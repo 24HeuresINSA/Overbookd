@@ -8,9 +8,11 @@
     @change="updateComment"
   >
     <template #prepend>
-      Dis nous en commentaire si tu as des contraintes physiques, de la
-      motivation à revendre pour nous aider un maximum ou encore un préféré
-      parmi les responsables bénévoles 😏
+      <p class="prepend-text">
+        Dis nous en commentaire si tu as des contraintes physiques, de la
+        motivation à revendre pour nous aider un maximum ou encore un préféré
+        parmi les responsables bénévoles 😏
+      </p>
     </template>
   </v-textarea>
 </template>
@@ -43,5 +45,9 @@ export default defineComponent({
 .comment-input {
   flex-direction: column;
   gap: 7px;
+}
+
+.prepend-text {
+  color: rgb(77, 77, 77);
 }
 </style>

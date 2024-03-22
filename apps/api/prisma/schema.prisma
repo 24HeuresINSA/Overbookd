@@ -48,7 +48,8 @@ model User {
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   registrationMembership RegistrationMembership? @map("registration_membership")
 
-  teams UserTeam[]
+  preference Preference?
+  teams      UserTeam[]
 
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
@@ -80,6 +81,14 @@ model User {
   assigned                  Assignee[]
 
   @@map("user")
+}
+
+model Preference {
+  userId        Int     @id @map("user_id")
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paperPlanning Boolean @default(false) @map("paper_planning")
+
+  @@map("preference")
 }
 
 model Notification {

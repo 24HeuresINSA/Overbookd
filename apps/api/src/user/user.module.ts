@@ -9,11 +9,25 @@ import { TeamService } from "../team/team.service";
 import { RegistrationModule } from "../registration/registration.module";
 import { ForgetMember } from "@overbookd/registration";
 import { PrismaModule } from "../prisma.module";
+import { PreferenceController } from "./preference.controller";
+import { PrismaPreferences } from "./repository/preferences.prisma";
+import { PreferenceService } from "./preference.service";
 
 @Module({
   imports: [VolunteerPlanningModule, RegistrationModule, PrismaModule],
-  controllers: [UserController],
+  controllers: [UserController, PreferenceController],
   providers: [
+    {
+      provide: PrismaPreferences,
+      useFactory: (prisma: PrismaService) => new PrismaPreferences(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PreferenceService,
+      useFactory: (preferences: PrismaPreferences) =>
+        new PreferenceService(preferences),
+      inject: [PrismaPreferences],
+    },
     {
       provide: UserService,
       useFactory: (prisma: PrismaService, forgetMember: ForgetMember) =>

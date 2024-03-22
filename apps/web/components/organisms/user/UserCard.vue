@@ -10,6 +10,13 @@
           </v-btn>
         </div>
         <v-form class="identity">
+          <v-checkbox
+            :value="preferences?.paperPlanning ?? false"
+            label="Je souhaite avoir une version papier de mon planning"
+            class="planning-preference"
+            hide-details
+            @change="updatePaperPlanningPreference"
+          ></v-checkbox>
           <v-text-field
             v-model="firstname"
             prepend-icon="mdi-account"
@@ -117,6 +124,7 @@ import { formatLocalDate } from "~/utils/date/date.utils";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
+import { Preference } from "@overbookd/http";
 
 type UserCardData = InputRulesData & {
   firstname: string;
@@ -164,6 +172,9 @@ export default defineComponent({
     friends(): number {
       return this.$accessor.user.mFriends.length;
     },
+    preferences(): Preference | null {
+      return this.$accessor.preference.myPreferences;
+    },
     charismaIcon(): string {
       return this.me.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon;
     },
@@ -187,18 +198,26 @@ export default defineComponent({
   },
 
   watch: {
-    me(me: MyUserInformationWithProfilePicture) {
+    async me(me: MyUserInformationWithProfilePicture) {
+      await this.fetchMyData();
       this.fillLocalFields(me);
     },
   },
 
-  mounted() {
+  async mounted() {
+    await this.fetchMyData();
     this.fillLocalFields(this.me);
     if (!this.me.profilePicture) return;
-    this.$accessor.user.setMyProfilePicture();
   },
 
   methods: {
+    async fetchMyData() {
+      await Promise.all([
+        this.$accessor.user.setMyProfilePicture(),
+        this.$accessor.user.fetchMyFriends(),
+        this.$accessor.preference.fetchMyPreferences(),
+      ]);
+    },
     openProfilePictureDialog() {
       this.$store.dispatch("dialog/openDialog", "profilePicture");
     },
@@ -237,6 +256,10 @@ export default defineComponent({
         comment,
       };
       this.$accessor.user.updateMyProfile(myInfo);
+    },
+    updatePaperPlanningPreference(canBeNull: boolean | null) {
+      const paperPlanning = canBeNull ?? false;
+      this.$accessor.preference.updateMyPreferences({ paperPlanning });
     },
   },
 });
@@ -311,5 +334,9 @@ export default defineComponent({
   border-radius: 50%;
   max-width: 100px;
   max-height: 100px;
+  margin-bottom: 15px;
+}
+.planning-preference {
+  margin-bottom: 10px;
 }
 </style>
