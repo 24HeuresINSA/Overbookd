@@ -57,10 +57,10 @@
             </p>
             <p>
               Si tu as la moindre question sur le festival et ce que tu peux
-              faire pour nous aider, n'hésite pas a
-              <nuxt-link to="mailto:humains@24heures.org">
+              faire pour nous aider, n'hésite pas à
+              <a href="mailto:humains@24heures.org">
                 contacter les responsables bénévoles
-              </nuxt-link>
+              </a>
               .
               <br />Ils seront tes principaux interlocuteurs en amont et en aval
               du festival. 😎
