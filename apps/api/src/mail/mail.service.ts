@@ -232,10 +232,7 @@ export class MailService implements OnApplicationBootstrap {
         to: email,
         subject: "[24h de l'INSA] Bienvenue dans l'équipe !",
         template: "volunteer-enrolled",
-        context: {
-          email,
-          firstname,
-        },
+        context: { firstname },
       });
       if (mail) {
         this.logger.log(`enrolment mail sent to ${email}`);
