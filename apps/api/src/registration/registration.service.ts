@@ -21,6 +21,7 @@ import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.reposit
 import { isString } from "class-validator";
 import {
   STAFF_REGISTERED,
+  VOLUNTEER_ENROLLED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
@@ -156,11 +157,15 @@ export class RegistrationService {
     if (team !== "soft") return;
 
     await Promise.all(
-      newcomersToEnroll.map(({ id }) =>
-        this.service.availability.addAvailabilities(id, [
+      newcomersToEnroll.map((newcomer) => {
+        this.service.availability.addAvailabilities(newcomer.id, [
           VOLUNTEER_BRIEFING_PERIOD,
-        ]),
-      ),
+        ]);
+        this.service.event.publish({
+          type: VOLUNTEER_ENROLLED,
+          data: newcomer,
+        });
+      }),
     );
   }
 

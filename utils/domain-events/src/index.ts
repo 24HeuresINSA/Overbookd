@@ -31,5 +31,10 @@ export { SHARED_MEAL_CLOSED } from "./shared-meal";
 export type {
   StaffRegisteredEvent,
   VolunteerRegisteredEvent,
+  VolunteerEnrolledEvent,
 } from "./registration";
-export { STAFF_REGISTERED, VOLUNTEER_REGISTERED } from "./registration";
+export {
+  STAFF_REGISTERED,
+  VOLUNTEER_REGISTERED,
+  VOLUNTEER_ENROLLED,
+} from "./registration";

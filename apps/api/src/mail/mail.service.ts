@@ -29,6 +29,11 @@ type WelcomeNewcomer = {
   membership: Membership;
 };
 
+type EnrollVolunteer = {
+  email: string;
+  firstname: string;
+};
+
 export type Member = Pick<
   Profile,
   "email" | "firstname" | "lastname" | "nickname"
@@ -86,6 +91,13 @@ export class MailService implements OnApplicationBootstrap {
       this.logger.log("Send welcome-volunteer mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);
+    });
+
+    this.eventStore.volunteersEnrolled.subscribe(async (event) => {
+      this.logger.log("Send volunteer-enrolled mail");
+      this.logger.debug(JSON.stringify(event));
+      const volunteer = await this.members.byId(event.id);
+      this.enrollVolunteer(volunteer);
     });
 
     this.eventStore.rejectedFestivalActivity.subscribe(async (event) => {
@@ -208,6 +220,25 @@ export class MailService implements OnApplicationBootstrap {
       });
       if (mail) {
         this.logger.log(`Welcome mail sent to ${email}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async enrollVolunteer({ email, firstname }: EnrollVolunteer): Promise<void> {
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: "[24h de l'INSA] Bienvenue dans l'équipe !",
+        template: "volunteer-enrolled",
+        context: {
+          email,
+          firstname,
+        },
+      });
+      if (mail) {
+        this.logger.log(`enrolment mail sent to ${email}`);
       }
     } catch (error) {
       this.logger.error(error);
