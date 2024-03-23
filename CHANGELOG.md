@@ -1,3 +1,10 @@
+## [2.23.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.0...v2.23.1) (2024-03-23)
+
+
+### Bug Fixes
+
+* **profile:** loop request [#1718](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1718) ([289bdd2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/289bdd2945d1a625ffe7357479bb82e80cadc835))
+
 ## [2.23.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.7...v2.23.0) (2024-03-23)
 
 
