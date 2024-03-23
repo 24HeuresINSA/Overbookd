@@ -1,3 +1,10 @@
+## [2.23.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.1...v2.23.2) (2024-03-23)
+
+
+### Bug Fixes
+
+* **registration:** send email when volunteer enrolment [#1716](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1716) ([8203445](https://gitlab.com/24-heures-insa/overbookd-mono/commit/82034453ce7ca335e45ca8df5d8f2b9a264e2fd9))
+
 ## [2.23.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.0...v2.23.1) (2024-03-23)
 
 
