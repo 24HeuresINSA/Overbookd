@@ -170,7 +170,7 @@ export default defineComponent({
       return this.$accessor.user.me;
     },
     myId(): number {
-      return this.$accessor.user.me.id;
+      return this.me.id;
     },
     friends(): number {
       return this.$accessor.user.mFriends.length;
