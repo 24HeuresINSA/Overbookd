@@ -1,3 +1,24 @@
+## [2.23.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.7...v2.23.0) (2024-03-23)
+
+
+### Features
+
+* **festival-task:** enable assignment. [#1690](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1690) ([db83bb1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/db83bb1f5b33bd48974902c584958ab548b3f236))
+* **preference:** add user preferences [#1711](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1711) ([e1921d9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e1921d94d9332c61668c2a5d3ed67c9fd9a07f52))
+
+
+### Bug Fixes
+
+* **festival-task:** block start assignment on conflicts. [#1714](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1714) ([0a4de7f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0a4de7f48209cffd9703956f3b95e50a6b77e0a4))
+* **festival-task:** compute assignment conflicts. [#1713](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1713) ([258c57f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/258c57fd5a75c80aeb6ee919f16def8102ca856e))
+
+
+### Pre-Features
+
+* **borrow-sheet:** add a data table to the index of borrow sheets [#1712](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1712) ([251c9be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/251c9be7bbd7e5be86f75e583e3fa4cec08e77bd))
+* **borrow:** implementation in api [#1682](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1682) ([d9cc23b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d9cc23bedf7b2324d8f85870e983bce2ae8d65e0))
+* **festival-task:** enable assignments on api. [#1690](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1690) ([07ea2fd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/07ea2fdb83a1e192cd35a3b65629e6736b0c823f))
+
 ## [2.22.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.6...v2.22.7) (2024-03-20)
 
 
