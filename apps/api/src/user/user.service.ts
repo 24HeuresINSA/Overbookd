@@ -74,8 +74,16 @@ export class UserService {
   async getUserPassword(email: string): Promise<UserPasswordOnly | null> {
     return this.prisma.user.findUnique({
       where: { email },
-      select: { password: true, isDeleted: false },
+      select: { password: true },
     });
+  }
+
+  async isDeleted(email: string): Promise<boolean | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: { isDeleted: true },
+    });
+    return user?.isDeleted ?? null;
   }
 
   async updateMyInformation(
@@ -187,10 +195,16 @@ export class UserService {
       where: { id },
       select: { email: true },
     });
-
     if (!user) return;
 
-    return this.forgetMember.him(user.email);
+    return this.softDeleteUser(id);
+  }
+
+  private async softDeleteUser(id: number): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
   }
 
   async getVolunteerAssignmentStats(
