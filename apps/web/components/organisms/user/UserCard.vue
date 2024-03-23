@@ -169,6 +169,9 @@ export default defineComponent({
     me(): MyUserInformationWithProfilePicture {
       return this.$accessor.user.me;
     },
+    myId(): number {
+      return this.me.id;
+    },
     friends(): number {
       return this.$accessor.user.mFriends.length;
     },
@@ -198,15 +201,15 @@ export default defineComponent({
   },
 
   watch: {
-    async me(me: MyUserInformationWithProfilePicture) {
+    async myId() {
       await this.fetchMyData();
-      this.fillLocalFields(me);
+      this.fillLocalFields();
     },
   },
 
   async mounted() {
     await this.fetchMyData();
-    this.fillLocalFields(this.me);
+    this.fillLocalFields();
     if (!this.me.profilePicture) return;
   },
 
@@ -221,22 +224,14 @@ export default defineComponent({
     openProfilePictureDialog() {
       this.$store.dispatch("dialog/openDialog", "profilePicture");
     },
-    fillLocalFields({
-      firstname,
-      lastname,
-      nickname,
-      birthdate,
-      email,
-      phone,
-      comment,
-    }: MyUserInformationWithProfilePicture) {
-      this.firstname = firstname;
-      this.lastname = lastname;
-      this.nickname = nickname;
-      this.birthday = formatLocalDate(birthdate);
-      this.email = email;
-      this.phone = phone;
-      this.comment = comment;
+    fillLocalFields() {
+      this.firstname = this.me.firstname;
+      this.lastname = this.me.lastname;
+      this.nickname = this.me.nickname;
+      this.birthday = formatLocalDate(this.me.birthdate);
+      this.email = this.me.email;
+      this.phone = this.me.phone;
+      this.comment = this.me.comment;
     },
     defectSave() {
       if (this.delay) clearInterval(this.delay);
