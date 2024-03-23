@@ -33,6 +33,7 @@ import * as personalAccount from "./personalAccount";
 import * as mealSharing from "./mealSharing";
 import * as logisticDashboard from "./logisticDashboard";
 import * as publicHoliday from "./publicHoliday";
+import * as preference from "./preference";
 
 export const state = () => ({});
 
@@ -82,5 +83,6 @@ export const accessorType = getAccessorType({
     mealSharing,
     logisticDashboard,
     publicHoliday,
+    preference,
   },
 });
