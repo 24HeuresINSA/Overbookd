@@ -57,10 +57,11 @@ export const actions = actionTree(
       commit("SET_SELECTED", castWithDate(res.data));
     },
 
-    async remove({ commit }, id: Borrow["id"]) {
+    async remove({ commit, dispatch }, id: Borrow["id"]) {
       const res = await safeCall(this, BorrowRepository.remove(this, id));
       if (!res) return;
       commit("SET_SELECTED", null);
+      await dispatch("fetchAll");
     },
 
     async addGearRequest({ state, commit }, form: AddBorrowGearRequestForm) {
@@ -95,7 +96,7 @@ function castWithDate(borrow: HttpStringified<Borrow>) {
 }
 
 const defaultBorrow: Borrow = {
-  id: -1,
+  id: 0,
   lender: "",
   availableOn: new Date(),
   unavailableOn: new Date(),

@@ -1,62 +1,60 @@
 <template>
   <div class="borrows-page">
     <h1>Fiches emprunts</h1>
-    <v-data-table
-      :headers="headers"
-      :items="borrows"
-      class="borrow-list"
-      @click:row="openBorrow"
-      @auxclick:row="openBorrowInNewTab"
+    <BorrowTable @remove:borrow="removeBorrow" />
+
+    <v-btn
+      color="secondary"
+      class="btn-plus"
+      elevation="2"
+      fab
+      @click="openNewBorrowDialog"
     >
-      <template #item.availableOn="{ item }">
-        {{ formatDateToHumanReadable(item.availableOn) }}
-      </template>
-      <template #item.unavailableOn="{ item }">
-        {{ formatDateToHumanReadable(item.unavailableOn) }}
-      </template>
-      <template #no-data> Aucune fiche emprunts </template>
-    </v-data-table>
+      <v-icon> mdi-plus-thick</v-icon>
+    </v-btn>
+
+    <v-dialog v-model="isNewBorrowDialogOpen" max-width="500">
+      <InitBorrowCard @init="initBorrow" />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Borrow } from "@overbookd/logistic";
-import { formatDateToHumanReadable } from "~/utils/date/date.utils";
+import BorrowTable from "~/components/organisms/logistic/borrow/BorrowTable.vue";
+import InitBorrowCard from "~/components/organisms/logistic/borrow/InitBorrowCard.vue";
+import { Borrow, InitBorrowForm } from "@overbookd/logistic";
+
+type BorrowsData = {
+  isNewBorrowDialogOpen: boolean;
+};
 
 export default defineComponent({
   name: "Borrows",
-  data() {
-    return {
-      headers: [
-        { text: "Nom", value: "lender" },
-        { text: "Date de disponibilité", value: "availableOn" },
-        { text: "Date de retour", value: "unavailableOn" },
-      ],
-    };
-  },
+  components: { BorrowTable, InitBorrowCard },
+  data: (): BorrowsData => ({
+    isNewBorrowDialogOpen: false,
+  }),
   computed: {
-    borrows(): Borrow[] {
-      return this.$accessor.borrow.all;
+    selectedBorrowId(): Borrow["id"] {
+      return this.$accessor.borrow.selected.id;
     },
-  },
-  async mounted() {
-    await this.$accessor.borrow.fetchAll();
   },
   methods: {
-    formatDateToHumanReadable,
-    openBorrow(borrow: Borrow, _: unknown, event: PointerEvent) {
-      if (event.ctrlKey) {
-        return this.openBorrowInNewTab(event, { item: borrow });
-      }
-      this.$router.push({ path: `/logistic/borrow/${borrow.id}` });
+    async initBorrow(form: InitBorrowForm) {
+      await this.$accessor.borrow.init(form);
+      this.closeNewBorrowDialog();
+      if (!this.selectedBorrowId) return;
+      this.$router.push({ path: `/logistic/borrow/${this.selectedBorrowId}` });
     },
-
-    openBorrowInNewTab(_: Event, { item: borrow }: { item: Borrow }) {
-      const borrowRoute = this.$router.resolve({
-        path: `/logistic/borrow/${borrow.id}`,
-      });
-      window.open(borrowRoute.href, "_blank");
+    async removeBorrow(borrowId: Borrow["id"]) {
+      await this.$accessor.borrow.remove(borrowId);
+    },
+    openNewBorrowDialog() {
+      this.isNewBorrowDialogOpen = true;
+    },
+    closeNewBorrowDialog() {
+      this.isNewBorrowDialogOpen = false;
     },
   },
 });
@@ -65,5 +63,14 @@ export default defineComponent({
 <style lang="scss">
 .borrow-list {
   cursor: pointer;
+}
+
+.btn-plus {
+  right: 20px;
+  bottom: 45px;
+  position: fixed;
+  @media screen and (max-width: $mobile-max-width) {
+    bottom: 70px;
+  }
 }
 </style>

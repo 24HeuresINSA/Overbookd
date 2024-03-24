@@ -950,7 +950,7 @@ model Borrow {
 
 model BorrowGearRequest {
   borrowId Int         @map("borrow_id")
-  borrow   Borrow      @relation(fields: [borrowId], references: [id])
+  borrow   Borrow      @relation(fields: [borrowId], references: [id], onDelete: Cascade)
   gearSlug String      @map("gear_slug")
   gear     CatalogGear @relation(fields: [gearSlug], references: [slug])
   quantity Int
