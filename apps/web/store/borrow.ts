@@ -11,19 +11,19 @@ import { AddBorrowGearRequestForm, HttpStringified } from "@overbookd/http";
 
 type State = {
   all: Borrow[];
-  selected: Borrow | null;
+  selected: Borrow;
 };
 
 export const state = (): State => ({
   all: [],
-  selected: null,
+  selected: defaultBorrow,
 });
 
 export const mutations = mutationTree(state, {
   SET_ALL(state, borrow: Borrow[]) {
     state.all = borrow;
   },
-  SET_SELECTED(state, borrow: Borrow | null) {
+  SET_SELECTED(state, borrow: Borrow) {
     state.selected = borrow;
   },
 });
@@ -50,10 +50,8 @@ export const actions = actionTree(
       commit("SET_SELECTED", castWithDate(res.data));
     },
 
-    async plan(
-      { commit },
-      { id, form }: { id: Borrow["id"]; form: PlanBorrowForm },
-    ) {
+    async plan({ state, commit }, form: PlanBorrowForm) {
+      const id = state.selected.id;
       const res = await safeCall(this, BorrowRepository.plan(this, id, form));
       if (!res) return;
       commit("SET_SELECTED", castWithDate(res.data));
@@ -65,10 +63,9 @@ export const actions = actionTree(
       commit("SET_SELECTED", null);
     },
 
-    async addGearRequest(
-      { commit },
-      { id, form }: { id: Borrow["id"]; form: AddBorrowGearRequestForm },
-    ) {
+    async addGearRequest({ state, commit }, form: AddBorrowGearRequestForm) {
+      const id = state.selected.id;
+      if (!id) return;
       const res = await safeCall(
         this,
         BorrowRepository.addGearRequest(this, id, form),
@@ -77,10 +74,8 @@ export const actions = actionTree(
       commit("SET_SELECTED", castWithDate(res.data));
     },
 
-    async removeGearRequest(
-      { commit },
-      { id, slug }: { id: Borrow["id"]; slug: GearRequest["slug"] },
-    ) {
+    async removeGearRequest({ state, commit }, slug: GearRequest["slug"]) {
+      const id = state.selected.id;
       const res = await safeCall(
         this,
         BorrowRepository.removeGearRequest(this, id, slug),
@@ -98,3 +93,11 @@ function castWithDate(borrow: HttpStringified<Borrow>) {
     unavailableOn: new Date(borrow.unavailableOn),
   };
 }
+
+const defaultBorrow: Borrow = {
+  id: -1,
+  lender: "",
+  availableOn: new Date(),
+  unavailableOn: new Date(),
+  gears: [],
+};
