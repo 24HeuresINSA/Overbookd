@@ -200,6 +200,13 @@ export default Vue.extend({
               "Tu as essayé de te connecter trop de fois ... 👨‍💻 Attends 30 secs",
           });
         }
+        if (e.response.status === 423) {
+          return this.$store.dispatch("notif/pushNotification", {
+            type: "error",
+            message:
+              "Ton compte est bloqué pour le moment... 🤷‍♂️ Envoie un mail à overbookd@24heures.org",
+          });
+        }
         return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "Ton email ou ton mot de passe est incorrect 😞",

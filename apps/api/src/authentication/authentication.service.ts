@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -9,7 +10,6 @@ import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { UserPasswordOnly } from "../user/user.model";
 import { UserService } from "../user/user.service";
 import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
 import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
@@ -31,10 +31,23 @@ export class AuthenticationService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<JwtPayload> {
+    const isDeleted = await this.userService.isDeleted(email);
     const user = await this.userService.getUserPassword(email);
-    if (await this.isInvalidUser(user, password)) {
+    const isSamePassword = user
+      ? await this.isSamePassword(user.password, password)
+      : false;
+
+    if (isDeleted && isSamePassword) {
+      throw new HttpException(
+        "Il y a une erreur avec ton compte, envoie un mail à overbookd@24heures.org",
+        423,
+      );
+    }
+
+    if (!user || !isSamePassword) {
       throw new UnauthorizedException("Email ou mot de passe invalide");
     }
+
     return this.buildJwtUser({ email });
   }
 
@@ -59,10 +72,8 @@ export class AuthenticationService {
     };
   }
 
-  private async isInvalidUser(user: UserPasswordOnly | null, pass: string) {
-    return (
-      !user || !(await this.hashingUtilsService.compare(pass, user.password))
-    );
+  private async isSamePassword(userPassword: string, existingPassword: string) {
+    return this.hashingUtilsService.compare(existingPassword, userPassword);
   }
 
   async login({ email, password }: UserCredentials): Promise<UserAccess> {
