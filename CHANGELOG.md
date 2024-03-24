@@ -1,3 +1,11 @@
+## [2.23.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.2...v2.23.3) (2024-03-24)
+
+
+### Bug Fixes
+
+* **preference:** is nullable & improve display [#1722](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1722) ([17fea97](https://gitlab.com/24-heures-insa/overbookd-mono/commit/17fea972f283257c5aa657057d11ea0322985231))
+* **register:** description help link [#1720](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1720) ([650df4d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/650df4d6c2c1eb66e3a18f9d287babce074d2019))
+
 ## [2.23.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.1...v2.23.2) (2024-03-23)
 
 
