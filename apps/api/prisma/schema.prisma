@@ -84,9 +84,9 @@ model User {
 }
 
 model Preference {
-  userId        Int     @id @map("user_id")
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  paperPlanning Boolean @default(false) @map("paper_planning")
+  userId        Int      @id @map("user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paperPlanning Boolean? @map("paper_planning")
 
   @@map("preference")
 }
