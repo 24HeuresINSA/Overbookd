@@ -17,7 +17,6 @@ import {
 } from "@nestjs/swagger";
 import { PreferenceService } from "./preference.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { PreferenceDto } from "./dto/preference.dto";
 import { RequestWithUserPayload } from "../app.controller";
 
@@ -32,7 +31,7 @@ import { RequestWithUserPayload } from "../app.controller";
 export class PreferenceController {
   constructor(private readonly preferenceService: PreferenceService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get("me")
   @ApiResponse({
@@ -46,7 +45,7 @@ export class PreferenceController {
     return this.preferenceService.findOne(user.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch("me")
   @ApiResponse({
