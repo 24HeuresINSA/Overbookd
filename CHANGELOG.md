@@ -1,3 +1,10 @@
+## [2.23.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.4...v2.23.5) (2024-03-24)
+
+
+### Bug Fixes
+
+* **preference:** requests permission ([e04db87](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e04db87c7ddc324816c79089c8d700a6c673505a))
+
 ## [2.23.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.3...v2.23.4) (2024-03-24)
 
 
