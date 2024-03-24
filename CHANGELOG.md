@@ -1,3 +1,10 @@
+## [2.23.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.3...v2.23.4) (2024-03-24)
+
+
+### Bug Fixes
+
+* **login:** deleted account connection and soft delete [#1719](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1719) ([13a49e1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/13a49e16735881c71e88d9ff919eb8c66660fa6b))
+
 ## [2.23.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.2...v2.23.3) (2024-03-24)
 
 
