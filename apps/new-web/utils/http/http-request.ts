@@ -13,7 +13,9 @@ async function apiFetch<T extends object>(
   method: Method,
   body?: object,
 ): Promise<HttpResponse<T>> {
-  const fullUrl = `/api/${url}`;
+  const config = useRuntimeConfig();
+
+  const fullUrl = `${config.public.baseURL}/${url}`;
   const options: RequestInit = {
     method,
     headers: { "Content-Type": "application/json" },

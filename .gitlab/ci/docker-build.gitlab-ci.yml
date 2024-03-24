@@ -189,3 +189,8 @@ overbookd-new-web_docker_build:
         - package.json
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - when: never
+  artifacts:
+    paths:
+      - web_pre-prod.tar
+      - web_prod.tar
+    expire_in: 1 hour

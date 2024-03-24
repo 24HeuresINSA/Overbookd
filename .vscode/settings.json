@@ -31,7 +31,8 @@
     "deps",
     "tools",
     "festival-activity",
-    "festival-event"
+    "festival-event",
+    "new-web"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],

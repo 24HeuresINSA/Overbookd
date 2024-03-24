@@ -6,8 +6,8 @@ workflow:
 
 stages:
   - install
-  - check
   - build
+  - check
   - test
   - docker-build
   - docker-scan

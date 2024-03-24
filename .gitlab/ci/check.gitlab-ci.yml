@@ -46,7 +46,12 @@ secret_detection:
 
 overbookd/format:
   extends: .format
-  needs: [install]
+  needs:
+    - job: overbookd/new_web_build
+      optional: true
+    - job: install
+  variables:
+    NODE_OPTIONS: --max_old_space_size=3584
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:

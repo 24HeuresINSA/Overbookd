@@ -43,6 +43,7 @@ overbookd/new_web_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/new-web/**/*
+        - apps/new-web/.nuxt
         - pnpm-lock.yaml
     - when: never
   variables:

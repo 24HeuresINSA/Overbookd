@@ -2,9 +2,13 @@
 .gitlab-ci.yml
 .idea
 .vscode
+.devcontainer
 **/.nuxt
+**/.output
+.pnpm-store
 **/node_modules
 **/dist
+**/build
 **/Dockerfile
 **/Dockerfile.dev
 **/.dockerignore
