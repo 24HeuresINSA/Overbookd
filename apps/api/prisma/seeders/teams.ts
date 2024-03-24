@@ -259,4 +259,10 @@ export const teams: Team[] = [
     color: "#ACBB62",
     icon: "mdi-sausage",
   },
+  {
+    name: "On baise pas",
+    code: "puceau",
+    color: "#fd6c9e",
+    icon: "mdi-wheelchair-accessibility"
+  },
 ];
