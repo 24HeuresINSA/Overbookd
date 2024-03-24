@@ -1,3 +1,3 @@
 export type Preference = {
-  paperPlanning: boolean;
+  paperPlanning: boolean | null;
 };

@@ -10,13 +10,6 @@
           </v-btn>
         </div>
         <v-form class="identity">
-          <v-checkbox
-            :value="preferences?.paperPlanning ?? false"
-            label="Je souhaite avoir une version papier de mon planning"
-            class="planning-preference"
-            hide-details
-            @change="updatePaperPlanningPreference"
-          ></v-checkbox>
           <v-text-field
             v-model="firstname"
             prepend-icon="mdi-account"
@@ -61,6 +54,21 @@
             <v-icon>mdi-account-hard-hat</v-icon>
             {{ me.tasksCount }} tâches affectées
           </p>
+          <v-card class="planning-preference elevation-1" outlined>
+            <v-btn-toggle
+              :value="preferences?.paperPlanning"
+              color="primary"
+              group
+              :mandatory="hasFilledPreferences"
+              @change="updatePaperPlanningPreference"
+            >
+              <v-btn :value="true"> <strong>OUI</strong> </v-btn>
+              <v-btn :value="false"> <strong>NON</strong> </v-btn>
+            </v-btn-toggle>
+            <p class="planning-preference__label">
+              Je souhaite avoir une version imprimée de mon planning
+            </p>
+          </v-card>
         </div>
         <v-form class="personal-information">
           <v-text-field
@@ -178,6 +186,12 @@ export default defineComponent({
     preferences(): Preference | null {
       return this.$accessor.preference.myPreferences;
     },
+    hasFilledPreferences(): boolean {
+      return (
+        this.preferences?.paperPlanning !== undefined &&
+        this.preferences?.paperPlanning !== null
+      );
+    },
     charismaIcon(): string {
       return this.me.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon;
     },
@@ -252,8 +266,8 @@ export default defineComponent({
       };
       this.$accessor.user.updateMyProfile(myInfo);
     },
-    updatePaperPlanningPreference(canBeNull: boolean | null) {
-      const paperPlanning = canBeNull ?? false;
+    updatePaperPlanningPreference(paperPlanning?: boolean) {
+      if (paperPlanning === undefined) return;
       this.$accessor.preference.updateMyPreferences({ paperPlanning });
     },
   },
@@ -332,6 +346,11 @@ export default defineComponent({
   margin-bottom: 15px;
 }
 .planning-preference {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
+  &__label {
+    margin-bottom: 0;
+  }
 }
 </style>

@@ -7,7 +7,8 @@ export class PreferenceDto implements Preference {
     type: "boolean",
     description: "User preference for paper planning",
     example: false,
+    nullable: true,
   })
   @IsBoolean()
-  paperPlanning: boolean;
+  paperPlanning: boolean | null;
 }
