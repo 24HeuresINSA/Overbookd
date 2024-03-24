@@ -75,11 +75,11 @@ services:
       SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-back.tls=true"
-      - "traefik.http.routers.dev-back.entrypoints=websecure"
-      - "traefik.http.services.dev-back.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.dev-back.middlewares=api-strip"
+      - "traefik.http.routers.ob-dev-api.tls=true"
+      - "traefik.http.routers.ob-dev-api.entrypoints=websecure"
+      - "traefik.http.services.ob-dev-api.loadbalancer.server.port=3000"
+      - "traefik.http.routers.ob-dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
+      - "traefik.http.routers.ob-dev-api.middlewares=api-strip"
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
     command:
       - /bin/sh
@@ -121,11 +121,11 @@ services:
       ADMINER_DEFAULT_SERVER: overbookd_postgresql
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-adminer.tls=true"
-      - "traefik.http.routers.dev-adminer.entrypoints=websecure"
-      - "traefik.http.services.dev-adminer.loadbalancer.server.port=8080"
-      - "traefik.http.routers.dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
-      - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
+      - "traefik.http.routers.ob-dev-adminer.tls=true"
+      - "traefik.http.routers.ob-dev-adminer.entrypoints=websecure"
+      - "traefik.http.services.ob-dev-adminer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.ob-dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
+      - "traefik.http.routers.ob-dev-adminer.middlewares=adminer-strip"
       - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 
   web:
@@ -142,10 +142,10 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-front.entrypoints=websecure"
-      - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.routers.dev-front.tls=true"
+      - "traefik.http.routers.ob-dev-web.entrypoints=websecure"
+      - "traefik.http.services.ob-dev-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.ob-dev-web.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.routers.ob-dev-web.tls=true"
     command:
       - /bin/sh
       - -c
@@ -169,16 +169,15 @@ services:
       - ../:/overbookd
     environment:
       - BASE_URL
-      - HOST=0.0.0.0
     restart: unless-stopped
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-front-new.entrypoints=websecure"
-      - "traefik.http.services.dev-front-new.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-front-new.rule=Host(`overbookd-next.${DOMAIN}`)"
-      - "traefik.http.routers.dev-front-new.tls=true"
+      - "traefik.http.routers.ob-dev-web-new.entrypoints=websecure"
+      - "traefik.http.services.ob-dev-web-new.loadbalancer.server.port=3000"
+      - "traefik.http.routers.ob-dev-web-new.rule=Host(`overbookd-next.${DOMAIN}`)"
+      - "traefik.http.routers.ob-dev-web-new.tls=true"
     command:
       - /bin/sh
       - -c

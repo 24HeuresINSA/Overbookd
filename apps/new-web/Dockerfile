@@ -10,7 +10,10 @@ RUN pnpm fetch
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
 
-COPY . .
+COPY apps/new-web /overbookd/apps/new-web
+COPY libraries /overbookd/libraries
+COPY domains /overbookd/domains
+COPY utils /overbookd/utils
 
 RUN pnpm install --recursive --offline --filter '@overbookd/new-web...'
 
@@ -26,6 +29,7 @@ COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
+
 RUN pnpm --recursive --filter '@overbookd/new-web...' run build:ci
 
 FROM node:20.11.1-alpine
@@ -47,10 +51,10 @@ RUN chown -R node:node /app
 
 USER node
 
-COPY --chown=node:node --from=builder /overbookd/new-web/.output ./output
+COPY --chown=node:node --from=builder /overbookd/apps/new-web/.output ./output
 
-EXPOSE 1235
+EXPOSE 3000
 
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:1235/"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
 
 CMD [ "node", "output/server/index.mjs" ]

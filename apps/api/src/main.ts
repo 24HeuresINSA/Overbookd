@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from "./http-error.filter";
 
 const SWAGGER_PROTECT_DOMAINS = [
   "overbookd.24heures.org",
+  "cetaitmieuxavant.24heures.org",
   "preprod.overbookd.24heures.org",
 ];
 
@@ -19,7 +20,13 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || origin.includes(process.env.DOMAIN)) {
+      const isSameOrigin = !origin || origin.includes(process.env.DOMAIN);
+      const isNextOrigin =
+        !origin ||
+        (origin.includes("overbookd-next.traefik.me") &&
+          process.env.DOMAIN == "overbookd.traefik.me");
+
+      if (isSameOrigin || isNextOrigin) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
