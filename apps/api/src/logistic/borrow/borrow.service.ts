@@ -54,7 +54,20 @@ export class BorrowService {
   }
 
   async planBorrow(id: Borrow["id"], form: PlanBorrowForm): Promise<Borrow> {
-    return this.useCases.plan.update(id, form);
+    const lender = form.lender ? { lender: form.lender } : {};
+    const availableOn = form.availableOn
+      ? { availableOn: form.availableOn }
+      : {};
+    const unavailableOn = form.unavailableOn
+      ? { unavailableOn: form.unavailableOn }
+      : {};
+
+    const borrow = {
+      ...lender,
+      ...availableOn,
+      ...unavailableOn,
+    };
+    return this.useCases.plan.update(id, borrow);
   }
 
   async removeBorrow(id: Borrow["id"]): Promise<void> {

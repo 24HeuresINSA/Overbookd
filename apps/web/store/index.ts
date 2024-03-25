@@ -34,6 +34,7 @@ import * as mealSharing from "./mealSharing";
 import * as logisticDashboard from "./logisticDashboard";
 import * as publicHoliday from "./publicHoliday";
 import * as preference from "./preference";
+import * as borrow from "./borrow";
 
 export const state = () => ({});
 
@@ -84,5 +85,6 @@ export const accessorType = getAccessorType({
     logisticDashboard,
     publicHoliday,
     preference,
+    borrow,
   },
 });
