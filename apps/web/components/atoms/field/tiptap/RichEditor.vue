@@ -58,9 +58,11 @@ export default defineComponent({
     editor: undefined,
   }),
   computed: {
-    emptyContent() {
-      const html = this.editor?.getHTML() ?? "";
-      const textContent = html.replace(/<[^>]+>/g, "");
+    content(): string {
+      return this.editor?.getHTML() ?? "";
+    },
+    emptyContent(): boolean {
+      const textContent = this.content.replace(/<[^>]+>/g, "");
       return textContent.trim() === "";
     },
   },
@@ -76,7 +78,7 @@ export default defineComponent({
       content: this.data ?? "",
       editable: !this.disabled,
       onBlur: () => this.deferUpdate(),
-      onFocus: () => this.$emit("focus"),
+      onFocus: () => this.applyStyle(),
     });
   },
   beforeUnmount() {
@@ -87,10 +89,15 @@ export default defineComponent({
       this.$emit("update:data", content);
     },
     deferUpdate() {
-      const content = this.emptyContent ? "" : this.editor?.getHTML() ?? "";
+      const content = this.emptyContent ? "" : this.content;
       if (content === this.data) return;
       if (this.delay) clearInterval(this.delay);
       this.delay = setTimeout(() => this.update(content), 300);
+    },
+    applyStyle() {
+      const content = this.emptyContent ? "" : this.content;
+      if (content === this.data) return this.$emit("focus");
+      return this.deferUpdate();
     },
   },
 });
