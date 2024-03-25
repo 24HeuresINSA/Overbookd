@@ -44,21 +44,36 @@ export default defineComponent({
     isAlsoRequested(): boolean {
       return this.volunteer.conflicts.tasks.length > 0;
     },
+    isAlreadyAssigned(): boolean {
+      return this.volunteer.conflicts.assignments.length > 0;
+    },
     volunteerStatus(): string {
+      if (this.isAlreadyAssigned) return "already-assigned";
       if (this.isAlsoRequested) return "also-requested-by-ft";
       if (this.isNotAvailable) return "not-available";
       return "";
     },
     hasErrors(): boolean {
-      return this.isNotAvailable || this.isAlsoRequested;
+      return (
+        this.isNotAvailable || this.isAlsoRequested || this.isAlreadyAssigned
+      );
     },
     errorMessages(): string[] {
       if (!this.hasErrors) return [];
-      return [...this.notAvailableErrors, ...this.alsoRequestedByErrors];
+      return [
+        ...this.notAvailableErrors,
+        ...this.alsoRequestedByErrors,
+        ...this.alreadyAssignedErrors,
+      ];
     },
     alsoRequestedByErrors(): string[] {
       return this.volunteer.conflicts.tasks.map(
         ({ id, name }) => `Aussi demandé dans la FT #${id} - ${name}`,
+      );
+    },
+    alreadyAssignedErrors(): string[] {
+      return this.volunteer.conflicts.assignments.map(
+        ({ id, name }) => `Déjà affecté sur la FT #${id} - ${name}`,
       );
     },
     notAvailableErrors(): string[] {
