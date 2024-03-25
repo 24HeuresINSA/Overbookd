@@ -1,3 +1,16 @@
+## [2.24.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.5...v2.24.0) (2024-03-25)
+
+
+### Features
+
+* **borrow:** implement it in web [#1721](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1721) ([e827cee](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e827ceed832c005ab4c9f94e271025fc92cd0cca))
+
+
+### Bug Fixes
+
+* **festival-task:** add team teckos in teams assignable in mobilisations [#1723](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1723) ([e5af0ca](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e5af0ca14df7fa76db2158e3e30b456075e6acd8))
+* **festival-task:** display assign conflicts. [#1715](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1715) ([378c4b4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/378c4b49a8ff9b6dfb04f48e6f6084fc2680c42a))
+
 ## [2.23.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.4...v2.23.5) (2024-03-24)
 
 
