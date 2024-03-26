@@ -44,7 +44,7 @@ const SELECT_ASSIGNED_VOLUNTEERS = {
   },
 };
 
-const IS_NOT_DELETED_FT = { ft: { isDeleted: false } };
+const IS_NOT_DELETED = { isDeleted: false };
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
@@ -146,7 +146,7 @@ export class OrgaNeedsService {
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
         ...this.hasTeamCondition(orgaNeedsRequest.teams),
-        ...IS_NOT_DELETED_FT,
+        ft: IS_NOT_DELETED,
       },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
@@ -165,7 +165,10 @@ export class OrgaNeedsService {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         ...this.periodIncludedCondition(periodWithTeams),
-        user: this.teamMemberCondition(periodWithTeams.teams),
+        user: {
+          ...this.teamMemberCondition(periodWithTeams.teams),
+          ...IS_NOT_DELETED,
+        },
       },
     });
   }
