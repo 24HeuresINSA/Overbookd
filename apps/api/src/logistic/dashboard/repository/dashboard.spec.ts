@@ -15,6 +15,10 @@ import {
   gearWithTwoInquiriesAndTwoInventoryRecordsForGraph,
   consumableGearWithOneInquiryWithTwoSameActivityTimeWindows,
   consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph,
+  gearWithOneInventoryRecordAndOneBorrow,
+  gearWithOneInventoryRecord,
+  gearWithOneInquiryAndOneBorrow,
+  consumableGearWithOneInquiryAndOneBorrow,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
@@ -31,6 +35,10 @@ describe("Summarize gear as preview", () => {
     ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${-10}
     ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${-60}
     ${"is consumable and has two inquiries and one inventory records"}    | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${-40}
+    ${"has one inventory record"}                                         | ${gearWithOneInventoryRecord}                                 | ${25}
+    ${"has one inventory record and one borrow"}                          | ${gearWithOneInventoryRecordAndOneBorrow}                     | ${25}
+    ${"has one inquiry and one borrow"}                                   | ${gearWithOneInquiryAndOneBorrow}                             | ${-5}
+    ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${-15}
   `("when gear $explaination", ({ gear, expectedStockDiscrepancy }) => {
     it(`should return preview with ${expectedStockDiscrepancy} as stock discrepancy`, () => {
       const preview = DashboardGear.generatePreview(gear);

@@ -4,6 +4,7 @@ import {
   DatabaseActivityInquiry,
   InventoryRecord,
   DatabaseTaskInquiry,
+  DatabaseBorrow,
 } from "./dashboard.model";
 
 const friday08hto09h = {
@@ -113,6 +114,16 @@ const inventoryRecordWith25Quantity: InventoryRecord = {
   quantity: 25,
 };
 
+const borrowFromFriday08hto09h: DatabaseBorrow = {
+  quantity: 5,
+  borrow: {
+    id: 1,
+    lender: "KARNA",
+    availableOn: friday08hto09h.start,
+    unavailableOn: friday08hto09h.end,
+  },
+};
+
 export const gearWithNoInquiry: DatabaseGear = {
   id: 1,
   name: "gear with no inquiry",
@@ -121,6 +132,7 @@ export const gearWithNoInquiry: DatabaseGear = {
   festivalActivityInquiries: [],
   festivalTaskInquiries: [],
   inventoryRecords: [],
+  borrows: [],
 };
 export const gearWithOneInquiry: DatabaseGear = {
   id: 2,
@@ -130,6 +142,7 @@ export const gearWithOneInquiry: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
+  borrows: [],
 };
 export const gearWithTwoInquiries: DatabaseGear = {
   id: 3,
@@ -139,6 +152,7 @@ export const gearWithTwoInquiries: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
   festivalTaskInquiries: [taskInquiryFromFriday08hto09h],
   inventoryRecords: [],
+  borrows: [],
 };
 export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
   id: 4,
@@ -148,6 +162,7 @@ export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday08hto09hAnd10hto12h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
+  borrows: [],
 };
 export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
   id: 5,
@@ -157,6 +172,7 @@ export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
   festivalTaskInquiries: [],
   inventoryRecords: [inventoryRecordWith25Quantity],
+  borrows: [],
 };
 export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   id: 6,
@@ -169,6 +185,7 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
     inventoryRecordWith5Quantity,
     inventoryRecordWith25Quantity,
   ],
+  borrows: [],
 };
 export const consumableGearWithOneInquiry: DatabaseGear = {
   id: 7,
@@ -178,6 +195,7 @@ export const consumableGearWithOneInquiry: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
+  borrows: [],
 };
 export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseGear =
   {
@@ -188,6 +206,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseGear =
     festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
     festivalTaskInquiries: [taskInquiryFromFriday08hto09h],
     inventoryRecords: [inventoryRecordWith5Quantity],
+    borrows: [],
   };
 export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: DatabaseGear =
   {
@@ -200,7 +219,48 @@ export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: Databas
     ],
     festivalTaskInquiries: [],
     inventoryRecords: [],
+    borrows: [],
   };
+export const gearWithOneInventoryRecord: DatabaseGear = {
+  id: 10,
+  name: "gear with one inventory record",
+  slug: "gear-with-one-inventory-record",
+  isConsumable: false,
+  festivalActivityInquiries: [],
+  festivalTaskInquiries: [],
+  inventoryRecords: [inventoryRecordWith25Quantity],
+  borrows: [],
+};
+export const gearWithOneInventoryRecordAndOneBorrow: DatabaseGear = {
+  id: 11,
+  name: "gear with one inventory record and one borrow",
+  slug: "gear-with-one-inventory-record-and-one-borrow",
+  isConsumable: false,
+  festivalActivityInquiries: [],
+  festivalTaskInquiries: [],
+  inventoryRecords: [inventoryRecordWith25Quantity],
+  borrows: [borrowFromFriday08hto09h],
+};
+export const gearWithOneInquiryAndOneBorrow: DatabaseGear = {
+  id: 12,
+  name: "gear with one inquiry and one borrow",
+  slug: "gear-with-one-inquiry-and-one-borrow",
+  isConsumable: false,
+  festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
+  festivalTaskInquiries: [],
+  inventoryRecords: [],
+  borrows: [borrowFromFriday08hto09h],
+};
+export const consumableGearWithOneInquiryAndOneBorrow: DatabaseGear = {
+  id: 13,
+  name: "consumable gear with one inquiry and one borrow",
+  slug: "consumable-gear-with-one-inquiry-and-one-borrow",
+  isConsumable: true,
+  festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
+  festivalTaskInquiries: [],
+  inventoryRecords: [],
+  borrows: [borrowFromFriday08hto09h],
+};
 
 const emptyGearDetailsWithoutPeriod = {
   stock: 0,
