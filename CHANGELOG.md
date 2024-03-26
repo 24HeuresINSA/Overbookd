@@ -1,3 +1,17 @@
+## [2.24.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.0...v2.24.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* **orga-needs:** ignore deleted volunteer availabilities [#1727](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1727) ([ed1a2f1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed1a2f1014a2b596691a7d56fc750db2c8617d65))
+* **orga-needs:** ignore volunteers if ft is deleted [#1726](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1726) ([b6c74d1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b6c74d18ed82cc633ba2746a7fe02fbd838a5371))
+* **web:** rich editor style via header buttons. [#1710](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1710) ([db7e90f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/db7e90f36a9ab300a5400054181fb7d68bccb24a))
+
+
+### Pre-Features
+
+* **registration:** add volunteer note [#1656](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1656) ([1bce21e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1bce21e9685aff40d8f1ceb2bfd04fb2418c084a))
+
 ## [2.24.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.23.5...v2.24.0) (2024-03-25)
 
 
