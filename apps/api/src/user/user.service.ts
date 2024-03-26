@@ -35,6 +35,7 @@ import {
   SELECT_MY_USER_INFORMATION,
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
+  SELECT_USER_PERSONAL_DATA_WITH_NOTE,
   SELECT_VOLUNTEER_ASSIGNMENTS,
   hasPermission,
 } from "./user.query";
@@ -54,12 +55,20 @@ export class UserService {
     private forgetMember: ForgetMember,
   ) {}
 
-  async getById(id: number, author: JwtUtil): Promise<UserPersonalData | null> {
+  async getById(
+    id: number,
+    author?: JwtUtil,
+  ): Promise<UserPersonalData | null> {
+    const select =
+      author && author.can(MANAGE_USERS)
+        ? SELECT_USER_PERSONAL_DATA_WITH_NOTE
+        : SELECT_USER_PERSONAL_DATA;
+
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: SELECT_USER_PERSONAL_DATA,
+      select,
     });
-    return UserService.formatToPersonalData(author, user);
+    return UserService.formatToPersonalData(user);
   }
 
   async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
@@ -97,16 +106,16 @@ export class UserService {
     return UserService.formatToMyInformation(updatedUser);
   }
 
-  async getAll(author: JwtUtil): Promise<UserPersonalData[]> {
+  async getAll(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: { isDeleted: false },
       select: SELECT_USER_PERSONAL_DATA,
     });
-    return users.map((user) => UserService.formatToPersonalData(author, user));
+    return users.map(UserService.formatToPersonalData);
   }
 
-  async getVolunteers(author: JwtUtil): Promise<UserPersonalData[]> {
+  async getVolunteers(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
@@ -115,7 +124,7 @@ export class UserService {
       },
       select: SELECT_USER_PERSONAL_DATA,
     });
-    return users.map((user) => UserService.formatToPersonalData(author, user));
+    return users.map(UserService.formatToPersonalData);
   }
 
   getAdherents(): Promise<User[]> {
@@ -160,9 +169,7 @@ export class UserService {
     const teams = await this.prisma.team.findMany({
       select: { code: true },
       where: {
-        users: {
-          some: { userId },
-        },
+        users: { some: { userId } },
       },
     });
     return teams.map((t) => t.code);
@@ -171,8 +178,10 @@ export class UserService {
   async updateUser(
     targetId: number,
     userData: UserUpdateForm,
-    author: JwtUtil,
+    authorInformation: JwtPayload,
   ): Promise<UserPersonalData> {
+    const author = new JwtUtil(authorInformation);
+
     if (!this.canUpdateUser(author, targetId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
@@ -184,7 +193,7 @@ export class UserService {
       data: filteredPersonalData,
       where: { id: targetId },
     });
-    return UserService.formatToPersonalData(author, user);
+    return UserService.formatToPersonalData(user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -227,16 +236,11 @@ export class UserService {
   }
 
   static formatToPersonalData(
-    author: JwtUtil,
-    data: DatabaseUserPersonalData,
+    user: DatabaseUserPersonalData,
   ): UserPersonalData {
-    const { teams, note, ...userWithoutTeams } = data;
-
-    const noteData = author.can(MANAGE_USERS) ? { note } : {};
-
+    const { teams, ...userWithoutTeams } = user;
     return {
       ...userWithoutTeams,
-      ...noteData,
       teams: extractTeamCodes(teams),
     };
   }
@@ -272,10 +276,7 @@ export class UserService {
     userData: UserUpdateForm,
   ): UserUpdateForm {
     const charisma = author.can(MANAGE_USERS) ? userData.charisma : undefined;
-    return {
-      ...userData,
-      charisma,
-    };
+    return { ...userData, charisma };
   }
 }
 

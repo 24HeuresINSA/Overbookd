@@ -63,7 +63,7 @@ export class TeamService {
     teams: string[],
     author: JwtUtil,
   ): Promise<string[]> {
-    await this.checkUserExistence(userId, author);
+    await this.checkUserExistence(userId);
     if (!this.canManageTeams(teams, author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
@@ -96,7 +96,7 @@ export class TeamService {
     team: string,
     author: JwtUtil,
   ): Promise<void> {
-    await this.checkUserExistence(userId, author);
+    await this.checkUserExistence(userId);
     if (!this.canManageTeams([team], author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
@@ -140,8 +140,8 @@ export class TeamService {
     return teamsFound.map((team) => team.code);
   }
 
-  private async checkUserExistence(id: number, author: JwtUtil): Promise<void> {
-    const user = await this.userService.getById(id, author);
+  private async checkUserExistence(id: number): Promise<void> {
+    const user = await this.userService.getById(id);
     if (!user) {
       throw new NotFoundException("Utilisateur inconnu");
     }

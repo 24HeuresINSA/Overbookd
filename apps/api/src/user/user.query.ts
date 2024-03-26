@@ -68,6 +68,11 @@ export const SELECT_USER_PERSONAL_DATA = {
   ...SELECT_USER_TEAMS,
 };
 
+export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
+  ...SELECT_USER_PERSONAL_DATA,
+  note: true,
+};
+
 export const SELECT_USERNAME_WITH_ID = {
   id: true,
   firstname: true,
