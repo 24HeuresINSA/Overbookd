@@ -44,6 +44,8 @@ const SELECT_ASSIGNED_VOLUNTEERS = {
   },
 };
 
+const IS_NOT_DELETED_FT = { ft: { isDeleted: false } };
+
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
 };
@@ -144,6 +146,7 @@ export class OrgaNeedsService {
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
         ...this.hasTeamCondition(orgaNeedsRequest.teams),
+        ...IS_NOT_DELETED_FT,
       },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
