@@ -77,7 +77,7 @@ export class RegistrationService {
     const isValidRegistration = this.checkInvitationValidity(token);
 
     if (!isValidRegistration) {
-      throw new BadRequestException("Le lien d'invitation a exipré");
+      throw new BadRequestException("Le lien d'invitation a expiré");
     }
 
     const membership = this.getMembership(token);
