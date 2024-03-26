@@ -94,7 +94,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: "The user charisma points",
+    description: "Notes from 'humain' members about user",
   })
   @IsOptional()
   @IsString()

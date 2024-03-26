@@ -57,10 +57,10 @@ export class UserService {
 
   async getById(
     id: number,
-    author?: JwtUtil,
+    currentUser?: JwtUtil,
   ): Promise<UserPersonalData | null> {
     const select =
-      author && author.can(MANAGE_USERS)
+      currentUser && currentUser.can(MANAGE_USERS)
         ? SELECT_USER_PERSONAL_DATA_WITH_NOTE
         : SELECT_USER_PERSONAL_DATA;
 
