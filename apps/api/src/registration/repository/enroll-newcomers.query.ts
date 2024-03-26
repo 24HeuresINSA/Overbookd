@@ -18,6 +18,7 @@ export const SELECT_VOLUNTEER = {
   phone: true,
   birthdate: true,
   comment: true,
+  note: true,
 };
 
 export const NOT_VOLUNTEER_YET = {
@@ -48,6 +49,7 @@ export type DatabaseEnrollableVolunteer = DatabaseEnrollableStaff & {
   phone: string;
   comment: string | null;
   birthdate: Date;
+  note: string | null;
 };
 
 export type DatabaseTeamCode = { team: { code: string } };

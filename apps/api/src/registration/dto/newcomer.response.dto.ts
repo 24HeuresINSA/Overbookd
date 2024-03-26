@@ -66,4 +66,7 @@ export class EnrollableVolunteerResponseDto
 
   @ApiProperty({ required: true, type: Date })
   birthdate: Date;
+
+  @ApiProperty({ required: false })
+  note?: string;
 }

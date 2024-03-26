@@ -82,6 +82,7 @@ function formatToEnrollableVolunteer(
     mobilePhone: volunteer.phone,
     comment: volunteer.comment === null ? undefined : volunteer.comment,
     birthdate: volunteer.birthdate,
+    note: volunteer.note === null ? undefined : volunteer.note,
   };
 }
 

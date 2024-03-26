@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import {
   JwtPayload,
   JwtUtil,
@@ -35,6 +35,7 @@ import {
   SELECT_MY_USER_INFORMATION,
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
+  SELECT_USER_PERSONAL_DATA_WITH_NOTE,
   SELECT_VOLUNTEER_ASSIGNMENTS,
   hasPermission,
 } from "./user.query";
@@ -53,12 +54,19 @@ export class UserService {
     private prisma: PrismaService,
     private forgetMember: ForgetMember,
   ) {}
-  private logger = new Logger("UserService");
 
-  async getById(id: number): Promise<UserPersonalData | null> {
+  async getById(
+    id: number,
+    currentUser?: JwtUtil,
+  ): Promise<UserPersonalData | null> {
+    const select =
+      currentUser && currentUser.can(MANAGE_USERS)
+        ? SELECT_USER_PERSONAL_DATA_WITH_NOTE
+        : SELECT_USER_PERSONAL_DATA;
+
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: SELECT_USER_PERSONAL_DATA,
+      select,
     });
     return UserService.formatToPersonalData(user);
   }
@@ -161,9 +169,7 @@ export class UserService {
     const teams = await this.prisma.team.findMany({
       select: { code: true },
       where: {
-        users: {
-          some: { userId },
-        },
+        users: { some: { userId } },
       },
     });
     return teams.map((t) => t.code);
@@ -270,10 +276,7 @@ export class UserService {
     userData: UserUpdateForm,
   ): UserUpdateForm {
     const charisma = author.can(MANAGE_USERS) ? userData.charisma : undefined;
-    return {
-      ...userData,
-      charisma,
-    };
+    return { ...userData, charisma };
   }
 }
 

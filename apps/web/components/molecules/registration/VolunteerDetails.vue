@@ -9,6 +9,13 @@
         rows="20"
         readonly
       ></v-textarea>
+      <v-textarea
+        :value="volunteer.note"
+        class="comment-input"
+        label="Note des humains"
+        rows="5"
+        @change="updateVolunteerNote"
+      ></v-textarea>
     </div>
     <div class="contact-and-availabilities">
       <div class="contact">
@@ -80,6 +87,12 @@ export default defineComponent({
         },
       );
       this.$accessor.registration.fetchVolunteerInformation(volunteerId);
+    },
+    async updateVolunteerNote(canBeEmpty: string) {
+      await this.$accessor.user.updateUser({
+        id: this.volunteer.id,
+        user: { note: canBeEmpty.trim() || null },
+      });
     },
   },
 });

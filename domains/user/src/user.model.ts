@@ -24,6 +24,7 @@ export type UserPersonalData = User & {
   comment?: string | null;
   charisma: number;
   teams: string[];
+  note?: string | null;
 };
 
 export type MyUserInformation = UserPersonalData & {

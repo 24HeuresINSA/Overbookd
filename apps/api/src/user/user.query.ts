@@ -16,6 +16,7 @@ const SELECT_USER = {
   comment: true,
   profilePicture: true,
   charisma: true,
+  note: true,
 };
 
 export const SELECT_USER_TEAMS = {
@@ -65,6 +66,11 @@ export const SELECT_MY_USER_INFORMATION = {
 export const SELECT_USER_PERSONAL_DATA = {
   ...SELECT_USER,
   ...SELECT_USER_TEAMS,
+};
+
+export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
+  ...SELECT_USER_PERSONAL_DATA,
+  note: true,
 };
 
 export const SELECT_USERNAME_WITH_ID = {

@@ -259,8 +259,9 @@ export class UserController {
   })
   getUserById(
     @Param("id", ParseIntPipe) id: number,
+    @RequestDecorator() { user }: RequestWithUserPayload,
   ): Promise<UserPersonalData> {
-    return this.userService.getById(id);
+    return this.userService.getById(id, new JwtUtil(user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -345,7 +346,7 @@ export class UserController {
   private async formatPlanning(volunteerId: number, format: string) {
     const [tasks, volunteer] = await Promise.all([
       this.planningService.getVolunteerPlanning(volunteerId),
-      this.getUserById(volunteerId),
+      this.userService.getById(volunteerId),
     ]);
     const renderStrategy = PlanningRenderStrategy.get(format);
     return renderStrategy.render(tasks, {

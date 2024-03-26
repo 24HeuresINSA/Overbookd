@@ -16,4 +16,5 @@ export type EnrollableVolunteer = EnrollableStaff & {
   availabilities: IProvidePeriod[];
   comment?: string;
   birthdate: Date;
+  note?: string;
 };
