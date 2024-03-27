@@ -5,7 +5,7 @@ const SELECT_BASE_GEAR = {
   slug: true,
 };
 
-const SELECT_GEAR_STOCK = {
+const SELECT_INVENTORY = {
   inventoryRecords: {
     select: {
       quantity: true,
@@ -58,9 +58,26 @@ const SELECT_TASK_GEAR_INQUIRIES = {
   },
 };
 
+const SELECT_BORROWS = {
+  borrows: {
+    select: {
+      quantity: true,
+      borrow: {
+        select: {
+          id: true,
+          lender: true,
+          availableOn: true,
+          unavailableOn: true,
+        },
+      },
+    },
+  },
+};
+
 export const SELECT_GEAR = {
   ...SELECT_BASE_GEAR,
-  ...SELECT_GEAR_STOCK,
+  ...SELECT_INVENTORY,
   ...SELECT_ACTIVITY_GEAR_INQUIRIES,
   ...SELECT_TASK_GEAR_INQUIRIES,
+  ...SELECT_BORROWS,
 };

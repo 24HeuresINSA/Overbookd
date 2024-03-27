@@ -43,6 +43,21 @@ type WithDatabaseInquiries = {
   festivalTaskInquiries: DatabaseTaskInquiry[];
 };
 
+export type DatabaseBorrow = {
+  quantity: number;
+  borrow: {
+    id: number;
+    lender: string;
+    availableOn: Date;
+    unavailableOn: Date;
+  };
+};
+
+type WithDatabaseBorrows = {
+  borrows: DatabaseBorrow[];
+};
+
 export type DatabaseGear = BaseDatabaseGear &
   WithDatabaseInventory &
-  WithDatabaseInquiries;
+  WithDatabaseInquiries &
+  WithDatabaseBorrows;

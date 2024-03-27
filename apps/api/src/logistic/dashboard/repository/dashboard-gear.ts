@@ -35,23 +35,37 @@ export class DashboardGear {
     const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
+
     const taskTimeWindows = gear.festivalTaskInquiries
       .flatMap((inquiry) => inquiry.ft.mobilizations)
       .map((period) => Period.init(period));
-    const inquiryTimeWindows = [...activityTimeWindows, ...taskTimeWindows];
 
-    const mergedTimeWindows = gear.isConsumable
-      ? inquiryTimeWindows
-      : Period.mergeContiguous(inquiryTimeWindows);
+    const borrowTimeWindows = gear.borrows.map(({ borrow }) => {
+      const { availableOn: start, unavailableOn: end } = borrow;
+      return Period.init({ start, end });
+    });
 
-    const discrepancies = mergedTimeWindows.map((timeWindow) => {
+    const timeWindows = [
+      ...activityTimeWindows,
+      ...taskTimeWindows,
+      ...borrowTimeWindows,
+    ];
+    const mergedTimeWindows = Period.mergeContiguous(timeWindows);
+
+    const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) => {
       return DashboardGear.computeStockDiscrepancyByTimeWindowOn(
         gear,
         timeWindow,
       );
     });
 
-    return discrepancies.length > 0 ? Math.min(...discrepancies) : 0;
+    const constantStockQuantity = this.findInventoryQuantity(gear);
+    const minDiscrepancyFromTimeWindows =
+      discrepanciesFromTimeWindows.length > 0
+        ? Math.min(...discrepanciesFromTimeWindows)
+        : constantStockQuantity;
+
+    return Math.min(constantStockQuantity, minDiscrepancyFromTimeWindows);
   }
 
   private static periodDetails(gear: DatabaseGear, period: IProvidePeriod) {
@@ -174,9 +188,9 @@ export class DashboardGear {
     const period = Period.init(timeWindow);
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
-    const discrepancies = periods.map(({ start }) => {
-      return DashboardGear.computeStockDiscrepancyByDateOn(gear, start);
-    });
+    const discrepancies = periods.map(({ start }) =>
+      DashboardGear.computeStockDiscrepancyByDateOn(gear, start),
+    );
     return Math.min(...discrepancies);
   }
 
@@ -184,7 +198,7 @@ export class DashboardGear {
     gear: DatabaseGear,
     date: Date,
   ) {
-    const stock = DashboardGear.findStockByDate(gear);
+    const stock = DashboardGear.findStockByDate(gear, date);
     const { inquiry } = gear.isConsumable
       ? DashboardGear.computeConsumableInquiries(gear, date)
       : DashboardGear.computeGearInquiries(gear, date);
@@ -194,9 +208,24 @@ export class DashboardGear {
     return stock - (inquiry + consumed);
   }
 
-  private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
-    // Date will be used in for purchases & borrows
-    return DashboardGear.findInventoryQuantity(gear);
+  private static findStockByDate(gear: DatabaseGear, date: Date): number {
+    const inventory = DashboardGear.findInventoryQuantity(gear);
+    const borrowed = DashboardGear.findBorrowedQuantityByDate(gear, date);
+    return inventory + borrowed;
+  }
+
+  private static findBorrowedQuantityByDate(
+    gear: DatabaseGear,
+    date: Date,
+  ): number {
+    const borrows = gear.borrows.filter(({ borrow }) => {
+      const { availableOn: start, unavailableOn: end } = borrow;
+      const period = Period.init({ start, end });
+      return gear.isConsumable
+        ? +borrow.availableOn < +date
+        : period.isIncluding(date);
+    });
+    return sumQuantity(borrows);
   }
 
   private static findInventoryQuantity(gear: DatabaseGear): number {
