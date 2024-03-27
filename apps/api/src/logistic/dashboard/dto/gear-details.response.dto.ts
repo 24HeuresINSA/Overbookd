@@ -65,9 +65,6 @@ class BaseGearDetailsResponseDto implements BaseGearDetails {
   @ApiProperty({ type: Number })
   inventory: number;
 
-  @ApiProperty({ type: Number })
-  stockDiscrepancy: number;
-
   @ApiProperty({
     type: BorrowResponseDto,
     isArray: true,
