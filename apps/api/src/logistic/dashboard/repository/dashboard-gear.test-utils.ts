@@ -1,4 +1,8 @@
-import { ConsumableGearDetails, GearDetails } from "@overbookd/http";
+import {
+  ConsumableGearDetails,
+  GearBorrow,
+  GearDetails,
+} from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseActivityInquiry,
@@ -6,7 +10,6 @@ import {
   DatabaseTaskInquiry,
   DatabaseBorrow,
 } from "./dashboard.model";
-import { GearBorrow } from "@overbookd/http/src/logistic/dashboard.model";
 
 const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),
