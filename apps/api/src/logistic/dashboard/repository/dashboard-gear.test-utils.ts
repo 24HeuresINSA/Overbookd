@@ -516,8 +516,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
 const borrowFromFriday08hto09h: GearBorrow = {
   id: databaseBorrowFromFriday08hto09h.borrow.id,
   lender: databaseBorrowFromFriday08hto09h.borrow.lender,
-  start: databaseBorrowFromFriday08hto09h.borrow.availableOn,
-  end: databaseBorrowFromFriday08hto09h.borrow.unavailableOn,
   quantity: databaseBorrowFromFriday08hto09h.quantity,
 };
 

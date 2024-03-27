@@ -1,6 +1,6 @@
 import { DatabaseGear } from "./dashboard.model";
 import { Period } from "@overbookd/period";
-import { sumQuantity } from "./dashboard-gear";
+import { sumQuantity } from "./sum-quantity";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 import { GearBorrow } from "@overbookd/http";
 
@@ -16,13 +16,7 @@ export class DashboardGearStock {
         return period.isIncluding(date);
       })
       .map(({ borrow, quantity }) => {
-        return {
-          id: borrow.id,
-          lender: borrow.lender,
-          start: borrow.availableOn,
-          end: borrow.unavailableOn,
-          quantity,
-        };
+        return { id: borrow.id, lender: borrow.lender, quantity };
       });
     const borrowed = sumQuantity(borrows);
     const stock = inventory + borrowed;
@@ -47,15 +41,14 @@ export class DashboardGearStock {
   private static findBorrowsGivingConsumableAt(
     borrows: DatabaseGear["borrows"],
     date: Date,
-  ) {
+  ): GearBorrow[] {
     return borrows.reduce((borrows, { borrow, quantity }) => {
-      const { availableOn: start, unavailableOn: end } = borrow;
-      const isStartingAt = +start === +date;
+      const isStartingAt = +borrow.availableOn === +date;
 
       if (!isStartingAt) return borrows;
 
       const { id, lender } = borrow;
-      const borrowDetails = { id, lender, start, end, quantity };
+      const borrowDetails = { id, lender, quantity };
       return [...borrows, borrowDetails];
     }, []);
   }

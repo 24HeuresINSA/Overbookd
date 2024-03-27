@@ -5,7 +5,7 @@ import {
   DatabaseTaskInquiry,
 } from "./dashboard.model";
 import { Period } from "@overbookd/period";
-import { sumQuantity } from "./dashboard-gear";
+import { sumQuantity } from "./sum-quantity";
 
 export class DashboardGearInquiry {
   private constructor() {}
