@@ -34,6 +34,7 @@ export type {
   Inquiry,
   BaseGearDetails,
   ConsumableGearDetails,
+  GearBorrow,
   GearDetails,
   GearPreview,
   GearWithDetails,
