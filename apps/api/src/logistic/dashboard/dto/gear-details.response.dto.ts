@@ -27,12 +27,6 @@ class BorrowResponseDto implements GearBorrow {
   @ApiProperty({ type: String })
   lender: GearBorrow["lender"];
 
-  @ApiProperty({ type: Date })
-  start: GearBorrow["start"];
-
-  @ApiProperty({ type: Date })
-  end: GearBorrow["end"];
-
   @ApiProperty({ type: Number })
   quantity: GearBorrow["quantity"];
 }

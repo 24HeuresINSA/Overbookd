@@ -18,8 +18,6 @@ export type Inquiry = {
 export type GearBorrow = {
   id: Borrow["id"];
   lender: Borrow["lender"];
-  start: Borrow["availableOn"];
-  end: Borrow["unavailableOn"];
   quantity: number;
 };
 
