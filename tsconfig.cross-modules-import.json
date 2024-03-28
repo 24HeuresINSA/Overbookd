@@ -4,7 +4,7 @@
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
-      "@overbookd/permission": ["./domains/permission/src"],
+      "@overbookd/permission": ["./constants/permission/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"]
     }
   }

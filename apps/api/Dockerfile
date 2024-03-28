@@ -19,6 +19,9 @@ COPY libraries/ ./
 WORKDIR /overbookd/domains
 COPY domains/ ./
 
+WORKDIR /overbookd/constants
+COPY constants/ ./
+
 WORKDIR /overbookd/utils
 COPY utils/ ./
 
@@ -62,6 +65,7 @@ COPY --chown=node:node --from=builder /overbookd/apps/api/package.json /overbook
 COPY --chown=node:node --from=builder /overbookd/apps/api/prisma /overbookd/apps/api/prisma
 COPY --chown=node:node --from=builder /overbookd/apps/api/node_modules /overbookd/apps/api/node_modules
 COPY --chown=node:node --from=builder /overbookd/libraries /overbookd/libraries
+COPY --chown=node:node --from=builder /overbookd/constants /overbookd/constants
 COPY --chown=node:node --from=builder /overbookd/domains /overbookd/domains
 COPY --chown=node:node --from=builder /overbookd/utils /overbookd/utils
 
