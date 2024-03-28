@@ -18,6 +18,7 @@
     "project": [
       "./apps/*/tsconfig.json",
       "!./apps/web/tsconfig.json",
+      "./constants/*/tsconfig.json",
       "./domains/*/tsconfig.json",
       "./libraries/*/tsconfig.json",
       "./utils/*/tsconfig.json",

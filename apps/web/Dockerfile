@@ -19,6 +19,9 @@ COPY libraries/ ./
 WORKDIR /overbookd/domains
 COPY domains/ ./
 
+WORKDIR /overbookd/constants
+COPY constants/ ./
+
 WORKDIR /overbookd/utils
 COPY utils/ ./
 

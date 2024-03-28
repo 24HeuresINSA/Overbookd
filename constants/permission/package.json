@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "domains/permission"
+    "directory": "constants/permission"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",

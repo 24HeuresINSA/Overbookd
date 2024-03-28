@@ -55,3 +55,15 @@ overbookd/domains_build:
     - when: never
   variables:
     PNPM_WORKSPACE: "{domains/**}"
+
+overbookd/constants_build:
+  extends: .build
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - constants/**/*
+        - pnpm-lock.yaml
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "{constants/**}"

@@ -22,12 +22,10 @@ gemnasium-dependency_scanning:
   variables:
     DS_MAX_DEPTH: 5
 
-
 gemnasium-python-dependency_scanning:
   <<: *security
   variables:
     DS_MAX_DEPTH: 5
-
 
 nodejs-scan-sast:
   <<: *security
@@ -55,6 +53,7 @@ overbookd/format:
         - apps/**/*
         - libraries/**/*
         - domains/**/*
+        - constants/**/*
     - when: never
   script:
     - pnpm run format
@@ -72,6 +71,7 @@ overbookd/prune:
         - apps/**/*
         - libraries/**/*
         - domains/**/*
+        - constants/**/*
     - when: never
   before_script:
     - corepack enable

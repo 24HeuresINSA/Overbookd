@@ -53,8 +53,8 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Group all dependencies from the domains directory",
-      "matchFileNames": ["domains/**"],
+      "description": "Group all dependencies from the domains or constants directories",
+      "matchFileNames": ["domains/**", "constants/**"],
       "addLabels": ["Scope::Domain"],
       "groupName": "Domain dependencies",
       "groupSlug": "domain-dependencies",
