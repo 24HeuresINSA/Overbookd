@@ -1,7 +1,7 @@
 import { PlanningTask } from "@overbookd/http";
-import { arePeriodsOverlapping } from "../../utils/period";
 import { TaskRepository } from "./planning";
 import { JsonStoredTask } from "./storedTask";
+import { Period } from "@overbookd/period";
 
 export class InMemoryTaskRepository implements TaskRepository {
   constructor(private tasks: JsonStoredTask[]) {}
@@ -41,7 +41,10 @@ export class InMemoryTaskRepository implements TaskRepository {
 }
 
 function isSimultaneousTask(task: JsonStoredTask) {
-  return function ({ period: otherPeriod, id }) {
-    return arePeriodsOverlapping([task.period, otherPeriod]) && task.id === id;
+  return function ({ period: otherPeriod, id }: JsonStoredTask) {
+    const taskPeriod = Period.init(task.period);
+    const otherTaskPeriod = Period.init(otherPeriod);
+    const isOverlapping = taskPeriod.isOverlapping(otherTaskPeriod);
+    return isOverlapping && task.id === id;
   };
 }

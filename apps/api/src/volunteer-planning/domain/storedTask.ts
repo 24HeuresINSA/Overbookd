@@ -1,7 +1,6 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { removeItemAtIndex } from "@overbookd/list";
 import { Assignment, Task, Volunteer } from "./task.model";
-import { arePeriodsOverlapping } from "../../utils/period";
 
 type Assignee = { period: IProvidePeriod; id: number; name: string };
 
@@ -64,9 +63,9 @@ export class StoredTask {
     return storedTask.id === this.storedTask.id;
   }
 
-  private findAssignedVolunteers(period: IProvidePeriod): Volunteer[] {
+  private findAssignedVolunteers(period: Period): Volunteer[] {
     const assignees = this.storedTask.assignees.filter((assignee) =>
-      arePeriodsOverlapping([period, assignee.period]),
+      period.isOverlapping(Period.init(assignee.period)),
     );
     return this.extractUniqueVolunteers(assignees);
   }
