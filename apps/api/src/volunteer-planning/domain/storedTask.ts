@@ -18,11 +18,11 @@ export class StoredTask {
   get assignments(): Assignment[] {
     const uniquePeriods = this.extractUniquePeriods();
 
-    const splitedPeriods = this.splitOverlapingPeriods(uniquePeriods).filter(
+    const splitPeriods = this.splitOverlappingPeriods(uniquePeriods).filter(
       (period) => this.period.includes(period),
     );
 
-    return splitedPeriods.reduce((assignments, period) => {
+    return splitPeriods.reduce((assignments, period) => {
       const volunteers = this.findAssignedVolunteers(period);
       if (volunteers.length === 0) return assignments;
       return [...assignments, { period, volunteers }];
@@ -82,34 +82,34 @@ export class StoredTask {
     return allPeriods.reduce(uniquePeriodReducer, []);
   }
 
-  private splitOverlapingPeriods(periods: Period[]): Period[] {
-    return periods.reduce((splitedPeriods: Period[], period) => {
-      return this.splitOverLapingPeriodsReducer(splitedPeriods, period);
+  private splitOverlappingPeriods(periods: Period[]): Period[] {
+    return periods.reduce((splitPeriods: Period[], period) => {
+      return this.splitOverlappingPeriodsReducer(splitPeriods, period);
     }, []);
   }
 
-  private splitOverLapingPeriodsReducer(
-    splitedPeriods: Period[],
+  private splitOverlappingPeriodsReducer(
+    periods: Period[],
     period: Period,
   ): Period[] {
-    const overlapedPeriodIndex = splitedPeriods.findIndex((previousPeriod) =>
+    const overlapedPeriodIndex = periods.findIndex((previousPeriod) =>
       period.isOverlapping(previousPeriod),
     );
-    const overlapedPeriod = splitedPeriods.at(overlapedPeriodIndex);
+    const overlapedPeriod = periods.at(overlapedPeriodIndex);
     if (overlapedPeriodIndex === -1 || !overlapedPeriod) {
-      return [...splitedPeriods, period];
+      return [...periods, period];
     }
 
-    const splittedPeriods = overlapedPeriod.splitOverlapping(period);
+    const splitPeriods = overlapedPeriod.splitOverlapping(period);
 
-    const nonOverlapingPeriods = removeItemAtIndex(
-      splitedPeriods,
+    const nonOverlappingPeriods = removeItemAtIndex(
+      periods,
       overlapedPeriodIndex,
     );
 
-    const updatedSplitedPeriods = [...nonOverlapingPeriods, ...splittedPeriods];
+    const updatedPeriods = [...nonOverlappingPeriods, ...splitPeriods];
 
-    return this.splitOverlapingPeriods(updatedSplitedPeriods);
+    return this.splitOverlappingPeriods(updatedPeriods);
   }
 }
 

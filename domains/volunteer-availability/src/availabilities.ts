@@ -41,8 +41,8 @@ export class Availabilities {
         const isPeriodIncluded = period.isOverlapping(availability);
         if (!isPeriodIncluded) return [...availabilities, availability];
 
-        const splitedPeriods = availability.substract(period);
-        return [...availabilities, ...splitedPeriods];
+        const remainingPeriods = availability.substract(period);
+        return [...availabilities, ...remainingPeriods];
       },
       [],
     );

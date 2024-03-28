@@ -27,8 +27,8 @@ export class PeriodOrchestrator {
       const isPeriodIncluded = period.isOverlapping(currentPeriod);
       if (!isPeriodIncluded) return [...periods, currentPeriod];
 
-      const splitedPeriods = currentPeriod.substract(period);
-      return [...periods, ...splitedPeriods];
+      const remainingPeriods = currentPeriod.substract(period);
+      return [...periods, ...remainingPeriods];
     }, [] as Period[]);
   }
 
