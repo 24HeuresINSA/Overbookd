@@ -1,12 +1,6 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { removeItemAtIndex } from "@overbookd/list";
 import { Assignment, Task, Volunteer } from "./task.model";
-import {
-  arePeriodsOverlapping,
-  areSamePeriods,
-  includesOtherPeriod,
-} from "../../utils/period";
-import { getPeriodDuration } from "../../utils/duration";
 
 type Assignee = { period: IProvidePeriod; id: number; name: string };
 
@@ -21,22 +15,14 @@ export type JsonStoredTask = Pick<
 export class StoredTask {
   constructor(private readonly storedTask: JsonStoredTask) {}
 
-  get start(): Date {
-    return this.storedTask.period.start;
-  }
-
-  get end(): Date {
-    return this.storedTask.period.end;
-  }
-
   get assignments(): Assignment[] {
     const uniquePeriods = this.extractUniquePeriods();
 
-    const splitedPeriods = this.splitOverlapingPeriods(uniquePeriods).filter(
-      (period) => includesOtherPeriod(this.period)(period),
+    const splitPeriods = this.splitOverlappingPeriods(uniquePeriods).filter(
+      (period) => this.period.includes(period),
     );
 
-    return splitedPeriods.reduce((assignments, period) => {
+    return splitPeriods.reduce((assignments, period) => {
       const volunteers = this.findAssignedVolunteers(period);
       if (volunteers.length === 0) return assignments;
       return [...assignments, { period, volunteers }];
@@ -44,19 +30,12 @@ export class StoredTask {
   }
 
   merge(task: StoredTask): StoredTask {
-    const startTimestamp = Math.min(this.start.getTime(), task.start.getTime());
-    const endTimestamp = Math.max(this.end.getTime(), task.end.getTime());
-    const start = new Date(startTimestamp);
-    const end = new Date(endTimestamp);
+    const period = this.period.mergeWith(task.period);
     const assignees = [
       ...this.storedTask.assignees,
       ...task.storedTask.assignees,
     ];
-    return new StoredTask({
-      ...this.storedTask,
-      period: { start, end },
-      assignees,
-    });
+    return new StoredTask({ ...this.storedTask, period, assignees });
   }
 
   toTask(): Task {
@@ -71,37 +50,22 @@ export class StoredTask {
   }
 
   canMergeWith(task: StoredTask): boolean {
-    return (
-      task.isSameTask(this.storedTask) &&
-      (this.isFollowedBy(task) || this.isOverlapedBy(task))
-    );
+    const isSameTask = task.isSameTask(this.storedTask);
+    const hasMergeablePeriods = this.period.isMergableWith(task.period);
+    return isSameTask && hasMergeablePeriods;
   }
 
-  private get period(): IProvidePeriod {
-    return {
-      start: this.start,
-      end: this.end,
-    };
-  }
-
-  private isOverlapedBy(task: StoredTask) {
-    return (
-      this.start.getTime() < task.end.getTime() &&
-      this.end.getTime() > task.start.getTime()
-    );
+  private get period(): Period {
+    return Period.init(this.storedTask.period);
   }
 
   private isSameTask(storedTask: JsonStoredTask) {
     return storedTask.id === this.storedTask.id;
   }
 
-  private isFollowedBy(task: StoredTask): boolean {
-    return this.end.getTime() === task.start.getTime();
-  }
-
-  private findAssignedVolunteers(period: IProvidePeriod): Volunteer[] {
+  private findAssignedVolunteers(period: Period): Volunteer[] {
     const assignees = this.storedTask.assignees.filter((assignee) =>
-      arePeriodsOverlapping([period, assignee.period]),
+      period.isOverlapping(Period.init(assignee.period)),
     );
     return this.extractUniqueVolunteers(assignees);
   }
@@ -110,60 +74,42 @@ export class StoredTask {
     return assignees.reduce(uniqueVolunteerReducer, []);
   }
 
-  private extractUniquePeriods(): IProvidePeriod[] {
-    const allPeriods = [...this.storedTask.assignees, { period: this.period }];
+  private extractUniquePeriods(): Period[] {
+    const allPeriods = [
+      ...this.storedTask.assignees.map(({ period }) => Period.init(period)),
+      this.period,
+    ];
     return allPeriods.reduce(uniquePeriodReducer, []);
   }
 
-  private splitOverlapingPeriods(periods: IProvidePeriod[]): IProvidePeriod[] {
-    return periods.reduce((splitedPeriods, period) => {
-      return this.splitOverLapingPeriodsReducer(splitedPeriods, period);
+  private splitOverlappingPeriods(periods: Period[]): Period[] {
+    return periods.reduce((splitPeriods: Period[], period) => {
+      return this.splitOverlappingPeriodsReducer(splitPeriods, period);
     }, []);
   }
 
-  private splitOverLapingPeriodsReducer(
-    splitedPeriods: IProvidePeriod[],
-    period: IProvidePeriod,
-  ): IProvidePeriod[] {
-    const overlapedPeriodIndex = splitedPeriods.findIndex((p) =>
-      arePeriodsOverlapping([period, p]),
+  private splitOverlappingPeriodsReducer(
+    periods: Period[],
+    period: Period,
+  ): Period[] {
+    const overlapedPeriodIndex = periods.findIndex((previousPeriod) =>
+      period.isOverlapping(previousPeriod),
     );
-    if (overlapedPeriodIndex === -1) return [...splitedPeriods, period];
+    const overlapedPeriod = periods.at(overlapedPeriodIndex);
+    if (overlapedPeriodIndex === -1 || !overlapedPeriod) {
+      return [...periods, period];
+    }
 
-    const overlapedPeriod = splitedPeriods.at(overlapedPeriodIndex);
-    if (!overlapedPeriod) return [...splitedPeriods, period];
+    const splitPeriods = overlapedPeriod.splitOverlapping(period);
 
-    const toAddPeriods = this.splitIntoPeriods(overlapedPeriod, period);
-
-    const nonOverlapingPeriods = removeItemAtIndex(
-      splitedPeriods,
+    const nonOverlappingPeriods = removeItemAtIndex(
+      periods,
       overlapedPeriodIndex,
     );
 
-    const updatedSplitedPeriods = [...nonOverlapingPeriods, ...toAddPeriods];
+    const updatedPeriods = [...nonOverlappingPeriods, ...splitPeriods];
 
-    return this.splitOverlapingPeriods(updatedSplitedPeriods);
-  }
-
-  private splitIntoPeriods(
-    overlapedPeriod: IProvidePeriod,
-    period: IProvidePeriod,
-  ): IProvidePeriod[] {
-    const [firstStart, firstEnd, sencondStart, secondEnd] = [
-      overlapedPeriod.start,
-      overlapedPeriod.end,
-      period.start,
-      period.end,
-    ].sort();
-
-    const firstPeriod = { start: firstStart, end: firstEnd };
-    const secondPeriod = { start: firstEnd, end: sencondStart };
-    const thirdPeriod = { start: sencondStart, end: secondEnd };
-
-    const toAddPeriods = [firstPeriod, secondPeriod, thirdPeriod].filter(
-      (period) => getPeriodDuration(period) > 0,
-    );
-    return toAddPeriods;
+    return this.splitOverlappingPeriods(updatedPeriods);
   }
 }
 
@@ -179,13 +125,8 @@ function uniqueVolunteerReducer(
   return [...volunteers, { id, name }];
 }
 
-function uniquePeriodReducer(
-  periods: IProvidePeriod[],
-  { period }: { period: IProvidePeriod },
-): IProvidePeriod[] {
-  const existingPeriodIndex = periods.findIndex((p) =>
-    areSamePeriods([period, p]),
-  );
+function uniquePeriodReducer(periods: Period[], period: Period): Period[] {
+  const existingPeriodIndex = periods.findIndex((p) => period.equals(p));
   if (existingPeriodIndex !== -1) return periods;
   return [...periods, period];
 }
