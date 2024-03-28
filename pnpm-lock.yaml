@@ -449,6 +449,8 @@ importers:
         specifier: 4.47.0
         version: 4.47.0
 
+  constants/permission: {}
+
   domains/configuration: {}
 
   domains/contribution:
