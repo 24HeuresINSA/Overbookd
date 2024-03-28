@@ -70,7 +70,7 @@ export class Period {
     return happenAfterStart && happenBeforeEnd;
   }
 
-  isFollowedBy(otherPeriod: Period): boolean {
+  isMergableWith(otherPeriod: Period): boolean {
     return (
       this.start.getTime() <= otherPeriod.end.getTime() &&
       this.end.getTime() >= otherPeriod.start.getTime()
@@ -87,7 +87,24 @@ export class Period {
     return new Period(start, end);
   }
 
-  splitFrom(otherPeriod: IProvidePeriod): Period[] {
+  splitOverlapping(otherPeriod: Period): Period[] {
+    const [firstStart, firstEnd, sencondStart, secondEnd] = [
+      this.start,
+      this.end,
+      otherPeriod.start,
+      otherPeriod.end,
+    ].sort();
+
+    const firstPeriod = Period.init({ start: firstStart, end: firstEnd });
+    const secondPeriod = Period.init({ start: firstEnd, end: sencondStart });
+    const thirdPeriod = Period.init({ start: sencondStart, end: secondEnd });
+
+    return [firstPeriod, secondPeriod, thirdPeriod].filter(
+      (period) => period.hasDuration,
+    );
+  }
+
+  substract(otherPeriod: IProvidePeriod): Period[] {
     const pastPeriod = Period.init({
       start: this.start,
       end: otherPeriod.start,
@@ -100,6 +117,13 @@ export class Period {
     return [pastPeriod, futurPeriod].filter((period) => period.hasDuration);
   }
 
+  equals(otherPeriod: IProvidePeriod): boolean {
+    const startAtSameTime =
+      this.start.getTime() === otherPeriod.start.getTime();
+    const endAtSameTime = this.end.getTime() === otherPeriod.end.getTime();
+    return startAtSameTime && endAtSameTime;
+  }
+
   static mergeContiguous(periods: Period[]): Period[] {
     const sortedPeriods = this.sort(periods);
 
@@ -108,7 +132,7 @@ export class Period {
         const lastMergedPeriod = mergedPeriods.at(mergedPeriods.length - 1);
         if (!lastMergedPeriod) return [currentPeriod];
 
-        const isMergeable = lastMergedPeriod.isFollowedBy(currentPeriod);
+        const isMergeable = lastMergedPeriod.isMergableWith(currentPeriod);
         if (isMergeable) {
           const mergedPeriod = lastMergedPeriod.mergeWith(currentPeriod);
           return [...mergedPeriods.slice(0, -1), mergedPeriod];

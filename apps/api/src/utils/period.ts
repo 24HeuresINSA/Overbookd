@@ -17,13 +17,3 @@ export function includesOtherPeriod(
     period.start.getTime() <= p.start.getTime() &&
     period.end.getTime() >= p.end.getTime();
 }
-
-export function areSamePeriods([first, second]: [
-  IProvidePeriod,
-  IProvidePeriod,
-]): boolean {
-  return (
-    first.start.getTime() === second.start.getTime() &&
-    first.end.getTime() === second.end.getTime()
-  );
-}

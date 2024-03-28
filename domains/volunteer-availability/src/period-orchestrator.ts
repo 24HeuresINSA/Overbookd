@@ -27,7 +27,7 @@ export class PeriodOrchestrator {
       const isPeriodIncluded = period.isOverlapping(currentPeriod);
       if (!isPeriodIncluded) return [...periods, currentPeriod];
 
-      const splitedPeriods = currentPeriod.splitFrom(period);
+      const splitedPeriods = currentPeriod.substract(period);
       return [...periods, ...splitedPeriods];
     }, [] as Period[]);
   }
@@ -68,7 +68,7 @@ export class PeriodOrchestrator {
     period: Period,
   ): Period[] {
     const mergeablePeriodIndex = periods.findIndex((otherPeriod) =>
-      period.isFollowedBy(otherPeriod),
+      period.isMergableWith(otherPeriod),
     );
     const mergeablePeriod = periods.at(mergeablePeriodIndex);
 
@@ -86,7 +86,7 @@ export class PeriodOrchestrator {
     return (period, startIndex) => {
       return periods
         .slice(startIndex + 1)
-        .some((otherPeriod) => period.isFollowedBy(otherPeriod));
+        .some((otherPeriod) => period.isMergableWith(otherPeriod));
     };
   }
 }

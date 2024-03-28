@@ -1,7 +1,7 @@
+import { PlanningTask } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import { JsonStoredTask, StoredTask } from "./storedTask";
 import { Task } from "./task.model";
-import { PlanningTask } from "@overbookd/http";
 
 export type TaskRepository = {
   getVolunteerTasksInChronologicalOrder(
