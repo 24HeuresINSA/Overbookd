@@ -70,12 +70,14 @@ export class PeriodOrchestrator {
     const mergeablePeriodIndex = periods.findIndex((otherPeriod) =>
       period.isFollowedBy(otherPeriod),
     );
-    if (mergeablePeriodIndex === -1) return [...periods, period];
-    return PeriodOrchestrator.mergePeriodToPeriodList(
-      periods,
-      mergeablePeriodIndex,
-      period,
-    );
+    const mergeablePeriod = periods.at(mergeablePeriodIndex);
+
+    if (mergeablePeriodIndex === -1 || !mergeablePeriod) {
+      return [...periods, period];
+    }
+
+    const mergedPeriod = period.mergeWith(mergeablePeriod);
+    return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
   }
 
   private static isMergeableFromOneOf(
@@ -86,18 +88,5 @@ export class PeriodOrchestrator {
         .slice(startIndex + 1)
         .some((otherPeriod) => period.isFollowedBy(otherPeriod));
     };
-  }
-
-  private static mergePeriodToPeriodList(
-    periods: Period[],
-    mergeablePeriodIndex: number,
-    period: Period,
-  ) {
-    const mergeablePeriod = periods.at(mergeablePeriodIndex);
-
-    if (!mergeablePeriod) return periods;
-
-    const mergedPeriod = period.mergeWith(mergeablePeriod);
-    return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
   }
 }
