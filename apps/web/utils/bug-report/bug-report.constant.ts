@@ -8,15 +8,12 @@ export class BugReport {
 ${window.location.href}
 
 # Comportement attendu
-<!---Décrivez ci-dessous le comportement souhaité.--->
 ${expectedBehavior}
 
 # Comportement constaté
-<!---Décrivez ci-dessous le comportement observé.--->
 ${actualBehavior}
 
 # Étapes pour reproduire
-<!---Listez ci-dessous les étapes à suivre pour reproduire le problème.--->
 ${stepsToReproduce}
 
 # Informations complémentaires
