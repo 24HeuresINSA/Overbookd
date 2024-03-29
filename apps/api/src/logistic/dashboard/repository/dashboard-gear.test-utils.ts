@@ -1,4 +1,8 @@
-import { ConsumableGearDetails, GearDetails } from "@overbookd/http";
+import {
+  ConsumableGearDetails,
+  GearBorrow,
+  GearDetails,
+} from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseActivityInquiry,
@@ -114,7 +118,7 @@ const inventoryRecordWith25Quantity: InventoryRecord = {
   quantity: 25,
 };
 
-const borrowFromFriday08hto09h: DatabaseBorrow = {
+const databaseBorrowFromFriday08hto09h: DatabaseBorrow = {
   quantity: 5,
   borrow: {
     id: 1,
@@ -239,7 +243,7 @@ export const gearWithOneInventoryRecordAndOneBorrow: DatabaseGear = {
   festivalActivityInquiries: [],
   festivalTaskInquiries: [],
   inventoryRecords: [inventoryRecordWith25Quantity],
-  borrows: [borrowFromFriday08hto09h],
+  borrows: [databaseBorrowFromFriday08hto09h],
 };
 export const gearWithOneInquiryAndOneBorrow: DatabaseGear = {
   id: 12,
@@ -249,7 +253,7 @@ export const gearWithOneInquiryAndOneBorrow: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
-  borrows: [borrowFromFriday08hto09h],
+  borrows: [databaseBorrowFromFriday08hto09h],
 };
 export const consumableGearWithOneInquiryAndOneBorrow: DatabaseGear = {
   id: 13,
@@ -259,129 +263,110 @@ export const consumableGearWithOneInquiryAndOneBorrow: DatabaseGear = {
   festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
-  borrows: [borrowFromFriday08hto09h],
+  borrows: [databaseBorrowFromFriday08hto09h],
 };
 
-const emptyGearDetailsWithoutPeriod = {
+const emptyGearDetails = {
   stock: 0,
   inquiry: 0,
   activities: [],
   tasks: [],
   inventory: 0,
+  borrows: [],
 };
 
+const emptyConsumableDetails = { ...emptyGearDetails, consumed: 0 };
+
 export const gearWithNoInquiryForGraph: GearDetails[] = [
-  { ...friday08hto08h15, ...emptyGearDetailsWithoutPeriod },
-  { ...friday08h15to08h30, ...emptyGearDetailsWithoutPeriod },
-  { ...friday08h30to08h45, ...emptyGearDetailsWithoutPeriod },
-  { ...friday08h45to09h, ...emptyGearDetailsWithoutPeriod },
-  { ...friday09hto09h15, ...emptyGearDetailsWithoutPeriod },
-  { ...friday09h15to09h30, ...emptyGearDetailsWithoutPeriod },
+  { ...friday08hto08h15, ...emptyGearDetails },
+  { ...friday08h15to08h30, ...emptyGearDetails },
+  { ...friday08h30to08h45, ...emptyGearDetails },
+  { ...friday08h45to09h, ...emptyGearDetails },
+  { ...friday09hto09h15, ...emptyGearDetails },
+  { ...friday09h15to09h30, ...emptyGearDetails },
 ];
 export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
   {
+    ...emptyGearDetails,
     ...friday08hto08h15,
     stock: 25,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
-    tasks: [],
     inventory: 25,
   },
   {
+    ...emptyGearDetails,
     ...friday08h15to08h30,
     stock: 25,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
-    tasks: [],
     inventory: 25,
   },
   {
+    ...emptyGearDetails,
     ...friday08h30to08h45,
     stock: 25,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
-    tasks: [],
     inventory: 25,
   },
   {
+    ...emptyGearDetails,
     ...friday08h45to09h,
     stock: 25,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
-    tasks: [],
     inventory: 25,
   },
   {
+    ...emptyGearDetails,
     ...friday09hto09h15,
     stock: 25,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
     inventory: 25,
   },
   {
+    ...emptyGearDetails,
     ...friday09h15to09h30,
     stock: 25,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
     inventory: 25,
   },
 ];
 
 export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   {
+    ...emptyConsumableDetails,
     ...friday08hto08h15,
-    stock: 0,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
-    tasks: [],
-    inventory: 0,
-    consumed: 0,
   },
   {
+    ...emptyConsumableDetails,
     ...friday08h15to08h30,
     stock: -10,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
-    inventory: 0,
     consumed: 10,
   },
   {
+    ...emptyConsumableDetails,
     ...friday08h30to08h45,
     stock: -10,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
-    inventory: 0,
     consumed: 10,
   },
   {
+    ...emptyConsumableDetails,
     ...friday08h45to09h,
     stock: -10,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
-    inventory: 0,
     consumed: 10,
   },
   {
+    ...emptyConsumableDetails,
     ...friday09hto09h15,
     stock: -10,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
-    inventory: 0,
     consumed: 10,
   },
   {
+    ...emptyConsumableDetails,
     ...friday09h15to09h30,
     stock: -10,
-    inquiry: 0,
-    activities: [],
-    tasks: [],
-    inventory: 0,
     consumed: 10,
   },
 ];
@@ -389,56 +374,47 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
 export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: ConsumableGearDetails[] =
   [
     {
+      ...emptyConsumableDetails,
       ...friday08hto08h15,
       stock: 5,
       inquiry: 25,
-      activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      consumed: 0,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h15to08h30,
       stock: -20,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 5,
       consumed: 25,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h30to08h45,
       stock: -20,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 5,
       consumed: 25,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h45to09h,
       stock: -20,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 5,
       consumed: 25,
     },
     {
+      ...emptyConsumableDetails,
       ...friday09hto09h15,
       stock: -20,
       inquiry: 20,
       activities: [{ ...pcSecuActivity, quantity: 20 }],
-      tasks: [],
       inventory: 5,
       consumed: 25,
     },
     {
+      ...emptyConsumableDetails,
       ...friday09h15to09h30,
       stock: -40,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 5,
       consumed: 45,
     },
@@ -446,57 +422,41 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
 export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph: ConsumableGearDetails[] =
   [
     {
+      ...emptyConsumableDetails,
       ...friday08hto08h15,
-      stock: 0,
       inquiry: 30,
       activities: [{ ...justeDanceActivity, quantity: 30 }],
-      tasks: [],
-      inventory: 0,
-      consumed: 0,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h15to08h30,
       stock: -30,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
-      inventory: 0,
       consumed: 30,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h30to08h45,
       stock: -30,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
-      inventory: 0,
       consumed: 30,
     },
     {
+      ...emptyConsumableDetails,
       ...friday08h45to09h,
       stock: -30,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
-      inventory: 0,
       consumed: 30,
     },
     {
+      ...emptyConsumableDetails,
       ...friday09hto09h15,
       stock: -30,
       inquiry: 30,
       activities: [{ ...justeDanceActivity, quantity: 30 }],
-      tasks: [],
-      inventory: 0,
       consumed: 30,
     },
     {
+      ...emptyConsumableDetails,
       ...friday09h15to09h30,
       stock: -60,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
-      inventory: 0,
       consumed: 60,
     },
   ];
@@ -504,6 +464,7 @@ export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph:
 export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
   [
     {
+      ...emptyGearDetails,
       ...friday08hto08h15,
       stock: 30,
       inquiry: 55,
@@ -512,6 +473,7 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       inventory: 30,
     },
     {
+      ...emptyGearDetails,
       ...friday08h15to08h30,
       stock: 30,
       inquiry: 55,
@@ -520,6 +482,7 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       inventory: 30,
     },
     {
+      ...emptyGearDetails,
       ...friday08h30to08h45,
       stock: 30,
       inquiry: 55,
@@ -528,6 +491,7 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       inventory: 30,
     },
     {
+      ...emptyGearDetails,
       ...friday08h45to09h,
       stock: 30,
       inquiry: 55,
@@ -536,19 +500,101 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       inventory: 30,
     },
     {
+      ...emptyGearDetails,
       ...friday09hto09h15,
       stock: 30,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 30,
     },
     {
+      ...emptyGearDetails,
       ...friday09h15to09h30,
       stock: 30,
-      inquiry: 0,
-      activities: [],
-      tasks: [],
       inventory: 30,
     },
   ];
+
+const borrowFromFriday08hto09h: GearBorrow = {
+  id: databaseBorrowFromFriday08hto09h.borrow.id,
+  lender: databaseBorrowFromFriday08hto09h.borrow.lender,
+  quantity: databaseBorrowFromFriday08hto09h.quantity,
+};
+
+export const gearWithOneInventoryRecordAndOneBorrowForGraph: GearDetails[] = [
+  {
+    ...emptyGearDetails,
+    ...friday08hto08h15,
+    stock: 30,
+    inventory: 25,
+    borrows: [borrowFromFriday08hto09h],
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h15to08h30,
+    stock: 30,
+    inventory: 25,
+    borrows: [borrowFromFriday08hto09h],
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h30to08h45,
+    stock: 30,
+    inventory: 25,
+    borrows: [borrowFromFriday08hto09h],
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h45to09h,
+    stock: 30,
+    inventory: 25,
+    borrows: [borrowFromFriday08hto09h],
+  },
+  {
+    ...emptyGearDetails,
+    ...friday09hto09h15,
+    stock: 25,
+    inventory: 25,
+  },
+  {
+    ...emptyGearDetails,
+    ...friday09h15to09h30,
+    stock: 25,
+    inventory: 25,
+  },
+];
+
+export const consumableGearWithOneInquiryAndOneBorrowForGraph: GearDetails[] = [
+  {
+    ...emptyConsumableDetails,
+    ...friday08hto08h15,
+    stock: 5,
+    borrows: [borrowFromFriday08hto09h],
+  },
+  {
+    ...emptyConsumableDetails,
+    ...friday08h15to08h30,
+    stock: 5,
+  },
+  {
+    ...emptyConsumableDetails,
+    ...friday08h30to08h45,
+    stock: 5,
+  },
+  {
+    ...emptyConsumableDetails,
+    ...friday08h45to09h,
+    stock: 5,
+  },
+  {
+    ...emptyConsumableDetails,
+    ...friday09hto09h15,
+    stock: 5,
+    inquiry: 20,
+    activities: [{ ...pcSecuActivity, quantity: 20 }],
+  },
+  {
+    ...emptyConsumableDetails,
+    ...friday09h15to09h30,
+    stock: -15,
+    consumed: 20,
+  },
+];

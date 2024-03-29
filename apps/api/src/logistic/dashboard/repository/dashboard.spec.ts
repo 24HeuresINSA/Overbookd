@@ -19,6 +19,8 @@ import {
   gearWithOneInventoryRecord,
   gearWithOneInquiryAndOneBorrow,
   consumableGearWithOneInquiryAndOneBorrow,
+  gearWithOneInventoryRecordAndOneBorrowForGraph,
+  consumableGearWithOneInquiryAndOneBorrowForGraph,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
@@ -62,7 +64,9 @@ describe("Summarize gear for graph", () => {
     ${"has two inquiries and two inventory records"}                      | ${gearWithTwoInquiryAndTwoInventoryRecord}                    | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
     ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
     ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${friday08hto09h30} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph}
-    ${"is consumable and has two inquiries and one inventory records"}    | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
+    ${"is consumable and has two inquiries and one inventory record"}     | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
+    ${"has one inventory record and one borrow"}                          | ${gearWithOneInventoryRecordAndOneBorrow}                     | ${friday08hto09h30} | ${gearWithOneInventoryRecordAndOneBorrowForGraph}
+    ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${friday08hto09h30} | ${consumableGearWithOneInquiryAndOneBorrowForGraph}
   `("when gear $explaination", ({ gear, period, expectedData }) => {
     it(`should return gear for graph with ${expectedData.length} periods`, () => {
       const gearForGraph = DashboardGear.generateDetails(
