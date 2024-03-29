@@ -60,11 +60,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
-.borrow-list {
-  cursor: pointer;
-}
-
+<style lang="scss" scoped>
 .btn-plus {
   right: 20px;
   bottom: 45px;

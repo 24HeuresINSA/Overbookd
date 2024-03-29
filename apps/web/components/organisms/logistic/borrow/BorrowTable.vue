@@ -70,3 +70,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.borrow-list {
+  cursor: pointer;
+}
+</style>
