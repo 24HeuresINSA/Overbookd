@@ -115,7 +115,7 @@ importers:
         version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:^
-        version: link:../../domains/permission
+        version: link:../../constants/permission
       '@overbookd/personal-account':
         specifier: workspace:^
         version: link:../../domains/personal-account
@@ -314,7 +314,7 @@ importers:
         version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
-        version: link:../../domains/permission
+        version: link:../../constants/permission
       '@overbookd/personal-account':
         specifier: workspace:*
         version: link:../../domains/personal-account
@@ -449,6 +449,8 @@ importers:
         specifier: 4.47.0
         version: 4.47.0
 
+  constants/permission: {}
+
   domains/configuration: {}
 
   domains/contribution:
@@ -461,7 +463,7 @@ importers:
         version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
-        version: link:../permission
+        version: link:../../constants/permission
 
   domains/festival-event:
     dependencies:
@@ -484,8 +486,6 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/period
 
-  domains/permission: {}
-
   domains/personal-account:
     dependencies:
       '@overbookd/list':
@@ -493,7 +493,7 @@ importers:
         version: link:../../libraries/list
       '@overbookd/permission':
         specifier: workspace:^
-        version: link:../permission
+        version: link:../../constants/permission
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
@@ -511,7 +511,7 @@ importers:
         version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:^
-        version: link:../permission
+        version: link:../../constants/permission
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
@@ -529,7 +529,7 @@ importers:
     dependencies:
       '@overbookd/permission':
         specifier: workspace:^
-        version: link:../permission
+        version: link:../../constants/permission
 
   domains/volunteer-availability:
     dependencies:
