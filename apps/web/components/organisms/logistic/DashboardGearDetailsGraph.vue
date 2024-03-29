@@ -10,6 +10,7 @@
 import { defineComponent } from "vue";
 import {
   ConsumableGearDetails,
+  GearBorrow,
   GearDetails,
   GearDetailsInquiry,
 } from "@overbookd/http";
@@ -139,11 +140,20 @@ export default defineComponent({
 
 function listStockAndInquiriesSources(allDetails: GearDetails[]) {
   return function (tooltipItem: Tooltip) {
-    const { inventory, activities, tasks } = allDetails[tooltipItem.index];
+    const { inventory, activities, tasks, borrows } =
+      allDetails[tooltipItem.index];
 
     const isStock = tooltipItem.datasetIndex === 0;
     if (isStock) {
-      return inventory > 0 ? `Inventaire: ${inventory}\n` : "";
+      const inventoryDetail = inventory > 0 ? `Inventaire: ${inventory}\n` : "";
+      const borrowsDetails = listStockSources({
+        title: "Emprunts",
+        sources: borrows,
+      });
+      const sourceDetails = [inventoryDetail, borrowsDetails].filter(
+        (details) => details !== "",
+      );
+      return `${sourceDetails.join("\n")}\n`;
     }
 
     const isInquiry = tooltipItem.datasetIndex === 1;
@@ -182,6 +192,21 @@ function listInquirySources({
   const bullet = "•";
   const sourceListing = sources.map(
     ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
+  );
+  return [title, ...sourceListing].join("\n");
+}
+
+function listStockSources({
+  title,
+  sources,
+}: {
+  title: string;
+  sources: GearBorrow[];
+}): string {
+  if (sources.length === 0) return "";
+  const bullet = "•";
+  const sourceListing = sources.map(
+    ({ lender, quantity }) => `${bullet} ${lender}: ${quantity}`,
   );
   return [title, ...sourceListing].join("\n");
 }

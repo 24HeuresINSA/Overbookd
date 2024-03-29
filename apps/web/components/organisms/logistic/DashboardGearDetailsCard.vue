@@ -30,6 +30,24 @@
         <strong>{{ gearDetails.inventory }}</strong>
       </p>
 
+      <details open>
+        <summary>
+          Venant des Fiches Emprunts
+          <v-chip color="primary" x-small>
+            {{ countList(gearDetails.borrows) }}
+          </v-chip>
+        </summary>
+        <ul v-if="gearDetails.borrows.length">
+          <li v-for="borrow in gearDetails.borrows" :key="borrow.id">
+            <nuxt-link :to="`/logistic/borrows/${borrow.id}`">
+              Emprunt #{{ borrow.id }} - {{ borrow.lender }}:
+              <strong>{{ borrow.quantity }}</strong>
+            </nuxt-link>
+          </li>
+        </ul>
+        <p v-else>Aucun emprunt</p>
+      </details>
+
       <h3>
         Demandes
         <v-chip color="primary" x-small>
@@ -41,7 +59,7 @@
         <summary>
           Venant des Fiches Activité
           <v-chip color="primary" x-small>
-            {{ countInquiries(gearDetails.activities) }}
+            {{ countList(gearDetails.activities) }}
           </v-chip>
         </summary>
         <ul v-if="gearDetails.activities.length">
@@ -59,7 +77,7 @@
         <summary>
           Venant des Fiches Tâche
           <v-chip color="primary" x-small>
-            {{ countInquiries(gearDetails.tasks) }}
+            {{ countList(gearDetails.tasks) }}
           </v-chip>
         </summary>
         <ul v-if="gearDetails.tasks.length">
@@ -77,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { GearDetails, Inquiry } from "@overbookd/http";
+import { GearDetails } from "@overbookd/http";
 import { defineComponent } from "vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 
@@ -95,8 +113,8 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     formatDateToHumanReadable,
-    countInquiries(inquiries: Inquiry[]): number {
-      return inquiries.reduce((sum, { quantity }) => sum + quantity, 0);
+    countList(list: { quantity: number }[]): number {
+      return list.reduce((sum, { quantity }) => sum + quantity, 0);
     },
   },
 });
