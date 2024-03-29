@@ -34,14 +34,8 @@ export class DashboardGearStockDiscrepancy {
       );
     });
 
-    const constantStockQuantity =
-      DashboardGearStock.findInventoryQuantity(gear);
-    const minDiscrepancyFromTimeWindows =
-      discrepanciesFromTimeWindows.length > 0
-        ? Math.min(...discrepanciesFromTimeWindows)
-        : constantStockQuantity;
-
-    return Math.min(constantStockQuantity, minDiscrepancyFromTimeWindows);
+    const inventory = DashboardGearStock.findInventoryQuantity(gear);
+    return Math.min(...discrepanciesFromTimeWindows, inventory);
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
