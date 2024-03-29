@@ -1,3 +1,19 @@
+## [2.24.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.1...v2.24.2) (2024-03-29)
+
+
+### Bug Fixes
+
+* **bug:** remove comment from template [#1734](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1734) ([2cac817](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2cac817744ae08dad6e632680066b8cacd521fe7))
+* **dashboard-logistic:** implement borrow in details in api [#1729](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1729) ([685bc82](https://gitlab.com/24-heures-insa/overbookd-mono/commit/685bc82e32a517690554830034573b38fa41edda))
+* explain volunteer brief availability. [#1736](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1736) ([9666952](https://gitlab.com/24-heures-insa/overbookd-mono/commit/96669524c734588dd4378f096c30f8e61648c07d))
+* **volunteer-planning:** use Period library to compute tasks. [#1582](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1582) ([4d18df2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4d18df2e22deb76ae829afaab9e3b1e9f9ee9eda))
+
+
+### Pre-Features
+
+* **logistic-dashboard:** implement borrows in preview [#1728](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1728) ([faeef42](https://gitlab.com/24-heures-insa/overbookd-mono/commit/faeef42b4db46a20b0eabc082b8113f813699b39))
+* **logistic-purchase:** create table [#1673](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1673) ([995091c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/995091cca65ae271442c4b23ce5fddd19a77573c))
+
 ## [2.24.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.0...v2.24.1) (2024-03-26)
 
 
