@@ -30,11 +30,11 @@
         <strong>{{ gearDetails.inventory }}</strong>
       </p>
 
-      <details open>
+      <details>
         <summary>
           Venant des Fiches Emprunts
           <v-chip color="primary" x-small>
-            {{ countList(gearDetails.borrows) }}
+            {{ sumQuantities(gearDetails.borrows) }}
           </v-chip>
         </summary>
         <ul v-if="gearDetails.borrows.length">
@@ -55,11 +55,11 @@
         </v-chip>
       </h3>
 
-      <details open>
+      <details>
         <summary>
           Venant des Fiches Activité
           <v-chip color="primary" x-small>
-            {{ countList(gearDetails.activities) }}
+            {{ sumQuantities(gearDetails.activities) }}
           </v-chip>
         </summary>
         <ul v-if="gearDetails.activities.length">
@@ -77,7 +77,7 @@
         <summary>
           Venant des Fiches Tâche
           <v-chip color="primary" x-small>
-            {{ countList(gearDetails.tasks) }}
+            {{ sumQuantities(gearDetails.tasks) }}
           </v-chip>
         </summary>
         <ul v-if="gearDetails.tasks.length">
@@ -113,7 +113,7 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     formatDateToHumanReadable,
-    countList(list: { quantity: number }[]): number {
+    sumQuantities(list: { quantity: number }[]): number {
       return list.reduce((sum, { quantity }) => sum + quantity, 0);
     },
   },

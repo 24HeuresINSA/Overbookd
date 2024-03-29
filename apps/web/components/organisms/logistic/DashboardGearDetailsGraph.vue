@@ -8,34 +8,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import {
-  ConsumableGearDetails,
-  GearBorrow,
-  GearDetails,
-  GearDetailsInquiry,
-} from "@overbookd/http";
+import { GearDetails } from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-
-type Dataset = {
-  label: string;
-  data: number[];
-  backgroundColor: string;
-  borderColor: string;
-  borderWidth: number;
-  pointRadius: number;
-  pointHitRadius: number;
-};
-
-type ChartData = {
-  labels: string[];
-  datasets: Dataset[];
-};
-
-type Tooltip = {
-  datasetIndex: number;
-  yLabel: number;
-  index: number;
-};
+import { ChartData, Dataset, tooltipLabel } from "~/utils/graph/graph";
+import {
+  isConsumable,
+  listStockAndInquiriesSources,
+} from "~/utils/logistic/dashboard-graph";
 
 type DashboardGearDetailsData = {
   courbs: ChartData;
@@ -106,11 +85,22 @@ export default defineComponent({
         responsive: true,
         maintainAspectRatio: false,
         scales: { xAxes: [{ ticks: { autoSkip: true, maxTicksLimit: 20 } }] },
-        hover: { mode: "nearest", intersect: true },
+        hover: {
+          mode: "nearest",
+          intersect: true,
+        },
         onClick: (_event: unknown, elements: { _index: number }[]) => {
           const [first] = elements;
           if (!first) return;
           this.$emit("select:gear-details", first._index);
+        },
+        onHover(event, chartElement) {
+          event.target.style.cursor = chartElement[0] ? "pointer" : "default";
+        },
+        legend: {
+          onHover(event) {
+            event.target.style.cursor = "pointer";
+          },
         },
         tooltips: {
           mode: "index",
@@ -137,83 +127,4 @@ export default defineComponent({
     },
   },
 });
-
-function listStockAndInquiriesSources(allDetails: GearDetails[]) {
-  return function (tooltipItem: Tooltip) {
-    const { inventory, activities, tasks, borrows } =
-      allDetails[tooltipItem.index];
-
-    const isStock = tooltipItem.datasetIndex === 0;
-    if (isStock) {
-      const inventoryDetail = inventory > 0 ? `Inventaire: ${inventory}\n` : "";
-      const borrowsDetails = listStockSources({
-        title: "Emprunts",
-        sources: borrows,
-      });
-      const sourceDetails = [inventoryDetail, borrowsDetails].filter(
-        (details) => details !== "",
-      );
-      return `${sourceDetails.join("\n")}\n`;
-    }
-
-    const isInquiry = tooltipItem.datasetIndex === 1;
-    if (isInquiry) {
-      const faDetails = listInquirySources({
-        title: "FA",
-        sources: activities,
-      });
-      const ftDetails = listInquirySources({
-        title: "FT",
-        sources: tasks,
-      });
-      const sourceDetails = [faDetails, ftDetails].filter(
-        (details) => details !== "",
-      );
-
-      return sourceDetails.join("\n");
-    }
-  };
-}
-
-function tooltipLabel(tooltipItem: Tooltip, data: ChartData) {
-  const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || "";
-  const dataPoint = tooltipItem.yLabel;
-  return `${datasetLabel}: ${dataPoint}`;
-}
-
-function listInquirySources({
-  title,
-  sources,
-}: {
-  title: string;
-  sources: GearDetailsInquiry[];
-}): string {
-  if (sources.length === 0) return "";
-  const bullet = "•";
-  const sourceListing = sources.map(
-    ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
-  );
-  return [title, ...sourceListing].join("\n");
-}
-
-function listStockSources({
-  title,
-  sources,
-}: {
-  title: string;
-  sources: GearBorrow[];
-}): string {
-  if (sources.length === 0) return "";
-  const bullet = "•";
-  const sourceListing = sources.map(
-    ({ lender, quantity }) => `${bullet} ${lender}: ${quantity}`,
-  );
-  return [title, ...sourceListing].join("\n");
-}
-
-export function isConsumable(
-  inquiries: GearDetails[],
-): inquiries is ConsumableGearDetails[] {
-  return inquiries.some((inquiry) => Object.hasOwn(inquiry, "consumed"));
-}
 </script>

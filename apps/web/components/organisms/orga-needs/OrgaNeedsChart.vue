@@ -9,26 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { OrgaNeedsResponse } from "~/store/orgaNeeds";
-
-type Dataset = {
-  label: string;
-  data: number[];
-  backgroundColor: string;
-  borderColor: string;
-  borderWidth: number;
-  pointRadius: number;
-  pointHitRadius: number;
-};
-
-type ChartData = {
-  labels: string[];
-  datasets: Dataset[];
-};
-
-type Tooltip = {
-  datasetIndex: number;
-  yLabel: number;
-};
+import { ChartData, Dataset, tooltipLabel } from "~/utils/graph/graph";
 
 export default Vue.extend({
   name: "OrgaNeedsChart",
@@ -63,14 +44,7 @@ export default Vue.extend({
         tooltips: {
           mode: "index",
           position: "nearest",
-          callbacks: {
-            label: function (tooltipItem: Tooltip, data: ChartData) {
-              const datasetLabel =
-                data.datasets[tooltipItem.datasetIndex].label || "";
-              const dataPoint = tooltipItem.yLabel;
-              return `${datasetLabel}: ${dataPoint}`;
-            },
-          },
+          callbacks: { label: tooltipLabel },
         },
       },
     };
