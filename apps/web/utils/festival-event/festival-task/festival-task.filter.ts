@@ -1,16 +1,18 @@
 import {
   APPROVED,
-  DRAFT,
   FestivalTask,
-  IN_REVIEW,
   NOT_ASKING_TO_REVIEW,
-  READY_TO_ASSIGN,
-  REFUSED,
   REJECTED,
   REVIEWING,
   ReviewStatus,
-  VALIDATED,
 } from "@overbookd/festival-event";
+import {
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+  READY_TO_ASSIGN,
+  DRAFT,
+} from "@overbookd/status";
 import { User } from "@overbookd/user";
 import { Team } from "../../models/team.model";
 import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";

@@ -1,10 +1,5 @@
-import {
-  APPROVED,
-  FestivalActivity,
-  IN_REVIEW,
-  VALIDATED,
-  secu,
-} from "@overbookd/festival-event";
+import { APPROVED, FestivalActivity, secu } from "@overbookd/festival-event";
+import { VALIDATED, IN_REVIEW } from "@overbookd/status";
 
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   id: true,

@@ -1,11 +1,11 @@
+import { FestivalEvent } from "@overbookd/festival-event";
 import {
   DRAFT,
-  FestivalEvent,
-  IN_REVIEW,
-  READY_TO_ASSIGN,
   REFUSED,
+  IN_REVIEW,
   VALIDATED,
-} from "@overbookd/festival-event";
+  READY_TO_ASSIGN,
+} from "@overbookd/status";
 
 const GREY = "grey";
 const RED = "red";

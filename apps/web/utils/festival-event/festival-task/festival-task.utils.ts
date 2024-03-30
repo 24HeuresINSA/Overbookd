@@ -1,5 +1,4 @@
 import {
-  DRAFT,
   ReviewStatus,
   PreviewFestivalTask,
   FestivalTaskWithConflicts as FestivalTask,
@@ -12,6 +11,7 @@ import {
   isRefused,
 } from "@overbookd/festival-event";
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
+import { DRAFT } from "@overbookd/status";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-task.model";
 import { CastReviewable } from "./reviewable";

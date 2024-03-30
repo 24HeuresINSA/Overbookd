@@ -1,8 +1,6 @@
 import {
-  DRAFT,
   ElectricityConnection,
   FestivalActivity,
-  IN_REVIEW,
   P17_125A_TETRA,
   P17_16A_MONO,
   P17_16A_TETRA,
@@ -14,11 +12,10 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-  REFUSED,
-  VALIDATED,
   PreviewDraft,
   PreviewFestivalActivity,
 } from "@overbookd/festival-event";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/status";
 import {
   BROUILLON,
   RELECTURE_EN_COURS,

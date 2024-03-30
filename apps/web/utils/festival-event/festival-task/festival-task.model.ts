@@ -1,13 +1,15 @@
 import {
-  DRAFT,
   FestivalTask,
-  IN_REVIEW,
   PreviewFestivalTask as Preview,
   PreviewFestivalTaskDraft as PreviewDraft,
-  READY_TO_ASSIGN,
+} from "@overbookd/festival-event";
+import {
+  DRAFT,
+  IN_REVIEW,
   REFUSED,
   VALIDATED,
-} from "@overbookd/festival-event";
+  READY_TO_ASSIGN,
+} from "@overbookd/status";
 import {
   BROUILLON,
   PRETE_POUR_AFFECTATION,

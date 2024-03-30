@@ -5,7 +5,7 @@ import {
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
-} from "../common/status";
+} from "@overbookd/status";
 import { isKeyOf } from "../is-key-of";
 import {
   Draft,

@@ -5,7 +5,8 @@
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./constants/permission/src"],
-      "@overbookd/slugify": ["./libraries/slugify/src"]
+      "@overbookd/slugify": ["./libraries/slugify/src"],
+      "@overbookd/status": ["./constants/status/src"]
     }
   }
 }

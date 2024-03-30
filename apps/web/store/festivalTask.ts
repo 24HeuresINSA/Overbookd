@@ -1,6 +1,6 @@
+import { actionTree, mutationTree } from "typed-vuex";
 import {
   PreviewFestivalTask,
-  DRAFT,
   InquiryRequest,
   Contact,
   Volunteer,
@@ -11,8 +11,6 @@ import {
   AssignDrive,
   Categorize,
 } from "@overbookd/festival-event";
-import { actionTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
 import {
   AddInquiryRequestForm,
   AddMobilizationForm,
@@ -24,7 +22,9 @@ import {
   UpdateGeneralForm,
   UpdateInstructionsForm,
 } from "@overbookd/http";
+import { DRAFT } from "@overbookd/status";
 import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
+import { safeCall } from "~/utils/api/calls";
 import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const repo = FestivalTaskRepository;

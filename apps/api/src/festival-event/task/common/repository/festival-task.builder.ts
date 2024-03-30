@@ -1,5 +1,4 @@
 import {
-  DRAFT,
   FestivalTask,
   PreviewFestivalTask,
   PreviewFestivalTaskDraft,
@@ -7,7 +6,6 @@ import {
   Volunteer,
   FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
-  IN_REVIEW,
   ReviewStatus,
   Reviewer,
   NOT_ASKING_TO_REVIEW,
@@ -16,18 +14,22 @@ import {
   matos,
   Adherent,
   InReviewSpecification,
-  REFUSED,
   isRefusedReviews,
   ReviewableWithoutConflicts,
   PreviewFestivalTaskReviewable,
-  VALIDATED,
   isValidatedReviews,
   ReadyToAssignWithoutConflicts,
-  READY_TO_ASSIGN,
   PreviewFestivalTaskReadyToAssign,
   Mobilization,
   FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
+import {
+  DRAFT,
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+  READY_TO_ASSIGN,
+} from "@overbookd/status";
 import { DatabaseFestivalActivity } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { DatabaseEvent } from "./event.query";

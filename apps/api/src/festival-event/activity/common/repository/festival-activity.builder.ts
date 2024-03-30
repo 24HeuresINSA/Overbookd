@@ -1,11 +1,9 @@
 import {
   BARRIERES,
-  DRAFT,
   Draft,
   ELEC,
   FestivalActivity,
   FestivalActivityWithoutStatus,
-  IN_REVIEW,
   Reviewable,
   ReviewableSpecification,
   InquiryRequest,
@@ -24,9 +22,7 @@ import {
   secu,
   signa,
   isValidatedReviews,
-  VALIDATED,
   isRefusedReviews,
-  REFUSED,
   BaseSignage,
   SignageCatalogItem,
   FestivalActivityKeyEvent as KeyEvent,
@@ -37,6 +33,7 @@ import {
   REJECTED,
   FestivalTaskChild,
 } from "@overbookd/festival-event";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/status";
 
 type DatabaseReview = {
   team: Reviewer<"FA">;

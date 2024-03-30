@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { READY_TO_ASSIGN } from "@overbookd/status";
 import {
   barCashier,
   cleanPressConference,
@@ -13,7 +14,6 @@ import {
   uninstallPreventionVillage,
 } from "../festival-task.fake";
 import { BAR, FUN, MANUTENTION, RELOU, STATIQUE } from "../festival-task";
-import { READY_TO_ASSIGN } from "../../common/status";
 import { ASSIGNMENT_STARTED } from "../../common/action";
 import {
   friday18hfriday20h,

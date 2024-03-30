@@ -1,11 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  DRAFT,
-  IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-} from "@overbookd/festival-event";
 import { PreviewForCommunication } from "@overbookd/http";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/status";
 import { TimeWindowResponseDto } from "../../../common/dto/time-window.response.dto";
 
 const statuses = [DRAFT, IN_REVIEW, VALIDATED, REFUSED];

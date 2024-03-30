@@ -1,12 +1,12 @@
 {
-  "name": "@overbookd/domain-events",
-  "version": "1.0.130",
-  "description": "Utilitaire pour les évènements métier d'overbookd",
+  "name": "@overbookd/status",
+  "version": "1.0.1",
+  "description": "Liste des status pour les fiches d'overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
   "private": true,
-  "main": "dist/utils/domain-events/src/index.js",
+  "main": "dist/index.js",
   "bugs": {
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
     "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "utils/domain-events"
+    "directory": "constants/status"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -28,16 +28,8 @@
     "test:unit": "echo 'No tests'",
     "test:unit:ci": "echo 'No tests'"
   },
-  "dependencies": {
-    "@overbookd/event": "workspace:^",
-    "@overbookd/festival-event": "workspace:^",
-    "@overbookd/personal-account": "workspace:^",
-    "@overbookd/registration": "workspace:^",
-    "rxjs": "7.8.1"
-  },
   "keywords": [
-    "domain-events",
-    "utils"
+    "status"
   ],
   "engines": {
     "node": "20.11.1",

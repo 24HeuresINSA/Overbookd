@@ -43,12 +43,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  FestivalActivity,
-  FestivalTask,
-  VALIDATED,
-} from "@overbookd/festival-event";
+import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import { Item } from "@overbookd/list";
+import { VALIDATED } from "@overbookd/status";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";

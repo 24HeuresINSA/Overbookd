@@ -1,4 +1,5 @@
 import { Item } from "@overbookd/list";
+import { VALIDATED } from "@overbookd/status";
 import { FestivalActivity } from "./festival-task";
 import { AddMobilization } from "./prepare/prepare";
 import { Contact, Volunteer } from "./sections/instructions";
@@ -10,7 +11,6 @@ import {
 } from "./volunteer-conflicts";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
-import { VALIDATED } from "../common/status";
 import { TimeWindow } from "../common/time-window";
 import { ValidatedWithConflicts } from "./festival-task.factory";
 import { Assignments } from "./enable-assignment/enable-assignment";

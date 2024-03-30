@@ -1,3 +1,4 @@
+import { DRAFT, IN_REVIEW, REFUSED } from "@overbookd/status";
 import {
   AssignDrive,
   BaseInquiryRequest,
@@ -29,7 +30,6 @@ import {
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
-import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { isDraft, isRefused, isValidated } from "../../festival-event";
 import {
   REVIEWING,

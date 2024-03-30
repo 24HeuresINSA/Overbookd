@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
 import {
   deuxTables,
   troisMarteaux,
@@ -13,7 +14,6 @@ import {
 } from "../festival-task.fake";
 import { Approval, elec, humain, matos } from "../../common/review";
 import { APPROVED, REJECTED } from "../../common/action";
-import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import { NotAskingToReview } from "../../common/review.error";
 import { Review } from "./review";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory";

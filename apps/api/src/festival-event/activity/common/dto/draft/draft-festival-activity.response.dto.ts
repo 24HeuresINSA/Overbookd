@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   Draft,
-  DRAFT,
   InquiryWithPotentialRequests,
   Feedback,
   FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
+import { DRAFT } from "@overbookd/status";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
 import { GeneralDto, General } from "./draft-general.response.dto";

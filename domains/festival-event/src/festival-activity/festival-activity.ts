@@ -1,3 +1,10 @@
+import {
+  DRAFT,
+  IN_REVIEW,
+  VALIDATED,
+  REFUSED,
+  READY_TO_ASSIGN,
+} from "@overbookd/status";
 import { DraftInCharge, InCharge } from "./sections/in-charge";
 import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";
@@ -9,13 +16,6 @@ import {
   ValidatedReviews,
 } from "../common/review";
 import { APPROVED, REJECTED } from "../common/action";
-import {
-  DRAFT,
-  IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-  READY_TO_ASSIGN,
-} from "../common/status";
 import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action";
 import { Feedback } from "../common/feedback";
 
