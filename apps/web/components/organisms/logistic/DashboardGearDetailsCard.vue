@@ -98,6 +98,7 @@
 import { GearDetails } from "@overbookd/http";
 import { defineComponent } from "vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
+import { sumQuantities } from "~/utils/logistic/logistic";
 
 export default defineComponent({
   name: "DashboardGearDetailsCard",
@@ -113,9 +114,7 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     formatDateToHumanReadable,
-    sumQuantities(list: { quantity: number }[]): number {
-      return list.reduce((sum, { quantity }) => sum + quantity, 0);
-    },
+    sumQuantities,
   },
 });
 </script>
