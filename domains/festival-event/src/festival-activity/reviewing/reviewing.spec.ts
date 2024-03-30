@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { REFUSED, VALIDATED } from "@overbookd/status";
 import { getFactory } from "../festival-activity.factory";
 import {
   barrieres,
@@ -38,7 +39,6 @@ import { AlreadyApproved } from "../../common/review.error";
 import { ShouldAssignDrive } from "../../common/review.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
 import { Reviewable } from "../festival-activity";
-import { REFUSED, VALIDATED } from "../../common/status";
 import { NotAskingToReview } from "../../common/review.error";
 
 const factory = getFactory();

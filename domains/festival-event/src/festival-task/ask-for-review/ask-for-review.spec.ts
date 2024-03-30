@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { IN_REVIEW } from "@overbookd/status";
 import { lea, noel } from "../festival-task.test-util";
 import {
   guardEscapeGame,
@@ -17,7 +18,6 @@ import {
   flashMobOnJustDance,
   approvedByElecRejectedByMatos,
 } from "../festival-task.fake";
-import { IN_REVIEW } from "../../common/status";
 import { READY_TO_REVIEW } from "../../common/action";
 import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory";
 import {
