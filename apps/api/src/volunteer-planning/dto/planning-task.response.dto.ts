@@ -1,11 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  TimeWindow,
-  Location,
-  DRAFT,
-  IN_REVIEW,
-} from "@overbookd/festival-event";
+import { TimeWindow, Location } from "@overbookd/festival-event";
 import { PlanningTask } from "@overbookd/http";
+import { DRAFT, IN_REVIEW } from "@overbookd/status";
 
 class TimeWindowResponseDto implements TimeWindow {
   @ApiProperty({

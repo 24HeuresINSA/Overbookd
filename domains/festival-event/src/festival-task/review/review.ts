@@ -1,3 +1,4 @@
+import { REFUSED, VALIDATED } from "@overbookd/status";
 import { FestivalTask, Validated } from "../festival-task";
 import {
   Approval,
@@ -9,7 +10,6 @@ import {
   matos,
 } from "../../common/review";
 import { APPROVED, REJECTED } from "../../common/action";
-import { REFUSED, VALIDATED } from "../../common/status";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
   FestivalTaskTranslator,

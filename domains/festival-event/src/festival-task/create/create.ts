@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT } from "../../common/status";
+import { DRAFT } from "@overbookd/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { FestivalActivity } from "../festival-task";

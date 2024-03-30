@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PreviewFestivalTaskRefused, REFUSED } from "@overbookd/festival-event";
+import { PreviewFestivalTaskRefused } from "@overbookd/festival-event";
+import { REFUSED } from "@overbookd/status";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 import { RefusedReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
 

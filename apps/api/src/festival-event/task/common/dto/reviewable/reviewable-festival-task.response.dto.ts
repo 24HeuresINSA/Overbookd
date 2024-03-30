@@ -1,14 +1,10 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
-  IN_REVIEW,
   FestivalTaskInReview as InReview,
-  REFUSED,
   FestivalTaskRefused as Refused,
   FestivalTaskReviewable as Reviewable,
   FestivalTaskValidated as Validated,
   FestivalTaskReadyToAssign as ReadyToAssign,
-  VALIDATED,
-  READY_TO_ASSIGN,
   BAR,
   RELOU,
   MANUTENTION,
@@ -16,6 +12,12 @@ import {
   STATIQUE,
 } from "@overbookd/festival-event";
 import { ReviewableWithConflicts } from "@overbookd/http";
+import {
+  IN_REVIEW,
+  READY_TO_ASSIGN,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/status";
 import { ReviewableGeneralResponseDto } from "./reviewable-general.response.dto";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { ReviewableInstructionsResponseDto } from "./reviewable-instructions.response.dto";

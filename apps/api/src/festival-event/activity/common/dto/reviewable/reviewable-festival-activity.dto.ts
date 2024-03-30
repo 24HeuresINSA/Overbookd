@@ -1,18 +1,16 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
   Feedback,
-  IN_REVIEW,
   InReview,
   InReviewReviews,
   FestivalActivityKeyEvent as KeyEvent,
-  REFUSED,
   Refused,
   RefusedReviews,
   Reviewable,
-  VALIDATED,
   Validated,
   ValidatedReviews,
 } from "@overbookd/festival-event";
+import { REFUSED, IN_REVIEW, VALIDATED } from "@overbookd/status";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import {
   InReviewReviewsResponseDto,

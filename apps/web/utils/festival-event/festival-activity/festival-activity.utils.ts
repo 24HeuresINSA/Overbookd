@@ -1,5 +1,4 @@
 import {
-  DRAFT,
   Draft,
   FestivalActivity,
   NOT_ASKING_TO_REVIEW,
@@ -19,9 +18,10 @@ import {
   PreviewForCommunication,
   PreviewForSecurity,
 } from "@overbookd/http";
-import { CastReviewable } from "./reviewable";
+import { DRAFT } from "@overbookd/status";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
+import { CastReviewable } from "./reviewable";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export function castActivityWithDate(

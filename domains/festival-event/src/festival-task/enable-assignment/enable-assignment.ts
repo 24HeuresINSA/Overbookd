@@ -1,10 +1,10 @@
+import { READY_TO_ASSIGN } from "@overbookd/status";
 import {
   Categorize,
   FestivalTask,
   ReadyToAssign,
   isReadyToAssign,
 } from "../festival-task";
-import { READY_TO_ASSIGN } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {

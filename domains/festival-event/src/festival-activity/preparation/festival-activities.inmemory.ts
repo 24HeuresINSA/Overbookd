@@ -1,11 +1,11 @@
 import { updateItemToList } from "@overbookd/list";
+import { VALIDATED, IN_REVIEW, REFUSED } from "@overbookd/status";
 import { FestivalActivity, Draft, Reviewable } from "../festival-activity";
 import {
   PreviewFestivalActivity,
   PreviewDraft,
   PreviewReviewable,
 } from "../festival-activity";
-import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 import { isValidatedReviews } from "../../common/review";

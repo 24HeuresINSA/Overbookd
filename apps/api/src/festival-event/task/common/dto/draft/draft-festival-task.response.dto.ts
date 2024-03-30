@@ -1,6 +1,7 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { DRAFT, FestivalTaskDraft as Draft } from "@overbookd/festival-event";
+import { FestivalTaskDraft as Draft } from "@overbookd/festival-event";
 import { DraftWithConflicts } from "@overbookd/http";
+import { DRAFT } from "@overbookd/status";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";

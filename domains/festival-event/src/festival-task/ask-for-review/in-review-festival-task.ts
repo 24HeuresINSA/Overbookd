@@ -1,3 +1,4 @@
+import { IN_REVIEW } from "@overbookd/status";
 import { REJECTED } from "../../common/action";
 import { Adherent } from "../../common/adherent";
 import { WaitingForReview } from "../../common/notifications";
@@ -9,7 +10,6 @@ import {
   matos,
   elec,
 } from "../../common/review";
-import { IN_REVIEW } from "../../common/status";
 import {
   Draft,
   FestivalActivity,

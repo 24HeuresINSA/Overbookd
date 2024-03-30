@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { DRAFT } from "@overbookd/status";
 import { CreateFestivalActivity } from "./creation";
 import { KeyEvent } from "../festival-activity";
 import { CREATED } from "../../common/action";
-import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory";
 

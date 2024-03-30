@@ -75,13 +75,6 @@ export type {
   RejectionReviewStatus,
   ReviewingStatus,
 } from "./common/review";
-export {
-  DRAFT,
-  IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-  READY_TO_ASSIGN,
-} from "./common/status";
 export type { TimeWindow } from "./common/time-window";
 
 //  **********************

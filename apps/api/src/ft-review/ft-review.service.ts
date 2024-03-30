@@ -6,6 +6,8 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { FtReview } from "@prisma/client";
+import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
+import { VALIDATED } from "@overbookd/status";
 import {
   JwtPayload,
   JwtUtil,
@@ -21,8 +23,6 @@ import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request
 import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
 import { reviewStatuses } from "../ft-review/ft-review.model";
-import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
-import { VALIDATED } from "@overbookd/festival-event";
 
 @Injectable()
 export class FtReviewService {

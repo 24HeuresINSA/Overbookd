@@ -1,4 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
 import {
   Draft,
   FestivalActivity,
@@ -7,7 +8,6 @@ import {
   Reviewable,
   Validated,
 } from "./festival-activity";
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { APPROVED, REJECTED } from "../common/action";
 import { Public } from "./sections/general";

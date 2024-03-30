@@ -1,10 +1,10 @@
+import { IN_REVIEW } from "@overbookd/status";
 import {
   FestivalActivity,
   InReview,
   Refused,
   Reviewable,
 } from "../festival-activity";
-import { IN_REVIEW } from "../../common/status";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review";
 import { InReviewReviews, RefusedReviews } from "../../common/review";
 import { REJECTED } from "../../common/action";

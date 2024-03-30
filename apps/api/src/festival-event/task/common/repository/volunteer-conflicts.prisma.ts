@@ -4,9 +4,9 @@ import {
   Volunteer,
   FestivalTaskLink,
   Conflicts,
-  READY_TO_ASSIGN,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
+import { READY_TO_ASSIGN } from "@overbookd/status";
 import { PrismaService } from "../../../../prisma.service";
 
 export class PrismaVolunteerConflicts implements VolunteerConflicts {

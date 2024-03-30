@@ -1,12 +1,10 @@
+import { FestivalTaskReadyToAssign } from "@overbookd/festival-event";
 import {
   HttpStringified,
   ReviewableWithConflicts as Reviewable,
 } from "@overbookd/http";
+import { READY_TO_ASSIGN } from "@overbookd/status";
 import { castTimeWindowWithDate } from "../cast-time-windows";
-import {
-  FestivalTaskReadyToAssign,
-  READY_TO_ASSIGN,
-} from "@overbookd/festival-event";
 
 type BeforeAssignment = Exclude<Reviewable, FestivalTaskReadyToAssign>;
 type ReadyToAssign = Extract<Reviewable, FestivalTaskReadyToAssign>;

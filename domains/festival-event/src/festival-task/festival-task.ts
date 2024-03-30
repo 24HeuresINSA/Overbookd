@@ -1,12 +1,12 @@
-import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
-import { Feedback } from "../common/feedback";
 import {
   DRAFT,
   IN_REVIEW,
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
-} from "../common/status";
+} from "@overbookd/status";
+import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
+import { Feedback } from "../common/feedback";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
