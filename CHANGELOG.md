@@ -1,3 +1,10 @@
+## [2.24.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.2...v2.24.3) (2024-03-31)
+
+
+### Bug Fixes
+
+* **logistic-dashboard:** implement borrows in web [#1735](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1735) ([872b27d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/872b27d146e72534b58e2fe99da6bc9ab5414f84))
+
 ## [2.24.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.1...v2.24.2) (2024-03-29)
 
 
