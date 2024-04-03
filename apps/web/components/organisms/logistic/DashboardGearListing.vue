@@ -3,9 +3,9 @@
     <v-data-table
       :items="previews"
       :headers="headers"
+      :expanded.sync="displayedGears"
       show-expand
-      single-expand
-      @item-expanded="selectGear"
+      @click:row="openOrCloseGearDetails"
     >
       <template #item.isConsumable="{ item }">
         <div v-show="item.isConsumable" class="icon">
@@ -35,10 +35,13 @@ import { defineComponent } from "vue";
 import { GearDetails, GearPreview, GearWithDetails } from "@overbookd/http";
 import DashboardGearDetailsGraph from "./DashboardGearDetailsGraph.vue";
 import DashboardGearDetailsCard from "./DashboardGearDetailsCard.vue";
+import { Header } from "~/utils/models/data-table.model";
 
 type DashboardGearListingData = {
+  headers: Header[];
   selectedGearDetails: (GearDetails & { name: string }) | undefined;
   isGearDetailsOpen: boolean;
+  displayedGears: GearPreview[];
 };
 
 export default defineComponent({
@@ -55,8 +58,15 @@ export default defineComponent({
     },
   },
   data: (): DashboardGearListingData => ({
+    headers: [
+      { text: "Matos", value: "name" },
+      { text: "Matos consommable", value: "isConsumable" },
+      { text: "Delta", value: "stockDiscrepancy" },
+      { text: "", value: "data-table-expand", sortable: false },
+    ],
     selectedGearDetails: undefined,
     isGearDetailsOpen: false,
+    displayedGears: [],
   }),
   computed: {
     previews(): GearPreview[] {
@@ -65,23 +75,19 @@ export default defineComponent({
     selectedGear(): GearWithDetails | undefined {
       return this.$accessor.logisticDashboard.selectedGear;
     },
-    headers() {
-      return [
-        { text: "Matos", value: "name" },
-        { text: "Matos consommable", value: "isConsumable" },
-        { text: "Delta", value: "stockDiscrepancy" },
-      ];
-    },
   },
   mounted() {
     this.$accessor.logisticDashboard.fetchPreviews();
   },
   methods: {
-    selectGear(event: { item: GearPreview; value: boolean }) {
-      const closingDetails = !event.value;
-      if (closingDetails) return;
-      this.$accessor.logisticDashboard.fetchDetails({
-        slug: event.item.slug,
+    async openOrCloseGearDetails(gear: GearPreview) {
+      if (this.displayedGears.length > 0) {
+        this.displayedGears = [];
+        return;
+      }
+      this.displayedGears = [gear];
+      await this.$accessor.logisticDashboard.fetchDetails({
+        slug: gear.slug,
         start: this.start,
         end: this.end,
       });
