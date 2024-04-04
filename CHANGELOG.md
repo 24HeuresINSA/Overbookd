@@ -1,3 +1,10 @@
+## [2.24.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.3...v2.24.4) (2024-04-04)
+
+
+### Bug Fixes
+
+* **festival-task:** can require team montage in mobilizations. [#1739](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1739) ([505fd96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/505fd964cfa1e7f0cdad6192b70067b7a555dc0c))
+
 ## [2.24.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.2...v2.24.3) (2024-03-31)
 
 
