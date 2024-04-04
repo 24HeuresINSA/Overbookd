@@ -5,6 +5,7 @@
       :headers="headers"
       :expanded.sync="displayedGears"
       show-expand
+      single-expand
       @click:row="openOrCloseGearDetails"
     >
       <template #item.isConsumable="{ item }">
