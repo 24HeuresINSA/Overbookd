@@ -15,6 +15,7 @@ const strasbourg = "strasbourg";
 const soft = "soft";
 const cvl = "cvl";
 const teckos = "teckos";
+const montage = "team-montage";
 
 export const requirableTeams = [
   benevole,
@@ -28,6 +29,7 @@ export const requirableTeams = [
   strasbourg,
   cvl,
   teckos,
+  montage,
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, soft] as const;
 
