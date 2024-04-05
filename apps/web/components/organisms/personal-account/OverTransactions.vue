@@ -59,13 +59,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { safeCall } from "~/utils/api/calls";
-import { Money } from "~/utils/money/money";
-import { formatUsername } from "~/utils/user/user.utils";
+import { Money } from "@overbookd/money";
 import { User } from "@overbookd/user";
-import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { TransactionRepository } from "~/repositories/transaction.repository";
+import { safeCall } from "~/utils/api/calls";
+import { formatUsername } from "~/utils/user/user.utils";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 
 export default defineComponent({
   name: "OverTransactions",
@@ -118,7 +118,7 @@ export default defineComponent({
       return formatUsername(user);
     },
     convertToEuros(amount: number): string {
-      return Money.displayCents(amount);
+      return Money.cents(amount).toString();
     },
     formatDate(date: Date): string {
       return formatDateWithMinutes(date);

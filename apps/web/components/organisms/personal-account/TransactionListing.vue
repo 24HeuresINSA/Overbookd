@@ -34,8 +34,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
-import { Money } from "~/utils/money/money";
+import { Money } from "@overbookd/money";
 import {
   BARREL,
   DEPOSIT,
@@ -46,6 +45,7 @@ import {
   TransactionType,
   doIReceive,
 } from "@overbookd/personal-account";
+import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
 import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
 
 export default defineComponent({
@@ -90,7 +90,7 @@ export default defineComponent({
     },
     formatAmount(transaction: Transaction): string {
       const symbol = this.isDebit(transaction) ? "-" : "";
-      return `${symbol}${Money.displayCents(transaction.amount)}`;
+      return `${symbol}${Money.cents(transaction.amount).toString()}`;
     },
     formatDate(date: Date): string {
       return formatDateWithExplicitMonthAndDay(date);

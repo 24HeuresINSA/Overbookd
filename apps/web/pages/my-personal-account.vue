@@ -29,9 +29,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Money } from "@overbookd/money";
 import TransactionListing from "~/components/organisms/personal-account/TransactionListing.vue";
 import CreateTransferForm from "~/components/organisms/personal-account/CreateTransferForm.vue";
-import { Money } from "~/utils/money/money";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 type MyPersonalAccountData = {
@@ -53,7 +53,7 @@ export default defineComponent({
   }),
   computed: {
     balance(): string {
-      return Money.displayCents(this.$accessor.user.me.balance);
+      return Money.cents(this.$accessor.user.me.balance).toString();
     },
   },
   methods: {

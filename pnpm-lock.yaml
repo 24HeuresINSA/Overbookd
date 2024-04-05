@@ -312,6 +312,9 @@ importers:
       '@overbookd/logistic':
         specifier: workspace:*
         version: link:../../domains/logistic
+      '@overbookd/money':
+        specifier: workspace:*
+        version: link:../../libraries/money
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
@@ -554,6 +557,8 @@ importers:
   libraries/event: {}
 
   libraries/list: {}
+
+  libraries/money: {}
 
   libraries/period: {}
 
