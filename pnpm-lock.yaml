@@ -512,6 +512,12 @@ importers:
         specifier: workspace:^
         version: link:../../libraries/slugify
 
+  domains/planning:
+    dependencies:
+      '@overbookd/period':
+        specifier: workspace:*
+        version: link:../../libraries/period
+
   domains/registration:
     dependencies:
       '@overbookd/event':
