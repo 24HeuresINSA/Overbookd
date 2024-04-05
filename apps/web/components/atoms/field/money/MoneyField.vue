@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :value="valueInEuros"
+    :value="euros"
     type="number"
     :solo="boxed"
     :filled="boxed"
@@ -16,15 +16,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Money } from "~/utils/money/money";
+import { defineComponent } from "vue";
+import { Money } from "@overbookd/money";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
-export default Vue.extend({
+export default defineComponent({
   name: "MoneyField",
   model: {
     prop: "value",
-    event: "change",
+    event: "update:value",
   },
   props: {
     value: {
@@ -52,22 +52,23 @@ export default Vue.extend({
       default: false,
     },
   },
+  emits: ["update:value", "error"],
   data(): InputRulesData {
     return {
       rules: {
         number: isNumber,
-        min: min(this.min / 100),
+        min: min(Money.cents(this.min).inEuros),
       },
     };
   },
   computed: {
-    valueInEuros(): number {
-      return Money.inEuros(this.value);
+    euros(): number {
+      return Money.cents(this.value).inEuros;
     },
   },
   methods: {
     propagateValue(euros: number) {
-      this.$emit("change", Math.floor(euros * 100));
+      this.$emit("update:value", Money.euros(euros).inCents);
     },
     propagateError(isError: boolean) {
       this.$emit("error", isError);

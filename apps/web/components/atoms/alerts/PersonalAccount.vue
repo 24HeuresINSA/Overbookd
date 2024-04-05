@@ -21,8 +21,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Money } from "@overbookd/money";
 import { PersonalAccountAlert } from "@overbookd/personal-account";
-import { Money } from "~/utils/money/money";
 
 const CP_RULES_EXPLAINED =
   "Les comptes persos ne peuvent exister que si tout le monde joue le jeu en restant dans le positif. Sinon ça veut dire que: Pas d'argent >> Pas de fûts >> Pas de rôtisserie >> Pas de manif >> Pas de manif.";
@@ -54,7 +54,7 @@ export default Vue.extend({
       return this.isInDebt ? "c'est déconné" : "tout est en règle";
     },
     balance(): string {
-      return Money.displayCents(this.alert.balance);
+      return Money.cents(this.alert.balance).toString();
     },
   },
   methods: {

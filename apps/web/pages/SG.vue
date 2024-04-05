@@ -139,13 +139,13 @@
  * then enter how much each user has a stick next to his name in the paper. after that the SG press a save button
  * and every user that consumed get charged accordingly
  */
+import { Money } from "@overbookd/money";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import BarrelsForm from "~/components/organisms/personal-account/BarrelsForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
-import { Money } from "~/utils/money/money";
 import { TransactionRepository } from "~/repositories/transaction.repository";
 
 const TRANSACTION_DEPOSIT = "DEPOSIT";
@@ -452,9 +452,7 @@ export default {
     defineContext(consumptions) {
       switch (this.mode) {
         case "cask":
-          return `Conso au local de ${consumptions} ${this.stickWord(consumptions)} à ${Money.displayCents(
-            this.stickPrice,
-          )}`;
+          return `Conso au local de ${consumptions} ${this.stickWord(consumptions)} à ${Money.cents(this.stickPrice).toString()}`;
         case "closet":
           return `Conso placard:  ${consumptions} ${this.stickWord(consumptions)}`;
         case "deposit":
