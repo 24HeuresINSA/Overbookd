@@ -1,5 +1,5 @@
 export class Money {
-  private constructor(private readonly cents: number) { }
+  private constructor(private readonly cents: number) {}
 
   static cents(cents: number) {
     return new Money(cents);
