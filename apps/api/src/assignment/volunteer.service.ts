@@ -3,7 +3,6 @@ import { TaskCategory } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
 import { TeamService } from "../team/team.service";
 import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
-import { SELECT_USER_TEAMS } from "../user/user.query";
 import { getPeriodDuration } from "../utils/duration";
 import { AssignmentService } from "./assignment.service";
 import { FtTimeSpanService, SELECT_FRIENDS } from "./ft-time-span.service";
@@ -14,24 +13,10 @@ import {
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from "./model/volunteer.model";
-import { BENEVOLE_CODE } from "@overbookd/team";
-
-export const WHERE_IS_VOLUNTEER = {
-  teams: {
-    some: {
-      team: { code: BENEVOLE_CODE },
-    },
-  },
-};
-
-const SELECT_VOLUNTEER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  charisma: true,
-  comment: true,
-  ...SELECT_USER_TEAMS,
-};
+import {
+  SELECT_VOLUNTEER,
+  HAS_VOLUNTEER_TEAM,
+} from "./repository/volunteer.query";
 
 const SELECT_TIMESPAN_PERIOD = {
   timeSpan: {
@@ -42,10 +27,12 @@ const SELECT_TIMESPAN_PERIOD = {
   },
 };
 
-const SELECT_ASSIGNMENTS_PERIOD = {
-  assignments: {
-    select: SELECT_TIMESPAN_PERIOD,
-  },
+export type Volunteers = {
+  findAll(): Promise<Volunteer[]>;
+};
+
+type Repositories = {
+  volunteers: Volunteers;
 };
 
 @Injectable()
@@ -53,21 +40,11 @@ export class VolunteerService {
   constructor(
     private prisma: PrismaService,
     private ftTimeSpan: FtTimeSpanService,
+    private repositories: Repositories,
   ) {}
 
   async findAllVolunteers(): Promise<Volunteer[]> {
-    const volunteers = await this.prisma.user.findMany({
-      where: {
-        isDeleted: false,
-        ...WHERE_IS_VOLUNTEER,
-      },
-      select: {
-        ...SELECT_VOLUNTEER,
-        ...SELECT_ASSIGNMENTS_PERIOD,
-      },
-      orderBy: { charisma: "desc" },
-    });
-    return this.formatVolunteers(volunteers);
+    return this.repositories.volunteers.findAll();
   }
 
   async findAvailableVolunteersForFtTimeSpan(
@@ -145,7 +122,7 @@ export class VolunteerService {
       );
 
     return {
-      ...WHERE_IS_VOLUNTEER,
+      ...HAS_VOLUNTEER_TEAM,
       isDeleted: false,
       team,
       availabilities,
