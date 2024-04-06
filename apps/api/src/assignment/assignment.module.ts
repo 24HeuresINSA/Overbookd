@@ -11,6 +11,8 @@ import { PrismaVolunteers } from "./repository/volunteers.prisma";
 import { UserService } from "../user/user.service";
 import { PrismaModule } from "../prisma.module";
 import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer-availability.module";
+import { PrismaTaskPeriods } from "./repository/task-periods.prisma";
+import { TaskPeriodService } from "./task-period.service";
 
 @Module({
   controllers: [AssignmentController],
@@ -18,6 +20,11 @@ import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer
     {
       provide: PrismaVolunteers,
       useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaTaskPeriods,
+      useFactory: (prisma: PrismaService) => new PrismaTaskPeriods(prisma),
       inject: [PrismaService],
     },
     {
@@ -42,6 +49,12 @@ import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer
         volunteers: PrismaVolunteers,
       ) => new VolunteerService(prisma, ftTimeSpan, { volunteers }),
       inject: [PrismaService, FtTimeSpanService, PrismaVolunteers],
+    },
+    {
+      provide: TaskPeriodService,
+      useFactory: (taskPeriods: PrismaTaskPeriods) =>
+        new TaskPeriodService(taskPeriods),
+      inject: [PrismaTaskPeriods],
     },
   ],
   imports: [PrismaModule, MailModule, UserModule, VolunteerAvailabilityModule],
