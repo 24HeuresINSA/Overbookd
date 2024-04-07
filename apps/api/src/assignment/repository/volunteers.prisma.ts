@@ -1,6 +1,5 @@
 import { Period } from "@overbookd/period";
 import { PrismaService } from "../../prisma.service";
-import { Volunteer } from "../model/volunteer.model";
 import { Volunteers } from "../volunteer.service";
 import {
   IS_NOT_DELETED,
@@ -9,6 +8,7 @@ import {
   HAS_VOLUNTEER_TEAM,
   DatabaseVolunteer,
 } from "./volunteer.query";
+import { Volunteer } from "@overbookd/assignment";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}

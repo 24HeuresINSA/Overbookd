@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AvailableVolunteer, Volunteer } from "../model/volunteer.model";
+import { AvailableVolunteer } from "../model/volunteer.model";
+import { Volunteer } from "@overbookd/assignment";
 
 export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({

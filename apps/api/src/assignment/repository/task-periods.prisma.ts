@@ -1,5 +1,6 @@
 import { PrismaService } from "../../prisma.service";
-import { TaskPeriods, TaskWithPeriods } from "../task-period.service";
+import { TaskPeriods } from "../task-period.service";
+import { TaskWithPeriods } from "@overbookd/assignment";
 import {
   DatabaseTaskWithPeriods,
   HAS_TEAM_REQUESTS,

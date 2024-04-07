@@ -1,5 +1,5 @@
 import { Categorize } from "@overbookd/festival-event";
-import { READY_TO_ASSIGN } from "@overbookd/status";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
 export const IS_READY_AND_EXISTS = {
   isDeleted: false,

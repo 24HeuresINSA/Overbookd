@@ -18,7 +18,7 @@ import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
 } from "../utils/assignment";
-import { BENEVOLE_CODE } from "@overbookd/assignment";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 type DatabaseVolunteer = {
   id: number;

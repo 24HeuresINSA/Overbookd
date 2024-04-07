@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE } from "@overbookd/registration";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export const HAS_VOLUNTEER_TEAM = {
   teams: {

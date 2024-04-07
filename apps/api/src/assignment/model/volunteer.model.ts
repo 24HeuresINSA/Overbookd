@@ -1,15 +1,4 @@
-type BaseVolunteer = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  charisma: number;
-  comment?: string;
-};
-
-export type Volunteer = BaseVolunteer & {
-  teams: string[];
-  assignmentDuration: number;
-};
+import { BaseVolunteer, Volunteer } from "@overbookd/assignment";
 
 export type AvailableVolunteer = Volunteer & {
   friendAvailable: boolean;
