@@ -18,7 +18,6 @@ import {
   FtWithTimeSpan,
   TimeSpanWithAssignees,
   castAvailableTimeSpansWithDate,
-  castFtsWithTimeSpansWithDate,
 } from "~/utils/models/ft-time-span.model";
 import { castPeriods } from "~/utils/models/period.model";
 import {
@@ -31,6 +30,8 @@ import { User } from "@overbookd/user";
 import { AssignmentRepository } from "~/repositories/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
+import { castTaskWithPeriodsWithDate } from "~/utils/assignment/task-period";
+import { TaskWithPeriods } from "@overbookd/assignment";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -54,10 +55,27 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
-export const state = () => ({
-  volunteers: [] as Volunteer[],
-  timeSpans: [] as AvailableTimeSpan[],
-  fts: [] as FtWithTimeSpan[],
+type State = {
+  volunteers: Volunteer[];
+  timeSpans: AvailableTimeSpan[];
+  fts: FtWithTimeSpan[];
+  tasksWithPeriods: TaskWithPeriods[];
+  selectedVolunteer: Volunteer | null;
+  selectedVolunteerFriends: User[];
+  selectedTimeSpan: FtTimeSpanWithRequestedTeams | null;
+  selectedFt: FtWithTimeSpan | null;
+  selectedFtTimeSpans: FtTimeSpanWithRequestedTeams[];
+  taskAssignment: TaskAssignment;
+  hoverTimeSpan: AvailableTimeSpan | null;
+  timeSpanToDisplayDetails: TimeSpanWithAssignees | null;
+  stats: AssignmentStats[];
+};
+
+export const state = (): State => ({
+  volunteers: [],
+  timeSpans: [] as AvailableTimeSpan[], // OLD
+  fts: [] as FtWithTimeSpan[], // OLD
+  tasksWithPeriods: [],
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
@@ -92,6 +110,10 @@ export const mutations = mutationTree(state, {
 
   SET_FTS(state, ftWithTimeSpans: FtWithTimeSpan[]) {
     state.fts = ftWithTimeSpans;
+  },
+
+  SET_TASKS_WITH_PERIODS(state, tasksWithPeriods: TaskWithPeriods[]) {
+    state.tasksWithPeriods = tasksWithPeriods;
   },
 
   SET_FT_TIMESPANS(state, timeSpans: FtTimeSpanWithRequestedTeams[]) {
@@ -264,13 +286,14 @@ export const actions = actionTree(
       commit("SET_VOLUNTEERS", volunteers);
     },
 
-    async fetchFtsWithTimeSpans({ commit }) {
+    async fetchTasksWithPeriods({ commit }) {
       const res = await safeCall(
         this,
-        AssignmentRepository.getFtWithTimeSpans(this),
+        AssignmentRepository.getTaskWithPeriods(this),
       );
       if (!res) return;
-      commit("SET_FTS", castFtsWithTimeSpansWithDate(res.data));
+      const tasks = res.data.map(castTaskWithPeriodsWithDate);
+      commit("SET_TASKS_WITH_PERIODS", tasks);
     },
 
     async fetchTimeSpansWithStats({ commit }, ftId: number) {

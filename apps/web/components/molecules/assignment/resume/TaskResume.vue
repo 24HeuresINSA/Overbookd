@@ -1,14 +1,15 @@
 <template>
   <div class="task-card">
-    <div class="task-card-data" @contextmenu.prevent="openFtNewTab(ft.id)">
+    <div class="task-card-data" @contextmenu.prevent="openFtNewTab(task.id)">
       <div class="task-name">
-        <span>{{ ft.id }} - {{ ft.name }}</span>
+        <span>{{ task.id }} - {{ task.name }}</span>
       </div>
       <div class="task-teams">
         <TeamChip
           v-for="teamCode of sortedVolunteerTeams"
           :key="teamCode"
           :team="teamCode"
+          show-hidden
         ></TeamChip>
       </div>
     </div>
@@ -17,33 +18,30 @@
 </template>
 
 <script lang="ts">
+import { TaskWithPeriods } from "@overbookd/assignment";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import {
-  FtWithTimeSpan,
-  getRequiredTeamsInFt,
-} from "~/utils/models/ft-time-span.model";
+import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
 import { sortTeamsForAssignment } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "TaskResume",
   components: { TeamChip },
   props: {
-    ft: {
-      type: Object as () => FtWithTimeSpan,
+    task: {
+      type: Object as () => TaskWithPeriods,
       required: true,
     },
   },
   computed: {
     sortedVolunteerTeams(): string[] {
-      const teams = this.getRequiredTeams();
-      return sortTeamsForAssignment(teams);
+      return sortTeamsForAssignment(this.requiredTeams);
+    },
+    requiredTeams(): string[] {
+      return getRequiredTeamsInTask(this.task);
     },
   },
   methods: {
-    getRequiredTeams() {
-      return getRequiredTeamsInFt(this.ft);
-    },
     openFtNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
     },

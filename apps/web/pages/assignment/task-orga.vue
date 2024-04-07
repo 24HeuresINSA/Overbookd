@@ -25,6 +25,7 @@ import FilterableTaskList from "~/components/organisms/assignment/list/Filterabl
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import { TaskWithPeriods } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -43,6 +44,9 @@ export default Vue.extend({
     title: "Affect Tâche-Orga",
   }),
   computed: {
+    tasksWithPeriods(): TaskWithPeriods[] {
+      return this.$accessor.assignment.tasksWithPeriods;
+    },
     openTaskAssignmentDialog: {
       get(): boolean {
         return this.$accessor.assignment.openTaskAssignmentDialog;
@@ -54,7 +58,7 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchFtsWithTimeSpans();
+    await this.$accessor.assignment.fetchTasksWithPeriods();
   },
   methods: {
     closeTaskAssignmentDialog() {

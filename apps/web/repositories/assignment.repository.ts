@@ -4,10 +4,10 @@ import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpanWithRequestedTeams,
-  FtWithTimeSpan,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
 import { HttpStringified } from "@overbookd/http";
+import { TaskWithPeriods } from "@overbookd/assignment";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -26,9 +26,9 @@ export class AssignmentRepository {
     );
   }
 
-  static getFtWithTimeSpans(context: Context) {
-    return context.$axios.get<HttpStringified<FtWithTimeSpan[]>>(
-      `${this.basePath}/ft-timespans`,
+  static getTaskWithPeriods(context: Context) {
+    return context.$axios.get<HttpStringified<TaskWithPeriods[]>>(
+      `${this.basePath}/task-periods`,
     );
   }
 

@@ -11,4 +11,4 @@ export type Category =
   | typeof FUN
   | typeof RELOU;
 
-export const categories = [STATIQUE, BAR, MANUTENTION, FUN, RELOU] as const;
+export const categories: Category[] = [STATIQUE, BAR, MANUTENTION, FUN, RELOU];

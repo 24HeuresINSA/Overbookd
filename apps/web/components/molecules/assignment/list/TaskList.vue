@@ -1,5 +1,5 @@
 <template>
-  <v-virtual-scroll :items="fts" item-height="64" class="virtual-scroll">
+  <v-virtual-scroll :items="tasks" item-height="64" class="virtual-scroll">
     <template #default="{ item }">
       <v-list-item
         :key="item.id"
@@ -8,7 +8,7 @@
         @click="selectFt(item)"
       >
         <TaskResume
-          :ft="item"
+          :task="item"
           :class="{ 'is-selected': isSelected(item.id) }"
           class="list__task"
         ></TaskResume>
@@ -19,25 +19,23 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  FtWithTimeSpan,
-  getRequiredTeamsInFt,
-} from "~/utils/models/ft-time-span.model";
+import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 import TaskResume from "../resume/TaskResume.vue";
+import { TaskWithPeriods } from "@overbookd/assignment";
+import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
 
 export default Vue.extend({
   name: "TaskList",
   components: { TaskResume },
   props: {
-    fts: {
-      type: Array as () => FtWithTimeSpan[],
+    tasks: {
+      type: Array as () => TaskWithPeriods[],
       required: true,
-      default: () => [],
     },
   },
   methods: {
-    getRequiredTeams(ft: FtWithTimeSpan) {
-      return getRequiredTeamsInFt(ft);
+    getRequiredTeams(task: TaskWithPeriods): string[] {
+      return getRequiredTeamsInTask(task);
     },
     selectFt(ft: FtWithTimeSpan) {
       if (!ft) return;

@@ -11,7 +11,7 @@
         @change:completed="completed = $event"
       ></FtTimeSpanFilters>
       <v-divider />
-      <TaskList :fts="filteredFts" class="task-list" />
+      <TaskList :tasks="filteredFts" class="task-list" />
     </v-card-text>
   </v-card>
 </template>
@@ -20,16 +20,13 @@
 import Vue from "vue";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
-import {
-  FtWithTimeSpan,
-  TaskCategory,
-  TaskPriority,
-  getRequiredTeamsInFt,
-} from "~/utils/models/ft-time-span.model";
+import { TaskCategory, TaskPriority } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
+import { TaskWithPeriods } from "@overbookd/assignment";
+import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
 
 type FilterableTaskListData = {
   teams: Team[];
@@ -48,16 +45,16 @@ export default Vue.extend({
     category: null,
   }),
   computed: {
-    fts(): FtWithTimeSpan[] {
-      return this.$accessor.assignment.fts;
+    tasks(): TaskWithPeriods[] {
+      return this.$accessor.assignment.tasksWithPeriods;
     },
-    searchableFts(): Searchable<FtWithTimeSpan>[] {
-      return this.fts.map((ft) => ({
+    searchableFts(): Searchable<TaskWithPeriods>[] {
+      return this.tasks.map((ft) => ({
         ...ft,
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
       }));
     },
-    filteredFts(): FtWithTimeSpan[] {
+    filteredFts(): TaskWithPeriods[] {
       return this.searchableFts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
@@ -71,12 +68,12 @@ export default Vue.extend({
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[],
-    ): (ft: FtWithTimeSpan) => boolean {
+    ): (ft: TaskWithPeriods) => boolean {
       return teamsSearched.length > 0
-        ? (ft) =>
+        ? (task) =>
             teamsSearched.every((teamSearched) =>
-              getRequiredTeamsInFt(ft).some(
-                (timeSpanTeamCode) => teamSearched.code === timeSpanTeamCode,
+              getRequiredTeamsInTask(task).some(
+                (teamCode) => teamSearched.code === teamCode,
               ),
             )
         : () => true;
@@ -88,7 +85,7 @@ export default Vue.extend({
     },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null,
-    ): (ft: FtWithTimeSpan) => boolean {
+    ): (ft: TaskWithPeriods) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
@@ -97,7 +94,7 @@ export default Vue.extend({
     },
     filterFtByCategory(
       categorySearched: TaskCategory,
-    ): (ft: FtWithTimeSpan) => boolean {
+    ): (ft: TaskWithPeriods) => boolean {
       return (ft) => {
         if (categorySearched === "AUCUNE") return ft.category === null;
         return ft.category === categorySearched;
@@ -105,21 +102,19 @@ export default Vue.extend({
     },
     filterByPriority(
       prioritySearched: TaskPriority,
-    ): (ft: FtWithTimeSpan) => boolean {
+    ): (ft: TaskWithPeriods) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
-      return (ft) => ft.hasPriority === hasPriority;
+      return (ft) => ft.topPriority === hasPriority;
     },
-    filterFtByQuantity({ timeSpans }: FtWithTimeSpan): boolean {
+    filterFtByQuantity({ periods }: TaskWithPeriods): boolean {
       if (this.completed) return true;
-      return timeSpans.some(({ requestedTeams }) =>
-        requestedTeams.some(
-          ({ quantity, assignmentCount }) => quantity > assignmentCount,
-        ),
+      return periods.some(({ teams }) =>
+        teams.some(({ count, assignmentCount }) => count > assignmentCount),
       );
     },
     filterFtByName(
       search: string,
-    ): (timeSpan: Searchable<FtWithTimeSpan>) => boolean {
+    ): (timeSpan: Searchable<TaskWithPeriods>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
