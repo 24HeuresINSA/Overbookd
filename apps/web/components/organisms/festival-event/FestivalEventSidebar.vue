@@ -135,7 +135,7 @@ export default Vue.extend({
   flex: 0 0 auto;
   padding-right: 20px;
   width: 350px;
-  height: 80vh;
+  height: calc(100vh - #{$header-height} - #{$footer-height});
   overflow-y: auto;
 
   #ask-for-review {
