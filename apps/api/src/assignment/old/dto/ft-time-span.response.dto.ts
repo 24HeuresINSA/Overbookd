@@ -4,7 +4,6 @@ import {
   Assignee,
   AvailableTimeSpan,
   FtWithLocation,
-  FtWithTimeSpan,
   RequestedTeam,
   SimplifiedFT,
   TimeSpan,
@@ -113,19 +112,6 @@ export class TimeSpanWithFtResponseDto
     type: Boolean,
   })
   hasFriendsAssigned: boolean;
-}
-
-export class FtWithTimeSpansResponseDto
-  extends SimplifiedFTRepresentation
-  implements FtWithTimeSpan
-{
-  @ApiProperty({
-    required: true,
-    description: "The ft time spans",
-    type: FtTimeSpanResponseDto,
-    isArray: true,
-  })
-  timeSpans: FtTimeSpanResponseDto[];
 }
 
 class FtWithLocationRepresentation implements FtWithLocation {
