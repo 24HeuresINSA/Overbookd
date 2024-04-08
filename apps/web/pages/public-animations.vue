@@ -49,7 +49,7 @@
 
             <tr
               v-for="timeWindow in sortTimeWindows(activity.timeWindows)"
-              :key="timeWindow.id"
+              :key="`${activity.id}-${timeWindow.id}`"
             >
               <td>
                 {{ formatDateWithMinutes(timeWindow.start) }}
