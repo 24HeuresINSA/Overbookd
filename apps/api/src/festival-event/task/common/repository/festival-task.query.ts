@@ -99,6 +99,7 @@ export class FestivalTaskQueryBuilder {
     const inquiries = this.upsertInquiries(task);
     const feedbacks = this.upsertFeedbacks(task);
     const events = this.upsertHistory(task);
+    const assignments = this.removeAssignments(task);
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
@@ -109,6 +110,7 @@ export class FestivalTaskQueryBuilder {
       inquiries,
       feedbacks,
       events,
+      assignments,
     };
   }
 
@@ -295,6 +297,12 @@ export class FestivalTaskQueryBuilder {
         update: { context: keyEvent.description },
         create: keyEventToHistory(task)(keyEvent),
       })),
+    };
+  }
+
+  private static removeAssignments(task: FestivalTaskWithoutConflicts) {
+    return {
+      deleteMany: { festivalTaskId: task.id },
     };
   }
 }
