@@ -248,9 +248,7 @@ export default defineComponent({
     },
     taskCategory(): string {
       if (!isReadyToAssign(this.selectedTask)) return "";
-      return this.selectedTask.category
-        ? this.selectedTask.category
-        : TaskCategories.AUCUNE;
+      return this.selectedTask.category ?? TaskCategories.AUCUNE;
     },
     taskPriority(): string {
       if (!isReadyToAssign(this.selectedTask)) return "";
