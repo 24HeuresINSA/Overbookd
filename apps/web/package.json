@@ -120,7 +120,7 @@
     "testEnvironment": "jsdom"
   },
   "engines": {
-    "node": "20.11.1",
+    "node": "20.12.1",
     "pnpm": "8.15.6"
   }
 }
