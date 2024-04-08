@@ -30,6 +30,15 @@
             Commencer l'affectation
           </v-btn>
         </div>
+
+        <div v-show="isReadyToAssign" class="categorize">
+          <p>
+            Catégorie de la tâche : <strong>{{ taskCategory }}</strong>
+          </p>
+          <p>
+            Tâche prioritaire : <strong>{{ taskPriority }}</strong>
+          </p>
+        </div>
       </template>
     </FestivalEventSidebar>
     <v-container class="container ft">
@@ -102,6 +111,7 @@ import {
   matos,
   Categorize,
   isValidated,
+  isReadyToAssign,
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import FtGeneralCard from "~/components/organisms/festival-event/festival-task/FtGeneralCard.vue";
@@ -232,6 +242,17 @@ export default defineComponent({
     cannotStartAssignment(): boolean {
       return !isValidated(this.selectedTask);
     },
+    isReadyToAssign(): boolean {
+      return isReadyToAssign(this.selectedTask);
+    },
+    taskCategory(): string {
+      if (!isReadyToAssign(this.selectedTask)) return "";
+      return this.selectedTask.category ? this.selectedTask.category : "";
+    },
+    taskPriority(): string {
+      if (!isReadyToAssign(this.selectedTask)) return "";
+      return this.selectedTask.topPriority ? "OUI" : "NON";
+    },
   },
   async mounted() {
     await this.$accessor.festivalTask.fetchTask(this.ftId);
@@ -361,6 +382,13 @@ $sidebar-width: 350px;
     font-weight: bolder;
     min-width: 100%;
     background-color: $ready-color;
+  }
+}
+
+.categorize {
+  margin-left: 16px;
+  p {
+    margin: 0;
   }
 }
 
