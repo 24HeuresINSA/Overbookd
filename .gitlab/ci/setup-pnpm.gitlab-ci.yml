@@ -2,6 +2,6 @@
   image: node:20.12.0-alpine
   interruptible: true
   before_script:
-    - npm install -g pnpm@8.15.5
+    - npm install -g pnpm@8.15.6
     - pnpm config set store-dir .pnpm-store
     - pnpm --version
