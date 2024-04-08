@@ -23,7 +23,7 @@ export class PrismaTasks implements Tasks {
   }
 }
 
-export function toTaskWithRequestedTeams(
+function toTaskWithRequestedTeams(
   task: DatabaseTaskWithRequestedTeams,
 ): TaskWithRequestedTeams {
   const teams = [
