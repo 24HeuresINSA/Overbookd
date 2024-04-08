@@ -32,11 +32,12 @@
         </div>
 
         <div v-show="isReadyToAssign" class="categorize">
-          <span>
+          <p>
             Catégorie de la tâche : <strong>{{ taskCategory }}</strong>
-            <br />
+          </p>
+          <p>
             Tâche prioritaire : <strong>{{ taskPriority }}</strong>
-          </span>
+          </p>
         </div>
       </template>
     </FestivalEventSidebar>
@@ -386,6 +387,9 @@ $sidebar-width: 350px;
 
 .categorize {
   margin-left: 16px;
+  p {
+    margin: 0;
+  }
 }
 
 .team-review {
