@@ -800,6 +800,7 @@ model FestivalTaskMobilizationTeam {
   mobilization     FestivalTaskMobilization @relation(fields: [mobilizationId, mobilizationftId], references: [id, ftId], onDelete: Cascade)
   mobilizationId   String                   @map("mobilization_id")
   mobilizationftId Int                      @map("mobilization_ft_id")
+  assignees        Assignee[]
 
   @@id([teamCode, mobilizationId, mobilizationftId])
   @@map("festival_task_mobilization_team")
@@ -820,14 +821,16 @@ model Assignment {
 }
 
 model Assignee {
-  assignment     Assignment               @relation(fields: [assignmentId, mobilizationId, festivalTaskId], references: [id, mobilizationId, festivalTaskId], onDelete: Cascade)
-  assignmentId   String                   @map("assignment_id")
-  mobilization   FestivalTaskMobilization @relation(fields: [mobilizationId, festivalTaskId], references: [id, ftId], onDelete: Cascade)
-  mobilizationId String                   @map("mobilization_id")
-  festivalTask   FestivalTask             @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
-  festivalTaskId Int                      @map("festival_task_id")
-  personalData   User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         Int                      @map("user_id")
+  assignment     Assignment                    @relation(fields: [assignmentId, mobilizationId, festivalTaskId], references: [id, mobilizationId, festivalTaskId], onDelete: Cascade)
+  assignmentId   String                        @map("assignment_id")
+  mobilization   FestivalTaskMobilization      @relation(fields: [mobilizationId, festivalTaskId], references: [id, ftId], onDelete: Cascade)
+  mobilizationId String                        @map("mobilization_id")
+  festivalTask   FestivalTask                  @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int                           @map("festival_task_id")
+  personalData   User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int                           @map("user_id")
+  as             FestivalTaskMobilizationTeam? @relation(fields: [teamCode, mobilizationId, festivalTaskId], references: [teamCode, mobilizationId, mobilizationftId], onDelete: Cascade)
+  teamCode       String?                       @map("team_code")
 
   @@id([userId, assignmentId, mobilizationId, festivalTaskId])
   @@map("assignee")
