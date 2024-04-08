@@ -151,7 +151,7 @@ export class FestivalTaskQueryBuilder {
     const events = this.upsertHistory(task);
     return {
       status,
-      category,
+      category: category ?? null,
       topPriority,
       mobilizations,
       events,
