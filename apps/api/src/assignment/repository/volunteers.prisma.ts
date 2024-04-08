@@ -3,7 +3,7 @@ import { PrismaService } from "../../prisma.service";
 import { Volunteers } from "../volunteer.service";
 import {
   IS_NOT_DELETED,
-  SELECT_ASSIGNED_PERIOD,
+  SELECT_ASSIGNED_TASK,
   SELECT_VOLUNTEER,
   HAS_VOLUNTEER_TEAM,
   DatabaseVolunteer,
@@ -21,7 +21,7 @@ export class PrismaVolunteers implements Volunteers {
       },
       select: {
         ...SELECT_VOLUNTEER,
-        ...SELECT_ASSIGNED_PERIOD,
+        ...SELECT_ASSIGNED_TASK,
       },
       orderBy: { charisma: "desc" },
     });
@@ -31,8 +31,7 @@ export class PrismaVolunteers implements Volunteers {
 
 function formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
   const assignmentDuration = volunteer.assigned.reduce(
-    (acc, assignment) =>
-      acc + Period.init(assignment.assignment).duration.inMilliseconds,
+    (acc, task) => acc + Period.init(task.assignment).duration.inMilliseconds,
     0,
   );
 

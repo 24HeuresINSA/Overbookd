@@ -23,7 +23,7 @@ export const SELECT_VOLUNTEER = {
   },
 };
 
-export const SELECT_ASSIGNED_PERIOD = {
+export const SELECT_ASSIGNED_TASK = {
   assigned: {
     select: {
       assignment: {
