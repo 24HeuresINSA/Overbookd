@@ -25,6 +25,7 @@ import { SELECT_FEEDBACKS } from "./feedback.query";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { Item } from "@overbookd/list";
+import { READY_TO_ASSIGN } from "@overbookd/status";
 
 const SELECT_REVIEWS = {
   reviews: {
@@ -99,6 +100,7 @@ export class FestivalTaskQueryBuilder {
     const inquiries = this.upsertInquiries(task);
     const feedbacks = this.upsertFeedbacks(task);
     const events = this.upsertHistory(task);
+    const assignments = this.removeAssignmentsIfReadyToAssign(task);
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
@@ -109,6 +111,7 @@ export class FestivalTaskQueryBuilder {
       inquiries,
       feedbacks,
       events,
+      assignments,
     };
   }
 
@@ -149,7 +152,7 @@ export class FestivalTaskQueryBuilder {
     const events = this.upsertHistory(task);
     return {
       status,
-      category,
+      category: category ?? null,
       topPriority,
       mobilizations,
       events,
@@ -296,6 +299,14 @@ export class FestivalTaskQueryBuilder {
         create: keyEventToHistory(task)(keyEvent),
       })),
     };
+  }
+
+  private static removeAssignmentsIfReadyToAssign(
+    task: FestivalTaskWithoutConflicts,
+  ) {
+    return task.status !== READY_TO_ASSIGN
+      ? { deleteMany: { festivalTaskId: task.id } }
+      : {};
   }
 }
 
