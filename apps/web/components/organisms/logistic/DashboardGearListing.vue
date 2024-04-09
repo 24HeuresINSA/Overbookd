@@ -7,6 +7,7 @@
       show-expand
       single-expand
       @click:row="openOrCloseGearDetails"
+      @item-expanded="expandItem"
     >
       <template #item.isConsumable="{ item }">
         <div v-show="item.isConsumable" class="icon">
@@ -81,8 +82,12 @@ export default defineComponent({
     this.$accessor.logisticDashboard.fetchPreviews();
   },
   methods: {
+    async expandItem({ item }: { item: GearPreview }) {
+      await this.openOrCloseGearDetails(item);
+    },
     async openOrCloseGearDetails(gear: GearPreview) {
-      if (this.displayedGears.length > 0) {
+      const isSameGear = this.displayedGears.at(0) === gear;
+      if (isSameGear) {
         this.displayedGears = [];
         return;
       }
