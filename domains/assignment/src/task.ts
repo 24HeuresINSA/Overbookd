@@ -1,9 +1,9 @@
 import { Category } from "@overbookd/festival-event-constants";
 
-export type TaskWithRequestedTeams = {
+export type TaskWithUnassignedTeams = {
   id: number;
   name: string;
   topPriority: boolean;
-  category: Category;
+  category?: Category;
   teams: string[];
 };

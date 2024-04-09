@@ -1,8 +1,11 @@
 import { PrismaService } from "../../prisma.service";
 import { Tasks } from "../task.service";
-import { TaskWithRequestedTeams } from "@overbookd/assignment";
 import {
-  DatabaseTaskWithRequestedTeams,
+  DeductUnassignedTeams,
+  TaskWithUnassignedTeams,
+} from "@overbookd/assignment";
+import {
+  DatabaseTaskWithUnassignedTeams,
   HAS_TEAM_REQUESTS,
   IS_READY_AND_EXISTS,
   SELECT_TASK_WITH_TEAMS,
@@ -11,7 +14,7 @@ import {
 export class PrismaTasks implements Tasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<TaskWithRequestedTeams[]> {
+  async findAll(): Promise<TaskWithUnassignedTeams[]> {
     const tasks = await this.prisma.festivalTask.findMany({
       where: {
         ...IS_READY_AND_EXISTS,
@@ -19,18 +22,23 @@ export class PrismaTasks implements Tasks {
       },
       select: SELECT_TASK_WITH_TEAMS,
     });
-    return tasks.map(toTaskWithRequestedTeams);
+    return tasks.map(toTaskWithUnassignedTeams);
   }
 }
 
-function toTaskWithRequestedTeams(
-  task: DatabaseTaskWithRequestedTeams,
-): TaskWithRequestedTeams {
-  const teams = [
-    ...new Set(
-      task.mobilizations.flatMap((m) => m.teams.map((t) => t.teamCode)),
-    ),
-  ];
+function toTaskWithUnassignedTeams(
+  task: DatabaseTaskWithUnassignedTeams,
+): TaskWithUnassignedTeams {
+  const taskForTeams = {
+    assignments: task.mobilizations.map((m) => ({
+      assignees: m.assignees.map((a) => ({ as: a.teamCode })),
+      requestedTeams: m.teams.map((t) => ({
+        count: t.count,
+        code: t.teamCode,
+      })),
+    })),
+  };
+  const teams = DeductUnassignedTeams.fromTask(taskForTeams);
   return {
     id: task.id,
     name: task.name,

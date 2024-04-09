@@ -19,15 +19,17 @@ export const SELECT_TASK_WITH_TEAMS = {
   category: true,
   mobilizations: {
     select: {
-      teams: { select: { teamCode: true } },
+      teams: { select: { teamCode: true, count: true } },
+      assignees: { select: { teamCode: true } },
     },
   },
 };
 
-export type DatabaseTaskWithRequestedTeams = Categorize & {
+export type DatabaseTaskWithUnassignedTeams = Categorize & {
   id: number;
   name: string;
   mobilizations: {
-    teams: { teamCode: string }[];
+    teams: { teamCode: string; count: number }[];
+    assignees: { teamCode: string }[];
   }[];
 };

@@ -8,7 +8,10 @@ import {
   HAS_VOLUNTEER_TEAM,
   DatabaseVolunteer,
 } from "./volunteer.query";
-import { Volunteer } from "@overbookd/assignment";
+import {
+  CalculeVolunteerAssignmentDuration,
+  Volunteer,
+} from "@overbookd/assignment";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -25,15 +28,16 @@ export class PrismaVolunteers implements Volunteers {
       },
       orderBy: { charisma: "desc" },
     });
-    return volunteers.map(formatVolunteer);
+    return volunteers.map(toVolunteer);
   }
 }
 
-function formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
-  const assignmentDuration = volunteer.assigned.reduce(
-    (acc, task) => acc + Period.init(task.assignment).duration.inMilliseconds,
-    0,
-  );
+function toVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+  const periods = volunteer.assigned
+    .flatMap((a) => a.assignment)
+    .flatMap(({ end, start }) => Period.init({ start, end }));
+  const assignmentDuration =
+    CalculeVolunteerAssignmentDuration.fromPeriods(periods);
 
   return {
     id: volunteer.id,
