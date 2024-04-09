@@ -7,7 +7,12 @@ import {
   NotEnoughQuantity,
 } from "../borrow.error";
 import { karnaBorrow } from "../borrow.fake";
-import { chaise, monday21At10, saturday19At16, table } from "../../logistic.test-utils";
+import {
+  chaise,
+  monday21At10,
+  saturday19At16,
+  table,
+} from "../../logistic.test-utils";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;

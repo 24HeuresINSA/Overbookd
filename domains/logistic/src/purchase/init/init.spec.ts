@@ -3,11 +3,10 @@ import { friday17At12 } from "../../logistic.test-utils";
 import { InMemoryPurchases } from "./purchase.inmemory";
 import { InitPurchase, InitPurchaseForm } from "./init";
 
-
 describe("Init purchase", () => {
   const purchases = new InMemoryPurchases();
   const init = new InitPurchase(purchases);
-  
+
   describe("when initializing a purchase for Leroy Merlin", async () => {
     const form: InitPurchaseForm = {
       seller: "Leroy Merlin",
