@@ -1,11 +1,4 @@
-export type Gear = {
-  slug: string;
-  name: string;
-};
-
-export type GearRequest = Gear & {
-  quantity: number;
-};
+import { GearRequest } from "../gear-request";
 
 export type Borrow = {
   id: number;

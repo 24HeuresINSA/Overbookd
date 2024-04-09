@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory";
 import { CancelBorrow } from "./cancel";
-import { karnaBorrow } from "../borrow.test-utils";
+import { karnaBorrow } from "../borrow.fake";
 
 describe("Cancel borrow", () => {
   describe("when cancelling borrow from KARNA", async () => {

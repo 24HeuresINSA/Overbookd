@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { InitBorrow } from "./init";
 import { InMemoryBorrows } from "./borrow.inmemory";
-import { friday17At12, sunday20At10 } from "../borrow.test-utils";
+import { friday17At12, sunday20At10 } from "../../logistic.test-utils";
 
 describe("Init borrow", () => {
   const borrows = new InMemoryBorrows();
   const init = new InitBorrow(borrows);
-  describe("when initializing a valid borrow from KARNA", async () => {
+  describe("when initializing a valid borrow for KARNA", async () => {
     const form = {
       lender: "KARNA",
       availableOn: friday17At12,
@@ -14,7 +14,7 @@ describe("Init borrow", () => {
     };
     const initializedBorrow = await init.apply(form);
 
-    it("should initialize a borrow from KARNA", () => {
+    it("should initialize a borrow for KARNA", () => {
       expect(initializedBorrow.lender).toBe("KARNA");
     });
     it("should initialize the available date", () => {
