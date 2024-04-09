@@ -86,8 +86,7 @@ export default defineComponent({
       await this.openOrCloseGearDetails(item);
     },
     async openOrCloseGearDetails(gear: GearPreview) {
-      const hasDisplayedGears = this.displayedGears.length > 0;
-      const isSameGear = hasDisplayedGears && this.displayedGears[0] === gear;
+      const isSameGear = this.displayedGears.at(0) === gear;
       if (isSameGear) {
         this.displayedGears = [];
         return;
