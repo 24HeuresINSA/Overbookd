@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DRAFT, IN_REVIEW } from "@overbookd/status";
+import { DRAFT, IN_REVIEW } from "@overbookd/festival-event-constants";
 import { Reviewer } from "../../common/review";
 import {
   barrieres,

@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
+import {
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import {
   deuxTables,
   troisMarteaux,

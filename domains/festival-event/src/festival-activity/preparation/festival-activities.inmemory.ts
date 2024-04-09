@@ -1,5 +1,9 @@
 import { updateItemToList } from "@overbookd/list";
-import { VALIDATED, IN_REVIEW, REFUSED } from "@overbookd/status";
+import {
+  VALIDATED,
+  IN_REVIEW,
+  REFUSED,
+} from "@overbookd/festival-event-constants";
 import { FestivalActivity, Draft, Reviewable } from "../festival-activity";
 import {
   PreviewFestivalActivity,

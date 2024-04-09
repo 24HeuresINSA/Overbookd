@@ -1,6 +1,5 @@
 import { JoinableTeam } from "./joinable-team";
-
-export const BENEVOLE_CODE = "benevole";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export type NewcomerToEnroll = {
   id: number;

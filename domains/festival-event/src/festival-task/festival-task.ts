@@ -4,7 +4,7 @@ import {
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
 import { TimeWindow } from "../common/time-window";
@@ -24,6 +24,7 @@ import {
   ValidatedReviews,
 } from "../common/review";
 import { Adherent } from "../common/adherent";
+import { Category } from "@overbookd/festival-event-constants";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -75,19 +76,6 @@ type MobilizationsWithoutConflicts<T extends AssignmentsOptions> = {
 type MobilizationsWithConflicts<T extends AssignmentsOptions> = {
   mobilizations: ReviewableMobilization<T & { withConflicts: true }>[];
 };
-
-export const STATIQUE = "STATIQUE";
-export const BAR = "BAR";
-export const MANUTENTION = "MANUTENTION";
-export const FUN = "FUN";
-export const RELOU = "RELOU";
-
-type Category =
-  | typeof STATIQUE
-  | typeof BAR
-  | typeof MANUTENTION
-  | typeof FUN
-  | typeof RELOU;
 
 export type Categorize = {
   category?: Category;

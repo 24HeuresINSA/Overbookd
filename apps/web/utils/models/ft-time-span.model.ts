@@ -1,3 +1,10 @@
+import {
+  BAR,
+  FUN,
+  MANUTENTION,
+  RELOU,
+  STATIQUE,
+} from "@overbookd/festival-event-constants";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
 
@@ -25,11 +32,11 @@ export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
 
 export const TaskCategoryEmojiMap: Map<TaskCategory, TaskCategoryEmoji> =
   new Map([
-    ["STATIQUE", TaskCategoryEmojis.STATIQUE],
-    ["BAR", TaskCategoryEmojis.BAR],
-    ["MANUTENTION", TaskCategoryEmojis.MANUTENTION],
-    ["FUN", TaskCategoryEmojis.FUN],
-    ["RELOU", TaskCategoryEmojis.RELOU],
+    [STATIQUE, TaskCategoryEmojis.STATIQUE],
+    [BAR, TaskCategoryEmojis.BAR],
+    [MANUTENTION, TaskCategoryEmojis.MANUTENTION],
+    [FUN, TaskCategoryEmojis.FUN],
+    [RELOU, TaskCategoryEmojis.RELOU],
     ["AUCUNE", TaskCategoryEmojis.AUCUNE],
   ]);
 

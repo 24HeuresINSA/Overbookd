@@ -34,6 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Team } from "~/utils/models/team.model";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export default Vue.extend({
   name: "TeamChip",
@@ -78,7 +79,7 @@ export default Vue.extend({
       return this.$accessor.team.getTeamByCode(this.team);
     },
     showTeam(): boolean {
-      const hiddenTeams = ["benevole"];
+      const hiddenTeams = [BENEVOLE_CODE];
       return this.showHidden || !hiddenTeams.includes(this.team);
     },
     teamText(): string {

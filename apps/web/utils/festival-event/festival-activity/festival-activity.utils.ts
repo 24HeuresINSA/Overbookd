@@ -18,7 +18,7 @@ import {
   PreviewForCommunication,
   PreviewForSecurity,
 } from "@overbookd/http";
-import { DRAFT } from "@overbookd/status";
+import { DRAFT } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
 import { CastReviewable } from "./reviewable";

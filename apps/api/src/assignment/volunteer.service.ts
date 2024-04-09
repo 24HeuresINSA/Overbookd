@@ -14,11 +14,12 @@ import {
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from "./model/volunteer.model";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export const WHERE_IS_VOLUNTEER = {
   teams: {
     some: {
-      team: { code: "benevole" },
+      team: { code: BENEVOLE_CODE },
     },
   },
 };

@@ -1,4 +1,4 @@
-import { READY_TO_ASSIGN } from "@overbookd/status";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import {
   Categorize,
   FestivalTask,

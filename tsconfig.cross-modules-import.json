@@ -2,11 +2,14 @@
   "compilerOptions": {
     "paths": {
       "@overbookd/event": ["./libraries/event/src"],
+      "@overbookd/festival-event-constants": [
+        "./constants/festival-event-constants/src"
+      ],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./constants/permission/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],
-      "@overbookd/status": ["./constants/status/src"]
+      "@overbookd/team": ["./constants/team/src"]
     }
   }
 }

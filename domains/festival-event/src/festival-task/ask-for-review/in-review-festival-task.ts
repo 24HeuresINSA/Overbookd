@@ -1,4 +1,4 @@
-import { IN_REVIEW } from "@overbookd/status";
+import { IN_REVIEW } from "@overbookd/festival-event-constants";
 import { REJECTED } from "../../common/action";
 import { Adherent } from "../../common/adherent";
 import { WaitingForReview } from "../../common/notifications";

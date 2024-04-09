@@ -1,13 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  BAR,
   Categorize,
-  FUN,
-  MANUTENTION,
-  RELOU,
-  STATIQUE,
   FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
+import { categories } from "@overbookd/festival-event-constants";
 import {
   IsEnum,
   ValidationArguments,
@@ -16,13 +12,12 @@ import {
   IsBoolean,
 } from "class-validator";
 
-const CATEGORIES = [BAR, RELOU, MANUTENTION, FUN, STATIQUE];
 export class CategorizeTaskRequestDto implements Categorize {
-  @ApiProperty({ enum: CATEGORIES, required: false })
+  @ApiProperty({ enum: categories, required: false })
   @IsOptional()
-  @IsEnum(CATEGORIES, {
+  @IsEnum(categories, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(CATEGORIES)}`,
+      `${va.property} must be one of ${Object.values(categories)}`,
   })
   category?: FestivalTaskReadyToAssign["category"];
 

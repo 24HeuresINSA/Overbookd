@@ -5,19 +5,15 @@ import {
   FestivalTaskReviewable as Reviewable,
   FestivalTaskValidated as Validated,
   FestivalTaskReadyToAssign as ReadyToAssign,
-  BAR,
-  RELOU,
-  MANUTENTION,
-  FUN,
-  STATIQUE,
 } from "@overbookd/festival-event";
+import { categories } from "@overbookd/festival-event-constants";
 import { ReviewableWithConflicts } from "@overbookd/http";
 import {
   IN_REVIEW,
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 import { ReviewableGeneralResponseDto } from "./reviewable-general.response.dto";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { ReviewableInstructionsResponseDto } from "./reviewable-instructions.response.dto";
@@ -192,7 +188,7 @@ export class ReadyToAssignFestivalTaskResponseDto
   })
   reviews: ReadyToAssign["reviews"];
 
-  @ApiProperty({ enum: [BAR, RELOU, MANUTENTION, FUN, STATIQUE] })
+  @ApiProperty({ enum: categories })
   category?: ReadyToAssign["category"];
 
   @ApiProperty({ description: "Indicate task is top priority to assign" })

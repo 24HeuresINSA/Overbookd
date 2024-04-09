@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { FtReview } from "@prisma/client";
 import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
-import { VALIDATED } from "@overbookd/status";
+import { VALIDATED } from "@overbookd/festival-event-constants";
 import {
   JwtPayload,
   JwtUtil,

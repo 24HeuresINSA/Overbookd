@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PreviewFestivalTaskInReview } from "@overbookd/festival-event";
-import { IN_REVIEW } from "@overbookd/status";
+import { IN_REVIEW } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 import { InReviewReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
 

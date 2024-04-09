@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { IN_REVIEW } from "@overbookd/status";
+import { IN_REVIEW } from "@overbookd/festival-event-constants";
 import { lea, noel } from "../festival-task.test-util";
 import {
   guardEscapeGame,

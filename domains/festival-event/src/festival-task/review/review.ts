@@ -1,4 +1,4 @@
-import { REFUSED, VALIDATED } from "@overbookd/status";
+import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
 import { FestivalTask, Validated } from "../festival-task";
 import {
   Approval,

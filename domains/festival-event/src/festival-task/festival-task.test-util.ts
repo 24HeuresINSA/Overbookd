@@ -1,5 +1,5 @@
 import { Item } from "@overbookd/list";
-import { VALIDATED } from "@overbookd/status";
+import { VALIDATED } from "@overbookd/festival-event-constants";
 import { FestivalActivity } from "./festival-task";
 import { AddMobilization } from "./prepare/prepare";
 import { Contact, Volunteer } from "./sections/instructions";

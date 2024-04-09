@@ -1,4 +1,8 @@
-import { IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
+import {
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Contractors } from "./section-aggregates/contractors";

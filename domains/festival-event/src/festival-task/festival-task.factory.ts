@@ -5,7 +5,7 @@ import {
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 import { isKeyOf } from "../is-key-of";
 import {
   Draft,

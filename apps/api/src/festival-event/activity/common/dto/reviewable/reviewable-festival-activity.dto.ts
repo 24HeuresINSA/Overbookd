@@ -10,7 +10,11 @@ import {
   Validated,
   ValidatedReviews,
 } from "@overbookd/festival-event";
-import { REFUSED, IN_REVIEW, VALIDATED } from "@overbookd/status";
+import {
+  REFUSED,
+  IN_REVIEW,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import {
   InReviewReviewsResponseDto,

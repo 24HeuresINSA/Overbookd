@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { REFUSED, VALIDATED } from "@overbookd/status";
+import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
 import { getFactory } from "../festival-activity.factory";
 import {
   barrieres,

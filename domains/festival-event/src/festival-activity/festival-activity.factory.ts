@@ -1,5 +1,10 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
+import {
+  DRAFT,
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import {
   Draft,
   FestivalActivity,

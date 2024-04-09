@@ -4,7 +4,7 @@ import {
   VALIDATED,
   REFUSED,
   READY_TO_ASSIGN,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 import { DraftInCharge, InCharge } from "./sections/in-charge";
 import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";

@@ -233,14 +233,7 @@ export type {
   PreviewReviewable as PreviewFestivalTaskReviewable,
   Categorize,
 } from "./festival-task/festival-task";
-export {
-  STATIQUE,
-  FUN,
-  BAR,
-  RELOU,
-  MANUTENTION,
-  isReadyToAssign,
-} from "./festival-task/festival-task";
+export { isReadyToAssign } from "./festival-task/festival-task";
 export type {
   Volunteer,
   Contact,

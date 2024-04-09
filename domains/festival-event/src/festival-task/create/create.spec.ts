@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DRAFT } from "@overbookd/status";
+import { DRAFT } from "@overbookd/festival-event-constants";
 import { CREATED } from "../../common/action";
 import { CreateFestivalTask } from "./create";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";

@@ -31,14 +31,14 @@
 </template>
 
 <script lang="ts">
+import { Categorize } from "@overbookd/festival-event";
 import {
   BAR,
-  Categorize,
   FUN,
   MANUTENTION,
   RELOU,
   STATIQUE,
-} from "@overbookd/festival-event";
+} from "@overbookd/festival-event-constants";
 import { defineComponent } from "vue";
 
 export default defineComponent({
