@@ -1,3 +1,16 @@
+## [2.24.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.4...v2.24.5) (2024-04-09)
+
+
+### Bug Fixes
+
+* **assignment:** clear assignments if refusal of a ready ft [#1731](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1731) ([3a0cd8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3a0cd8ed6e570cd817f02b159559320d3ade6134))
+* **assignment:** show empty ft category [#1744](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1744) ([c99cd56](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c99cd56cf62efe717c10f43bb3468a85913d5d5c))
+* **festival-task:** show category and priority if ready to affect [#1743](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1743) ([22f6770](https://gitlab.com/24-heures-insa/overbookd-mono/commit/22f677042c0b642f155e01b60d87fc5b4036aaba))
+* **logistic-dashboard:** click on row to open details [#1676](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1676) ([9f3cb25](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f3cb25b32379a60090a90e93fbc03eb8ca2a093))
+* **logistic-dashboard:** gear extend [#1676](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1676) ([56fa612](https://gitlab.com/24-heures-insa/overbookd-mono/commit/56fa6125031f205297581a3b950cd40f03df6992))
+* **personal-account:** round amount in euros. [#1436](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1436) ([24586a8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/24586a8a46333a040f36797f8a844ee41cc66ebf))
+* **public-animation:** time window item key [#1742](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1742) ([c569276](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c569276d831f04d69ead5cdfff526349891af246))
+
 ## [2.24.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.3...v2.24.4) (2024-04-04)
 
 
