@@ -6,7 +6,7 @@ import {
   REVIEWING,
   ReviewStatus,
 } from "@overbookd/festival-event";
-import { IN_REVIEW, VALIDATED, REFUSED, DRAFT } from "@overbookd/status";
+import { IN_REVIEW, VALIDATED, REFUSED, DRAFT } from "@overbookd/festival-event-constants";
 import { User } from "@overbookd/user";
 import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
 import { Team } from "../../models/team.model";

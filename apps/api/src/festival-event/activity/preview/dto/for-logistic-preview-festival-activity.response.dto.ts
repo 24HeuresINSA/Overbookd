@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { drives } from "@overbookd/festival-event";
-import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/status";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/festival-event-constants";
 import { LogisticInquiry, PreviewForLogistic } from "@overbookd/http";
 import { TimeWindowResponseDto } from "../../../common/dto/time-window.response.dto";
 

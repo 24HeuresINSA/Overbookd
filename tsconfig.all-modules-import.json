@@ -8,6 +8,9 @@
       "@overbookd/domain-events": ["./utils/domain-events/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-event": ["./domains/festival-event/src"],
+      "@overbookd/festival-event-constants": [
+        "./constants/festival-event-constants/src"
+      ],
       "@overbookd/http": ["./utils/http/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/logistic": ["./domains/logistic/src"],
@@ -18,7 +21,7 @@
       "@overbookd/registration": ["./domains/registration/src"],
       "@overbookd/signa": ["./domains/signa/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],
-      "@overbookd/status": ["./constants/status/src"],
+      "@overbookd/team": ["./constants/team/src"],
       "@overbookd/user": ["./domains/user/src"],
       "@overbookd/web": ["./apps/web/src"]
     }

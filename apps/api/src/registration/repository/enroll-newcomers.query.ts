@@ -1,4 +1,5 @@
-import { BENEVOLE_CODE, VOLUNTEER } from "@overbookd/registration";
+import { VOLUNTEER } from "@overbookd/registration";
+import { BENEVOLE_CODE } from "@overbookd/team";
 import { SELECT_USER_TEAMS } from "../../user/user.query";
 import { IProvidePeriod } from "@overbookd/period";
 

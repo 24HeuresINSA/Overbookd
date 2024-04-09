@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PreviewFestivalTaskDraft } from "@overbookd/festival-event";
-import { DRAFT } from "@overbookd/status";
+import { DRAFT } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
 export class PreviewFestivalTaskDraftResponseDto

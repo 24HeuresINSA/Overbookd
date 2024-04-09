@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/status",
-  "version": "1.0.1",
-  "description": "Liste des status pour les fiches d'overbookd",
+  "name": "@overbookd/festival-event-constants",
+  "version": "1.0.0",
+  "description": "Gestion des constantes pour les fiches evenements d'overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "constants/status"
+    "directory": "constants/festival-event-constants"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -29,7 +29,10 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "keywords": [
-    "status"
+    "festival-event",
+    "constants",
+    "activity",
+    "task"
   ],
   "engines": {
     "node": "20.12.1",

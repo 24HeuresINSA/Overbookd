@@ -5,7 +5,7 @@ import {
   IN_REVIEW,
   VALIDATED,
   READY_TO_ASSIGN,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 
 const GREY = "grey";
 const RED = "red";

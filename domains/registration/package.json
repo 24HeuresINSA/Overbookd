@@ -40,6 +40,7 @@
     "@overbookd/list": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",
+    "@overbookd/team": "workspace:^",
     "jsonwebtoken": "9.0.2",
     "jwt-decode": "4.0.0"
   },

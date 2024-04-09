@@ -9,7 +9,7 @@ import {
   REFUSED,
   VALIDATED,
   READY_TO_ASSIGN,
-} from "@overbookd/status";
+} from "@overbookd/festival-event-constants";
 import {
   BROUILLON,
   PRETE_POUR_AFFECTATION,

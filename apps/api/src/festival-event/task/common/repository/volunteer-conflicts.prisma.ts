@@ -6,7 +6,7 @@ import {
   Conflicts,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { READY_TO_ASSIGN } from "@overbookd/status";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PrismaService } from "../../../../prisma.service";
 
 export class PrismaVolunteerConflicts implements VolunteerConflicts {

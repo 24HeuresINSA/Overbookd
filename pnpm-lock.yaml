@@ -101,6 +101,9 @@ importers:
       '@overbookd/festival-event':
         specifier: workspace:^
         version: link:../../domains/festival-event
+      '@overbookd/festival-event-constants':
+        specifier: workspace:^
+        version: link:../../constants/festival-event-constants
       '@overbookd/http':
         specifier: workspace:^
         version: link:../../utils/http
@@ -128,9 +131,9 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
-      '@overbookd/status':
+      '@overbookd/team':
         specifier: workspace:^
-        version: link:../../constants/status
+        version: link:../../constants/team
       '@overbookd/user':
         specifier: workspace:^
         version: link:../../domains/user
@@ -303,6 +306,9 @@ importers:
       '@overbookd/festival-event':
         specifier: workspace:*
         version: link:../../domains/festival-event
+      '@overbookd/festival-event-constants':
+        specifier: workspace:*
+        version: link:../../constants/festival-event-constants
       '@overbookd/http':
         specifier: workspace:*
         version: link:../../utils/http
@@ -333,9 +339,9 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
-      '@overbookd/status':
+      '@overbookd/team':
         specifier: workspace:*
-        version: link:../../constants/status
+        version: link:../../constants/team
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../domains/user
@@ -458,9 +464,13 @@ importers:
         specifier: 4.47.0
         version: 4.47.0
 
+  constants/festival-event-constants: {}
+
   constants/permission: {}
 
   constants/status: {}
+
+  constants/team: {}
 
   domains/configuration: {}
 
@@ -478,6 +488,9 @@ importers:
 
   domains/festival-event:
     dependencies:
+      '@overbookd/festival-event-constants':
+        specifier: workspace:*
+        version: link:../../constants/festival-event-constants
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
@@ -487,9 +500,6 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
-      '@overbookd/status':
-        specifier: workspace:*
-        version: link:../../constants/status
 
   domains/logistic:
     dependencies:
@@ -526,6 +536,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:^
         version: link:../../constants/permission
+      '@overbookd/team':
+        specifier: workspace:^
+        version: link:../../constants/team
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2

@@ -22,7 +22,7 @@ import {
   UpdateGeneralForm,
   UpdateInstructionsForm,
 } from "@overbookd/http";
-import { DRAFT } from "@overbookd/status";
+import { DRAFT } from "@overbookd/festival-event-constants";
 import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
 import { safeCall } from "~/utils/api/calls";
 import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";

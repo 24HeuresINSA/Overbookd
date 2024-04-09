@@ -1,4 +1,4 @@
-import { IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
+import { IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
 import { FestivalActivity, Refused, Reviewable } from "../festival-activity";
 import { isValidatedReviews } from "../../common/review";
 import { Reviews } from "../../common/review";

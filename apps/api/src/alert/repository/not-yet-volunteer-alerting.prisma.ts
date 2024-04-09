@@ -2,6 +2,7 @@ import { PrismaService } from "../../prisma.service";
 import { User } from "@overbookd/user";
 import { NotYetVolunteerAlerting } from "../alert.service";
 import { VOLUNTEER } from "@overbookd/registration";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
   constructor(private readonly prisma: PrismaService) {}
@@ -11,7 +12,7 @@ export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
       where: {
         id,
         registrationMembership: VOLUNTEER,
-        teams: { none: { team: { code: "benevole" } } },
+        teams: { none: { team: { code: BENEVOLE_CODE } } },
       },
       select: { registrationMembership: true },
     });

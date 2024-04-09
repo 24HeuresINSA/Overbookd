@@ -15,7 +15,7 @@ import {
   PreviewDraft,
   PreviewFestivalActivity,
 } from "@overbookd/festival-event";
-import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/status";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "@overbookd/festival-event-constants";
 import {
   BROUILLON,
   RELECTURE_EN_COURS,

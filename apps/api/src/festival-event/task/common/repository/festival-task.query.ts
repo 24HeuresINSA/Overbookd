@@ -25,7 +25,7 @@ import { SELECT_FEEDBACKS } from "./feedback.query";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { Item } from "@overbookd/list";
-import { READY_TO_ASSIGN } from "@overbookd/status";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
 const SELECT_REVIEWS = {
   reviews: {

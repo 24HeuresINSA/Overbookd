@@ -1,4 +1,4 @@
-import { DRAFT, IN_REVIEW, REFUSED } from "@overbookd/status";
+import { DRAFT, IN_REVIEW, REFUSED } from "@overbookd/festival-event-constants";
 import {
   AssignDrive,
   BaseInquiryRequest,

@@ -1,4 +1,4 @@
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/status";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
 import { FestivalActivity } from "./festival-activity/festival-activity";
 import { FestivalTask } from "./festival-task/festival-task";
 
