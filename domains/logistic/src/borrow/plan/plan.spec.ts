@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory";
-import {
-  chaise,
-  table,
-  karnaBorrow,
-  monday21At10,
-  saturday19At16,
-} from "../borrow.test-utils";
 import { PlanBorrow } from "./plan";
 import {
   AlreadyAddedGear,
   BorrowNotFound,
   NotEnoughQuantity,
 } from "../borrow.error";
+import { karnaBorrow } from "../borrow.fake";
+import {
+  chaise,
+  monday21At10,
+  saturday19At16,
+  table,
+} from "../../logistic.test-utils";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;

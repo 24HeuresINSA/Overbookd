@@ -1,11 +1,9 @@
 import { OverDate } from "@overbookd/period";
-import { Borrow } from "./borrow";
 
 export const chaise = {
   slug: "chaise",
   name: "Chaise",
 };
-
 export const table = {
   slug: "table",
   name: "table",
@@ -27,11 +25,3 @@ export const monday21At10 = OverDate.init({
   date: "2024-05-21",
   hour: 10,
 }).date;
-
-export const karnaBorrow: Borrow = {
-  id: 1,
-  lender: "KARNA",
-  availableOn: friday17At12,
-  unavailableOn: sunday20At10,
-  gears: [{ ...table, quantity: 2 }],
-};

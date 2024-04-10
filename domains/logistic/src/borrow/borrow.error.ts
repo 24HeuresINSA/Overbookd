@@ -1,4 +1,5 @@
-import { Borrow, GearRequest } from "./borrow";
+import { GearRequest } from "../gear-request";
+import { Borrow } from "./borrow";
 
 export class BorrowError extends Error {}
 
