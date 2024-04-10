@@ -1,46 +1,46 @@
 import { Assignment, Task } from "./unassigned-team";
 
-const assignmentWithoutUnassigned: Assignment = {
+const assignmentFulfilled: Assignment = {
   assignees: [{ as: "hard" }],
   requestedTeams: [{ code: "hard", count: 1 }],
 };
-export const taskWithoutUnassigned: Task = {
-  assignments: [assignmentWithoutUnassigned],
+export const taskFullyAssigned: Task = {
+  assignments: [assignmentFulfilled],
 };
 
-const assignmentWithOneUnassigned: Assignment = {
+const assignmentMissingOneAssignee: Assignment = {
   assignees: [],
   requestedTeams: [{ code: "plaizir", count: 1 }],
 };
-export const taskWithOneUnassigned: Task = {
-  assignments: [assignmentWithOneUnassigned],
+export const taskMissingOneAssignee: Task = {
+  assignments: [assignmentMissingOneAssignee],
 };
 
-const assignmentWithOneUnassignedAmongTwoTeams: Assignment = {
+const assignmentMissingTwoVieux: Assignment = {
   assignees: [{ as: "hard" }],
   requestedTeams: [
     { code: "hard", count: 1 },
     { code: "vieux", count: 2 },
   ],
 };
-export const taskWithOneUnassignedAmongTwoTeams: Task = {
-  assignments: [assignmentWithOneUnassignedAmongTwoTeams],
+export const taskMissingTwoVieux: Task = {
+  assignments: [assignmentMissingTwoVieux],
 };
 
-const assignmentWithTwoDifferentUnassigned: Assignment = {
+const assignmentMissingOneHardAndOneBenevole: Assignment = {
   assignees: [{ as: "hard" }, { as: "hard" }, { as: "benevole" }],
   requestedTeams: [
     { code: "hard", count: 3 },
     { code: "benevole", count: 2 },
   ],
 };
-export const taskWithTwoDifferentUnassigned: Task = {
-  assignments: [assignmentWithTwoDifferentUnassigned],
+export const taskMissingOneHardAndOneBenevole: Task = {
+  assignments: [assignmentMissingOneHardAndOneBenevole],
 };
 
-export const taskWithTwoAssignments: Task = {
+export const taskMissingOneAssigneeThenOneHardAndOneBenevole: Task = {
   assignments: [
-    assignmentWithOneUnassigned,
-    assignmentWithTwoDifferentUnassigned,
+    assignmentMissingOneAssignee,
+    assignmentMissingOneHardAndOneBenevole,
   ],
 };
