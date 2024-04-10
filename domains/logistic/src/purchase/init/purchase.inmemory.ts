@@ -1,4 +1,5 @@
-import { Purchase, PurchasesForInit } from "./init";
+import { Purchase } from "../purchase";
+import { PurchasesForInit } from "./init";
 
 export class InMemoryPurchases implements PurchasesForInit {
   constructor(private purchases: Purchase[] = []) {}
