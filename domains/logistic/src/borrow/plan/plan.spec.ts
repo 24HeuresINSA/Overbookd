@@ -1,11 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory";
 import { PlanBorrow } from "./plan";
-import {
-  AlreadyAddedGear,
-  BorrowNotFound,
-  NotEnoughQuantity,
-} from "../borrow.error";
+import { BorrowNotFound } from "../borrow.error";
 import { karnaBorrow } from "../borrow.fake";
 import {
   chaise,
@@ -13,6 +9,7 @@ import {
   saturday19At16,
   table,
 } from "../../logistic.test-utils";
+import { AlreadyAddedGear, NotEnoughQuantity } from "../../forms.error";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;
@@ -41,6 +38,7 @@ describe("Plan borrow", () => {
       });
     },
   );
+
   describe("when planning a borrow that does not exist", () => {
     it("should indicate that borrow does not exist", async () => {
       const borrows = new InMemoryBorrows([karnaBorrow]);
@@ -51,6 +49,7 @@ describe("Plan borrow", () => {
       );
     });
   });
+
   describe("when adding a gear request to a borrow", () => {
     it("should add the gear request to the borrow", async () => {
       const request = { ...chaise, quantity: 4 };
@@ -90,7 +89,6 @@ describe("Plan borrow", () => {
 
       expect(updated.gears).not.toContainEqual(chaise);
     });
-
     describe("when the borrow does not exist", () => {
       it("should indicate that borrow does not exist", async () => {
         await expect(plan.removeGear(100, chaise.slug)).rejects.toThrowError(
