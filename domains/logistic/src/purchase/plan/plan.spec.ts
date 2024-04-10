@@ -1,22 +1,10 @@
-import {
-  chaise,
-  friday17At12,
-  saturday19At16,
-  table,
-} from "../../logistic.test-utils";
+import { chaise, saturday19At16, table } from "../../logistic.test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
-import { Purchase } from "../purchase";
 import { AlreadyAddedGear, NotEnoughQuantity } from "../../forms.error";
 import { InMemoryPurchases } from "./purchase.inmemory";
 import { PlanPurchase } from "./plan";
 import { PurchaseNotFound } from "../purchase.error";
-
-const leroyMerlinPurchase: Purchase = {
-  id: 1,
-  seller: "Leroy Merlin",
-  availableOn: friday17At12,
-  gears: [{ ...table, quantity: 2 }],
-};
+import { leroyMerlinPurchase } from "../purchase.fake";
 
 describe("Plan purchase", () => {
   let purchases: InMemoryPurchases;
