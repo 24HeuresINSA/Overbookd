@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { IProvidePeriod, QUARTER_IN_MS } from "@overbookd/period";
+import { BE_AFFECTED } from "@overbookd/permission";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
 import { getPeriodDuration } from "../utils/duration";
-import { BE_AFFECTED } from "@overbookd/permission";
 
 type OrgaNeedsRequest = {
   start: Date;
@@ -34,25 +35,14 @@ const SELECT_REQUESTED_VOLUNTEERS = {
   },
 };
 
-const SELECT_ASSIGNED_VOLUNTEERS = {
-  start: true,
-  end: true,
-  _count: {
-    select: {
-      assignments: true,
-    },
-  },
-};
-
 const IS_NOT_DELETED = { isDeleted: false };
+const SELECT_PERIOD = { start: true, end: true };
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
 };
 
-type AssignmentsOverPeriod = IProvidePeriod & {
-  assigments: number;
-};
+type AssignmentsOverPeriod = IProvidePeriod;
 
 type DataBaseOrgaStats = {
   interval: IProvidePeriod;
@@ -118,9 +108,7 @@ export class OrgaNeedsService {
     assignments: AssignmentsOverPeriod[],
     interval: IProvidePeriod,
   ) {
-    return assignments
-      .filter(includedPeriods(interval))
-      .reduce((acc, { assigments }) => acc + assigments, 0);
+    return assignments.filter(includedPeriods(interval)).length;
   }
 
   private countRequestedVolunteersOnInterval(
@@ -144,9 +132,9 @@ export class OrgaNeedsService {
   ): Promise<RequestedVolunteersOverPeriod[]> {
     const timeWindows = await this.prisma.festivalTaskMobilization.findMany({
       where: {
+        ft: IS_NOT_DELETED,
         ...this.periodIncludedCondition(orgaNeedsRequest),
         ...this.hasTeamCondition(orgaNeedsRequest.teams),
-        ft: IS_NOT_DELETED,
       },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
@@ -165,32 +153,74 @@ export class OrgaNeedsService {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         ...this.periodIncludedCondition(periodWithTeams),
+        ...this.notAssignedNorPartOfMibilizationDuring(periodWithTeams),
         user: {
-          ...this.teamMemberCondition(periodWithTeams.teams),
           ...IS_NOT_DELETED,
+          ...this.teamMemberCondition(periodWithTeams.teams),
         },
       },
     });
   }
 
+  private notAssignedNorPartOfMibilizationDuring(period: IProvidePeriod) {
+    return { NOT: { user: this.assignedOrPartOfMobilizationDuring(period) } };
+  }
+
+  private assignedOrPartOfMobilizationDuring(period: IProvidePeriod) {
+    const isAssignedDuringPeriod = {
+      assigned: {
+        some: { assignment: this.periodIncludedCondition(period) },
+      },
+    };
+    const isPartOfMobilizationDuringPeriod = {
+      festivalTaskMobilizations: {
+        some: { mobilization: this.periodIncludedCondition(period) },
+      },
+    };
+
+    return {
+      OR: [isAssignedDuringPeriod, isPartOfMobilizationDuringPeriod],
+    };
+  }
+
   private async getAssignments(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<AssignmentsOverPeriod[]> {
-    const teams = orgaNeedsRequest.teams ?? [];
-
-    const assignments = await this.prisma.ftTimeSpan.findMany({
-      where: {
-        ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.teamRequestedInTimeWindowCondition(teams),
+    const assignedTasks = {
+      assigned: {
+        where: { assignment: this.periodIncludedCondition(orgaNeedsRequest) },
+        select: { assignment: { select: SELECT_PERIOD } },
       },
-      select: SELECT_ASSIGNED_VOLUNTEERS,
+    };
+
+    const mobilizationsHeWillBePartOf = {
+      festivalTaskMobilizations: {
+        where: {
+          mobilization: {
+            ft: {
+              status: { not: READY_TO_ASSIGN } as const,
+              ...IS_NOT_DELETED,
+            },
+            ...this.periodIncludedCondition(orgaNeedsRequest),
+          },
+        },
+        select: { mobilization: { select: SELECT_PERIOD } },
+      },
+    };
+
+    const assignees = await this.prisma.user.findMany({
+      where: {
+        ...IS_NOT_DELETED,
+        ...this.teamMemberCondition(orgaNeedsRequest.teams),
+        ...this.assignedOrPartOfMobilizationDuring(orgaNeedsRequest),
+      },
+      select: { ...assignedTasks, ...mobilizationsHeWillBePartOf },
     });
 
-    return assignments.map(({ start, end, _count }) => ({
-      start,
-      end,
-      assigments: _count.assignments,
-    }));
+    return assignees.flatMap(({ assigned, festivalTaskMobilizations }) => [
+      ...assigned.map(({ assignment }) => assignment),
+      ...festivalTaskMobilizations.map(({ mobilization }) => mobilization),
+    ]);
   }
 
   private buildOrgaNeedsIntervals(period: IProvidePeriod): IProvidePeriod[] {
@@ -217,18 +247,6 @@ export class OrgaNeedsService {
     return {
       teams: { some: { teamCode: { in: teams } } },
     };
-  }
-
-  private teamRequestedCondition(teams: string[]) {
-    if (teams.length === 0) return {};
-    return {
-      teamRequests: { some: { teamCode: { in: teams } } },
-    };
-  }
-
-  private teamRequestedInTimeWindowCondition(teams: string[]) {
-    if (teams.length === 0) return {};
-    return { timeWindow: this.teamRequestedCondition(teams) };
   }
 
   private teamMemberCondition(teams: string[]) {
