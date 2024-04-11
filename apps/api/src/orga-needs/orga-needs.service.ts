@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { IProvidePeriod, QUARTER_IN_MS } from "@overbookd/period";
+import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/period";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
-import { getPeriodDuration } from "../utils/duration";
 
 type OrgaNeedsRequest = {
   start: Date;
@@ -18,21 +17,6 @@ export type OrgaNeedsResponse = {
   assignedVolunteers: number;
   availableVolunteers: number;
   requestedVolunteers: number;
-};
-
-const SELECT_REQUESTED_VOLUNTEERS = {
-  start: true,
-  end: true,
-  teams: {
-    select: {
-      count: true,
-    },
-  },
-  _count: {
-    select: {
-      volunteers: true,
-    },
-  },
 };
 
 const IS_NOT_DELETED = { isDeleted: false };
@@ -130,21 +114,80 @@ export class OrgaNeedsService {
   private async getRequestedVolunteers(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<RequestedVolunteersOverPeriod[]> {
-    const timeWindows = await this.prisma.festivalTaskMobilization.findMany({
+    const { teams, ...period } = orgaNeedsRequest;
+
+    const mobilizations = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ft: IS_NOT_DELETED,
-        ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.hasTeamCondition(orgaNeedsRequest.teams),
+        ...this.periodIncludedCondition(period),
+        OR: [
+          this.requestTeamMemberCondition(teams),
+          this.requestVolunteerWithMembershipCondition(teams),
+        ].filter((condition) => condition !== undefined),
       },
-      select: SELECT_REQUESTED_VOLUNTEERS,
+      select: {
+        ...SELECT_PERIOD,
+        ...this.teamMemberRequestsSelection(teams),
+        ...this.volunteerWithMembershipRequestsSelection(teams),
+      },
     });
 
-    return timeWindows.map(({ start, end, teams, _count }) => {
+    return mobilizations.map(({ start, end, teams, volunteers }) => {
       const requestedVolunteers =
-        teams.reduce((acc, { count }) => acc + count, 0) + _count.volunteers;
+        teams.reduce((acc, { count }) => acc + count, 0) + volunteers.length;
 
       return { start, end, requestedVolunteers };
     });
+  }
+
+  private volunteerWithMembershipRequestsSelection(teams: string[]) {
+    return {
+      volunteers: {
+        select: { volunteerId: true },
+        where: {
+          volunteer: {
+            ...IS_NOT_DELETED,
+            ...this.teamMemberCondition(teams),
+          },
+        },
+      },
+    };
+  }
+
+  private teamMemberRequestsSelection(teams: string[]) {
+    return {
+      teams: {
+        select: {
+          count: true,
+        },
+        where: this.teamIsAssignableOrSearchedCondition(teams),
+      },
+    };
+  }
+
+  private teamIsAssignableOrSearchedCondition(teams: string[]) {
+    return teams.length > 0
+      ? {
+          teamCode: { in: teams },
+        }
+      : {
+          team: {
+            permissions: { some: { permissionName: BE_AFFECTED } },
+          },
+        };
+  }
+
+  private requestVolunteerWithMembershipCondition(teams: string[]) {
+    return {
+      volunteers: {
+        some: {
+          volunteer: {
+            ...IS_NOT_DELETED,
+            ...this.teamMemberCondition(teams),
+          },
+        },
+      },
+    };
   }
 
   private async getAvailabilities(
@@ -225,7 +268,7 @@ export class OrgaNeedsService {
 
   private buildOrgaNeedsIntervals(period: IProvidePeriod): IProvidePeriod[] {
     const numberOfIntervals = Math.floor(
-      getPeriodDuration(period) / QUARTER_IN_MS,
+      Period.init(period).duration.inMilliseconds / QUARTER_IN_MS,
     );
 
     return Array.from({ length: numberOfIntervals }).map((_, index) => {
@@ -242,8 +285,8 @@ export class OrgaNeedsService {
     };
   }
 
-  private hasTeamCondition(teams: string[]) {
-    if (teams.length === 0) return {};
+  private requestTeamMemberCondition(teams: string[]) {
+    if (teams.length === 0) return undefined;
     return {
       teams: { some: { teamCode: { in: teams } } },
     };
