@@ -157,10 +157,10 @@ export class OrgaNeedsService {
   }
 
   private teamIsAssignableOrSearchedCondition(teams: string[]) {
-    if (teams.length > 0) {
-      return { teamCode: { in: teams } };
+    if (teams.length === 0) {
+      return undefined;
     }
-    return { team: { permissions: { some: { permissionName: BE_AFFECTED } } } };
+    return { teamCode: { in: teams } };
   }
 
   private requestVolunteerWithMembershipCondition(teams: string[]) {
