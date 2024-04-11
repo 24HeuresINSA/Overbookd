@@ -11,7 +11,7 @@ describe("Plan purchase", () => {
   let plan: PlanPurchase;
 
   beforeEach(() => {
-    purchases = new InMemoryPurchases();
+    purchases = new InMemoryPurchases([leroyMerlinPurchase]);
     plan = new PlanPurchase(purchases);
   });
   describe.each`
@@ -44,7 +44,7 @@ describe("Plan purchase", () => {
 
   describe("when adding a gear request to a purchase", () => {
     it("should add the gear request to the purchase", async () => {
-      const request = { ...table, quantity: 4 };
+      const request = { ...chaise, quantity: 4 };
       const updated = await plan.addGear(leroyMerlinPurchase.id, request);
 
       expect(updated.gears).toContainEqual(request);
