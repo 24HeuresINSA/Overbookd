@@ -137,61 +137,38 @@ export class OrgaNeedsService {
     });
 
     return mobilizations.map(({ start, end, teams, volunteers }) => {
-      const requestedVolunteers =
-        teams.reduce((acc, { count }) => acc + count, 0) + volunteers.length;
+      const teamMembers = teams.reduce((acc, { count }) => acc + count, 0);
+      const requestedVolunteers = teamMembers + volunteers.length;
 
       return { start, end, requestedVolunteers };
     });
   }
 
   private volunteerWithMembershipRequestsSelection(teams: string[]) {
-    return {
-      volunteers: {
-        select: { volunteerId: true },
-        where: {
-          volunteer: {
-            ...IS_NOT_DELETED,
-            ...this.teamMemberCondition(teams),
-          },
-        },
-      },
+    const condition = {
+      volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
     };
+    return { volunteers: { select: { volunteerId: true }, where: condition } };
   }
 
   private teamMemberRequestsSelection(teams: string[]) {
-    return {
-      teams: {
-        select: {
-          count: true,
-        },
-        where: this.teamIsAssignableOrSearchedCondition(teams),
-      },
-    };
+    const condition = this.teamIsAssignableOrSearchedCondition(teams);
+    return { teams: { select: { count: true }, where: condition } };
   }
 
   private teamIsAssignableOrSearchedCondition(teams: string[]) {
-    return teams.length > 0
-      ? {
-          teamCode: { in: teams },
-        }
-      : {
-          team: {
-            permissions: { some: { permissionName: BE_AFFECTED } },
-          },
-        };
+    if (teams.length > 0) {
+      return { teamCode: { in: teams } };
+    }
+    return { team: { permissions: { some: { permissionName: BE_AFFECTED } } } };
   }
 
   private requestVolunteerWithMembershipCondition(teams: string[]) {
-    return {
-      volunteers: {
-        some: {
-          volunteer: {
-            ...IS_NOT_DELETED,
-            ...this.teamMemberCondition(teams),
-          },
-        },
-      },
+    const condition = {
+      ...IS_NOT_DELETED,
+      ...this.teamMemberCondition(teams),
     };
+    return { volunteers: { some: { volunteer: condition } } };
   }
 
   private async getAvailabilities(
@@ -304,12 +281,6 @@ export class OrgaNeedsService {
 
     const teamCondition = teams.length > 0 ? isMemberOf : isValidUser;
 
-    return {
-      teams: {
-        some: {
-          team: teamCondition,
-        },
-      },
-    };
+    return { teams: { some: { team: teamCondition } } };
   }
 }
