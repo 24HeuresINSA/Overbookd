@@ -1,6 +1,6 @@
 import { GearRequest } from "./gear-request";
 
-export class FormError extends Error {}
+class FormError extends Error {}
 
 export class NotEnoughQuantity extends FormError {
   constructor() {
