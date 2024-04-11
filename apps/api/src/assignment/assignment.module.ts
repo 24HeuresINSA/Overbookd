@@ -7,30 +7,46 @@ import { FtTimeSpanService } from "./ft-time-span.service";
 import { VolunteerService } from "./volunteer.service";
 import { MailModule } from "../mail/mail.module";
 import { UserModule } from "../user/user.module";
-import { PrismaVolunteers } from "./repository/volunteers.prisma";
+import { PrismaAssignees } from "./repository/assignees.prisma";
 import { UserService } from "../user/user.service";
 import { PrismaModule } from "../prisma.module";
 import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer-availability.module";
-import { PrismaTasks } from "./repository/tasks.prisma";
 import { TaskService } from "./task.service";
+import {
+  AssignmentDurationAssignee,
+  MissingAssignmentTasks,
+} from "@overbookd/assignment";
+import { PrismaAssignedTasks } from "./repository/assigned-tasks.prisma";
 
 @Module({
   controllers: [AssignmentController],
   providers: [
     {
-      provide: PrismaVolunteers,
-      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      provide: PrismaAssignees,
+      useFactory: (prisma: PrismaService) => new PrismaAssignees(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaTasks,
-      useFactory: (prisma: PrismaService) => new PrismaTasks(prisma),
+      provide: PrismaAssignedTasks,
+      useFactory: (prisma: PrismaService) => new PrismaAssignedTasks(prisma),
       inject: [PrismaService],
     },
     {
       provide: AssignmentService,
       useFactory: (prisma: PrismaService) => new AssignmentService(prisma),
       inject: [PrismaService],
+    },
+    {
+      provide: MissingAssignmentTasks,
+      useFactory: (tasks: PrismaAssignedTasks) =>
+        new MissingAssignmentTasks(tasks),
+      inject: [PrismaAssignedTasks],
+    },
+    {
+      provide: AssignmentDurationAssignee,
+      useFactory: (tasks: PrismaAssignees) =>
+        new AssignmentDurationAssignee(tasks),
+      inject: [PrismaAssignees],
     },
     {
       provide: FtTimeSpanService,
@@ -46,14 +62,17 @@ import { TaskService } from "./task.service";
       useFactory: (
         prisma: PrismaService,
         ftTimeSpan: FtTimeSpanService,
-        volunteers: PrismaVolunteers,
-      ) => new VolunteerService(prisma, ftTimeSpan, { volunteers }),
-      inject: [PrismaService, FtTimeSpanService, PrismaVolunteers],
+        assignmentDurationAssignee: AssignmentDurationAssignee,
+      ) =>
+        new VolunteerService(prisma, ftTimeSpan, {
+          assignmentDurationAssignee,
+        }),
+      inject: [PrismaService, FtTimeSpanService, AssignmentDurationAssignee],
     },
     {
       provide: TaskService,
-      useFactory: (tasks: PrismaTasks) => new TaskService(tasks),
-      inject: [PrismaTasks],
+      useFactory: (tasks: MissingAssignmentTasks) => new TaskService(tasks),
+      inject: [MissingAssignmentTasks],
     },
   ],
   imports: [PrismaModule, MailModule, UserModule, VolunteerAvailabilityModule],

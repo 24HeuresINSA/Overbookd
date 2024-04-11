@@ -6,12 +6,6 @@ export const IS_READY_AND_EXISTS = {
   status: READY_TO_ASSIGN,
 } as const;
 
-export const HAS_TEAM_REQUESTS = {
-  mobilizations: {
-    some: { teams: {} },
-  },
-};
-
 export const SELECT_TASK_WITH_TEAMS = {
   id: true,
   name: true,
@@ -25,7 +19,7 @@ export const SELECT_TASK_WITH_TEAMS = {
   },
 };
 
-export type DatabaseTaskWithUnassignedTeams = Categorize & {
+export type DatabaseAssignmentTask = Categorize & {
   id: number;
   name: string;
   mobilizations: {

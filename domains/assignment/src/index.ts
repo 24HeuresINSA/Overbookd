@@ -5,9 +5,9 @@ export type {
 } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export type {
-  Tasks as AssignedTasks,
+  Tasks,
   Assignment,
-  TaskWithAssignments as AssignmentTask,
+  TaskWithAssignments,
   MissingAssignmentTask,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
-export { AssignTaskToVolunteer as MissingAssignmentTasks } from "./assign-task-to-volunteer/assign-task-to-volunteer";
+export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";

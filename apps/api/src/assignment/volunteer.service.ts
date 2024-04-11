@@ -11,12 +11,16 @@ import {
   AvailableVolunteer,
   DatabaseVolunteer,
   DatabaseVolunteerWithFriendRequests,
+  Volunteer,
 } from "./model/volunteer.model";
 import {
   SELECT_VOLUNTEER,
   HAS_VOLUNTEER_TEAM,
-} from "./repository/volunteer.query";
-import { Volunteer } from "@overbookd/assignment";
+} from "./repository/assignee.query";
+import {
+  AssigneeWithAssignmentDuration,
+  AssignmentDurationAssignee,
+} from "@overbookd/assignment";
 
 const SELECT_TIMESPAN_PERIOD = {
   timeSpan: {
@@ -27,12 +31,8 @@ const SELECT_TIMESPAN_PERIOD = {
   },
 };
 
-export type Volunteers = {
-  findAll(): Promise<Volunteer[]>;
-};
-
-type Repositories = {
-  volunteers: Volunteers;
+type UseCases = {
+  assignmentDurationAssignee: AssignmentDurationAssignee;
 };
 
 @Injectable()
@@ -40,11 +40,11 @@ export class VolunteerService {
   constructor(
     private prisma: PrismaService,
     private ftTimeSpan: FtTimeSpanService,
-    private repositories: Repositories,
+    private useCases: UseCases,
   ) {}
 
-  async findAllVolunteers(): Promise<Volunteer[]> {
-    return this.repositories.volunteers.findAll();
+  async findAllAssignees(): Promise<AssigneeWithAssignmentDuration[]> {
+    return this.useCases.assignmentDurationAssignee.list();
   }
 
   async findAvailableVolunteersForFtTimeSpan(

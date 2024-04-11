@@ -3,11 +3,11 @@ import { PrismaService } from "../../prisma.service";
 import { Volunteers } from "../volunteer.service";
 import {
   IS_NOT_DELETED,
-  SELECT_ASSIGNED_TASK,
+  SELECT_ASSIGNMENTS,
   SELECT_VOLUNTEER,
   HAS_VOLUNTEER_TEAM,
-  DatabaseVolunteer,
-} from "./volunteer.query";
+  DatabaseAssigneeWithAssignments,
+} from "./assignee.query";
 import {
   CalculeVolunteerAssignmentDuration,
   Volunteer,
@@ -24,7 +24,7 @@ export class PrismaVolunteers implements Volunteers {
       },
       select: {
         ...SELECT_VOLUNTEER,
-        ...SELECT_ASSIGNED_TASK,
+        ...SELECT_ASSIGNMENTS,
       },
       orderBy: { charisma: "desc" },
     });
@@ -32,7 +32,7 @@ export class PrismaVolunteers implements Volunteers {
   }
 }
 
-function toVolunteer(volunteer: DatabaseVolunteer): Volunteer {
+function toVolunteer(volunteer: DatabaseAssigneeWithAssignments): Volunteer {
   const periods = volunteer.assigned
     .flatMap((a) => a.assignment)
     .flatMap(({ end, start }) => Period.init({ start, end }));

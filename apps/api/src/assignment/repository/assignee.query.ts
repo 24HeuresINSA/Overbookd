@@ -23,7 +23,7 @@ export const SELECT_VOLUNTEER = {
   },
 };
 
-export const SELECT_ASSIGNED_TASK = {
+export const SELECT_ASSIGNMENTS = {
   assigned: {
     select: {
       assignment: {
@@ -36,7 +36,7 @@ export const SELECT_ASSIGNED_TASK = {
   },
 };
 
-export type DatabaseVolunteer = {
+export type DatabaseAssigneeWithAssignments = {
   id: number;
   firstname: string;
   lastname: string;

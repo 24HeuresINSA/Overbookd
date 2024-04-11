@@ -1,15 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { TaskWithUnassignedTeams } from "@overbookd/assignment";
-
-export type Tasks = {
-  findAll(): Promise<TaskWithUnassignedTeams[]>;
-};
+import {
+  MissingAssignmentTask,
+  MissingAssignmentTasks,
+} from "@overbookd/assignment";
 
 @Injectable()
 export class TaskService {
-  constructor(private readonly tasks: Tasks) {}
+  constructor(private readonly tasks: MissingAssignmentTasks) {}
 
-  async findAll(): Promise<TaskWithUnassignedTeams[]> {
-    return this.tasks.findAll();
+  async findAll(): Promise<MissingAssignmentTask[]> {
+    return this.tasks.list();
   }
 }

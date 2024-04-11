@@ -7,7 +7,7 @@ import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
 import { VolunteerAssignmentStat } from "../user/dto/volunteer-assignment-stat.response.dto";
 import { UserService } from "../user/user.service";
 import { SELECT_TIMESPAN_PERIOD_WITH_CATEGORY } from "../user/user.query";
-import { HAS_VOLUNTEER_TEAM } from "./repository/volunteer.query";
+import { HAS_VOLUNTEER_TEAM } from "./repository/assignee.query";
 
 const SELECT_TEAM_REQUEST = {
   id: true,
