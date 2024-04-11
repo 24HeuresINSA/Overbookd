@@ -6,7 +6,7 @@ export const IS_READY_AND_EXISTS = {
   status: READY_TO_ASSIGN,
 } as const;
 
-export const SELECT_TASK_WITH_TEAMS = {
+export const SELECT_ASSIGNMENT_TASK = {
   id: true,
   name: true,
   topPriority: true,
