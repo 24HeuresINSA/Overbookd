@@ -19,8 +19,7 @@ type WithAssignmentDuration = {
 
 export type AssigneeWithAssignments = Assignee & WithAssignments;
 
-export type AssigneeWithAssignmentDuration = Assignee &
-  WithAssignmentDuration;
+export type AssigneeWithAssignmentDuration = Assignee & WithAssignmentDuration;
 
 export type Assignees = {
   findAll(): Promise<AssigneeWithAssignments[]>;
