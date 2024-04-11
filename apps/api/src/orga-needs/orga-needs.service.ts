@@ -29,7 +29,7 @@ type RequestedVolunteersOverPeriod = IProvidePeriod & {
 type AssignmentsOverPeriod = IProvidePeriod;
 
 type DataBaseOrgaStats = {
-  interval: IProvidePeriod;
+  interval: Period;
   assignments: AssignmentsOverPeriod[];
   availabilities: VolunteerAvailability[];
   requestedVolunteers: RequestedVolunteersOverPeriod[];
@@ -90,25 +90,29 @@ export class OrgaNeedsService {
 
   private countAssignedVolunteersOnInterval(
     assignments: AssignmentsOverPeriod[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
-    return assignments.filter(includedPeriods(interval)).length;
+    return assignments.filter((assignment) =>
+      Period.init(assignment).isOverlapping(interval),
+    ).length;
   }
 
   private countRequestedVolunteersOnInterval(
     requestedVolunteers: RequestedVolunteersOverPeriod[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
     return requestedVolunteers
-      .filter(includedPeriods(interval))
+      .filter((request) => Period.init(request).isOverlapping(interval))
       .reduce((acc, { requestedVolunteers }) => acc + requestedVolunteers, 0);
   }
 
   private countAvailableVolunteersOnInterval(
     availabilities: VolunteerAvailability[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
-    return availabilities.filter(includedPeriods(interval)).length;
+    return availabilities.filter((availability) =>
+      Period.init(availability).isOverlapping(interval),
+    ).length;
   }
 
   private async getRequestedVolunteers(
@@ -266,7 +270,7 @@ export class OrgaNeedsService {
     ]);
   }
 
-  private buildOrgaNeedsIntervals(period: IProvidePeriod): IProvidePeriod[] {
+  private buildOrgaNeedsIntervals(period: IProvidePeriod): Period[] {
     const numberOfIntervals = Math.floor(
       Period.init(period).duration.inMilliseconds / QUARTER_IN_MS,
     );
@@ -274,7 +278,7 @@ export class OrgaNeedsService {
     return Array.from({ length: numberOfIntervals }).map((_, index) => {
       const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
       const end = new Date(start.getTime() + QUARTER_IN_MS);
-      return { start, end };
+      return Period.init({ start, end });
     });
   }
 
@@ -308,11 +312,4 @@ export class OrgaNeedsService {
       },
     };
   }
-}
-
-function includedPeriods({
-  start,
-  end,
-}: IProvidePeriod): (value: IProvidePeriod) => boolean {
-  return (period) => period.start < end && period.end > start;
 }
