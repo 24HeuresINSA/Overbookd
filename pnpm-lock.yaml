@@ -89,6 +89,9 @@ importers:
       '@overbookd/alerts':
         specifier: workspace:^
         version: link:../../utils/alerts
+      '@overbookd/assignment':
+        specifier: workspace:^
+        version: link:../../domains/assignment
       '@overbookd/configuration':
         specifier: workspace:^
         version: link:../../domains/configuration
@@ -294,6 +297,9 @@ importers:
       '@overbookd/alerts':
         specifier: workspace:*
         version: link:../../utils/alerts
+      '@overbookd/assignment':
+        specifier: workspace:*
+        version: link:../../domains/assignment
       '@overbookd/configuration':
         specifier: workspace:*
         version: link:../../domains/configuration
@@ -471,6 +477,15 @@ importers:
   constants/status: {}
 
   constants/team: {}
+
+  domains/assignment:
+    dependencies:
+      '@overbookd/festival-event-constants':
+        specifier: workspace:*
+        version: link:../../constants/festival-event-constants
+      '@overbookd/period':
+        specifier: workspace:*
+        version: link:../../libraries/period
 
   domains/configuration: {}
 

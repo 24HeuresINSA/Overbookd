@@ -52,6 +52,7 @@
     "@nestjs/swagger": "7.3.1",
     "@nestjs/throttler": "5.1.2",
     "@overbookd/alerts": "workspace:^",
+    "@overbookd/assignment": "workspace:^",
     "@overbookd/configuration": "workspace:^",
     "@overbookd/contribution": "workspace:^",
     "@overbookd/domain-events": "workspace:^",
