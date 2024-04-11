@@ -3,6 +3,7 @@
     "paths": {
       "@overbookd/alerts": ["./utils/alerts/src"],
       "@overbookd/api": ["./apps/api/src"],
+      "@overbookd/assignment": ["./domains/assignment/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./domains/configuration/src"],
       "@overbookd/domain-events": ["./utils/domain-events/src"],
