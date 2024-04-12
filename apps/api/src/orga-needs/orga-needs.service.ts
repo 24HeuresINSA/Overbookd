@@ -138,7 +138,7 @@ export class OrgaNeedsService {
         OR: [
           this.requestTeamMemberCondition(teams),
           this.requestVolunteerWithMembershipCondition(teams),
-        ].filter((condition) => condition !== undefined),
+        ],
       },
       select: {
         ...SELECT_PERIOD,
@@ -163,13 +163,13 @@ export class OrgaNeedsService {
   }
 
   private teamMemberRequestsSelection(teams: string[]) {
-    const condition = this.teamIsAssignableOrSearchedCondition(teams);
+    const condition = this.teamIsSearchedCondition(teams);
     return { teams: { select: { count: true }, where: condition } };
   }
 
-  private teamIsAssignableOrSearchedCondition(teams: string[]) {
+  private teamIsSearchedCondition(teams: string[]) {
     if (teams.length === 0) {
-      return undefined;
+      return {};
     }
     return { teamCode: { in: teams } };
   }
@@ -354,10 +354,7 @@ export class OrgaNeedsService {
   }
 
   private requestTeamMemberCondition(teams: string[]) {
-    if (teams.length === 0) return undefined;
-    return {
-      teams: { some: { teamCode: { in: teams } } },
-    };
+    return { teams: { some: this.teamIsSearchedCondition(teams) } };
   }
 
   private teamMemberCondition(teams: string[]) {
