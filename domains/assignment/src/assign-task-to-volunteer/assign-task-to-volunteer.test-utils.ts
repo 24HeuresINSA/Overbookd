@@ -87,19 +87,19 @@ export const expectedTaskMissingOneHardAndOneBenevole: MissingAssignmentTask = {
   teams: ["hard", "benevole"],
 };
 
-const baseTaskMissingOneAssigneeThenOneHardAndOneBenevole: BaseTask =
-  {
-    id: 5,
-    name: "Task missing one assignee then one hard and one benevole",
-    topPriority: false,
-  };
-export const taskMissingOneAssigneeThenOneHardAndOneBenevole: TaskWithAssignments = {
-  ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
-  assignments: [
-    assignmentMissingOneAssignee,
-    assignmentMissingOneHardAndOneBenevole,
-  ],
+const baseTaskMissingOneAssigneeThenOneHardAndOneBenevole: BaseTask = {
+  id: 5,
+  name: "Task missing one assignee then one hard and one benevole",
+  topPriority: false,
 };
+export const taskMissingOneAssigneeThenOneHardAndOneBenevole: TaskWithAssignments =
+  {
+    ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
+    assignments: [
+      assignmentMissingOneAssignee,
+      assignmentMissingOneHardAndOneBenevole,
+    ],
+  };
 export const expectedTaskMissingOneAssigneeThenOneHardAndOneBenevole: MissingAssignmentTask =
   {
     ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
