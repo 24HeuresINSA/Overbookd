@@ -3,6 +3,7 @@ import { TaskCategory } from "@prisma/client";
 import { PrismaService } from "../../prisma.service";
 import { TeamService } from "../../team/team.service";
 import { getOtherAssignableTeams } from "../../team/underlying-teams.utils";
+import { SELECT_USER_TEAMS } from "../../user/user.query";
 import { getPeriodDuration } from "../../utils/duration";
 import { AssignmentService } from "./assignment.service";
 import { FtTimeSpanService, SELECT_FRIENDS } from "./ft-time-span.service";
@@ -13,11 +14,24 @@ import {
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from "./model/volunteer.model";
-import {
-  SELECT_VOLUNTEER,
-  HAS_VOLUNTEER_TEAM,
-} from "../volunteer-to-task/repository/volunteer.query";
-import { AssignVolunteerToTask } from "@overbookd/assignment";
+import { BENEVOLE_CODE } from "@overbookd/team";
+
+export const WHERE_IS_VOLUNTEER = {
+  teams: {
+    some: {
+      team: { code: BENEVOLE_CODE },
+    },
+  },
+};
+
+const SELECT_VOLUNTEER = {
+  id: true,
+  firstname: true,
+  lastname: true,
+  charisma: true,
+  comment: true,
+  ...SELECT_USER_TEAMS,
+};
 
 const SELECT_TIMESPAN_PERIOD = {
   timeSpan: {
@@ -28,8 +42,10 @@ const SELECT_TIMESPAN_PERIOD = {
   },
 };
 
-type UseCases = {
-  assigned: AssignVolunteerToTask;
+const SELECT_ASSIGNMENTS_PERIOD = {
+  assignments: {
+    select: SELECT_TIMESPAN_PERIOD,
+  },
 };
 
 @Injectable()
@@ -37,7 +53,6 @@ export class VolunteerService {
   constructor(
     private prisma: PrismaService,
     private ftTimeSpan: FtTimeSpanService,
-    private useCases: UseCases,
   ) {}
 
   async findAllVolunteers(): Promise<Volunteer[]> {
@@ -130,7 +145,7 @@ export class VolunteerService {
       );
 
     return {
-      ...HAS_VOLUNTEER_TEAM,
+      ...WHERE_IS_VOLUNTEER,
       isDeleted: false,
       team,
       availabilities,

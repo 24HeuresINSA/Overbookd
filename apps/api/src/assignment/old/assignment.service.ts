@@ -7,7 +7,7 @@ import { getOtherAssignableTeams } from "../../team/underlying-teams.utils";
 import { VolunteerAssignmentStat } from "../../user/dto/volunteer-assignment-stat.response.dto";
 import { UserService } from "../../user/user.service";
 import { SELECT_TIMESPAN_PERIOD_WITH_CATEGORY } from "../../user/user.query";
-import { HAS_VOLUNTEER_TEAM } from "../volunteer-to-task/repository/volunteer.query";
+import { WHERE_IS_VOLUNTEER } from "./volunteer.service";
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -236,7 +236,7 @@ export class AssignmentService {
       select: { id: true },
       where: {
         id: volunteerId,
-        ...HAS_VOLUNTEER_TEAM,
+        ...WHERE_IS_VOLUNTEER,
         availabilities,
         assignments,
         teams,

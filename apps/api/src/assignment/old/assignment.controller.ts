@@ -35,7 +35,7 @@ import {
 } from "./dto/ft-time-span.response.dto";
 import {
   AvailableVolunteerResponseDto,
-  AssigneeResponseDto,
+  VolunteerResponseDto,
 } from "./dto/volunteer.response.dto";
 import { FtTimeSpanService } from "./ft-time-span.service";
 import { TimeSpan, TimeSpanWithAssignees } from "./model/ft-time-span.model";
@@ -63,12 +63,12 @@ export class AssignmentController {
   @Get("volunteers")
   @ApiResponse({
     status: 200,
-    description: "Get all valid assignable volunteers",
+    description: "Get all valid volunteers",
     isArray: true,
-    type: AssigneeResponseDto,
+    type: VolunteerResponseDto,
   })
-  findAllAssignees(): Promise<AssigneeResponseDto[]> {
-    return this.volunteerService.findAllAssignees();
+  findAllVolunteers(): Promise<VolunteerResponseDto[]> {
+    return this.volunteerService.findAllVolunteers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -168,12 +168,12 @@ export class AssignmentController {
     status: 200,
     description: "Get volunteer's friends available for ft time span",
     isArray: true,
-    type: AssigneeResponseDto,
+    type: VolunteerResponseDto,
   })
   findAvailableVolunteerFriendsForFtTimeSpan(
     @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
-  ): Promise<AssigneeResponseDto[]> {
+  ): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteerFriendsForFtTimeSpan(
       timeSpanId,
       volunteerId,

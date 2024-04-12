@@ -1,8 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AvailableVolunteer } from "../model/volunteer.model";
-import { AssigneeWithAssignmentDuration } from "@overbookd/assignment";
+import { AvailableVolunteer, Volunteer } from "../model/volunteer.model";
 
-export class AssigneeResponseDto implements AssigneeWithAssignmentDuration {
+export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({
     required: true,
     description: "The id of the volunteer",
@@ -54,7 +53,7 @@ export class AssigneeResponseDto implements AssigneeWithAssignmentDuration {
 }
 
 export class AvailableVolunteerResponseDto
-  extends AssigneeResponseDto
+  extends VolunteerResponseDto
   implements AvailableVolunteer
 {
   @ApiProperty({

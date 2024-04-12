@@ -13,7 +13,7 @@ import { VolunteerTask } from "../user/user.model";
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from "../assignment/model/assignment.model";
+} from "../assignment/old/model/assignment.model";
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,

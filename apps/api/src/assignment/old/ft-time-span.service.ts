@@ -34,7 +34,7 @@ import {
   TimeSpanWithFt,
   TimeSpanWithFtAndAssignees,
   WithTeams,
-} from "../model/ft-time-span.model";
+} from "./model/ft-time-span.model";
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
