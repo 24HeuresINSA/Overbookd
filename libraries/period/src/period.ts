@@ -117,6 +117,14 @@ export class Period {
     return [pastPeriod, futurPeriod].filter((period) => period.hasDuration);
   }
 
+  remove(otherPeriod: Period): Period[] {
+    if (!otherPeriod.isOverlapping(this)) {
+      return [this];
+    }
+
+    return this.mergeWith(otherPeriod).substract(otherPeriod);
+  }
+
   equals(otherPeriod: IProvidePeriod): boolean {
     const startAtSameTime =
       this.start.getTime() === otherPeriod.start.getTime();
