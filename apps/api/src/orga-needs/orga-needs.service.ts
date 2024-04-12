@@ -197,10 +197,10 @@ export class OrgaNeedsService {
       select: this.selectAvailabiliesAndTaksOn(period),
     });
 
-    return this.formatedAvailabilities(availabilities);
+    return this.formattedAvailabilities(availabilities);
   }
 
-  private formatedAvailabilities(
+  private formattedAvailabilities(
     availabilities: DataBaseVolunteerAvailability[],
   ): VolunteerAvailability[] {
     return availabilities.flatMap(({ user, ...availabilityPeriod }) => {
