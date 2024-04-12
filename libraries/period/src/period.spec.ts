@@ -25,6 +25,8 @@ import {
   friday08hto10h,
   friday08h30to09h30,
   friday08hto09h30,
+  friday08h30to09h,
+  friday08h15to09h,
 } from "./period.test-utils";
 
 describe("Create a period", () => {
@@ -135,6 +137,25 @@ describe("Merge contiguous periods", () => {
       it(`should merge contiguous periods to ${readableExpectedPeriods}`, () => {
         const mergedPeriods = Period.mergeContiguous(periods);
         expect(mergedPeriods).toEqual(expectedPeriods);
+      });
+    },
+  );
+});
+
+describe("Remove period from another", () => {
+  describe.each`
+    case                         | basePeriod          | periodToRemove           | expectedPeriods
+    ${"not overlapping"}         | ${friday08hto09h}   | ${saturday00hTo00h00m02} | ${[friday08hto09h]}
+    ${"partially overlapping"}   | ${friday08hto09h}   | ${friday07hto08h30}      | ${[friday08h30to09h]}
+    ${"starting at same time"}   | ${friday08hto09h}   | ${friday08hto08h15}      | ${[friday08h15to09h]}
+    ${"included"}                | ${friday08hto09h}   | ${friday08h15to08h30}    | ${[friday08hto08h15, friday08h30to09h]}
+    ${"completelly overlapping"} | ${friday08hto08h15} | ${friday07hto08h30}      | ${[]}
+  `(
+    "when removing a $case period",
+    ({ basePeriod, periodToRemove, expectedPeriods }) => {
+      it(`should return ${expectedPeriods.length} period(s)`, () => {
+        const periods = basePeriod.remove(periodToRemove);
+        expect(periods).toStrictEqual(expectedPeriods);
       });
     },
   );

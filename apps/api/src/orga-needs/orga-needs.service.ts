@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { IProvidePeriod, QUARTER_IN_MS } from "@overbookd/period";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/period";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
-import { getPeriodDuration } from "../utils/duration";
-import { BE_AFFECTED } from "@overbookd/permission";
 
 type OrgaNeedsRequest = {
   start: Date;
@@ -19,46 +18,32 @@ export type OrgaNeedsResponse = {
   requestedVolunteers: number;
 };
 
-const SELECT_REQUESTED_VOLUNTEERS = {
-  start: true,
-  end: true,
-  teams: {
-    select: {
-      count: true,
-    },
-  },
-  _count: {
-    select: {
-      volunteers: true,
-    },
-  },
-};
-
-const SELECT_ASSIGNED_VOLUNTEERS = {
-  start: true,
-  end: true,
-  _count: {
-    select: {
-      assignments: true,
-    },
-  },
-};
-
 const IS_NOT_DELETED = { isDeleted: false };
+const SELECT_PERIOD = { start: true, end: true };
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
 };
 
-type AssignmentsOverPeriod = IProvidePeriod & {
-  assigments: number;
-};
+type AssignmentsOverPeriod = IProvidePeriod;
 
 type DataBaseOrgaStats = {
-  interval: IProvidePeriod;
+  interval: Period;
   assignments: AssignmentsOverPeriod[];
   availabilities: VolunteerAvailability[];
   requestedVolunteers: RequestedVolunteersOverPeriod[];
+};
+
+type DataBaseVolunteerAvailability = IProvidePeriod & {
+  user: {
+    id: number;
+    festivalTaskMobilizations: {
+      mobilization: IProvidePeriod;
+    }[];
+    assigned: {
+      assignment: IProvidePeriod;
+    }[];
+  };
 };
 
 @Injectable()
@@ -116,92 +101,248 @@ export class OrgaNeedsService {
 
   private countAssignedVolunteersOnInterval(
     assignments: AssignmentsOverPeriod[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
-    return assignments
-      .filter(includedPeriods(interval))
-      .reduce((acc, { assigments }) => acc + assigments, 0);
+    return assignments.filter((assignment) =>
+      Period.init(assignment).isOverlapping(interval),
+    ).length;
   }
 
   private countRequestedVolunteersOnInterval(
     requestedVolunteers: RequestedVolunteersOverPeriod[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
     return requestedVolunteers
-      .filter(includedPeriods(interval))
+      .filter((request) => Period.init(request).isOverlapping(interval))
       .reduce((acc, { requestedVolunteers }) => acc + requestedVolunteers, 0);
   }
 
   private countAvailableVolunteersOnInterval(
     availabilities: VolunteerAvailability[],
-    interval: IProvidePeriod,
+    interval: Period,
   ) {
-    return availabilities.filter(includedPeriods(interval)).length;
+    return availabilities.filter((availability) =>
+      Period.init(availability).isOverlapping(interval),
+    ).length;
   }
 
   private async getRequestedVolunteers(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<RequestedVolunteersOverPeriod[]> {
-    const timeWindows = await this.prisma.festivalTaskMobilization.findMany({
+    const { teams, ...period } = orgaNeedsRequest;
+
+    const mobilizations = await this.prisma.festivalTaskMobilization.findMany({
       where: {
-        ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.hasTeamCondition(orgaNeedsRequest.teams),
         ft: IS_NOT_DELETED,
+        ...this.periodIncludedCondition(period),
+        OR: [
+          this.requestTeamMemberCondition(teams),
+          this.requestVolunteerWithMembershipCondition(teams),
+        ],
       },
-      select: SELECT_REQUESTED_VOLUNTEERS,
+      select: {
+        ...SELECT_PERIOD,
+        ...this.teamMemberRequestsSelection(teams),
+        ...this.volunteerWithMembershipRequestsSelection(teams),
+      },
     });
 
-    return timeWindows.map(({ start, end, teams, _count }) => {
-      const requestedVolunteers =
-        teams.reduce((acc, { count }) => acc + count, 0) + _count.volunteers;
+    return mobilizations.map(({ start, end, teams, volunteers }) => {
+      const teamMembers = teams.reduce((acc, { count }) => acc + count, 0);
+      const requestedVolunteers = teamMembers + volunteers.length;
 
       return { start, end, requestedVolunteers };
     });
   }
 
+  private volunteerWithMembershipRequestsSelection(teams: string[]) {
+    const condition = {
+      volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+    };
+    return { volunteers: { select: { volunteerId: true }, where: condition } };
+  }
+
+  private teamMemberRequestsSelection(teams: string[]) {
+    const condition = this.teamIsSearchedCondition(teams);
+    return { teams: { select: { count: true }, where: condition } };
+  }
+
+  private teamIsSearchedCondition(teams: string[]) {
+    if (teams.length === 0) {
+      return {};
+    }
+    return { teamCode: { in: teams } };
+  }
+
+  private requestVolunteerWithMembershipCondition(teams: string[]) {
+    const condition = {
+      ...IS_NOT_DELETED,
+      ...this.teamMemberCondition(teams),
+    };
+    return { volunteers: { some: { volunteer: condition } } };
+  }
+
   private async getAvailabilities(
     periodWithTeams: OrgaNeedsRequest,
   ): Promise<VolunteerAvailability[]> {
-    return this.prisma.volunteerAvailability.findMany({
+    const { teams, ...period } = periodWithTeams;
+    const availabilities = await this.prisma.volunteerAvailability.findMany({
       where: {
-        ...this.periodIncludedCondition(periodWithTeams),
+        ...this.periodIncludedCondition(period),
         user: {
-          ...this.teamMemberCondition(periodWithTeams.teams),
           ...IS_NOT_DELETED,
+          ...this.teamMemberCondition(teams),
         },
       },
+      select: this.selectAvailabiliesAndTaksOn(period),
     });
+
+    return this.formattedAvailabilities(availabilities);
+  }
+
+  private formattedAvailabilities(
+    availabilities: DataBaseVolunteerAvailability[],
+  ): VolunteerAvailability[] {
+    return availabilities.flatMap(({ user, ...availabilityPeriod }) => {
+      const remainingAvailabilities = this.removeTaskFromAvailability(
+        availabilityPeriod,
+        user.festivalTaskMobilizations,
+        user.assigned,
+      );
+
+      return remainingAvailabilities.map((availability) => ({
+        userId: user.id,
+        start: availability.start,
+        end: availability.end,
+      }));
+    });
+  }
+
+  private removeTaskFromAvailability(
+    availabilityPeriod: IProvidePeriod,
+    mobilizations: { mobilization: IProvidePeriod }[],
+    assignments: { assignment: IProvidePeriod }[],
+  ) {
+    const availability = Period.init(availabilityPeriod);
+
+    const notAvailableDuring = this.retrieveNotAvailablePeriods(
+      assignments,
+      mobilizations,
+    );
+
+    return notAvailableDuring.reduce(
+      (remainingAvailabilities, notAvailablePeriod) => {
+        return remainingAvailabilities.flatMap((availability) => {
+          return availability.remove(notAvailablePeriod);
+        });
+      },
+      [availability],
+    );
+  }
+
+  private retrieveNotAvailablePeriods(
+    assignments: { assignment: IProvidePeriod }[],
+    mobilizations: { mobilization: IProvidePeriod }[],
+  ) {
+    const assignmentPeriods = assignments.map(({ assignment }) =>
+      Period.init(assignment),
+    );
+    const mobilizationPeriods = mobilizations.map(({ mobilization }) =>
+      Period.init(mobilization),
+    );
+
+    return [...assignmentPeriods, ...mobilizationPeriods];
+  }
+
+  private selectAvailabiliesAndTaksOn(period: IProvidePeriod) {
+    return {
+      ...SELECT_PERIOD,
+      user: {
+        select: {
+          id: true,
+          assigned: {
+            select: { assignment: { select: SELECT_PERIOD } },
+            where: {
+              assignment: this.periodIncludedCondition(period),
+            },
+          },
+          festivalTaskMobilizations: {
+            select: { mobilization: { select: SELECT_PERIOD } },
+            where: {
+              mobilization: this.periodIncludedCondition(period),
+            },
+          },
+        },
+      },
+    };
+  }
+
+  private assignedOrPartOfMobilizationDuring(period: IProvidePeriod) {
+    const isAssignedDuringPeriod = {
+      assigned: {
+        some: { assignment: this.periodIncludedCondition(period) },
+      },
+    };
+    const isPartOfMobilizationDuringPeriod = {
+      festivalTaskMobilizations: {
+        some: { mobilization: this.periodIncludedCondition(period) },
+      },
+    };
+
+    return {
+      OR: [isAssignedDuringPeriod, isPartOfMobilizationDuringPeriod],
+    };
   }
 
   private async getAssignments(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<AssignmentsOverPeriod[]> {
-    const teams = orgaNeedsRequest.teams ?? [];
-
-    const assignments = await this.prisma.ftTimeSpan.findMany({
-      where: {
-        ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.teamRequestedInTimeWindowCondition(teams),
+    const assignedTasks = {
+      assigned: {
+        where: { assignment: this.periodIncludedCondition(orgaNeedsRequest) },
+        select: { assignment: { select: SELECT_PERIOD } },
       },
-      select: SELECT_ASSIGNED_VOLUNTEERS,
+    };
+
+    const mobilizationsHeWillBePartOf = {
+      festivalTaskMobilizations: {
+        where: {
+          mobilization: {
+            ft: {
+              status: { not: READY_TO_ASSIGN } as const,
+              ...IS_NOT_DELETED,
+            },
+            ...this.periodIncludedCondition(orgaNeedsRequest),
+          },
+        },
+        select: { mobilization: { select: SELECT_PERIOD } },
+      },
+    };
+
+    const assignees = await this.prisma.user.findMany({
+      where: {
+        ...IS_NOT_DELETED,
+        ...this.teamMemberCondition(orgaNeedsRequest.teams),
+        ...this.assignedOrPartOfMobilizationDuring(orgaNeedsRequest),
+      },
+      select: { ...assignedTasks, ...mobilizationsHeWillBePartOf },
     });
 
-    return assignments.map(({ start, end, _count }) => ({
-      start,
-      end,
-      assigments: _count.assignments,
-    }));
+    return assignees.flatMap(({ assigned, festivalTaskMobilizations }) => [
+      ...assigned.map(({ assignment }) => assignment),
+      ...festivalTaskMobilizations.map(({ mobilization }) => mobilization),
+    ]);
   }
 
-  private buildOrgaNeedsIntervals(period: IProvidePeriod): IProvidePeriod[] {
+  private buildOrgaNeedsIntervals(period: IProvidePeriod): Period[] {
     const numberOfIntervals = Math.floor(
-      getPeriodDuration(period) / QUARTER_IN_MS,
+      Period.init(period).duration.inMilliseconds / QUARTER_IN_MS,
     );
 
     return Array.from({ length: numberOfIntervals }).map((_, index) => {
       const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
       const end = new Date(start.getTime() + QUARTER_IN_MS);
-      return { start, end };
+      return Period.init({ start, end });
     });
   }
 
@@ -212,46 +353,14 @@ export class OrgaNeedsService {
     };
   }
 
-  private hasTeamCondition(teams: string[]) {
-    if (teams.length === 0) return {};
-    return {
-      teams: { some: { teamCode: { in: teams } } },
-    };
-  }
-
-  private teamRequestedCondition(teams: string[]) {
-    if (teams.length === 0) return {};
-    return {
-      teamRequests: { some: { teamCode: { in: teams } } },
-    };
-  }
-
-  private teamRequestedInTimeWindowCondition(teams: string[]) {
-    if (teams.length === 0) return {};
-    return { timeWindow: this.teamRequestedCondition(teams) };
+  private requestTeamMemberCondition(teams: string[]) {
+    return { teams: { some: this.teamIsSearchedCondition(teams) } };
   }
 
   private teamMemberCondition(teams: string[]) {
-    const isValidUser = {
-      permissions: { some: { permissionName: BE_AFFECTED } },
-    };
+    if (teams.length === 0) return {};
     const isMemberOf = { code: { in: teams } };
 
-    const teamCondition = teams.length > 0 ? isMemberOf : isValidUser;
-
-    return {
-      teams: {
-        some: {
-          team: teamCondition,
-        },
-      },
-    };
+    return { teams: { some: { team: isMemberOf } } };
   }
-}
-
-function includedPeriods({
-  start,
-  end,
-}: IProvidePeriod): (value: IProvidePeriod) => boolean {
-  return (period) => period.start < end && period.end > start;
 }
