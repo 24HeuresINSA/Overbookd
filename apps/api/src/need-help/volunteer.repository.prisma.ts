@@ -2,8 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "./need-help.model";
 import { VolunteerRepository } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
-import { AssignmentService } from "../assignment/assignment.service";
-import { WHERE_IS_VOLUNTEER } from "../assignment/volunteer.service";
+import { AssignmentService } from "../assignment/old/assignment.service";
 import { Injectable } from "@nestjs/common";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
@@ -14,11 +13,12 @@ import { VolunteerTask } from "../user/user.model";
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from "../assignment/model/assignment.model";
+} from "../assignment/old/model/assignment.model";
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
 } from "../utils/assignment";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 type DatabaseVolunteer = {
   id: number;
@@ -38,6 +38,14 @@ const SELECT_VOLUNTEER = {
   phone: true,
   teams: { select: { team: { select: { code: true } } } },
   availabilities: { select: { start: true, end: true } },
+};
+
+const IS_MEMBER_OF_VOLUNTEER_TEAM = {
+  teams: {
+    some: {
+      team: { code: BENEVOLE_CODE },
+    },
+  },
 };
 
 @Injectable()
@@ -73,7 +81,7 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
       );
 
     return {
-      ...WHERE_IS_VOLUNTEER,
+      ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       isDeleted: false,
       availabilities,
       assignments,

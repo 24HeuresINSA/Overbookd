@@ -25,7 +25,6 @@ import FilterableTaskList from "~/components/organisms/assignment/list/Filterabl
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
-import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -44,9 +43,6 @@ export default Vue.extend({
     title: "Affect Tâche-Orga",
   }),
   computed: {
-    ftWithTimeSpans(): FtWithTimeSpan[] {
-      return this.$accessor.assignment.fts;
-    },
     openTaskAssignmentDialog: {
       get(): boolean {
         return this.$accessor.assignment.openTaskAssignmentDialog;

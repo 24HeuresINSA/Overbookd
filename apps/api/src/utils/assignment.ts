@@ -1,7 +1,7 @@
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from "../assignment/model/assignment.model";
+} from "../assignment/old/model/assignment.model";
 import { VolunteerTask } from "../../src/user/user.model";
 
 export function formatAssignmentAsTask({

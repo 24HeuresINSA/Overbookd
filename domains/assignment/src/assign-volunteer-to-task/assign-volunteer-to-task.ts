@@ -6,6 +6,7 @@ export type Volunteer = {
   lastname: string;
   charisma: number;
   comment?: string;
+  note?: string;
   teams: string[];
 };
 
@@ -49,6 +50,7 @@ export class AssignVolunteerToTask {
       lastname: volunteer.lastname,
       charisma: volunteer.charisma,
       comment: volunteer.comment,
+      note: volunteer.note,
       teams: volunteer.teams,
       assignmentDuration,
     };

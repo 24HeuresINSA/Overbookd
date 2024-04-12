@@ -1,22 +1,11 @@
 import { Module } from "@nestjs/common";
-import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
-import { PrismaService } from "../prisma.service";
-import { AssignmentController } from "./assignment.controller";
-import { AssignmentService } from "./assignment.service";
-import { FtTimeSpanService } from "./ft-time-span.service";
-import { VolunteerService } from "./volunteer.service";
-import { MailModule } from "../mail/mail.module";
-import { UserModule } from "../user/user.module";
+import { VolunteerToTaskController } from "./volunteer-to-task/volunteer-to-task.controller";
+import { TaskToVolunteerController } from "./task-to-volunteer/task-to-volunteer.controller";
+import { VolunteerToTaskModule } from "./volunteer-to-task/volunteer-to-task.module";
+import { TaskToVolunteerModule } from "./task-to-volunteer/task-to-volunteer.module";
 
 @Module({
-  controllers: [AssignmentController],
-  providers: [
-    AssignmentService,
-    VolunteerService,
-    FtTimeSpanService,
-    PrismaService,
-    VolunteerAvailabilityService,
-  ],
-  imports: [MailModule, UserModule],
+  controllers: [VolunteerToTaskController, TaskToVolunteerController],
+  imports: [VolunteerToTaskModule, TaskToVolunteerModule],
 })
 export class AssignmentModule {}
