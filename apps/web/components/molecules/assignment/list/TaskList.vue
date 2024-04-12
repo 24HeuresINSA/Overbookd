@@ -21,22 +21,18 @@
 import Vue from "vue";
 import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 import TaskResume from "../resume/TaskResume.vue";
-import { TaskWithPeriods } from "@overbookd/assignment";
-import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
+import { MissingAssignmentTask } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "TaskList",
   components: { TaskResume },
   props: {
     tasks: {
-      type: Array as () => TaskWithPeriods[],
+      type: Array as () => MissingAssignmentTask[],
       required: true,
     },
   },
   methods: {
-    getRequiredTeams(task: TaskWithPeriods): string[] {
-      return getRequiredTeamsInTask(task);
-    },
     selectFt(ft: FtWithTimeSpan) {
       if (!ft) return;
       this.$accessor.assignment.setSelectedFt(ft);

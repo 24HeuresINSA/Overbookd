@@ -18,10 +18,9 @@
 </template>
 
 <script lang="ts">
-import { TaskWithPeriods } from "@overbookd/assignment";
+import { MissingAssignmentTask } from "@overbookd/assignment";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
 import { sortTeamsForAssignment } from "~/utils/models/team.model";
 
 export default Vue.extend({
@@ -29,16 +28,13 @@ export default Vue.extend({
   components: { TeamChip },
   props: {
     task: {
-      type: Object as () => TaskWithPeriods,
+      type: Object as () => MissingAssignmentTask,
       required: true,
     },
   },
   computed: {
     sortedVolunteerTeams(): string[] {
-      return sortTeamsForAssignment(this.requiredTeams);
-    },
-    requiredTeams(): string[] {
-      return getRequiredTeamsInTask(this.task);
+      return sortTeamsForAssignment(this.task.teams);
     },
   },
   methods: {

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
 import { TaskCategory, TaskPriority } from "~/utils/models/ft-time-span.model";
@@ -25,8 +25,7 @@ import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import { TaskWithPeriods } from "@overbookd/assignment";
-import { getRequiredTeamsInTask } from "~/utils/assignment/task-period";
+import { MissingAssignmentTask } from "@overbookd/assignment";
 
 type FilterableTaskListData = {
   teams: Team[];
@@ -35,7 +34,7 @@ type FilterableTaskListData = {
   completed: boolean;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "FilterableTaskList",
   components: { FtTimeSpanFilters, TaskList },
   data: (): FilterableTaskListData => ({
@@ -45,21 +44,20 @@ export default Vue.extend({
     category: null,
   }),
   computed: {
-    tasks(): TaskWithPeriods[] {
-      return this.$accessor.assignment.tasksWithPeriods;
+    tasks(): MissingAssignmentTask[] {
+      return this.$accessor.assignment.taskToVolunteer.tasks;
     },
-    searchableFts(): Searchable<TaskWithPeriods>[] {
+    searchableFts(): Searchable<MissingAssignmentTask>[] {
       return this.tasks.map((ft) => ({
         ...ft,
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
       }));
     },
-    filteredFts(): TaskWithPeriods[] {
+    filteredFts(): MissingAssignmentTask[] {
       return this.searchableFts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
           this.filterFtByCatergoryOrPriority(this.category)(ft) &&
-          this.filterFtByQuantity(ft) &&
           this.filterFtByName(this.searchFt)(ft)
         );
       });
@@ -68,13 +66,11 @@ export default Vue.extend({
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[],
-    ): (ft: TaskWithPeriods) => boolean {
+    ): (ft: MissingAssignmentTask) => boolean {
       return teamsSearched.length > 0
         ? (task) =>
             teamsSearched.every((teamSearched) =>
-              getRequiredTeamsInTask(task).some(
-                (teamCode) => teamSearched.code === teamCode,
-              ),
+              task.teams.some((teamCode) => teamSearched.code === teamCode),
             )
         : () => true;
     },
@@ -85,7 +81,7 @@ export default Vue.extend({
     },
     filterFtByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null,
-    ): (ft: TaskWithPeriods) => boolean {
+    ): (ft: MissingAssignmentTask) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
@@ -94,7 +90,7 @@ export default Vue.extend({
     },
     filterFtByCategory(
       categorySearched: TaskCategory,
-    ): (ft: TaskWithPeriods) => boolean {
+    ): (ft: MissingAssignmentTask) => boolean {
       return (ft) => {
         if (categorySearched === "AUCUNE") return ft.category === null;
         return ft.category === categorySearched;
@@ -102,19 +98,13 @@ export default Vue.extend({
     },
     filterByPriority(
       prioritySearched: TaskPriority,
-    ): (ft: TaskWithPeriods) => boolean {
+    ): (ft: MissingAssignmentTask) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.topPriority === hasPriority;
     },
-    filterFtByQuantity({ periods }: TaskWithPeriods): boolean {
-      if (this.completed) return true;
-      return periods.some(({ teams }) =>
-        teams.some(({ count, assignmentCount }) => count > assignmentCount),
-      );
-    },
     filterFtByName(
       search: string,
-    ): (timeSpan: Searchable<TaskWithPeriods>) => boolean {
+    ): (timeSpan: Searchable<MissingAssignmentTask>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },

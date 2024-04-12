@@ -29,6 +29,7 @@ import { AssignmentResponseDto } from "./dto/assignment.response.dto";
 import { AssignmentStatsResponseDto } from "./dto/assignment-stats.response.dto";
 import {
   FtTimeSpanResponseDto,
+  FtWithTimeSpansResponseDto,
   TimeSpanWithAssigneesResponseDto,
   TimeSpanWithFtResponseDto,
 } from "./dto/ft-time-span.response.dto";
@@ -40,8 +41,6 @@ import { FtTimeSpanService } from "./ft-time-span.service";
 import { TimeSpan, TimeSpanWithAssignees } from "./model/ft-time-span.model";
 import { VolunteerService } from "./volunteer.service";
 import { AFFECT_VOLUNTEER, BE_AFFECTED } from "@overbookd/permission";
-import { TaskWithPeriodsResponseDto } from "./dto/task-period.response.dto";
-import { TaskPeriodService } from "./task-period.service";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -57,7 +56,6 @@ class AssignmentController {
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
     private readonly ftTimeSpanService: FtTimeSpanService,
-    private readonly taskPeriodService: TaskPeriodService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -75,15 +73,15 @@ class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Get("task-periods")
+  @Get("ft-timespans")
   @ApiResponse({
     status: 200,
-    description: "Get all valid task with periods",
+    description: "Get all valid ft with time spans",
     isArray: true,
-    type: TaskWithPeriodsResponseDto,
+    type: FtWithTimeSpansResponseDto,
   })
-  findAllFtTimeSpans(): Promise<TaskWithPeriodsResponseDto[]> {
-    return this.taskPeriodService.findAll();
+  findAllFtTimeSpans(): Promise<FtWithTimeSpansResponseDto[]> {
+    return this.ftTimeSpanService.findAllFtsWithTimeSpans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

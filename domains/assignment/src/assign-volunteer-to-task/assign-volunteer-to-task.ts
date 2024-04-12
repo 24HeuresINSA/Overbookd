@@ -4,6 +4,7 @@ export type Volunteer = {
   id: number;
   firstname: string;
   lastname: string;
+  nickname?: string;
   charisma: number;
   comment?: string;
   note?: string;
