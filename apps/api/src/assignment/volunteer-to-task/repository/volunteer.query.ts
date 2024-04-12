@@ -1,6 +1,7 @@
+import { IProvidePeriod } from "@overbookd/period";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
-export const HAS_VOLUNTEER_TEAM = {
+export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: {
     some: {
       team: { code: BENEVOLE_CODE },
@@ -16,6 +17,7 @@ const SELECT_VOLUNTEER = {
   lastname: true,
   charisma: true,
   comment: true,
+  note: true,
   teams: {
     select: {
       team: { select: { code: true } },
@@ -52,10 +54,5 @@ export type DatabaseAssigneeWithAssignments = {
       code: string;
     };
   }[];
-  assigned: {
-    assignment: {
-      start: Date;
-      end: Date;
-    };
-  }[];
+  assigned: { assignment: IProvidePeriod }[];
 };

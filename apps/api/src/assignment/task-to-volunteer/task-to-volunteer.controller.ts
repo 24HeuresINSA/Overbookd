@@ -31,7 +31,7 @@ export class TaskToVolunteerController {
   @Get("tasks")
   @ApiResponse({
     status: 200,
-    description: "All assignable tasks with missing teams",
+    description: "All tasks with missing assignments",
     type: MissingAssignmentTaskResponseDto,
     isArray: true,
   })

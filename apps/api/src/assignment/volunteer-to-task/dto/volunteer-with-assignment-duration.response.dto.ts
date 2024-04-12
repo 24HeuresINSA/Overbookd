@@ -19,6 +19,9 @@ export class VolunteerWithAssignmentDurationResponseDto
   @ApiProperty({ type: String, required: false })
   comment?: string;
 
+  @ApiProperty({ type: String, required: false })
+  note?: string;
+
   @ApiProperty({ type: String, isArray: true })
   teams: string[];
 

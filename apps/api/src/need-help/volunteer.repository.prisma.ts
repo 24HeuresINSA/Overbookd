@@ -40,7 +40,7 @@ const SELECT_VOLUNTEER = {
   availabilities: { select: { start: true, end: true } },
 };
 
-const HAS_VOLUNTEER_TEAM = {
+const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: {
     some: {
       team: { code: BENEVOLE_CODE },
@@ -81,7 +81,7 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
       );
 
     return {
-      ...HAS_VOLUNTEER_TEAM,
+      ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       isDeleted: false,
       availabilities,
       assignments,

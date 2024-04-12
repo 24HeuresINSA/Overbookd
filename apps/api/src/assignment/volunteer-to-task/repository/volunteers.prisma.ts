@@ -2,7 +2,7 @@ import { Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
   IS_NOT_DELETED,
-  HAS_VOLUNTEER_TEAM,
+  IS_MEMBER_OF_VOLUNTEER_TEAM,
   DatabaseAssigneeWithAssignments,
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
@@ -15,7 +15,7 @@ export class PrismaVolunteers implements Volunteers {
     const volunteers = await this.prisma.user.findMany({
       where: {
         ...IS_NOT_DELETED,
-        ...HAS_VOLUNTEER_TEAM,
+        ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       },
       select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
       orderBy: { charisma: "desc" },
@@ -27,9 +27,9 @@ export class PrismaVolunteers implements Volunteers {
 function toVolunteerWithAssignments(
   volunteer: DatabaseAssigneeWithAssignments,
 ): VolunteerWithAssignments {
-  const assignments = volunteer.assigned
-    .flatMap((a) => a.assignment)
-    .flatMap(({ end, start }) => Period.init({ start, end }));
+  const assignments = volunteer.assigned.map(({ assignment }) =>
+    Period.init(assignment),
+  );
 
   return {
     id: volunteer.id,
