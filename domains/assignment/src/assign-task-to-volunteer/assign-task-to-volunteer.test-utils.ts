@@ -5,21 +5,21 @@ import {
 } from "@overbookd/festival-event-constants";
 import {
   Assignment,
-  AssignmentTask,
-  BaseAssignmentTask,
+  TaskWithAssignments,
+  BaseTask,
   MissingAssignmentTask,
-} from "./missing-assignment-task";
+} from "./assign-task-to-volunteer";
 
 const assignmentFulfilled: Assignment = {
   assignees: [{ as: "hard" }],
   requestedTeams: [{ code: "hard", count: 1 }],
 };
-const baseTaskFullyAssigned: BaseAssignmentTask = {
+const baseTaskFullyAssigned: BaseTask = {
   id: 1,
   name: "Task fully assigned",
   topPriority: false,
 };
-export const taskFullyAssigned: AssignmentTask = {
+export const taskFullyAssigned: TaskWithAssignments = {
   ...baseTaskFullyAssigned,
   assignments: [assignmentFulfilled],
 };
@@ -28,13 +28,13 @@ const assignmentMissingOneAssignee: Assignment = {
   assignees: [],
   requestedTeams: [{ code: "plaizir", count: 1 }],
 };
-const baseTaskMissingOneAssignee: BaseAssignmentTask = {
+const baseTaskMissingOneAssignee: BaseTask = {
   id: 2,
   name: "Task missing one assignee",
   topPriority: false,
   category: BAR,
 };
-export const taskMissingOneAssignee: AssignmentTask = {
+export const taskMissingOneAssignee: TaskWithAssignments = {
   ...baseTaskMissingOneAssignee,
   assignments: [assignmentMissingOneAssignee],
 };
@@ -50,13 +50,13 @@ const assignmentMissingTwoVieux: Assignment = {
     { code: "vieux", count: 2 },
   ],
 };
-const baseMissingTwoVieux: BaseAssignmentTask = {
+const baseMissingTwoVieux: BaseTask = {
   id: 3,
   name: "Task missing two vieux",
   topPriority: false,
   category: MANUTENTION,
 };
-export const taskMissingTwoVieux: AssignmentTask = {
+export const taskMissingTwoVieux: TaskWithAssignments = {
   ...baseMissingTwoVieux,
   assignments: [assignmentMissingTwoVieux],
 };
@@ -72,13 +72,13 @@ const assignmentMissingOneHardAndOneBenevole: Assignment = {
     { code: "benevole", count: 2 },
   ],
 };
-const baseTaskMissingOneHardAndOneBenevole: BaseAssignmentTask = {
+const baseTaskMissingOneHardAndOneBenevole: BaseTask = {
   id: 4,
   name: "Task missing one hard and one benevole",
   topPriority: false,
   category: STATIQUE,
 };
-export const taskMissingOneHardAndOneBenevole: AssignmentTask = {
+export const taskMissingOneHardAndOneBenevole: TaskWithAssignments = {
   ...baseTaskMissingOneHardAndOneBenevole,
   assignments: [assignmentMissingOneHardAndOneBenevole],
 };
@@ -87,19 +87,19 @@ export const expectedTaskMissingOneHardAndOneBenevole: MissingAssignmentTask = {
   teams: ["hard", "benevole"],
 };
 
-const baseTaskMissingOneAssigneeThenOneHardAndOneBenevole: BaseAssignmentTask =
-  {
-    id: 5,
-    name: "Task missing one assignee then one hard and one benevole",
-    topPriority: false,
-  };
-export const taskMissingOneAssigneeThenOneHardAndOneBenevole: AssignmentTask = {
-  ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
-  assignments: [
-    assignmentMissingOneAssignee,
-    assignmentMissingOneHardAndOneBenevole,
-  ],
+const baseTaskMissingOneAssigneeThenOneHardAndOneBenevole: BaseTask = {
+  id: 5,
+  name: "Task missing one assignee then one hard and one benevole",
+  topPriority: false,
 };
+export const taskMissingOneAssigneeThenOneHardAndOneBenevole: TaskWithAssignments =
+  {
+    ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
+    assignments: [
+      assignmentMissingOneAssignee,
+      assignmentMissingOneHardAndOneBenevole,
+    ],
+  };
 export const expectedTaskMissingOneAssigneeThenOneHardAndOneBenevole: MissingAssignmentTask =
   {
     ...baseTaskMissingOneAssigneeThenOneHardAndOneBenevole,
