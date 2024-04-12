@@ -1,9 +1,9 @@
 import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
 import {
-  Assignee,
-  AssigneeWithAssignmentDuration,
-  AssigneeWithAssignments,
-} from "./assignment-duration-assignee";
+  Volunteer,
+  VolunteerWithAssignmentDuration,
+  VolunteerWithAssignments,
+} from "./assign-volunteer-to-task";
 import { Period } from "@overbookd/period";
 
 const friday08hTo10h = Period.init({
@@ -19,14 +19,14 @@ const friday15h15To18h = Period.init({
   end: new Date("2022-07-01T18:00:00Z"),
 });
 
-const noel: Assignee = {
+const noel: Volunteer = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",
   charisma: 1000,
   teams: ["hard", "comsa"],
 };
-const lea: Assignee = {
+const lea: Volunteer = {
   id: 2,
   firstname: "Lea",
   lastname: "Mouyno",
@@ -34,20 +34,20 @@ const lea: Assignee = {
   teams: ["vieux"],
 };
 
-export const noelAssignee: AssigneeWithAssignments = {
+export const noelAssignee: VolunteerWithAssignments = {
   ...noel,
   assignments: [friday08hTo10h],
 };
-export const noelExpected: AssigneeWithAssignmentDuration = {
+export const noelExpected: VolunteerWithAssignmentDuration = {
   ...noel,
   assignmentDuration: 2 * ONE_HOUR_IN_MS,
 };
 
-export const leaAssignee: AssigneeWithAssignments = {
+export const leaAssignee: VolunteerWithAssignments = {
   ...lea,
   assignments: [friday08hTo10h, friday11hTo14h, friday15h15To18h],
 };
-export const leaExpected: AssigneeWithAssignmentDuration = {
+export const leaExpected: VolunteerWithAssignmentDuration = {
   ...lea,
   assignmentDuration: 7 * ONE_HOUR_IN_MS + 3 * QUARTER_IN_MS,
 };

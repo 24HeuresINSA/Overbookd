@@ -12,38 +12,38 @@ export type Assignment = {
   assignees: Assignee[];
 };
 
-export type BaseAssignmentTask = {
+export type BaseTask = {
   id: number;
   name: string;
   topPriority: boolean;
   category?: Category;
 };
 
-export type AssignmentTask = BaseAssignmentTask & {
+export type TaskWithAssignments = BaseTask & {
   assignments: Assignment[];
 };
 
-export type MissingAssignmentTask = BaseAssignmentTask & {
+export type MissingAssignmentTask = BaseTask & {
   teams: string[];
 };
 
-export type AssignedTasks = {
-  findAll(): Promise<AssignmentTask[]>;
+export type Tasks = {
+  findAll(): Promise<TaskWithAssignments[]>;
 };
 
-export class MissingAssignmentTasks {
-  constructor(private readonly assignedTasks: AssignedTasks) {}
+export class AssignTaskToVolunteer {
+  constructor(private readonly allTasks: Tasks) {}
 
-  async list(): Promise<MissingAssignmentTask[]> {
-    const assignments = await this.assignedTasks.findAll();
-    const withTeams = assignments.map((task) =>
+  async tasks(): Promise<MissingAssignmentTask[]> {
+    const tasks = await this.allTasks.findAll();
+    const withMissingTeams = tasks.map((task) =>
       this.computeMissingAssignmentTeams(task),
     );
-    return withTeams.filter((task) => task.teams.length > 0);
+    return withMissingTeams.filter((task) => task.teams.length > 0);
   }
 
   private computeMissingAssignmentTeams(
-    task: AssignmentTask,
+    task: TaskWithAssignments,
   ): MissingAssignmentTask {
     const requestedTeams = task.assignments.flatMap((assignment) =>
       assignment.requestedTeams.map((team) => team),
