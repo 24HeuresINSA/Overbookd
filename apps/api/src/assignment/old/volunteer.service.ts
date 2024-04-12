@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { TaskCategory } from "@prisma/client";
-import { PrismaService } from "../prisma.service";
-import { TeamService } from "../team/team.service";
-import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
-import { getPeriodDuration } from "../utils/duration";
+import { PrismaService } from "../../prisma.service";
+import { TeamService } from "../../team/team.service";
+import { getOtherAssignableTeams } from "../../team/underlying-teams.utils";
+import { getPeriodDuration } from "../../utils/duration";
 import { AssignmentService } from "./assignment.service";
 import { FtTimeSpanService, SELECT_FRIENDS } from "./ft-time-span.service";
 import { TimeSpanWithFt } from "./model/ft-time-span.model";
@@ -16,11 +16,8 @@ import {
 import {
   SELECT_VOLUNTEER,
   HAS_VOLUNTEER_TEAM,
-} from "./repository/assignee.query";
-import {
-  AssigneeWithAssignmentDuration,
-  AssignmentDurationAssignee,
-} from "@overbookd/assignment";
+} from "../volunteer-to-task/repository/volunteer.query";
+import { AssignVolunteerToTask } from "@overbookd/assignment";
 
 const SELECT_TIMESPAN_PERIOD = {
   timeSpan: {
@@ -32,7 +29,7 @@ const SELECT_TIMESPAN_PERIOD = {
 };
 
 type UseCases = {
-  assignmentDurationAssignee: AssignmentDurationAssignee;
+  assigned: AssignVolunteerToTask;
 };
 
 @Injectable()
@@ -43,8 +40,19 @@ export class VolunteerService {
     private useCases: UseCases,
   ) {}
 
-  async findAllAssignees(): Promise<AssigneeWithAssignmentDuration[]> {
-    return this.useCases.assignmentDurationAssignee.list();
+  async findAllVolunteers(): Promise<Volunteer[]> {
+    const volunteers = await this.prisma.user.findMany({
+      where: {
+        isDeleted: false,
+        ...WHERE_IS_VOLUNTEER,
+      },
+      select: {
+        ...SELECT_VOLUNTEER,
+        ...SELECT_ASSIGNMENTS_PERIOD,
+      },
+      orderBy: { charisma: "desc" },
+    });
+    return this.formatVolunteers(volunteers);
   }
 
   async findAvailableVolunteersForFtTimeSpan(

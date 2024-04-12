@@ -1,24 +1,26 @@
-import { AssignedTasks, AssignmentTask } from "@overbookd/assignment";
-import { PrismaService } from "../../prisma.service";
+import { TaskWithAssignments, Tasks } from "@overbookd/assignment";
+import { PrismaService } from "../../../prisma.service";
 import {
-  DatabaseAssignmentTask,
+  DatabaseTaskWithAssignments,
   IS_READY_AND_EXISTS,
-  SELECT_ASSIGNMENT_TASK,
-} from "./assigned-task.query";
+  SELECT_TASK_WITH_ASSIGNMENTS,
+} from "./task.query";
 
-export class PrismaAssignedTasks implements AssignedTasks {
+export class PrismaTasks implements Tasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<AssignmentTask[]> {
+  async findAll(): Promise<TaskWithAssignments[]> {
     const tasks = await this.prisma.festivalTask.findMany({
       where: IS_READY_AND_EXISTS,
-      select: SELECT_ASSIGNMENT_TASK,
+      select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
-    return tasks.map(toAssignmentTask);
+    return tasks.map(toTaskWithAssignments);
   }
 }
 
-function toAssignmentTask(task: DatabaseAssignmentTask): AssignmentTask {
+function toTaskWithAssignments(
+  task: DatabaseTaskWithAssignments,
+): TaskWithAssignments {
   const assignments = task.mobilizations.map((m) => ({
     assignees: m.assignees.map((a) => ({ as: a.teamCode })),
     requestedTeams: m.teams.map((t) => ({

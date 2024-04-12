@@ -6,7 +6,7 @@ export const IS_READY_AND_EXISTS = {
   status: READY_TO_ASSIGN,
 } as const;
 
-export const SELECT_ASSIGNMENT_TASK = {
+export const SELECT_TASK_WITH_ASSIGNMENTS = {
   id: true,
   name: true,
   topPriority: true,
@@ -19,7 +19,7 @@ export const SELECT_ASSIGNMENT_TASK = {
   },
 };
 
-export type DatabaseAssignmentTask = Categorize & {
+export type DatabaseTaskWithAssignments = Categorize & {
   id: number;
   name: string;
   mobilizations: {

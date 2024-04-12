@@ -23,7 +23,7 @@ export const SELECT_VOLUNTEER = {
   },
 };
 
-export const SELECT_ASSIGNMENTS = {
+const SELECT_ASSIGNMENTS = {
   assigned: {
     select: {
       assignment: {
@@ -34,6 +34,11 @@ export const SELECT_ASSIGNMENTS = {
       },
     },
   },
+};
+
+export const SELECT_VOLUNTEER_WITH_ASSIGNMENTS = {
+  ...SELECT_VOLUNTEER,
+  ...SELECT_ASSIGNMENTS,
 };
 
 export type DatabaseAssigneeWithAssignments = {

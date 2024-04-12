@@ -1,4 +1,4 @@
-import { SELECT_BASE_TIMESPAN } from "../assignment/assignment.service";
+import { SELECT_BASE_TIMESPAN } from "../assignment/old/assignment.service";
 import { UserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
 import { TEAM_SELECT } from "../team/team.query";
 import { FtStatus } from "./ft.model";

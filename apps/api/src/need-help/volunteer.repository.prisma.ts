@@ -2,7 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "./need-help.model";
 import { VolunteerRepository } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
-import { AssignmentService } from "../assignment/assignment.service";
+import { AssignmentService } from "../assignment/old/assignment.service";
 import { Injectable } from "@nestjs/common";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
