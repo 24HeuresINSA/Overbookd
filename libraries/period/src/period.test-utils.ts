@@ -28,9 +28,17 @@ export const friday08h15to08h30 = Period.init({
   start: new Date("2024-05-17T08:15+02:00"),
   end: new Date("2024-05-17T08:30+02:00"),
 });
+export const friday08h15to09h = Period.init({
+  start: new Date("2024-05-17T08:15+02:00"),
+  end: new Date("2024-05-17T09:00+02:00"),
+});
 export const friday08h30to08h45 = Period.init({
   start: new Date("2024-05-17T08:30+02:00"),
   end: new Date("2024-05-17T08:45+02:00"),
+});
+export const friday08h30to09h = Period.init({
+  start: new Date("2024-05-17T08:30+02:00"),
+  end: new Date("2024-05-17T09:00+02:00"),
 });
 export const friday08h30to09h30 = Period.init({
   start: new Date("2024-05-17T08:30+02:00"),
