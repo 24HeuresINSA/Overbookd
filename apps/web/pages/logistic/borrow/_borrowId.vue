@@ -85,7 +85,7 @@ export default defineComponent({
     quantity: 1,
     headers: [
       { text: "Quantité", value: "quantity" },
-      { text: "Nom", value: "name", sortable: false },
+      { text: "Nom", value: "name" },
       { text: "Supprimer", value: "remove", sortable: false, align: "center" },
     ],
   }),
