@@ -18,10 +18,10 @@
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
-import { Volunteer } from "~/utils/models/assignment.model";
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "OrgaTask",
@@ -39,13 +39,13 @@ export default Vue.extend({
     title: "Affect Orga-Tâche",
   }),
   computed: {
-    volunteers(): Volunteer[] {
-      return this.$accessor.assignment.volunteers;
+    volunteers(): VolunteerWithAssignmentDuration[] {
+      return this.$accessor.assignment.volunteerToTask.volunteers;
     },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchVolunteers();
+    await this.$accessor.assignment.fetchVolunteersForVolunteerToTask();
 
     const volunteerId = +this.$route.query.volunteer;
     if (!volunteerId) return;

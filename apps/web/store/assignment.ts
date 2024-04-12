@@ -27,11 +27,15 @@ import {
 } from "~/utils/models/user.model";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
-import { AssignmentRepository } from "~/repositories/assignment.repository";
+import { AssignmentRepository } from "~/repositories/assignment/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
-import { castTaskWithPeriodsWithDate } from "~/utils/assignment/task-period";
-import { TaskWithPeriods } from "@overbookd/assignment";
+import {
+  MissingAssignmentTask,
+  VolunteerWithAssignmentDuration,
+} from "@overbookd/assignment";
+import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
+import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -55,11 +59,18 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
+type TaskToVolunteer = {
+  tasks: MissingAssignmentTask[];
+};
+
+type VolunteerToTask = {
+  volunteers: VolunteerWithAssignmentDuration[];
+};
+
 type State = {
   volunteers: Volunteer[];
   timeSpans: AvailableTimeSpan[];
   fts: FtWithTimeSpan[];
-  tasksWithPeriods: TaskWithPeriods[];
   selectedVolunteer: Volunteer | null;
   selectedVolunteerFriends: User[];
   selectedTimeSpan: FtTimeSpanWithRequestedTeams | null;
@@ -69,13 +80,15 @@ type State = {
   hoverTimeSpan: AvailableTimeSpan | null;
   timeSpanToDisplayDetails: TimeSpanWithAssignees | null;
   stats: AssignmentStats[];
+
+  taskToVolunteer: TaskToVolunteer;
+  volunteerToTask: VolunteerToTask;
 };
 
 export const state = (): State => ({
   volunteers: [],
   timeSpans: [] as AvailableTimeSpan[], // OLD
   fts: [] as FtWithTimeSpan[], // OLD
-  tasksWithPeriods: [],
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
@@ -89,6 +102,13 @@ export const state = (): State => ({
   timeSpanToDisplayDetails: null as TimeSpanWithAssignees | null,
 
   stats: [] as AssignmentStats[],
+
+  taskToVolunteer: {
+    tasks: [],
+  },
+  volunteerToTask: {
+    volunteers: [],
+  },
 });
 
 export const getters = getterTree(state, {
@@ -100,6 +120,16 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
+  SET_TASKS_FOR_TASK_TO_VOLUNTEER(state, tasks: MissingAssignmentTask[]) {
+    state.taskToVolunteer.tasks = tasks;
+  },
+  SET_VOLUNTEERS_FOR_VOLUNTEER_TO_TASK(
+    state,
+    volunteers: VolunteerWithAssignmentDuration[],
+  ) {
+    state.volunteerToTask.volunteers = volunteers;
+  },
+
   SET_VOLUNTEERS(state, volunteers: Volunteer[]) {
     state.volunteers = volunteers;
   },
@@ -110,10 +140,6 @@ export const mutations = mutationTree(state, {
 
   SET_FTS(state, ftWithTimeSpans: FtWithTimeSpan[]) {
     state.fts = ftWithTimeSpans;
-  },
-
-  SET_TASKS_WITH_PERIODS(state, tasksWithPeriods: TaskWithPeriods[]) {
-    state.tasksWithPeriods = tasksWithPeriods;
   },
 
   SET_FT_TIMESPANS(state, timeSpans: FtTimeSpanWithRequestedTeams[]) {
@@ -237,14 +263,21 @@ export const actions = actionTree(
         root: true,
       });
     },
-
-    async fetchVolunteers({ commit }) {
+    async fetchVolunteersForVolunteerToTask({ commit }) {
       const res = await safeCall(
         this,
-        AssignmentRepository.getVolunteers(this),
+        VolunteerToTaskRepository.getVolunteers(this),
       );
       if (!res) return;
-      commit("SET_VOLUNTEERS", res.data);
+      commit("SET_VOLUNTEERS_FOR_VOLUNTEER_TO_TASK", res.data);
+    },
+    async fetchTasksForTaskToVolunteer({ commit }) {
+      const res = await safeCall(
+        this,
+        TaskToVolunteerRepository.getTasks(this),
+      );
+      if (!res) return;
+      commit("SET_TASKS_FOR_TASK_TO_VOLUNTEER", res.data);
     },
 
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
@@ -284,16 +317,6 @@ export const actions = actionTree(
 
     setVolunteers({ commit }, volunteers: Volunteer[]) {
       commit("SET_VOLUNTEERS", volunteers);
-    },
-
-    async fetchTasksWithPeriods({ commit }) {
-      const res = await safeCall(
-        this,
-        AssignmentRepository.getTaskWithPeriods(this),
-      );
-      if (!res) return;
-      const tasks = res.data.map(castTaskWithPeriodsWithDate);
-      commit("SET_TASKS_WITH_PERIODS", tasks);
     },
 
     async fetchTimeSpansWithStats({ commit }, ftId: number) {
