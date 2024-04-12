@@ -10,7 +10,7 @@ export const HAS_VOLUNTEER_TEAM = {
 
 export const IS_NOT_DELETED = { isDeleted: false };
 
-export const SELECT_VOLUNTEER = {
+const SELECT_VOLUNTEER = {
   id: true,
   firstname: true,
   lastname: true,
