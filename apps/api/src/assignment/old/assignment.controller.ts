@@ -51,7 +51,7 @@ import { AFFECT_VOLUNTEER, BE_AFFECTED } from "@overbookd/permission";
   description: "User can't access this resource",
 })
 @Controller("assignments")
-export class AssignmentController {
+class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
@@ -236,3 +236,6 @@ export class AssignmentController {
     );
   }
 }
+
+// To avoid prune error
+console.log(AssignmentController);
