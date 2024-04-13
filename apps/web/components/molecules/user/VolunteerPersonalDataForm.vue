@@ -107,15 +107,6 @@
         changer les infos personnelles
       </v-btn>
       <v-btn
-        v-if="canManageAvailability"
-        text
-        color="warning"
-        class="availability-btn"
-        @click="saveAvailabilities"
-      >
-        changer les disponibilites
-      </v-btn>
-      <v-btn
         v-if="canManageUsers && !isMe"
         text
         color="red"
@@ -136,11 +127,7 @@ import {
   formatUserNameWithNickname,
   formatUsername,
 } from "~/utils/user/user.utils";
-import {
-  MANAGE_USERS,
-  MANAGE_ADMINS,
-  AFFECT_VOLUNTEER,
-} from "@overbookd/permission";
+import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
 import { MyUserInformation, User, UserUpdateForm } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
@@ -205,9 +192,6 @@ export default defineComponent({
     },
     canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);
-    },
-    canManageAvailability(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     isMe(): boolean {
       return this.me.id === this.selectedVolunteer.id;
@@ -276,16 +260,6 @@ export default defineComponent({
       this.$emit("saved");
     },
 
-    async saveAvailabilities() {
-      const availabilities =
-        this.$accessor.volunteerAvailability.availabilities.list;
-      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        { volunteerId: this.selectedVolunteer.id, availabilities },
-      );
-      this.$accessor.user.findUserById(this.selectedVolunteer.id);
-      this.$emit("saved");
-    },
-
     async deleteVolunteer() {
       await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
       this.$emit("deleted");
@@ -338,12 +312,6 @@ export default defineComponent({
   align-items: center;
   gap: 10px;
   margin-left: 10px;
-}
-
-.availability-btn {
-  @media only screen and(max-width: $mobile-max-width) {
-    display: none;
-  }
 }
 
 .friends {
