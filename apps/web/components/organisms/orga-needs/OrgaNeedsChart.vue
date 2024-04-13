@@ -24,7 +24,30 @@ export default Vue.extend({
         pointRadius: 0,
         pointHitRadius: 10,
       },
-      options: {
+    };
+  },
+  computed: {
+    stats(): OrgaNeedsResponse[] {
+      return this.$accessor.orgaNeeds.stats;
+    },
+    max(): number {
+      const TOP_MARGING = 1.05;
+      const STEP = 50;
+
+      const assigned = this.assignedVolunteers().data;
+      const stillAvailable = this.availableVolunteers().data;
+      const stackedAvailable = assigned.map((assignedCount, index) => {
+        const stillAvailableCount = stillAvailable.at(index) ?? 0;
+        return assignedCount + stillAvailableCount;
+      });
+      const demands = this.requestedVolunteers().data;
+
+      const maxVolunteers = Math.max(...demands, ...stackedAvailable);
+      const steps = Math.ceil((maxVolunteers * TOP_MARGING) / STEP);
+      return steps * STEP;
+    },
+    options(): unknown {
+      return {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
@@ -40,10 +63,10 @@ export default Vue.extend({
             {
               id: "availability",
               stacked: true,
-              ticks: { max: 500 },
+              ticks: { max: this.max },
               position: "right",
             },
-            { id: "demands", stacked: false, ticks: { max: 500 } },
+            { id: "demands", stacked: false, ticks: { max: this.max } },
           ],
         },
         hover: {
@@ -55,12 +78,7 @@ export default Vue.extend({
           position: "nearest",
           callbacks: { label: tooltipLabel },
         },
-      },
-    };
-  },
-  computed: {
-    stats(): OrgaNeedsResponse[] {
-      return this.$accessor.orgaNeeds.stats;
+      };
     },
   },
   watch: {
