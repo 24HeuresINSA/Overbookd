@@ -11,10 +11,10 @@ class AssignmentTeamDto implements AssignmentTeam {
   code: string;
 
   @ApiProperty({ type: Number })
-  required: number;
+  demands: number;
 
   @ApiProperty({ type: Number })
-  count: number;
+  assigned: number;
 }
 
 class AssignmentSummaryDto implements AssignmentSummary {

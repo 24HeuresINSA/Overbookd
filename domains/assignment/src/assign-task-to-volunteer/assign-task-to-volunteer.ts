@@ -6,7 +6,7 @@ export type Assignee = {
 };
 export type RequestedTeam = {
   code: string;
-  required: number;
+  demands: number;
 };
 export type Assignment = IProvidePeriod & {
   requestedTeams: RequestedTeam[];
@@ -14,7 +14,7 @@ export type Assignment = IProvidePeriod & {
 };
 
 export type AssignmentTeam = RequestedTeam & {
-  count: number;
+  assigned: number;
 };
 
 export type AssignmentSummary = IProvidePeriod & {
@@ -76,7 +76,7 @@ export class AssignTaskToVolunteer {
     const teams = requestedTeams
       .filter((team) => {
         const countAssignees = this.countAssigneesInTeam(team.code, assignees);
-        return countAssignees < team.required;
+        return countAssignees < team.demands;
       })
       .map((team) => team.code);
 
@@ -97,10 +97,11 @@ export class AssignTaskToVolunteer {
       end: assignment.end,
       teams: assignment.requestedTeams.map((team) => ({
         code: team.code,
-        required: team.required,
-        count: this.countAssigneesInTeam(team.code, assignment.assignees),
+        demands: team.demands,
+        assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
       })),
     }));
+
     return {
       id: task.id,
       name: task.name,

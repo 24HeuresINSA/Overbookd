@@ -38,7 +38,7 @@ function toFullTask(task: DatabaseFullTask): FullTask {
     end: mobilization.end,
     assignees: mobilization.assignees.map((a) => ({ as: a.teamCode })),
     requestedTeams: mobilization.teams.map((t) => ({
-      required: t.count,
+      demands: t.count,
       code: t.teamCode,
     })),
   }));

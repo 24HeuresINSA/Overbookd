@@ -8,35 +8,35 @@ const friday08hto09h = {
 
 export const fulfilledAssignment = AssignmentBuilder.init(friday08hto09h)
   .withAssignees([{ as: "hard" }])
-  .withRequestedTeams([{ code: "hard", required: 1 }])
+  .withRequestedTeams([{ code: "hard", demands: 1 }])
   .build();
 export const fulfilledAssignmentSummary: AssignmentSummary = {
   ...friday08hto09h,
-  teams: [{ code: "hard", required: 1, count: 1 }],
+  teams: [{ code: "hard", demands: 1, assigned: 1 }],
 };
 
 export const missingOnePlaizirAssignment = AssignmentBuilder.init(
   friday08hto09h,
 )
-  .withRequestedTeams([{ code: "plaizir", required: 1 }])
+  .withRequestedTeams([{ code: "plaizir", demands: 1 }])
   .build();
 export const missingOnePlaizirAssignmentSummary: AssignmentSummary = {
   ...friday08hto09h,
-  teams: [{ code: "plaizir", required: 1, count: 0 }],
+  teams: [{ code: "plaizir", demands: 1, assigned: 0 }],
 };
 
 export const missingTwoVieuxAssignment = AssignmentBuilder.init(friday08hto09h)
   .withAssignees([{ as: "hard" }])
   .withRequestedTeams([
-    { code: "hard", required: 1 },
-    { code: "vieux", required: 2 },
+    { code: "hard", demands: 1 },
+    { code: "vieux", demands: 2 },
   ])
   .build();
 export const missingTwoVieuxAssignmentSummary: AssignmentSummary = {
   ...friday08hto09h,
   teams: [
-    { code: "hard", required: 1, count: 1 },
-    { code: "vieux", required: 2, count: 0 },
+    { code: "hard", demands: 1, assigned: 1 },
+    { code: "vieux", demands: 2, assigned: 0 },
   ],
 };
 
@@ -45,15 +45,15 @@ export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init(
 )
   .withAssignees([{ as: "hard" }, { as: "hard" }, { as: "benevole" }])
   .withRequestedTeams([
-    { code: "hard", required: 3 },
-    { code: "benevole", required: 2 },
+    { code: "hard", demands: 3 },
+    { code: "benevole", demands: 2 },
   ])
   .build();
 export const missingOneHardAndOneBenevoleAssignmentSummary: AssignmentSummary =
   {
     ...friday08hto09h,
     teams: [
-      { code: "hard", required: 3, count: 2 },
-      { code: "benevole", required: 2, count: 1 },
+      { code: "hard", demands: 3, assigned: 2 },
+      { code: "benevole", demands: 2, assigned: 1 },
     ],
   };
