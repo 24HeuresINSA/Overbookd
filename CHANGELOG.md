@@ -1,3 +1,10 @@
+## [2.24.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.6...v2.24.7) (2024-04-13)
+
+
+### Bug Fixes
+
+* **orga-needs:** dynamic max limit on graph. [#1753](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1753) ([2700411](https://gitlab.com/24-heures-insa/overbookd-mono/commit/27004118bdc66cd3fbbd37f7b187f9610991d4fb))
+
 ## [2.24.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.5...v2.24.6) (2024-04-13)
 
 
