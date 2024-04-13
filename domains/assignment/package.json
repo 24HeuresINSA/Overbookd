@@ -37,6 +37,7 @@
     "pnpm": "8.15.6"
   },
   "dependencies": {
+    "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
     "@overbookd/festival-event-constants": "workspace:*"
   }

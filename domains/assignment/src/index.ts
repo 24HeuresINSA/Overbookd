@@ -7,7 +7,7 @@ export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunte
 export type {
   Tasks,
   Assignment,
-  TaskWithAssignments,
+  FullTask,
   MissingAssignmentTask,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";

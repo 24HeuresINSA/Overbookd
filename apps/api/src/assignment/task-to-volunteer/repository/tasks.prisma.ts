@@ -1,7 +1,7 @@
-import { TaskWithAssignments, Tasks } from "@overbookd/assignment";
+import { FullTask, Tasks } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import {
-  DatabaseTaskWithAssignments,
+  DatabaseFullTask,
   IS_READY_AND_EXISTS,
   SELECT_TASK_WITH_ASSIGNMENTS,
 } from "./task.query";
@@ -9,21 +9,21 @@ import {
 export class PrismaTasks implements Tasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<TaskWithAssignments[]> {
+  async findAll(): Promise<FullTask[]> {
     const tasks = await this.prisma.festivalTask.findMany({
       where: IS_READY_AND_EXISTS,
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
-    return tasks.map(toTaskWithAssignments);
+    return tasks.map(toFullTask);
   }
 }
 
-function toTaskWithAssignments(
-  task: DatabaseTaskWithAssignments,
-): TaskWithAssignments {
-  const assignments = task.mobilizations.map((m) => ({
-    assignees: m.assignees.map((a) => ({ as: a.teamCode })),
-    requestedTeams: m.teams.map((t) => ({
+function toFullTask(task: DatabaseFullTask): FullTask {
+  const assignments = task.mobilizations.map((mobilization) => ({
+    start: mobilization.start,
+    end: mobilization.end,
+    assignees: mobilization.assignees.map((a) => ({ as: a.teamCode })),
+    requestedTeams: mobilization.teams.map((t) => ({
       count: t.count,
       code: t.teamCode,
     })),

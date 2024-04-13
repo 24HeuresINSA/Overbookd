@@ -1,25 +1,28 @@
 import { Category } from "@overbookd/festival-event-constants";
+import { IProvidePeriod } from "@overbookd/period";
 
-type Assignee = {
+export type Assignee = {
   as: string;
 };
-type RequestedTeam = {
+export type RequestedTeam = {
   code: string;
   count: number;
 };
-export type Assignment = {
+export type Assignment = IProvidePeriod & {
   requestedTeams: RequestedTeam[];
   assignees: Assignee[];
 };
 
-export type BaseTask = {
+type TaskIdentifier = {
   id: number;
   name: string;
+};
+export type BaseTask = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
 };
 
-export type TaskWithAssignments = BaseTask & {
+export type FullTask = BaseTask & {
   assignments: Assignment[];
 };
 
@@ -28,7 +31,7 @@ export type MissingAssignmentTask = BaseTask & {
 };
 
 export type Tasks = {
-  findAll(): Promise<TaskWithAssignments[]>;
+  findAll(): Promise<FullTask[]>;
 };
 
 export class AssignTaskToVolunteer {
@@ -42,9 +45,7 @@ export class AssignTaskToVolunteer {
     return withMissingTeams.filter((task) => task.teams.length > 0);
   }
 
-  private computeMissingAssignmentTeams(
-    task: TaskWithAssignments,
-  ): MissingAssignmentTask {
+  private computeMissingAssignmentTeams(task: FullTask): MissingAssignmentTask {
     const requestedTeams = task.assignments.flatMap((assignment) =>
       assignment.requestedTeams.map((team) => team),
     );
