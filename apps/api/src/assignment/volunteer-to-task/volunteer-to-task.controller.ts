@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseFilters, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -13,10 +13,12 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
+import { AssignmentErrorFilter } from "../assignment.filter";
 
 @ApiBearerAuth()
 @ApiTags("assignments/volunteer-to-task")
 @Controller("assignments/volunteer-to-task")
+@UseFilters(AssignmentErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })

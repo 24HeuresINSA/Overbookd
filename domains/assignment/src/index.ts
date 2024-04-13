@@ -15,4 +15,4 @@ export type {
   TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";
-export { TaskNotFoundError } from "./assignment.error";
+export { AssignmentError, TaskNotFoundError } from "./assignment.error";

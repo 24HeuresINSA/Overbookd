@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -24,10 +25,12 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { MissingAssignmentTaskResponseDto } from "./dto/missing-assignment-task.response.dto";
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
+import { AssignmentErrorFilter } from "../assignment.filter";
 
 @ApiBearerAuth()
 @ApiTags("assignments/task-to-volunteer")
 @Controller("assignments/task-to-volunteer")
+@UseFilters(AssignmentErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
