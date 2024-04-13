@@ -17,7 +17,8 @@ type TaskIdentifier = {
   id: number;
   name: string;
 };
-export type BaseTask = TaskIdentifier & {
+
+type BaseTask = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
 };

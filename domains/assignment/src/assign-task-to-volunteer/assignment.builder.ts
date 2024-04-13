@@ -8,8 +8,8 @@ import {
 export class AssignmentBuilder {
   private constructor(private assignment: Assignment) {}
 
-  static init({ start, end }: IProvidePeriod): AssignmentBuilder {
-    const assignment = defaultAssignment(start, end);
+  static init(period: IProvidePeriod): AssignmentBuilder {
+    const assignment = defaultAssignment(period);
     return new AssignmentBuilder(assignment);
   }
 
@@ -28,7 +28,7 @@ export class AssignmentBuilder {
   }
 }
 
-function defaultAssignment(start: Date, end: Date): Assignment {
+function defaultAssignment({ start, end }: IProvidePeriod): Assignment {
   return {
     start,
     end,
