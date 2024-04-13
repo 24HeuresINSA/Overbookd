@@ -9,7 +9,7 @@ import {
   saturday19At16,
   table,
 } from "../../logistic.test-utils";
-import { AlreadyAddedGear, NotEnoughQuantity } from "../../forms.error";
+import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;

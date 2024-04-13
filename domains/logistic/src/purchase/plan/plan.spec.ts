@@ -1,6 +1,6 @@
 import { chaise, saturday19At16, table } from "../../logistic.test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
-import { AlreadyAddedGear, NotEnoughQuantity } from "../../forms.error";
+import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error";
 import { InMemoryPurchases } from "./purchase.inmemory";
 import { PlanPurchase } from "./plan";
 import { PurchaseNotFound } from "../purchase.error";

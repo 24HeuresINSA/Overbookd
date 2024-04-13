@@ -1,4 +1,4 @@
-import { NotEnoughQuantity } from "../../forms.error";
+import { NotEnoughQuantity } from "../../logistic.error";
 import { GearRequest, GearRequests } from "../../gear-request";
 import { Purchase } from "../purchase";
 import { PurchaseNotFound } from "../purchase.error";

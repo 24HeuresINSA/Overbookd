@@ -2,7 +2,7 @@ import { Period } from "@overbookd/period";
 import { Borrow } from "../borrow";
 import { BorrowNotFound } from "../borrow.error";
 import { GearRequest, GearRequests } from "../../gear-request";
-import { NotEnoughQuantity } from "../../forms.error";
+import { NotEnoughQuantity } from "../../logistic.error";
 
 export type PlanBorrowForm = {
   lender?: Borrow["lender"];

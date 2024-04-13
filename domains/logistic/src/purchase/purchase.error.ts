@@ -1,6 +1,7 @@
+import { LogisticError } from "../logistic.error";
 import { Purchase } from "./purchase";
 
-class PurchaseError extends Error {}
+class PurchaseError extends LogisticError {}
 
 export class PurchaseNotFound extends PurchaseError {
   constructor(id: Purchase["id"]) {
