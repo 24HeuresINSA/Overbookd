@@ -6,14 +6,22 @@ export type Assignee = {
 };
 export type RequestedTeam = {
   code: string;
-  count: number;
+  demands: number;
 };
 export type Assignment = IProvidePeriod & {
   requestedTeams: RequestedTeam[];
   assignees: Assignee[];
 };
 
-type TaskIdentifier = {
+export type AssignmentTeam = RequestedTeam & {
+  assigned: number;
+};
+
+export type AssignmentSummary = IProvidePeriod & {
+  teams: AssignmentTeam[];
+};
+
+export type TaskIdentifier = {
   id: number;
   name: string;
 };
@@ -21,6 +29,10 @@ type TaskIdentifier = {
 type BaseTask = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
+};
+
+export type TaskWithAssignmentsSummary = TaskIdentifier & {
+  assignments: AssignmentSummary[];
 };
 
 export type FullTask = BaseTask & {
@@ -33,6 +45,7 @@ export type MissingAssignmentTask = BaseTask & {
 
 export type Tasks = {
   findAll(): Promise<FullTask[]>;
+  findOne(id: TaskIdentifier["id"]): Promise<FullTask>;
 };
 
 export class AssignTaskToVolunteer {
@@ -46,6 +59,13 @@ export class AssignTaskToVolunteer {
     return withMissingTeams.filter((task) => task.teams.length > 0);
   }
 
+  async selectTask(
+    taskId: TaskIdentifier["id"],
+  ): Promise<TaskWithAssignmentsSummary> {
+    const task = await this.allTasks.findOne(taskId);
+    return this.computeAssignmentsSummary(task);
+  }
+
   private computeMissingAssignmentTeams(task: FullTask): MissingAssignmentTask {
     const requestedTeams = task.assignments.flatMap((assignment) =>
       assignment.requestedTeams.map((team) => team),
@@ -56,7 +76,7 @@ export class AssignTaskToVolunteer {
     const teams = requestedTeams
       .filter((team) => {
         const countAssignees = this.countAssigneesInTeam(team.code, assignees);
-        return countAssignees < team.count;
+        return countAssignees < team.demands;
       })
       .map((team) => team.code);
 
@@ -66,6 +86,26 @@ export class AssignTaskToVolunteer {
       topPriority: task.topPriority,
       category: task.category,
       teams,
+    };
+  }
+
+  private computeAssignmentsSummary(
+    task: FullTask,
+  ): TaskWithAssignmentsSummary {
+    const assignments = task.assignments.map((assignment) => ({
+      start: assignment.start,
+      end: assignment.end,
+      teams: assignment.requestedTeams.map((team) => ({
+        code: team.code,
+        demands: team.demands,
+        assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
+      })),
+    }));
+
+    return {
+      id: task.id,
+      name: task.name,
+      assignments,
     };
   }
 
