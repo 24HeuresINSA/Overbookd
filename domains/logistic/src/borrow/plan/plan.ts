@@ -1,11 +1,8 @@
 import { Period } from "@overbookd/period";
 import { Borrow } from "../borrow";
-import {
-  AlreadyAddedGear,
-  BorrowNotFound,
-  NotEnoughQuantity,
-} from "../borrow.error";
-import { GearRequest } from "../../gear-request";
+import { BorrowNotFound } from "../borrow.error";
+import { GearRequest, GearRequests } from "../../gear-request";
+import { NotEnoughQuantity } from "../../logistic.error";
 
 export type PlanBorrowForm = {
   lender?: Borrow["lender"];
@@ -52,27 +49,5 @@ export class PlanBorrow {
     const gearRequests = GearRequests.init(borrow.gears);
     const gears = gearRequests.remove(gearSlug).all;
     return this.borrows.save({ ...borrow, gears });
-  }
-}
-
-class GearRequests {
-  private constructor(private gears: GearRequest[]) {}
-
-  static init(gears: GearRequest[]): GearRequests {
-    return new GearRequests(gears);
-  }
-
-  add(gear: GearRequest): GearRequests {
-    const existingGear = this.gears.some((g) => g.slug === gear.slug);
-    if (existingGear) throw new AlreadyAddedGear(gear.name);
-    return new GearRequests([...this.gears, gear]);
-  }
-
-  remove(slug: GearRequest["slug"]): GearRequests {
-    return new GearRequests(this.gears.filter((gear) => gear.slug !== slug));
-  }
-
-  get all(): GearRequest[] {
-    return this.gears;
   }
 }

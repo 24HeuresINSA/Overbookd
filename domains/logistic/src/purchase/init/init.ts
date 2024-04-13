@@ -1,16 +1,9 @@
 import { numberGenerator } from "@overbookd/list";
-import { GearRequest } from "../../gear-request";
+import { Purchase } from "../purchase";
 
 export type InitPurchaseForm = {
   seller: string;
   availableOn: Date;
-};
-
-export type Purchase = {
-  id: number;
-  seller: string;
-  availableOn: Date;
-  gears: GearRequest[];
 };
 
 export type PurchasesForInit = {
