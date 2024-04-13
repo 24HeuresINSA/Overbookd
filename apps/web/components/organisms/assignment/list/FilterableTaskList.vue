@@ -56,7 +56,7 @@ export default defineComponent({
     filteredTasks(): MissingAssignmentTask[] {
       return this.searchableTasks.filter((task) => {
         return (
-          this.filterFtByTeamRequests(this.teams)(task) &&
+          this.filterByTeamRequests(this.teams)(task) &&
           this.filterByCatergoryOrPriority(this.category)(task) &&
           this.filterByName(this.searchTask)(task)
         );
@@ -64,7 +64,7 @@ export default defineComponent({
     },
   },
   methods: {
-    filterFtByTeamRequests(
+    filterByTeamRequests(
       teamsSearched: Team[],
     ): (task: MissingAssignmentTask) => boolean {
       return teamsSearched.length > 0
