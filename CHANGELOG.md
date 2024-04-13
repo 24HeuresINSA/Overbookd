@@ -1,3 +1,25 @@
+## [2.24.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.5...v2.24.6) (2024-04-13)
+
+
+### Bug Fixes
+
+* **borrow:** allow borrow sorting by name [#1751](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1751) ([b050dae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b050dae9731b9d5188d314e72237b79680698519))
+* **orga-needs:** change counter computation. [#1737](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1737) ([0ab882f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0ab882f7012ba320f158968c0ee44263ea4090e6))
+* **orga-needs:** stack available with assigned in graph. [#1752](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1752) ([b926fe2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b926fe2c8178a9c09ca5ba9ef94308330f3c857b))
+
+
+### Pre-Features
+
+* **assignment:** add domain [#1749](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1749) ([84ffcc9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/84ffcc940d48ef631196b5b460243da35c86b435))
+* **assignment:** get new assignment data in api [#1740](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1740) ([fa0c423](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fa0c423e03119f36be288c9d76ecd3ece1ed35e5))
+* **purchase-form:** implement tests for purchase init in domains [#1746](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1746) ([6ce7914](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6ce79147c1f9b2f7a4067cbf93a21d575b107e7a))
+
+
+### Refactor
+
+* **assignment:** adjust domain with assignment modes [#1750](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1750) ([8f497ef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8f497ef87ae49dcf67f2cb9ffbff8706a594342e))
+* **constants:** add team repo and task categories [#1745](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1745) ([141a440](https://gitlab.com/24-heures-insa/overbookd-mono/commit/141a440f31065132425cd5dae83c9bd86c2ee1c3))
+
 ## [2.24.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.4...v2.24.5) (2024-04-09)
 
 
