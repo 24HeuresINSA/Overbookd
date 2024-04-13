@@ -36,6 +36,15 @@ export default Vue.extend({
               },
             },
           ],
+          yAxes: [
+            {
+              id: "availability",
+              stacked: true,
+              ticks: { max: 500 },
+              position: "right",
+            },
+            { id: "demands", stacked: false, ticks: { max: 500 } },
+          ],
         },
         hover: {
           mode: "nearest",
@@ -59,9 +68,9 @@ export default Vue.extend({
       this.courbs = {
         labels: this.labels(),
         datasets: [
-          this.availableVolunteers(),
           this.requestedVolunteers(),
           this.assignedVolunteers(),
+          this.availableVolunteers(),
         ],
       };
     },
@@ -76,6 +85,7 @@ export default Vue.extend({
         data: this.stats.map((stat) => stat.availableVolunteers),
         backgroundColor: "#00ff0030",
         borderColor: "#00ff00",
+        yAxisID: "availability",
         ...this.datasetOptions,
       };
     },
@@ -85,6 +95,7 @@ export default Vue.extend({
         data: this.stats.map((stat) => stat.requestedVolunteers),
         backgroundColor: "#ff000030",
         borderColor: "#ff0000",
+        yAxisID: "demands",
         ...this.datasetOptions,
       };
     },
@@ -94,6 +105,7 @@ export default Vue.extend({
         data: this.stats.map((stat) => stat.assignedVolunteers),
         backgroundColor: "#0000ff30",
         borderColor: "#0000ff",
+        yAxisID: "availability",
         ...this.datasetOptions,
       };
     },

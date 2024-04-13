@@ -6,6 +6,7 @@ export type Dataset = {
   borderWidth: number;
   pointRadius: number;
   pointHitRadius: number;
+  yAxisID?: string;
 };
 
 export type ChartData = {
