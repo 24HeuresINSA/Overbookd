@@ -61,7 +61,7 @@ export default Vue.extend({
   }),
   computed: {
     volunteers(): VolunteerWithAssignmentDuration[] {
-      return this.$accessor.assignment.volunteerToTask.volunteers;
+      return this.$accessor.assignVolunteerToTask.volunteers;
     },
     searchableVolunteers(): Searchable<VolunteerWithAssignmentDuration>[] {
       return this.volunteers.map((volunteer) => ({
@@ -132,7 +132,7 @@ export default Vue.extend({
     },
     filterVolunteerByName(
       search: string,
-    ): (timeSpan: Searchable<VolunteerWithAssignmentDuration>) => boolean {
+    ): (volunteer: Searchable<VolunteerWithAssignmentDuration>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },

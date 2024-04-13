@@ -40,12 +40,12 @@ export default Vue.extend({
   }),
   computed: {
     volunteers(): VolunteerWithAssignmentDuration[] {
-      return this.$accessor.assignment.volunteerToTask.volunteers;
+      return this.$accessor.assignVolunteerToTask.volunteers;
     },
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchVolunteersForVolunteerToTask();
+    await this.$accessor.assignVolunteerToTask.fetchVolunteers();
 
     const volunteerId = +this.$route.query.volunteer;
     if (!volunteerId) return;

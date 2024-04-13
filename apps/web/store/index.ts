@@ -2,6 +2,8 @@ import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 
 // Import all submodules
 import * as assignment from "./assignment";
+import * as assignVolunteerToTask from "./assignVolunteerToTask";
+import * as assignTaskToVolunteer from "./assignTaskToVolunteer";
 import * as catalog from "./catalog";
 import * as catalogGear from "./catalogGear";
 import * as catalogSignage from "./catalogSignage";
@@ -61,6 +63,8 @@ export const accessorType = getAccessorType({
     festivalTask,
     team,
     assignment,
+    assignVolunteerToTask,
+    assignTaskToVolunteer,
     catalog,
     catalogGear,
     catalogSignage,

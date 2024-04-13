@@ -30,12 +30,6 @@ import { User } from "@overbookd/user";
 import { AssignmentRepository } from "~/repositories/assignment/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
-import {
-  MissingAssignmentTask,
-  VolunteerWithAssignmentDuration,
-} from "@overbookd/assignment";
-import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
-import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -59,14 +53,6 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
-type TaskToVolunteer = {
-  tasks: MissingAssignmentTask[];
-};
-
-type VolunteerToTask = {
-  volunteers: VolunteerWithAssignmentDuration[];
-};
-
 type State = {
   volunteers: Volunteer[];
   timeSpans: AvailableTimeSpan[];
@@ -80,9 +66,6 @@ type State = {
   hoverTimeSpan: AvailableTimeSpan | null;
   timeSpanToDisplayDetails: TimeSpanWithAssignees | null;
   stats: AssignmentStats[];
-
-  taskToVolunteer: TaskToVolunteer;
-  volunteerToTask: VolunteerToTask;
 };
 
 export const state = (): State => ({
@@ -102,13 +85,6 @@ export const state = (): State => ({
   timeSpanToDisplayDetails: null as TimeSpanWithAssignees | null,
 
   stats: [] as AssignmentStats[],
-
-  taskToVolunteer: {
-    tasks: [],
-  },
-  volunteerToTask: {
-    volunteers: [],
-  },
 });
 
 export const getters = getterTree(state, {
@@ -120,16 +96,6 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_TASKS_FOR_TASK_TO_VOLUNTEER(state, tasks: MissingAssignmentTask[]) {
-    state.taskToVolunteer.tasks = tasks;
-  },
-  SET_VOLUNTEERS_FOR_VOLUNTEER_TO_TASK(
-    state,
-    volunteers: VolunteerWithAssignmentDuration[],
-  ) {
-    state.volunteerToTask.volunteers = volunteers;
-  },
-
   SET_VOLUNTEERS(state, volunteers: Volunteer[]) {
     state.volunteers = volunteers;
   },
@@ -262,22 +228,6 @@ export const actions = actionTree(
       dispatch("volunteerAvailability/clearVolunteerAvailabilities", null, {
         root: true,
       });
-    },
-    async fetchVolunteersForVolunteerToTask({ commit }) {
-      const res = await safeCall(
-        this,
-        VolunteerToTaskRepository.getVolunteers(this),
-      );
-      if (!res) return;
-      commit("SET_VOLUNTEERS_FOR_VOLUNTEER_TO_TASK", res.data);
-    },
-    async fetchTasksForTaskToVolunteer({ commit }) {
-      const res = await safeCall(
-        this,
-        TaskToVolunteerRepository.getTasks(this),
-      );
-      if (!res) return;
-      commit("SET_TASKS_FOR_TASK_TO_VOLUNTEER", res.data);
     },
 
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {

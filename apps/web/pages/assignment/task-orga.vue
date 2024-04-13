@@ -45,7 +45,7 @@ export default Vue.extend({
   }),
   computed: {
     tasks(): MissingAssignmentTask[] {
-      return this.$accessor.assignment.taskToVolunteer.tasks;
+      return this.$accessor.assignTaskToVolunteer.tasks;
     },
     openTaskAssignmentDialog: {
       get(): boolean {
@@ -58,7 +58,7 @@ export default Vue.extend({
   },
   async mounted() {
     this.$accessor.assignment.clearSelectedVariables();
-    await this.$accessor.assignment.fetchTasksForTaskToVolunteer();
+    await this.$accessor.assignTaskToVolunteer.fetchTasks();
   },
   methods: {
     closeTaskAssignmentDialog() {

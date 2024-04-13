@@ -2,16 +2,16 @@
   <v-card class="filterable-task-list">
     <v-card-text class="filterable-task-list__text">
       <FtTimeSpanFilters
-        :list-length="filteredFts.length"
+        :list-length="filteredTasks.length"
         class="filters"
         type="ft"
-        @change:search="searchFt = $event"
+        @change:search="searchTask = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
         @change:completed="completed = $event"
       ></FtTimeSpanFilters>
       <v-divider />
-      <TaskList :tasks="filteredFts" class="task-list" />
+      <TaskList :tasks="filteredTasks" class="task-list" />
     </v-card-text>
   </v-card>
 </template>
@@ -29,7 +29,7 @@ import { MissingAssignmentTask } from "@overbookd/assignment";
 
 type FilterableTaskListData = {
   teams: Team[];
-  searchFt: string;
+  searchTask: string;
   category: TaskCategory | TaskPriority | null;
   completed: boolean;
 };
@@ -40,25 +40,25 @@ export default defineComponent({
   data: (): FilterableTaskListData => ({
     completed: false,
     teams: [],
-    searchFt: "",
+    searchTask: "",
     category: null,
   }),
   computed: {
     tasks(): MissingAssignmentTask[] {
-      return this.$accessor.assignment.taskToVolunteer.tasks;
+      return this.$accessor.assignTaskToVolunteer.tasks;
     },
-    searchableFts(): Searchable<MissingAssignmentTask>[] {
-      return this.tasks.map((ft) => ({
-        ...ft,
-        searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
+    searchableTasks(): Searchable<MissingAssignmentTask>[] {
+      return this.tasks.map((task) => ({
+        ...task,
+        searchable: SlugifyService.apply(`${task.id} ${task.name}`),
       }));
     },
-    filteredFts(): MissingAssignmentTask[] {
-      return this.searchableFts.filter((ft) => {
+    filteredTasks(): MissingAssignmentTask[] {
+      return this.searchableTasks.filter((task) => {
         return (
-          this.filterFtByTeamRequests(this.teams)(ft) &&
-          this.filterFtByCatergoryOrPriority(this.category)(ft) &&
-          this.filterFtByName(this.searchFt)(ft)
+          this.filterFtByTeamRequests(this.teams)(task) &&
+          this.filterByCatergoryOrPriority(this.category)(task) &&
+          this.filterByName(this.searchTask)(task)
         );
       });
     },
@@ -66,7 +66,7 @@ export default defineComponent({
   methods: {
     filterFtByTeamRequests(
       teamsSearched: Team[],
-    ): (ft: MissingAssignmentTask) => boolean {
+    ): (task: MissingAssignmentTask) => boolean {
       return teamsSearched.length > 0
         ? (task) =>
             teamsSearched.every((teamSearched) =>
@@ -79,32 +79,32 @@ export default defineComponent({
     ): category is TaskPriority {
       return Object.values(TaskPriorities).includes(category);
     },
-    filterFtByCatergoryOrPriority(
+    filterByCatergoryOrPriority(
       categorySearched: TaskCategory | TaskPriority | null,
-    ): (ft: MissingAssignmentTask) => boolean {
+    ): (task: MissingAssignmentTask) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
         return this.filterByPriority(categorySearched);
       }
-      return this.filterFtByCategory(categorySearched);
+      return this.filterByCategory(categorySearched);
     },
-    filterFtByCategory(
+    filterByCategory(
       categorySearched: TaskCategory,
-    ): (ft: MissingAssignmentTask) => boolean {
-      return (ft) => {
-        if (categorySearched === "AUCUNE") return ft.category === null;
-        return ft.category === categorySearched;
+    ): (task: MissingAssignmentTask) => boolean {
+      return (task) => {
+        if (categorySearched === "AUCUNE") return task.category === null;
+        return task.category === categorySearched;
       };
     },
     filterByPriority(
       prioritySearched: TaskPriority,
-    ): (ft: MissingAssignmentTask) => boolean {
+    ): (task: MissingAssignmentTask) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
-      return (ft) => ft.topPriority === hasPriority;
+      return (task) => task.topPriority === hasPriority;
     },
-    filterFtByName(
+    filterByName(
       search: string,
-    ): (timeSpan: Searchable<MissingAssignmentTask>) => boolean {
+    ): (task: Searchable<MissingAssignmentTask>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
