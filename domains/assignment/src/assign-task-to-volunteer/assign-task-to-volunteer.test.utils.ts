@@ -1,7 +1,7 @@
 import { AssignmentSummary } from "./assign-task-to-volunteer";
 import { AssignmentBuilder } from "./assignment.builder";
 
-export const friday08hto09h = {
+const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T09:00+02:00"),
 };
