@@ -481,6 +481,9 @@ importers:
       '@overbookd/festival-event-constants':
         specifier: workspace:*
         version: link:../../constants/festival-event-constants
+      '@overbookd/list':
+        specifier: workspace:*
+        version: link:../../libraries/list
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period

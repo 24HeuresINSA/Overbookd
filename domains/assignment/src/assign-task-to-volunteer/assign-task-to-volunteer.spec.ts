@@ -1,25 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
-  taskFullyAssigned,
-  taskMissingOneAssignee,
-  taskMissingTwoVieux,
-  taskMissingOneHardAndOneBenevole,
-  taskMissingOneAssigneeThenOneHardAndOneBenevole,
-  expectedTaskMissingOneAssignee,
-  expectedTaskMissingTwoVieux,
-  expectedTaskMissingOneHardAndOneBenevole,
-  expectedTaskMissingOneAssigneeThenOneHardAndOneBenevole,
-} from "./assign-task-to-volunteer.test-utils";
+  fullyAssignedTask,
+  missingOnePlaizirTask,
+  missingTwoVieuxTask,
+  missingOneHardAndOneBenevoleTask,
+  missingOneAssigneeThenOneHardAndOneBenevoleTask,
+} from "./task.fake";
 import { InMemoryTasks } from "./tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
-    taskFullyAssigned,
-    taskMissingOneAssignee,
-    taskMissingTwoVieux,
-    taskMissingOneHardAndOneBenevole,
-    taskMissingOneAssigneeThenOneHardAndOneBenevole,
+    fullyAssignedTask,
+    missingOnePlaizirTask,
+    missingTwoVieuxTask,
+    missingOneHardAndOneBenevoleTask,
+    missingOneAssigneeThenOneHardAndOneBenevoleTask,
   ]);
   const assign = new AssignTaskToVolunteer(tasks);
 
@@ -28,10 +24,10 @@ describe("Assign task to volunteer", () => {
 
     describe.each`
       taskName                                                | taskId                                                | expectedTeams
-      ${taskMissingOneAssignee.name}                          | ${taskMissingOneAssignee.id}                          | ${expectedTaskMissingOneAssignee.teams}
-      ${taskMissingTwoVieux.name}                             | ${taskMissingTwoVieux.id}                             | ${expectedTaskMissingTwoVieux.teams}
-      ${taskMissingOneHardAndOneBenevole.name}                | ${taskMissingOneHardAndOneBenevole.id}                | ${expectedTaskMissingOneHardAndOneBenevole.teams}
-      ${taskMissingOneAssigneeThenOneHardAndOneBenevole.name} | ${taskMissingOneAssigneeThenOneHardAndOneBenevole.id} | ${expectedTaskMissingOneAssigneeThenOneHardAndOneBenevole.teams}
+      ${missingOnePlaizirTask.name}                           | ${missingOnePlaizirTask.id}                           | ${["plaizir"]}
+      ${missingTwoVieuxTask.name}                             | ${missingTwoVieuxTask.id}                             | ${["vieux"]}
+      ${missingOneHardAndOneBenevoleTask.name}                | ${missingOneHardAndOneBenevoleTask.id}                | ${["hard", "benevole"]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.id} | ${["plaizir", "hard", "benevole"]}
     `(
       "when listing missing assignment tasks with $taskName",
       ({ taskId, expectedTeams }) => {
@@ -44,7 +40,7 @@ describe("Assign task to volunteer", () => {
     describe("when listing missing assignment tasks with fully assigned task", () => {
       it("should not contain task", () => {
         const foundTask = assignableTasks.find(
-          (t) => t.id === taskFullyAssigned.id,
+          (task) => task.id === fullyAssignedTask.id,
         );
         expect(foundTask).toBeUndefined();
       });

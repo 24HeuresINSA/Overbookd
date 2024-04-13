@@ -1,9 +1,9 @@
-import { Tasks, TaskWithAssignments } from "./assign-task-to-volunteer";
+import { Tasks, FullTask } from "./assign-task-to-volunteer";
 
 export class InMemoryTasks implements Tasks {
-  constructor(private tasks: TaskWithAssignments[] = []) {}
+  constructor(private tasks: FullTask[] = []) {}
 
-  findAll(): Promise<TaskWithAssignments[]> {
+  findAll(): Promise<FullTask[]> {
     return Promise.resolve(this.tasks);
   }
 }

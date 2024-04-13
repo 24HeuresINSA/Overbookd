@@ -13,16 +13,20 @@ export const SELECT_TASK_WITH_ASSIGNMENTS = {
   category: true,
   mobilizations: {
     select: {
+      start: true,
+      end: true,
       teams: { select: { teamCode: true, count: true } },
       assignees: { select: { teamCode: true } },
     },
   },
 };
 
-export type DatabaseTaskWithAssignments = Categorize & {
+export type DatabaseFullTask = Categorize & {
   id: number;
   name: string;
   mobilizations: {
+    start: Date;
+    end: Date;
     teams: { teamCode: string; count: number }[];
     assignees: { teamCode: string }[];
   }[];
