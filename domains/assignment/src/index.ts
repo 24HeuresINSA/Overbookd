@@ -7,7 +7,12 @@ export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunte
 export type {
   Tasks,
   Assignment,
+  AssignmentSummary,
+  AssignmentTeam,
   FullTask,
   MissingAssignmentTask,
+  TaskIdentifier,
+  TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";
+export { TaskNotFoundError } from "./assignment.error";

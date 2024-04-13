@@ -8,6 +8,12 @@ import {
 } from "./task.fake";
 import { InMemoryTasks } from "./tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
+import {
+  fulfilledAssignmentSummary,
+  missingOneHardAndOneBenevoleAssignmentSummary,
+  missingOnePlaizirAssignmentSummary,
+  missingTwoVieuxAssignmentSummary,
+} from "./assign-task-to-volunteer.test.utils";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
@@ -43,6 +49,24 @@ describe("Assign task to volunteer", () => {
           (task) => task.id === fullyAssignedTask.id,
         );
         expect(foundTask).toBeUndefined();
+      });
+    });
+  });
+
+  describe("when selecting a task to assign", () => {
+    describe.each`
+      taskName                                                | taskId                                                | expectedAssignments
+      ${fullyAssignedTask.name}                               | ${fullyAssignedTask.id}                               | ${[fulfilledAssignmentSummary]}
+      ${missingOnePlaizirTask.name}                           | ${missingOnePlaizirTask.id}                           | ${[missingOnePlaizirAssignmentSummary]}
+      ${missingTwoVieuxTask.name}                             | ${missingTwoVieuxTask.id}                             | ${[missingTwoVieuxAssignmentSummary]}
+      ${missingOneHardAndOneBenevoleTask.name}                | ${missingOneHardAndOneBenevoleTask.id}                | ${[missingOneHardAndOneBenevoleAssignmentSummary]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.id} | ${[missingOnePlaizirAssignmentSummary, missingOneHardAndOneBenevoleAssignmentSummary]}
+    `("when selecting task $taskName", ({ taskId, expectedAssignments }) => {
+      it("should return the selected task with assignments summary", async () => {
+        const selectedTask = await assign.selectTask(taskId);
+        expect(selectedTask.assignments.sort()).toEqual(
+          expectedAssignments.sort(),
+        );
       });
     });
   });
