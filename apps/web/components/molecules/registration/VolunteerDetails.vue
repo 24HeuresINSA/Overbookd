@@ -81,10 +81,7 @@ export default defineComponent({
     async updateVolunteerAvailabilities(availabilities: Period[]) {
       const volunteerId = this.volunteer.id;
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        {
-          volunteerId,
-          availabilities,
-        },
+        { volunteerId, availabilities },
       );
       this.$accessor.registration.fetchVolunteerInformation(volunteerId);
     },
