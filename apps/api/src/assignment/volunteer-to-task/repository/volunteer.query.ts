@@ -15,6 +15,7 @@ const SELECT_VOLUNTEER = {
   id: true,
   firstname: true,
   lastname: true,
+  nickname: true,
   charisma: true,
   comment: true,
   note: true,
@@ -47,8 +48,10 @@ export type DatabaseAssigneeWithAssignments = {
   id: number;
   firstname: string;
   lastname: string;
+  nickname?: string;
   charisma: number;
   comment?: string;
+  note?: string;
   teams: {
     team: {
       code: string;

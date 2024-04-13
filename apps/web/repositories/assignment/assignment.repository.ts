@@ -4,7 +4,6 @@ import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpanWithRequestedTeams,
-  FtWithTimeSpan,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
 import { HttpStringified } from "@overbookd/http";
@@ -19,18 +18,6 @@ type AssignmentResponse = {
 
 export class AssignmentRepository {
   private static readonly basePath = "assignments";
-
-  static getVolunteers(context: Context) {
-    return context.$axios.get<HttpStringified<Volunteer[]>>(
-      `${this.basePath}/volunteers`,
-    );
-  }
-
-  static getFtWithTimeSpans(context: Context) {
-    return context.$axios.get<HttpStringified<FtWithTimeSpan[]>>(
-      `${this.basePath}/ft-timespans`,
-    );
-  }
 
   static getTimeSpansWithStats(context: Context, ftId: number) {
     return context.$axios.get<HttpStringified<FtTimeSpanWithRequestedTeams[]>>(

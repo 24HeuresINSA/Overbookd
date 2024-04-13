@@ -18,7 +18,6 @@ import {
   FtWithTimeSpan,
   TimeSpanWithAssignees,
   castAvailableTimeSpansWithDate,
-  castFtsWithTimeSpansWithDate,
 } from "~/utils/models/ft-time-span.model";
 import { castPeriods } from "~/utils/models/period.model";
 import {
@@ -28,7 +27,7 @@ import {
 } from "~/utils/models/user.model";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
-import { AssignmentRepository } from "~/repositories/assignment.repository";
+import { AssignmentRepository } from "~/repositories/assignment/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 
@@ -54,10 +53,25 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
-export const state = () => ({
-  volunteers: [] as Volunteer[],
-  timeSpans: [] as AvailableTimeSpan[],
-  fts: [] as FtWithTimeSpan[],
+type State = {
+  volunteers: Volunteer[];
+  timeSpans: AvailableTimeSpan[];
+  fts: FtWithTimeSpan[];
+  selectedVolunteer: Volunteer | null;
+  selectedVolunteerFriends: User[];
+  selectedTimeSpan: FtTimeSpanWithRequestedTeams | null;
+  selectedFt: FtWithTimeSpan | null;
+  selectedFtTimeSpans: FtTimeSpanWithRequestedTeams[];
+  taskAssignment: TaskAssignment;
+  hoverTimeSpan: AvailableTimeSpan | null;
+  timeSpanToDisplayDetails: TimeSpanWithAssignees | null;
+  stats: AssignmentStats[];
+};
+
+export const state = (): State => ({
+  volunteers: [],
+  timeSpans: [] as AvailableTimeSpan[], // OLD
+  fts: [] as FtWithTimeSpan[], // OLD
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
@@ -216,15 +230,6 @@ export const actions = actionTree(
       });
     },
 
-    async fetchVolunteers({ commit }) {
-      const res = await safeCall(
-        this,
-        AssignmentRepository.getVolunteers(this),
-      );
-      if (!res) return;
-      commit("SET_VOLUNTEERS", res.data);
-    },
-
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
       dispatch("fetchTimeSpansForVolunteer", volunteer.id);
@@ -262,15 +267,6 @@ export const actions = actionTree(
 
     setVolunteers({ commit }, volunteers: Volunteer[]) {
       commit("SET_VOLUNTEERS", volunteers);
-    },
-
-    async fetchFtsWithTimeSpans({ commit }) {
-      const res = await safeCall(
-        this,
-        AssignmentRepository.getFtWithTimeSpans(this),
-      );
-      if (!res) return;
-      commit("SET_FTS", castFtsWithTimeSpansWithDate(res.data));
     },
 
     async fetchTimeSpansWithStats({ commit }, ftId: number) {
