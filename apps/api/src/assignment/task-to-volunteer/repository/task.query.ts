@@ -13,6 +13,7 @@ export const SELECT_TASK_WITH_ASSIGNMENTS = {
   category: true,
   mobilizations: {
     select: {
+      id: true,
       start: true,
       end: true,
       teams: { select: { teamCode: true, count: true } },
@@ -25,6 +26,7 @@ export type DatabaseTask = Categorize & {
   id: number;
   name: string;
   mobilizations: {
+    id: string;
     start: Date;
     end: Date;
     teams: { teamCode: string; count: number }[];
