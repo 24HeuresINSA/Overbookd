@@ -5,7 +5,11 @@ import {
   AssignmentTeamFactory,
 } from "./factory/assignment-summary.factory";
 import { Volunteer } from "../../volunteer";
-import { AssignableVolunteerFactory } from "./factory/assignable-volunteer.factory";
+import {
+  AssignableVolunteerFactory,
+  MaybeCategory,
+} from "./factory/assignable-volunteer.factory";
+import { BAR } from "@overbookd/festival-event-constants";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
@@ -19,6 +23,11 @@ const friday09hto10h = Period.init({
   start: new Date("2024-05-17T09:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
 });
+const friday09hto10hBarAssignment = {
+  start: friday09hto10h.start,
+  end: friday09hto10h.end,
+  category: BAR,
+} as const;
 
 const noel: Volunteer = {
   id: 1,
@@ -38,9 +47,22 @@ const lea: Volunteer = {
   comment: "Je suis une bénévole de longue date",
   note: "Elle est vraiment très vieille",
 };
+
+const defaultAssignmentDurations: Record<MaybeCategory, number> = {
+  BAR: 0,
+  FUN: 0,
+  MANUTENTION: 0,
+  RELOU: 0,
+  STATIQUE: 0,
+  undefined: 0,
+};
+
 export const noelAsAvailableVolunteer = AssignableVolunteerFactory.init(noel);
 export const leaAsAvailableVolunteer = AssignableVolunteerFactory.init(lea)
-  .withAssignments([friday09hto10h], ONE_HOUR_IN_MS)
+  .withAssignments([friday09hto10hBarAssignment], {
+    ...defaultAssignmentDurations,
+    BAR: ONE_HOUR_IN_MS,
+  })
   .withRequests([friday08h45to09h], true);
 
 const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
@@ -75,7 +97,7 @@ const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
 )
   .withTeams([onePlaizirDemanded.value])
   .withAssignableVolunteers(
-    availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected),
+    availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected.BAR),
   );
 export const missingOnePlaizirAssignment = AssignmentBuilder.init(
   friday08hto09h,

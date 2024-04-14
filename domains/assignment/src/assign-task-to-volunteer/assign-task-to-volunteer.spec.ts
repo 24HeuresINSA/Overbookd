@@ -77,9 +77,9 @@ describe("Assign task to volunteer", () => {
     describe.each`
       task                                | teams                   | expectedVolunteers
       ${fullyAssignedTask}                | ${[]}                   | ${[]}
-      ${missingOnePlaizirTask}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected]}
-      ${missingOneHardAndOneBenevoleTask} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected, leaAsAvailableVolunteer.expected]}
-      ${missingTwoVieuxTask}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected]}
+      ${missingOnePlaizirTask}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleTask} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxTask}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
     `(
       "when looking for assignable $teams volunteers",
       ({ task, expectedVolunteers }) => {
@@ -92,7 +92,7 @@ describe("Assign task to volunteer", () => {
           );
         });
 
-        it("should return plaizir volunteers only", () => {
+        it("should return assignable volunteers only", () => {
           expect(volunteers).toHaveLength(expectedVolunteers.length);
         });
         it("should compute assignment duration", () => {

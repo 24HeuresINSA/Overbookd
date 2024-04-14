@@ -11,14 +11,6 @@ export type Volunteer = {
   teams: string[];
 };
 
-export type WithAssignments = {
-  assignments: Period[];
-};
-
-export type WithAssignmentDuration = {
-  assignmentDuration: number;
-};
-
 export class FormatVolunteer {
   private constructor() {}
 

@@ -12,6 +12,7 @@ import {
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
+import { Category } from "@overbookd/festival-event-constants";
 
 export type Tasks = {
   findAll(): Promise<Task[]>;
@@ -22,6 +23,7 @@ export type AssignableVolunteers = {
   on(
     period: IProvidePeriod,
     oneOfTheTeams: string[],
+    category?: Category,
   ): Promise<StoredAssignableVolunteer[]>;
 };
 
@@ -60,16 +62,18 @@ export class AssignTaskToVolunteer {
     const volunteers = await this.assignableVolunteers.on(
       assignment,
       this.filterMissingTeamMembers(assignment),
+      task.category,
     );
 
-    return volunteers.map(({ assignments, requestedDuring, ...volunteer }) => ({
-      ...volunteer,
-      assignmentDuration:
-        FormatVolunteer.computeAssignmentDuration(assignments),
-      isRequestedOnSamePeriod: requestedDuring.some((period) =>
+    return volunteers.map(({ assignments, requestedDuring, ...volunteer }) => {
+      const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
+        assignments.map((period) => Period.init(period)),
+      );
+      const isRequestedOnSamePeriod = requestedDuring.some((period) =>
         period.isOverlapping(Period.init(assignment)),
-      ),
-    }));
+      );
+      return { ...volunteer, assignmentDuration, isRequestedOnSamePeriod };
+    });
   }
 
   private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
