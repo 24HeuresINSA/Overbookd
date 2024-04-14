@@ -21,7 +21,7 @@ export const SELECT_TASK_WITH_ASSIGNMENTS = {
   },
 };
 
-export type DatabaseFullTask = Categorize & {
+export type DatabaseTask = Categorize & {
   id: number;
   name: string;
   mobilizations: {

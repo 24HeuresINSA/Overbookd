@@ -1,13 +1,17 @@
 import { Category } from "@overbookd/festival-event-constants";
+import { Period } from "@overbookd/period";
 import { IProvidePeriod } from "@overbookd/period";
+import { missingOnePlaizirTask } from "./task.fake";
 
 export type Assignee = {
   as: string;
 };
+
 export type RequestedTeam = {
   code: string;
   demands: number;
 };
+
 export type Assignment = IProvidePeriod & {
   requestedTeams: RequestedTeam[];
   assignees: Assignee[];
@@ -18,6 +22,7 @@ export type AssignmentTeam = RequestedTeam & {
 };
 
 export type AssignmentSummary = IProvidePeriod & {
+  id: string;
   teams: AssignmentTeam[];
 };
 
@@ -26,7 +31,7 @@ export type TaskIdentifier = {
   name: string;
 };
 
-type BaseTask = TaskIdentifier & {
+type TaskCategorized = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
 };
@@ -35,17 +40,32 @@ export type TaskWithAssignmentsSummary = TaskIdentifier & {
   assignments: AssignmentSummary[];
 };
 
-export type FullTask = BaseTask & {
+export type Task = TaskCategorized & {
   assignments: Assignment[];
 };
 
-export type MissingAssignmentTask = BaseTask & {
+export type MissingAssignmentTask = TaskCategorized & {
   teams: string[];
 };
 
+export type AssignableVolunteer = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+  charisma: number;
+  comment?: string;
+  note?: string;
+  teams: string[];
+  assignmentDuration: number;
+  isRequestedOnSamePeriod: boolean;
+  hasFriendAvailable: boolean;
+  hasFriendAssigned: boolean;
+};
+
 export type Tasks = {
-  findAll(): Promise<FullTask[]>;
-  findOne(id: TaskIdentifier["id"]): Promise<FullTask>;
+  findAll(): Promise<Task[]>;
+  findOne(id: TaskIdentifier["id"]): Promise<Task>;
 };
 
 export class AssignTaskToVolunteer {
@@ -66,7 +86,17 @@ export class AssignTaskToVolunteer {
     return this.computeAssignmentsSummary(task);
   }
 
-  private computeMissingAssignmentTeams(task: FullTask): MissingAssignmentTask {
+  async selectAssignment(
+    taskId: TaskIdentifier["id"],
+    assignmentId: AssignmentSummary["id"],
+  ): Promise<AssignableVolunteer[]> {
+    return (
+      missingOnePlaizirTask.assignments.at(0)?.summary.assignableVolunteers ??
+      []
+    );
+  }
+
+  private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
     const requestedTeams = task.assignments.flatMap((assignment) =>
       assignment.requestedTeams.map((team) => team),
     );
@@ -89,18 +119,20 @@ export class AssignTaskToVolunteer {
     };
   }
 
-  private computeAssignmentsSummary(
-    task: FullTask,
-  ): TaskWithAssignmentsSummary {
-    const assignments = task.assignments.map((assignment) => ({
-      start: assignment.start,
-      end: assignment.end,
-      teams: assignment.requestedTeams.map((team) => ({
-        code: team.code,
-        demands: team.demands,
-        assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
-      })),
-    }));
+  private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
+    const assignments = task.assignments.map((assignment) => {
+      const period = Period.init(assignment);
+      return {
+        start: period.start,
+        end: period.end,
+        id: period.id,
+        teams: assignment.requestedTeams.map((team) => ({
+          code: team.code,
+          demands: team.demands,
+          assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
+        })),
+      };
+    });
 
     return {
       id: task.id,

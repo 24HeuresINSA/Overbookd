@@ -8,20 +8,14 @@ import {
 } from "./task.fake";
 import { InMemoryTasks } from "./tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
-import {
-  fulfilledAssignmentSummary,
-  missingOneHardAndOneBenevoleAssignmentSummary,
-  missingOnePlaizirAssignmentSummary,
-  missingTwoVieuxAssignmentSummary,
-} from "./assign-task-to-volunteer.test.utils";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
-    fullyAssignedTask,
-    missingOnePlaizirTask,
-    missingTwoVieuxTask,
-    missingOneHardAndOneBenevoleTask,
-    missingOneAssigneeThenOneHardAndOneBenevoleTask,
+    fullyAssignedTask.value,
+    missingOnePlaizirTask.value,
+    missingTwoVieuxTask.value,
+    missingOneHardAndOneBenevoleTask.value,
+    missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
   ]);
   const assign = new AssignTaskToVolunteer(tasks);
 
@@ -29,11 +23,11 @@ describe("Assign task to volunteer", () => {
     const assignableTasks = await assign.tasks();
 
     describe.each`
-      taskName                                                | taskId                                                | expectedTeams
-      ${missingOnePlaizirTask.name}                           | ${missingOnePlaizirTask.id}                           | ${["plaizir"]}
-      ${missingTwoVieuxTask.name}                             | ${missingTwoVieuxTask.id}                             | ${["vieux"]}
-      ${missingOneHardAndOneBenevoleTask.name}                | ${missingOneHardAndOneBenevoleTask.id}                | ${["hard", "benevole"]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.id} | ${["plaizir", "hard", "benevole"]}
+      taskName                                                      | taskId                                                      | expectedTeams
+      ${missingOnePlaizirTask.value.name}                           | ${missingOnePlaizirTask.value.id}                           | ${["plaizir"]}
+      ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${["vieux"]}
+      ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${["hard", "benevole"]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${["plaizir", "hard", "benevole"]}
     `(
       "when listing missing assignment tasks with $taskName",
       ({ taskId, expectedTeams }) => {
@@ -46,7 +40,7 @@ describe("Assign task to volunteer", () => {
     describe("when listing missing assignment tasks with fully assigned task", () => {
       it("should not contain task", () => {
         const foundTask = assignableTasks.find(
-          (task) => task.id === fullyAssignedTask.id,
+          (task) => task.id === fullyAssignedTask.value.id,
         );
         expect(foundTask).toBeUndefined();
       });
@@ -55,12 +49,12 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task to assign", () => {
     describe.each`
-      taskName                                                | taskId                                                | expectedAssignments
-      ${fullyAssignedTask.name}                               | ${fullyAssignedTask.id}                               | ${[fulfilledAssignmentSummary]}
-      ${missingOnePlaizirTask.name}                           | ${missingOnePlaizirTask.id}                           | ${[missingOnePlaizirAssignmentSummary]}
-      ${missingTwoVieuxTask.name}                             | ${missingTwoVieuxTask.id}                             | ${[missingTwoVieuxAssignmentSummary]}
-      ${missingOneHardAndOneBenevoleTask.name}                | ${missingOneHardAndOneBenevoleTask.id}                | ${[missingOneHardAndOneBenevoleAssignmentSummary]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.id} | ${[missingOnePlaizirAssignmentSummary, missingOneHardAndOneBenevoleAssignmentSummary]}
+      taskName                                                      | taskId                                                      | expectedAssignments
+      ${fullyAssignedTask.value.name}                               | ${fullyAssignedTask.value.id}                               | ${fullyAssignedTask.assignments.map(({ summary }) => summary.assignment)}
+      ${missingOnePlaizirTask.value.name}                           | ${missingOnePlaizirTask.value.id}                           | ${missingOnePlaizirTask.assignments.map(({ summary }) => summary.assignment)}
+      ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${missingTwoVieuxTask.assignments.map(({ summary }) => summary.assignment)}
+      ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${missingOneHardAndOneBenevoleTask.assignments.map(({ summary }) => summary.assignment)}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.assignments.map(({ summary }) => summary.assignment)}
     `("when selecting task $taskName", ({ taskId, expectedAssignments }) => {
       it("should return the selected task with assignments summary", async () => {
         const selectedTask = await assign.selectTask(taskId);
@@ -68,6 +62,17 @@ describe("Assign task to volunteer", () => {
           expectedAssignments.sort(),
         );
       });
+    });
+  });
+
+  describe("when selecting a task assignment", () => {
+    it("should return assignable volunteers", async () => {
+      const assignment = missingOnePlaizirTask.assignments.at(0);
+      const volunteers = await assign.selectAssignment(
+        missingOnePlaizirTask.value.id,
+        assignment?.summary.assignment.id ?? "",
+      );
+      expect(volunteers).toEqual(assignment?.summary.assignableVolunteers);
     });
   });
 });

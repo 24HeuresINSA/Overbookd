@@ -9,7 +9,7 @@ export type {
   Assignment,
   AssignmentSummary,
   AssignmentTeam,
-  FullTask,
+  Task,
   MissingAssignmentTask,
   TaskIdentifier,
   TaskWithAssignmentsSummary,

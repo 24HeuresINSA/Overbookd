@@ -4,27 +4,37 @@ import {
   Assignment,
   RequestedTeam,
 } from "./assign-task-to-volunteer";
+import { AssignmentSummaryFactory } from "./assignment-summary.factory";
+import { Period } from "@overbookd/period";
 
 export class AssignmentBuilder {
-  private constructor(private assignment: Assignment) {}
+  private constructor(
+    readonly assignment: Assignment,
+    readonly summary: AssignmentSummaryFactory,
+  ) {}
 
   static init(period: IProvidePeriod): AssignmentBuilder {
     const assignment = defaultAssignment(period);
-    return new AssignmentBuilder(assignment);
+    const summary = AssignmentSummaryFactory.init(Period.init(period));
+    return new AssignmentBuilder(assignment, summary);
   }
 
   withAssignees(assignees: Assignee[]): AssignmentBuilder {
-    this.assignment = { ...this.assignment, assignees };
-    return this;
+    return new AssignmentBuilder(
+      { ...this.assignment, assignees },
+      this.summary,
+    );
   }
 
   withRequestedTeams(requestedTeams: RequestedTeam[]): AssignmentBuilder {
-    this.assignment = { ...this.assignment, requestedTeams };
-    return this;
+    return new AssignmentBuilder(
+      { ...this.assignment, requestedTeams },
+      this.summary,
+    );
   }
 
-  build(): Assignment {
-    return this.assignment;
+  withSummary(summary: AssignmentSummaryFactory): AssignmentBuilder {
+    return new AssignmentBuilder(this.assignment, summary);
   }
 }
 

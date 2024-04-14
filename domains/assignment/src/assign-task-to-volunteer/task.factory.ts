@@ -1,49 +1,58 @@
 import { numberGenerator } from "@overbookd/list";
-import { Assignment, FullTask } from "./assign-task-to-volunteer";
+import { Task } from "./assign-task-to-volunteer";
 import { Category } from "@overbookd/festival-event-constants";
+import { AssignmentBuilder } from "./assignment.builder";
 
 class TaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
   init(name: string): TaskBuilder {
     const id = this.idGenerator.next().value;
-    const task = defaultTask(id, name);
-    return new TaskBuilder(task);
+    const task = {
+      id,
+      name,
+      topPriority: false,
+      assignments: [],
+    };
+    return TaskBuilder.init(task);
   }
 }
 
+type TaskWithoutAssignments = Omit<Task, "assignments">;
+
 class TaskBuilder {
-  constructor(private task: FullTask) {}
+  private constructor(
+    readonly task: TaskWithoutAssignments,
+    readonly assignments: AssignmentBuilder[],
+  ) {}
+
+  static init(task: TaskWithoutAssignments): TaskBuilder {
+    return new TaskBuilder(task, []);
+  }
 
   withCategory(category: Category): TaskBuilder {
-    this.task = { ...this.task, category };
-    return this;
+    return new TaskBuilder({ ...this.task, category }, this.assignments);
   }
 
   withTopPriority(): TaskBuilder {
-    this.task = { ...this.task, topPriority: true };
-    return this;
+    return new TaskBuilder(
+      { ...this.task, topPriority: true },
+      this.assignments,
+    );
   }
 
-  withAssignments(assignments: Assignment[]): TaskBuilder {
-    this.task = { ...this.task, assignments };
-    return this;
+  withAssignments(assignments: AssignmentBuilder[]): TaskBuilder {
+    return new TaskBuilder(this.task, assignments);
   }
 
-  build(): FullTask {
-    return this.task;
+  get value(): Task {
+    return {
+      ...this.task,
+      assignments: this.assignments.map(({ assignment }) => assignment),
+    };
   }
 }
 
-function defaultTask(id: number, name: string): FullTask {
-  return {
-    id,
-    name,
-    topPriority: false,
-    assignments: [],
-  };
-}
-
-export function getFactory() {
+export function getTaskFactory() {
   return new TaskFactory(numberGenerator(1));
 }
