@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { AddBorrowGearRequestForm, HttpStringified } from "@overbookd/http";
+import { AddGearRequestForm, HttpStringified } from "@overbookd/http";
 import {
   Borrow,
   GearRequest,
@@ -42,7 +42,7 @@ export class BorrowRepository {
   static addGearRequest(
     context: Context,
     id: Borrow["id"],
-    form: AddBorrowGearRequestForm,
+    form: AddGearRequestForm,
   ) {
     return context.$axios.post<HttpStringified<Borrow>>(
       `${this.basePath}/${id}/gear-requests`,

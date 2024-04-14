@@ -1,7 +1,7 @@
+import { BorrowsForCancel } from "@overbookd/logistic/src/borrow/cancel/cancel";
 import { PrismaService } from "../../../prisma.service";
-import { BorrowsForRemove } from "../borrow.service";
 
-export class PrismaRemoveBorrows implements BorrowsForRemove {
+export class PrismaCancelBorrows implements BorrowsForCancel {
   constructor(private prisma: PrismaService) {}
 
   async remove(id: number): Promise<void> {

@@ -7,7 +7,7 @@ import {
   PlanBorrowForm,
 } from "@overbookd/logistic";
 import { BorrowRepository } from "~/repositories/borrow.repository";
-import { AddBorrowGearRequestForm, HttpStringified } from "@overbookd/http";
+import { AddGearRequestForm, HttpStringified } from "@overbookd/http";
 
 type State = {
   all: Borrow[];
@@ -64,7 +64,7 @@ export const actions = actionTree(
       await dispatch("fetchAll");
     },
 
-    async addGearRequest({ state, commit }, form: AddBorrowGearRequestForm) {
+    async addGearRequest({ state, commit }, form: AddGearRequestForm) {
       const id = state.selected.id;
       if (!id) return;
       const res = await safeCall(
