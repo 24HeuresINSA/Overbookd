@@ -22,6 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import { CalendarEvent } from "~/utils/models/calendar.model";
 import {
   FtTimeSpanEvent,
   FtTimeSpanWithRequestedTeams,
@@ -48,7 +49,7 @@ export default Vue.extend({
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
-    timeSpans(): FtTimeSpanEvent[] {
+    timeSpans(): CalendarEvent[] {
       return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>
         this.mapTimeSpanToEvent(timeSpan),
       );
@@ -56,8 +57,8 @@ export default Vue.extend({
     selectedTimeSpanId(): number | null {
       return this.$accessor.assignment.selectedTimeSpan?.id ?? null;
     },
-    hourToScrollTo(): number | null {
-      return this.timeSpans.at(0)?.start.getHours() ?? null;
+    hourToScrollTo(): number | undefined {
+      return this.timeSpans.at(0)?.start.getHours();
     },
   },
   async mounted() {
@@ -73,7 +74,7 @@ export default Vue.extend({
     },
     mapTimeSpanToEvent(
       timeSpan: FtTimeSpanWithRequestedTeams,
-    ): FtTimeSpanEvent[] {
+    ): CalendarEvent[] {
       return timeSpan.requestedTeams.map((team) => ({
         ...timeSpan,
         start: new Date(timeSpan.start),

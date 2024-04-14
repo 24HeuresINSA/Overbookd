@@ -114,11 +114,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $filters-height: 225px;
-$header-footer-height: 100px;
+$column-margins: 30px;
+$layout-padding: 20px;
 
 .filterable-task-list {
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -128,12 +128,14 @@ $header-footer-height: 100px;
 }
 
 .filters {
-  width: 100%;
   height: $filters-height;
 }
 
 .task-list {
   padding: 0 5px;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
+      #{$column-margins}
+  );
 }
 </style>
