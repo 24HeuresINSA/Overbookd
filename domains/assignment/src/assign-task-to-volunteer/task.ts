@@ -5,6 +5,7 @@ export type TaskIdentifier = {
   id: number;
   name: string;
 };
+
 type TaskCategorized = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;

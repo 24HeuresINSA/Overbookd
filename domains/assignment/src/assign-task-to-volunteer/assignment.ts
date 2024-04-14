@@ -8,6 +8,7 @@ export type RequestedTeam = {
   code: string;
   demands: number;
 };
+
 type IProvidePeriodWithId = IProvidePeriod & {
   id: string;
 };
