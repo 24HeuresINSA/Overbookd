@@ -1,11 +1,11 @@
 import { Period } from "@overbookd/period";
 import { FormatVolunteer, Volunteer } from "../volunteer";
 
-export type WithAssignments = {
+type WithAssignments = {
   assignments: Period[];
 };
 
-export type WithAssignmentDuration = {
+type WithAssignmentDuration = {
   assignmentDuration: number;
 };
 
