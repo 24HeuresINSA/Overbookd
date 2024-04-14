@@ -6,13 +6,22 @@ export type {
 export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export type {
   Tasks,
+  AssignableVolunteers,
+} from "./assign-task-to-volunteer/assign-task-to-volunteer";
+export type {
   Assignment,
-  AssignmentSummary,
   AssignmentTeam,
-  FullTask,
+  AssignmentSummary,
+} from "./assign-task-to-volunteer/assignment";
+export type {
+  Task,
   MissingAssignmentTask,
   TaskIdentifier,
   TaskWithAssignmentsSummary,
-} from "./assign-task-to-volunteer/assign-task-to-volunteer";
+} from "./assign-task-to-volunteer/task";
+export type {
+  AssignableVolunteer,
+  StoredAssignableVolunteer,
+} from "./assign-task-to-volunteer/assignable-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignmentError, TaskNotFoundError } from "./assignment.error";

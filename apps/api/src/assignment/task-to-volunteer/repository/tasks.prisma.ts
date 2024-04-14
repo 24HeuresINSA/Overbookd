@@ -1,12 +1,12 @@
 import {
-  FullTask,
+  Task,
   TaskIdentifier,
   TaskNotFoundError,
   Tasks,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import {
-  DatabaseFullTask,
+  DatabaseTask,
   IS_READY_AND_EXISTS,
   SELECT_TASK_WITH_ASSIGNMENTS,
 } from "./task.query";
@@ -14,26 +14,27 @@ import {
 export class PrismaTasks implements Tasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<FullTask[]> {
+  async findAll(): Promise<Task[]> {
     const tasks = await this.prisma.festivalTask.findMany({
       where: IS_READY_AND_EXISTS,
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
-    return tasks.map(toFullTask);
+    return tasks.map(toTask);
   }
 
-  async findOne(id: TaskIdentifier["id"]): Promise<FullTask> {
+  async findOne(id: TaskIdentifier["id"]): Promise<Task> {
     const task = await this.prisma.festivalTask.findFirst({
       where: { id, ...IS_READY_AND_EXISTS },
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
     if (!task) throw new TaskNotFoundError(id);
-    return toFullTask(task);
+    return toTask(task);
   }
 }
 
-function toFullTask(task: DatabaseFullTask): FullTask {
+function toTask(task: DatabaseTask): Task {
   const assignments = task.mobilizations.map((mobilization) => ({
+    id: mobilization.id,
     start: mobilization.start,
     end: mobilization.end,
     assignees: mobilization.assignees.map((a) => ({ as: a.teamCode })),

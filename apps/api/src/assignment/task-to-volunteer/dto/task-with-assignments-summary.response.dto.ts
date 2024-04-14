@@ -18,6 +18,9 @@ class AssignmentTeamDto implements AssignmentTeam {
 }
 
 class AssignmentSummaryDto implements AssignmentSummary {
+  @ApiProperty({ type: String })
+  id: AssignmentSummary["id"];
+
   @ApiProperty({ type: Date })
   start: AssignmentSummary["start"];
 

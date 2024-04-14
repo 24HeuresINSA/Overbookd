@@ -3,8 +3,7 @@ import {
   MANUTENTION,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
-import { FullTask } from "./assign-task-to-volunteer";
-import { getFactory } from "./task.factory";
+import { getTaskFactory } from "./factory/task.factory";
 import {
   fulfilledAssignment,
   missingOneHardAndOneBenevoleAssignment,
@@ -12,37 +11,32 @@ import {
   missingTwoVieuxAssignment,
 } from "./assign-task-to-volunteer.test.utils";
 
-const factory = getFactory();
+const factory = getTaskFactory();
 
-export const fullyAssignedTask: FullTask = factory
+export const fullyAssignedTask = factory
   .init("Task fully assigned")
-  .withAssignments([fulfilledAssignment])
-  .build();
+  .withAssignments([fulfilledAssignment]);
 
-export const missingOnePlaizirTask: FullTask = factory
+export const missingOnePlaizirTask = factory
   .init("Task missing one assignee")
   .withCategory(BAR)
-  .withAssignments([missingOnePlaizirAssignment])
-  .build();
+  .withAssignments([missingOnePlaizirAssignment]);
 
-export const missingTwoVieuxTask: FullTask = factory
+export const missingTwoVieuxTask = factory
   .init("Task missing two vieux")
   .withCategory(MANUTENTION)
   .withTopPriority()
-  .withAssignments([missingTwoVieuxAssignment])
-  .build();
+  .withAssignments([missingTwoVieuxAssignment]);
 
-export const missingOneHardAndOneBenevoleTask: FullTask = factory
+export const missingOneHardAndOneBenevoleTask = factory
   .init("Task missing one hard and one benevole")
   .withCategory(STATIQUE)
-  .withAssignments([missingOneHardAndOneBenevoleAssignment])
-  .build();
+  .withAssignments([missingOneHardAndOneBenevoleAssignment]);
 
-export const missingOneAssigneeThenOneHardAndOneBenevoleTask: FullTask = factory
+export const missingOneAssigneeThenOneHardAndOneBenevoleTask = factory
   .init("Task missing one assignee then one hard and one benevole")
   .withCategory(STATIQUE)
   .withAssignments([
     missingOnePlaizirAssignment,
     missingOneHardAndOneBenevoleAssignment,
-  ])
-  .build();
+  ]);

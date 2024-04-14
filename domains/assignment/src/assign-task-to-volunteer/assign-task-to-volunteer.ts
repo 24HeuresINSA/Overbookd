@@ -1,55 +1,37 @@
-import { Category } from "@overbookd/festival-event-constants";
+import { Period } from "@overbookd/period";
 import { IProvidePeriod } from "@overbookd/period";
-
-export type Assignee = {
-  as: string;
-};
-export type RequestedTeam = {
-  code: string;
-  demands: number;
-};
-export type Assignment = IProvidePeriod & {
-  requestedTeams: RequestedTeam[];
-  assignees: Assignee[];
-};
-
-export type AssignmentTeam = RequestedTeam & {
-  assigned: number;
-};
-
-export type AssignmentSummary = IProvidePeriod & {
-  teams: AssignmentTeam[];
-};
-
-export type TaskIdentifier = {
-  id: number;
-  name: string;
-};
-
-type BaseTask = TaskIdentifier & {
-  topPriority: boolean;
-  category?: Category;
-};
-
-export type TaskWithAssignmentsSummary = TaskIdentifier & {
-  assignments: AssignmentSummary[];
-};
-
-export type FullTask = BaseTask & {
-  assignments: Assignment[];
-};
-
-export type MissingAssignmentTask = BaseTask & {
-  teams: string[];
-};
+import { FormatVolunteer } from "../volunteer";
+import {
+  StoredAssignableVolunteer,
+  AssignableVolunteer,
+} from "./assignable-volunteer";
+import { AssignmentSummary, Assignment, Assignee } from "./assignment";
+import {
+  Task,
+  TaskIdentifier,
+  MissingAssignmentTask,
+  TaskWithAssignmentsSummary,
+} from "./task";
+import { Category } from "@overbookd/festival-event-constants";
 
 export type Tasks = {
-  findAll(): Promise<FullTask[]>;
-  findOne(id: TaskIdentifier["id"]): Promise<FullTask>;
+  findAll(): Promise<Task[]>;
+  findOne(id: TaskIdentifier["id"]): Promise<Task>;
+};
+
+export type AssignableVolunteers = {
+  on(
+    period: IProvidePeriod,
+    oneOfTheTeams: string[],
+    category?: Category,
+  ): Promise<StoredAssignableVolunteer[]>;
 };
 
 export class AssignTaskToVolunteer {
-  constructor(private readonly allTasks: Tasks) {}
+  constructor(
+    private readonly allTasks: Tasks,
+    private readonly assignableVolunteers: AssignableVolunteers,
+  ) {}
 
   async tasks(): Promise<MissingAssignmentTask[]> {
     const tasks = await this.allTasks.findAll();
@@ -66,19 +48,42 @@ export class AssignTaskToVolunteer {
     return this.computeAssignmentsSummary(task);
   }
 
-  private computeMissingAssignmentTeams(task: FullTask): MissingAssignmentTask {
+  async selectAssignment(
+    taskId: TaskIdentifier["id"],
+    assignmentId: AssignmentSummary["id"],
+  ): Promise<AssignableVolunteer[]> {
+    const task = await this.allTasks.findOne(taskId);
+
+    const assignment = task.assignments.find(
+      (assignment) => assignment.id === assignmentId,
+    );
+    if (!assignment) throw new Error("Assignment not found");
+
+    const volunteers = await this.assignableVolunteers.on(
+      assignment,
+      this.filterMissingTeamMembers(assignment),
+      task.category,
+    );
+
+    return volunteers.map(({ assignments, requestedDuring, ...volunteer }) => {
+      const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
+        assignments.map((period) => Period.init(period)),
+      );
+      const isRequestedOnSamePeriod = requestedDuring.some((period) =>
+        period.isOverlapping(Period.init(assignment)),
+      );
+      return { ...volunteer, assignmentDuration, isRequestedOnSamePeriod };
+    });
+  }
+
+  private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
     const requestedTeams = task.assignments.flatMap((assignment) =>
       assignment.requestedTeams.map((team) => team),
     );
     const assignees = task.assignments.flatMap((assignment) =>
       assignment.assignees.map((assignee) => assignee),
     );
-    const teams = requestedTeams
-      .filter((team) => {
-        const countAssignees = this.countAssigneesInTeam(team.code, assignees);
-        return countAssignees < team.demands;
-      })
-      .map((team) => team.code);
+    const teams = this.filterMissingTeamMembers({ requestedTeams, assignees });
 
     return {
       id: task.id,
@@ -89,18 +94,32 @@ export class AssignTaskToVolunteer {
     };
   }
 
-  private computeAssignmentsSummary(
-    task: FullTask,
-  ): TaskWithAssignmentsSummary {
-    const assignments = task.assignments.map((assignment) => ({
-      start: assignment.start,
-      end: assignment.end,
-      teams: assignment.requestedTeams.map((team) => ({
-        code: team.code,
-        demands: team.demands,
-        assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
-      })),
-    }));
+  private filterMissingTeamMembers({
+    requestedTeams,
+    assignees,
+  }: Pick<Assignment, "requestedTeams" | "assignees">): string[] {
+    return requestedTeams
+      .filter((team) => {
+        const countAssignees = this.countAssigneesInTeam(team.code, assignees);
+        return countAssignees < team.demands;
+      })
+      .map((team) => team.code);
+  }
+
+  private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
+    const assignments = task.assignments.map((assignment) => {
+      const period = Period.init(assignment);
+      return {
+        start: period.start,
+        end: period.end,
+        id: period.id,
+        teams: assignment.requestedTeams.map((team) => ({
+          code: team.code,
+          demands: team.demands,
+          assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
+        })),
+      };
+    });
 
     return {
       id: task.id,
