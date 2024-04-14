@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { Task } from "./assign-task-to-volunteer";
+import { Task } from "../../task";
 import { Category } from "@overbookd/festival-event-constants";
 import { AssignmentBuilder } from "./assignment.builder";
 

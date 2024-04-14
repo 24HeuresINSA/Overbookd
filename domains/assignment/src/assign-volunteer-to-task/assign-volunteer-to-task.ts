@@ -1,23 +1,9 @@
-import { Period } from "@overbookd/period";
-
-export type Volunteer = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  nickname?: string;
-  charisma: number;
-  comment?: string;
-  note?: string;
-  teams: string[];
-};
-
-type WithAssignments = {
-  assignments: Period[];
-};
-
-type WithAssignmentDuration = {
-  assignmentDuration: number;
-};
+import {
+  FormatVolunteer,
+  Volunteer,
+  WithAssignmentDuration,
+  WithAssignments,
+} from "../volunteer";
 
 export type VolunteerWithAssignments = Volunteer & WithAssignments;
 
@@ -41,9 +27,8 @@ export class AssignVolunteerToTask {
   private computeAssignmentDuration(
     volunteer: VolunteerWithAssignments,
   ): VolunteerWithAssignmentDuration {
-    const assignmentDuration = volunteer.assignments.reduce(
-      (acc, assignment) => acc + assignment.duration.inMilliseconds,
-      0,
+    const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
+      volunteer.assignments,
     );
     return {
       id: volunteer.id,

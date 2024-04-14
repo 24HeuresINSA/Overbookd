@@ -1,9 +1,6 @@
 import { Period } from "@overbookd/period";
-import {
-  AssignableVolunteer,
-  AssignmentSummary,
-  AssignmentTeam,
-} from "./assign-task-to-volunteer";
+import { AssignmentSummary, AssignmentTeam } from "../../assignment";
+import { AssignableVolunteer } from "../../assignable-volunteer";
 
 export class AssignmentSummaryFactory {
   private constructor(

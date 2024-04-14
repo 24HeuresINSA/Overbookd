@@ -1,9 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
-import {
-  Assignee,
-  Assignment,
-  RequestedTeam,
-} from "./assign-task-to-volunteer";
+import { Assignee, Assignment, RequestedTeam } from "../../assignment";
 import { AssignmentSummaryFactory } from "./assignment-summary.factory";
 import { Period } from "@overbookd/period";
 
@@ -13,8 +8,14 @@ export class AssignmentBuilder {
     readonly summary: AssignmentSummaryFactory,
   ) {}
 
-  static init(period: IProvidePeriod): AssignmentBuilder {
-    const assignment = defaultAssignment(period);
+  static init(period: Period): AssignmentBuilder {
+    const assignment = {
+      id: period.id,
+      start: period.start,
+      end: period.end,
+      requestedTeams: [],
+      assignees: [],
+    };
     const summary = AssignmentSummaryFactory.init(Period.init(period));
     return new AssignmentBuilder(assignment, summary);
   }
@@ -36,13 +37,4 @@ export class AssignmentBuilder {
   withSummary(summary: AssignmentSummaryFactory): AssignmentBuilder {
     return new AssignmentBuilder(this.assignment, summary);
   }
-}
-
-function defaultAssignment({ start, end }: IProvidePeriod): Assignment {
-  return {
-    start,
-    end,
-    requestedTeams: [],
-    assignees: [],
-  };
 }

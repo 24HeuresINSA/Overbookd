@@ -3,7 +3,7 @@ import {
   MANUTENTION,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
-import { getTaskFactory } from "./task.factory";
+import { getTaskFactory } from "./factory/task.factory";
 import {
   fulfilledAssignment,
   missingOneHardAndOneBenevoleAssignment,

@@ -1,13 +1,19 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   fullyAssignedTask,
   missingOnePlaizirTask,
   missingTwoVieuxTask,
   missingOneHardAndOneBenevoleTask,
   missingOneAssigneeThenOneHardAndOneBenevoleTask,
-} from "./task.fake";
-import { InMemoryTasks } from "./tasks.inmemory";
+} from "./test-ressources/task.fake";
+import { InMemoryTasks } from "./repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
+import { AssignableVolunteer } from "./assignable-volunteer";
+import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory";
+import {
+  leaAsAvailableVolunteer,
+  noelAsAvailableVolunteer,
+} from "./test-ressources/assign-task-to-volunteer.test.utils";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
@@ -17,7 +23,11 @@ describe("Assign task to volunteer", () => {
     missingOneHardAndOneBenevoleTask.value,
     missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
   ]);
-  const assign = new AssignTaskToVolunteer(tasks);
+  const volunteers = new InMemoryAssignableVolunteers([
+    noelAsAvailableVolunteer.stored,
+    leaAsAvailableVolunteer.stored,
+  ]);
+  const assign = new AssignTaskToVolunteer(tasks, volunteers);
 
   describe("when listing all assignable tasks", async () => {
     const assignableTasks = await assign.tasks();
@@ -58,21 +68,57 @@ describe("Assign task to volunteer", () => {
     `("when selecting task $taskName", ({ taskId, expectedAssignments }) => {
       it("should return the selected task with assignments summary", async () => {
         const selectedTask = await assign.selectTask(taskId);
-        expect(selectedTask.assignments.sort()).toEqual(
-          expectedAssignments.sort(),
-        );
+        expect(selectedTask.assignments).toMatchObject(expectedAssignments);
       });
     });
   });
 
   describe("when selecting a task assignment", () => {
-    it("should return assignable volunteers", async () => {
-      const assignment = missingOnePlaizirTask.assignments.at(0);
-      const volunteers = await assign.selectAssignment(
-        missingOnePlaizirTask.value.id,
-        assignment?.summary.assignment.id ?? "",
-      );
-      expect(volunteers).toEqual(assignment?.summary.assignableVolunteers);
-    });
+    describe.each`
+      task                                | teams                   | expectedVolunteers
+      ${fullyAssignedTask}                | ${[]}                   | ${[]}
+      ${missingOnePlaizirTask}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected]}
+      ${missingOneHardAndOneBenevoleTask} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected, leaAsAvailableVolunteer.expected]}
+      ${missingTwoVieuxTask}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected]}
+    `(
+      "when looking for assignable $teams volunteers",
+      ({ task, expectedVolunteers }) => {
+        let volunteers: AssignableVolunteer[];
+        beforeAll(async () => {
+          const assignment = task.assignments.at(0);
+          volunteers = await assign.selectAssignment(
+            task.value.id,
+            assignment?.summary.assignment.id ?? "",
+          );
+        });
+
+        it("should return plaizir volunteers only", () => {
+          expect(volunteers).toHaveLength(expectedVolunteers.length);
+        });
+        it("should compute assignment duration", () => {
+          const durations = extractDuration(volunteers);
+          expect(durations).toEqual(extractDuration(expectedVolunteers));
+        });
+        it("should compute requested on same period", () => {
+          const requestedOnSamePeriods = extractRequestOnSamePeriod(volunteers);
+          expect(requestedOnSamePeriods).toEqual(
+            extractRequestOnSamePeriod(expectedVolunteers),
+          );
+        });
+        it("should provide all assignable volunteers", () => {
+          expect(volunteers).toEqual(expectedVolunteers);
+        });
+      },
+    );
   });
 });
+
+function extractDuration(volunteers: AssignableVolunteer[]) {
+  return volunteers.map(({ assignmentDuration }) => assignmentDuration);
+}
+
+function extractRequestOnSamePeriod(volunteers: AssignableVolunteer[]) {
+  return volunteers.map(
+    ({ isRequestedOnSamePeriod }) => isRequestedOnSamePeriod,
+  );
+}

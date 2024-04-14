@@ -1,9 +1,9 @@
 import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
 import {
-  Volunteer,
   VolunteerWithAssignmentDuration,
   VolunteerWithAssignments,
 } from "./assign-volunteer-to-task";
+import { Volunteer } from "../volunteer";
 import { Period } from "@overbookd/period";
 
 const friday08hTo10h = Period.init({

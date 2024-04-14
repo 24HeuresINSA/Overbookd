@@ -1,17 +1,26 @@
-import { Period } from "@overbookd/period";
-import { AssignableVolunteer } from "./assign-task-to-volunteer";
-import { AssignmentBuilder } from "./assignment.builder";
+import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { AssignmentBuilder } from "./factory/assignment.builder";
 import {
   AssignmentSummaryFactory,
   AssignmentTeamFactory,
-} from "./assignment-summary.factory";
+} from "./factory/assignment-summary.factory";
+import { Volunteer } from "../../volunteer";
+import { AssignableVolunteerFactory } from "./factory/assignable-volunteer.factory";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T09:00+02:00"),
 });
+const friday08h45to09h = Period.init({
+  start: new Date("2024-05-17T08:45+02:00"),
+  end: new Date("2024-05-17T09:00+02:00"),
+});
+const friday09hto10h = Period.init({
+  start: new Date("2024-05-17T09:00+02:00"),
+  end: new Date("2024-05-17T10:00+02:00"),
+});
 
-const noel = {
+const noel: Volunteer = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",
@@ -19,14 +28,23 @@ const noel = {
   charisma: 1000,
   teams: ["hard", "plaizir"],
 };
-const availableVolunteersForMissingOnePlaizir: AssignableVolunteer[] = [
-  {
-    ...noel,
-    assignmentDuration: 0,
-    hasFriendAssigned: false,
-    hasFriendAvailable: false,
-    isRequestedOnSamePeriod: false,
-  },
+const lea: Volunteer = {
+  id: 2,
+  firstname: "Lea",
+  lastname: "Mauyno",
+  nickname: "Shogosse",
+  charisma: 1,
+  teams: ["vieux", "benevole"],
+  comment: "Je suis une bénévole de longue date",
+  note: "Elle est vraiment très vieille",
+};
+export const noelAsAvailableVolunteer = AssignableVolunteerFactory.init(noel);
+export const leaAsAvailableVolunteer = AssignableVolunteerFactory.init(lea)
+  .withAssignments([friday09hto10h], ONE_HOUR_IN_MS)
+  .withRequests([friday08h45to09h], true);
+
+const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
+  noelAsAvailableVolunteer,
 ];
 
 const oneHardDemanded = AssignmentTeamFactory.init().withCode("hard");
@@ -56,7 +74,9 @@ const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
 )
   .withTeams([onePlaizirDemanded.value])
-  .withAssignableVolunteers(availableVolunteersForMissingOnePlaizir);
+  .withAssignableVolunteers(
+    availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected),
+  );
 export const missingOnePlaizirAssignment = AssignmentBuilder.init(
   friday08hto09h,
 )
