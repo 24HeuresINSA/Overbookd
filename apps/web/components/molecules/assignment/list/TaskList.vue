@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 import TaskResume from "../resume/TaskResume.vue";
 import { MissingAssignmentTask } from "@overbookd/assignment";
 
@@ -33,9 +32,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    selectFt(ft: FtWithTimeSpan) {
+    selectFt(ft: MissingAssignmentTask) {
       if (!ft) return;
-      this.$accessor.assignment.setSelectedFt(ft);
+      // this.$accessor.assignment.setSelectedFt(ft);
       this.$accessor.assignment.setVolunteers([]);
       this.$accessor.assignment.fetchTimeSpansWithStats(ft.id);
     },

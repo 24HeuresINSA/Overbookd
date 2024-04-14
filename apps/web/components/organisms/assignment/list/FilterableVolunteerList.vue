@@ -142,11 +142,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 165px;
-$header-footer-height: 100px;
 $friends-height: 160px;
+$layout-padding: 20px;
 
 .filterable-volunteer-list {
-  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -163,10 +162,13 @@ $friends-height: 160px;
 
 .volunteer-list {
   padding: 0 5px;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding}
+  );
   &--with-friend-list {
     max-height: calc(
-      100vh - #{$filters-height + $header-footer-height + $friends-height}
+      100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$friends-height} -
+        #{$layout-padding}
     );
   }
 }
@@ -175,7 +177,9 @@ $friends-height: 160px;
   align-items: center;
   justify-content: center;
   display: flex;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding}
+  );
   margin: 0 5%;
 
   p {
