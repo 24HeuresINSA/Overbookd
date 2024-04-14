@@ -33,7 +33,7 @@ export class AssignmentSummaryFactory {
 }
 
 export class AssignmentTeamFactory {
-  private constructor(private readonly team: AssignmentTeam) {}
+  private constructor(readonly team: AssignmentTeam) {}
 
   static init(team?: Partial<AssignmentTeam>): AssignmentTeamFactory {
     const code = team?.code ?? "benevole";
@@ -52,9 +52,5 @@ export class AssignmentTeamFactory {
 
   withAssigned(assigned: number): AssignmentTeamFactory {
     return new AssignmentTeamFactory({ ...this.team, assigned });
-  }
-
-  get value(): AssignmentTeam {
-    return this.team;
   }
 }

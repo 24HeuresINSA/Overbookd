@@ -86,44 +86,44 @@ const twoBenevoleDemandedAndOneAssigned = twoBenevoleDemanded.withAssigned(1);
 
 const fulfilledAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
-).withTeams([oneHardAssignedAndDemanded.value]);
+).withTeams([oneHardAssignedAndDemanded.team]);
 export const fulfilledAssignment = AssignmentBuilder.init(friday08hto09h)
   .withAssignees([{ as: "hard" }])
-  .withRequestedTeams([oneHardDemanded.value])
+  .withRequestedTeams([oneHardDemanded.team])
   .withSummary(fulfilledAssignmentSummary);
 
 const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
 )
-  .withTeams([onePlaizirDemanded.value])
+  .withTeams([onePlaizirDemanded.team])
   .withAssignableVolunteers(
     availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected.BAR),
   );
 export const missingOnePlaizirAssignment = AssignmentBuilder.init(
   friday08hto09h,
 )
-  .withRequestedTeams([onePlaizirDemanded.value])
+  .withRequestedTeams([onePlaizirDemanded.team])
   .withSummary(missingOnePlaizirAssignmentSummary);
 
 const missingTwoVieuxAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
-).withTeams([oneHardAssignedAndDemanded.value, twoVieuxDemanded.value]);
+).withTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team]);
 export const missingTwoVieuxAssignment = AssignmentBuilder.init(friday08hto09h)
   .withAssignees([{ as: "hard" }])
   .withRequestedTeams([
-    oneHardAssignedAndDemanded.value,
-    twoVieuxDemanded.value,
+    oneHardAssignedAndDemanded.team,
+    twoVieuxDemanded.team,
   ])
   .withSummary(missingTwoVieuxAssignmentSummary);
 
 const missingOneHardAndOneBenevoleAssignmentSummary =
   AssignmentSummaryFactory.init(friday08hto09h).withTeams([
-    threeHardDemandedAndTwoAssigned.value,
-    twoBenevoleDemandedAndOneAssigned.value,
+    threeHardDemandedAndTwoAssigned.team,
+    twoBenevoleDemandedAndOneAssigned.team,
   ]);
 export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init(
   friday08hto09h,
 )
   .withAssignees([{ as: "hard" }, { as: "hard" }, { as: "benevole" }])
-  .withRequestedTeams([threeHardDemanded.value, twoBenevoleDemanded.value])
+  .withRequestedTeams([threeHardDemanded.team, twoBenevoleDemanded.team])
   .withSummary(missingOneHardAndOneBenevoleAssignmentSummary);
