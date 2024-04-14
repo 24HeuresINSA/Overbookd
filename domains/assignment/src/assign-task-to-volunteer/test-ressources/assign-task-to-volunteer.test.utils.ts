@@ -110,10 +110,7 @@ const missingTwoVieuxAssignmentSummary = AssignmentSummaryFactory.init(
 ).withTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team]);
 export const missingTwoVieuxAssignment = AssignmentBuilder.init(friday08hto09h)
   .withAssignees([{ as: "hard" }])
-  .withRequestedTeams([
-    oneHardAssignedAndDemanded.team,
-    twoVieuxDemanded.team,
-  ])
+  .withRequestedTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team])
   .withSummary(missingTwoVieuxAssignmentSummary);
 
 const missingOneHardAndOneBenevoleAssignmentSummary =
