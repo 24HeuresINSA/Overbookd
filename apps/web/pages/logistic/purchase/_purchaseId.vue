@@ -72,7 +72,7 @@ type PurchaseDetailsData = {
 };
 
 export default defineComponent({
-  name: "PurchaseSheetDetails",
+  name: "PurchaseFormDetails",
   components: { DateTimeField, InquiryFormFields, SnackNotificationContainer },
   data(): PurchaseDetailsData {
     return {
