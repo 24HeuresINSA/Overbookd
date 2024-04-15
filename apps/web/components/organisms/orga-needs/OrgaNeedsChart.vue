@@ -7,12 +7,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { OrgaNeedsResponse } from "~/store/orgaNeeds";
+import { OrgaNeedDetails } from "@overbookd/http";
+import { defineComponent } from "vue";
 import { ChartData, Dataset, tooltipLabel } from "~/utils/graph/graph";
 
-export default Vue.extend({
+export default defineComponent({
   name: "OrgaNeedsChart",
+  emits: ["select:orga-needs-details"],
   data() {
     return {
       courbs: {
@@ -27,7 +28,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    stats(): OrgaNeedsResponse[] {
+    stats(): OrgaNeedDetails[] {
       return this.$accessor.orgaNeeds.stats;
     },
     max(): number {
@@ -66,12 +67,20 @@ export default Vue.extend({
               ticks: { max: this.max },
               position: "right",
             },
-            { id: "demands", stacked: false, ticks: { max: this.max } },
+            { id: "demands", stacked: false, ticks: { min: 0, max: this.max } },
           ],
         },
         hover: {
           mode: "nearest",
           intersect: true,
+        },
+        onHover(event, chartElement) {
+          event.target.style.cursor = chartElement[0] ? "pointer" : "default";
+        },
+        onClick: (_event: unknown, elements: { _index: number }[]) => {
+          const [first] = elements;
+          if (!first) return;
+          this.$emit("select:orga-needs-details", first._index);
         },
         tooltips: {
           mode: "index",

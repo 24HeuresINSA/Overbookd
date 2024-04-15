@@ -47,3 +47,8 @@ export type { Task as PlanningTask } from "./planning";
 export type { EnrollableStaff, EnrollableVolunteer } from "./registration";
 export type { EditAmountForm } from "./contribution";
 export type { Preference } from "./preference.model";
+export type {
+  OrgaNeedDetails,
+  OrgaNeedTask,
+  OrgaNeedRequest,
+} from "./orga-need";
