@@ -38,7 +38,12 @@ export class AssignTaskToVolunteer {
     const withMissingTeams = tasks.map((task) =>
       this.computeMissingAssignmentTeams(task),
     );
-    return withMissingTeams.filter((task) => task.teams.length > 0);
+    return withMissingTeams
+      .filter((task) => task.teams.length > 0)
+      .map(({ teams, ...task }) => ({
+        ...task,
+        teams: removeDuplicates(teams),
+      }));
   }
 
   async selectTask(
@@ -131,4 +136,8 @@ export class AssignTaskToVolunteer {
   private countAssigneesInTeam(team: string, assignees: Assignee[]): number {
     return assignees.filter((assignee) => assignee.as === team).length;
   }
+}
+
+function removeDuplicates(teams: string[]): string[] {
+  return Array.from(new Set(teams));
 }

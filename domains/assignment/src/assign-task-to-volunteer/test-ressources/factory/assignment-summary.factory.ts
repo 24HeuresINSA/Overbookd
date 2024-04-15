@@ -18,11 +18,15 @@ export class AssignmentSummaryFactory {
     return new AssignmentSummaryFactory(assignment, []);
   }
 
+  during(period: Period) {
+    const temporal = { start: period.start, end: period.end, id: period.id };
+    const assignment = { ...this.assignment, ...temporal };
+    return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
+  }
+
   withTeams(teams: AssignmentTeam[]): AssignmentSummaryFactory {
-    return new AssignmentSummaryFactory(
-      { ...this.assignment, teams },
-      this.assignableVolunteers,
-    );
+    const assignment = { ...this.assignment, teams };
+    return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
   }
 
   withAssignableVolunteers(
