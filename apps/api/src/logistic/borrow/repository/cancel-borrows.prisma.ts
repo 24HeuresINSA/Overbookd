@@ -1,4 +1,4 @@
-import { BorrowsForCancel } from "@overbookd/logistic/src/borrow/cancel/cancel";
+import { BorrowsForCancel } from "@overbookd/logistic";
 import { PrismaService } from "../../../prisma.service";
 
 export class PrismaCancelBorrows implements BorrowsForCancel {
