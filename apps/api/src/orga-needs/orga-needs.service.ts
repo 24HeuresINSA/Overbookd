@@ -24,13 +24,10 @@ type DatabaseOrgaStats = {
   assignments: AssignmentsOverPeriod[];
   availabilities: VolunteerAvailability[];
   requestedVolunteers: RequestedVolunteersOverPeriod[];
-  tasks: TaskWithPeriod[];
+  tasks: OrgaNeedTaskWithPeriod[];
 };
 
-type TaskWithPeriod = {
-  period: Period;
-  tasks: OrgaNeedTask[];
-};
+type OrgaNeedTaskWithPeriod = OrgaNeedTask & IProvidePeriod;
 
 type DatabaseTask = {
   id: FestivalTask["id"];
@@ -141,14 +138,10 @@ export class OrgaNeedsService {
   }
 
   private listTasksOnInterval(
-    tasks: TaskWithPeriod[],
+    tasks: OrgaNeedTaskWithPeriod[],
     interval: Period,
   ): OrgaNeedTask[] {
-    return tasks
-      .flatMap(({ period, tasks }) =>
-        period.equals(interval) ? tasks : undefined,
-      )
-      .filter((tasks) => tasks !== undefined);
+    return tasks.filter((task) => Period.init(task).equals(interval));
   }
 
   private async getRequestedVolunteers(
@@ -362,25 +355,26 @@ export class OrgaNeedsService {
   private async getTasksAt({
     teams,
     ...period
-  }: OrgaNeedRequest): Promise<TaskWithPeriod[]> {
+  }: OrgaNeedRequest): Promise<OrgaNeedTaskWithPeriod[]> {
+    const isValidMobilization = {
+      AND: [
+        this.periodIncludedCondition(period),
+        this.requestTeamMemberCondition(teams),
+      ],
+    };
+
     const tasks = await this.prisma.festivalTask.findMany({
       where: {
         ...IS_NOT_DELETED,
         mobilizations: {
-          some: {
-            OR: [this.periodIncludedCondition(period)],
-            AND: this.requestTeamMemberCondition(teams),
-          },
+          some: isValidMobilization,
         },
       },
       select: {
         id: true,
         name: true,
         mobilizations: {
-          where: {
-            OR: [this.periodIncludedCondition(period)],
-            AND: this.requestTeamMemberCondition(teams),
-          },
+          where: isValidMobilization,
           select: {
             start: true,
             end: true,
@@ -394,29 +388,26 @@ export class OrgaNeedsService {
     });
 
     const splittedPeriods = this.buildOrgaNeedsIntervals(period);
-    return splittedPeriods.map((period) => ({
-      period,
-      tasks: this.retrieveTasksOnPeriod(tasks, period),
-    }));
+    return splittedPeriods.flatMap((period) =>
+      this.retrieveTasksOnPeriod(tasks, period),
+    );
   }
 
   private retrieveTasksOnPeriod(
     tasks: DatabaseTask[],
     period: Period,
-  ): OrgaNeedTask[] {
-    return tasks
-      .map(({ id, name, mobilizations }) => {
-        const overlapped = mobilizations.filter((mobilization) =>
-          period.isOverlapping(Period.init(mobilization)),
-        );
-        const count = overlapped.reduce(
-          (acc, { teams }) =>
-            acc + teams.reduce((acc, { count }) => acc + count, 0),
-          0,
-        );
-        return { id, name, count };
-      })
-      .filter(({ count }) => count > 0);
+  ): OrgaNeedTaskWithPeriod[] {
+    return tasks.map(({ id, name, mobilizations }) => {
+      const overlapped = mobilizations.filter((mobilization) =>
+        period.isOverlapping(Period.init(mobilization)),
+      );
+      const count = overlapped.reduce(
+        (acc, { teams }) =>
+          acc + teams.reduce((acc, { count }) => acc + count, 0),
+        0,
+      );
+      return { id, name, count, start: period.start, end: period.end };
+    });
   }
 
   private buildOrgaNeedsIntervals(period: IProvidePeriod): Period[] {
