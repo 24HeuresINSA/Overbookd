@@ -138,7 +138,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.borrow {
+.purchase {
   margin: 0 20px;
   h2 {
     margin-top: 10px;

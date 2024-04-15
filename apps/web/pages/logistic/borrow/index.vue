@@ -16,6 +16,8 @@
     <v-dialog v-model="isNewBorrowDialogOpen" max-width="500">
       <InitBorrowCard @init="initBorrow" />
     </v-dialog>
+
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -24,6 +26,7 @@ import { defineComponent } from "vue";
 import BorrowTable from "~/components/organisms/logistic/borrow/BorrowTable.vue";
 import InitBorrowCard from "~/components/organisms/logistic/borrow/InitBorrowCard.vue";
 import { Borrow, InitBorrowForm } from "@overbookd/logistic";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 type BorrowsData = {
   isNewBorrowDialogOpen: boolean;
@@ -31,7 +34,7 @@ type BorrowsData = {
 
 export default defineComponent({
   name: "Borrows",
-  components: { BorrowTable, InitBorrowCard },
+  components: { BorrowTable, InitBorrowCard, SnackNotificationContainer },
   data: (): BorrowsData => ({
     isNewBorrowDialogOpen: false,
   }),

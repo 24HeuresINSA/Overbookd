@@ -16,6 +16,8 @@
     <v-dialog v-model="isNewPurchaseDialogOpen" max-width="500">
       <InitPurchaseCard @init="initPurchase" />
     </v-dialog>
+
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -24,6 +26,7 @@ import { defineComponent } from "vue";
 import PurchaseTable from "~/components/organisms/logistic/purchase/PurchaseTable.vue";
 import InitPurchaseCard from "~/components/organisms/logistic/purchase/InitPurchaseCard.vue";
 import { Purchase, InitPurchaseForm } from "@overbookd/logistic";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 type PurchasesData = {
   isNewPurchaseDialogOpen: boolean;
@@ -31,7 +34,7 @@ type PurchasesData = {
 
 export default defineComponent({
   name: "Purchases",
-  components: { PurchaseTable, InitPurchaseCard },
+  components: { PurchaseTable, InitPurchaseCard, SnackNotificationContainer },
   data: (): PurchasesData => ({
     isNewPurchaseDialogOpen: false,
   }),
