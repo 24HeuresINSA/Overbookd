@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/assignment",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Gestion de l'affectation pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -37,8 +37,9 @@
     "pnpm": "8.15.6"
   },
   "dependencies": {
+    "@overbookd/festival-event-constants": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
-    "@overbookd/festival-event-constants": "workspace:*"
+    "@overbookd/team": "workspace:*"
   }
 }
