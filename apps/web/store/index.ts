@@ -37,6 +37,7 @@ import * as logisticDashboard from "./logisticDashboard";
 import * as publicHoliday from "./publicHoliday";
 import * as preference from "./preference";
 import * as borrow from "./borrow";
+import * as purchase from "./purchase";
 
 export const state = () => ({});
 
@@ -90,5 +91,6 @@ export const accessorType = getAccessorType({
     publicHoliday,
     preference,
     borrow,
+    purchase,
   },
 });
