@@ -3,7 +3,6 @@ import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/period";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
-import { FestivalTask } from "@overbookd/festival-event";
 import {
   OrgaNeedDetails,
   OrgaNeedRequest,
@@ -29,25 +28,11 @@ type DatabaseOrgaStats = {
 
 type OrgaNeedTaskWithPeriod = OrgaNeedTask & IProvidePeriod;
 
-type DatabaseTask = {
-  id: FestivalTask["id"];
-  name: FestivalTask["general"]["name"];
-  mobilizations: {
-    end: Date;
-    start: Date;
-    teams: { count: number }[];
-  }[];
-};
-
 type DatabaseVolunteerAvailability = IProvidePeriod & {
   user: {
     id: number;
-    festivalTaskMobilizations: {
-      mobilization: IProvidePeriod;
-    }[];
-    assigned: {
-      assignment: IProvidePeriod;
-    }[];
+    festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
+    assigned: { assignment: IProvidePeriod }[];
   };
 };
 
@@ -58,14 +43,15 @@ export class OrgaNeedsService {
   async computeOrgaStats(
     periodAndTeams: OrgaNeedRequest,
   ): Promise<OrgaNeedDetails[]> {
-    const intervals = this.buildOrgaNeedsIntervals(periodAndTeams);
+    const intervals =
+      Period.init(periodAndTeams).splitWithIntervalInMs(QUARTER_IN_MS);
 
     const [assignments, availabilities, requestedVolunteers, tasks] =
       await Promise.all([
         this.getAssignments(periodAndTeams),
         this.getAvailabilities(periodAndTeams),
         this.getRequestedVolunteers(periodAndTeams),
-        this.getTasksAt(periodAndTeams, intervals),
+        this.getTasksAt(periodAndTeams),
       ]);
 
     return intervals.map((interval) =>
@@ -141,7 +127,17 @@ export class OrgaNeedsService {
     tasks: OrgaNeedTaskWithPeriod[],
     interval: Period,
   ): OrgaNeedTask[] {
-    return tasks.filter((task) => Period.init(task).equals(interval));
+    return tasks
+      .filter((task) => Period.init(task).isOverlapping(interval))
+      .reduce((acc, { id, name, count }) => {
+        const existingTask = acc.find((task) => task.id === id);
+
+        if (existingTask) {
+          existingTask.count += count;
+          return acc;
+        }
+        return [...acc, { id, name, count }];
+      }, [] as OrgaNeedTask[]);
   }
 
   private async getRequestedVolunteers(
@@ -352,10 +348,10 @@ export class OrgaNeedsService {
     ]);
   }
 
-  private async getTasksAt(
-    { teams, ...period }: OrgaNeedRequest,
-    intervals: Period[],
-  ): Promise<OrgaNeedTaskWithPeriod[]> {
+  private async getTasksAt({
+    teams,
+    ...period
+  }: OrgaNeedRequest): Promise<OrgaNeedTaskWithPeriod[]> {
     const isValidMobilization = {
       AND: [
         this.periodIncludedCondition(period),
@@ -366,9 +362,7 @@ export class OrgaNeedsService {
     const tasks = await this.prisma.festivalTask.findMany({
       where: {
         ...IS_NOT_DELETED,
-        mobilizations: {
-          some: isValidMobilization,
-        },
+        mobilizations: { some: isValidMobilization },
       },
       select: {
         id: true,
@@ -387,30 +381,21 @@ export class OrgaNeedsService {
       },
     });
 
-    return intervals.flatMap((period) =>
-      this.retrieveTasksOnPeriod(tasks, period),
-    );
-  }
-
-  private retrieveTasksOnPeriod(
-    tasks: DatabaseTask[],
-    period: Period,
-  ): OrgaNeedTaskWithPeriod[] {
-    return tasks.map(({ id, name, mobilizations }) => {
-      const overlapped = mobilizations.filter((mobilization) =>
-        period.isOverlapping(Period.init(mobilization)),
-      );
-      const count = overlapped.reduce(
-        (acc, { teams }) =>
-          acc + teams.reduce((acc, { count }) => acc + count, 0),
-        0,
-      );
-      return { id, name, count, start: period.start, end: period.end };
+    return tasks.flatMap((task) => {
+      return task.mobilizations.map((mobilization) => {
+        const count = mobilization.teams.reduce(
+          (acc, { count }) => acc + count,
+          0,
+        );
+        return {
+          id: task.id,
+          name: task.name,
+          start: mobilization.start,
+          end: mobilization.end,
+          count,
+        };
+      });
     });
-  }
-
-  private buildOrgaNeedsIntervals(period: IProvidePeriod): Period[] {
-    return Period.init(period).splitWithIntervalInMs(QUARTER_IN_MS);
   }
 
   private periodIncludedCondition({ start, end }: IProvidePeriod) {
