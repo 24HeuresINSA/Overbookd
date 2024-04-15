@@ -40,7 +40,7 @@ export default defineComponent({
     cantInitPurchase(): boolean {
       const hasSeller = this.seller.trim();
       if (!hasSeller) return true;
-      return hasSeller;
+      return !hasSeller;
     },
   },
   methods: {
