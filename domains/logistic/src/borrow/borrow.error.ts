@@ -1,7 +1,7 @@
 import { LogisticError } from "../logistic.error";
 import { Borrow } from "./borrow";
 
-export class BorrowError extends LogisticError {}
+class BorrowError extends LogisticError {}
 
 export class BorrowNotFound extends BorrowError {
   constructor(id: Borrow["id"]) {

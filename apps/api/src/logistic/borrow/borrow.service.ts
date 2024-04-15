@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import {
   Borrow,
-  BorrowError,
+  CancelBorrow,
   Gear,
   GearRequest,
   InitBorrow,
   InitBorrowForm,
+  LogisticError,
   PlanBorrow,
   PlanBorrowForm,
 } from "@overbookd/logistic";
@@ -19,18 +20,14 @@ export type BorrowsForView = {
   findOne(id: Borrow["id"]): Promise<Borrow>;
 };
 
-export type BorrowsForRemove = {
-  remove(id: Borrow["id"]): Promise<void>;
-};
-
 type UseCases = {
   init: Readonly<InitBorrow>;
   plan: Readonly<PlanBorrow>;
+  cancel: Readonly<CancelBorrow>;
 };
 
 type Repositories = {
   views: Readonly<BorrowsForView>;
-  removes: Readonly<BorrowsForRemove>;
   gears: Readonly<Gears>;
 };
 
@@ -70,8 +67,8 @@ export class BorrowService {
     return this.useCases.plan.update(id, borrow);
   }
 
-  async removeBorrow(id: Borrow["id"]): Promise<void> {
-    return this.repositories.removes.remove(id);
+  async cancelBorrow(id: Borrow["id"]): Promise<void> {
+    return this.useCases.cancel.apply(id);
   }
 
   async addGearRequest(
@@ -80,7 +77,7 @@ export class BorrowService {
     quantity: GearRequest["quantity"],
   ): Promise<Borrow> {
     const gear = await this.repositories.gears.findOne(slug);
-    if (!gear) throw new BorrowError("Matos introuvable dans le catalogue");
+    if (!gear) throw new LogisticError("Matos introuvable dans le catalogue");
     return this.useCases.plan.addGear(id, { ...gear, quantity });
   }
 

@@ -1,16 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Borrow, GearRequest } from "@overbookd/logistic";
-
-class GearRequestDto implements GearRequest {
-  @ApiProperty({})
-  slug: GearRequest["slug"];
-
-  @ApiProperty({})
-  name: GearRequest["name"];
-
-  @ApiProperty({})
-  quantity: GearRequest["quantity"];
-}
+import { Borrow } from "@overbookd/logistic";
+import { GearRequestDto } from "../../common/dto/gear-request.response.dto";
 
 export class BorrowResponseDto implements Borrow {
   @ApiProperty({})

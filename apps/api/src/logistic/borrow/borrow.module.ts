@@ -2,35 +2,21 @@ import { Module } from "@nestjs/common";
 import { BorrowController } from "./borrow.controller";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
-import { InitBorrow, PlanBorrow } from "@overbookd/logistic";
+import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
 import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
-import {
-  BorrowService,
-  BorrowsForRemove,
-  BorrowsForView,
-  Gears,
-} from "./borrow.service";
-import { PrismaGears } from "./repository/gears.prisma";
+import { BorrowService, BorrowsForView, Gears } from "./borrow.service";
+import { PrismaGears } from "../common/repository/gears.prisma";
 import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
-import { PrismaRemoveBorrows } from "./repository/remove-borrows.prisma";
+import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
+import { LogisticCommonModule } from "../common/logistic-common.module";
 
 @Module({
   controllers: [BorrowController],
   providers: [
     {
-      provide: PrismaGears,
-      useFactory: (prisma: PrismaService) => new PrismaGears(prisma),
-      inject: [PrismaService],
-    },
-    {
       provide: PrismaViewBorrows,
       useFactory: (prisma: PrismaService) => new PrismaViewBorrows(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaRemoveBorrows,
-      useFactory: (prisma: PrismaService) => new PrismaRemoveBorrows(prisma),
       inject: [PrismaService],
     },
     {
@@ -44,6 +30,11 @@ import { PrismaRemoveBorrows } from "./repository/remove-borrows.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaCancelBorrows,
+      useFactory: (prisma: PrismaService) => new PrismaCancelBorrows(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: InitBorrow,
       useFactory: (borrows: PrismaInitBorrows) => new InitBorrow(borrows),
       inject: [PrismaInitBorrows],
@@ -54,23 +45,28 @@ import { PrismaRemoveBorrows } from "./repository/remove-borrows.prisma";
       inject: [PrismaPlanBorrows],
     },
     {
+      provide: CancelBorrow,
+      useFactory: (borrows: PrismaCancelBorrows) => new CancelBorrow(borrows),
+      inject: [PrismaCancelBorrows],
+    },
+    {
       provide: BorrowService,
       useFactory: (
         init: InitBorrow,
         plan: PlanBorrow,
+        cancel: CancelBorrow,
         views: BorrowsForView,
-        removes: BorrowsForRemove,
         gears: Gears,
-      ) => new BorrowService({ init, plan }, { views, removes, gears }),
+      ) => new BorrowService({ init, plan, cancel }, { views, gears }),
       inject: [
         InitBorrow,
         PlanBorrow,
+        CancelBorrow,
         PrismaViewBorrows,
-        PrismaRemoveBorrows,
         PrismaGears,
       ],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, LogisticCommonModule],
 })
 export class BorrowModule {}

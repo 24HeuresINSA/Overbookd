@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AddBorrowGearRequestForm } from "@overbookd/http";
+import { AddGearRequestForm } from "@overbookd/http";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class AddGearRequestDto implements AddBorrowGearRequestForm {
+export class AddGearRequestDto implements AddGearRequestForm {
   @ApiProperty({
     type: String,
     description: "The name of the gear",
   })
   @IsString()
   @IsNotEmpty()
-  slug: AddBorrowGearRequestForm["slug"];
+  slug: AddGearRequestForm["slug"];
 
   @ApiProperty({
     type: Number,
@@ -17,5 +17,5 @@ export class AddGearRequestDto implements AddBorrowGearRequestForm {
   })
   @IsNumber()
   @IsNotEmpty()
-  quantity: AddBorrowGearRequestForm["quantity"];
+  quantity: AddGearRequestForm["quantity"];
 }

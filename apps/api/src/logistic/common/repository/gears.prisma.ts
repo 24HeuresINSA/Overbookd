@@ -1,6 +1,6 @@
 import { Gear } from "@overbookd/logistic";
 import { PrismaService } from "../../../prisma.service";
-import { Gears } from "../borrow.service";
+import { Gears } from "../../borrow/borrow.service";
 
 export class PrismaGears implements Gears {
   constructor(private prisma: PrismaService) {}

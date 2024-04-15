@@ -1,6 +1,6 @@
 import { Purchase } from "../purchase";
 
-type PurchasesForCancel = {
+export type PurchasesForCancel = {
   remove(id: Purchase["id"]): void;
 };
 

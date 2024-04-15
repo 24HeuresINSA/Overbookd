@@ -1,6 +1,6 @@
 import { GearRequest } from "@overbookd/logistic";
 
-export type AddBorrowGearRequestForm = {
+export type AddGearRequestForm = {
   slug: GearRequest["slug"];
   quantity: GearRequest["quantity"];
 };

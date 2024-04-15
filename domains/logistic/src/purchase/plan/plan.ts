@@ -8,7 +8,7 @@ export type PurchasesForPlan = {
   save(purchase: Purchase): Promise<Purchase>;
 };
 
-type PlanPurchaseForm = {
+export type PlanPurchaseForm = {
   seller?: Purchase["seller"];
   availableOn?: Purchase["availableOn"];
 };

@@ -20,7 +20,7 @@ import {
   ApiBody,
   ApiParam,
 } from "@nestjs/swagger";
-import { BorrowErrorFilter } from "./borrow.filter";
+import { LogisticErrorFilter } from "../logistic.filter";
 import { BorrowService } from "./borrow.service";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { BORROW_GEARS } from "@overbookd/permission";
@@ -29,14 +29,14 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
 import { InitBorrowRequestDto } from "./dto/init-borrow.request.dto";
 import { Borrow, GearRequest } from "@overbookd/logistic";
-import { AddGearRequestDto } from "./dto/add-gear.request.dto";
-import { AddBorrowGearRequestForm } from "@overbookd/http";
+import { AddGearRequestDto } from "../common/dto/add-gear.request.dto";
+import { AddGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/borrows")
 @Controller("logistic/borrows")
-@UseFilters(BorrowErrorFilter)
+@UseFilters(LogisticErrorFilter)
 @ApiBadRequestResponse({ description: "Request is not formated as expected" })
 @ApiForbiddenResponse({ description: "User can't access this resource" })
 export class BorrowController {
@@ -125,8 +125,8 @@ export class BorrowController {
     status: 204,
     description: "Removed borrow",
   })
-  removeBorrow(@Param("id", ParseIntPipe) id: Borrow["id"]): Promise<void> {
-    return this.borrowService.removeBorrow(id);
+  cancelBorrow(@Param("id", ParseIntPipe) id: Borrow["id"]): Promise<void> {
+    return this.borrowService.cancelBorrow(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -148,7 +148,7 @@ export class BorrowController {
   })
   addGearRequest(
     @Param("id", ParseIntPipe) id: Borrow["id"],
-    @Body() { slug, quantity }: AddBorrowGearRequestForm,
+    @Body() { slug, quantity }: AddGearRequestForm,
   ): Promise<Borrow> {
     return this.borrowService.addGearRequest(id, slug, quantity);
   }
