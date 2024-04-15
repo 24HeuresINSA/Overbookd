@@ -80,15 +80,38 @@ class AssignFunnelSetup {
       volunteer,
       this.assignment,
     );
-    return AssignFunnelVolunteerSelected.init(candidate);
+    return AssignFunnelVolunteerSelected.init(
+      candidate,
+      this.assignment.demands,
+    );
   }
 }
 
-class AssignFunnelVolunteerSelected {
-  private constructor(readonly candidates: Candidate[]) {}
+type AssignmentDefinition = {
+  volunteer: Volunteer["id"];
+  team: string;
+};
 
-  static init(candidate: Candidate) {
-    return new AssignFunnelVolunteerSelected([candidate]);
+class AssignFunnelVolunteerSelected {
+  private constructor(
+    readonly candidates: Candidate[],
+    private readonly demands: TeamDemanded[],
+  ) {}
+
+  static init(candidate: Candidate, demands: TeamDemanded[]) {
+    return new AssignFunnelVolunteerSelected([candidate], demands);
+  }
+
+  defineAssignment({ volunteer, team }: AssignmentDefinition) {
+    const candidates = this.candidates.map((candidate) =>
+      candidate.id === volunteer ? { ...candidate, as: team } : candidate,
+    );
+    return new AssignFunnelVolunteerSelected(candidates, this.demands);
+  }
+
+  get hasRemainingDemands(): boolean {
+    const demands = this.demands.reduce((sum, { count }) => sum + count, 0);
+    return this.candidates.length < demands;
   }
 }
 
@@ -155,31 +178,62 @@ describe("Assign volunteers funnel", () => {
             planning,
           );
         });
+        it("should indicate there is not remaining team demanded", () => {
+          expect(volunteerSelected.hasRemainingDemands).toBe(false);
+        });
       },
     );
   });
   describe("when assignment needs two benevoles and one conducteur", () => {
     describe("when selected volunteer is only member of benevole", () => {
-      it("should select benevole as team assignment", async () => {
-        const funnel = await AssignFunnelSetup.init(
+      let funnel: AssignFunnelVolunteerSelected;
+      beforeAll(async () => {
+        funnel = await AssignFunnelSetup.init(
           candidateFactory,
           rendreKangoo,
         ).select(noel.volunteer);
-
+      });
+      it("should select benevole as team assignment", () => {
         const [noelCandidate, ..._candidates] = funnel.candidates;
         expect(noelCandidate.as).toBe(BENEVOLE_CODE);
       });
+      it("should indicate there is remaining team demanded", () => {
+        expect(funnel.hasRemainingDemands).toBe(true);
+      });
     });
     describe("when selected volunteer is member of both benevole and conducteur", () => {
-      it("should NOT select team assignment", async () => {
-        const funnel = await AssignFunnelSetup.init(
+      let volunteerFunnel: AssignFunnelVolunteerSelected;
+      const volunteer = lea.volunteer;
+      beforeAll(async () => {
+        volunteerFunnel = await AssignFunnelSetup.init(
           candidateFactory,
           rendreKangoo,
-        ).select(lea.volunteer);
-
-        const [leaCandidate, ..._candidates] = funnel.candidates;
-        expect(leaCandidate.as).toBeUndefined();
+        ).select(volunteer);
       });
+      it("should NOT select team assignment", () => {
+        const [candidate, ..._candidates] = volunteerFunnel.candidates;
+        expect(candidate.as).toBeUndefined();
+      });
+      it("should indicate there is remaining team demanded", () => {
+        expect(volunteerFunnel.hasRemainingDemands).toBe(true);
+      });
+      describe.each`
+        team
+        ${BENEVOLE_CODE}
+        ${"conducteur"}
+      `(
+        "when defininig $team assignment for selected volunteer",
+        ({ team }) => {
+          it(`should select ${team} as team assignment`, () => {
+            const definition = { volunteer: volunteer.id, team };
+            const withAssignmentFunnel =
+              volunteerFunnel.defineAssignment(definition);
+
+            const [candidate, ..._candidates] = withAssignmentFunnel.candidates;
+            expect(candidate.as).toBe(team);
+          });
+        },
+      );
     });
   });
 });
