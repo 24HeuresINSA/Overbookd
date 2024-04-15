@@ -165,12 +165,11 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $filters-height: 225px;
-$header-footer-height: 100px;
-$card-padding: 32px;
+$column-margins: 30px;
+$layout-padding: 20px;
 
 .filterable-timespan-list {
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -180,20 +179,25 @@ $card-padding: 32px;
 }
 
 .filters {
-  width: 100%;
   height: $filters-height;
 }
 
 .timespan-list {
   padding: 0 5px;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
+      #{$column-margins}
+  );
 }
 
 .error-message {
   align-items: center;
   justify-content: center;
   display: flex;
-  height: calc(100vh - #{$filters-height + $header-footer-height});
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
+      #{$column-margins}
+  );
   margin: 0 5%;
 
   p {
