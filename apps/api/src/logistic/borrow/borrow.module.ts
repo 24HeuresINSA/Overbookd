@@ -36,8 +36,13 @@ import { LogisticCommonModule } from "../common/logistic-common.module";
     },
     {
       provide: InitBorrow,
-      useFactory: (borrows: PrismaInitBorrows) => new InitBorrow(borrows),
-      inject: [PrismaInitBorrows],
+      useFactory: async (borrows: PrismaInitBorrows, prisma: PrismaService) => {
+        const {
+          _max: { id: maxId },
+        } = await prisma.borrow.aggregate({ _max: { id: true } });
+        return new InitBorrow(borrows, maxId + 1);
+      },
+      inject: [PrismaInitBorrows, PrismaService],
     },
     {
       provide: PlanBorrow,

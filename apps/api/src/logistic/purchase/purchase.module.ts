@@ -40,9 +40,16 @@ import { PrismaViewPurchases } from "./repository/view-purchases.prisma";
     },
     {
       provide: InitPurchase,
-      useFactory: (purchases: PrismaInitPurchases) =>
-        new InitPurchase(purchases),
-      inject: [PrismaInitPurchases],
+      useFactory: async (
+        purchases: PrismaInitPurchases,
+        prisma: PrismaService,
+      ) => {
+        const {
+          _max: { id: maxId },
+        } = await prisma.purchase.aggregate({ _max: { id: true } });
+        return new InitPurchase(purchases, maxId + 1);
+      },
+      inject: [PrismaInitPurchases, PrismaService],
     },
     {
       provide: PlanPurchase,
