@@ -89,7 +89,7 @@ export const actions = actionTree(
 function castWithDate(purchase: HttpStringified<Purchase>) {
   return {
     ...purchase,
-    availaibleOn: new Date(purchase.availableOn),
+    availableOn: new Date(purchase.availableOn),
   };
 }
 
