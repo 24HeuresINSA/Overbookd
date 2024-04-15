@@ -5,6 +5,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { getTaskFactory } from "./factory/task.factory";
 import {
+  friday09hto10h,
   fulfilledAssignment,
   missingOneHardAndOneBenevoleAssignment,
   missingOnePlaizirAssignment,
@@ -20,7 +21,10 @@ export const fullyAssignedTask = factory
 export const missingOnePlaizirTask = factory
   .init("Task missing one assignee")
   .withCategory(BAR)
-  .withAssignments([missingOnePlaizirAssignment]);
+  .withAssignments([
+    missingOnePlaizirAssignment,
+    missingOnePlaizirAssignment.during(friday09hto10h),
+  ]);
 
 export const missingTwoVieuxTask = factory
   .init("Task missing two vieux")

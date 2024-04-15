@@ -43,7 +43,7 @@ describe("Assign task to volunteer", () => {
       ({ taskId, expectedTeams }) => {
         it("should contain task with missing teams", () => {
           const foundTask = assignableTasks.find((t) => t.id === taskId);
-          expect(foundTask?.teams.sort()).toEqual(expectedTeams.sort());
+          expect(foundTask?.teams).toMatchObject(expectedTeams);
         });
       },
     );

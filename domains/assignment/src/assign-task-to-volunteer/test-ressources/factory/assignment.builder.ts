@@ -20,6 +20,13 @@ export class AssignmentBuilder {
     return new AssignmentBuilder(assignment, summary);
   }
 
+  during(period: Period): AssignmentBuilder {
+    const temporal = { start: period.start, end: period.end, id: period.id };
+    const assignment = { ...this.assignment, ...temporal };
+    const summary = this.summary.during(period);
+    return new AssignmentBuilder(assignment, summary);
+  }
+
   withAssignees(assignees: Assignee[]): AssignmentBuilder {
     return new AssignmentBuilder(
       { ...this.assignment, assignees },
