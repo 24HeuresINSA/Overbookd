@@ -12,9 +12,14 @@ export type BorrowsForInit = {
 };
 
 export class InitBorrow {
-  private idGenerator: Generator<number> = numberGenerator(1);
+  private idGenerator: Generator<number>;
 
-  constructor(private readonly borrows: BorrowsForInit) {}
+  constructor(
+    private readonly borrows: BorrowsForInit,
+    startId: number = 1,
+  ) {
+    this.idGenerator = numberGenerator(startId);
+  }
 
   async apply(form: InitBorrowForm): Promise<Borrow> {
     Period.init({ start: form.availableOn, end: form.unavailableOn });

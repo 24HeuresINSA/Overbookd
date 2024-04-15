@@ -11,9 +11,14 @@ export type PurchasesForInit = {
 };
 
 export class InitPurchase {
-  private idGenerator: Generator<number> = numberGenerator(1);
+  private idGenerator: Generator<number>;
 
-  constructor(private readonly purchases: PurchasesForInit) {}
+  constructor(
+    private readonly purchases: PurchasesForInit,
+    startId: number = 1,
+  ) {
+    this.idGenerator = numberGenerator(startId);
+  }
 
   async apply(form: InitPurchaseForm): Promise<Purchase> {
     const purchase = {
