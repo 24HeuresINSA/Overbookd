@@ -1,3 +1,35 @@
+## [2.25.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.7...v2.25.0) (2024-04-15)
+
+
+### Features
+
+* **purchase-form:** implement purchases in web [#1674](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1674) ([a840de5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a840de5eecba62c49eef934a275bc98d37b52b8e))
+
+
+### Bug Fixes
+
+* **assignment:** only display missing teams once. [#1756](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1756) ([5bc0b40](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5bc0b40326065c30ce4cee2bb54d836ae582e116))
+* **assignment:** use adapted requests in web [#1740](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1740) ([9fbe9f5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9fbe9f56b2e1967d7eddbc216e5317969ad43150))
+* **logistic:** borrow & purchase id generation [#1758](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1758) ([1e5b3db](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e5b3db4cd465bba3cee69e4815447c18bc971e1))
+* **orga-needs:** show ft details [#1755](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1755) ([e32e381](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e32e381318500cd3301efe76a17d80b905e99972))
+* **volunteers:** center calendar from volunteer information to either manif date or first availability date. [#1705](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1705) ([8fd3795](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8fd3795469a86099bbe2ea52e649cebdbb50ad7b))
+
+
+### Pre-Features
+
+* **assignment:** define candidate team assignment. [#1759](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1759) ([3ce745d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3ce745dde853be5349d166675f06ab1b3cb867cb))
+* **assignment:** init assign volunteers to task funnel. [#1759](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1759) ([590550c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/590550c1efd50557956bc91c14d0bfe2fd0f5313))
+* **assignment:** retrieve assignable volunteers for an assignment [#1754](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1754) ([e56d510](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e56d510622ec019178d40a037a3b9232f8ff1066))
+* **assignment:** task selection in domain & api [#1741](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1741) ([eb5a230](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eb5a230b674bf113de93814db756792a4ced7d1b))
+* **purchase-form:** implement in API [#1675](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1675) ([ff4dc73](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ff4dc732586d67c27a1309a9ae34d387883804ab))
+* **purchase-form:** implement purchase form canceling in domains [#1748](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1748) ([3b31735](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3b317355c99fdf5399a8fc19d070bf877e51d295))
+* **purchase-form:** implement purchase planifications in the domains [#1747](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1747) ([8ec8ce2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8ec8ce2b8ac30f283db53868e056c2903d3e109d))
+
+
+### Refactor
+
+* **assignment:** add task factory [#1741](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1741) ([b615fe8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b615fe89ea7344c3dace0bde41840c02db42d3aa))
+
 ## [2.24.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.6...v2.24.7) (2024-04-13)
 
 
