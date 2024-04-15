@@ -9,7 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { OrgaNeedsService } from "./orga-needs.service";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { OrgaNeedsResponseDto } from "./dto/orga-needs.response.dto";
+import { OrgaNeedDetailsDto } from "./dto/orga-needs.response.dto";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
@@ -32,7 +32,7 @@ export class OrgaNeedsController {
   @ApiResponse({
     status: 200,
     description: "Returns the needs for a given day per 15 minutes interval",
-    type: OrgaNeedsResponseDto,
+    type: OrgaNeedDetailsDto,
     isArray: true,
   })
   @ApiQuery({
@@ -55,7 +55,7 @@ export class OrgaNeedsController {
     @Query("start") start: Date,
     @Query("end") end: Date,
     @Query("teams") teams?: string[],
-  ): Promise<OrgaNeedsResponseDto[]> {
+  ): Promise<OrgaNeedDetailsDto[]> {
     const periodAndTeams = {
       start: new Date(start),
       end: new Date(end),

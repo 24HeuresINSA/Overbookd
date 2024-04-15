@@ -6,12 +6,12 @@
     <v-card-text class="datepicker">
       <div>
         <h3>Début du créneau</h3>
-        <DateTimeField v-model="start" label="Début"></DateTimeField>
+        <DateTimeField v-model="start" label="Début" />
       </div>
 
       <div>
         <h3>Fin du créneau</h3>
-        <DateTimeField v-model="end" label="Fin"></DateTimeField>
+        <DateTimeField v-model="end" label="Fin" />
       </div>
 
       <v-btn color="success" class="btn" @click="updateStats"> Appliquer</v-btn>
@@ -23,36 +23,60 @@
         @change="changeTeams"
       ></SearchTeams>
     </v-card-text>
-    <OrgaNeedsChart></OrgaNeedsChart>
+    <OrgaNeedsChart @select:orga-needs-details="selectDetails" />
+
+    <v-dialog v-model="isDetailsOpen" max-width="1200">
+      <OrgaNeedsDetailsCard
+        v-if="selectedDetails"
+        :orga-needs-details="selectedDetails"
+        @close-dialog="closeDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
-import { OrgaNeedsResponse } from "~/store/orgaNeeds";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
+import OrgaNeedsDetailsCard from "~/components/organisms/orga-needs/OrgaNeedsDetailsCard.vue";
 import { Team } from "~/utils/models/team.model";
+import { OrgaNeedDetails } from "@overbookd/http";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
+type OrgaNeedsData = {
+  start?: Date;
+  end?: Date;
+  teams: string[];
+  isDetailsOpen: boolean;
+  selectedDetails?: OrgaNeedDetails;
+};
+
 export default Vue.extend({
   name: "OrgaNeeds",
-  components: { DateTimeField, OrgaNeedsChart, SearchTeams },
-  data() {
+  components: {
+    DateTimeField,
+    OrgaNeedsChart,
+    SearchTeams,
+    OrgaNeedsDetailsCard,
+  },
+  data(): OrgaNeedsData {
     return {
-      start: undefined as Date | undefined,
-      end: undefined as Date | undefined,
-      teams: [] as string[],
+      start: undefined,
+      end: undefined,
+      teams: [],
+      isDetailsOpen: false,
+      selectedDetails: undefined,
     };
   },
   head: () => ({
     title: "Besoin orgas",
   }),
   computed: {
-    stats(): OrgaNeedsResponse[] {
+    stats(): OrgaNeedDetails[] {
       return this.$accessor.orgaNeeds.stats;
     },
   },
@@ -75,6 +99,15 @@ export default Vue.extend({
         end: this.end,
         teams: this.teams,
       });
+    },
+    selectDetails(index: number) {
+      const details = this.stats.at(index);
+      if (!details) return;
+      this.selectedDetails = details;
+      this.isDetailsOpen = true;
+    },
+    closeDialog() {
+      this.isDetailsOpen = false;
     },
   },
 });

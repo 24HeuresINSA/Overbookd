@@ -1,7 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OrgaNeedsResponse } from "../orga-needs.service";
+import { OrgaNeedDetails, OrgaNeedTask } from "@overbookd/http";
 
-export class OrgaNeedsResponseDto implements OrgaNeedsResponse {
+class OrgaNeedTaskDto implements OrgaNeedTask {
+  @ApiProperty({ type: Number })
+  id: OrgaNeedTask["id"];
+
+  @ApiProperty({ type: String })
+  name: OrgaNeedTask["name"];
+
+  @ApiProperty({ type: Number })
+  count: OrgaNeedTask["count"];
+}
+
+export class OrgaNeedDetailsDto implements OrgaNeedDetails {
   @ApiProperty({
     name: "start",
     description: "The start of the interval",
@@ -36,4 +47,12 @@ export class OrgaNeedsResponseDto implements OrgaNeedsResponse {
     type: Number,
   })
   requestedVolunteers: number;
+
+  @ApiProperty({
+    name: "tasks",
+    description: "The tasks with volunteers on the interval",
+    type: OrgaNeedTaskDto,
+    isArray: true,
+  })
+  tasks: OrgaNeedTask[];
 }
