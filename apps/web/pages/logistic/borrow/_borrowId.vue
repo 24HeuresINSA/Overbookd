@@ -78,7 +78,7 @@ type BorrowDetailsData = {
 };
 
 export default defineComponent({
-  name: "BorrowSheetDetails",
+  name: "BorrowFormDetails",
   components: { DateTimeField, InquiryFormFields, SnackNotificationContainer },
   data: (): BorrowDetailsData => ({
     gear: null,

@@ -1,5 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="purchases" class="purchase-list">
+  <v-data-table
+    :headers="headers"
+    :items="purchases"
+    class="purchase-list"
+    @click:row="openPurchase"
+    @auxclick:row="openPurchaseInNewTab"
+  >
+    <template #item.availableOn="{ item }">
+      {{ formatDateToHumanReadable(item.availableOn) }}
+    </template>
+    <template #item.remove="{ item }">
+      <v-btn icon @click.stop="removePurchase(item)">
+        <v-icon>mdi-trash-can</v-icon>
+      </v-btn>
+    </template>
     <template #no-data> Aucune fiche achat </template>
   </v-data-table>
 </template>
@@ -7,6 +21,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Header } from "~/utils/models/data-table.model";
+import { formatDateToHumanReadable } from "~/utils/date/date.utils";
+import { Purchase } from "@overbookd/logistic";
 
 type PurchaseTableData = {
   headers: Header[];
@@ -22,8 +38,29 @@ export default defineComponent({
     ],
   }),
   computed: {
-    purchases() {
-      return [];
+    purchases(): Purchase[] {
+      return this.$accessor.purchase.all;
+    },
+  },
+  async mounted() {
+    await this.$accessor.purchase.fetchAll();
+  },
+  methods: {
+    formatDateToHumanReadable,
+    openPurchase(purchase: Purchase, _: unknown, event: PointerEvent) {
+      if (event.ctrlKey) {
+        return this.openPurchaseInNewTab(event, { item: purchase });
+      }
+      this.$router.push({ path: `/logistic/purchase/${purchase.id}` });
+    },
+    openPurchaseInNewTab(event: PointerEvent, { item }: { item: Purchase }) {
+      const purchaseRoute = this.$router.resolve({
+        path: `/logistic/purchase/${item.id}`,
+      });
+      window.open(purchaseRoute.href, "_blank");
+    },
+    removePurchase(purchase: Purchase) {
+      this.$emit("remove:purchase", purchase.id);
     },
   },
 });

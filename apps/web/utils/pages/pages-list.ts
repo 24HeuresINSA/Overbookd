@@ -23,6 +23,7 @@ import {
   SHOTGUN_SHARED_MEAL,
   VIEW_GEAR_DASHBOARD,
   PURCHASE_GEARS,
+  BORROW_GEARS,
 } from "@overbookd/permission";
 
 export type Page = {
@@ -310,7 +311,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-store-clock",
     title: "Fiches Emprunts",
-    permission: PURCHASE_GEARS,
+    permission: BORROW_GEARS,
     to: "/logistic/borrow",
     description: "Permet de gérer les emprunts de matériel",
     mobileSupport: false,
