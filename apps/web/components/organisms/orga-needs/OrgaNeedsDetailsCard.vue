@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="details-card__title">
-      <h2>FT avec des bénévoles demandés</h2>
+      <h2>FT avec des bénévoles demandés {{ formattedTeams }}</h2>
     </v-card-title>
 
     <v-card-subtitle class="details-card__subtitle">
@@ -49,11 +49,26 @@ export default defineComponent({
       type: Object as () => OrgaNeedDetails,
       required: true,
     },
+    filterTeams: {
+      type: Array as () => string[],
+      required: true,
+    },
   },
   emits: ["close-dialog"],
+  computed: {
+    formattedTeams(): string {
+      if (this.filterTeams.length === 0) return "";
+      return this.filterTeams
+        .map((team) => `(${this.findTeamName(team)})`)
+        .join(", ");
+    },
+  },
   methods: {
     closeDialog() {
       this.$emit("close-dialog");
+    },
+    findTeamName(code: string): string {
+      return this.$accessor.team.getTeamByCode(code)?.name || "";
     },
     formatDateToHumanReadable,
   },

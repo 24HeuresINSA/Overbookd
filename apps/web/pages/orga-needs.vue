@@ -29,6 +29,7 @@
       <OrgaNeedsDetailsCard
         v-if="selectedDetails"
         :orga-needs-details="selectedDetails"
+        :filter-teams="teams"
         @close-dialog="closeDialog"
       />
     </v-dialog>

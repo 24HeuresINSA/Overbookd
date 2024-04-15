@@ -65,7 +65,7 @@ export class OrgaNeedsService {
         this.getAssignments(periodAndTeams),
         this.getAvailabilities(periodAndTeams),
         this.getRequestedVolunteers(periodAndTeams),
-        this.getTasksAt(periodAndTeams),
+        this.getTasksAt(periodAndTeams, intervals),
       ]);
 
     return intervals.map((interval) =>
@@ -352,10 +352,10 @@ export class OrgaNeedsService {
     ]);
   }
 
-  private async getTasksAt({
-    teams,
-    ...period
-  }: OrgaNeedRequest): Promise<OrgaNeedTaskWithPeriod[]> {
+  private async getTasksAt(
+    { teams, ...period }: OrgaNeedRequest,
+    intervals: Period[],
+  ): Promise<OrgaNeedTaskWithPeriod[]> {
     const isValidMobilization = {
       AND: [
         this.periodIncludedCondition(period),
@@ -387,8 +387,7 @@ export class OrgaNeedsService {
       },
     });
 
-    const splittedPeriods = this.buildOrgaNeedsIntervals(period);
-    return splittedPeriods.flatMap((period) =>
+    return intervals.flatMap((period) =>
       this.retrieveTasksOnPeriod(tasks, period),
     );
   }
