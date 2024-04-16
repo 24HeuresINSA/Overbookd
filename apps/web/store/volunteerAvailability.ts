@@ -5,8 +5,8 @@ import {
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriods } from "~/utils/models/period.model";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
+import { castPeriodsWithDate } from "~/utils/http/period";
 
 const repo = VolunteerAvailabilityRepository;
 
@@ -70,7 +70,7 @@ export const actions = actionTree(
         repo.getVolunteerAvailabilities(this, userId),
       );
       if (!res) return;
-      commit("INIT_AVAILABILITIES", castPeriods(res.data));
+      commit("INIT_AVAILABILITIES", castPeriodsWithDate(res.data));
     },
 
     async updateVolunteerAvailabilities(
@@ -90,7 +90,7 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("INIT_AVAILABILITIES", castPeriods(res.data));
+      commit("INIT_AVAILABILITIES", castPeriodsWithDate(res.data));
 
       dispatch("user/fetchMyInformation", null, { root: true });
     },
@@ -108,7 +108,7 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("INIT_AVAILABILITIES", castPeriods(res.data));
+      commit("INIT_AVAILABILITIES", castPeriodsWithDate(res.data));
     },
 
     selectAvailability({ commit }, selected: AvailabilitySelection) {

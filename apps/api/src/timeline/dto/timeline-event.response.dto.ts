@@ -1,126 +1,99 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  TimelineActivity,
+  TimelineMobilization,
+  TimelineTask,
   TimelineEvent,
-  TimelineFa,
-  TimelineFt,
-  TimelineTimeSpan,
-  TimelineTimeWindow,
-} from "../timeline.model";
+} from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
 
-class TimelineFaDto implements TimelineFa {
+class TimelineActivityDto implements TimelineActivity {
   @ApiProperty({
     required: true,
-    description: "The id of the FA",
+    description: "The id of the activity",
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: "The name of the FA",
+    description: "The name of the activity",
     type: String,
   })
   name: string;
 
   @ApiProperty({
     required: true,
-    description: "The team code in charge of the FA",
+    description: "The team code in charge of the activity",
     type: String,
   })
   team: string;
 }
 
-class TimelineTimeSpanDto implements TimelineTimeSpan {
-  @ApiProperty({
-    required: true,
-    description: "The start date of the time span",
-    type: Date,
-  })
+class PeriodDto implements IProvidePeriod {
+  @ApiProperty({ type: Date })
   start: Date;
 
-  @ApiProperty({
-    required: true,
-    description: "The end date of the time span",
-    type: Date,
-  })
+  @ApiProperty({ type: Date })
   end: Date;
-
-  @ApiProperty({
-    required: true,
-    description: "The id of the time span",
-    type: Number,
-  })
-  id: number;
 }
 
-class TimelineTimeWindowDto implements TimelineTimeWindow {
+class TimelineMobilizationDto
+  extends PeriodDto
+  implements TimelineMobilization
+{
   @ApiProperty({
-    required: true,
-    description: "The start date of the Timewindow",
-    type: Date,
-  })
-  start: Date;
-
-  @ApiProperty({
-    required: true,
-    description: "The end date of the Timewindow",
-    type: Date,
-  })
-  end: Date;
-
-  @ApiProperty({
-    required: true,
-    description: "The time spans of the TimeWindow",
-    type: TimelineTimeSpanDto,
+    description: "The assignment periods of the mobilization",
+    type: PeriodDto,
     isArray: true,
   })
-  timeSpans: TimelineTimeSpan[];
+  assignments: PeriodDto[];
 }
 
-class TimelineFtDto implements TimelineFt {
+class TimelineTaskDto implements TimelineTask {
   @ApiProperty({
     required: true,
-    description: "The id of the FT",
+    description: "The id of the task",
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: "The name of the FT",
+    description: "The name of the task",
     type: String,
   })
   name: string;
 
   @ApiProperty({
     required: true,
-    description: "The timewindows of the FT",
-    type: TimelineTimeWindowDto,
+    description: "The mobilizations of the task",
+    type: TimelineMobilizationDto,
     isArray: true,
   })
-  timeWindows: TimelineTimeWindow[];
+  mobilizations: TimelineMobilization[];
 
   @ApiProperty({
     required: true,
-    description: "Indicate priority FT",
+    description: "Indicate priority of the task",
     type: Boolean,
   })
-  hasPriority: boolean;
+  topPriority: boolean;
 }
 
 export class TimelineEventResponseDto implements TimelineEvent {
   @ApiProperty({
     required: true,
     description: "The FA of the timeline",
-    type: TimelineFaDto,
+    type: TimelineActivityDto,
   })
-  fa: TimelineFaDto;
+  activity: TimelineActivityDto;
 
   @ApiProperty({
     required: true,
     description: "The FTs of the timeline",
-    type: TimelineFtDto,
+    type: TimelineTaskDto,
     isArray: true,
   })
-  fts: TimelineFtDto[];
+  tasks: TimelineTaskDto[];
 }

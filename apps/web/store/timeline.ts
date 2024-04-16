@@ -3,19 +3,19 @@ import {
   IProvidePeriod,
   TWO_HOURS_IN_MS,
   QUARTER_IN_MS,
+  Period,
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
 import {
+  HttpStringified,
   TimelineEvent,
-  TimelineFt,
-  TimelineTimeSpan,
-  TimelineTimeWindow,
-} from "~/utils/models/timeline.model";
-import { HttpStringified } from "@overbookd/http";
+  TimelineMobilization,
+  TimelineTask,
+} from "@overbookd/http";
 import { TimelineRepository } from "~/repositories/timeline.repository";
+import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
 
 type WithName = {
   name: string;
@@ -51,20 +51,20 @@ export const state = (): TimelineState => ({
 });
 
 export const getters = getterTree(state, {
-  period(state): IProvidePeriod {
-    return { start: state.start, end: state.end };
+  period({ start, end }): Period {
+    return Period.init({ start, end });
   },
   filteredEvents(state): TimelineEvent[] {
-    const fasMatchingTeams = filterFasMatchingTeams(state);
-    const fasMatchingSearch = fasMatchingTeams.filter(({ fa }) =>
-      isMatchingSearchedName(fa, state.search),
+    const activitiesMatchingTeams = filterActivitiesMatchingTeams(state);
+    const activitiesMatchingSearch = activitiesMatchingTeams.filter(
+      ({ activity }) => isMatchingSearchedName(activity, state.search),
     );
-    const ftsMatchingSearch = filterFasWithTasksMatchingSearch(
-      fasMatchingTeams,
+    const tasksMatchingSearch = filterActivitiesWithTasksMatchingSearch(
+      activitiesMatchingTeams,
       state.search,
     );
-    return [...fasMatchingSearch, ...ftsMatchingSearch].sort(
-      (a, b) => a.fa.id - b.fa.id,
+    return [...activitiesMatchingSearch, ...tasksMatchingSearch].sort(
+      (a, b) => a.activity.id - b.activity.id,
     );
   },
 });
@@ -117,29 +117,29 @@ export const actions = actionTree(
   },
 );
 
-function filterFasMatchingTeams({ teams, events }: TimelineState) {
+function filterActivitiesMatchingTeams({ teams, events }: TimelineState) {
   const teamsCode = teams.map(({ code }) => code);
-  const faMatchingTeams =
+  const activityMatchingTeams =
     teamsCode.length === 0
       ? [...events]
-      : events.filter(({ fa }) => teamsCode.includes(fa.team));
-  return faMatchingTeams;
+      : events.filter(({ activity }) => teamsCode.includes(activity.team));
+  return activityMatchingTeams;
 }
 
-function filterFasWithTasksMatchingSearch(
-  fas: TimelineEvent[],
+function filterActivitiesWithTasksMatchingSearch(
+  activities: TimelineEvent[],
   search: string,
 ) {
-  const faNotMatchingSearch = fas.filter(({ fa }) => {
-    return !isMatchingSearchedName(fa, search);
+  const activityNotMatchingSearch = activities.filter(({ activity }) => {
+    return !isMatchingSearchedName(activity, search);
   });
-  return faNotMatchingSearch
-    .filter(({ fts }) => {
-      return fts.some((ft) => isMatchingSearchedName(ft, search));
+  return activityNotMatchingSearch
+    .filter(({ tasks }) => {
+      return tasks.some((task) => isMatchingSearchedName(task, search));
     })
     .map((event) => ({
       ...event,
-      fts: event.fts.filter((ft) => isMatchingSearchedName(ft, search)),
+      tasks: event.tasks.filter((task) => isMatchingSearchedName(task, search)),
     }));
 }
 
@@ -160,32 +160,25 @@ function castTimelineEventWithDate(
 ): TimelineEvent {
   return {
     ...event,
-    fts: event.fts.map(castTimelineFtWithDate),
+    tasks: event.tasks.map(castTimelineTaskWithDate),
   };
 }
 
-function castTimelineFtWithDate(ft: HttpStringified<TimelineFt>): TimelineFt {
+function castTimelineTaskWithDate(
+  task: HttpStringified<TimelineTask>,
+): TimelineTask {
   return {
-    ...ft,
-    timeWindows: ft.timeWindows.map(castTimelineTimeWindowWithDate),
+    ...task,
+    mobilizations: task.mobilizations.map(castTimelineMobilizationWithDate),
   };
 }
 
-function castTimelineTimeWindowWithDate(
-  timeWindow: HttpStringified<TimelineTimeWindow>,
-): TimelineTimeWindow {
+function castTimelineMobilizationWithDate(
+  mobilization: HttpStringified<TimelineMobilization>,
+): TimelineMobilization {
   return {
-    ...timeWindow,
-    ...castPeriod(timeWindow),
-    timeSpans: timeWindow.timeSpans.map(castTimelineTimeSpanWithDate),
-  };
-}
-
-function castTimelineTimeSpanWithDate(
-  timeSpan: HttpStringified<TimelineTimeSpan>,
-): TimelineTimeSpan {
-  return {
-    ...timeSpan,
-    ...castPeriod(timeSpan),
+    ...mobilization,
+    ...castPeriodWithDate(mobilization),
+    assignments: castPeriodsWithDate(mobilization.assignments),
   };
 }

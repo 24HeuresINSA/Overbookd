@@ -7,12 +7,12 @@ import {
 import { SlugifyService } from "@overbookd/slugify";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/need-help.model";
-import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
 import { castVolunteerTaskWithDate } from "~/utils/models/user.model";
 import { UserName } from "@overbookd/user";
 import { HttpStringified } from "@overbookd/http";
 import { NeedHelpRepository } from "~/repositories/need-help.repository";
+import { castPeriodsWithDate } from "~/utils/http/period";
 
 type NeedHelpState = {
   volunteers: Volunteer[];
@@ -122,7 +122,7 @@ function castVolunteerWithDate(
 ): Volunteer {
   return {
     ...volunteer,
-    availabilities: volunteer.availabilities.map(castPeriod),
+    availabilities: castPeriodsWithDate(volunteer.availabilities),
     tasks: castVolunteerTaskWithDate(volunteer.tasks),
   };
 }

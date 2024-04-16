@@ -19,7 +19,6 @@ import {
   TimeSpanWithAssignees,
   castAvailableTimeSpansWithDate,
 } from "~/utils/models/ft-time-span.model";
-import { castPeriods } from "~/utils/models/period.model";
 import {
   VolunteerAssignmentStat,
   VolunteerTask,
@@ -30,6 +29,7 @@ import { User } from "@overbookd/user";
 import { AssignmentRepository } from "~/repositories/assignment/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
+import { castPeriodsWithDate } from "~/utils/http/period";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -364,7 +364,7 @@ export const actions = actionTree(
         (res) => res?.data ?? [],
       );
       commit("SET_CANDIDATES_FRIENDS", candidateFriends);
-      const availabilities = castPeriods(availabilitiesRes?.data ?? []);
+      const availabilities = castPeriodsWithDate(availabilitiesRes?.data ?? []);
       commit("SET_CANDIDATE_AVAILABILITIES", {
         availabilities,
         id: volunteerId,

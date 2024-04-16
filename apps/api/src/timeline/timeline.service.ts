@@ -1,37 +1,33 @@
 import { Injectable } from "@nestjs/common";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
-import { TimelineEvent, TimelineFt } from "./timeline.model";
+import { TimelineEvent } from "@overbookd/http";
 
-type DatabaseFT = {
+type DatabaseMobilization = IProvidePeriod & {
+  assignments: IProvidePeriod[];
+};
+
+type DatabaseTask = {
   id: number;
   name: string;
-  timeWindows: DatabaseTimeWindow[];
-  hasPriority?: boolean;
-};
-
-type DatabaseTimeSpan = IProvidePeriod & {
-  id: number;
-};
-
-type DatabaseTimeWindow = IProvidePeriod & {
-  timeSpans: DatabaseTimeSpan[];
+  mobilizations: DatabaseMobilization[];
+  topPriority: boolean;
 };
 
 type DatabaseTimeline = {
   id: number;
   name: string;
-  team: { code: string };
-  fts: DatabaseFT[];
+  teamCode: string;
+  festivalTasks: DatabaseTask[];
 };
 
 @Injectable()
 export class TimelineService {
   constructor(private prisma: PrismaService) {}
 
-  async getTimelines(start: Date, end: Date): Promise<TimelineEvent[]> {
-    const where = this.buildTimelineCondition(start, end);
-    const select = this.buildTimelineSelection(start, end);
+  async getTimelines(period: IProvidePeriod): Promise<TimelineEvent[]> {
+    const where = this.buildTimelineCondition(period);
+    const select = this.buildTimelineSelection(period);
 
     const timelines = await this.prisma.festivalActivity.findMany({
       where,
@@ -40,56 +36,51 @@ export class TimelineService {
     return formatTimelines(timelines);
   }
 
-  private buildTimelineSelection(start: Date, end: Date) {
-    const ftsSelection = this.buildFtsSelection(start, end);
-    const ftsCondition = this.buildFtsCondition(start, end);
+  private buildTimelineSelection(period: IProvidePeriod) {
+    const ftsSelection = this.buildTasksSelection(period);
+    const ftsCondition = this.buildTasksCondition(period);
 
     return {
       id: true,
       name: true,
-      team: {
-        select: { code: true },
-      },
-      fts: {
+      teamCode: true,
+      festivalTasks: {
         select: ftsSelection,
         where: ftsCondition,
       },
     };
   }
 
-  private buildTimelineCondition(start: Date, end: Date) {
-    const ftsCondition = this.buildFtsCondition(start, end);
-    return { fts: { some: ftsCondition } };
+  private buildTimelineCondition(period: IProvidePeriod) {
+    const tasksCondition = this.buildTasksCondition(period);
+    return { festivalTasks: { some: tasksCondition } };
   }
 
-  private buildFtsSelection(start: Date, end: Date) {
-    const timeWindowSelection = this.buildTimeWindowsWithTimeSpansSelection(
-      start,
-      end,
-    );
+  private buildTasksSelection(period: IProvidePeriod) {
+    const mobilizationSelection =
+      this.buildMobilizationsWithAssignmentsSelection(period);
 
     return {
       id: true,
       name: true,
-      hasPriority: true,
-      ...timeWindowSelection,
+      topPriority: true,
+      ...mobilizationSelection,
     };
   }
 
-  private buildTimeWindowsWithTimeSpansSelection(start: Date, end: Date) {
-    const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
+  private buildMobilizationsWithAssignmentsSelection(period: IProvidePeriod) {
+    const overlapPeriodCondition = this.buildOverlapPeriodCondition(period);
     return {
-      timeWindows: {
+      mobilizations: {
         where: overlapPeriodCondition,
         select: {
           start: true,
           end: true,
-          timeSpans: {
+          assignments: {
             where: overlapPeriodCondition,
             select: {
               start: true,
               end: true,
-              id: true,
             },
           },
         },
@@ -97,18 +88,18 @@ export class TimelineService {
     };
   }
 
-  private buildFtsCondition(start: Date, end: Date) {
-    const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
+  private buildTasksCondition(period: IProvidePeriod) {
+    const overlapPeriodCondition = this.buildOverlapPeriodCondition(period);
     return {
-      timeWindows: {
+      mobilizations: {
         some: {
-          timeSpans: { some: overlapPeriodCondition },
+          assignments: { some: overlapPeriodCondition },
         },
       },
     };
   }
 
-  private buildOverlapPeriodCondition(start: Date, end: Date) {
+  private buildOverlapPeriodCondition({ start, end }: IProvidePeriod) {
     return { start: { lt: end }, end: { gt: start } };
   }
 }
@@ -118,22 +109,12 @@ function formatTimelines(timelines: DatabaseTimeline[]): TimelineEvent[] {
 }
 
 function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
-  const fts = formatFts(timeline.fts);
   return {
-    fa: {
+    activity: {
       id: timeline.id,
       name: timeline.name,
-      team: timeline.team.code,
+      team: timeline.teamCode,
     },
-    fts,
+    tasks: timeline.festivalTasks,
   };
-}
-
-function formatFts(fts: DatabaseFT[]): TimelineFt[] {
-  return fts.map((ft) => ({
-    id: ft.id,
-    name: ft.name,
-    hasPriority: ft.hasPriority ?? false,
-    timeWindows: ft.timeWindows,
-  }));
 }

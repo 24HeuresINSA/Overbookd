@@ -15,9 +15,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { IProvidePeriod } from "@overbookd/period";
+import { Period } from "@overbookd/period";
 import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/date.utils";
-import { getPeriodDuration } from "~/utils/models/period.model";
 
 const NB_MARKERS = 9;
 
@@ -30,11 +29,11 @@ export default Vue.extend({
     endHour(): string {
       return formatDateWithHoursAndMinutesOnly(this.$accessor.timeline.end);
     },
-    period(): IProvidePeriod {
+    period(): Period {
       return this.$accessor.timeline.period;
     },
     markers(): string[] {
-      const periodDuration = getPeriodDuration(this.period);
+      const periodDuration = this.period.duration.inMilliseconds;
       const stepDuration = periodDuration / (NB_MARKERS - 1);
       return new Array(NB_MARKERS).fill(null).map((_, index) => {
         const startInMs = this.$accessor.timeline.start.getTime();

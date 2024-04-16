@@ -1,9 +1,15 @@
 <template>
   <div class="timeline-events">
-    <div v-for="event in events" :key="event.fa.id" class="timeline-event">
-      <h2>{{ event.fa.name }} <TeamChip :team="event.fa.team" /></h2>
+    <div
+      v-for="event in events"
+      :key="event.activity.id"
+      class="timeline-event"
+    >
+      <h2>
+        {{ event.activity.name }} <TeamChip :team="event.activity.team" />
+      </h2>
       <div
-        v-for="task in event.fts"
+        v-for="task in event.tasks"
         :key="task.id"
         class="timeline-event__task"
         :style="{
@@ -13,33 +19,33 @@
       >
         <h3 @click="openFtInNewTab(task.id)">
           {{ task.name }}
-          <v-icon v-show="task.hasPriority" color="orange">
+          <v-icon v-show="task.topPriority" color="orange">
             mdi-alert-circle
           </v-icon>
         </h3>
         <div
-          v-for="(timeWindow, index) in task.timeWindows"
+          v-for="(mobilization, index) in task.mobilizations"
           :key="index"
-          class="timewindow"
+          class="mobilization"
           :style="{
-            width: computeTimeWindowWidth(task, timeWindow),
-            marginLeft: computeTimeWindowLeftMargin(task, timeWindow),
+            width: computeMobilizationWidth(task, mobilization),
+            marginLeft: computeMobilizationLeftMargin(task, mobilization),
           }"
         >
           <div
-            v-for="timeSpan in timeWindow.timeSpans"
-            :key="timeSpan.id"
-            class="timespan"
+            v-for="assignment in mobilization.assignments"
+            :key="`${index}-${assignment.start.getTime()}-${assignment.end.getTime()}`"
+            class="assignment"
             :style="{
-              width: computeTimeSpanWidth(timeWindow, timeSpan),
+              width: computeAssignmentWidth(mobilization, assignment),
             }"
-            @click="openTimeSpanDetailsDialog(timeSpan.id)"
+            @click="openAssignmentDetailsDialog()"
           ></div>
         </div>
       </div>
     </div>
-    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
-      <FtTimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+      <FtTimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -49,20 +55,19 @@ import Vue from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FtTimeSpanDetails from "~/components/organisms/festival-event/festival-task/FtTimeSpanDetails.vue";
+import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 import {
   TimelineEvent,
-  TimelineFt,
-  TimelineTimeWindow,
-  TimelineTimeSpan,
-} from "~/utils/models/timeline.model";
-import { marginPercent, widthPercent } from "~/utils/timeline/placement";
+  TimelineMobilization,
+  TimelineTask,
+} from "@overbookd/http";
 
 export default Vue.extend({
   name: "TimelineEvents",
   components: { TeamChip, FtTimeSpanDetails },
   data: () => {
     return {
-      displayTimeSpanDetailsDialog: false,
+      displayAssignmentDetailsDialog: false,
     };
   },
   computed: {
@@ -77,12 +82,12 @@ export default Vue.extend({
     this.$accessor.timeline.fetchEvents();
   },
   methods: {
-    buildTaskPeriod(task: TimelineFt): IProvidePeriod {
+    buildTaskPeriod(task: TimelineTask): IProvidePeriod {
       const lowestStartDate = Math.min(
-        ...task.timeWindows.map(({ start }) => start.getTime()),
+        ...task.mobilizations.map(({ start }) => start.getTime()),
       );
       const highestEndDate = Math.max(
-        ...task.timeWindows.map(({ end }) => end.getTime()),
+        ...task.mobilizations.map(({ end }) => end.getTime()),
       );
       return {
         start: new Date(Math.max(lowestStartDate, this.range.start.getTime())),
@@ -90,61 +95,61 @@ export default Vue.extend({
       };
     },
     adjustPeriodToRange(period: IProvidePeriod): IProvidePeriod {
-      const PeriodStart = period.start.getTime();
+      const periodStart = period.start.getTime();
       const rangeStart = this.range.start.getTime();
       const periodEnd = period.end.getTime();
       const rangeEnd = this.range.end.getTime();
 
-      const start = new Date(Math.max(PeriodStart, rangeStart));
+      const start = new Date(Math.max(periodStart, rangeStart));
       const end = new Date(Math.min(periodEnd, rangeEnd));
 
       return { start, end };
     },
-    computeTaskWidth(task: TimelineFt): string {
+    computeTaskWidth(task: TimelineTask): string {
       const taskPeriod = this.buildTaskPeriod(task);
       const width = widthPercent(this.range, taskPeriod);
       return `${width.toFixed(2)}%`;
     },
-    computeTimeWindowWidth(
-      task: TimelineFt,
-      timeWindow: TimelineTimeWindow,
+    computeMobilizationWidth(
+      task: TimelineTask,
+      mobilization: TimelineMobilization,
     ): string {
       const taskPeriod = this.buildTaskPeriod(task);
-      const timeWindowPeriod = this.adjustPeriodToRange(timeWindow);
-      const width = widthPercent(taskPeriod, timeWindowPeriod);
+      const mobilizationPeriod = this.adjustPeriodToRange(mobilization);
+      const width = widthPercent(taskPeriod, mobilizationPeriod);
       return `${width.toFixed(2)}%`;
     },
-    computeTimeSpanWidth(
-      timeWindow: TimelineTimeWindow,
-      timeSpan: TimelineTimeSpan,
+    computeAssignmentWidth(
+      mobilization: TimelineMobilization,
+      assignment: IProvidePeriod,
     ): string {
-      const timeWindowPeriod = this.adjustPeriodToRange(timeWindow);
-      const timeSpanPeriod = this.adjustPeriodToRange(timeSpan);
-      const width = widthPercent(timeWindowPeriod, timeSpanPeriod);
+      const mobilizationPeriod = this.adjustPeriodToRange(mobilization);
+      const assignmentPeriod = this.adjustPeriodToRange(assignment);
+      const width = widthPercent(mobilizationPeriod, assignmentPeriod);
       return `${width.toFixed(2)}%`;
     },
-    computeTaskLeftMargin(task: TimelineFt): string {
+    computeTaskLeftMargin(task: TimelineTask): string {
       const taskPeriod = this.buildTaskPeriod(task);
       const margin = marginPercent(this.range, taskPeriod);
       return `${margin.toFixed(2)}%`;
     },
-    computeTimeWindowLeftMargin(
-      task: TimelineFt,
-      timeWindow: TimelineTimeWindow,
+    computeMobilizationLeftMargin(
+      task: TimelineTask,
+      mobilization: TimelineMobilization,
     ): string {
       const taskPeriod = this.buildTaskPeriod(task);
-      const margin = marginPercent(taskPeriod, timeWindow);
+      const margin = marginPercent(taskPeriod, mobilization);
       return `${margin.toFixed(2)}%`;
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
     },
-    openTimeSpanDetailsDialog(timeSpanId: number) {
-      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
-      this.displayTimeSpanDetailsDialog = true;
+    openAssignmentDetailsDialog() {
+      //this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
+      //this.displayAssignmentDetailsDialog = true;
     },
-    closeTimeSpanDetailsDialog() {
-      this.displayTimeSpanDetailsDialog = false;
+    closeAssignmentDetailsDialog() {
+      this.displayAssignmentDetailsDialog = false;
     },
   },
 });
@@ -159,7 +164,7 @@ export default Vue.extend({
   gap: 10px;
   .timeline-event {
     border-radius: 10px;
-    background-color: $timeline-fa-content-background-color;
+    background-color: $timeline-activity-content-background-color;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -168,7 +173,7 @@ export default Vue.extend({
     h2 {
       text-align: center;
       min-width: 100%;
-      background-color: $timeline-fa-title-background-color;
+      background-color: $timeline-activity-title-background-color;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     }
@@ -186,13 +191,13 @@ export default Vue.extend({
         color: white;
         text-transform: capitalize;
       }
-      .timewindow {
-        --time-window-height: 20px;
+      .mobilization {
+        --mobilization-height: 20px;
         margin-top: 5px;
-        min-height: var(--time-window-height);
+        min-height: var(--mobilization-height);
         cursor: pointer;
-        background-color: $timeline-timewindow-background-color;
-        border-radius: calc(var(--time-window-height) / 2);
+        background-color: $timeline-mobilization-background-color;
+        border-radius: calc(var(--mobilization-height) / 2);
         display: flex;
         &:last-of-type {
           margin-bottom: 10px;
@@ -200,7 +205,7 @@ export default Vue.extend({
         &:first-of-type {
           margin-top: 10px;
         }
-        .timespan {
+        .assignment {
           min-height: 100%;
           border-right-color: black;
           border-right-width: 3px;

@@ -7,9 +7,9 @@ import {
 } from "@overbookd/http";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
-import { castPeriods } from "~/utils/models/period.model";
 import { updateItemToList } from "@overbookd/list";
 import { RegistrationRepository } from "~/repositories/registration.repository";
+import { castPeriodsWithDate } from "~/utils/http/period";
 
 type State = {
   staffs: EnrollableStaff[];
@@ -190,6 +190,6 @@ function castVolunteerWithDate(
     ...volunteer,
     registeredAt: new Date(volunteer.registeredAt),
     birthdate: new Date(volunteer.birthdate),
-    availabilities: castPeriods(volunteer.availabilities),
+    availabilities: castPeriodsWithDate(volunteer.availabilities),
   };
 }
