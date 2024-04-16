@@ -1,5 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TimelineActivity, TimelineMobilization, TimelineTask, TimelineEvent } from "@overbookd/http";
+import {
+  TimelineActivity,
+  TimelineMobilization,
+  TimelineTask,
+  TimelineEvent,
+} from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 
 class TimelineActivityDto implements TimelineActivity {
@@ -33,7 +38,10 @@ class PeriodDto implements IProvidePeriod {
   end: Date;
 }
 
-class TimelineMobilizationDto extends PeriodDto implements TimelineMobilization {
+class TimelineMobilizationDto
+  extends PeriodDto
+  implements TimelineMobilization
+{
   @ApiProperty({
     description: "The assignment periods of the mobilization",
     type: PeriodDto,
