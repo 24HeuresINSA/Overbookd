@@ -1,28 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
-import { TimelineEvent, TimelineFt } from "./timeline.model";
+import { TimelineEvent, TimelineTask } from "@overbookd/http";
 
-type DatabaseFT = {
+type DatabaseMobilization = IProvidePeriod & {
+  assignments: IProvidePeriod[];
+};
+
+type DatabaseTask = {
   id: number;
   name: string;
-  timeWindows: DatabaseTimeWindow[];
-  hasPriority?: boolean;
-};
-
-type DatabaseTimeSpan = IProvidePeriod & {
-  id: number;
-};
-
-type DatabaseTimeWindow = IProvidePeriod & {
-  timeSpans: DatabaseTimeSpan[];
+  mobilizations: DatabaseMobilization[];
+  topPriority: boolean;
 };
 
 type DatabaseTimeline = {
   id: number;
   name: string;
-  team: { code: string };
-  fts: DatabaseFT[];
+  teamCode: string;
+  festivalTasks: DatabaseTask[];
 };
 
 @Injectable()
@@ -41,16 +37,14 @@ export class TimelineService {
   }
 
   private buildTimelineSelection(start: Date, end: Date) {
-    const ftsSelection = this.buildFtsSelection(start, end);
-    const ftsCondition = this.buildFtsCondition(start, end);
+    const ftsSelection = this.buildTasksSelection(start, end);
+    const ftsCondition = this.buildTasksCondition(start, end);
 
     return {
       id: true,
       name: true,
-      team: {
-        select: { code: true },
-      },
-      fts: {
+      teamCode: true,
+      festivalTasks: {
         select: ftsSelection,
         where: ftsCondition,
       },
@@ -58,38 +52,35 @@ export class TimelineService {
   }
 
   private buildTimelineCondition(start: Date, end: Date) {
-    const ftsCondition = this.buildFtsCondition(start, end);
-    return { fts: { some: ftsCondition } };
+    const tasksCondition = this.buildTasksCondition(start, end);
+    return { festivalTasks: { some: tasksCondition } };
   }
 
-  private buildFtsSelection(start: Date, end: Date) {
-    const timeWindowSelection = this.buildTimeWindowsWithTimeSpansSelection(
-      start,
-      end,
-    );
+  private buildTasksSelection(start: Date, end: Date) {
+    const mobilizationSelection =
+      this.buildMobilizationsWithAssignmentsSelection(start, end);
 
     return {
       id: true,
       name: true,
-      hasPriority: true,
-      ...timeWindowSelection,
+      topPriority: true,
+      ...mobilizationSelection,
     };
   }
 
-  private buildTimeWindowsWithTimeSpansSelection(start: Date, end: Date) {
+  private buildMobilizationsWithAssignmentsSelection(start: Date, end: Date) {
     const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
     return {
-      timeWindows: {
+      mobilizations: {
         where: overlapPeriodCondition,
         select: {
           start: true,
           end: true,
-          timeSpans: {
+          assignments: {
             where: overlapPeriodCondition,
             select: {
               start: true,
               end: true,
-              id: true,
             },
           },
         },
@@ -97,12 +88,12 @@ export class TimelineService {
     };
   }
 
-  private buildFtsCondition(start: Date, end: Date) {
+  private buildTasksCondition(start: Date, end: Date) {
     const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
     return {
-      timeWindows: {
+      mobilizations: {
         some: {
-          timeSpans: { some: overlapPeriodCondition },
+          assignments: { some: overlapPeriodCondition },
         },
       },
     };
@@ -118,22 +109,22 @@ function formatTimelines(timelines: DatabaseTimeline[]): TimelineEvent[] {
 }
 
 function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
-  const fts = formatFts(timeline.fts);
+  const tasks = formatTasks(timeline.festivalTasks);
   return {
-    fa: {
+    activity: {
       id: timeline.id,
       name: timeline.name,
-      team: timeline.team.code,
+      team: timeline.teamCode,
     },
-    fts,
+    tasks: tasks,
   };
 }
 
-function formatFts(fts: DatabaseFT[]): TimelineFt[] {
-  return fts.map((ft) => ({
-    id: ft.id,
-    name: ft.name,
-    hasPriority: ft.hasPriority ?? false,
-    timeWindows: ft.timeWindows,
+function formatTasks(tasks: DatabaseTask[]): TimelineTask[] {
+  return tasks.map((task) => ({
+    id: task.id,
+    name: task.name,
+    topPriority: task.topPriority,
+    mobilizations: task.mobilizations,
   }));
 }

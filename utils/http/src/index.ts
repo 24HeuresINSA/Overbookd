@@ -52,3 +52,4 @@ export type {
   OrgaNeedTask,
   OrgaNeedRequest,
 } from "./orga-need";
+export type { TimelineActivity, TimelineEvent, TimelineMobilization, TimelineTask } from "./timeline";

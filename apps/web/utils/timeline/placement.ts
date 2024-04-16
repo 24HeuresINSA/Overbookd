@@ -1,11 +1,10 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { getPeriodDuration } from "../models/period.model";
+import { IProvidePeriod, Period } from "@overbookd/period";
 
 function getIdleBeforePercent(
   container: IProvidePeriod,
   containee: IProvidePeriod,
 ): number {
-  const containerDuration = getPeriodDuration(container);
+  const containerDuration = Period.init(container).duration.inMilliseconds;
   const idleBeforeDuration =
     containee.start.getTime() - container.start.getTime();
   return (idleBeforeDuration / containerDuration) * 100;
@@ -15,8 +14,8 @@ function getDurationPercent(
   container: IProvidePeriod,
   containee: IProvidePeriod,
 ): number {
-  const containerDuration = getPeriodDuration(container);
-  const containeeDuration = getPeriodDuration(containee);
+  const containerDuration = Period.init(container).duration.inMilliseconds;
+  const containeeDuration = Period.init(containee).duration.inMilliseconds;
   return (containeeDuration / containerDuration) * 100;
 }
 
