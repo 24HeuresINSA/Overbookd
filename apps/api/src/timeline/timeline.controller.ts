@@ -55,6 +55,7 @@ export class TimelineController {
     @Query("start") start: Date,
     @Query("end") end: Date,
   ): Promise<TimelineEventResponseDto[]> {
-    return this.timelineService.getTimelines(new Date(start), new Date(end));
+    const period = { start: new Date(start), end: new Date(end) };
+    return this.timelineService.getTimelines(period);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
-import { TimelineEvent, TimelineTask } from "@overbookd/http";
+import { TimelineEvent } from "@overbookd/http";
 
 type DatabaseMobilization = IProvidePeriod & {
   assignments: IProvidePeriod[];
@@ -25,9 +25,9 @@ type DatabaseTimeline = {
 export class TimelineService {
   constructor(private prisma: PrismaService) {}
 
-  async getTimelines(start: Date, end: Date): Promise<TimelineEvent[]> {
-    const where = this.buildTimelineCondition(start, end);
-    const select = this.buildTimelineSelection(start, end);
+  async getTimelines(period: IProvidePeriod): Promise<TimelineEvent[]> {
+    const where = this.buildTimelineCondition(period);
+    const select = this.buildTimelineSelection(period);
 
     const timelines = await this.prisma.festivalActivity.findMany({
       where,
@@ -36,9 +36,9 @@ export class TimelineService {
     return formatTimelines(timelines);
   }
 
-  private buildTimelineSelection(start: Date, end: Date) {
-    const ftsSelection = this.buildTasksSelection(start, end);
-    const ftsCondition = this.buildTasksCondition(start, end);
+  private buildTimelineSelection(period: IProvidePeriod) {
+    const ftsSelection = this.buildTasksSelection(period);
+    const ftsCondition = this.buildTasksCondition(period);
 
     return {
       id: true,
@@ -51,14 +51,14 @@ export class TimelineService {
     };
   }
 
-  private buildTimelineCondition(start: Date, end: Date) {
-    const tasksCondition = this.buildTasksCondition(start, end);
+  private buildTimelineCondition(period: IProvidePeriod) {
+    const tasksCondition = this.buildTasksCondition(period);
     return { festivalTasks: { some: tasksCondition } };
   }
 
-  private buildTasksSelection(start: Date, end: Date) {
+  private buildTasksSelection(period: IProvidePeriod) {
     const mobilizationSelection =
-      this.buildMobilizationsWithAssignmentsSelection(start, end);
+      this.buildMobilizationsWithAssignmentsSelection(period);
 
     return {
       id: true,
@@ -68,8 +68,8 @@ export class TimelineService {
     };
   }
 
-  private buildMobilizationsWithAssignmentsSelection(start: Date, end: Date) {
-    const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
+  private buildMobilizationsWithAssignmentsSelection(period: IProvidePeriod) {
+    const overlapPeriodCondition = this.buildOverlapPeriodCondition(period);
     return {
       mobilizations: {
         where: overlapPeriodCondition,
@@ -88,8 +88,8 @@ export class TimelineService {
     };
   }
 
-  private buildTasksCondition(start: Date, end: Date) {
-    const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
+  private buildTasksCondition(period: IProvidePeriod) {
+    const overlapPeriodCondition = this.buildOverlapPeriodCondition(period);
     return {
       mobilizations: {
         some: {
@@ -99,7 +99,7 @@ export class TimelineService {
     };
   }
 
-  private buildOverlapPeriodCondition(start: Date, end: Date) {
+  private buildOverlapPeriodCondition({ start, end }: IProvidePeriod) {
     return { start: { lt: end }, end: { gt: start } };
   }
 }
@@ -109,22 +109,12 @@ function formatTimelines(timelines: DatabaseTimeline[]): TimelineEvent[] {
 }
 
 function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
-  const tasks = formatTasks(timeline.festivalTasks);
   return {
     activity: {
       id: timeline.id,
       name: timeline.name,
       team: timeline.teamCode,
     },
-    tasks: tasks,
+    tasks: timeline.festivalTasks,
   };
-}
-
-function formatTasks(tasks: DatabaseTask[]): TimelineTask[] {
-  return tasks.map((task) => ({
-    id: task.id,
-    name: task.name,
-    topPriority: task.topPriority,
-    mobilizations: task.mobilizations,
-  }));
 }
