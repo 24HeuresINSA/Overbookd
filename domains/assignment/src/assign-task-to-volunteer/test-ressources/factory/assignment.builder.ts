@@ -8,15 +8,19 @@ export class AssignmentBuilder {
     readonly summary: AssignmentSummaryFactory,
   ) {}
 
-  static init(period: Period): AssignmentBuilder {
+  static init(period: Period, mobilizationId: string): AssignmentBuilder {
     const assignment = {
       id: period.id,
       start: period.start,
       end: period.end,
+      mobilizationId,
       requestedTeams: [],
       assignees: [],
     };
-    const summary = AssignmentSummaryFactory.init(Period.init(period));
+    const summary = AssignmentSummaryFactory.init(
+      Period.init(period),
+      mobilizationId,
+    );
     return new AssignmentBuilder(assignment, summary);
   }
 

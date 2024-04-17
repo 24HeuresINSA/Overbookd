@@ -89,6 +89,7 @@ describe("Assign task to volunteer", () => {
           volunteers = await assign.selectAssignment(
             task.value.id,
             assignment?.summary.assignment.id ?? "",
+            assignment?.summary.assignment.mobilizationId ?? "",
           );
         });
 

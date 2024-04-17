@@ -1,13 +1,13 @@
-import { IProvidePeriod } from "@overbookd/period";
 import { AssignableVolunteers } from "../assign-task-to-volunteer";
 import { StoredAssignableVolunteer } from "../assignable-volunteer";
 import { Category } from "@overbookd/festival-event-constants";
+import { AssignmentIdentifier } from "../assignment";
 
 export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}
 
   on(
-    period: IProvidePeriod,
+    assignment: AssignmentIdentifier,
     oneOfTheTeams: string[],
     category?: Category,
   ): Promise<StoredAssignableVolunteer[]> {

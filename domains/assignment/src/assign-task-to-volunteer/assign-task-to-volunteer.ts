@@ -1,11 +1,15 @@
 import { Period } from "@overbookd/period";
-import { IProvidePeriod } from "@overbookd/period";
 import { FormatVolunteer } from "../volunteer";
 import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
 } from "./assignable-volunteer";
-import { AssignmentSummary, Assignment, Assignee } from "./assignment";
+import {
+  AssignmentSummary,
+  Assignment,
+  Assignee,
+  AssignmentIdentifier,
+} from "./assignment";
 import {
   Task,
   TaskIdentifier,
@@ -21,7 +25,7 @@ export type Tasks = {
 
 export type AssignableVolunteers = {
   on(
-    period: IProvidePeriod,
+    assignment: AssignmentIdentifier,
     oneOfTheTeams: string[],
     category?: Category,
   ): Promise<StoredAssignableVolunteer[]>;
@@ -56,12 +60,11 @@ export class AssignTaskToVolunteer {
   async selectAssignment(
     taskId: TaskIdentifier["id"],
     assignmentId: AssignmentSummary["id"],
+    mobilizationId: AssignmentSummary["mobilizationId"],
   ): Promise<AssignableVolunteer[]> {
     const task = await this.allTasks.findOne(taskId);
 
-    const assignment = task.assignments.find(
-      (assignment) => assignment.id === assignmentId,
-    );
+    const assignment = this.findAssignment(task, assignmentId, mobilizationId);
     if (!assignment) throw new Error("Assignment not found");
 
     const volunteers = await this.assignableVolunteers.on(
@@ -118,6 +121,7 @@ export class AssignTaskToVolunteer {
         start: period.start,
         end: period.end,
         id: period.id,
+        mobilizationId: assignment.mobilizationId,
         teams: assignment.requestedTeams.map((team) => ({
           code: team.code,
           demands: team.demands,
@@ -135,6 +139,18 @@ export class AssignTaskToVolunteer {
 
   private countAssigneesInTeam(team: string, assignees: Assignee[]): number {
     return assignees.filter((assignee) => assignee.as === team).length;
+  }
+
+  private findAssignment(
+    task: Task,
+    assignmentId: AssignmentSummary["id"],
+    mobilizationId: AssignmentSummary["mobilizationId"],
+  ): Assignment | undefined {
+    return task.assignments.find(
+      (assignment) =>
+        assignment.id === assignmentId &&
+        assignment.mobilizationId === mobilizationId,
+    );
   }
 }
 

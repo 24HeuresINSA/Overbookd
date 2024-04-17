@@ -8,11 +8,12 @@ export class AssignmentSummaryFactory {
     readonly assignableVolunteers: AssignableVolunteer[],
   ) {}
 
-  static init(period: Period) {
+  static init(period: Period, mobilizationId: string) {
     const assignment = {
       start: period.start,
       end: period.end,
       id: period.id,
+      mobilizationId,
       teams: [],
     };
     return new AssignmentSummaryFactory(assignment, []);
