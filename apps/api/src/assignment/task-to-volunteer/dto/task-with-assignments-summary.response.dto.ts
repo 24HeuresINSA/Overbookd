@@ -27,6 +27,9 @@ class AssignmentSummaryDto implements AssignmentSummary {
   @ApiProperty({ type: Date })
   end: AssignmentSummary["end"];
 
+  @ApiProperty({ type: String })
+  mobilizationId: AssignmentSummary["mobilizationId"];
+
   @ApiProperty({ type: AssignmentTeamDto, isArray: true })
   teams: AssignmentTeam[];
 }
