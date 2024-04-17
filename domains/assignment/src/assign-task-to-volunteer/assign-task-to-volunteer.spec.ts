@@ -85,11 +85,12 @@ describe("Assign task to volunteer", () => {
       ({ task, expectedVolunteers }) => {
         let volunteers: AssignableVolunteer[];
         beforeAll(async () => {
-          const assignment = task.assignments.at(0);
+          const { summary } = task.assignments.at(0);
+          const { id, mobilizationId } = summary.assignment;
           volunteers = await assign.selectAssignment(
             task.value.id,
-            assignment?.summary.assignment.id ?? "",
-            assignment?.summary.assignment.mobilizationId ?? "",
+            id,
+            mobilizationId,
           );
         });
 
