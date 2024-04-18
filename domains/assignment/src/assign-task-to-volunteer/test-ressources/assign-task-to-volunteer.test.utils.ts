@@ -15,6 +15,10 @@ const friday07hto10h = Period.init({
   start: new Date("2024-05-17T07:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
 });
+const friday07hto09h = Period.init({
+  start: new Date("2024-05-17T07:00+02:00"),
+  end: new Date("2024-05-17T10:00+02:00"),
+});
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T09:00+02:00"),
@@ -134,7 +138,7 @@ const missingOneHardAndOneBenevoleAssignmentSummary =
   ]);
 export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init(
   friday08hto09h,
-  friday07hto10h.id,
+  friday07hto09h.id,
 )
   .withAssignees([{ as: "hard" }, { as: "hard" }, { as: "benevole" }])
   .withRequestedTeams([threeHardDemanded.team, twoBenevoleDemanded.team])
