@@ -1,15 +1,15 @@
 import {
   AssignableVolunteers,
   AssignmentSpecification,
-  MobilizationIdentifier,
 } from "../assign-task-to-volunteer";
 import { StoredAssignableVolunteer } from "../assignable-volunteer";
+import { TaskIdentifier } from "../task";
 
 export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}
 
   on(
-    mobilizationIdentifier: MobilizationIdentifier,
+    taskId: TaskIdentifier["id"],
     { oneOfTheTeams, category }: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     return Promise.resolve(

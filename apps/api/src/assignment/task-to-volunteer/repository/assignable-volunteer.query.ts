@@ -1,4 +1,15 @@
 import { Category, READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { IProvidePeriod } from "@overbookd/period";
+import { SELECT_PERIOD } from "../../common/period.query";
+
+type DatabaseFriend = {
+  availabilities: IProvidePeriod[];
+  assigned: {
+    assignment: IProvidePeriod & {
+      festivalTaskId: number;
+    };
+  }[];
+};
 
 export type DatabaseStoredAssignableVolunteer = {
   id: number;
@@ -10,23 +21,11 @@ export type DatabaseStoredAssignableVolunteer = {
   note: string;
   teams: { teamCode: string }[];
   assigned: {
-    assignment: {
-      start: Date;
-      end: Date;
-      festivalTask: { category: Category };
-    };
+    assignment: IProvidePeriod & { festivalTask: { category: Category } };
   }[];
-  festivalTaskMobilizations: {
-    mobilization: {
-      start: Date;
-      end: Date;
-      ft: { status: string };
-    };
-  }[];
-  _count: {
-    friends: number;
-    friendRequestors: number;
-  };
+  festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
+  friends: { requestor: DatabaseFriend }[];
+  friendRequestors: { friend: DatabaseFriend }[];
 };
 
 export const SELECT_VOLUNTEER = {
@@ -49,10 +48,7 @@ export const SELECT_VOLUNTEER_MOBILIZATIONS = {
     },
     select: {
       mobilization: {
-        select: {
-          start: true,
-          end: true,
-        },
+        select: SELECT_PERIOD,
       },
     },
   },

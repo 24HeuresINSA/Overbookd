@@ -18,11 +18,6 @@ export type Tasks = {
   findOne(id: TaskIdentifier["id"]): Promise<Task>;
 };
 
-export type MobilizationIdentifier = {
-  taskId: number;
-  mobilizationId: string;
-};
-
 export type AssignmentSpecification = {
   period: Period;
   oneOfTheTeams: string[];
@@ -31,7 +26,7 @@ export type AssignmentSpecification = {
 
 export type AssignableVolunteers = {
   on(
-    mobilizationIdentifier: MobilizationIdentifier,
+    taskId: TaskIdentifier["id"],
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]>;
 };
@@ -75,17 +70,13 @@ export class AssignTaskToVolunteer {
     );
     if (!assignment) throw new Error("Assignment not found");
 
-    const mobilizationIdentifier = {
-      taskId,
-      mobilizationId: assignmentIdentifier.mobilizationId,
-    };
     const assignmentSpecification = {
       period: Period.init(assignment),
       oneOfTheTeams: this.filterMissingTeamMembers(assignment),
       category: task.category,
     };
     const volunteers = await this.assignableVolunteers.on(
-      mobilizationIdentifier,
+      taskId,
       assignmentSpecification,
     );
 

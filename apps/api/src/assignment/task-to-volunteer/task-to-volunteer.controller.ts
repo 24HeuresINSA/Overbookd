@@ -17,6 +17,7 @@ import {
 import { TaskToVolunteerService } from "./task-to-volunteer.service";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import {
+  AssignableVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
@@ -26,6 +27,7 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { MissingAssignmentTaskResponseDto } from "./dto/missing-assignment-task.response.dto";
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
+import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments/task-to-volunteer")
@@ -60,7 +62,6 @@ export class TaskToVolunteerController {
     status: 200,
     description: "Selected task with assignments summary",
     type: TaskWithAssignmentsSummaryResponseDto,
-    isArray: true,
   })
   @ApiParam({
     name: "id",
@@ -71,5 +72,40 @@ export class TaskToVolunteerController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<TaskWithAssignmentsSummary> {
     return this.taskToVolunteer.selectTask(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
+  @ApiResponse({
+    status: 200,
+    description: "Assignable volunteers for the selected assignment",
+    type: AssignableVolunteerResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "taskId",
+    description: "Task id",
+    type: Number,
+  })
+  @ApiParam({
+    name: "mobilizationId",
+    description: "Mobilization id",
+    type: String,
+  })
+  @ApiParam({
+    name: "assignmentId",
+    description: "Assignment id",
+    type: String,
+  })
+  selectAssignment(
+    @Param("taskId", ParseIntPipe) taskId: number,
+    @Param("mobilizationId") mobilizationId: string,
+    @Param("assignmentId") assignmentId: string,
+  ): Promise<AssignableVolunteer[]> {
+    return this.taskToVolunteer.selectAssignment(taskId, {
+      mobilizationId,
+      assignmentId,
+    });
   }
 }

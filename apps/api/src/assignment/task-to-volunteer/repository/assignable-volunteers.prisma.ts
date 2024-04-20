@@ -1,9 +1,8 @@
 import {
   AssignableVolunteers,
   AssignmentSpecification,
-  MobilizationIdentifier,
+  StoredAssignableVolunteer,
 } from "@overbookd/assignment";
-import { StoredAssignableVolunteer } from "@overbookd/assignment/src/assign-task-to-volunteer/assignable-volunteer";
 import { PrismaService } from "../../../prisma.service";
 import {
   SELECT_VOLUNTEER,
@@ -12,59 +11,57 @@ import {
 } from "./assignable-volunteer.query";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { Category } from "@overbookd/festival-event-constants";
+import {
+  SELECT_PERIOD,
+  includePeriodCondition,
+} from "../../common/period.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
 
   async on(
-    { mobilizationId, taskId }: MobilizationIdentifier,
-    { oneOfTheTeams, period, category }: AssignmentSpecification,
+    taskId: number,
+    assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
+    const { oneOfTheTeams, period, category } = assignmentSpecification;
     const volunteers = await this.prisma.user.findMany({
       where: {
         isDeleted: false,
         charisma: { lt: 0 },
-        ...this.buildAssignableCondition(oneOfTheTeams, period),
+        ...this.buildHasAvailabilityCondition(oneOfTheTeams, period),
+        assigned: { none: { assignment: includePeriodCondition(period) } },
       },
       select: {
         ...SELECT_VOLUNTEER,
         ...this.buildVolunteerAssignmentSelection(category),
         ...SELECT_VOLUNTEER_MOBILIZATIONS,
-        ...this.buildAssignableFriendCount(oneOfTheTeams, period),
+        ...this.buildAssignableFriendSelection(assignmentSpecification),
       },
     });
 
-    return volunteers.map(toStoredAssignableVolunteer);
+    return volunteers.map((volunteer) =>
+      toStoredAssignableVolunteer(volunteer, taskId),
+    );
   }
 
-  private buildAssignableCondition(
+  private buildHasAvailabilityCondition(
     oneOfTheTeams: string[],
     period: IProvidePeriod,
   ) {
     return {
       teams: { some: { teamCode: { in: oneOfTheTeams } } },
-      availabilities: {
-        some: {
-          AND: {
-            start: { lte: period.end },
-            end: { gte: period.start },
-          },
-        },
-      },
+      availabilities: { some: includePeriodCondition(period) },
     };
   }
 
   private buildVolunteerAssignmentSelection(category?: Category) {
     return {
       assigned: {
-        where: {
-          assignment: { festivalTask: { category } },
-        },
+        where: { assignment: { festivalTask: { category } } },
         select: {
           assignment: {
             select: {
-              start: true,
-              end: true,
+              ...SELECT_PERIOD,
               festivalTask: { select: { category: true } },
             },
           },
@@ -73,21 +70,42 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
   }
 
-  private buildAssignableFriendCount(
-    oneOfTheTeams: string[],
-    period: IProvidePeriod,
-  ) {
-    const isAssignable = this.buildAssignableCondition(oneOfTheTeams, period);
+  private buildAssignableFriendSelection({
+    oneOfTheTeams,
+    period,
+  }: AssignmentSpecification) {
+    const hasAvailability = this.buildHasAvailabilityCondition(
+      oneOfTheTeams,
+      period,
+    );
+
+    const selectAssignment = {
+      assignment: { select: { festivalTaskId: true, ...SELECT_PERIOD } },
+    };
+
+    const assignmentDuringPeriod = {
+      assignment: { start: period.start, end: period.end },
+    };
+
+    const friendSelection = {
+      availabilities: {
+        select: SELECT_PERIOD,
+        where: includePeriodCondition(period),
+      },
+      assigned: {
+        select: selectAssignment,
+        where: assignmentDuringPeriod,
+      },
+    };
+
     return {
-      _count: {
-        select: {
-          friends: {
-            where: { friend: isAssignable },
-          },
-          friendRequestors: {
-            where: { friend: isAssignable },
-          },
-        },
+      friends: {
+        where: { requestor: hasAvailability },
+        select: { requestor: { select: friendSelection } },
+      },
+      friendRequestors: {
+        where: { friend: hasAvailability },
+        select: { friend: { select: friendSelection } },
       },
     };
   }
@@ -95,17 +113,31 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 
 function toStoredAssignableVolunteer(
   volunteer: DatabaseStoredAssignableVolunteer,
+  taskId: number,
 ): StoredAssignableVolunteer {
   const assignments = volunteer.assigned.flatMap(({ assignment }) => ({
     start: assignment.start,
     end: assignment.end,
     category: assignment.festivalTask.category,
   }));
+
   const requestedDuring = volunteer.festivalTaskMobilizations.map(
     ({ mobilization }) => Period.init(mobilization),
   );
-  const hasFriendAvailable =
-    volunteer._count.friends > 0 || volunteer._count.friendRequestors > 0;
+
+  const friends = [
+    ...volunteer.friends.map(({ requestor }) => requestor),
+    ...volunteer.friendRequestors.map(({ friend }) => friend),
+  ];
+  const hasFriendAvailable = friends.some(
+    (friend) =>
+      friend.availabilities.length > 0 && friend.assigned.length === 0,
+  );
+  const hasFriendAssigned = friends.some((friend) =>
+    friend.assigned.some(
+      ({ assignment }) => assignment.festivalTaskId === taskId,
+    ),
+  );
 
   return {
     id: volunteer.id,
@@ -119,6 +151,6 @@ function toStoredAssignableVolunteer(
     assignments,
     requestedDuring,
     hasFriendAvailable,
-    hasFriendAssigned: false, // TODO
+    hasFriendAssigned,
   };
 }
