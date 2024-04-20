@@ -33,10 +33,7 @@ export default Vue.extend({
   },
   methods: {
     selectFt(ft: MissingAssignmentTask) {
-      if (!ft) return;
       this.$accessor.assignTaskToVolunteer.selectTask(ft.id);
-      //this.$accessor.assignment.setSelectedFt(ft);
-      //this.$accessor.assignment.setVolunteers([]);
       //this.$accessor.assignment.fetchTimeSpansWithStats(ft.id);
     },
     isSelected(id: number): boolean {

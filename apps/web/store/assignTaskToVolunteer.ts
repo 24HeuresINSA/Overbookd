@@ -1,4 +1,6 @@
 import {
+  AssignableVolunteers,
+  AssignmentIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
@@ -9,12 +11,16 @@ import { safeCall } from "~/utils/api/calls";
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
+  assignableVolunteers: AssignableVolunteers[];
 };
 
 export const state = (): State => ({
   tasks: [],
   selectedTask: null,
+  assignableVolunteers: [],
 });
+
+type ExtendedAssignementIdentifier = AssignmentIdentifier & { taskId: number };
 
 export const mutations = mutationTree(state, {
   SET_TASKS(state, tasks: MissingAssignmentTask[]) {
@@ -22,6 +28,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary) {
     state.selectedTask = task;
+  },
+  SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteers[]) {
+    state.assignableVolunteers = volunteers;
   },
 });
 
@@ -43,6 +52,22 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_SELECTED_TASK", res.data);
+    },
+    async setAssignableVolunteers(
+      { commit },
+      assignmentIdentifier: ExtendedAssignementIdentifier,
+    ) {
+      const res = await safeCall(
+        this,
+        TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+          this,
+          assignmentIdentifier.taskId,
+          assignmentIdentifier.mobilizationId,
+          assignmentIdentifier.assignmentId,
+        ),
+      );
+      if (!res) return;
+      commit("SET_ASSIGNABLE_VOLUNTEERS", res);
     },
   },
 );
