@@ -3,7 +3,7 @@
     <FilterableVolunteerList class="volunteer-list" />
     <TaskOrgaCalendar
       class="calendar"
-      @display-time-span-details="openTimeSpanDetailsDialog"
+      @display-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
@@ -11,8 +11,8 @@
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
       <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
-    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
-      <TimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+      <TimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -25,7 +25,10 @@ import FilterableTaskList from "~/components/organisms/assignment/list/Filterabl
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
-import { MissingAssignmentTask } from "@overbookd/assignment";
+import {
+  AssignmentIdentifier,
+  MissingAssignmentTask,
+} from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "TaskOrga",
@@ -38,7 +41,7 @@ export default Vue.extend({
     SnackNotificationContainer,
   },
   data: () => ({
-    displayTimeSpanDetailsDialog: false,
+    displayAssignmentDetailsDialog: false,
   }),
   head: () => ({
     title: "Affect Tâche-Orga",
@@ -64,12 +67,12 @@ export default Vue.extend({
     closeTaskAssignmentDialog() {
       this.openTaskAssignmentDialog = false;
     },
-    closeTimeSpanDetailsDialog() {
-      this.displayTimeSpanDetailsDialog = false;
+    closeAssignmentDetailsDialog() {
+      this.displayAssignmentDetailsDialog = false;
     },
-    openTimeSpanDetailsDialog(timeSpanId: number) {
-      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
-      this.displayTimeSpanDetailsDialog = true;
+    openAssignmentDetailsDialog(identifier: AssignmentIdentifier) {
+      console.log(identifier);
+      //this.displayAssignmentDetailsDialog = true;
     },
   },
 });

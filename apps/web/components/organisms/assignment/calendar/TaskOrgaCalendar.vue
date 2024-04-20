@@ -5,15 +5,17 @@
     :events="assignments"
     :hour-to-scroll-to="hourToScrollTo"
   >
-    <template #event="{ event: timeSpan }">
+    <template #event="{ event: assignment }">
       <div
         class="event underline-on-hover"
-        :class="{ highlight: timeSpan.id === selectedTimeSpanId }"
-        @click="selectTimeSpan(timeSpan)"
-        @mouseup.middle="openSelectedFtInNewTab()"
-        @contextmenu.prevent="selectTimeSpanToDisplayDetails(timeSpan.id)"
+        :class="{ highlight: isSelectedAssignment(assignment.identifier) }"
+        @click="selectAssignment(assignment)"
+        @mouseup.middle="openSelectedTaskInNewTab"
+        @contextmenu.prevent="
+          selectAssignmentToDisplayDetails(assignment.identifier)
+        "
       >
-        {{ timeSpan.name }}
+        {{ assignment.name }}
       </div>
     </template>
   </OverCalendar>
@@ -22,6 +24,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+  AssignmentIdentifier,
   AssignmentSummary,
   AssignmentTeam,
   TaskWithAssignmentsSummary,
@@ -33,6 +36,7 @@ import { FtTimeSpanEvent } from "~/utils/models/ft-time-span.model";
 export default defineComponent({
   name: "TaskOrgaCalendar",
   components: { OverCalendar },
+  emits: ["display-assignment-details"],
   data: () => ({
     calendarMarker: new Date(),
   }),
@@ -52,11 +56,17 @@ export default defineComponent({
         this.mapAssignmentToEvent(assignment),
       );
     },
-    selectedTimeSpanId(): number | null {
-      return this.$accessor.assignment.selectedTimeSpan?.id ?? null;
+    selectedAssignment(): AssignmentSummary | null {
+      return null;
     },
     hourToScrollTo(): number | undefined {
       return this.assignments.at(0)?.start.getHours();
+    },
+  },
+  watch: {
+    selectedTask(task: TaskWithAssignmentsSummary | null): void {
+      if (!task) return;
+      this.calendarMarker = task.assignments.at(0)?.start ?? this.manifDate;
     },
   },
   async mounted() {
@@ -64,11 +74,21 @@ export default defineComponent({
     this.calendarMarker = this.manifDate;
   },
   methods: {
-    selectTimeSpan(timeSpan: FtTimeSpanEvent) {
+    isSelectedAssignment({
+      mobilizationId,
+      assignmentId,
+    }: AssignmentIdentifier): boolean {
+      if (!this.selectedAssignment) return false;
+      return (
+        this.selectedAssignment.identifier.mobilizationId === mobilizationId &&
+        this.selectedAssignment.identifier.assignmentId === assignmentId
+      );
+    },
+    selectAssignment(timeSpan: FtTimeSpanEvent) {
       this.$accessor.assignment.setSelectedTimeSpan(timeSpan);
     },
-    selectTimeSpanToDisplayDetails(timeSpanId: number) {
-      this.$emit("display-time-span-details", timeSpanId);
+    selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
+      this.$emit("display-assignment-details", identifier);
     },
     mapAssignmentToEvent(assignment: AssignmentSummary): CalendarEvent[] {
       return assignment.teams.map((team) => ({
@@ -93,7 +113,7 @@ export default defineComponent({
       const hex = decimal.toString(16);
       return hex.length === 1 ? "0" + hex : hex;
     },
-    openSelectedFtInNewTab() {
+    openSelectedTaskInNewTab() {
       if (this.selectedTask === null) return;
       window.open(`/ft/${this.selectedTask.id}`);
     },
