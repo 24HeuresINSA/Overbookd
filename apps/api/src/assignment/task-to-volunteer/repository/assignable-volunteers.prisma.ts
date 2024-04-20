@@ -6,13 +6,13 @@ import {
 import { PrismaService } from "../../../prisma.service";
 import {
   SELECT_VOLUNTEER,
-  SELECT_VOLUNTEER_MOBILIZATIONS,
   DatabaseStoredAssignableVolunteer,
 } from "./assignable-volunteer.query";
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { Category } from "@overbookd/festival-event-constants";
+import { Category, READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import {
   SELECT_PERIOD,
+  overlapPeriodCondition,
   includePeriodCondition,
 } from "../../common/period.query";
 
@@ -24,17 +24,19 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
+    const includePeriod = overlapPeriodCondition(period);
+
     const volunteers = await this.prisma.user.findMany({
       where: {
         isDeleted: false,
-        charisma: { lt: 0 },
+        charisma: { gt: 0 },
         ...this.buildHasAvailabilityCondition(oneOfTheTeams, period),
-        assigned: { none: { assignment: includePeriodCondition(period) } },
+        assigned: { none: { assignment: includePeriod } },
       },
       select: {
         ...SELECT_VOLUNTEER,
         ...this.buildVolunteerAssignmentSelection(category),
-        ...SELECT_VOLUNTEER_MOBILIZATIONS,
+        ...this.buildFestivalTaskMobilizationSelection(period),
         ...this.buildAssignableFriendSelection(assignmentSpecification),
       },
     });
@@ -42,6 +44,20 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     return volunteers.map((volunteer) =>
       toStoredAssignableVolunteer(volunteer, taskId),
     );
+  }
+
+  private buildFestivalTaskMobilizationSelection(period: Period) {
+    const mobilizationIncludedNotYetReadyToAssign = {
+      ...includePeriodCondition(period),
+      ft: { status: { not: READY_TO_ASSIGN }, isDeleted: false },
+    } as const;
+
+    return {
+      festivalTaskMobilizations: {
+        where: { mobilization: mobilizationIncludedNotYetReadyToAssign },
+        select: { mobilization: { select: SELECT_PERIOD } },
+      },
+    };
   }
 
   private buildHasAvailabilityCondition(
