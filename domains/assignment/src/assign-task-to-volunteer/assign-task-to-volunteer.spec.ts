@@ -75,12 +75,12 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      task                                | teams                   | expectedVolunteers
-      ${fullyAssignedTask}                | ${[]}                   | ${[]}
-      ${missingOnePlaizirTask}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleTask} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxTask}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask} | ${["plaizir"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      task                                               | teams                   | expectedVolunteers
+      ${fullyAssignedTask}                               | ${[]}                   | ${[]}
+      ${missingOnePlaizirTask}                           | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleTask}                | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxTask}                             | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask} | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
     `(
       "when looking for assignable $teams volunteers",
       ({ task, expectedVolunteers }) => {
