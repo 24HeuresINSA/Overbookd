@@ -30,7 +30,13 @@ import {
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
+
+function isDailyEvent(
+  event: AssignmentIdentifier | DailyEvent,
+): event is DailyEvent {
+  return (event as DailyEvent).timed === false;
+}
 
 export default defineComponent({
   name: "TaskOrgaCalendar",
@@ -73,11 +79,12 @@ export default defineComponent({
     this.calendarMarker = this.manifDate;
   },
   methods: {
-    isSelectedAssignment({
-      mobilizationId,
-      assignmentId,
-    }: AssignmentIdentifier): boolean {
-      if (!this.selectedAssignment) return false;
+    isSelectedAssignment(
+      identifier: AssignmentIdentifier | DailyEvent,
+    ): boolean {
+      if (!this.selectedAssignment || isDailyEvent(identifier)) return false;
+
+      const { assignmentId, mobilizationId } = identifier;
       return (
         this.selectedAssignment.identifier.mobilizationId === mobilizationId &&
         this.selectedAssignment.identifier.assignmentId === assignmentId
