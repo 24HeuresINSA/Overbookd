@@ -121,3 +121,9 @@ export class EveryCandidateFulfillsDemand {
     return this.candidates.length < totalDemands - totalAssignees;
   }
 }
+
+export function isEveryCandidateFulfillsDemand(
+  state: VolunteerSelected | EveryCandidateFulfillsDemand,
+): state is EveryCandidateFulfillsDemand {
+  return state.candidates.every(isFulfillingDemand);
+}

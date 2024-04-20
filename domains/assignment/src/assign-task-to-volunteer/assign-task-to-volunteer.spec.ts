@@ -20,6 +20,8 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-ressources/assign-task-to-volunteer.test.utils";
+import { HARD, VIEUX } from "./funnel/teams";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
@@ -42,9 +44,9 @@ describe("Assign task to volunteer", () => {
     describe.each`
       taskName                                                      | taskId                                                      | expectedTeams
       ${missingOnePlaizirTask.value.name}                           | ${missingOnePlaizirTask.value.id}                           | ${["plaizir"]}
-      ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${["vieux"]}
-      ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${["hard", "benevole"]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${["plaizir", "hard", "benevole"]}
+      ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${[VIEUX]}
+      ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${[HARD, BENEVOLE_CODE]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${["plaizir", HARD, BENEVOLE_CODE]}
     `(
       "when listing missing assignment tasks with $taskName",
       ({ taskId, expectedTeams }) => {
@@ -82,13 +84,13 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      task                                                     | assignmentIdentifier                                            | teams                   | expectedVolunteers
-      ${fullyAssignedTask}                                     | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                   | ${[]}
-      ${missingOnePlaizirTask}                                 | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleTask}                      | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxTask}                                   | ${missingTwoVieuxAssignment.assignment.identifier}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask}       | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask} | ${missingTwoVieuxDuring19hto20h.assignment.identifier}          | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.FUN]}
+      task                                                     | assignmentIdentifier                                            | teams                    | expectedVolunteers
+      ${fullyAssignedTask}                                     | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                    | ${[]}
+      ${missingOnePlaizirTask}                                 | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleTask}                      | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${[HARD, BENEVOLE_CODE]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxTask}                                   | ${missingTwoVieuxAssignment.assignment.identifier}              | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask}       | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask} | ${missingTwoVieuxDuring19hto20h.assignment.identifier}          | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.FUN]}
     `(
       "when looking for assignable $teams volunteers",
       ({ task, assignmentIdentifier, expectedVolunteers }) => {
