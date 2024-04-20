@@ -1,8 +1,8 @@
 <template>
   <OverCalendar
     v-model="calendarMarker"
-    :title="ftName"
-    :events="timeSpans"
+    :title="taskName"
+    :events="assignments"
     :hour-to-scroll-to="hourToScrollTo"
   >
     <template #event="{ event: timeSpan }">
@@ -20,45 +20,43 @@
 </template>
 
 <script lang="ts">
-import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
-import Vue from "vue";
+import { defineComponent } from "vue";
+import {
+  AssignmentSummary,
+  AssignmentTeam,
+  TaskWithAssignmentsSummary,
+} from "@overbookd/assignment";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
-import {
-  FtTimeSpanEvent,
-  FtTimeSpanWithRequestedTeams,
-  RequestedTeam,
-} from "~/utils/models/ft-time-span.model";
+import { FtTimeSpanEvent } from "~/utils/models/ft-time-span.model";
 
-export default Vue.extend({
+export default defineComponent({
   name: "TaskOrgaCalendar",
   components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedFt(): TaskWithAssignmentsSummary | null {
+    selectedTask(): TaskWithAssignmentsSummary | null {
       return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
-    ftName(): string {
-      if (this.selectedFt === null) {
-        return "";
-      }
-      return `[${this.selectedFt.id}] ${this.selectedFt.name}`;
+    taskName(): string {
+      if (this.selectedTask === null) return "";
+      return `[${this.selectedTask.id}] ${this.selectedTask.name}`;
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
-    timeSpans(): CalendarEvent[] {
-      return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>
-        this.mapTimeSpanToEvent(timeSpan),
+    assignments(): CalendarEvent[] {
+      return (this.selectedTask?.assignments ?? []).flatMap((assignment) =>
+        this.mapAssignmentToEvent(assignment),
       );
     },
     selectedTimeSpanId(): number | null {
       return this.$accessor.assignment.selectedTimeSpan?.id ?? null;
     },
     hourToScrollTo(): number | undefined {
-      return this.timeSpans.at(0)?.start.getHours();
+      return this.assignments.at(0)?.start.getHours();
     },
   },
   async mounted() {
@@ -72,31 +70,23 @@ export default Vue.extend({
     selectTimeSpanToDisplayDetails(timeSpanId: number) {
       this.$emit("display-time-span-details", timeSpanId);
     },
-    mapTimeSpanToEvent(
-      timeSpan: FtTimeSpanWithRequestedTeams,
-    ): CalendarEvent[] {
-      return timeSpan.requestedTeams.map((team) => ({
-        ...timeSpan,
-        start: new Date(timeSpan.start),
-        end: new Date(timeSpan.end),
+    mapAssignmentToEvent(assignment: AssignmentSummary): CalendarEvent[] {
+      return assignment.teams.map((team) => ({
+        ...assignment,
         name: this.buildEventName(team),
         timed: true,
         color: this.defineEventColor(team),
       }));
     },
-    buildEventName({ assignmentCount, quantity, code }: RequestedTeam): string {
-      return `[${assignmentCount}/${quantity}] ${code}`;
+    buildEventName({ assigned, demands, code }: AssignmentTeam): string {
+      return `[${assigned}/${demands}] ${code}`;
     },
     getTeamColor(code: string): string {
       return this.$accessor.team.getTeamByCode(code)?.color ?? "blue";
     },
-    defineEventColor({
-      code,
-      quantity,
-      assignmentCount,
-    }: RequestedTeam): string {
+    defineEventColor({ assigned, demands, code }: AssignmentTeam): string {
       const color = this.getTeamColor(code);
-      const spread = (180 * assignmentCount) / quantity + 75;
+      const spread = (180 * assigned) / demands + 75;
       return color + this.convertDecimalToHex(spread);
     },
     convertDecimalToHex(decimal: number): string {
@@ -104,8 +94,8 @@ export default Vue.extend({
       return hex.length === 1 ? "0" + hex : hex;
     },
     openSelectedFtInNewTab() {
-      if (this.selectedFt === null) return;
-      window.open(`/ft/${this.selectedFt.id}`);
+      if (this.selectedTask === null) return;
+      window.open(`/ft/${this.selectedTask.id}`);
     },
   },
 });

@@ -1,12 +1,13 @@
 import {
   AssignableVolunteers,
-  AssignmentIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import { actionTree, mutationTree } from "typed-vuex";
 import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 import { safeCall } from "~/utils/api/calls";
+import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
+import { HttpStringified } from "@overbookd/http";
 
 type State = {
   tasks: MissingAssignmentTask[];
@@ -19,8 +20,6 @@ export const state = (): State => ({
   selectedTask: null,
   assignableVolunteers: [],
 });
-
-type ExtendedAssignementIdentifier = AssignmentIdentifier & { taskId: number };
 
 export const mutations = mutationTree(state, {
   SET_TASKS(state, tasks: MissingAssignmentTask[]) {
@@ -45,13 +44,16 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_TASKS", res.data);
     },
-    async selectTask({ commit }, ftId: number) {
+    async selectTask({ commit }, taskId: number) {
       const res = await safeCall(
         this,
-        TaskToVolunteerRepository.selectTask(this, ftId),
+        TaskToVolunteerRepository.selectTask(this, taskId),
       );
       if (!res) return;
-      commit("SET_SELECTED_TASK", res.data);
+
+      const task = castTaskWithAssignmentsSummaryWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+      commit("SET_ASSIGNABLE_VOLUNTEERS", []);
     },
     async setAssignableVolunteers(
       { commit },
@@ -61,9 +63,7 @@ export const actions = actionTree(
         this,
         TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
           this,
-          assignmentIdentifier.taskId,
-          assignmentIdentifier.mobilizationId,
-          assignmentIdentifier.assignmentId,
+          assignmentIdentifier,
         ),
       );
       if (!res) return;
@@ -71,3 +71,16 @@ export const actions = actionTree(
     },
   },
 );
+
+function castTaskWithAssignmentsSummaryWithDate(
+  task: HttpStringified<TaskWithAssignmentsSummary>,
+): TaskWithAssignmentsSummary {
+  return {
+    ...task,
+    assignments: task.assignments.map((assignment) => ({
+      ...assignment,
+      start: new Date(assignment.start),
+      end: new Date(assignment.end),
+    })),
+  };
+}

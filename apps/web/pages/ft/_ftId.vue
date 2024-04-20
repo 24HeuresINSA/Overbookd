@@ -127,7 +127,7 @@ import CategorizeFormCard from "~/components/molecules/festival-event/review/Cat
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { IProvidePeriod } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { TaskCategories } from "~/utils/models/ft-time-span.model";
+import { AUCUNE } from "~/utils/assignment/task-category";
 
 type DisplayableEvent =
   | "mobilizations"
@@ -248,7 +248,7 @@ export default defineComponent({
     },
     taskCategory(): string {
       if (!isReadyToAssign(this.selectedTask)) return "";
-      return this.selectedTask.category ?? TaskCategories.AUCUNE;
+      return this.selectedTask.category ?? AUCUNE;
     },
     taskPriority(): string {
       if (!isReadyToAssign(this.selectedTask)) return "";

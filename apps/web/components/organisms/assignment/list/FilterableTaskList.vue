@@ -1,7 +1,7 @@
 <template>
   <v-card class="filterable-task-list">
     <v-card-text class="filterable-task-list__text">
-      <FtTimeSpanFilters
+      <TaskFilters
         :list-length="filteredTasks.length"
         class="filters"
         type="ft"
@@ -9,7 +9,7 @@
         @change:teams="teams = $event"
         @change:category="category = $event"
         @change:completed="completed = $event"
-      ></FtTimeSpanFilters>
+      ></TaskFilters>
       <v-divider />
       <TaskList :tasks="filteredTasks" class="task-list" />
     </v-card-text>
@@ -18,25 +18,26 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
+import TaskFilters from "~/components/molecules/assignment/filter/TaskFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
-import { TaskCategory, TaskPriority } from "~/utils/models/ft-time-span.model";
+import { TaskPriority } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import { MissingAssignmentTask } from "@overbookd/assignment";
+import { DisplayableCategory } from "~/utils/assignment/task-category";
 
 type FilterableTaskListData = {
   teams: Team[];
   searchTask: string;
-  category: TaskCategory | TaskPriority | null;
+  category: DisplayableCategory | TaskPriority | null;
   completed: boolean;
 };
 
 export default defineComponent({
   name: "FilterableTaskList",
-  components: { FtTimeSpanFilters, TaskList },
+  components: { TaskFilters, TaskList },
   data: (): FilterableTaskListData => ({
     completed: false,
     teams: [],
@@ -75,12 +76,12 @@ export default defineComponent({
         : () => true;
     },
     isTaskPriority(
-      category: TaskPriority | TaskCategory,
+      category: TaskPriority | DisplayableCategory,
     ): category is TaskPriority {
       return Object.values(TaskPriorities).includes(category);
     },
     filterByCatergoryOrPriority(
-      categorySearched: TaskCategory | TaskPriority | null,
+      categorySearched: DisplayableCategory | TaskPriority | null,
     ): (task: MissingAssignmentTask) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
@@ -89,7 +90,7 @@ export default defineComponent({
       return this.filterByCategory(categorySearched);
     },
     filterByCategory(
-      categorySearched: TaskCategory,
+      categorySearched: DisplayableCategory,
     ): (task: MissingAssignmentTask) => boolean {
       return (task) => {
         if (categorySearched === "AUCUNE") return task.category === null;

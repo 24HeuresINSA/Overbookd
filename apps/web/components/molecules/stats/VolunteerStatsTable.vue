@@ -32,32 +32,39 @@
 <script lang="ts">
 import Vue from "vue";
 import {
-  TaskCategories,
   TaskCategoryEmoji,
   TaskCategoryEmojis,
 } from "~/utils/models/ft-time-span.model";
 import { AssignmentStats } from "~/store/assignment";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { Duration } from "~/utils/date/duration";
+import {
+  BAR,
+  FUN,
+  MANUTENTION,
+  RELOU,
+  STATIQUE,
+} from "@overbookd/festival-event-constants";
+import { AUCUNE } from "~/utils/assignment/task-category";
 
 function searchStatic(stat: VolunteerAssignmentStat): boolean {
-  return stat.category === TaskCategories.STATIQUE;
+  return stat.category === STATIQUE;
 }
 
 function searchBar(stat: VolunteerAssignmentStat): boolean {
-  return stat.category === TaskCategories.BAR;
+  return stat.category === BAR;
 }
 
 function searchManutention(stat: VolunteerAssignmentStat): boolean {
-  return stat.category === TaskCategories.MANUTENTION;
+  return stat.category === MANUTENTION;
 }
 
 function searchFun(stat: VolunteerAssignmentStat): boolean {
-  return stat.category === TaskCategories.FUN;
+  return stat.category === FUN;
 }
 
 function searchRelou(stat: VolunteerAssignmentStat): boolean {
-  return stat.category === TaskCategories.RELOU;
+  return stat.category === RELOU;
 }
 
 function searchUnknown(stat: VolunteerAssignmentStat): boolean {
@@ -71,20 +78,20 @@ export default Vue.extend({
       { text: "Benevole", value: "volunteer", sortable: false },
       {
         text: "Creneaux statiques",
-        value: TaskCategories.STATIQUE,
+        value: STATIQUE,
         sortable: false,
       },
-      { text: "Creneaux bar", value: TaskCategories.BAR, sortable: false },
+      { text: "Creneaux bar", value: BAR, sortable: false },
       {
         text: "Creneaux manutention",
-        value: TaskCategories.MANUTENTION,
+        value: MANUTENTION,
         sortable: false,
       },
-      { text: "Creneaux fun", value: TaskCategories.FUN, sortable: false },
-      { text: "Creneaux relous", value: TaskCategories.RELOU, sortable: false },
+      { text: "Creneaux fun", value: FUN, sortable: false },
+      { text: "Creneaux relous", value: RELOU, sortable: false },
       {
         text: "Creneaux indetermines",
-        value: TaskCategories.AUCUNE,
+        value: AUCUNE,
         sortable: false,
       },
     ],

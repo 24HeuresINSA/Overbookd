@@ -77,7 +77,7 @@ export class TaskToVolunteerController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get(
-    "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignableVolunteers",
+    "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignable-volunteers",
   )
   @ApiResponse({
     status: 200,

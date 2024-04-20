@@ -37,18 +37,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import {
-  TaskCategories,
-  TaskCategory,
+  DisplayableCategory,
+  displayableCategories,
+} from "~/utils/assignment/task-category";
+import {
   TaskPriorities,
   TaskPriority,
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 
-export default Vue.extend({
-  name: "FtTimeSpanFilters",
+export default defineComponent({
+  name: "TaskFilters",
   components: { SearchTeams },
   props: {
     type: {
@@ -61,11 +63,17 @@ export default Vue.extend({
       default: 0,
     },
   },
+  emits: [
+    "change:search",
+    "change:teams",
+    "change:category",
+    "change:completed",
+  ],
   data: () => ({
     completed: false,
     search: "",
     teams: [] as Team[],
-    category: null as TaskCategory | TaskPriority | null,
+    category: null as DisplayableCategory | TaskPriority | null,
   }),
   computed: {
     counterLabel(): string {
@@ -74,10 +82,7 @@ export default Vue.extend({
         : "Nombre de créneaux dans la liste : ";
     },
     categoryItems(): string[] {
-      return [
-        ...Object.values(TaskPriorities),
-        ...Object.values(TaskCategories),
-      ];
+      return [...Object.values(TaskPriorities), ...displayableCategories];
     },
   },
   methods: {

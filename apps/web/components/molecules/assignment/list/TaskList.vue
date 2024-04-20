@@ -5,7 +5,7 @@
         :key="item.id"
         :value="item"
         class="list"
-        @click="selectFt(item)"
+        @click="selectTask(item)"
       >
         <TaskResume
           :task="item"
@@ -18,11 +18,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import TaskResume from "../resume/TaskResume.vue";
 import { MissingAssignmentTask } from "@overbookd/assignment";
 
-export default Vue.extend({
+export default defineComponent({
   name: "TaskList",
   components: { TaskResume },
   props: {
@@ -32,12 +32,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    selectFt(ft: MissingAssignmentTask) {
-      this.$accessor.assignTaskToVolunteer.selectTask(ft.id);
-      //this.$accessor.assignment.fetchTimeSpansWithStats(ft.id);
+    selectTask({ id }: MissingAssignmentTask) {
+      this.$accessor.assignTaskToVolunteer.selectTask(id);
     },
     isSelected(id: number): boolean {
-      return this.$accessor.assignment.selectedFt?.id === id;
+      return this.$accessor.assignTaskToVolunteer.selectedTask?.id === id;
     },
   },
 });
