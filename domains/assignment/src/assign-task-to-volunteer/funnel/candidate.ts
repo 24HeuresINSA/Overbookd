@@ -1,14 +1,17 @@
+import { HARD, VIEUX, CONFIANCE } from "./teams";
 import { TeamDemanded, Assignee, Assignment } from "./assignments";
 import { Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
 type NotYetFulfillingDemandCandidate = Volunteer & {
   planning: PlanningEvent[];
+  assignableTeams: string[];
   as: undefined;
 };
 
 export type CandidateFulfillingDemand = Volunteer & {
   planning: PlanningEvent[];
+  assignableTeams: string[];
   as: string;
 };
 
@@ -22,7 +25,20 @@ export class Candidate {
   static init(
     volunteer: Volunteer,
     planning: PlanningEvent[],
+    assignment: Assignment,
+  ) {
+    const assignableTeams = Candidate.getAssignableTeams(
+      assignment,
+      volunteer.teams,
+    );
+    const as = assignableTeams.length === 1 ? assignableTeams.at(0) : undefined;
+
+    return new Candidate({ ...volunteer, planning, as, assignableTeams });
+  }
+
+  private static getAssignableTeams(
     { demands, assignees }: Assignment,
+    teams: string[],
   ) {
     const remainingDemands = demands.reduce(
       (remainingDemands, { team, count }) => {
@@ -33,12 +49,10 @@ export class Candidate {
       },
       [] as TeamDemanded[],
     );
-    const assignableTeams = volunteer.teams.filter((team) =>
+    const implicitTeams = retrieveImplicitTeams(teams);
+    return implicitTeams.filter((team) =>
       remainingDemands.map(({ team }) => team).includes(team),
     );
-    const as = assignableTeams.length === 1 ? assignableTeams.at(0) : undefined;
-
-    return new Candidate({ ...volunteer, planning, as });
   }
 
   static toAssignment({ id, as }: CandidateFulfillingDemand): Assignee {
@@ -46,7 +60,7 @@ export class Candidate {
   }
 
   demandAs(as: string) {
-    if (!this.candidate.teams.includes(as)) {
+    if (!this.candidate.assignableTeams.includes(as)) {
       throw new Error(`${this.name} is not team member of ${as}`);
     }
     return new Candidate({ ...this.candidate, as });
@@ -59,6 +73,15 @@ export class Candidate {
   get json(): IDefineCandidate {
     return this.candidate;
   }
+}
+
+function retrieveImplicitTeams(teams: string[]) {
+  const areConfianceByDefault = [HARD, VIEUX];
+  const isConfiance = teams.some((team) =>
+    areConfianceByDefault.includes(team),
+  );
+
+  return isConfiance ? [...teams, CONFIANCE] : teams;
 }
 
 export function isFulfillingDemand(

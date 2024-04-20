@@ -4,6 +4,7 @@ import {
   EveryCandidateFulfillsDemand,
   Setup,
   VolunteerSelected,
+  isEveryCandidateFulfillsDemand,
 } from "./assign-volunteers-funnel";
 import { InMemoryPlanning } from "./planning.inmemory";
 import { InMemoryAssignments } from "./assignments.inmemory";
@@ -15,8 +16,12 @@ import {
   ontaine,
   tatouin,
   couperDesCarottes,
+  luce,
+  gererLaCaisse,
+  scannerLesBillets,
 } from "./assign-volunteers-funnel.test-utils";
-import { CandidateFactory, isFulfillingDemand } from "./candidate";
+import { CandidateFactory } from "./candidate";
+import { CONFIANCE, HARD, VIEUX } from "./teams";
 
 describe("Assign volunteers funnel", () => {
   const planning = new InMemoryPlanning(
@@ -25,9 +30,15 @@ describe("Assign volunteers funnel", () => {
       [lea.volunteer.id, lea.planning],
       [ontaine.volunteer.id, ontaine.planning],
       [tatouin.volunteer.id, tatouin.planning],
+      [luce.volunteer.id, luce.planning],
     ]),
   );
-  const initialAssignments = [benevolant, rendreKangoo, couperDesCarottes];
+  const initialAssignments = [
+    benevolant,
+    rendreKangoo,
+    couperDesCarottes,
+    gererLaCaisse,
+  ];
   const candidateFactory = new CandidateFactory(planning);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
@@ -183,10 +194,66 @@ describe("Assign volunteers funnel", () => {
       );
     });
   });
-});
+  describe("Assign hard and vieux as confiance", () => {
+    describe("when assignment needs one more confiance", () => {
+      describe.each`
+        assignment       | volunteer         | team
+        ${gererLaCaisse} | ${luce.volunteer} | ${HARD}
+        ${gererLaCaisse} | ${lea.volunteer}  | ${VIEUX}
+      `(
+        "when volunteer selected is part of $team",
+        ({ assignment, volunteer }) => {
+          let funnel: Setup;
+          beforeAll(() => {
+            const assignments = new InMemoryAssignments(initialAssignments);
+            funnel = Setup.init(candidateFactory, assignments, assignment);
+          });
+          it("should be able to assign him as confiance", async () => {
+            const selected = await funnel.select(volunteer);
+            if (!isEveryCandidateFulfillsDemand(selected)) {
+              throw new Error("Unexpected funnel type");
+            }
 
-function isEveryCandidateFulfillsDemand(
-  state: VolunteerSelected | EveryCandidateFulfillsDemand,
-): state is EveryCandidateFulfillsDemand {
-  return state.candidates.every(isFulfillingDemand);
-}
+            const assignment = await selected.assign();
+
+            const expectedAssignee = { as: CONFIANCE, volunteer: volunteer.id };
+            expect(assignment.assignees).toContainEqual(expectedAssignee);
+          });
+        },
+      );
+    });
+    describe("when assignment needs several team member", () => {
+      describe.each`
+        assignmentName            | assignment           | volunteer         | volunteerName               | volunteerTeams
+        ${scannerLesBillets.name} | ${scannerLesBillets} | ${noel.volunteer} | ${noel.volunteer.firstname} | ${noel.volunteer.teams}
+      `(
+        "When selecting $volunteerName who is part of $volunteerTeams on $assignmentName",
+        ({ assignment, volunteer }) => {
+          let funnel: VolunteerSelected;
+          beforeAll(async () => {
+            const assignments = new InMemoryAssignments(initialAssignments);
+            const selected = await Setup.init(
+              candidateFactory,
+              assignments,
+              assignment,
+            ).select(volunteer);
+            if (isEveryCandidateFulfillsDemand(selected)) {
+              throw new Error("Unexpected funnel type");
+            }
+            funnel = selected;
+          });
+          it(`should list ${CONFIANCE} as assignable team`, () => {
+            expect(
+              funnel.candidates.find(({ id }) => id === volunteer.id)
+                ?.assignableTeams,
+            ).toContain(CONFIANCE);
+          });
+          it(`should be possible to assign him as ${CONFIANCE}`, () => {
+            const demand = { volunteer: volunteer.id, team: CONFIANCE };
+            expect(() => funnel.fulfillDemand(demand)).not.toThrow();
+          });
+        },
+      );
+    });
+  });
+});
