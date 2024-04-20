@@ -31,7 +31,6 @@ import {
 } from "@overbookd/assignment";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
-import { FtTimeSpanEvent } from "~/utils/models/ft-time-span.model";
 
 export default defineComponent({
   name: "TaskOrgaCalendar",
@@ -84,8 +83,8 @@ export default defineComponent({
         this.selectedAssignment.identifier.assignmentId === assignmentId
       );
     },
-    selectAssignment(timeSpan: FtTimeSpanEvent) {
-      this.$accessor.assignment.setSelectedTimeSpan(timeSpan);
+    selectAssignment(assignment: AssignmentSummary) {
+      console.log(assignment);
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
       this.$emit("display-assignment-details", identifier);
