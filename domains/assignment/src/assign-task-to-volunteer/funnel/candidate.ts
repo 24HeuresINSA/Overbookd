@@ -27,9 +27,8 @@ export class Candidate {
     const remainingDemands = demands.reduce(
       (remainingDemands, { team, count }) => {
         const totalAssignees = assignees.filter(({ as }) => as === team).length;
-        if (totalAssignees === count) {
-          return remainingDemands;
-        }
+        if (totalAssignees === count) return remainingDemands;
+
         return [...remainingDemands, { team, count: count - totalAssignees }];
       },
       [] as TeamDemanded[],
