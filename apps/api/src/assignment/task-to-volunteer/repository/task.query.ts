@@ -14,10 +14,9 @@ export const SELECT_TASK_WITH_ASSIGNMENTS = {
   mobilizations: {
     select: {
       id: true,
-      start: true,
-      end: true,
       teams: { select: { teamCode: true, count: true } },
       assignees: { select: { teamCode: true } },
+      assignments: { select: { id: true, start: true, end: true } },
     },
   },
 };
@@ -27,9 +26,12 @@ export type DatabaseTask = Categorize & {
   name: string;
   mobilizations: {
     id: string;
-    start: Date;
-    end: Date;
     teams: { teamCode: string; count: number }[];
     assignees: { teamCode: string }[];
+    assignments: {
+      id: string;
+      start: Date;
+      end: Date;
+    }[];
   }[];
 };

@@ -9,11 +9,13 @@ export type RequestedTeam = {
   demands: number;
 };
 
-type IProvidePeriodWithId = IProvidePeriod & {
-  id: string;
+export type AssignmentIdentifier = {
+  assignmentId: string;
+  mobilizationId: string;
 };
 
-export type Assignment = IProvidePeriodWithId & {
+export type Assignment = IProvidePeriod & {
+  identifier: AssignmentIdentifier;
   requestedTeams: RequestedTeam[];
   assignees: Assignee[];
 };
@@ -22,6 +24,7 @@ export type AssignmentTeam = RequestedTeam & {
   assigned: number;
 };
 
-export type AssignmentSummary = IProvidePeriodWithId & {
+export type AssignmentSummary = IProvidePeriod & {
+  identifier: AssignmentIdentifier;
   teams: AssignmentTeam[];
 };

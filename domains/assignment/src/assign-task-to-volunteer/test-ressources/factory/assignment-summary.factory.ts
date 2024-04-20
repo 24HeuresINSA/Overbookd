@@ -10,17 +10,30 @@ export class AssignmentSummaryFactory {
 
   static init(period: Period) {
     const assignment = {
+      identifier: { assignmentId: period.id, mobilizationId: period.id },
       start: period.start,
       end: period.end,
-      id: period.id,
       teams: [],
     };
     return new AssignmentSummaryFactory(assignment, []);
   }
 
   during(period: Period) {
-    const temporal = { start: period.start, end: period.end, id: period.id };
-    const assignment = { ...this.assignment, ...temporal };
+    const identifier = {
+      ...this.assignment.identifier,
+      assignmentId: period.id,
+    };
+    const temporal = { start: period.start, end: period.end };
+    const assignment = { ...this.assignment, ...temporal, identifier };
+    return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
+  }
+
+  withMobilization(period: Period) {
+    const identifier = {
+      ...this.assignment.identifier,
+      mobilizationId: period.id,
+    };
+    const assignment = { ...this.assignment, identifier };
     return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
   }
 
