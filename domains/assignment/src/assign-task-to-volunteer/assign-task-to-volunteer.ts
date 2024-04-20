@@ -55,12 +55,12 @@ export class AssignTaskToVolunteer {
 
   async selectAssignment(
     taskId: TaskIdentifier["id"],
-    assignmentId: AssignmentSummary["id"],
+    assignmentId: AssignmentSummary["identifier"]["assignmentId"],
   ): Promise<AssignableVolunteer[]> {
     const task = await this.allTasks.findOne(taskId);
 
     const assignment = task.assignments.find(
-      (assignment) => assignment.id === assignmentId,
+      ({ identifier }) => identifier.assignmentId === assignmentId,
     );
     if (!assignment) throw new Error("Assignment not found");
 
@@ -112,12 +112,13 @@ export class AssignTaskToVolunteer {
   }
 
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
+    console.error("task", task);
     const assignments = task.assignments.map((assignment) => {
       const period = Period.init(assignment);
       return {
         start: period.start,
         end: period.end,
-        id: period.id,
+        identifier: assignment.identifier,
         teams: assignment.requestedTeams.map((team) => ({
           code: team.code,
           demands: team.demands,

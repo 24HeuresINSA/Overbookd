@@ -6,6 +6,9 @@ import {
 import { getTaskFactory } from "./factory/task.factory";
 import {
   friday09hto10h,
+  friday18hto19h,
+  friday19hto20h,
+  friday20hto21h,
   fulfilledAssignment,
   missingOneHardAndOneBenevoleAssignment,
   missingOnePlaizirAssignment,
@@ -19,7 +22,7 @@ export const fullyAssignedTask = factory
   .withAssignments([fulfilledAssignment]);
 
 export const missingOnePlaizirTask = factory
-  .init("Task missing one assignee")
+  .init("Task missing one plaizir")
   .withCategory(BAR)
   .withAssignments([
     missingOnePlaizirAssignment,
@@ -43,4 +46,14 @@ export const missingOneAssigneeThenOneHardAndOneBenevoleTask = factory
   .withAssignments([
     missingOnePlaizirAssignment,
     missingOneHardAndOneBenevoleAssignment,
+  ]);
+
+export const missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask = factory
+  .init("Task missing one plaizir or two vieux on staggered assignments")
+  .withCategory(STATIQUE)
+  .withAssignments([
+    missingOnePlaizirAssignment.during(friday18hto19h),
+    missingOnePlaizirAssignment.during(friday19hto20h),
+    missingTwoVieuxAssignment.during(friday19hto20h),
+    missingTwoVieuxAssignment.during(friday20hto21h),
   ]);

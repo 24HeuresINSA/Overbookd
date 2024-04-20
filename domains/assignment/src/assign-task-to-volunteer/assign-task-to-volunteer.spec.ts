@@ -5,15 +5,21 @@ import {
   missingTwoVieuxTask,
   missingOneHardAndOneBenevoleTask,
   missingOneAssigneeThenOneHardAndOneBenevoleTask,
+  missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
 } from "./test-ressources/task.fake";
 import { InMemoryTasks } from "./repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
 import { AssignableVolunteer } from "./assignable-volunteer";
 import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory";
 import {
+  fulfilledAssignment,
   leaAsAvailableVolunteer,
+  missingOneHardAndOneBenevoleAssignment,
+  missingOnePlaizirAssignment,
+  missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-ressources/assign-task-to-volunteer.test.utils";
+import { AssignmentBuilder } from "./test-ressources/factory/assignment.builder";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
@@ -22,6 +28,7 @@ describe("Assign task to volunteer", () => {
     missingTwoVieuxTask.value,
     missingOneHardAndOneBenevoleTask.value,
     missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
+    missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.value,
   ]);
   const volunteers = new InMemoryAssignableVolunteers([
     noelAsAvailableVolunteer.stored,
@@ -75,20 +82,27 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      task                                | teams                   | expectedVolunteers
-      ${fullyAssignedTask}                | ${[]}                   | ${[]}
-      ${missingOnePlaizirTask}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleTask} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxTask}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      task                                               | assignmentIdentifier                                            | teams                   | expectedVolunteers
+      ${fullyAssignedTask}                               | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                   | ${[]}
+      ${missingOnePlaizirTask}                           | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleTask}                | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxTask}                             | ${missingTwoVieuxAssignment.assignment.identifier}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask} | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
     `(
       "when looking for assignable $teams volunteers",
-      ({ task, expectedVolunteers }) => {
+      ({ task, assignmentIdentifier, expectedVolunteers }) => {
         let volunteers: AssignableVolunteer[];
         beforeAll(async () => {
-          const assignment = task.assignments.at(0);
+          const assignment = task.assignments.find(
+            ({ assignment }: AssignmentBuilder) =>
+              assignment.identifier.assignmentId ===
+                assignmentIdentifier.assignmentId &&
+              assignment.identifier.mobilizationId ===
+                assignmentIdentifier.mobilizationId,
+          );
           volunteers = await assign.selectAssignment(
             task.value.id,
-            assignment?.summary.assignment.id ?? "",
+            assignment?.summary.assignment.identifier.assignmentId ?? "",
           );
         });
 
@@ -113,11 +127,13 @@ describe("Assign task to volunteer", () => {
   });
 });
 
-function extractDuration(volunteers: AssignableVolunteer[]) {
+function extractDuration(volunteers: AssignableVolunteer[]): number[] {
   return volunteers.map(({ assignmentDuration }) => assignmentDuration);
 }
 
-function extractRequestOnSamePeriod(volunteers: AssignableVolunteer[]) {
+function extractRequestOnSamePeriod(
+  volunteers: AssignableVolunteer[],
+): boolean[] {
   return volunteers.map(
     ({ isRequestedOnSamePeriod }) => isRequestedOnSamePeriod,
   );

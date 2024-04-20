@@ -9,8 +9,9 @@ export class AssignmentBuilder {
   ) {}
 
   static init(period: Period): AssignmentBuilder {
+    const identifier = { assignmentId: period.id, mobilizationId: period.id };
     const assignment = {
-      id: period.id,
+      identifier,
       start: period.start,
       end: period.end,
       requestedTeams: [],
@@ -21,8 +22,9 @@ export class AssignmentBuilder {
   }
 
   during(period: Period): AssignmentBuilder {
-    const temporal = { start: period.start, end: period.end, id: period.id };
-    const assignment = { ...this.assignment, ...temporal };
+    const identifier = { assignmentId: period.id, mobilizationId: period.id };
+    const temporal = { start: period.start, end: period.end };
+    const assignment = { ...this.assignment, ...temporal, identifier };
     const summary = this.summary.during(period);
     return new AssignmentBuilder(assignment, summary);
   }

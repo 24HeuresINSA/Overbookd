@@ -23,6 +23,18 @@ export const friday09hto10h = Period.init({
   start: new Date("2024-05-17T09:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
 });
+export const friday18hto19h = Period.init({
+  start: new Date("2024-05-17T18:00+02:00"),
+  end: new Date("2024-05-17T19:00+02:00"),
+});
+export const friday19hto20h = Period.init({
+  start: new Date("2024-05-17T19:00+02:00"),
+  end: new Date("2024-05-17T20:00+02:00"),
+});
+export const friday20hto21h = Period.init({
+  start: new Date("2024-05-17T20:00+02:00"),
+  end: new Date("2024-05-17T21:00+02:00"),
+});
 const friday09hto10hBarAssignment = {
   start: friday09hto10h.start,
   end: friday09hto10h.end,
