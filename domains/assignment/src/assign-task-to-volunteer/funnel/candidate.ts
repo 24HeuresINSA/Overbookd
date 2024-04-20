@@ -22,10 +22,19 @@ export class Candidate {
   static init(
     volunteer: Volunteer,
     planning: PlanningEvent[],
-    demands: TeamDemanded[],
+    { demands, assignees }: Assignment,
   ) {
+    const remainingDemands = demands.reduce(
+      (remainingDemands, { team, count }) => {
+        const totalAssignees = assignees.filter(({ as }) => as === team).length;
+        if (totalAssignees === count) return remainingDemands;
+
+        return [...remainingDemands, { team, count: count - totalAssignees }];
+      },
+      [] as TeamDemanded[],
+    );
     const assignableTeams = volunteer.teams.filter((team) =>
-      demands.map(({ team }) => team).includes(team),
+      remainingDemands.map(({ team }) => team).includes(team),
     );
     const as = assignableTeams.length === 1 ? assignableTeams.at(0) : undefined;
 
@@ -64,6 +73,6 @@ export class CandidateFactory {
   async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
     const planning = await this.planning.for(volunteer.id);
 
-    return Candidate.init(volunteer, planning, assignment.demands);
+    return Candidate.init(volunteer, planning, assignment);
   }
 }

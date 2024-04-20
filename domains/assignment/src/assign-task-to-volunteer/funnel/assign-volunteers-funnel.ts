@@ -115,8 +115,9 @@ export class EveryCandidateFulfillsDemand {
   }
 
   get hasRemainingDemands(): boolean {
-    const { demands } = this.assignment;
+    const { demands, assignees } = this.assignment;
     const totalDemands = demands.reduce((sum, { count }) => sum + count, 0);
-    return this.candidates.length < totalDemands;
+    const totalAssignees = assignees.length;
+    return this.candidates.length < totalDemands - totalAssignees;
   }
 }
