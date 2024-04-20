@@ -1,6 +1,5 @@
-import { Category, READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/period";
-import { SELECT_PERIOD } from "../../common/period.query";
 
 type DatabaseFriend = {
   availabilities: IProvidePeriod[];
@@ -38,18 +37,3 @@ export const SELECT_VOLUNTEER = {
   note: true,
   teams: { select: { teamCode: true } },
 };
-
-export const SELECT_VOLUNTEER_MOBILIZATIONS = {
-  festivalTaskMobilizations: {
-    where: {
-      mobilization: {
-        ft: { status: { not: READY_TO_ASSIGN } },
-      },
-    },
-    select: {
-      mobilization: {
-        select: SELECT_PERIOD,
-      },
-    },
-  },
-} as const;
