@@ -7,11 +7,11 @@ export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunte
 export type {
   Tasks,
   AssignableVolunteers,
-  MobilizationIdentifier,
   AssignmentSpecification,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export type {
   Assignment,
+  AssignmentIdentifier,
   AssignmentTeam,
   AssignmentSummary,
 } from "./assign-task-to-volunteer/assignment";
