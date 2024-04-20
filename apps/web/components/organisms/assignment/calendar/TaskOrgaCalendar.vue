@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
+import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import {
   FtTimeSpanEvent,
   FtTimeSpanWithRequestedTeams,
-  FtWithTimeSpan,
   RequestedTeam,
 } from "~/utils/models/ft-time-span.model";
 
@@ -37,8 +37,8 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedFt(): FtWithTimeSpan | null {
-      return this.$accessor.assignment.selectedFt;
+    selectedFt(): TaskWithAssignmentsSummary | null {
+      return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
     ftName(): string {
       if (this.selectedFt === null) {
