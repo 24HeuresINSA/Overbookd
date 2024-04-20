@@ -17,10 +17,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import {
+  AUCUNE,
+  DisplayableCategory,
+  displayableCategories,
+} from "~/utils/assignment/task-category";
 import { Duration } from "~/utils/date/duration";
 import {
-  TaskCategories,
-  TaskCategory,
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
 } from "~/utils/models/ft-time-span.model";
@@ -37,19 +40,18 @@ export default Vue.extend({
   computed: {
     sortedStats(): VolunteerAssignmentStat[] {
       return [...this.stats].sort((a, b) => {
-        const categories = Object.values(TaskCategories);
-        const aIndex = categories.indexOf(a.category ?? TaskCategories.AUCUNE);
-        const bIndex = categories.indexOf(b.category ?? TaskCategories.AUCUNE);
+        const aIndex = displayableCategories.indexOf(a.category ?? AUCUNE);
+        const bIndex = displayableCategories.indexOf(b.category ?? AUCUNE);
         return aIndex - bIndex;
       });
     },
   },
   methods: {
-    getStatCategoryEmoji(category: TaskCategory | null): string {
+    getStatCategoryEmoji(category: DisplayableCategory | null): string {
       if (category === null) return TaskCategoryEmojis.AUCUNE;
       return TaskCategoryEmojiMap.get(category) ?? TaskCategoryEmojis.AUCUNE;
     },
-    getStatCategoryName(category: TaskCategory | null): string {
+    getStatCategoryName(category: DisplayableCategory | null): string {
       return category?.toLowerCase() ?? "indeterminé";
     },
     getDisplayedDuration(duration: number): string {

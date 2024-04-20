@@ -1,13 +1,13 @@
 <template>
   <v-card class="filterable-timespan-list">
     <v-card-text class="filterable-timespan-list__text">
-      <FtTimeSpanFilters
+      <TaskFilters
         :list-length="filteredTimeSpans.length"
         class="filters"
         @change:search="searchFtName = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
-      ></FtTimeSpanFilters>
+      ></TaskFilters>
       <v-divider />
       <FtTimeSpanList
         v-if="shouldShowTimeSpanList"
@@ -26,13 +26,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
+import TaskFilters from "~/components/molecules/assignment/filter/TaskFilters.vue";
 import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
 import { Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   SimplifiedFT,
-  TaskCategory,
   TaskPriorities,
   TaskPriority,
 } from "~/utils/models/ft-time-span.model";
@@ -40,16 +39,17 @@ import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { DisplayableCategory } from "~/utils/assignment/task-category";
 
 type FilterableTimeSpanListData = {
   teams: Team[];
   searchFtName: string;
-  category: TaskCategory | TaskPriority | null;
+  category: DisplayableCategory | TaskPriority | null;
 };
 
 export default Vue.extend({
   name: "FilterableTimeSpanList",
-  components: { FtTimeSpanFilters, FtTimeSpanList },
+  components: { TaskFilters, FtTimeSpanList },
   data: (): FilterableTimeSpanListData => ({
     teams: [],
     searchFtName: "",
@@ -95,7 +95,7 @@ export default Vue.extend({
         : () => true;
     },
     filterFtByCatergoryOrPriority(
-      categorySearched: TaskCategory | TaskPriority | null,
+      categorySearched: DisplayableCategory | TaskPriority | null,
     ): (ft: SimplifiedFT) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
@@ -104,12 +104,12 @@ export default Vue.extend({
       return this.filterFtByCategory(categorySearched);
     },
     isTaskPriority(
-      category: TaskPriority | TaskCategory,
+      category: TaskPriority | DisplayableCategory,
     ): category is TaskPriority {
       return Object.values(TaskPriorities).includes(category);
     },
     filterFtByCategory(
-      categorySearched: TaskCategory,
+      categorySearched: DisplayableCategory,
     ): (ft: SimplifiedFT) => boolean {
       return (ft) => ft.category === categorySearched;
     },

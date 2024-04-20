@@ -76,7 +76,9 @@ export class TaskToVolunteerController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
+  @Get(
+    "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignable-volunteers",
+  )
   @ApiResponse({
     status: 200,
     description: "Assignable volunteers for the selected assignment",
@@ -98,7 +100,7 @@ export class TaskToVolunteerController {
     description: "Assignment id",
     type: String,
   })
-  selectAssignment(
+  getAssignableVolunteersForAssignement(
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,

@@ -7,21 +7,14 @@ import {
 } from "@overbookd/festival-event-constants";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
-
-export const TaskCategories = {
-  STATIQUE: "STATIQUE",
-  BAR: "BAR",
-  MANUTENTION: "MANUTENTION",
-  FUN: "FUN",
-  RELOU: "RELOU",
-  AUCUNE: "AUCUNE",
-};
-
-export type TaskCategory = keyof typeof TaskCategories;
+import { DisplayableCategory } from "../assignment/task-category";
 
 export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
 
-export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
+export const TaskCategoryEmojis: Record<
+  DisplayableCategory,
+  TaskCategoryEmoji
+> = {
   STATIQUE: "🥶",
   BAR: "🍻",
   MANUTENTION: "👷",
@@ -30,7 +23,7 @@ export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
   AUCUNE: "🤷‍♂️",
 };
 
-export const TaskCategoryEmojiMap: Map<TaskCategory, TaskCategoryEmoji> =
+export const TaskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
   new Map([
     [STATIQUE, TaskCategoryEmojis.STATIQUE],
     [BAR, TaskCategoryEmojis.BAR],
@@ -49,7 +42,7 @@ export type TaskPriority = keyof typeof TaskPriorities;
 
 export type FtTimeSpanParameters = {
   hasPriority: boolean;
-  category?: TaskCategory;
+  category?: DisplayableCategory;
 };
 
 export type SimplifiedFT = FtTimeSpanParameters & {

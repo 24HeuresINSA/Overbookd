@@ -2,7 +2,7 @@ import { FestivalTask } from "@overbookd/festival-event";
 import { HttpStringified, PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { MyUserInformation, UserPersonalData } from "@overbookd/user";
-import { TaskCategory } from "./ft-time-span.model";
+import { DisplayableCategory } from "../assignment/task-category";
 
 type WithPotentialProfilePicture = {
   profilePicture?: string;
@@ -27,7 +27,7 @@ export type VolunteerTask = IProvidePeriod & {
 };
 
 export type VolunteerAssignmentStat = {
-  category: TaskCategory;
+  category: DisplayableCategory;
   duration: number;
 };
 
