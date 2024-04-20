@@ -1,14 +1,18 @@
-import { Assignments, Assignment, VolunteersForAssignment } from "./assignments";
-
+import {
+  Assignments,
+  Assignment,
+  VolunteersForAssignment,
+} from "./assignments";
 
 export class InMemoryAssignments implements Assignments {
-  constructor(private assignments: Assignment[]) { }
+  constructor(private assignments: Assignment[]) {}
 
   assign({
-    assignment, volunteers,
+    assignment,
+    volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
     const assignmentIndex = this.assignments.findIndex(
-      ({ taskId: id }) => assignment.taskId === id
+      ({ taskId: id }) => assignment.taskId === id,
     );
     const currentAssignment = this.assignments.at(assignmentIndex);
     if (assignmentIndex === -1 || !currentAssignment) {
