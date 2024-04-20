@@ -1,6 +1,5 @@
-import { PlanningEvent } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { Planning } from "./planning";
+import { Planning, PlanningEvent } from "./planning";
 
 export class InMemoryPlanning implements Planning {
   constructor(private plannings: Map<Volunteer["id"], PlanningEvent[]>) {}
