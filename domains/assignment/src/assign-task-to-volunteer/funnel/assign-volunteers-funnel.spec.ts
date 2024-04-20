@@ -12,6 +12,9 @@ import {
   lea,
   benevolant,
   rendreKangoo,
+  ontaine,
+  tatouin,
+  couperDesCarottes,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory, isFulfillingDemand } from "./candidate";
 
@@ -20,22 +23,25 @@ describe("Assign volunteers funnel", () => {
     new Map([
       [noel.volunteer.id, noel.planning],
       [lea.volunteer.id, lea.planning],
+      [ontaine.volunteer.id, ontaine.planning],
+      [tatouin.volunteer.id, tatouin.planning],
     ]),
   );
-  const initialAssignments = [benevolant, rendreKangoo];
+  const initialAssignments = [benevolant, rendreKangoo, couperDesCarottes];
   const candidateFactory = new CandidateFactory(planning);
-  describe("when assignment as only one benevole needs remaining", () => {
+  describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteer         | candidates          | planning
-      ${noel.volunteer} | ${[noel.volunteer]} | ${noel.planning}
-      ${lea.volunteer}  | ${[lea.volunteer]}  | ${lea.planning}
+      volunteerName                  | volunteer            | taskName                  | task                 | team             | candidates             | planning
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name} | ${couperDesCarottes} | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning}
     `(
-      "when selecting an available volunteer",
-      ({ volunteer, candidates, planning }) => {
+      "when selecting $volunteerName as available volunteer on task $taskName",
+      ({ volunteer, candidates, planning, task, team }) => {
         let everyCandidateFulfillsDemand: EveryCandidateFulfillsDemand;
         beforeAll(async () => {
           const assignments = new InMemoryAssignments(initialAssignments);
-          const funnel = Setup.init(candidateFactory, assignments, benevolant);
+          const funnel = Setup.init(candidateFactory, assignments, task);
           const selected = await funnel.select(volunteer);
           if (!isEveryCandidateFulfillsDemand(selected)) {
             throw new Error("Unexepected funnel type");
@@ -50,7 +56,7 @@ describe("Assign volunteers funnel", () => {
         it("should select benevole as team assignment", () => {
           expect(
             everyCandidateFulfillsDemand.candidates.every(
-              (candidate) => candidate.as === BENEVOLE_CODE,
+              (candidate) => candidate.as === team,
             ),
           ).toBe(true);
         });
@@ -65,13 +71,13 @@ describe("Assign volunteers funnel", () => {
         describe("when assigning selected volunteers", () => {
           it("should save new assignments", async () => {
             const expectedAssignees = [
-              ...benevolant.assignees,
-              { volunteer: volunteer.id, as: BENEVOLE_CODE },
+              ...task.assignees,
+              { volunteer: volunteer.id, as: team },
             ];
             const assignment = await everyCandidateFulfillsDemand.assign();
 
             expect(assignment).toEqual({
-              ...benevolant,
+              ...task,
               assignees: expectedAssignees,
             });
           });
