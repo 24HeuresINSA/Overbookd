@@ -9,7 +9,7 @@ export type RequestedTeam = {
   demands: number;
 };
 
-type AssignmentIdentifier = {
+export type AssignmentIdentifier = {
   assignmentId: string;
   mobilizationId: string;
 };

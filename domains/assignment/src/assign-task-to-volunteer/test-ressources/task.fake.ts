@@ -1,5 +1,6 @@
 import {
   BAR,
+  FUN,
   MANUTENTION,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
@@ -7,7 +8,9 @@ import { getTaskFactory } from "./factory/task.factory";
 import {
   friday09hto10h,
   friday18hto19h,
+  friday18hto20h,
   friday19hto20h,
+  friday19hto21h,
   friday20hto21h,
   fulfilledAssignment,
   missingOneHardAndOneBenevoleAssignment,
@@ -48,12 +51,22 @@ export const missingOneAssigneeThenOneHardAndOneBenevoleTask = factory
     missingOneHardAndOneBenevoleAssignment,
   ]);
 
+export const missingTwoVieuxDuring19hto20h = missingTwoVieuxAssignment
+  .during(friday19hto20h)
+  .withMobilization(friday19hto21h);
+
 export const missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask = factory
   .init("Task missing one plaizir or two vieux on staggered assignments")
-  .withCategory(STATIQUE)
+  .withCategory(FUN)
   .withAssignments([
-    missingOnePlaizirAssignment.during(friday18hto19h),
-    missingOnePlaizirAssignment.during(friday19hto20h),
-    missingTwoVieuxAssignment.during(friday19hto20h),
-    missingTwoVieuxAssignment.during(friday20hto21h),
+    missingOnePlaizirAssignment
+      .during(friday18hto19h)
+      .withMobilization(friday18hto20h),
+    missingOnePlaizirAssignment
+      .during(friday19hto20h)
+      .withMobilization(friday18hto20h),
+    missingTwoVieuxDuring19hto20h,
+    missingTwoVieuxAssignment
+      .during(friday20hto21h)
+      .withMobilization(friday19hto21h),
   ]);

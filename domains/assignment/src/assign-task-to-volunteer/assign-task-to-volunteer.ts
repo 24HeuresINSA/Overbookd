@@ -1,29 +1,38 @@
+import { Category } from "@overbookd/festival-event-constants";
 import { Period } from "@overbookd/period";
-import { IProvidePeriod } from "@overbookd/period";
 import { FormatVolunteer } from "../volunteer";
 import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
 } from "./assignable-volunteer";
-import { AssignmentSummary, Assignment, Assignee } from "./assignment";
+import { Assignment, Assignee, AssignmentIdentifier } from "./assignment";
 import {
   Task,
   TaskIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
-import { Category } from "@overbookd/festival-event-constants";
 
 export type Tasks = {
   findAll(): Promise<Task[]>;
   findOne(id: TaskIdentifier["id"]): Promise<Task>;
 };
 
+export type MobilizationIdentifier = {
+  taskId: number;
+  mobilizationId: string;
+};
+
+export type AssignmentSpecification = {
+  period: Period;
+  oneOfTheTeams: string[];
+  category?: Category;
+};
+
 export type AssignableVolunteers = {
   on(
-    period: IProvidePeriod,
-    oneOfTheTeams: string[],
-    category?: Category,
+    mobilizationIdentifier: MobilizationIdentifier,
+    assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]>;
 };
 
@@ -55,19 +64,29 @@ export class AssignTaskToVolunteer {
 
   async selectAssignment(
     taskId: TaskIdentifier["id"],
-    assignmentId: AssignmentSummary["identifier"]["assignmentId"],
+    assignmentIdentifier: AssignmentIdentifier,
   ): Promise<AssignableVolunteer[]> {
     const task = await this.allTasks.findOne(taskId);
 
     const assignment = task.assignments.find(
-      ({ identifier }) => identifier.assignmentId === assignmentId,
+      ({ identifier }) =>
+        identifier.assignmentId === assignmentIdentifier.assignmentId &&
+        identifier.mobilizationId === assignmentIdentifier.mobilizationId,
     );
     if (!assignment) throw new Error("Assignment not found");
 
+    const mobilizationIdentifier = {
+      taskId,
+      mobilizationId: assignmentIdentifier.mobilizationId,
+    };
+    const assignmentSpecification = {
+      period: Period.init(assignment),
+      oneOfTheTeams: this.filterMissingTeamMembers(assignment),
+      category: task.category,
+    };
     const volunteers = await this.assignableVolunteers.on(
-      assignment,
-      this.filterMissingTeamMembers(assignment),
-      task.category,
+      mobilizationIdentifier,
+      assignmentSpecification,
     );
 
     return volunteers.map(({ assignments, requestedDuring, ...volunteer }) => {
@@ -112,7 +131,6 @@ export class AssignTaskToVolunteer {
   }
 
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
-    console.error("task", task);
     const assignments = task.assignments.map((assignment) => {
       const period = Period.init(assignment);
       return {

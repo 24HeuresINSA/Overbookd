@@ -6,6 +6,7 @@ import {
   missingOneHardAndOneBenevoleTask,
   missingOneAssigneeThenOneHardAndOneBenevoleTask,
   missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
+  missingTwoVieuxDuring19hto20h,
 } from "./test-ressources/task.fake";
 import { InMemoryTasks } from "./repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
@@ -19,7 +20,6 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-ressources/assign-task-to-volunteer.test.utils";
-import { AssignmentBuilder } from "./test-ressources/factory/assignment.builder";
 
 describe("Assign task to volunteer", () => {
   const tasks = new InMemoryTasks([
@@ -82,27 +82,21 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      task                                               | assignmentIdentifier                                            | teams                   | expectedVolunteers
-      ${fullyAssignedTask}                               | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                   | ${[]}
-      ${missingOnePlaizirTask}                           | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleTask}                | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxTask}                             | ${missingTwoVieuxAssignment.assignment.identifier}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask} | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      task                                                     | assignmentIdentifier                                            | teams                   | expectedVolunteers
+      ${fullyAssignedTask}                                     | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                   | ${[]}
+      ${missingOnePlaizirTask}                                 | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleTask}                      | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${["hard", "benevole"]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxTask}                                   | ${missingTwoVieuxAssignment.assignment.identifier}              | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOneAssigneeThenOneHardAndOneBenevoleTask}       | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}          | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask} | ${missingTwoVieuxDuring19hto20h.assignment.identifier}          | ${["vieux"]}            | ${[leaAsAvailableVolunteer.expected.FUN]}
     `(
       "when looking for assignable $teams volunteers",
       ({ task, assignmentIdentifier, expectedVolunteers }) => {
         let volunteers: AssignableVolunteer[];
         beforeAll(async () => {
-          const assignment = task.assignments.find(
-            ({ assignment }: AssignmentBuilder) =>
-              assignment.identifier.assignmentId ===
-                assignmentIdentifier.assignmentId &&
-              assignment.identifier.mobilizationId ===
-                assignmentIdentifier.mobilizationId,
-          );
           volunteers = await assign.selectAssignment(
             task.value.id,
-            assignment?.summary.assignment.identifier.assignmentId ?? "",
+            assignmentIdentifier,
           );
         });
 

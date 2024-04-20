@@ -27,9 +27,17 @@ export const friday18hto19h = Period.init({
   start: new Date("2024-05-17T18:00+02:00"),
   end: new Date("2024-05-17T19:00+02:00"),
 });
+export const friday18hto20h = Period.init({
+  start: new Date("2024-05-17T18:00+02:00"),
+  end: new Date("2024-05-17T20:00+02:00"),
+});
 export const friday19hto20h = Period.init({
   start: new Date("2024-05-17T19:00+02:00"),
   end: new Date("2024-05-17T20:00+02:00"),
+});
+export const friday19hto21h = Period.init({
+  start: new Date("2024-05-17T19:00+02:00"),
+  end: new Date("2024-05-17T21:00+02:00"),
 });
 export const friday20hto21h = Period.init({
   start: new Date("2024-05-17T20:00+02:00"),
@@ -75,7 +83,7 @@ export const leaAsAvailableVolunteer = AssignableVolunteerFactory.init(lea)
     ...defaultAssignmentDurations,
     BAR: ONE_HOUR_IN_MS,
   })
-  .withRequests([friday08h45to09h], true);
+  .withRequests([friday08h45to09h, friday19hto21h], true);
 
 const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
   noelAsAvailableVolunteer,
@@ -99,7 +107,9 @@ const twoBenevoleDemandedAndOneAssigned = twoBenevoleDemanded.withAssigned(1);
 const fulfilledAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
 ).withTeams([oneHardAssignedAndDemanded.team]);
-export const fulfilledAssignment = AssignmentBuilder.init(friday08hto09h)
+export const fulfilledAssignment = AssignmentBuilder.init({
+  assignmentPeriod: friday08hto09h,
+})
   .withAssignees([{ as: "hard" }])
   .withRequestedTeams([oneHardDemanded.team])
   .withSummary(fulfilledAssignmentSummary);
@@ -111,16 +121,18 @@ const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
   .withAssignableVolunteers(
     availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected.BAR),
   );
-export const missingOnePlaizirAssignment = AssignmentBuilder.init(
-  friday08hto09h,
-)
+export const missingOnePlaizirAssignment = AssignmentBuilder.init({
+  assignmentPeriod: friday08hto09h,
+})
   .withRequestedTeams([onePlaizirDemanded.team])
   .withSummary(missingOnePlaizirAssignmentSummary);
 
 const missingTwoVieuxAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
 ).withTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team]);
-export const missingTwoVieuxAssignment = AssignmentBuilder.init(friday08hto09h)
+export const missingTwoVieuxAssignment = AssignmentBuilder.init({
+  assignmentPeriod: friday08hto09h,
+})
   .withAssignees([{ as: "hard" }])
   .withRequestedTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team])
   .withSummary(missingTwoVieuxAssignmentSummary);
@@ -130,9 +142,9 @@ const missingOneHardAndOneBenevoleAssignmentSummary =
     threeHardDemandedAndTwoAssigned.team,
     twoBenevoleDemandedAndOneAssigned.team,
   ]);
-export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init(
-  friday08hto09h,
-)
+export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init({
+  assignmentPeriod: friday08hto09h,
+})
   .withAssignees([{ as: "hard" }, { as: "hard" }, { as: "benevole" }])
   .withRequestedTeams([threeHardDemanded.team, twoBenevoleDemanded.team])
   .withSummary(missingOneHardAndOneBenevoleAssignmentSummary);
