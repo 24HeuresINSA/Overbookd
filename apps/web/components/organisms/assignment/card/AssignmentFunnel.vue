@@ -143,6 +143,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["close-dialog", "volunteers-assigned"],
   data: (): AssingmentFunneData => {
     return {
       calendarDate: new Date(),
@@ -198,7 +199,8 @@ export default defineComponent({
       return { start, end, name };
     },
     canNotAssign(): boolean {
-      return !this.taskAssignment.canAssign;
+      if (!this.funnel) return false;
+      return !(this.funnel instanceof EveryCandidateFulfillsDemand);
     },
     canNotAssignMoreVolunteer(): boolean {
       return !this.taskAssignment.canAssignMoreVolunteer;
@@ -252,9 +254,13 @@ export default defineComponent({
       if (!candidate) return false;
       return candidate.as !== teamCode;
     },
-    assign() {
+    async assign() {
       if (this.canNotAssign) return;
-      this.$accessor.assignment.saveAssignments();
+      if (!this.funnel) return;
+      if (!(this.funnel instanceof EveryCandidateFulfillsDemand)) return;
+      const assignment = await this.funnel.assign();
+      this.$emit("volunteers-assigned", assignment);
+      this.closeDialog();
     },
     addCandidate() {
       if (this.canNotAssignMoreVolunteer) return;

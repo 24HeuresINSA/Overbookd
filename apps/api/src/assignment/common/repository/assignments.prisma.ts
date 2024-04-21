@@ -1,9 +1,18 @@
-import { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
-import { Assignments } from "../assignment.service";
+import {
+  Assignment,
+  AssignmentIdentifier,
+  VolunteersForAssignment,
+} from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
-import { DatabaseAssignment, SELECT_ASSIGNMENT } from "./assignment.query";
+import { AssignmentRepository } from "../assignment.service";
+import {
+  DatabaseAssignment,
+  SELECT_ASSIGNMENT,
+  uniqueAssignment,
+  updateAssigneesOnAssignment,
+} from "./assignment.query";
 
-export class PrismaAssignments implements Assignments {
+export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
@@ -16,6 +25,20 @@ export class PrismaAssignments implements Assignments {
           mobilizationId,
         },
       },
+      select: SELECT_ASSIGNMENT,
+    });
+
+    return toAssignment(assignment, identifier);
+  }
+
+  async assign({
+    assignment: identifier,
+    volunteers,
+  }: VolunteersForAssignment): Promise<Assignment> {
+    const upsert = updateAssigneesOnAssignment(volunteers, identifier);
+    const assignment = await this.prisma.assignment.update({
+      where: uniqueAssignment(identifier),
+      data: { assignees: { upsert } },
       select: SELECT_ASSIGNMENT,
     });
 

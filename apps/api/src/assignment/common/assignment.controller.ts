@@ -1,8 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
+  Post,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -13,6 +16,7 @@ import {
   ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
+  ApiBody,
 } from "@nestjs/swagger";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentService } from "./assignment.service";
@@ -22,6 +26,7 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { AssignmentResponseDto } from "./dto/assignment.response.dto";
 import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
+import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -89,5 +94,24 @@ export class AssignmentController {
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
   ): Promise<PlanningEventResponseDto[]> {
     return this.assignment.getPlanning(volunteerId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Post()
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Assignment with new assignees",
+    type: AssignmentResponseDto,
+  })
+  @ApiBody({
+    description: "Volunteers for assignment",
+    type: VolunteersForAssignmentRequestDto,
+  })
+  assign(
+    @Body() volunteersForAssignment: VolunteersForAssignmentRequestDto,
+  ): Promise<AssignmentResponseDto> {
+    return this.assignment.assign(volunteersForAssignment);
   }
 }

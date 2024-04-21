@@ -82,7 +82,6 @@ export default Vue.extend({
 
 .volunteer-card-data {
   overflow: hidden;
-  max-width: 200px;
   padding: 3px;
   display: flex;
   flex-direction: column;
