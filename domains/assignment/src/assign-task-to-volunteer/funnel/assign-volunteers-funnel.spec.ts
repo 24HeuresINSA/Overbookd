@@ -2,8 +2,8 @@ import { BENEVOLE_CODE } from "@overbookd/team";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   EveryCandidateFulfillsDemand,
-  Setup,
-  VolunteerSelected,
+  WaitingForVolunteer,
+  SomeCandidatesNotFulfillingDemand,
   isEveryCandidateFulfillsDemand,
 } from "./assign-volunteers-funnel";
 import { InMemoryPlanning } from "./planning.inmemory";
@@ -52,7 +52,11 @@ describe("Assign volunteers funnel", () => {
         let everyCandidateFulfillsDemand: EveryCandidateFulfillsDemand;
         beforeAll(async () => {
           const assignments = new InMemoryAssignments(initialAssignments);
-          const funnel = Setup.init(candidateFactory, assignments, task);
+          const funnel = WaitingForVolunteer.init(
+            candidateFactory,
+            assignments,
+            task,
+          );
           const selected = await funnel.select(volunteer);
           if (!isEveryCandidateFulfillsDemand(selected)) {
             throw new Error("Unexepected funnel type");
@@ -101,7 +105,7 @@ describe("Assign volunteers funnel", () => {
       let funnel: EveryCandidateFulfillsDemand;
       beforeAll(async () => {
         const assignments = new InMemoryAssignments(initialAssignments);
-        const volunteerSelected = await Setup.init(
+        const volunteerSelected = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
           rendreKangoo,
@@ -134,11 +138,11 @@ describe("Assign volunteers funnel", () => {
       });
     });
     describe("when selected volunteer is member of both benevole and conducteur", () => {
-      let volunteerFunnel: VolunteerSelected;
+      let volunteerFunnel: SomeCandidatesNotFulfillingDemand;
       const volunteer = lea.volunteer;
       beforeAll(async () => {
         const assignments = new InMemoryAssignments(initialAssignments);
-        const funnel = await Setup.init(
+        const funnel = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
           rendreKangoo,
@@ -203,10 +207,14 @@ describe("Assign volunteers funnel", () => {
       `(
         "when volunteer selected is part of $team",
         ({ assignment, volunteer }) => {
-          let funnel: Setup;
+          let funnel: WaitingForVolunteer;
           beforeAll(() => {
             const assignments = new InMemoryAssignments(initialAssignments);
-            funnel = Setup.init(candidateFactory, assignments, assignment);
+            funnel = WaitingForVolunteer.init(
+              candidateFactory,
+              assignments,
+              assignment,
+            );
           });
           it("should be able to assign him as confiance", async () => {
             const selected = await funnel.select(volunteer);
@@ -229,10 +237,10 @@ describe("Assign volunteers funnel", () => {
       `(
         "When selecting $volunteerName who is part of $volunteerTeams on $assignmentName",
         ({ assignment, volunteer }) => {
-          let funnel: VolunteerSelected;
+          let funnel: SomeCandidatesNotFulfillingDemand;
           beforeAll(async () => {
             const assignments = new InMemoryAssignments(initialAssignments);
-            const selected = await Setup.init(
+            const selected = await WaitingForVolunteer.init(
               candidateFactory,
               assignments,
               assignment,

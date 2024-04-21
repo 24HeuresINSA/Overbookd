@@ -31,3 +31,24 @@ export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to
 export { AssignmentError, TaskNotFoundError } from "./assignment.error";
 export { CONFIANCE, HARD, VIEUX } from "./teams";
 export type { Volunteer as VolunteerForFunnel } from "./assign-task-to-volunteer/funnel/volunteer";
+export {
+  Candidate,
+  CandidateFactory,
+} from "./assign-task-to-volunteer/funnel/candidate";
+export {
+  ReadyToStart,
+  isReadyToStart,
+  WaitingForVolunteer,
+  isWaitingForVolunteer,
+  SomeCandidatesNotFulfillingDemand,
+  isSomeCandidatesNotFulfillingDemand,
+  EveryCandidateFulfillsDemand,
+  isEveryCandidateFulfillsDemand,
+} from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
+export type { Funnel } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
+export type { Planning } from "./assign-task-to-volunteer/funnel/planning";
+export type {
+  Assignments,
+  VolunteersForAssignment,
+} from "./assign-task-to-volunteer/funnel/assignments";
+export type { Volunteer as AssignmentVolunteer } from "./assign-task-to-volunteer/funnel/volunteer";
