@@ -12,7 +12,7 @@ import {
   DatabaseStoredAssignableVolunteer,
 } from "./assignable-volunteer.query";
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { Category, READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { Category } from "@overbookd/festival-event-constants";
 import {
   SELECT_PERIOD,
   overlapPeriodCondition,
@@ -26,6 +26,7 @@ import {
   HAS_POSITIVE_CHARISMA,
   IS_NOT_DELETED,
 } from "../../common/repository/common.query";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -65,8 +66,8 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
   private buildFestivalTaskMobilizationSelection(period: Period) {
     const mobilizationIncludedNotYetReadyToAssign = {
       ...includePeriodCondition(period),
-      ft: { status: { not: READY_TO_ASSIGN }, isDeleted: false },
-    } as const;
+      ft: EXISTS_AND_NOT_READY_TO_ASSIGN,
+    };
 
     return {
       festivalTaskMobilizations: {

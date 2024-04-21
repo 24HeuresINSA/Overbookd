@@ -2,7 +2,7 @@ import { Planning, PlanningEvent } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/period";
 import { SELECT_PERIOD } from "./period.query";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   festivalTask: { name: string };
@@ -29,10 +29,7 @@ export class PrismaPlanning implements Planning {
         },
       }),
       this.prisma.festivalTaskMobilization.findMany({
-        where: {
-          ...isAssignedCondition,
-          ft: { status: { not: READY_TO_ASSIGN } },
-        },
+        where: { ...isAssignedCondition, ft: EXISTS_AND_NOT_READY_TO_ASSIGN },
         select: { ...SELECT_PERIOD, ft: { select: { name: true } } },
       }),
     ]);
