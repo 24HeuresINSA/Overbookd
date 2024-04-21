@@ -25,6 +25,10 @@ export type DatabaseStoredAssignableVolunteer = {
   festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
   friends: { requestor: DatabaseFriend }[];
   friendRequestors: { friend: DatabaseFriend }[];
+  _count: {
+    friends: number;
+    friendRequestors: number;
+  };
 };
 
 export const SELECT_VOLUNTEER = {

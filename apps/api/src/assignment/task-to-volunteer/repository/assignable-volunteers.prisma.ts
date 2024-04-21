@@ -45,6 +45,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
           ...assignmentSpecification,
           oneOfTheTeams: extendedOneOfTeams,
         }),
+        _count: { select: { friends: true, friendRequestors: true } },
       },
     });
 
@@ -167,6 +168,8 @@ function toStoredAssignableVolunteer(
       ({ assignment }) => assignment.festivalTaskId === taskId,
     ),
   );
+  const hasFriends =
+    volunteer._count.friends + volunteer._count.friendRequestors > 0;
 
   return {
     id: volunteer.id,
@@ -181,5 +184,6 @@ function toStoredAssignableVolunteer(
     requestedDuring,
     hasFriendAvailable,
     hasFriendAssigned,
+    hasFriends,
   };
 }
