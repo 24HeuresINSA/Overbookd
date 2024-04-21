@@ -10,7 +10,7 @@
           <OverMultiCalendar
             v-model="calendarDate"
             :users="volunteerAvailabilitiesForCalendar"
-            :planning-events="candidatesTaskEvents"
+            :planning-events="candidatesPlanningEvents"
             :event-to-add="assignmentAsEvent"
           >
             <template #volunteer-header="{}">
@@ -99,8 +99,8 @@ import {
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
 import {
-  PlanningEvent,
-  convertTaskToPlanningEvent,
+  CalendarPlanningEvent,
+  convertAssignmentPlanningEventForCalendar,
 } from "~/domain/common/planning-events";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarUser } from "~/utils/models/calendar.model";
@@ -184,13 +184,16 @@ export default defineComponent({
         availabilities: [], // TODO Get assigment somehow
       }));
     },
-    candidatesTaskEvents(): PlanningEvent[] {
-      return this.$accessor.assignment.taskAssignment.candidates.flatMap(
-        ({ volunteer, tasks }) =>
-          tasks.map((task) => convertTaskToPlanningEvent(task, volunteer.id)),
+    candidatesPlanningEvents(): CalendarPlanningEvent[] {
+      if (!this.funnel) return [];
+      return this.funnel.candidates.flatMap(
+        ({ planning, id }: IDefineCandidate) =>
+          planning.map((planning) =>
+            convertAssignmentPlanningEventForCalendar(planning, id),
+          ),
       );
     },
-    assignmentAsEvent(): PlanningEvent {
+    assignmentAsEvent(): CalendarPlanningEvent {
       const { start, end, name } = this.assignment;
       return { start, end, name };
     },

@@ -13,7 +13,7 @@
 import Vue from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  PlanningEvent,
+  CalendarPlanningEvent,
   convertTaskToPlanningEvent,
 } from "~/domain/common/planning-events";
 import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
@@ -34,14 +34,14 @@ export default Vue.extend({
     volunteers(): CalendarUser[] {
       return this.$accessor.needHelp.filteredVolunteers;
     },
-    periodAsEvent(): PlanningEvent {
+    periodAsEvent(): CalendarPlanningEvent {
       const period = this.$accessor.needHelp.period;
       return {
         ...period,
         name: "Viens m'aider",
       };
     },
-    tasksAsEvents(): PlanningEvent[] {
+    tasksAsEvents(): CalendarPlanningEvent[] {
       return this.$accessor.needHelp.volunteers.flatMap(({ tasks, id }) =>
         tasks.map((task) => convertTaskToPlanningEvent(task, id)),
       );

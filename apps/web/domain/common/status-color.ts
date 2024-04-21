@@ -7,7 +7,7 @@ import {
   READY_TO_ASSIGN,
 } from "@overbookd/festival-event-constants";
 
-const GREY = "grey";
+export const GREY = "grey";
 const RED = "red";
 const ORANGE = "orange";
 const GREEN = "green";

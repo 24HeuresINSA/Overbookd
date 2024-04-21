@@ -100,7 +100,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { DateString, Hour } from "@overbookd/period";
-import { PlanningEvent } from "~/domain/common/planning-events";
+import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
@@ -121,13 +121,13 @@ export default Vue.extend({
       default: () => [],
     },
     planningEvents: {
-      type: Array as () => PlanningEvent[],
+      type: Array as () => CalendarPlanningEvent[],
       required: true,
       default: () => [],
     },
     eventToAdd: {
-      type: Object as () => PlanningEvent | undefined,
-      default: () => undefined as PlanningEvent | undefined,
+      type: Object as () => CalendarPlanningEvent | undefined,
+      default: () => undefined as CalendarPlanningEvent | undefined,
     },
     startDate: {
       type: Date,
@@ -194,7 +194,7 @@ export default Vue.extend({
 
       return isItAvailableDuringThisHour(volunteer.availabilities, date, hour);
     },
-    buildPreviewEvents(eventToAdd: PlanningEvent): CalendarEvent[] {
+    buildPreviewEvents(eventToAdd: CalendarPlanningEvent): CalendarEvent[] {
       return this.volunteerIds.map((category) => ({
         ...eventToAdd,
         timed: true,
