@@ -1,5 +1,6 @@
 import {
   AssignableVolunteer,
+  Assignment,
   AssignmentVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
@@ -9,11 +10,12 @@ import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-vol
 import { safeCall } from "~/utils/api/calls";
 import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
 import { HttpStringified } from "@overbookd/http";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
-  selectedAssignment: ExtendedAssignementIdentifier | null;
+  selectedAssignment: Assignment | null;
   assignableVolunteers: AssignableVolunteer[];
   selectedVolunteer: AssignmentVolunteer | null;
 };
@@ -30,14 +32,14 @@ export const mutations = mutationTree(state, {
   SET_TASKS(state, tasks: MissingAssignmentTask[]) {
     state.tasks = tasks;
   },
-  SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary | null) {
+  SELECT_TASK(state, task: TaskWithAssignmentsSummary) {
     state.selectedTask = task;
   },
-  SET_SELECTED_ASSIGNMENT(
-    state,
-    assignmentIdentifier: ExtendedAssignementIdentifier | null,
-  ) {
-    state.selectedAssignment = assignmentIdentifier;
+  SELECT_ASSIGNMENT(state, assignment: Assignment) {
+    state.selectedAssignment = assignment;
+  },
+  RESET_SELECTED_ASSIGNMENT(state) {
+    state.selectedAssignment = null;
   },
   SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
@@ -70,8 +72,9 @@ export const actions = actionTree(
       if (!res) return;
 
       const task = castTaskWithAssignmentsSummaryWithDate(res.data);
-      commit("SET_SELECTED_TASK", task);
-      commit("SET_SELECTED_ASSIGNMENT", null);
+      commit("SELECT_TASK", task);
+      commit("RESET_SELECTED_ASSIGNMENT");
+      commit("RESET_SELECTED_VOLUNTEER");
       commit("SET_ASSIGNABLE_VOLUNTEERS", []);
     },
 
@@ -79,16 +82,23 @@ export const actions = actionTree(
       { commit },
       assignmentIdentifier: ExtendedAssignementIdentifier,
     ) {
-      const res = await safeCall(
-        this,
-        TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+      const [assignableVolunteersRes, assignmentRes] = await Promise.all([
+        safeCall(
           this,
-          assignmentIdentifier,
+          TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+            this,
+            assignmentIdentifier,
+          ),
         ),
-      );
-      if (!res) return;
-      commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
-      commit("SET_ASSIGNABLE_VOLUNTEERS", res.data);
+        safeCall(
+          this,
+          AssignmentsRepository.findOne(this, assignmentIdentifier),
+        ),
+      ]);
+      if (!assignableVolunteersRes || !assignmentRes) return;
+      commit("SELECT_ASSIGNMENT", assignmentIdentifier);
+      commit("SET_ASSIGNABLE_VOLUNTEERS", assignableVolunteersRes.data);
+      commit("SELECT_ASSIGNMENT", assignmentRes.data);
     },
 
     async selectVolunteer({ commit }, volunteer: AssignmentVolunteer) {

@@ -12,12 +12,12 @@
     <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
 
-    <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
+    <v-dialog v-model="openFunnelDialog" width="1000px">
       <AssignmentFunnel
         v-if="volunteer && assignment"
         :volunteer="volunteer"
         :assignment="assignment"
-        @close-dialog="closeTaskAssignmentDialog"
+        @close-dialog="closeFunnelDialog"
       />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AssignmentFunnel from "~/components/organisms/assignment/card/AssignmentFunnel.vue";
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
@@ -42,7 +42,12 @@ import {
   MissingAssignmentTask,
 } from "@overbookd/assignment";
 
-export default Vue.extend({
+type OrgaTaskData = {
+  openFunnelDialog: boolean;
+  displayAssignmentDetailsDialog: boolean;
+};
+
+export default defineComponent({
   name: "TaskOrga",
   components: {
     FilterableVolunteerList,
@@ -52,7 +57,8 @@ export default Vue.extend({
     TimeSpanDetails,
     SnackNotificationContainer,
   },
-  data: () => ({
+  data: (): OrgaTaskData => ({
+    openFunnelDialog: false,
     displayAssignmentDetailsDialog: false,
   }),
   head: () => ({
@@ -66,15 +72,7 @@ export default Vue.extend({
       return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
     },
     assignment(): Assignment | null {
-      return null;
-    },
-    openTaskAssignmentDialog: {
-      get(): boolean {
-        return this.$accessor.assignment.openTaskAssignmentDialog;
-      },
-      set(): void {
-        this.$accessor.assignment.resetAssignment();
-      },
+      return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
   },
   async mounted() {
@@ -82,8 +80,8 @@ export default Vue.extend({
     await this.$accessor.assignTaskToVolunteer.fetchTasks();
   },
   methods: {
-    closeTaskAssignmentDialog() {
-      this.openTaskAssignmentDialog = false;
+    closeFunnelDialog() {
+      this.openFunnelDialog = false;
     },
     closeAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = false;
@@ -94,6 +92,7 @@ export default Vue.extend({
     },
     selectVolunteer(volunteer: AssignmentVolunteer) {
       this.$accessor.assignTaskToVolunteer.selectVolunteer(volunteer);
+      this.openFunnelDialog = true;
     },
     selectAssignment(assignment: AssignmentSummary) {
       const taskId = this.$accessor.assignTaskToVolunteer.selectedTask?.id;
