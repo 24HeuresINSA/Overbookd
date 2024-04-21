@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { HARD, VIEUX, CONFIANCE } from "../../teams";
 import { Assignee, Assignment, TeamDemanded } from "../assignment";
-import { Availablilities, Planning, PlanningEvent } from "./planning";
+import { Availabilities, Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
 type NotYetFulfillingDemandCandidate = Volunteer & {
@@ -107,7 +107,7 @@ export function isFulfillingDemand(
 export class CandidateFactory {
   constructor(
     private readonly planning: Planning,
-    private readonly availabilities: Availablilities,
+    private readonly availabilities: Availabilities,
   ) {}
 
   async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
