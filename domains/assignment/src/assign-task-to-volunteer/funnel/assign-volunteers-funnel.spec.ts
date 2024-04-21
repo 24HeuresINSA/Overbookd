@@ -52,7 +52,11 @@ describe("Assign volunteers funnel", () => {
         let everyCandidateFulfillsDemand: EveryCandidateFulfillsDemand;
         beforeAll(async () => {
           const assignments = new InMemoryAssignments(initialAssignments);
-          const funnel = WaitingForVolunteer.init(candidateFactory, assignments, task);
+          const funnel = WaitingForVolunteer.init(
+            candidateFactory,
+            assignments,
+            task,
+          );
           const selected = await funnel.select(volunteer);
           if (!isEveryCandidateFulfillsDemand(selected)) {
             throw new Error("Unexepected funnel type");
@@ -206,7 +210,11 @@ describe("Assign volunteers funnel", () => {
           let funnel: WaitingForVolunteer;
           beforeAll(() => {
             const assignments = new InMemoryAssignments(initialAssignments);
-            funnel = WaitingForVolunteer.init(candidateFactory, assignments, assignment);
+            funnel = WaitingForVolunteer.init(
+              candidateFactory,
+              assignments,
+              assignment,
+            );
           });
           it("should be able to assign him as confiance", async () => {
             const selected = await funnel.select(volunteer);
