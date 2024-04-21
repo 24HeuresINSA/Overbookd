@@ -187,6 +187,6 @@ function toStoredAssignableVolunteer(
     requestedDuring,
     hasFriendAvailable,
     hasFriendAssigned,
-    hasFriends: hasAtLeastOneFriend(volunteer),
+    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
   };
 }

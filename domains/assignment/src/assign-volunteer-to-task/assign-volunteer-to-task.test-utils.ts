@@ -25,7 +25,7 @@ const noel: VolunteerWithFriendFilter = {
   lastname: "Ertsemud",
   charisma: 1000,
   teams: ["hard", "comsa"],
-  hasFriends: false,
+  hasAtLeastOneFriend: false,
 };
 const lea: VolunteerWithFriendFilter = {
   id: 2,
@@ -33,7 +33,7 @@ const lea: VolunteerWithFriendFilter = {
   lastname: "Mouyno",
   charisma: 0,
   teams: ["vieux"],
-  hasFriends: false,
+  hasAtLeastOneFriend: false,
 };
 
 export const noelAssignee: VolunteerWithAssignments = {

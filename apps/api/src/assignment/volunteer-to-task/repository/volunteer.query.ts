@@ -1,6 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { COUNT_FRIENDS, DatabaseFriendCount } from "../../common/friend.query";
+import { SELECT_PERIOD } from "../../common/period.query";
 
 export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: {
@@ -28,7 +29,7 @@ const SELECT_VOLUNTEER = {
 const SELECT_ASSIGNMENTS = {
   assigned: {
     select: {
-      assignment: { select: { start: true, end: true } },
+      assignment: { select: SELECT_PERIOD },
     },
   },
 };

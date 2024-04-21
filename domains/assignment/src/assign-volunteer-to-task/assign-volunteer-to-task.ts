@@ -2,7 +2,7 @@ import { Period } from "@overbookd/period";
 import { FormatVolunteer, Volunteer } from "../volunteer";
 
 export type VolunteerWithFriendFilter = Volunteer & {
-  hasFriends: boolean;
+  hasAtLeastOneFriend: boolean;
 };
 
 export type VolunteerWithAssignments = VolunteerWithFriendFilter & {
@@ -35,7 +35,7 @@ export class AssignVolunteerToTask {
       FormatVolunteer.computeAssignmentDuration(assignments);
     return {
       ...volunteer,
-      hasFriends: false,
+      hasAtLeastOneFriend: false,
       assignmentDuration,
     };
   }

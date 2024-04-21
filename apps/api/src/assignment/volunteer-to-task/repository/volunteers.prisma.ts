@@ -45,7 +45,7 @@ function toVolunteerWithAssignments(
     note: volunteer.note,
     charisma: volunteer.charisma,
     teams: volunteer.teams.map((t) => t.team.code),
-    hasFriends: hasAtLeastOneFriend(volunteer),
+    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
     assignments,
   };
 }

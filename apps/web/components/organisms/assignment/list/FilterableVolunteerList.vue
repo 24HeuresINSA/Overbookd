@@ -7,7 +7,7 @@
         @change:search="searchVolunteer = $event"
         @change:teams="teams = $event"
         @change:sort="sort = $event"
-        @change:no-friends="hasNoFriends = $event"
+        @change:has-no-friends="hasNoFriends = $event"
       ></VolunteerFilters>
       <v-divider />
       <AssignmentVolunteerList
@@ -142,7 +142,7 @@ export default defineComponent({
       hasNoFriends: boolean,
     ): (volunteer: AssignmentVolunteer) => boolean {
       if (!hasNoFriends) return () => true;
-      return (volunteer) => !volunteer.hasFriends;
+      return (volunteer) => !volunteer.hasAtLeastOneFriend;
     },
   },
 });

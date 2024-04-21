@@ -63,7 +63,12 @@ export default defineComponent({
       default: 0,
     },
   },
-  emits: ["change:search", "change:teams", "change:sort", "change:no-friends"],
+  emits: [
+    "change:search",
+    "change:teams",
+    "change:sort",
+    "change:has-no-friends",
+  ],
   data: () => ({
     search: "",
     teams: [],
@@ -82,7 +87,7 @@ export default defineComponent({
       this.$emit("change:sort", this.sort);
     },
     changeNoFriends() {
-      this.$emit("change:no-friends", this.hasNoFriends);
+      this.$emit("change:has-no-friends", this.hasNoFriends);
     },
   },
 });
