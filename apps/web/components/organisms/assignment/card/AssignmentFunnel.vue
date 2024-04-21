@@ -353,7 +353,6 @@ export default defineComponent({
 
 .calendar-header {
   &__candidate {
-    max-width: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
