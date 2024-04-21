@@ -1,19 +1,29 @@
 import {
   AssignableVolunteer,
+  Assignment,
+  AssignmentVolunteer,
+  Funnel,
   MissingAssignmentTask,
+  ReadyToStart,
   TaskWithAssignmentsSummary,
+  isReadyToStart,
+  isWaitingForVolunteer,
 } from "@overbookd/assignment";
 import { actionTree, mutationTree } from "typed-vuex";
 import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 import { safeCall } from "~/utils/api/calls";
 import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
 import { HttpStringified } from "@overbookd/http";
+import { assignments, candidateFactory } from "~/utils/assignment/funnel";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
   selectedAssignment: ExtendedAssignementIdentifier | null;
   assignableVolunteers: AssignableVolunteer[];
+  funnel: Funnel | null;
 };
 
 export const state = (): State => ({
@@ -21,6 +31,7 @@ export const state = (): State => ({
   selectedTask: null,
   selectedAssignment: null,
   assignableVolunteers: [],
+  funnel: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -39,6 +50,9 @@ export const mutations = mutationTree(state, {
   SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
   },
+  SET_FUNNEL(state, funnel: Funnel) {
+    state.funnel = funnel;
+  },
 });
 
 export const actions = actionTree(
@@ -51,6 +65,12 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_TASKS", res.data);
+
+      const funnel = ReadyToStart.init(
+        candidateFactory(this),
+        assignments(this),
+      );
+      commit("SET_FUNNEL", funnel);
     },
 
     async selectTask({ commit }, taskId: number) {
@@ -67,19 +87,37 @@ export const actions = actionTree(
     },
 
     async selectAssignment(
-      { commit },
+      { commit, state },
       assignmentIdentifier: ExtendedAssignementIdentifier,
     ) {
-      const res = await safeCall(
-        this,
-        TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+      const [assignableVolunteersRes, assignmentRes] = await Promise.all([
+        safeCall(
           this,
-          assignmentIdentifier,
+          TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+            this,
+            assignmentIdentifier,
+          ),
         ),
-      );
-      if (!res) return;
+        safeCall(
+          this,
+          AssignmentsRepository.findOne(this, assignmentIdentifier),
+        ),
+      ]);
+
+      if (!assignableVolunteersRes || !assignmentRes) return;
       commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
-      commit("SET_ASSIGNABLE_VOLUNTEERS", res.data);
+      commit("SET_ASSIGNABLE_VOLUNTEERS", assignableVolunteersRes.data);
+
+      if (state.funnel === null || !isReadyToStart(state.funnel)) return;
+      const assignment = castAssignmentWithDate(assignmentRes.data);
+      const funnel = state.funnel.select(assignment);
+      commit("SET_FUNNEL", funnel);
+    },
+
+    async selectVolunteer({ commit, state }, volunteer: AssignmentVolunteer) {
+      if (state.funnel === null || !isWaitingForVolunteer(state.funnel)) return;
+      const funnel = await state.funnel.select(volunteer);
+      commit("SET_FUNNEL", funnel);
     },
   },
 );
@@ -95,4 +133,10 @@ function castTaskWithAssignmentsSummaryWithDate(
       end: new Date(assignment.end),
     })),
   };
+}
+
+function castAssignmentWithDate(
+  assignment: HttpStringified<Assignment>,
+): Assignment {
+  return { ...assignment, ...castPeriodWithDate(assignment) };
 }

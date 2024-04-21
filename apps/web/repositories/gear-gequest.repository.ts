@@ -1,7 +1,7 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { EventGearRequest } from "~/utils/models/gear-request.model";
 
-export type Context = { $axios: NuxtAxiosInstance };
+type Context = { $axios: NuxtAxiosInstance };
 
 export class GearRequestRepository {
   private static readonly basePath = "gear-requests";

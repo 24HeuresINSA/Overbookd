@@ -13,11 +13,11 @@
             :planning-events="candidatesTaskEvents"
             :event-to-add="currentTaskAsEvent"
           >
-            <template #volunteer-header="{ category }">
+            <template #volunteer-header="{}">
               <div class="calendar-header">
                 <div class="calendar-header__action">
                   <v-btn
-                    v-if="isRemovable(category)"
+                    v-if="isRemovable()"
                     icon
                     color="red"
                     @click="removeLastCandidate()"
@@ -26,23 +26,15 @@
                   </v-btn>
                 </div>
                 <div class="calendar-header__candidate">
-                  <v-btn
-                    v-if="isReplacable(category)"
-                    icon
-                    @click="previousCandidate"
-                  >
+                  <v-btn v-if="isReplacable()" icon @click="previousCandidate">
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
                   <AssignmentVolunteerResumeCalendarHeader
-                    v-if="retrieveVolunteer(category)"
-                    :volunteer="retrieveVolunteer(category)"
+                    v-if="retrieveVolunteer()"
+                    :volunteer="retrieveVolunteer()"
                     class="volunteer-resume"
                   ></AssignmentVolunteerResumeCalendarHeader>
-                  <v-btn
-                    v-if="isReplacable(category)"
-                    icon
-                    @click="nextCandidate"
-                  >
+                  <v-btn v-if="isReplacable()" icon @click="nextCandidate">
                     <v-icon>mdi-chevron-right</v-icon>
                   </v-btn>
                 </div>
@@ -52,19 +44,19 @@
           <div class="planning__teams">
             <div
               v-for="candidate in candidates"
-              :key="candidate.volunteer.id"
+              :key="candidate.json.id"
               class="candidate-teams"
             >
               <TeamChip
-                v-for="team of getAssignableTeams(candidate)"
+                v-for="team of candidate.json.assignableTeams"
                 :key="team"
                 :team="team"
                 with-name
                 size="large"
                 :class="{
-                  'not-selected': isNotAssignedAs(team, candidate),
+                  'not-selected': team !== candidate.json.as,
                 }"
-                @click="temporaryAssign(team, candidate)"
+                @click="candidate.demandAs(team)"
               ></TeamChip>
             </div>
           </div>
@@ -98,13 +90,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import { defineComponent } from "vue";
 import {
-  AssignmentCandidate,
-  Task,
-  TaskAssignment,
-} from "~/domain/timespan-assignment/timeSpanAssignment";
+  Assignment,
+  VolunteerForFunnel,
+  Candidate,
+  Funnel,
+  ReadyToStart,
+} from "@overbookd/assignment";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
@@ -112,52 +106,59 @@ import {
 } from "~/domain/common/planning-events";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarUser } from "~/utils/models/calendar.model";
-import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
+import { assignments, candidateFactory } from "~/utils/assignment/funnel";
 
-export default Vue.extend({
-  name: "AssignmentForm",
+type AssignmentFunnelData = {
+  calendarDate: Date;
+};
+
+export default defineComponent({
+  name: "AssignmentFunnel",
   components: {
     TeamChip,
     OverMultiCalendar,
     AssignmentVolunteerResumeCalendarHeader,
   },
-  data: () => {
+  props: {
+    volunteer: {
+      type: Object as () => VolunteerForFunnel,
+      required: true,
+    },
+    assignment: {
+      type: Object as () => Assignment,
+      required: true,
+    },
+  },
+  data: (): AssignmentFunnelData => {
     return {
       calendarDate: new Date(),
     };
   },
   computed: {
-    taskAssignment(): TaskAssignment {
-      return this.$accessor.assignment.taskAssignment;
+    taskAssignment(): Assignment {
+      return this.assignment;
     },
-    ftId(): number {
-      return this.$accessor.assignment.selectedFt?.id ?? 0;
+    funnel(): Funnel {
+      const { funnel } = this.$accessor.assignTaskToVolunteer;
+      const baseFunnel = ReadyToStart.init(
+        candidateFactory(this),
+        assignments(this),
+      );
+      return funnel ?? baseFunnel;
+    },
+    taskId(): number {
+      return this.assignment.taskId;
     },
     taskTitle(): string {
-      const id = this.ftId;
-      const name = this.taskAssignment.task.name;
-      return `[${id}] ${name}`;
-    },
-    mainCandidate(): AssignmentCandidate | undefined {
-      return this.taskAssignment.candidates.at(0);
+      return `[${this.assignment.taskId}] ${this.assignment.name}`;
     },
     start(): Date {
-      return this.taskAssignment.task.start;
-    },
-    volunteerIds(): string[] {
-      return this.taskAssignment.candidates.map((c) =>
-        c.volunteer.id.toString(),
-      );
-    },
-    currentTask(): Task {
-      return this.taskAssignment.task;
+      return this.assignment.start;
     },
     calendarUsers(): CalendarUser[] {
-      return this.taskAssignment.candidates.map(
-        ({ volunteer, availabilities }) => ({ ...volunteer, availabilities }),
-      );
+      return [];
     },
     candidatesTaskEvents(): PlanningEvent[] {
       return this.$accessor.assignment.taskAssignment.candidates.flatMap(
@@ -166,59 +167,35 @@ export default Vue.extend({
       );
     },
     currentTaskAsEvent(): PlanningEvent {
-      return createTemporaryTaskPlanningEvent(this.currentTask);
+      return createTemporaryTaskPlanningEvent(this.assignment);
     },
     canNotAssign(): boolean {
-      return !this.taskAssignment.canAssign;
+      return true;
     },
     canNotAssignMoreVolunteer(): boolean {
-      return !this.taskAssignment.canAssignMoreVolunteer;
+      return true;
     },
     areOtherFriendsAvailable(): boolean {
-      return this.taskAssignment.potentialCandidates.length > 0;
+      return false;
     },
-    candidates(): AssignmentCandidate[] {
-      return this.taskAssignment.candidates;
+    candidates(): Candidate[] {
+      return [];
     },
   },
   watch: {
-    taskAssignment() {
-      this.calendarDate = this.start;
+    assignment(assignment) {
+      this.calendarDate = assignment.start;
     },
   },
-  mounted() {
-    this.calendarDate = this.start;
+  async mounted() {
+    this.calendarDate = this.assignment.start;
   },
   methods: {
-    retrieveVolunteer(id: string): Volunteer | undefined {
-      return this.taskAssignment.getCandidate(+id)?.volunteer;
+    retrieveVolunteer(): Volunteer | undefined {
+      return undefined;
     },
     closeDialog() {
       this.$emit("close-dialog");
-    },
-    getAssignableTeams(candidate?: AssignmentCandidate): string[] {
-      if (!candidate) return [];
-      const underlyingTeams = getUnderlyingTeams(candidate.volunteer.teams);
-      const teams = [...candidate.volunteer.teams, ...underlyingTeams];
-      return teams.filter((team) =>
-        this.taskAssignment.remainingTeamRequest.includes(team),
-      );
-    },
-    temporaryAssign(teamCode: string, candidate?: AssignmentCandidate) {
-      if (!candidate) return;
-      const volunteerId = candidate.volunteer.id;
-      if (candidate.assignment === teamCode) {
-        this.$accessor.assignment.unassign(volunteerId);
-      } else {
-        this.$accessor.assignment.assign({ teamCode, volunteerId });
-      }
-    },
-    isNotAssignedAs(
-      teamCode: string,
-      candidate?: AssignmentCandidate,
-    ): boolean {
-      if (!candidate) return false;
-      return candidate.assignment !== teamCode;
     },
     assign() {
       if (this.canNotAssign) return;
@@ -234,30 +211,21 @@ export default Vue.extend({
     nextCandidate() {
       this.$accessor.assignment.nextCandidate();
     },
-    isReplacable(volunteerId: string): boolean {
+    isReplacable(): boolean {
       return (
-        this.isLastAddedCandidate(volunteerId) &&
+        this.isLastAddedCandidate() &&
         this.areOtherFriendsAvailable &&
-        !this.isFirstAddedCandidate(volunteerId)
+        !this.isFirstAddedCandidate()
       );
     },
-    isLastAddedCandidate(volunteerId: string): boolean {
-      const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId,
-      );
-      return candidateIndex + 1 === this.taskAssignment.candidates.length;
+    isLastAddedCandidate(): boolean {
+      return false;
     },
-    isFirstAddedCandidate(volunteerId: string): boolean {
-      const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId,
-      );
-      return candidateIndex === 0;
+    isFirstAddedCandidate(): boolean {
+      return true;
     },
-    isRemovable(volunteerId: string): boolean {
-      return (
-        this.isLastAddedCandidate(volunteerId) &&
-        !this.isFirstAddedCandidate(volunteerId)
-      );
+    isRemovable(): boolean {
+      return this.isLastAddedCandidate() && !this.isFirstAddedCandidate();
     },
     removeLastCandidate(): void {
       this.$accessor.assignment.removeLastCandidate();
