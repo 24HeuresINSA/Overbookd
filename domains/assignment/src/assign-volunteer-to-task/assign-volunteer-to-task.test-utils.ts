@@ -2,8 +2,8 @@ import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
 import {
   VolunteerWithAssignmentDuration,
   VolunteerWithAssignments,
+  VolunteerWithFriendFilter,
 } from "./assign-volunteer-to-task";
-import { Volunteer } from "../volunteer";
 import { Period } from "@overbookd/period";
 
 const friday08hTo10h = Period.init({
@@ -19,19 +19,21 @@ const friday15h15To18h = Period.init({
   end: new Date("2022-07-01T18:00:00Z"),
 });
 
-const noel: Volunteer = {
+const noel: VolunteerWithFriendFilter = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",
   charisma: 1000,
   teams: ["hard", "comsa"],
+  hasAtLeastOneFriend: false,
 };
-const lea: Volunteer = {
+const lea: VolunteerWithFriendFilter = {
   id: 2,
   firstname: "Lea",
   lastname: "Mouyno",
   charisma: 0,
   teams: ["vieux"],
+  hasAtLeastOneFriend: false,
 };
 
 export const noelAssignee: VolunteerWithAssignments = {

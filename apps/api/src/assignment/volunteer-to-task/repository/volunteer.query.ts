@@ -1,5 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { BENEVOLE_CODE } from "@overbookd/team";
+import { COUNT_FRIENDS, DatabaseFriendCount } from "../../common/friend.query";
+import { SELECT_PERIOD } from "../../common/period.query";
 
 export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: {
@@ -8,8 +10,6 @@ export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
     },
   },
 };
-
-export const IS_NOT_DELETED = { isDeleted: false };
 
 const SELECT_VOLUNTEER = {
   id: true,
@@ -29,12 +29,7 @@ const SELECT_VOLUNTEER = {
 const SELECT_ASSIGNMENTS = {
   assigned: {
     select: {
-      assignment: {
-        select: {
-          start: true,
-          end: true,
-        },
-      },
+      assignment: { select: SELECT_PERIOD },
     },
   },
 };
@@ -42,9 +37,10 @@ const SELECT_ASSIGNMENTS = {
 export const SELECT_VOLUNTEER_WITH_ASSIGNMENTS = {
   ...SELECT_VOLUNTEER,
   ...SELECT_ASSIGNMENTS,
+  ...COUNT_FRIENDS,
 };
 
-export type DatabaseAssigneeWithAssignments = {
+export type DatabaseAssigneeWithAssignments = DatabaseFriendCount & {
   id: number;
   firstname: string;
   lastname: string;
@@ -52,10 +48,6 @@ export type DatabaseAssigneeWithAssignments = {
   charisma: number;
   comment?: string;
   note?: string;
-  teams: {
-    team: {
-      code: string;
-    };
-  }[];
+  teams: { team: { code: string } }[];
   assigned: { assignment: IProvidePeriod }[];
 };

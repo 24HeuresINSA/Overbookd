@@ -8,6 +8,7 @@ export type AssignableVolunteer = Volunteer & {
   isRequestedOnSamePeriod: boolean;
   hasFriendAvailable: boolean;
   hasFriendAssigned: boolean;
+  hasAtLeastOneFriend: boolean;
 };
 
 export type StoredAssignment = IProvidePeriod & { category: Category };

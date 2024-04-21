@@ -27,6 +27,7 @@ export class AssignableVolunteerFactory {
       ...volunteer,
       hasFriendAssigned: false,
       hasFriendAvailable: false,
+      hasAtLeastOneFriend: false,
       requestedDuring: [],
       assignments: [],
     };
@@ -36,6 +37,7 @@ export class AssignableVolunteerFactory {
       isRequestedOnSamePeriod: false,
       hasFriendAssigned: false,
       hasFriendAvailable: false,
+      hasAtLeastOneFriend: false,
     };
     const expected: Record<MaybeCategory, AssignableVolunteer> = {
       [BAR]: assignable,

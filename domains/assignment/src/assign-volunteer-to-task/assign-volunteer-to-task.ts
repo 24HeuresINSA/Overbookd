@@ -1,18 +1,17 @@
 import { Period } from "@overbookd/period";
 import { FormatVolunteer, Volunteer } from "../volunteer";
 
-type WithAssignments = {
+export type VolunteerWithFriendFilter = Volunteer & {
+  hasAtLeastOneFriend: boolean;
+};
+
+export type VolunteerWithAssignments = VolunteerWithFriendFilter & {
   assignments: Period[];
 };
 
-type WithAssignmentDuration = {
+export type VolunteerWithAssignmentDuration = VolunteerWithFriendFilter & {
   assignmentDuration: number;
 };
-
-export type VolunteerWithAssignments = Volunteer & WithAssignments;
-
-export type VolunteerWithAssignmentDuration = Volunteer &
-  WithAssignmentDuration;
 
 export type Volunteers = {
   findAll(): Promise<VolunteerWithAssignments[]>;
@@ -28,20 +27,15 @@ export class AssignVolunteerToTask {
     );
   }
 
-  private computeAssignmentDuration(
-    volunteer: VolunteerWithAssignments,
-  ): VolunteerWithAssignmentDuration {
-    const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
-      volunteer.assignments,
-    );
+  private computeAssignmentDuration({
+    assignments,
+    ...volunteer
+  }: VolunteerWithAssignments): VolunteerWithAssignmentDuration {
+    const assignmentDuration =
+      FormatVolunteer.computeAssignmentDuration(assignments);
     return {
-      id: volunteer.id,
-      firstname: volunteer.firstname,
-      lastname: volunteer.lastname,
-      charisma: volunteer.charisma,
-      comment: volunteer.comment,
-      note: volunteer.note,
-      teams: volunteer.teams,
+      ...volunteer,
+      hasAtLeastOneFriend: false,
       assignmentDuration,
     };
   }

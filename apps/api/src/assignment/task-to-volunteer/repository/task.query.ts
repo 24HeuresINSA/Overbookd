@@ -1,8 +1,10 @@
 import { Categorize } from "@overbookd/festival-event";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { IProvidePeriod } from "@overbookd/period";
+import { IS_NOT_DELETED } from "../../common/common.query";
 
 export const IS_READY_AND_EXISTS = {
-  isDeleted: false,
+  ...IS_NOT_DELETED,
   status: READY_TO_ASSIGN,
 } as const;
 
@@ -28,10 +30,6 @@ export type DatabaseTask = Categorize & {
     id: string;
     teams: { teamCode: string; count: number }[];
     assignees: { teamCode: string }[];
-    assignments: {
-      id: string;
-      start: Date;
-      end: Date;
-    }[];
+    assignments: (IProvidePeriod & { id: string })[];
   }[];
 };

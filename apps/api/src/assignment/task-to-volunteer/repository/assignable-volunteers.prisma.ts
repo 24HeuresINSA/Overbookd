@@ -18,6 +18,11 @@ import {
   overlapPeriodCondition,
   includePeriodCondition,
 } from "../../common/period.query";
+import { COUNT_FRIENDS, hasAtLeastOneFriend } from "../../common/friend.query";
+import {
+  HAS_POSITIVE_CHARISMA,
+  IS_NOT_DELETED,
+} from "../../common/common.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -32,8 +37,8 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 
     const volunteers = await this.prisma.user.findMany({
       where: {
-        isDeleted: false,
-        charisma: { gt: 0 },
+        ...IS_NOT_DELETED,
+        ...HAS_POSITIVE_CHARISMA,
         ...this.buildHasAvailabilityCondition(extendedOneOfTeams, period),
         assigned: { none: { assignment: includePeriod } },
       },
@@ -45,6 +50,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
           ...assignmentSpecification,
           oneOfTheTeams: extendedOneOfTeams,
         }),
+        ...COUNT_FRIENDS,
       },
     });
 
@@ -181,5 +187,6 @@ function toStoredAssignableVolunteer(
     requestedDuring,
     hasFriendAvailable,
     hasFriendAssigned,
+    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
   };
 }

@@ -37,4 +37,7 @@ export class AssignableVolunteerResponseDto implements AssignableVolunteer {
 
   @ApiProperty({ type: Boolean })
   hasFriendAssigned: boolean;
+
+  @ApiProperty({ type: Boolean })
+  hasAtLeastOneFriend: boolean;
 }

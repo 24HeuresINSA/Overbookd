@@ -1,12 +1,16 @@
 import { Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
-  IS_NOT_DELETED,
   IS_MEMBER_OF_VOLUNTEER_TEAM,
   DatabaseAssigneeWithAssignments,
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
 import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
+import { hasAtLeastOneFriend } from "../../common/friend.query";
+import {
+  HAS_POSITIVE_CHARISMA,
+  IS_NOT_DELETED,
+} from "../../common/common.query";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -15,6 +19,7 @@ export class PrismaVolunteers implements Volunteers {
     const volunteers = await this.prisma.user.findMany({
       where: {
         ...IS_NOT_DELETED,
+        ...HAS_POSITIVE_CHARISMA,
         ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       },
       select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
@@ -40,6 +45,7 @@ function toVolunteerWithAssignments(
     note: volunteer.note,
     charisma: volunteer.charisma,
     teams: volunteer.teams.map((t) => t.team.code),
+    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
     assignments,
   };
 }
