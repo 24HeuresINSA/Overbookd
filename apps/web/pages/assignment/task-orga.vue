@@ -1,15 +1,24 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList class="volunteer-list" />
+    <FilterableVolunteerList
+      class="volunteer-list"
+      @select-volunteer="selectVolunteer"
+    />
     <TaskOrgaCalendar
       class="calendar"
       @display-assignment-details="openAssignmentDetailsDialog"
+      @select-assignment="selectAssignment"
     />
     <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
 
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
-      <AssignmentFunnel @close-dialog="closeTaskAssignmentDialog" />
+      <AssignmentFunnel
+        v-if="volunteer && assignment"
+        :volunteer="volunteer"
+        :assignment="assignment"
+        @close-dialog="closeTaskAssignmentDialog"
+      />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <TimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
@@ -26,7 +35,10 @@ import FilterableVolunteerList from "~/components/organisms/assignment/list/Filt
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
 import {
+  Assignment,
   AssignmentIdentifier,
+  AssignmentSummary,
+  AssignmentVolunteer,
   MissingAssignmentTask,
 } from "@overbookd/assignment";
 
@@ -49,6 +61,12 @@ export default Vue.extend({
   computed: {
     tasks(): MissingAssignmentTask[] {
       return this.$accessor.assignTaskToVolunteer.tasks;
+    },
+    volunteer(): AssignmentVolunteer | null {
+      return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
+    },
+    assignment(): Assignment | null {
+      return null;
     },
     openTaskAssignmentDialog: {
       get(): boolean {
@@ -73,6 +91,14 @@ export default Vue.extend({
     openAssignmentDetailsDialog(identifier: AssignmentIdentifier) {
       console.log(identifier);
       //this.displayAssignmentDetailsDialog = true;
+    },
+    selectVolunteer(volunteer: AssignmentVolunteer) {
+      this.$accessor.assignTaskToVolunteer.selectVolunteer(volunteer);
+    },
+    selectAssignment(assignment: AssignmentSummary) {
+      const taskId = this.$accessor.assignTaskToVolunteer.selectedTask?.id;
+      if (!taskId) return;
+      this.$accessor.assignTaskToVolunteer.selectAssignment(assignment);
     },
   },
 });

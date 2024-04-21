@@ -46,7 +46,10 @@ export {
   isEveryCandidateFulfillsDemand,
 } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
 export type { Funnel } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
-export type { Planning } from "./assign-task-to-volunteer/funnel/planning";
+export type {
+  Planning,
+  PlanningEvent,
+} from "./assign-task-to-volunteer/funnel/planning";
 export type {
   Assignments,
   VolunteersForAssignment,

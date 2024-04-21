@@ -1,5 +1,6 @@
 import {
   AssignableVolunteer,
+  AssignmentVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
@@ -14,6 +15,7 @@ type State = {
   selectedTask: TaskWithAssignmentsSummary | null;
   selectedAssignment: ExtendedAssignementIdentifier | null;
   assignableVolunteers: AssignableVolunteer[];
+  selectedVolunteer: AssignmentVolunteer | null;
 };
 
 export const state = (): State => ({
@@ -21,6 +23,7 @@ export const state = (): State => ({
   selectedTask: null,
   selectedAssignment: null,
   assignableVolunteers: [],
+  selectedVolunteer: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -38,6 +41,12 @@ export const mutations = mutationTree(state, {
   },
   SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
+  },
+  SELECT_VOLUNTEER(state, volunteer: AssignmentVolunteer) {
+    state.selectedVolunteer = volunteer;
+  },
+  RESET_SELECTED_VOLUNTEER(state) {
+    state.selectedVolunteer = null;
   },
 });
 
@@ -80,6 +89,10 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
       commit("SET_ASSIGNABLE_VOLUNTEERS", res.data);
+    },
+
+    async selectVolunteer({ commit }, volunteer: AssignmentVolunteer) {
+      commit("SELECT_VOLUNTEER", volunteer);
     },
   },
 );

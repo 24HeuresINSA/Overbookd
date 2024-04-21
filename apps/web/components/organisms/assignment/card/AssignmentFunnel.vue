@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   AssignmentCandidate,
@@ -115,15 +115,30 @@ import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
+import { Assignment, AssignmentVolunteer } from "@overbookd/assignment";
 
-export default Vue.extend({
+type AssingmentFunneData = {
+  calendarDate: Date;
+};
+
+export default defineComponent({
   name: "AssignmentFunnel",
   components: {
     TeamChip,
     OverMultiCalendar,
     AssignmentVolunteerResumeCalendarHeader,
   },
-  data: () => {
+  props: {
+    volunteer: {
+      type: Object as () => AssignmentVolunteer,
+      required: true,
+    },
+    assignment: {
+      type: Object as () => Assignment,
+      required: true,
+    },
+  },
+  data: (): AssingmentFunneData => {
     return {
       calendarDate: new Date(),
     };
