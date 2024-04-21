@@ -5,12 +5,7 @@ import {
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { safeCall } from "~/utils/api/calls";
-import {
-  AssignmentModes,
-  UpdateAssignedTeam,
-  Volunteer,
-  getAssignmentModeFromRoute,
-} from "~/utils/models/assignment.model";
+import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpan,
@@ -30,6 +25,7 @@ import { AssignmentRepository } from "~/repositories/assignment/assignment.repos
 import { UserRepository } from "~/repositories/user.repository";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 import { castPeriodsWithDate } from "~/utils/http/period";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -492,10 +488,9 @@ export const actions = actionTree(
       dispatch("fetchTimeSpanDetails", timeSpanId);
 
       const route = this.$router.currentRoute.fullPath;
-      const isOrgaTaskMode =
-        getAssignmentModeFromRoute(route) === AssignmentModes.ORGA_TASK;
+      const isOrgaTask = isOrgaTaskMode(route);
 
-      if (isOrgaTaskMode && volunteerId) {
+      if (isOrgaTask && volunteerId) {
         dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
         dispatch("fetchTimeSpansForVolunteer", volunteerId);
         return;
