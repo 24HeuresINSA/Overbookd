@@ -17,7 +17,6 @@ import {
 import {
   VolunteerAssignmentStat,
   VolunteerTask,
-  castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
@@ -316,28 +315,19 @@ export const actions = actionTree(
     },
 
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
-      const [userRequestsRes, assignmentRes, availabilitiesRes, _tasks] =
-        await Promise.all([
-          safeCall(this, UserRepository.getUserFtRequests(this, volunteerId)),
-          safeCall(
+      const [availabilitiesRes, _tasks] = await Promise.all([
+        safeCall(
+          this,
+          VolunteerAvailabilityRepository.getVolunteerAvailabilities(
             this,
-            UserRepository.getVolunteerAssignments(this, volunteerId),
+            volunteerId,
           ),
-          safeCall(
-            this,
-            VolunteerAvailabilityRepository.getVolunteerAvailabilities(
-              this,
-              volunteerId,
-            ),
-          ),
-          safeCall(
-            this,
-            UserRepository.getMobilizationsVolunteerTakePartOf(
-              this,
-              volunteerId,
-            ),
-          ),
-        ]);
+        ),
+        safeCall(
+          this,
+          UserRepository.getMobilizationsVolunteerTakePartOf(this, volunteerId),
+        ),
+      ]);
       const volunteerFriendsRes = await Promise.all(
         state.taskAssignment.candidateToRetrieveFriendsFor.map(
           ({ volunteer }) =>
@@ -351,11 +341,7 @@ export const actions = actionTree(
             ),
         ),
       );
-      const tasks = castVolunteerTaskWithDate([
-        ...(userRequestsRes?.data ?? []),
-        ...(assignmentRes?.data ?? []),
-      ]);
-      commit("SET_CANDIDATE_TASKS", { id: volunteerId, tasks });
+
       const candidateFriends = volunteerFriendsRes.flatMap(
         (res) => res?.data ?? [],
       );

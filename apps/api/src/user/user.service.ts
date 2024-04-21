@@ -5,10 +5,7 @@ import {
 } from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import {
-  formatAssignmentAsTask,
-  formatRequirementAsTask,
-} from "../utils/assignment";
+import { formatRequirementAsTask } from "../utils/assignment";
 import { getPeriodDuration } from "../utils/duration";
 import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
 import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
@@ -36,7 +33,6 @@ import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
   SELECT_USER_PERSONAL_DATA_WITH_NOTE,
-  SELECT_VOLUNTEER_ASSIGNMENTS,
   hasPermission,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
@@ -47,6 +43,9 @@ import {
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
 import { ForgetMember } from "@overbookd/registration";
+import { PlanningEvent } from "@overbookd/assignment";
+import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
+import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
 
 @Injectable()
 export class UserService {
@@ -156,13 +155,13 @@ export class UserService {
     return userRequests.map(formatRequirementAsTask);
   }
 
-  async getVolunteerAssignments(volunteerId: number): Promise<VolunteerTask[]> {
-    const assignments = await this.prisma.oldAssignment.findMany({
-      where: { assigneeId: volunteerId },
-      select: SELECT_VOLUNTEER_ASSIGNMENTS,
+  async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
+    const assignments = await this.prisma.assignment.findMany({
+      where: { assignees: { some: { userId: volunteerId } } },
+      select: SELECT_PLANNING_EVENT,
     });
 
-    return assignments.map(formatAssignmentAsTask);
+    return assignments.map(toPlanningEventFromAssignment);
   }
 
   async getUserTeams(userId: number): Promise<string[]> {

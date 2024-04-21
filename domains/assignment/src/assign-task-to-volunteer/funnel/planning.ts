@@ -1,8 +1,11 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "./volunteer";
+import { Status } from "@overbookd/festival-event-constants";
+
+export type Task = { name: string; id: number; status: Status };
 
 export type PlanningEvent = IProvidePeriod & {
-  task: string;
+  task: Task;
 };
 
 export type Planning = {

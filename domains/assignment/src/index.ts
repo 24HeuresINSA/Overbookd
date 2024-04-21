@@ -53,6 +53,7 @@ export type { Funnel } from "./assign-task-to-volunteer/funnel/assign-volunteers
 export type {
   Planning,
   PlanningEvent,
+  Task as PlanningTask,
   Availabilities,
 } from "./assign-task-to-volunteer/funnel/planning";
 export type {

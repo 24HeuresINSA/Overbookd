@@ -13,6 +13,7 @@ import {
 } from "@overbookd/user";
 import { ImageRepository } from "~/utils/image/image.repository";
 import { Context } from "./context";
+import { PlanningEvent } from "@overbookd/assignment";
 
 export class UserRepository {
   private static readonly basePath = "users";
@@ -124,7 +125,7 @@ export class UserRepository {
   }
 
   static getVolunteerAssignments(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<VolunteerTask[]>>(
+    return context.$axios.get<HttpStringified<PlanningEvent[]>>(
       `${this.basePath}/${userId}/assignments`,
     );
   }

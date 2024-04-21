@@ -76,6 +76,7 @@ import { ForgetMemberErrorFilter } from "../registration/registration-error.filt
 import { BaseUserResponseDto } from "./dto/base-user.response.dto";
 import { ICAL, JSON, PDF } from "@overbookd/http";
 import { PlanningTaskResponseDto } from "../volunteer-planning/dto/planning-task.response.dto";
+import { PlanningEventResponseDto } from "../assignment/common/dto/planning-event.response.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -304,11 +305,11 @@ export class UserController {
     status: 200,
     description: "Get tasks a volunteer is assigned to",
     isArray: true,
-    type: VolunteerAssignmentDto,
+    type: PlanningEventResponseDto,
   })
   async getVolunteerAssignments(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<VolunteerAssignmentDto[]> {
+  ): Promise<PlanningEventResponseDto[]> {
     return this.userService.getVolunteerAssignments(id);
   }
 
