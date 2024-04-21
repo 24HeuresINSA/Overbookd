@@ -1,11 +1,9 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   HttpStringified,
   OrgaNeedDetails,
   OrgaNeedRequest,
 } from "@overbookd/http";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class OrgaNeedsRepository {
   private static readonly basePath = "orga-needs";

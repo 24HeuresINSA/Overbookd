@@ -1,6 +1,4 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class AuthRepository {
   static requestResetPassword(context: Context, data: { email: string }) {

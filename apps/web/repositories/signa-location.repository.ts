@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { SignaLocation } from "@overbookd/signa";
 import { CreateLocation } from "~/utils/models/signa-location.model";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class SignaLocationRepository {
   private static readonly basePath = "signa-location";

@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { ConfiguredBarrel, NewBarrel } from "@overbookd/personal-account";
 import { HttpStringified } from "@overbookd/http";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class PersonalAccountRepository {
   private static readonly basePath = "personal-account";

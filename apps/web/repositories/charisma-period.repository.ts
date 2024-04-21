@@ -1,11 +1,9 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charisma-period.model";
 import { HttpStringified } from "@overbookd/http";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class CharismaPeriodRepository {
   private static readonly basePath = "charisma-period";

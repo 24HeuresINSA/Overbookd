@@ -9,7 +9,7 @@
     <SnackNotificationContainer />
 
     <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
-      <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
+      <AssignmentFunnel @close-dialog="closeTaskAssignmentDialog" />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <TimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
@@ -20,7 +20,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import AssignmentForm from "~/components/organisms/assignment/card/AssignmentForm.vue";
+import AssignmentFunnel from "~/components/organisms/assignment/card/AssignmentFunnel.vue";
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
@@ -36,7 +36,7 @@ export default Vue.extend({
     FilterableVolunteerList,
     FilterableTaskList,
     TaskOrgaCalendar,
-    AssignmentForm,
+    AssignmentFunnel,
     TimeSpanDetails,
     SnackNotificationContainer,
   },

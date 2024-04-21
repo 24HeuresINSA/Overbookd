@@ -1,7 +1,5 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified, Preference } from "@overbookd/http";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class PreferenceRepository {
   private static readonly basePath = "preferences";

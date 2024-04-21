@@ -117,7 +117,7 @@ import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
-  name: "AssignmentForm",
+  name: "AssignmentFunnel",
   components: {
     TeamChip,
     OverMultiCalendar,

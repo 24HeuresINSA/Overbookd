@@ -1,7 +1,5 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { CreateTransferForm, Transaction } from "@overbookd/personal-account";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class TransactionRepository {
   private static readonly basePath = "transactions";

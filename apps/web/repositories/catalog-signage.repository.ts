@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Signage, SignageForm } from "@overbookd/signa";
 import { ImageRepository } from "~/utils/image/image.repository";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class CatalogSignageRepository {
   private static readonly basePath = "signages";
