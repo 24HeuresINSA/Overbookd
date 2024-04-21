@@ -16,20 +16,19 @@ export class PrismaPlanning implements Planning {
   constructor(private readonly prisma: PrismaService) {}
 
   async for(volunteerId: number): Promise<PlanningEvent[]> {
-    const isAssignedCondition = {
-      assignees: { some: { userId: volunteerId } },
-    };
-
     const [dbAssignments, dbMobilizations] = await Promise.all([
       this.prisma.assignment.findMany({
-        where: isAssignedCondition,
+        where: { assignees: { some: { userId: volunteerId } } },
         select: {
           ...SELECT_PERIOD,
           festivalTask: { select: { name: true } },
         },
       }),
       this.prisma.festivalTaskMobilization.findMany({
-        where: { ...isAssignedCondition, ft: EXISTS_AND_NOT_READY_TO_ASSIGN },
+        where: {
+          volunteers: { some: { volunteerId } },
+          ft: EXISTS_AND_NOT_READY_TO_ASSIGN,
+        },
         select: { ...SELECT_PERIOD, ft: { select: { name: true } } },
       }),
     ]);
