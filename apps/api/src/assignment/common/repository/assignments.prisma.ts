@@ -3,9 +3,14 @@ import {
   AssignmentIdentifier,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
-import { AssignmentRepository } from "../assignment.service";
 import { PrismaService } from "../../../prisma.service";
-import { DatabaseAssignment, SELECT_ASSIGNMENT } from "./assignment.query";
+import { AssignmentRepository } from "../assignment.service";
+import {
+  DatabaseAssignment,
+  SELECT_ASSIGNMENT,
+  uniqueAssignment,
+  updateAssigneesOnAssignment,
+} from "./assignment.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -27,11 +32,17 @@ export class PrismaAssignments implements AssignmentRepository {
   }
 
   async assign({
-    assignment,
+    assignment: identifier,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
-    console.log(assignment, volunteers);
-    throw new Error("Method not implemented.");
+    const upsert = updateAssigneesOnAssignment(volunteers, identifier);
+    const assignment = await this.prisma.assignment.update({
+      where: uniqueAssignment(identifier),
+      data: { assignees: { upsert } },
+      select: SELECT_ASSIGNMENT,
+    });
+
+    return toAssignment(assignment, identifier);
   }
 }
 

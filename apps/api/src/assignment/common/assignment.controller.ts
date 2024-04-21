@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
+  Post,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -96,7 +98,8 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Get("planning/:volunteerId")
+  @Post()
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Assignment with new assignees",
@@ -105,11 +108,6 @@ export class AssignmentController {
   @ApiBody({
     description: "Volunteers for assignment",
     type: VolunteersForAssignmentRequestDto,
-  })
-  @ApiParam({
-    name: "volunteerId",
-    description: "Volunteer id",
-    type: Number,
   })
   assign(
     @Body() volunteersForAssignment: VolunteersForAssignmentRequestDto,

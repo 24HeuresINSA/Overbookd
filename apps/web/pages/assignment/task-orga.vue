@@ -18,6 +18,7 @@
         :volunteer="volunteer"
         :assignment="assignment"
         @close-dialog="closeFunnelDialog"
+        @volunteers-assigned="refreshTaskAssignments"
       />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
@@ -82,6 +83,9 @@ export default defineComponent({
   methods: {
     closeFunnelDialog() {
       this.openFunnelDialog = false;
+    },
+    refreshTaskAssignments({ taskId }: Assignment) {
+      this.$accessor.assignTaskToVolunteer.selectTask(taskId);
     },
     closeAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = false;

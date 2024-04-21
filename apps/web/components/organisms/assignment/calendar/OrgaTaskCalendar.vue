@@ -85,8 +85,8 @@ export default Vue.extend({
         ...timeSpans,
       ];
     },
-    hourToScrollTo(): number | null {
-      return this.hoverTimeSpan?.start.getHours() ?? null;
+    hourToScrollTo(): number | undefined {
+      return this.hoverTimeSpan?.start.getHours();
     },
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
