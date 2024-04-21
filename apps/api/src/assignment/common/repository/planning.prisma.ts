@@ -3,7 +3,7 @@ import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/period";
 import { SELECT_PERIOD } from "./period.query";
 
-export type DatabasePlanningEvent = IProvidePeriod & {
+type DatabasePlanningEvent = IProvidePeriod & {
   festivalTask: { name: string };
 };
 
