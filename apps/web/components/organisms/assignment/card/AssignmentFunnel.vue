@@ -181,7 +181,7 @@ export default defineComponent({
         firstname: candidate.firstname,
         lastname: candidate.lastname,
         teams: candidate.teams,
-        availabilities: [], // TODO Get assigment somehow
+        availabilities: candidate.availabilities,
       }));
     },
     candidatesPlanningEvents(): CalendarPlanningEvent[] {

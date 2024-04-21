@@ -1,16 +1,19 @@
+import { IProvidePeriod } from "@overbookd/period";
 import { HARD, VIEUX, CONFIANCE } from "../../teams";
 import { Assignee, Assignment, TeamDemanded } from "../assignment";
-import { Planning, PlanningEvent } from "./planning";
+import { Availabilities, Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
 type NotYetFulfillingDemandCandidate = Volunteer & {
   planning: PlanningEvent[];
+  availabilities: IProvidePeriod[];
   assignableTeams: string[];
   as: undefined;
 };
 
 export type CandidateFulfillingDemand = Volunteer & {
   planning: PlanningEvent[];
+  availabilities: IProvidePeriod[];
   assignableTeams: string[];
   as: string;
 };
@@ -19,12 +22,17 @@ export type IDefineCandidate =
   | NotYetFulfillingDemandCandidate
   | CandidateFulfillingDemand;
 
+type Agenda = {
+  planning: PlanningEvent[];
+  availabilities: IProvidePeriod[];
+};
+
 export class Candidate {
   private constructor(private readonly candidate: IDefineCandidate) {}
 
   static init(
     volunteer: Volunteer,
-    planning: PlanningEvent[],
+    { planning, availabilities }: Agenda,
     assignment: Assignment,
   ) {
     const assignableTeams = Candidate.getAssignableTeams(
@@ -33,7 +41,13 @@ export class Candidate {
     );
     const as = assignableTeams.length === 1 ? assignableTeams.at(0) : undefined;
 
-    return new Candidate({ ...volunteer, planning, as, assignableTeams });
+    return new Candidate({
+      ...volunteer,
+      planning,
+      availabilities,
+      as,
+      assignableTeams,
+    });
   }
 
   private static getAssignableTeams(
@@ -91,11 +105,17 @@ export function isFulfillingDemand(
 }
 
 export class CandidateFactory {
-  constructor(private readonly planning: Planning) {}
+  constructor(
+    private readonly planning: Planning,
+    private readonly availabilities: Availabilities,
+  ) {}
 
   async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
-    const planning = await this.planning.for(volunteer.id);
+    const [planning, availabilities] = await Promise.all([
+      this.planning.for(volunteer.id),
+      this.availabilities.for(volunteer.id),
+    ]);
 
-    return Candidate.init(volunteer, planning, assignment);
+    return Candidate.init(volunteer, { planning, availabilities }, assignment);
   }
 }

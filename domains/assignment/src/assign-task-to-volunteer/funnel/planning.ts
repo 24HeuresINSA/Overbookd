@@ -8,3 +8,7 @@ export type PlanningEvent = IProvidePeriod & {
 export type Planning = {
   for(volunteer: Volunteer["id"]): Promise<PlanningEvent[]>;
 };
+
+export type Availabilities = {
+  for(volunteer: Volunteer["id"]): Promise<IProvidePeriod[]>;
+};
