@@ -21,7 +21,7 @@ export type CalendarUser = {
   id: number;
   firstname: string;
   lastname: string;
-  nickname?: string;
+  nickname?: string | null;
   teams: string[];
   availabilities: IProvidePeriod[];
 };
