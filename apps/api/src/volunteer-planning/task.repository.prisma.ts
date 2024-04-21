@@ -5,6 +5,7 @@ import { PrismaService } from "../../src/prisma.service";
 import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
 import { TaskRepository } from "./domain/planning";
 import { JsonStoredTask } from "./domain/storedTask";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
 const SELECT_LEGACY_TASK = {
   timeWindow: {
@@ -133,7 +134,10 @@ export class PrismaTaskRepository implements TaskRepository {
     };
 
     const mobilizations = await this.prisma.festivalTaskMobilization.findMany({
-      where: { ...volunteerIsPartOfMobilization, ft: IS_NOT_DELETED },
+      where: {
+        ...volunteerIsPartOfMobilization,
+        ft: { ...IS_NOT_DELETED, status: { not: READY_TO_ASSIGN } },
+      },
       select: SELECT_MOBILIZATION,
     });
 
