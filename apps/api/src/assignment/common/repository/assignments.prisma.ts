@@ -1,9 +1,13 @@
-import { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
-import { Assignments } from "../assignment.service";
+import {
+  Assignment,
+  AssignmentIdentifier,
+  VolunteersForAssignment,
+} from "@overbookd/assignment";
+import { AssignmentRepository } from "../assignment.service";
 import { PrismaService } from "../../../prisma.service";
 import { DatabaseAssignment, SELECT_ASSIGNMENT } from "./assignment.query";
 
-export class PrismaAssignments implements Assignments {
+export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
@@ -20,6 +24,14 @@ export class PrismaAssignments implements Assignments {
     });
 
     return toAssignment(assignment, identifier);
+  }
+
+  async assign({
+    assignment,
+    volunteers,
+  }: VolunteersForAssignment): Promise<Assignment> {
+    console.log(assignment, volunteers);
+    throw new Error("Method not implemented.");
   }
 }
 
