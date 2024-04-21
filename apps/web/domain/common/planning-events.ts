@@ -1,5 +1,6 @@
 import { VolunteerTask } from "~/utils/models/user.model";
 import { getColorByStatus } from "./status-color";
+import { IProvidePeriod } from "@overbookd/period";
 
 export type PlanningEvent = {
   start: Date;
@@ -22,20 +23,13 @@ export function convertTaskToPlanningEvent(
   };
 }
 
-type TemporaryTask = {
-  start: Date;
-  end: Date;
+type TemporaryTask = IProvidePeriod & {
   name: string;
 };
 
-export function createTemporaryTaskPlanningEvent({
-  start,
-  end,
-  name,
-}: TemporaryTask): PlanningEvent {
-  return {
-    start,
-    end,
-    name,
-  };
+export function createTemporaryTaskPlanningEvent(
+  task: TemporaryTask,
+): PlanningEvent {
+  const { start, end, name } = task;
+  return { start, end, name };
 }

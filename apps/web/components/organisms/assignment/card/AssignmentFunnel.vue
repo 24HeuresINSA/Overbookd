@@ -93,7 +93,6 @@
 import { defineComponent } from "vue";
 import {
   Assignment,
-  VolunteerForFunnel,
   Candidate,
   Funnel,
   ReadyToStart,
@@ -121,24 +120,14 @@ export default defineComponent({
     OverMultiCalendar,
     AssignmentVolunteerResumeCalendarHeader,
   },
-  props: {
-    volunteer: {
-      type: Object as () => VolunteerForFunnel,
-      required: true,
-    },
-    assignment: {
-      type: Object as () => Assignment,
-      required: true,
-    },
-  },
   data: (): AssignmentFunnelData => {
     return {
       calendarDate: new Date(),
     };
   },
   computed: {
-    taskAssignment(): Assignment {
-      return this.assignment;
+    assignment(): Assignment | null {
+      return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
     funnel(): Funnel {
       const { funnel } = this.$accessor.assignTaskToVolunteer;
@@ -149,13 +138,13 @@ export default defineComponent({
       return funnel ?? baseFunnel;
     },
     taskId(): number {
-      return this.assignment.taskId;
+      return this.assignment?.taskId ?? 0;
     },
     taskTitle(): string {
-      return `[${this.assignment.taskId}] ${this.assignment.name}`;
+      return `[${this.taskId}] ${this.assignment?.name ?? ""}`;
     },
     start(): Date {
-      return this.assignment.start;
+      return this.assignment?.start ?? this.calendarDate;
     },
     calendarUsers(): CalendarUser[] {
       return [];
@@ -167,7 +156,10 @@ export default defineComponent({
       );
     },
     currentTaskAsEvent(): PlanningEvent {
-      return createTemporaryTaskPlanningEvent(this.assignment);
+      const start = this.calendarDate;
+      const fakeAssignment = { start, end: start, name: "" };
+      const assignment = this.assignment ?? fakeAssignment;
+      return createTemporaryTaskPlanningEvent(assignment);
     },
     canNotAssign(): boolean {
       return true;
@@ -188,7 +180,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-    this.calendarDate = this.assignment.start;
+    this.calendarDate = this.start;
   },
   methods: {
     retrieveVolunteer(): Volunteer | undefined {

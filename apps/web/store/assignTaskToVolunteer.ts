@@ -21,7 +21,7 @@ import { castPeriodWithDate } from "~/utils/http/period";
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
-  selectedAssignment: ExtendedAssignementIdentifier | null;
+  selectedAssignment: Assignment | null;
   assignableVolunteers: AssignableVolunteer[];
   funnel: Funnel | null;
 };
@@ -41,11 +41,11 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary | null) {
     state.selectedTask = task;
   },
-  SET_SELECTED_ASSIGNMENT(
-    state,
-    assignmentIdentifier: ExtendedAssignementIdentifier | null,
-  ) {
-    state.selectedAssignment = assignmentIdentifier;
+  SET_SELECTED_ASSIGNMENT(state, assignment: Assignment) {
+    state.selectedAssignment = assignment;
+  },
+  RESET_SELECTED_ASSIGNMENT(state) {
+    state.selectedAssignment = null;
   },
   SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
@@ -82,7 +82,7 @@ export const actions = actionTree(
 
       const task = castTaskWithAssignmentsSummaryWithDate(res.data);
       commit("SET_SELECTED_TASK", task);
-      commit("SET_SELECTED_ASSIGNMENT", null);
+      commit("RESET_SELECTED_ASSIGNMENT");
       commit("SET_ASSIGNABLE_VOLUNTEERS", []);
     },
 
@@ -105,12 +105,12 @@ export const actions = actionTree(
       ]);
 
       if (!assignableVolunteersRes || !assignmentRes) return;
-      commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
       commit("SET_ASSIGNABLE_VOLUNTEERS", assignableVolunteersRes.data);
 
       if (state.funnel === null || !isReadyToStart(state.funnel)) return;
       const assignment = castAssignmentWithDate(assignmentRes.data);
       const funnel = state.funnel.select(assignment);
+      commit("SET_SELECTED_ASSIGNMENT", assignment);
       commit("SET_FUNNEL", funnel);
     },
 
