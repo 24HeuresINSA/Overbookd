@@ -1,15 +1,16 @@
-import { Planning, PlanningEvent } from "@overbookd/assignment";
+import { Planning, PlanningEvent, PlanningTask } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/period";
 import { SELECT_PERIOD } from "./period.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
+import { SELECT_PLANNING_EVENT, SELECT_TASK } from "./planning.query";
 
 type DatabaseAssignment = IProvidePeriod & {
-  festivalTask: { name: string };
+  festivalTask: PlanningTask;
 };
 
 type DatabaseMobilization = IProvidePeriod & {
-  ft: { name: string };
+  ft: PlanningTask;
 };
 
 export class PrismaPlanning implements Planning {
@@ -19,17 +20,14 @@ export class PrismaPlanning implements Planning {
     const [dbAssignments, dbMobilizations] = await Promise.all([
       this.prisma.assignment.findMany({
         where: { assignees: { some: { userId: volunteerId } } },
-        select: {
-          ...SELECT_PERIOD,
-          festivalTask: { select: { name: true } },
-        },
+        select: SELECT_PLANNING_EVENT,
       }),
       this.prisma.festivalTaskMobilization.findMany({
         where: {
           volunteers: { some: { volunteerId } },
           ft: EXISTS_AND_NOT_READY_TO_ASSIGN,
         },
-        select: { ...SELECT_PERIOD, ft: { select: { name: true } } },
+        select: { ...SELECT_PERIOD, ft: { select: SELECT_TASK } },
       }),
     ]);
 
@@ -39,16 +37,16 @@ export class PrismaPlanning implements Planning {
   }
 }
 
-function toPlanningEventFromAssignment(
+export function toPlanningEventFromAssignment(
   event: DatabaseAssignment,
 ): PlanningEvent {
   const { start, end, festivalTask } = event;
-  return { start, end, task: festivalTask.name };
+  return { start, end, task: festivalTask };
 }
 
 function toPlanningEventFromMobilization(
   event: DatabaseMobilization,
 ): PlanningEvent {
   const { start, end, ft } = event;
-  return { start, end, task: ft.name };
+  return { start, end, task: ft };
 }

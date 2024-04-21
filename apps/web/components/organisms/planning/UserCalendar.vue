@@ -35,15 +35,13 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
-import {
-  VolunteerAssignmentStat,
-  VolunteerTask,
-} from "~/utils/models/user.model";
+import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { PlanningTask } from "@overbookd/http";
+import { PlanningEvent } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -63,7 +61,7 @@ export default Vue.extend({
     availabilities(): Period[] {
       return this.$accessor.volunteerAvailability.availabilities.list;
     },
-    assignments(): VolunteerTask[] {
+    assignments(): PlanningEvent[] {
       return this.$accessor.user.selectedUserAssignments;
     },
     tasks(): PlanningTask[] {
@@ -74,12 +72,12 @@ export default Vue.extend({
     },
     events(): CalendarEvent[] {
       const assignmentEvents = this.assignments.map(
-        ({ start, end, ft }): CalendarEvent => ({
+        ({ start, end, task }): CalendarEvent => ({
           start,
           end,
-          name: `[${ft.id}] ${ft.name}`,
-          link: `/ft/${ft.id}`,
-          color: getColorByStatus(ft.status),
+          name: `[${task.id}] ${task.name}`,
+          link: `/ft/${task.id}`,
+          color: getColorByStatus(task.status),
           timed: true,
         }),
       );
@@ -108,7 +106,6 @@ export default Vue.extend({
   async created() {
     await Promise.all([
       this.$accessor.user.findUserById(this.userId),
-      this.$accessor.user.getUserFtRequests(this.userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
         this.userId,
       ),

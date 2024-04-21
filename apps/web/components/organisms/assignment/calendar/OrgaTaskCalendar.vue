@@ -37,16 +37,14 @@ import { getColorByStatus } from "~/domain/common/status-color";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
-import {
-  VolunteerAssignmentStat,
-  VolunteerTask,
-} from "~/utils/models/user.model";
+import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
+import { PlanningEvent } from "@overbookd/assignment";
 
 type CalendarItemWithTask = CalendarEvent & {
   timeSpanId?: number;
-  ft: { id: number; name: string };
+  task: { id: number; name: string };
 };
 
 export default Vue.extend({
@@ -73,10 +71,7 @@ export default Vue.extend({
       return this.$accessor.assignment.hoverTimeSpan;
     },
     assignedTasks(): CalendarItemWithTask[] {
-      const tasks = [
-        ...this.$accessor.user.selectedUserFtRequests,
-        ...this.$accessor.user.selectedUserAssignments,
-      ];
+      const tasks = [...this.$accessor.user.selectedUserAssignments];
       const timeSpans = this.hoverTimeSpan
         ? [this.formatTimeSpanForCalendar(this.hoverTimeSpan)]
         : [];
@@ -126,23 +121,21 @@ export default Vue.extend({
         end,
         name: ft.name,
         timed: true,
-        ft,
+        task: ft,
       };
     },
     formatTaskForCalendar({
-      ft,
+      task,
       start,
       end,
-      timeSpanId,
-    }: VolunteerTask): CalendarItemWithTask {
+    }: PlanningEvent): CalendarItemWithTask {
       return {
         start,
         end,
-        name: ft.name,
-        color: getColorByStatus(ft.status),
+        name: task.name,
+        color: getColorByStatus(task.status),
         timed: true,
-        ft,
-        timeSpanId,
+        task,
       };
     },
   },

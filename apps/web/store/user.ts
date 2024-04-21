@@ -21,6 +21,8 @@ import { Permission } from "@overbookd/permission";
 import { Consumer } from "~/utils/models/user.model";
 import { PlanningTask } from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
+import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
+import { PlanningEvent } from "@overbookd/assignment";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -32,7 +34,7 @@ type State = {
   selectedUser: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
   selectedUserFtRequests: VolunteerTask[];
-  selectedUserAssignments: VolunteerTask[];
+  selectedUserAssignments: PlanningEvent[];
   selectedUserTasks: PlanningTask[];
   selectedUserAssignmentStats: VolunteerAssignmentStat[];
   personalAccountConsumers: Consumer[];
@@ -83,7 +85,7 @@ export const mutations = mutationTree(state, {
   SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: VolunteerTask[]) {
     state.selectedUserFtRequests = periods;
   },
-  SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: VolunteerTask[]) {
+  SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: PlanningEvent[]) {
     state.selectedUserAssignments = assignments;
   },
   SET_SELECTED_USER_TASKS(state: UserState, tasks: PlanningTask[]) {
@@ -433,7 +435,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      const periods = castVolunteerTaskWithDate(res.data);
+      const periods = castPlanningEventsWithDate(res.data);
       commit("SET_SELECTED_USER_ASSIGNMENT", periods);
     },
 

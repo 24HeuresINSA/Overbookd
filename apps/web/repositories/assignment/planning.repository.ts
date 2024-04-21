@@ -11,11 +11,11 @@ export class PlanningRepository implements Planning {
     const res = await this.context.$axios.get<HttpStringified<PlanningEvent[]>>(
       `${this.basePath}/${volunteer}`,
     );
-    return castWithDate(res.data);
+    return castPlanningEventsWithDate(res.data);
   }
 }
 
-function castWithDate(
+export function castPlanningEventsWithDate(
   planningEvents: HttpStringified<PlanningEvent[]>,
 ): PlanningEvent[] {
   return planningEvents.map((planningEvent) => ({
