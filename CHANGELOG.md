@@ -1,3 +1,37 @@
+## [2.26.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.25.0...v2.26.0) (2024-04-21)
+
+
+### Features
+
+* **assignment:** enable assignment on funnel [#1777](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1777) ([bee610c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bee610c6e87abb22462a915888b52db7662dafce))
+
+
+### Bug Fixes
+
+* **assignment:** auto assign when only one remaining demands not complete. [#1769](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1769) ([fca778c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fca778cc197c9ec4c2439019cc271f70ad453e9d))
+* **assignment:** display mobilizations in funnel [#1781](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1781) ([726acd1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/726acd112909f7a69a53218db1b7678ac93464bd))
+* **assignment:** hard and vieux are assignable as confiance. [#1770](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1770) ([c7db9c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c7db9c4f8ee3670988be6fbc3776900d5eb427b4))
+* **assignment:** merge types between funnel and task to volunteer. [#1772](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1772) ([1c42a75](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c42a75fa20fc47c4da9a7198c0260d4d24a5bc7))
+* **assignment:** retrieve availabilities when selecting as candidate. [#1775](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1775) ([d020a23](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d020a231f2838fc5b9841f156105b05529ff5809))
+* **assignment:** staggered assignments on same task [#1765](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1765) ([fb5a9dc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fb5a9dcd477b7673d4a02a480079997c85a6a735))
+* **calendar:** avoir duplicate events [#1783](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1783) ([1f2654f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f2654fc5a45e01fd2d68dea0733a90e34104cf8))
+* **calendar:** display assignment. [#1782](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1782) ([40aa949](https://gitlab.com/24-heures-insa/overbookd-mono/commit/40aa9493171c402359f961a895638587f1277827))
+* **timeline:** adapt api and web with new tasks [#1760](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1760) ([5f89f0d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5f89f0daf84a5332eff9f9bfb9b2530e3a025a40))
+
+
+### Pre-Features
+
+* **assignment:** add common module [#1774](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1774) ([0ea2169](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0ea216946b19455ef38dcc09ce4939f8ea76c0a5))
+* **assignment:** assignable volunteers request [#1762](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1762) ([f4c60c1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f4c60c1eb6462f9c0709bca817d9b4ec3560f67d))
+* **assignment:** check if volunteer has friends [#1020](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1020) ([7d497e9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d497e9fa75a01107a10eff43bb1d594837e3c77))
+* **assignment:** display assignments when selecting task [#1768](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1768) ([75dc578](https://gitlab.com/24-heures-insa/overbookd-mono/commit/75dc578cbf7ddd7c19994b8550826ce3ad11e722))
+* **assignment:** display candidate planning [#1776](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1776) ([ab02478](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ab02478c76bb35e9a2ef31748471aa916307e26a))
+* **assignment:** display current task and volunteer on funnel [#1772](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1772) ([b051ad9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b051ad98a1b46e54fbcc8f84fd8d28af3c035933))
+* **assignment:** display mobilizations in funnel planning [#1778](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1778) ([c7224d6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c7224d670017d7db35ff348799e67be14fb6a5fa))
+* **assignment:** enable assign volunteer to task as team member. [#1759](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1759) ([e9b0b46](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e9b0b468d41a1bb1c14f4d04861bcb13c04402e1))
+* **assignment:** find one assignment [#1774](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1774) ([e5b88d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e5b88d0db155869445e0759a3acb28517b924eec))
+* **assignment:** show assignable volunteers for assignment [#1771](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1771) ([2f1bd74](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2f1bd74ab80ec37fa10a36c0191a685f6aeb5a80))
+
 ## [2.25.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.24.7...v2.25.0) (2024-04-15)
 
 
