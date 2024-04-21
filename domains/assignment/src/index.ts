@@ -35,6 +35,10 @@ export {
   Candidate,
   CandidateFactory,
 } from "./assign-task-to-volunteer/funnel/candidate";
+export type {
+  IDefineCandidate,
+  CandidateFulfillingDemand,
+} from "./assign-task-to-volunteer/funnel/candidate";
 export {
   ReadyToStart,
   isReadyToStart,

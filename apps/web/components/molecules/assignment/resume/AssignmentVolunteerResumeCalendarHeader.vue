@@ -2,7 +2,9 @@
   <div class="volunteer-card">
     <div class="volunteer-card-data">
       <div class="info-row">
-        <span class="info-row__title">{{ formattedUserInformations }}</span>
+        <span class="info-row__title">
+          {{ displayableVolunteerInformations }}
+        </span>
       </div>
       <div class="teams">
         <TeamChip
@@ -23,8 +25,8 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { moveAtFirstIndex } from "@overbookd/list";
 import { Volunteer } from "~/utils/models/assignment.model";
-import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 import { formatUsername } from "~/utils/user/user.utils";
+import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "AssignmentVolunteerResumeCalendarHeader",
@@ -50,11 +52,11 @@ export default Vue.extend({
       }
       return filteredTeams;
     },
-    formattedUserInformations(): string {
+    displayableVolunteerInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
-    selectedFt(): FtWithTimeSpan | null {
-      return this.$accessor.assignment.selectedFt;
+    selectedTask(): TaskWithAssignmentsSummary | null {
+      return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
     assignmentStats(): string {
       const duration = Duration.fromMilliseconds(
@@ -63,8 +65,8 @@ export default Vue.extend({
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affectées";
-      return this.selectedFt?.category ?? "indéterminées";
+      if (!this.selectedTask) return "affectées";
+      return this.selectedTask?.category ?? "indéterminé";
     },
   },
 });
@@ -80,12 +82,20 @@ export default Vue.extend({
 
 .volunteer-card-data {
   overflow: hidden;
+  max-width: 200px;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .teams {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 1px;
 }
 
 .info-row {
