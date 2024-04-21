@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {
   Assignment,
   AssignmentIdentifier,
+  Planning,
   PlanningEvent,
 } from "@overbookd/assignment";
 
@@ -11,14 +12,16 @@ export type Assignments = {
 
 @Injectable()
 export class AssignmentService {
-  constructor(private readonly assignments: Assignments) {}
+  constructor(
+    private readonly assignments: Assignments,
+    private readonly planning: Planning,
+  ) {}
 
   async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
     return this.assignments.findOne(identifier);
   }
 
   async getPlanning(volunteerId: number): Promise<PlanningEvent[]> {
-    console.log("getPlanning", volunteerId);
-    return Promise.resolve([]);
+    return this.planning.for(volunteerId);
   }
 }
