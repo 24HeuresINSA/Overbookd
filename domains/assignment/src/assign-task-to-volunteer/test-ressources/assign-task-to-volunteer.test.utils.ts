@@ -113,7 +113,7 @@ const fulfilledAssignmentSummary = AssignmentSummaryFactory.init(
 export const fulfilledAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withAssignees([{ as: HARD, volunteer: 100 }])
+  .withAssignees([{ as: HARD, id: 100 }])
   .withRequestedTeams([oneHardDemanded.assignmentTeam])
   .withSummary(fulfilledAssignmentSummary);
 
@@ -141,7 +141,7 @@ const missingTwoVieuxAssignmentSummary = AssignmentSummaryFactory.init(
 export const missingTwoVieuxAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withAssignees([{ as: HARD, volunteer: 101 }])
+  .withAssignees([{ as: HARD, id: 101 }])
   .withRequestedTeams([
     oneHardAssignedAndDemanded.assignmentTeam,
     twoVieuxDemanded.assignmentTeam,
@@ -157,9 +157,9 @@ export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
   .withAssignees([
-    { as: HARD, volunteer: 102 },
-    { as: HARD, volunteer: 103 },
-    { as: BENEVOLE_CODE, volunteer: 104 },
+    { as: HARD, id: 102 },
+    { as: HARD, id: 103 },
+    { as: BENEVOLE_CODE, id: 104 },
   ])
   .withRequestedTeams([
     threeHardDemanded.assignmentTeam,

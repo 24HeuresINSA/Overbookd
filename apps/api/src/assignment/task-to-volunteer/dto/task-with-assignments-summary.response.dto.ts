@@ -5,7 +5,7 @@ import {
 } from "@overbookd/assignment";
 import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
 import { ApiProperty } from "@nestjs/swagger";
-import { AssignmentIdentifier } from "@overbookd/assignment/src/assign-task-to-volunteer/assignment";
+import { AssignmentIdentifierResponseDto } from "../../common/dto/assignment-identifier.response.dto";
 
 class AssignmentTeamDto implements AssignmentTeam {
   @ApiProperty({ type: String })
@@ -18,19 +18,8 @@ class AssignmentTeamDto implements AssignmentTeam {
   assigned: number;
 }
 
-class AssignmentIdentifierDto implements AssignmentIdentifier {
-  @ApiProperty({ type: String })
-  assignmentId: string;
-
-  @ApiProperty({ type: String })
-  mobilizationId: string;
-
-  @ApiProperty({ type: Number })
-  taskId: number;
-}
-
-class AssignmentSummaryDto
-  extends AssignmentIdentifierDto
+class AssignmentSummaryResponseDto
+  extends AssignmentIdentifierResponseDto
   implements AssignmentSummary
 {
   @ApiProperty({ type: Date })
@@ -50,6 +39,6 @@ export class TaskWithAssignmentsSummaryResponseDto
   @ApiProperty({ type: String, required: false })
   category: TaskWithAssignmentsSummary["category"];
 
-  @ApiProperty({ type: AssignmentSummaryDto, isArray: true })
+  @ApiProperty({ type: AssignmentSummaryResponseDto, isArray: true })
   assignments: AssignmentSummary[];
 }

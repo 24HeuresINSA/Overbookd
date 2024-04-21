@@ -36,7 +36,7 @@ function toTask(task: DatabaseTask): Task {
   const assignments = task.mobilizations.flatMap((mobilization) => {
     const assignees = mobilization.assignees.map(({ teamCode, userId }) => ({
       as: teamCode,
-      volunteer: userId,
+      id: userId,
     }));
     const demands = mobilization.teams.map(({ teamCode, count }) => ({
       demand: count,

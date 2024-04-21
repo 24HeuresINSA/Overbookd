@@ -2,7 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "../volunteer";
 
 export type Assignee = {
-  volunteer: Volunteer["id"];
+  id: Volunteer["id"];
   as: string;
 };
 

@@ -17,12 +17,12 @@ import {
   SELECT_PERIOD,
   overlapPeriodCondition,
   includePeriodCondition,
-} from "../../common/period.query";
-import { COUNT_FRIENDS, hasAtLeastOneFriend } from "../../common/friend.query";
+} from "../../common/repository/period.query";
+import { COUNT_FRIENDS, hasAtLeastOneFriend } from "../../common/repository/friend.query";
 import {
   HAS_POSITIVE_CHARISMA,
   IS_NOT_DELETED,
-} from "../../common/common.query";
+} from "../../common/repository/common.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}

@@ -1,6 +1,6 @@
 import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/period";
-import { DatabaseFriendCount } from "../../common/friend.query";
+import { DatabaseFriendCount } from "../../common/repository/friend.query";
 
 type DatabaseFriend = {
   availabilities: IProvidePeriod[];

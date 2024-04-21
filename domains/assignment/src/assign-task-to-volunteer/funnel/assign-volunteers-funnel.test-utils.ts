@@ -113,8 +113,8 @@ export const couperDesCarottes: Assignment = {
     { team: BENEVOLE_CODE, demand: 2 },
   ],
   assignees: [
-    { volunteer: lea.volunteer.id, as: BENEVOLE_CODE },
-    { volunteer: tatouin.volunteer.id, as: BENEVOLE_CODE },
+    { id: lea.volunteer.id, as: BENEVOLE_CODE },
+    { id: tatouin.volunteer.id, as: BENEVOLE_CODE },
   ],
 };
 
@@ -126,7 +126,7 @@ export const gererLaCaisse: Assignment = {
   assignmentId: friday19hto21h.id,
   name: "Gerer la caisse",
   demands: [{ team: CONFIANCE, demand: 2 }],
-  assignees: [{ volunteer: lea.volunteer.id, as: CONFIANCE }],
+  assignees: [{ id: lea.volunteer.id, as: CONFIANCE }],
 };
 
 export const scannerLesBillets: Assignment = {
