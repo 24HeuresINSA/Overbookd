@@ -29,7 +29,7 @@ export class TaskToVolunteerRepository {
     { taskId, mobilizationId, assignmentId }: ExtendedAssignementIdentifier,
   ) {
     return context.$axios.get<HttpStringified<AssignableVolunteers[]>>(
-      `${this.basePath}tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}/assignable-volunteers`,
+      `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}/assignable-volunteers`,
     );
   }
 }

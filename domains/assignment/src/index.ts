@@ -27,3 +27,8 @@ export type {
 } from "./assign-task-to-volunteer/assignable-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignmentError, TaskNotFoundError } from "./assignment.error";
+export {
+  CONFIANCE,
+  HARD,
+  VIEUX,
+} from "./assign-task-to-volunteer/funnel/teams";

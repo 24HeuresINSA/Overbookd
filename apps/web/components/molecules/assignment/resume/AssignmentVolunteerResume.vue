@@ -7,7 +7,10 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-icon
-                v-if="volunteer.hasFriendAssigned"
+                v-if="
+                  isAssignableVolunteer(volunteer) &&
+                  volunteer.hasFriendAssigned
+                "
                 small
                 color="green"
                 v-bind="attrs"
@@ -21,7 +24,10 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-icon
-                v-if="volunteer.friendAvailable"
+                v-if="
+                  isAssignableVolunteer(volunteer) &&
+                  volunteer.hasFriendAvailable
+                "
                 small
                 v-bind="attrs"
                 v-on="on"
@@ -30,6 +36,14 @@
               </v-icon>
             </template>
             <span>Amis disponibles sur le même créneau</span>
+          </v-tooltip>
+          <v-tooltip top max-width="20rem">
+            <template #activator="{ on, attrs }">
+              <v-icon v-if="volunteer.note" small v-bind="attrs" v-on="on">
+                mdi-note
+              </v-icon>
+            </template>
+            <span>{{ volunteer.note }}</span>
           </v-tooltip>
           <v-tooltip top max-width="20rem">
             <template #activator="{ on, attrs }">
@@ -42,7 +56,10 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-icon
-                v-if="volunteer.isRequestedOnSamePeriod"
+                v-if="
+                  isAssignableVolunteer(volunteer) &&
+                  volunteer.isRequestedOnSamePeriod
+                "
                 small
                 color="orange"
                 v-bind="attrs"
@@ -71,11 +88,15 @@
 </template>
 
 <script lang="ts">
+import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import {
+  AssignmentVolunteer,
+  isAssignableVolunteer,
+} from "~/utils/assignment/assignment-volunteer";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import { Duration } from "~/utils/date/duration";
-import { Volunteer } from "~/utils/models/assignment.model";
-import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 import { sortTeamsForAssignment } from "~/utils/models/team.model";
 import { formatUsername } from "~/utils/user/user.utils";
 
@@ -84,7 +105,7 @@ export default Vue.extend({
   components: { TeamChip },
   props: {
     volunteer: {
-      type: Object as () => Volunteer,
+      type: Object as () => AssignmentVolunteer,
       required: true,
     },
   },
@@ -95,8 +116,8 @@ export default Vue.extend({
     formattedUserInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
-    selectedFt(): FtWithTimeSpan | null {
-      return this.$accessor.assignment.selectedFt;
+    selectedTask(): TaskWithAssignmentsSummary | null {
+      return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
     assignmentStats(): string {
       const duration = Duration.fromMilliseconds(
@@ -105,14 +126,18 @@ export default Vue.extend({
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affecté";
-      return this.selectedFt?.category ?? "indéterminé";
+      if (this.isOrgaTaskMode) return "affecté";
+      return this.selectedTask?.category ?? "indéterminé";
+    },
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
     },
   },
   methods: {
     openCalendar() {
       window.open(`/planning/${this.volunteer.id}`, "_blank");
     },
+    isAssignableVolunteer,
   },
 });
 </script>

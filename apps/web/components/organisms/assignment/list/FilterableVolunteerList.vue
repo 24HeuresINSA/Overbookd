@@ -17,7 +17,7 @@
         @select-volunteer="handleVolunteerSelection"
       ></AssignmentVolunteerList>
       <div v-else class="error-message">
-        <p v-if="!selectedTimeSpan">Aucun créneau séléctionné</p>
+        <p v-if="!selectedAssignment">Aucun créneau séléctionné</p>
         <p v-else>Aucun bénévole disponible pour ce créneau</p>
       </div>
       <FriendsDisplay
@@ -30,20 +30,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team.model";
-import {
-  Sort,
-  AssignmentModes,
-  getAssignmentModeFromRoute,
-} from "~/utils/models/assignment.model";
-import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
+import { Sort } from "~/utils/models/assignment.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 type FilterableVolunteerListData = {
   teams: Team[];
@@ -51,7 +47,7 @@ type FilterableVolunteerListData = {
   sort: number;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "FilterableVolunteerList",
   components: { AssignmentVolunteerList, FriendsDisplay, VolunteerFilters },
   data: (): FilterableVolunteerListData => ({
@@ -60,10 +56,13 @@ export default Vue.extend({
     sort: 0,
   }),
   computed: {
-    volunteers(): VolunteerWithAssignmentDuration[] {
-      return this.$accessor.assignVolunteerToTask.volunteers;
+    volunteers(): AssignmentVolunteer[] {
+      if (this.isOrgaTaskMode) {
+        return this.$accessor.assignVolunteerToTask.volunteers;
+      }
+      return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
     },
-    searchableVolunteers(): Searchable<VolunteerWithAssignmentDuration>[] {
+    searchableVolunteers(): Searchable<AssignmentVolunteer>[] {
       return this.volunteers.map((volunteer) => ({
         ...volunteer,
         searchable: SlugifyService.apply(
@@ -71,7 +70,7 @@ export default Vue.extend({
         ),
       }));
     },
-    displayedVolunteers(): VolunteerWithAssignmentDuration[] {
+    displayedVolunteers(): AssignmentVolunteer[] {
       const filteredVolunteers = this.searchableVolunteers.filter(
         (volunteer) => {
           return (
@@ -83,28 +82,27 @@ export default Vue.extend({
       return this.sortVolunteers(filteredVolunteers);
     },
     isOrgaTaskMode(): boolean {
-      return (
-        getAssignmentModeFromRoute(this.$route.path) ===
-        AssignmentModes.ORGA_TASK
-      );
+      return isOrgaTaskMode(this.$route.path);
     },
     hasSelectedVolunteer(): boolean {
       return !!this.$accessor.assignment.selectedVolunteer;
     },
-    selectedTimeSpan(): FtTimeSpan | null {
-      return this.$accessor.assignment.selectedTimeSpan;
+    selectedAssignment() {
+      return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
     shouldShowVolunteerList(): boolean {
+      const hasSelectedAssignment = this.selectedAssignment !== null;
+      const hasDisplayedVolunteers = this.displayedVolunteers.length > 0;
+
       return (
-        this.isOrgaTaskMode ||
-        (this.selectedTimeSpan !== null && this.displayedVolunteers.length > 0)
+        this.isOrgaTaskMode || (hasSelectedAssignment && hasDisplayedVolunteers)
       );
     },
   },
   methods: {
     filterVolunteerByTeams(
       teamsSearched: Team[],
-    ): (volunteer: VolunteerWithAssignmentDuration) => boolean {
+    ): (volunteer: AssignmentVolunteer) => boolean {
       return teamsSearched.length > 0
         ? (volunteer) =>
             teamsSearched.every((teamSearched) =>
@@ -114,14 +112,14 @@ export default Vue.extend({
             )
         : () => true;
     },
-    handleVolunteerSelection(volunteer: VolunteerWithAssignmentDuration) {
+    handleVolunteerSelection(volunteer: AssignmentVolunteer) {
       if (this.isOrgaTaskMode) {
         this.$accessor.assignment.selectVolunteer(volunteer);
         return;
       }
       this.$accessor.assignment.startAssignment(volunteer);
     },
-    sortVolunteers(volunteers: VolunteerWithAssignmentDuration[]) {
+    sortVolunteers(volunteers: AssignmentVolunteer[]) {
       return volunteers.sort((a, b) => {
         if (this.sort === Sort.NONE) return a.charisma - b.charisma;
         if (this.sort === Sort.ASC) {
@@ -132,7 +130,7 @@ export default Vue.extend({
     },
     filterVolunteerByName(
       search: string,
-    ): (volunteer: Searchable<VolunteerWithAssignmentDuration>) => boolean {
+    ): (volunteer: Searchable<AssignmentVolunteer>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },

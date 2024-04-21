@@ -91,7 +91,12 @@ export default defineComponent({
       );
     },
     selectAssignment(assignment: AssignmentSummary) {
-      console.log(assignment);
+      const taskId = this.selectedTask?.id;
+      if (!taskId) return;
+      this.$accessor.assignTaskToVolunteer.selectAssignment({
+        ...assignment.identifier,
+        taskId,
+      });
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
       this.$emit("display-assignment-details", identifier);

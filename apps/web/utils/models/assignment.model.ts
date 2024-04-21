@@ -1,10 +1,5 @@
 import { User } from "@overbookd/user";
 
-export const AssignmentModes = {
-  ORGA_TASK: "orga-task",
-  TASK_ORGA: "task-orga",
-};
-
 export type Volunteer = User & {
   charisma: number;
   comment?: string;
@@ -20,11 +15,6 @@ export type UpdateAssignedTeam = {
   assigneeId: number;
   team: string;
 };
-
-export function getAssignmentModeFromRoute(url: string): string {
-  const mode = url.split("/").at(-1);
-  return mode ?? AssignmentModes.ORGA_TASK;
-}
 
 export const Sort = {
   ASC: 1,

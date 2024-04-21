@@ -139,6 +139,7 @@ export class AssignTaskToVolunteer {
     return {
       id: task.id,
       name: task.name,
+      category: task.category,
       assignments,
     };
   }
