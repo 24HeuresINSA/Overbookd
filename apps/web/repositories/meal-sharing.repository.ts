@@ -1,12 +1,10 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified, OfferMeal } from "@overbookd/http";
 import {
   Expense,
   PastSharedMeal,
   SharedMeal,
 } from "@overbookd/personal-account";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class MealSharingRepository {
   private static readonly basePath = "shared-meals";

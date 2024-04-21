@@ -9,7 +9,26 @@ import { Volunteer } from "./volunteer";
 import { Assignments } from "./assignments";
 import { Assignment } from "../assignment";
 
-export class Setup {
+export class ReadyToStart {
+  private constructor(
+    private readonly candidateFactory: CandidateFactory,
+    private readonly assignments: Assignments,
+  ) {}
+
+  static init(candidateFactory: CandidateFactory, assignments: Assignments) {
+    return new ReadyToStart(candidateFactory, assignments);
+  }
+
+  select(assignment: Assignment) {
+    return WaitingForVolunteer.init(
+      this.candidateFactory,
+      this.assignments,
+      assignment,
+    );
+  }
+}
+
+export class WaitingForVolunteer {
   private constructor(
     private readonly candidateFactory: CandidateFactory,
     private readonly assignments: Assignments,
@@ -21,7 +40,7 @@ export class Setup {
     assignments: Assignments,
     assignment: Assignment,
   ) {
-    return new Setup(candidateFactory, assignments, assignment);
+    return new WaitingForVolunteer(candidateFactory, assignments, assignment);
   }
 
   async select(volunteer: Volunteer) {
@@ -29,7 +48,11 @@ export class Setup {
       volunteer,
       this.assignment,
     );
-    return VolunteerSelected.init(candidate, this.assignments, this.assignment);
+    return SomeCandidatesNotFulfillingDemand.init(
+      candidate,
+      this.assignments,
+      this.assignment,
+    );
   }
 }
 
@@ -38,7 +61,7 @@ type FulfillDemand = {
   team: string;
 };
 
-export class VolunteerSelected {
+export class SomeCandidatesNotFulfillingDemand {
   private constructor(
     private readonly _candidates: Candidate[],
     private readonly assignments: Assignments,
@@ -57,7 +80,11 @@ export class VolunteerSelected {
         assignment,
       );
     }
-    return new VolunteerSelected([candidate], assignments, assignment);
+    return new SomeCandidatesNotFulfillingDemand(
+      [candidate],
+      assignments,
+      assignment,
+    );
   }
 
   fulfillDemand({ volunteer, team }: FulfillDemand) {
@@ -71,7 +98,11 @@ export class VolunteerSelected {
         this.assignment,
       );
     }
-    return new VolunteerSelected(candidates, this.assignments, this.assignment);
+    return new SomeCandidatesNotFulfillingDemand(
+      candidates,
+      this.assignments,
+      this.assignment,
+    );
   }
 
   get hasRemainingDemands(): boolean {
@@ -130,8 +161,30 @@ export class EveryCandidateFulfillsDemand {
   }
 }
 
+export type Funnel =
+  | ReadyToStart
+  | WaitingForVolunteer
+  | SomeCandidatesNotFulfillingDemand
+  | EveryCandidateFulfillsDemand;
+
+export function isReadyToStart(state: Funnel): state is ReadyToStart {
+  return state instanceof ReadyToStart;
+}
+
+export function isWaitingForVolunteer(
+  state: Funnel,
+): state is WaitingForVolunteer {
+  return state instanceof WaitingForVolunteer;
+}
+
+export function isSomeCandidatesNotFulfillingDemand(
+  state: Funnel,
+): state is SomeCandidatesNotFulfillingDemand {
+  return state instanceof SomeCandidatesNotFulfillingDemand;
+}
+
 export function isEveryCandidateFulfillsDemand(
-  state: VolunteerSelected | EveryCandidateFulfillsDemand,
+  state: Funnel,
 ): state is EveryCandidateFulfillsDemand {
-  return state.candidates.every(isFulfillingDemand);
+  return state instanceof EveryCandidateFulfillsDemand;
 }

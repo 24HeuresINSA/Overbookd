@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CSV,
   HttpStringified,
@@ -34,8 +33,7 @@ import {
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequestForm, PublishFeedbackForm } from "@overbookd/http";
 import { StatsPayload } from "~/utils/models/stats.model";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class FestivalActivityRepository {
   private static readonly basePath = "festival-activities";

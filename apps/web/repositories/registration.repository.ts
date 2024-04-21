@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   Credentials,
   NewcomerToEnroll,
@@ -9,8 +8,7 @@ import {
   EnrollableVolunteer,
   HttpStringified,
 } from "@overbookd/http";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class RegistrationRepository {
   private static readonly basePath = "registrations";

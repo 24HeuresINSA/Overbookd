@@ -1,15 +1,24 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList class="volunteer-list" />
+    <FilterableVolunteerList
+      class="volunteer-list"
+      @select-volunteer="selectVolunteer"
+    />
     <TaskOrgaCalendar
       class="calendar"
       @display-assignment-details="openAssignmentDetailsDialog"
+      @select-assignment="selectAssignment"
     />
     <FilterableTaskList class="task-list" />
     <SnackNotificationContainer />
 
-    <v-dialog v-model="openTaskAssignmentDialog" width="1000px">
-      <AssignmentForm @close-dialog="closeTaskAssignmentDialog" />
+    <v-dialog v-model="openFunnelDialog" width="1000px">
+      <AssignmentFunnel
+        v-if="volunteer && assignment"
+        :volunteer="volunteer"
+        :assignment="assignment"
+        @close-dialog="closeFunnelDialog"
+      />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <TimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
@@ -18,29 +27,38 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import AssignmentForm from "~/components/organisms/assignment/card/AssignmentForm.vue";
+import AssignmentFunnel from "~/components/organisms/assignment/card/AssignmentFunnel.vue";
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
 import {
+  Assignment,
   AssignmentIdentifier,
+  AssignmentSummary,
+  AssignmentVolunteer,
   MissingAssignmentTask,
 } from "@overbookd/assignment";
 
-export default Vue.extend({
+type OrgaTaskData = {
+  openFunnelDialog: boolean;
+  displayAssignmentDetailsDialog: boolean;
+};
+
+export default defineComponent({
   name: "TaskOrga",
   components: {
     FilterableVolunteerList,
     FilterableTaskList,
     TaskOrgaCalendar,
-    AssignmentForm,
+    AssignmentFunnel,
     TimeSpanDetails,
     SnackNotificationContainer,
   },
-  data: () => ({
+  data: (): OrgaTaskData => ({
+    openFunnelDialog: false,
     displayAssignmentDetailsDialog: false,
   }),
   head: () => ({
@@ -50,13 +68,11 @@ export default Vue.extend({
     tasks(): MissingAssignmentTask[] {
       return this.$accessor.assignTaskToVolunteer.tasks;
     },
-    openTaskAssignmentDialog: {
-      get(): boolean {
-        return this.$accessor.assignment.openTaskAssignmentDialog;
-      },
-      set(): void {
-        this.$accessor.assignment.resetAssignment();
-      },
+    volunteer(): AssignmentVolunteer | null {
+      return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
+    },
+    assignment(): Assignment | null {
+      return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
   },
   async mounted() {
@@ -64,8 +80,8 @@ export default Vue.extend({
     await this.$accessor.assignTaskToVolunteer.fetchTasks();
   },
   methods: {
-    closeTaskAssignmentDialog() {
-      this.openTaskAssignmentDialog = false;
+    closeFunnelDialog() {
+      this.openFunnelDialog = false;
     },
     closeAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = false;
@@ -73,6 +89,15 @@ export default Vue.extend({
     openAssignmentDetailsDialog(identifier: AssignmentIdentifier) {
       console.log(identifier);
       //this.displayAssignmentDetailsDialog = true;
+    },
+    selectVolunteer(volunteer: AssignmentVolunteer) {
+      this.$accessor.assignTaskToVolunteer.selectVolunteer(volunteer);
+      this.openFunnelDialog = true;
+    },
+    selectAssignment(assignment: AssignmentSummary) {
+      const taskId = this.$accessor.assignTaskToVolunteer.selectedTask?.id;
+      if (!taskId) return;
+      this.$accessor.assignTaskToVolunteer.selectAssignment(assignment);
     },
   },
 });

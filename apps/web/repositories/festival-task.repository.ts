@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   AddInquiryRequestForm,
   AddContactForm,
@@ -28,8 +27,7 @@ import {
   Categorize,
   FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 type ReadyToAssign = Extract<
   FestivalTaskWithConflicts,

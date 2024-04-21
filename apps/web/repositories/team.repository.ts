@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Team } from "~/utils/models/team.model";
 import { HttpStringified } from "@overbookd/http";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class TeamRepository {
   private static readonly basePath = "teams";

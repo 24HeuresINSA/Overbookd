@@ -1,12 +1,10 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   GearPreview,
   GearSearchOptions,
   GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class LogisticDashboardRepository {
   private static readonly basePath = "logistic/dashboard";

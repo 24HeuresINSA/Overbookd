@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Period } from "@overbookd/period";
 import { HttpStringified } from "@overbookd/http";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class VolunteerAvailabilityRepository {
   private static readonly basePath = "volunteer-availability";

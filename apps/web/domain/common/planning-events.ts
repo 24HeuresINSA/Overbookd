@@ -21,21 +21,3 @@ export function convertTaskToPlanningEvent(
     volunteerId,
   };
 }
-
-type TemporaryTask = {
-  start: Date;
-  end: Date;
-  name: string;
-};
-
-export function createTemporaryTaskPlanningEvent({
-  start,
-  end,
-  name,
-}: TemporaryTask): PlanningEvent {
-  return {
-    start,
-    end,
-    name,
-  };
-}

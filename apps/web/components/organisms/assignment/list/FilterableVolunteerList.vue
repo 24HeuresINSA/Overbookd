@@ -15,7 +15,7 @@
         :volunteers="displayedVolunteers"
         class="volunteer-list"
         :class="isOrgaTaskMode ? 'volunteer-list--with-friend-list' : ''"
-        @select-volunteer="handleVolunteerSelection"
+        @select-volunteer="selectVolunteer"
       ></AssignmentVolunteerList>
       <div v-else class="error-message">
         <p v-if="!selectedAssignment">Aucun créneau séléctionné</p>
@@ -24,7 +24,7 @@
       <FriendsDisplay
         v-if="isOrgaTaskMode"
         class="friend-list"
-        @select-volunteer="handleVolunteerSelection"
+        @select-volunteer="selectVolunteer"
       ></FriendsDisplay>
     </v-card-text>
   </v-card>
@@ -52,6 +52,7 @@ type FilterableVolunteerListData = {
 export default defineComponent({
   name: "FilterableVolunteerList",
   components: { AssignmentVolunteerList, FriendsDisplay, VolunteerFilters },
+  emits: ["select-volunteer"],
   data: (): FilterableVolunteerListData => ({
     teams: [],
     searchVolunteer: "",
@@ -116,12 +117,8 @@ export default defineComponent({
             )
         : () => true;
     },
-    handleVolunteerSelection(volunteer: AssignmentVolunteer) {
-      if (this.isOrgaTaskMode) {
-        this.$accessor.assignment.selectVolunteer(volunteer);
-        return;
-      }
-      this.$accessor.assignment.startAssignment(volunteer);
+    selectVolunteer(volunteer: AssignmentVolunteer) {
+      this.$emit("select-volunteer", volunteer);
     },
     sortVolunteers(volunteers: AssignmentVolunteer[]) {
       return volunteers.sort((a, b) => {

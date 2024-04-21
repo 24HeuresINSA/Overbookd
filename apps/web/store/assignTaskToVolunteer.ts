@@ -1,5 +1,7 @@
 import {
   AssignableVolunteer,
+  Assignment,
+  AssignmentVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
@@ -8,12 +10,15 @@ import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-vol
 import { safeCall } from "~/utils/api/calls";
 import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
 import { HttpStringified } from "@overbookd/http";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
-  selectedAssignment: ExtendedAssignementIdentifier | null;
+  selectedAssignment: Assignment | null;
   assignableVolunteers: AssignableVolunteer[];
+  selectedVolunteer: AssignmentVolunteer | null;
 };
 
 export const state = (): State => ({
@@ -21,23 +26,30 @@ export const state = (): State => ({
   selectedTask: null,
   selectedAssignment: null,
   assignableVolunteers: [],
+  selectedVolunteer: null,
 });
 
 export const mutations = mutationTree(state, {
   SET_TASKS(state, tasks: MissingAssignmentTask[]) {
     state.tasks = tasks;
   },
-  SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary | null) {
+  SELECT_TASK(state, task: TaskWithAssignmentsSummary) {
     state.selectedTask = task;
   },
-  SET_SELECTED_ASSIGNMENT(
-    state,
-    assignmentIdentifier: ExtendedAssignementIdentifier | null,
-  ) {
-    state.selectedAssignment = assignmentIdentifier;
+  SELECT_ASSIGNMENT(state, assignment: Assignment) {
+    state.selectedAssignment = assignment;
+  },
+  RESET_SELECTED_ASSIGNMENT(state) {
+    state.selectedAssignment = null;
   },
   SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
+  },
+  SELECT_VOLUNTEER(state, volunteer: AssignmentVolunteer) {
+    state.selectedVolunteer = volunteer;
+  },
+  RESET_SELECTED_VOLUNTEER(state) {
+    state.selectedVolunteer = null;
   },
 });
 
@@ -61,8 +73,9 @@ export const actions = actionTree(
       if (!res) return;
 
       const task = castTaskWithAssignmentsSummaryWithDate(res.data);
-      commit("SET_SELECTED_TASK", task);
-      commit("SET_SELECTED_ASSIGNMENT", null);
+      commit("SELECT_TASK", task);
+      commit("RESET_SELECTED_ASSIGNMENT");
+      commit("RESET_SELECTED_VOLUNTEER");
       commit("SET_ASSIGNABLE_VOLUNTEERS", []);
     },
 
@@ -70,16 +83,26 @@ export const actions = actionTree(
       { commit },
       assignmentIdentifier: ExtendedAssignementIdentifier,
     ) {
-      const res = await safeCall(
-        this,
-        TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+      const [assignableVolunteersRes, assignmentRes] = await Promise.all([
+        safeCall(
           this,
-          assignmentIdentifier,
+          TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+            this,
+            assignmentIdentifier,
+          ),
         ),
-      );
-      if (!res) return;
-      commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
-      commit("SET_ASSIGNABLE_VOLUNTEERS", res.data);
+        safeCall(
+          this,
+          AssignmentsRepository.findOne(this, assignmentIdentifier),
+        ),
+      ]);
+      if (!assignableVolunteersRes || !assignmentRes) return;
+      commit("SET_ASSIGNABLE_VOLUNTEERS", assignableVolunteersRes.data);
+      commit("SELECT_ASSIGNMENT", castAssignmentWithDate(assignmentRes.data));
+    },
+
+    async selectVolunteer({ commit }, volunteer: AssignmentVolunteer) {
+      commit("SELECT_VOLUNTEER", volunteer);
     },
   },
 );
@@ -91,8 +114,16 @@ function castTaskWithAssignmentsSummaryWithDate(
     ...task,
     assignments: task.assignments.map((assignment) => ({
       ...assignment,
-      start: new Date(assignment.start),
-      end: new Date(assignment.end),
+      ...castPeriodWithDate(assignment),
     })),
+  };
+}
+
+function castAssignmentWithDate(
+  assignment: HttpStringified<Assignment>,
+): Assignment {
+  return {
+    ...assignment,
+    ...castPeriodWithDate(assignment),
   };
 }

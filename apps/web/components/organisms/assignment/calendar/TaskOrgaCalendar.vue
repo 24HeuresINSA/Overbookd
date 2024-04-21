@@ -41,7 +41,7 @@ function isDailyEvent(
 export default defineComponent({
   name: "TaskOrgaCalendar",
   components: { OverCalendar },
-  emits: ["display-assignment-details"],
+  emits: ["display-assignment-details", "select-assignment"],
   data: () => ({
     calendarMarker: new Date(),
   }),
@@ -91,9 +91,7 @@ export default defineComponent({
       );
     },
     selectAssignment(assignment: AssignmentSummary) {
-      const taskId = this.selectedTask?.id;
-      if (!taskId) return;
-      this.$accessor.assignTaskToVolunteer.selectAssignment(assignment);
+      this.$emit("select-assignment", assignment);
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
       this.$emit("display-assignment-details", identifier);

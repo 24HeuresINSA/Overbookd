@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Alerts } from "@overbookd/alerts";
 import { HttpStringified } from "@overbookd/http";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class AlertRepository {
   private static readonly basePath = "alerts";

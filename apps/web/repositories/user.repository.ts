@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   Consumer,
   VolunteerAssignmentStat,
@@ -13,8 +12,7 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 import { ImageRepository } from "~/utils/image/image.repository";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class UserRepository {
   private static readonly basePath = "users";

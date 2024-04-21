@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { AddGearRequestForm, HttpStringified } from "@overbookd/http";
 import {
   Borrow,
@@ -6,8 +5,7 @@ import {
   InitBorrowForm,
   PlanBorrowForm,
 } from "@overbookd/logistic";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class BorrowRepository {
   private static readonly basePath = "logistic/borrows";

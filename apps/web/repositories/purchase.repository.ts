@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { AddGearRequestForm, HttpStringified } from "@overbookd/http";
 import {
   Purchase,
@@ -6,8 +5,7 @@ import {
   GearRequest,
   PlanPurchaseForm,
 } from "@overbookd/logistic";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class PurchaseRepository {
   private static readonly basePath = "logistic/purchases";

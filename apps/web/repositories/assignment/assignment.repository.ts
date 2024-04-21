@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { AssignmentStats, BulkAssignmentRequest } from "~/store/assignment";
 import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
@@ -7,8 +6,7 @@ import {
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
 import { HttpStringified } from "@overbookd/http";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "../context";
 
 type AssignmentResponse = {
   assigneeId: number;

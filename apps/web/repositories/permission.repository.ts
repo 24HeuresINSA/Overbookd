@@ -1,11 +1,9 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified } from "@overbookd/http";
 import {
   Permission,
   CreatePermissionForm,
 } from "~/utils/models/permission.model";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class PermissionRepository {
   private static readonly basePath = "permissions";

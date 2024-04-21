@@ -1,5 +1,4 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { User } from "@overbookd/user";
 
 export type CalendarEvent = {
   start: Date;
@@ -18,7 +17,11 @@ export type DailyEvent = {
   timed: false;
 };
 
-export type CalendarUser = User & {
+export type CalendarUser = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string | null;
   teams: string[];
   availabilities: IProvidePeriod[];
 };

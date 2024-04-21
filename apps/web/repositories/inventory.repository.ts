@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryGroupedRecord } from "~/store/inventory";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class InventoryRepository {
   private static readonly basePath = "logistic/inventory";

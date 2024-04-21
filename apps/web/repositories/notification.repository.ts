@@ -1,6 +1,4 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class NotificationRepository {
   private static readonly basePath = "notifications";

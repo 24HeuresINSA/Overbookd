@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   AssignableVolunteers,
   MissingAssignmentTask,
@@ -6,8 +5,7 @@ import {
 } from "@overbookd/assignment";
 import { HttpStringified } from "@overbookd/http";
 import { ExtendedAssignementIdentifier } from "~/utils/assignment/assignment-identifier";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "../context";
 
 export class TaskToVolunteerRepository {
   private static readonly basePath = "assignments/task-to-volunteer";

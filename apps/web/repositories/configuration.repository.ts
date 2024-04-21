@@ -1,8 +1,6 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified } from "@overbookd/http";
 import { Configuration } from "@overbookd/configuration";
-
-type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class ConfigurationRepository {
   private static readonly basePath = "configuration";

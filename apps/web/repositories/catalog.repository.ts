@@ -1,10 +1,8 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { GearSearchOptions } from "@overbookd/http";
 import { CategoryForm, CategorySearchOptions } from "~/store/catalog";
 import { GearForm } from "~/store/catalogGear";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
-
-export type Context = { $axios: NuxtAxiosInstance };
+import { Context } from "./context";
 
 export class GearsRepository {
   private static readonly basePath = "logistic/gears";
