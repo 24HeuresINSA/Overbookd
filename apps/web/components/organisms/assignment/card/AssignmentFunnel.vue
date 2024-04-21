@@ -115,10 +115,22 @@ import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
-import { Assignment, AssignmentVolunteer } from "@overbookd/assignment";
+import {
+  Assignment,
+  AssignmentVolunteer,
+  EveryCandidateFulfillsDemand,
+  ReadyToStart,
+  SomeCandidatesNotFulfillingDemand,
+} from "@overbookd/assignment";
+import { assignments, candidateFactory } from "~/utils/assignment/funnel";
+
+type AssignmentAndVolunteerSelected =
+  | SomeCandidatesNotFulfillingDemand
+  | EveryCandidateFulfillsDemand;
 
 type AssingmentFunneData = {
   calendarDate: Date;
+  funnel: AssignmentAndVolunteerSelected | null;
 };
 
 export default defineComponent({
@@ -141,25 +153,19 @@ export default defineComponent({
   data: (): AssingmentFunneData => {
     return {
       calendarDate: new Date(),
+      funnel: null,
     };
   },
   computed: {
     taskAssignment(): TaskAssignment {
       return this.$accessor.assignment.taskAssignment;
     },
-    ftId(): number {
-      return this.$accessor.assignment.selectedFt?.id ?? 0;
-    },
     taskTitle(): string {
-      const id = this.ftId;
-      const name = this.taskAssignment.task.name;
-      return `[${id}] ${name}`;
+      const { taskId, name } = this.assignment;
+      return `[${taskId}] ${name}`;
     },
     mainCandidate(): AssignmentCandidate | undefined {
       return this.taskAssignment.candidates.at(0);
-    },
-    start(): Date {
-      return this.taskAssignment.task.start;
     },
     volunteerIds(): string[] {
       return this.taskAssignment.candidates.map((c) =>
@@ -197,14 +203,23 @@ export default defineComponent({
     },
   },
   watch: {
-    taskAssignment() {
-      this.calendarDate = this.start;
+    assignment({ start }: Assignment) {
+      this.calendarDate = start;
+    },
+    async volunteer() {
+      this.funnel = await this.initFunnel();
     },
   },
-  mounted() {
-    this.calendarDate = this.start;
+  async mounted() {
+    this.calendarDate = this.assignment.start;
+    this.funnel = await this.initFunnel();
   },
   methods: {
+    initFunnel(): Promise<AssignmentAndVolunteerSelected> {
+      return ReadyToStart.init(candidateFactory(this), assignments(this))
+        .select(this.assignment)
+        .select(this.volunteer);
+    },
     retrieveVolunteer(id: string): Volunteer | undefined {
       return this.taskAssignment.getCandidate(+id)?.volunteer;
     },

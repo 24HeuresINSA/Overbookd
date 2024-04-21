@@ -11,6 +11,7 @@ import { safeCall } from "~/utils/api/calls";
 import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
 import { HttpStringified } from "@overbookd/http";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
   tasks: MissingAssignmentTask[];
@@ -96,9 +97,8 @@ export const actions = actionTree(
         ),
       ]);
       if (!assignableVolunteersRes || !assignmentRes) return;
-      commit("SELECT_ASSIGNMENT", assignmentIdentifier);
       commit("SET_ASSIGNABLE_VOLUNTEERS", assignableVolunteersRes.data);
-      commit("SELECT_ASSIGNMENT", assignmentRes.data);
+      commit("SELECT_ASSIGNMENT", castAssignmentWithDate(assignmentRes.data));
     },
 
     async selectVolunteer({ commit }, volunteer: AssignmentVolunteer) {
@@ -114,8 +114,16 @@ function castTaskWithAssignmentsSummaryWithDate(
     ...task,
     assignments: task.assignments.map((assignment) => ({
       ...assignment,
-      start: new Date(assignment.start),
-      end: new Date(assignment.end),
+      ...castPeriodWithDate(assignment),
     })),
+  };
+}
+
+function castAssignmentWithDate(
+  assignment: HttpStringified<Assignment>,
+): Assignment {
+  return {
+    ...assignment,
+    ...castPeriodWithDate(assignment),
   };
 }

@@ -1,5 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
+import {
+  Assignment,
+  AssignmentIdentifier,
+  PlanningEvent,
+} from "@overbookd/assignment";
 
 export type Assignments = {
   findOne(identifier: AssignmentIdentifier): Promise<Assignment>;
@@ -11,5 +15,10 @@ export class AssignmentService {
 
   async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
     return this.assignments.findOne(identifier);
+  }
+
+  async getPlanning(volunteerId: number): Promise<PlanningEvent[]> {
+    console.log("getPlanning", volunteerId);
+    return Promise.resolve([]);
   }
 }

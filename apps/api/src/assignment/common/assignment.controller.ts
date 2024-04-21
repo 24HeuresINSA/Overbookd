@@ -21,7 +21,7 @@ import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { AssignmentResponseDto } from "./dto/assignment.response.dto";
-import { Assignment } from "@overbookd/assignment";
+import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -63,11 +63,31 @@ export class AssignmentController {
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
-  ): Promise<Assignment> {
+  ): Promise<AssignmentResponseDto> {
     return this.assignment.findOne({
       taskId,
       mobilizationId,
       assignmentId,
     });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("planning/:volunteerId")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteer planning",
+    type: PlanningEventResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    description: "Volunteer id",
+    type: Number,
+  })
+  getPlanning(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+  ): Promise<PlanningEventResponseDto[]> {
+    return this.assignment.getPlanning(volunteerId);
   }
 }
