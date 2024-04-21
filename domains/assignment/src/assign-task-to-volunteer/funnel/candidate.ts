@@ -41,13 +41,13 @@ export class Candidate {
     teams: string[],
   ) {
     const remainingDemands = demands.reduce(
-      (remainingDemands, { team, demand }) => {
+      (remainingDemands: TeamDemanded[], { team, demand }) => {
         const totalAssignees = assignees.filter(({ as }) => as === team).length;
         if (totalAssignees === demand) return remainingDemands;
 
         return [...remainingDemands, { team, demand: demand - totalAssignees }];
       },
-      [] as TeamDemanded[],
+      [],
     );
     const implicitTeams = retrieveImplicitTeams(teams);
     return implicitTeams.filter((team) =>
@@ -56,7 +56,7 @@ export class Candidate {
   }
 
   static toAssignment({ id, as }: CandidateFulfillingDemand): Assignee {
-    return { volunteer: id, as };
+    return { id, as };
   }
 
   demandAs(as: string) {

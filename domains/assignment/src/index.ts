@@ -10,10 +10,12 @@ export type {
   AssignmentSpecification,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export type {
+  Assignee,
   Assignment,
   AssignmentIdentifier,
   AssignmentTeam,
   AssignmentSummary,
+  TeamDemanded,
 } from "./assign-task-to-volunteer/assignment";
 export type {
   Task,

@@ -6,11 +6,11 @@ import {
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
 import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
-import { hasAtLeastOneFriend } from "../../common/friend.query";
+import { hasAtLeastOneFriend } from "../../common/repository/friend.query";
 import {
   HAS_POSITIVE_CHARISMA,
   IS_NOT_DELETED,
-} from "../../common/common.query";
+} from "../../common/repository/common.query";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}

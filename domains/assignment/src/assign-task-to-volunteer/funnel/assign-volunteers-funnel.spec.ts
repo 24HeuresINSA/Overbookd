@@ -83,7 +83,7 @@ describe("Assign volunteers funnel", () => {
           it("should save new assignments", async () => {
             const expectedAssignees = [
               ...task.assignees,
-              { volunteer: volunteer.id, as: team },
+              { id: volunteer.id, as: team },
             ];
             const assignment = await everyCandidateFulfillsDemand.assign();
 
@@ -122,7 +122,7 @@ describe("Assign volunteers funnel", () => {
         it("should save new assignments", async () => {
           const expectedAssignees = [
             ...rendreKangoo.assignees,
-            { volunteer: noel.volunteer.id, as: BENEVOLE_CODE },
+            { id: noel.volunteer.id, as: BENEVOLE_CODE },
           ];
           const assignment = await funnel.assign();
 
@@ -180,7 +180,7 @@ describe("Assign volunteers funnel", () => {
             it("should save new assignments", async () => {
               const expectedAssignees = [
                 ...rendreKangoo.assignees,
-                { volunteer: volunteer.id, as: team },
+                { id: volunteer.id, as: team },
               ];
               const assignment = await withAssignmentFunnel.assign();
 
@@ -216,7 +216,7 @@ describe("Assign volunteers funnel", () => {
 
             const assignment = await selected.assign();
 
-            const expectedAssignee = { as: CONFIANCE, volunteer: volunteer.id };
+            const expectedAssignee = { as: CONFIANCE, id: volunteer.id };
             expect(assignment.assignees).toContainEqual(expectedAssignee);
           });
         },
