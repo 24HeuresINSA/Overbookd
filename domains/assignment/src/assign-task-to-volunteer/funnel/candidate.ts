@@ -1,5 +1,5 @@
-import { HARD, VIEUX, CONFIANCE } from "./teams";
-import { TeamDemanded, Assignee, Assignment } from "./assignments";
+import { HARD, VIEUX, CONFIANCE } from "../../teams";
+import { Assignee, Assignment, TeamDemanded } from "../assignment";
 import { Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
@@ -41,11 +41,11 @@ export class Candidate {
     teams: string[],
   ) {
     const remainingDemands = demands.reduce(
-      (remainingDemands, { team, count }) => {
+      (remainingDemands, { team, demand }) => {
         const totalAssignees = assignees.filter(({ as }) => as === team).length;
-        if (totalAssignees === count) return remainingDemands;
+        if (totalAssignees === demand) return remainingDemands;
 
-        return [...remainingDemands, { team, count: count - totalAssignees }];
+        return [...remainingDemands, { team, demand: demand - totalAssignees }];
       },
       [] as TeamDemanded[],
     );

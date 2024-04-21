@@ -6,7 +6,8 @@ import {
   CandidateFactory,
 } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { Assignments, Assignment } from "./assignments";
+import { Assignments } from "./assignments";
+import { Assignment } from "../assignment";
 
 export class Setup {
   private constructor(
@@ -31,6 +32,7 @@ export class Setup {
     return VolunteerSelected.init(candidate, this.assignments, this.assignment);
   }
 }
+
 type FulfillDemand = {
   volunteer: Volunteer["id"];
   team: string;
@@ -74,7 +76,10 @@ export class VolunteerSelected {
 
   get hasRemainingDemands(): boolean {
     const { demands } = this.assignment;
-    const totalDemands = demands.reduce((sum, { count }) => sum + count, 0);
+    const totalDemands = demands.reduce(
+      (sum, { demand: count }) => sum + count,
+      0,
+    );
     return this._candidates.length < totalDemands;
   }
 
@@ -116,7 +121,10 @@ export class EveryCandidateFulfillsDemand {
 
   get hasRemainingDemands(): boolean {
     const { demands, assignees } = this.assignment;
-    const totalDemands = demands.reduce((sum, { count }) => sum + count, 0);
+    const totalDemands = demands.reduce(
+      (sum, { demand: count }) => sum + count,
+      0,
+    );
     const totalAssignees = assignees.length;
     return this.candidates.length < totalDemands - totalAssignees;
   }

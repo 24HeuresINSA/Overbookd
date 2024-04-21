@@ -86,17 +86,14 @@ export default defineComponent({
 
       const { assignmentId, mobilizationId } = identifier;
       return (
-        this.selectedAssignment.identifier.mobilizationId === mobilizationId &&
-        this.selectedAssignment.identifier.assignmentId === assignmentId
+        this.selectedAssignment.mobilizationId === mobilizationId &&
+        this.selectedAssignment.assignmentId === assignmentId
       );
     },
     selectAssignment(assignment: AssignmentSummary) {
       const taskId = this.selectedTask?.id;
       if (!taskId) return;
-      this.$accessor.assignTaskToVolunteer.selectAssignment({
-        ...assignment.identifier,
-        taskId,
-      });
+      this.$accessor.assignTaskToVolunteer.selectAssignment(assignment);
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
       this.$emit("display-assignment-details", identifier);
@@ -109,15 +106,15 @@ export default defineComponent({
         color: this.defineEventColor(team),
       }));
     },
-    buildEventName({ assigned, demands, code }: AssignmentTeam): string {
-      return `[${assigned}/${demands}] ${code}`;
+    buildEventName({ assigned, demand, team }: AssignmentTeam): string {
+      return `[${assigned}/${demand}] ${team}`;
     },
     getTeamColor(code: string): string {
       return this.$accessor.team.getTeamByCode(code)?.color ?? "blue";
     },
-    defineEventColor({ assigned, demands, code }: AssignmentTeam): string {
-      const color = this.getTeamColor(code);
-      const spread = (180 * assigned) / demands + 75;
+    defineEventColor({ assigned, demand, team }: AssignmentTeam): string {
+      const color = this.getTeamColor(team);
+      const spread = (180 * assigned) / demand + 75;
       return color + this.convertDecimalToHex(spread);
     },
     convertDecimalToHex(decimal: number): string {

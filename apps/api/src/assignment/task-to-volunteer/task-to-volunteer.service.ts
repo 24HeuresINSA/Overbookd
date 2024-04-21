@@ -18,10 +18,7 @@ export class TaskToVolunteerService {
     return this.assign.selectTask(taskId);
   }
 
-  async selectAssignment(
-    taskId: TaskIdentifier["id"],
-    assignmentIdentifier: AssignmentIdentifier,
-  ) {
-    return this.assign.selectAssignment(taskId, assignmentIdentifier);
+  async selectAssignment(assignmentIdentifier: AssignmentIdentifier) {
+    return this.assign.selectAssignment(assignmentIdentifier);
   }
 }

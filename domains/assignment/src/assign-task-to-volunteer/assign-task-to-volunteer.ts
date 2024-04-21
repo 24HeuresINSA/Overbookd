@@ -58,16 +58,16 @@ export class AssignTaskToVolunteer {
   }
 
   async selectAssignment(
-    taskId: TaskIdentifier["id"],
     assignmentIdentifier: AssignmentIdentifier,
   ): Promise<AssignableVolunteer[]> {
-    const task = await this.allTasks.findOne(taskId);
+    const task = await this.allTasks.findOne(assignmentIdentifier.taskId);
 
     const assignment = task.assignments.find(
-      ({ identifier }) =>
-        identifier.assignmentId === assignmentIdentifier.assignmentId &&
-        identifier.mobilizationId === assignmentIdentifier.mobilizationId,
+      ({ assignmentId, mobilizationId }) =>
+        assignmentId === assignmentIdentifier.assignmentId &&
+        mobilizationId === assignmentIdentifier.mobilizationId,
     );
+
     if (!assignment) throw new Error("Assignment not found");
 
     const assignmentSpecification = {
@@ -76,7 +76,7 @@ export class AssignTaskToVolunteer {
       category: task.category,
     };
     const volunteers = await this.assignableVolunteers.on(
-      taskId,
+      assignment.taskId,
       assignmentSpecification,
     );
 
@@ -92,13 +92,13 @@ export class AssignTaskToVolunteer {
   }
 
   private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
-    const requestedTeams = task.assignments.flatMap((assignment) =>
-      assignment.requestedTeams.map((team) => team),
+    const demands = task.assignments.flatMap((assignment) =>
+      assignment.demands.map((team) => team),
     );
     const assignees = task.assignments.flatMap((assignment) =>
       assignment.assignees.map((assignee) => assignee),
     );
-    const teams = this.filterMissingTeamMembers({ requestedTeams, assignees });
+    const teams = this.filterMissingTeamMembers({ demands, assignees });
 
     return {
       id: task.id,
@@ -110,28 +110,31 @@ export class AssignTaskToVolunteer {
   }
 
   private filterMissingTeamMembers({
-    requestedTeams,
+    demands,
     assignees,
-  }: Pick<Assignment, "requestedTeams" | "assignees">): string[] {
-    return requestedTeams
-      .filter((team) => {
-        const countAssignees = this.countAssigneesInTeam(team.code, assignees);
-        return countAssignees < team.demands;
+  }: Pick<Assignment, "demands" | "assignees">): string[] {
+    return demands
+      .filter(({ team, demand: demands }) => {
+        const countAssignees = this.countAssigneesInTeam(team, assignees);
+        return countAssignees < demands;
       })
-      .map((team) => team.code);
+      .map(({ team }) => team);
   }
 
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
     const assignments = task.assignments.map((assignment) => {
       const period = Period.init(assignment);
+      const { taskId, mobilizationId, assignmentId } = assignment;
       return {
         start: period.start,
         end: period.end,
-        identifier: assignment.identifier,
-        teams: assignment.requestedTeams.map((team) => ({
-          code: team.code,
-          demands: team.demands,
-          assigned: this.countAssigneesInTeam(team.code, assignment.assignees),
+        taskId,
+        mobilizationId,
+        assignmentId,
+        teams: assignment.demands.map(({ team, demand }) => ({
+          team,
+          demand,
+          assigned: this.countAssigneesInTeam(team, assignment.assignees),
         })),
       };
     });

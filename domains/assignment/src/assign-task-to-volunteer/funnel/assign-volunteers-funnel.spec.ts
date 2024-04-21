@@ -21,7 +21,7 @@ import {
   scannerLesBillets,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
-import { CONFIANCE, HARD, VIEUX } from "./teams";
+import { CONFIANCE, HARD, VIEUX } from "../../teams";
 
 describe("Assign volunteers funnel", () => {
   const planning = new InMemoryPlanning(

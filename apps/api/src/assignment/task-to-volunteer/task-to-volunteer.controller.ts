@@ -105,7 +105,8 @@ export class TaskToVolunteerController {
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
   ): Promise<AssignableVolunteer[]> {
-    return this.taskToVolunteer.selectAssignment(taskId, {
+    return this.taskToVolunteer.selectAssignment({
+      taskId,
       mobilizationId,
       assignmentId,
     });

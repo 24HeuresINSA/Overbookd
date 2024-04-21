@@ -1,8 +1,8 @@
 import { BENEVOLE_CODE } from "@overbookd/team";
-import { Assignment } from "./assignments";
 import { Period } from "@overbookd/period";
 import { friday19hto21h } from "../test-ressources/assign-task-to-volunteer.test.utils";
-import { CONFIANCE, HARD, VIEUX } from "./teams";
+import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { Assignment } from "../assignment";
 
 const friday08hTo09h = {
   start: new Date("2024-17-05T08:00+02:00"),
@@ -83,7 +83,7 @@ export const benevolant: Assignment = {
   mobilizationId: friday06hTo18h.id,
   assignmentId: friday08hTo10h.id,
   name: "Benevolant",
-  demands: [{ team: BENEVOLE_CODE, count: 1 }],
+  demands: [{ team: BENEVOLE_CODE, demand: 1 }],
   assignees: [],
 };
 
@@ -95,8 +95,8 @@ export const rendreKangoo: Assignment = {
   assignmentId: nextThursday08hTo10h.id,
   name: "Rendre les Kangoos",
   demands: [
-    { team: "conducteur", count: 1 },
-    { team: BENEVOLE_CODE, count: 2 },
+    { team: "conducteur", demand: 1 },
+    { team: BENEVOLE_CODE, demand: 2 },
   ],
   assignees: [],
 };
@@ -109,8 +109,8 @@ export const couperDesCarottes: Assignment = {
   assignmentId: friday08hTo10h.id,
   name: "Couper les carottes",
   demands: [
-    { team: "catering", count: 1 },
-    { team: BENEVOLE_CODE, count: 2 },
+    { team: "catering", demand: 1 },
+    { team: BENEVOLE_CODE, demand: 2 },
   ],
   assignees: [
     { volunteer: lea.volunteer.id, as: BENEVOLE_CODE },
@@ -125,7 +125,7 @@ export const gererLaCaisse: Assignment = {
   mobilizationId: friday19hto21h.id,
   assignmentId: friday19hto21h.id,
   name: "Gerer la caisse",
-  demands: [{ team: CONFIANCE, count: 2 }],
+  demands: [{ team: CONFIANCE, demand: 2 }],
   assignees: [{ volunteer: lea.volunteer.id, as: CONFIANCE }],
 };
 
@@ -137,8 +137,8 @@ export const scannerLesBillets: Assignment = {
   assignmentId: friday22hToSaturday00h.id,
   name: "Scanner les billets",
   demands: [
-    { team: CONFIANCE, count: 1 },
-    { team: BENEVOLE_CODE, count: 5 },
+    { team: CONFIANCE, demand: 1 },
+    { team: BENEVOLE_CODE, demand: 5 },
   ],
   assignees: [],
 };

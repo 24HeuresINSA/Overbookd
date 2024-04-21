@@ -17,7 +17,7 @@ export const SELECT_TASK_WITH_ASSIGNMENTS = {
     select: {
       id: true,
       teams: { select: { teamCode: true, count: true } },
-      assignees: { select: { teamCode: true } },
+      assignees: { select: { teamCode: true, userId: true } },
       assignments: { select: { id: true, start: true, end: true } },
     },
   },
@@ -29,7 +29,7 @@ export type DatabaseTask = Categorize & {
   mobilizations: {
     id: string;
     teams: { teamCode: string; count: number }[];
-    assignees: { teamCode: string }[];
+    assignees: { teamCode: string; userId: number }[];
     assignments: (IProvidePeriod & { id: string })[];
   }[];
 };

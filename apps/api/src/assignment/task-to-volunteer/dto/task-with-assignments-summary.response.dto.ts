@@ -9,10 +9,10 @@ import { AssignmentIdentifier } from "@overbookd/assignment/src/assign-task-to-v
 
 class AssignmentTeamDto implements AssignmentTeam {
   @ApiProperty({ type: String })
-  code: string;
+  team: string;
 
   @ApiProperty({ type: Number })
-  demands: number;
+  demand: number;
 
   @ApiProperty({ type: Number })
   assigned: number;
@@ -24,12 +24,15 @@ class AssignmentIdentifierDto implements AssignmentIdentifier {
 
   @ApiProperty({ type: String })
   mobilizationId: string;
+
+  @ApiProperty({ type: Number })
+  taskId: number;
 }
 
-class AssignmentSummaryDto implements AssignmentSummary {
-  @ApiProperty({ type: AssignmentIdentifierDto })
-  identifier: AssignmentIdentifier;
-
+class AssignmentSummaryDto
+  extends AssignmentIdentifierDto
+  implements AssignmentSummary
+{
   @ApiProperty({ type: Date })
   start: AssignmentSummary["start"];
 

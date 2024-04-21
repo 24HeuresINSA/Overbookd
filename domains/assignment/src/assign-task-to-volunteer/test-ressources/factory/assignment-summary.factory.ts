@@ -1,6 +1,7 @@
 import { Period } from "@overbookd/period";
 import { AssignmentSummary, AssignmentTeam } from "../../assignment";
 import { AssignableVolunteer } from "../../assignable-volunteer";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 export class AssignmentSummaryFactory {
   private constructor(
@@ -8,9 +9,11 @@ export class AssignmentSummaryFactory {
     readonly assignableVolunteers: AssignableVolunteer[],
   ) {}
 
-  static init(period: Period) {
+  static init(period: Period, taskId: number) {
     const assignment = {
-      identifier: { assignmentId: period.id, mobilizationId: period.id },
+      taskId,
+      assignmentId: period.id,
+      mobilizationId: period.id,
       start: period.start,
       end: period.end,
       teams: [],
@@ -19,21 +22,20 @@ export class AssignmentSummaryFactory {
   }
 
   during(period: Period) {
-    const identifier = {
-      ...this.assignment.identifier,
-      assignmentId: period.id,
-    };
+    const assignmentId = period.id;
     const temporal = { start: period.start, end: period.end };
-    const assignment = { ...this.assignment, ...temporal, identifier };
+    const assignment = { ...this.assignment, ...temporal, assignmentId };
     return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
   }
 
   withMobilization(period: Period) {
-    const identifier = {
-      ...this.assignment.identifier,
-      mobilizationId: period.id,
-    };
-    const assignment = { ...this.assignment, identifier };
+    const mobilizationId = period.id;
+    const assignment = { ...this.assignment, mobilizationId };
+    return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
+  }
+
+  withTaskId(taskId: number) {
+    const assignment = { ...this.assignment, taskId };
     return new AssignmentSummaryFactory(assignment, this.assignableVolunteers);
   }
 
@@ -50,24 +52,24 @@ export class AssignmentSummaryFactory {
 }
 
 export class AssignmentTeamFactory {
-  private constructor(readonly team: AssignmentTeam) {}
+  private constructor(readonly assignmentTeam: AssignmentTeam) {}
 
-  static init(team?: Partial<AssignmentTeam>): AssignmentTeamFactory {
-    const code = team?.code ?? "benevole";
-    const demands = team?.demands ?? 1;
-    const assigned = team?.assigned ?? 0;
-    return new AssignmentTeamFactory({ code, demands, assigned });
+  static init(assignmentTeam?: Partial<AssignmentTeam>): AssignmentTeamFactory {
+    const team = assignmentTeam?.team ?? BENEVOLE_CODE;
+    const demand = assignmentTeam?.demand ?? 1;
+    const assigned = assignmentTeam?.assigned ?? 0;
+    return new AssignmentTeamFactory({ team, demand, assigned });
   }
 
-  withDemands(demands: number): AssignmentTeamFactory {
-    return new AssignmentTeamFactory({ ...this.team, demands });
+  withDemands(demand: number): AssignmentTeamFactory {
+    return new AssignmentTeamFactory({ ...this.assignmentTeam, demand });
   }
 
-  withCode(code: string): AssignmentTeamFactory {
-    return new AssignmentTeamFactory({ ...this.team, code });
+  withCode(team: string): AssignmentTeamFactory {
+    return new AssignmentTeamFactory({ ...this.assignmentTeam, team });
   }
 
   withAssigned(assigned: number): AssignmentTeamFactory {
-    return new AssignmentTeamFactory({ ...this.team, assigned });
+    return new AssignmentTeamFactory({ ...this.assignmentTeam, assigned });
   }
 }

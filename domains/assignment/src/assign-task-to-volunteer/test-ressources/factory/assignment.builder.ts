@@ -1,10 +1,11 @@
-import { Assignee, Assignment, RequestedTeam } from "../../assignment";
+import { Assignee, Assignment, TeamDemanded } from "../../assignment";
 import { AssignmentSummaryFactory } from "./assignment-summary.factory";
 import { Period } from "@overbookd/period";
 
 type InitAssignment = {
   assignmentPeriod: Period;
   mobilizationPeriod?: Period;
+  taskId?: number;
 };
 
 export class AssignmentBuilder {
@@ -16,41 +17,39 @@ export class AssignmentBuilder {
   static init({
     assignmentPeriod,
     mobilizationPeriod,
+    taskId: maybeTaskId,
   }: InitAssignment): AssignmentBuilder {
-    const identifier = {
-      assignmentId: assignmentPeriod.id,
-      mobilizationId: mobilizationPeriod?.id ?? assignmentPeriod.id,
-    };
+    const taskId = maybeTaskId ?? 1;
+    const assignmentId = assignmentPeriod.id;
+    const mobilizationId = mobilizationPeriod?.id ?? assignmentPeriod.id;
     const assignment = {
-      identifier,
+      taskId,
+      name: "Task Name",
+      assignmentId,
+      mobilizationId,
       start: assignmentPeriod.start,
       end: assignmentPeriod.end,
-      requestedTeams: [],
+      demands: [],
       assignees: [],
     };
     const summary = AssignmentSummaryFactory.init(
       Period.init(assignmentPeriod),
+      maybeTaskId ?? 1,
     );
     return new AssignmentBuilder(assignment, summary);
   }
 
   during(period: Period): AssignmentBuilder {
-    const identifier = {
-      ...this.assignment.identifier,
-      assignmentId: period.id,
-    };
+    const assignmentId = period.id;
     const temporal = { start: period.start, end: period.end };
-    const assignment = { ...this.assignment, ...temporal, identifier };
+    const assignment = { ...this.assignment, ...temporal, assignmentId };
     const summary = this.summary.during(period);
     return new AssignmentBuilder(assignment, summary);
   }
 
   withMobilization(period: Period): AssignmentBuilder {
-    const identifier = {
-      ...this.assignment.identifier,
-      mobilizationId: period.id,
-    };
-    const assignment = { ...this.assignment, identifier };
+    const mobilizationId = period.id;
+    const assignment = { ...this.assignment, mobilizationId };
     const summary = this.summary.withMobilization(period);
     return new AssignmentBuilder(assignment, summary);
   }
@@ -62,14 +61,21 @@ export class AssignmentBuilder {
     );
   }
 
-  withRequestedTeams(requestedTeams: RequestedTeam[]): AssignmentBuilder {
-    return new AssignmentBuilder(
-      { ...this.assignment, requestedTeams },
-      this.summary,
-    );
+  withTaskId(taskId: number): AssignmentBuilder {
+    const assignment = { ...this.assignment, taskId };
+    const summary = this.summary.withTaskId(taskId);
+    return new AssignmentBuilder(assignment, summary);
+  }
+
+  withRequestedTeams(demands: TeamDemanded[]): AssignmentBuilder {
+    return new AssignmentBuilder({ ...this.assignment, demands }, this.summary);
   }
 
   withSummary(summary: AssignmentSummaryFactory): AssignmentBuilder {
-    return new AssignmentBuilder(this.assignment, summary);
+    const assignment = {
+      ...this.assignment,
+      taskId: summary.assignment.taskId,
+    };
+    return new AssignmentBuilder(assignment, summary);
   }
 }

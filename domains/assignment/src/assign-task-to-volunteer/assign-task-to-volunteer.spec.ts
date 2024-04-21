@@ -20,7 +20,7 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-ressources/assign-task-to-volunteer.test.utils";
-import { HARD, VIEUX } from "./funnel/teams";
+import { HARD, VIEUX } from "../teams";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Assign task to volunteer", () => {
@@ -84,22 +84,20 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      task                                                     | assignmentIdentifier                                            | teams                    | expectedVolunteers
-      ${fullyAssignedTask}                                     | ${fulfilledAssignment.assignment.identifier}                    | ${[]}                    | ${[]}
-      ${missingOnePlaizirTask}                                 | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleTask}                      | ${missingOneHardAndOneBenevoleAssignment.assignment.identifier} | ${[HARD, BENEVOLE_CODE]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxTask}                                   | ${missingTwoVieuxAssignment.assignment.identifier}              | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
-      ${missingOneAssigneeThenOneHardAndOneBenevoleTask}       | ${missingOnePlaizirAssignment.assignment.identifier}            | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask} | ${missingTwoVieuxDuring19hto20h.assignment.identifier}          | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.FUN]}
+      assignmentId                                                      | mobilizationId                                                      | taskId                                                           | teams                    | expectedVolunteers
+      ${fulfilledAssignment.assignment.assignmentId}                    | ${fulfilledAssignment.assignment.mobilizationId}                    | ${fullyAssignedTask.task.id}                                     | ${[]}                    | ${[]}
+      ${missingOnePlaizirAssignment.assignment.assignmentId}            | ${missingOnePlaizirAssignment.assignment.mobilizationId}            | ${missingOnePlaizirTask.task.id}                                 | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleAssignment.assignment.assignmentId} | ${missingOneHardAndOneBenevoleAssignment.assignment.mobilizationId} | ${missingOneHardAndOneBenevoleTask.task.id}                      | ${[HARD, BENEVOLE_CODE]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxAssignment.assignment.assignmentId}              | ${missingTwoVieuxAssignment.assignment.mobilizationId}              | ${missingTwoVieuxTask.task.id}                                   | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOnePlaizirAssignment.assignment.assignmentId}            | ${missingOnePlaizirAssignment.assignment.mobilizationId}            | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.task.id}       | ${["plaizir"]}           | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxDuring19hto20h.assignment.assignmentId}          | ${missingTwoVieuxDuring19hto20h.assignment.mobilizationId}          | ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.task.id} | ${[VIEUX]}               | ${[leaAsAvailableVolunteer.expected.FUN]}
     `(
       "when looking for assignable $teams volunteers",
-      ({ task, assignmentIdentifier, expectedVolunteers }) => {
+      ({ taskId, mobilizationId, assignmentId, expectedVolunteers }) => {
         let volunteers: AssignableVolunteer[];
+        const assignmentIdentifier = { taskId, mobilizationId, assignmentId };
         beforeAll(async () => {
-          volunteers = await assign.selectAssignment(
-            task.value.id,
-            assignmentIdentifier,
-          );
+          volunteers = await assign.selectAssignment(assignmentIdentifier);
         });
 
         it("should return assignable volunteers only", () => {

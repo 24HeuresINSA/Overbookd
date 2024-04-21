@@ -42,7 +42,10 @@ class TaskBuilder {
   }
 
   withAssignments(assignments: AssignmentBuilder[]): TaskBuilder {
-    return new TaskBuilder(this.task, assignments);
+    const linkedAssignments = assignments.map((assignment) =>
+      assignment.withTaskId(this.task.id),
+    );
+    return new TaskBuilder(this.task, linkedAssignments);
   }
 
   get value(): Task {

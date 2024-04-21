@@ -10,6 +10,8 @@ import {
   MaybeCategory,
 } from "./factory/assignable-volunteer.factory";
 import { BAR } from "@overbookd/festival-event-constants";
+import { HARD } from "../../teams";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
@@ -106,45 +108,61 @@ const twoBenevoleDemandedAndOneAssigned = twoBenevoleDemanded.withAssigned(1);
 
 const fulfilledAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
-).withTeams([oneHardAssignedAndDemanded.team]);
+  1,
+).withTeams([oneHardAssignedAndDemanded.assignmentTeam]);
 export const fulfilledAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withAssignees([{ as: "hard" }])
-  .withRequestedTeams([oneHardDemanded.team])
+  .withAssignees([{ as: HARD, volunteer: 100 }])
+  .withRequestedTeams([oneHardDemanded.assignmentTeam])
   .withSummary(fulfilledAssignmentSummary);
 
 const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
+  2,
 )
-  .withTeams([onePlaizirDemanded.team])
+  .withTeams([onePlaizirDemanded.assignmentTeam])
   .withAssignableVolunteers(
     availableVolunteersForMissingOnePlaizir.map(({ expected }) => expected.BAR),
   );
 export const missingOnePlaizirAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withRequestedTeams([onePlaizirDemanded.team])
+  .withRequestedTeams([onePlaizirDemanded.assignmentTeam])
   .withSummary(missingOnePlaizirAssignmentSummary);
 
 const missingTwoVieuxAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
-).withTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team]);
+  3,
+).withTeams([
+  oneHardAssignedAndDemanded.assignmentTeam,
+  twoVieuxDemanded.assignmentTeam,
+]);
 export const missingTwoVieuxAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withAssignees([{ as: "hard" }])
-  .withRequestedTeams([oneHardAssignedAndDemanded.team, twoVieuxDemanded.team])
+  .withAssignees([{ as: HARD, volunteer: 101 }])
+  .withRequestedTeams([
+    oneHardAssignedAndDemanded.assignmentTeam,
+    twoVieuxDemanded.assignmentTeam,
+  ])
   .withSummary(missingTwoVieuxAssignmentSummary);
 
 const missingOneHardAndOneBenevoleAssignmentSummary =
-  AssignmentSummaryFactory.init(friday08hto09h).withTeams([
-    threeHardDemandedAndTwoAssigned.team,
-    twoBenevoleDemandedAndOneAssigned.team,
+  AssignmentSummaryFactory.init(friday08hto09h, 4).withTeams([
+    threeHardDemandedAndTwoAssigned.assignmentTeam,
+    twoBenevoleDemandedAndOneAssigned.assignmentTeam,
   ]);
 export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
-  .withAssignees([{ as: "hard" }, { as: "hard" }, { as: "benevole" }])
-  .withRequestedTeams([threeHardDemanded.team, twoBenevoleDemanded.team])
+  .withAssignees([
+    { as: HARD, volunteer: 102 },
+    { as: HARD, volunteer: 103 },
+    { as: BENEVOLE_CODE, volunteer: 104 },
+  ])
+  .withRequestedTeams([
+    threeHardDemanded.assignmentTeam,
+    twoBenevoleDemanded.assignmentTeam,
+  ])
   .withSummary(missingOneHardAndOneBenevoleAssignmentSummary);
