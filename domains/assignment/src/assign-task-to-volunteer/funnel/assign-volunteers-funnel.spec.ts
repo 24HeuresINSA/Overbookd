@@ -22,6 +22,7 @@ import {
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { InMemoryAvailabilities } from "./availabilties.inmemory";
 
 describe("Assign volunteers funnel", () => {
   const planning = new InMemoryPlanning(
@@ -33,22 +34,31 @@ describe("Assign volunteers funnel", () => {
       [luce.volunteer.id, luce.planning],
     ]),
   );
+  const availabilities = new InMemoryAvailabilities(
+    new Map([
+      [noel.volunteer.id, noel.availabilities],
+      [lea.volunteer.id, lea.availabilities],
+      [ontaine.volunteer.id, ontaine.availabilities],
+      [tatouin.volunteer.id, tatouin.availabilities],
+      [luce.volunteer.id, luce.availabilities],
+    ]),
+  );
   const initialAssignments = [
     benevolant,
     rendreKangoo,
     couperDesCarottes,
     gererLaCaisse,
   ];
-  const candidateFactory = new CandidateFactory(planning);
+  const candidateFactory = new CandidateFactory(planning, availabilities);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteerName                  | volunteer            | taskName                  | task                 | team             | candidates             | planning
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name} | ${couperDesCarottes} | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning}
+      volunteerName                  | volunteer            | taskName                  | task                 | team             | candidates             | planning            | availabilities
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name} | ${couperDesCarottes} | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
-      ({ volunteer, candidates, planning, task, team }) => {
+      ({ volunteer, candidates, planning, task, team, availabilities }) => {
         let everyCandidateFulfillsDemand: EveryCandidateFulfillsDemand;
         beforeAll(async () => {
           const assignments = new InMemoryAssignments(initialAssignments);
@@ -79,6 +89,11 @@ describe("Assign volunteers funnel", () => {
           expect(
             everyCandidateFulfillsDemand.candidates.at(0)?.planning,
           ).toStrictEqual(planning);
+        });
+        it("should expose his availabilities", () => {
+          expect(
+            everyCandidateFulfillsDemand.candidates.at(0)?.availabilities,
+          ).toStrictEqual(availabilities);
         });
         it("should indicate there is not remaining team demanded", () => {
           expect(everyCandidateFulfillsDemand.hasRemainingDemands).toBe(false);

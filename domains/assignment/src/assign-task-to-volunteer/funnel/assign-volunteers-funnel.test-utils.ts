@@ -4,6 +4,17 @@ import { friday19hto21h } from "../test-ressources/assign-task-to-volunteer.test
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
 import { Assignment } from "../assignment";
 
+const friday06h = new Date("2024-05-17T06:00+02:00");
+const sunday20h = new Date("2024-05-19T20:00+02:00");
+const monday10h = new Date("2024-05-13T10:00+02:00");
+const nextMonday18h = new Date("2024-05-20T18:00+02:00");
+const nextTuesday02h = new Date("2024-05-21T02:00+02:00");
+const nextTuesday18h = new Date("2024-05-21T18:00+02:00");
+const nextWednesday02h = new Date("2024-05-22T02:00+02:00");
+const nextWednesday18h = new Date("2024-05-22T18:00+02:00");
+const nextThursday02h = new Date("2024-05-23T02:00+02:00");
+const nextThursday10h = new Date("2024-05-23T20:00+02:00");
+
 const friday08hTo09h = {
   start: new Date("2024-17-05T08:00+02:00"),
   end: new Date("2024-17-05T09:00+02:00"),
@@ -13,7 +24,7 @@ const friday08hTo10h = Period.init({
   end: new Date("2024-05-17T10:00+02:00"),
 });
 const friday06hTo18h = Period.init({
-  start: new Date("2024-05-17T06:00+02:00"),
+  start: friday06h,
   end: new Date("2024-05-17T18:00+02:00"),
 });
 const friday22hToSaturday00h = Period.init({
@@ -23,7 +34,7 @@ const friday22hToSaturday00h = Period.init({
 
 const nextThursday08hTo10h = Period.init({
   start: new Date("2024-05-23T08:00+02:00"),
-  end: new Date("2024-05-23T10:00+02:00"),
+  end: nextThursday10h,
 });
 
 export const noel = {
@@ -34,6 +45,11 @@ export const noel = {
     teams: [BENEVOLE_CODE, VIEUX],
   },
   planning: [{ ...friday08hTo09h, task: "Accueillir INSA CVL" }],
+  availabilities: [
+    { start: monday10h, end: sunday20h },
+    { start: nextMonday18h, end: nextWednesday02h },
+    { start: nextWednesday18h, end: nextThursday10h },
+  ],
 };
 
 export const lea = {
@@ -44,6 +60,7 @@ export const lea = {
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
   },
   planning: [],
+  availabilities: [{ start: friday06h, end: sunday20h }],
 };
 
 export const ontaine = {
@@ -54,6 +71,10 @@ export const ontaine = {
     teams: [BENEVOLE_CODE, "catering", "conducteur"],
   },
   planning: [],
+  availabilities: [
+    { start: monday10h, end: nextTuesday02h },
+    { start: nextTuesday18h, end: nextThursday10h },
+  ],
 };
 
 export const tatouin = {
@@ -64,6 +85,11 @@ export const tatouin = {
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
   },
   planning: [],
+  availabilities: [
+    { start: nextMonday18h, end: nextTuesday02h },
+    { start: nextTuesday18h, end: nextWednesday02h },
+    { start: nextWednesday18h, end: nextThursday02h },
+  ],
 };
 
 export const luce = {
@@ -74,6 +100,7 @@ export const luce = {
     teams: [BENEVOLE_CODE, HARD],
   },
   planning: [],
+  availabilities: [{ start: monday10h, end: nextTuesday02h }],
 };
 
 export const benevolant: Assignment = {
