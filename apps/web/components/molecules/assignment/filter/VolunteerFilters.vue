@@ -6,13 +6,21 @@
       label="Recherche"
       @input="changeSearch"
     ></v-text-field>
-    <div class="team_filter_categoy_sort">
-      <SearchTeams
-        :value="teams"
+    <SearchTeams
+      :value="teams"
+      class="filters__field"
+      :boxed="false"
+      @change="changeTeams"
+    ></SearchTeams>
+
+    <div class="friend_filter_categoy_sort">
+      <v-switch
+        v-model="hasNoFriends"
+        label="N'a pas d'amis"
         class="filters__field"
-        :boxed="false"
-        @change="changeTeams"
-      ></SearchTeams>
+        hide-details
+        @change="changeNoFriends"
+      ></v-switch>
       <div class="sort__category" @click="updateSort">
         <v-tooltip top>
           <template #activator="{ on, attrs }">
@@ -36,12 +44,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { Team } from "~/utils/models/team.model";
 import { nextSortDirection } from "~/utils/models/assignment.model";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "VolunteerFilters",
   components: { SearchTeams },
   props: {
@@ -55,10 +63,12 @@ export default Vue.extend({
       default: 0,
     },
   },
+  emits: ["change:search", "change:teams", "change:sort", "change:no-friends"],
   data: () => ({
     search: "",
     teams: [],
     sort: 0,
+    hasNoFriends: false,
   }),
   methods: {
     changeSearch(search: string) {
@@ -71,6 +81,9 @@ export default Vue.extend({
       this.sort = nextSortDirection(this.sort);
       this.$emit("change:sort", this.sort);
     },
+    changeNoFriends() {
+      this.$emit("change:no-friends", this.hasNoFriends);
+    },
   },
 });
 </script>
@@ -78,7 +91,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 140px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -101,10 +114,11 @@ export default Vue.extend({
   cursor: pointer;
 }
 
-.team_filter_categoy_sort {
+.friend_filter_categoy_sort {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 5px;
+  margin-bottom: 5px;
 }
 </style>

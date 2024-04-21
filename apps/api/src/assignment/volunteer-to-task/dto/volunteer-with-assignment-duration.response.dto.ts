@@ -27,4 +27,7 @@ export class VolunteerWithAssignmentDurationResponseDto
 
   @ApiProperty({ type: Number })
   assignmentDuration: number;
+
+  @ApiProperty({ type: Boolean })
+  hasFriends: boolean;
 }

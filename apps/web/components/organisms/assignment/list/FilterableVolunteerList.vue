@@ -7,6 +7,7 @@
         @change:search="searchVolunteer = $event"
         @change:teams="teams = $event"
         @change:sort="sort = $event"
+        @change:no-friends="hasNoFriends = $event"
       ></VolunteerFilters>
       <v-divider />
       <AssignmentVolunteerList
@@ -45,6 +46,7 @@ type FilterableVolunteerListData = {
   teams: Team[];
   searchVolunteer: string;
   sort: number;
+  hasNoFriends: boolean;
 };
 
 export default defineComponent({
@@ -54,6 +56,7 @@ export default defineComponent({
     teams: [],
     searchVolunteer: "",
     sort: 0,
+    hasNoFriends: false,
   }),
   computed: {
     volunteers(): AssignmentVolunteer[] {
@@ -75,7 +78,8 @@ export default defineComponent({
         (volunteer) => {
           return (
             this.filterVolunteerByTeams(this.teams)(volunteer) &&
-            this.filterVolunteerByName(this.searchVolunteer)(volunteer)
+            this.filterVolunteerByName(this.searchVolunteer)(volunteer) &&
+            this.filterVolunteerByFriendExistence(this.hasNoFriends)(volunteer)
           );
         },
       );
@@ -134,12 +138,18 @@ export default defineComponent({
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
+    filterVolunteerByFriendExistence(
+      hasNoFriends: boolean,
+    ): (volunteer: AssignmentVolunteer) => boolean {
+      if (!hasNoFriends) return () => true;
+      return (volunteer) => !volunteer.hasFriends;
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 165px;
+$filters-height: 185px;
 $friends-height: 160px;
 $layout-padding: 20px;
 $column-margins: 30px;
