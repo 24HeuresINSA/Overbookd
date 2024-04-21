@@ -1,7 +1,10 @@
 import {
   AssignableVolunteers,
   AssignmentSpecification,
+  CONFIANCE,
+  HARD,
   StoredAssignableVolunteer,
+  VIEUX,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -24,20 +27,24 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
+    const extendedOneOfTeams = this.extendOneOfTeams(oneOfTheTeams);
     const includePeriod = overlapPeriodCondition(period);
 
     const volunteers = await this.prisma.user.findMany({
       where: {
         isDeleted: false,
         charisma: { gt: 0 },
-        ...this.buildHasAvailabilityCondition(oneOfTheTeams, period),
+        ...this.buildHasAvailabilityCondition(extendedOneOfTeams, period),
         assigned: { none: { assignment: includePeriod } },
       },
       select: {
         ...SELECT_VOLUNTEER,
         ...this.buildVolunteerAssignmentSelection(category),
         ...this.buildFestivalTaskMobilizationSelection(period),
-        ...this.buildAssignableFriendSelection(assignmentSpecification),
+        ...this.buildAssignableFriendSelection({
+          ...assignmentSpecification,
+          oneOfTheTeams: extendedOneOfTeams,
+        }),
       },
     });
 
@@ -124,6 +131,12 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
         select: { friend: { select: friendSelection } },
       },
     };
+  }
+
+  private extendOneOfTeams(oneOfTeams: string[]): string[] {
+    return oneOfTeams.includes(CONFIANCE)
+      ? [...oneOfTeams, VIEUX, HARD]
+      : oneOfTeams;
   }
 }
 

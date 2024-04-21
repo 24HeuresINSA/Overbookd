@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts">
+import { AssignableVolunteer } from "@overbookd/assignment";
 import Vue from "vue";
 import AssignmentVolunteerResume from "~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment.model";
@@ -27,7 +28,7 @@ export default Vue.extend({
   components: { AssignmentVolunteerResume },
   props: {
     volunteers: {
-      type: Array as () => Volunteer[],
+      type: Array as () => AssignableVolunteer[],
       required: true,
       default: () => [],
     },

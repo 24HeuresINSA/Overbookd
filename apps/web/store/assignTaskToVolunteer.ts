@@ -1,5 +1,5 @@
 import {
-  AssignableVolunteers,
+  AssignableVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
@@ -12,12 +12,14 @@ import { HttpStringified } from "@overbookd/http";
 type State = {
   tasks: MissingAssignmentTask[];
   selectedTask: TaskWithAssignmentsSummary | null;
-  assignableVolunteers: AssignableVolunteers[];
+  selectedAssignment: ExtendedAssignementIdentifier | null;
+  assignableVolunteers: AssignableVolunteer[];
 };
 
 export const state = (): State => ({
   tasks: [],
   selectedTask: null,
+  selectedAssignment: null,
   assignableVolunteers: [],
 });
 
@@ -25,10 +27,16 @@ export const mutations = mutationTree(state, {
   SET_TASKS(state, tasks: MissingAssignmentTask[]) {
     state.tasks = tasks;
   },
-  SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary) {
+  SET_SELECTED_TASK(state, task: TaskWithAssignmentsSummary | null) {
     state.selectedTask = task;
   },
-  SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteers[]) {
+  SET_SELECTED_ASSIGNMENT(
+    state,
+    assignmentIdentifier: ExtendedAssignementIdentifier | null,
+  ) {
+    state.selectedAssignment = assignmentIdentifier;
+  },
+  SET_ASSIGNABLE_VOLUNTEERS(state, volunteers: AssignableVolunteer[]) {
     state.assignableVolunteers = volunteers;
   },
 });
@@ -44,6 +52,7 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_TASKS", res.data);
     },
+
     async selectTask({ commit }, taskId: number) {
       const res = await safeCall(
         this,
@@ -53,9 +62,11 @@ export const actions = actionTree(
 
       const task = castTaskWithAssignmentsSummaryWithDate(res.data);
       commit("SET_SELECTED_TASK", task);
+      commit("SET_SELECTED_ASSIGNMENT", null);
       commit("SET_ASSIGNABLE_VOLUNTEERS", []);
     },
-    async setAssignableVolunteers(
+
+    async selectAssignment(
       { commit },
       assignmentIdentifier: ExtendedAssignementIdentifier,
     ) {
@@ -67,7 +78,8 @@ export const actions = actionTree(
         ),
       );
       if (!res) return;
-      commit("SET_ASSIGNABLE_VOLUNTEERS", res);
+      commit("SET_SELECTED_ASSIGNMENT", assignmentIdentifier);
+      commit("SET_ASSIGNABLE_VOLUNTEERS", res.data);
     },
   },
 );

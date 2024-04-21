@@ -11,7 +11,10 @@ type TaskCategorized = TaskIdentifier & {
   category?: Category;
 };
 
-export type TaskWithAssignmentsSummary = TaskIdentifier & {
+export type TaskWithAssignmentsSummary = Omit<
+  TaskCategorized,
+  "topPriority"
+> & {
   assignments: AssignmentSummary[];
 };
 

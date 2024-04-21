@@ -44,6 +44,9 @@ export class TaskWithAssignmentsSummaryResponseDto
   extends TaskIdentifierResponseDto
   implements TaskWithAssignmentsSummary
 {
+  @ApiProperty({ type: String, required: false })
+  category: TaskWithAssignmentsSummary["category"];
+
   @ApiProperty({ type: AssignmentSummaryDto, isArray: true })
   assignments: AssignmentSummary[];
 }

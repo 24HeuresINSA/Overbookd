@@ -25,7 +25,7 @@ import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.p
         tasks: PrismaTasks,
         volunteers: PrismaAssignableVolunteers,
       ) => new AssignTaskToVolunteer(tasks, volunteers),
-      inject: [PrismaTasks],
+      inject: [PrismaTasks, PrismaAssignableVolunteers],
     },
     {
       provide: TaskToVolunteerService,

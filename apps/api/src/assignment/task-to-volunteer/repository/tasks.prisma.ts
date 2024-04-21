@@ -50,12 +50,14 @@ function toTask(task: DatabaseTask): Task {
         identifier,
         start: assignment.start,
         end: assignment.end,
+        category: task.category,
         mobilizationId: mobilization.id,
         assignees,
         requestedTeams,
       };
     });
   });
+
   return {
     id: task.id,
     name: task.name,
