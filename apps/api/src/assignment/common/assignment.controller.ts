@@ -4,8 +4,10 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
+  Query,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -18,6 +20,8 @@ import {
   ApiResponse,
   ApiBody,
   ApiExtraModels,
+  ApiQuery,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentService } from "./assignment.service";
@@ -32,6 +36,7 @@ import {
 } from "./dto/assignment.response.dto";
 import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
+import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -53,7 +58,12 @@ export class AssignmentController {
   @ApiResponse({
     status: 200,
     description: "Assignment",
-    type: AssignmentResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(AssignmentResponseDto) },
+        { $ref: getSchemaPath(AssignmentWithDetailsResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "taskId",
@@ -70,16 +80,20 @@ export class AssignmentController {
     description: "Assignment id",
     type: String,
   })
+  @ApiQuery({
+    name: "withDetails",
+    required: false,
+    type: Boolean,
+    description: "Include details",
+  })
   findOne(
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
-  ): Promise<AssignmentResponseDto> {
-    return this.assignment.findOne({
-      taskId,
-      mobilizationId,
-      assignmentId,
-    });
+    @Query("withDetails", ParseBoolPipe) withDetails?: boolean,
+  ): Promise<AssignmentResponseDto | AssignmentWithDetailsResponseDto> {
+    const identifier = { taskId, mobilizationId, assignmentId };
+    return this.assignment.findOne(identifier, withDetails ?? false);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

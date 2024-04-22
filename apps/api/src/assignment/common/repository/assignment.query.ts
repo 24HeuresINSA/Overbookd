@@ -5,11 +5,24 @@ import {
 } from "@overbookd/assignment";
 import { SELECT_PERIOD } from "./period.query";
 
+export type DatabaseAssignee = {
+  teamCode: string;
+  personalData: {
+    id: number;
+    firstname: string;
+    lastname: string;
+    teams: { teamCode: string }[];
+  };
+};
+
 export type DatabaseAssignment = {
   start: Date;
   end: Date;
-  festivalTask: { name: string };
-  assignees: { userId: number; teamCode: string }[];
+  festivalTask: {
+    name: string;
+    appointment: { name: string };
+  };
+  assignees: DatabaseAssignee[];
   mobilization: {
     teams: { teamCode: string; count: number }[];
   };
@@ -17,8 +30,25 @@ export type DatabaseAssignment = {
 
 export const SELECT_ASSIGNMENT = {
   ...SELECT_PERIOD,
-  festivalTask: { select: { name: true } },
-  assignees: { select: { userId: true, teamCode: true } },
+  festivalTask: {
+    select: {
+      name: true,
+      appointment: { select: { name: true } },
+    },
+  },
+  assignees: {
+    select: {
+      teamCode: true,
+      personalData: {
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          teams: { select: { teamCode: true } },
+        },
+      },
+    },
+  },
   mobilization: {
     select: {
       teams: {

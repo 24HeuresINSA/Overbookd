@@ -16,6 +16,22 @@ export function isMemberOf(team: string): (value: Assignee) => boolean {
   };
 }
 
+export type BaseAssigneeForDetails = {
+  id: Volunteer["id"];
+  firstname: Volunteer["firstname"];
+  lastname: Volunteer["lastname"];
+};
+
+export type TeamMemberForDetails = BaseAssigneeForDetails & {
+  teams: string[];
+  as: string;
+  friends: BaseAssigneeForDetails[];
+};
+
+type NamelyDemandedForDetails = BaseAssigneeForDetails;
+
+type AssigneeForDetails = TeamMemberForDetails | NamelyDemandedForDetails;
+
 export type TeamDemanded = { team: string; demand: number };
 
 export type AssignmentIdentifier = {
@@ -24,12 +40,32 @@ export type AssignmentIdentifier = {
   assignmentId: string;
 };
 
-export type Assignment = IProvidePeriod &
+type BaseAssignment = IProvidePeriod &
   AssignmentIdentifier & {
     name: string;
     demands: TeamDemanded[];
-    assignees: Assignee[];
   };
+
+type AssignmentWithoutDetails = BaseAssignment & {
+  assignees: Assignee[];
+};
+
+type AssignmentWithDetails = BaseAssignment & {
+  appointment: string;
+  assignees: AssigneeForDetails[];
+};
+
+const defaultAssignmentOption = { withDetails: false };
+
+type AssignmentOption = {
+  withDetails: boolean;
+};
+
+export type Assignment<
+  Option extends AssignmentOption = typeof defaultAssignmentOption,
+> = Option["withDetails"] extends true
+  ? AssignmentWithDetails
+  : AssignmentWithoutDetails;
 
 export type AssignmentTeam = TeamDemanded & {
   assigned: number;

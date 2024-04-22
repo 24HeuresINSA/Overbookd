@@ -1,14 +1,7 @@
 import { Assignee, Assignment, TeamDemanded } from "@overbookd/assignment";
 import { AssignmentIdentifierResponseDto } from "./assignment-identifier.response.dto";
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-
-class TeamDemandedDto implements TeamDemanded {
-  @ApiProperty({ type: String })
-  team: string;
-
-  @ApiProperty({ type: Number })
-  demand: number;
-}
+import { TeamDemandedResponseDto } from "./team-demanded.response.dto";
 
 type TeamMember = Extract<Assignee, { as: string }>;
 type NamelyDemanded = Exclude<Assignee, { as: string }>;
@@ -39,7 +32,7 @@ export class AssignmentResponseDto
   @ApiProperty({ type: String })
   name: string;
 
-  @ApiProperty({ type: TeamDemandedDto, isArray: true })
+  @ApiProperty({ type: TeamDemandedResponseDto, isArray: true })
   demands: TeamDemanded[];
 
   @ApiProperty({
