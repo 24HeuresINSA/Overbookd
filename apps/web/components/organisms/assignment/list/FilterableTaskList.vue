@@ -64,6 +64,11 @@ export default defineComponent({
       });
     },
   },
+  watch: {
+    completed() {
+      this.$accessor.assignTaskToVolunteer.fetchTasks(this.completed);
+    },
+  },
   methods: {
     filterByTeamRequests(
       teamsSearched: Team[],

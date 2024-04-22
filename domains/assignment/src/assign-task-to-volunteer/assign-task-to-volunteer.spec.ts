@@ -42,7 +42,7 @@ describe("Assign task to volunteer", () => {
   const assign = new AssignTaskToVolunteer(tasks, volunteers);
 
   describe("when listing all assignable tasks", async () => {
-    const assignableTasks = await assign.tasks(false);
+    const assignableTasks = await assign.tasks();
 
     describe.each`
       taskName                                                      | taskId                                                      | expectedTeams

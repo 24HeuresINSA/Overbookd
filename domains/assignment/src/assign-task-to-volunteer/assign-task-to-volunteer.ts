@@ -42,7 +42,7 @@ export class AssignTaskToVolunteer {
     private readonly assignableVolunteers: AssignableVolunteers,
   ) {}
 
-  async tasks(all: boolean): Promise<MissingAssignmentTask[]> {
+  async tasks(all: boolean = false): Promise<MissingAssignmentTask[]> {
     const tasks = await this.allTasks.findAll();
 
     const withMissingTeams = tasks.map((task) =>
