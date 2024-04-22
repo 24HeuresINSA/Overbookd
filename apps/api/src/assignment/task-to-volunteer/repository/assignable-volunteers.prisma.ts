@@ -121,6 +121,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
 
     const friendSelection = {
+      id: true,
       availabilities: {
         select: SELECT_PERIOD,
         where: includePeriodCondition(period),
@@ -168,10 +169,12 @@ function toStoredAssignableVolunteer(
     ...volunteer.friends.map(({ requestor }) => requestor),
     ...volunteer.friendRequestors.map(({ friend }) => friend),
   ];
-  const hasFriendAvailable = friends.some(
-    (friend) =>
-      friend.availabilities.length > 0 && friend.assigned.length === 0,
-  );
+  const assignableFriendsIds = friends
+    .filter(
+      (friend) =>
+        friend.availabilities.length > 0 && friend.assigned.length === 0,
+    )
+    .map(({ id }) => id);
   const hasFriendAssigned = friends.some((friend) =>
     friend.assigned.some(
       ({ assignment }) => assignment.festivalTaskId === taskId,
@@ -189,7 +192,7 @@ function toStoredAssignableVolunteer(
     teams: volunteer.teams.map((team) => team.teamCode),
     assignments,
     requestedDuring,
-    hasFriendAvailable,
+    assignableFriendsIds,
     hasFriendAssigned,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
   };

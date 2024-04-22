@@ -33,11 +33,11 @@ export class AssignableVolunteerResponseDto implements AssignableVolunteer {
   isRequestedOnSamePeriod: boolean;
 
   @ApiProperty({ type: Boolean })
-  hasFriendAvailable: boolean;
-
-  @ApiProperty({ type: Boolean })
   hasFriendAssigned: boolean;
 
   @ApiProperty({ type: Boolean })
   hasAtLeastOneFriend: boolean;
+
+  @ApiProperty({ type: Number, isArray: true })
+  assignableFriendsIds: number[];
 }

@@ -3,6 +3,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { DatabaseFriendCount } from "../../common/repository/friend.query";
 
 type DatabaseFriend = {
+  id: number;
   availabilities: IProvidePeriod[];
   assigned: {
     assignment: IProvidePeriod & { festivalTaskId: number };

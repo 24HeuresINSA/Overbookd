@@ -6,9 +6,9 @@ import { Category } from "@overbookd/festival-event-constants";
 export type AssignableVolunteer = Volunteer & {
   assignmentDuration: number;
   isRequestedOnSamePeriod: boolean;
-  hasFriendAvailable: boolean;
   hasFriendAssigned: boolean;
   hasAtLeastOneFriend: boolean;
+  assignableFriendsIds: number[];
 };
 
 export type StoredAssignment = IProvidePeriod & { category: Category };
