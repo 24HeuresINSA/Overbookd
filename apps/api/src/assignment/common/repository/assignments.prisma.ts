@@ -1,11 +1,14 @@
 import {
+  AssigneeForDetailsAs,
   Assignment,
   AssignmentIdentifier,
+  SimpleAssigneeForDetails,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
 import {
+  DatabaseAssignee,
   DatabaseAssignment,
   SELECT_ASSIGNMENT,
   uniqueAssignment,
@@ -81,13 +84,7 @@ function toAssignmentWithDetails(
     team: teamCode,
     demand: count,
   }));
-  const assignees = assignment.assignees.map(({ teamCode, personalData }) => ({
-    id: personalData.id,
-    firstname: personalData.firstname,
-    lastname: personalData.lastname,
-    friends: [], // TODO: implement assigned friends
-    as: teamCode,
-  }));
+  const assignees = assignment.assignees.map(toAssigneeForDetails);
   return {
     ...identifier,
     start: assignment.start,
@@ -96,5 +93,24 @@ function toAssignmentWithDetails(
     appointment: assignment.festivalTask.appointment.name,
     demands,
     assignees,
+  };
+}
+
+function toAssigneeForDetails(
+  assignee: DatabaseAssignee,
+): SimpleAssigneeForDetails | AssigneeForDetailsAs {
+  const baseAssignee = {
+    id: assignee.personalData.id,
+    firstname: assignee.personalData.firstname,
+    lastname: assignee.personalData.lastname,
+  };
+  if (!assignee.teamCode) return baseAssignee;
+
+  const teams = assignee.personalData.teams.map(({ teamCode }) => teamCode);
+  return {
+    ...baseAssignee,
+    teams,
+    as: assignee.teamCode,
+    friends: [], // TODO: implement assigned friends
   };
 }
