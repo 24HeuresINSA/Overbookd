@@ -7,7 +7,7 @@ import {
   isEveryCandidateFulfillsDemand,
 } from "./assign-volunteers-funnel";
 import { InMemoryPlanning } from "./planning.inmemory";
-import { InMemoryAssignments } from "./assignments.inmemory";
+import { InMemoryAssignments } from "../repositories/assignments.inmemory";
 import {
   noel,
   lea,

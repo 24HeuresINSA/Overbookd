@@ -7,4 +7,5 @@ export type VolunteersForAssignment = {
 
 export type Assignments = {
   assign(volunteersForAssignment: VolunteersForAssignment): Promise<Assignment>;
+  unassign(assignment: AssignmentIdentifier, assigneeId: number): Promise<void>;
 };
