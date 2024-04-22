@@ -38,7 +38,7 @@ export class InMemoryAssignments implements Assignments {
     );
     const currentAssignment = this.assignments.at(assignmentIndex);
     if (assignmentIndex === -1 || !currentAssignment) {
-      throw new Error("Not Found");
+      return Promise.resolve();
     }
 
     const assignees = currentAssignment.assignees.filter(
