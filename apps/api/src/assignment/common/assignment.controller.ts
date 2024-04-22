@@ -17,6 +17,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
+  ApiExtraModels,
 } from "@nestjs/swagger";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentService } from "./assignment.service";
@@ -24,7 +25,11 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
-import { AssignmentResponseDto } from "./dto/assignment.response.dto";
+import {
+  AssignmentResponseDto,
+  NamelyDemandedDto,
+  TeamMemberDto,
+} from "./dto/assignment.response.dto";
 import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 
@@ -38,6 +43,7 @@ import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignme
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
+@ApiExtraModels(NamelyDemandedDto, TeamMemberDto)
 export class AssignmentController {
   constructor(private readonly assignment: AssignmentService) {}
 

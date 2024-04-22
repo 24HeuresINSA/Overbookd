@@ -1,6 +1,11 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { HARD, VIEUX, CONFIANCE } from "../../teams";
-import { Assignee, Assignment, TeamDemanded } from "../assignment";
+import {
+  Assignment,
+  isMemberOf,
+  TeamDemanded,
+  TeamMember,
+} from "../assignment";
 import { Availabilities, Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
@@ -56,7 +61,7 @@ export class Candidate {
   ) {
     const remainingDemands = demands.reduce(
       (remainingDemands: TeamDemanded[], { team, demand }) => {
-        const totalAssignees = assignees.filter(({ as }) => as === team).length;
+        const totalAssignees = assignees.filter(isMemberOf(team)).length;
         if (totalAssignees === demand) return remainingDemands;
 
         return [...remainingDemands, { team, demand: demand - totalAssignees }];
@@ -69,7 +74,7 @@ export class Candidate {
     );
   }
 
-  static toAssignment({ id, as }: CandidateFulfillingDemand): Assignee {
+  static toAssignment({ id, as }: CandidateFulfillingDemand): TeamMember {
     return { id, as };
   }
 

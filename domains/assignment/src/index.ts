@@ -16,7 +16,9 @@ export type {
   AssignmentTeam,
   AssignmentSummary,
   TeamDemanded,
+  TeamMember,
 } from "./assign-task-to-volunteer/assignment";
+export { isTeamMember } from "./assign-task-to-volunteer/assignment";
 export type {
   Task,
   MissingAssignmentTask,

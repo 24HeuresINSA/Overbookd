@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  Assignee,
   AssignmentIdentifier,
+  TeamMember,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { Type } from "class-transformer";
@@ -21,7 +21,7 @@ class AssignmentIdentifierRequestDto implements AssignmentIdentifier {
   taskId: number;
 }
 
-class AssigneeRequestDto implements Assignee {
+class TeamMemberRequestDto implements TeamMember {
   @ApiProperty({ type: Number })
   @IsNumber()
   id: number;
@@ -39,8 +39,8 @@ export class VolunteersForAssignmentRequestDto
   @ValidateNested()
   assignment: AssignmentIdentifier;
 
-  @ApiProperty({ type: AssigneeRequestDto, isArray: true })
-  @Type(() => AssigneeRequestDto)
+  @ApiProperty({ type: TeamMemberRequestDto, isArray: true })
+  @Type(() => TeamMemberRequestDto)
   @ValidateNested({ each: true })
-  volunteers: Assignee[];
+  volunteers: TeamMember[];
 }

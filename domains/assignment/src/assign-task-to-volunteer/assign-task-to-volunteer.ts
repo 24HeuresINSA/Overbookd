@@ -5,7 +5,12 @@ import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
 } from "./assignable-volunteer";
-import { Assignment, Assignee, AssignmentIdentifier } from "./assignment";
+import {
+  Assignment,
+  Assignee,
+  AssignmentIdentifier,
+  isMemberOf,
+} from "./assignment";
 import {
   Task,
   TaskIdentifier,
@@ -148,7 +153,7 @@ export class AssignTaskToVolunteer {
   }
 
   private countAssigneesInTeam(team: string, assignees: Assignee[]): number {
-    return assignees.filter((assignee) => assignee.as === team).length;
+    return assignees.filter(isMemberOf(team)).length;
   }
 }
 

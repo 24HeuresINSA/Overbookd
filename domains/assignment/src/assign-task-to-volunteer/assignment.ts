@@ -1,10 +1,20 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "../volunteer";
 
-export type Assignee = {
-  id: Volunteer["id"];
-  as: string;
-};
+type NamelyDemanded = { id: Volunteer["id"] };
+export type TeamMember = { id: Volunteer["id"]; as: string };
+export type Assignee = NamelyDemanded | TeamMember;
+
+export function isTeamMember(assignee: Assignee): assignee is TeamMember {
+  return Object.hasOwn(assignee, "as");
+}
+
+export function isMemberOf(team: string): (value: Assignee) => boolean {
+  return (assignee) => {
+    if (!isTeamMember(assignee)) return false;
+    return assignee.as === team;
+  };
+}
 
 export type TeamDemanded = { team: string; demand: number };
 

@@ -1,5 +1,5 @@
-import { BENEVOLE_CODE } from "@overbookd/team";
 import { beforeAll, describe, expect, it } from "vitest";
+import { BENEVOLE_CODE } from "@overbookd/team";
 import {
   EveryCandidateFulfillsDemand,
   WaitingForVolunteer,
@@ -19,6 +19,7 @@ import {
   luce,
   gererLaCaisse,
   scannerLesBillets,
+  demonterLesJeuxGonflables,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
@@ -48,14 +49,16 @@ describe("Assign volunteers funnel", () => {
     rendreKangoo,
     couperDesCarottes,
     gererLaCaisse,
+    demonterLesJeuxGonflables,
   ];
   const candidateFactory = new CandidateFactory(planning, availabilities);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteerName                  | volunteer            | taskName                  | task                 | team             | candidates             | planning            | availabilities
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}        | ${benevolant}        | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name} | ${couperDesCarottes} | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities}
+      volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities}
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({ volunteer, candidates, planning, task, team, availabilities }) => {
