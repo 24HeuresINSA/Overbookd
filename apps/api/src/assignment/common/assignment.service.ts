@@ -38,4 +38,11 @@ export class AssignmentService {
   ): Promise<Assignment> {
     return this.assignments.assign(volunteersForAssignment);
   }
+
+  async unassign(
+    assignment: AssignmentIdentifier,
+    assigneeId: number,
+  ): Promise<void> {
+    return this.assignments.unassign(assignment, assigneeId);
+  }
 }

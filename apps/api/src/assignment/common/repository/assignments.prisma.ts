@@ -60,8 +60,16 @@ export class PrismaAssignments implements AssignmentRepository {
     assignment: AssignmentIdentifier,
     assigneeId: number,
   ): Promise<void> {
-    console.log("unassign", assignment, assigneeId);
-    throw new Error("Method not implemented.");
+    await this.prisma.assignee.delete({
+      where: {
+        userId_assignmentId_mobilizationId_festivalTaskId: {
+          assignmentId: assignment.assignmentId,
+          mobilizationId: assignment.mobilizationId,
+          festivalTaskId: assignment.taskId,
+          userId: assigneeId,
+        },
+      },
+    });
   }
 }
 
