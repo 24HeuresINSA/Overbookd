@@ -55,6 +55,22 @@ export class PrismaAssignments implements AssignmentRepository {
 
     return toAssignment(assignment, identifier);
   }
+
+  async unassign(
+    assignment: AssignmentIdentifier,
+    assigneeId: number,
+  ): Promise<void> {
+    await this.prisma.assignee.delete({
+      where: {
+        userId_assignmentId_mobilizationId_festivalTaskId: {
+          assignmentId: assignment.assignmentId,
+          mobilizationId: assignment.mobilizationId,
+          festivalTaskId: assignment.taskId,
+          userId: assigneeId,
+        },
+      },
+    });
+  }
 }
 
 function toAssignment(

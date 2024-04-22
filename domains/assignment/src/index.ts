@@ -66,5 +66,5 @@ export type {
 export type {
   Assignments,
   VolunteersForAssignment,
-} from "./assign-task-to-volunteer/funnel/assignments";
+} from "./assign-task-to-volunteer/repositories/assignments";
 export type { Volunteer as AssignmentVolunteer } from "./assign-task-to-volunteer/funnel/volunteer";

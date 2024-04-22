@@ -6,7 +6,7 @@ import {
   CandidateFactory,
 } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { Assignments } from "./assignments";
+import { Assignments } from "../repositories/assignments";
 import { Assignment } from "../assignment";
 
 export class ReadyToStart {

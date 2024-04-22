@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -132,5 +133,44 @@ export class AssignmentController {
     @Body() volunteersForAssignment: VolunteersForAssignmentRequestDto,
   ): Promise<AssignmentResponseDto> {
     return this.assignment.assign(volunteersForAssignment);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Delete(
+    "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignees/:assigneeId",
+  )
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Assignment unassigned",
+  })
+  @ApiParam({
+    name: "taskId",
+    description: "Task id",
+    type: Number,
+  })
+  @ApiParam({
+    name: "mobilizationId",
+    description: "Mobilization id",
+    type: String,
+  })
+  @ApiParam({
+    name: "assignmentId",
+    description: "Assignment id",
+    type: String,
+  })
+  @ApiParam({
+    name: "assigneeId",
+    description: "Assignee id",
+    type: Number,
+  })
+  unassign(
+    @Param("taskId", ParseIntPipe) taskId: number,
+    @Param("mobilizationId") mobilizationId: string,
+    @Param("assignmentId") assignmentId: string,
+    @Param("assigneeId", ParseIntPipe) assigneeId: number,
+  ): Promise<void> {
+    const identifier = { taskId, mobilizationId, assignmentId };
+    return this.assignment.unassign(identifier, assigneeId);
   }
 }
