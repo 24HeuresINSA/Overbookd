@@ -92,14 +92,8 @@ export class AssignmentController {
     @Param("assignmentId") assignmentId: string,
     @Query("withDetails", ParseBoolPipe) withDetails?: boolean,
   ): Promise<AssignmentResponseDto | AssignmentWithDetailsResponseDto> {
-    return this.assignment.findOne(
-      {
-        taskId,
-        mobilizationId,
-        assignmentId,
-      },
-      withDetails ?? false,
-    );
+    const identifier = { taskId, mobilizationId, assignmentId } 
+    return this.assignment.findOne(identifier, withDetails ?? false);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
