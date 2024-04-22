@@ -19,6 +19,9 @@ export type {
   BaseAssigneeForDetails,
   TeamDemanded,
   TeamMember,
+  AssignmentWithDetails,
+  AssigneeForDetails,
+  NamelyDemandedForDetails,
 } from "./assign-task-to-volunteer/assignment";
 export { isTeamMember } from "./assign-task-to-volunteer/assignment";
 export type {

@@ -28,9 +28,11 @@ export type TeamMemberForDetails = BaseAssigneeForDetails & {
   friends: BaseAssigneeForDetails[];
 };
 
-type NamelyDemandedForDetails = BaseAssigneeForDetails;
+export type NamelyDemandedForDetails = BaseAssigneeForDetails;
 
-type AssigneeForDetails = TeamMemberForDetails | NamelyDemandedForDetails;
+export type AssigneeForDetails =
+  | TeamMemberForDetails
+  | NamelyDemandedForDetails;
 
 export type TeamDemanded = { team: string; demand: number };
 
@@ -50,7 +52,7 @@ type AssignmentWithoutDetails = BaseAssignment & {
   assignees: Assignee[];
 };
 
-type AssignmentWithDetails = BaseAssignment & {
+export type AssignmentWithDetails = BaseAssignment & {
   appointment: string;
   assignees: AssigneeForDetails[];
 };

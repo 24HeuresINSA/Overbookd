@@ -4,7 +4,7 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-card-title>
-      {{ task }}
+      {{ taskName }}
       <v-icon right @click="openFtInNewTab">mdi-open-in-new</v-icon>
     </v-card-title>
     <v-card-text class="timespan-details__content">
@@ -28,7 +28,11 @@
       <div class="required-volunteers">
         <h2>Bénévoles requis sur le créneau</h2>
         <div class="volunteer-list">
-          <v-chip v-for="volunteer in requiredVolunteers" :key="volunteer.id">
+          <v-chip
+            v-for="volunteer in requiredVolunteers"
+            :key="volunteer.id"
+            @click="openCalendarInNewTab(volunteer.id)"
+          >
             <v-icon left>mdi-account</v-icon>
             <span>{{ volunteer.firstname }} {{ volunteer.lastname }}</span>
           </v-chip>
@@ -56,7 +60,13 @@
             ></TeamChip>
           </template>
           <template #item.assignedTeam="{ item }">
-            <div
+            <TeamChip
+              :team="item.as"
+              size="medium"
+              with-name
+              show-hidden
+            ></TeamChip>
+            <!--<div
               v-if="isUpdateAssignedTeamActiveForAssignee(item.id)"
               class="team-update"
             >
@@ -77,13 +87,7 @@
               <v-icon color="green" @click="updateAssignedTeam(item)">
                 mdi-check-circle
               </v-icon>
-            </div>
-            <TeamChip
-              v-else
-              :team="item.assignedTeam"
-              size="medium"
-              with-name
-            ></TeamChip>
+            </div>-->
           </template>
           <template #item.friends="{ item }">
             <div class="volunteer-list">
@@ -126,45 +130,76 @@ import {
   TimeSpanAssignee,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
-import { User } from "@overbookd/user";
 import { isNumber, isString } from "~/utils/types/check";
+import {
+  AssignmentWithDetails,
+  NamelyDemandedForDetails,
+  TeamMemberForDetails,
+  isTeamMember,
+} from "@overbookd/assignment";
 
 export default Vue.extend({
-  name: "TimeSpanDetails",
+  name: "AssignmentDetails",
   components: { TeamChip },
   data: () => ({
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,
   }),
   computed: {
+    assignementDetails(): AssignmentWithDetails | null {
+      return this.$accessor.assignTaskToVolunteer.assignmentDetails;
+    },
+    taskName(): string {
+      if (this.assignementDetails === null) return "";
+      return `[${this.assignementDetails.taskId}] ${this.assignementDetails.name}`;
+    },
     timeSpan(): TimeSpanWithAssignees | null {
       return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
-    task(): string {
-      if (!this.timeSpan) return "";
-      return `[${this.timeSpan.ft.id}] ${this.timeSpan.ft.name}`;
-    },
     location(): string {
-      if (!this.timeSpan) return "";
-      return this.timeSpan.ft.location;
+      if (!this.assignementDetails) return "";
+      return this.assignementDetails.appointment;
     },
     timetable(): string {
-      if (!this.timeSpan) return "";
-      const start = formatDateToHumanReadable(this.timeSpan.start);
-      const end = formatDateToHumanReadable(this.timeSpan.end);
+      if (!this.assignementDetails) return "";
+      const start = formatDateToHumanReadable(this.assignementDetails.start);
+      const end = formatDateToHumanReadable(this.assignementDetails.end);
       return `${start} - ${end}`;
     },
     requestedTeams(): string[] {
-      if (!this.timeSpan) return [];
-      return this.timeSpan.requestedTeams.map((team) => team.code);
+      if (!this.assignementDetails) return [];
+      const requestedTeamCodes = this.assignementDetails.demands.map(
+        (demand) => demand.team,
+      );
+      return requestedTeamCodes;
     },
-    requiredVolunteers(): User[] {
-      if (!this.timeSpan) return [];
-      return this.timeSpan.requiredVolunteers;
+    requiredVolunteers(): NamelyDemandedForDetails[] {
+      if (!this.assignementDetails) return [];
+
+      return this.assignementDetails.assignees
+        .map((requiredVolunteer) => {
+          if (!isTeamMember(requiredVolunteer)) {
+            return requiredVolunteer;
+          }
+        })
+        .filter(
+          (requiredVolunteer): requiredVolunteer is NamelyDemandedForDetails =>
+            requiredVolunteer !== undefined,
+        );
     },
-    assignees(): TimeSpanAssignee[] {
-      if (!this.timeSpan) return [];
-      return this.timeSpan.assignees;
+    assignees(): TeamMemberForDetails[] {
+      if (!this.assignementDetails) return [];
+
+      return this.assignementDetails.assignees
+        .map((assignee) => {
+          if (isTeamMember(assignee)) {
+            return assignee;
+          }
+        })
+        .filter(
+          (assignee): assignee is TeamMemberForDetails =>
+            assignee !== undefined,
+        );
     },
     allTimeSpansTeamCodes(): string[] {
       if (!this.timeSpan) return [];
@@ -211,8 +246,8 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     openFtInNewTab() {
-      if (!this.timeSpan) return;
-      const ftId = this.timeSpan.ft.id;
+      if (!this.assignementDetails) return;
+      const ftId = this.assignementDetails.taskId;
       window.open(`/ft/${ftId}`, "_blank");
     },
     openCalendarInNewTab(assigneeId: number) {
