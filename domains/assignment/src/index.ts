@@ -11,12 +11,12 @@ export type {
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export type {
   Assignee,
-  AssigneeForDetailsAs,
+  TeamMemberForDetails,
   Assignment,
   AssignmentIdentifier,
   AssignmentTeam,
   AssignmentSummary,
-  SimpleAssigneeForDetails,
+  BaseAssigneeForDetails,
   TeamDemanded,
   TeamMember,
 } from "./assign-task-to-volunteer/assignment";

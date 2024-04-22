@@ -1,8 +1,8 @@
 import {
-  AssigneeForDetailsAs,
+  TeamMemberForDetails,
   Assignment,
   AssignmentIdentifier,
-  SimpleAssigneeForDetails,
+  BaseAssigneeForDetails,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
@@ -98,7 +98,7 @@ function toAssignmentWithDetails(
 
 function toAssigneeForDetails(
   assignee: DatabaseAssignee,
-): SimpleAssigneeForDetails | AssigneeForDetailsAs {
+): BaseAssigneeForDetails | TeamMemberForDetails {
   const baseAssignee = {
     id: assignee.personalData.id,
     firstname: assignee.personalData.firstname,
