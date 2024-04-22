@@ -4,7 +4,7 @@ import { Assignments } from "./repositories/assignments";
 export class Unassign {
   constructor(private assignments: Assignments) {}
 
-  async volunteerFromTask(
+  async volunteer(
     assignment: AssignmentIdentifier,
     volunteerId: number,
   ) {

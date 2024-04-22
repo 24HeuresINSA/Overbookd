@@ -1,4 +1,4 @@
-import { describe, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { InMemoryAssignments } from "./repositories/assignments.inmemory";
 import {
   gererLaCaisse,
@@ -10,8 +10,13 @@ import { Unassign } from "./unassign";
 describe("Unassign volunteer", () => {
   const assignments = new InMemoryAssignments([rendreKangoo, gererLaCaisse]);
   const unassign = new Unassign(assignments);
-  describe("when the volunteer is assigned to the task", async () => {
-    await unassign.volunteerFromTask(gererLaCaisse, lea.volunteer.id);
-    expect(assignments.all).toContainEqual({ ...gererLaCaisse, assignees: [] });
+  describe("when the volunteer is assigned to an assignment", async () => {
+    it("should unassign the volunteer", async () => {
+      await unassign.volunteer(gererLaCaisse, lea.volunteer.id);
+      expect(assignments.all).toContainEqual({
+        ...gererLaCaisse,
+        assignees: [],
+      });
+    });
   });
 });
