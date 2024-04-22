@@ -1,5 +1,5 @@
 import { AssignmentIdentifier } from "./assignment";
-import { Assignments } from "./repositories/assignments";
+import { Assignments } from "../common/repositories/assignments";
 
 export class Unassign {
   constructor(private assignments: Assignments) {}

@@ -1,6 +1,6 @@
 import { Candidate, IDefineCandidate, CandidateFactory } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { Assignments } from "../repositories/assignments";
+import { Assignments } from "../../common/repositories/assignments";
 import { Assignment } from "../assignment";
 import {
   FunnelRepositories,

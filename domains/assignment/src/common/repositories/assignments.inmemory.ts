@@ -1,5 +1,5 @@
 import { updateItemToList } from "@overbookd/list";
-import { Assignment, AssignmentIdentifier } from "../assignment";
+import { Assignment, AssignmentIdentifier } from "../../assign-task-to-volunteer/assignment";
 import { Assignments, VolunteersForAssignment } from "./assignments";
 
 export class InMemoryAssignments implements Assignments {

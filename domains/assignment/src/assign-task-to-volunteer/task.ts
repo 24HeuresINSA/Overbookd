@@ -1,15 +1,5 @@
-import { Category } from "@overbookd/festival-event-constants";
 import { AssignmentSummary, Assignment } from "./assignment";
-
-export type TaskIdentifier = {
-  id: number;
-  name: string;
-};
-
-type TaskCategorized = TaskIdentifier & {
-  topPriority: boolean;
-  category?: Category;
-};
+import { TaskCategorized } from "../task";
 
 export type TaskWithAssignmentsSummary = Omit<
   TaskCategorized,

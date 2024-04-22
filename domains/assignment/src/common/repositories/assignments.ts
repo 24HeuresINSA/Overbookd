@@ -1,4 +1,4 @@
-import { Assignment, AssignmentIdentifier, TeamMember } from "../assignment";
+import { Assignment, AssignmentIdentifier, TeamMember } from "../../assign-task-to-volunteer/assignment";
 
 export type VolunteersForAssignment = {
   assignment: AssignmentIdentifier;

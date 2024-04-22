@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryAssignments } from "./repositories/assignments.inmemory";
+import { InMemoryAssignments } from "../common/repositories/assignments.inmemory";
 import {
   gererLaCaisse,
   lea,

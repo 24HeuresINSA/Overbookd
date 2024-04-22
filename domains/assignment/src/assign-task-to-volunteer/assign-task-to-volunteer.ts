@@ -13,10 +13,10 @@ import {
 } from "./assignment";
 import {
   Task,
-  TaskIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
+import { TaskIdentifier } from "../task";
 
 export type Tasks = {
   findAll(): Promise<Task[]>;
