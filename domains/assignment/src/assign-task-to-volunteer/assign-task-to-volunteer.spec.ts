@@ -7,7 +7,7 @@ import {
   missingOneAssigneeThenOneHardAndOneBenevoleTask,
   missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
   missingTwoVieuxDuring19hto20h,
-} from "./test-ressources/task.fake";
+} from "./test-resources/task.fake";
 import { InMemoryTasks } from "./repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
 import { AssignableVolunteer } from "./assignable-volunteer";
@@ -19,7 +19,7 @@ import {
   missingOnePlaizirAssignment,
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
-} from "./test-ressources/assign-task-to-volunteer.test.utils";
+} from "./test-resources/assign-task-to-volunteer.test.utils";
 import { HARD, VIEUX } from "../teams";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
