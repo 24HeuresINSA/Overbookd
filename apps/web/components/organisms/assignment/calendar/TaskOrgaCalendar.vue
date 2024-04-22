@@ -38,6 +38,8 @@ function isDailyEvent(
   return (event as DailyEvent).timed === false;
 }
 
+type CalendarEventWithIdentifier = CalendarEvent & AssignmentIdentifier;
+
 export default defineComponent({
   name: "TaskOrgaCalendar",
   components: { OverCalendar },
@@ -96,12 +98,19 @@ export default defineComponent({
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
       this.$emit("display-assignment-details", identifier);
     },
-    mapAssignmentToEvent(assignment: AssignmentSummary): CalendarEvent[] {
+    mapAssignmentToEvent(
+      assignment: AssignmentSummary,
+    ): CalendarEventWithIdentifier[] {
       return assignment.teams.map((team) => ({
         ...assignment,
         name: this.buildEventName(team),
         timed: true,
         color: this.defineEventColor(team),
+        identifier: {
+          assignmentId: assignment.assignmentId,
+          mobilizationId: assignment.mobilizationId,
+          taskId: assignment.taskId,
+        },
       }));
     },
     buildEventName({ assigned, demand, team }: AssignmentTeam): string {

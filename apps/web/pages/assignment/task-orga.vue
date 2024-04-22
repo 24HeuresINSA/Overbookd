@@ -92,7 +92,7 @@ export default defineComponent({
     },
     openAssignmentDetailsDialog(identifier: AssignmentIdentifier) {
       console.log(identifier);
-      //this.displayAssignmentDetailsDialog = true;
+      this.displayAssignmentDetailsDialog = true;
     },
     selectVolunteer(volunteer: AssignmentVolunteer) {
       this.$accessor.assignTaskToVolunteer.selectVolunteer(volunteer);
