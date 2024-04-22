@@ -15,16 +15,31 @@ export type VolunteerWithAssignmentDuration = VolunteerWithFriendFilter & {
 
 export type Volunteers = {
   findAll(): Promise<VolunteerWithAssignments[]>;
+  findOne(id: Volunteer["id"]): Promise<VolunteerWithAssignments | undefined>;
+};
+
+export type TaskAssignments = {
+  findOn(periods: Period[], oneOfTheTeams: string[]): Promise<[]>;
 };
 
 export class AssignVolunteerToTask {
-  constructor(private readonly allVolunteers: Volunteers) {}
+  constructor(
+    private readonly allVolunteers: Volunteers,
+    private readonly taskAssignments: TaskAssignments,
+  ) {}
 
   async volunteers(): Promise<VolunteerWithAssignmentDuration[]> {
     const volunteers = await this.allVolunteers.findAll();
     return volunteers.map((assignee) =>
       this.computeAssignmentDuration(assignee),
     );
+  }
+
+  async selectVolunteer(volunteerId: Volunteer["id"]): Promise<[]> {
+    const volunteer = await this.allVolunteers.findOne(volunteerId);
+    if (!volunteer) return [];
+
+    return this.taskAssignments.findOn(volunteer.assignments, volunteer.teams);
   }
 
   private computeAssignmentDuration({
