@@ -43,6 +43,7 @@ export type Drive =
   | typeof NON_STOCKE
   | typeof QG_ORGA
   | typeof BACKLINE
+  | typeof SALLE_CRLA
   | typeof LIVRE_PAR_LOGISTIQUE
   | typeof LIVRE_PAR_COM;
 
@@ -67,6 +68,7 @@ export const drives: Drive[] = [
   NON_STOCKE,
   QG_ORGA,
   BACKLINE,
+  SALLE_CRLA,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
 ];
