@@ -12,7 +12,7 @@
           { "type": "refactor", "release": "patch" },
           { "type": "perf", "release": "patch" },
           { "type": "test", "release": "patch" },
-          { "type": "prefeat", "release": "minor"}
+          { "type": "prefeat", "release": "patch" }
         ],
         "parserOpts": {
           "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "NEW EDITION"]
