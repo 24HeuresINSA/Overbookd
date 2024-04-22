@@ -9,10 +9,10 @@ import {
 } from "@overbookd/assignment";
 
 export type AssignmentRepository = Assignments & {
-  findOne(
+  findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
-    withDetails: boolean,
-  ): Promise<Assignment | Assignment<{ withDetails: true }>>;
+    withDetails: T,
+  ): Promise<Assignment<{ withDetails: T }>>;
 };
 
 @Injectable()
@@ -22,11 +22,11 @@ export class AssignmentService {
     private readonly planning: Planning,
   ) {}
 
-  async findOne(
+  async findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
-    withDetails: boolean,
-  ): Promise<Assignment | Assignment<{ withDetails: true }>> {
-    return this.assignments.findOne(identifier, withDetails);
+    withDetails: T,
+  ): Promise<Assignment<{ withDetails: T }>> {
+    return this.assignments.findOne<T>(identifier, withDetails);
   }
 
   async getPlanning(volunteerId: number): Promise<PlanningEvent[]> {

@@ -18,10 +18,10 @@ import {
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOne(
+  async findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
-    withDetails: boolean,
-  ): Promise<Assignment | Assignment<{ withDetails: true }>> {
+    withDetails: T,
+  ): Promise<Assignment<{ withDetails: T }>> {
     const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
       where: {
@@ -34,9 +34,12 @@ export class PrismaAssignments implements AssignmentRepository {
       select: SELECT_ASSIGNMENT,
     });
 
-    return withDetails
-      ? toAssignmentWithDetails(assignment, identifier)
-      : toAssignment(assignment, identifier);
+    if (!withDetails) {
+      type Output = Assignment<{ withDetails: T }>;
+      return toAssignment(assignment, identifier) as Output;
+    }
+
+    return toAssignmentWithDetails(assignment, identifier);
   }
 
   async assign({
