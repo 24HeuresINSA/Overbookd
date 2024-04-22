@@ -129,7 +129,7 @@ import {
 } from "@overbookd/assignment";
 
 export default Vue.extend({
-  name: "TimeSpanDetails",
+  name: "AssignmentDetails",
   components: { TeamChip },
   data: () => ({
     selectedAssigneeId: null as number | null,
@@ -137,7 +137,6 @@ export default Vue.extend({
   }),
   computed: {
     assignementDetails(): AssignmentWithDetails | null {
-      console.log(this.$accessor.assignTaskToVolunteer.assignmentDetails);
       return this.$accessor.assignTaskToVolunteer.assignmentDetails;
     },
     taskName(): string {
@@ -166,36 +165,31 @@ export default Vue.extend({
     },
     requiredVolunteers(): NamelyDemandedForDetails[] {
       if (!this.assignementDetails) return [];
-      const requiredVolunteers: NamelyDemandedForDetails[] =
-        this.assignementDetails.assignees
-          .map((requiredVolunteer) => {
-            if (!isTeamMember(requiredVolunteer)) {
-              return requiredVolunteer;
-            }
-          })
-          .filter(
-            (
-              requiredVolunteer,
-            ): requiredVolunteer is NamelyDemandedForDetails =>
-              requiredVolunteer !== undefined,
-          );
-      return requiredVolunteers;
+
+      return this.assignementDetails.assignees
+        .map((requiredVolunteer) => {
+          if (!isTeamMember(requiredVolunteer)) {
+            return requiredVolunteer;
+          }
+        })
+        .filter(
+          (requiredVolunteer): requiredVolunteer is NamelyDemandedForDetails =>
+            requiredVolunteer !== undefined,
+        );
     },
     assignees(): TeamMemberForDetails[] {
       if (!this.assignementDetails) return [];
-      const assignees: TeamMemberForDetails[] =
-        this.assignementDetails.assignees
-          .map((assignee) => {
-            if (isTeamMember(assignee)) {
-              return assignee;
-            }
-          })
-          .filter(
-            (assignee): assignee is TeamMemberForDetails =>
-              assignee !== undefined,
-          );
-      console.log(assignees);
-      return assignees;
+
+      return this.assignementDetails.assignees
+        .map((assignee) => {
+          if (isTeamMember(assignee)) {
+            return assignee;
+          }
+        })
+        .filter(
+          (assignee): assignee is TeamMemberForDetails =>
+            assignee !== undefined,
+        );
     },
     allTimeSpansTeamCodes(): string[] {
       if (!this.timeSpan) return [];

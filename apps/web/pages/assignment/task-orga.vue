@@ -22,7 +22,7 @@
       />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
-      <TimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
+      <AssignmentDetails @close-dialog="closeAssignmentDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -34,7 +34,7 @@ import AssignmentFunnel from "~/components/organisms/assignment/card/AssignmentF
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
-import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
 import {
   Assignment,
   AssignmentSummary,
@@ -54,7 +54,7 @@ export default defineComponent({
     FilterableTaskList,
     TaskOrgaCalendar,
     AssignmentFunnel,
-    TimeSpanDetails,
+    AssignmentDetails,
     SnackNotificationContainer,
   },
   data: (): OrgaTaskData => ({

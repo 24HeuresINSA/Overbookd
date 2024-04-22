@@ -9,7 +9,7 @@
     <SnackNotificationContainer />
 
     <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
-      <TimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
+      <AssignmentDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -20,7 +20,7 @@ import FilterableVolunteerList from "~/components/organisms/assignment/list/Filt
 import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 
 export default Vue.extend({
@@ -30,7 +30,7 @@ export default Vue.extend({
     FilterableTimeSpanList,
     OrgaTaskCalendar,
     SnackNotificationContainer,
-    TimeSpanDetails,
+    AssignmentDetails,
   },
   data: () => ({
     displayTimeSpanDetailsDialog: false,
