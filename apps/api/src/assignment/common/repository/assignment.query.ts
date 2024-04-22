@@ -1,4 +1,8 @@
-import { Assignee, AssignmentIdentifier } from "@overbookd/assignment";
+import {
+  Assignee,
+  AssignmentIdentifier,
+  isTeamMember,
+} from "@overbookd/assignment";
 import { SELECT_PERIOD } from "./period.query";
 
 export type DatabaseAssignment = {
@@ -39,7 +43,7 @@ export function updateAssigneesOnAssignment(
   volunteers: Assignee[],
   { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
 ) {
-  return volunteers.map(({ id, as }) => ({
+  return volunteers.filter(isTeamMember).map(({ id, as }) => ({
     where: {
       userId_assignmentId_mobilizationId_festivalTaskId: {
         assignmentId,

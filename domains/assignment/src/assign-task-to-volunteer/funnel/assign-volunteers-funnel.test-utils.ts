@@ -1,10 +1,15 @@
 import { BENEVOLE_CODE } from "@overbookd/team";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { friday19hto21h } from "../test-ressources/assign-task-to-volunteer.test.utils";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
 import { Assignment } from "../assignment";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { Volunteer } from "./volunteer";
+import { PlanningEvent } from "./planning";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
+const saturday18h = new Date("2024-05-18T18:00+02:00");
+const saturday20h = new Date("2024-05-18T20:00+02:00");
 const sunday20h = new Date("2024-05-19T20:00+02:00");
 const monday10h = new Date("2024-05-13T10:00+02:00");
 const nextMonday18h = new Date("2024-05-20T18:00+02:00");
@@ -32,19 +37,32 @@ const friday22hToSaturday00h = Period.init({
   end: new Date("2024-05-18T00:00+02:00"),
 });
 
+const saturday18hTo20h = Period.init({ start: saturday18h, end: saturday20h });
+
 const nextThursday08hTo10h = Period.init({
   start: new Date("2024-05-23T08:00+02:00"),
   end: nextThursday10h,
 });
 
-export const noel = {
+type TestHelper = {
+  volunteer: Volunteer;
+  planning: PlanningEvent[];
+  availabilities: IProvidePeriod[];
+};
+
+export const noel: TestHelper = {
   volunteer: {
     id: 1,
     firstname: "Noel",
     lastname: "Ertsemud",
     teams: [BENEVOLE_CODE, VIEUX],
   },
-  planning: [{ ...friday08hTo09h, task: "Accueillir INSA CVL" }],
+  planning: [
+    {
+      ...friday08hTo09h,
+      task: { name: "Accueillir INSA CVL", id: 200, status: READY_TO_ASSIGN },
+    },
+  ],
   availabilities: [
     { start: monday10h, end: sunday20h },
     { start: nextMonday18h, end: nextWednesday02h },
@@ -52,7 +70,7 @@ export const noel = {
   ],
 };
 
-export const lea = {
+export const lea: TestHelper = {
   volunteer: {
     id: 2,
     firstname: "Lea",
@@ -63,7 +81,7 @@ export const lea = {
   availabilities: [{ start: friday06h, end: sunday20h }],
 };
 
-export const ontaine = {
+export const ontaine: TestHelper = {
   volunteer: {
     id: 3,
     firstname: "Ontaine",
@@ -77,7 +95,7 @@ export const ontaine = {
   ],
 };
 
-export const tatouin = {
+export const tatouin: TestHelper = {
   volunteer: {
     id: 4,
     firstname: "Tatouin",
@@ -92,7 +110,7 @@ export const tatouin = {
   ],
 };
 
-export const luce = {
+export const luce: TestHelper = {
   volunteer: {
     id: 5,
     firstname: "Luce",
@@ -168,4 +186,15 @@ export const scannerLesBillets: Assignment = {
     { team: BENEVOLE_CODE, demand: 5 },
   ],
   assignees: [],
+};
+
+export const demonterLesJeuxGonflables: Assignment = {
+  start: saturday18hTo20h.start,
+  end: saturday18hTo20h.end,
+  taskId: 6,
+  mobilizationId: saturday18hTo20h.id,
+  assignmentId: saturday18hTo20h.id,
+  name: "Demonter les jeux gonflables",
+  demands: [{ team: BENEVOLE_CODE, demand: 1 }],
+  assignees: [{ id: luce.volunteer.id }],
 };

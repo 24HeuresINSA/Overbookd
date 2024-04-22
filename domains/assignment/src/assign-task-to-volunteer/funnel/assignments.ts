@@ -1,8 +1,8 @@
-import { Assignee, Assignment, AssignmentIdentifier } from "../assignment";
+import { Assignment, AssignmentIdentifier, TeamMember } from "../assignment";
 
 export type VolunteersForAssignment = {
   assignment: AssignmentIdentifier;
-  volunteers: Assignee[];
+  volunteers: TeamMember[];
 };
 
 export type Assignments = {
