@@ -53,11 +53,25 @@ export type DatabaseBorrow = {
   };
 };
 
+export type DatabasePurchase = {
+  quantity: number;
+  purchase: {
+    id: number;
+    seller: string;
+    availableOn: Date;
+  };
+};
+
 type WithDatabaseBorrows = {
   borrows: DatabaseBorrow[];
+};
+
+type WithDatabasePurchases = {
+  purchases: DatabasePurchase[];
 };
 
 export type DatabaseGear = BaseDatabaseGear &
   WithDatabaseInventory &
   WithDatabaseInquiries &
-  WithDatabaseBorrows;
+  WithDatabaseBorrows &
+  WithDatabasePurchases;

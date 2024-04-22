@@ -56,7 +56,8 @@ export class DashboardGearStock {
   static findStockByDate(gear: DatabaseGear, date: Date): number {
     const inventory = DashboardGearStock.findInventoryQuantity(gear);
     const borrowed = DashboardGearStock.findBorrowedQuantityByDate(gear, date);
-    return inventory + borrowed;
+    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
+    return inventory + borrowed + purchased;
   }
 
   private static findBorrowedQuantityByDate(
@@ -71,6 +72,16 @@ export class DashboardGearStock {
         : period.isIncluding(date);
     });
     return sumQuantity(borrows);
+  }
+
+  private static findPurchaseQuantityByDate(
+    gear: DatabaseGear,
+    date: Date,
+  ): number {
+    const purchases = gear.purchases.filter(({ purchase }) => {
+      return +purchase.availableOn <= +date;
+    });
+    return sumQuantity(purchases);
   }
 
   static findInventoryQuantity(gear: DatabaseGear): number {
