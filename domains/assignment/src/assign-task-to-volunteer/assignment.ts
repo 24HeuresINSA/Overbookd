@@ -63,9 +63,7 @@ type AssignmentOption = {
 
 export type Assignment<
   Option extends AssignmentOption = typeof defaultAssignmentOption,
-> = Option extends {
-  withDetails: true;
-}
+> = Option["withDetails"] extends true
   ? AssignmentWithDetails
   : AssignmentWithoutDetails;
 
