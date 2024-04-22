@@ -6,10 +6,11 @@ import {
   TeamDemanded,
   TeamMember,
 } from "../assignment";
-import { Availabilities, Planning, PlanningEvent } from "./planning";
+import { Availabilities, Friends, Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 
 type NotYetFulfillingDemandCandidate = Volunteer & {
+  friends: Volunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
@@ -17,6 +18,7 @@ type NotYetFulfillingDemandCandidate = Volunteer & {
 };
 
 export type CandidateFulfillingDemand = Volunteer & {
+  friends: Volunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
@@ -32,11 +34,16 @@ type Agenda = {
   availabilities: IProvidePeriod[];
 };
 
-export class Candidate {
-  private constructor(private readonly candidate: IDefineCandidate) {}
+type RelationShip = {
+  volunteer: Volunteer;
+  friends: Volunteer[];
+};
+
+export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
+  private constructor(private readonly candidate: T) {}
 
   static init(
-    volunteer: Volunteer,
+    { volunteer, friends }: RelationShip,
     { planning, availabilities }: Agenda,
     assignment: Assignment,
   ) {
@@ -48,11 +55,16 @@ export class Candidate {
 
     return new Candidate({
       ...volunteer,
+      friends,
       planning,
       availabilities,
       as,
       assignableTeams,
     });
+  }
+
+  static from<T extends IDefineCandidate>(candidate: T) {
+    return new Candidate<T>(candidate);
   }
 
   private static getAssignableTeams(
@@ -82,14 +94,14 @@ export class Candidate {
     if (!this.candidate.assignableTeams.includes(as)) {
       throw new Error(`${this.name} is not team member of ${as}`);
     }
-    return new Candidate({ ...this.candidate, as });
+    return new Candidate<CandidateFulfillingDemand>({ ...this.candidate, as });
   }
 
   private get name(): string {
     return `${this.candidate.firstname} ${this.candidate.lastname}`;
   }
 
-  get json(): IDefineCandidate {
+  get json(): T {
     return this.candidate;
   }
 }
@@ -113,14 +125,18 @@ export class CandidateFactory {
   constructor(
     private readonly planning: Planning,
     private readonly availabilities: Availabilities,
+    private readonly friends: Friends,
   ) {}
 
   async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
-    const [planning, availabilities] = await Promise.all([
+    const [planning, availabilities, friends] = await Promise.all([
       this.planning.for(volunteer.id),
       this.availabilities.for(volunteer.id),
+      this.friends.for(volunteer.id),
     ]);
 
-    return Candidate.init(volunteer, { planning, availabilities }, assignment);
+    const agenda = { planning, availabilities };
+    const relationShip = { volunteer, friends };
+    return Candidate.init(relationShip, agenda, assignment);
   }
 }

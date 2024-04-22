@@ -15,6 +15,7 @@ const monday10h = new Date("2024-05-13T10:00+02:00");
 const nextMonday18h = new Date("2024-05-20T18:00+02:00");
 const nextTuesday02h = new Date("2024-05-21T02:00+02:00");
 const nextTuesday18h = new Date("2024-05-21T18:00+02:00");
+const nextTuesday20h = new Date("2024-05-21T20:00+02:00");
 const nextWednesday02h = new Date("2024-05-22T02:00+02:00");
 const nextWednesday18h = new Date("2024-05-22T18:00+02:00");
 const nextThursday02h = new Date("2024-05-23T02:00+02:00");
@@ -38,6 +39,11 @@ const friday22hToSaturday00h = Period.init({
 });
 
 const saturday18hTo20h = Period.init({ start: saturday18h, end: saturday20h });
+
+const nextTuesday18hTo20h = Period.init({
+  start: nextTuesday18h,
+  end: nextTuesday20h,
+});
 
 const nextThursday08hTo10h = Period.init({
   start: new Date("2024-05-23T08:00+02:00"),
@@ -197,4 +203,15 @@ export const demonterLesJeuxGonflables: Assignment = {
   name: "Demonter les jeux gonflables",
   demands: [{ team: BENEVOLE_CODE, demand: 1 }],
   assignees: [{ id: luce.volunteer.id }],
+};
+
+export const nettoyerLeQgCatering: Assignment = {
+  start: nextTuesday18hTo20h.start,
+  end: nextTuesday18hTo20h.end,
+  taskId: 7,
+  mobilizationId: nextTuesday18hTo20h.id,
+  assignmentId: nextTuesday18hTo20h.id,
+  name: "Nettoyer le QG Catering",
+  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  assignees: [],
 };

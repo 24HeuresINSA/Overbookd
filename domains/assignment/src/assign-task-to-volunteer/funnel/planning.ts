@@ -15,3 +15,7 @@ export type Planning = {
 export type Availabilities = {
   for(volunteer: Volunteer["id"]): Promise<IProvidePeriod[]>;
 };
+
+export type Friends = {
+  for(volunteer: Volunteer["id"]): Promise<Volunteer[]>;
+};
