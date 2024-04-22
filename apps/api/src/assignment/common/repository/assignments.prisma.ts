@@ -55,6 +55,14 @@ export class PrismaAssignments implements AssignmentRepository {
 
     return toAssignment(assignment, identifier);
   }
+
+  async unassign(
+    assignment: AssignmentIdentifier,
+    assigneeId: number,
+  ): Promise<void> {
+    console.log("unassign", assignment, assigneeId);
+    throw new Error("Method not implemented.");
+  }
 }
 
 function toAssignment(
