@@ -102,37 +102,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-import {
-  AssignmentCandidate,
-  Task,
-  TaskAssignment,
-} from "~/domain/timespan-assignment/timeSpanAssignment";
 import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
-import {
-  AssignableVolunteer,
-  Assignment,
-  AssignmentVolunteer,
-  OneCandidateFulfillsDemand,
-  IDefineCandidate,
-  ReadyToStart,
-  OneCandidateNotFulfillingDemand,
-} from "@overbookd/assignment";
-import { assignments, candidateFactory } from "~/utils/assignment/funnel";
+import { AssignableVolunteer, Assignment } from "@overbookd/assignment";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 
-type AssignmentAndVolunteerSelected =
-  | OneCandidateNotFulfillingDemand
-  | OneCandidateFulfillsDemand;
+type Candidate = AssignableVolunteer & {
+  as?: string;
+};
 
 type AssingmentFunneData = {
   calendarDate: Date;
-  funnel: AssignmentAndVolunteerSelected | null;
-  additionalCandidates: AssignableVolunteer[];
+  additionalCandidates: Candidate[];
   selectedFriendIndex: number;
 };
 
@@ -144,7 +128,7 @@ export default defineComponent({
   },
   props: {
     volunteer: {
-      type: Object as () => AssignmentVolunteer,
+      type: Object as () => AssignableVolunteer,
       required: true,
     },
     assignment: {
@@ -156,25 +140,24 @@ export default defineComponent({
   data: (): AssingmentFunneData => {
     return {
       calendarDate: new Date(),
-      funnel: null,
       additionalCandidates: [],
       selectedFriendIndex: 0,
     };
   },
   computed: {
-    selectedVolunteer(): AssignableVolunteer | null {
+    selectedVolunteer(): Candidate | null {
       return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
     },
-    assignableVolunteers(): AssignableVolunteer[] {
+    assignableVolunteers(): Candidate[] {
       return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
     },
-    lockedCandidates(): AssignableVolunteer[] {
+    lockedCandidates(): Candidate[] {
       if (this.candidates.length === 1) return this.candidates;
       return [
         ...removeItemAtIndex(this.candidates, this.candidates.length - 1),
       ];
     },
-    assignableFriends(): AssignableVolunteer[] {
+    assignableFriends(): Candidate[] {
       // ATTENTION, je crois qu'il y a un problème d'actualisation avec lockedCandidate
       // Quand on add un candidate, ça prend en compte que les amis du 1er
       const candidatesriendsIds = [
@@ -192,30 +175,16 @@ export default defineComponent({
     selectedAssignment(): Assignment | null {
       return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
-    candidates(): AssignableVolunteer[] {
+    candidates(): Candidate[] {
       if (this.selectedVolunteer === null) return [];
       return [this.selectedVolunteer, ...this.additionalCandidates];
-    },
-    taskAssignment(): TaskAssignment {
-      return this.$accessor.assignment.taskAssignment;
     },
     taskTitle(): string {
       const { taskId, name } = this.assignment;
       return `[${taskId}] ${name}`;
     },
-    mainCandidate(): AssignmentCandidate | undefined {
-      return this.taskAssignment.candidates.at(0);
-    },
-    volunteerIds(): string[] {
-      return this.taskAssignment.candidates.map((c) =>
-        c.volunteer.id.toString(),
-      );
-    },
-    currentTask(): Task {
-      return this.taskAssignment.task;
-    },
     candidatesForCalendar(): CalendarUser[] {
-      return this.candidates.map((candidate: AssignableVolunteer) => ({
+      return this.candidates.map((candidate: Candidate) => ({
         id: candidate.id,
         firstname: candidate.firstname,
         lastname: candidate.lastname,
@@ -231,8 +200,7 @@ export default defineComponent({
       return { start, end, name };
     },
     canNotAssign(): boolean {
-      if (!this.funnel) return false;
-      return !(this.funnel instanceof OneCandidateFulfillsDemand);
+      return this.candidates.every((candidate) => !candidate.as);
     },
     canNotAssignMoreVolunteer(): boolean {
       if (!this.selectedAssignment) return true;
@@ -242,20 +210,16 @@ export default defineComponent({
         0,
       );
       const assigneeCount = this.selectedAssignment.assignees.filter(
-        (assignee) => "as" in assignee && assignee.as !== null,
+        (assignee) =>
+          !Object.hasOwn(assignee, "as") ||
+          ("as" in assignee && assignee.as !== null),
       ).length;
       return demands <= this.candidates.length + assigneeCount;
-    },
-    areOtherFriendsAvailable(): boolean {
-      return this.taskAssignment.potentialCandidates.length > 0;
     },
   },
   watch: {
     assignment({ start }: Assignment) {
       this.calendarDate = start;
-    },
-    async volunteer() {
-      this.funnel = await this.initFunnel();
     },
     selectedVolunteer() {
       this.clearData();
@@ -263,18 +227,12 @@ export default defineComponent({
   },
   async mounted() {
     this.calendarDate = this.assignment.start;
-    this.funnel = await this.initFunnel();
   },
   methods: {
     canChangeCandidates(id: string): boolean {
       return this.isLastAddedCandidate(id) && this.assignableFriends.length > 1;
     },
-    initFunnel(): Promise<AssignmentAndVolunteerSelected> {
-      return ReadyToStart.init(candidateFactory(this), assignments(this))
-        .select(this.assignment)
-        .select(this.volunteer);
-    },
-    retrieveVolunteer(id: string): AssignableVolunteer | undefined {
+    retrieveVolunteer(id: string): Candidate | undefined {
       return this.candidates.find((candidate) => candidate.id === +id);
     },
     clearData() {
@@ -285,29 +243,33 @@ export default defineComponent({
       this.clearData();
       this.$emit("close-dialog");
     },
-    getAssignableTeams(candidate?: AssignmentCandidate): string[] {
+    getAssignableTeams(candidate?: Candidate): string[] {
       if (!candidate) return [];
-      const underlyingTeams = getUnderlyingTeams(candidate.volunteer.teams);
-      const teams = [...candidate.volunteer.teams, ...underlyingTeams];
-      return teams.filter((team) =>
+      const underlyingTeams = getUnderlyingTeams(candidate.teams);
+      const teams = [...candidate.teams, ...underlyingTeams];
+      return [];
+      /*return teams.filter((team) =>
         this.taskAssignment.remainingTeamRequest.includes(team),
-      );
+      );*/
     },
-    temporaryAssign(team: string, candidate?: IDefineCandidate) {
-      if (!candidate) return;
-      if (this.funnel instanceof OneCandidateNotFulfillingDemand) {
-        this.funnel.fulfillDemand({ volunteer: candidate.id, team });
-      }
-    },
-    isNotAssignedAs(teamCode: string, candidate?: IDefineCandidate): boolean {
+    isNotAssignedAs(teamCode: string, candidate?: Candidate): boolean {
       if (!candidate) return false;
       return candidate.as !== teamCode;
     },
-    async assign() {
+    assign() {
       if (this.canNotAssign) return;
-      if (!this.funnel) return;
-      if (!(this.funnel instanceof OneCandidateFulfillsDemand)) return;
-      const assignment = await this.funnel.assign();
+
+      const assignment = {
+        assignmentId: this.assignment.assignmentId,
+        mobilizationId: this.assignment.mobilizationId,
+        taskId: this.assignment.taskId,
+      };
+      const volunteers = this.candidates.map(({ id, as }) => ({ id, as }));
+      this.$accessor.assignTaskToVolunteer.assign({
+        assignment,
+        volunteers,
+      } as VolunteersForAssignment);
+
       this.$emit("volunteers-assigned", assignment);
       this.closeDialog();
     },

@@ -4,11 +4,11 @@ import {
   AssignmentIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
+  VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { actionTree, mutationTree } from "typed-vuex";
 import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 import { safeCall } from "~/utils/api/calls";
-import { ExtendedAssignementIdentifier } from "../utils/assignment/assignment-identifier";
 import { HttpStringified } from "@overbookd/http";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { castPeriodWithDate } from "~/utils/http/period";
@@ -86,7 +86,7 @@ export const actions = actionTree(
 
     async selectAssignment(
       { commit },
-      assignmentIdentifier: ExtendedAssignementIdentifier,
+      assignmentIdentifier: AssignmentIdentifier,
     ) {
       const [assignableVolunteersRes, assignmentRes] = await Promise.all([
         safeCall(
@@ -112,7 +112,7 @@ export const actions = actionTree(
 
     async fetchAssignmentDetails(
       { commit },
-      assignmentIdentifier: ExtendedAssignementIdentifier,
+      assignmentIdentifier: AssignmentIdentifier,
     ) {
       const res = await safeCall(
         this,
@@ -122,17 +122,26 @@ export const actions = actionTree(
       commit("SET_ASSIGNMENT_DETAILS", castAssignmentWithDate(res.data));
     },
 
+    async assign(
+      { dispatch },
+      volunteersForAssignment: VolunteersForAssignment,
+    ) {
+      const repository = new AssignmentsRepository(this);
+      await repository.assign(volunteersForAssignment);
+      dispatch("selectAssignment", volunteersForAssignment.assignment);
+    },
+
     async unassign(
       { dispatch },
       {
-        assignmentId,
+        assignmentIdentifier,
         assigneeId,
-      }: { assignmentId: AssignmentIdentifier; assigneeId: number },
+      }: { assignmentIdentifier: AssignmentIdentifier; assigneeId: number },
     ) {
       const repository = new AssignmentsRepository(this);
-      await repository.unassign(assignmentId, assigneeId);
-      dispatch("fetchAssignmentDetails", assignmentId);
-      dispatch("selectTask", assignmentId.taskId);
+      await repository.unassign(assignmentIdentifier, assigneeId);
+      dispatch("fetchAssignmentDetails", assignmentIdentifier);
+      dispatch("selectTask", assignmentIdentifier.taskId);
     },
   },
 );
