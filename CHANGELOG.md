@@ -1,3 +1,16 @@
+## [2.26.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.26.0...v2.26.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* **assignment:** don't count namely demanded volunteers for assignment. [#1785](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1785) ([dc0c637](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dc0c63724740be297632d511161d66b59a27386b))
+* **log:** add salle crl-a location ([8006451](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8006451cf9448d2a8d6c20ea2fd8b7610f141dc9))
+
+
+### Pre-Features
+
+* **assignment:** Implement get assignment details from api [#1786](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1786) ([e25652d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e25652d686505f3027a89b115e6871464858eb44))
+
 ## [2.26.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.25.0...v2.26.0) (2024-04-21)
 
 
