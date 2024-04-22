@@ -18,6 +18,7 @@ export const SALLE_RENE_CHAR = "Salle René Char";
 export const NON_STOCKE = "Non stocké";
 export const QG_ORGA = "QG Orga";
 export const BACKLINE = "Backline";
+export const SALLE_CRLA = "Salle CRL-A Humanités";
 export const LIVRE_PAR_LOGISTIQUE = "Livré par l'équipe logistique";
 export const LIVRE_PAR_COM = "Livré par une com";
 
@@ -42,6 +43,7 @@ export type Drive =
   | typeof NON_STOCKE
   | typeof QG_ORGA
   | typeof BACKLINE
+  | typeof SALLE_CRLA
   | typeof LIVRE_PAR_LOGISTIQUE
   | typeof LIVRE_PAR_COM;
 
@@ -66,6 +68,7 @@ export const drives: Drive[] = [
   NON_STOCKE,
   QG_ORGA,
   BACKLINE,
+  SALLE_CRLA,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
 ];

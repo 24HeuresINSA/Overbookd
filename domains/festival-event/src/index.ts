@@ -35,6 +35,7 @@ export {
   NON_STOCKE,
   QG_ORGA,
   BACKLINE,
+  SALLE_CRLA,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
   drives,
