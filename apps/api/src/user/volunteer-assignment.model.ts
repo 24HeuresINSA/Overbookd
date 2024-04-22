@@ -1,6 +1,6 @@
 import { TaskCategory } from "@prisma/client";
 
-export type DatabaseVolunteerAssignmentStat = {
+export type DatabaseOldVolunteerAssignmentStat = {
   timeSpan: {
     start: Date;
     end: Date;
@@ -9,5 +9,15 @@ export type DatabaseVolunteerAssignmentStat = {
         category: TaskCategory;
       };
     };
+  };
+};
+
+export type DatabaseVolunteerAssignmentStat = {
+  mobilization: {
+    start: Date;
+    end: Date;
+  };
+  festivalTask: {
+    category: TaskCategory;
   };
 };
