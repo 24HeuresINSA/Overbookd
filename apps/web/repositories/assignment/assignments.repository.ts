@@ -22,6 +22,15 @@ export class AssignmentsRepository implements Assignments {
     return castWithDate(res.data);
   }
 
+  async unassign(
+    assignment: AssignmentIdentifier,
+    assigneeId: number,
+  ): Promise<void> {
+    await this.context.$axios.delete(
+      `${AssignmentsRepository.basePath}/${assignment.taskId}/mobilizations/${assignment.mobilizationId}/assignments/${assignment.assignmentId}/assignees/${assigneeId}`,
+    );
+  }
+
   static async findOne(
     context: Context,
     { taskId, mobilizationId, assignmentId }: AssignmentIdentifier,
