@@ -47,6 +47,7 @@
               :key="candidate.id"
               class="candidate-teams"
             >
+              <!--
               <TeamChip
                 v-for="team of candidate.assignableTeams"
                 :key="team"
@@ -59,6 +60,7 @@
                 }"
                 @click="temporaryAssign(team, candidate)"
               ></TeamChip>
+              -->
             </div>
           </div>
           <v-btn
@@ -108,12 +110,14 @@ import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-team
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 import {
+  AssignableVolunteer,
   Assignment,
   AssignmentVolunteer,
   OneCandidateFulfillsDemand,
   IDefineCandidate,
   ReadyToStart,
   OneCandidateNotFulfillingDemand,
+  isTeamMember,
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
 
@@ -124,6 +128,7 @@ type AssignmentAndVolunteerSelected =
 type AssingmentFunneData = {
   calendarDate: Date;
   funnel: AssignmentAndVolunteerSelected | null;
+  additionalCandidates: AssignableVolunteer[];
 };
 
 export default defineComponent({
@@ -148,9 +153,29 @@ export default defineComponent({
     return {
       calendarDate: new Date(),
       funnel: null,
+      additionalCandidates: [],
     };
   },
   computed: {
+    selectedVolunteer(): AssignableVolunteer | null {
+      return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
+    },
+    assignableVolunteers(): AssignableVolunteer[] {
+      return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
+    },
+    assignableFriends(): AssignableVolunteer[] {
+      const friendsIds = this.selectedVolunteer?.assignableFriendsIds ?? [];
+      return this.assignableVolunteers.filter((volunteer) =>
+        friendsIds.includes(volunteer.id),
+      );
+    },
+    selectedAssignment(): Assignment | null {
+      return this.$accessor.assignTaskToVolunteer.selectedAssignment;
+    },
+    candidates(): AssignableVolunteer[] {
+      if (this.selectedVolunteer === null) return [];
+      return [this.selectedVolunteer, ...this.additionalCandidates];
+    },
     taskAssignment(): TaskAssignment {
       return this.$accessor.assignment.taskAssignment;
     },
@@ -203,13 +228,18 @@ export default defineComponent({
       return !(this.funnel instanceof OneCandidateFulfillsDemand);
     },
     canNotAssignMoreVolunteer(): boolean {
-      return !this.taskAssignment.canAssignMoreVolunteer;
+      if (!this.selectedAssignment) return true;
+      if (this.assignableFriends.length === 0) return true;
+      const demands = this.selectedAssignment.demands.reduce(
+        (acc, demand) => acc + demand.demand,
+        0,
+      );
+      const assigneeCount =
+        this.selectedAssignment.assignees.filter(isTeamMember).length;
+      return demands < this.candidates.length + assigneeCount;
     },
     areOtherFriendsAvailable(): boolean {
       return this.taskAssignment.potentialCandidates.length > 0;
-    },
-    candidates(): IDefineCandidate[] {
-      return this.funnel?.candidates ?? [];
     },
   },
   watch: {
@@ -264,7 +294,10 @@ export default defineComponent({
     },
     addCandidate() {
       if (this.canNotAssignMoreVolunteer) return;
-      this.$accessor.assignment.addCandidate();
+      this.additionalCandidates = [
+        ...this.additionalCandidates,
+        this.assignableFriends[0],
+      ];
     },
     previousCandidate() {
       this.$accessor.assignment.previousCandidate();

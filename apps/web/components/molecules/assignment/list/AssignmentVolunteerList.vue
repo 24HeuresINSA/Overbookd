@@ -21,7 +21,6 @@
 import { AssignableVolunteer } from "@overbookd/assignment";
 import Vue from "vue";
 import AssignmentVolunteerResume from "~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue";
-import { Volunteer } from "~/utils/models/assignment.model";
 
 export default Vue.extend({
   name: "AssignmentVolunteerList",
@@ -37,7 +36,7 @@ export default Vue.extend({
     isSelected(id: number): boolean {
       return this.$accessor.assignment.selectedVolunteer?.id === id;
     },
-    selectVolunteer(volunteer: Volunteer): void {
+    selectVolunteer(volunteer: AssignableVolunteer): void {
       if (!volunteer) return;
       this.$emit("select-volunteer", volunteer);
     },

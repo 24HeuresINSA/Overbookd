@@ -36,6 +36,7 @@ import FilterableVolunteerList from "~/components/organisms/assignment/list/Filt
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
 import {
+  AssignableVolunteer,
   Assignment,
   AssignmentSummary,
   AssignmentVolunteer,
@@ -92,7 +93,7 @@ export default defineComponent({
     openAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = true;
     },
-    selectVolunteer(volunteer: AssignmentVolunteer) {
+    selectVolunteer(volunteer: AssignableVolunteer) {
       this.$accessor.assignTaskToVolunteer.selectVolunteer(volunteer);
       this.openFunnelDialog = true;
     },
