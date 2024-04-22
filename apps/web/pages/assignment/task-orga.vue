@@ -37,7 +37,6 @@ import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrg
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
 import {
   Assignment,
-  AssignmentIdentifier,
   AssignmentSummary,
   AssignmentVolunteer,
   MissingAssignmentTask,
@@ -90,8 +89,7 @@ export default defineComponent({
     closeAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = false;
     },
-    openAssignmentDetailsDialog(identifier: AssignmentIdentifier) {
-      console.log(identifier);
+    openAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = true;
     },
     selectVolunteer(volunteer: AssignmentVolunteer) {

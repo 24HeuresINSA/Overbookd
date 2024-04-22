@@ -96,7 +96,8 @@ export default defineComponent({
       this.$emit("select-assignment", assignment);
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
-      this.$emit("display-assignment-details", identifier);
+      this.$accessor.assignTaskToVolunteer.fetchAssignmentDetails(identifier);
+      this.$emit("display-assignment-details");
     },
     mapAssignmentToEvent(
       assignment: AssignmentSummary,
