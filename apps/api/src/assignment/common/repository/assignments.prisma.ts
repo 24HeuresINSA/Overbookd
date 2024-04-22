@@ -15,7 +15,10 @@ import {
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
+  async findOne(
+    identifier: AssignmentIdentifier,
+    withDetails: boolean,
+  ): Promise<Assignment | Assignment<{ withDetails: true }>> {
     const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
       where: {
@@ -28,7 +31,9 @@ export class PrismaAssignments implements AssignmentRepository {
       select: SELECT_ASSIGNMENT,
     });
 
-    return toAssignment(assignment, identifier);
+    return withDetails
+      ? toAssignmentWithDetails(assignment, identifier)
+      : toAssignment(assignment, identifier);
   }
 
   async assign({
@@ -54,8 +59,8 @@ function toAssignment(
     team: teamCode,
     demand: count,
   }));
-  const assignees = assignment.assignees.map(({ userId, teamCode }) => ({
-    id: userId,
+  const assignees = assignment.assignees.map(({ teamCode, personalData }) => ({
+    id: personalData.id,
     as: teamCode,
   }));
   return {
@@ -63,6 +68,32 @@ function toAssignment(
     start: assignment.start,
     end: assignment.end,
     name: assignment.festivalTask.name,
+    demands,
+    assignees,
+  };
+}
+
+function toAssignmentWithDetails(
+  assignment: DatabaseAssignment,
+  identifier: AssignmentIdentifier,
+): Assignment<{ withDetails: true }> {
+  const demands = assignment.mobilization.teams.map(({ teamCode, count }) => ({
+    team: teamCode,
+    demand: count,
+  }));
+  const assignees = assignment.assignees.map(({ teamCode, personalData }) => ({
+    id: personalData.id,
+    firstname: personalData.firstname,
+    lastname: personalData.lastname,
+    friends: [], // TODO: implement assigned friends
+    as: teamCode,
+  }));
+  return {
+    ...identifier,
+    start: assignment.start,
+    end: assignment.end,
+    name: assignment.festivalTask.name,
+    appointment: assignment.festivalTask.appointment.name,
     demands,
     assignees,
   };
