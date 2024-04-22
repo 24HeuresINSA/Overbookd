@@ -92,7 +92,7 @@ export class AssignmentController {
     @Param("assignmentId") assignmentId: string,
     @Query("withDetails", ParseBoolPipe) withDetails?: boolean,
   ): Promise<AssignmentResponseDto | AssignmentWithDetailsResponseDto> {
-    const identifier = { taskId, mobilizationId, assignmentId } 
+    const identifier = { taskId, mobilizationId, assignmentId };
     return this.assignment.findOne(identifier, withDetails ?? false);
   }
 
