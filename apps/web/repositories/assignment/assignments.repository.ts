@@ -25,9 +25,11 @@ export class AssignmentsRepository implements Assignments {
   static async findOne(
     context: Context,
     { taskId, mobilizationId, assignmentId }: AssignmentIdentifier,
+    withDetails: boolean = false,
   ) {
     return context.$axios.get<HttpStringified<Assignment>>(
       `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}`,
+      { params: { withDetails } },
     );
   }
 }

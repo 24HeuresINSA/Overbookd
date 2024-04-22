@@ -19,6 +19,7 @@ type State = {
   selectedAssignment: Assignment | null;
   assignableVolunteers: AssignableVolunteer[];
   selectedVolunteer: AssignmentVolunteer | null;
+  assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
 
 export const state = (): State => ({
@@ -27,6 +28,7 @@ export const state = (): State => ({
   selectedAssignment: null,
   assignableVolunteers: [],
   selectedVolunteer: null,
+  assignmentDetails: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -50,6 +52,9 @@ export const mutations = mutationTree(state, {
   },
   RESET_SELECTED_VOLUNTEER(state) {
     state.selectedVolunteer = null;
+  },
+  SET_ASSIGNMENT_DETAILS(state, assignment: Assignment<{ withDetails: true }>) {
+    state.assignmentDetails = assignment;
   },
 });
 
@@ -104,6 +109,18 @@ export const actions = actionTree(
     async selectVolunteer({ commit }, volunteer: AssignmentVolunteer) {
       commit("SELECT_VOLUNTEER", volunteer);
     },
+
+    async fetchAssignmentDetails(
+      { commit },
+      assignmentIdentifier: ExtendedAssignementIdentifier,
+    ) {
+      const res = await safeCall(
+        this,
+        AssignmentsRepository.findOne(this, assignmentIdentifier, true),
+      );
+      if (!res) return;
+      commit("SET_ASSIGNMENT_DETAILS", castAssignmentWithDate(res.data));
+    },
   },
 );
 
@@ -120,8 +137,8 @@ function castTaskWithAssignmentsSummaryWithDate(
 }
 
 function castAssignmentWithDate(
-  assignment: HttpStringified<Assignment>,
-): Assignment {
+  assignment: HttpStringified<Assignment | Assignment<{ withDetails: true }>>,
+): Assignment | Assignment<{ withDetails: true }> {
   return {
     ...assignment,
     ...castPeriodWithDate(assignment),
