@@ -80,12 +80,17 @@ export default defineComponent({
     },
     endingTimeWindow(timeWindows: PreviewForSecurity["timeWindows"]) {
       const ends = timeWindows.map(({ end }) => end);
+      console.log("Ends:", ends);
       const maxTimestamp = Math.max(...ends.map((end) => end.getTime()));
+      console.log("Max timestamp:", maxTimestamp);
       return new Date(maxTimestamp);
     },
+
     startingTimeWindow(timeWindows: PreviewForSecurity["timeWindows"]) {
       const starts = timeWindows.map(({ start }) => start);
+      console.log("Starts:", starts);
       const minTimestamp = Math.min(...starts.map((end) => end.getTime()));
+      console.log("Min timestamp:", minTimestamp);
       return new Date(minTimestamp);
     },
   },
