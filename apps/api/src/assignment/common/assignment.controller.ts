@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Query,
@@ -90,10 +89,10 @@ export class AssignmentController {
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
-    @Query("withDetails", ParseBoolPipe) withDetails?: boolean,
+    @Query("withDetails") withDetails?: string,
   ): Promise<AssignmentResponseDto | AssignmentWithDetailsResponseDto> {
     const identifier = { taskId, mobilizationId, assignmentId };
-    return this.assignment.findOne(identifier, withDetails ?? false);
+    return this.assignment.findOne(identifier, withDetails === "true");
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

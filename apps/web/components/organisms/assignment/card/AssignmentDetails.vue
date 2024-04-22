@@ -28,7 +28,11 @@
       <div class="required-volunteers">
         <h2>Bénévoles requis sur le créneau</h2>
         <div class="volunteer-list">
-          <v-chip v-for="volunteer in requiredVolunteers" :key="volunteer.id">
+          <v-chip
+            v-for="volunteer in requiredVolunteers"
+            :key="volunteer.id"
+            @click="openCalendarInNewTab(volunteer.id)"
+          >
             <v-icon left>mdi-account</v-icon>
             <span>{{ volunteer.firstname }} {{ volunteer.lastname }}</span>
           </v-chip>
@@ -56,7 +60,13 @@
             ></TeamChip>
           </template>
           <template #item.assignedTeam="{ item }">
-            <div
+            <TeamChip
+              :team="item.as"
+              size="medium"
+              with-name
+              show-hidden
+            ></TeamChip>
+            <!--<div
               v-if="isUpdateAssignedTeamActiveForAssignee(item.id)"
               class="team-update"
             >
@@ -77,7 +87,7 @@
               <v-icon color="green" @click="updateAssignedTeam(item)">
                 mdi-check-circle
               </v-icon>
-            </div>
+            </div>-->
           </template>
           <template #item.friends="{ item }">
             <div class="volunteer-list">
@@ -236,8 +246,8 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     openFtInNewTab() {
-      if (!this.timeSpan) return;
-      const ftId = this.timeSpan.ft.id;
+      if (!this.assignementDetails) return;
+      const ftId = this.assignementDetails.taskId;
       window.open(`/ft/${ftId}`, "_blank");
     },
     openCalendarInNewTab(assigneeId: number) {
