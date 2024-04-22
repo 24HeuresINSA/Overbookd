@@ -18,6 +18,7 @@ export const SALLE_RENE_CHAR = "Salle René Char";
 export const NON_STOCKE = "Non stocké";
 export const QG_ORGA = "QG Orga";
 export const BACKLINE = "Backline";
+export const SALLE_CRLA = "Salle CRL-A Humanités";
 export const LIVRE_PAR_LOGISTIQUE = "Livré par l'équipe logistique";
 export const LIVRE_PAR_COM = "Livré par une com";
 
