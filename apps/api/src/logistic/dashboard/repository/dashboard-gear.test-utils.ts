@@ -9,6 +9,7 @@ import {
   InventoryRecord,
   DatabaseTaskInquiry,
   DatabaseBorrow,
+  DatabasePurchase,
 } from "./dashboard.model";
 
 const friday08hto09h = {
@@ -128,7 +129,7 @@ const databaseBorrowFromFriday08hto09h: DatabaseBorrow = {
   },
 };
 
-const databasePurchaseFromFriday08h = {
+const databasePurchaseFromFriday08h: DatabasePurchase = {
   quantity: 5,
   purchase: {
     id: 1,
