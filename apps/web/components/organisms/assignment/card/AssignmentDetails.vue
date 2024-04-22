@@ -126,10 +126,7 @@ import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-team
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { UpdateAssignedTeam } from "~/utils/models/assignment.model";
-import {
-  TimeSpanAssignee,
-  TimeSpanWithAssignees,
-} from "~/utils/models/ft-time-span.model";
+import { TimeSpanAssignee } from "~/utils/models/ft-time-span.model";
 import { isNumber, isString } from "~/utils/types/check";
 import {
   AssignmentWithDetails,
@@ -152,9 +149,6 @@ export default Vue.extend({
     taskName(): string {
       if (this.assignementDetails === null) return "";
       return `[${this.assignementDetails.taskId}] ${this.assignementDetails.name}`;
-    },
-    timeSpan(): TimeSpanWithAssignees | null {
-      return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
     location(): string {
       if (!this.assignementDetails) return "";
@@ -202,10 +196,7 @@ export default Vue.extend({
         );
     },
     allTimeSpansTeamCodes(): string[] {
-      if (!this.timeSpan) return [];
-      return this.timeSpan.requestedTeams
-        .filter((team) => team.quantity > team.assignmentCount)
-        .map((team) => team.code);
+      return [];
     },
     isUpdateAssignedTeamActive(): boolean {
       return this.selectedAssigneeId !== null;
@@ -235,11 +226,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    unassignVolunteer(assignee: TimeSpanAssignee) {
-      if (!this.timeSpan) return;
-      this.$accessor.assignment.unassignVolunteer({
-        timeSpanId: this.timeSpan.id,
-        assigneeId: assignee.id,
+    unassignVolunteer(teamMember: TeamMemberForDetails) {
+      if (!this.assignementDetails) return;
+      const assignmentId = {
+        assignmentId: this.assignementDetails.assignmentId,
+        taskId: this.assignementDetails.taskId,
+        mobilizationId: this.assignementDetails.mobilizationId,
+      };
+
+      this.$accessor.assignTaskToVolunteer.unassign({
+        assignmentId,
+        assigneeId: teamMember.id,
       });
     },
     closeDialog() {
@@ -300,20 +297,9 @@ export default Vue.extend({
         isString(input.team)
       );
     },
-    updateAssignedTeam(assignee: TimeSpanAssignee) {
-      const updateAssignedTeamForm = {
-        timeSpanId: this.timeSpan?.id,
-        assigneeId: this.selectedAssigneeId,
-        team: this.selectedTeamToAssign,
-      };
-      if (!this.canUpdateAssignedTeam(updateAssignedTeamForm)) return;
-      if (this.selectedTeamToAssign === assignee.assignedTeam) {
-        this.cancelUpdateAssignedTeam();
-        return;
-      }
-      this.$accessor.assignment.updateAssignedTeam(updateAssignedTeamForm);
-      this.cancelUpdateAssignedTeam();
-    },
+    // updateAssignedTeam(assignee: TeamMemberForDetails) {
+    //   //TODO
+    // },
   },
 });
 </script>

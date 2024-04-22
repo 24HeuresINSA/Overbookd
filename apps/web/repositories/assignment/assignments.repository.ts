@@ -27,7 +27,7 @@ export class AssignmentsRepository implements Assignments {
     assigneeId: number,
   ): Promise<void> {
     await this.context.$axios.delete(
-      `${AssignmentsRepository.basePath}/${assignment.taskId}/mobilizations/${assignment.mobilizationId}/assignments/${assignment.assignmentId}/assignees/${assigneeId}`,
+      `${AssignmentsRepository.basePath}/tasks/${assignment.taskId}/mobilizations/${assignment.mobilizationId}/assignments/${assignment.assignmentId}/assignees/${assigneeId}`,
     );
   }
 

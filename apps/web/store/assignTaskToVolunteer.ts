@@ -1,6 +1,7 @@
 import {
   AssignableVolunteer,
   Assignment,
+  AssignmentIdentifier,
   AssignmentVolunteer,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
@@ -120,6 +121,18 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_ASSIGNMENT_DETAILS", castAssignmentWithDate(res.data));
+    },
+
+    async unassign(
+      { dispatch },
+      {
+        assignmentId,
+        assigneeId,
+      }: { assignmentId: AssignmentIdentifier; assigneeId: number },
+    ) {
+      const repository = new AssignmentsRepository(this);
+      await repository.unassign(assignmentId, assigneeId);
+      dispatch("fetchAssignmentDetails", assignmentId);
     },
   },
 );
