@@ -133,6 +133,7 @@ export const actions = actionTree(
       const repository = new AssignmentsRepository(this);
       await repository.unassign(assignmentId, assigneeId);
       dispatch("fetchAssignmentDetails", assignmentId);
+      dispatch("selectTask", assignmentId.taskId);
     },
   },
 );
