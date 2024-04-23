@@ -315,7 +315,7 @@ export const consumableGearWithOneInquiryAndOnePurchase: DatabaseGear = {
   name: "consumable gear with one inquiry and one purchase",
   slug: "consumable-gear-with-one-inquiry-and-one-purchase",
   isConsumable: true,
-  festivalActivityInquiries: [activityInquiryFromFriday08hto09h],
+  festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
   festivalTaskInquiries: [],
   inventoryRecords: [],
   borrows: [],
