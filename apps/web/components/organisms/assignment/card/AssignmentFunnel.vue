@@ -249,6 +249,9 @@ export default defineComponent({
     async volunteer() {
       this.funnel = await this.initFunnel();
     },
+    selectedVolunteer() {
+      this.clearData();
+    },
   },
   async mounted() {
     this.calendarDate = this.assignment.start;
@@ -263,7 +266,12 @@ export default defineComponent({
     retrieveVolunteer(id: string): AssignableVolunteer | undefined {
       return this.candidates.find((candidate) => candidate.id === +id);
     },
+    clearData() {
+      this.additionalCandidates = [];
+      this.selectedFriendIndex = 0;
+    },
     closeDialog() {
+      this.clearData();
       this.$emit("close-dialog");
     },
     getAssignableTeams(candidate?: AssignmentCandidate): string[] {
