@@ -20,6 +20,7 @@ import {
   gererLaCaisse,
   scannerLesBillets,
   demonterLesJeuxGonflables,
+  nettoyerLeQgCatering,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
@@ -52,6 +53,7 @@ describe("Assign volunteers funnel", () => {
     couperDesCarottes,
     gererLaCaisse,
     demonterLesJeuxGonflables,
+    nettoyerLeQgCatering,
   ];
   const candidateFactory = new CandidateFactory(
     planning,
