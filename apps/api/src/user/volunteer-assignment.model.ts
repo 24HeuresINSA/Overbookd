@@ -14,7 +14,5 @@ export type DatabaseOldVolunteerAssignmentStat = {
 };
 
 export type DatabaseVolunteerAssignmentStat = IProvidePeriod & {
-  festivalTask: {
-    category: TaskCategory;
-  };
+  festivalTask: { category: TaskCategory };
 };
