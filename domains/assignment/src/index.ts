@@ -27,6 +27,7 @@ export { isTeamMember } from "./assign-task-to-volunteer/assignment";
 export type {
   Task,
   MissingAssignmentTask,
+  TaskCategorized,
   TaskIdentifier,
   TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/task";

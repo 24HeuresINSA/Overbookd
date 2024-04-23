@@ -39,7 +39,6 @@ import {
   AssignableVolunteer,
   Assignment,
   AssignmentSummary,
-  AssignmentVolunteer,
   MissingAssignmentTask,
 } from "@overbookd/assignment";
 
@@ -69,7 +68,7 @@ export default defineComponent({
     tasks(): MissingAssignmentTask[] {
       return this.$accessor.assignTaskToVolunteer.tasks;
     },
-    volunteer(): AssignmentVolunteer | null {
+    volunteer(): AssignableVolunteer | null {
       return this.$accessor.assignTaskToVolunteer.selectedVolunteer;
     },
     assignment(): Assignment | null {

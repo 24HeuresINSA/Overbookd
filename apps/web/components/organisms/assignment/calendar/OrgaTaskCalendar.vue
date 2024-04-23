@@ -20,7 +20,9 @@
       <div
         class="event underline-on-hover"
         @mouseup.middle="openFtInNewTab(event.ft.id)"
-        @contextmenu.prevent="selectTimeSpanToDisplayDetails(event.timeSpanId)"
+        @contextmenu.prevent="
+          selectAssignmentToDisplayDetails(event.timeSpanId)
+        "
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
       </div>
@@ -29,33 +31,33 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { DateString, Hour, Period } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
-import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarEvent } from "~/utils/models/calendar.model";
-import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
-import { PlanningEvent } from "@overbookd/assignment";
+import {
+  AssignmentIdentifier,
+  PlanningEvent,
+  VolunteerWithAssignmentDuration,
+} from "@overbookd/assignment";
+import { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
+import { AssignmentSummaryWithTask } from "@overbookd/http";
 
-type CalendarItemWithTask = CalendarEvent & {
-  timeSpanId?: number;
-  task: { id: number; name: string };
-};
-
-export default Vue.extend({
+export default defineComponent({
   name: "OrgaTaskCalendar",
   components: { OverCalendar, AssignmentUserStats },
+  emits: ["display-assignment-details"],
   data: () => ({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedVolunteer(): Volunteer | null {
-      return this.$accessor.assignment.selectedVolunteer;
+    selectedVolunteer(): VolunteerWithAssignmentDuration | null {
+      return this.$accessor.assignVolunteerToTask.selectedVolunteer;
     },
     volunteerName(): string {
       if (!this.selectedVolunteer) return "";
@@ -67,29 +69,32 @@ export default Vue.extend({
     availabilities(): Period[] {
       return this.$accessor.volunteerAvailability.availabilities.list;
     },
-    hoverTimeSpan(): AvailableTimeSpan | null {
-      return this.$accessor.assignment.hoverTimeSpan;
+    hoverAssignment(): AssignmentSummaryWithTask | null {
+      return this.$accessor.assignVolunteerToTask.hoverAssignment;
     },
-    assignedTasks(): CalendarItemWithTask[] {
+    assignedTasks(): CalendarEvent[] {
       const tasks = [...this.$accessor.user.selectedUserAssignments];
-      const timeSpans = this.hoverTimeSpan
-        ? [this.formatTimeSpanForCalendar(this.hoverTimeSpan)]
+      const assignments = this.hoverAssignment
+        ? [this.formatAssignmentForCalendar(this.hoverAssignment)]
         : [];
       return [
         ...tasks.map((task) => this.formatTaskForCalendar(task)),
-        ...timeSpans,
+        ...assignments,
       ];
     },
     hourToScrollTo(): number | undefined {
-      return this.hoverTimeSpan?.start.getHours();
+      return this.hoverAssignment?.start.getHours();
     },
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
   },
   watch: {
-    hoverTimeSpan() {
-      this.calendarMarker = this.hoverTimeSpan?.start || this.manifDate;
+    hoverAssignment() {
+      this.calendarMarker = this.hoverAssignment?.start || this.manifDate;
+    },
+    async selectedVolunteer(volunteer: VolunteerWithAssignmentDuration | null) {
+      if (volunteer) await this.refreshVolunteerData(volunteer.id);
     },
   },
   async mounted() {
@@ -97,45 +102,45 @@ export default Vue.extend({
     this.calendarMarker = this.manifDate;
   },
   methods: {
+    async refreshVolunteerData(volunteerId: number) {
+      await Promise.all([
+        this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
+          volunteerId,
+        ),
+        this.$accessor.user.getVolunteerAssignments(volunteerId),
+      ]);
+    },
     isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
-    selectTimeSpanToDisplayDetails(timeSpanId?: number) {
-      if (!timeSpanId) {
-        return this.$accessor.notif.pushNotification({
-          message: "La FT n'est pas prête à être affectée",
-        });
-      }
-      this.$emit("display-time-span-details", timeSpanId);
+    selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
+      this.$accessor.assignTaskToVolunteer.fetchAssignmentDetails(identifier);
+      this.$emit("display-assignment-details");
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
-    formatTimeSpanForCalendar({
-      ft,
-      start,
-      end,
-    }: AvailableTimeSpan): CalendarItemWithTask {
+    formatAssignmentForCalendar(
+      assignment: AssignmentSummaryWithTask,
+    ): CalendarEventWithIdentifier {
       return {
-        start,
-        end,
-        name: ft.name,
+        ...assignment,
         timed: true,
-        task: ft,
+        identifier: {
+          assignmentId: assignment.assignmentId,
+          mobilizationId: assignment.mobilizationId,
+          taskId: assignment.taskId,
+        },
       };
     },
-    formatTaskForCalendar({
-      task,
-      start,
-      end,
-    }: PlanningEvent): CalendarItemWithTask {
+    formatTaskForCalendar({ start, end, task }: PlanningEvent): CalendarEvent {
       return {
         start,
         end,
-        name: task.name,
+        name: `[${task.id}] ${task.name}`,
+        link: `/ft/${task.id}`,
         color: getColorByStatus(task.status),
         timed: true,
-        task,
       };
     },
   },

@@ -6,17 +6,7 @@ import {
 import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { AssignmentIdentifierResponseDto } from "../../common/dto/assignment-identifier.response.dto";
-
-class AssignmentTeamDto implements AssignmentTeam {
-  @ApiProperty({ type: String })
-  team: string;
-
-  @ApiProperty({ type: Number })
-  demand: number;
-
-  @ApiProperty({ type: Number })
-  assigned: number;
-}
+import { AssignmentTeamResponseDto } from "../../common/dto/assignment-team.response.dto";
 
 class AssignmentSummaryResponseDto
   extends AssignmentIdentifierResponseDto
@@ -28,7 +18,7 @@ class AssignmentSummaryResponseDto
   @ApiProperty({ type: Date })
   end: AssignmentSummary["end"];
 
-  @ApiProperty({ type: AssignmentTeamDto, isArray: true })
+  @ApiProperty({ type: AssignmentTeamResponseDto, isArray: true })
   teams: AssignmentTeam[];
 }
 
