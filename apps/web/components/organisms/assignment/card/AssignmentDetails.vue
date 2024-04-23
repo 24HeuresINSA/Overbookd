@@ -50,7 +50,7 @@
           disable-pagination
           hide-default-footer
         >
-          <template #item.volunteer="{ item }">
+          <template #item.firstname="{ item }">
             {{ item.firstname }} {{ item.lastname }}
             <TeamChip
               v-for="team in item.teams"
@@ -204,9 +204,8 @@ export default Vue.extend({
     headers(): Header[] {
       const volunteer = {
         text: "Bénévole",
-        value: "volunteer",
+        value: "firstname",
         width: "300px",
-        sortable: false,
       };
       const assignedTeam = {
         text: "Affecté en tant que",
