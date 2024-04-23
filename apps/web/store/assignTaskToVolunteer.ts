@@ -3,6 +3,7 @@ import {
   Assignment,
   AssignmentIdentifier,
   MissingAssignmentTask,
+  PlanningEvent,
   TaskWithAssignmentsSummary,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
@@ -12,6 +13,9 @@ import { safeCall } from "~/utils/api/calls";
 import { HttpStringified } from "@overbookd/http";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { castPeriodWithDate } from "~/utils/http/period";
+import { PlanningRepository } from "~/repositories/assignment/planning.repository";
+import { IProvidePeriod } from "@overbookd/period";
+import { AvailabilitiesRepository } from "~/repositories/assignment/availabilities.repository";
 
 type State = {
   tasks: MissingAssignmentTask[];
@@ -142,6 +146,20 @@ export const actions = actionTree(
       await repository.unassign(assignmentIdentifier, assigneeId);
       dispatch("fetchAssignmentDetails", assignmentIdentifier);
       dispatch("selectTask", assignmentIdentifier.taskId);
+    },
+
+    async getPlanningEvents(_, volunteerId: number): Promise<PlanningEvent[]> {
+      const repository = new PlanningRepository(this);
+      return repository.for(volunteerId);
+    },
+
+    async getAvailabilities(_, volunteerId: number): Promise<IProvidePeriod[]> {
+      const repository = new AvailabilitiesRepository(this);
+      const availabilities = await repository.for(volunteerId);
+      return availabilities.map(({ start, end }) => ({
+        start: new Date(start),
+        end: new Date(end),
+      }));
     },
   },
 );

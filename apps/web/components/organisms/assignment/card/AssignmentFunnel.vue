@@ -100,22 +100,36 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { CalendarPlanningEvent } from "~/domain/common/planning-events";
+import {
+  CalendarPlanningEvent,
+  convertAssignmentPlanningEventForCalendar,
+} from "~/domain/common/planning-events";
 import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
-import { AssignableVolunteer, Assignment } from "@overbookd/assignment";
+import {
+  AssignableVolunteer,
+  Assignment,
+  PlanningEvent,
+  VolunteersForAssignment,
+} from "@overbookd/assignment";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import { IProvidePeriod } from "@overbookd/period";
 
 type Candidate = AssignableVolunteer & {
   as?: string;
 };
 
-type AssingmentFunneData = {
+export type CandidateForCalendar = Candidate & {
+  availabilities: IProvidePeriod[];
+  events: PlanningEvent[];
+};
+
+type AssingmentFunnelData = {
   calendarDate: Date;
-  candidates: Candidate[];
+  candidates: CandidateForCalendar[];
   selectedFriendIndex: number;
 };
 
@@ -137,7 +151,7 @@ export default defineComponent({
     },
   },
   emits: ["close-dialog", "volunteers-assigned"],
-  data: (): AssingmentFunneData => {
+  data: (): AssingmentFunnelData => {
     return {
       calendarDate: new Date(),
       candidates: [],
@@ -178,16 +192,20 @@ export default defineComponent({
       return `[${taskId}] ${name}`;
     },
     candidatesForCalendar(): CalendarUser[] {
-      return this.candidates.map((candidate: Candidate) => ({
+      return this.candidates.map((candidate: CandidateForCalendar) => ({
         id: candidate.id,
         firstname: candidate.firstname,
         lastname: candidate.lastname,
         teams: candidate.teams,
-        availabilities: [],
+        availabilities: candidate.availabilities,
       }));
     },
     candidatesPlanningEvents(): CalendarPlanningEvent[] {
-      return [];
+      return this.candidates.flatMap(({ events, id }: CandidateForCalendar) =>
+        events.map((event) =>
+          convertAssignmentPlanningEventForCalendar(event, id),
+        ),
+      );
     },
     assignmentAsEvent(): CalendarPlanningEvent {
       const { start, end, name } = this.assignment;
@@ -225,14 +243,35 @@ export default defineComponent({
     this.initCandidates();
   },
   methods: {
-    initCandidates() {
+    async initCandidates() {
       if (!this.selectedVolunteer) return;
-      this.candidates = [this.selectedVolunteer];
+
+      const newCandidate = await this.convertCandidateForCalendar(
+        this.selectedVolunteer,
+      );
+      this.candidates = [newCandidate];
 
       const assignableTeams = this.getAssignableTeams(this.selectedVolunteer);
       if (assignableTeams.length === 1) {
         this.linkCandidateTeam(assignableTeams[0], this.candidates[0]);
       }
+    },
+    async convertCandidateForCalendar(
+      candidate: Candidate,
+    ): Promise<CandidateForCalendar> {
+      const events =
+        await this.$accessor.assignTaskToVolunteer.getPlanningEvents(
+          candidate.id,
+        );
+      const availabilities =
+        await this.$accessor.assignTaskToVolunteer.getAvailabilities(
+          candidate.id,
+        );
+      return {
+        ...candidate,
+        events,
+        availabilities,
+      };
     },
     canChangeCandidates(id: string): boolean {
       return this.isLastAddedCandidate(id) && this.assignableFriends.length > 1;
@@ -289,33 +328,49 @@ export default defineComponent({
       this.$emit("volunteers-assigned", assignment);
       this.closeDialog();
     },
-    addCandidate() {
+    async addCandidate() {
       if (this.canNotAssignMoreVolunteer) return;
       this.selectedFriendIndex = 0;
-      this.candidates = [
-        ...this.candidates,
+
+      const newCandidate = await this.convertCandidateForCalendar(
         this.assignableFriends[this.selectedFriendIndex],
-      ];
+      );
+      this.candidates = [...this.candidates, newCandidate];
+
+      const assignableTeams = this.getAssignableTeams(
+        this.assignableFriends[this.selectedFriendIndex],
+      );
+      if (assignableTeams.length === 1) {
+        this.linkCandidateTeam(assignableTeams[0], this.candidates[0]);
+      }
     },
-    previousCandidate() {
+    async previousCandidate() {
       this.selectedFriendIndex =
         (this.selectedFriendIndex - 1 + this.assignableFriends.length) %
         this.assignableFriends.length;
 
-      this.candidates = updateItemToList(
-        this.candidates,
-        this.candidates.length - 1,
+      const newCandidate = await this.convertCandidateForCalendar(
         this.assignableFriends[this.selectedFriendIndex],
       );
-    },
-    nextCandidate() {
-      this.selectedFriendIndex =
-        (this.selectedFriendIndex + 1) % this.assignableFriends.length;
 
       this.candidates = updateItemToList(
         this.candidates,
         this.candidates.length - 1,
+        newCandidate,
+      );
+    },
+    async nextCandidate() {
+      this.selectedFriendIndex =
+        (this.selectedFriendIndex + 1) % this.assignableFriends.length;
+
+      const newCandidate = await this.convertCandidateForCalendar(
         this.assignableFriends[this.selectedFriendIndex],
+      );
+
+      this.candidates = updateItemToList(
+        this.candidates,
+        this.candidates.length - 1,
+        newCandidate,
       );
     },
     isLastAddedCandidate(volunteerId: string): boolean {
