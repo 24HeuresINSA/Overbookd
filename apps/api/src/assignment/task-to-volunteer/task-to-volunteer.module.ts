@@ -4,7 +4,7 @@ import { AssignTaskToVolunteer } from "@overbookd/assignment";
 import { PrismaService } from "../../prisma.service";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.prisma";
-import { PrismaTasks } from "../common/repository/tasks.prisma";
+import { PrismaTasks } from "./repository/tasks.prisma";
 
 @Module({
   providers: [

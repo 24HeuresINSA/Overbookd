@@ -1,7 +1,7 @@
 import { Categorize } from "@overbookd/festival-event";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/period";
-import { IS_NOT_DELETED } from "./common.query";
+import { IS_NOT_DELETED } from "../../common/repository/common.query";
 
 const NOT_READY_TO_ASSIGN = {
   status: { not: READY_TO_ASSIGN },
