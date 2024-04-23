@@ -341,7 +341,7 @@ export default defineComponent({
         this.assignableFriends[this.selectedFriendIndex],
       );
       if (assignableTeams.length === 1) {
-        this.linkCandidateTeam(assignableTeams[0], this.candidates[0]);
+        this.linkCandidateTeam(assignableTeams[0], newCandidate);
       }
     },
     async previousCandidate() {
@@ -358,6 +358,13 @@ export default defineComponent({
         this.candidates.length - 1,
         newCandidate,
       );
+
+      const assignableTeams = this.getAssignableTeams(
+        this.assignableFriends[this.selectedFriendIndex],
+      );
+      if (assignableTeams.length === 1) {
+        this.linkCandidateTeam(assignableTeams[0], newCandidate);
+      }
     },
     async nextCandidate() {
       this.selectedFriendIndex =
@@ -372,6 +379,13 @@ export default defineComponent({
         this.candidates.length - 1,
         newCandidate,
       );
+
+      const assignableTeams = this.getAssignableTeams(
+        this.assignableFriends[this.selectedFriendIndex],
+      );
+      if (assignableTeams.length === 1) {
+        this.linkCandidateTeam(assignableTeams[0], newCandidate);
+      }
     },
     isLastAddedCandidate(volunteerId: string): boolean {
       if (this.candidatesForCalendar.length < 2) return false;
