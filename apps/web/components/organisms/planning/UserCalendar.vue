@@ -11,7 +11,7 @@
           v-for="team in user?.teams"
           :key="team"
           :team="team"
-          :with-name="true"
+          :with-name="isDesktop()"
           class="mr-2"
         ></TeamChip>
       </div>
@@ -42,6 +42,7 @@ import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabiliti
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { PlanningTask } from "@overbookd/http";
 import { PlanningEvent } from "@overbookd/assignment";
+import { isDesktop } from "~/utils/device/device.utils";
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -97,7 +98,7 @@ export default Vue.extend({
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER);
+      return this.$accessor.user.can(AFFECT_VOLUNTEER) && this.isDesktop();
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -122,6 +123,7 @@ export default Vue.extend({
     document.title = formatUsername(this.user);
   },
   methods: {
+    isDesktop,
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
