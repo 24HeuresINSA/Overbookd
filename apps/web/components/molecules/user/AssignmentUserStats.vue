@@ -39,7 +39,12 @@ export default Vue.extend({
   },
   computed: {
     sortedStats(): VolunteerAssignmentStat[] {
-      return [...this.stats].sort((a, b) => {
+      const stats = [...this.stats];
+      for (const category of displayableCategories) {
+        if (!stats.find((stat) => stat.category === category))
+          stats.push({ category, duration: 0 });
+      }
+      return stats.sort((a, b) => {
         const aIndex = displayableCategories.indexOf(a.category ?? AUCUNE);
         const bIndex = displayableCategories.indexOf(b.category ?? AUCUNE);
         return aIndex - bIndex;
