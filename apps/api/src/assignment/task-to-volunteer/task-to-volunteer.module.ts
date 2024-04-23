@@ -9,14 +9,14 @@ import { PrismaTasks } from "./repository/tasks.prisma";
 @Module({
   providers: [
     {
-      provide: PrismaAssignableVolunteers,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaAssignableVolunteers(prisma),
+      provide: PrismaTasks,
+      useFactory: (prisma: PrismaService) => new PrismaTasks(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaTasks,
-      useFactory: (prisma: PrismaService) => new PrismaTasks(prisma),
+      provide: PrismaAssignableVolunteers,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaAssignableVolunteers(prisma),
       inject: [PrismaService],
     },
     {
