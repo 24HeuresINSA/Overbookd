@@ -24,7 +24,7 @@ abstract class InactiveFunnel implements IActAsFunnel {
   revokeLastCandidate(): IActAsFunnel {
     return this;
   }
-  canSelectLastCandidate: boolean = false;
+  canChangeLastCandidate: boolean = false;
   previousCandidate(): Promise<IActAsFunnel> {
     return Promise.resolve(this);
   }

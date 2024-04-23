@@ -1,18 +1,24 @@
 import { Assignment, TeamDemanded } from "../assignment";
 import {
-  Candidate, CandidateFulfillingDemand,
+  Candidate,
+  CandidateFulfillingDemand,
   IDefineCandidate,
-  isFulfillingDemand
+  isFulfillingDemand,
 } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { FunnelRepositories, IActAsFunnel, FulfillDemand } from "./funnel";
+import {
+  FunnelRepositories,
+  IActAsFunnel,
+  FulfillDemand,
+  IStartupFunnel,
+} from "./funnel";
 
-export abstract class CommonFunnel {
+export abstract class CommonFunnel implements IActAsFunnel {
   protected constructor(
     protected readonly _candidates: Candidate[],
     protected readonly repositories: FunnelRepositories,
-    protected readonly assignment: Assignment
-  ) { }
+    protected readonly assignment: Assignment,
+  ) {}
 
   get candidates(): IDefineCandidate[] {
     return this._candidates.map(({ json }) => json);
@@ -22,7 +28,7 @@ export abstract class CommonFunnel {
     return areEveryCandidateFulfillingDemand(this._candidates);
   }
 
-  abstract assign(): Promise<IActAsFunnel>;
+  abstract assign(): Promise<IStartupFunnel>;
 
   get canFulfillMoreRemainingDemands(): boolean {
     const { demands, assignees } = this.assignment;
@@ -71,25 +77,31 @@ export abstract class CommonFunnel {
 
   abstract revokeLastCandidate(): IActAsFunnel;
 
-  private get otherCandidatesThanTheLastOne(): Candidate[] {
+  protected get otherCandidatesThanTheLastOne(): Candidate[] {
     return this._candidates.slice(0, -1);
   }
 
-  get canSelectLastCandidate(): boolean {
-    return this.hasAssignableFriends(this.otherCandidatesThanTheLastOne);
+  get canChangeLastCandidate(): boolean {
+    const selectableFriends = this.assignableFriendsFrom(
+      this.otherCandidatesThanTheLastOne,
+    );
+    return selectableFriends.length > 1;
   }
 
   abstract previousCandidate(): Promise<IActAsFunnel>;
   abstract nextCandidate(): Promise<IActAsFunnel>;
 }
+
 function sumDemands(demands: TeamDemanded[]) {
   return demands.reduce((sum, { demand: count }) => sum + count, 0);
 }
+
 function isAssignable(assignment: Assignment, volunteer: Volunteer) {
   return Candidate.getAssignableTeams(assignment, volunteer.teams).length > 0;
 }
+
 export function areEveryCandidateFulfillingDemand(
-  candidates: Candidate[]
+  candidates: Candidate[],
 ): candidates is Candidate<CandidateFulfillingDemand>[] {
   return candidates.every((candidate) => isFulfillingDemand(candidate.json));
 }

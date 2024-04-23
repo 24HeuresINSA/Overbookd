@@ -25,7 +25,7 @@ import { InMemoryFriends } from "./friends.inmemory";
 import { IActAsFunnel } from "./funnel";
 
 describe("Assign volunteers funnel", () => {
-  const planning = new InMemoryPlanning(
+  const inMemoryPlanning = new InMemoryPlanning(
     new Map([
       [noel.volunteer.id, noel.planning],
       [lea.volunteer.id, lea.planning],
@@ -35,7 +35,7 @@ describe("Assign volunteers funnel", () => {
       [nathan.volunteer.id, nathan.planning],
     ]),
   );
-  const availabilities = new InMemoryAvailabilities(
+  const inMemoryAvailabilities = new InMemoryAvailabilities(
     new Map([
       [noel.volunteer.id, noel.availabilities],
       [lea.volunteer.id, lea.availabilities],
@@ -54,8 +54,8 @@ describe("Assign volunteers funnel", () => {
     nettoyerLeQgCatering,
   ];
   const candidateFactory = new CandidateFactory(
-    planning,
-    availabilities,
+    inMemoryPlanning,
+    inMemoryAvailabilities,
     friends,
   );
   describe("when assignment has only one team member needs remaining", () => {
@@ -72,6 +72,18 @@ describe("Assign volunteers funnel", () => {
         let assignments: InMemoryAssignments;
         beforeAll(async () => {
           assignments = new InMemoryAssignments(initialAssignments);
+          const friends = new InMemoryFriends(
+            new Map([
+              [noel.volunteer.id, [lea.volunteer, ontaine.volunteer]],
+              [lea.volunteer.id, [noel.volunteer, ontaine.volunteer]],
+              [ontaine.volunteer.id, [lea.volunteer, noel.volunteer]],
+            ]),
+          );
+          const candidateFactory = new CandidateFactory(
+            inMemoryPlanning,
+            inMemoryAvailabilities,
+            friends,
+          );
           const funnel = WaitingForVolunteer.init(
             candidateFactory,
             assignments,
@@ -82,6 +94,11 @@ describe("Assign volunteers funnel", () => {
         it("should expose him as a candidate", () => {
           expect(everyCandidateFulfillsDemand.candidates).toMatchObject(
             candidates,
+          );
+        });
+        it("should indicate it can't select another candidate", () => {
+          expect(everyCandidateFulfillsDemand.canChangeLastCandidate).toBe(
+            false,
           );
         });
         it("should select benevole as team assignment", () => {
@@ -290,16 +307,20 @@ describe("Assign volunteers funnel", () => {
       3 benevoles are demanded for Nettoyer le QG catering
     `, () => {
       let funnel: IActAsFunnel;
+      let assignments: InMemoryAssignments;
       beforeAll(async () => {
         const friends = new InMemoryFriends(
-          new Map([[ontaine.volunteer.id, [tatouin.volunteer]]]),
+          new Map([
+            [ontaine.volunteer.id, [tatouin.volunteer]],
+            [tatouin.volunteer.id, [ontaine.volunteer]],
+          ]),
         );
         const candidateFactory = new CandidateFactory(
-          planning,
-          availabilities,
+          inMemoryPlanning,
+          inMemoryAvailabilities,
           friends,
         );
-        const assignments = new InMemoryAssignments(initialAssignments);
+        assignments = new InMemoryAssignments(initialAssignments);
         funnel = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
@@ -310,9 +331,145 @@ describe("Assign volunteers funnel", () => {
         expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
       });
       describe("when adding a candidate", () => {
+        let multipleCandidate: IActAsFunnel;
+        beforeAll(async () => {
+          multipleCandidate = await funnel.addCandidate();
+        });
         it("should add tatouin", async () => {
-          const multipleCandidate = await funnel.addCandidate();
           expect(multipleCandidate.candidates).toHaveLength(2);
+          expect(multipleCandidate.candidates.at(1)).toMatchObject(
+            tatouin.volunteer,
+          );
+        });
+        it("should indicate it can't fulfill more demands (cause there is no assignable friend for fulfilling it", () => {
+          expect(multipleCandidate.canFulfillMoreRemainingDemands).toBe(false);
+        });
+        it("should indicate it can't select another candidate", () => {
+          expect(multipleCandidate.canChangeLastCandidate).toBe(false);
+        });
+        describe("when assigning both ontain and tatouin", () => {
+          it("should save them as assignees for the task", async () => {
+            const expectedAssignees = [
+              ...nettoyerLeQgCatering.assignees,
+              { id: ontaine.volunteer.id, as: BENEVOLE_CODE },
+              { id: tatouin.volunteer.id, as: BENEVOLE_CODE },
+            ];
+            await multipleCandidate.assign();
+
+            expect(assignments.all).toContainEqual({
+              ...nettoyerLeQgCatering,
+              assignees: expectedAssignees,
+            });
+          });
+        });
+      });
+    });
+    describe(`
+    Given:
+      Ontain is benevole and friend with Tatouin and Lea,
+      Tatouin is benevole and has no more friends,
+      Lea is benevole and friend with Noel
+      All of them are available during nettoyer le QG catering,
+      3 benevoles are demanded for Nettoyer le QG catering
+    `, () => {
+      let funnel: IActAsFunnel;
+      let assignments: InMemoryAssignments;
+      beforeAll(async () => {
+        const friends = new InMemoryFriends(
+          new Map([
+            [ontaine.volunteer.id, [tatouin.volunteer, lea.volunteer]],
+            [tatouin.volunteer.id, [ontaine.volunteer]],
+            [lea.volunteer.id, [noel.volunteer, ontaine.volunteer]],
+            [noel.volunteer.id, [lea.volunteer]],
+          ]),
+        );
+        const candidateFactory = new CandidateFactory(
+          inMemoryPlanning,
+          inMemoryAvailabilities,
+          friends,
+        );
+        assignments = new InMemoryAssignments(initialAssignments);
+        funnel = await WaitingForVolunteer.init(
+          candidateFactory,
+          assignments,
+          nettoyerLeQgCatering,
+        ).select(ontaine.volunteer);
+      });
+      it("should indicate it can fulfill more demands", () => {
+        expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+      });
+      describe("when adding a candidate", () => {
+        let multipleCandidate: IActAsFunnel;
+        beforeAll(async () => {
+          multipleCandidate = await funnel.addCandidate();
+        });
+        it("should add tatouin", async () => {
+          expect(multipleCandidate.candidates).toHaveLength(2);
+          expect(multipleCandidate.candidates.at(1)).toMatchObject(
+            tatouin.volunteer,
+          );
+        });
+        it("should indicate it can still fulfill more demands", () => {
+          expect(multipleCandidate.canFulfillMoreRemainingDemands).toBe(true);
+        });
+        describe("when adding a new candidate", () => {
+          let evenMoreCandidate: IActAsFunnel;
+          beforeAll(async () => {
+            evenMoreCandidate = await multipleCandidate.addCandidate();
+          });
+          it("should add lea", () => {
+            expect(evenMoreCandidate.candidates).toHaveLength(3);
+            expect(evenMoreCandidate.candidates.at(2)).toMatchObject(
+              lea.volunteer,
+            );
+          });
+          describe("when revoking last candidate", () => {
+            let revokingLea: IActAsFunnel;
+            beforeAll(async () => {
+              revokingLea = evenMoreCandidate.revokeLastCandidate();
+            });
+            it("should remove lea from candidate", () => {
+              expect(revokingLea.candidates).not.toContain(lea.volunteer);
+            });
+            it("should retrieve tatouin as latest candidate", () => {
+              expect(revokingLea.candidates).toHaveLength(2);
+              expect(revokingLea.candidates.at(1)).toMatchObject(
+                tatouin.volunteer,
+              );
+            });
+          });
+        });
+        it("should indicate it can select another candidate", () => {
+          expect(multipleCandidate.canChangeLastCandidate).toBe(true);
+        });
+        describe("when selecting the next candidate", () => {
+          let leaAsSecondCandidate: IActAsFunnel;
+          beforeAll(async () => {
+            leaAsSecondCandidate = await multipleCandidate.nextCandidate();
+          });
+          it("should select lea", () => {
+            expect(leaAsSecondCandidate.candidates).toHaveLength(2);
+            expect(leaAsSecondCandidate.candidates.at(1)).toMatchObject(
+              lea.volunteer,
+            );
+          });
+          it("should indicate it can still fulfill more demands", () => {
+            expect(leaAsSecondCandidate.canFulfillMoreRemainingDemands).toBe(
+              true,
+            );
+          });
+        });
+        describe("when selecting the next candidate", () => {
+          let leaAsSecondCandidate: IActAsFunnel;
+          beforeAll(async () => {
+            leaAsSecondCandidate = await multipleCandidate.previousCandidate();
+          });
+          it("should select lea", () => {
+            expect(leaAsSecondCandidate.candidates).toHaveLength(2);
+            expect(leaAsSecondCandidate.candidates.at(1)).toMatchObject(
+              lea.volunteer,
+            );
+          });
         });
       });
     });

@@ -10,7 +10,7 @@ export type FulfillDemand = {
   team: string;
 };
 
-type IStartupFunnel = {
+export type IStartupFunnel = {
   select(assignment: Assignment): {
     select(volunteer: Volunteer): Promise<IActAsFunnel>;
   };
@@ -25,7 +25,7 @@ export type IActAsFunnel = {
   fulfillDemand(volunteer: FulfillDemand): IActAsFunnel;
   canRevokeLastCandidate: boolean;
   revokeLastCandidate(): IActAsFunnel;
-  canSelectLastCandidate: boolean;
+  canChangeLastCandidate: boolean;
   previousCandidate(): Promise<IActAsFunnel>;
   nextCandidate(): Promise<IActAsFunnel>;
 };
