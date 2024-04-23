@@ -1,7 +1,7 @@
 <template>
   <div class="user-stats">
     <div v-for="stat in sortedStats" :key="stat.category" class="stat">
-      <v-tooltip top>
+      <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <p class="stat__duration" v-bind="attrs" v-on="on">
             {{ getDisplayedStat(stat) }}
