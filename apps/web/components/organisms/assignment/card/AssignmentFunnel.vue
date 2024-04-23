@@ -270,7 +270,7 @@ export default defineComponent({
       if (this.candidatesForCalendar.length < 2) return false;
       return (
         this.candidatesForCalendar[this.candidatesForCalendar.length - 1].id ===
-        +id
+          +id && this.assignableFriends.length > 1
       );
     },
     initFunnel(): Promise<AssignmentAndVolunteerSelected> {
