@@ -115,7 +115,7 @@ import {
   OneCandidateNotFulfillingDemand,
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
-import { updateItemToList } from "@overbookd/list";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 
 type AssignmentAndVolunteerSelected =
   | OneCandidateNotFulfillingDemand
@@ -160,10 +160,25 @@ export default defineComponent({
     assignableVolunteers(): AssignableVolunteer[] {
       return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
     },
+    lockedCandidates(): AssignableVolunteer[] {
+      if (this.candidates.length === 1) return this.candidates;
+      return [
+        ...removeItemAtIndex(this.candidates, this.candidates.length - 1),
+      ];
+    },
     assignableFriends(): AssignableVolunteer[] {
-      const friendsIds = this.selectedVolunteer?.assignableFriendsIds ?? [];
+      // ATTENTION, je crois qu'il y a un problème d'actualisation avec lockedCandidate
+      // Quand on add un candidate, ça prend en compte que les amis du 1er
+      const candidatesriendsIds = [
+        ...new Set(
+          this.lockedCandidates.flatMap(
+            ({ assignableFriendsIds }) => assignableFriendsIds,
+          ),
+        ),
+      ].filter((id) => !this.candidates.map(({ id }) => id).includes(id));
+
       return this.assignableVolunteers.filter((volunteer) =>
-        friendsIds.includes(volunteer.id),
+        candidatesriendsIds.includes(volunteer.id),
       );
     },
     selectedAssignment(): Assignment | null {
