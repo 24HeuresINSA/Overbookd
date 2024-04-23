@@ -340,13 +340,6 @@ export default defineComponent({
         this.assignableFriends[this.selectedFriendIndex],
       );
     },
-    isReplacable(volunteerId: string): boolean {
-      return (
-        this.isLastAddedCandidate(volunteerId) &&
-        this.areOtherFriendsAvailable &&
-        !this.isFirstAddedCandidate(volunteerId)
-      );
-    },
     isLastAddedCandidate(volunteerId: string): boolean {
       if (this.candidatesForCalendar.length < 2) return false;
       return (
