@@ -1,3 +1,15 @@
+## [2.28.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.3...v2.28.0) (2024-04-23)
+
+
+### Features
+
+* **api:** display assignment duration by category in planning. [#1790](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1790) ([08f15c1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/08f15c13c876f26ba6f9c7d53418c5318b14ee6f))
+
+
+### Bug Fixes
+
+* **assignment:** possibility to show all tasks [#1802](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1802) ([4eac1b2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4eac1b2bb0b0ced4249b02e85030cff216786aad))
+
 ## [2.27.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.2...v2.27.3) (2024-04-23)
 
 
