@@ -26,7 +26,11 @@
                   </v-btn>
                 </div>
                 <div class="calendar-header__candidate">
-                  <v-btn v-if="false" icon @click="previousCandidate">
+                  <v-btn
+                    v-if="canChangeCandidates(category)"
+                    icon
+                    @click="previousCandidate"
+                  >
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
                   <AssignmentVolunteerResumeCalendarHeader
@@ -34,7 +38,11 @@
                     :volunteer="retrieveVolunteer(category)"
                     class="volunteer-resume"
                   ></AssignmentVolunteerResumeCalendarHeader>
-                  <v-btn v-if="false" icon @click="nextCandidate">
+                  <v-btn
+                    v-if="canChangeCandidates(category)"
+                    icon
+                    @click="nextCandidate"
+                  >
                     <v-icon>mdi-chevron-right</v-icon>
                   </v-btn>
                 </div>
@@ -258,6 +266,13 @@ export default defineComponent({
     this.funnel = await this.initFunnel();
   },
   methods: {
+    canChangeCandidates(id: string): boolean {
+      if (this.candidatesForCalendar.length < 2) return false;
+      return (
+        this.candidatesForCalendar[this.candidatesForCalendar.length - 1].id ===
+        +id
+      );
+    },
     initFunnel(): Promise<AssignmentAndVolunteerSelected> {
       return ReadyToStart.init(candidateFactory(this), assignments(this))
         .select(this.assignment)
