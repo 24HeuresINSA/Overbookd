@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Query,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -11,6 +12,7 @@ import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -51,8 +53,14 @@ export class TaskToVolunteerController {
     type: MissingAssignmentTaskResponseDto,
     isArray: true,
   })
-  findTasks(): Promise<MissingAssignmentTask[]> {
-    return this.taskToVolunteer.findTasks();
+  @ApiQuery({
+    name: "all",
+    description: "Get all tasks",
+    required: false,
+    type: String,
+  })
+  findTasks(@Query("all") all?: string): Promise<MissingAssignmentTask[]> {
+    return this.taskToVolunteer.findTasks(all === "true");
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
