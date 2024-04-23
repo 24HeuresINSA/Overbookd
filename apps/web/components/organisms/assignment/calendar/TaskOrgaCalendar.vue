@@ -126,7 +126,7 @@ export default defineComponent({
       return color + this.convertDecimalToHex(spread);
     },
     convertDecimalToHex(decimal: number): string {
-      const hex = decimal.toString(16);
+      const hex = Math.round(decimal).toString(16);
       return hex.length === 1 ? "0" + hex : hex;
     },
     openSelectedTaskInNewTab() {
