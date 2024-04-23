@@ -1,3 +1,10 @@
+## [2.27.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.2...v2.27.3) (2024-04-23)
+
+
+### Bug Fixes
+
+* **assignment:** display also assigned friends in assignment details. [#1793](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1793) ([7c04d4a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7c04d4adbe60b2c883dd1b5e073e57d6658aa7ea))
+
 ## [2.27.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.1...v2.27.2) (2024-04-23)
 
 
