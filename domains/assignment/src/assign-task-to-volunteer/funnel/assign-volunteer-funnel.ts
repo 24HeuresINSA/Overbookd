@@ -15,10 +15,13 @@ import {
 
 type ActiveFunnelInitializer = [Candidate[], FunnelRepositories, Assignment];
 
-export class Funnel extends CommonFunnel implements IActAsFunnel {
+export class AssignVolunteerFunnel
+  extends CommonFunnel
+  implements IActAsFunnel
+{
   static init(initializer: ActiveFunnelInitializer) {
     const [candidates, repositories, assignment] = initializer;
-    return new Funnel(candidates, repositories, assignment);
+    return new AssignVolunteerFunnel(candidates, repositories, assignment);
   }
 
   async assign(): Promise<ReadyToStart> {
@@ -45,7 +48,11 @@ export class Funnel extends CommonFunnel implements IActAsFunnel {
     const asCandidate = await this.toCandidate(nextFriend);
     const candidates = [...this._candidates, asCandidate];
 
-    return new Funnel(candidates, this.repositories, this.assignment);
+    return new AssignVolunteerFunnel(
+      candidates,
+      this.repositories,
+      this.assignment,
+    );
   }
 
   private toCandidate(friend: Volunteer) {
@@ -56,13 +63,21 @@ export class Funnel extends CommonFunnel implements IActAsFunnel {
     const candidates = this._candidates.map((candidate) =>
       candidate.json.id === volunteer ? candidate.demandAs(team) : candidate,
     );
-    return new Funnel(candidates, this.repositories, this.assignment);
+    return new AssignVolunteerFunnel(
+      candidates,
+      this.repositories,
+      this.assignment,
+    );
   }
 
   revokeLastCandidate(): IActAsFunnel {
     if (!this.canRevokeLastCandidate) return this;
     const candidates = this._candidates.slice(0, -1);
-    return new Funnel(candidates, this.repositories, this.assignment);
+    return new AssignVolunteerFunnel(
+      candidates,
+      this.repositories,
+      this.assignment,
+    );
   }
 
   private async countBasedCandidateSelection(
@@ -84,7 +99,11 @@ export class Funnel extends CommonFunnel implements IActAsFunnel {
     const otherCandidatesThanTheLastOne = this.otherCandidatesThanTheLastOne;
     const asCandidate = await this.toCandidate(nextFriend);
     const candidates = [...otherCandidatesThanTheLastOne, asCandidate];
-    return new Funnel(candidates, this.repositories, this.assignment);
+    return new AssignVolunteerFunnel(
+      candidates,
+      this.repositories,
+      this.assignment,
+    );
   }
 
   async previousCandidate(): Promise<IActAsFunnel> {

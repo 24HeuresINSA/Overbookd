@@ -60,3 +60,6 @@ export type {
 } from "./assign-task-to-volunteer/repositories/assignments";
 export type { Volunteer as AssignmentVolunteer } from "./assign-task-to-volunteer/funnel/volunteer";
 export { countAssigneesInTeam } from "./count-assignees-in-team";
+export { AssignVolunteerFunnel } from "./assign-task-to-volunteer/funnel/assign-volunteer-funnel";
+export { ReadyToStart } from "./assign-task-to-volunteer/funnel/startup-funnel";
+export type { IActAsFunnel } from "./assign-task-to-volunteer/funnel/funnel";

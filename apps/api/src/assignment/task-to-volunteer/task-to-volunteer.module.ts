@@ -5,6 +5,7 @@ import { PrismaTasks } from "./repository/tasks.prisma";
 import { PrismaService } from "../../prisma.service";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.prisma";
+import { PrismaFriends } from "./repository/friends.prisma";
 
 @Module({
   providers: [
@@ -20,6 +21,11 @@ import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.p
       inject: [PrismaService],
     },
     {
+      provide: PrismaFriends,
+      useFactory: (prisma: PrismaService) => new PrismaFriends(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: AssignTaskToVolunteer,
       useFactory: (
         tasks: PrismaTasks,
@@ -29,9 +35,9 @@ import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.p
     },
     {
       provide: TaskToVolunteerService,
-      useFactory: (assign: AssignTaskToVolunteer) =>
-        new TaskToVolunteerService(assign),
-      inject: [AssignTaskToVolunteer],
+      useFactory: (assign: AssignTaskToVolunteer, friends: PrismaFriends) =>
+        new TaskToVolunteerService(assign, friends),
+      inject: [AssignTaskToVolunteer, PrismaFriends],
     },
   ],
   exports: [TaskToVolunteerService],

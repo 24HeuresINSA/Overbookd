@@ -30,6 +30,7 @@ import { MissingAssignmentTaskResponseDto } from "./dto/missing-assignment-task.
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
+import { AvailableFriendResponseDto } from "./dto/assignable-friend.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments/task-to-volunteer")
@@ -118,5 +119,38 @@ export class TaskToVolunteerController {
       mobilizationId,
       assignmentId,
     });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("volunteers/:volunteerId/available-friends")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteer available friends",
+    type: AvailableFriendResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    description: "Volunteer id",
+    type: Number,
+  })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+  })
+  getAvailableFriends(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+    @Query("start") start: Date,
+    @Query("end") end: Date,
+  ): Promise<AvailableFriendResponseDto[]> {
+    const period = { start, end };
+    return this.taskToVolunteer.getAvailableFriends(volunteerId, period);
   }
 }

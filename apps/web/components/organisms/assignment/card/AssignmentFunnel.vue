@@ -452,6 +452,7 @@ export default defineComponent({
       display: flex;
       justify-content: space-around;
       width: 100%;
+      padding-left: 60px;
     }
     &__assignment {
       position: fixed;
@@ -503,8 +504,7 @@ export default defineComponent({
 }
 
 .candidate-teams {
-  min-width: $calendar-category-column-min-width;
-  padding-left: 60px;
+  min-width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;

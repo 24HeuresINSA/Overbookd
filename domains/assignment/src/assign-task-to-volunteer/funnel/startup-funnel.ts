@@ -3,7 +3,7 @@ import { Assignments } from "../repositories/assignments";
 import { CandidateFactory, IDefineCandidate } from "./candidate";
 import { Volunteer } from "./volunteer";
 import { IActAsFunnel, FunnelError, FunnelRepositories } from "./funnel";
-import { Funnel } from "./assign-volunteer-funnel";
+import { AssignVolunteerFunnel } from "./assign-volunteer-funnel";
 
 abstract class InactiveFunnel implements IActAsFunnel {
   candidates: IDefineCandidate[] = [];
@@ -80,6 +80,6 @@ export class WaitingForVolunteer extends InactiveFunnel {
       assignments: this.assignments,
       candidateFactory: this.candidateFactory,
     };
-    return Funnel.init([[candidate], repositories, this.assignment]);
+    return AssignVolunteerFunnel.init([[candidate], repositories, this.assignment]);
   }
 }

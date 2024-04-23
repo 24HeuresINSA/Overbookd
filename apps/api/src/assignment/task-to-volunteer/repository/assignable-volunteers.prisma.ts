@@ -4,13 +4,13 @@ import {
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
+import { Category } from "@overbookd/festival-event-constants";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
   SELECT_VOLUNTEER,
   DatabaseStoredAssignableVolunteer,
 } from "./assignable-volunteer.query";
-import { IProvidePeriod, Period } from "@overbookd/period";
-import { Category } from "@overbookd/festival-event-constants";
 import {
   SELECT_PERIOD,
   overlapPeriodCondition,
