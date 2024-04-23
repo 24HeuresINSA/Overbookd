@@ -7,38 +7,34 @@ import {
   noelExpected,
   leaExpected,
 } from "./assign-volunteer-to-task.test-utils";
-import { InMemoryTasks } from "../common/repositories/tasks.inmemory";
 import {
   benevolant,
   couperDesCarottes,
   rendreKangoo,
 } from "../assign-task-to-volunteer/funnel/assign-volunteers-funnel.test-utils";
-import { Task } from "../assign-task-to-volunteer/task";
 import { STATIQUE } from "@overbookd/festival-event-constants";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { AssignmentSummaryWithTask } from "../common/assignment";
 import { InMemoryTaskAssignments } from "./repositories/task-assignments.inmemory";
+import { TaskAssignment } from "./task-assignment";
 
-const taskForBenevolant: Task = {
-  id: benevolant.taskId,
+const taskForBenevolant: TaskAssignment = {
+  ...benevolant,
   name: "Task for Benevolant",
-  assignments: [benevolant],
   topPriority: true,
   category: STATIQUE,
 };
 
-const taskForRendreKangoo: Task = {
-  id: rendreKangoo.taskId,
+const taskForRendreKangoo: TaskAssignment = {
+  ...rendreKangoo,
   name: "Task for Rendre Kangoo",
-  assignments: [rendreKangoo],
   topPriority: true,
   category: STATIQUE,
 };
 
-const taskForCouperDesCarottes: Task = {
-  id: couperDesCarottes.taskId,
+const taskForCouperDesCarottes: TaskAssignment = {
+  ...couperDesCarottes,
   name: "Task for Couper des Carottes",
-  assignments: [couperDesCarottes],
   topPriority: true,
   category: STATIQUE,
 };
@@ -51,16 +47,11 @@ const teamsForRendreKangoo = [
 describe("Assign volunteer to task", () => {
   const volunteers = new InMemoryVolunteers([leaAssignee, noelAssignee]);
   const assignments = new InMemoryTaskAssignments([
-    benevolant,
-    rendreKangoo,
-    couperDesCarottes,
-  ]);
-  const tasks = new InMemoryTasks([
     taskForBenevolant,
     taskForRendreKangoo,
     taskForCouperDesCarottes,
   ]);
-  const assign = new AssignVolunteerToTask(volunteers, assignments, tasks);
+  const assign = new AssignVolunteerToTask(volunteers, assignments);
 
   describe("when listing all assignable volunteers", async () => {
     const assignableVolunteers = await assign.volunteers();
@@ -80,10 +71,8 @@ describe("Assign volunteer to task", () => {
     describe("when selecting volunteer with conducteur team", async () => {
       const assignments = await assign.selectVolunteer(leaAssignee.id);
       it("should return assignable task assignments", () => {
-        const { id, ...expectedTask } = taskForRendreKangoo;
         const expectedAssignment: AssignmentSummaryWithTask = {
-          ...rendreKangoo,
-          ...expectedTask,
+          ...taskForRendreKangoo,
           teams: teamsForRendreKangoo,
           hasFriendsAssigned: false,
         };
@@ -97,10 +86,8 @@ describe("Assign volunteer to task", () => {
     describe("when selecting volunteer already assigned at same time and with benevole team", async () => {
       const assignments = await assign.selectVolunteer(noelAssignee.id);
       it("should return assignable task assignments", () => {
-        const { id, ...expectedTask } = taskForRendreKangoo;
         const expectedAssignment: AssignmentSummaryWithTask = {
-          ...rendreKangoo,
-          ...expectedTask,
+          ...taskForRendreKangoo,
           teams: teamsForRendreKangoo,
           hasFriendsAssigned: false,
         };

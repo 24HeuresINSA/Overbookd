@@ -1,11 +1,10 @@
 import { Period } from "@overbookd/period";
 import { FormatVolunteer, Volunteer } from "../volunteer";
 import {
-  Assignment,
   AssignmentSummaryWithTask,
   countAssigneesInTeam,
 } from "../common/assignment";
-import { Tasks } from "../common/repositories/tasks";
+import { TaskAssignment } from "./task-assignment";
 
 export type VolunteerWithFriendFilter = Volunteer & {
   hasAtLeastOneFriend: boolean;
@@ -28,14 +27,13 @@ export type TaskAssignments = {
   findAssignableFor(
     volunteerAssignments: Period[],
     oneOfTheTeams: string[],
-  ): Promise<Assignment[]>;
+  ): Promise<TaskAssignment[]>;
 };
 
 export class AssignVolunteerToTask {
   constructor(
     private readonly allVolunteers: Volunteers,
     private readonly taskAssignments: TaskAssignments,
-    private readonly tasks: Tasks,
   ) {}
 
   async volunteers(): Promise<VolunteerWithAssignmentDuration[]> {
@@ -70,8 +68,7 @@ export class AssignVolunteerToTask {
 
     return Promise.all(
       withTeams.map(async (assignment) => {
-        const { id, ...task } = await this.tasks.findOne(assignment.taskId);
-        return { ...assignment, ...task, hasFriendsAssigned: false };
+        return { ...assignment, hasFriendsAssigned: false };
       }),
     );
   }

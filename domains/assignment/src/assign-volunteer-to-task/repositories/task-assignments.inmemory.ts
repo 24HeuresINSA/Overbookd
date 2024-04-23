@@ -1,14 +1,14 @@
 import { Period } from "@overbookd/period";
 import { TaskAssignments } from "../assign-volunteer-to-task";
-import { Assignment } from "../../common/assignment";
+import { TaskAssignment } from "../task-assignment";
 
 export class InMemoryTaskAssignments implements TaskAssignments {
-  constructor(private assignments: Assignment[]) {}
+  constructor(private assignments: TaskAssignment[]) {}
 
   async findAssignableFor(
     volunteerAssignments: Period[],
     oneOfTheTeams: string[],
-  ): Promise<Assignment[]> {
+  ): Promise<TaskAssignment[]> {
     return this.assignments.filter((assignment) => {
       const isAssignedAtSameTime = volunteerAssignments.some((period) =>
         period.isOverlapping(Period.init(assignment)),

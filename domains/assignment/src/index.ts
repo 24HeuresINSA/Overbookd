@@ -4,6 +4,7 @@ export type {
   VolunteerWithAssignments,
   VolunteerWithAssignmentDuration,
 } from "./assign-volunteer-to-task/assign-volunteer-to-task";
+export type { TaskAssignment } from "./assign-volunteer-to-task/task-assignment";
 export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export type {
   AssignableVolunteers,
