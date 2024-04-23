@@ -1,3 +1,15 @@
+## [2.30.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.29.0...v2.30.0) (2024-04-23)
+
+
+### Features
+
+* **assignment:** sort volunteers in AssigmentDetails ([9443c66](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9443c6607e73898ee927753c885b7db75e8b093d))
+
+
+### Bug Fixes
+
+* **planning:** adapt display for mobile [#1803](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1803) ([4ef8b86](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4ef8b861cea3f94408aa83ff664213d715714f51))
+
 ## [2.29.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.28.0...v2.29.0) (2024-04-23)
 
 
