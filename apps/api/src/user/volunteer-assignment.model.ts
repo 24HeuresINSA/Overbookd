@@ -13,10 +13,8 @@ export type DatabaseOldVolunteerAssignmentStat = {
 };
 
 export type DatabaseVolunteerAssignmentStat = {
-  mobilization: {
-    start: Date;
-    end: Date;
-  };
+  start: Date;
+  end: Date;
   festivalTask: {
     category: TaskCategory;
   };

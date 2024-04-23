@@ -226,17 +226,14 @@ export class UserService {
   }
 
   static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
-    const stats = assignments.reduce(
-      (stats, { mobilization, festivalTask }) => {
-        const category = festivalTask.category;
-        const durationToAdd = getPeriodDuration(mobilization);
-        const previousDuration = stats.get(category)?.duration ?? 0;
-        const duration = previousDuration + durationToAdd;
-        stats.set(category, { category, duration });
-        return stats;
-      },
-      new Map<TaskCategory, VolunteerAssignmentStat>(),
-    );
+    const stats = assignments.reduce((stats, { start, end, festivalTask }) => {
+      const category = festivalTask.category;
+      const durationToAdd = getPeriodDuration({ start, end });
+      const previousDuration = stats.get(category)?.duration ?? 0;
+      const duration = previousDuration + durationToAdd;
+      stats.set(category, { category, duration });
+      return stats;
+    }, new Map<TaskCategory, VolunteerAssignmentStat>());
     return [...stats.values()];
   }
 
