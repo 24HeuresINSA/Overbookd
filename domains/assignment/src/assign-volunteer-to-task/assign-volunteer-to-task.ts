@@ -20,13 +20,16 @@ export type VolunteerWithAssignmentDuration = VolunteerWithFriendFilter & {
 
 export type Volunteers = {
   findAll(): Promise<VolunteerWithAssignments[]>;
-  findOne(id: Volunteer["id"]): Promise<VolunteerWithAssignments | undefined>;
+};
+
+export type AssignmentCondition = {
+  volunteerId: number;
+  oneOfTheTeams: string[];
 };
 
 export type TaskAssignments = {
   findAssignableFor(
-    volunteerAssignments: Period[],
-    oneOfTheTeams: string[],
+    condition: AssignmentCondition,
   ): Promise<TaskAssignmentForVolunteer[]>;
 };
 
@@ -44,15 +47,13 @@ export class AssignVolunteerToTask {
   }
 
   async selectVolunteer(
-    volunteerId: Volunteer["id"],
+    volunteerId: number,
+    oneOfTheTeams: string[],
   ): Promise<AssignmentSummaryWithTask[]> {
-    const volunteer = await this.allVolunteers.findOne(volunteerId);
-    if (!volunteer) throw new Error("Volunteer not found");
-
-    const assignments = await this.taskAssignments.findAssignableFor(
-      volunteer.assignments,
-      volunteer.teams,
-    );
+    const assignments = await this.taskAssignments.findAssignableFor({
+      volunteerId,
+      oneOfTheTeams,
+    });
     return assignments
       .map((assignment) => ({
         ...assignment,

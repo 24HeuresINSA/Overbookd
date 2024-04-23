@@ -1,14 +1,21 @@
 import { Period } from "@overbookd/period";
-import { TaskAssignments } from "../assign-volunteer-to-task";
+import {
+  AssignmentCondition,
+  TaskAssignments,
+} from "../assign-volunteer-to-task";
 import { TaskAssignment, TaskAssignmentForVolunteer } from "../task-assignment";
 
 export class InMemoryTaskAssignments implements TaskAssignments {
   constructor(private assignments: TaskAssignment[]) {}
 
-  async findAssignableFor(
-    volunteerAssignments: Period[],
-    oneOfTheTeams: string[],
-  ): Promise<TaskAssignmentForVolunteer[]> {
+  async findAssignableFor({
+    volunteerId,
+    oneOfTheTeams,
+  }: AssignmentCondition): Promise<TaskAssignmentForVolunteer[]> {
+    const volunteerAssignments = this.assignments
+      .filter(({ assignees }) => assignees.some(({ id }) => id === volunteerId))
+      .map(Period.init);
+
     return this.assignments
       .filter((assignment) => {
         const isAssignedAtSameTime = volunteerAssignments.some((period) =>

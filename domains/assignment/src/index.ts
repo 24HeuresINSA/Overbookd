@@ -1,4 +1,5 @@
 export type {
+  AssignmentCondition,
   TaskAssignments,
   Volunteers,
   VolunteerWithAssignments,

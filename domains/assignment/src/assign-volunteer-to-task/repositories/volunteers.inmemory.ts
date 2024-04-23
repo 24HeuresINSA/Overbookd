@@ -9,10 +9,4 @@ export class InMemoryVolunteers implements Volunteers {
   findAll() {
     return Promise.resolve(this.volunteers);
   }
-
-  findOne(id: number) {
-    return Promise.resolve(
-      this.volunteers.find((volunteer) => volunteer.id === id),
-    );
-  }
 }

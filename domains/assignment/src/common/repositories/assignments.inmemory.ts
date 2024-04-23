@@ -1,7 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import { Assignment, AssignmentIdentifier } from "../assignment";
 import { Assignments, VolunteersForAssignment } from "./assignments";
-import { Period } from "@overbookd/period";
 
 export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}
@@ -50,20 +49,6 @@ export class InMemoryAssignments implements Assignments {
       assignmentIndex,
       updatedAssignment,
     );
-  }
-  async findAssignableFor(
-    volunteerAssignments: Period[],
-    oneOfTheTeams: string[],
-  ): Promise<Assignment[]> {
-    return this.assignments.filter((assignment) => {
-      const isAssignedAtSameTime = volunteerAssignments.some((period) =>
-        period.isOverlapping(Period.init(assignment)),
-      );
-      const isOnOneOfTheTeams = oneOfTheTeams.some((team) =>
-        assignment.demands.some((demand) => demand.team === team),
-      );
-      return !isAssignedAtSameTime && isOnOneOfTheTeams;
-    });
   }
 
   get all() {
