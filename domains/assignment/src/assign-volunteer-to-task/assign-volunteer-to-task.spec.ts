@@ -6,43 +6,13 @@ import {
   noelAssignee,
   noelExpected,
   leaExpected,
+  taskForBenevolant,
+  taskForCouperDesCarottes,
+  taskForRendreKangoo,
+  teamsForRendreKangoo,
 } from "./assign-volunteer-to-task.test-utils";
-import {
-  benevolant,
-  couperDesCarottes,
-  rendreKangoo,
-} from "../assign-task-to-volunteer/funnel/assign-volunteers-funnel.test-utils";
-import { STATIQUE } from "@overbookd/festival-event-constants";
-import { BENEVOLE_CODE } from "@overbookd/team";
 import { AssignmentSummaryWithTask } from "../common/assignment";
 import { InMemoryTaskAssignments } from "./repositories/task-assignments.inmemory";
-import { TaskAssignment } from "./task-assignment";
-
-const taskForBenevolant: TaskAssignment = {
-  ...benevolant,
-  name: "Task for Benevolant",
-  topPriority: true,
-  category: STATIQUE,
-};
-
-const taskForRendreKangoo: TaskAssignment = {
-  ...rendreKangoo,
-  name: "Task for Rendre Kangoo",
-  topPriority: true,
-  category: STATIQUE,
-};
-
-const taskForCouperDesCarottes: TaskAssignment = {
-  ...couperDesCarottes,
-  name: "Task for Couper des Carottes",
-  topPriority: true,
-  category: STATIQUE,
-};
-
-const teamsForRendreKangoo = [
-  { team: "conducteur", demand: 1, assigned: 0 },
-  { team: BENEVOLE_CODE, demand: 2, assigned: 0 },
-];
 
 describe("Assign volunteer to task", () => {
   const volunteers = new InMemoryVolunteers([leaAssignee, noelAssignee]);

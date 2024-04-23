@@ -6,6 +6,13 @@ import {
 } from "./assign-volunteer-to-task";
 import { Period } from "@overbookd/period";
 import { BENEVOLE_CODE } from "@overbookd/team";
+import { STATIQUE } from "@overbookd/festival-event-constants";
+import {
+  benevolant,
+  rendreKangoo,
+  couperDesCarottes,
+} from "../assign-task-to-volunteer/funnel/assign-volunteers-funnel.test-utils";
+import { TaskAssignment } from "./task-assignment";
 
 const friday08hTo10h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
@@ -54,3 +61,29 @@ export const leaExpected: VolunteerWithAssignmentDuration = {
   ...lea,
   assignmentDuration: 7 * ONE_HOUR_IN_MS + 3 * QUARTER_IN_MS,
 };
+
+export const taskForBenevolant: TaskAssignment = {
+  ...benevolant,
+  name: "Task for Benevolant",
+  topPriority: true,
+  category: STATIQUE,
+};
+
+export const taskForRendreKangoo: TaskAssignment = {
+  ...rendreKangoo,
+  name: "Task for Rendre Kangoo",
+  topPriority: true,
+  category: STATIQUE,
+};
+
+export const taskForCouperDesCarottes: TaskAssignment = {
+  ...couperDesCarottes,
+  name: "Task for Couper des Carottes",
+  topPriority: true,
+  category: STATIQUE,
+};
+
+export const teamsForRendreKangoo = [
+  { team: "conducteur", demand: 1, assigned: 0 },
+  { team: BENEVOLE_CODE, demand: 2, assigned: 0 },
+];
