@@ -16,7 +16,7 @@
     <div class="friend_filter_categoy_sort">
       <v-switch
         v-model="hasNoFriends"
-        label="N'a pas d'amis"
+        label="N'a aucun ami"
         class="filters__field"
         hide-details
         @change="changeNoFriends"

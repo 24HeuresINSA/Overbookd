@@ -128,7 +128,7 @@ export const actions = actionTree(
     ) {
       const repository = new AssignmentsRepository(this);
       await repository.assign(volunteersForAssignment);
-      dispatch("selectAssignment", volunteersForAssignment.assignment);
+      dispatch("selectTask", volunteersForAssignment.assignment.taskId);
     },
 
     async unassign(

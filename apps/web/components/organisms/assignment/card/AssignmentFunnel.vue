@@ -55,9 +55,8 @@
               :key="candidate.id"
               class="candidate-teams"
             >
-              <!--
               <TeamChip
-                v-for="team of candidate.assignableTeams"
+                v-for="team of getAssignableTeams(candidate)"
                 :key="team"
                 :team="team"
                 with-name
@@ -66,9 +65,8 @@
                 :class="{
                   'not-selected': isNotAssignedAs(team, candidate),
                 }"
-                @click="temporaryAssign(team, candidate)"
+                @click="linkCandidateTeam(team, candidate)"
               ></TeamChip>
-              -->
             </div>
           </div>
           <v-btn
@@ -109,6 +107,7 @@ import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 import { AssignableVolunteer, Assignment } from "@overbookd/assignment";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 
 type Candidate = AssignableVolunteer & {
   as?: string;
@@ -116,7 +115,7 @@ type Candidate = AssignableVolunteer & {
 
 type AssingmentFunneData = {
   calendarDate: Date;
-  additionalCandidates: Candidate[];
+  candidates: Candidate[];
   selectedFriendIndex: number;
 };
 
@@ -125,6 +124,7 @@ export default defineComponent({
   components: {
     OverMultiCalendar,
     AssignmentVolunteerResumeCalendarHeader,
+    TeamChip,
   },
   props: {
     volunteer: {
@@ -140,7 +140,7 @@ export default defineComponent({
   data: (): AssingmentFunneData => {
     return {
       calendarDate: new Date(),
-      additionalCandidates: [],
+      candidates: [],
       selectedFriendIndex: 0,
     };
   },
@@ -152,14 +152,12 @@ export default defineComponent({
       return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
     },
     lockedCandidates(): Candidate[] {
-      if (this.candidates.length === 1) return this.candidates;
+      if (this.candidates.length <= 1) return this.candidates;
       return [
         ...removeItemAtIndex(this.candidates, this.candidates.length - 1),
       ];
     },
     assignableFriends(): Candidate[] {
-      // ATTENTION, je crois qu'il y a un problème d'actualisation avec lockedCandidate
-      // Quand on add un candidate, ça prend en compte que les amis du 1er
       const candidatesriendsIds = [
         ...new Set(
           this.lockedCandidates.flatMap(
@@ -174,10 +172,6 @@ export default defineComponent({
     },
     selectedAssignment(): Assignment | null {
       return this.$accessor.assignTaskToVolunteer.selectedAssignment;
-    },
-    candidates(): Candidate[] {
-      if (this.selectedVolunteer === null) return [];
-      return [this.selectedVolunteer, ...this.additionalCandidates];
     },
     taskTitle(): string {
       const { taskId, name } = this.assignment;
@@ -200,11 +194,11 @@ export default defineComponent({
       return { start, end, name };
     },
     canNotAssign(): boolean {
-      return this.candidates.every((candidate) => !candidate.as);
+      return this.candidates.some((candidate) => !candidate.as);
     },
     canNotAssignMoreVolunteer(): boolean {
       if (!this.selectedAssignment) return true;
-      if (this.assignableFriends.length === 0) return true;
+      if (this.assignableFriends.length === 0 || this.canNotAssign) return true;
       const demands = this.selectedAssignment.demands.reduce(
         (acc, demand) => acc + demand.demand,
         0,
@@ -223,12 +217,23 @@ export default defineComponent({
     },
     selectedVolunteer() {
       this.clearData();
+      this.initCandidates();
     },
   },
-  async mounted() {
+  mounted() {
     this.calendarDate = this.assignment.start;
+    this.initCandidates();
   },
   methods: {
+    initCandidates() {
+      if (!this.selectedVolunteer) return;
+      this.candidates = [this.selectedVolunteer];
+
+      const assignableTeams = this.getAssignableTeams(this.selectedVolunteer);
+      if (assignableTeams.length === 1) {
+        this.linkCandidateTeam(assignableTeams[0], this.candidates[0]);
+      }
+    },
     canChangeCandidates(id: string): boolean {
       return this.isLastAddedCandidate(id) && this.assignableFriends.length > 1;
     },
@@ -236,21 +241,32 @@ export default defineComponent({
       return this.candidates.find((candidate) => candidate.id === +id);
     },
     clearData() {
-      this.additionalCandidates = [];
+      this.candidates = [];
       this.selectedFriendIndex = 0;
     },
     closeDialog() {
       this.clearData();
       this.$emit("close-dialog");
     },
+    linkCandidateTeam(teamCode: string, candidate?: Candidate) {
+      const isLastCandidate =
+        this.candidates.findIndex(({ id }) => id === candidate?.id) ===
+        this.candidates.length - 1;
+      if (!isLastCandidate) return;
+
+      this.candidates = updateItemToList(
+        this.candidates,
+        this.candidates.length - 1,
+        { ...this.candidates[this.candidates.length - 1], as: teamCode },
+      );
+    },
     getAssignableTeams(candidate?: Candidate): string[] {
       if (!candidate) return [];
       const underlyingTeams = getUnderlyingTeams(candidate.teams);
       const teams = [...candidate.teams, ...underlyingTeams];
-      return [];
-      /*return teams.filter((team) =>
-        this.taskAssignment.remainingTeamRequest.includes(team),
-      );*/
+      const demands =
+        this.selectedAssignment?.demands.flatMap(({ team }) => team) ?? [];
+      return demands.filter((team) => teams.includes(team));
     },
     isNotAssignedAs(teamCode: string, candidate?: Candidate): boolean {
       if (!candidate) return false;
@@ -276,8 +292,8 @@ export default defineComponent({
     addCandidate() {
       if (this.canNotAssignMoreVolunteer) return;
       this.selectedFriendIndex = 0;
-      this.additionalCandidates = [
-        ...this.additionalCandidates,
+      this.candidates = [
+        ...this.candidates,
         this.assignableFriends[this.selectedFriendIndex],
       ];
     },
@@ -286,9 +302,9 @@ export default defineComponent({
         (this.selectedFriendIndex - 1 + this.assignableFriends.length) %
         this.assignableFriends.length;
 
-      this.additionalCandidates = updateItemToList(
-        this.additionalCandidates,
-        this.additionalCandidates.length - 1,
+      this.candidates = updateItemToList(
+        this.candidates,
+        this.candidates.length - 1,
         this.assignableFriends[this.selectedFriendIndex],
       );
     },
@@ -296,9 +312,9 @@ export default defineComponent({
       this.selectedFriendIndex =
         (this.selectedFriendIndex + 1) % this.assignableFriends.length;
 
-      this.additionalCandidates = updateItemToList(
-        this.additionalCandidates,
-        this.additionalCandidates.length - 1,
+      this.candidates = updateItemToList(
+        this.candidates,
+        this.candidates.length - 1,
         this.assignableFriends[this.selectedFriendIndex],
       );
     },
@@ -319,7 +335,7 @@ export default defineComponent({
       );
     },
     removeLastCandidate(): void {
-      this.additionalCandidates.pop();
+      this.candidates.pop();
     },
   },
 });
