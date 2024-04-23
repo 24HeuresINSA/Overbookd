@@ -20,7 +20,7 @@ const friday15h15To18h = Period.init({
   end: new Date("2024-05-17T18:00+02:00"),
 });
 
-export const noel: VolunteerWithFriendFilter = {
+const noel: VolunteerWithFriendFilter = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",
@@ -28,7 +28,7 @@ export const noel: VolunteerWithFriendFilter = {
   teams: [BENEVOLE_CODE, "hard", "comsa"],
   hasAtLeastOneFriend: false,
 };
-export const lea: VolunteerWithFriendFilter = {
+const lea: VolunteerWithFriendFilter = {
   id: 2,
   firstname: "Lea",
   lastname: "Mouyno",
