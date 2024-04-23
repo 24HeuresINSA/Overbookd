@@ -65,8 +65,8 @@ export default defineComponent({
     },
   },
   watch: {
-    completed() {
-      this.$accessor.assignTaskToVolunteer.fetchTasks(this.completed);
+    completed(completed: boolean) {
+      this.$accessor.assignTaskToVolunteer.fetchTasks(completed);
     },
   },
   methods: {
