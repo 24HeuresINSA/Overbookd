@@ -7,6 +7,7 @@ import {
   missingOneAssigneeThenOneHardAndOneBenevoleTask,
   missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
   missingTwoVieuxDuring19hto20h,
+  fulfillAssignmentThenMissingOneHardTask,
 } from "./test-resources/task.fake";
 import { InMemoryTasks } from "./repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
@@ -31,6 +32,7 @@ describe("Assign task to volunteer", () => {
     missingOneHardAndOneBenevoleTask.value,
     missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
     missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.value,
+    fulfillAssignmentThenMissingOneHardTask.value,
   ]);
   const volunteers = new InMemoryAssignableVolunteers([
     noelAsAvailableVolunteer.stored,
@@ -47,6 +49,7 @@ describe("Assign task to volunteer", () => {
       ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${[VIEUX]}
       ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${[HARD, BENEVOLE_CODE]}
       ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${["plaizir", HARD, BENEVOLE_CODE]}
+      ${fulfillAssignmentThenMissingOneHardTask.value.name}         | ${fulfillAssignmentThenMissingOneHardTask.value.id}         | ${[HARD]}
     `(
       "when listing missing assignment tasks with $taskName",
       ({ taskId, expectedTeams }) => {

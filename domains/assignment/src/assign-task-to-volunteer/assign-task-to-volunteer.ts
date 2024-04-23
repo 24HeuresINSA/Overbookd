@@ -97,20 +97,20 @@ export class AssignTaskToVolunteer {
   }
 
   private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
-    const demands = task.assignments.flatMap((assignment) =>
-      assignment.demands.map((team) => team),
+    const missingTeamMembers = task.assignments.reduce(
+      (teams: string[], assignment) => {
+        const missingTeamMembers = this.filterMissingTeamMembers(assignment);
+        return [...teams, ...missingTeamMembers];
+      },
+      [],
     );
-    const assignees = task.assignments.flatMap((assignment) =>
-      assignment.assignees.map((assignee) => assignee),
-    );
-    const teams = this.filterMissingTeamMembers({ demands, assignees });
 
     return {
       id: task.id,
       name: task.name,
       topPriority: task.topPriority,
       category: task.category,
-      teams,
+      teams: Array.from(new Set(missingTeamMembers)),
     };
   }
 
