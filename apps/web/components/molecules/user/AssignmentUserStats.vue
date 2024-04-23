@@ -76,6 +76,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .user-stats {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .stat {

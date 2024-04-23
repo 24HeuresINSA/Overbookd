@@ -6,7 +6,12 @@
       class="calendar"
       :class="`calendar-${calendarType}`"
     >
-      <v-sheet v-if="displayHeader" tile height="54" class="d-flex">
+      <v-sheet
+        v-if="displayHeader"
+        tile
+        class="d-flex align-center"
+        style="height: auto"
+      >
         <v-btn
           icon
           class="ma-2"
