@@ -1,3 +1,15 @@
+## [2.27.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.1...v2.27.2) (2024-04-23)
+
+
+### Bug Fixes
+
+* **assignment:** count assignees on each assignment instead of in mobilization... ([8d3d53a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8d3d53a164800b8ea73c68b88e0bf5ecbb07b8cf))
+
+
+### Refactor
+
+* **assignment:** define more complex state machine.  [#1794](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1794) ([6331726](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6331726d1f24580923148f22f64fde73dd327c0e))
+
 ## [2.27.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.0...v2.27.1) (2024-04-23)
 
 
