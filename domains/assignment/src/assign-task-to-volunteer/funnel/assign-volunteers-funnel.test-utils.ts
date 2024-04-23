@@ -25,7 +25,7 @@ const friday08hTo09h = {
   start: new Date("2024-17-05T08:00+02:00"),
   end: new Date("2024-17-05T09:00+02:00"),
 };
-const friday08hTo10h = Period.init({
+export const friday08hTo10h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
 });

@@ -5,34 +5,35 @@ import {
   VolunteerWithFriendFilter,
 } from "./assign-volunteer-to-task";
 import { Period } from "@overbookd/period";
+import { BENEVOLE_CODE } from "@overbookd/team";
 
 const friday08hTo10h = Period.init({
-  start: new Date("2022-07-01T08:00:00Z"),
-  end: new Date("2022-07-01T10:00:00Z"),
+  start: new Date("2024-05-17T08:00+02:00"),
+  end: new Date("2024-05-17T10:00+02:00"),
 });
 const friday11hTo14h = Period.init({
-  start: new Date("2022-07-01T11:00:00Z"),
-  end: new Date("2022-07-01T14:00:00Z"),
+  start: new Date("2024-05-17T11:00+02:00"),
+  end: new Date("2024-05-17T14:00+02:00"),
 });
 const friday15h15To18h = Period.init({
-  start: new Date("2022-07-01T15:15:00Z"),
-  end: new Date("2022-07-01T18:00:00Z"),
+  start: new Date("2024-05-17T15:15+02:00"),
+  end: new Date("2024-05-17T18:00+02:00"),
 });
 
-const noel: VolunteerWithFriendFilter = {
+export const noel: VolunteerWithFriendFilter = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",
   charisma: 1000,
-  teams: ["hard", "comsa"],
+  teams: [BENEVOLE_CODE, "hard", "comsa"],
   hasAtLeastOneFriend: false,
 };
-const lea: VolunteerWithFriendFilter = {
+export const lea: VolunteerWithFriendFilter = {
   id: 2,
   firstname: "Lea",
   lastname: "Mouyno",
   charisma: 0,
-  teams: ["vieux"],
+  teams: ["conducteur", "vieux"],
   hasAtLeastOneFriend: false,
 };
 
