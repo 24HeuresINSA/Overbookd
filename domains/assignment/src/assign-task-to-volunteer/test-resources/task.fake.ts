@@ -2,6 +2,7 @@ import {
   BAR,
   FUN,
   MANUTENTION,
+  RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
 import { getTaskFactory } from "./factory/task.factory";
@@ -49,6 +50,17 @@ export const missingOneAssigneeThenOneHardAndOneBenevoleTask = factory
   .withAssignments([
     missingOnePlaizirAssignment,
     missingOneHardAndOneBenevoleAssignment,
+  ]);
+
+export const fulfillAssignmentThenMissingOneHardTask = factory
+  .init("Task with fulfilled first assignment then one hard is missing")
+  .withCategory(RELOU)
+  .withAssignments([
+    fulfilledAssignment.during(friday18hto19h).withMobilization(friday18hto20h),
+    fulfilledAssignment
+      .withAssignees([])
+      .during(friday19hto20h)
+      .withMobilization(friday18hto20h),
   ]);
 
 export const missingTwoVieuxDuring19hto20h = missingTwoVieuxAssignment
