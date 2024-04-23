@@ -320,6 +320,7 @@ export default defineComponent({
   gap: 5px;
   &__list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     margin: 0;
