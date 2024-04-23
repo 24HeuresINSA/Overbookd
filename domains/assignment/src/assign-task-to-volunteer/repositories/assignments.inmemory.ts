@@ -23,6 +23,12 @@ export class InMemoryAssignments implements Assignments {
     const assignees = [...currentAssignment.assignees, ...volunteers];
     const updatedAssignment = { ...currentAssignment, assignees };
 
+    this.assignments = updateItemToList(
+      this.assignments,
+      assignmentIndex,
+      updatedAssignment,
+    );
+
     return Promise.resolve(updatedAssignment);
   }
 

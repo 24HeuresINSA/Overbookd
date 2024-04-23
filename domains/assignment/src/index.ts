@@ -47,17 +47,6 @@ export type {
   IDefineCandidate,
   CandidateFulfillingDemand,
 } from "./assign-task-to-volunteer/funnel/candidate";
-export {
-  ReadyToStart,
-  isReadyToStart,
-  WaitingForVolunteer,
-  isWaitingForVolunteer,
-  OneCandidateNotFulfillingDemand,
-  isOneCandidateNotFulfillingDemand,
-  OneCandidateFulfillsDemand,
-  isOneCandidateFulfillsDemand,
-} from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
-export type { Funnel } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
 export type {
   Planning,
   PlanningEvent,

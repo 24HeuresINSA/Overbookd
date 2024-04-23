@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { HARD, VIEUX, CONFIANCE } from "../../teams";
 import {
   Assignment,
@@ -67,7 +67,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
     return new Candidate<T>(candidate);
   }
 
-  private static getAssignableTeams(
+  static getAssignableTeams(
     { demands, assignees }: Assignment,
     teams: string[],
   ) {
@@ -132,7 +132,7 @@ export class CandidateFactory {
     const [planning, availabilities, friends] = await Promise.all([
       this.planning.for(volunteer.id),
       this.availabilities.for(volunteer.id),
-      this.friends.for(volunteer.id),
+      this.friends.availableDuringWith(Period.init(assignment), volunteer.id),
     ]);
 
     const agenda = { planning, availabilities };

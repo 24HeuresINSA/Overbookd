@@ -1,6 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "./volunteer";
 import { Status } from "@overbookd/festival-event-constants";
+import { Period } from "@overbookd/period";
 
 export type Task = { name: string; id: number; status: Status };
 
@@ -17,5 +18,8 @@ export type Availabilities = {
 };
 
 export type Friends = {
-  for(volunteer: Volunteer["id"]): Promise<Volunteer[]>;
+  availableDuringWith(
+    period: Period,
+    volunteer: Volunteer["id"],
+  ): Promise<Volunteer[]>;
 };

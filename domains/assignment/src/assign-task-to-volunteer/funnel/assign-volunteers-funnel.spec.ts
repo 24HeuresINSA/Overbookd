@@ -1,11 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { BENEVOLE_CODE } from "@overbookd/team";
-import {
-  OneCandidateFulfillsDemand,
-  WaitingForVolunteer,
-  OneCandidateNotFulfillingDemand,
-  isOneCandidateFulfillsDemand,
-} from "./assign-volunteers-funnel";
+import { WaitingForVolunteer } from "./startup-funnel";
 import { InMemoryPlanning } from "./planning.inmemory";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory";
 import {
@@ -21,11 +16,13 @@ import {
   scannerLesBillets,
   demonterLesJeuxGonflables,
   nettoyerLeQgCatering,
+  nathan,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
 import { InMemoryAvailabilities } from "./availabilties.inmemory";
 import { InMemoryFriends } from "./friends.inmemory";
+import { IActAsFunnel } from "./funnel";
 
 describe("Assign volunteers funnel", () => {
   const planning = new InMemoryPlanning(
@@ -35,6 +32,7 @@ describe("Assign volunteers funnel", () => {
       [ontaine.volunteer.id, ontaine.planning],
       [tatouin.volunteer.id, tatouin.planning],
       [luce.volunteer.id, luce.planning],
+      [nathan.volunteer.id, nathan.planning],
     ]),
   );
   const availabilities = new InMemoryAvailabilities(
@@ -43,7 +41,7 @@ describe("Assign volunteers funnel", () => {
       [lea.volunteer.id, lea.availabilities],
       [ontaine.volunteer.id, ontaine.availabilities],
       [tatouin.volunteer.id, tatouin.availabilities],
-      [luce.volunteer.id, luce.availabilities],
+      [nathan.volunteer.id, nathan.availabilities],
     ]),
   );
   const friends = new InMemoryFriends(new Map());
@@ -70,19 +68,16 @@ describe("Assign volunteers funnel", () => {
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({ volunteer, candidates, planning, task, team, availabilities }) => {
-        let everyCandidateFulfillsDemand: OneCandidateFulfillsDemand;
+        let everyCandidateFulfillsDemand: IActAsFunnel;
+        let assignments: InMemoryAssignments;
         beforeAll(async () => {
-          const assignments = new InMemoryAssignments(initialAssignments);
+          assignments = new InMemoryAssignments(initialAssignments);
           const funnel = WaitingForVolunteer.init(
             candidateFactory,
             assignments,
             task,
           );
-          const selected = await funnel.select(volunteer);
-          if (!isOneCandidateFulfillsDemand(selected)) {
-            throw new Error("Unexepected funnel type");
-          }
-          everyCandidateFulfillsDemand = selected;
+          everyCandidateFulfillsDemand = await funnel.select(volunteer);
         });
         it("should expose him as a candidate", () => {
           expect(everyCandidateFulfillsDemand.candidates).toMatchObject(
@@ -106,8 +101,10 @@ describe("Assign volunteers funnel", () => {
             everyCandidateFulfillsDemand.candidates.at(0)?.availabilities,
           ).toStrictEqual(availabilities);
         });
-        it("should indicate there is not remaining team demanded", () => {
-          expect(everyCandidateFulfillsDemand.hasRemainingDemands).toBe(false);
+        it("should indicate it can't fulfill more demands (cause there is no demand any more)", () => {
+          expect(
+            everyCandidateFulfillsDemand.canFulfillMoreRemainingDemands,
+          ).toBe(false);
         });
         describe("when assigning selected volunteers", () => {
           it("should save new assignments", async () => {
@@ -115,9 +112,9 @@ describe("Assign volunteers funnel", () => {
               ...task.assignees,
               { id: volunteer.id, as: team },
             ];
-            const assignment = await everyCandidateFulfillsDemand.assign();
+            await everyCandidateFulfillsDemand.assign();
 
-            expect(assignment).toEqual({
+            expect(assignments.all).toContainEqual({
               ...task,
               assignees: expectedAssignees,
             });
@@ -128,25 +125,22 @@ describe("Assign volunteers funnel", () => {
   });
   describe("when assignment needs two benevoles and one conducteur", () => {
     describe("when selected volunteer is only member of benevole", () => {
-      let funnel: OneCandidateFulfillsDemand;
+      let funnel: IActAsFunnel;
+      let assignments: InMemoryAssignments;
       beforeAll(async () => {
-        const assignments = new InMemoryAssignments(initialAssignments);
-        const volunteerSelected = await WaitingForVolunteer.init(
+        assignments = new InMemoryAssignments(initialAssignments);
+        funnel = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
           rendreKangoo,
         ).select(noel.volunteer);
-        if (!isOneCandidateFulfillsDemand(volunteerSelected)) {
-          throw new Error("Unexepected funnel type");
-        }
-        funnel = volunteerSelected;
       });
       it("should select benevole as team assignment", () => {
         const [noelCandidate, ..._candidates] = funnel.candidates;
         expect(noelCandidate.as).toBe(BENEVOLE_CODE);
       });
-      it("should indicate there is remaining team demanded", () => {
-        expect(funnel.hasRemainingDemands).toBe(true);
+      it("should indicate it can't fulfill more demands (cause there is no assignable friend for fulfilling it)", () => {
+        expect(funnel.canFulfillMoreRemainingDemands).toBe(false);
       });
       describe("when assigning selected volunteers", () => {
         it("should save new assignments", async () => {
@@ -154,9 +148,9 @@ describe("Assign volunteers funnel", () => {
             ...rendreKangoo.assignees,
             { id: noel.volunteer.id, as: BENEVOLE_CODE },
           ];
-          const assignment = await funnel.assign();
+          await funnel.assign();
 
-          expect(assignment).toEqual({
+          expect(assignments.all).toContainEqual({
             ...rendreKangoo,
             assignees: expectedAssignees,
           });
@@ -164,26 +158,23 @@ describe("Assign volunteers funnel", () => {
       });
     });
     describe("when selected volunteer is member of both benevole and conducteur", () => {
-      let volunteerFunnel: OneCandidateNotFulfillingDemand;
+      let volunteerFunnel: IActAsFunnel;
       const volunteer = lea.volunteer;
+      let assignments: InMemoryAssignments;
       beforeAll(async () => {
-        const assignments = new InMemoryAssignments(initialAssignments);
-        const funnel = await WaitingForVolunteer.init(
+        assignments = new InMemoryAssignments(initialAssignments);
+        volunteerFunnel = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
           rendreKangoo,
         ).select(volunteer);
-        if (isOneCandidateFulfillsDemand(funnel)) {
-          throw new Error("Unexepected funnel type");
-        }
-        volunteerFunnel = funnel;
       });
       it("should NOT select team assignment", () => {
         const [candidate, ..._candidates] = volunteerFunnel.candidates;
         expect(candidate.as).toBeUndefined();
       });
-      it("should indicate there is remaining team demanded", () => {
-        expect(volunteerFunnel.hasRemainingDemands).toBe(true);
+      it("should indicate it can't fulfill more demands (cause there is no assignable friend for fulfilling it)", () => {
+        expect(volunteerFunnel.canFulfillMoreRemainingDemands).toBe(false);
       });
       describe.each`
         team
@@ -192,14 +183,16 @@ describe("Assign volunteers funnel", () => {
       `(
         "when defininig $team assignment for selected volunteer",
         ({ team }) => {
-          let withAssignmentFunnel: OneCandidateFulfillsDemand;
-          beforeAll(() => {
+          let withAssignmentFunnel: IActAsFunnel;
+          beforeAll(async () => {
+            assignments = new InMemoryAssignments(initialAssignments);
+            volunteerFunnel = await WaitingForVolunteer.init(
+              candidateFactory,
+              assignments,
+              rendreKangoo,
+            ).select(volunteer);
             const definition = { volunteer: volunteer.id, team };
-            const funnel = volunteerFunnel.fulfillDemand(definition);
-            if (!isOneCandidateFulfillsDemand(funnel)) {
-              throw new Error("Unexepected funnel type");
-            }
-            withAssignmentFunnel = funnel;
+            withAssignmentFunnel = volunteerFunnel.fulfillDemand(definition);
           });
 
           it(`should select ${team} as team assignment`, () => {
@@ -212,9 +205,9 @@ describe("Assign volunteers funnel", () => {
                 ...rendreKangoo.assignees,
                 { id: volunteer.id, as: team },
               ];
-              const assignment = await withAssignmentFunnel.assign();
+              await withAssignmentFunnel.assign();
 
-              expect(assignment).toEqual({
+              expect(assignments.all).toContainEqual({
                 ...rendreKangoo,
                 assignees: expectedAssignees,
               });
@@ -227,15 +220,16 @@ describe("Assign volunteers funnel", () => {
   describe("Assign hard and vieux as confiance", () => {
     describe("when assignment needs one more confiance", () => {
       describe.each`
-        assignment       | volunteer         | team
-        ${gererLaCaisse} | ${luce.volunteer} | ${HARD}
-        ${gererLaCaisse} | ${lea.volunteer}  | ${VIEUX}
+        assignment       | volunteer           | team
+        ${gererLaCaisse} | ${luce.volunteer}   | ${HARD}
+        ${gererLaCaisse} | ${nathan.volunteer} | ${VIEUX}
       `(
         "when volunteer selected is part of $team",
         ({ assignment, volunteer }) => {
           let funnel: WaitingForVolunteer;
+          let assignments: InMemoryAssignments;
           beforeAll(() => {
-            const assignments = new InMemoryAssignments(initialAssignments);
+            assignments = new InMemoryAssignments(initialAssignments);
             funnel = WaitingForVolunteer.init(
               candidateFactory,
               assignments,
@@ -244,14 +238,15 @@ describe("Assign volunteers funnel", () => {
           });
           it("should be able to assign him as confiance", async () => {
             const selected = await funnel.select(volunteer);
-            if (!isOneCandidateFulfillsDemand(selected)) {
-              throw new Error("Unexpected funnel type");
-            }
 
-            const assignment = await selected.assign();
+            await selected.assign();
 
             const expectedAssignee = { as: CONFIANCE, id: volunteer.id };
-            expect(assignment.assignees).toContainEqual(expectedAssignee);
+            const expectAssignment = {
+              ...assignment,
+              assignees: [...assignment.assignees, expectedAssignee],
+            };
+            expect(assignments.all).toContainEqual(expectAssignment);
           });
         },
       );
@@ -263,18 +258,14 @@ describe("Assign volunteers funnel", () => {
       `(
         "When selecting $volunteerName who is part of $volunteerTeams on $assignmentName",
         ({ assignment, volunteer }) => {
-          let funnel: OneCandidateNotFulfillingDemand;
+          let funnel: IActAsFunnel;
           beforeAll(async () => {
             const assignments = new InMemoryAssignments(initialAssignments);
-            const selected = await WaitingForVolunteer.init(
+            funnel = await WaitingForVolunteer.init(
               candidateFactory,
               assignments,
               assignment,
             ).select(volunteer);
-            if (isOneCandidateFulfillsDemand(selected)) {
-              throw new Error("Unexpected funnel type");
-            }
-            funnel = selected;
           });
           it(`should list ${CONFIANCE} as assignable team`, () => {
             expect(
@@ -288,6 +279,42 @@ describe("Assign volunteers funnel", () => {
           });
         },
       );
+    });
+  });
+  describe("Assign multiple candidate", () => {
+    describe(`
+    Given:
+      Ontain is benevole and friend with Tatouin,
+      Tatouin is benevole and has no more friends,
+      Both are available during nettoyer le QG catering,
+      3 benevoles are demanded for Nettoyer le QG catering
+    `, () => {
+      let funnel: IActAsFunnel;
+      beforeAll(async () => {
+        const friends = new InMemoryFriends(
+          new Map([[ontaine.volunteer.id, [tatouin.volunteer]]]),
+        );
+        const candidateFactory = new CandidateFactory(
+          planning,
+          availabilities,
+          friends,
+        );
+        const assignments = new InMemoryAssignments(initialAssignments);
+        funnel = await WaitingForVolunteer.init(
+          candidateFactory,
+          assignments,
+          nettoyerLeQgCatering,
+        ).select(ontaine.volunteer);
+      });
+      it("should indicate it can fulfill more demands", () => {
+        expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+      });
+      describe("when adding a candidate", () => {
+        it("should add tatouin", async () => {
+          const multipleCandidate = await funnel.addCandidate();
+          expect(multipleCandidate.candidates).toHaveLength(2);
+        });
+      });
     });
   });
 });

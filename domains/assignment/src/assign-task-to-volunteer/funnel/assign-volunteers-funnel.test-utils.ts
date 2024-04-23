@@ -127,6 +127,17 @@ export const luce: TestHelper = {
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
 };
 
+export const nathan: TestHelper = {
+  volunteer: {
+    id: 6,
+    firstname: "Nathan",
+    lastname: "Trice",
+    teams: [BENEVOLE_CODE, VIEUX, HARD],
+  },
+  planning: [],
+  availabilities: [{ start: monday10h, end: nextTuesday02h }],
+};
+
 export const benevolant: Assignment = {
   start: friday08hTo10h.start,
   end: friday08hTo10h.end,
