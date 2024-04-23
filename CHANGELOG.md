@@ -1,3 +1,18 @@
+## [2.27.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.0...v2.27.1) (2024-04-23)
+
+
+### Bug Fixes
+
+* **assignment:** add missed permission to unassign [#1799](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1799) ([054d06b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/054d06bf21048ffe07d524f446496573d8e34a0e))
+* **assignment:** count assignees on each assignment instead of on mobilization. [#1800](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1800) ([73a1e62](https://gitlab.com/24-heures-insa/overbookd-mono/commit/73a1e621ea020178a8540348a470377fd4afb068))
+* **assignment:** enable consecutive assignment. [#1798](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1798) ([9af1dcd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9af1dcdbcc4d679130508ea1a70ccf6f97a8b59f))
+* **logistic-dashboard:** implement purchases in preview [#1788](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1788) ([c4f945a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c4f945a01e29d50c20ca1a6c2e85971564c86655))
+
+
+### CI/CD
+
+* patch version for prefeat release ([01688d6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/01688d6d036cce221c96cd074462af33b510ef12))
+
 ## [2.27.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.26.1...v2.27.0) (2024-04-23)
 
 
