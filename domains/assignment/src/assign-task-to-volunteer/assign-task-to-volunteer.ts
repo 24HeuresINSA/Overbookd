@@ -49,7 +49,7 @@ export class AssignTaskToVolunteer {
       this.computeMissingAssignmentTeams(task),
     );
     return withMissingTeams
-      .filter((task) => (all ? true : task.teams.length > 0))
+      .filter((task) => (all || task.teams.length > 0))
       .map(({ teams, ...task }) => ({
         ...task,
         teams: removeDuplicates(teams),
