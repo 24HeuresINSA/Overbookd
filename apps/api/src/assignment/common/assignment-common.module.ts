@@ -4,12 +4,18 @@ import { PrismaService } from "../../prisma.service";
 import { PrismaAssignments } from "./repository/assignments.prisma";
 import { AssignmentService } from "./assignment.service";
 import { PrismaPlanning } from "./repository/planning.prisma";
+import { PrismaTasks } from "./repository/tasks.prisma";
 
 @Module({
   providers: [
     {
       provide: PrismaAssignments,
       useFactory: (prisma: PrismaService) => new PrismaAssignments(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaTasks,
+      useFactory: (prisma: PrismaService) => new PrismaTasks(prisma),
       inject: [PrismaService],
     },
     {
@@ -24,7 +30,7 @@ import { PrismaPlanning } from "./repository/planning.prisma";
       inject: [PrismaAssignments, PrismaPlanning],
     },
   ],
-  exports: [AssignmentService],
+  exports: [AssignmentService, PrismaAssignments, PrismaTasks],
   imports: [PrismaModule],
 })
 export class AssignmentCommonModule {}

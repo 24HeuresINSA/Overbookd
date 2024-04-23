@@ -7,7 +7,6 @@ import {
   noelExpected,
   leaExpected,
 } from "./assign-volunteer-to-task.test-utils";
-import { InMemoryAssignments } from "../common/repositories/assignments.inmemory";
 import { InMemoryTasks } from "../common/repositories/tasks.inmemory";
 import {
   benevolant,
@@ -18,6 +17,7 @@ import { Task } from "../assign-task-to-volunteer/task";
 import { STATIQUE } from "@overbookd/festival-event-constants";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { AssignmentSummaryWithTask } from "../common/assignment";
+import { InMemoryTaskAssignments } from "./repositories/task-assignments.inmemory";
 
 const taskForBenevolant: Task = {
   id: benevolant.taskId,
@@ -50,7 +50,7 @@ const teamsForRendreKangoo = [
 
 describe("Assign volunteer to task", () => {
   const volunteers = new InMemoryVolunteers([leaAssignee, noelAssignee]);
-  const assignments = new InMemoryAssignments([
+  const assignments = new InMemoryTaskAssignments([
     benevolant,
     rendreKangoo,
     couperDesCarottes,

@@ -27,6 +27,11 @@ export class PrismaVolunteers implements Volunteers {
     });
     return volunteers.map(toVolunteerWithAssignments);
   }
+
+  async findOne(id: number): Promise<VolunteerWithAssignments> {
+    console.log("findOne", id);
+    throw new Error("Method not implemented.");
+  }
 }
 
 function toVolunteerWithAssignments(

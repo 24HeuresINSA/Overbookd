@@ -1,7 +1,7 @@
 import { Period } from "@overbookd/period";
 import { FormatVolunteer, Volunteer } from "../volunteer";
-import { Assignments } from "../common/repositories/assignments";
 import {
+  Assignment,
   AssignmentSummaryWithTask,
   countAssigneesInTeam,
 } from "../common/assignment";
@@ -24,10 +24,17 @@ export type Volunteers = {
   findOne(id: Volunteer["id"]): Promise<VolunteerWithAssignments | undefined>;
 };
 
+export type TaskAssignments = {
+  findAssignableFor(
+    volunteerAssignments: Period[],
+    oneOfTheTeams: string[],
+  ): Promise<Assignment[]>;
+};
+
 export class AssignVolunteerToTask {
   constructor(
     private readonly allVolunteers: Volunteers,
-    private readonly assignments: Assignments,
+    private readonly taskAssignments: TaskAssignments,
     private readonly tasks: Tasks,
   ) {}
 
@@ -44,7 +51,7 @@ export class AssignVolunteerToTask {
     const volunteer = await this.allVolunteers.findOne(volunteerId);
     if (!volunteer) throw new Error("Volunteer not found");
 
-    const assignments = await this.assignments.findAssignableFor(
+    const assignments = await this.taskAssignments.findAssignableFor(
       volunteer.assignments,
       volunteer.teams,
     );

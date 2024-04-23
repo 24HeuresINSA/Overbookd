@@ -1,18 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TaskToVolunteerService } from "./task-to-volunteer.service";
 import { AssignTaskToVolunteer } from "@overbookd/assignment";
-import { PrismaTasks } from "../common/repository/tasks.prisma";
 import { PrismaService } from "../../prisma.service";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.prisma";
+import { PrismaTasks } from "../common/repository/tasks.prisma";
+import { AssignmentCommonModule } from "../common/assignment-common.module";
 
 @Module({
   providers: [
-    {
-      provide: PrismaTasks,
-      useFactory: (prisma: PrismaService) => new PrismaTasks(prisma),
-      inject: [PrismaService],
-    },
     {
       provide: PrismaAssignableVolunteers,
       useFactory: (prisma: PrismaService) =>
@@ -35,6 +31,6 @@ import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.p
     },
   ],
   exports: [TaskToVolunteerService],
-  imports: [PrismaModule],
+  imports: [PrismaModule, AssignmentCommonModule],
 })
 export class TaskToVolunteerModule {}
