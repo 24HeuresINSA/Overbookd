@@ -1,3 +1,15 @@
+## [2.29.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.28.0...v2.29.0) (2024-04-23)
+
+
+### Features
+
+* **assignment:** multi-assignment in task-orga [#1794](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1794) ([054607d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/054607da369488755857b29893eafa88ac2d4a07))
+
+
+### Bug Fixes
+
+* **assignment:** fix transparent ft. [#1797](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1797) ([b5dcf0b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b5dcf0b0e7097b727d2b76354f947a2752828a98))
+
 ## [2.28.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.27.3...v2.28.0) (2024-04-23)
 
 
