@@ -14,6 +14,7 @@ import {
   uniqueAssignment,
   updateAssigneesOnAssignment,
 } from "./assignment.query";
+import { MISSING_ITEM_INDEX } from "@overbookd/list";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -103,7 +104,9 @@ function toAssignmentWithDetails(
     team: teamCode,
     demand: count,
   }));
-  const assignees = assignment.assignees.map(toAssigneeForDetails);
+  const assignees = assignment.assignees.map((assignee, _, assignees) =>
+    toAssigneeForDetails(assignee, assignees),
+  );
   return {
     ...identifier,
     start: assignment.start,
@@ -117,6 +120,7 @@ function toAssignmentWithDetails(
 
 function toAssigneeForDetails(
   assignee: DatabaseAssignee,
+  assignees: DatabaseAssignee[],
 ): BaseAssigneeForDetails | TeamMemberForDetails {
   const baseAssignee = {
     id: assignee.personalData.id,
@@ -125,11 +129,29 @@ function toAssigneeForDetails(
   };
   if (!assignee.teamCode) return baseAssignee;
 
+  const allFriendsAssigned = [
+    ...assignee.personalData.friendRequestors.map(({ friend }) => friend),
+    ...assignee.personalData.friends.map(({ requestor }) => requestor),
+  ].filter(({ id }) =>
+    assignees.some(({ personalData }) => personalData.id === id),
+  );
+
+  const friends = allFriendsAssigned.reduce(
+    (friends: BaseAssigneeForDetails[], friend) => {
+      const friendIndex = friends.findIndex(({ id }) => friend.id === id);
+      const isAlredyListed = friendIndex !== MISSING_ITEM_INDEX;
+      if (isAlredyListed) return friends;
+
+      return [...friends, friend];
+    },
+    [],
+  );
+
   const teams = assignee.personalData.teams.map(({ teamCode }) => teamCode);
   return {
     ...baseAssignee,
     teams,
     as: assignee.teamCode,
-    friends: [], // TODO: implement assigned friends
+    friends,
   };
 }

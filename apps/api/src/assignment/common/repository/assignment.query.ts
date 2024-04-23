@@ -1,6 +1,7 @@
 import {
   Assignee,
   AssignmentIdentifier,
+  BaseAssigneeForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
 import { SELECT_PERIOD } from "./period.query";
@@ -12,6 +13,8 @@ export type DatabaseAssignee = {
     firstname: string;
     lastname: string;
     teams: { teamCode: string }[];
+    friends: { requestor: BaseAssigneeForDetails }[];
+    friendRequestors: { friend: BaseAssigneeForDetails }[];
   };
 };
 
@@ -28,33 +31,40 @@ export type DatabaseAssignment = {
   };
 };
 
+const SELECT_FRIEND_PERSONAL_DATA = {
+  id: true,
+  lastname: true,
+  firstname: true,
+};
+
+const SELECT_ASSIGNEE_PERSONAL_DATA = {
+  id: true,
+  firstname: true,
+  lastname: true,
+  teams: { select: { teamCode: true } },
+  friends: { select: { requestor: { select: SELECT_FRIEND_PERSONAL_DATA } } },
+  friendRequestors: {
+    select: { friend: { select: SELECT_FRIEND_PERSONAL_DATA } },
+  },
+};
+
+const SELECT_ASSIGNEE = {
+  teamCode: true,
+  personalData: { select: SELECT_ASSIGNEE_PERSONAL_DATA },
+};
+
+const SELECT_TEAM_DEMANDS = { teamCode: true, count: true };
+
+const SELECT_TASK = {
+  name: true,
+  appointment: { select: { name: true } },
+};
 export const SELECT_ASSIGNMENT = {
   ...SELECT_PERIOD,
-  festivalTask: {
-    select: {
-      name: true,
-      appointment: { select: { name: true } },
-    },
-  },
-  assignees: {
-    select: {
-      teamCode: true,
-      personalData: {
-        select: {
-          id: true,
-          firstname: true,
-          lastname: true,
-          teams: { select: { teamCode: true } },
-        },
-      },
-    },
-  },
+  festivalTask: { select: SELECT_TASK },
+  assignees: { select: SELECT_ASSIGNEE },
   mobilization: {
-    select: {
-      teams: {
-        select: { teamCode: true, count: true },
-      },
-    },
+    select: { teams: { select: SELECT_TEAM_DEMANDS } },
   },
 };
 

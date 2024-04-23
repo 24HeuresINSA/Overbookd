@@ -29,3 +29,5 @@ export function hasAtLeastOneItem<T>(list: T[]): list is WithAtLeastOneItem<T> {
 export function isEmpty<T>(list: T[]): list is [] {
   return list.length === 0;
 }
+
+export const MISSING_ITEM_INDEX = -1;
