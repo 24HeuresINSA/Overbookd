@@ -2,6 +2,7 @@ import {
   ConsumableGearDetails,
   GearBorrow,
   GearDetails,
+  GearPurchase,
 } from "@overbookd/http";
 import {
   DatabaseGear,
@@ -329,6 +330,7 @@ const emptyGearDetails = {
   tasks: [],
   inventory: 0,
   borrows: [],
+  purchases: [],
 };
 
 const emptyConsumableDetails = { ...emptyGearDetails, consumed: 0 };
@@ -654,3 +656,87 @@ export const consumableGearWithOneInquiryAndOneBorrowForGraph: GearDetails[] = [
     consumed: 20,
   },
 ];
+
+const PurchaseFromFriday08h: GearPurchase = {
+  id: databasePurchaseFromFriday08h.purchase.id,
+  seller: databasePurchaseFromFriday08h.purchase.seller,
+  quantity: databasePurchaseFromFriday08h.quantity,
+};
+
+export const gearWithOneInventoryRecordAndOnePurchaseForGraph: GearDetails[] = [
+  {
+    ...emptyGearDetails,
+    ...friday08hto08h15,
+    stock: 30,
+    inventory: 25,
+    purchases: [PurchaseFromFriday08h],
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h15to08h30,
+    stock: 30,
+    inventory: 25,
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h30to08h45,
+    stock: 30,
+    inventory: 25,
+  },
+  {
+    ...emptyGearDetails,
+    ...friday08h45to09h,
+    stock: 30,
+    inventory: 25,
+  },
+  {
+    ...emptyGearDetails,
+    ...friday09hto09h15,
+    stock: 30,
+    inventory: 25,
+  },
+  {
+    ...emptyGearDetails,
+    ...friday09h15to09h30,
+    stock: 30,
+    inventory: 25,
+  },
+];
+
+export const consumableGearWithOneInquiryAndOnePurchaseForGraph: GearDetails[] =
+  [
+    {
+      ...emptyConsumableDetails,
+      ...friday08hto08h15,
+      stock: 5,
+      purchases: [PurchaseFromFriday08h],
+    },
+    {
+      ...emptyConsumableDetails,
+      ...friday08h15to08h30,
+      stock: 5,
+    },
+    {
+      ...emptyConsumableDetails,
+      ...friday08h30to08h45,
+      stock: 5,
+    },
+    {
+      ...emptyConsumableDetails,
+      ...friday08h45to09h,
+      stock: 5,
+    },
+    {
+      ...emptyConsumableDetails,
+      ...friday09hto09h15,
+      stock: 5,
+      inquiry: 20,
+      activities: [{ ...pcSecuActivity, quantity: 20 }],
+    },
+    {
+      ...emptyConsumableDetails,
+      ...friday09h15to09h30,
+      stock: -15,
+      consumed: 20,
+    },
+  ];

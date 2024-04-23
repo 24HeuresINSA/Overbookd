@@ -1,4 +1,5 @@
 import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
+import { Purchase } from "@overbookd/logistic";
 import { Borrow } from "@overbookd/logistic";
 
 export type GearPreview = {
@@ -21,6 +22,12 @@ export type GearBorrow = {
   quantity: number;
 };
 
+export type GearPurchase = {
+  id: Purchase["id"];
+  seller: Purchase["seller"];
+  quantity: number;
+};
+
 export type BaseGearDetails = {
   start: Date;
   end: Date;
@@ -30,6 +37,7 @@ export type BaseGearDetails = {
   tasks: Inquiry[];
   inventory: number;
   borrows: GearBorrow[];
+  purchases: GearPurchase[];
 };
 
 export type ConsumableGearDetails = BaseGearDetails & {
