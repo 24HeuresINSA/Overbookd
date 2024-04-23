@@ -16,6 +16,7 @@ export type {
   AssignmentIdentifier,
   AssignmentTeam,
   AssignmentSummary,
+  AssignmentSummaryWithTask,
   BaseAssigneeForDetails,
   TeamDemanded,
   TeamMember,

@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TaskToVolunteerService } from "./task-to-volunteer.service";
 import { AssignTaskToVolunteer } from "@overbookd/assignment";
-import { PrismaTasks } from "./repository/tasks.prisma";
+import { PrismaTasks } from "../common/repository/tasks.prisma";
 import { PrismaService } from "../../prisma.service";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaAssignableVolunteers } from "./repository/assignable-volunteers.prisma";

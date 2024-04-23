@@ -15,6 +15,7 @@ import {
   updateAssigneesOnAssignment,
 } from "./assignment.query";
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
+import { Period } from "@overbookd/period";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -71,6 +72,14 @@ export class PrismaAssignments implements AssignmentRepository {
         },
       },
     });
+  }
+
+  async findAssignableFor(
+    volunteerAssignments: Period[],
+    oneOfTheTeams: string[],
+  ): Promise<Assignment[]> {
+    console.log(volunteerAssignments, oneOfTheTeams);
+    throw new Error("Method not implemented.");
   }
 }
 
