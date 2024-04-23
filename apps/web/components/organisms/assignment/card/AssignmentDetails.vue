@@ -228,14 +228,14 @@ export default Vue.extend({
   methods: {
     unassignVolunteer(teamMember: TeamMemberForDetails) {
       if (!this.assignementDetails) return;
-      const assignmentId = {
+      const assignmentIdentifier = {
         assignmentId: this.assignementDetails.assignmentId,
         taskId: this.assignementDetails.taskId,
         mobilizationId: this.assignementDetails.mobilizationId,
       };
 
       this.$accessor.assignTaskToVolunteer.unassign({
-        assignmentId,
+        assignmentIdentifier,
         assigneeId: teamMember.id,
       });
     },

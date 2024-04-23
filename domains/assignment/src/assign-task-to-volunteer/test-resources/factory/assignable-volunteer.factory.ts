@@ -26,7 +26,7 @@ export class AssignableVolunteerFactory {
     const stored: StoredAssignableVolunteer = {
       ...volunteer,
       hasFriendAssigned: false,
-      hasFriendAvailable: false,
+      assignableFriendsIds: [],
       hasAtLeastOneFriend: false,
       requestedDuring: [],
       assignments: [],
@@ -36,7 +36,7 @@ export class AssignableVolunteerFactory {
       assignmentDuration: 0,
       isRequestedOnSamePeriod: false,
       hasFriendAssigned: false,
-      hasFriendAvailable: false,
+      assignableFriendsIds: [],
       hasAtLeastOneFriend: false,
     };
     const expected: Record<MaybeCategory, AssignableVolunteer> = {

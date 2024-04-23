@@ -1,10 +1,10 @@
 import {
   AssignableVolunteers,
+  AssignmentIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import { HttpStringified } from "@overbookd/http";
-import { ExtendedAssignementIdentifier } from "~/utils/assignment/assignment-identifier";
 import { Context } from "../context";
 
 export class TaskToVolunteerRepository {
@@ -25,7 +25,7 @@ export class TaskToVolunteerRepository {
 
   static getAssignableVolunteersForAssignement(
     context: Context,
-    { taskId, mobilizationId, assignmentId }: ExtendedAssignementIdentifier,
+    { taskId, mobilizationId, assignmentId }: AssignmentIdentifier,
   ) {
     return context.$axios.get<HttpStringified<AssignableVolunteers[]>>(
       `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}/assignable-volunteers`,

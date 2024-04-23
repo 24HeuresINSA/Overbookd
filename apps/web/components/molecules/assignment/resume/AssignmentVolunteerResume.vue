@@ -26,7 +26,7 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
-                  volunteer.hasFriendAvailable
+                  volunteer.assignableFriendsIds.length > 0
                 "
                 small
                 v-bind="attrs"

@@ -12,7 +12,7 @@ export function isAssignableVolunteer(
 ): volunteer is AssignableVolunteer {
   return (
     Object.hasOwn(volunteer, "isRequestedOnSamePeriod") &&
-    Object.hasOwn(volunteer, "hasFriendAvailable") &&
+    Object.hasOwn(volunteer, "assignableFriendsIds") &&
     Object.hasOwn(volunteer, "hasFriendAssigned")
   );
 }
