@@ -49,6 +49,7 @@ import { ForgetMember } from "@overbookd/registration";
 import { PlanningEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
+import { Period } from "@overbookd/period";
 
 @Injectable()
 export class UserService {
@@ -226,14 +227,17 @@ export class UserService {
   }
 
   static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
-    const stats = assignments.reduce((stats, { start, end, festivalTask }) => {
-      const category = festivalTask.category;
-      const durationToAdd = getPeriodDuration({ start, end });
-      const previousDuration = stats.get(category)?.duration ?? 0;
-      const duration = previousDuration + durationToAdd;
-      stats.set(category, { category, duration });
-      return stats;
-    }, new Map<TaskCategory, VolunteerAssignmentStat>());
+    const stats = assignments.reduce(
+      (stats, { festivalTask, ...assignment }) => {
+        const { category } = festivalTask;
+        const durationToAdd = Period.init(assignment).duration.inMilliseconds;
+        const previousDuration = stats.get(category)?.duration ?? 0;
+        const duration = previousDuration + durationToAdd;
+        stats.set(category, { category, duration });
+        return stats;
+      },
+      new Map<TaskCategory, VolunteerAssignmentStat>(),
+    );
     return [...stats.values()];
   }
 
