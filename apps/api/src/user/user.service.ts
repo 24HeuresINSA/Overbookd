@@ -38,7 +38,7 @@ import {
   SELECT_USER_PERSONAL_DATA_WITH_NOTE,
   hasPermission,
 } from "./user.query";
-import { TaskCategory } from "@prisma/client";
+import { Category } from "@overbookd/festival-event-constants";
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
@@ -236,7 +236,7 @@ export class UserService {
         stats.set(category, { category, duration });
         return stats;
       },
-      new Map<TaskCategory, VolunteerAssignmentStat>(),
+      new Map<Category, VolunteerAssignmentStat>(),
     );
     return [...stats.values()];
   }
@@ -251,7 +251,7 @@ export class UserService {
       const duration = previousDuration + durationToAdd;
       stats.set(category, { category, duration });
       return stats;
-    }, new Map<TaskCategory, VolunteerAssignmentStat>());
+    }, new Map<Category, VolunteerAssignmentStat>());
     return [...stats.values()];
   }
 
