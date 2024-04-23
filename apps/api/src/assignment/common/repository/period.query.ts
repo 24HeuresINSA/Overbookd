@@ -4,8 +4,8 @@ export const SELECT_PERIOD = { start: true, end: true };
 
 export function overlapPeriodCondition(period: IProvidePeriod) {
   return {
-    start: { lte: period.end },
-    end: { gte: period.start },
+    start: { lt: period.end },
+    end: { gt: period.start },
   };
 }
 
