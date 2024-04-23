@@ -26,7 +26,7 @@ import {
   HAS_POSITIVE_CHARISMA,
   IS_NOT_DELETED,
 } from "../../common/repository/common.query";
-import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}

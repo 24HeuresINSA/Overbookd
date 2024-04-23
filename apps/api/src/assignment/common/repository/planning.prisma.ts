@@ -2,8 +2,8 @@ import { Planning, PlanningEvent, PlanningTask } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/period";
 import { SELECT_PERIOD } from "./period.query";
-import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../task-to-volunteer/repository/task.query";
 import { SELECT_PLANNING_EVENT, SELECT_TASK } from "./planning.query";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   festivalTask: PlanningTask;
