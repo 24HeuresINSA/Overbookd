@@ -74,10 +74,26 @@ const SELECT_BORROWS = {
   },
 };
 
+const SELECT_PURCHASES = {
+  purchases: {
+    select: {
+      quantity: true,
+      purchase: {
+        select: {
+          id: true,
+          seller: true,
+          availableOn: true,
+        },
+      },
+    },
+  },
+};
+
 export const SELECT_GEAR = {
   ...SELECT_BASE_GEAR,
   ...SELECT_INVENTORY,
   ...SELECT_ACTIVITY_GEAR_INQUIRIES,
   ...SELECT_TASK_GEAR_INQUIRIES,
   ...SELECT_BORROWS,
+  ...SELECT_PURCHASES,
 };
