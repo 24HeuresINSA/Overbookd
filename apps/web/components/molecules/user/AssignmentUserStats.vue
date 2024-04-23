@@ -1,7 +1,7 @@
 <template>
   <div class="user-stats">
     <div v-for="stat in sortedStats" :key="stat.category" class="stat">
-      <v-tooltip top>
+      <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <p class="stat__duration" v-bind="attrs" v-on="on">
             {{ getDisplayedStat(stat) }}
@@ -39,11 +39,18 @@ export default Vue.extend({
   },
   computed: {
     sortedStats(): VolunteerAssignmentStat[] {
-      return [...this.stats].sort((a, b) => {
-        const aIndex = displayableCategories.indexOf(a.category ?? AUCUNE);
-        const bIndex = displayableCategories.indexOf(b.category ?? AUCUNE);
-        return aIndex - bIndex;
-      });
+      return displayableCategories
+        .map((displayableCategory) => {
+          const categoryStat = this.stats.find(
+            ({ category }) => (category ?? AUCUNE) === displayableCategory,
+          );
+          return categoryStat ?? { category: displayableCategory, duration: 0 };
+        })
+        .sort((a, b) => {
+          const aIndex = displayableCategories.indexOf(a.category ?? AUCUNE);
+          const bIndex = displayableCategories.indexOf(b.category ?? AUCUNE);
+          return aIndex - bIndex;
+        });
     },
   },
   methods: {

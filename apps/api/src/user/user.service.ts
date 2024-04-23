@@ -8,7 +8,10 @@ import { retrievePermissions } from "../team/utils/permissions";
 import { formatRequirementAsTask } from "../utils/assignment";
 import { getPeriodDuration } from "../utils/duration";
 import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
-import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
+import {
+  DatabaseOldVolunteerAssignmentStat,
+  DatabaseVolunteerAssignmentStat,
+} from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
@@ -30,12 +33,12 @@ import {
   SELECT_BASE_USER,
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_MY_USER_INFORMATION,
-  SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
+  SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
   SELECT_USER_PERSONAL_DATA_WITH_NOTE,
   hasPermission,
 } from "./user.query";
-import { TaskCategory } from "@prisma/client";
+import { Category } from "@overbookd/festival-event-constants";
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
@@ -46,6 +49,7 @@ import { ForgetMember } from "@overbookd/registration";
 import { PlanningEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
+import { Period } from "@overbookd/period";
 
 @Injectable()
 export class UserService {
@@ -215,14 +219,31 @@ export class UserService {
   async getVolunteerAssignmentStats(
     volunteerId: number,
   ): Promise<VolunteerAssignmentStat[]> {
-    const assignments = await this.prisma.oldAssignment.findMany({
-      where: { assigneeId: volunteerId },
-      select: SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
+    const assignments = await this.prisma.assignment.findMany({
+      where: { assignees: { some: { userId: volunteerId } } },
+      select: SELECT_PERIOD_AND_CATEGORY,
     });
     return UserService.formatAssignmentStats(assignments);
   }
 
   static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
+    const stats = assignments.reduce(
+      (stats, { festivalTask, ...assignment }) => {
+        const { category } = festivalTask;
+        const durationToAdd = Period.init(assignment).duration.inMilliseconds;
+        const previousDuration = stats.get(category)?.duration ?? 0;
+        const duration = previousDuration + durationToAdd;
+        stats.set(category, { category, duration });
+        return stats;
+      },
+      new Map<Category, VolunteerAssignmentStat>(),
+    );
+    return [...stats.values()];
+  }
+
+  static formatOldAssignmentStats(
+    assignments: DatabaseOldVolunteerAssignmentStat[],
+  ) {
     const stats = assignments.reduce((stats, { timeSpan }) => {
       const category = timeSpan.timeWindow.ft.category;
       const durationToAdd = getPeriodDuration(timeSpan);
@@ -230,7 +251,7 @@ export class UserService {
       const duration = previousDuration + durationToAdd;
       stats.set(category, { category, duration });
       return stats;
-    }, new Map<TaskCategory, VolunteerAssignmentStat>());
+    }, new Map<Category, VolunteerAssignmentStat>());
     return [...stats.values()];
   }
 

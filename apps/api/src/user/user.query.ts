@@ -132,6 +132,16 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
+export const SELECT_PERIOD_AND_CATEGORY = {
+  start: true,
+  end: true,
+  festivalTask: {
+    select: {
+      category: true,
+    },
+  },
+};
+
 export function hasPermission(permission: Permission) {
   return {
     teams: {

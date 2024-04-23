@@ -163,7 +163,7 @@ export class AssignmentService {
       },
     });
     return volunteers.map(({ assignments, ...volunteer }) => {
-      const stats = UserService.formatAssignmentStats(assignments);
+      const stats = UserService.formatOldAssignmentStats(assignments);
       return { ...volunteer, stats };
     });
   }
