@@ -17,7 +17,7 @@
               <div class="calendar-header">
                 <div class="calendar-header__action">
                   <v-btn
-                    v-if="false"
+                    v-if="isRemovable(category)"
                     icon
                     color="red"
                     @click="removeLastCandidate"
@@ -267,11 +267,7 @@ export default defineComponent({
   },
   methods: {
     canChangeCandidates(id: string): boolean {
-      if (this.candidatesForCalendar.length < 2) return false;
-      return (
-        this.candidatesForCalendar[this.candidatesForCalendar.length - 1].id ===
-          +id && this.assignableFriends.length > 1
-      );
+      return this.isLastAddedCandidate(id) && this.assignableFriends.length > 1;
     },
     initFunnel(): Promise<AssignmentAndVolunteerSelected> {
       return ReadyToStart.init(candidateFactory(this), assignments(this))
@@ -352,16 +348,14 @@ export default defineComponent({
       );
     },
     isLastAddedCandidate(volunteerId: string): boolean {
-      const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId,
+      if (this.candidatesForCalendar.length < 2) return false;
+      return (
+        this.candidatesForCalendar[this.candidatesForCalendar.length - 1].id ===
+        +volunteerId
       );
-      return candidateIndex + 1 === this.taskAssignment.candidates.length;
     },
     isFirstAddedCandidate(volunteerId: string): boolean {
-      const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId,
-      );
-      return candidateIndex === 0;
+      return this.selectedVolunteer?.id === +volunteerId;
     },
     isRemovable(volunteerId: string): boolean {
       return (
@@ -370,7 +364,7 @@ export default defineComponent({
       );
     },
     removeLastCandidate(): void {
-      this.$accessor.assignment.removeLastCandidate();
+      this.additionalCandidates.pop();
     },
   },
 });
