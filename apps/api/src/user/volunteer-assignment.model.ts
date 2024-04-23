@@ -1,3 +1,4 @@
+import { IProvidePeriod } from "@overbookd/period";
 import { TaskCategory } from "@prisma/client";
 
 export type DatabaseOldVolunteerAssignmentStat = {
@@ -12,9 +13,7 @@ export type DatabaseOldVolunteerAssignmentStat = {
   };
 };
 
-export type DatabaseVolunteerAssignmentStat = {
-  start: Date;
-  end: Date;
+export type DatabaseVolunteerAssignmentStat = IProvidePeriod & {
   festivalTask: {
     category: TaskCategory;
   };
