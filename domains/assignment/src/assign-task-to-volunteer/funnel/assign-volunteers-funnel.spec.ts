@@ -23,7 +23,7 @@ import {
   nettoyerLeQgCatering,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
-import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { CONFIANCE, HARD, VIEUX } from "../../common/teams";
 import { InMemoryAvailabilities } from "./availabilties.inmemory";
 import { InMemoryFriends } from "./friends.inmemory";
 

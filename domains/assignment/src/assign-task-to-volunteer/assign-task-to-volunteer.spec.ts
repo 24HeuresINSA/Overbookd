@@ -21,7 +21,7 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-resources/assign-task-to-volunteer.test.utils";
-import { HARD, VIEUX } from "../teams";
+import { HARD, VIEUX } from "../common/teams";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Assign task to volunteer", () => {

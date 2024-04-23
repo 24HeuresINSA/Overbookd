@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { Volunteer } from "../volunteer";
+import { Volunteer } from "../common/volunteer";
 import { IProvidePeriod } from "@overbookd/period";
 import { Category } from "@overbookd/festival-event-constants";
 

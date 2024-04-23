@@ -4,13 +4,13 @@ import {
   AssignmentSummaryFactory,
   AssignmentTeamFactory,
 } from "./factory/assignment-summary.factory";
-import { Volunteer } from "../../volunteer";
+import { Volunteer } from "../../common/volunteer";
 import {
   AssignableVolunteerFactory,
   MaybeCategory,
 } from "./factory/assignable-volunteer.factory";
 import { BAR } from "@overbookd/festival-event-constants";
-import { HARD } from "../../teams";
+import { HARD } from "../../common/teams";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 const friday08hto09h = Period.init({

@@ -4,7 +4,10 @@ export type {
   VolunteerWithAssignments,
   VolunteerWithAssignmentDuration,
 } from "./assign-volunteer-to-task/assign-volunteer-to-task";
-export type { TaskAssignment } from "./assign-volunteer-to-task/task-assignment";
+export type {
+  TaskAssignment,
+  TaskAssignmentForVolunteer,
+} from "./assign-volunteer-to-task/task-assignment";
 export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export type {
   AssignableVolunteers,
@@ -38,7 +41,7 @@ export type {
 } from "./assign-task-to-volunteer/assignable-volunteer";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer";
 export { AssignmentError, TaskNotFoundError } from "./assignment.error";
-export { CONFIANCE, HARD, VIEUX } from "./teams";
+export { CONFIANCE, HARD, VIEUX } from "./common/teams";
 export type { Volunteer as VolunteerForFunnel } from "./assign-task-to-volunteer/funnel/volunteer";
 export {
   Candidate,
@@ -71,4 +74,4 @@ export type {
   VolunteersForAssignment,
 } from "./common/repositories/assignments";
 export type { Volunteer as AssignmentVolunteer } from "./assign-task-to-volunteer/funnel/volunteer";
-export type { TaskIdentifier } from "./task";
+export type { TaskIdentifier } from "./common/task";

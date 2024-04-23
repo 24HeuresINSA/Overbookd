@@ -1,6 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Volunteer } from "../volunteer";
-import { TaskCategorized } from "../task";
+import { Volunteer } from "./volunteer";
+import { TaskCategorized } from "./task";
 
 type NamelyDemanded = { id: Volunteer["id"] };
 export type TeamMember = { id: Volunteer["id"]; as: string };

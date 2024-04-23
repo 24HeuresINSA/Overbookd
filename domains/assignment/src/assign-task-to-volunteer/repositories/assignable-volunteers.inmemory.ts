@@ -3,7 +3,7 @@ import {
   AssignmentSpecification,
 } from "../assign-task-to-volunteer";
 import { StoredAssignableVolunteer } from "../assignable-volunteer";
-import { TaskIdentifier } from "../../task";
+import { TaskIdentifier } from "../../common/task";
 
 export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}

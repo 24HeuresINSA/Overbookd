@@ -1,5 +1,5 @@
 import { AssignmentSummary, Assignment } from "../common/assignment";
-import { TaskCategorized } from "../task";
+import { TaskCategorized } from "../common/task";
 
 export type TaskWithAssignmentsSummary = Omit<
   TaskCategorized,

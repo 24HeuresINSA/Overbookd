@@ -1,6 +1,6 @@
 import { Category } from "@overbookd/festival-event-constants";
 import { Period } from "@overbookd/period";
-import { FormatVolunteer } from "../volunteer";
+import { FormatVolunteer } from "../common/volunteer";
 import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
@@ -15,7 +15,7 @@ import {
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
-import { TaskIdentifier } from "../task";
+import { TaskIdentifier } from "../common/task";
 import { Tasks } from "../common/repositories/tasks";
 
 export type AssignmentSpecification = {

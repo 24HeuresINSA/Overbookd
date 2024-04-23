@@ -1,7 +1,7 @@
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils";
-import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { CONFIANCE, HARD, VIEUX } from "../../common/teams";
 import { Assignment } from "../../common/assignment";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { Volunteer } from "./volunteer";

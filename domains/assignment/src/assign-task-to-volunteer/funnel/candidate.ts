@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { HARD, VIEUX, CONFIANCE } from "../../teams";
+import { HARD, VIEUX, CONFIANCE } from "../../common/teams";
 import {
   Assignment,
   isMemberOf,
