@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import {
-  EveryCandidateFulfillsDemand,
+  OneCandidateFulfillsDemand,
   WaitingForVolunteer,
-  SomeCandidatesNotFulfillingDemand,
-  isEveryCandidateFulfillsDemand,
+  OneCandidateNotFulfillingDemand,
+  isOneCandidateFulfillsDemand,
 } from "./assign-volunteers-funnel";
 import { InMemoryPlanning } from "./planning.inmemory";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory";
@@ -20,10 +20,12 @@ import {
   gererLaCaisse,
   scannerLesBillets,
   demonterLesJeuxGonflables,
+  nettoyerLeQgCatering,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
 import { InMemoryAvailabilities } from "./availabilties.inmemory";
+import { InMemoryFriends } from "./friends.inmemory";
 
 describe("Assign volunteers funnel", () => {
   const planning = new InMemoryPlanning(
@@ -44,14 +46,20 @@ describe("Assign volunteers funnel", () => {
       [luce.volunteer.id, luce.availabilities],
     ]),
   );
+  const friends = new InMemoryFriends(new Map());
   const initialAssignments = [
     benevolant,
     rendreKangoo,
     couperDesCarottes,
     gererLaCaisse,
     demonterLesJeuxGonflables,
+    nettoyerLeQgCatering,
   ];
-  const candidateFactory = new CandidateFactory(planning, availabilities);
+  const candidateFactory = new CandidateFactory(
+    planning,
+    availabilities,
+    friends,
+  );
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
       volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities
@@ -62,7 +70,7 @@ describe("Assign volunteers funnel", () => {
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({ volunteer, candidates, planning, task, team, availabilities }) => {
-        let everyCandidateFulfillsDemand: EveryCandidateFulfillsDemand;
+        let everyCandidateFulfillsDemand: OneCandidateFulfillsDemand;
         beforeAll(async () => {
           const assignments = new InMemoryAssignments(initialAssignments);
           const funnel = WaitingForVolunteer.init(
@@ -71,7 +79,7 @@ describe("Assign volunteers funnel", () => {
             task,
           );
           const selected = await funnel.select(volunteer);
-          if (!isEveryCandidateFulfillsDemand(selected)) {
+          if (!isOneCandidateFulfillsDemand(selected)) {
             throw new Error("Unexepected funnel type");
           }
           everyCandidateFulfillsDemand = selected;
@@ -120,7 +128,7 @@ describe("Assign volunteers funnel", () => {
   });
   describe("when assignment needs two benevoles and one conducteur", () => {
     describe("when selected volunteer is only member of benevole", () => {
-      let funnel: EveryCandidateFulfillsDemand;
+      let funnel: OneCandidateFulfillsDemand;
       beforeAll(async () => {
         const assignments = new InMemoryAssignments(initialAssignments);
         const volunteerSelected = await WaitingForVolunteer.init(
@@ -128,7 +136,7 @@ describe("Assign volunteers funnel", () => {
           assignments,
           rendreKangoo,
         ).select(noel.volunteer);
-        if (!isEveryCandidateFulfillsDemand(volunteerSelected)) {
+        if (!isOneCandidateFulfillsDemand(volunteerSelected)) {
           throw new Error("Unexepected funnel type");
         }
         funnel = volunteerSelected;
@@ -156,7 +164,7 @@ describe("Assign volunteers funnel", () => {
       });
     });
     describe("when selected volunteer is member of both benevole and conducteur", () => {
-      let volunteerFunnel: SomeCandidatesNotFulfillingDemand;
+      let volunteerFunnel: OneCandidateNotFulfillingDemand;
       const volunteer = lea.volunteer;
       beforeAll(async () => {
         const assignments = new InMemoryAssignments(initialAssignments);
@@ -165,7 +173,7 @@ describe("Assign volunteers funnel", () => {
           assignments,
           rendreKangoo,
         ).select(volunteer);
-        if (isEveryCandidateFulfillsDemand(funnel)) {
+        if (isOneCandidateFulfillsDemand(funnel)) {
           throw new Error("Unexepected funnel type");
         }
         volunteerFunnel = funnel;
@@ -184,11 +192,11 @@ describe("Assign volunteers funnel", () => {
       `(
         "when defininig $team assignment for selected volunteer",
         ({ team }) => {
-          let withAssignmentFunnel: EveryCandidateFulfillsDemand;
+          let withAssignmentFunnel: OneCandidateFulfillsDemand;
           beforeAll(() => {
             const definition = { volunteer: volunteer.id, team };
             const funnel = volunteerFunnel.fulfillDemand(definition);
-            if (!isEveryCandidateFulfillsDemand(funnel)) {
+            if (!isOneCandidateFulfillsDemand(funnel)) {
               throw new Error("Unexepected funnel type");
             }
             withAssignmentFunnel = funnel;
@@ -236,7 +244,7 @@ describe("Assign volunteers funnel", () => {
           });
           it("should be able to assign him as confiance", async () => {
             const selected = await funnel.select(volunteer);
-            if (!isEveryCandidateFulfillsDemand(selected)) {
+            if (!isOneCandidateFulfillsDemand(selected)) {
               throw new Error("Unexpected funnel type");
             }
 
@@ -255,7 +263,7 @@ describe("Assign volunteers funnel", () => {
       `(
         "When selecting $volunteerName who is part of $volunteerTeams on $assignmentName",
         ({ assignment, volunteer }) => {
-          let funnel: SomeCandidatesNotFulfillingDemand;
+          let funnel: OneCandidateNotFulfillingDemand;
           beforeAll(async () => {
             const assignments = new InMemoryAssignments(initialAssignments);
             const selected = await WaitingForVolunteer.init(
@@ -263,7 +271,7 @@ describe("Assign volunteers funnel", () => {
               assignments,
               assignment,
             ).select(volunteer);
-            if (isEveryCandidateFulfillsDemand(selected)) {
+            if (isOneCandidateFulfillsDemand(selected)) {
               throw new Error("Unexpected funnel type");
             }
             funnel = selected;

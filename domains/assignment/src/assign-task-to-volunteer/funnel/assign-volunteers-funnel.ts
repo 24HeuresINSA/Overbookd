@@ -1,13 +1,20 @@
-import {
-  Candidate,
-  IDefineCandidate,
-  CandidateFulfillingDemand,
-  isFulfillingDemand,
-  CandidateFactory,
-} from "./candidate";
+import { Candidate, IDefineCandidate, CandidateFactory } from "./candidate";
 import { Volunteer } from "./volunteer";
 import { Assignments } from "../repositories/assignments";
 import { Assignment } from "../assignment";
+import {
+  FunnelRepositories,
+  IamActiveFunnel,
+  ActiveFunnelInitializer,
+  CandidateFulfills,
+  IHaveOnlyOneCandidateWhoCanFulfillDemandsButNoneOfFriendsCanFulfillMoreDemands,
+  FulfillDemand,
+  ONE_ITEM,
+  IHaveOnlyOneCandidateWhoIsReadyToAssignButNoneOfFriendsCanFulfillMoreDemands,
+  areEveryCandidateFulfillingDemand,
+  ActiveFunnel,
+  EveryCandidateFulfillsDemand,
+} from "./state-machine";
 
 export class ReadyToStart {
   private constructor(
@@ -48,124 +55,86 @@ export class WaitingForVolunteer {
       volunteer,
       this.assignment,
     );
-    return SomeCandidatesNotFulfillingDemand.init(
-      candidate,
-      this.assignments,
+    const repositories: FunnelRepositories = {
+      assignments: this.assignments,
+      candidateFactory: this.candidateFactory,
+    };
+    return OneCandidateNotFulfillingDemand.init([
+      [candidate],
+      repositories,
       this.assignment,
-    );
+    ]);
   }
 }
 
-type FulfillDemand = {
-  volunteer: Volunteer["id"];
-  team: string;
-};
+export class OneCandidateNotFulfillingDemand
+  extends ActiveFunnel<IDefineCandidate>
+  implements
+    IHaveOnlyOneCandidateWhoCanFulfillDemandsButNoneOfFriendsCanFulfillMoreDemands,
+    IamActiveFunnel<IDefineCandidate>
+{
+  private constructor(initializer: ActiveFunnelInitializer<[Candidate]>) {
+    super(...initializer);
+  }
 
-export class SomeCandidatesNotFulfillingDemand {
-  private constructor(
-    private readonly _candidates: Candidate[],
-    private readonly assignments: Assignments,
-    private readonly assignment: Assignment,
-  ) {}
-
-  static init(
-    candidate: Candidate,
-    assignments: Assignments,
-    assignment: Assignment,
-  ) {
-    if (isFulfillingDemand(candidate.json)) {
-      return EveryCandidateFulfillsDemand.init(
-        [candidate],
-        assignments,
-        assignment,
-      );
+  static init(initializer: ActiveFunnelInitializer<[Candidate]>) {
+    if (OneCandidateFulfillsDemand.isSatisfiedBy(initializer)) {
+      return OneCandidateFulfillsDemand.init(initializer);
     }
-    return new SomeCandidatesNotFulfillingDemand(
-      [candidate],
-      assignments,
-      assignment,
-    );
+    return new OneCandidateNotFulfillingDemand(initializer);
   }
 
   fulfillDemand({ volunteer, team }: FulfillDemand) {
-    const candidates = this._candidates.map((candidate) =>
-      candidate.json.id === volunteer ? candidate.demandAs(team) : candidate,
+    const current = this._candidates.find(
+      (candidate) => candidate.json.id === volunteer,
     );
-    if (candidates.every((candidate) => isFulfillingDemand(candidate.json))) {
-      return EveryCandidateFulfillsDemand.init(
-        candidates,
-        this.assignments,
-        this.assignment,
-      );
-    }
-    return new SomeCandidatesNotFulfillingDemand(
-      candidates,
-      this.assignments,
+    if (!current) throw new Error("Wrong Volunteer");
+    const fullFilling = current.demandAs(team);
+
+    return OneCandidateFulfillsDemand.init([
+      [fullFilling],
+      this.repositories,
       this.assignment,
-    );
+    ]);
   }
 
-  get hasRemainingDemands(): boolean {
-    const { demands } = this.assignment;
-    const totalDemands = demands.reduce(
-      (sum, { demand: count }) => sum + count,
-      0,
-    );
-    return this._candidates.length < totalDemands;
-  }
-
-  get candidates(): IDefineCandidate[] {
-    return this._candidates.map((candidate) => candidate.json);
+  static isSatisfiedBy(
+    initializer: ActiveFunnelInitializer,
+  ): initializer is ActiveFunnelInitializer<[Candidate]> {
+    const [canidates] = initializer;
+    return canidates.length === ONE_ITEM;
   }
 }
 
-export class EveryCandidateFulfillsDemand {
-  private constructor(
-    readonly candidates: CandidateFulfillingDemand[],
-    private readonly assignments: Assignments,
-    private readonly assignment: Assignment,
-  ) {}
-
-  static init(
-    candidates: Candidate[],
-    assignments: Assignments,
-    assignment: Assignment,
+export class OneCandidateFulfillsDemand
+  extends EveryCandidateFulfillsDemand
+  implements
+    IHaveOnlyOneCandidateWhoIsReadyToAssignButNoneOfFriendsCanFulfillMoreDemands
+{
+  protected constructor(
+    initializer: ActiveFunnelInitializer<[CandidateFulfills]>,
   ) {
-    const candidateJson = candidates.map((c) => c.json);
-    if (!candidateJson.every(isFulfillingDemand)) {
-      throw new Error("Not fulfilling demands");
-    }
-    return new EveryCandidateFulfillsDemand(
-      candidateJson,
-      assignments,
-      assignment,
-    );
+    super(initializer);
   }
 
-  async assign(): Promise<Assignment> {
-    const { taskId, mobilizationId, assignmentId } = this.assignment;
-    const assignment = { taskId, mobilizationId, assignmentId };
-    const volunteers = this.candidates.map(Candidate.toAssignment);
-
-    return this.assignments.assign({ assignment, volunteers });
+  static init(initializer: ActiveFunnelInitializer<[CandidateFulfills]>) {
+    return new OneCandidateFulfillsDemand(initializer);
   }
 
-  get hasRemainingDemands(): boolean {
-    const { demands, assignees } = this.assignment;
-    const totalDemands = demands.reduce(
-      (sum, { demand: count }) => sum + count,
-      0,
-    );
-    const totalAssignees = assignees.length;
-    return this.candidates.length < totalDemands - totalAssignees;
+  static isSatisfiedBy(
+    initializer: ActiveFunnelInitializer,
+  ): initializer is ActiveFunnelInitializer<[CandidateFulfills]> {
+    const [candidates] = initializer;
+    if (candidates.length > ONE_ITEM) return false;
+    return areEveryCandidateFulfillingDemand(candidates);
   }
 }
 
 export type Funnel =
   | ReadyToStart
   | WaitingForVolunteer
-  | SomeCandidatesNotFulfillingDemand
-  | EveryCandidateFulfillsDemand;
+  | OneCandidateNotFulfillingDemand
+  | OneCandidateFulfillsDemand;
 
 export function isReadyToStart(state: Funnel): state is ReadyToStart {
   return state instanceof ReadyToStart;
@@ -177,14 +146,14 @@ export function isWaitingForVolunteer(
   return state instanceof WaitingForVolunteer;
 }
 
-export function isSomeCandidatesNotFulfillingDemand(
+export function isOneCandidateNotFulfillingDemand(
   state: Funnel,
-): state is SomeCandidatesNotFulfillingDemand {
-  return state instanceof SomeCandidatesNotFulfillingDemand;
+): state is OneCandidateNotFulfillingDemand {
+  return state instanceof OneCandidateNotFulfillingDemand;
 }
 
-export function isEveryCandidateFulfillsDemand(
+export function isOneCandidateFulfillsDemand(
   state: Funnel,
-): state is EveryCandidateFulfillsDemand {
-  return state instanceof EveryCandidateFulfillsDemand;
+): state is OneCandidateFulfillsDemand {
+  return state instanceof OneCandidateFulfillsDemand;
 }
