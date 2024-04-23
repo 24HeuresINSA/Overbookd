@@ -56,13 +56,13 @@ export class InMemoryAssignments implements Assignments {
     oneOfTheTeams: string[],
   ): Promise<Assignment[]> {
     return this.assignments.filter((assignment) => {
-      const isAlreadyAssigned = volunteerAssignments.some((period) =>
+      const isAssignedAtSameTime = volunteerAssignments.some((period) =>
         period.isOverlapping(Period.init(assignment)),
       );
       const isOnOneOfTheTeams = oneOfTheTeams.some((team) =>
         assignment.demands.some((demand) => demand.team === team),
       );
-      return isAlreadyAssigned && isOnOneOfTheTeams;
+      return !isAssignedAtSameTime && isOnOneOfTheTeams;
     });
   }
 

@@ -51,13 +51,15 @@ export class AssignVolunteerToTask {
     const withTeams = assignments
       .map((assignment) => ({
         ...assignment,
-        teams: assignment.demands.map(({ team, demand }) => ({
-          team,
-          demand,
-          assigned: countAssigneesInTeam(team, assignment.assignees),
-        })),
+        teams: assignment.demands
+          .map(({ team, demand }) => ({
+            team,
+            demand,
+            assigned: countAssigneesInTeam(team, assignment.assignees),
+          }))
+          .filter(({ assigned, demand }) => assigned < demand),
       }))
-      .filter((assignment) => assignment.teams.length > 0);
+      .filter(({ teams }) => teams.length > 0);
 
     return Promise.all(
       withTeams.map(async (assignment) => {

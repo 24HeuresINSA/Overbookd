@@ -6,8 +6,8 @@ import {
   isFulfillingDemand,
 } from "./candidate";
 import { Volunteer } from "./volunteer";
-import { Assignments } from "../repositories/assignments";
 import { Assignment } from "../../common/assignment";
+import { Assignments } from "../../common/repositories/assignments";
 
 /*
 State Machine

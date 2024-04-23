@@ -110,6 +110,18 @@ export class AssignTaskToVolunteer {
     };
   }
 
+  private filterMissingTeamMembers({
+    demands,
+    assignees,
+  }: Pick<Assignment, "demands" | "assignees">): string[] {
+    return demands
+      .filter(({ team, demand: demands }) => {
+        const countAssignees = countAssigneesInTeam(team, assignees);
+        return countAssignees < demands;
+      })
+      .map(({ team }) => team);
+  }
+
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
     const assignments = task.assignments.map((assignment) => {
       const period = Period.init(assignment);
@@ -134,18 +146,6 @@ export class AssignTaskToVolunteer {
       category: task.category,
       assignments,
     };
-  }
-
-  private filterMissingTeamMembers({
-    demands,
-    assignees,
-  }: Pick<Assignment, "demands" | "assignees">): string[] {
-    return demands
-      .filter(({ team, demand: demands }) => {
-        const countAssignees = countAssigneesInTeam(team, assignees);
-        return countAssignees < demands;
-      })
-      .map(({ team }) => team);
   }
 }
 
