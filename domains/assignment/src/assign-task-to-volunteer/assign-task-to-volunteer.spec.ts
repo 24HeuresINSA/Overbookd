@@ -25,7 +25,7 @@ import { HARD, VIEUX } from "../teams";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Assign task to volunteer", () => {
-  const tasks = new InMemoryTasks([
+  const taskList = [
     fullyAssignedTask.value,
     missingOnePlaizirTask.value,
     missingTwoVieuxTask.value,
@@ -33,7 +33,8 @@ describe("Assign task to volunteer", () => {
     missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
     missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.value,
     fulfillAssignmentThenMissingOneHardTask.value,
-  ]);
+  ];
+  const tasks = new InMemoryTasks(taskList);
   const volunteers = new InMemoryAssignableVolunteers([
     noelAsAvailableVolunteer.stored,
     leaAsAvailableVolunteer.stored,
@@ -66,6 +67,13 @@ describe("Assign task to volunteer", () => {
         );
         expect(foundTask).toBeUndefined();
       });
+    });
+  });
+
+  describe("when listing all tasks", async () => {
+    const allTasks = await assign.tasks(true);
+    it("should return all tasks", () => {
+      expect(allTasks).toHaveLength(taskList.length);
     });
   });
 

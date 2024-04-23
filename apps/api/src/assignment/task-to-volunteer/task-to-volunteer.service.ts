@@ -10,8 +10,8 @@ import {
 export class TaskToVolunteerService {
   constructor(private readonly assign: AssignTaskToVolunteer) {}
 
-  async findTasks(): Promise<MissingAssignmentTask[]> {
-    return this.assign.tasks();
+  async findTasks(all: boolean): Promise<MissingAssignmentTask[]> {
+    return this.assign.tasks(all);
   }
 
   async selectTask(taskId: TaskIdentifier["id"]) {

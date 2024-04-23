@@ -62,10 +62,10 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async fetchTasks({ commit }) {
+    async fetchTasks({ commit }, all: boolean = false) {
       const res = await safeCall(
         this,
-        TaskToVolunteerRepository.getTasks(this),
+        TaskToVolunteerRepository.getTasks(this, all),
       );
       if (!res) return;
       commit("SET_TASKS", res.data);
