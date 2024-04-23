@@ -9,11 +9,11 @@
         <div class="planning">
           <OverMultiCalendar
             v-model="calendarDate"
-            :users="volunteerAvailabilitiesForCalendar"
+            :users="candidatesForCalendar"
             :planning-events="candidatesPlanningEvents"
             :event-to-add="assignmentAsEvent"
           >
-            <template #volunteer-header="{}">
+            <template #volunteer-header="{ category }">
               <div class="calendar-header">
                 <div class="calendar-header__action">
                   <v-btn
@@ -30,8 +30,8 @@
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
                   <AssignmentVolunteerResumeCalendarHeader
-                    v-if="volunteer"
-                    :volunteer="volunteer"
+                    v-if="retrieveVolunteer(category)"
+                    :volunteer="retrieveVolunteer(category)"
                     class="volunteer-resume"
                   ></AssignmentVolunteerResumeCalendarHeader>
                   <v-btn v-if="false" icon @click="nextCandidate">
@@ -94,17 +94,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+
 import {
   AssignmentCandidate,
   Task,
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
-import {
-  CalendarPlanningEvent,
-  convertAssignmentPlanningEventForCalendar,
-} from "~/domain/common/planning-events";
-import { Volunteer } from "~/utils/models/assignment.model";
+import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
@@ -117,9 +113,9 @@ import {
   IDefineCandidate,
   ReadyToStart,
   OneCandidateNotFulfillingDemand,
-  isTeamMember,
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
+import { updateItemToList } from "@overbookd/list";
 
 type AssignmentAndVolunteerSelected =
   | OneCandidateNotFulfillingDemand
@@ -129,12 +125,12 @@ type AssingmentFunneData = {
   calendarDate: Date;
   funnel: AssignmentAndVolunteerSelected | null;
   additionalCandidates: AssignableVolunteer[];
+  selectedFriendIndex: number;
 };
 
 export default defineComponent({
   name: "AssignmentFunnel",
   components: {
-    TeamChip,
     OverMultiCalendar,
     AssignmentVolunteerResumeCalendarHeader,
   },
@@ -154,6 +150,7 @@ export default defineComponent({
       calendarDate: new Date(),
       funnel: null,
       additionalCandidates: [],
+      selectedFriendIndex: 0,
     };
   },
   computed: {
@@ -194,30 +191,17 @@ export default defineComponent({
     currentTask(): Task {
       return this.taskAssignment.task;
     },
-    volunteerAvailabilitiesForCalendar(): CalendarUser[] {
-      if (!this.funnel) return [];
-      if (
-        !(this.funnel instanceof OneCandidateNotFulfillingDemand) &&
-        !(this.funnel instanceof OneCandidateFulfillsDemand)
-      ) {
-        return [];
-      }
-      return this.funnel.candidates.map((candidate: IDefineCandidate) => ({
+    candidatesForCalendar(): CalendarUser[] {
+      return this.candidates.map((candidate: AssignableVolunteer) => ({
         id: candidate.id,
         firstname: candidate.firstname,
         lastname: candidate.lastname,
         teams: candidate.teams,
-        availabilities: candidate.availabilities,
+        availabilities: [],
       }));
     },
     candidatesPlanningEvents(): CalendarPlanningEvent[] {
-      if (!this.funnel) return [];
-      return this.funnel.candidates.flatMap(
-        ({ planning, id }: IDefineCandidate) =>
-          planning.map((planning) =>
-            convertAssignmentPlanningEventForCalendar(planning, id),
-          ),
-      );
+      return [];
     },
     assignmentAsEvent(): CalendarPlanningEvent {
       const { start, end, name } = this.assignment;
@@ -234,9 +218,10 @@ export default defineComponent({
         (acc, demand) => acc + demand.demand,
         0,
       );
-      const assigneeCount =
-        this.selectedAssignment.assignees.filter(isTeamMember).length;
-      return demands < this.candidates.length + assigneeCount;
+      const assigneeCount = this.selectedAssignment.assignees.filter(
+        (assignee) => "as" in assignee && assignee.as !== null,
+      ).length;
+      return demands <= this.candidates.length + assigneeCount;
     },
     areOtherFriendsAvailable(): boolean {
       return this.taskAssignment.potentialCandidates.length > 0;
@@ -260,8 +245,8 @@ export default defineComponent({
         .select(this.assignment)
         .select(this.volunteer);
     },
-    retrieveVolunteer(id: string): Volunteer | undefined {
-      return this.taskAssignment.getCandidate(+id)?.volunteer;
+    retrieveVolunteer(id: string): AssignableVolunteer | undefined {
+      return this.candidates.find((candidate) => candidate.id === +id);
     },
     closeDialog() {
       this.$emit("close-dialog");
@@ -294,16 +279,32 @@ export default defineComponent({
     },
     addCandidate() {
       if (this.canNotAssignMoreVolunteer) return;
+      this.selectedFriendIndex = 0;
       this.additionalCandidates = [
         ...this.additionalCandidates,
-        this.assignableFriends[0],
+        this.assignableFriends[this.selectedFriendIndex],
       ];
     },
     previousCandidate() {
-      this.$accessor.assignment.previousCandidate();
+      this.selectedFriendIndex =
+        (this.selectedFriendIndex - 1 + this.assignableFriends.length) %
+        this.assignableFriends.length;
+
+      this.additionalCandidates = updateItemToList(
+        this.additionalCandidates,
+        this.additionalCandidates.length - 1,
+        this.assignableFriends[this.selectedFriendIndex],
+      );
     },
     nextCandidate() {
-      this.$accessor.assignment.nextCandidate();
+      this.selectedFriendIndex =
+        (this.selectedFriendIndex + 1) % this.assignableFriends.length;
+
+      this.additionalCandidates = updateItemToList(
+        this.additionalCandidates,
+        this.additionalCandidates.length - 1,
+        this.assignableFriends[this.selectedFriendIndex],
+      );
     },
     isReplacable(volunteerId: string): boolean {
       return (
