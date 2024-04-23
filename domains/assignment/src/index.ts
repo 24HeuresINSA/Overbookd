@@ -51,10 +51,10 @@ export {
   isReadyToStart,
   WaitingForVolunteer,
   isWaitingForVolunteer,
-  OneCandidateNotFulfillingDemand as SomeCandidatesNotFulfillingDemand,
-  isOneCandidateNotFulfillingDemand as isSomeCandidatesNotFulfillingDemand,
-  OneCandidateFulfillsDemand as EveryCandidateFulfillsDemand,
-  isOneCandidateFulfillsDemand as isEveryCandidateFulfillsDemand,
+  OneCandidateNotFulfillingDemand,
+  isOneCandidateNotFulfillingDemand,
+  OneCandidateFulfillsDemand,
+  isOneCandidateFulfillsDemand,
 } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
 export type { Funnel } from "./assign-task-to-volunteer/funnel/assign-volunteers-funnel";
 export type {

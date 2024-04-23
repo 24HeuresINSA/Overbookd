@@ -110,16 +110,16 @@ import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assi
 import {
   Assignment,
   AssignmentVolunteer,
-  EveryCandidateFulfillsDemand,
+  OneCandidateFulfillsDemand,
   IDefineCandidate,
   ReadyToStart,
-  SomeCandidatesNotFulfillingDemand,
+  OneCandidateNotFulfillingDemand,
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
 
 type AssignmentAndVolunteerSelected =
-  | SomeCandidatesNotFulfillingDemand
-  | EveryCandidateFulfillsDemand;
+  | OneCandidateNotFulfillingDemand
+  | OneCandidateFulfillsDemand;
 
 type AssingmentFunneData = {
   calendarDate: Date;
@@ -172,8 +172,8 @@ export default defineComponent({
     volunteerAvailabilitiesForCalendar(): CalendarUser[] {
       if (!this.funnel) return [];
       if (
-        !(this.funnel instanceof SomeCandidatesNotFulfillingDemand) &&
-        !(this.funnel instanceof EveryCandidateFulfillsDemand)
+        !(this.funnel instanceof OneCandidateNotFulfillingDemand) &&
+        !(this.funnel instanceof OneCandidateFulfillsDemand)
       ) {
         return [];
       }
@@ -200,7 +200,7 @@ export default defineComponent({
     },
     canNotAssign(): boolean {
       if (!this.funnel) return false;
-      return !(this.funnel instanceof EveryCandidateFulfillsDemand);
+      return !(this.funnel instanceof OneCandidateFulfillsDemand);
     },
     canNotAssignMoreVolunteer(): boolean {
       return !this.taskAssignment.canAssignMoreVolunteer;
@@ -246,7 +246,7 @@ export default defineComponent({
     },
     temporaryAssign(team: string, candidate?: IDefineCandidate) {
       if (!candidate) return;
-      if (this.funnel instanceof SomeCandidatesNotFulfillingDemand) {
+      if (this.funnel instanceof OneCandidateNotFulfillingDemand) {
         this.funnel.fulfillDemand({ volunteer: candidate.id, team });
       }
     },
@@ -257,7 +257,7 @@ export default defineComponent({
     async assign() {
       if (this.canNotAssign) return;
       if (!this.funnel) return;
-      if (!(this.funnel instanceof EveryCandidateFulfillsDemand)) return;
+      if (!(this.funnel instanceof OneCandidateFulfillsDemand)) return;
       const assignment = await this.funnel.assign();
       this.$emit("volunteers-assigned", assignment);
       this.closeDialog();
