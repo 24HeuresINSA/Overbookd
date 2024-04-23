@@ -5,7 +5,7 @@ import {
   isMemberOf,
   TeamDemanded,
   TeamMember,
-} from "../assignment";
+} from "../../common/assignment";
 import { Availabilities, Friends, Planning, PlanningEvent } from "./planning";
 import { Volunteer } from "./volunteer";
 

@@ -7,21 +7,16 @@ import {
 } from "./assignable-volunteer";
 import {
   Assignment,
-  Assignee,
   AssignmentIdentifier,
-  isMemberOf,
-} from "./assignment";
+  countAssigneesInTeam,
+} from "../common/assignment";
 import {
   Task,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
 import { TaskIdentifier } from "../task";
-
-export type Tasks = {
-  findAll(): Promise<Task[]>;
-  findOne(id: TaskIdentifier["id"]): Promise<Task>;
-};
+import { Tasks } from "../common/repositories/tasks";
 
 export type AssignmentSpecification = {
   period: Period;
@@ -115,18 +110,6 @@ export class AssignTaskToVolunteer {
     };
   }
 
-  private filterMissingTeamMembers({
-    demands,
-    assignees,
-  }: Pick<Assignment, "demands" | "assignees">): string[] {
-    return demands
-      .filter(({ team, demand: demands }) => {
-        const countAssignees = this.countAssigneesInTeam(team, assignees);
-        return countAssignees < demands;
-      })
-      .map(({ team }) => team);
-  }
-
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
     const assignments = task.assignments.map((assignment) => {
       const period = Period.init(assignment);
@@ -140,7 +123,7 @@ export class AssignTaskToVolunteer {
         teams: assignment.demands.map(({ team, demand }) => ({
           team,
           demand,
-          assigned: this.countAssigneesInTeam(team, assignment.assignees),
+          assigned: countAssigneesInTeam(team, assignment.assignees),
         })),
       };
     });
@@ -153,8 +136,16 @@ export class AssignTaskToVolunteer {
     };
   }
 
-  private countAssigneesInTeam(team: string, assignees: Assignee[]): number {
-    return assignees.filter(isMemberOf(team)).length;
+  private filterMissingTeamMembers({
+    demands,
+    assignees,
+  }: Pick<Assignment, "demands" | "assignees">): string[] {
+    return demands
+      .filter(({ team, demand: demands }) => {
+        const countAssignees = countAssigneesInTeam(team, assignees);
+        return countAssignees < demands;
+      })
+      .map(({ team }) => team);
   }
 }
 

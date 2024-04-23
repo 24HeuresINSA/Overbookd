@@ -9,7 +9,7 @@ import {
   missingTwoVieuxDuring19hto20h,
   fulfillAssignmentThenMissingOneHardTask,
 } from "./test-resources/task.fake";
-import { InMemoryTasks } from "./repositories/tasks.inmemory";
+import { InMemoryTasks } from "../common/repositories/tasks.inmemory";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
 import { AssignableVolunteer } from "./assignable-volunteer";
 import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory";

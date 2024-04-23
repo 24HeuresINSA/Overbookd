@@ -1,4 +1,4 @@
-import { AssignmentIdentifier } from "./assignment";
+import { AssignmentIdentifier } from "../common/assignment";
 import { Assignments } from "../common/repositories/assignments";
 
 export class Unassign {

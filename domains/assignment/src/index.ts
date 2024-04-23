@@ -5,10 +5,10 @@ export type {
 } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export { AssignVolunteerToTask } from "./assign-volunteer-to-task/assign-volunteer-to-task";
 export type {
-  Tasks,
   AssignableVolunteers,
   AssignmentSpecification,
 } from "./assign-task-to-volunteer/assign-task-to-volunteer";
+export type { Tasks } from "./common/repositories/tasks";
 export type {
   Assignee,
   TeamMemberForDetails,
@@ -22,8 +22,8 @@ export type {
   AssignmentWithDetails,
   AssigneeForDetails,
   NamelyDemandedForDetails,
-} from "./assign-task-to-volunteer/assignment";
-export { isTeamMember } from "./assign-task-to-volunteer/assignment";
+} from "./common/assignment";
+export { isTeamMember } from "./common/assignment";
 export type {
   Task,
   MissingAssignmentTask,

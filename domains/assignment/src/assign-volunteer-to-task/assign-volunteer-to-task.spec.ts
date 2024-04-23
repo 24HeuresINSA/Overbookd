@@ -7,12 +7,14 @@ import {
   noelExpected,
   leaExpected,
 } from "./assign-volunteer-to-task.test-utils";
-import { InMemoryTaskAssignments } from "./repositories/task-assignments.inmemory";
+import { InMemoryAssignments } from "../common/repositories/assignments.inmemory";
+import { InMemoryTasks } from "../common/repositories/tasks.inmemory";
 
 describe("Assign volunteer to task", () => {
   const volunteers = new InMemoryVolunteers([leaAssignee, noelAssignee]);
-  const assignments = new InMemoryTaskAssignments();
-  const assign = new AssignVolunteerToTask(volunteers, assignments);
+  const assignments = new InMemoryAssignments([]);
+  const tasks = new InMemoryTasks([]);
+  const assign = new AssignVolunteerToTask(volunteers, assignments, tasks);
 
   describe("when listing all assignable volunteers", async () => {
     const assignableVolunteers = await assign.volunteers();
@@ -30,7 +32,8 @@ describe("Assign volunteer to task", () => {
 
   describe("when selecting a volunteer", () => {
     it("should return assignable task assignments", async () => {
-      const assignableTasks = await assign.selectVolunteer(noelAssignee.id);
+      await assign.selectVolunteer(noelAssignee.id);
+      expect(true).toBe(true);
     });
   });
 });

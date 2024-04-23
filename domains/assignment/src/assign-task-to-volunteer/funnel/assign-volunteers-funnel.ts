@@ -1,7 +1,7 @@
 import { Candidate, IDefineCandidate, CandidateFactory } from "./candidate";
 import { Volunteer } from "./volunteer";
 import { Assignments } from "../../common/repositories/assignments";
-import { Assignment } from "../assignment";
+import { Assignment } from "../../common/assignment";
 import {
   FunnelRepositories,
   IamActiveFunnel,

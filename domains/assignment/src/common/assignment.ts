@@ -1,5 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Volunteer } from "../volunteer";
+import { TaskCategorized } from "../task";
 
 type NamelyDemanded = { id: Volunteer["id"] };
 export type TeamMember = { id: Volunteer["id"]; as: string };
@@ -14,6 +15,13 @@ export function isMemberOf(team: string): (value: Assignee) => boolean {
     if (!isTeamMember(assignee)) return false;
     return assignee.as === team;
   };
+}
+
+export function countAssigneesInTeam(
+  team: string,
+  assignees: Assignee[],
+): number {
+  return assignees.filter(isMemberOf(team)).length;
 }
 
 export type BaseAssigneeForDetails = {
@@ -76,4 +84,9 @@ export type AssignmentTeam = TeamDemanded & {
 export type AssignmentSummary = IProvidePeriod &
   AssignmentIdentifier & {
     teams: AssignmentTeam[];
+  };
+
+export type AssignmentSummaryWithTask = AssignmentSummary &
+  Omit<TaskCategorized, "id"> & {
+    hasFriendsAssigned: boolean;
   };

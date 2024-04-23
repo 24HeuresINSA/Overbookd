@@ -1,4 +1,4 @@
-import { Assignee, Assignment, TeamDemanded } from "../../assignment";
+import { Assignee, Assignment, TeamDemanded } from "../../../common/assignment";
 import { AssignmentSummaryFactory } from "./assignment-summary.factory";
 import { Period } from "@overbookd/period";
 

@@ -7,7 +7,7 @@ import {
 } from "./candidate";
 import { Volunteer } from "./volunteer";
 import { Assignments } from "../repositories/assignments";
-import { Assignment } from "../assignment";
+import { Assignment } from "../../common/assignment";
 
 /*
 State Machine

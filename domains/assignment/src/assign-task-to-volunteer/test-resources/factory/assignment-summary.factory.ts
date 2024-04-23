@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { AssignmentSummary, AssignmentTeam } from "../../assignment";
+import { AssignmentSummary, AssignmentTeam } from "../../../common/assignment";
 import { AssignableVolunteer } from "../../assignable-volunteer";
 import { BENEVOLE_CODE } from "@overbookd/team";
 

@@ -1,11 +1,12 @@
 import { updateItemToList } from "@overbookd/list";
-import { Assignment, AssignmentIdentifier } from "../../assign-task-to-volunteer/assignment";
+import { Assignment, AssignmentIdentifier } from "../assignment";
 import { Assignments, VolunteersForAssignment } from "./assignments";
+import { Period } from "@overbookd/period";
 
 export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}
 
-  assign({
+  async assign({
     assignment,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
@@ -21,12 +22,10 @@ export class InMemoryAssignments implements Assignments {
     }
 
     const assignees = [...currentAssignment.assignees, ...volunteers];
-    const updatedAssignment = { ...currentAssignment, assignees };
-
-    return Promise.resolve(updatedAssignment);
+    return { ...currentAssignment, assignees };
   }
 
-  unassign(
+  async unassign(
     assignment: AssignmentIdentifier,
     assigneeId: number,
   ): Promise<void> {
@@ -51,8 +50,20 @@ export class InMemoryAssignments implements Assignments {
       assignmentIndex,
       updatedAssignment,
     );
-
-    return Promise.resolve();
+  }
+  async findAssignableFor(
+    volunteerAssignments: Period[],
+    oneOfTheTeams: string[],
+  ): Promise<Assignment[]> {
+    return this.assignments.filter((assignment) => {
+      const isAlreadyAssigned = volunteerAssignments.some((period) =>
+        period.isOverlapping(Period.init(assignment)),
+      );
+      const isOnOneOfTheTeams = oneOfTheTeams.some((team) =>
+        assignment.demands.some((demand) => demand.team === team),
+      );
+      return isAlreadyAssigned && isOnOneOfTheTeams;
+    });
   }
 
   get all() {

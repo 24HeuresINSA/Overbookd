@@ -1,6 +1,6 @@
 import { TaskNotFoundError } from "../../assignment.error";
-import { Tasks } from "../assign-task-to-volunteer";
-import { Task } from "../task";
+import { Tasks } from "./tasks";
+import { Task } from "../../assign-task-to-volunteer/task";
 
 export class InMemoryTasks implements Tasks {
   constructor(private tasks: Task[] = []) {}
