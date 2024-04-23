@@ -98,7 +98,7 @@ export default Vue.extend({
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER);
+      return this.$accessor.user.can(AFFECT_VOLUNTEER) && this.isDesktop();
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -123,9 +123,7 @@ export default Vue.extend({
     document.title = formatUsername(this.user);
   },
   methods: {
-    isDesktop() {
-      return isDesktop();
-    },
+    isDesktop,
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
