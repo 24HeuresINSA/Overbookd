@@ -1,3 +1,16 @@
+## [2.27.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.26.1...v2.27.0) (2024-04-23)
+
+
+### Pre-Features
+
+* **assignment:** display details [#1786](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1786) ([9a91a8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9a91a8e520474615b1569d1438e249bd1bf34208))
+* **assignment:** unassign a volunteer [#1787](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1787) ([b1fd5a6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b1fd5a6a4ad1331dd442bc5406e0cc0c5176139d))
+
+
+### CI/CD
+
+* ✨ add prefeat for versioning ([a42ddca](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a42ddca61d0c0a0617052e32da40b369f27349a1))
+
 ## [2.26.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.26.0...v2.26.1) (2024-04-22)
 
 
