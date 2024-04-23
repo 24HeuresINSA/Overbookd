@@ -34,10 +34,6 @@ export class PrismaTasks implements Tasks {
 
 function toTask(task: DatabaseTask): Task {
   const assignments = task.mobilizations.flatMap((mobilization) => {
-    const assignees = mobilization.assignees.map(({ teamCode, userId }) => ({
-      as: teamCode,
-      id: userId,
-    }));
     const demands = mobilization.teams.map(({ teamCode, count }) => ({
       demand: count,
       team: teamCode,
@@ -48,6 +44,10 @@ function toTask(task: DatabaseTask): Task {
         mobilizationId: mobilization.id,
         assignmentId: assignment.id,
       };
+      const assignees = assignment.assignees.map(({ teamCode, userId }) => ({
+        as: teamCode,
+        id: userId,
+      }));
       return {
         ...identifier,
         start: assignment.start,
