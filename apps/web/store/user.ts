@@ -282,7 +282,7 @@ export const actions = actionTree(
         },
       );
       if (res) {
-        commit("REMOVE_FRIEND_FROM_SELECTED_USER", res.data);
+        commit("REMOVE_FRIEND_FROM_SELECTED_USER", friend);
       }
     },
     async fetchPersonalAccountConsumers({ commit }) {
