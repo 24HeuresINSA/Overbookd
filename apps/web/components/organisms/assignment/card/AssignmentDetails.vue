@@ -29,12 +29,15 @@
         <h2>Bénévoles requis sur le créneau</h2>
         <div class="volunteer-list">
           <v-chip
-            v-for="volunteer in requiredVolunteers"
-            :key="volunteer.id"
-            @click="openCalendarInNewTab(volunteer.id)"
+            v-for="requiredVolunteer in requiredVolunteers"
+            :key="requiredVolunteer.id"
+            @click="openCalendarInNewTab(requiredVolunteer.id)"
           >
             <v-icon left>mdi-account</v-icon>
-            <span>{{ volunteer.firstname }} {{ volunteer.lastname }}</span>
+            <span
+              >{{ requiredVolunteer.firstname }}
+              {{ requiredVolunteer.lastname }}</span
+            >
           </v-chip>
         </div>
         <p v-if="requiredVolunteers.length === 0">
@@ -90,10 +93,10 @@
             </div>-->
           </template>
           <template #item.friends="{ item }">
-            <div class="volunteer-list">
-              <v-chip v-for="volunteer in item.friends" :key="volunteer.id">
+            <div class="friend-list">
+              <v-chip v-for="friend in item.friends" :key="friend.id">
                 <v-icon left>mdi-account</v-icon>
-                <span>{{ volunteer.firstname }} {{ volunteer.lastname }}</span>
+                <span>{{ friend.firstname }} {{ friend.lastname }}</span>
               </v-chip>
             </div>
           </template>
@@ -326,7 +329,7 @@ export default defineComponent({
     h2 {
       margin-bottom: 5px;
     }
-    .volunteer-list {
+    .friend-list {
       display: flex;
       gap: 5px;
       flex-wrap: wrap;

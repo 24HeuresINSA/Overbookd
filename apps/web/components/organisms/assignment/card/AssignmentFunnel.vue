@@ -24,6 +24,32 @@
                   >
                     <v-icon>mdi-account-minus</v-icon>
                   </v-btn>
+                  <v-tooltip top max-width="20rem">
+                    <template #activator="{ on, attrs }">
+                      <v-icon
+                        v-if="retrieveVolunteer(category)?.note"
+                        small
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        mdi-note
+                      </v-icon>
+                    </template>
+                    <span>{{ retrieveVolunteer(category)?.note }}</span>
+                  </v-tooltip>
+                  <v-tooltip top max-width="20rem">
+                    <template #activator="{ on, attrs }">
+                      <v-icon
+                        v-if="retrieveVolunteer(category)?.comment"
+                        small
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        mdi-comment
+                      </v-icon>
+                    </template>
+                    <span>{{ retrieveVolunteer(category)?.comment }}</span>
+                  </v-tooltip>
                 </div>
                 <div class="calendar-header__candidate">
                   <v-btn
