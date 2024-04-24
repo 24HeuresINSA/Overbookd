@@ -12,6 +12,13 @@
       :boxed="false"
       @change="changeTeams"
     ></SearchTeams>
+    <SearchTeams
+      :value="excludedTeams"
+      label="Exclure des équipes"
+      class="filters__field"
+      :boxed="false"
+      @change="changeExcludedTeams"
+    ></SearchTeams>
 
     <div class="friend_filter_categoy_sort">
       <v-switch
@@ -66,12 +73,14 @@ export default defineComponent({
   emits: [
     "change:search",
     "change:teams",
+    "change:excluded-teams",
     "change:sort",
     "change:has-no-friends",
   ],
   data: () => ({
     search: "",
     teams: [],
+    excludedTeams: [],
     sort: 0,
     hasNoFriends: false,
   }),
@@ -81,6 +90,9 @@ export default defineComponent({
     },
     changeTeams(teams: Team[]) {
       this.$emit("change:teams", teams);
+    },
+    changeExcludedTeams(excludedTeams: Team[]) {
+      this.$emit("change:excluded-teams", excludedTeams);
     },
     updateSort() {
       this.sort = nextSortDirection(this.sort);

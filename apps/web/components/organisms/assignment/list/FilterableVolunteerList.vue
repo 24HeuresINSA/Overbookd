@@ -6,6 +6,7 @@
         class="filters"
         @change:search="searchVolunteer = $event"
         @change:teams="teams = $event"
+        @change:excluded-teams="excludedTeams = $event"
         @change:sort="sort = $event"
         @change:has-no-friends="hasNoFriends = $event"
       ></VolunteerFilters>
@@ -44,6 +45,7 @@ import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 type FilterableVolunteerListData = {
   teams: Team[];
+  excludedTeams: Team[];
   searchVolunteer: string;
   sort: number;
   hasNoFriends: boolean;
@@ -55,6 +57,7 @@ export default defineComponent({
   emits: ["select-volunteer"],
   data: (): FilterableVolunteerListData => ({
     teams: [],
+    excludedTeams: [],
     searchVolunteer: "",
     sort: 0,
     hasNoFriends: false,
@@ -79,6 +82,9 @@ export default defineComponent({
         (volunteer) => {
           return (
             this.filterVolunteerByTeams(this.teams)(volunteer) &&
+            this.filterVolunteerByExcludedTeams(this.excludedTeams)(
+              volunteer,
+            ) &&
             this.filterVolunteerByName(this.searchVolunteer)(volunteer) &&
             this.filterVolunteerByFriendExistence(this.hasNoFriends)(volunteer)
           );
@@ -114,6 +120,18 @@ export default defineComponent({
             )
         : () => true;
     },
+    filterVolunteerByExcludedTeams(
+      teamsExcluded: Team[],
+    ): (volunteer: AssignmentVolunteer) => boolean {
+      return teamsExcluded.length > 0
+        ? (volunteer) =>
+            !teamsExcluded.some((teamExcluded) =>
+              volunteer.teams.some(
+                (volunteerTeamCode) => teamExcluded.code === volunteerTeamCode,
+              ),
+            )
+        : () => true;
+    },
     selectVolunteer(volunteer: AssignmentVolunteer) {
       this.$emit("select-volunteer", volunteer);
     },
@@ -143,7 +161,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 185px;
+$filters-height: 255px;
 $friends-height: 160px;
 $layout-padding: 20px;
 $column-margins: 30px;
