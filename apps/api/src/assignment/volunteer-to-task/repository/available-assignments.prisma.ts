@@ -83,6 +83,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
           },
         },
       },
+      orderBy: [{ start: "asc" }, { end: "asc" }, { festivalTaskId: "asc" }],
     });
 
     return assignments
