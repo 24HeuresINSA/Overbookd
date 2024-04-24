@@ -7,7 +7,7 @@
     <template #title>
       <div v-show="selectedVolunteer" class="title">
         <h1 class="title__name">{{ volunteerName }}</h1>
-        <span v-show="stats.length > 0">|</span>
+        <span>|</span>
         <AssignmentUserStats :stats="stats" class="title__stats" />
       </div>
     </template>
@@ -108,6 +108,7 @@ export default defineComponent({
           volunteerId,
         ),
         this.$accessor.user.getVolunteerAssignments(volunteerId),
+        this.$accessor.user.getVolunteerAssignmentStats(volunteerId),
       ]);
     },
     isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
