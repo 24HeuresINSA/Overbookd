@@ -1,3 +1,16 @@
+## [2.31.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.30.0...v2.31.0) (2024-04-24)
+
+
+### Features
+
+* humains can add friends to volunteers. [#1808](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1808) ([40eb883](https://gitlab.com/24-heures-insa/overbookd-mono/commit/40eb883be48c1ace2c5d953946e053a1deaa4310))
+
+
+### Bug Fixes
+
+* **logistic-dashboard:** implement purchase in details in api [#1804](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1804) ([c0d4aeb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c0d4aeb46d59d394c724652f094f775dfdd1cb63))
+* **personnal-data:** friends list display [#1806](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1806) ([5ef68ba](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5ef68ba22784133898263c67edb32903b544b730))
+
 ## [2.30.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.29.0...v2.30.0) (2024-04-23)
 
 
