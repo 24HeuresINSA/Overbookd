@@ -1,3 +1,10 @@
+## [2.33.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.1...v2.33.2) (2024-04-24)
+
+
+### Bug Fixes
+
+* **assignment:** enable unassignment in volunteer to task [#1822](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1822) ([c585e31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c585e319af0ae20844ad7864b22bfdff404e600c))
+
 ## [2.33.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.0...v2.33.1) (2024-04-24)
 
 
