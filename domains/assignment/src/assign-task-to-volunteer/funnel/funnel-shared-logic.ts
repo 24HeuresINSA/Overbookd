@@ -59,12 +59,19 @@ export abstract class CommonFunnel implements IActAsFunnel {
   private assignableFriendsFrom(candidates: Candidate<IDefineCandidate>[]) {
     return candidates
       .flatMap((candidate) => candidate.json.friends)
-      .filter((friend) => {
-        return (
-          candidates.every(({ json }) => json.id !== friend.id) &&
-          isAssignable(this.assignment, friend)
+      .reduce((friends: AssignableVolunteer[], friend) => {
+        const isNotACandidateYet = candidates.every(
+          ({ json }) => json.id !== friend.id,
         );
-      });
+        const isAssignable = isAssignableOn(this.assignment, friend);
+        const isNotAlreadyListed = friends.every(({ id }) => id !== friend.id);
+
+        const shouldBeAdded =
+          isNotACandidateYet && isAssignable && isNotAlreadyListed;
+        if (!shouldBeAdded) return friends;
+
+        return [...friends, friend];
+      }, []);
   }
 
   abstract addCandidate(): Promise<IActAsFunnel>;
@@ -96,7 +103,10 @@ function sumDemands(demands: TeamDemanded[]) {
   return demands.reduce((sum, { demand: count }) => sum + count, 0);
 }
 
-function isAssignable(assignment: Assignment, volunteer: AssignableVolunteer) {
+function isAssignableOn(
+  assignment: Assignment,
+  volunteer: AssignableVolunteer,
+) {
   return Candidate.getAssignableTeams(assignment, volunteer.teams).length > 0;
 }
 

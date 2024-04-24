@@ -107,10 +107,10 @@ export class AssignVolunteerFunnel
   }
 
   async previousCandidate(): Promise<IActAsFunnel> {
-    return this.countBasedCandidateSelection(+1);
+    return this.countBasedCandidateSelection(-1);
   }
 
   nextCandidate(): Promise<IActAsFunnel> {
-    return this.countBasedCandidateSelection(-1);
+    return this.countBasedCandidateSelection(+1);
   }
 }

@@ -17,6 +17,9 @@ import {
   demonterLesJeuxGonflables,
   nettoyerLeQgCatering,
   nathan,
+  bruce,
+  amanda,
+  barmanBarDeLambiance,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
@@ -33,6 +36,8 @@ describe("Assign volunteers funnel", () => {
       [tatouin.volunteer.id, tatouin.planning],
       [luce.volunteer.id, luce.planning],
       [nathan.volunteer.id, nathan.planning],
+      [bruce.volunteer.id, bruce.planning],
+      [amanda.volunteer.id, amanda.planning],
     ]),
   );
   const inMemoryAvailabilities = new InMemoryAvailabilities(
@@ -42,6 +47,8 @@ describe("Assign volunteers funnel", () => {
       [ontaine.volunteer.id, ontaine.availabilities],
       [tatouin.volunteer.id, tatouin.availabilities],
       [nathan.volunteer.id, nathan.availabilities],
+      [bruce.volunteer.id, bruce.availabilities],
+      [amanda.volunteer.id, amanda.availabilities],
     ]),
   );
   const friends = new InMemoryFriends(new Map());
@@ -366,7 +373,7 @@ describe("Assign volunteers funnel", () => {
     });
     describe(`
     Given:
-      Ontain is benevole and friend with Tatouin and Lea,
+      Ontaine is benevole and friend with Tatouin and Lea,
       Tatouin is benevole and has no more friends,
       Lea is benevole and friend with Noel
       All of them are available during nettoyer le QG catering,
@@ -472,6 +479,77 @@ describe("Assign volunteers funnel", () => {
           });
         });
       });
+    });
+    describe(`
+    Given:
+      Ontaine is benevole and friend with Tatouin, Lea and Noel,
+      Tatouin is benevole and friend with Ontaine, Bruce, Lea, Luce, Amanda and Noel
+      All of them are available during barman bar de l'ambiance,
+      7 benevoles are demanded for barman bar de l'ambiance,
+      Ontaine and Tatouin are already selected as candidate
+    `, () => {
+      let funnel: IActAsFunnel;
+      beforeAll(async () => {
+        const friends = new InMemoryFriends(
+          new Map([
+            [
+              ontaine.volunteer.id,
+              [tatouin.volunteer, lea.volunteer, noel.volunteer],
+            ],
+            [
+              tatouin.volunteer.id,
+              [
+                ontaine.volunteer,
+                bruce.volunteer,
+                lea.volunteer,
+                luce.volunteer,
+                amanda.volunteer,
+                noel.volunteer,
+              ],
+            ],
+            [lea.volunteer.id, [ontaine.volunteer, tatouin.volunteer]],
+            [noel.volunteer.id, [ontaine.volunteer, tatouin.volunteer]],
+            [bruce.volunteer.id, [tatouin.volunteer]],
+            [luce.volunteer.id, [tatouin.volunteer]],
+            [amanda.volunteer.id, [tatouin.volunteer]],
+          ]),
+        );
+        const candidateFactory = new CandidateFactory(
+          inMemoryPlanning,
+          inMemoryAvailabilities,
+          friends,
+        );
+        const assignments = new InMemoryAssignments(initialAssignments);
+        const ontaineSelected = await WaitingForVolunteer.init(
+          candidateFactory,
+          assignments,
+          barmanBarDeLambiance,
+        ).select(ontaine.volunteer);
+        const tatouinSelected = await ontaineSelected.addCandidate();
+        funnel = await tatouinSelected.addCandidate();
+      });
+      it("should have both Ontaine and Tatouin as candidates", () => {
+        expect(funnel.candidates).toHaveLength(3);
+      });
+      it.each`
+        volunteerName                 | volunteer
+        ${lea.volunteer.firstname}    | ${lea.volunteer}
+        ${noel.volunteer.firstname}   | ${noel.volunteer}
+        ${bruce.volunteer.firstname}  | ${bruce.volunteer}
+        ${amanda.volunteer.firstname} | ${amanda.volunteer}
+        ${luce.volunteer.firstname}   | ${luce.volunteer}
+      `(
+        "should be possible to select $volunteerName",
+        async ({ volunteer }) => {
+          for (let iteration = 0; iteration < 7; iteration++) {
+            const lastCanidate = funnel.candidates.at(-1);
+            if (lastCanidate?.id === volunteer.id) break;
+            funnel = await funnel.nextCandidate();
+          }
+
+          expect(funnel.candidates.at(2)).toMatchObject(volunteer);
+        },
+      );
     });
   });
 });

@@ -8,6 +8,8 @@ import { PlanningEvent } from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
+const friday22h = new Date("2024-05-17T22:00+02:00");
+const saturday00h = new Date("2024-05-18T00:00+02:00");
 const saturday18h = new Date("2024-05-18T18:00+02:00");
 const saturday20h = new Date("2024-05-18T20:00+02:00");
 const sunday20h = new Date("2024-05-19T20:00+02:00");
@@ -34,8 +36,8 @@ const friday06hTo18h = Period.init({
   end: new Date("2024-05-17T18:00+02:00"),
 });
 const friday22hToSaturday00h = Period.init({
-  start: new Date("2024-05-17T22:00+02:00"),
-  end: new Date("2024-05-18T00:00+02:00"),
+  start: friday22h,
+  end: saturday00h,
 });
 
 const saturday18hTo20h = Period.init({ start: saturday18h, end: saturday20h });
@@ -56,18 +58,22 @@ type TestHelper = {
   availabilities: IProvidePeriod[];
 };
 
+const BOILERPLATE_ASSIGNMENT_STATS = {
+  charisma: 120,
+  assignmentDuration: 1000000,
+  isRequestedOnSamePeriod: false,
+  hasFriendAssigned: false,
+  hasAtLeastOneFriend: false,
+  assignableFriendsIds: [],
+};
+
 export const noel: TestHelper = {
   volunteer: {
     id: 1,
     firstname: "Noel",
     lastname: "Ertsemud",
     teams: [BENEVOLE_CODE, VIEUX],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [
     {
@@ -88,12 +94,7 @@ export const lea: TestHelper = {
     firstname: "Lea",
     lastname: "Mauyno",
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [{ start: friday06h, end: sunday20h }],
@@ -105,12 +106,7 @@ export const ontaine: TestHelper = {
     firstname: "Ontaine",
     lastname: "Porin",
     teams: [BENEVOLE_CODE, "catering", "conducteur"],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [
@@ -125,12 +121,7 @@ export const tatouin: TestHelper = {
     firstname: "Tatouin",
     lastname: "Jesoph",
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [
@@ -146,12 +137,7 @@ export const luce: TestHelper = {
     firstname: "Luce",
     lastname: "Nehgahredanv",
     teams: [BENEVOLE_CODE, HARD],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
@@ -163,15 +149,34 @@ export const nathan: TestHelper = {
     firstname: "Nathan",
     lastname: "Trice",
     teams: [BENEVOLE_CODE, VIEUX, HARD],
-    charisma: 120,
-    assignmentDuration: 1_000_000,
-    isRequestedOnSamePeriod: false,
-    hasFriendAssigned: false,
-    hasAtLeastOneFriend: false,
-    assignableFriendsIds: [],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
+};
+
+export const bruce: TestHelper = {
+  volunteer: {
+    id: 7,
+    firstname: "Bruce",
+    lastname: "Eel",
+    teams: [BENEVOLE_CODE],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
+  },
+  planning: [],
+  availabilities: [{ start: friday06h, end: sunday20h }],
+};
+
+export const amanda: TestHelper = {
+  volunteer: {
+    id: 8,
+    firstname: "Amanda",
+    lastname: "Lousie",
+    teams: [BENEVOLE_CODE],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
+  },
+  planning: [],
+  availabilities: [{ start: friday06h, end: sunday20h }],
 };
 
 export const benevolant: Assignment = {
@@ -260,5 +265,16 @@ export const nettoyerLeQgCatering: Assignment = {
   assignmentId: nextTuesday18hTo20h.id,
   name: "Nettoyer le QG Catering",
   demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  assignees: [],
+};
+
+export const barmanBarDeLambiance: Assignment = {
+  start: friday22hToSaturday00h.start,
+  end: friday22hToSaturday00h.end,
+  taskId: 8,
+  mobilizationId: friday22hToSaturday00h.id,
+  assignmentId: friday22hToSaturday00h.id,
+  name: "Barman bar de l'Ambiance",
+  demands: [{ team: BENEVOLE_CODE, demand: 7 }],
   assignees: [],
 };
