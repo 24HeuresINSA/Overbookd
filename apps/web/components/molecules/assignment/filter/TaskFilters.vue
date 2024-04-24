@@ -6,13 +6,30 @@
       label="Recherche"
       @input="changeSearch"
     ></v-text-field>
+    <SearchTeams
+      :value="teams"
+      :label="'Chercher par équipe requise'"
+      class="filters__field"
+      :boxed="false"
+      @change="changeTeams"
+    ></SearchTeams>
+    <SearchTeams
+      :value="teams"
+      :label="'Chercher par équipe de création'"
+      class="filters__field"
+      :boxed="false"
+      @change="changeTeams"
+    ></SearchTeams>
     <div class="team-filter-completed-switch">
-      <SearchTeams
-        :value="teams"
+      <v-combobox
+        :value="category"
+        :items="categoryItems"
+        label="Chercher une catégorie"
         class="filters__field"
-        :boxed="false"
-        @change="changeTeams"
-      ></SearchTeams>
+        clearable
+        return-object
+        @change="changeCategory"
+      ></v-combobox>
       <v-switch
         v-model="completed"
         label="Toutes les FTs"
@@ -20,15 +37,6 @@
         @change="changeCompleted"
       ></v-switch>
     </div>
-    <v-combobox
-      :value="category"
-      :items="categoryItems"
-      label="Chercher une catégorie"
-      class="filters__field"
-      clearable
-      return-object
-      @change="changeCategory"
-    ></v-combobox>
     <p class="stats">
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
