@@ -88,7 +88,6 @@ export default defineComponent({
       teamSearched: Team | null,
     ): (task: MissingAssignmentTask) => boolean {
       return (task) => {
-        console.log(teamSearched?.code, task.inChargeTeam);
         return !teamSearched?.code
           ? true
           : teamSearched?.code === task.inChargeTeam;

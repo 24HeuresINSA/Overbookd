@@ -4,6 +4,7 @@
       :value="search"
       class="filters__field"
       label="Recherche"
+      hide-details
       @input="changeSearch"
     ></v-text-field>
     <SearchTeams
@@ -11,6 +12,7 @@
       label="Chercher par équipe requise"
       class="filters__field"
       :boxed="false"
+      hide-details
       @change="changeTeamsRequired"
     ></SearchTeams>
     <SearchTeam
@@ -18,6 +20,7 @@
       label="Chercher par équipe responsable"
       class="filters__field"
       :boxed="false"
+      hide-details
       @change="changeTeamsCreation"
     ></SearchTeam>
     <div class="team-filter-completed-switch">
@@ -28,12 +31,15 @@
         class="filters__field"
         clearable
         return-object
+        hide-details
         @change="changeCategory"
       ></v-combobox>
       <v-switch
+        v-show="!isOrgaTaskMode"
         v-model="completed"
         label="Toutes les FTs"
         class="filters__switch"
+        hide-details
         @change="changeCompleted"
       ></v-switch>
     </div>
@@ -48,6 +54,7 @@
 import { defineComponent } from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
   DisplayableCategory,
   displayableCategories,
@@ -103,6 +110,9 @@ export default defineComponent({
     categoryItems(): string[] {
       return [...Object.values(TaskPriorities), ...displayableCategories];
     },
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
+    },
   },
   methods: {
     changeSearch(search: string) {
@@ -130,12 +140,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 200px;
+  height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: 25px;
+  gap: 15px;
 
   &__field {
     width: 100%;
@@ -153,9 +164,6 @@ export default defineComponent({
   align-items: center;
   gap: 5px;
   .filters {
-    &__field {
-      padding-right: 10px;
-    }
     &__switch {
       margin-top: 0;
       margin-right: 5px;

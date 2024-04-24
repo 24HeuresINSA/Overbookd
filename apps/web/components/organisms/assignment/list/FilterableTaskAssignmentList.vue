@@ -5,7 +5,8 @@
         :list-length="filteredAssignments.length"
         class="filters"
         @change:search="searchTaskName = $event"
-        @change:teams="teams = $event"
+        @change:required-teams="requiredTeams = $event"
+        @change:in-charge-team="inChargeTeam = $event"
         @change:category="category = $event"
       ></TaskFilters>
       <v-divider />
@@ -41,7 +42,8 @@ import { AssignmentSummaryWithTask } from "@overbookd/http";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 
 type FilterableTaskAssignmentListData = {
-  teams: Team[];
+  requiredTeams: Team[];
+  inChargeTeam: Team | null;
   searchTaskName: string;
   category: DisplayableCategory | TaskPriority | null;
 };
@@ -50,7 +52,8 @@ export default defineComponent({
   name: "FilterableTaskAssignmentList",
   components: { TaskFilters, TaskAssignmentList },
   data: (): FilterableTaskAssignmentListData => ({
-    teams: [],
+    requiredTeams: [],
+    inChargeTeam: null,
     searchTaskName: "",
     category: null,
   }),
@@ -81,7 +84,7 @@ export default defineComponent({
     },
   },
   methods: {
-    filterAssignmentsByTeams(
+    filterByRequestedTeams(
       teamsSearched: Team[],
     ): (assignment: AssignmentSummaryWithTask) => boolean {
       return teamsSearched.length > 0
@@ -91,7 +94,16 @@ export default defineComponent({
             )
         : () => true;
     },
-    filterAssignmentsByCatergoryOrPriority(
+    filterByInChargeTeam(
+      teamSearched: Team | null,
+    ): (assignment: AssignmentSummaryWithTask) => boolean {
+      return (assignment) => {
+        return !teamSearched?.code
+          ? true
+          : teamSearched?.code === assignment.inChargeTeam;
+      };
+    },
+    filterByCatergoryOrPriority(
       categorySearched: DisplayableCategory | TaskPriority | null,
     ): (assignment: AssignmentSummaryWithTask) => boolean {
       if (!categorySearched) return () => true;
@@ -135,11 +147,10 @@ export default defineComponent({
     ): boolean {
       return (
         this.hasAssignableSlotsAvailable(assignment) &&
-        this.filterAssignmentsByTeams(this.teams)(assignment) &&
-        this.filterAssignmentsByCatergoryOrPriority(this.category)(
-          assignment,
-        ) &&
-        this.filterAssignmentsByTaskName(this.searchTaskName)(assignment)
+        this.filterByRequestedTeams(this.requiredTeams)(assignment) &&
+        this.filterByInChargeTeam(this.inChargeTeam)(assignment) &&
+        this.filterByCatergoryOrPriority(this.category)(assignment) &&
+        this.filterByTaskName(this.searchTaskName)(assignment)
       );
     },
     hasAssignableSlotsAvailable(
@@ -151,7 +162,7 @@ export default defineComponent({
         return demand > assigned && candidate.canBeAssignedAs(team);
       });
     },
-    filterAssignmentsByTaskName(
+    filterByTaskName(
       search: string,
     ): (assignment: Searchable<AssignmentSummaryWithTask>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
@@ -162,7 +173,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 225px;
+$filters-height: 275px;
 $column-margins: 30px;
 $layout-padding: 20px;
 
