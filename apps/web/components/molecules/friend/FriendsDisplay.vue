@@ -26,18 +26,18 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Volunteer } from "~/utils/models/assignment.model";
 import { User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
+import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "FriendsDisplay",
   computed: {
-    selectedVolunteer(): Volunteer | null {
-      return this.$accessor.assignment.selectedVolunteer;
+    selectedVolunteer(): VolunteerWithAssignmentDuration | null {
+      return this.$accessor.assignVolunteerToTask.selectedVolunteer;
     },
     selectedVolunteerFriends(): User[] {
-      return this.$accessor.assignment.selectedVolunteerFriends;
+      return this.$accessor.assignVolunteerToTask.selectedVolunteerFriends;
     },
     title(): string {
       const volunteerName = this.selectedVolunteer?.firstname ?? "...";
@@ -46,7 +46,7 @@ export default Vue.extend({
   },
   methods: {
     selectVolunteer(friend: User) {
-      const volunteer = this.$accessor.assignment.volunteers.find(
+      const volunteer = this.$accessor.assignVolunteerToTask.volunteers.find(
         (volunteer) => volunteer.id === friend.id,
       );
       if (!volunteer) return;

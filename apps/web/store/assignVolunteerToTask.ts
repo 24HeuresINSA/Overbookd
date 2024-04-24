@@ -4,15 +4,18 @@ import {
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
 import { AssignmentSummaryWithTask, HttpStringified } from "@overbookd/http";
+import { User } from "@overbookd/user";
 import { actionTree, mutationTree } from "typed-vuex";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
+import { UserRepository } from "~/repositories/user.repository";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];
   selectedVolunteer: VolunteerWithAssignmentDuration | null;
+  selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
   hoverAssignment: AssignmentSummaryWithTask | null;
 };
@@ -20,6 +23,7 @@ type State = {
 export const state = (): State => ({
   volunteers: [],
   selectedVolunteer: null,
+  selectedVolunteerFriends: [],
   assignments: [],
   hoverAssignment: null,
 });
@@ -30,6 +34,9 @@ export const mutations = mutationTree(state, {
   },
   SELECT_VOLUNTEER(state, volunteer: VolunteerWithAssignmentDuration) {
     state.selectedVolunteer = volunteer;
+  },
+  SET_SELECTED_VOLUNTEER_FRIENDS(state, friends: User[]) {
+    state.selectedVolunteerFriends = friends;
   },
   SET_ASSIGNMENTS(state, assignments: AssignmentSummaryWithTask[]) {
     state.assignments = assignments;
@@ -56,6 +63,14 @@ export const actions = actionTree(
       volunteer: VolunteerWithAssignmentDuration,
     ) {
       commit("SELECT_VOLUNTEER", volunteer);
+
+      const res = await safeCall(
+        this,
+        UserRepository.getUserFriends(this, volunteer.id),
+      );
+      if (!res) return;
+      commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
+
       dispatch("fetchAssignmentsFor", volunteer.id);
     },
 
