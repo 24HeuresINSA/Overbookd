@@ -153,15 +153,3 @@ export class AssignTaskToVolunteer {
 function removeDuplicates(teams: string[]): string[] {
   return Array.from(new Set(teams));
 }
-
-export function filterMissingTeamMembers({
-  demands,
-  assignees,
-}: Pick<Assignment, "demands" | "assignees">): string[] {
-  return demands
-    .filter(({ team, demand: demands }) => {
-      const countAssignees = countAssigneesInTeam(team, assignees);
-      return countAssignees < demands;
-    })
-    .map(({ team }) => team);
-}
