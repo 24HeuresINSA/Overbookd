@@ -1,3 +1,20 @@
+## [2.33.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.32.0...v2.33.0) (2024-04-24)
+
+
+### Features
+
+* **assignment:** display assignment stats in orga-task mode. [#1817](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1817) ([1ad1e6d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ad1e6d52d87efd3b78081a42d5f580af9eb24e0))
+
+
+### Bug Fixes
+
+* **assignement:** add comments and notes in funnel and task details [#1807](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1807) ([4e7a4ae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4e7a4ae2f5e5085fdbd47b605cb8e8b7e5107fbc))
+
+
+### Pre-Features
+
+* **assignment:** display details in orga-task mode [#1819](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1819) ([5f0e5b1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5f0e5b183cec86b820766aca33613432b2e7769f))
+
 ## [2.32.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.31.1...v2.32.0) (2024-04-24)
 
 
