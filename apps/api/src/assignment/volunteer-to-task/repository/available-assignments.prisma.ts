@@ -16,6 +16,7 @@ type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
     name: string;
     category: Category;
     topPriority: boolean;
+    teamCode: string;
   };
   mobilization: { teams: { teamCode: string; count: number }[] };
   assignees: { userId: number; as: { teamCode: string } }[];
@@ -56,6 +57,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
             name: true,
             category: true,
             topPriority: true,
+            teamCode: true,
           },
         },
         mobilization: {
@@ -132,6 +134,7 @@ function toAssignmentSummaryWithTask(
     name: assignment.festivalTask.name,
     category: assignment.festivalTask.category,
     topPriority: assignment.festivalTask.topPriority,
+    inChargeTeam: assignment.festivalTask.teamCode,
     teams,
     hasFriendsAssigned,
   };

@@ -27,6 +27,9 @@ export class AssignmentSummaryWithTaskResponseDto
   @ApiProperty({ type: String, required: false })
   category?: Category;
 
+  @ApiProperty({ type: String })
+  inChargeTeam: string;
+
   @ApiProperty({ type: Boolean })
   hasFriendsAssigned: boolean;
 }

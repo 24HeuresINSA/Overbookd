@@ -92,4 +92,12 @@ export default defineComponent({
   flex-grow: 10;
   overflow-y: scroll;
 }
+
+.volunteer-list {
+  width: 420px;
+}
+
+.task-list {
+  width: 420px;
+}
 </style>

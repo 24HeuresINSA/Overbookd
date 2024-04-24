@@ -6,7 +6,8 @@
         class="filters"
         type="ft"
         @change:search="searchTask = $event"
-        @change:teams="teams = $event"
+        @change:required-teams="requiredTeams = $event"
+        @change:in-charge-team="inChargeTeam = $event"
         @change:category="category = $event"
         @change:completed="completed = $event"
       ></TaskFilters>
@@ -29,7 +30,8 @@ import { MissingAssignmentTask } from "@overbookd/assignment";
 import { DisplayableCategory } from "~/utils/assignment/task-category";
 
 type FilterableTaskListData = {
-  teams: Team[];
+  requiredTeams: Team[];
+  inChargeTeam: Team | null;
   searchTask: string;
   category: DisplayableCategory | TaskPriority | null;
   completed: boolean;
@@ -40,7 +42,8 @@ export default defineComponent({
   components: { TaskFilters, TaskList },
   data: (): FilterableTaskListData => ({
     completed: false,
-    teams: [],
+    requiredTeams: [],
+    inChargeTeam: null,
     searchTask: "",
     category: null,
   }),
@@ -57,7 +60,8 @@ export default defineComponent({
     filteredTasks(): MissingAssignmentTask[] {
       return this.searchableTasks.filter((task) => {
         return (
-          this.filterByTeamRequests(this.teams)(task) &&
+          this.filterByRequestedTeams(this.requiredTeams)(task) &&
+          this.filterByInChargeTeam(this.inChargeTeam)(task) &&
           this.filterByCatergoryOrPriority(this.category)(task) &&
           this.filterByName(this.searchTask)(task)
         );
@@ -70,7 +74,7 @@ export default defineComponent({
     },
   },
   methods: {
-    filterByTeamRequests(
+    filterByRequestedTeams(
       teamsSearched: Team[],
     ): (task: MissingAssignmentTask) => boolean {
       return teamsSearched.length > 0
@@ -79,6 +83,15 @@ export default defineComponent({
               task.teams.some((teamCode) => teamSearched.code === teamCode),
             )
         : () => true;
+    },
+    filterByInChargeTeam(
+      teamSearched: Team | null,
+    ): (task: MissingAssignmentTask) => boolean {
+      return (task) => {
+        return !teamSearched?.code
+          ? true
+          : teamSearched?.code === task.inChargeTeam;
+      };
     },
     isTaskPriority(
       category: TaskPriority | DisplayableCategory,
@@ -119,7 +132,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 225px;
+$filters-height: 275px;
 $column-margins: 30px;
 $layout-padding: 20px;
 

@@ -9,11 +9,12 @@ export type TaskIdentifier = {
 export type TaskCategorized = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
+  inChargeTeam: string;
 };
 
 export type TaskWithAssignmentsSummary = Omit<
   TaskCategorized,
-  "topPriority"
+  "topPriority" | "inChargeTeam"
 > & {
   assignments: AssignmentSummary[];
 };

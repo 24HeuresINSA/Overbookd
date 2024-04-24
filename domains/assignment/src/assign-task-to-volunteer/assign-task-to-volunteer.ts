@@ -107,6 +107,7 @@ export class AssignTaskToVolunteer {
       name: task.name,
       topPriority: task.topPriority,
       category: task.category,
+      inChargeTeam: task.inChargeTeam,
       teams: Array.from(new Set(missingTeamMembers)),
     };
   }

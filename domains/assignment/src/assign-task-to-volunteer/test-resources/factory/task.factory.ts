@@ -12,6 +12,7 @@ class TaskFactory {
       id,
       name,
       topPriority: false,
+      inChargeTeam: "hard",
       assignments: [],
     };
     return TaskBuilder.init(task);

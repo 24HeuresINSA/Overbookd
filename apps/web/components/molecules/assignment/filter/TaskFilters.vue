@@ -4,31 +4,45 @@
       :value="search"
       class="filters__field"
       label="Recherche"
+      hide-details
       @input="changeSearch"
     ></v-text-field>
+    <SearchTeams
+      :value="requiredTeams"
+      label="Chercher par équipe requise"
+      class="filters__field"
+      :boxed="false"
+      hide-details
+      @change="changeTeamsRequired"
+    ></SearchTeams>
+    <SearchTeam
+      :value="inChargeTeam"
+      label="Chercher par équipe responsable"
+      class="filters__field"
+      :boxed="false"
+      hide-details
+      @change="changeTeamsCreation"
+    ></SearchTeam>
     <div class="team-filter-completed-switch">
-      <SearchTeams
-        :value="teams"
+      <v-combobox
+        :value="category"
+        :items="categoryItems"
+        label="Chercher une catégorie"
         class="filters__field"
-        :boxed="false"
-        @change="changeTeams"
-      ></SearchTeams>
+        clearable
+        return-object
+        hide-details
+        @change="changeCategory"
+      ></v-combobox>
       <v-switch
+        v-show="!isOrgaTaskMode"
         v-model="completed"
         label="Toutes les FTs"
         class="filters__switch"
+        hide-details
         @change="changeCompleted"
       ></v-switch>
     </div>
-    <v-combobox
-      :value="category"
-      :items="categoryItems"
-      label="Chercher une catégorie"
-      class="filters__field"
-      clearable
-      return-object
-      @change="changeCategory"
-    ></v-combobox>
     <p class="stats">
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
@@ -38,7 +52,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
   DisplayableCategory,
   displayableCategories,
@@ -49,9 +65,17 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 
+type TaskFiltersData = {
+  completed: boolean;
+  search: string;
+  requiredTeams: Team[];
+  inChargeTeam: Team | null;
+  category: DisplayableCategory | TaskPriority | null;
+};
+
 export default defineComponent({
   name: "TaskFilters",
-  components: { SearchTeams },
+  components: { SearchTeams, SearchTeam },
   props: {
     type: {
       type: String,
@@ -65,15 +89,17 @@ export default defineComponent({
   },
   emits: [
     "change:search",
-    "change:teams",
+    "change:required-teams",
+    "change:in-charge-team",
     "change:category",
     "change:completed",
   ],
-  data: () => ({
+  data: (): TaskFiltersData => ({
     completed: false,
     search: "",
-    teams: [] as Team[],
-    category: null as DisplayableCategory | TaskPriority | null,
+    requiredTeams: [],
+    inChargeTeam: null,
+    category: null,
   }),
   computed: {
     counterLabel(): string {
@@ -84,13 +110,21 @@ export default defineComponent({
     categoryItems(): string[] {
       return [...Object.values(TaskPriorities), ...displayableCategories];
     },
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
+    },
   },
   methods: {
     changeSearch(search: string) {
       this.$emit("change:search", search);
     },
-    changeTeams(teams: Team[]) {
-      this.$emit("change:teams", teams);
+    changeTeamsRequired(requiredTeams: Team[]) {
+      this.requiredTeams = requiredTeams;
+      this.$emit("change:required-teams", requiredTeams);
+    },
+    changeTeamsCreation(inChargeTeam: Team | null) {
+      this.inChargeTeam = inChargeTeam;
+      this.$emit("change:in-charge-team", inChargeTeam);
     },
     changeCategory(category: string) {
       this.$emit("change:category", category);
@@ -106,12 +140,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 200px;
+  height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: 25px;
+  gap: 15px;
 
   &__field {
     width: 100%;
@@ -129,9 +164,6 @@ export default defineComponent({
   align-items: center;
   gap: 5px;
   .filters {
-    &__field {
-      padding-right: 10px;
-    }
     &__switch {
       margin-top: 0;
       margin-right: 5px;

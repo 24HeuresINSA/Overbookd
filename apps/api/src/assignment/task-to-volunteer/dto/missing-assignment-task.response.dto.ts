@@ -7,6 +7,9 @@ export class MissingAssignmentTaskResponseDto
   extends TaskIdentifierResponseDto
   implements MissingAssignmentTask
 {
+  @ApiProperty({ type: String })
+  inChargeTeam: string;
+
   @ApiProperty({ type: Boolean })
   topPriority: boolean;
 
