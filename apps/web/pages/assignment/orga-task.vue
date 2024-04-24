@@ -1,6 +1,9 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList class="volunteer-list" />
+    <FilterableVolunteerList
+      class="volunteer-list"
+      @select-volunteer="selectVolunteer"
+    />
     <OrgaTaskCalendar
       class="calendar"
       @display-assignment-details="openAssignmentDetailsDialog"
@@ -60,6 +63,9 @@ export default defineComponent({
     },
     openAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = true;
+    },
+    selectVolunteer(volunteer: VolunteerWithAssignmentDuration) {
+      this.$accessor.assignVolunteerToTask.selectVolunteer(volunteer);
     },
   },
 });

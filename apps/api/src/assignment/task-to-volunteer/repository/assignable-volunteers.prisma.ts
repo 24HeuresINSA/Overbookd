@@ -1,10 +1,7 @@
 import {
   AssignableVolunteers,
   AssignmentSpecification,
-  CONFIANCE,
-  HARD,
   StoredAssignableVolunteer,
-  VIEUX,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -27,6 +24,7 @@ import {
   IS_NOT_DELETED,
 } from "../../common/repository/common.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
+import { extendOneOfTeams } from "../../common/extend-teams";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -36,6 +34,8 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
+    const extendedOneOfTeams = extendOneOfTeams(oneOfTheTeams);
+    const includePeriod = overlapPeriodCondition(period);
 
     const volunteers = await this.prisma.user.findMany({
       where: isAssignableOn(oneOfTheTeams, period),

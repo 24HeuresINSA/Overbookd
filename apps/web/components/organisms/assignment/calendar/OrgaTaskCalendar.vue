@@ -19,12 +19,12 @@
     <template #event="{ event }">
       <div
         class="event underline-on-hover"
-        @mouseup.middle="openFtInNewTab(event.ft.id)"
+        @mouseup.middle="openFtInNewTab(event.taskId)"
         @contextmenu.prevent="
-          selectAssignmentToDisplayDetails(event.timeSpanId)
+          selectAssignmentToDisplayDetails(event.identifier)
         "
       >
-        {{ `[${event.ft.id}] ${event.ft.name}` }}
+        {{ event.name }}
       </div>
     </template>
   </OverCalendar>
@@ -114,6 +114,7 @@ export default defineComponent({
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
     selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
+      if (!identifier) return;
       this.$accessor.assignTaskToVolunteer.fetchAssignmentDetails(identifier);
       this.$emit("display-assignment-details");
     },
@@ -138,7 +139,7 @@ export default defineComponent({
         start,
         end,
         name: `[${task.id}] ${task.name}`,
-        link: `/ft/${task.id}`,
+        //link: `/ft/${task.id}`,
         color: getColorByStatus(task.status),
         timed: true,
       };

@@ -1,6 +1,7 @@
 import {
+  AssignmentIdentifier,
+  TeamMember,
   VolunteerWithAssignmentDuration,
-  VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { AssignmentSummaryWithTask, HttpStringified } from "@overbookd/http";
 import { actionTree, mutationTree } from "typed-vuex";
@@ -51,16 +52,19 @@ export const actions = actionTree(
     },
 
     async selectVolunteer(
-      { commit },
+      { commit, dispatch },
       volunteer: VolunteerWithAssignmentDuration,
     ) {
+      commit("SELECT_VOLUNTEER", volunteer);
+      dispatch("fetchAssignmentsFor", volunteer.id);
+    },
+
+    async fetchAssignmentsFor({ commit }, volunteerId: number) {
       const res = await safeCall(
         this,
-        VolunteerToTaskRepository.getAssignmentsFor(this, volunteer.id),
+        VolunteerToTaskRepository.getAssignmentsFor(this, volunteerId),
       );
       if (!res) return;
-
-      commit("SELECT_VOLUNTEER", volunteer);
 
       const assignments = res.data.map(toAssignmentSummaryWithTask);
       commit("SET_ASSIGNMENTS", assignments);
@@ -68,11 +72,23 @@ export const actions = actionTree(
 
     async assign(
       { dispatch },
-      volunteersForAssignment: VolunteersForAssignment,
+      {
+        assignment,
+        volunteer,
+      }: {
+        assignment: AssignmentIdentifier;
+        volunteer: TeamMember;
+      },
     ) {
       const repository = new AssignmentsRepository(this);
-      await repository.assign(volunteersForAssignment);
-      dispatch("selectTask", volunteersForAssignment.assignment.taskId);
+      const res = await repository.assign({
+        assignment,
+        volunteers: [volunteer],
+      });
+      if (!res) return;
+
+      dispatch("user/getVolunteerAssignments", volunteer.id, { root: true });
+      dispatch("fetchAssignmentsFor", volunteer.id);
     },
 
     setHoverAssignment(

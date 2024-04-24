@@ -55,10 +55,7 @@ export default defineComponent({
       const assignment = { taskId, mobilizationId, assignmentId };
       const volunteer = { id: this.selectedVolunteer.id, as };
 
-      this.$accessor.assignVolunteerToTask.assign({
-        assignment,
-        volunteers: [volunteer],
-      });
+      this.$accessor.assignVolunteerToTask.assign({ assignment, volunteer });
     },
   },
 });

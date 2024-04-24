@@ -5,18 +5,14 @@ import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
 } from "./assignable-volunteer";
-import {
-  Assignment,
-  Assignee,
-  AssignmentIdentifier,
-  isMemberOf,
-} from "./assignment";
+import { Assignment, AssignmentIdentifier } from "./assignment";
 import {
   Task,
   TaskIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
 } from "./task";
+import { countAssigneesInTeam } from "../count-assignees-in-team";
 
 export type Tasks = {
   findAll(): Promise<Task[]>;
@@ -121,7 +117,7 @@ export class AssignTaskToVolunteer {
   }: Pick<Assignment, "demands" | "assignees">): string[] {
     return demands
       .filter(({ team, demand: demands }) => {
-        const countAssignees = this.countAssigneesInTeam(team, assignees);
+        const countAssignees = countAssigneesInTeam(team, assignees);
         return countAssignees < demands;
       })
       .map(({ team }) => team);
@@ -140,7 +136,7 @@ export class AssignTaskToVolunteer {
         teams: assignment.demands.map(({ team, demand }) => ({
           team,
           demand,
-          assigned: this.countAssigneesInTeam(team, assignment.assignees),
+          assigned: countAssigneesInTeam(team, assignment.assignees),
         })),
       };
     });
@@ -152,12 +148,20 @@ export class AssignTaskToVolunteer {
       assignments,
     };
   }
-
-  private countAssigneesInTeam(team: string, assignees: Assignee[]): number {
-    return assignees.filter(isMemberOf(team)).length;
-  }
 }
 
 function removeDuplicates(teams: string[]): string[] {
   return Array.from(new Set(teams));
+}
+
+export function filterMissingTeamMembers({
+  demands,
+  assignees,
+}: Pick<Assignment, "demands" | "assignees">): string[] {
+  return demands
+    .filter(({ team, demand: demands }) => {
+      const countAssignees = countAssigneesInTeam(team, assignees);
+      return countAssignees < demands;
+    })
+    .map(({ team }) => team);
 }
