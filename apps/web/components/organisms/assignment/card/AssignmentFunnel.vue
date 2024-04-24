@@ -256,8 +256,8 @@ export default defineComponent({
     async assign() {
       if (this.canNotAssign) return;
       if (!this.funnel) return;
-      const assignment = await this.funnel.assign();
-      this.$emit("volunteers-assigned", assignment);
+      await this.funnel.assign();
+      this.$emit("volunteers-assigned", this.assignment);
       this.closeDialog();
     },
     async addCandidate() {
