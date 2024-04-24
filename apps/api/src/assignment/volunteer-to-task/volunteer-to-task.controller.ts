@@ -1,8 +1,16 @@
-import { Controller, Get, UseFilters, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseFilters,
+  UseGuards,
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -14,6 +22,8 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
+import { AssignmentSummaryWithTask } from "@overbookd/http";
+import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments/volunteer-to-task")
@@ -39,5 +49,25 @@ export class VolunteerToTaskController {
   })
   findVolunteers(): Promise<VolunteerWithAssignmentDuration[]> {
     return this.volunteerToTask.findVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("volunteers/:volunteerId/assignments")
+  @ApiResponse({
+    status: 200,
+    description: "All assignments for volunteer",
+    type: AssignmentSummaryWithTaskResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    description: "Volunteer id",
+    type: Number,
+  })
+  findAssignments(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+  ): Promise<AssignmentSummaryWithTask[]> {
+    return this.volunteerToTask.findAssignmentsFor(volunteerId);
   }
 }

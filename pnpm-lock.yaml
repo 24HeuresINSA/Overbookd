@@ -625,6 +625,9 @@ importers:
 
   utils/http:
     dependencies:
+      '@overbookd/assignment':
+        specifier: workspace:^
+        version: link:../../domains/assignment
       '@overbookd/festival-event':
         specifier: workspace:^
         version: link:../../domains/festival-event

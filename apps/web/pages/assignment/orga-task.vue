@@ -1,39 +1,42 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList class="volunteer-list" />
+    <FilterableVolunteerList
+      class="volunteer-list"
+      @select-volunteer="selectVolunteer"
+    />
     <OrgaTaskCalendar
       class="calendar"
-      @display-time-span-details="openTimeSpanDetailsDialog"
+      @display-assignment-details="openAssignmentDetailsDialog"
     />
-    <FilterableTimeSpanList class="task-list" />
+    <FilterableTaskAssignmentList class="task-list" />
     <SnackNotificationContainer />
 
-    <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
-      <AssignmentDetails @close-dialog="closeTimeSpanDetailsDialog" />
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+      <AssignmentDetails @close-dialog="closeAssignmentDetailsDialog" />
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
-import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
+import FilterableTaskAssignmentList from "~/components/organisms/assignment/list/FilterableTaskAssignmentList.vue";
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 
-export default Vue.extend({
+export default defineComponent({
   name: "OrgaTask",
   components: {
     FilterableVolunteerList,
-    FilterableTimeSpanList,
+    FilterableTaskAssignmentList,
     OrgaTaskCalendar,
     SnackNotificationContainer,
     AssignmentDetails,
   },
   data: () => ({
-    displayTimeSpanDetailsDialog: false,
+    displayAssignmentDetailsDialog: false,
   }),
   head: () => ({
     title: "Affect Orga-Tâche",
@@ -44,7 +47,6 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignVolunteerToTask.fetchVolunteers();
 
     const volunteerId = +this.$route.query.volunteer;
@@ -56,12 +58,14 @@ export default Vue.extend({
     this.$accessor.assignment.selectVolunteer(volunteer);
   },
   methods: {
-    closeTimeSpanDetailsDialog() {
-      this.displayTimeSpanDetailsDialog = false;
+    closeAssignmentDetailsDialog() {
+      this.displayAssignmentDetailsDialog = false;
     },
-    openTimeSpanDetailsDialog(timeSpanId: number) {
-      this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
-      this.displayTimeSpanDetailsDialog = true;
+    openAssignmentDetailsDialog() {
+      this.displayAssignmentDetailsDialog = true;
+    },
+    selectVolunteer(volunteer: VolunteerWithAssignmentDuration) {
+      this.$accessor.assignVolunteerToTask.selectVolunteer(volunteer);
     },
   },
 });

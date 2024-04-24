@@ -27,6 +27,7 @@ export { isTeamMember } from "./assign-task-to-volunteer/assignment";
 export type {
   Task,
   MissingAssignmentTask,
+  TaskCategorized,
   TaskIdentifier,
   TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/task";
@@ -69,3 +70,4 @@ export type {
   VolunteersForAssignment,
 } from "./assign-task-to-volunteer/repositories/assignments";
 export type { Volunteer as AssignmentVolunteer } from "./assign-task-to-volunteer/funnel/volunteer";
+export { countAssigneesInTeam } from "./count-assignees-in-team";

@@ -4,12 +4,19 @@ import { PrismaService } from "../../prisma.service";
 import { PrismaVolunteers } from "./repository/volunteers.prisma";
 import { VolunteerToTaskService } from "./volunteer-to-task.service";
 import { PrismaModule } from "../../prisma.module";
+import { PrismaAvailableAssignments } from "./repository/available-assignments.prisma";
 
 @Module({
   providers: [
     {
       provide: PrismaVolunteers,
       useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaAvailableAssignments,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaAvailableAssignments(prisma),
       inject: [PrismaService],
     },
     {
@@ -20,9 +27,11 @@ import { PrismaModule } from "../../prisma.module";
     },
     {
       provide: VolunteerToTaskService,
-      useFactory: (assign: AssignVolunteerToTask) =>
-        new VolunteerToTaskService(assign),
-      inject: [AssignVolunteerToTask],
+      useFactory: (
+        assign: AssignVolunteerToTask,
+        assignments: PrismaAvailableAssignments,
+      ) => new VolunteerToTaskService(assign, assignments),
+      inject: [AssignVolunteerToTask, PrismaAvailableAssignments],
     },
   ],
   exports: [VolunteerToTaskService],

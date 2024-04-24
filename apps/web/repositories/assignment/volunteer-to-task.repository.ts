@@ -1,5 +1,5 @@
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
-import { HttpStringified } from "@overbookd/http";
+import { AssignmentSummaryWithTask, HttpStringified } from "@overbookd/http";
 import { Context } from "../context";
 
 export class VolunteerToTaskRepository {
@@ -9,5 +9,11 @@ export class VolunteerToTaskRepository {
     return context.$axios.get<
       HttpStringified<VolunteerWithAssignmentDuration[]>
     >(`${this.basePath}/volunteers`);
+  }
+
+  static getAssignmentsFor(context: Context, volunteerId: number) {
+    return context.$axios.get<HttpStringified<AssignmentSummaryWithTask[]>>(
+      `${this.basePath}/volunteers/${volunteerId}/assignments`,
+    );
   }
 }

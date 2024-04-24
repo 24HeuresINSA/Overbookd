@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PlanningEvent, PlanningTask } from "@overbookd/assignment";
 import { Status } from "@overbookd/festival-event-constants";
+import { PeriodResponseDto } from "./period.response.dto";
 
 class PlanningTaskResponseDto implements PlanningTask {
   @ApiProperty({ type: String })
@@ -13,13 +14,10 @@ class PlanningTaskResponseDto implements PlanningTask {
   status: Status;
 }
 
-export class PlanningEventResponseDto implements PlanningEvent {
-  @ApiProperty({ type: Date })
-  start: Date;
-
-  @ApiProperty({ type: Date })
-  end: Date;
-
+export class PlanningEventResponseDto
+  extends PeriodResponseDto
+  implements PlanningEvent
+{
   @ApiProperty({ type: PlanningTaskResponseDto })
   task: PlanningTask;
 }

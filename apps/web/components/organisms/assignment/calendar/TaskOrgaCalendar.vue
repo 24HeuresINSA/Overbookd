@@ -31,14 +31,10 @@ import {
 } from "@overbookd/assignment";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
-
-function isDailyEvent(
-  event: AssignmentIdentifier | DailyEvent,
-): event is DailyEvent {
-  return (event as DailyEvent).timed === false;
-}
-
-type CalendarEventWithIdentifier = CalendarEvent & AssignmentIdentifier;
+import {
+  isDailyEvent,
+  CalendarEventWithIdentifier,
+} from "~/utils/assignment/calendar-event";
 
 export default defineComponent({
   name: "TaskOrgaCalendar",
