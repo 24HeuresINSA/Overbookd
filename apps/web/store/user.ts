@@ -123,6 +123,14 @@ export const mutations = mutationTree(state, {
   REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
+  ADD_FRIEND_TO_SELECTED_USER(state: UserState, friend: User) {
+    state.selectedUserFriends = [...state.selectedUserFriends, friend];
+  },
+  REMOVE_FRIEND_FROM_SELECTED_USER(state: UserState, friend: User) {
+    state.selectedUserFriends = state.selectedUserFriends.filter(
+      (f) => f.id !== friend.id,
+    );
+  },
   SET_VOLUNTEERS(state: UserState, volunteers: UserPersonalData[]) {
     state.volunteers = volunteers;
   },
@@ -245,6 +253,36 @@ export const actions = actionTree(
       );
       if (res) {
         commit("REMOVE_MY_FRIEND", friend);
+      }
+    },
+    async addFriendToSelectedUser({ commit, state }, friend: User) {
+      const res = await safeCall(
+        this,
+        UserRepository.addFriendToUser(this, state.selectedUser.id, friend.id),
+        {
+          successMessage: `${friend.firstname} a été ajouté aux amis de ${state.selectedUser.firstname} 🎉`,
+          errorMessage: `${friend.firstname} n'a pas pu être ajouté aux amis de ${state.selectedUser.firstname} 😢`,
+        },
+      );
+      if (res) {
+        commit("ADD_FRIEND_TO_SELECTED_USER", res.data);
+      }
+    },
+    async removeFriendFromSelectedUser({ commit, state }, friend: User) {
+      const res = await safeCall(
+        this,
+        UserRepository.removeFriendFromUser(
+          this,
+          state.selectedUser.id,
+          friend.id,
+        ),
+        {
+          successMessage: `${friend.firstname} a été supprimé des amis de ${state.selectedUser.firstname}`,
+          errorMessage: `${friend.firstname} n'a pas pu être supprimé des amis de ${state.selectedUser.firstname}`,
+        },
+      );
+      if (res) {
+        commit("REMOVE_FRIEND_FROM_SELECTED_USER", res.data);
       }
     },
     async fetchPersonalAccountConsumers({ commit }) {

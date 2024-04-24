@@ -109,6 +109,22 @@ export class UserRepository {
     return context.$axios.delete<HttpStringified<User>>(`friends/${friendId}`);
   }
 
+  static addFriendToUser(context: Context, userId: number, friendId: number) {
+    return context.$axios.post<HttpStringified<User>>(`friends/${userId}`, {
+      id: friendId,
+    });
+  }
+
+  static removeFriendFromUser(
+    context: Context,
+    userId: number,
+    friendId: number,
+  ) {
+    return context.$axios.delete<HttpStringified<User>>(
+      `friends/${userId}/${friendId}`,
+    );
+  }
+
   static getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
       `${this.basePath}/${userId}/ft-requests`,
