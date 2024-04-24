@@ -66,6 +66,7 @@ function toTask(task: DatabaseTask): Task {
     name: task.name,
     topPriority: task.topPriority,
     category: task.category,
+    inChargeTeam: task.teamCode,
     assignments,
   };
 }

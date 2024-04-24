@@ -7,19 +7,19 @@
       @input="changeSearch"
     ></v-text-field>
     <SearchTeams
-      :value="teams"
-      :label="'Chercher par équipe requise'"
+      :value="requiredTeams"
+      label="Chercher par équipe requise"
       class="filters__field"
       :boxed="false"
-      @change="changeTeams"
+      @change="changeTeamsRequired"
     ></SearchTeams>
-    <SearchTeams
-      :value="teams"
-      :label="'Chercher par équipe de création'"
+    <SearchTeam
+      :value="inChargeTeam"
+      label="Chercher par équipe responsable"
       class="filters__field"
       :boxed="false"
-      @change="changeTeams"
-    ></SearchTeams>
+      @change="changeTeamsCreation"
+    ></SearchTeam>
     <div class="team-filter-completed-switch">
       <v-combobox
         :value="category"
@@ -46,6 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import {
   DisplayableCategory,
@@ -57,9 +58,17 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 
+type TaskFiltersData = {
+  completed: boolean;
+  search: string;
+  requiredTeams: Team[];
+  inChargeTeam: Team | null;
+  category: DisplayableCategory | TaskPriority | null;
+};
+
 export default defineComponent({
   name: "TaskFilters",
-  components: { SearchTeams },
+  components: { SearchTeams, SearchTeam },
   props: {
     type: {
       type: String,
@@ -73,15 +82,17 @@ export default defineComponent({
   },
   emits: [
     "change:search",
-    "change:teams",
+    "change:required-teams",
+    "change:in-charge-team",
     "change:category",
     "change:completed",
   ],
-  data: () => ({
+  data: (): TaskFiltersData => ({
     completed: false,
     search: "",
-    teams: [] as Team[],
-    category: null as DisplayableCategory | TaskPriority | null,
+    requiredTeams: [],
+    inChargeTeam: null,
+    category: null,
   }),
   computed: {
     counterLabel(): string {
@@ -97,8 +108,13 @@ export default defineComponent({
     changeSearch(search: string) {
       this.$emit("change:search", search);
     },
-    changeTeams(teams: Team[]) {
-      this.$emit("change:teams", teams);
+    changeTeamsRequired(requiredTeams: Team[]) {
+      this.requiredTeams = requiredTeams;
+      this.$emit("change:required-teams", requiredTeams);
+    },
+    changeTeamsCreation(inChargeTeam: Team | null) {
+      this.inChargeTeam = inChargeTeam;
+      this.$emit("change:in-charge-team", inChargeTeam);
     },
     changeCategory(category: string) {
       this.$emit("change:category", category);
