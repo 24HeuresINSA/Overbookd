@@ -15,6 +15,8 @@ export type DatabaseAssignee = {
     teams: { teamCode: string }[];
     friends: { requestor: BaseAssigneeForDetails }[];
     friendRequestors: { friend: BaseAssigneeForDetails }[];
+    comment?: string;
+    note?: string;
   };
 };
 
