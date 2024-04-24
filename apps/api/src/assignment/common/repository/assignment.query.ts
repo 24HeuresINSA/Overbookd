@@ -12,6 +12,8 @@ export type DatabaseAssignee = {
     id: number;
     firstname: string;
     lastname: string;
+    comment?: string;
+    note?: string;
     teams: { teamCode: string }[];
     friends: { requestor: BaseAssigneeForDetails }[];
     friendRequestors: { friend: BaseAssigneeForDetails }[];
@@ -41,6 +43,8 @@ const SELECT_ASSIGNEE_PERSONAL_DATA = {
   id: true,
   firstname: true,
   lastname: true,
+  comment: true,
+  note: true,
   teams: { select: { teamCode: true } },
   friends: { select: { requestor: { select: SELECT_FRIEND_PERSONAL_DATA } } },
   friendRequestors: {

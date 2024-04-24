@@ -101,6 +101,22 @@
             </div>
           </template>
           <template #item.actions="{ item }">
+            <v-tooltip top max-width="20rem">
+              <template #activator="{ on, attrs }">
+                <v-icon v-if="item?.note" small v-bind="attrs" v-on="on">
+                  mdi-note
+                </v-icon>
+              </template>
+              <span>{{ item?.note }}</span>
+            </v-tooltip>
+            <v-tooltip top max-width="20rem">
+              <template #activator="{ on, attrs }">
+                <v-icon v-if="item?.comment" small v-bind="attrs" v-on="on">
+                  mdi-comment
+                </v-icon>
+              </template>
+              <span>{{ item?.comment }}</span>
+            </v-tooltip>
             <v-btn icon @click="openCalendarInNewTab(item.id)">
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
