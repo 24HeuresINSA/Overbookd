@@ -76,6 +76,33 @@ export class FriendService {
       },
     });
   }
+
+  async createBiDirectional(id1: number, id2: number): Promise<number | null> {
+    const { count } = await this.prisma.friend.createMany({
+      data: [
+        {
+          requestorId: id1,
+          friendId: id2,
+        },
+        {
+          requestorId: id2,
+          friendId: id1,
+        },
+      ],
+      skipDuplicates: true,
+    });
+
+    return count;
+  }
+
+  async deleteBiDirectionnal(id1: number, id2: number): Promise<void> {
+    await this.prisma.friend.deleteMany({
+      where: {
+        requestorId: { in: [id1, id2] },
+        friendId: { in: [id1, id2] },
+      },
+    });
+  }
 }
 
 function retrieveFriend({ friend }: FriendWithData): User {

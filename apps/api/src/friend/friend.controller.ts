@@ -22,7 +22,10 @@ import {
 } from "@nestjs/swagger";
 import { RequestWithUserPayload } from "../../src/app.controller";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { CreateFriendRequestDto } from "./dto/create-friend.request.dto";
+import {
+  CreateBiDirectionalFriendRequestDto,
+  CreateFriendRequestDto,
+} from "./dto/create-friend.request.dto";
 import { FriendResponseDto } from "./dto/friend.response.dto";
 import { FriendService } from "./friend.service";
 import { MANAGE_USERS } from "@overbookd/permission";
@@ -120,32 +123,37 @@ export class FriendController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_USERS)
-  @Post(":id")
+  @Post("bi-relation")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: "Create relation between two users",
-    type: FriendResponseDto,
+    description: "Create bi directional relation between two users",
+    type: Number,
   })
   @ApiBody({
-    description: "Friend id",
-    type: CreateFriendRequestDto,
+    description: "User and Friend ids",
+    type: CreateBiDirectionalFriendRequestDto,
   })
-  addFriendToUser(
-    @Param("id", ParseIntPipe) id: number,
-    @Body() friend: CreateFriendRequestDto,
-  ): Promise<FriendResponseDto> {
-    return this.friendService.create(id, friend.id);
+  createBiDirectional(
+    @Body() { userId, friendId }: CreateBiDirectionalFriendRequestDto,
+  ): Promise<number> {
+    return this.friendService.createBiDirectional(userId, friendId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_USERS)
-  @Delete(":id/:friendId")
+  @Delete(":userId/with/:friendId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Delete relation between two users",
+    description: "Delete bi directional relation between two users",
+  })
+  @ApiParam({
+    name: "userId",
+    description: "User id",
+    type: Number,
+    required: true,
   })
   @ApiParam({
     name: "friendId",
@@ -154,9 +162,9 @@ export class FriendController {
     required: true,
   })
   removeFriendFromUser(
-    @Param("id", ParseIntPipe) id: number,
+    @Param("userId", ParseIntPipe) userId: number,
     @Param("friendId", ParseIntPipe) friendId: number,
   ): Promise<void> {
-    return this.friendService.delete(id, friendId);
+    return this.friendService.deleteBiDirectionnal(userId, friendId);
   }
 }

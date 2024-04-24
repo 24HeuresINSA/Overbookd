@@ -11,3 +11,22 @@ export class CreateFriendRequestDto {
   @IsNotEmpty()
   id: number;
 }
+export class CreateBiDirectionalFriendRequestDto {
+  @ApiProperty({
+    required: true,
+    description: "The id of the User",
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
+  @ApiProperty({
+    required: true,
+    description: "The id of the Friend",
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  friendId: number;
+}
