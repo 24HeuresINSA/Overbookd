@@ -15,7 +15,10 @@ import { AssignmentsRepository } from "~/repositories/assignment/assignments.rep
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { safeCall } from "~/utils/api/calls";
-import { castAssignmentWithDate } from "~/utils/assignment/assignment";
+import {
+  UnassignForm,
+  castAssignmentWithDate,
+} from "~/utils/assignment/assignment";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
@@ -119,7 +122,7 @@ export const actions = actionTree(
     },
 
     async assign(
-      { dispatch },
+      { dispatch, commit },
       {
         assignment,
         volunteer,
@@ -128,6 +131,8 @@ export const actions = actionTree(
         volunteer: TeamMember;
       },
     ) {
+      commit("SET_HOVER_ASSIGNMENT", null);
+
       const repository = new AssignmentsRepository(this);
       const res = await repository.assign({
         assignment,
@@ -135,8 +140,21 @@ export const actions = actionTree(
       });
       if (!res) return;
 
-      dispatch("user/getVolunteerAssignments", volunteer.id, { root: true });
+      dispatch("fetchAllAssignmentsFor", volunteer.id);
       dispatch("fetchPotentialAssignmentsFor", volunteer.id);
+    },
+
+    async unassign(
+      { state, dispatch },
+      { assignmentIdentifier, assigneeId }: UnassignForm,
+    ) {
+      const repository = new AssignmentsRepository(this);
+      await repository.unassign(assignmentIdentifier, assigneeId);
+
+      dispatch("fetchAssignmentDetails", assignmentIdentifier);
+      if (!state.selectedVolunteer) return;
+      dispatch("fetchAllAssignmentsFor", state.selectedVolunteer.id);
+      dispatch("fetchPotentialAssignmentsFor", state.selectedVolunteer.id);
     },
 
     setHoverAssignment(

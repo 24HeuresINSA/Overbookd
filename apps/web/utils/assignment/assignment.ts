@@ -1,4 +1,4 @@
-import { Assignment } from "@overbookd/assignment";
+import { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
 import { HttpStringified } from "@overbookd/http";
 import { castPeriodWithDate } from "../http/period";
 
@@ -10,3 +10,8 @@ export function castAssignmentWithDate(
     ...castPeriodWithDate(assignment),
   };
 }
+
+export type UnassignForm = {
+  assignmentIdentifier: AssignmentIdentifier;
+  assigneeId: number;
+};

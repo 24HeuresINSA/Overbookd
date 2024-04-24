@@ -163,6 +163,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["close-dialog", "unassign"],
   data: () => ({
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,
@@ -255,7 +256,7 @@ export default defineComponent({
         mobilizationId: this.assignmentDetails.mobilizationId,
       };
 
-      this.$accessor.assignTaskToVolunteer.unassign({
+      this.$emit("unassign", {
         assignmentIdentifier,
         assigneeId: teamMember.id,
       });

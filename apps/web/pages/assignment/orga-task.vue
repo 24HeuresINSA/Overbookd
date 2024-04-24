@@ -16,6 +16,7 @@
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
         @close-dialog="closeAssignmentDetailsDialog"
+        @unassign="unassignVolunteer"
       />
     </v-dialog>
   </div>
@@ -32,6 +33,7 @@ import {
   AssignmentWithDetails,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
+import { UnassignForm } from "~/utils/assignment/assignment";
 
 export default defineComponent({
   name: "OrgaTask",
@@ -76,6 +78,9 @@ export default defineComponent({
     },
     selectVolunteer(volunteer: VolunteerWithAssignmentDuration) {
       this.$accessor.assignVolunteerToTask.selectVolunteer(volunteer);
+    },
+    unassignVolunteer(form: UnassignForm) {
+      this.$accessor.assignVolunteerToTask.unassign(form);
     },
   },
 });

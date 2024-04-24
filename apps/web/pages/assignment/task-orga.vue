@@ -26,6 +26,7 @@
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
         @close-dialog="closeAssignmentDetailsDialog"
+        @unassign="unassignVolunteer"
       />
     </v-dialog>
   </div>
@@ -46,6 +47,7 @@ import {
   AssignmentWithDetails,
   MissingAssignmentTask,
 } from "@overbookd/assignment";
+import { UnassignForm } from "~/utils/assignment/assignment";
 
 type OrgaTaskData = {
   openFunnelDialog: boolean;
@@ -107,6 +109,9 @@ export default defineComponent({
       const taskId = this.$accessor.assignTaskToVolunteer.selectedTask?.id;
       if (!taskId) return;
       this.$accessor.assignTaskToVolunteer.selectAssignment(assignment);
+    },
+    unassignVolunteer(form: UnassignForm) {
+      this.$accessor.assignTaskToVolunteer.unassign(form);
     },
   },
 });
