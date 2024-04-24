@@ -275,12 +275,12 @@ export default defineComponent({
         this.selectedVolunteer.id === this.newFriend.id
       )
         return;
-      this.$accessor.user.addFriendToSelectedUser(this.newFriend);
+      this.$accessor.user.addFriendWithSelectedUser(this.newFriend);
       this.newFriend = { id: 0, firstname: "", lastname: "" };
     },
 
     removeFriend(friend: User) {
-      this.$accessor.user.removeFriendFromSelectedUser(friend);
+      this.$accessor.user.removeFriendWithSelectedUser(friend);
     },
 
     async savePersonalData() {

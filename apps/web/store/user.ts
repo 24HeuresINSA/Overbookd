@@ -124,6 +124,7 @@ export const mutations = mutationTree(state, {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
   ADD_FRIEND_TO_SELECTED_USER(state: UserState, friend: User) {
+    if (state.selectedUserFriends.find((f) => f.id === friend.id)) return;
     state.selectedUserFriends = [...state.selectedUserFriends, friend];
   },
   REMOVE_FRIEND_FROM_SELECTED_USER(state: UserState, friend: User) {
@@ -255,20 +256,20 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
-    async addFriendToSelectedUser({ commit, state }, friend: User) {
+    async addFriendWithSelectedUser({ commit, state }, friend: User) {
       const res = await safeCall(
         this,
         UserRepository.addFriendToUser(this, state.selectedUser.id, friend.id),
         {
-          successMessage: `${friend.firstname} a été ajouté aux amis de ${state.selectedUser.firstname} 🎉`,
-          errorMessage: `${friend.firstname} n'a pas pu être ajouté aux amis de ${state.selectedUser.firstname} 😢`,
+          successMessage: `${friend.firstname} et ${state.selectedUser.firstname} sont ajoutés en tant qu'amis 🎉`,
+          errorMessage: `${friend.firstname} et ${state.selectedUser.firstname} n'ont pas pu être ajoutés en tant qu'amis 😢`,
         },
       );
       if (res) {
-        commit("ADD_FRIEND_TO_SELECTED_USER", res.data);
+        commit("ADD_FRIEND_TO_SELECTED_USER", friend);
       }
     },
-    async removeFriendFromSelectedUser({ commit, state }, friend: User) {
+    async removeFriendWithSelectedUser({ commit, state }, friend: User) {
       const res = await safeCall(
         this,
         UserRepository.removeFriendFromUser(
@@ -277,8 +278,8 @@ export const actions = actionTree(
           friend.id,
         ),
         {
-          successMessage: `${friend.firstname} a été supprimé des amis de ${state.selectedUser.firstname}`,
-          errorMessage: `${friend.firstname} n'a pas pu être supprimé des amis de ${state.selectedUser.firstname}`,
+          successMessage: `${friend.firstname} et ${state.selectedUser.firstname} sont retirés de leur liste d'amis`,
+          errorMessage: `${friend.firstname} et ${state.selectedUser.firstname} n'ont pas pu être retirés de leur liste d'amis`,
         },
       );
       if (res) {

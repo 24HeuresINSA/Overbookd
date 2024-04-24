@@ -110,8 +110,9 @@ export class UserRepository {
   }
 
   static addFriendToUser(context: Context, userId: number, friendId: number) {
-    return context.$axios.post<HttpStringified<User>>(`friends/${userId}`, {
-      id: friendId,
+    return context.$axios.post<HttpStringified<User>>("friends/bi-relation", {
+      userId,
+      friendId,
     });
   }
 
@@ -121,7 +122,7 @@ export class UserRepository {
     friendId: number,
   ) {
     return context.$axios.delete<HttpStringified<User>>(
-      `friends/${userId}/${friendId}`,
+      `friends/${userId}/with/${friendId}`,
     );
   }
 
