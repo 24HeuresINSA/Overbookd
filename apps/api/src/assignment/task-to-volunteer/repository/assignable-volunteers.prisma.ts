@@ -36,24 +36,14 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
-    const extendedOneOfTeams = this.extendOneOfTeams(oneOfTheTeams);
-    const includePeriod = overlapPeriodCondition(period);
 
     const volunteers = await this.prisma.user.findMany({
-      where: {
-        ...IS_NOT_DELETED,
-        ...HAS_POSITIVE_CHARISMA,
-        ...this.buildHasAvailabilityCondition(extendedOneOfTeams, period),
-        assigned: { none: { assignment: includePeriod } },
-      },
+      where: isAssignableOn(oneOfTheTeams, period),
       select: {
         ...SELECT_VOLUNTEER,
         ...this.buildVolunteerAssignmentSelection(category),
         ...this.buildFestivalTaskMobilizationSelection(period),
-        ...this.buildAssignableFriendSelection({
-          ...assignmentSpecification,
-          oneOfTheTeams: extendedOneOfTeams,
-        }),
+        ...this.buildAssignableFriendSelection(assignmentSpecification),
         ...COUNT_FRIENDS,
       },
     });
@@ -77,16 +67,6 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
   }
 
-  private buildHasAvailabilityCondition(
-    oneOfTheTeams: string[],
-    period: IProvidePeriod,
-  ) {
-    return {
-      teams: { some: { teamCode: { in: oneOfTheTeams } } },
-      availabilities: { some: includePeriodCondition(period) },
-    };
-  }
-
   private buildVolunteerAssignmentSelection(category?: Category) {
     return {
       assigned: {
@@ -107,11 +87,6 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     oneOfTheTeams,
     period,
   }: AssignmentSpecification) {
-    const hasAvailability = this.buildHasAvailabilityCondition(
-      oneOfTheTeams,
-      period,
-    );
-
     const selectAssignment = {
       assignment: { select: { festivalTaskId: true, ...SELECT_PERIOD } },
     };
@@ -120,12 +95,8 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
       assignment: { start: period.start, end: period.end },
     };
 
-    const friendSelection = {
+    const selectFriend = {
       id: true,
-      availabilities: {
-        select: SELECT_PERIOD,
-        where: includePeriodCondition(period),
-      },
       assigned: {
         select: selectAssignment,
         where: assignmentDuringPeriod,
@@ -134,20 +105,14 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 
     return {
       friends: {
-        where: { requestor: hasAvailability },
-        select: { requestor: { select: friendSelection } },
+        select: { requestor: { select: selectFriend } },
+        where: { requestor: isAssignableOn(oneOfTheTeams, period) },
       },
       friendRequestors: {
-        where: { friend: hasAvailability },
-        select: { friend: { select: friendSelection } },
+        select: { friend: { select: selectFriend } },
+        where: { friend: isAssignableOn(oneOfTheTeams, period) },
       },
     };
-  }
-
-  private extendOneOfTeams(oneOfTeams: string[]): string[] {
-    return oneOfTeams.includes(CONFIANCE)
-      ? [...oneOfTeams, VIEUX, HARD]
-      : oneOfTeams;
   }
 }
 
@@ -169,12 +134,9 @@ function toStoredAssignableVolunteer(
     ...volunteer.friends.map(({ requestor }) => requestor),
     ...volunteer.friendRequestors.map(({ friend }) => friend),
   ];
-  const assignableFriendsIds = friends
-    .filter(
-      (friend) =>
-        friend.availabilities.length > 0 && friend.assigned.length === 0,
-    )
-    .map(({ id }) => id);
+
+  const assignableFriendsIds = Array.from(new Set(friends.map(({ id }) => id)));
+
   const hasFriendAssigned = friends.some((friend) =>
     friend.assigned.some(
       ({ assignment }) => assignment.festivalTaskId === taskId,
@@ -195,5 +157,30 @@ function toStoredAssignableVolunteer(
     assignableFriendsIds,
     hasFriendAssigned,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
+  };
+}
+
+function isAssignableOn(oneOfTheTeams: string[], period: Period) {
+  return {
+    ...IS_NOT_DELETED,
+    ...HAS_POSITIVE_CHARISMA,
+    ...buildHasAvailabilityCondition(oneOfTheTeams, period),
+    assigned: { none: { assignment: overlapPeriodCondition(period) } },
+  };
+}
+
+function extendOneOfTeams(oneOfTeams: string[]): string[] {
+  return oneOfTeams.includes(CONFIANCE)
+    ? [...oneOfTeams, VIEUX, HARD]
+    : oneOfTeams;
+}
+
+function buildHasAvailabilityCondition(
+  oneOfTheTeams: string[],
+  period: IProvidePeriod,
+) {
+  return {
+    teams: { some: { teamCode: { in: extendOneOfTeams(oneOfTheTeams) } } },
+    availabilities: { some: includePeriodCondition(period) },
   };
 }
