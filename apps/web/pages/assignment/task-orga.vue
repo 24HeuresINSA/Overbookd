@@ -13,7 +13,7 @@
     <SnackNotificationContainer />
 
     <v-dialog v-model="openFunnelDialog" width="1000px">
-      <AssignmentFunnel
+      <AssignmentFunnelV2
         v-if="volunteer && assignment"
         :volunteer="volunteer"
         :assignment="assignment"
@@ -35,7 +35,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import AssignmentFunnel from "~/components/organisms/assignment/card/AssignmentFunnel.vue";
+import AssignmentFunnelV2 from "~/components/organisms/assignment/card/AssignmentFunnelV2.vue";
 import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
@@ -60,7 +60,7 @@ export default defineComponent({
     FilterableVolunteerList,
     FilterableTaskList,
     TaskOrgaCalendar,
-    AssignmentFunnel,
+    AssignmentFunnelV2,
     AssignmentDetails,
     SnackNotificationContainer,
   },
