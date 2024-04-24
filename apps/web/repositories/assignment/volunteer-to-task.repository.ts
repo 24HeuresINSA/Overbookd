@@ -11,7 +11,7 @@ export class VolunteerToTaskRepository {
     >(`${this.basePath}/volunteers`);
   }
 
-  static getAssignmentsFor(context: Context, volunteerId: number) {
+  static fetchPotentialAssignmentsFor(context: Context, volunteerId: number) {
     return context.$axios.get<HttpStringified<AssignmentSummaryWithTask[]>>(
       `${this.basePath}/volunteers/${volunteerId}/assignments`,
     );

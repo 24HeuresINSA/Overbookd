@@ -5,7 +5,7 @@ import {
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import { Context } from "../context";
-import { HttpStringified } from "@overbookd/http";
+import { DisplayableAssignment, HttpStringified } from "@overbookd/http";
 
 export class AssignmentsRepository implements Assignments {
   private static readonly basePath = "assignments";
@@ -39,6 +39,12 @@ export class AssignmentsRepository implements Assignments {
     return context.$axios.get<HttpStringified<Assignment>>(
       `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}`,
       { params: { withDetails } },
+    );
+  }
+
+  static findAllFor(context: Context, volunteerId: number) {
+    return context.$axios.get<HttpStringified<DisplayableAssignment[]>>(
+      `${this.basePath}/volunteers/${volunteerId}/assignments`,
     );
   }
 }

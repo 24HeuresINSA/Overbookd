@@ -56,16 +56,22 @@ const SELECT_ASSIGNEE = {
 const SELECT_TEAM_DEMANDS = { teamCode: true, count: true };
 
 const SELECT_TASK = {
+  id: true,
   name: true,
   appointment: { select: { name: true } },
 };
+
+const SELECT_MOBILIZATION = {
+  id: true,
+  teams: { select: SELECT_TEAM_DEMANDS },
+};
+
 export const SELECT_ASSIGNMENT = {
   ...SELECT_PERIOD,
+  id: true,
   festivalTask: { select: SELECT_TASK },
   assignees: { select: SELECT_ASSIGNEE },
-  mobilization: {
-    select: { teams: { select: SELECT_TEAM_DEMANDS } },
-  },
+  mobilization: { select: SELECT_MOBILIZATION },
 };
 
 export function uniqueAssignment(identifier: AssignmentIdentifier) {

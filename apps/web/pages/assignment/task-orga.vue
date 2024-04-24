@@ -22,7 +22,11 @@
       />
     </v-dialog>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
-      <AssignmentDetails @close-dialog="closeAssignmentDetailsDialog" />
+      <AssignmentDetails
+        v-if="assignmentDetails"
+        :assignment-details="assignmentDetails"
+        @close-dialog="closeAssignmentDetailsDialog"
+      />
     </v-dialog>
   </div>
 </template>
@@ -39,6 +43,7 @@ import {
   AssignableVolunteer,
   Assignment,
   AssignmentSummary,
+  AssignmentWithDetails,
   MissingAssignmentTask,
 } from "@overbookd/assignment";
 
@@ -74,9 +79,11 @@ export default defineComponent({
     assignment(): Assignment | null {
       return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },
+    assignmentDetails(): AssignmentWithDetails | null {
+      return this.$accessor.assignTaskToVolunteer.assignmentDetails;
+    },
   },
   async mounted() {
-    this.$accessor.assignment.clearSelectedVariables();
     await this.$accessor.assignTaskToVolunteer.fetchTasks();
   },
   methods: {

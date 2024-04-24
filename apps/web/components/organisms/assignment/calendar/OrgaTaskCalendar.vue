@@ -20,9 +20,7 @@
       <div
         class="event underline-on-hover"
         @mouseup.middle="openFtInNewTab(event.taskId)"
-        @contextmenu.prevent="
-          selectAssignmentToDisplayDetails(event.identifier)
-        "
+        @contextmenu.prevent="selectAssignmentToDisplayDetails(event)"
       >
         {{ event.name }}
       </div>
@@ -35,18 +33,17 @@ import { defineComponent } from "vue";
 import { DateString, Hour, Period } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
-import { getColorByStatus } from "~/domain/common/status-color";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
-import {
-  AssignmentIdentifier,
-  PlanningEvent,
-  VolunteerWithAssignmentDuration,
-} from "@overbookd/assignment";
+import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
-import { AssignmentSummaryWithTask } from "@overbookd/http";
+import {
+  AssignmentSummaryWithTask,
+  DisplayableAssignment,
+} from "@overbookd/http";
+import { PURPLE } from "~/domain/common/status-color";
 
 export default defineComponent({
   name: "OrgaTaskCalendar",
@@ -72,15 +69,18 @@ export default defineComponent({
     hoverAssignment(): AssignmentSummaryWithTask | null {
       return this.$accessor.assignVolunteerToTask.hoverAssignment;
     },
+    alreadyAssignedAssignments(): DisplayableAssignment[] {
+      return this.$accessor.assignVolunteerToTask.alreadyAssignedAssignments;
+    },
     assignedTasks(): CalendarEvent[] {
-      const tasks = [...this.$accessor.user.selectedUserAssignments];
-      const assignments = this.hoverAssignment
+      const alreadyAssigned = [...this.alreadyAssignedAssignments].map(
+        (assignment) => this.formatAssignmentForCalendar(assignment, PURPLE),
+      );
+      const hoverAssignments = this.hoverAssignment
         ? [this.formatAssignmentForCalendar(this.hoverAssignment)]
         : [];
-      return [
-        ...tasks.map((task) => this.formatTaskForCalendar(task)),
-        ...assignments,
-      ];
+
+      return [...alreadyAssigned, ...hoverAssignments];
     },
     hourToScrollTo(): number | undefined {
       return this.hoverAssignment?.start.getHours();
@@ -109,40 +109,35 @@ export default defineComponent({
         ),
         this.$accessor.user.getVolunteerAssignments(volunteerId),
         this.$accessor.user.getVolunteerAssignmentStats(volunteerId),
+        this.$accessor.assignVolunteerToTask.fetchAllAssignmentsFor(
+          volunteerId,
+        ),
       ]);
     },
     isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
-    selectAssignmentToDisplayDetails(identifier: AssignmentIdentifier) {
-      if (!identifier) return;
-      this.$accessor.assignTaskToVolunteer.fetchAssignmentDetails(identifier);
+    selectAssignmentToDisplayDetails(assignment: DisplayableAssignment) {
+      this.$accessor.assignVolunteerToTask.fetchAssignmentDetails(assignment);
       this.$emit("display-assignment-details");
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);
     },
     formatAssignmentForCalendar(
-      assignment: AssignmentSummaryWithTask,
+      assignment: DisplayableAssignment,
+      color?: string,
     ): CalendarEventWithIdentifier {
       return {
         ...assignment,
         timed: true,
+        color,
+        name: `[${assignment.taskId}] ${assignment.name}`,
         identifier: {
           assignmentId: assignment.assignmentId,
           mobilizationId: assignment.mobilizationId,
           taskId: assignment.taskId,
         },
-      };
-    },
-    formatTaskForCalendar({ start, end, task }: PlanningEvent): CalendarEvent {
-      return {
-        start,
-        end,
-        name: `[${task.id}] ${task.name}`,
-        //link: `/ft/${task.id}`,
-        color: getColorByStatus(task.status),
-        timed: true,
       };
     },
   },

@@ -15,6 +15,7 @@ import {
   updateAssigneesOnAssignment,
 } from "./assignment.query";
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
+import { DisplayableAssignment } from "@overbookd/http";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -41,6 +42,24 @@ export class PrismaAssignments implements AssignmentRepository {
     }
 
     return toAssignmentWithDetails(assignment, identifier);
+  }
+
+  async findAllFor(volunteerId: number): Promise<DisplayableAssignment[]> {
+    const assignments = await this.prisma.assignment.findMany({
+      where: {
+        assignees: { some: { userId: volunteerId } },
+      },
+      select: SELECT_ASSIGNMENT,
+    });
+
+    return assignments.map((assignment) => ({
+      taskId: assignment.festivalTask.id,
+      mobilizationId: assignment.mobilization.id,
+      assignmentId: assignment.id,
+      start: assignment.start,
+      end: assignment.end,
+      name: assignment.festivalTask.name,
+    }));
   }
 
   async assign({
