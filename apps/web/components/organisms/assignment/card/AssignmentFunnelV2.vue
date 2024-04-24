@@ -111,7 +111,7 @@ import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 import {
   Assignment,
-  AssignmentVolunteer,
+  AssignableVolunteer,
   IDefineCandidate,
   IActAsFunnel,
   ReadyToStart,
@@ -132,7 +132,7 @@ export default defineComponent({
   },
   props: {
     volunteer: {
-      type: Object as () => AssignmentVolunteer,
+      type: Object as () => AssignableVolunteer,
       required: true,
     },
     assignment: {

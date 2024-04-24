@@ -1,23 +1,31 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { Context } from "../context";
-import { AssignmentVolunteer, Friends } from "@overbookd/assignment";
-import { HttpStringified } from "@overbookd/http";
+import { AssignableVolunteer, Friends } from "@overbookd/assignment";
 
+export type FriendsRepositoryContext = Context & {
+  $accessor: {
+    assignTaskToVolunteer: {
+      assignableVolunteers: AssignableVolunteer[];
+      selectedVolunteer: AssignableVolunteer | null;
+    };
+  };
+};
 export class FriendsRepository implements Friends {
-  private readonly basePath = "assignments/task-to-volunteer/volunteers";
-
-  constructor(private readonly context: Context) {}
+  constructor(private readonly context: FriendsRepositoryContext) {}
 
   async availableDuringWith(
-    { start, end }: Period,
+    period: IProvidePeriod,
     volunteer: number,
-  ): Promise<AssignmentVolunteer[]> {
-    const res = await this.context.$axios.get<
-      HttpStringified<AssignmentVolunteer[]>
-    >(`${this.basePath}/${volunteer}/available-friends`, {
-      params: { start, end },
-    });
+  ): Promise<AssignableVolunteer[]> {
+    const { assignTaskToVolunteer } = this.context.$accessor;
+    const selectedVolunteer = assignTaskToVolunteer.assignableVolunteers.find(
+      ({ id }) => id === volunteer,
+    );
+    if (!selectedVolunteer) return Promise.resolve([]);
 
-    return res.data;
+    const assignableFriends = assignTaskToVolunteer.assignableVolunteers.filter(
+      ({ id }) => selectedVolunteer.assignableFriendsIds.includes(id),
+    );
+    return Promise.resolve(assignableFriends);
   }
 }
