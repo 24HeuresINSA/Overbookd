@@ -145,8 +145,6 @@ function toAssigneeForDetails(
     id: assignee.personalData.id,
     firstname: assignee.personalData.firstname,
     lastname: assignee.personalData.lastname,
-    comment: assignee.personalData.comment,
-    note: assignee.personalData.note,
   };
   if (!assignee.teamCode) return baseAssignee;
 
