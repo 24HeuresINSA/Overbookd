@@ -1,3 +1,11 @@
+## [2.31.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.31.0...v2.31.1) (2024-04-24)
+
+
+### Bug Fixes
+
+* **api:** correctly update friend list when humains remove a friend ([404756e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/404756ec5b4d26ac73ab85402c99a0dd9bc1fd1d))
+* **assignment:** retrieve only assignable friend ids from api. [#1811](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1811) ([3977a33](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3977a33e80f88952687d7390bea23fc138acf832))
+
 ## [2.31.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.30.0...v2.31.0) (2024-04-24)
 
 
