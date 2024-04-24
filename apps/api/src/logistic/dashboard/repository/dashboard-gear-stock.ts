@@ -2,13 +2,14 @@ import { DatabaseGear } from "./dashboard.model";
 import { Period } from "@overbookd/period";
 import { sumQuantity } from "./sum-quantity";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
-import { GearBorrow } from "@overbookd/http";
+import { GearBorrow, GearPurchase } from "@overbookd/http";
 
 export class DashboardGearStock {
   private constructor() {}
 
   static computeGearStock(gear: DatabaseGear, date: Date) {
     const inventory = DashboardGearStock.findInventoryQuantity(gear);
+
     const borrows: GearBorrow[] = gear.borrows
       .filter(({ borrow }) => {
         const { availableOn: start, unavailableOn: end } = borrow;
@@ -19,8 +20,12 @@ export class DashboardGearStock {
         return { id: borrow.id, lender: borrow.lender, quantity };
       });
     const borrowed = sumQuantity(borrows);
-    const stock = inventory + borrowed;
-    return { stock, inventory, borrows };
+
+    const purchases = DashboardGearStock.findPurchasesAt(gear.purchases, date);
+    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
+
+    const stock = inventory + borrowed + purchased;
+    return { stock, inventory, borrows, purchases };
   }
 
   static computeConsumableStock(gear: DatabaseGear, date: Date) {
@@ -34,8 +39,12 @@ export class DashboardGearStock {
       date,
     );
     const borrowed = DashboardGearStock.findBorrowedQuantityByDate(gear, date);
-    const stock = inventory + borrowed - consumed;
-    return { stock, inventory, consumed, borrows };
+
+    const purchases = DashboardGearStock.findPurchasesAt(gear.purchases, date);
+    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
+
+    const stock = inventory + borrowed + purchased - consumed;
+    return { stock, inventory, consumed, borrows, purchases };
   }
 
   private static findBorrowsGivingConsumableAt(
@@ -50,6 +59,21 @@ export class DashboardGearStock {
       const { id, lender } = borrow;
       const borrowDetails = { id, lender, quantity };
       return [...borrows, borrowDetails];
+    }, []);
+  }
+
+  private static findPurchasesAt(
+    purchases: DatabaseGear["purchases"],
+    date: Date,
+  ): GearPurchase[] {
+    return purchases.reduce((purchases, { purchase, quantity }) => {
+      const isStartingAt = +purchase.availableOn === +date;
+
+      if (!isStartingAt) return purchases;
+
+      const { id, seller } = purchase;
+      const purchaseDetails = { id, seller, quantity };
+      return [...purchases, purchaseDetails];
     }, []);
   }
 

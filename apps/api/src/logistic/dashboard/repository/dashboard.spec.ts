@@ -24,6 +24,8 @@ import {
   gearWithOneInventoryRecordAndOnePurchase,
   gearWithOneInquiryAndOnePurchase,
   consumableGearWithOneInquiryAndOnePurchase,
+  gearWithOneInventoryRecordAndOnePurchaseForGraph,
+  consumableGearWithOneInquiryAndOnePurchaseForGraph,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
@@ -73,6 +75,8 @@ describe("Summarize gear for graph", () => {
     ${"is consumable and has two inquiries and one inventory record"}     | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
     ${"has one inventory record and one borrow"}                          | ${gearWithOneInventoryRecordAndOneBorrow}                     | ${friday08hto09h30} | ${gearWithOneInventoryRecordAndOneBorrowForGraph}
     ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${friday08hto09h30} | ${consumableGearWithOneInquiryAndOneBorrowForGraph}
+    ${"has one inventory record and one purchase"}                        | ${gearWithOneInventoryRecordAndOnePurchase}                   | ${friday08hto09h30} | ${gearWithOneInventoryRecordAndOnePurchaseForGraph}
+    ${"is consumable and has one inquiry and one purchase"}               | ${consumableGearWithOneInquiryAndOnePurchase}                 | ${friday08hto09h30} | ${consumableGearWithOneInquiryAndOnePurchaseForGraph}
   `("when gear $explaination", ({ gear, period, expectedData }) => {
     it(`should return gear for graph with ${expectedData.length} periods`, () => {
       const gearForGraph = DashboardGear.generateDetails(
