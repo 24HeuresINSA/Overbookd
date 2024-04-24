@@ -1,3 +1,16 @@
+## [2.32.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.31.1...v2.32.0) (2024-04-24)
+
+
+### Features
+
+* **assignment:** implement orga-task [#1789](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1789) ([493b1b1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/493b1b1e07f89c351d142c654478fa899843e874))
+
+
+### Bug Fixes
+
+* **assignment:** display friends in orga-task [#1816](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1816) ([86b13c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86b13c4414e3e01c108eb06d2013284f7de35761))
+* **assignment:** sort assignments in orga-task and fix confiance assign [#1818](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1818) ([732c43a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/732c43a70b25a995980800e95a12bf54ce414afc))
+
 ## [2.31.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.31.0...v2.31.1) (2024-04-24)
 
 
