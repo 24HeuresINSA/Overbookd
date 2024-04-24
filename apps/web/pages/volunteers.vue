@@ -4,9 +4,11 @@
       <VolunteerListFilters
         :search="filters.search"
         :teams="filters.teams"
+        :excluded-teams="filters.excludedTeams"
         :disabled="isStatsModeActive"
         @change:search="filters.search = $event"
         @change:teams="filters.teams = $event"
+        @change:excluded-teams="filters.excludedTeams = $event"
       />
 
       <VolunteerStatsExportFilters
@@ -50,6 +52,7 @@ type VolunteersData = {
   filters: {
     search: string;
     teams: Team[];
+    excludedTeams: Team[];
   };
 
   isVolunteerInfoDialogOpen: boolean;
@@ -70,6 +73,7 @@ export default Vue.extend({
     filters: {
       search: "",
       teams: [],
+      excludedTeams: [],
     },
 
     isVolunteerInfoDialogOpen: false,
@@ -93,9 +97,16 @@ export default Vue.extend({
     },
     displayedVolunteers(): UserPersonalData[] {
       const matchTeams = this.filterVolunteersByTeams(this.filters.teams);
+      const matchExcludedTeams = this.filterVolunteersByExcludedTeams(
+        this.filters.excludedTeams,
+      );
       const matchName = this.filterVolunteersByName(this.filters.search);
       return this.searchableVolunteers.filter((volunteer) => {
-        return matchTeams(volunteer) && matchName(volunteer);
+        return (
+          matchTeams(volunteer) &&
+          matchExcludedTeams(volunteer) &&
+          matchName(volunteer)
+        );
       });
     },
   },
@@ -120,6 +131,17 @@ export default Vue.extend({
       return (volunteer) =>
         teamsSearched.every((teamSearched) =>
           volunteer.teams.some((teamCode) => teamSearched.code === teamCode),
+        );
+    },
+
+    filterVolunteersByExcludedTeams(
+      teamsExcluded: Team[],
+    ): (volunteer: UserPersonalData) => boolean {
+      if (teamsExcluded.length === 0) return () => true;
+
+      return (volunteer) =>
+        !teamsExcluded.some((teamExcluded) =>
+          volunteer.teams.some((teamCode) => teamExcluded.code === teamCode),
         );
     },
 

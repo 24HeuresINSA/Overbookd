@@ -16,6 +16,14 @@
         :disabled="disabled"
         @change="propagateTeams"
       />
+
+      <SearchTeams
+        :teams="excludedTeams"
+        label="Équipe(s) à exclure"
+        :boxed="false"
+        :disabled="disabled"
+        @change="propagateExcludedTeams"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -37,6 +45,10 @@ export default Vue.extend({
       type: Array as () => Team[],
       default: () => [],
     },
+    excludedTeams: {
+      type: Array as () => Team[],
+      default: () => [],
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -48,6 +60,9 @@ export default Vue.extend({
     },
     propagateTeams(teams: Team[]) {
       this.$emit("change:teams", teams);
+    },
+    propagateExcludedTeams(excludedTeams: Team[]) {
+      this.$emit("change:excluded-teams", excludedTeams);
     },
   },
 });
