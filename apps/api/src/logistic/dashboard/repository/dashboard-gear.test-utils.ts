@@ -657,7 +657,7 @@ export const consumableGearWithOneInquiryAndOneBorrowForGraph: GearDetails[] = [
   },
 ];
 
-const PurchaseFromFriday08h: GearPurchase = {
+const purchaseFromFriday08h: GearPurchase = {
   id: databasePurchaseFromFriday08h.purchase.id,
   seller: databasePurchaseFromFriday08h.purchase.seller,
   quantity: databasePurchaseFromFriday08h.quantity,
@@ -669,7 +669,7 @@ export const gearWithOneInventoryRecordAndOnePurchaseForGraph: GearDetails[] = [
     ...friday08hto08h15,
     stock: 30,
     inventory: 25,
-    purchases: [PurchaseFromFriday08h],
+    purchases: [purchaseFromFriday08h],
   },
   {
     ...emptyGearDetails,
@@ -709,7 +709,7 @@ export const consumableGearWithOneInquiryAndOnePurchaseForGraph: GearDetails[] =
       ...emptyConsumableDetails,
       ...friday08hto08h15,
       stock: 5,
-      purchases: [PurchaseFromFriday08h],
+      purchases: [purchaseFromFriday08h],
     },
     {
       ...emptyConsumableDetails,
