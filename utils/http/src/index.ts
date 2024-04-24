@@ -59,4 +59,7 @@ export type {
   TimelineMobilization,
   TimelineTask,
 } from "./timeline";
-export type { AssignmentSummaryWithTask } from "./assignment";
+export type {
+  AssignmentSummaryWithTask,
+  DisplayableAssignment,
+} from "./assignment";

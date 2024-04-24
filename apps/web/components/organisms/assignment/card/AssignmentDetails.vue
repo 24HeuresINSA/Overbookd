@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
@@ -135,42 +135,45 @@ import {
   isTeamMember,
 } from "@overbookd/assignment";
 
-export default Vue.extend({
+export default defineComponent({
   name: "AssignmentDetails",
   components: { TeamChip },
+  props: {
+    assignmentDetails: {
+      type: Object as () => AssignmentWithDetails,
+      required: true,
+    },
+  },
   data: () => ({
     selectedAssigneeId: null as number | null,
     selectedTeamToAssign: null as string | null,
   }),
   computed: {
-    assignementDetails(): AssignmentWithDetails | null {
-      return this.$accessor.assignTaskToVolunteer.assignmentDetails;
-    },
     taskName(): string {
-      if (this.assignementDetails === null) return "";
-      return `[${this.assignementDetails.taskId}] ${this.assignementDetails.name}`;
+      if (this.assignmentDetails === null) return "";
+      return `[${this.assignmentDetails.taskId}] ${this.assignmentDetails.name}`;
     },
     location(): string {
-      if (!this.assignementDetails) return "";
-      return this.assignementDetails.appointment;
+      if (!this.assignmentDetails) return "";
+      return this.assignmentDetails.appointment;
     },
     timetable(): string {
-      if (!this.assignementDetails) return "";
-      const start = formatDateToHumanReadable(this.assignementDetails.start);
-      const end = formatDateToHumanReadable(this.assignementDetails.end);
+      if (!this.assignmentDetails) return "";
+      const start = formatDateToHumanReadable(this.assignmentDetails.start);
+      const end = formatDateToHumanReadable(this.assignmentDetails.end);
       return `${start} - ${end}`;
     },
     requestedTeams(): string[] {
-      if (!this.assignementDetails) return [];
-      const requestedTeamCodes = this.assignementDetails.demands.map(
+      if (!this.assignmentDetails) return [];
+      const requestedTeamCodes = this.assignmentDetails.demands.map(
         (demand) => demand.team,
       );
       return requestedTeamCodes;
     },
     requiredVolunteers(): NamelyDemandedForDetails[] {
-      if (!this.assignementDetails) return [];
+      if (!this.assignmentDetails) return [];
 
-      return this.assignementDetails.assignees
+      return this.assignmentDetails.assignees
         .map((requiredVolunteer) => {
           if (!isTeamMember(requiredVolunteer)) {
             return requiredVolunteer;
@@ -182,9 +185,9 @@ export default Vue.extend({
         );
     },
     assignees(): TeamMemberForDetails[] {
-      if (!this.assignementDetails) return [];
+      if (!this.assignmentDetails) return [];
 
-      return this.assignementDetails.assignees
+      return this.assignmentDetails.assignees
         .map((assignee) => {
           if (isTeamMember(assignee)) {
             return assignee;
@@ -226,11 +229,11 @@ export default Vue.extend({
   },
   methods: {
     unassignVolunteer(teamMember: TeamMemberForDetails) {
-      if (!this.assignementDetails) return;
+      if (!this.assignmentDetails) return;
       const assignmentIdentifier = {
-        assignmentId: this.assignementDetails.assignmentId,
-        taskId: this.assignementDetails.taskId,
-        mobilizationId: this.assignementDetails.mobilizationId,
+        assignmentId: this.assignmentDetails.assignmentId,
+        taskId: this.assignmentDetails.taskId,
+        mobilizationId: this.assignmentDetails.mobilizationId,
       };
 
       this.$accessor.assignTaskToVolunteer.unassign({
@@ -242,8 +245,8 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     openFtInNewTab() {
-      if (!this.assignementDetails) return;
-      const ftId = this.assignementDetails.taskId;
+      if (!this.assignmentDetails) return;
+      const ftId = this.assignmentDetails.taskId;
       window.open(`/ft/${ftId}`, "_blank");
     },
     openCalendarInNewTab(assigneeId: number) {

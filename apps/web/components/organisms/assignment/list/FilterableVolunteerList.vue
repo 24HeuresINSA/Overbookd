@@ -89,9 +89,6 @@ export default defineComponent({
     isOrgaTaskMode(): boolean {
       return isOrgaTaskMode(this.$route.path);
     },
-    hasSelectedVolunteer(): boolean {
-      return !!this.$accessor.assignment.selectedVolunteer;
-    },
     selectedAssignment() {
       return this.$accessor.assignTaskToVolunteer.selectedAssignment;
     },

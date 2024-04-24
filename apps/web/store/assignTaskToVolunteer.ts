@@ -16,6 +16,7 @@ import { castPeriodWithDate } from "~/utils/http/period";
 import { PlanningRepository } from "~/repositories/assignment/planning.repository";
 import { IProvidePeriod } from "@overbookd/period";
 import { AvailabilitiesRepository } from "~/repositories/assignment/availabilities.repository";
+import { castAssignmentWithDate } from "~/utils/assignment/assignment";
 
 type State = {
   tasks: MissingAssignmentTask[];
@@ -173,14 +174,5 @@ function castTaskWithAssignmentsSummaryWithDate(
       ...assignment,
       ...castPeriodWithDate(assignment),
     })),
-  };
-}
-
-function castAssignmentWithDate(
-  assignment: HttpStringified<Assignment | Assignment<{ withDetails: true }>>,
-): Assignment | Assignment<{ withDetails: true }> {
-  return {
-    ...assignment,
-    ...castPeriodWithDate(assignment),
   };
 }

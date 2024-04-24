@@ -12,7 +12,11 @@
     <SnackNotificationContainer />
 
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
-      <AssignmentDetails @close-dialog="closeAssignmentDetailsDialog" />
+      <AssignmentDetails
+        v-if="assignmentDetails"
+        :assignment-details="assignmentDetails"
+        @close-dialog="closeAssignmentDetailsDialog"
+      />
     </v-dialog>
   </div>
 </template>
@@ -24,7 +28,10 @@ import FilterableTaskAssignmentList from "~/components/organisms/assignment/list
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
-import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import {
+  AssignmentWithDetails,
+  VolunteerWithAssignmentDuration,
+} from "@overbookd/assignment";
 
 export default defineComponent({
   name: "OrgaTask",
@@ -45,6 +52,9 @@ export default defineComponent({
     volunteers(): VolunteerWithAssignmentDuration[] {
       return this.$accessor.assignVolunteerToTask.volunteers;
     },
+    assignmentDetails(): AssignmentWithDetails | null {
+      return this.$accessor.assignVolunteerToTask.assignmentDetails;
+    },
   },
   async mounted() {
     await this.$accessor.assignVolunteerToTask.fetchVolunteers();
@@ -55,7 +65,7 @@ export default defineComponent({
       (volunteer) => volunteer.id === volunteerId,
     );
     if (!volunteer) return;
-    this.$accessor.assignment.selectVolunteer(volunteer);
+    this.$accessor.assignVolunteerToTask.selectVolunteer(volunteer);
   },
   methods: {
     closeAssignmentDetailsDialog() {

@@ -1,15 +1,21 @@
 import {
+  Assignment,
   AssignmentIdentifier,
   TeamMember,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
-import { AssignmentSummaryWithTask, HttpStringified } from "@overbookd/http";
+import {
+  AssignmentSummaryWithTask,
+  DisplayableAssignment,
+  HttpStringified,
+} from "@overbookd/http";
 import { User } from "@overbookd/user";
 import { actionTree, mutationTree } from "typed-vuex";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { safeCall } from "~/utils/api/calls";
+import { castAssignmentWithDate } from "~/utils/assignment/assignment";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
@@ -17,7 +23,9 @@ type State = {
   selectedVolunteer: VolunteerWithAssignmentDuration | null;
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
+  alreadyAssignedAssignments: DisplayableAssignment[];
   hoverAssignment: AssignmentSummaryWithTask | null;
+  assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
 
 export const state = (): State => ({
@@ -25,7 +33,9 @@ export const state = (): State => ({
   selectedVolunteer: null,
   selectedVolunteerFriends: [],
   assignments: [],
+  alreadyAssignedAssignments: [],
   hoverAssignment: null,
+  assignmentDetails: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -41,8 +51,17 @@ export const mutations = mutationTree(state, {
   SET_ASSIGNMENTS(state, assignments: AssignmentSummaryWithTask[]) {
     state.assignments = assignments;
   },
+  SET_ALREADY_ASSIGNED_ASSIGNMENTS(
+    state,
+    assignments: DisplayableAssignment[],
+  ) {
+    state.alreadyAssignedAssignments = assignments;
+  },
   SET_HOVER_ASSIGNMENT(state, assignment: AssignmentSummaryWithTask | null) {
     state.hoverAssignment = assignment;
+  },
+  SET_ASSIGNMENT_DETAILS(state, assignment: Assignment<{ withDetails: true }>) {
+    state.assignmentDetails = assignment;
   },
 });
 
@@ -71,17 +90,31 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
 
-      dispatch("fetchAssignmentsFor", volunteer.id);
+      dispatch("fetchPotentialAssignmentsFor", volunteer.id);
     },
 
-    async fetchAssignmentsFor({ commit }, volunteerId: number) {
+    async fetchAllAssignmentsFor({ commit }, volunteerId: number) {
       const res = await safeCall(
         this,
-        VolunteerToTaskRepository.getAssignmentsFor(this, volunteerId),
+        AssignmentsRepository.findAllFor(this, volunteerId),
       );
       if (!res) return;
 
-      const assignments = res.data.map(toAssignmentSummaryWithTask);
+      const assignments = res.data.map(castDisplayableAssignmentWithDate);
+      commit("SET_ALREADY_ASSIGNED_ASSIGNMENTS", assignments);
+    },
+
+    async fetchPotentialAssignmentsFor({ commit }, volunteerId: number) {
+      const res = await safeCall(
+        this,
+        VolunteerToTaskRepository.fetchPotentialAssignmentsFor(
+          this,
+          volunteerId,
+        ),
+      );
+      if (!res) return;
+
+      const assignments = res.data.map(castAssignmentSummaryWithTaskWithDate);
       commit("SET_ASSIGNMENTS", assignments);
     },
 
@@ -103,7 +136,7 @@ export const actions = actionTree(
       if (!res) return;
 
       dispatch("user/getVolunteerAssignments", volunteer.id, { root: true });
-      dispatch("fetchAssignmentsFor", volunteer.id);
+      dispatch("fetchPotentialAssignmentsFor", volunteer.id);
     },
 
     setHoverAssignment(
@@ -112,12 +145,33 @@ export const actions = actionTree(
     ) {
       commit("SET_HOVER_ASSIGNMENT", assignment);
     },
+
+    async fetchAssignmentDetails(
+      { commit },
+      assignmentIdentifier: AssignmentIdentifier,
+    ) {
+      const res = await safeCall(
+        this,
+        AssignmentsRepository.findOne(this, assignmentIdentifier, true),
+      );
+      if (!res) return;
+      commit("SET_ASSIGNMENT_DETAILS", castAssignmentWithDate(res.data));
+    },
   },
 );
 
-function toAssignmentSummaryWithTask(
+function castAssignmentSummaryWithTaskWithDate(
   assignment: HttpStringified<AssignmentSummaryWithTask>,
 ): AssignmentSummaryWithTask {
+  return {
+    ...assignment,
+    ...castPeriodWithDate(assignment),
+  };
+}
+
+function castDisplayableAssignmentWithDate(
+  assignment: HttpStringified<DisplayableAssignment>,
+): DisplayableAssignment {
   return {
     ...assignment,
     ...castPeriodWithDate(assignment),

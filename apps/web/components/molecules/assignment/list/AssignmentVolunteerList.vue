@@ -34,7 +34,7 @@ export default Vue.extend({
   },
   methods: {
     isSelected(id: number): boolean {
-      return this.$accessor.assignment.selectedVolunteer?.id === id;
+      return this.$accessor.assignVolunteerToTask.selectedVolunteer?.id === id;
     },
     selectVolunteer(volunteer: AssignableVolunteer): void {
       if (!volunteer) return;
