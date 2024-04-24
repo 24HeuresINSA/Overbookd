@@ -34,8 +34,6 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
-    const extendedOneOfTeams = extendOneOfTeams(oneOfTheTeams);
-    const includePeriod = overlapPeriodCondition(period);
 
     const volunteers = await this.prisma.user.findMany({
       where: isAssignableOn(oneOfTheTeams, period),
@@ -167,12 +165,6 @@ function isAssignableOn(oneOfTheTeams: string[], period: Period) {
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
   };
-}
-
-function extendOneOfTeams(oneOfTeams: string[]): string[] {
-  return oneOfTeams.includes(CONFIANCE)
-    ? [...oneOfTeams, VIEUX, HARD]
-    : oneOfTeams;
 }
 
 function buildHasAvailabilityCondition(
