@@ -1,10 +1,12 @@
-import { Volunteer } from "./volunteer";
+import { AssignableVolunteer } from "../assignable-volunteer";
 import { Planning, PlanningEvent } from "./planning";
 
 export class InMemoryPlanning implements Planning {
-  constructor(private plannings: Map<Volunteer["id"], PlanningEvent[]>) {}
+  constructor(
+    private plannings: Map<AssignableVolunteer["id"], PlanningEvent[]>,
+  ) {}
 
-  for(volunteer: Volunteer["id"]): Promise<PlanningEvent[]> {
+  for(volunteer: AssignableVolunteer["id"]): Promise<PlanningEvent[]> {
     return Promise.resolve(this.plannings.get(volunteer) ?? []);
   }
 }

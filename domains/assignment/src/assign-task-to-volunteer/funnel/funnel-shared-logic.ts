@@ -1,3 +1,4 @@
+import { AssignableVolunteer } from "../assignable-volunteer";
 import { Assignment, TeamDemanded } from "../assignment";
 import {
   Candidate,
@@ -5,7 +6,6 @@ import {
   IDefineCandidate,
   isFulfillingDemand,
 } from "./candidate";
-import { Volunteer } from "./volunteer";
 import {
   FunnelRepositories,
   IActAsFunnel,
@@ -41,11 +41,11 @@ export abstract class CommonFunnel implements IActAsFunnel {
     return hasRemainingDemands && hasAssignableFriends;
   }
 
-  protected get friendsAbleToFulfillNextDemand(): Volunteer[] {
+  protected get friendsAbleToFulfillNextDemand(): AssignableVolunteer[] {
     return this.assignableFriendsFrom(this._candidates);
   }
 
-  protected get friendsAssignableOnLastDemand(): Volunteer[] {
+  protected get friendsAssignableOnLastDemand(): AssignableVolunteer[] {
     return this.assignableFriendsFrom(this.otherCandidatesThanTheLastOne);
   }
 
@@ -96,7 +96,7 @@ function sumDemands(demands: TeamDemanded[]) {
   return demands.reduce((sum, { demand: count }) => sum + count, 0);
 }
 
-function isAssignable(assignment: Assignment, volunteer: Volunteer) {
+function isAssignable(assignment: Assignment, volunteer: AssignableVolunteer) {
   return Candidate.getAssignableTeams(assignment, volunteer.teams).length > 0;
 }
 

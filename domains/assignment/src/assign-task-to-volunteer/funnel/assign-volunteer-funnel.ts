@@ -1,7 +1,6 @@
 import { Assignment } from "../assignment";
 import { ReadyToStart } from "./startup-funnel";
 import { Candidate } from "./candidate";
-import { Volunteer } from "./volunteer";
 import {
   CommonFunnel,
   areEveryCandidateFulfillingDemand,
@@ -12,6 +11,7 @@ import {
   FunnelError,
   FulfillDemand,
 } from "./funnel";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
 type ActiveFunnelInitializer = [Candidate[], FunnelRepositories, Assignment];
 
@@ -55,7 +55,7 @@ export class AssignVolunteerFunnel
     );
   }
 
-  private toCandidate(friend: Volunteer) {
+  private toCandidate(friend: AssignableVolunteer) {
     return this.repositories.candidateFactory.from(friend, this.assignment);
   }
 

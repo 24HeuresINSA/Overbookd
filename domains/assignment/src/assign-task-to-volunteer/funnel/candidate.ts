@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { HARD, VIEUX, CONFIANCE } from "../../teams";
 import {
   Assignment,
@@ -7,18 +7,18 @@ import {
   TeamMember,
 } from "../assignment";
 import { Availabilities, Friends, Planning, PlanningEvent } from "./planning";
-import { Volunteer } from "./volunteer";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
-type NotYetFulfillingDemandCandidate = Volunteer & {
-  friends: Volunteer[];
+type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
+  friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
   as: undefined;
 };
 
-export type CandidateFulfillingDemand = Volunteer & {
-  friends: Volunteer[];
+export type CandidateFulfillingDemand = AssignableVolunteer & {
+  friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
@@ -35,8 +35,8 @@ type Agenda = {
 };
 
 type RelationShip = {
-  volunteer: Volunteer;
-  friends: Volunteer[];
+  volunteer: AssignableVolunteer;
+  friends: AssignableVolunteer[];
 };
 
 export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
@@ -128,11 +128,15 @@ export class CandidateFactory {
     private readonly friends: Friends,
   ) {}
 
-  async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
+  async from(
+    volunteer: AssignableVolunteer,
+    assignment: Assignment,
+  ): Promise<Candidate> {
+    const { start, end } = assignment;
     const [planning, availabilities, friends] = await Promise.all([
       this.planning.for(volunteer.id),
       this.availabilities.for(volunteer.id),
-      this.friends.availableDuringWith(Period.init(assignment), volunteer.id),
+      this.friends.availableDuringWith({ start, end }, volunteer.id),
     ]);
 
     const agenda = { planning, availabilities };

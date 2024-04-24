@@ -1,14 +1,16 @@
 import { Period } from "@overbookd/period";
 import { Friends } from "./planning";
-import { Volunteer } from "./volunteer";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
 export class InMemoryFriends implements Friends {
-  constructor(private friends: Map<Volunteer["id"], Volunteer[]>) {}
+  constructor(
+    private friends: Map<AssignableVolunteer["id"], AssignableVolunteer[]>,
+  ) {}
 
   availableDuringWith(
     period: Period,
-    volunteer: Volunteer["id"],
-  ): Promise<Volunteer[]> {
+    volunteer: AssignableVolunteer["id"],
+  ): Promise<AssignableVolunteer[]> {
     return Promise.resolve(this.friends.get(volunteer) ?? []);
   }
 }

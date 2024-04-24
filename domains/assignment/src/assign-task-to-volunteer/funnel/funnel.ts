@@ -1,18 +1,18 @@
+import { AssignableVolunteer } from "../assignable-volunteer";
 import { Assignment } from "../assignment";
 import { Assignments } from "../repositories/assignments";
 import { CandidateFactory, IDefineCandidate } from "./candidate";
-import { Volunteer } from "./volunteer";
 
 export class FunnelError extends Error {}
 
 export type FulfillDemand = {
-  volunteer: Volunteer["id"];
+  volunteer: AssignableVolunteer["id"];
   team: string;
 };
 
 export type IStartupFunnel = {
   select(assignment: Assignment): {
-    select(volunteer: Volunteer): Promise<IActAsFunnel>;
+    select(volunteer: AssignableVolunteer): Promise<IActAsFunnel>;
   };
 };
 

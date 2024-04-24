@@ -1,9 +1,9 @@
 import { Assignment } from "../assignment";
 import { Assignments } from "../repositories/assignments";
 import { CandidateFactory, IDefineCandidate } from "./candidate";
-import { Volunteer } from "./volunteer";
 import { IActAsFunnel, FunnelError, FunnelRepositories } from "./funnel";
 import { AssignVolunteerFunnel } from "./assign-volunteer-funnel";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
 abstract class InactiveFunnel implements IActAsFunnel {
   candidates: IDefineCandidate[] = [];
@@ -71,7 +71,7 @@ export class WaitingForVolunteer extends InactiveFunnel {
     return new WaitingForVolunteer(candidateFactory, assignments, assignment);
   }
 
-  async select(volunteer: Volunteer) {
+  async select(volunteer: AssignableVolunteer) {
     const candidate = await this.candidateFactory.from(
       volunteer,
       this.assignment,
@@ -80,6 +80,10 @@ export class WaitingForVolunteer extends InactiveFunnel {
       assignments: this.assignments,
       candidateFactory: this.candidateFactory,
     };
-    return AssignVolunteerFunnel.init([[candidate], repositories, this.assignment]);
+    return AssignVolunteerFunnel.init([
+      [candidate],
+      repositories,
+      this.assignment,
+    ]);
   }
 }

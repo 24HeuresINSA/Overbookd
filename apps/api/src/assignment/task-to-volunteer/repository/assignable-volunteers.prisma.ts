@@ -8,8 +8,8 @@ import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
-  SELECT_VOLUNTEER,
   DatabaseStoredAssignableVolunteer,
+  SELECT_VOLUNTEER,
 } from "./assignable-volunteer.query";
 import {
   SELECT_PERIOD,

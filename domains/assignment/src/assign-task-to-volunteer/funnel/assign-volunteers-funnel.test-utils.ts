@@ -4,8 +4,8 @@ import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.
 import { CONFIANCE, HARD, VIEUX } from "../../teams";
 import { Assignment } from "../assignment";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { Volunteer } from "./volunteer";
 import { PlanningEvent } from "./planning";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
 const saturday18h = new Date("2024-05-18T18:00+02:00");
@@ -51,7 +51,7 @@ const nextThursday08hTo10h = Period.init({
 });
 
 type TestHelper = {
-  volunteer: Volunteer;
+  volunteer: AssignableVolunteer;
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
 };
@@ -62,6 +62,12 @@ export const noel: TestHelper = {
     firstname: "Noel",
     lastname: "Ertsemud",
     teams: [BENEVOLE_CODE, VIEUX],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [
     {
@@ -82,6 +88,12 @@ export const lea: TestHelper = {
     firstname: "Lea",
     lastname: "Mauyno",
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [],
   availabilities: [{ start: friday06h, end: sunday20h }],
@@ -93,6 +105,12 @@ export const ontaine: TestHelper = {
     firstname: "Ontaine",
     lastname: "Porin",
     teams: [BENEVOLE_CODE, "catering", "conducteur"],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [],
   availabilities: [
@@ -107,6 +125,12 @@ export const tatouin: TestHelper = {
     firstname: "Tatouin",
     lastname: "Jesoph",
     teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [],
   availabilities: [
@@ -122,6 +146,12 @@ export const luce: TestHelper = {
     firstname: "Luce",
     lastname: "Nehgahredanv",
     teams: [BENEVOLE_CODE, HARD],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
@@ -133,6 +163,12 @@ export const nathan: TestHelper = {
     firstname: "Nathan",
     lastname: "Trice",
     teams: [BENEVOLE_CODE, VIEUX, HARD],
+    charisma: 120,
+    assignmentDuration: 1_000_000,
+    isRequestedOnSamePeriod: false,
+    hasFriendAssigned: false,
+    hasAtLeastOneFriend: false,
+    assignableFriendsIds: [],
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
