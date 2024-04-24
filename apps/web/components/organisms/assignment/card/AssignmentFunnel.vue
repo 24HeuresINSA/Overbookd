@@ -150,7 +150,7 @@ type AssingmentFunneData = {
 };
 
 export default defineComponent({
-  name: "AssignmentFunnelV2",
+  name: "AssignmentFunnel",
   components: {
     TeamChip,
     OverMultiCalendar,
