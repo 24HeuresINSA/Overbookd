@@ -31,6 +31,12 @@ class TeamMemberForDetailsDto
 
   @ApiProperty({ type: BaseAssigneeForDetailsDto, isArray: true })
   friends: BaseAssigneeForDetails[];
+
+  @ApiProperty({ type: String, required: false })
+  comment?: string;
+
+  @ApiProperty({ type: String, required: false })
+  note?: string;
 }
 
 export class AssignmentWithDetailsResponseDto
