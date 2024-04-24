@@ -37,6 +37,9 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
+@ApiNotFoundResponse({
+  description: "Friends not found",
+})
 @Controller("friends")
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
@@ -69,7 +72,6 @@ export class FriendController {
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({ description: "Friends not found" })
   findMany(
     @Param("id", ParseIntPipe) id: number,
   ): Promise<FriendResponseDto[]> {
@@ -88,7 +90,6 @@ export class FriendController {
     description: "Friend id",
     type: CreateFriendRequestDto,
   })
-  @ApiNotFoundResponse({ description: "Friend not found" })
   create(
     @Body() friend: CreateFriendRequestDto,
     @Request() req: RequestWithUserPayload,
@@ -109,7 +110,6 @@ export class FriendController {
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({ description: "Friend not found" })
   remove(
     @Param("friendId", ParseIntPipe) friendId: number,
     @Request() req: RequestWithUserPayload,
@@ -131,7 +131,6 @@ export class FriendController {
     description: "Friend id",
     type: CreateFriendRequestDto,
   })
-  @ApiNotFoundResponse({ description: "Friend not found" })
   addFriendToUser(
     @Param("id", ParseIntPipe) id: number,
     @Body() friend: CreateFriendRequestDto,
@@ -154,7 +153,6 @@ export class FriendController {
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({ description: "Friend not found" })
   removeFriendFromUser(
     @Param("id", ParseIntPipe) id: number,
     @Param("friendId", ParseIntPipe) friendId: number,
