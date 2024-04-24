@@ -30,7 +30,6 @@ import { MissingAssignmentTaskResponseDto } from "./dto/missing-assignment-task.
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
-import { AvailableFriendResponseDto } from "./dto/assignable-friend.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments/task-to-volunteer")
@@ -127,7 +126,7 @@ export class TaskToVolunteerController {
   @ApiResponse({
     status: 200,
     description: "Volunteer available friends",
-    type: AvailableFriendResponseDto,
+    type: AssignableVolunteerResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -145,12 +144,7 @@ export class TaskToVolunteerController {
     required: true,
     type: Date,
   })
-  getAvailableFriends(
-    @Param("volunteerId", ParseIntPipe) volunteerId: number,
-    @Query("start") start: Date,
-    @Query("end") end: Date,
-  ): Promise<AvailableFriendResponseDto[]> {
-    const period = { start, end };
-    return this.taskToVolunteer.getAvailableFriends(volunteerId, period);
+  getAvailableFriends(): Promise<AssignableVolunteerResponseDto[]> {
+    return Promise.resolve([]);
   }
 }
