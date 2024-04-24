@@ -1,3 +1,16 @@
+## [2.33.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.0...v2.33.1) (2024-04-24)
+
+
+### Bug Fixes
+
+* **assignment:** implement comments and notes in assignmentDetails [#1821](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1821) ([d4f74c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d4f74c0bd1323a62768a98c52e876779896632b3))
+* **team-filters:** Add filter to exclude teams in volunteer lists. [#1813](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1813) ([7a8b297](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7a8b297db3b18f77c5e6216efb690feac2ec0c2c))
+
+
+### Refactor
+
+* **assignment:** filter festival tasks by in charge team [#1809](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1809) ([10444bc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/10444bcdf0a0df7892cd58de05801ba49e6a0068))
+
 ## [2.33.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.32.0...v2.33.0) (2024-04-24)
 
 
