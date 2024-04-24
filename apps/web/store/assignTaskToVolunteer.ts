@@ -16,7 +16,10 @@ import { castPeriodWithDate } from "~/utils/http/period";
 import { PlanningRepository } from "~/repositories/assignment/planning.repository";
 import { IProvidePeriod } from "@overbookd/period";
 import { AvailabilitiesRepository } from "~/repositories/assignment/availabilities.repository";
-import { castAssignmentWithDate } from "~/utils/assignment/assignment";
+import {
+  UnassignForm,
+  castAssignmentWithDate,
+} from "~/utils/assignment/assignment";
 
 type State = {
   tasks: MissingAssignmentTask[];
@@ -138,13 +141,11 @@ export const actions = actionTree(
 
     async unassign(
       { dispatch },
-      {
-        assignmentIdentifier,
-        assigneeId,
-      }: { assignmentIdentifier: AssignmentIdentifier; assigneeId: number },
+      { assignmentIdentifier, assigneeId }: UnassignForm,
     ) {
       const repository = new AssignmentsRepository(this);
       await repository.unassign(assignmentIdentifier, assigneeId);
+
       dispatch("fetchAssignmentDetails", assignmentIdentifier);
       dispatch("selectTask", assignmentIdentifier.taskId);
     },
