@@ -12,6 +12,15 @@
         </span>
       </v-tooltip>
     </div>
+    <span class="stat">•</span>
+    <v-tooltip bottom>
+      <template #activator="{ on, attrs }">
+        <p class="stat__duration" v-bind="attrs" v-on="on">
+          total: {{ getDisplayedTotalDuration() }}
+        </p>
+      </template>
+      <span class="stat__category">Total</span>
+    </v-tooltip>
   </div>
 </template>
 
@@ -68,6 +77,11 @@ export default Vue.extend({
       const emoji = this.getStatCategoryEmoji(stat.category);
       const duration = this.getDisplayedDuration(stat.duration);
       return `${emoji} ${duration}`;
+    },
+    getDisplayedTotalDuration(): string {
+      return Duration.fromMilliseconds(
+        this.sortedStats.reduce((total, { duration }) => total + duration, 0),
+      ).toString();
     },
   },
 });
