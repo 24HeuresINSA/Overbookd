@@ -87,7 +87,12 @@
       <div class="friends">
         <h3>Amis</h3>
         <div class="friends__list">
-          <v-chip v-for="friend in selectedVolunteerFriends" :key="friend.id">
+          <v-chip
+            v-for="friend in selectedVolunteerFriends"
+            :key="friend.id"
+            :close="canManageUsers"
+            @click:close="removeFriend(friend)"
+          >
             {{ formatUserName(friend) }}
           </v-chip>
           <span v-show="selectedVolunteerFriends.length === 0">
@@ -96,6 +101,13 @@
         </div>
       </div>
     </v-card-text>
+
+    <SearchFriend
+      v-show="canManageUsers"
+      v-model="newFriend"
+      class="friend-search"
+      @change="sendFriendRequest"
+    />
 
     <v-card-actions class="action-btns">
       <v-btn
@@ -122,6 +134,7 @@
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import SearchFriend from "~/components/atoms/field/search/SearchFriend.vue";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
@@ -147,6 +160,7 @@ type VolunteerPersonalDataFormData = InputRulesData & {
   charisma: number;
   newTeam?: string;
   note?: string | null;
+  newFriend: User | null;
 };
 
 export default defineComponent({
@@ -154,6 +168,7 @@ export default defineComponent({
   components: {
     ProfilePicture,
     TeamChip,
+    SearchFriend,
   },
   emits: ["saved", "deleted"],
   data(): VolunteerPersonalDataFormData {
@@ -164,6 +179,7 @@ export default defineComponent({
       charisma: 0,
       newTeam: undefined,
       note: undefined,
+      newFriend: null,
       rules: {
         required: required,
         email: isEmail,
@@ -253,6 +269,20 @@ export default defineComponent({
       await this.updateVolunteerInformations();
     },
 
+    async sendFriendRequest() {
+      if (
+        this.newFriend === null ||
+        this.selectedVolunteer.id === this.newFriend.id
+      )
+        return;
+      this.$accessor.user.addFriendToSelectedUser(this.newFriend);
+      this.newFriend = { id: 0, firstname: "", lastname: "" };
+    },
+
+    removeFriend(friend: User) {
+      this.$accessor.user.removeFriendFromSelectedUser(friend);
+    },
+
     async savePersonalData() {
       const id = this.selectedVolunteer.id;
       const user = this.updatedVolunteer;
@@ -325,6 +355,11 @@ export default defineComponent({
     gap: 10px;
     margin: 0;
   }
+}
+
+.friend-search {
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .action-btns {
