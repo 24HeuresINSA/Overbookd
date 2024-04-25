@@ -1,3 +1,10 @@
+## [2.33.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.4...v2.33.5) (2024-04-25)
+
+
+### Bug Fixes
+
+* **assignment:** fix volunteer assignment stats in volunteer list. [#1828](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1828) ([0281798](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0281798e765e49137b934ee19c9dc59c651943b4))
+
 ## [2.33.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.3...v2.33.4) (2024-04-25)
 
 
