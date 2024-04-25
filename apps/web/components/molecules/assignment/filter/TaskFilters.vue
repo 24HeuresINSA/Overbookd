@@ -42,6 +42,14 @@
         hide-details
         @change="changeCompleted"
       ></v-switch>
+      <v-switch
+        v-show="isOrgaTaskMode"
+        v-model="hasAssignedFriends"
+        label="Amis assignés"
+        class="filters__switch"
+        hide-details
+        @change="changeHasAssignedFriends"
+      ></v-switch>
     </div>
     <p class="stats">
       {{ counterLabel }}
@@ -67,6 +75,7 @@ import { Team } from "~/utils/models/team.model";
 
 type TaskFiltersData = {
   completed: boolean;
+  hasAssignedFriends: boolean;
   search: string;
   requiredTeams: Team[];
   inChargeTeam: Team | null;
@@ -93,9 +102,11 @@ export default defineComponent({
     "change:in-charge-team",
     "change:category",
     "change:completed",
+    "change:has-assigned-friends",
   ],
   data: (): TaskFiltersData => ({
     completed: false,
+    hasAssignedFriends: false,
     search: "",
     requiredTeams: [],
     inChargeTeam: null,
@@ -132,6 +143,10 @@ export default defineComponent({
     changeCompleted(state: boolean) {
       this.completed = state;
       this.$emit("change:completed", state);
+    },
+    changeHasAssignedFriends(state: boolean) {
+      this.hasAssignedFriends = state;
+      this.$emit("change:has-assigned-friends", state);
     },
   },
 });

@@ -8,6 +8,7 @@
         @change:required-teams="requiredTeams = $event"
         @change:in-charge-team="inChargeTeam = $event"
         @change:category="category = $event"
+        @change:has-assigned-friends="hasAssignedFriends = $event"
       ></TaskFilters>
       <v-divider />
       <TaskAssignmentList
@@ -46,12 +47,14 @@ type FilterableTaskAssignmentListData = {
   inChargeTeam: Team | null;
   searchTaskName: string;
   category: DisplayableCategory | TaskPriority | null;
+  hasAssignedFriends: boolean;
 };
 
 export default defineComponent({
   name: "FilterableTaskAssignmentList",
   components: { TaskFilters, TaskAssignmentList },
   data: (): FilterableTaskAssignmentListData => ({
+    hasAssignedFriends: false,
     requiredTeams: [],
     inChargeTeam: null,
     searchTaskName: "",
@@ -128,6 +131,12 @@ export default defineComponent({
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return ({ topPriority }) => topPriority === hasPriority;
     },
+    filterByHasAssignedFriends(
+      hasAssignedFriends: boolean,
+    ): (assignment: AssignmentSummaryWithTask) => boolean {
+      return ({ hasFriendsAssigned }) =>
+        hasFriendsAssigned === hasAssignedFriends;
+    },
     isVolunteerAssignableTo(teamCode: string): boolean {
       if (!this.selectedVolunteer) return false;
       const candidate = new AssignmentCandidate(this.selectedVolunteer);
@@ -150,6 +159,7 @@ export default defineComponent({
         this.filterByRequestedTeams(this.requiredTeams)(assignment) &&
         this.filterByInChargeTeam(this.inChargeTeam)(assignment) &&
         this.filterByCatergoryOrPriority(this.category)(assignment) &&
+        this.filterByHasAssignedFriends(this.hasAssignedFriends)(assignment) &&
         this.filterByTaskName(this.searchTaskName)(assignment)
       );
     },
