@@ -1,3 +1,12 @@
+## [2.34.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.1...v2.34.2) (2024-04-25)
+
+
+### Bug Fixes
+
+* **assignment:** change friend condition filter in task orga. [#1842](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1842) ([3d51178](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3d511783fa08a5f2e9304076fc5861b34bf6be63))
+* **assignment:** display corretly filters when several teams are selected [#1840](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1840) ([45218c3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/45218c348d1d3be13452fceafb9afe78a63ca27f))
+* **assignment:** make stats sortable in volunteer list. [#1841](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1841) ([40afe83](https://gitlab.com/24-heures-insa/overbookd-mono/commit/40afe8380775538826ce27b8573d485d99e8e78f))
+
 ## [2.34.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.0...v2.34.1) (2024-04-25)
 
 
