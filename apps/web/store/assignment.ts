@@ -14,11 +14,8 @@ import {
   TimeSpanWithAssignees,
   castAvailableTimeSpansWithDate,
 } from "~/utils/models/ft-time-span.model";
-import {
-  VolunteerAssignmentStat,
-  VolunteerTask,
-} from "~/utils/models/user.model";
-import { HttpStringified } from "@overbookd/http";
+import { VolunteerTask } from "~/utils/models/user.model";
+import { AssignmentStats, HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
 import { AssignmentRepository } from "~/repositories/assignment/assignment.repository";
 import { UserRepository } from "~/repositories/user.repository";
@@ -40,12 +37,6 @@ type AssignmentRequest = {
 export type BulkAssignmentRequest = {
   volunteers: { id: number; teamCode: string }[];
   timeSpanId: number;
-};
-
-export type AssignmentStats = {
-  firstname: string;
-  lastname: string;
-  stats: VolunteerAssignmentStat[];
 };
 
 type State = {

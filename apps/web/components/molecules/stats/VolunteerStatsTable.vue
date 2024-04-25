@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="volunteers"
+    :items="displayedVolunteers"
     :items-per-page="-1"
     dense
   >
@@ -38,7 +38,6 @@ import {
   TaskCategoryEmoji,
   TaskCategoryEmojis,
 } from "~/utils/models/ft-time-span.model";
-import { AssignmentStats } from "~/store/assignment";
 import { Duration } from "~/utils/date/duration";
 import {
   BAR,
@@ -48,7 +47,8 @@ import {
   STATIQUE,
 } from "@overbookd/festival-event-constants";
 import { AUCUNE } from "~/utils/assignment/task-category";
-import { VolunteerAssignmentStat } from "@overbookd/http";
+import { VolunteerAssignmentStat, AssignmentStats } from "@overbookd/http";
+import { UserPersonalData } from "@overbookd/user";
 
 function searchStatic(stat: VolunteerAssignmentStat): boolean {
   return stat.category === STATIQUE;
@@ -76,6 +76,12 @@ function searchUnknown(stat: VolunteerAssignmentStat): boolean {
 
 export default Vue.extend({
   name: "VolunteerStatsTable",
+  props: {
+    volunteers: {
+      type: Array as () => UserPersonalData[],
+      required: true,
+    },
+  },
   data: () => ({
     headers: [
       { text: "Benevole", value: "firstname" },
@@ -100,13 +106,16 @@ export default Vue.extend({
       {
         text: "Totaux",
         value: "total",
-        sortable: false,
       },
     ],
   }),
   computed: {
-    volunteers(): AssignmentStats[] {
-      return this.$accessor.assignment.stats;
+    displayedVolunteers(): AssignmentStats[] {
+      return this.$accessor.assignment.stats.filter(({ id }) =>
+        this.volunteers.some(
+          ({ id: displayedVolunteerId }) => displayedVolunteerId === id,
+        ),
+      );
     },
     staticEmoji(): TaskCategoryEmoji {
       return TaskCategoryEmojis.STATIQUE;
