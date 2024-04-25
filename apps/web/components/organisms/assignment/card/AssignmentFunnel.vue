@@ -314,9 +314,10 @@ export default defineComponent({
     padding-bottom: 80px;
     &__teams {
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       width: 100%;
       padding-left: 60px;
+      gap: 10px;
     }
     &__assignment {
       position: fixed;
@@ -368,13 +369,16 @@ export default defineComponent({
 }
 
 .candidate-teams {
-  min-width: 200px;
+  max-width: 190px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   .not-selected {
     opacity: 0.4;
+  }
+  :hover {
+    cursor: pointer;
   }
 }
 </style>
