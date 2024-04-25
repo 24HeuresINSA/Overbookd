@@ -1,3 +1,15 @@
+## [2.34.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.5...v2.34.0) (2024-04-25)
+
+
+### Features
+
+* **assignment:** add has assigned friends filter in orga task mode. [#1834](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1834) ([e37f492](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e37f4920de60fe5932e92fb3a4549393d33ee562))
+
+
+### Bug Fixes
+
+* **assignment:** display tasks in orga-task [#1833](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1833) ([004a0f2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/004a0f29ae44a35f914adef7530cee7265ce6105))
+
 ## [2.33.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.4...v2.33.5) (2024-04-25)
 
 
