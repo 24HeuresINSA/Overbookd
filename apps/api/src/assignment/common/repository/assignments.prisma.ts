@@ -107,10 +107,7 @@ export class PrismaAssignments implements AssignmentRepository {
     });
     return volunteers.map(({ assigned, ...volunteer }) => {
       const stats = UserService.formatAssignmentStats(
-        assigned.reduce(
-          (assignments, { assignment }) => [...assignments, assignment],
-          [],
-        ),
+        assigned.map(({ assignment }) => assignment),
       );
       return { ...volunteer, stats };
     });
