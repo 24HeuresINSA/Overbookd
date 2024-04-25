@@ -9,6 +9,23 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
+                  !volunteer.hasAtLeastOneFriend
+                "
+                small
+                color="red"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-account-alert
+              </v-icon>
+            </template>
+            <span>N'a aucun ami</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <v-icon
+                v-if="
+                  isAssignableVolunteer(volunteer) &&
                   volunteer.hasFriendAssigned
                 "
                 small
