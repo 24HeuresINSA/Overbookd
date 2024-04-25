@@ -80,10 +80,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
       },
       [],
     );
-    const implicitTeams = retrieveImplicitTeams(teams);
-    return implicitTeams.filter((team) =>
-      remainingDemands.map(({ team }) => team).includes(team),
-    );
+    return assignableTeamsAccordingToRemainingDemands(teams, remainingDemands);
   }
 
   static toAssignment({ id, as }: CandidateFulfillingDemand): TeamMember {
@@ -97,6 +94,11 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
     return new Candidate<CandidateFulfillingDemand>({ ...this.candidate, as });
   }
 
+  assignableTeamsAccordingTo(remainingDemands: TeamDemanded[]): string[] {
+    const { teams } = this.candidate;
+    return assignableTeamsAccordingToRemainingDemands(teams, remainingDemands);
+  }
+
   private get name(): string {
     return `${this.candidate.firstname} ${this.candidate.lastname}`;
   }
@@ -104,6 +106,16 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
   get json(): T {
     return this.candidate;
   }
+}
+
+export function assignableTeamsAccordingToRemainingDemands(
+  teams: string[],
+  remainingDemands: TeamDemanded[],
+) {
+  const implicitTeams = retrieveImplicitTeams(teams);
+  return implicitTeams.filter((team) =>
+    remainingDemands.map(({ team }) => team).includes(team),
+  );
 }
 
 function retrieveImplicitTeams(teams: string[]) {

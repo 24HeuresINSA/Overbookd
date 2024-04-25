@@ -1,6 +1,6 @@
-import { Assignment } from "../assignment";
+import { Assignment, TeamDemanded, isMemberOf } from "../assignment";
 import { ReadyToStart } from "./startup-funnel";
-import { Candidate } from "./candidate";
+import { Candidate, isFulfillingDemand } from "./candidate";
 import {
   CommonFunnel,
   areEveryCandidateFulfillingDemand,
@@ -46,13 +46,53 @@ export class AssignVolunteerFunnel
 
     const [nextFriend] = this.friendsAbleToFulfillNextDemand;
     const asCandidate = await this.toCandidate(nextFriend);
+
     const candidates = [...this._candidates, asCandidate];
+    const assignedCandidates =
+      this.assignCandidateAccordingToRemainingDemands(candidates);
 
     return new AssignVolunteerFunnel(
-      candidates,
+      assignedCandidates,
       this.repositories,
       this.assignment,
     );
+  }
+
+  private assignCandidateAccordingToRemainingDemands(
+    candidates: Candidate[],
+  ): Candidate[] {
+    const remainingDemands = this.remainingDemandsIfAssignThose(candidates);
+
+    const assignedCandidates = candidates.map((candidate) => {
+      if (isFulfillingDemand(candidate.json)) return candidate;
+
+      const remainingAssignableTeams =
+        candidate.assignableTeamsAccordingTo(remainingDemands);
+      if (remainingAssignableTeams.length > 1) return candidate;
+
+      const [lastRemainingTeam] = remainingAssignableTeams;
+      return candidate.demandAs(lastRemainingTeam);
+    });
+
+    return assignedCandidates;
+  }
+
+  private remainingDemandsIfAssignThose(candidates: Candidate[]) {
+    const { assignees, demands } = this.assignment;
+    const remainingDemands = demands.reduce(
+      (remainingDemands: TeamDemanded[], { team, demand }) => {
+        const alreadyAssigned = assignees.filter(isMemberOf(team)).length;
+        const temporarlyAssigned = candidates.filter((candidate) =>
+          isMemberOf(team)(candidate.json),
+        ).length;
+        const totalAssignees = alreadyAssigned + temporarlyAssigned;
+        if (totalAssignees === demand) return remainingDemands;
+
+        return [...remainingDemands, { team, demand: demand - totalAssignees }];
+      },
+      [],
+    );
+    return remainingDemands;
   }
 
   private toCandidate(friend: AssignableVolunteer) {
@@ -63,8 +103,10 @@ export class AssignVolunteerFunnel
     const candidates = this._candidates.map((candidate) =>
       candidate.json.id === volunteer ? candidate.demandAs(team) : candidate,
     );
+    const assignedCandidates =
+      this.assignCandidateAccordingToRemainingDemands(candidates);
     return new AssignVolunteerFunnel(
-      candidates,
+      assignedCandidates,
       this.repositories,
       this.assignment,
     );
@@ -99,8 +141,10 @@ export class AssignVolunteerFunnel
     const otherCandidatesThanTheLastOne = this.otherCandidatesThanTheLastOne;
     const asCandidate = await this.toCandidate(nextFriend);
     const candidates = [...otherCandidatesThanTheLastOne, asCandidate];
+    const assignedCandidates =
+      this.assignCandidateAccordingToRemainingDemands(candidates);
     return new AssignVolunteerFunnel(
-      candidates,
+      assignedCandidates,
       this.repositories,
       this.assignment,
     );

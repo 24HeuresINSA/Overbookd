@@ -20,9 +20,10 @@ import {
   bruce,
   amanda,
   barmanBarDeLambiance,
+  collageParcoursF,
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
-import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams";
 import { InMemoryAvailabilities } from "./availabilties.inmemory";
 import { InMemoryFriends } from "./friends.inmemory";
 import { IActAsFunnel } from "./funnel";
@@ -59,6 +60,7 @@ describe("Assign volunteers funnel", () => {
     gererLaCaisse,
     demonterLesJeuxGonflables,
     nettoyerLeQgCatering,
+    collageParcoursF,
   ];
   const candidateFactory = new CandidateFactory(
     inMemoryPlanning,
@@ -203,7 +205,7 @@ describe("Assign volunteers funnel", () => {
       describe.each`
         team
         ${BENEVOLE_CODE}
-        ${"conducteur"}
+        ${CONDUCTEUR}
       `(
         "when defininig $team assignment for selected volunteer",
         ({ team }) => {
@@ -550,6 +552,119 @@ describe("Assign volunteers funnel", () => {
           expect(funnel.candidates.at(2)).toMatchObject(volunteer);
         },
       );
+    });
+    describe(`
+    Given:
+      Lea is benevole and conducteur and friend with Noel,
+      Noel is benevole and friend with Lea,
+      All of them are available during collage parcours F,
+      1 benevole and 1 conducteur are demanded for collage parcours F,
+      Lea is already selected as candidate
+    `, () => {
+      let funnel: IActAsFunnel;
+      beforeAll(async () => {
+        const friends = new InMemoryFriends(
+          new Map([
+            [lea.volunteer.id, [noel.volunteer]],
+            [noel.volunteer.id, [lea.volunteer]],
+          ]),
+        );
+        const candidateFactory = new CandidateFactory(
+          inMemoryPlanning,
+          inMemoryAvailabilities,
+          friends,
+        );
+        const assignments = new InMemoryAssignments(initialAssignments);
+        const leaSelected = await WaitingForVolunteer.init(
+          candidateFactory,
+          assignments,
+          collageParcoursF,
+        ).select(lea.volunteer);
+        funnel = await leaSelected.addCandidate();
+      });
+      it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
+        expect(funnel.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+      });
+      it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
+        expect(funnel.candidates.at(0)?.as).toBe(CONDUCTEUR);
+      });
+    });
+  });
+  describe(`
+    Given:
+      Lea is benevole and conducteur and friend with Tatouin and Noel,
+      Tatouin is benevole and conducteur and friend with Lea,
+      Noel is benevole and friend with Lea,
+      All of them are available during collage parcours F,
+      1 benevole and 1 conducteur are demanded for collage parcours F,
+      Lea is already selected as candidate and Tatouin is the current latest candidate
+    `, () => {
+    let funnel: IActAsFunnel;
+    beforeAll(async () => {
+      const friends = new InMemoryFriends(
+        new Map([
+          [lea.volunteer.id, [tatouin.volunteer, noel.volunteer]],
+          [tatouin.volunteer.id, [lea.volunteer]],
+          [noel.volunteer.id, [lea.volunteer]],
+        ]),
+      );
+      const candidateFactory = new CandidateFactory(
+        inMemoryPlanning,
+        inMemoryAvailabilities,
+        friends,
+      );
+      const assignments = new InMemoryAssignments(initialAssignments);
+      const leaSelected = await WaitingForVolunteer.init(
+        candidateFactory,
+        assignments,
+        collageParcoursF,
+      ).select(lea.volunteer);
+      funnel = await leaSelected.addCandidate();
+    });
+    describe.each`
+      volunteerName                  | volunteer            | team             | expectedLeaAssignment | expectedTatouinAssignment
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${BENEVOLE_CODE} | ${CONDUCTEUR}         | ${BENEVOLE_CODE}
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR}    | ${BENEVOLE_CODE}      | ${CONDUCTEUR}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR}    | ${CONDUCTEUR}         | ${BENEVOLE_CODE}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${BENEVOLE_CODE} | ${BENEVOLE_CODE}      | ${CONDUCTEUR}
+    `(
+      "when assign $volunteerName as $team",
+      ({
+        volunteer,
+        team,
+        expectedLeaAssignment,
+        expectedTatouinAssignment,
+      }) => {
+        let fulfillingDemands: IActAsFunnel;
+        beforeAll(async () => {
+          fulfillingDemands = funnel.fulfillDemand({
+            volunteer: volunteer.id,
+            team,
+          });
+        });
+        it(`should assign Lea as ${expectedLeaAssignment}`, () => {
+          expect(fulfillingDemands.candidates.at(0)?.as).toBe(
+            expectedLeaAssignment,
+          );
+        });
+        it(`should assign Tatouin as ${expectedTatouinAssignment}`, () => {
+          expect(fulfillingDemands.candidates.at(1)?.as).toBe(
+            expectedTatouinAssignment,
+          );
+        });
+      },
+    );
+    describe("when selecting next candidate", () => {
+      let noelAsLastCandidate: IActAsFunnel;
+      beforeAll(async () => {
+        noelAsLastCandidate = await funnel.nextCandidate();
+      });
+      it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
+        expect(noelAsLastCandidate.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+      });
+      it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
+        expect(noelAsLastCandidate.candidates.at(0)?.as).toBe(CONDUCTEUR);
+      });
     });
   });
 });

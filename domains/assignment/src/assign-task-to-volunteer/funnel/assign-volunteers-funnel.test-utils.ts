@@ -1,7 +1,7 @@
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils";
-import { CONFIANCE, HARD, VIEUX } from "../../teams";
+import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams";
 import { Assignment } from "../assignment";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PlanningEvent } from "./planning";
@@ -13,6 +13,7 @@ const saturday00h = new Date("2024-05-18T00:00+02:00");
 const saturday18h = new Date("2024-05-18T18:00+02:00");
 const saturday20h = new Date("2024-05-18T20:00+02:00");
 const sunday20h = new Date("2024-05-19T20:00+02:00");
+const monday08h = new Date("2024-05-13T08:00+02:00");
 const monday10h = new Date("2024-05-13T10:00+02:00");
 const nextMonday18h = new Date("2024-05-20T18:00+02:00");
 const nextTuesday02h = new Date("2024-05-21T02:00+02:00");
@@ -23,10 +24,15 @@ const nextWednesday18h = new Date("2024-05-22T18:00+02:00");
 const nextThursday02h = new Date("2024-05-23T02:00+02:00");
 const nextThursday10h = new Date("2024-05-23T20:00+02:00");
 
-const friday08hTo09h = {
+const monday08hTo10h = Period.init({
+  start: monday08h,
+  end: monday10h,
+});
+
+const friday08hTo09h = Period.init({
   start: new Date("2024-17-05T08:00+02:00"),
   end: new Date("2024-17-05T09:00+02:00"),
-};
+});
 const friday08hTo10h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
@@ -82,7 +88,7 @@ export const noel: TestHelper = {
     },
   ],
   availabilities: [
-    { start: monday10h, end: sunday20h },
+    { start: monday08h, end: sunday20h },
     { start: nextMonday18h, end: nextWednesday02h },
     { start: nextWednesday18h, end: nextThursday10h },
   ],
@@ -93,11 +99,11 @@ export const lea: TestHelper = {
     id: 2,
     firstname: "Lea",
     lastname: "Mauyno",
-    teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
+    teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
-  availabilities: [{ start: friday06h, end: sunday20h }],
+  availabilities: [monday08hTo10h, { start: friday06h, end: sunday20h }],
 };
 
 export const ontaine: TestHelper = {
@@ -105,7 +111,7 @@ export const ontaine: TestHelper = {
     id: 3,
     firstname: "Ontaine",
     lastname: "Porin",
-    teams: [BENEVOLE_CODE, "catering", "conducteur"],
+    teams: [BENEVOLE_CODE, "catering", CONDUCTEUR],
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -120,11 +126,12 @@ export const tatouin: TestHelper = {
     id: 4,
     firstname: "Tatouin",
     lastname: "Jesoph",
-    teams: [BENEVOLE_CODE, VIEUX, "conducteur"],
+    teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
   availabilities: [
+    monday08hTo10h,
     { start: nextMonday18h, end: nextTuesday02h },
     { start: nextTuesday18h, end: nextWednesday02h },
     { start: nextWednesday18h, end: nextThursday02h },
@@ -198,7 +205,7 @@ export const rendreKangoo: Assignment = {
   assignmentId: nextThursday08hTo10h.id,
   name: "Rendre les Kangoos",
   demands: [
-    { team: "conducteur", demand: 1 },
+    { team: CONDUCTEUR, demand: 1 },
     { team: BENEVOLE_CODE, demand: 2 },
   ],
   assignees: [],
@@ -276,5 +283,19 @@ export const barmanBarDeLambiance: Assignment = {
   assignmentId: friday22hToSaturday00h.id,
   name: "Barman bar de l'Ambiance",
   demands: [{ team: BENEVOLE_CODE, demand: 7 }],
+  assignees: [],
+};
+
+export const collageParcoursF: Assignment = {
+  start: monday08hTo10h.start,
+  end: monday08hTo10h.end,
+  taskId: 9,
+  mobilizationId: monday08hTo10h.id,
+  assignmentId: monday08hTo10h.id,
+  name: "Collage Parcours F",
+  demands: [
+    { team: BENEVOLE_CODE, demand: 1 },
+    { team: CONDUCTEUR, demand: 1 },
+  ],
   assignees: [],
 };
