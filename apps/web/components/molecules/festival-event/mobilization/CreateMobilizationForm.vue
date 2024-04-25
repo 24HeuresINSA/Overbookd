@@ -48,7 +48,7 @@
           v-for="team in teams"
           :key="team.team"
           :team="team.team"
-          :count="team.count"
+          :prefix="team.count"
           with-name
           show-hidden
           close

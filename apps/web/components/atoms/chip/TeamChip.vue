@@ -63,8 +63,8 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    count: {
-      type: Number,
+    prefix: {
+      type: String,
       default: null,
     },
   },
@@ -83,8 +83,8 @@ export default Vue.extend({
       return this.showHidden || !hiddenTeams.includes(this.team);
     },
     teamText(): string {
-      const count = this.count ? `${this.count} ` : "";
-      return `${count}${this.teamMetadata?.name}`;
+      const prefix = this.prefix ? `${this.prefix} ` : "";
+      return `${prefix}${this.teamMetadata?.name}`;
     },
     color(): string {
       return this.teamMetadata?.color ?? "grey";

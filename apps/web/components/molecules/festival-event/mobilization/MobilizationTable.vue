@@ -46,7 +46,7 @@
             v-for="team in item.teams"
             :key="`${item.id}-${team.team}`"
             :team="team.team"
-            :count="team.count"
+            :prefix="team.count"
             with-name
             show-hidden
             close
