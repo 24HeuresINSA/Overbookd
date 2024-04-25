@@ -1,3 +1,12 @@
+## [2.33.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.3...v2.33.4) (2024-04-25)
+
+
+### Bug Fixes
+
+* **assignment:** display missing assignees stats in assignment details [#1829](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1829) ([34d8e5d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/34d8e5dd9b68092fe011f1215a1b15cd75ebdb89))
+* **assignment:** refresh stats in orga-task [#1832](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1832) ([ed4a945](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed4a945fedbb4df9f1fe596bb6bec3002dcabcaf))
+* **planning:** do not show deleted assignments [#1830](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1830) ([dedda08](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dedda08dd9723eb457c33be4407154f620b5239f))
+
 ## [2.33.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.2...v2.33.3) (2024-04-25)
 
 
