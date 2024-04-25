@@ -3,9 +3,10 @@
     :headers="headers"
     :items="displayedVolunteers"
     :items-per-page="-1"
+    :custom-sort="customSort"
     dense
   >
-    <template #item.firstname="{ item }">
+    <template #item.volunteer="{ item }">
       {{ item.firstname }} {{ item.lastname }}
     </template>
     <template #item.STATIQUE="{ item }">
@@ -38,7 +39,6 @@ import {
   TaskCategoryEmoji,
   TaskCategoryEmojis,
 } from "~/utils/models/ft-time-span.model";
-import { Duration } from "~/utils/date/duration";
 import {
   BAR,
   FUN,
@@ -49,6 +49,13 @@ import {
 import { AUCUNE } from "~/utils/assignment/task-category";
 import { VolunteerAssignmentStat, AssignmentStats } from "@overbookd/http";
 import { UserPersonalData } from "@overbookd/user";
+import {
+  sortVolunteerOnNames,
+  sortVolunteerOnTaskCategoryAssignmentDuration,
+  sortVolunteerOnTotalAssignmentDuration,
+  sumAssignmentDuration,
+} from "~/utils/functions/sort-stats";
+import { Duration } from "@overbookd/period";
 
 function searchStatic(stat: VolunteerAssignmentStat): boolean {
   return stat.category === STATIQUE;
@@ -84,29 +91,14 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Benevole", value: "firstname" },
-      {
-        text: "Creneaux statiques",
-        value: STATIQUE,
-        sortable: false,
-      },
-      { text: "Creneaux bar", value: BAR, sortable: false },
-      {
-        text: "Creneaux manutention",
-        value: MANUTENTION,
-        sortable: false,
-      },
-      { text: "Creneaux fun", value: FUN, sortable: false },
-      { text: "Creneaux relous", value: RELOU, sortable: false },
-      {
-        text: "Creneaux indetermines",
-        value: AUCUNE,
-        sortable: false,
-      },
-      {
-        text: "Totaux",
-        value: "total",
-      },
+      { text: "Benevole", value: "volunteer" },
+      { text: "Creneaux statiques", value: STATIQUE },
+      { text: "Creneaux bar", value: BAR },
+      { text: "Creneaux manutention", value: MANUTENTION },
+      { text: "Creneaux fun", value: FUN },
+      { text: "Creneaux relous", value: RELOU },
+      { text: "Creneaux indetermines", value: AUCUNE },
+      { text: "Totaux", value: "total" },
     ],
   }),
   computed: {
@@ -145,7 +137,7 @@ export default Vue.extend({
       searchFunction: (stat: VolunteerAssignmentStat) => boolean,
     ): string {
       const stat = stats.find(searchFunction);
-      return Duration.fromMilliseconds(stat?.duration ?? 0).toString();
+      return Duration.ms(stat?.duration ?? 0).toString();
     },
     retrieveStaticStat(stats: VolunteerAssignmentStat[]): string {
       return this.retrieveStat(stats, searchStatic);
@@ -166,9 +158,38 @@ export default Vue.extend({
       return this.retrieveStat(stats, searchUnknown);
     },
     retrieveTotalDuration(stats: VolunteerAssignmentStat[]): string {
-      return Duration.fromMilliseconds(
-        stats.reduce((total, { duration }) => total + duration, 0),
-      ).toString();
+      return sumAssignmentDuration(stats).toString();
+    },
+    customSort: function (
+      volunteers: AssignmentStats[],
+      sortsBy: string[],
+      sortsDesc: boolean[],
+    ) {
+      const [sortOn] = sortsBy;
+      const [sortDesc] = sortsDesc;
+      switch (sortOn) {
+        case "volunteer":
+          return sortVolunteerOnNames(volunteers, sortDesc);
+        case STATIQUE:
+        case MANUTENTION:
+        case BAR:
+        case RELOU:
+        case FUN:
+          return sortVolunteerOnTaskCategoryAssignmentDuration(
+            volunteers,
+            sortDesc,
+            sortOn,
+          );
+        case AUCUNE:
+          return sortVolunteerOnTaskCategoryAssignmentDuration(
+            volunteers,
+            sortDesc,
+          );
+        case "total":
+          return sortVolunteerOnTotalAssignmentDuration(volunteers, sortDesc);
+        default:
+          return volunteers;
+      }
     },
   },
 });

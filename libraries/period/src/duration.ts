@@ -34,4 +34,14 @@ export class Duration {
   canBeDividedBy(divider: Duration): boolean {
     return this.milliseconds % divider.milliseconds === 0;
   }
+
+  toString(): string {
+    const hours = Math.floor(this.milliseconds / ONE_HOUR_IN_MS);
+    const minutes = Math.floor(
+      (this.milliseconds % ONE_HOUR_IN_MS) / ONE_MINUTE_IN_MS,
+    );
+    const formattedHours = hours.toString();
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    return `${formattedHours}h${formattedMinutes}`;
+  }
 }
