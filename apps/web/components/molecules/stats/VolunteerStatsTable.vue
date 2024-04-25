@@ -110,12 +110,11 @@ export default Vue.extend({
     ],
   }),
   computed: {
-    displayedVolunteersId(): Set<number> {
-      return new Set<number>(this.volunteers.map(({ id }) => id));
-    },
     displayedVolunteers(): AssignmentStats[] {
       return this.$accessor.assignment.stats.filter(({ id }) =>
-        this.displayedVolunteersId.has(id),
+        this.volunteers.some(
+          ({ id: displayedVolunteerId }) => displayedVolunteerId === id,
+        ),
       );
     },
     staticEmoji(): TaskCategoryEmoji {
