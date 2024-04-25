@@ -161,7 +161,10 @@ export class UserService {
 
   async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
     const assignments = await this.prisma.assignment.findMany({
-      where: { assignees: { some: { userId: volunteerId } } },
+      where: {
+        assignees: { some: { userId: volunteerId } },
+        festivalTask: { isDeleted: false },
+      },
       select: SELECT_PLANNING_EVENT,
     });
 
@@ -220,7 +223,10 @@ export class UserService {
     volunteerId: number,
   ): Promise<VolunteerAssignmentStat[]> {
     const assignments = await this.prisma.assignment.findMany({
-      where: { assignees: { some: { userId: volunteerId } } },
+      where: {
+        assignees: { some: { userId: volunteerId } },
+        festivalTask: { isDeleted: false },
+      },
       select: SELECT_PERIOD_AND_CATEGORY,
     });
     return UserService.formatAssignmentStats(assignments);
