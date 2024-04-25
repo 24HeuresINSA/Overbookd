@@ -142,6 +142,9 @@ export const actions = actionTree(
 
       dispatch("fetchAllAssignmentsFor", volunteer.id);
       dispatch("fetchPotentialAssignmentsFor", volunteer.id);
+      dispatch("user/getVolunteerAssignmentStats", volunteer.id, {
+        root: true,
+      });
     },
 
     async unassign(
