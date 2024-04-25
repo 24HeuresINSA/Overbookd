@@ -100,6 +100,9 @@ export class AssignVolunteerFunnel
   }
 
   fulfillDemand({ volunteer, team }: FulfillDemand): IActAsFunnel {
+    const hasTeamAllDemandsFulfilled = this.hasTeamAllDemandsFulfilled(team);
+    if (hasTeamAllDemandsFulfilled) return this;
+
     const candidates = this._candidates.map((candidate) =>
       candidate.json.id === volunteer ? candidate.demandAs(team) : candidate,
     );
@@ -110,6 +113,14 @@ export class AssignVolunteerFunnel
       this.repositories,
       this.assignment,
     );
+  }
+
+  private hasTeamAllDemandsFulfilled(teamToAnalyse: string) {
+    const teamRemainingDemands = this.remainingDemandsIfAssignThose(
+      this._candidates,
+    ).filter(({ demand, team }) => team === teamToAnalyse && demand > 0);
+
+    return teamRemainingDemands.length === 0;
   }
 
   revokeLastCandidate(): IActAsFunnel {

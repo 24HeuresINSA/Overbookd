@@ -665,6 +665,19 @@ describe("Assign volunteers funnel", () => {
       it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
         expect(noelAsLastCandidate.candidates.at(0)?.as).toBe(CONDUCTEUR);
       });
+      describe(`when trying to assign Lea as ${BENEVOLE_CODE}`, () => {
+        it(`should keep her assigned to ${CONDUCTEUR}`, () => {
+          const leaAsBenevole = {
+            volunteer: lea.volunteer.id,
+            team: BENEVOLE_CODE,
+          };
+          const tryingToAssignLeaAsBenevole =
+            noelAsLastCandidate.fulfillDemand(leaAsBenevole);
+          expect(tryingToAssignLeaAsBenevole.candidates.at(0)?.as).toBe(
+            CONDUCTEUR,
+          );
+        });
+      });
     });
   });
   describe(`
