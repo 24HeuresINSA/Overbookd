@@ -1,3 +1,12 @@
+## [2.34.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.0...v2.34.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* **assignment:** display friend button only in task orga [#1824](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1824) ([8a2f842](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8a2f842e685f758bd4bfe542e5bbca385ba9f3d3))
+* **assignment:** working filters in stats mode on volunteer list page. [#1835](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1835) ([95227ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/95227ab7cea483f16079b328ee09fa5b177e4b93))
+* **festival-task:** don't allow delete ready to assign task. [#1837](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1837) ([1c46c96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c46c966c3f19dffa5279758ca322daf2df77199))
+
 ## [2.34.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.5...v2.34.0) (2024-04-25)
 
 
