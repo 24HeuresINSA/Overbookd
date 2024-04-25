@@ -5,7 +5,11 @@ import { DatabaseFriendCount } from "../../common/repository/friend.query";
 type DatabaseFriend = {
   id: number;
   assigned: {
-    assignment: IProvidePeriod & { festivalTaskId: number };
+    assignment: IProvidePeriod & {
+      festivalTaskId: number;
+      mobilizationId: string;
+      id: string;
+    };
   }[];
 };
 
