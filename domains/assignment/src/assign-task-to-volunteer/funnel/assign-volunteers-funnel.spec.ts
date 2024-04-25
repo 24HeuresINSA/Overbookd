@@ -561,7 +561,7 @@ describe("Assign volunteers funnel", () => {
       1 benevole and 1 conducteur are demanded for collage parcours F,
       Lea is already selected as candidate
     `, () => {
-      let funnel: IActAsFunnel;
+      let leaSelected: IActAsFunnel;
       beforeAll(async () => {
         const friends = new InMemoryFriends(
           new Map([
@@ -575,18 +575,36 @@ describe("Assign volunteers funnel", () => {
           friends,
         );
         const assignments = new InMemoryAssignments(initialAssignments);
-        const leaSelected = await WaitingForVolunteer.init(
+        leaSelected = await WaitingForVolunteer.init(
           candidateFactory,
           assignments,
           collageParcoursF,
         ).select(lea.volunteer);
-        funnel = await leaSelected.addCandidate();
       });
-      it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
-        expect(funnel.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+      describe("when adding a candidate", () => {
+        let withNoel: IActAsFunnel;
+        beforeAll(async () => {
+          withNoel = await leaSelected.addCandidate();
+        });
+        it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
+          expect(withNoel.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+        });
+        it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
+          expect(withNoel.candidates.at(0)?.as).toBe(CONDUCTEUR);
+        });
       });
-      it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
-        expect(funnel.candidates.at(0)?.as).toBe(CONDUCTEUR);
+      describe(`when assigning lea as ${BENEVOLE_CODE}`, () => {
+        let leaAsBenevole: IActAsFunnel;
+        beforeAll(async () => {
+          const leaToBenevole = {
+            volunteer: lea.volunteer.id,
+            team: BENEVOLE_CODE,
+          };
+          leaAsBenevole = leaSelected.fulfillDemand(leaToBenevole);
+        });
+        it("should indicate it can't fulfill more demands (cause none of the remaining friends are assignable)", () => {
+          expect(leaAsBenevole.canFulfillMoreRemainingDemands).toBe(false);
+        });
       });
     });
   });

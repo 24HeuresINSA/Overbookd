@@ -1,5 +1,5 @@
 import { AssignableVolunteer } from "../assignable-volunteer";
-import { Assignment, TeamDemanded, isTeamMember } from "../assignment";
+import { Assignment, TeamDemanded, isMemberOf } from "../assignment";
 import {
   Candidate,
   CandidateFulfillingDemand,
@@ -31,14 +31,25 @@ export abstract class CommonFunnel implements IActAsFunnel {
   abstract assign(): Promise<IStartupFunnel>;
 
   get canFulfillMoreRemainingDemands(): boolean {
-    const { demands, assignees } = this.assignment;
-    const totalDemands = sumDemands(demands);
-    const totalAssignees = assignees.filter(isTeamMember).length;
-    const totalCandidates = this._candidates.length;
-    const hasRemainingDemands = totalCandidates < totalDemands - totalAssignees;
+    return this.hasAssignableFriends(this._candidates);
+  }
 
-    const hasAssignableFriends = this.hasAssignableFriends(this._candidates);
-    return hasRemainingDemands && hasAssignableFriends;
+  protected remainingDemandsIfAssignThose(candidates: Candidate[]) {
+    const { assignees, demands } = this.assignment;
+    const remainingDemands = demands.reduce(
+      (remainingDemands: TeamDemanded[], { team, demand }) => {
+        const alreadyAssigned = assignees.filter(isMemberOf(team)).length;
+        const temporarlyAssigned = candidates.filter((candidate) =>
+          isMemberOf(team)(candidate.json),
+        ).length;
+        const totalAssignees = alreadyAssigned + temporarlyAssigned;
+        if (totalAssignees === demand) return remainingDemands;
+
+        return [...remainingDemands, { team, demand: demand - totalAssignees }];
+      },
+      [],
+    );
+    return remainingDemands;
   }
 
   protected get friendsAbleToFulfillNextDemand(): AssignableVolunteer[] {
@@ -57,13 +68,15 @@ export abstract class CommonFunnel implements IActAsFunnel {
   }
 
   private assignableFriendsFrom(candidates: Candidate<IDefineCandidate>[]) {
+    const remainingDemands = this.remainingDemandsIfAssignThose(candidates);
+    const assignment = { ...this.assignment, demands: remainingDemands };
     return candidates
       .flatMap((candidate) => candidate.json.friends)
       .reduce((friends: AssignableVolunteer[], friend) => {
         const isNotACandidateYet = candidates.every(
           ({ json }) => json.id !== friend.id,
         );
-        const isAssignable = isAssignableOn(this.assignment, friend);
+        const isAssignable = isAssignableOn(assignment, friend);
         const isNotAlreadyListed = friends.every(({ id }) => id !== friend.id);
 
         const shouldBeAdded =
@@ -97,10 +110,6 @@ export abstract class CommonFunnel implements IActAsFunnel {
 
   abstract previousCandidate(): Promise<IActAsFunnel>;
   abstract nextCandidate(): Promise<IActAsFunnel>;
-}
-
-function sumDemands(demands: TeamDemanded[]) {
-  return demands.reduce((sum, { demand: count }) => sum + count, 0);
 }
 
 function isAssignableOn(

@@ -1,4 +1,4 @@
-import { Assignment, TeamDemanded, isMemberOf } from "../assignment";
+import { Assignment } from "../assignment";
 import { ReadyToStart } from "./startup-funnel";
 import { Candidate, isFulfillingDemand } from "./candidate";
 import {
@@ -75,24 +75,6 @@ export class AssignVolunteerFunnel
     });
 
     return assignedCandidates;
-  }
-
-  private remainingDemandsIfAssignThose(candidates: Candidate[]) {
-    const { assignees, demands } = this.assignment;
-    const remainingDemands = demands.reduce(
-      (remainingDemands: TeamDemanded[], { team, demand }) => {
-        const alreadyAssigned = assignees.filter(isMemberOf(team)).length;
-        const temporarlyAssigned = candidates.filter((candidate) =>
-          isMemberOf(team)(candidate.json),
-        ).length;
-        const totalAssignees = alreadyAssigned + temporarlyAssigned;
-        if (totalAssignees === demand) return remainingDemands;
-
-        return [...remainingDemands, { team, demand: demand - totalAssignees }];
-      },
-      [],
-    );
-    return remainingDemands;
   }
 
   private toCandidate(friend: AssignableVolunteer) {
