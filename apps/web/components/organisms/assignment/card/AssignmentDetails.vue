@@ -18,11 +18,13 @@
           <span>{{ timetable }}</span>
         </v-chip>
         <TeamChip
-          v-for="team in requestedTeams"
+          v-for="{ team, demand, assigned } in requestedTeams"
           :key="team"
           :team="team"
+          :prefix="`${assigned}/${demand}`"
           size="medium"
           with-name
+          show-hidden
         ></TeamChip>
       </div>
       <div class="required-volunteers">
@@ -148,6 +150,7 @@ import { UpdateAssignedTeam } from "~/utils/models/assignment.model";
 import { TimeSpanAssignee } from "~/utils/models/ft-time-span.model";
 import { isNumber, isString } from "~/utils/types/check";
 import {
+  AssignmentTeam,
   AssignmentWithDetails,
   NamelyDemandedForDetails,
   TeamMemberForDetails,
@@ -183,12 +186,14 @@ export default defineComponent({
       const end = formatDateToHumanReadable(this.assignmentDetails.end);
       return `${start} - ${end}`;
     },
-    requestedTeams(): string[] {
+    requestedTeams(): AssignmentTeam[] {
       if (!this.assignmentDetails) return [];
-      const requestedTeamCodes = this.assignmentDetails.demands.map(
-        (demand) => demand.team,
-      );
-      return requestedTeamCodes;
+      return this.assignmentDetails.demands.map(({ demand, team }) => {
+        const assigned = this.assignmentDetails.assignees.filter(
+          (assignee) => "as" in assignee && assignee.as === team,
+        ).length;
+        return { team, demand, assigned };
+      });
     },
     requiredVolunteers(): NamelyDemandedForDetails[] {
       if (!this.assignmentDetails) return [];
@@ -371,5 +376,11 @@ export default defineComponent({
 
 .not-selected {
   opacity: 0.4;
+}
+
+.volunteer-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 </style>
