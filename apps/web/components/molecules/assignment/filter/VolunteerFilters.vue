@@ -21,13 +21,20 @@
     ></SearchTeams>
 
     <div class="friend_filter_categoy_sort">
-      <v-switch
-        v-model="hasNoFriends"
-        label="N'a aucun ami"
-        class="filters__field"
-        hide-details
-        @change="changeNoFriends"
-      ></v-switch>
+      <div>
+        <v-switch
+          v-show="!isOrgaTaskMode"
+          v-model="hasNoFriends"
+          label="N'a aucun ami"
+          class="filters__field"
+          hide-details
+          @change="changeNoFriends"
+        ></v-switch>
+        <p class="stats">
+          Nombre de bénévoles dans la liste :
+          <span class="font-weight-bold">{{ listLength }}</span>
+        </p>
+      </div>
       <div class="sort__category" @click="updateSort">
         <v-tooltip top>
           <template #activator="{ on, attrs }">
@@ -43,10 +50,6 @@
         </v-tooltip>
       </div>
     </div>
-    <p class="stats">
-      Nombre de bénévoles dans la liste :
-      <span class="font-weight-bold">{{ listLength }}</span>
-    </p>
   </div>
 </template>
 
@@ -55,6 +58,7 @@ import { defineComponent } from "vue";
 import { Team } from "~/utils/models/team.model";
 import { nextSortDirection } from "~/utils/models/assignment.model";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 export default defineComponent({
   name: "VolunteerFilters",
@@ -84,6 +88,11 @@ export default defineComponent({
     sort: 0,
     hasNoFriends: false,
   }),
+  computed: {
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
+    },
+  },
   methods: {
     changeSearch(search: string) {
       this.$emit("change:search", search);
@@ -108,9 +117,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 160px;
-  display: flex;
-  flex-direction: column;
+  block-size: auto;
   justify-content: center;
   align-items: center;
   margin-top: 25px;
@@ -127,15 +134,18 @@ export default defineComponent({
   margin-bottom: 5px;
 }
 
-.sort__category:hover {
+.sort__category {
   cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 0px;
 }
 
 .friend_filter_categoy_sort {
   width: 100%;
-  display: flex;
-  align-items: center;
   gap: 5px;
   margin-bottom: 5px;
+  display: block;
+  position: relative;
 }
 </style>
