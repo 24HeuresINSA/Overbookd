@@ -1,7 +1,7 @@
 <template>
   <OverCalendar
     v-model="calendarMarker"
-    :events="assignedTasks"
+    :events="events"
     :hour-to-scroll-to="hourToScrollTo"
   >
     <template #title>
@@ -19,7 +19,7 @@
     <template #event="{ event }">
       <div
         class="event underline-on-hover"
-        @mouseup.middle="openFtInNewTab(event.taskId)"
+        @mouseup="openFtInNewTab(event)"
         @contextmenu.prevent="selectAssignmentToDisplayDetails(event)"
       >
         {{ event.name }}
@@ -42,8 +42,9 @@ import { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import {
   AssignmentSummaryWithTask,
   DisplayableAssignment,
+  PlanningTask,
 } from "@overbookd/http";
-import { PURPLE } from "~/domain/common/status-color";
+import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
 
 export default defineComponent({
   name: "OrgaTaskCalendar",
@@ -72,7 +73,13 @@ export default defineComponent({
     alreadyAssignedAssignments(): DisplayableAssignment[] {
       return this.$accessor.assignVolunteerToTask.alreadyAssignedAssignments;
     },
-    assignedTasks(): CalendarEvent[] {
+    notReadyTasks(): PlanningTask[] {
+      return this.$accessor.user.selectedUserTasks;
+    },
+    events(): CalendarEvent[] {
+      const tasks = this.notReadyTasks.map((task) =>
+        this.formatTaskForCalendar(task),
+      );
       const alreadyAssigned = [...this.alreadyAssignedAssignments].map(
         (assignment) => this.formatAssignmentForCalendar(assignment, PURPLE),
       );
@@ -80,7 +87,7 @@ export default defineComponent({
         ? [this.formatAssignmentForCalendar(this.hoverAssignment)]
         : [];
 
-      return [...alreadyAssigned, ...hoverAssignments];
+      return [...tasks, ...alreadyAssigned, ...hoverAssignments];
     },
     hourToScrollTo(): number | undefined {
       return this.hoverAssignment?.start.getHours();
@@ -112,17 +119,23 @@ export default defineComponent({
         this.$accessor.assignVolunteerToTask.fetchAllAssignmentsFor(
           volunteerId,
         ),
+        this.$accessor.user.getVolunteerTasks(volunteerId),
       ]);
     },
     isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
-    selectAssignmentToDisplayDetails(assignment: DisplayableAssignment) {
-      this.$accessor.assignVolunteerToTask.fetchAssignmentDetails(assignment);
-      this.$emit("display-assignment-details");
+    selectAssignmentToDisplayDetails(
+      event: DisplayableAssignment | CalendarEvent,
+    ) {
+      if ("taskId" in event) {
+        this.$accessor.assignVolunteerToTask.fetchAssignmentDetails(event);
+        this.$emit("display-assignment-details");
+      }
     },
-    openFtInNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`);
+    openFtInNewTab(event: DisplayableAssignment | CalendarEvent) {
+      if ("taskId" in event) return;
+      window.open(event.link);
     },
     formatAssignmentForCalendar(
       assignment: DisplayableAssignment,
@@ -138,6 +151,21 @@ export default defineComponent({
           mobilizationId: assignment.mobilizationId,
           taskId: assignment.taskId,
         },
+      };
+    },
+    formatTaskForCalendar({
+      name,
+      id,
+      status,
+      timeWindow: { start, end },
+    }: PlanningTask): CalendarEvent {
+      return {
+        start,
+        end,
+        name: `[${id}] ${name}`,
+        link: `/ft/${id}`,
+        color: getColorByStatus(status),
+        timed: true,
       };
     },
   },
