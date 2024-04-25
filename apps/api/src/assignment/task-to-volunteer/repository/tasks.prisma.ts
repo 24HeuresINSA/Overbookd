@@ -19,7 +19,7 @@ export class PrismaTasks implements Tasks {
       where: IS_READY_AND_EXISTS,
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
-    return tasks.map(toTask);
+    return tasks.map(toTask).sort(sortByDate);
   }
 
   async findOne(id: TaskIdentifier["id"]): Promise<Task> {
@@ -69,4 +69,12 @@ function toTask(task: DatabaseTask): Task {
     inChargeTeam: task.teamCode,
     assignments,
   };
+}
+
+function sortByDate(a: Task, b: Task) {
+  if (a.assignments.length === 0 && b.assignments.length === 0) return 0;
+  if (a.assignments.length === 0) return 1;
+  if (b.assignments.length === 0) return -1;
+
+  return a.assignments[0].start.getTime() - b.assignments[0].start.getTime();
 }
