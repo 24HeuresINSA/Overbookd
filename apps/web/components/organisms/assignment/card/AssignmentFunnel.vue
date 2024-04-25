@@ -236,11 +236,13 @@ export default defineComponent({
     closeDialog() {
       this.$emit("close-dialog");
     },
-    temporaryAssign(team: string, candidate?: IDefineCandidate) {
-      if (!candidate) return;
+    temporaryAssign(team: string, candidate: IDefineCandidate) {
       if (!this.funnel) return;
 
-      this.funnel?.fulfillDemand({ volunteer: candidate.id, team });
+      this.funnel = this.funnel?.fulfillDemand({
+        volunteer: candidate.id,
+        team,
+      });
     },
     isNotAssignedAs(teamCode: string, candidate?: IDefineCandidate): boolean {
       if (!candidate) return false;
