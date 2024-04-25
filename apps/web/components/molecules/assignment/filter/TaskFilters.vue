@@ -10,7 +10,7 @@
     <SearchTeams
       :value="requiredTeams"
       label="Chercher par équipe requise"
-      class="filters__field"
+      class="filters__field filter__multi-select"
       :boxed="false"
       hide-details
       @change="changeTeamsRequired"
@@ -155,11 +155,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 220px;
+  height: 270px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  block-size: auto;
-  justify-content: center;
   align-items: center;
   margin-top: 25px;
   gap: 15px;
@@ -167,6 +166,10 @@ export default defineComponent({
   &__field {
     width: 100%;
     padding: 0 25px;
+  }
+
+  &__multi-select {
+    max-height: 200px;
   }
 }
 

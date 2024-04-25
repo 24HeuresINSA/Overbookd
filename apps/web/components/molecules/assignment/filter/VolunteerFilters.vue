@@ -117,8 +117,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  block-size: auto;
-  justify-content: center;
+  height: 245px;
+  overflow-y: auto;
   align-items: center;
   margin-top: 25px;
   padding: 0 25px;
