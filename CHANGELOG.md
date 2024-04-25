@@ -1,3 +1,10 @@
+## [2.33.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.2...v2.33.3) (2024-04-25)
+
+
+### Bug Fixes
+
+* **assignment:** friend assigned icon [#1825](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1825) ([12d1035](https://gitlab.com/24-heures-insa/overbookd-mono/commit/12d10355b16e9a468d5401c77c2940eb6f824619))
+
 ## [2.33.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.33.1...v2.33.2) (2024-04-24)
 
 
