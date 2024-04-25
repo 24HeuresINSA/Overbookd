@@ -205,11 +205,11 @@ export default defineComponent({
       return { start, end, name };
     },
     canNotAssign(): boolean {
-      if (!this.funnel) return false;
+      if (!this.funnel) return true;
       return !this.funnel.canAssign;
     },
     canNotAssignMoreVolunteer(): boolean {
-      return !this.funnel?.canFulfillMoreRemainingDemands ?? false;
+      return !this.funnel?.canFulfillMoreRemainingDemands ?? true;
     },
     candidates(): IDefineCandidate[] {
       return this.funnel?.candidates ?? [];

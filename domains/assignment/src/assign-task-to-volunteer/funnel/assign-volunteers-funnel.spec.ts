@@ -667,4 +667,39 @@ describe("Assign volunteers funnel", () => {
       });
     });
   });
+  describe(`
+  Given:
+      Lea is benevole and vieux and friend with Ontaine and Noel,
+      Ontaine is benevole and conducteur and friend with Lea,
+      Noel is benevole and vieux and friend with Lea,
+      All of them are available Scanner les billets,
+      1 confiance and 5 benevoles are demanded for Scanner les billets,
+      5 other volunteer where namely required and already assigned
+      Lea is already selected as candidate
+  `, () => {
+    let funnel: IActAsFunnel;
+    beforeAll(async () => {
+      const friends = new InMemoryFriends(
+        new Map([
+          [lea.volunteer.id, [tatouin.volunteer, noel.volunteer]],
+          [tatouin.volunteer.id, [lea.volunteer]],
+          [noel.volunteer.id, [lea.volunteer]],
+        ]),
+      );
+      const candidateFactory = new CandidateFactory(
+        inMemoryPlanning,
+        inMemoryAvailabilities,
+        friends,
+      );
+      const assignments = new InMemoryAssignments(initialAssignments);
+      funnel = await WaitingForVolunteer.init(
+        candidateFactory,
+        assignments,
+        scannerLesBillets,
+      ).select(lea.volunteer);
+    });
+    it("should indicate it can fulfill more demands", () => {
+      expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+    });
+  });
 });

@@ -186,6 +186,18 @@ export const amanda: TestHelper = {
   availabilities: [{ start: friday06h, end: sunday20h }],
 };
 
+export const rachid: TestHelper = {
+  volunteer: {
+    id: 9,
+    firstname: "Rachid",
+    lastname: "Datti",
+    teams: [BENEVOLE_CODE],
+    ...BOILERPLATE_ASSIGNMENT_STATS,
+  },
+  planning: [],
+  availabilities: [{ start: friday06h, end: sunday20h }],
+};
+
 export const benevolant: Assignment = {
   start: friday08hTo10h.start,
   end: friday08hTo10h.end,
@@ -250,7 +262,13 @@ export const scannerLesBillets: Assignment = {
     { team: CONFIANCE, demand: 1 },
     { team: BENEVOLE_CODE, demand: 5 },
   ],
-  assignees: [],
+  assignees: [
+    { id: nathan.volunteer.id },
+    { id: amanda.volunteer.id },
+    { id: bruce.volunteer.id },
+    { id: luce.volunteer.id },
+    { id: rachid.volunteer.id },
+  ],
 };
 
 export const demonterLesJeuxGonflables: Assignment = {

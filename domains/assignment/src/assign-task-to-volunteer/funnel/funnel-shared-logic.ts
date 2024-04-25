@@ -1,5 +1,5 @@
 import { AssignableVolunteer } from "../assignable-volunteer";
-import { Assignment, TeamDemanded } from "../assignment";
+import { Assignment, TeamDemanded, isTeamMember } from "../assignment";
 import {
   Candidate,
   CandidateFulfillingDemand,
@@ -33,7 +33,7 @@ export abstract class CommonFunnel implements IActAsFunnel {
   get canFulfillMoreRemainingDemands(): boolean {
     const { demands, assignees } = this.assignment;
     const totalDemands = sumDemands(demands);
-    const totalAssignees = assignees.length;
+    const totalAssignees = assignees.filter(isTeamMember).length;
     const totalCandidates = this._candidates.length;
     const hasRemainingDemands = totalCandidates < totalDemands - totalAssignees;
 
