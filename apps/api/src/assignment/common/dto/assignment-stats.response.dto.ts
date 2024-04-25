@@ -8,6 +8,13 @@ import { ApiProperty } from "@nestjs/swagger";
 export class AssignmentStatsResponseDto implements AssignmentStats {
   @ApiProperty({
     required: true,
+    description: "volunteer id",
+    type: Number,
+  })
+  id: number;
+
+  @ApiProperty({
+    required: true,
     description: "volunteer firstname",
     type: String,
   })

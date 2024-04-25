@@ -1,11 +1,11 @@
-import { AssignmentStats, BulkAssignmentRequest } from "~/store/assignment";
+import { BulkAssignmentRequest } from "~/store/assignment";
 import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpanWithRequestedTeams,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
-import { HttpStringified } from "@overbookd/http";
+import { AssignmentStats, HttpStringified } from "@overbookd/http";
 import { Context } from "../context";
 
 type AssignmentResponse = {

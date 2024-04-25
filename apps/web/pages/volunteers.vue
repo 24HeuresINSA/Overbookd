@@ -5,7 +5,6 @@
         :search="filters.search"
         :teams="filters.teams"
         :excluded-teams="filters.excludedTeams"
-        :disabled="isStatsModeActive"
         @change:search="filters.search = $event"
         @change:teams="filters.teams = $event"
         @change:excluded-teams="filters.excludedTeams = $event"
@@ -24,7 +23,7 @@
         @open-dialog="openVolunteerInfoDialog"
         @click:team="addTeamInFilters"
       />
-      <VolunteerStatsTable v-else />
+      <VolunteerStatsTable v-else :volunteers="displayedVolunteers" />
     </div>
 
     <v-dialog v-model="isVolunteerInfoDialogOpen">

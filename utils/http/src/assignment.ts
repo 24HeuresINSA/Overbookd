@@ -19,6 +19,7 @@ export type VolunteerAssignmentStat = {
 };
 
 export type AssignmentStats = {
+  id: number;
   firstname: string;
   lastname: string;
   stats: VolunteerAssignmentStat[];
