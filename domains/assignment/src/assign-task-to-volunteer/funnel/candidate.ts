@@ -108,7 +108,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
   }
 }
 
-export function assignableTeamsAccordingToRemainingDemands(
+function assignableTeamsAccordingToRemainingDemands(
   teams: string[],
   remainingDemands: TeamDemanded[],
 ) {

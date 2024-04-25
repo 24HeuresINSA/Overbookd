@@ -186,7 +186,7 @@ export const amanda: TestHelper = {
   availabilities: [{ start: friday06h, end: sunday20h }],
 };
 
-export const rachid: TestHelper = {
+const rachid: TestHelper = {
   volunteer: {
     id: 9,
     firstname: "Rachid",
