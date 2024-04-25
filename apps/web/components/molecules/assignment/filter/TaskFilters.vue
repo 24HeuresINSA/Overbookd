@@ -158,6 +158,7 @@ export default defineComponent({
   height: 220px;
   display: flex;
   flex-direction: column;
+  block-size: auto;
   justify-content: center;
   align-items: center;
   margin-top: 25px;
