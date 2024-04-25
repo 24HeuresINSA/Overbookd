@@ -8,7 +8,7 @@
         @change:teams="teams = $event"
         @change:excluded-teams="excludedTeams = $event"
         @change:sort="sort = $event"
-        @change:has-no-friends="hasNoFriends = $event"
+        @change:friend-filter="friendFilter = $event"
       ></VolunteerFilters>
       <v-divider />
       <AssignmentVolunteerList
@@ -40,15 +40,24 @@ import { Team } from "~/utils/models/team.model";
 import { Sort } from "~/utils/models/assignment.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
+import {
+  AssignmentVolunteer,
+  isAssignableVolunteer,
+} from "~/utils/assignment/assignment-volunteer";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import {
+  AMIS_DEJA_AFFECTES,
+  AMIS_DISPONIBLES,
+  AUCUN_AMI,
+  FriendFilter,
+} from "~/utils/assignment/assignment.utils";
 
 type FilterableVolunteerListData = {
   teams: Team[];
   excludedTeams: Team[];
   searchVolunteer: string;
   sort: number;
-  hasNoFriends: boolean;
+  friendFilter: FriendFilter | undefined;
 };
 
 export default defineComponent({
@@ -60,7 +69,7 @@ export default defineComponent({
     excludedTeams: [],
     searchVolunteer: "",
     sort: 0,
-    hasNoFriends: false,
+    friendFilter: undefined,
   }),
   computed: {
     volunteers(): AssignmentVolunteer[] {
@@ -86,7 +95,7 @@ export default defineComponent({
               volunteer,
             ) &&
             this.filterVolunteerByName(this.searchVolunteer)(volunteer) &&
-            this.filterVolunteerByFriendExistence(this.hasNoFriends)(volunteer)
+            this.filterVolunteerByFriendCondition(this.friendFilter)(volunteer)
           );
         },
       );
@@ -150,11 +159,23 @@ export default defineComponent({
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
-    filterVolunteerByFriendExistence(
-      hasNoFriends: boolean,
+    filterVolunteerByFriendCondition(
+      friendFilter: FriendFilter | undefined,
     ): (volunteer: AssignmentVolunteer) => boolean {
-      if (!hasNoFriends) return () => true;
-      return (volunteer) => !volunteer.hasAtLeastOneFriend;
+      switch (friendFilter) {
+        case AUCUN_AMI:
+          return (volunteer) => !volunteer.hasAtLeastOneFriend;
+        case AMIS_DISPONIBLES:
+          return (volunteer) =>
+            isAssignableVolunteer(volunteer) &&
+            volunteer.assignableFriendsIds.length > 0;
+        case AMIS_DEJA_AFFECTES:
+          return (volunteer) =>
+            isAssignableVolunteer(volunteer) && volunteer.hasFriendAssigned;
+        case undefined:
+        default:
+          return () => true;
+      }
     },
   },
 });

@@ -22,14 +22,23 @@
 
     <div class="friend_filter_categoy_sort">
       <div>
-        <v-switch
+        <v-btn-toggle
           v-show="!isOrgaTaskMode"
-          v-model="hasNoFriends"
-          label="N'a aucun ami"
-          class="filters__field"
-          hide-details
-          @change="changeNoFriends"
-        ></v-switch>
+          tile
+          color="deep-purple accent-3"
+          group
+          @change="changeFriendFilter($event)"
+        >
+          <v-btn
+            v-for="label of friendFilterLabel"
+            :id="`friend-filter-${stringify(label)}`"
+            :key="label"
+            :value="label"
+            x-small
+          >
+            {{ label }}
+          </v-btn>
+        </v-btn-toggle>
         <p class="stats">
           Nombre de bénévoles dans la liste :
           <span class="font-weight-bold">{{ listLength }}</span>
@@ -59,6 +68,11 @@ import { Team } from "~/utils/models/team.model";
 import { nextSortDirection } from "~/utils/models/assignment.model";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import {
+  FriendFilter,
+  friendFilterLabel,
+} from "~/utils/assignment/assignment.utils";
+import { SlugifyService } from "@overbookd/slugify";
 
 export default defineComponent({
   name: "VolunteerFilters",
@@ -79,7 +93,7 @@ export default defineComponent({
     "change:teams",
     "change:excluded-teams",
     "change:sort",
-    "change:has-no-friends",
+    "change:friend-filter",
   ],
   data: () => ({
     search: "",
@@ -91,6 +105,9 @@ export default defineComponent({
   computed: {
     isOrgaTaskMode(): boolean {
       return isOrgaTaskMode(this.$route.path);
+    },
+    friendFilterLabel(): FriendFilter[] {
+      return friendFilterLabel;
     },
   },
   methods: {
@@ -107,8 +124,11 @@ export default defineComponent({
       this.sort = nextSortDirection(this.sort);
       this.$emit("change:sort", this.sort);
     },
-    changeNoFriends() {
-      this.$emit("change:has-no-friends", this.hasNoFriends);
+    changeFriendFilter(friendFilter: FriendFilter | undefined) {
+      this.$emit("change:friend-filter", friendFilter);
+    },
+    stringify(label: string) {
+      return SlugifyService.apply(label);
     },
   },
 });
@@ -147,5 +167,15 @@ export default defineComponent({
   margin-bottom: 5px;
   display: block;
   position: relative;
+}
+
+#friend-filter-aucun-ami {
+  margin-left: -4px;
+}
+
+#friend-filter-aucun-ami,
+#friend-filter-amis-disponibles,
+#friend-filter-amis-deja-affectes {
+  padding: 0 4px;
 }
 </style>
