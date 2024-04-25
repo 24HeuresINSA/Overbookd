@@ -9,7 +9,7 @@
         <div class="planning">
           <OverMultiCalendar
             v-model="calendarDate"
-            :users="volunteerAvailabilitiesForCalendar"
+            :users="candidatesForCalendar"
             :planning-events="candidatesPlanningEvents"
             :event-to-add="assignmentAsEvent"
           >
@@ -144,7 +144,7 @@ import {
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
 
-type AssingmentFunneData = {
+type AssingmentFunnelData = {
   calendarDate: Date;
   funnel: IActAsFunnel | null;
 };
@@ -167,7 +167,7 @@ export default defineComponent({
     },
   },
   emits: ["close-dialog", "volunteers-assigned"],
-  data: (): AssingmentFunneData => {
+  data: (): AssingmentFunnelData => {
     return {
       calendarDate: new Date(),
       funnel: null,
@@ -181,7 +181,7 @@ export default defineComponent({
       const { taskId, name } = this.assignment;
       return `[${taskId}] ${name}`;
     },
-    volunteerAvailabilitiesForCalendar(): CalendarUser[] {
+    candidatesForCalendar(): CalendarUser[] {
       if (!this.funnel) return [];
       return this.funnel.candidates.map((candidate: IDefineCandidate) => ({
         id: candidate.id,
@@ -195,8 +195,8 @@ export default defineComponent({
       if (!this.funnel) return [];
       return this.funnel.candidates.flatMap(
         ({ planning, id }: IDefineCandidate) =>
-          planning.map((planning) =>
-            convertAssignmentPlanningEventForCalendar(planning, id),
+          planning.map((event) =>
+            convertAssignmentPlanningEventForCalendar(event, id),
           ),
       );
     },
@@ -244,8 +244,7 @@ export default defineComponent({
         team,
       });
     },
-    isNotAssignedAs(teamCode: string, candidate?: IDefineCandidate): boolean {
-      if (!candidate) return false;
+    isNotAssignedAs(teamCode: string, candidate: IDefineCandidate): boolean {
       return candidate.as !== teamCode;
     },
     canChangeCandidates(id: string): boolean {
@@ -273,10 +272,6 @@ export default defineComponent({
     async nextCandidate() {
       if (!this.funnel?.canChangeLastCandidate) return;
       this.funnel = await this.funnel.nextCandidate();
-    },
-    isReplacable(volunteerId: string): boolean {
-      const canChangeLast = this.funnel?.canChangeLastCandidate ?? false;
-      return this.isLastAddedCandidate(volunteerId) && canChangeLast;
     },
     isLastAddedCandidate(volunteerId: string): boolean {
       const lastCandidate = this.candidates.at(-1);
