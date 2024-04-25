@@ -62,4 +62,6 @@ export type {
 export type {
   AssignmentSummaryWithTask,
   DisplayableAssignment,
+  AssignmentStats,
+  VolunteerAssignmentStat,
 } from "./assignment";
