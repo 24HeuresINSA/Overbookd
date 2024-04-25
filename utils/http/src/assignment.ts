@@ -1,5 +1,6 @@
 import { AssignmentIdentifier } from "@overbookd/assignment";
 import { AssignmentSummary, TaskCategorized } from "@overbookd/assignment";
+import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/period";
 
 export type AssignmentSummaryWithTask = AssignmentSummary &
@@ -11,3 +12,14 @@ export type DisplayableAssignment = AssignmentIdentifier &
   IProvidePeriod & {
     name: string;
   };
+
+export type VolunteerAssignmentStat = {
+  category: Category;
+  duration: number;
+};
+
+export type AssignmentStats = {
+  firstname: string;
+  lastname: string;
+  stats: VolunteerAssignmentStat[];
+};

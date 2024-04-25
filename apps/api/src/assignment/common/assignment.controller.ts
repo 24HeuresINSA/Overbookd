@@ -38,6 +38,8 @@ import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
 import { DisplayableAssignmentResponseDto } from "./dto/displayable-assignment.response.dto";
+import { AssignmentStatsResponseDto } from "./dto/assignment-stats.response.dto";
+import { AssignmentStats } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -194,5 +196,19 @@ export class AssignmentController {
   ): Promise<void> {
     const identifier = { taskId, mobilizationId, assignmentId };
     return this.assignment.unassign(identifier, assigneeId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("stats")
+  @ApiResponse({
+    status: 200,
+    description: "Get assignments stats for all volunteers",
+    isArray: true,
+    type: AssignmentStatsResponseDto,
+  })
+  async getVolunteerAssignmentStats(): Promise<AssignmentStats[]> {
+    return this.assignment.getVolunteersAssignmentStats();
   }
 }

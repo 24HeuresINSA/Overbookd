@@ -15,7 +15,9 @@ import {
   updateAssigneesOnAssignment,
 } from "./assignment.query";
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
-import { DisplayableAssignment } from "@overbookd/http";
+import { AssignmentStats, DisplayableAssignment } from "@overbookd/http";
+import { SELECT_PERIOD_AND_CATEGORY } from "../../../user/user.query";
+import { UserService } from "../../../user/user.service";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -89,6 +91,25 @@ export class PrismaAssignments implements AssignmentRepository {
           userId: assigneeId,
         },
       },
+    });
+  }
+
+  async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
+    const volunteers = await this.prisma.user.findMany({
+      where: { isDeleted: false, teams: { none: { team: { code: "hard" } } } },
+      select: {
+        firstname: true,
+        lastname: true,
+        assigned: {
+          select: { assignment: { select: SELECT_PERIOD_AND_CATEGORY } },
+        },
+      },
+    });
+    return volunteers.map(({ assigned, ...volunteer }) => {
+      const stats = UserService.formatAssignmentStats(
+        assigned.map(({ assignment }) => assignment),
+      );
+      return { ...volunteer, stats };
     });
   }
 }

@@ -5,7 +5,7 @@
     :items-per-page="-1"
     dense
   >
-    <template #item.volunteer="{ item }">
+    <template #item.firstname="{ item }">
       {{ item.firstname }} {{ item.lastname }}
     </template>
     <template #item.STATIQUE="{ item }">
@@ -26,6 +26,9 @@
     <template #item.AUCUNE="{ item }">
       {{ unknownEmoji }} {{ retrieveUnknownStat(item.stats) }}
     </template>
+    <template #item.total="{ item }">
+      {{ retrieveTotalDuration(item.stats) }}
+    </template>
   </v-data-table>
 </template>
 
@@ -36,7 +39,6 @@ import {
   TaskCategoryEmojis,
 } from "~/utils/models/ft-time-span.model";
 import { AssignmentStats } from "~/store/assignment";
-import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { Duration } from "~/utils/date/duration";
 import {
   BAR,
@@ -46,6 +48,7 @@ import {
   STATIQUE,
 } from "@overbookd/festival-event-constants";
 import { AUCUNE } from "~/utils/assignment/task-category";
+import { VolunteerAssignmentStat } from "@overbookd/http";
 
 function searchStatic(stat: VolunteerAssignmentStat): boolean {
   return stat.category === STATIQUE;
@@ -75,7 +78,7 @@ export default Vue.extend({
   name: "VolunteerStatsTable",
   data: () => ({
     headers: [
-      { text: "Benevole", value: "volunteer", sortable: false },
+      { text: "Benevole", value: "firstname" },
       {
         text: "Creneaux statiques",
         value: STATIQUE,
@@ -92,6 +95,11 @@ export default Vue.extend({
       {
         text: "Creneaux indetermines",
         value: AUCUNE,
+        sortable: false,
+      },
+      {
+        text: "Totaux",
+        value: "total",
         sortable: false,
       },
     ],
@@ -147,6 +155,11 @@ export default Vue.extend({
     },
     retrieveUnknownStat(stats: VolunteerAssignmentStat[]): string {
       return this.retrieveStat(stats, searchUnknown);
+    },
+    retrieveTotalDuration(stats: VolunteerAssignmentStat[]): string {
+      return Duration.fromMilliseconds(
+        stats.reduce((total, { duration }) => total + duration, 0),
+      ).toString();
     },
   },
 });
