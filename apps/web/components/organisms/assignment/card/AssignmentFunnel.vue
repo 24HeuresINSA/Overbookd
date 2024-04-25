@@ -14,65 +14,14 @@
             :event-to-add="assignmentAsEvent"
           >
             <template #volunteer-header="{ category }">
-              <div class="calendar-header">
-                <div class="calendar-header__action">
-                  <v-btn
-                    v-if="isRemovable(category)"
-                    icon
-                    color="red"
-                    @click="removeLastCandidate"
-                  >
-                    <v-icon>mdi-account-minus</v-icon>
-                  </v-btn>
-                  <v-tooltip top max-width="20rem">
-                    <template #activator="{ on, attrs }">
-                      <v-icon
-                        v-if="retrieveVolunteer(category)?.note"
-                        small
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        mdi-note
-                      </v-icon>
-                    </template>
-                    <span>{{ retrieveVolunteer(category)?.note }}</span>
-                  </v-tooltip>
-                  <v-tooltip top max-width="20rem">
-                    <template #activator="{ on, attrs }">
-                      <v-icon
-                        v-if="retrieveVolunteer(category)?.comment"
-                        small
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        mdi-comment
-                      </v-icon>
-                    </template>
-                    <span>{{ retrieveVolunteer(category)?.comment }}</span>
-                  </v-tooltip>
-                </div>
-                <div class="calendar-header__candidate">
-                  <v-btn
-                    v-if="canChangeCandidates(category)"
-                    icon
-                    @click="previousCandidate"
-                  >
-                    <v-icon>mdi-chevron-left</v-icon>
-                  </v-btn>
-                  <AssignmentVolunteerResumeCalendarHeader
-                    v-if="retrieveVolunteer(category)"
-                    :volunteer="retrieveVolunteer(category)"
-                    class="volunteer-resume"
-                  ></AssignmentVolunteerResumeCalendarHeader>
-                  <v-btn
-                    v-if="canChangeCandidates(category)"
-                    icon
-                    @click="nextCandidate"
-                  >
-                    <v-icon>mdi-chevron-right</v-icon>
-                  </v-btn>
-                </div>
-              </div>
+              <CandidateHeader
+                v-if="retrieveVolunteer(category) && funnel"
+                :funnel="funnel"
+                :candidate="candidatesByStringifiedIds[category]"
+                @revoke="revokeLastCandidate"
+                @next="nextCandidate"
+                @previous="previousCandidate"
+              />
             </template>
           </OverMultiCalendar>
           <div class="planning__teams">
@@ -134,7 +83,6 @@ import {
 } from "~/domain/common/planning-events";
 import { CalendarUser } from "~/utils/models/calendar.model";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
-import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 import {
   Assignment,
   AssignableVolunteer,
@@ -143,10 +91,12 @@ import {
   ReadyToStart,
 } from "@overbookd/assignment";
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
+import CandidateHeader from "~/components/molecules/assignment/calendar/CandidateHeader.vue";
 
 type AssingmentFunnelData = {
   calendarDate: Date;
   funnel: IActAsFunnel | null;
+  candidatesByStringifiedIds: Record<string, IDefineCandidate>;
 };
 
 export default defineComponent({
@@ -154,7 +104,7 @@ export default defineComponent({
   components: {
     TeamChip,
     OverMultiCalendar,
-    AssignmentVolunteerResumeCalendarHeader,
+    CandidateHeader,
   },
   props: {
     volunteer: {
@@ -171,6 +121,7 @@ export default defineComponent({
     return {
       calendarDate: new Date(),
       funnel: null,
+      candidatesByStringifiedIds: {},
     };
   },
   computed: {
@@ -251,8 +202,21 @@ export default defineComponent({
       const canChange = this.funnel?.canChangeLastCandidate ?? false;
       return this.isLastAddedCandidate(id) && canChange;
     },
-    retrieveVolunteer(id: string): IDefineCandidate | undefined {
-      return this.candidates.find((candidate) => candidate.id === +id);
+    retrieveVolunteer(id: string): boolean {
+      const storedIds = Object.keys(this.candidatesByStringifiedIds);
+      const isAlreadyStored = storedIds.includes(id);
+      if (isAlreadyStored) return true;
+
+      const candidate = this.funnel?.candidates.find(
+        (candidate) => candidate.id === +id,
+      );
+      if (!candidate) return false;
+
+      this.candidatesByStringifiedIds = {
+        ...this.candidatesByStringifiedIds,
+        [id]: candidate,
+      };
+      return true;
     },
     async assign() {
       if (this.canNotAssign) return;
@@ -287,7 +251,7 @@ export default defineComponent({
       const canRevoke = this.funnel?.canRevokeLastCandidate ?? false;
       return this.isLastAddedCandidate(volunteerId) && canRevoke;
     },
-    removeLastCandidate(): void {
+    revokeLastCandidate(): void {
       if (!this.funnel?.canRevokeLastCandidate) return;
       this.funnel = this.funnel.revokeLastCandidate();
     },
@@ -344,27 +308,9 @@ export default defineComponent({
   right: 3px;
 }
 
-.calendar-header {
-  &__candidate {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    .volunteer-resume {
-      width: 100%;
-    }
-  }
-
-  &__action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 36px;
-  }
-}
-
 .candidate-teams {
   max-width: 190px;
+  min-width: 190px;
   display: flex;
   align-items: center;
   justify-content: center;
