@@ -1,5 +1,6 @@
 import {
   AssignableVolunteers,
+  AssignmentIdentifier,
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
@@ -30,7 +31,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
 
   async on(
-    taskId: number,
+    assignmentIdentifier: AssignmentIdentifier,
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period, category } = assignmentSpecification;
@@ -41,13 +42,16 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
         ...SELECT_VOLUNTEER,
         ...this.buildVolunteerAssignmentSelection(category),
         ...this.buildFestivalTaskMobilizationSelection(period),
-        ...this.buildAssignableFriendSelection(assignmentSpecification),
+        ...this.buildAssignableFriendSelection(
+          assignmentIdentifier,
+          assignmentSpecification,
+        ),
         ...COUNT_FRIENDS,
       },
     });
 
     return volunteers.map((volunteer) =>
-      toStoredAssignableVolunteer(volunteer, taskId),
+      toStoredAssignableVolunteer(volunteer, assignmentIdentifier),
     );
   }
 
@@ -81,12 +85,19 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
   }
 
-  private buildAssignableFriendSelection({
-    oneOfTheTeams,
-    period,
-  }: AssignmentSpecification) {
+  private buildAssignableFriendSelection(
+    assignmentIdentifier: AssignmentIdentifier,
+    { oneOfTheTeams, period }: AssignmentSpecification,
+  ) {
     const selectAssignment = {
-      assignment: { select: { festivalTaskId: true, ...SELECT_PERIOD } },
+      assignment: {
+        select: {
+          festivalTaskId: true,
+          mobilizationId: true,
+          id: true,
+          ...SELECT_PERIOD,
+        },
+      },
     };
 
     const assignmentDuringPeriod = {
@@ -104,11 +115,21 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     return {
       friends: {
         select: { requestor: { select: selectFriend } },
-        where: { requestor: isAssignableOn(oneOfTheTeams, period) },
+        where: {
+          OR: [
+            { requestor: isAssignableOn(oneOfTheTeams, period) },
+            { requestor: isAssignedOn(assignmentIdentifier) },
+          ],
+        },
       },
       friendRequestors: {
         select: { friend: { select: selectFriend } },
-        where: { friend: isAssignableOn(oneOfTheTeams, period) },
+        where: {
+          OR: [
+            { friend: isAssignableOn(oneOfTheTeams, period) },
+            { friend: isAssignedOn(assignmentIdentifier) },
+          ],
+        },
       },
     };
   }
@@ -116,7 +137,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 
 function toStoredAssignableVolunteer(
   volunteer: DatabaseStoredAssignableVolunteer,
-  taskId: number,
+  { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
 ): StoredAssignableVolunteer {
   const assignments = volunteer.assigned.flatMap(({ assignment }) => ({
     start: assignment.start,
@@ -133,13 +154,21 @@ function toStoredAssignableVolunteer(
     ...volunteer.friendRequestors.map(({ friend }) => friend),
   ];
 
-  const assignableFriendsIds = Array.from(new Set(friends.map(({ id }) => id)));
-
-  const hasFriendAssigned = friends.some((friend) =>
+  const assignedFriends = friends.filter((friend) =>
     friend.assigned.some(
-      ({ assignment }) => assignment.festivalTaskId === taskId,
+      ({ assignment }) =>
+        assignment.festivalTaskId === taskId &&
+        assignment.mobilizationId === mobilizationId &&
+        assignment.id === assignmentId,
     ),
   );
+
+  const assignableFriendsIds = friends
+    .filter(({ id }) => {
+      const friend = friends.find((friend) => friend.id === id);
+      return !assignedFriends.includes(friend);
+    })
+    .map(({ id }) => id);
 
   return {
     id: volunteer.id,
@@ -152,8 +181,8 @@ function toStoredAssignableVolunteer(
     teams: volunteer.teams.map((team) => team.teamCode),
     assignments,
     requestedDuring,
-    assignableFriendsIds,
-    hasFriendAssigned,
+    assignableFriendsIds: Array.from(new Set(assignableFriendsIds)),
+    hasFriendAssigned: assignedFriends.length > 0,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
   };
 }
@@ -164,6 +193,24 @@ function isAssignableOn(oneOfTheTeams: string[], period: Period) {
     ...HAS_POSITIVE_CHARISMA,
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
+  };
+}
+
+function isAssignedOn({
+  assignmentId,
+  mobilizationId,
+  taskId,
+}: AssignmentIdentifier) {
+  return {
+    assigned: {
+      some: {
+        assignment: {
+          id: assignmentId,
+          mobilizationId,
+          festivalTaskId: taskId,
+        },
+      },
+    },
   };
 }
 

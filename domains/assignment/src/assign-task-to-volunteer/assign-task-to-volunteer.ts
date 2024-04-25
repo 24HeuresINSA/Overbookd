@@ -27,7 +27,7 @@ export type AssignmentSpecification = {
 
 export type AssignableVolunteers = {
   on(
-    taskId: TaskIdentifier["id"],
+    assignmentIdentifier: AssignmentIdentifier,
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]>;
 };
@@ -78,7 +78,7 @@ export class AssignTaskToVolunteer {
       category: task.category,
     };
     const volunteers = await this.assignableVolunteers.on(
-      assignment.taskId,
+      assignmentIdentifier,
       assignmentSpecification,
     );
 

@@ -3,13 +3,13 @@ import {
   AssignmentSpecification,
 } from "../assign-task-to-volunteer";
 import { StoredAssignableVolunteer } from "../assignable-volunteer";
-import { TaskIdentifier } from "../task";
+import { AssignmentIdentifier } from "../assignment";
 
 export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}
 
   on(
-    taskId: TaskIdentifier["id"],
+    assignmentIdentifier: AssignmentIdentifier,
     { oneOfTheTeams, category }: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     return Promise.resolve(
