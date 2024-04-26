@@ -51,7 +51,6 @@ import { AUCUNE } from "~/utils/assignment/task-category";
 import { VolunteerAssignmentStat, AssignmentStats } from "@overbookd/http";
 import { UserPersonalData } from "@overbookd/user";
 import {
-  AssignmentStatsSortFunction,
   getAssignmentStatsSortFunctionFromSortType,
   sumAssignmentDuration,
 } from "~/utils/functions/sort-stats";
@@ -165,21 +164,17 @@ export default Vue.extend({
       sortsBy: string[],
       sortsDesc: boolean[],
     ) {
-      const sortsFunctions: AssignmentStatsSortFunction[] = [];
-      for (let i = 0; i < sortsBy.length; i++) {
-        sortsFunctions.push(
-          getAssignmentStatsSortFunctionFromSortType(sortsBy[i], sortsDesc[i]),
-        );
-      }
-      return volunteers.sort((a, b) => {
-        let sortValue = 0;
-        let sortFunctionIndex = 0;
-        while (sortValue === 0 && sortFunctionIndex < sortsFunctions.length) {
-          sortValue = sortsFunctions[sortFunctionIndex](a, b);
-          sortFunctionIndex++;
-        }
-        return sortValue;
-      });
+      const sortsFunctions = sortsBy.map((sortBy, index) =>
+        getAssignmentStatsSortFunctionFromSortType(
+          sortBy,
+          sortsDesc.at(index) ?? false,
+        ),
+      );
+      return volunteers.sort((a, b) =>
+        sortsFunctions.reduce((sortValue, sortFunction) => {
+          return sortValue === 0 ? sortFunction(a, b) : sortValue;
+        }, 0),
+      );
     },
   },
 });
