@@ -154,6 +154,9 @@ export default Vue.extend({
   @media only screen and (min-width: $mobile-max-width) {
     padding-top: 0;
   }
+  .user-stats {
+    justify-content: center;
+  }
 }
 
 .available {
