@@ -1,3 +1,13 @@
+## [2.35.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.1...v2.35.2) (2024-04-26)
+
+
+### Bug Fixes
+
+* **assignment:** add multi-sort in volunteer list stats. [#1846](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1846) ([c121677](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c1216772d6561da8895a5595972fc7364804c47a))
+* **assignment:** click on the cross to remove a single filter tag [#477](https://gitlab.com/24-heures-insa/overbookd-mono/issues/477) ([c76d660](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c76d66004f24e3a4c143c3bd24b0f8acfdf47183))
+* **assignment:** refresh volunteer assignment duration in orga-task [#1851](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1851) ([d831f92](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d831f923b3f20dba3d0452ad6f8cb07e17390fb7))
+* **planning:** make planning available on mobile. [#1849](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1849) ([387e52f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/387e52fda92363b4a3cf142237c354a271b33375))
+
 ## [2.35.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.0...v2.35.1) (2024-04-26)
 
 
