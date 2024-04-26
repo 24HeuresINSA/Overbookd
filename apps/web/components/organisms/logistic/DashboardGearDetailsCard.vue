@@ -32,6 +32,24 @@
 
       <details>
         <summary>
+          Venant des Fiches Achats
+          <v-chip color="primary" x-small>
+            {{ sumQuantities(gearDetails.purchases) }}
+          </v-chip>
+        </summary>
+        <ul v-if="gearDetails.purchases.length">
+          <li v-for="purchase in gearDetails.purchases" :key="purchase.id">
+            <nuxt-link :to="`/logistic/purchases/${purchase.id}`">
+              Achat #{{ purchase.id }} - {{ purchase.seller }}:
+              <strong>{{ purchase.quantity }}</strong>
+            </nuxt-link>
+          </li>
+        </ul>
+        <p v-else>Aucun achat</p>
+      </details>
+
+      <details>
+        <summary>
           Venant des Fiches Emprunts
           <v-chip color="primary" x-small>
             {{ sumQuantities(gearDetails.borrows) }}

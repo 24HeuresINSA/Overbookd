@@ -1,8 +1,8 @@
-<template>
+<template class="dashboard">
   <div>
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
-    <div class="datepicker">
+    <div class="dashboard__datepicker">
       <div>
         <h3>Début du créneau</h3>
         <DateTimeField
@@ -105,9 +105,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.datepicker {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
+.dashboard {
+  margin-left: auto;
+  &__datepicker {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
 }
 </style>
