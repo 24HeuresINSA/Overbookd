@@ -142,8 +142,7 @@ export default Vue.extend({
         ? ` • total: ${Duration.ms(this.volunteer.totalAssignmentDuration).toString()}`
         : "";
       return (
-        `${this.category.toLowerCase()}: ${duration.toString()}` +
-        displayedTotalDuration
+        `${this.category.toLowerCase()}: ${duration.toString()}${displayedTotalDuration}`
       );
     },
     category(): string {
