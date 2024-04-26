@@ -873,6 +873,7 @@ enum FestivalTaskEvent {
   APPROVED
   RESET_REVIEW
   ASSIGNMENT_STARTED
+  FORCED_UPDATE
 
   @@map("festival_task_event")
 }

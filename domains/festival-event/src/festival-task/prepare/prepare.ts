@@ -19,6 +19,7 @@ import { Mobilization, TeamMobilization } from "../sections/mobilizations";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
+  ForceUpdateError,
 } from "../festival-task.error";
 import {
   DraftWithoutConflicts,
@@ -42,7 +43,11 @@ import {
 import { APPROVED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { Inquiries } from "./sections/inquiries";
-import { InitInCharge, Instructions } from "./sections/instructions";
+import {
+  ForceInstructions,
+  InitInCharge,
+  Instructions,
+} from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
@@ -155,6 +160,25 @@ export class PrepareFestivalTask {
       `un changement sur le champ ${field}`,
     );
     return this.save(updatedTask);
+  }
+
+  async forceInstructions(
+    taskId: FestivalTask["id"],
+    force: ForceInstructions,
+    instigator: Adherent,
+  ): Promise<WithConflicts> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isReadyToAssign(task)) {
+      throw ForceUpdateError.notReadyToAssign(task.id);
+    }
+    const instructions = Instructions.forceUpdate(task.instructions, force);
+    const history = [
+      ...task.history,
+      FestivalTaskKeyEvents.forceInstructions(instigator),
+    ];
+
+    return this.save({ ...task, instructions, history });
   }
 
   private canUpdateInstructions(

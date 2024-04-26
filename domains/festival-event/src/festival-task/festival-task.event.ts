@@ -3,6 +3,7 @@ import {
   ASSIGNMENT_STARTED,
   COMMENTED,
   CREATED,
+  FORCED_UPDATE,
   READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
@@ -16,7 +17,8 @@ type Action =
   | typeof REJECTED
   | typeof APPROVED
   | typeof RESET_REVIEW
-  | typeof ASSIGNMENT_STARTED;
+  | typeof ASSIGNMENT_STARTED
+  | typeof FORCED_UPDATE;
 
 export type KeyEvent = {
   action: Action;
@@ -61,6 +63,13 @@ export class FestivalTaskKeyEvents {
     const description = "Affectation activée pour la FT";
 
     return { action: ASSIGNMENT_STARTED, by, at, description };
+  }
+
+  static forceInstructions(by: Adherent): KeyEvent {
+    const at = this.computeAt();
+    const description = "Mise à jour forcée des instructions";
+
+    return { action: FORCED_UPDATE, by, at, description };
   }
 
   private static computeAt() {

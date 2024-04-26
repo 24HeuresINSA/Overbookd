@@ -199,7 +199,6 @@ describe("Prepare festival task mobilizations list", () => {
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
             );
-            console.error(mobilization?.volunteers);
             const volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === gab.id,
             );

@@ -8,7 +8,12 @@ import {
   noelContact,
   mdeHall,
 } from "../festival-task.test-util";
-import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import {
+  gabIsAssignedTo,
+  installEscapeGame,
+  parcoursCollageTrajetA,
+  uninstallEscapeGame,
+} from "../festival-task.fake";
 import {
   installBarbecue,
   guardJustDance,
@@ -36,7 +41,12 @@ import {
   humain,
   matos,
 } from "../../common/review";
-import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
+import {
+  APPROVED,
+  FORCED_UPDATE,
+  REJECTED,
+  RESET_REVIEW,
+} from "../../common/action";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
@@ -55,6 +65,8 @@ describe("Prepare festival task instructions section", () => {
       approvedByHumainAndElecRejectedByMatos,
       approvedByElecRejectedByMatos,
       approvedByMatosRejectedByHumainAndElec,
+      gabIsAssignedTo,
+      parcoursCollageTrajetA,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -690,6 +702,101 @@ describe("Prepare festival task instructions section", () => {
           });
         },
       );
+    });
+  });
+
+  describe("Force instructions update", () => {
+    describe("when forcing global instructions on ready to assign task", () => {
+      const forceInstructions = { global: "C'est push" };
+      it("should update global instructions", async () => {
+        const updated = await prepare.forceInstructions(
+          gabIsAssignedTo.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.instructions.global).toBe(forceInstructions.global);
+      });
+      it("should should add FORCED_UPDATE key event to history", async () => {
+        const message = "Mise à jour forcée des instructions";
+        const updated = await prepare.forceInstructions(
+          gabIsAssignedTo.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.history).toStrictEqual([
+          ...gabIsAssignedTo.history,
+          {
+            action: FORCED_UPDATE,
+            by: noel,
+            at: expect.any(Date),
+            description: message,
+          },
+        ]);
+      });
+    });
+    describe("when forcing in charge instructions on ready to assign task", () => {
+      const forceInstructions = { inCharge: "C'est push" };
+      it("should update in charge instructions", async () => {
+        const updated = await prepare.forceInstructions(
+          parcoursCollageTrajetA.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.instructions.inCharge.instruction).toBe(
+          forceInstructions.inCharge,
+        );
+      });
+      it("should should add FORCED_UPDATE key event to history", async () => {
+        const message = "Mise à jour forcée des instructions";
+        const updated = await prepare.forceInstructions(
+          parcoursCollageTrajetA.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.history).toStrictEqual([
+          ...parcoursCollageTrajetA.history,
+          {
+            action: FORCED_UPDATE,
+            by: noel,
+            at: expect.any(Date),
+            description: message,
+          },
+        ]);
+      });
+    });
+    describe("when forcing in charge and global instructions on ready to assign task", () => {
+      const forceInstructions = {
+        inCharge: "C'est push",
+        global: "Avec force",
+      };
+      it("should update in charge instructions", async () => {
+        const updated = await prepare.forceInstructions(
+          parcoursCollageTrajetA.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.instructions.global).toBe(forceInstructions.global);
+        expect(updated.instructions.inCharge.instruction).toBe(
+          forceInstructions.inCharge,
+        );
+      });
+      it("should should add FORCED_UPDATE key event to history", async () => {
+        const message = "Mise à jour forcée des instructions";
+        const updated = await prepare.forceInstructions(
+          parcoursCollageTrajetA.id,
+          forceInstructions,
+          noel,
+        );
+        expect(updated.history).toStrictEqual([
+          ...parcoursCollageTrajetA.history,
+          {
+            action: FORCED_UPDATE,
+            by: noel,
+            at: expect.any(Date),
+            description: message,
+          },
+        ]);
+      });
     });
   });
 });
