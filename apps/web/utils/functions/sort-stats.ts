@@ -1,6 +1,14 @@
-import { Category } from "@overbookd/festival-event-constants";
+import {
+  BAR,
+  Category,
+  FUN,
+  MANUTENTION,
+  RELOU,
+  STATIQUE,
+} from "@overbookd/festival-event-constants";
 import { AssignmentStats, VolunteerAssignmentStat } from "@overbookd/http";
 import { Duration } from "@overbookd/period";
+import { AUCUNE } from "../assignment/task-category";
 
 export function sumAssignmentDuration(stats: VolunteerAssignmentStat[]) {
   return Duration.ms(
@@ -8,46 +16,48 @@ export function sumAssignmentDuration(stats: VolunteerAssignmentStat[]) {
   );
 }
 
-export function sortVolunteerOnNames(
-  volunteers: AssignmentStats[],
+export type AssignmentStatsSortFunction = (
+  a: AssignmentStats,
+  b: AssignmentStats,
+) => number;
+
+export function sortVolunteerOnNamesFunction(
   desc: boolean,
-): AssignmentStats[] {
-  return volunteers.sort((a, b) => {
+): AssignmentStatsSortFunction {
+  return (a, b) => {
     const order = desc ? -1 : 1;
     return a.firstname.localeCompare(b.firstname) * order;
-  });
+  };
 }
 
-export function sortVolunteerOnTaskCategoryAssignmentDuration(
-  volunteers: AssignmentStats[],
+export function sortVolunteerOnTaskCategoryAssignmentDurationFunction(
   desc: boolean,
   category?: Category,
-): AssignmentStats[] {
+): AssignmentStatsSortFunction {
   const order = desc ? -1 : 1;
   if (!category) {
-    return volunteers.sort((a, b) => {
+    return (a, b) => {
       const aAssignmentDuration =
         a.stats.find((stat) => stat.category === null)?.duration ?? 0;
       const bAssignmentDuration =
         b.stats.find((stat) => stat.category === null)?.duration ?? 0;
       return (aAssignmentDuration - bAssignmentDuration) * order;
-    });
+    };
   }
-  return volunteers.sort((a, b) => {
+  return (a, b) => {
     const aAssignmentDuration =
       a.stats.find((stat) => stat.category === category)?.duration ?? 0;
     const bAssignmentDuration =
       b.stats.find((stat) => stat.category === category)?.duration ?? 0;
     return (aAssignmentDuration - bAssignmentDuration) * order;
-  });
+  };
 }
 
-export function sortVolunteerOnTotalAssignmentDuration(
-  volunteers: AssignmentStats[],
+export function sortVolunteerOnTotalAssignmentDurationFunction(
   desc: boolean,
-): AssignmentStats[] {
+): AssignmentStatsSortFunction {
   const order = desc ? -1 : 1;
-  return volunteers.sort((a, b) => {
+  return (a, b) => {
     const aTotalAssignmentDuration = sumAssignmentDuration(
       a.stats,
     ).inMilliseconds;
@@ -55,5 +65,30 @@ export function sortVolunteerOnTotalAssignmentDuration(
       b.stats,
     ).inMilliseconds;
     return (aTotalAssignmentDuration - bTotalAssignmentDuration) * order;
-  });
+  };
+}
+
+export function getAssignmentStatsSortFunctionFromSortType(
+  sortBy: string,
+  sortDesc: boolean,
+): AssignmentStatsSortFunction {
+  switch (sortBy) {
+    case "volunteer":
+      return sortVolunteerOnNamesFunction(sortDesc);
+    case STATIQUE:
+    case MANUTENTION:
+    case BAR:
+    case RELOU:
+    case FUN:
+      return sortVolunteerOnTaskCategoryAssignmentDurationFunction(
+        sortDesc,
+        sortBy,
+      );
+    case AUCUNE:
+      return sortVolunteerOnTaskCategoryAssignmentDurationFunction(sortDesc);
+    case "total":
+      return sortVolunteerOnTotalAssignmentDurationFunction(sortDesc);
+    default:
+      return () => 0;
+  }
 }

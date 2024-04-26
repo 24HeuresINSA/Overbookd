@@ -3,7 +3,8 @@
     :headers="headers"
     :items="displayedVolunteers"
     :items-per-page="-1"
-    :custom-sort="customSort"
+    :custom-sort="assignmentStatsSort"
+    multi-sort
     dense
   >
     <template #item.volunteer="{ item }">
@@ -50,9 +51,7 @@ import { AUCUNE } from "~/utils/assignment/task-category";
 import { VolunteerAssignmentStat, AssignmentStats } from "@overbookd/http";
 import { UserPersonalData } from "@overbookd/user";
 import {
-  sortVolunteerOnNames,
-  sortVolunteerOnTaskCategoryAssignmentDuration,
-  sortVolunteerOnTotalAssignmentDuration,
+  getAssignmentStatsSortFunctionFromSortType,
   sumAssignmentDuration,
 } from "~/utils/functions/sort-stats";
 import { Duration } from "@overbookd/period";
@@ -160,36 +159,22 @@ export default Vue.extend({
     retrieveTotalDuration(stats: VolunteerAssignmentStat[]): string {
       return sumAssignmentDuration(stats).toString();
     },
-    customSort: function (
+    assignmentStatsSort: function (
       volunteers: AssignmentStats[],
       sortsBy: string[],
       sortsDesc: boolean[],
     ) {
-      const [sortOn] = sortsBy;
-      const [sortDesc] = sortsDesc;
-      switch (sortOn) {
-        case "volunteer":
-          return sortVolunteerOnNames(volunteers, sortDesc);
-        case STATIQUE:
-        case MANUTENTION:
-        case BAR:
-        case RELOU:
-        case FUN:
-          return sortVolunteerOnTaskCategoryAssignmentDuration(
-            volunteers,
-            sortDesc,
-            sortOn,
-          );
-        case AUCUNE:
-          return sortVolunteerOnTaskCategoryAssignmentDuration(
-            volunteers,
-            sortDesc,
-          );
-        case "total":
-          return sortVolunteerOnTotalAssignmentDuration(volunteers, sortDesc);
-        default:
-          return volunteers;
-      }
+      const sortsFunctions = sortsBy.map((sortBy, index) =>
+        getAssignmentStatsSortFunctionFromSortType(
+          sortBy,
+          sortsDesc.at(index) ?? false,
+        ),
+      );
+      return volunteers.sort((a, b) =>
+        sortsFunctions.reduce((sortValue, sortFunction) => {
+          return sortValue === 0 ? sortFunction(a, b) : sortValue;
+        }, 0),
+      );
     },
   },
 });
