@@ -140,7 +140,7 @@ export const pages: Page[] = [
     permission: VIEW_PLANNING,
     to: "/planning",
     description: "Permet d'avoir un apercu de son planning sur le festival",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["planning", "calendrier", "taches", "affectation"],
   },
   {
