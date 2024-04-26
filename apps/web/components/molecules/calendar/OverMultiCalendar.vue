@@ -163,6 +163,12 @@ export default Vue.extend({
       return this.$accessor.theme.darkTheme;
     },
   },
+  mounted() {
+    addEventListener("keydown", (event) => {
+      if (["ArrowLeft", "q"].includes(event.key)) this.previousDay();
+      if (["ArrowRight", "d"].includes(event.key)) this.nextDay();
+    });
+  },
   methods: {
     updateDate(date: Date) {
       this.$emit("change", date);
