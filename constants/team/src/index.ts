@@ -1,1 +1,1 @@
-export { BENEVOLE_CODE } from "./team";
+export { BENEVOLE_CODE, AFFECT_V2_CODE } from "./team";
