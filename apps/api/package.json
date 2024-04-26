@@ -64,6 +64,7 @@
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",
     "@overbookd/personal-account": "workspace:^",
+    "@overbookd/planning": "workspace:^",
     "@overbookd/registration": "workspace:^",
     "@overbookd/signa": "workspace:^",
     "@overbookd/slugify": "workspace:^",
