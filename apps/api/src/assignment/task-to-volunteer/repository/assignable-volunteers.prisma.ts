@@ -4,7 +4,6 @@ import {
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
-import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -69,10 +68,9 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
   }
 
-  private buildVolunteerAssignmentSelection(category?: Category) {
+  private buildVolunteerAssignmentSelection() {
     return {
       assigned: {
-        where: { assignment: { festivalTask: { category } } },
         select: {
           assignment: {
             select: {
