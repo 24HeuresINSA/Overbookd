@@ -31,7 +31,26 @@ export abstract class CommonFunnel implements IActAsFunnel {
   abstract assign(): Promise<IStartupFunnel>;
 
   get canFulfillMoreRemainingDemands(): boolean {
-    return this.hasAssignableFriends(this._candidates);
+    const candidates = this._candidates;
+    const canFulfillAllDemands = this.canTheyFulfillAllDemands(candidates);
+    if (canFulfillAllDemands) return false;
+
+    return this.hasAssignableFriends(candidates);
+  }
+
+  private canTheyFulfillAllDemands(
+    candidates: Candidate<IDefineCandidate>[],
+  ): boolean {
+    const remainingDemands = this.remainingDemandsIfAssignThose(candidates);
+    const candidatesWithoutSelectedTeam = candidates.filter(
+      (candidate) => !isFulfillingDemand(candidate.json),
+    );
+    const totalRemainingDemands = remainingDemands.reduce(
+      (total, { demand }) => total + demand,
+      0,
+    );
+    const totalAssignableCandidates = candidatesWithoutSelectedTeam.length;
+    return totalAssignableCandidates === totalRemainingDemands;
   }
 
   protected remainingDemandsIfAssignThose(candidates: Candidate[]) {

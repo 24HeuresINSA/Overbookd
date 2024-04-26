@@ -639,6 +639,9 @@ describe("Assign volunteers funnel", () => {
       ).select(lea.volunteer);
       funnel = await leaSelected.addCandidate();
     });
+    it("should indicate it can't fulfill more demands (cause remaining assignments can be fulfilled by current candidates)", () => {
+      expect(funnel.canFulfillMoreRemainingDemands).toBe(false);
+    });
     describe.each`
       volunteerName                  | volunteer            | team             | expectedLeaAssignment | expectedTatouinAssignment
       ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${BENEVOLE_CODE} | ${CONDUCTEUR}         | ${BENEVOLE_CODE}
