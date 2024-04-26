@@ -1,4 +1,3 @@
-import { Category } from "@overbookd/festival-event-constants";
 import { Period } from "@overbookd/period";
 import { FormatVolunteer } from "../volunteer";
 import {
@@ -22,7 +21,6 @@ export type Tasks = {
 export type AssignmentSpecification = {
   period: Period;
   oneOfTheTeams: string[];
-  category?: Category;
 };
 
 export type AssignableVolunteers = {
@@ -75,7 +73,6 @@ export class AssignTaskToVolunteer {
     const assignmentSpecification = {
       period: Period.init(assignment),
       oneOfTheTeams: this.filterMissingTeamMembers(assignment),
-      category: task.category,
     };
     const volunteers = await this.assignableVolunteers.on(
       assignmentIdentifier,
@@ -83,13 +80,23 @@ export class AssignTaskToVolunteer {
     );
 
     return volunteers.map(({ assignments, requestedDuring, ...volunteer }) => {
-      const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
+      const totalAssignmentDuration = FormatVolunteer.computeAssignmentDuration(
         assignments.map((period) => Period.init(period)),
+      );
+      const assignmentDuration = FormatVolunteer.computeAssignmentDuration(
+        assignments
+          .filter(({ category }) => category === task.category)
+          .map((period) => Period.init(period)),
       );
       const isRequestedOnSamePeriod = requestedDuring.some((period) =>
         period.isOverlapping(Period.init(assignment)),
       );
-      return { ...volunteer, assignmentDuration, isRequestedOnSamePeriod };
+      return {
+        ...volunteer,
+        totalAssignmentDuration,
+        assignmentDuration,
+        isRequestedOnSamePeriod,
+      };
     });
   }
 

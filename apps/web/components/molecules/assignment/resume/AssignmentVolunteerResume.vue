@@ -106,6 +106,7 @@
 
 <script lang="ts">
 import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import { Duration } from "@overbookd/period";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
@@ -113,7 +114,6 @@ import {
   isAssignableVolunteer,
 } from "~/utils/assignment/assignment-volunteer";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
-import { Duration } from "~/utils/date/duration";
 import { sortTeamsForAssignment } from "~/utils/models/team.model";
 import { formatUsername } from "~/utils/user/user.utils";
 
@@ -137,10 +137,14 @@ export default Vue.extend({
       return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
     assignmentStats(): string {
-      const duration = Duration.fromMilliseconds(
-        this.volunteer.assignmentDuration,
+      const duration = Duration.ms(this.volunteer.assignmentDuration);
+      const displayedTotalDuration = isAssignableVolunteer(this.volunteer)
+        ? ` • total: ${Duration.ms(this.volunteer.totalAssignmentDuration).toString()}`
+        : "";
+      return (
+        `${this.category.toLowerCase()}: ${duration.toString()}` +
+        displayedTotalDuration
       );
-      return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
       if (this.isOrgaTaskMode) return "affecté";

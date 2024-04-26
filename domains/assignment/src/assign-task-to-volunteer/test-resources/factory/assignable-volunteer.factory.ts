@@ -34,6 +34,7 @@ export class AssignableVolunteerFactory {
     const assignable: AssignableVolunteer = {
       ...volunteer,
       assignmentDuration: 0,
+      totalAssignmentDuration: 0,
       isRequestedOnSamePeriod: false,
       hasFriendAssigned: false,
       assignableFriendsIds: [],

@@ -67,6 +67,7 @@ type TestHelper = {
 const BOILERPLATE_ASSIGNMENT_STATS = {
   charisma: 120,
   assignmentDuration: 1000000,
+  totalAssignmentDuration: 1000000,
   isRequestedOnSamePeriod: false,
   hasFriendAssigned: false,
   hasAtLeastOneFriend: false,

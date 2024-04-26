@@ -10,19 +10,12 @@ export class InMemoryAssignableVolunteers implements AssignableVolunteers {
 
   on(
     assignmentIdentifier: AssignmentIdentifier,
-    { oneOfTheTeams, category }: AssignmentSpecification,
+    { oneOfTheTeams }: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     return Promise.resolve(
-      this.volunteers
-        .filter((volunteer) => {
-          return oneOfTheTeams.some((team) => volunteer.teams.includes(team));
-        })
-        .map((volunteer) => {
-          const assignments = volunteer.assignments.filter((assignment) => {
-            return assignment.category === category;
-          });
-          return { ...volunteer, assignments };
-        }),
+      this.volunteers.filter((volunteer) => {
+        return oneOfTheTeams.some((team) => volunteer.teams.includes(team));
+      }),
     );
   }
 }

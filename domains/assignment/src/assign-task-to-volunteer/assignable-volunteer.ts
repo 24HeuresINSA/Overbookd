@@ -4,6 +4,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Category } from "@overbookd/festival-event-constants";
 
 export type AssignableVolunteer = Volunteer & {
+  totalAssignmentDuration: number;
   assignmentDuration: number;
   isRequestedOnSamePeriod: boolean;
   hasFriendAssigned: boolean;
@@ -15,7 +16,7 @@ export type StoredAssignment = IProvidePeriod & { category: Category };
 
 export type StoredAssignableVolunteer = Omit<
   AssignableVolunteer,
-  "assignmentDuration" | "isRequestedOnSamePeriod"
+  "assignmentDuration" | "isRequestedOnSamePeriod" | "totalAssignmentDuration"
 > & {
   assignments: StoredAssignment[];
   requestedDuring: Period[];
