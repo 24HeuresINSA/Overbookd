@@ -1,3 +1,11 @@
+## [2.35.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.0...v2.35.1) (2024-04-26)
+
+
+### Bug Fixes
+
+* **assignment:** improve display in assignment details [#1839](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1839) ([7961463](https://gitlab.com/24-heures-insa/overbookd-mono/commit/79614636cd0c2bf620b401be8b0d81a40b811a25))
+* **user:** hide team affect V2 [#1847](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1847) ([cf26a99](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cf26a99889606f573d67c485b4405c4a5d5c2d43))
+
 ## [2.35.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.2...v2.35.0) (2024-04-26)
 
 
