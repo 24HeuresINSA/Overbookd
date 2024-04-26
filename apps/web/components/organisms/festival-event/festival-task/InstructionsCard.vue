@@ -8,7 +8,7 @@
           :location="instructions.appointment"
           label="Lieu de rendez-vous"
           :boxed="false"
-          :disabled="!canUpdate"
+          :disabled="disabled"
           @change="updateAppointment"
         />
 
@@ -16,13 +16,14 @@
         <RichEditor
           :data="instructions.global ?? ''"
           class="mb-6"
-          :disabled="!canUpdate && !canForceInstruction"
+          :disabled="disabled && !canForceInstruction"
           @update:data="updateGlobal"
           @focus="openResetApprovalsDialogIfNeeded"
         />
 
         <v-switch
           :value="hasInChargeInstructions"
+          :disabled="disabled"
           label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
           @change="toggleInChargeInstructions"
         />
@@ -32,7 +33,7 @@
             label="Responsables de la tâche"
             :boxed="false"
             deletable-chips
-            :disabled="!canUpdate"
+            :disabled="disabled"
             @add="addInChargeVolunteer"
             @remove="removeInChargeVolunteer"
           />
@@ -41,7 +42,7 @@
           <RichEditor
             :data="instructions.inCharge.instruction ?? ''"
             class="mb-6"
-            :disabled="!canUpdate && !canForceInstruction"
+            :disabled="disabled && !canForceInstruction"
             @update:data="updateInChargeInstruction"
             @focus="openResetApprovalsDialogIfNeeded"
           />
@@ -53,7 +54,7 @@
             :list="contacts"
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
-            :disabled="!canUpdate"
+            :disabled="disabled"
             class="contact-form__fields"
             @change="addContact"
           />
@@ -71,7 +72,7 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn icon @click="removeContact(item)">
+            <v-btn :disabled="disabled" icon @click="removeContact(item)">
               <v-icon>mdi-trash-can</v-icon>
             </v-btn>
           </template>
@@ -110,8 +111,6 @@ import {
   FestivalTask,
   FestivalTaskWithConflicts,
   isDraft,
-  isReadyToAssign,
-  isValidated,
 } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
@@ -139,6 +138,12 @@ export default defineComponent({
     SearchUser,
     InitInChargeInstructionsCard,
     ResetApprovalsCard,
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: (): InstructionsCardData => ({
     contact: null,
@@ -180,14 +185,9 @@ export default defineComponent({
     shouldResetApprovals(): boolean {
       return shouldResetTaskApprovals(this.selectedTask);
     },
-    canUpdate(): boolean {
-      const isValidatedOrReadyToAssign =
-        isReadyToAssign(this.selectedTask) || isValidated(this.selectedTask);
-      return !isValidatedOrReadyToAssign;
-    },
     canForceInstruction(): boolean {
       const hasPermission = this.$accessor.user.can(FORCE_WRITE_FT);
-      return !this.canUpdate && hasPermission;
+      return this.disabled && hasPermission;
     },
   },
   watch: {
