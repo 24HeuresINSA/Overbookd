@@ -3,7 +3,7 @@ import {
   ASSIGNMENT_STARTED,
   COMMENTED,
   CREATED,
-  FORCE_UPDATE,
+  FORCED_UPDATE,
   READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
@@ -18,7 +18,7 @@ type Action =
   | typeof APPROVED
   | typeof RESET_REVIEW
   | typeof ASSIGNMENT_STARTED
-  | typeof FORCE_UPDATE;
+  | typeof FORCED_UPDATE;
 
 export type KeyEvent = {
   action: Action;
@@ -69,7 +69,7 @@ export class FestivalTaskKeyEvents {
     const at = this.computeAt();
     const description = "Mise à jour forcée des instructions";
 
-    return { action: FORCE_UPDATE, by, at, description };
+    return { action: FORCED_UPDATE, by, at, description };
   }
 
   private static computeAt() {

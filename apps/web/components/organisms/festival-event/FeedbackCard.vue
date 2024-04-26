@@ -49,7 +49,7 @@ import {
   REJECTED,
   RESET_REVIEW,
   ASSIGNMENT_STARTED,
-  FORCE_UPDATE,
+  FORCED_UPDATE,
 } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
@@ -123,7 +123,7 @@ export default defineComponent({
           return "🌪️";
         case ASSIGNMENT_STARTED:
           return "🗓️";
-        case FORCE_UPDATE:
+        case FORCED_UPDATE:
           return "💪";
       }
     },

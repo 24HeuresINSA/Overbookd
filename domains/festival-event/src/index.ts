@@ -9,7 +9,7 @@ export {
   REJECTED,
   RESET_REVIEW,
   ASSIGNMENT_STARTED,
-  FORCE_UPDATE,
+  FORCED_UPDATE,
 } from "./common/action";
 export type { Adherent } from "./common/adherent";
 export type { Feedback } from "./common/feedback";

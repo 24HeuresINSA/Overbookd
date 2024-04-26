@@ -43,7 +43,7 @@ import {
 } from "../../common/review";
 import {
   APPROVED,
-  FORCE_UPDATE,
+  FORCED_UPDATE,
   REJECTED,
   RESET_REVIEW,
 } from "../../common/action";
@@ -716,7 +716,7 @@ describe("Prepare festival task instructions section", () => {
         );
         expect(updated.instructions.global).toBe(forceInstructions.global);
       });
-      it("should should add FORCE_UPDATE key event to history", async () => {
+      it("should should add FORCED_UPDATE key event to history", async () => {
         const message = "Mise à jour forcée des instructions";
         const updated = await prepare.forceInstructions(
           gabIsAssignedTo.id,
@@ -726,7 +726,7 @@ describe("Prepare festival task instructions section", () => {
         expect(updated.history).toStrictEqual([
           ...gabIsAssignedTo.history,
           {
-            action: FORCE_UPDATE,
+            action: FORCED_UPDATE,
             by: noel,
             at: expect.any(Date),
             description: message,
@@ -746,7 +746,7 @@ describe("Prepare festival task instructions section", () => {
           forceInstructions.inCharge,
         );
       });
-      it("should should add FORCE_UPDATE key event to history", async () => {
+      it("should should add FORCED_UPDATE key event to history", async () => {
         const message = "Mise à jour forcée des instructions";
         const updated = await prepare.forceInstructions(
           parcoursCollageTrajetA.id,
@@ -756,7 +756,7 @@ describe("Prepare festival task instructions section", () => {
         expect(updated.history).toStrictEqual([
           ...parcoursCollageTrajetA.history,
           {
-            action: FORCE_UPDATE,
+            action: FORCED_UPDATE,
             by: noel,
             at: expect.any(Date),
             description: message,
@@ -780,7 +780,7 @@ describe("Prepare festival task instructions section", () => {
           forceInstructions.inCharge,
         );
       });
-      it("should should add FORCE_UPDATE key event to history", async () => {
+      it("should should add FORCED_UPDATE key event to history", async () => {
         const message = "Mise à jour forcée des instructions";
         const updated = await prepare.forceInstructions(
           parcoursCollageTrajetA.id,
@@ -790,7 +790,7 @@ describe("Prepare festival task instructions section", () => {
         expect(updated.history).toStrictEqual([
           ...parcoursCollageTrajetA.history,
           {
-            action: FORCE_UPDATE,
+            action: FORCED_UPDATE,
             by: noel,
             at: expect.any(Date),
             description: message,
