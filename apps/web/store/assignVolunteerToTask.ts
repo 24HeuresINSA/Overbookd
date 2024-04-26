@@ -140,6 +140,7 @@ export const actions = actionTree(
       });
       if (!res) return;
 
+      dispatch("fetchVolunteers");
       dispatch("fetchAllAssignmentsFor", volunteer.id);
       dispatch("fetchPotentialAssignmentsFor", volunteer.id);
       dispatch("user/getVolunteerAssignmentStats", volunteer.id, {
@@ -154,6 +155,7 @@ export const actions = actionTree(
       const repository = new AssignmentsRepository(this);
       await repository.unassign(assignmentIdentifier, assigneeId);
 
+      dispatch("fetchVolunteers");
       dispatch("fetchAssignmentDetails", assignmentIdentifier);
       if (!state.selectedVolunteer) return;
       dispatch("fetchAllAssignmentsFor", state.selectedVolunteer.id);
