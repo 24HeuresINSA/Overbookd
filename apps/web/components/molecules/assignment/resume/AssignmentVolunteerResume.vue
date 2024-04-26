@@ -141,9 +141,7 @@ export default Vue.extend({
       const displayedTotalDuration = isAssignableVolunteer(this.volunteer)
         ? ` • total: ${Duration.ms(this.volunteer.totalAssignmentDuration).toString()}`
         : "";
-      return (
-        `${this.category.toLowerCase()}: ${duration.toString()}${displayedTotalDuration}`
-      );
+      return `${this.category.toLowerCase()}: ${duration.toString()}${displayedTotalDuration}`;
     },
     category(): string {
       if (this.isOrgaTaskMode) return "affecté";
