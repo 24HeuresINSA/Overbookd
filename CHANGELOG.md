@@ -1,3 +1,27 @@
+## [2.35.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.2...v2.35.0) (2024-04-26)
+
+
+### Features
+
+* **festival-task:** allow force update instructions and enable read only. [#1838](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1838) ([9270300](https://gitlab.com/24-heures-insa/overbookd-mono/commit/92703002bec8647561c4729fb6516258b21b96c3))
+
+
+### Bug Fixes
+
+* **assignment:** change title when volunteer is selected. [#1843](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1843) ([7f6828b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7f6828ba2758a42e29b81e5a335249e65a1e4476))
+* **assignment:** sort by charisma for volunteers with same number of hours in task-orga. [#1844](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1844) ([f6880de](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f6880de9d790f0df9ee0e315787b05cb6555e2a9))
+* **festival-task:** don't send assignees when requesting task details. [#1845](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1845) ([1ecbaed](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ecbaed5f3cf8f0ddff17b529aa0bd74ba7e64c3))
+
+
+### Pre-Features
+
+* **festival-task:** allow force update on instructions. [#1838](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1838) ([c01a6db](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c01a6db2b4b46ae4079883efd48daff3e419f963))
+
+
+### Refactor
+
+* **assignment:** use funnel from domain. [#1794](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1794) ([1d9ee0f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1d9ee0ffffd8fc500b368b8b858fd5ba47c34cf2))
+
 ## [2.34.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.34.1...v2.34.2) (2024-04-25)
 
 
