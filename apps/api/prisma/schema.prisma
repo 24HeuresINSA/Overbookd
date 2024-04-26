@@ -59,6 +59,7 @@ model User {
   oldFtFeedbacks   FtFeedback[]
   ftUserRequests   FtUserRequest[]
   availabilities   VolunteerAvailability[]
+  breaks           BreakPeriod[]
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
@@ -983,4 +984,17 @@ model PurchaseGearRequest {
 
   @@id([purchaseId, gearSlug])
   @@map("purchase_gear_request")
+}
+
+model BreakPeriod {
+  volunteer   User     @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  volunteerId Int      @map("volunteer_id")
+  start       DateTime
+  end         DateTime
+
+  @@unique([volunteerId, start, end])
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Asc)])
+  @@index([start(sort: Asc), end(sort: Asc)])
+  @@map("break_period")
 }
