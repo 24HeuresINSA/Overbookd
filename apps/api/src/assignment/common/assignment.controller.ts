@@ -121,7 +121,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Get("planning/:volunteerId")
+  @Get("volunteers/:volunteerId/planning")
   @ApiResponse({
     status: 200,
     description: "Volunteer planning",

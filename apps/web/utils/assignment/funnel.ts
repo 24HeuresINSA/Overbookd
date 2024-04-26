@@ -1,9 +1,13 @@
 import { Assignments, CandidateFactory } from "@overbookd/assignment";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { AvailabilitiesRepository } from "~/repositories/assignment/availabilities.repository";
-import { FriendsRepository } from "~/repositories/assignment/friends.repository";
+import {
+  FriendsRepository,
+  FriendsRepositoryContext,
+} from "~/repositories/assignment/friends.repository";
 import { PlanningRepository } from "~/repositories/assignment/planning.repository";
-import { Context } from "~/repositories/context";
+
+type Context = FriendsRepositoryContext;
 
 export function candidateFactory(context: Context): CandidateFactory {
   const planning = new PlanningRepository(context);

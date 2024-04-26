@@ -119,4 +119,32 @@ export class TaskToVolunteerController {
       assignmentId,
     });
   }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("volunteers/:volunteerId/available-friends")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteer available friends",
+    type: AssignableVolunteerResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    description: "Volunteer id",
+    type: Number,
+  })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+  })
+  getAvailableFriends(): Promise<AssignableVolunteerResponseDto[]> {
+    return Promise.resolve([]);
+  }
 }

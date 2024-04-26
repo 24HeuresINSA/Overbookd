@@ -7,18 +7,18 @@ import {
   TeamMember,
 } from "../assignment";
 import { Availabilities, Friends, Planning, PlanningEvent } from "./planning";
-import { Volunteer } from "./volunteer";
+import { AssignableVolunteer } from "../assignable-volunteer";
 
-type NotYetFulfillingDemandCandidate = Volunteer & {
-  friends: Volunteer[];
+type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
+  friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
   as: undefined;
 };
 
-export type CandidateFulfillingDemand = Volunteer & {
-  friends: Volunteer[];
+export type CandidateFulfillingDemand = AssignableVolunteer & {
+  friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
   assignableTeams: string[];
@@ -35,8 +35,8 @@ type Agenda = {
 };
 
 type RelationShip = {
-  volunteer: Volunteer;
-  friends: Volunteer[];
+  volunteer: AssignableVolunteer;
+  friends: AssignableVolunteer[];
 };
 
 export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
@@ -67,7 +67,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
     return new Candidate<T>(candidate);
   }
 
-  private static getAssignableTeams(
+  static getAssignableTeams(
     { demands, assignees }: Assignment,
     teams: string[],
   ) {
@@ -80,10 +80,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
       },
       [],
     );
-    const implicitTeams = retrieveImplicitTeams(teams);
-    return implicitTeams.filter((team) =>
-      remainingDemands.map(({ team }) => team).includes(team),
-    );
+    return assignableTeamsAccordingToRemainingDemands(teams, remainingDemands);
   }
 
   static toAssignment({ id, as }: CandidateFulfillingDemand): TeamMember {
@@ -97,6 +94,11 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
     return new Candidate<CandidateFulfillingDemand>({ ...this.candidate, as });
   }
 
+  assignableTeamsAccordingTo(remainingDemands: TeamDemanded[]): string[] {
+    const { teams } = this.candidate;
+    return assignableTeamsAccordingToRemainingDemands(teams, remainingDemands);
+  }
+
   private get name(): string {
     return `${this.candidate.firstname} ${this.candidate.lastname}`;
   }
@@ -104,6 +106,16 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
   get json(): T {
     return this.candidate;
   }
+}
+
+function assignableTeamsAccordingToRemainingDemands(
+  teams: string[],
+  remainingDemands: TeamDemanded[],
+) {
+  const implicitTeams = retrieveImplicitTeams(teams);
+  return implicitTeams.filter((team) =>
+    remainingDemands.map(({ team }) => team).includes(team),
+  );
 }
 
 function retrieveImplicitTeams(teams: string[]) {
@@ -128,11 +140,15 @@ export class CandidateFactory {
     private readonly friends: Friends,
   ) {}
 
-  async from(volunteer: Volunteer, assignment: Assignment): Promise<Candidate> {
+  async from(
+    volunteer: AssignableVolunteer,
+    assignment: Assignment,
+  ): Promise<Candidate> {
+    const { start, end } = assignment;
     const [planning, availabilities, friends] = await Promise.all([
       this.planning.for(volunteer.id),
       this.availabilities.for(volunteer.id),
-      this.friends.for(volunteer.id),
+      this.friends.availableDuringWith({ start, end }, volunteer.id),
     ]);
 
     const agenda = { planning, availabilities };

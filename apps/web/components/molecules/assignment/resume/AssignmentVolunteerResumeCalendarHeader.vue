@@ -24,16 +24,18 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { moveAtFirstIndex } from "@overbookd/list";
-import { Volunteer } from "~/utils/models/assignment.model";
 import { formatUsername } from "~/utils/user/user.utils";
-import { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import {
+  IDefineCandidate,
+  TaskWithAssignmentsSummary,
+} from "@overbookd/assignment";
 
 export default Vue.extend({
   name: "AssignmentVolunteerResumeCalendarHeader",
   components: { TeamChip },
   props: {
     volunteer: {
-      type: Object as () => Volunteer,
+      type: Object as () => IDefineCandidate,
       required: true,
     },
   },

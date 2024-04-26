@@ -131,10 +131,10 @@ function toAssignment(
     team: teamCode,
     demand: count,
   }));
-  const assignees = assignment.assignees.map(({ teamCode, personalData }) => ({
-    id: personalData.id,
-    as: teamCode,
-  }));
+  const assignees = assignment.assignees.map(({ teamCode, personalData }) => {
+    const as = teamCode ? { as: teamCode } : {};
+    return { id: personalData.id, ...as };
+  });
   return {
     ...identifier,
     start: assignment.start,

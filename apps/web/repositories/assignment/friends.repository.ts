@@ -1,11 +1,31 @@
+import { IProvidePeriod } from "@overbookd/period";
 import { Context } from "../context";
-import { AssignmentVolunteer, Friends } from "@overbookd/assignment";
+import { AssignableVolunteer, Friends } from "@overbookd/assignment";
 
+export type FriendsRepositoryContext = Context & {
+  $accessor: {
+    assignTaskToVolunteer: {
+      assignableVolunteers: AssignableVolunteer[];
+      selectedVolunteer: AssignableVolunteer | null;
+    };
+  };
+};
 export class FriendsRepository implements Friends {
-  constructor(private readonly context: Context) {}
+  constructor(private readonly context: FriendsRepositoryContext) {}
 
-  async for(volunteer: number): Promise<AssignmentVolunteer[]> {
-    console.log(`Should take a look at volunteer #${volunteer} friends`);
-    return Promise.resolve([]); // TODO implement endpoint
+  async availableDuringWith(
+    period: IProvidePeriod,
+    volunteer: number,
+  ): Promise<AssignableVolunteer[]> {
+    const { assignTaskToVolunteer } = this.context.$accessor;
+    const selectedVolunteer = assignTaskToVolunteer.assignableVolunteers.find(
+      ({ id }) => id === volunteer,
+    );
+    if (!selectedVolunteer) return Promise.resolve([]);
+
+    const assignableFriends = assignTaskToVolunteer.assignableVolunteers.filter(
+      ({ id }) => selectedVolunteer.assignableFriendsIds.includes(id),
+    );
+    return Promise.resolve(assignableFriends);
   }
 }
