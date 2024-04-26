@@ -8,6 +8,7 @@
           :location="instructions.appointment"
           label="Lieu de rendez-vous"
           :boxed="false"
+          :disabled="!canUpdate"
           @change="updateAppointment"
         />
 
@@ -15,6 +16,7 @@
         <RichEditor
           :data="instructions.global ?? ''"
           class="mb-6"
+          :disabled="!canUpdate && !canForceInstruction"
           @update:data="updateGlobal"
           @focus="openResetApprovalsDialogIfNeeded"
         />
@@ -30,6 +32,7 @@
             label="Responsables de la tâche"
             :boxed="false"
             deletable-chips
+            :disabled="!canUpdate"
             @add="addInChargeVolunteer"
             @remove="removeInChargeVolunteer"
           />
@@ -38,6 +41,7 @@
           <RichEditor
             :data="instructions.inCharge.instruction ?? ''"
             class="mb-6"
+            :disabled="!canUpdate && !canForceInstruction"
             @update:data="updateInChargeInstruction"
             @focus="openResetApprovalsDialogIfNeeded"
           />
@@ -49,6 +53,7 @@
             :list="contacts"
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
+            :disabled="!canUpdate"
             class="contact-form__fields"
             @change="addContact"
           />
@@ -105,6 +110,8 @@ import {
   FestivalTask,
   FestivalTaskWithConflicts,
   isDraft,
+  isReadyToAssign,
+  isValidated,
 } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
@@ -112,6 +119,7 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { InitInChargeForm } from "@overbookd/http";
+import { FORCE_WRITE_FT } from "@overbookd/permission";
 
 type InstructionsCardData = {
   contact: User | null;
@@ -172,6 +180,15 @@ export default defineComponent({
     shouldResetApprovals(): boolean {
       return shouldResetTaskApprovals(this.selectedTask);
     },
+    canUpdate(): boolean {
+      const isValidatedOrReadyToAssign =
+        isReadyToAssign(this.selectedTask) || isValidated(this.selectedTask);
+      return !isValidatedOrReadyToAssign;
+    },
+    canForceInstruction(): boolean {
+      const hasPermission = this.$accessor.user.can(FORCE_WRITE_FT);
+      return !this.canUpdate && hasPermission;
+    },
   },
   watch: {
     selectedTaskId() {
@@ -215,12 +232,20 @@ export default defineComponent({
 
     updateGlobal(canBeEmpty: string) {
       const global = canBeEmpty.trim() || null;
-      this.$accessor.festivalTask.updateInstructions({ global });
+      if (!this.canForceInstruction) {
+        return this.$accessor.festivalTask.updateInstructions({ global });
+      }
+      if (global === null) return;
+      this.$accessor.festivalTask.forceInstructions({ global });
     },
 
     updateInChargeInstruction(canBeEmpty: string) {
       const inCharge = canBeEmpty.trim() || null;
-      this.$accessor.festivalTask.updateInstructions({ inCharge });
+      if (!this.canForceInstruction) {
+        return this.$accessor.festivalTask.updateInstructions({ inCharge });
+      }
+      if (inCharge === null) return;
+      this.$accessor.festivalTask.forceInstructions({ inCharge });
     },
 
     async addContact(contact: Contact | null) {

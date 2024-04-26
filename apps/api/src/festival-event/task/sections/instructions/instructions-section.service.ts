@@ -2,8 +2,12 @@ import { Injectable } from "@nestjs/common";
 import {
   Contact,
   FestivalTask,
+  FestivalTaskError,
+  ForceInstructions,
   PrepareFestivalTask,
   Volunteer,
+  isReadyToAssign,
+  ReadyToAssignWithConflicts,
 } from "@overbookd/festival-event";
 import { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { Adherents } from "../../common/festival-task-common.model";
@@ -34,6 +38,26 @@ export class InstructionsSectionService {
       updateInstructions,
       instigator,
     );
+  }
+
+  async force(
+    id: FestivalTask["id"],
+    instructions: ForceInstructions,
+    user: JwtPayload,
+  ): Promise<ReadyToAssignWithConflicts> {
+    const instigator = await this.adherents.findOne(user.id);
+
+    const task = await this.prepare.forceInstructions(
+      id,
+      instructions,
+      instigator,
+    );
+    if (!isReadyToAssign(task)) {
+      const error =
+        "Impossible de récupérer la ft, mais la mise à jour a bien eu lieu";
+      throw new FestivalTaskError(error);
+    }
+    return task;
   }
 
   async addContact(

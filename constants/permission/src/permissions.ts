@@ -22,6 +22,7 @@ export const READ_FA = "read-fa";
 export const WRITE_FA = "write-fa";
 export const READ_FT = "read-ft";
 export const WRITE_FT = "write-ft";
+export const FORCE_WRITE_FT = "force-write-ft";
 export const VIEW_FESTIVAL_EVENTS_STATS = "view-festival-events-stats";
 export const VIEW_TIMELINE = "view-timeline";
 export const ASK_FOR_HELP = "ask-for-help";
@@ -66,6 +67,7 @@ const permissions = [
   WRITE_FA,
   READ_FT,
   WRITE_FT,
+  FORCE_WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_TIMELINE,
   ASK_FOR_HELP,

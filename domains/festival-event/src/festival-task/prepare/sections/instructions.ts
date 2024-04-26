@@ -11,11 +11,11 @@ export type InitInCharge = {
   instruction: string;
 };
 
-type ForceGlobalInstructions = {
+export type ForceGlobalInstructions = {
   global: string;
 };
 
-type ForceInChargeInstructions = {
+export type ForceInChargeInstructions = {
   inCharge: string;
 };
 

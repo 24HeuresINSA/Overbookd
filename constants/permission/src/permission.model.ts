@@ -41,6 +41,7 @@ import {
   VIEW_GEAR_DASHBOARD,
   PURCHASE_GEARS,
   BORROW_GEARS,
+  FORCE_WRITE_FT,
 } from "./permissions";
 
 export type Permission =
@@ -66,6 +67,7 @@ export type Permission =
   | typeof WRITE_FA
   | typeof READ_FT
   | typeof WRITE_FT
+  | typeof FORCE_WRITE_FT
   | typeof VIEW_FESTIVAL_EVENTS_STATS
   | typeof VIEW_TIMELINE
   | typeof ASK_FOR_HELP
