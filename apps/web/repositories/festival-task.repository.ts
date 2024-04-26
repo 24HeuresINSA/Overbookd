@@ -26,6 +26,8 @@ import {
   AssignDrive,
   Categorize,
   FestivalTaskReadyToAssign,
+  ForceInstructions,
+  ReadyToAssignWithConflicts,
 } from "@overbookd/festival-event";
 import { Context } from "./context";
 
@@ -96,6 +98,17 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.patch<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions`,
+      instructions,
+    );
+  }
+
+  static forceInstructions(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    instructions: ForceInstructions,
+  ) {
+    return context.$axios.patch<HttpStringified<ReadyToAssignWithConflicts>>(
+      `${this.basePath}/${ftId}/force/instructions`,
       instructions,
     );
   }

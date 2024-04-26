@@ -14,6 +14,7 @@
     :dense="dense"
     :filter="matchingGear"
     :hide-details="dense"
+    :disabled="disabled"
     @update:search-input="searchGear"
     @change="propagateEvent"
     @focus="initList"
@@ -73,6 +74,10 @@ export default Vue.extend({
     boxed: {
       type: Boolean,
       default: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data(): SearchGearData {

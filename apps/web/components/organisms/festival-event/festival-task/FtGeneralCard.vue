@@ -19,18 +19,21 @@
       <v-text-field
         :value="general.name"
         label="Nom de la FT"
+        :disabled="disabled"
         @change="updateName"
       />
       <SearchUser
         :user="general.administrator"
         label="Gestionnaire de la FT"
         :boxed="false"
+        :disabled="disabled"
         @change="updateAdministrator"
       />
       <SearchTeam
         :team="inChargeTeam"
         label="Équipe"
         :boxed="false"
+        :disabled="disabled"
         @change="updateTeam"
       />
     </v-card-text>
@@ -48,12 +51,18 @@ import { FestivalTask } from "@overbookd/festival-event";
 export default Vue.extend({
   name: "FtGeneralCard",
   components: { SearchUser, SearchTeam },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
-    mFT(): FestivalTask {
+    selectedTask(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
     },
     general(): FestivalTask["general"] {
-      return this.mFT.general;
+      return this.selectedTask.general;
     },
     inChargeTeam(): Team | undefined {
       return this.$accessor.team.getTeamByCode(this.general.team ?? "");

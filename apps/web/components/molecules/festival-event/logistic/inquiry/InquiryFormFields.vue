@@ -6,12 +6,14 @@
       label="Quantité"
       :rules="[rules.number, rules.min]"
       class="inquiry-form__quantity"
+      :disabled="disabled"
       @change="updateQuantity"
     />
     <SearchGear
       :gear="gear"
       class="inquiry-form__search"
       :ponctual-usage="ponctualUsage"
+      :disabled="disabled"
       @change="updateGear"
     />
   </v-form>
@@ -38,6 +40,10 @@ export default defineComponent({
     ponctualUsage: {
       type: Boolean,
       default: () => undefined,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ["update:gear", "update:quantity"],

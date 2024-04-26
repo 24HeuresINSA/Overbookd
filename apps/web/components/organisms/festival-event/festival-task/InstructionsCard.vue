@@ -8,6 +8,7 @@
           :location="instructions.appointment"
           label="Lieu de rendez-vous"
           :boxed="false"
+          :disabled="disabled"
           @change="updateAppointment"
         />
 
@@ -15,12 +16,14 @@
         <RichEditor
           :data="instructions.global ?? ''"
           class="mb-6"
+          :disabled="disabled && !canForceInstruction"
           @update:data="updateGlobal"
           @focus="openResetApprovalsDialogIfNeeded"
         />
 
         <v-switch
           :value="hasInChargeInstructions"
+          :disabled="disabled"
           label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
           @change="toggleInChargeInstructions"
         />
@@ -30,6 +33,7 @@
             label="Responsables de la tâche"
             :boxed="false"
             deletable-chips
+            :disabled="disabled"
             @add="addInChargeVolunteer"
             @remove="removeInChargeVolunteer"
           />
@@ -38,6 +42,7 @@
           <RichEditor
             :data="instructions.inCharge.instruction ?? ''"
             class="mb-6"
+            :disabled="disabled && !canForceInstruction"
             @update:data="updateInChargeInstruction"
             @focus="openResetApprovalsDialogIfNeeded"
           />
@@ -49,6 +54,7 @@
             :list="contacts"
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
+            :disabled="disabled"
             class="contact-form__fields"
             @change="addContact"
           />
@@ -66,7 +72,7 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn icon @click="removeContact(item)">
+            <v-btn :disabled="disabled" icon @click="removeContact(item)">
               <v-icon>mdi-trash-can</v-icon>
             </v-btn>
           </template>
@@ -112,6 +118,7 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { InitInChargeForm } from "@overbookd/http";
+import { FORCE_WRITE_FT } from "@overbookd/permission";
 
 type InstructionsCardData = {
   contact: User | null;
@@ -131,6 +138,12 @@ export default defineComponent({
     SearchUser,
     InitInChargeInstructionsCard,
     ResetApprovalsCard,
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: (): InstructionsCardData => ({
     contact: null,
@@ -171,6 +184,10 @@ export default defineComponent({
     },
     shouldResetApprovals(): boolean {
       return shouldResetTaskApprovals(this.selectedTask);
+    },
+    canForceInstruction(): boolean {
+      const hasPermission = this.$accessor.user.can(FORCE_WRITE_FT);
+      return this.disabled && hasPermission;
     },
   },
   watch: {
@@ -215,12 +232,20 @@ export default defineComponent({
 
     updateGlobal(canBeEmpty: string) {
       const global = canBeEmpty.trim() || null;
-      this.$accessor.festivalTask.updateInstructions({ global });
+      if (!this.canForceInstruction) {
+        return this.$accessor.festivalTask.updateInstructions({ global });
+      }
+      if (global === null) return;
+      this.$accessor.festivalTask.forceInstructions({ global });
     },
 
     updateInChargeInstruction(canBeEmpty: string) {
       const inCharge = canBeEmpty.trim() || null;
-      this.$accessor.festivalTask.updateInstructions({ inCharge });
+      if (!this.canForceInstruction) {
+        return this.$accessor.festivalTask.updateInstructions({ inCharge });
+      }
+      if (inCharge === null) return;
+      this.$accessor.festivalTask.forceInstructions({ inCharge });
     },
 
     async addContact(contact: Contact | null) {

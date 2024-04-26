@@ -16,6 +16,7 @@
 
     <v-card-text>
       <MobilizationTable
+        :disabled="disabled"
         @add="addMobilization"
         @update="updateMobilization"
         @remove="removeMobilization"
@@ -27,13 +28,28 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import MobilizationTable from "~/components/molecules/festival-event/mobilization/MobilizationTable.vue";
-import { Mobilization, UpdateMobilization } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  Mobilization,
+  UpdateMobilization,
+} from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
 
 export default defineComponent({
   name: "MobilizationCard",
   components: { MobilizationTable },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   emits: ["open:calendar"],
+  computed: {
+    selectedTask(): FestivalTask {
+      return this.$accessor.festivalTask.selectedTask;
+    },
+  },
   methods: {
     addMobilization(mobilization: AddMobilizationForm) {
       this.$accessor.festivalTask.addMobilization(mobilization);

@@ -42,11 +42,15 @@
       </template>
     </FestivalEventSidebar>
     <v-container class="container ft">
-      <FtGeneralCard id="general" />
+      <FtGeneralCard id="general" :disabled="!canUpdate" />
       <ParentFaCard id="fa" @open:calendar="openCalendar" />
-      <FtInquiryCard id="inquiry" />
-      <InstructionsCard id="instructions" />
-      <MobilizationCard id="mobilization" @open:calendar="openCalendar" />
+      <FtInquiryCard id="inquiry" :disabled="!canUpdate" />
+      <InstructionsCard id="instructions" :disabled="!canUpdate" />
+      <MobilizationCard
+        id="mobilization"
+        :disabled="!canUpdate"
+        @open:calendar="openCalendar"
+      />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedTask"
@@ -174,6 +178,11 @@ export default defineComponent({
     },
     ftId(): number {
       return +this.$route.params.ftId;
+    },
+    canUpdate(): boolean {
+      const isValidatedOrReadyToAssign =
+        isReadyToAssign(this.selectedTask) || isValidated(this.selectedTask);
+      return !isValidatedOrReadyToAssign;
     },
     reviewers(): Reviewer<"FT">[] {
       const potentialReviewer: Reviewer<"FT">[] = this.selectedTask

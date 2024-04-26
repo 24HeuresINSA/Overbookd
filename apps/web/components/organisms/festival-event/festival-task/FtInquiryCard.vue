@@ -9,6 +9,7 @@
           :gear="gear"
           :quantity="quantity"
           ponctual-usage
+          :disabled="disabled"
           @update:gear="updateGear"
           @update:quantity="updateQuantity"
         />
@@ -16,7 +17,7 @@
           rounded
           color="primary"
           class="inquiry-form__btn"
-          :disabled="!canAddInquiry"
+          :disabled="!canAddInquiry || disabled"
           @click="addInquiry"
         >
           <v-icon>mdi-plus</v-icon>
@@ -27,6 +28,7 @@
         :inquiries="inquiries"
         :time-windows="timeWindows"
         :owner="MATOS"
+        :disabled="disabled"
         @link-drive="linkDrive"
         @remove="removeInquiry"
       />
@@ -57,6 +59,12 @@ type FtInquiryCardData = InputRulesData & {
 export default defineComponent({
   name: "FtInquiryCard",
   components: { InquiryTable, InquiryFormFields },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: (): FtInquiryCardData => ({
     gear: null,
     quantity: 1,
@@ -67,11 +75,14 @@ export default defineComponent({
     },
   }),
   computed: {
+    selectedTask(): FestivalTask {
+      return this.$accessor.festivalTask.selectedTask;
+    },
     inquiries(): FestivalTask["inquiries"] {
-      return this.$accessor.festivalTask.selectedTask.inquiries;
+      return this.selectedTask.inquiries;
     },
     timeWindows(): TimeWindow[] {
-      return this.$accessor.festivalTask.selectedTask.mobilizations;
+      return this.selectedTask.mobilizations;
     },
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;

@@ -6,7 +6,7 @@
           <v-chip
             :class="volunteerStatus"
             v-bind="attrs"
-            close
+            :close="!disabled"
             v-on="on"
             @click:close="removeVolunteer"
           >
@@ -34,6 +34,10 @@ export default defineComponent({
     volunteer: {
       type: Object as () => VolunteerWithConflicts,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ["remove"],

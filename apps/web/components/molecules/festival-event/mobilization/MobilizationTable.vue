@@ -26,6 +26,7 @@
             v-for="volunteer in item.volunteers"
             :key="`${item.id}-${volunteer.id}`"
             :volunteer="volunteer"
+            :disabled="disabled"
             @remove="removeVolunteer(item, volunteer.id)"
           />
           <v-btn
@@ -33,6 +34,7 @@
             elevation="2"
             x-small
             fab
+            :disabled="disabled"
             @click="openAddVolunteerDialog(item)"
           >
             <v-icon> mdi-plus-thick</v-icon>
@@ -49,7 +51,7 @@
             :prefix="team.count"
             with-name
             show-hidden
-            close
+            :close="!disabled"
             @close="removeTeam(item, team)"
           />
           <v-btn
@@ -57,6 +59,7 @@
             elevation="2"
             x-small
             fab
+            :disabled="disabled"
             @click="openAddTeamDialog(item)"
           >
             <v-icon> mdi-plus-thick</v-icon>
@@ -65,10 +68,10 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn icon @click="openUpdateDialog(item)">
+        <v-btn :disabled="disabled" icon @click="openUpdateDialog(item)">
           <v-icon>mdi-clock-edit</v-icon>
         </v-btn>
-        <v-btn icon @click="removeMobilization(item)">
+        <v-btn :disabled="disabled" icon @click="removeMobilization(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </template>
@@ -76,7 +79,12 @@
       <template #no-data> Aucune mobilisation </template>
     </v-data-table>
 
-    <v-btn color="primary" class="mobilizations__add" @click="openAddDialog">
+    <v-btn
+      :disabled="disabled"
+      color="primary"
+      class="mobilizations__add"
+      @click="openAddDialog"
+    >
       Ajouter une mobilisation
     </v-btn>
 
@@ -153,6 +161,12 @@ export default defineComponent({
     AddVolunteerInMobilizationForm,
     AddTeamInMobilizationForm,
     VolunteerWithConflictsChip,
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ["add", "update", "remove"],
   data: (): MobilizationTableData => ({

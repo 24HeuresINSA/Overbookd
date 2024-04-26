@@ -10,6 +10,7 @@ import {
   FestivalTaskWithConflicts,
   AssignDrive,
   Categorize,
+  ForceInstructions,
 } from "@overbookd/festival-event";
 import {
   AddInquiryRequestForm,
@@ -159,6 +160,20 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.updateInstructions(this, state.selectedTask.id, instructions),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async forceInstructions(
+      { state, commit },
+      instructions: ForceInstructions,
+    ) {
+      const res = await safeCall(
+        this,
+        repo.forceInstructions(this, state.selectedTask.id, instructions),
       );
       if (!res) return;
 

@@ -266,10 +266,16 @@ export type {
   DraftWithoutConflicts,
   ReviewableWithoutConflicts,
   ReadyToAssignWithoutConflicts,
+  ReadyToAssignWithConflicts,
 } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
 export { Review as ReviewTask } from "./festival-task/review/review";
 export type { FestivalTasksForReview } from "./festival-task/review/review";
+export type {
+  ForceInstructions,
+  ForceGlobalInstructions,
+  ForceInChargeInstructions,
+} from "./festival-task/prepare/sections/instructions";
 
 //  **********************
 //  FESTIVAL EVENT MODULE
