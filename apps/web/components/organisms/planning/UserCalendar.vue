@@ -5,21 +5,23 @@
     class="no-scroll elevation-2"
   >
     <template #title>
-      <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
-      <div class="ml-4">
-        <TeamChip
-          v-for="team in user?.teams"
-          :key="team"
-          :team="team"
-          :with-name="isDesktop()"
-          class="mr-2"
-        ></TeamChip>
+      <div class="calendar-title__content">
+        <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
+        <div class="ml-4">
+          <TeamChip
+            v-for="team in user?.teams"
+            :key="team"
+            :team="team"
+            :with-name="isDesktop"
+            class="mr-2"
+          ></TeamChip>
+        </div>
+        <AssignmentUserStats
+          v-show="shouldShowStats"
+          :stats="stats"
+          class="user-stats"
+        ></AssignmentUserStats>
       </div>
-      <AssignmentUserStats
-        v-show="shouldShowStats"
-        :stats="stats"
-        class="user-stats"
-      ></AssignmentUserStats>
     </template>
     <template #interval="{ date, hour }">
       <div :class="{ available: isUserAvailable(date, hour) }" />
@@ -97,8 +99,11 @@ export default Vue.extend({
     user(): UserPersonalData {
       return this.$accessor.user.selectedUser;
     },
+    isDesktop(): boolean {
+      return isDesktop();
+    },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER) && this.isDesktop();
+      return this.$accessor.user.can(AFFECT_VOLUNTEER) && this.isDesktop;
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -123,7 +128,6 @@ export default Vue.extend({
     document.title = formatUsername(this.user);
   },
   methods: {
-    isDesktop,
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
@@ -142,6 +146,16 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.calendar-title__content {
+  flex-direction: row;
+  text-align: center;
+  line-height: 1;
+  padding: 6px 0 4px 0;
+  @media only screen and (min-width: $mobile-max-width) {
+    padding-top: 0;
+  }
+}
+
 .available {
   background-color: $calendar-available-background-color;
   height: 100%;
