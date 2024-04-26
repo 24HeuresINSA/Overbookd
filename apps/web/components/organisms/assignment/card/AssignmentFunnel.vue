@@ -177,6 +177,14 @@ export default defineComponent({
   async mounted() {
     this.calendarDate = this.assignment.start;
     this.funnel = await this.initFunnel();
+    addEventListener("keydown", (event) => {
+      if (["=", "+"].includes(event.key)) this.addCandidate();
+      if (["Backspace", "Delete"].includes(event.key))
+        this.revokeLastCandidate();
+      if (["Enter"].includes(event.key)) this.assign();
+      if (["j"].includes(event.key)) this.previousCandidate();
+      if (["l"].includes(event.key)) this.nextCandidate();
+    });
   },
   methods: {
     initFunnel(): Promise<IActAsFunnel> {
