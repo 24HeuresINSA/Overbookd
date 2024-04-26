@@ -8,7 +8,7 @@
       @input="changeSearch"
     ></v-text-field>
     <SearchTeams
-      :value="requiredTeams"
+      :teams="requiredTeams"
       label="Chercher par équipe requise"
       class="filters__field filter__multi-select"
       :boxed="false"
