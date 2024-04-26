@@ -5,3 +5,4 @@ export const APPROVED = "APPROVED";
 export const REJECTED = "REJECTED";
 export const RESET_REVIEW = "RESET_REVIEW";
 export const ASSIGNMENT_STARTED = "ASSIGNMENT_STARTED";
+export const FORCE_UPDATE = "FORCE_UPDATE";

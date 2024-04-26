@@ -170,7 +170,6 @@ describe("Enable assignment", () => {
     "when enabling assignment for validated festival task",
     ({ task, instigator, categorize, expectedMobilizations }) => {
       it(`should switch status to ${READY_TO_ASSIGN}`, async () => {
-        console.error(JSON.stringify(task.mobilizations));
         const { status } = await enableAssignment.for(
           task.id,
           instigator,

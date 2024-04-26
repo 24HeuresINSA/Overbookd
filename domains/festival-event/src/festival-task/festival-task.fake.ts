@@ -715,3 +715,21 @@ export const findTruck = factory
     }).mobilization,
   ])
   .build();
+
+export const parcoursCollageTrajetA = factory
+  .readyToAssign("Parcours collage trajet A")
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: saturday08h,
+      end: saturday12h,
+      teams: [
+        { count: 1, team: "conducteur" },
+        { count: 3, team: "benevoles" },
+      ],
+      durationSplitInHour: 2,
+    }).withAssignments([]).mobilization,
+  ])
+  .withInstructions({
+    inCharge: { volunteers: [valery, george], instruction: "Let's go" },
+  })
+  .build();

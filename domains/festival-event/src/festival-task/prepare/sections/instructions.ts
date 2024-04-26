@@ -1,5 +1,9 @@
-import { FestivalTask } from "../../festival-task";
-import { Contact, Volunteer } from "../../sections/instructions";
+import { FestivalTask, ReadyToAssign } from "../../festival-task";
+import {
+  Contact,
+  Volunteer,
+  hasInChargeInstructions,
+} from "../../sections/instructions";
 import { UpdateInstructions } from "../prepare";
 
 export type InitInCharge = {
@@ -7,12 +11,58 @@ export type InitInCharge = {
   instruction: string;
 };
 
+type ForceGlobalInstructions = {
+  global: string;
+};
+
+type ForceInChargeInstructions = {
+  inCharge: string;
+};
+
+function isForcingInChargeUpdate(
+  forceInstructions: ForceInstructions,
+): forceInstructions is ForceInChargeInstructions {
+  return Object.hasOwn(forceInstructions, "inCharge");
+}
+
+function isForcingGlobalUpdate(
+  forceInstructions: ForceInstructions,
+): forceInstructions is ForceGlobalInstructions {
+  return Object.hasOwn(forceInstructions, "global");
+}
+
+export type ForceInstructions =
+  | ForceGlobalInstructions
+  | ForceInChargeInstructions;
+
 export class Instructions {
   private constructor(
     private readonly instructions: FestivalTask["instructions"],
   ) {}
   static build(instructions: FestivalTask["instructions"]) {
     return new Instructions(instructions);
+  }
+
+  static forceUpdate(
+    currentInstructions: ReadyToAssign["instructions"],
+    force: ForceInstructions,
+  ): ReadyToAssign["instructions"] {
+    const global: ReadyToAssign["instructions"]["global"] =
+      isForcingGlobalUpdate(force) ? force.global : currentInstructions.global;
+
+    const currentInCharge = currentInstructions.inCharge;
+    const inCharge: ReadyToAssign["instructions"]["inCharge"] =
+      isForcingInChargeUpdate(force) && hasInChargeInstructions(currentInCharge)
+        ? { ...currentInCharge, instruction: force.inCharge }
+        : currentInCharge;
+
+    const instructions: ReadyToAssign["instructions"] = {
+      ...currentInstructions,
+      global,
+      inCharge,
+    };
+
+    return instructions;
   }
 
   update({ inCharge, ...form }: UpdateInstructions) {

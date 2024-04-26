@@ -28,9 +28,17 @@ export type DraftInstructions = {
   };
 };
 
+type InCharge = WithoutInChargeInstructions | WithInChargeInstructions;
+
+export function hasInChargeInstructions(
+  inCharge: InCharge,
+): inCharge is WithInChargeInstructions {
+  return inCharge.volunteers.length > 0;
+}
+
 export type Instructions = {
   appointment: Location;
   contacts: WithAtLeastOneItem<Contact>;
   global: string;
-  inCharge: WithoutInChargeInstructions | WithInChargeInstructions;
+  inCharge: InCharge;
 };

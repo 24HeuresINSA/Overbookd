@@ -65,3 +65,15 @@ export class ReadyToAssignError extends FestivalTaskError {
     super(message);
   }
 }
+
+export class ForceUpdateError extends FestivalTaskError {
+  private constructor(reason: string) {
+    const message = `❌ ${reason}`;
+    super(message);
+  }
+
+  static notReadyToAssign(ftId: FestivalTask["id"]) {
+    const notReadyToAssign = `La ft #${ftId} n'est pas en affectation`;
+    return new ForceUpdateError(notReadyToAssign);
+  }
+}
