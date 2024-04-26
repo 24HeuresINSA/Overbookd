@@ -61,7 +61,7 @@
               v-for="team in item.teams"
               :key="team"
               :team="team"
-              class="assignee-team"
+              class="assignees__assignee-team"
             ></TeamChip>
           </template>
           <template #item.assignedTeam="{ item }">
@@ -103,35 +103,37 @@
             </div>
           </template>
           <template #item.actions="{ item }">
-            <v-tooltip top max-width="20rem">
-              <template #activator="{ on, attrs }">
-                <v-icon v-if="item?.note" small v-bind="attrs" v-on="on">
-                  mdi-note
-                </v-icon>
-              </template>
-              <span>{{ item?.note }}</span>
-            </v-tooltip>
-            <v-tooltip top max-width="20rem">
-              <template #activator="{ on, attrs }">
-                <v-icon v-if="item?.comment" small v-bind="attrs" v-on="on">
-                  mdi-comment
-                </v-icon>
-              </template>
-              <span>{{ item?.comment }}</span>
-            </v-tooltip>
-            <v-btn icon @click="openCalendarInNewTab(item.id)">
-              <v-icon>mdi-calendar</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="canActivateAssignedTeamUpdate(item)"
-              icon
-              @click="toggleUpdateAssignedTeam(item)"
-            >
-              <v-icon>mdi-swap-vertical</v-icon>
-            </v-btn>
-            <v-btn icon @click="unassignVolunteer(item)">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+            <div class="assignees__actions">
+              <v-tooltip top max-width="20rem">
+                <template #activator="{ on, attrs }">
+                  <v-icon v-if="item?.note" small v-bind="attrs" v-on="on">
+                    mdi-note
+                  </v-icon>
+                </template>
+                <span>{{ item?.note }}</span>
+              </v-tooltip>
+              <v-tooltip top max-width="20rem">
+                <template #activator="{ on, attrs }">
+                  <v-icon v-if="item?.comment" small v-bind="attrs" v-on="on">
+                    mdi-comment
+                  </v-icon>
+                </template>
+                <span>{{ item?.comment }}</span>
+              </v-tooltip>
+              <v-btn icon @click="openCalendarInNewTab(item.id)">
+                <v-icon>mdi-calendar</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="canActivateAssignedTeamUpdate(item)"
+                icon
+                @click="toggleUpdateAssignedTeam(item)"
+              >
+                <v-icon>mdi-swap-vertical</v-icon>
+              </v-btn>
+              <v-btn icon @click="unassignVolunteer(item)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </div>
           </template>
           <template #no-data> Aucun bénévole affecté sur ce créneau </template>
         </v-data-table>
@@ -360,8 +362,13 @@ export default defineComponent({
   }
 }
 
-.assignee-team {
-  margin-left: 4px;
+.assignees {
+  &__assignee-team {
+    margin-left: 4px;
+  }
+  &__actions {
+    display: block ruby;
+  }
 }
 
 .team-update {
