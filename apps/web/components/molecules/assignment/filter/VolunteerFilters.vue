@@ -137,16 +137,15 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 245px;
+  height: 280px;
   overflow-y: auto;
   align-items: center;
-  margin-top: 25px;
-  padding: 0 25px;
+  padding: 0px 15px;
+  margin-top: 5px;
 
   &__field {
     width: 100%;
-    padding-top: 0;
-    margin-top: 0;
+    padding: 5px 0px;
   }
 }
 

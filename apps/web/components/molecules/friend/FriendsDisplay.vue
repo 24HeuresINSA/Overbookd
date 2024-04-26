@@ -68,6 +68,7 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   border: 1px solid;
+  height: 145px;
 
   &__title {
     padding: 8px 16px 4px 16px;

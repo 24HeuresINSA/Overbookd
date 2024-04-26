@@ -155,17 +155,17 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 270px;
+  height: 280px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 25px;
-  gap: 15px;
+  padding: 0px 15px;
+  margin-top: auto;
 
   &__field {
     width: 100%;
-    padding: 0 25px;
+    padding: 5px, 0px;
   }
 
   &__multi-select {
