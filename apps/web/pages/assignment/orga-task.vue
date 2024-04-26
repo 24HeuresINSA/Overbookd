@@ -57,6 +57,18 @@ export default defineComponent({
     assignmentDetails(): AssignmentWithDetails | null {
       return this.$accessor.assignVolunteerToTask.assignmentDetails;
     },
+    title(): string {
+      const selectedVolunteer =
+        this.$accessor.assignVolunteerToTask.selectedVolunteer;
+      if (!selectedVolunteer) return "Affect Orga-Tâche";
+      const { firstname, lastname } = selectedVolunteer;
+      return `${firstname} ${lastname} affectation`;
+    },
+  },
+  watch: {
+    title(newTitle: string) {
+      document.title = newTitle;
+    },
   },
   async mounted() {
     await this.$accessor.assignVolunteerToTask.fetchVolunteers();
