@@ -147,7 +147,6 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
         id: assignment.id,
         end: assignment.end,
         start: assignment.start,
-        assignees: assignment.assignees.map(({ personalData }) => personalData),
       })),
     };
   }

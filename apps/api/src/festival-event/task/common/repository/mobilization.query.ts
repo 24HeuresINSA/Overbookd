@@ -10,7 +10,6 @@ const SELECT_ASSIGNMENT = {
   id: true,
   start: true,
   end: true,
-  assignees: { select: { personalData: { select: SELECT_VOLUNTEER } } },
 };
 
 export const SELECT_MOBILIZATION = {
@@ -28,15 +27,10 @@ type DatabaseTeam = {
   teamCode: string;
 };
 
-type DatabaseAssignee = {
-  personalData: Volunteer;
-};
-
 export type DatabaseAssignment = {
   start: Date;
   end: Date;
   id: string;
-  assignees: DatabaseAssignee[];
 };
 
 export type DatabaseMobilization = {
