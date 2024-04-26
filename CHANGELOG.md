@@ -1,3 +1,10 @@
+## [2.35.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.2...v2.35.3) (2024-04-26)
+
+
+### Bug Fixes
+
+* **assignment:** add key shortcuts in funnel [#1852](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1852) ([d508309](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d508309b0c1bd31cbaa38f431a45ecb415455640))
+
 ## [2.35.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.1...v2.35.2) (2024-04-26)
 
 
