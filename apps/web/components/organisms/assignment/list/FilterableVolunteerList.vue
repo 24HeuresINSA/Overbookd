@@ -146,11 +146,13 @@ export default defineComponent({
     },
     sortVolunteers(volunteers: AssignmentVolunteer[]) {
       return volunteers.sort((a, b) => {
-        if (this.sort === Sort.NONE) return a.charisma - b.charisma;
-        if (this.sort === Sort.ASC) {
-          return a.assignmentDuration - b.assignmentDuration;
-        }
-        return b.assignmentDuration - a.assignmentDuration;
+        const charismaDifference = a.charisma - b.charisma;
+        if (this.sort === Sort.NONE) return charismaDifference;
+        const durationDifference = a.assignmentDuration - b.assignmentDuration;
+        const order = this.sort === Sort.DESC ? -1 : 1;
+        return durationDifference === 0
+          ? charismaDifference
+          : durationDifference * order;
       });
     },
     filterVolunteerByName(
