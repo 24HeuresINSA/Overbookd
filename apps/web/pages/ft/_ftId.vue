@@ -66,30 +66,7 @@
       </v-dialog>
     </v-container>
     <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
-      <div class="filters">
-        <v-btn
-          color="orange"
-          :outlined="!displayMobilizations"
-          @click="toggleDisplay('mobilizations')"
-        >
-          Mobilisations
-        </v-btn>
-        <v-btn
-          color="blue"
-          :outlined="!displayActivityTimeWindows"
-          @click="toggleDisplay('activity-time-windows')"
-        >
-          Créneaux Animation
-        </v-btn>
-        <v-btn
-          color="grey"
-          :outlined="!displayActivityInquiries"
-          @click="toggleDisplay('activity-inquiries')"
-        >
-          Créneaux Matos de l'Animation
-        </v-btn>
-      </div>
-      <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
+      <FestivalTaskCalendar :task="selectedTask" />
     </v-dialog>
     <v-dialog v-model="isEnableAssignmentOpen" width="600">
       <CategorizeFormCard
@@ -128,25 +105,14 @@ import MobilizationCard from "~/components/organisms/festival-event/festival-tas
 import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import CategorizeFormCard from "~/components/molecules/festival-event/review/CategorizeFormCard.vue";
-import { CalendarEvent } from "~/utils/models/calendar.model";
-import { IProvidePeriod } from "@overbookd/period";
-import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { AUCUNE } from "~/utils/assignment/task-category";
-
-type DisplayableEvent =
-  | "mobilizations"
-  | "activity-time-windows"
-  | "activity-inquiries";
+import FestivalTaskCalendar from "~/components/molecules/festival-event/FestivalTaskCalendar.vue";
 
 type FestivalTaskDetailsData = {
   isRejectDialogOpen: boolean;
   reviewer?: Reviewer<"FT">;
   isCalendarDialogOpen: boolean;
   isEnableAssignmentOpen: boolean;
-  calendarMarker: Date;
-  displayMobilizations: boolean;
-  displayActivityTimeWindows: boolean;
-  displayActivityInquiries: boolean;
 };
 
 export default defineComponent({
@@ -160,17 +126,13 @@ export default defineComponent({
     MobilizationCard,
     FeedbackCard,
     AskRejectReasonFormCard,
-    OverCalendar,
     CategorizeFormCard,
+    FestivalTaskCalendar,
   },
   data: (): FestivalTaskDetailsData => ({
     isRejectDialogOpen: false,
     isCalendarDialogOpen: false,
     isEnableAssignmentOpen: false,
-    calendarMarker: new Date(),
-    displayMobilizations: true,
-    displayActivityTimeWindows: true,
-    displayActivityInquiries: true,
   }),
   computed: {
     selectedTask(): FestivalTask {
@@ -193,58 +155,6 @@ export default defineComponent({
       return potentialReviewer.filter((team) =>
         this.$accessor.user.isMemberOf(team),
       );
-    },
-    eventStartDate(): Date {
-      return this.$accessor.configuration.eventStartDate;
-    },
-    calendarStartDate(): Date {
-      const startTimestamps = this.selectedTask.mobilizations.map(({ start }) =>
-        start.getTime(),
-      );
-      if (startTimestamps.length === 0) return this.eventStartDate;
-
-      const minStart = Math.min(...startTimestamps);
-      return new Date(minStart);
-    },
-    allTimeWindows(): CalendarEvent[] {
-      const mobilizationEvents = this.displayMobilizations
-        ? this.selectedTask.mobilizations.map(
-            ({ start, end }: IProvidePeriod): CalendarEvent => ({
-              start,
-              end,
-              name: this.selectedTask.general.name,
-              timed: true,
-              color: "orange",
-            }),
-          )
-        : [];
-      const activityInquiryEvents = this.displayActivityInquiries
-        ? this.selectedTask.festivalActivity.inquiry.timeWindows.map(
-            ({ start, end }): CalendarEvent => ({
-              start,
-              end,
-              name: "Créneau matos de la FA",
-              timed: true,
-              color: "grey",
-            }),
-          )
-        : [];
-      const activityTimeWindowEvents = this.displayActivityTimeWindows
-        ? this.selectedTask.festivalActivity.timeWindows.map(
-            ({ start, end }): CalendarEvent => ({
-              start,
-              end,
-              name: this.selectedTask.festivalActivity.name,
-              timed: true,
-              color: "blue",
-            }),
-          )
-        : [];
-      return [
-        ...mobilizationEvents,
-        ...activityInquiryEvents,
-        ...activityTimeWindowEvents,
-      ];
     },
     canEnableAssignment(): boolean {
       return this.$accessor.user.can(AFFECT_VOLUNTEER);
@@ -273,7 +183,6 @@ export default defineComponent({
       this.$router.push({ path: "/ft" });
     }
     document.title = `FT ${this.ftId} - ${this.selectedTask.general.name}`;
-    this.calendarMarker = this.calendarStartDate;
   },
   methods: {
     publishFeedback(content: string) {
@@ -329,18 +238,6 @@ export default defineComponent({
     },
     approved(team: Reviewer<"FT">) {
       this.$accessor.festivalTask.approve({ team });
-    },
-    toggleDisplay(event: DisplayableEvent) {
-      switch (event) {
-        case "mobilizations":
-          this.displayMobilizations = !this.displayMobilizations;
-          break;
-        case "activity-time-windows":
-          this.displayActivityTimeWindows = !this.displayActivityTimeWindows;
-          break;
-        case "activity-inquiries":
-          this.displayActivityInquiries = !this.displayActivityInquiries;
-      }
     },
     openEnableAssignment() {
       this.isEnableAssignmentOpen = true;

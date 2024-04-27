@@ -9,7 +9,7 @@ import {
 
 const GREY = "grey";
 const RED = "red";
-const ORANGE = "orange";
+export const ORANGE = "orange";
 const GREEN = "green";
 export const PURPLE = "#673ab7";
 
