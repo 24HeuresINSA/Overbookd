@@ -22,6 +22,7 @@ import {
 } from "../../../user/user.query";
 import { UserService } from "../../../user/user.service";
 import { BE_AFFECTED } from "@overbookd/permission";
+import { HAS_POSITIVE_CHARISMA } from "./common.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -104,7 +105,7 @@ export class PrismaAssignments implements AssignmentRepository {
       where: {
         isDeleted: false,
         ...hasPermission(BE_AFFECTED),
-        charisma: { gt: 0 },
+        ...HAS_POSITIVE_CHARISMA,
       },
       select: {
         id: true,
