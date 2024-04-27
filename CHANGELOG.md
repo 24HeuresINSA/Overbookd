@@ -1,3 +1,16 @@
+## [2.36.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.4...v2.36.0) (2024-04-27)
+
+
+### Features
+
+* **planning:** create break periods. [#1853](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1853) ([35d1e71](https://gitlab.com/24-heures-insa/overbookd-mono/commit/35d1e71fd0006541357505485b8235828a684d92))
+
+
+### Bug Fixes
+
+* **assignment:** expose break periods in funnel. [#1856](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1856) ([b122a53](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b122a53dde5698f9bab6554584a8f3c9dceee951))
+* **assignment:** volunteer in break period is not assignable. [#1857](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1857) ([a70d051](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a70d051591b80ea0cfc0923fd999e76fac1747e2))
+
 ## [2.35.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.3...v2.35.4) (2024-04-27)
 
 
