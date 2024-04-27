@@ -27,6 +27,16 @@ import { DRAFT } from "@overbookd/festival-event-constants";
 import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
 import { safeCall } from "~/utils/api/calls";
 import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";
+import {
+  Assignment,
+  AssignmentIdentifier,
+  isWithDetails,
+} from "@overbookd/assignment";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import {
+  UnassignForm,
+  castAssignmentWithDate,
+} from "~/utils/assignment/assignment";
 
 const repo = FestivalTaskRepository;
 
@@ -35,6 +45,7 @@ type State = {
     forAll: PreviewFestivalTask[];
   };
   selectedTask: FestivalTaskWithConflicts;
+  assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
 
 const fakeTask: FestivalTaskWithConflicts = {
@@ -81,6 +92,7 @@ export const state = (): State => ({
     forAll: [],
   },
   selectedTask: fakeTask,
+  assignmentDetails: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -89,6 +101,12 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_TASK(state, task: FestivalTaskWithConflicts) {
     state.selectedTask = task;
+  },
+  SET_ASSIGNMENT_DETAILS(
+    state,
+    assignmentDetails: Assignment<{ withDetails: true }>,
+  ) {
+    state.assignmentDetails = assignmentDetails;
   },
 });
 
@@ -474,6 +492,30 @@ export const actions = actionTree(
 
       const task = castTaskWithDate(res.data);
       commit("SET_SELECTED_TASK", task);
+    },
+
+    async fetchAssignmentDetails(
+      { commit },
+      assignmentIdentifier: AssignmentIdentifier,
+    ) {
+      const res = await safeCall(
+        this,
+        AssignmentsRepository.findOne(this, assignmentIdentifier, true),
+      );
+      if (!res) return;
+      const assignment = castAssignmentWithDate(res.data);
+      if (!isWithDetails(assignment)) return;
+      commit("SET_ASSIGNMENT_DETAILS", assignment);
+    },
+
+    async unassign(
+      { dispatch },
+      { assignmentIdentifier, assigneeId }: UnassignForm,
+    ) {
+      const repository = new AssignmentsRepository(this);
+      await repository.unassign(assignmentIdentifier, assigneeId);
+
+      dispatch("fetchAssignmentDetails", assignmentIdentifier);
     },
   },
 );

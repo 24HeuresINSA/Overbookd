@@ -26,19 +26,47 @@
         Créneaux Matos de l'Animation
       </v-btn>
     </div>
-    <OverCalendar v-model="calendarMarker" :events="allEvents" />
+    <OverCalendar v-model="calendarMarker" :events="allEvents">
+      <template #event="{ event }">
+        <div
+          class="event"
+          @contextmenu.prevent="selectAssignmentToDisplayDetails(event)"
+        >
+          <strong>{{ event.name }}</strong> <br />
+          <span v-if="event.end">
+            {{ event.start.getHours() }}h - {{ event.end.getHours() }}h
+          </span>
+        </div>
+      </template>
+    </OverCalendar>
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+      <AssignmentDetails
+        v-if="assignmentDetails"
+        :assignment-details="assignmentDetails"
+        @close-dialog="closeAssignmentDetailsDialog"
+        @unassign="unassignVolunteer"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
+import { Assignment } from "@overbookd/assignment";
 import {
   FestivalTask,
   FestivalTaskReadyToAssign,
+  Mobilization,
   isReadyToAssign,
 } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import AssignmentDetails from "~/components/organisms/assignment/card/AssignmentDetails.vue";
 import { ORANGE, PURPLE } from "~/domain/common/status-color";
+import { UnassignForm } from "~/utils/assignment/assignment";
+import {
+  CalendarEventWithIdentifier,
+  isWithIdentifier,
+} from "~/utils/assignment/calendar-event";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 
 type FestivalTaskCalendarData = {
@@ -46,6 +74,7 @@ type FestivalTaskCalendarData = {
   displayActivityTimeWindows: boolean;
   displayActivityInquiries: boolean;
   calendarMarker: Date;
+  displayAssignmentDetailsDialog: boolean;
 };
 
 type DisplayableEvent =
@@ -55,7 +84,7 @@ type DisplayableEvent =
 
 export default defineComponent({
   name: "FestivalTaskCalendar",
-  components: { OverCalendar },
+  components: { OverCalendar, AssignmentDetails },
   props: {
     task: {
       type: Object as () => FestivalTask,
@@ -67,6 +96,7 @@ export default defineComponent({
     displayActivityInquiries: false,
     displayActivityTimeWindows: false,
     calendarMarker: new Date(),
+    displayAssignmentDetailsDialog: false,
   }),
   computed: {
     eventStartDate(): Date {
@@ -127,6 +157,9 @@ export default defineComponent({
         ...this.activityTimeWindows,
       ];
     },
+    assignmentDetails(): Assignment<{ withDetails: true }> | null {
+      return this.$accessor.festivalTask.assignmentDetails;
+    },
   },
   mounted() {
     this.calendarMarker = this.calendarStartDate;
@@ -146,18 +179,30 @@ export default defineComponent({
     },
     convertAssignmentsToCalendarEvent(
       task: FestivalTaskReadyToAssign,
-    ): CalendarEvent[] {
+    ): CalendarEventWithIdentifier[] {
+      const taskId = task.id;
       const { name } = task.general;
-      return task.mobilizations.flatMap(({ assignments }) =>
-        assignments.map(
-          ({ start, end }): CalendarEvent => ({
-            start,
-            end,
-            timed: true,
-            color: PURPLE,
-            name,
-          }),
-        ),
+      type WithAssignment = Mobilization<{
+        withAssignments: true;
+        withConflicts: false;
+      }>;
+
+      return task.mobilizations.flatMap(
+        ({ assignments, id: mobilizationId }: WithAssignment) => {
+          return assignments.map(
+            ({ start, end, id: assignmentId }): CalendarEventWithIdentifier => {
+              const identifier = { taskId, mobilizationId, assignmentId };
+              return {
+                start,
+                end,
+                timed: true,
+                color: PURPLE,
+                name,
+                identifier,
+              };
+            },
+          );
+        },
       );
     },
     toggleDisplay(event: DisplayableEvent) {
@@ -172,6 +217,21 @@ export default defineComponent({
         case "activity-inquiries":
           this.displayActivityInquiries = !this.displayActivityInquiries;
       }
+    },
+    async selectAssignmentToDisplayDetails(
+      event: CalendarEvent | CalendarEventWithIdentifier,
+    ) {
+      if (!isWithIdentifier(event)) return;
+      await this.$accessor.festivalTask.fetchAssignmentDetails(
+        event.identifier,
+      );
+      this.displayAssignmentDetailsDialog = true;
+    },
+    closeAssignmentDetailsDialog() {
+      this.displayAssignmentDetailsDialog = false;
+    },
+    unassignVolunteer(form: UnassignForm) {
+      this.$accessor.festivalTask.unassign(form);
     },
   },
 });
@@ -190,6 +250,13 @@ export default defineComponent({
   #activity-inquiries {
     color: white;
   }
+}
+
+.event {
+  height: 100%;
+  white-space: normal;
+  padding: 2px;
+  overflow: hidden;
 }
 
 @media only screen and (max-width: $mobile-max-width) {

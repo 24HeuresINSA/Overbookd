@@ -23,7 +23,10 @@ export type {
   AssigneeForDetails,
   NamelyDemandedForDetails,
 } from "./assign-task-to-volunteer/assignment";
-export { isTeamMember } from "./assign-task-to-volunteer/assignment";
+export {
+  isTeamMember,
+  isWithDetails,
+} from "./assign-task-to-volunteer/assignment";
 export type {
   Task,
   MissingAssignmentTask,
