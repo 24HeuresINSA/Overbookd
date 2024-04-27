@@ -404,8 +404,4 @@ export default defineComponent({
   gap: 5px;
   flex-wrap: wrap;
 }
-.selected-assignee {
-  color: rgb(207, 0, 17);
-  font-weight: 900;
-}
 </style>
