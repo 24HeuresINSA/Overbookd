@@ -9,17 +9,19 @@ import {
   DisplayableAssignment,
   HttpStringified,
 } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
 import { User } from "@overbookd/user";
 import { actionTree, mutationTree } from "typed-vuex";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
+import { PlanningRepository } from "~/repositories/planning.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import { safeCall } from "~/utils/api/calls";
 import {
   UnassignForm,
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];
@@ -27,6 +29,7 @@ type State = {
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
   alreadyAssignedAssignments: DisplayableAssignment[];
+  breakPeriods: IProvidePeriod[];
   hoverAssignment: AssignmentSummaryWithTask | null;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
@@ -37,6 +40,7 @@ export const state = (): State => ({
   selectedVolunteerFriends: [],
   assignments: [],
   alreadyAssignedAssignments: [],
+  breakPeriods: [],
   hoverAssignment: null,
   assignmentDetails: null,
 });
@@ -65,6 +69,9 @@ export const mutations = mutationTree(state, {
   },
   SET_ASSIGNMENT_DETAILS(state, assignment: Assignment<{ withDetails: true }>) {
     state.assignmentDetails = assignment;
+  },
+  SET_BREAK_PERIODS(state, breaks: IProvidePeriod[]) {
+    state.breakPeriods = breaks;
   },
 });
 
@@ -105,6 +112,17 @@ export const actions = actionTree(
 
       const assignments = res.data.map(castDisplayableAssignmentWithDate);
       commit("SET_ALREADY_ASSIGNED_ASSIGNMENTS", assignments);
+    },
+
+    async fetchBreakPeriodsFor({ commit }, volunteerId: number) {
+      const res = await safeCall(
+        this,
+        PlanningRepository.getBreakPeriods(this, volunteerId),
+      );
+      if (!res) return;
+
+      const breaks = castPeriodsWithDate(res.data);
+      commit("SET_BREAK_PERIODS", breaks);
     },
 
     async fetchPotentialAssignmentsFor({ commit }, volunteerId: number) {

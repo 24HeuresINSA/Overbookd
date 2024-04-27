@@ -35,6 +35,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
         teams: { select: { teamCode: true } },
         availabilities: { select: SELECT_PERIOD },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
+        breaks: { select: SELECT_PERIOD },
       },
     });
 
@@ -98,8 +99,11 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
         const isAssigned = volunteer.assigned.some(({ assignment }) =>
           Period.init(assignment).isOverlapping(assignmentPeriod),
         );
+        const isInBreakPeriod = volunteer.breaks.some((breakPeriod) =>
+          Period.init(breakPeriod).includes(assignmentPeriod),
+        );
 
-        return isAvailable && !isAssigned;
+        return isAvailable && !isAssigned && !isInBreakPeriod;
       })
       .map(toAssignmentSummaryWithTask)
       .filter(({ teams }) => teams.length > 0);
