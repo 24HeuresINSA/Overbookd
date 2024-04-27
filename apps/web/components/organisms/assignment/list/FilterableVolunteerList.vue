@@ -212,7 +212,7 @@ $column-margins: 30px;
   );
   &--with-friend-list {
     max-height: calc(
-      100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$friends-height} -
+      102vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$friends-height} -
         #{$layout-padding} - #{$column-margins}
     );
   }
