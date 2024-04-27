@@ -1,6 +1,6 @@
 import { DuringBreakPeriods, HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
 import { IProvidePeriod } from "@overbookd/period";
+import { Context } from "./context";
 
 export class PlanningRepository {
   private static readonly basePath = "planning";
@@ -19,6 +19,17 @@ export class PlanningRepository {
     return context.$axios.post<HttpStringified<IProvidePeriod[]>>(
       `${this.basePath}/${volunteer}/break-periods`,
       { ...during },
+    );
+  }
+
+  static removeBreakPeriod(
+    context: Context,
+    volunteer: number,
+    { start, end }: IProvidePeriod,
+  ) {
+    return context.$axios.delete<HttpStringified<IProvidePeriod[]>>(
+      `${this.basePath}/${volunteer}/break-periods`,
+      { params: { start, end } },
     );
   }
 }

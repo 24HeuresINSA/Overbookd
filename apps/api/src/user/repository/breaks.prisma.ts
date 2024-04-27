@@ -22,4 +22,12 @@ export class PrismaBreaks implements Breaks {
 
     return breaks;
   }
+
+  async remove(volunteerId: number, { start, end }: Period): Promise<Period[]> {
+    await this.prisma.breakPeriod.delete({
+      where: { volunteerId_start_end: { volunteerId, start, end } },
+      select: SELECT_PERIOD,
+    });
+    return this.of(volunteerId);
+  }
 }
