@@ -22,5 +22,6 @@ export type AssignmentStats = {
   id: number;
   firstname: string;
   lastname: string;
+  charisma: number;
   stats: VolunteerAssignmentStat[];
 };

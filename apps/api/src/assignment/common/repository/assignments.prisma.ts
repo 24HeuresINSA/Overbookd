@@ -104,11 +104,13 @@ export class PrismaAssignments implements AssignmentRepository {
       where: {
         isDeleted: false,
         ...hasPermission(BE_AFFECTED),
+        charisma: { gt: 0 },
       },
       select: {
         id: true,
         firstname: true,
         lastname: true,
+        charisma: true,
         assigned: {
           select: { assignment: { select: SELECT_PERIOD_AND_CATEGORY } },
         },
