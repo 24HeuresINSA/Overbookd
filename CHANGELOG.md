@@ -1,3 +1,10 @@
+## [2.35.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.3...v2.35.4) (2024-04-27)
+
+
+### Bug Fixes
+
+* **assignment:** add total assignment duration in task-orga mode. [#1854](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1854) ([27042af](https://gitlab.com/24-heures-insa/overbookd-mono/commit/27042afac2b8fbae71e64e152f59448550a6ac8e))
+
 ## [2.35.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.2...v2.35.3) (2024-04-26)
 
 
