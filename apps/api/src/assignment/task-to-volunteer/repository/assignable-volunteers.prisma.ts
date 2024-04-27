@@ -191,6 +191,7 @@ function isAssignableOn(oneOfTheTeams: string[], period: Period) {
     ...HAS_POSITIVE_CHARISMA,
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
+    breaks: { none: overlapPeriodCondition(period) },
   };
 }
 
