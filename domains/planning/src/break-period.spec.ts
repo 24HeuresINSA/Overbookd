@@ -13,14 +13,21 @@ const sunday04h = new Date("2024-05-19T04:00+02:00");
 const sunday10h = new Date("2024-05-19T10:00+02:00");
 const sixHours = Duration.hours(6);
 const saturday02hTo06h = Period.init({ start: saturday02h, end: saturday06h });
+const sunday04hTo10h = Period.init({ start: sunday04h, end: sunday10h });
 
 const noel = { id: 1 };
 const lea = { id: 2, breaks: [saturday02hTo06h] };
+const tatouine = { id: 3, breaks: [saturday02hTo06h, sunday04hTo10h] };
 
-describe("Add break to volunteer", () => {
+describe("Add break period to volunteer", () => {
   let breakPeriods: BreakPeriods;
   beforeEach(() => {
-    const breaks = new InMemoryBreakRepository(new Map([[lea.id, lea.breaks]]));
+    const breaks = new InMemoryBreakRepository(
+      new Map([
+        [lea.id, lea.breaks],
+        [tatouine.id, tatouine.breaks],
+      ]),
+    );
     breakPeriods = new BreakPeriods(breaks);
   });
   describe.each`
@@ -63,4 +70,39 @@ describe("Add break to volunteer", () => {
       expect(generatedBreaks).toStrictEqual(expectedBreaks);
     });
   });
+});
+
+describe("Remove break period", () => {
+  let breakPeriods: BreakPeriods;
+  beforeEach(() => {
+    const breaks = new InMemoryBreakRepository(
+      new Map([
+        [lea.id, lea.breaks],
+        [tatouine.id, tatouine.breaks],
+      ]),
+    );
+    breakPeriods = new BreakPeriods(breaks);
+  });
+  describe.each`
+    volunteer      | breakToRemove       | expectedRemainingBreaks
+    ${lea.id}      | ${saturday02hTo06h} | ${[]}
+    ${tatouine.id} | ${saturday02hTo06h} | ${[sunday04hTo10h]}
+    ${tatouine.id} | ${sunday04hTo10h}   | ${[saturday02hTo06h]}
+  `(
+    "when removing an existing break from $volunteer",
+    ({ volunteer, breakToRemove, expectedRemainingBreaks }) => {
+      let remainingBreaks: Period[];
+      beforeEach(async () => {
+        const breakIdentifier = { volunteer, period: breakToRemove };
+        remainingBreaks = await breakPeriods.remove(breakIdentifier);
+      });
+      it("should retrieve previous breaks without the removing one", async () => {
+        expect(remainingBreaks).toStrictEqual(expectedRemainingBreaks);
+      });
+      it("should store it afterward", async () => {
+        const storedBreaks = await breakPeriods.of(volunteer);
+        expect(storedBreaks).toStrictEqual(expectedRemainingBreaks);
+      });
+    },
+  );
 });

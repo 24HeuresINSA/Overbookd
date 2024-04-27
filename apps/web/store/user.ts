@@ -18,6 +18,7 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
+import { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
 import { Consumer } from "~/utils/models/user.model";
 import { PlanningTask } from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
@@ -26,7 +27,6 @@ import { PlanningEvent } from "@overbookd/assignment";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { Period } from "@overbookd/period";
 import { castPeriodWithDate } from "~/utils/http/period";
-import { BreakDefinition } from "../../../domains/planning/src/break-periods";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -518,6 +518,22 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         PlanningRepository.addBreakPeriod(this, volunteer, during),
+      );
+
+      if (!res) return;
+      const breakPeriods = res.data.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
+      commit("SET_SELECTED_USER_BREAK_PERIODS", breakPeriods);
+    },
+
+    async deleteVolunteerBreakPeriods(
+      { commit },
+      { volunteer, period }: BreakIdentifier,
+    ) {
+      const res = await safeCall(
+        this,
+        PlanningRepository.removeBreakPeriod(this, volunteer, period),
       );
 
       if (!res) return;

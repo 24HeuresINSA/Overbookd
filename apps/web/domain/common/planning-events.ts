@@ -37,6 +37,8 @@ export function convertAssignmentPlanningEventForCalendar(
   };
 }
 
+export const PAUSE = "Pause";
+
 export function convertToCalendarBreak({ start, end }): CalendarEvent {
-  return { start, end, name: "Pause", color: "black", timed: true };
+  return { start, end, name: PAUSE, color: "black", timed: true };
 }

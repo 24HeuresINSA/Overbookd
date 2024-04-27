@@ -28,6 +28,18 @@
       <template #interval="{ date, hour }">
         <div :class="{ available: isUserAvailable(date, hour) }" />
       </template>
+      <template #event="{ event }">
+        <div
+          class="event"
+          @click="openTaskOrBreakDeletion(event)"
+          @contextmenu.prevent="openTaskOrBreakDeletion(event)"
+        >
+          <strong>{{ event.name }}</strong> <br />
+          <span v-if="event.end">
+            {{ event.start.getHours() }}h - {{ event.end.getHours() }}h
+          </span>
+        </div>
+      </template>
     </OverCalendar>
     <v-dialog v-model="isCreateBreakPeriodOpen" max-width="800">
       <CreateBreakPeriodCard
@@ -36,6 +48,29 @@
         @create="addBreakPeriod"
         @close-dialog="closeCreateBreakPeriodDialog"
       />
+    </v-dialog>
+    <v-dialog v-model="isDeleteBreakPeriodOpen" max-width="800">
+      <ConfirmationMessage
+        v-if="selectedBreak"
+        confirm-color="error"
+        abort-color="success"
+        @close-dialog="cancelBreakPeriodDeletion"
+        @confirm="deleteBreakPeriod"
+      >
+        <template #title>Supprimer le créneau de pause</template>
+        <template #statement>
+          <div class="delete-statement">
+            <p>Tu vas supprimer la pause de</p>
+            <v-chip color="primary">
+              <v-icon left>mdi-clock</v-icon>
+              <span>{{ selectedBreak.toString() }}</span>
+            </v-chip>
+          </div>
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left> mdi-delete-empty-outline </v-icon>Supprimer
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
   </div>
 </template>
@@ -58,13 +93,20 @@ import { PlanningEvent } from "@overbookd/assignment";
 import { BreakDefinition } from "@overbookd/planning";
 import { isDesktop } from "~/utils/device/device.utils";
 import CreateBreakPeriodCard from "~/components/molecules/planning/CreateBreakPeriodCard.vue";
-import { convertToCalendarBreak } from "~/domain/common/planning-events";
+import { convertToCalendarBreak, PAUSE } from "~/domain/common/planning-events";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 
 type UserCalendarData = {
   calendarCentralDate: Date;
   selectedDate: OverDate | null;
   isCreateBreakPeriodOpen: boolean;
+  isDeleteBreakPeriodOpen: boolean;
+  selectedBreak: Period | null;
 };
+
+function isBreakPeriodEvent(event: CalendarEvent): boolean {
+  return event.name === PAUSE;
+}
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -73,17 +115,17 @@ export default Vue.extend({
     TeamChip,
     AssignmentUserStats,
     CreateBreakPeriodCard,
+    ConfirmationMessage,
   },
   props: {
-    userId: {
-      type: Number,
-      default: () => 0,
-    },
+    userId: { type: Number, default: () => 0 },
   },
   data: (): UserCalendarData => ({
     calendarCentralDate: new Date(),
     selectedDate: null,
     isCreateBreakPeriodOpen: false,
+    isDeleteBreakPeriodOpen: false,
+    selectedBreak: null,
   }),
   computed: {
     availabilities(): Period[] {
@@ -165,16 +207,13 @@ export default Vue.extend({
       const overDate = OverDate.init({ date, hour });
       return isItAvailableDuringThisHour(this.availabilities, overDate);
     },
-    openFt(path?: string) {
-      if (!path) return;
-      this.$router.push({ path });
-    },
     openFtInNewTab(path?: string) {
-      if (!path) window.open(path);
+      if (!path) return;
+      window.open(path, "_blank");
     },
     openCreateBreakPeriodIfNeeded(date: OverDate) {
       if (!this.$accessor.user.can(AFFECT_VOLUNTEER)) return;
-      if (date.isIncludedBy(this.breakPeriods)) return;
+      if (date.isIncludedBy(this.events)) return;
       if (!isItAvailableDuringThisHour(this.availabilities, date)) {
         return;
       }
@@ -188,6 +227,23 @@ export default Vue.extend({
       this.closeCreateBreakPeriodDialog();
       const breakDefinition = { volunteer: this.user.id, during };
       this.$accessor.user.addVolunteerBreakPeriods(breakDefinition);
+    },
+    openTaskOrBreakDeletion(event: CalendarEvent) {
+      if (isBreakPeriodEvent(event)) {
+        this.isDeleteBreakPeriodOpen = true;
+        this.selectedBreak = Period.init(event);
+      }
+      if (!event.link) return;
+      this.openFtInNewTab(event.link);
+    },
+    cancelBreakPeriodDeletion() {
+      this.isDeleteBreakPeriodOpen = false;
+    },
+    deleteBreakPeriod() {
+      if (!this.selectedBreak) return;
+      const volunteer = this.user.id;
+      const period = this.selectedBreak;
+      this.$accessor.user.deleteVolunteerBreakPeriods({ volunteer, period });
     },
   },
 });
@@ -227,5 +283,20 @@ export default Vue.extend({
 .user-stats {
   margin-top: 3px;
   margin-left: 3px;
+}
+
+.event {
+  height: 100%;
+  white-space: normal;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.delete-statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 </style>

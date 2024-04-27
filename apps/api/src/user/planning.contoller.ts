@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -12,6 +14,8 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
+  ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -22,7 +26,8 @@ import { AFFECT_VOLUNTEER, VIEW_VOLUNTEER } from "@overbookd/permission";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { BreakPeriodDuringRequestDto } from "./dto/break-period-during.request.dto";
-import { Duration } from "@overbookd/period";
+import { Duration, Period } from "@overbookd/period";
+import { ParseDatePipe } from "../common/pipes/parse-date.pipe";
 
 @ApiBearerAuth()
 @ApiTags("planning")
@@ -74,5 +79,43 @@ export class PlanningController {
       volunteer,
       during: { start, duration },
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Delete(":volunteerId/break-periods")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteer break periods",
+    type: PeriodDto,
+    isArray: true,
+  })
+  @ApiBody({
+    description: "Period to remove break from",
+    type: PeriodDto,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    type: Number,
+    description: "Volunteer identifier to remove break from",
+  })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+  })
+  async removeVolunteerBreakPeriod(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+    @Query("start", ParseDatePipe) start: Date,
+    @Query("end", ParseDatePipe) end: Date,
+  ): Promise<PeriodDto[]> {
+    const breakPeriod = Period.init({ start, end });
+    return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
   }
 }

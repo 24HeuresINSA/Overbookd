@@ -164,6 +164,20 @@ export class Period {
     });
   }
 
+  toString(): string {
+    const start = this.formatDate(this.start);
+    const end = this.formatDate(this.end);
+    return `${start} - ${end}`;
+  }
+
+  private formatDate(date: Date): string {
+    const displayOptions: Intl.DateTimeFormatOptions = {
+      dateStyle: "long",
+      timeStyle: "short",
+    };
+    return new Intl.DateTimeFormat("fr", displayOptions).format(date);
+  }
+
   static sort<T extends IProvidePeriod>(periods: T[]): T[] {
     return periods.sort(
       (a, b) =>
