@@ -54,6 +54,7 @@
           :items-per-page="-1"
           disable-pagination
           hide-default-footer
+          :value="selectedAssignee"
         >
           <template #item.firstname="{ item }">
             {{ item.firstname }} {{ item.lastname }}
@@ -158,6 +159,7 @@ import {
   TeamMemberForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 export default defineComponent({
   name: "AssignmentDetails",
@@ -252,6 +254,18 @@ export default defineComponent({
         return [volunteer, assignedTeam, actions];
       }
       return [volunteer, assignedTeam, friends, actions];
+    },
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
+    },
+    selectedAssignee(): [TeamMemberForDetails] | [] {
+      if (!this.isOrgaTaskMode) return [];
+      const assignee = this.$accessor.assignVolunteerToTask.selectedVolunteer;
+      const assigneeForDetails = this.assignees.find(
+        ({ id }) => id === assignee?.id,
+      );
+      if (!assigneeForDetails) return [];
+      return [assigneeForDetails];
     },
   },
   methods: {
