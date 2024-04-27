@@ -12,4 +12,14 @@ export class InMemoryBreakRepository implements Breaks {
     this.breaks.set(volunteer, breaks);
     return Promise.resolve(breaks);
   }
+
+  remove(volunteer: number, breakPeriod: Period): Promise<Period[]> {
+    const breaks = this.breaks.get(volunteer);
+    if (!breaks) return Promise.resolve([]);
+    const remainingBreaks = breaks.filter(
+      (storedBreak) => !storedBreak.equals(breakPeriod),
+    );
+    this.breaks.set(volunteer, remainingBreaks);
+    return Promise.resolve(remainingBreaks);
+  }
 }

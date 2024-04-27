@@ -1,3 +1,4 @@
+import { IProvidePeriod } from "@overbookd/period";
 import { Period, Duration } from "@overbookd/period";
 
 export type BreakDefinition = {
@@ -8,6 +9,12 @@ export type BreakDefinition = {
 export type Breaks = {
   of(volunteer: number): Promise<Period[]>;
   save(volunteer: number, breaks: Period[]): Promise<Period[]>;
+  remove(volunteer: number, breakPeriod: Period): Promise<Period[]>;
+};
+
+export type BreakIdentifier = {
+  volunteer: number;
+  period: IProvidePeriod;
 };
 
 export class BreakPeriods {
@@ -26,5 +33,9 @@ export class BreakPeriods {
 
   async of(volunteer: number): Promise<Period[]> {
     return this.breaks.of(volunteer);
+  }
+
+  remove({ volunteer, period }: BreakIdentifier): Promise<Period[]> {
+    return this.breaks.remove(volunteer, Period.init(period));
   }
 }
