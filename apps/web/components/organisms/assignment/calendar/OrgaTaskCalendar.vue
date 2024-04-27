@@ -30,7 +30,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { DateString, Hour, OverDate, Period } from "@overbookd/period";
+import {
+  DateString,
+  Hour,
+  IProvidePeriod,
+  OverDate,
+  Period,
+} from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
@@ -45,6 +51,7 @@ import {
   PlanningTask,
 } from "@overbookd/http";
 import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
+import { convertToCalendarBreak } from "~/domain/common/planning-events";
 
 export default defineComponent({
   name: "OrgaTaskCalendar",
@@ -76,6 +83,9 @@ export default defineComponent({
     notReadyTasks(): PlanningTask[] {
       return this.$accessor.user.selectedUserTasks;
     },
+    breaks(): IProvidePeriod[] {
+      return this.$accessor.assignVolunteerToTask.breakPeriods;
+    },
     events(): CalendarEvent[] {
       const tasks = this.notReadyTasks.map((task) =>
         this.formatTaskForCalendar(task),
@@ -87,7 +97,9 @@ export default defineComponent({
         ? [this.formatAssignmentForCalendar(this.hoverAssignment)]
         : [];
 
-      return [...tasks, ...alreadyAssigned, ...hoverAssignments];
+      const breaks = this.breaks.map(convertToCalendarBreak);
+
+      return [...tasks, ...alreadyAssigned, ...hoverAssignments, ...breaks];
     },
     hourToScrollTo(): number | undefined {
       return this.hoverAssignment?.start.getHours();
@@ -119,6 +131,7 @@ export default defineComponent({
         this.$accessor.assignVolunteerToTask.fetchAllAssignmentsFor(
           volunteerId,
         ),
+        this.$accessor.assignVolunteerToTask.fetchBreakPeriodsFor(volunteerId),
         this.$accessor.user.getVolunteerTasks(volunteerId),
       ]);
     },
