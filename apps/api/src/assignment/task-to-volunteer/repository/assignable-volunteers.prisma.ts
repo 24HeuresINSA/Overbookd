@@ -4,7 +4,6 @@ import {
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
-import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -34,13 +33,13 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     assignmentIdentifier: AssignmentIdentifier,
     assignmentSpecification: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
-    const { oneOfTheTeams, period, category } = assignmentSpecification;
+    const { oneOfTheTeams, period } = assignmentSpecification;
 
     const volunteers = await this.prisma.user.findMany({
       where: isAssignableOn(oneOfTheTeams, period),
       select: {
         ...SELECT_VOLUNTEER,
-        ...this.buildVolunteerAssignmentSelection(category),
+        ...this.buildVolunteerAssignmentSelection(),
         ...this.buildFestivalTaskMobilizationSelection(period),
         ...this.buildAssignableFriendSelection(
           assignmentIdentifier,
@@ -69,10 +68,9 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     };
   }
 
-  private buildVolunteerAssignmentSelection(category?: Category) {
+  private buildVolunteerAssignmentSelection() {
     return {
       assigned: {
-        where: { assignment: { festivalTask: { category } } },
         select: {
           assignment: {
             select: {
