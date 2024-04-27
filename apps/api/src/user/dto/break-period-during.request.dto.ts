@@ -1,19 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Duration } from "@overbookd/period";
-import { BreakDefinition } from "@overbookd/planning";
+import { DuringBreakPeriods } from "@overbookd/http";
 import { Type } from "class-transformer";
-import { IsDate, IsNumber } from "class-validator";
+import { IsDate, IsNumber, IsPositive, ValidateNested } from "class-validator";
 
-type During = BreakDefinition["during"];
-
-export class BreakPeriodDuringRequestDto implements During {
+export class BreakPeriodDuringRequestDto implements DuringBreakPeriods {
   @ApiProperty({})
   @IsDate()
   @Type(() => Date)
+  @ValidateNested()
   start: Date;
 
   @ApiProperty({ type: Number, description: "Duration in hours" })
   @IsNumber()
-  @Type(() => Duration.hours)
-  duration: Duration;
+  @IsPositive()
+  durationInHours: number;
 }

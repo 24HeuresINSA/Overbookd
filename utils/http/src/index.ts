@@ -65,3 +65,4 @@ export type {
   AssignmentStats,
   VolunteerAssignmentStat,
 } from "./assignment";
+export type { During as DuringBreakPeriods } from "./planning/break-periods";

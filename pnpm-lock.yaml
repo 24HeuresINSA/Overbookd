@@ -125,6 +125,9 @@ importers:
       '@overbookd/personal-account':
         specifier: workspace:^
         version: link:../../domains/personal-account
+      '@overbookd/planning':
+        specifier: workspace:^
+        version: link:../../domains/planning
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
@@ -540,6 +543,12 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
+
+  domains/planning:
+    dependencies:
+      '@overbookd/period':
+        specifier: workspace:*
+        version: link:../../libraries/period
 
   domains/registration:
     dependencies:

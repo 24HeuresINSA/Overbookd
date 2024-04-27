@@ -22,6 +22,7 @@ import { AFFECT_VOLUNTEER, VIEW_VOLUNTEER } from "@overbookd/permission";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { BreakPeriodDuringRequestDto } from "./dto/break-period-during.request.dto";
+import { Duration } from "@overbookd/period";
 
 @ApiBearerAuth()
 @ApiTags("planning")
@@ -66,8 +67,12 @@ export class PlanningController {
   })
   async addVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteer: number,
-    @Body() during: BreakPeriodDuringRequestDto,
+    @Body() { start, durationInHours }: BreakPeriodDuringRequestDto,
   ): Promise<PeriodDto[]> {
-    return this.planning.addBreakPeriod({ volunteer, during });
+    const duration = Duration.hours(durationInHours);
+    return this.planning.addBreakPeriod({
+      volunteer,
+      during: { start, duration },
+    });
   }
 }

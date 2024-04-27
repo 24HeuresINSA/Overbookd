@@ -15,10 +15,11 @@ import { PreferenceService } from "./preference.service";
 import { PrismaBreaks } from "./repository/breaks.prisma";
 import { PlanningService } from "./planning.service";
 import { BreakPeriods } from "@overbookd/planning";
+import { PlanningController } from "./planning.contoller";
 
 @Module({
   imports: [VolunteerPlanningModule, RegistrationModule, PrismaModule],
-  controllers: [UserController, PreferenceController],
+  controllers: [UserController, PreferenceController, PlanningController],
   providers: [
     {
       provide: PrismaPreferences,

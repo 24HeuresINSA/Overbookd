@@ -23,6 +23,10 @@ import { PlanningTask } from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningEvent } from "@overbookd/assignment";
+import { PlanningRepository } from "~/repositories/planning.repository";
+import { Period } from "@overbookd/period";
+import { castPeriodWithDate } from "~/utils/http/period";
+import { BreakDefinition } from "../../../domains/planning/src/break-periods";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -35,6 +39,7 @@ type State = {
   selectedUserFriends: User[];
   selectedUserFtRequests: VolunteerTask[];
   selectedUserAssignments: PlanningEvent[];
+  selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
   selectedUserAssignmentStats: VolunteerAssignmentStat[];
   personalAccountConsumers: Consumer[];
@@ -51,6 +56,7 @@ export const state = (): State => ({
   selectedUserFriends: [],
   selectedUserFtRequests: [],
   selectedUserAssignments: [],
+  selectedUserBreakPeriods: [],
   selectedUserTasks: [],
   selectedUserAssignmentStats: [],
   personalAccountConsumers: [],
@@ -96,6 +102,9 @@ export const mutations = mutationTree(state, {
     stats: VolunteerAssignmentStat[],
   ) {
     state.selectedUserAssignmentStats = stats;
+  },
+  SET_SELECTED_USER_BREAK_PERIODS(state: UserState, breakPeriods: Period[]) {
+    state.selectedUserBreakPeriods = breakPeriods;
   },
   SET_USERS(state: UserState, data: UserPersonalData[]) {
     state.users = data;
@@ -485,6 +494,37 @@ export const actions = actionTree(
 
       if (!res) return;
       commit("SET_SELECTED_USER_ASSIGNMENT_STATS", res.data);
+    },
+
+    async getVolunteerBreakPeriods({ commit }, volunteerId: number) {
+      const res = await safeCall(
+        this,
+        PlanningRepository.getBreakPeriods(this, volunteerId),
+      );
+
+      if (!res) return;
+      const breakPeriods = res.data.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
+      commit("SET_SELECTED_USER_BREAK_PERIODS", breakPeriods);
+    },
+
+    async addVolunteerBreakPeriods(
+      { commit },
+      { volunteer, during: { start, duration } }: BreakDefinition,
+    ) {
+      const durationInHours = duration.inHours;
+      const during = { start, durationInHours };
+      const res = await safeCall(
+        this,
+        PlanningRepository.addBreakPeriod(this, volunteer, during),
+      );
+
+      if (!res) return;
+      const breakPeriods = res.data.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
+      commit("SET_SELECTED_USER_BREAK_PERIODS", breakPeriods);
     },
   },
 );

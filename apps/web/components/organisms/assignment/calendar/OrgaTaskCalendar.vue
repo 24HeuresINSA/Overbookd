@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { DateString, Hour, Period } from "@overbookd/period";
+import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
@@ -123,7 +123,8 @@ export default defineComponent({
       ]);
     },
     isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
-      return isItAvailableDuringThisHour(this.availabilities, date, hour);
+      const overDate = OverDate.init({ date, hour });
+      return isItAvailableDuringThisHour(this.availabilities, overDate);
     },
     selectAssignmentToDisplayDetails(
       event: DisplayableAssignment | CalendarEvent,

@@ -43,9 +43,7 @@ export function isAvailabilityPeriodSaved(
 
 export function isItAvailableDuringThisHour(
   availabilities: IProvidePeriod[],
-  date: DateString,
-  hour: Hour,
+  overDate: OverDate,
 ) {
-  const overDate = OverDate.init({ date, hour });
   return overDate.isIncludedBy(availabilities);
 }
