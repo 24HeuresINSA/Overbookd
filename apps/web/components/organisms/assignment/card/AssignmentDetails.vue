@@ -56,7 +56,9 @@
           hide-default-footer
         >
           <template #item.firstname="{ item }">
-            {{ item.firstname }} {{ item.lastname }}
+            <span :class="{ 'selected-assignee': isAssigneeSelected(item) }">
+              {{ item.firstname }} {{ item.lastname }}
+            </span>
             <TeamChip
               v-for="team in item.teams"
               :key="team"
@@ -158,6 +160,7 @@ import {
   TeamMemberForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 
 export default defineComponent({
   name: "AssignmentDetails",
@@ -253,6 +256,9 @@ export default defineComponent({
       }
       return [volunteer, assignedTeam, friends, actions];
     },
+    isOrgaTaskMode(): boolean {
+      return isOrgaTaskMode(this.$route.path);
+    },
   },
   methods: {
     unassignVolunteer(teamMember: TeamMemberForDetails) {
@@ -326,6 +332,12 @@ export default defineComponent({
         isString(input.team)
       );
     },
+    isAssigneeSelected(assignee: TeamMemberForDetails): boolean {
+      if (!this.isOrgaTaskMode) return false;
+      const selectedVolunteer =
+        this.$accessor.assignVolunteerToTask.selectedVolunteer;
+      return assignee.id === selectedVolunteer?.id;
+    },
     // updateAssignedTeam(assignee: TeamMemberForDetails) {
     //   //TODO
     // },
@@ -389,5 +401,9 @@ export default defineComponent({
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+.selected-assignee {
+  color: rgb(207, 0, 17);
+  font-weight: 900;
 }
 </style>
