@@ -80,6 +80,7 @@ import { TaskAssignment } from "~/domain/timespan-assignment/timeSpanAssignment"
 import {
   CalendarPlanningEvent,
   convertAssignmentPlanningEventForCalendar,
+  convertToCalendarBreak,
 } from "~/domain/common/planning-events";
 import { CalendarUser } from "~/utils/models/calendar.model";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
@@ -144,12 +145,19 @@ export default defineComponent({
     },
     candidatesPlanningEvents(): CalendarPlanningEvent[] {
       if (!this.funnel) return [];
-      return this.funnel.candidates.flatMap(
+      const tasks = this.funnel.candidates.flatMap(
         ({ planning, id }: IDefineCandidate) =>
           planning.map((event) =>
             convertAssignmentPlanningEventForCalendar(event, id),
           ),
       );
+      const breaks = this.funnel.candidates.flatMap(({ id, breakPeriods }) =>
+        breakPeriods.map((breakPeriod) => ({
+          ...convertToCalendarBreak(breakPeriod),
+          volunteerId: id,
+        })),
+      );
+      return [...tasks, ...breaks];
     },
     assignmentAsEvent(): CalendarPlanningEvent {
       const { start, end, name } = this.assignment;

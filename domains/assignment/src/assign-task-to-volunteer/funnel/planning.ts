@@ -16,6 +16,10 @@ export type Availabilities = {
   for(volunteer: AssignableVolunteer["id"]): Promise<IProvidePeriod[]>;
 };
 
+export type BreakPeriods = {
+  for(volunteer: AssignableVolunteer["id"]): Promise<IProvidePeriod[]>;
+};
+
 export type Friends = {
   availableDuringWith(
     period: IProvidePeriod,
