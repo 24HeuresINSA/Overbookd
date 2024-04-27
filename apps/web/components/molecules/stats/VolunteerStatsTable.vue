@@ -91,6 +91,7 @@ export default Vue.extend({
   data: () => ({
     headers: [
       { text: "Benevole", value: "volunteer" },
+      { text: "Charisme", value: "charisma" },
       { text: "Creneaux statiques", value: STATIQUE },
       { text: "Creneaux bar", value: BAR },
       { text: "Creneaux manutention", value: MANUTENTION },

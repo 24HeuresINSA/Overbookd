@@ -30,6 +30,15 @@ export function sortVolunteerOnNamesFunction(
   };
 }
 
+export function sortVolunteerOnCharismaFunction(
+  desc: boolean,
+): AssignmentStatsSortFunction {
+  return (a, b) => {
+    const order = desc ? -1 : 1;
+    return (a.charisma - b.charisma) * order;
+  };
+}
+
 export function sortVolunteerOnTaskCategoryAssignmentDurationFunction(
   desc: boolean,
   category?: Category,
@@ -75,6 +84,8 @@ export function getAssignmentStatsSortFunctionFromSortType(
   switch (sortBy) {
     case "volunteer":
       return sortVolunteerOnNamesFunction(sortDesc);
+    case "charisma":
+      return sortVolunteerOnCharismaFunction(sortDesc);
     case STATIQUE:
     case MANUTENTION:
     case BAR:

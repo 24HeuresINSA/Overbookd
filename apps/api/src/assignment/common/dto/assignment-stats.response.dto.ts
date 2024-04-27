@@ -29,6 +29,13 @@ export class AssignmentStatsResponseDto implements AssignmentStats {
 
   @ApiProperty({
     required: true,
+    description: "volunteer charisma",
+    type: Number,
+  })
+  charisma: number;
+
+  @ApiProperty({
+    required: true,
     description: "volunteer assignments stats",
     type: VolunteerAssignmentDto,
   })
