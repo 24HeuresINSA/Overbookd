@@ -6,13 +6,20 @@ import {
   TeamDemanded,
   TeamMember,
 } from "../assignment";
-import { Availabilities, Friends, Planning, PlanningEvent } from "./planning";
+import {
+  Availabilities,
+  BreakPeriods,
+  Friends,
+  Planning,
+  PlanningEvent,
+} from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer";
 
 type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
   friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
+  breakPeriods: IProvidePeriod[];
   assignableTeams: string[];
   as: undefined;
 };
@@ -21,6 +28,7 @@ export type CandidateFulfillingDemand = AssignableVolunteer & {
   friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
+  breakPeriods: IProvidePeriod[];
   assignableTeams: string[];
   as: string;
 };
@@ -32,6 +40,7 @@ export type IDefineCandidate =
 type Agenda = {
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
+  breakPeriods: IProvidePeriod[];
 };
 
 type RelationShip = {
@@ -44,7 +53,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
 
   static init(
     { volunteer, friends }: RelationShip,
-    { planning, availabilities }: Agenda,
+    { planning, availabilities, breakPeriods }: Agenda,
     assignment: Assignment,
   ) {
     const assignableTeams = Candidate.getAssignableTeams(
@@ -60,6 +69,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
       availabilities,
       as,
       assignableTeams,
+      breakPeriods,
     });
   }
 
@@ -133,10 +143,15 @@ export function isFulfillingDemand(
   return candidate.as !== undefined;
 }
 
+type Agendas = {
+  planning: Planning;
+  availabilities: Availabilities;
+  breakPeriods: BreakPeriods;
+};
+
 export class CandidateFactory {
   constructor(
-    private readonly planning: Planning,
-    private readonly availabilities: Availabilities,
+    private readonly agendas: Agendas,
     private readonly friends: Friends,
   ) {}
 
@@ -145,13 +160,16 @@ export class CandidateFactory {
     assignment: Assignment,
   ): Promise<Candidate> {
     const { start, end } = assignment;
-    const [planning, availabilities, friends] = await Promise.all([
-      this.planning.for(volunteer.id),
-      this.availabilities.for(volunteer.id),
-      this.friends.availableDuringWith({ start, end }, volunteer.id),
-    ]);
+    const [planning, availabilities, breakPeriods, friends] = await Promise.all(
+      [
+        this.agendas.planning.for(volunteer.id),
+        this.agendas.availabilities.for(volunteer.id),
+        this.agendas.breakPeriods.for(volunteer.id),
+        this.friends.availableDuringWith({ start, end }, volunteer.id),
+      ],
+    );
 
-    const agenda = { planning, availabilities };
+    const agenda = { planning, availabilities, breakPeriods };
     const relationShip = { volunteer, friends };
     return Candidate.init(relationShip, agenda, assignment);
   }

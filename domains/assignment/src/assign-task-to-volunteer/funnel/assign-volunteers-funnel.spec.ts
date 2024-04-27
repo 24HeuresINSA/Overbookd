@@ -27,6 +27,17 @@ import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams";
 import { InMemoryAvailabilities } from "./availabilties.inmemory";
 import { InMemoryFriends } from "./friends.inmemory";
 import { IActAsFunnel } from "./funnel";
+import { BreakPeriods } from "./planning";
+import { IProvidePeriod } from "@overbookd/period";
+import { Volunteer } from "../../volunteer";
+
+class InMemoryBreakPeriods implements BreakPeriods {
+  constructor(private breakPeriods: Map<Volunteer["id"], IProvidePeriod[]>) {}
+
+  for(volunteer: Volunteer["id"]): Promise<IProvidePeriod[]> {
+    return Promise.resolve(this.breakPeriods.get(volunteer) ?? []);
+  }
+}
 
 describe("Assign volunteers funnel", () => {
   const inMemoryPlanning = new InMemoryPlanning(
@@ -52,6 +63,17 @@ describe("Assign volunteers funnel", () => {
       [amanda.volunteer.id, amanda.availabilities],
     ]),
   );
+  const inMemoryBreakPeriods = new InMemoryBreakPeriods(
+    new Map([
+      [noel.volunteer.id, noel.breakPeriods],
+      [lea.volunteer.id, lea.breakPeriods],
+      [ontaine.volunteer.id, ontaine.breakPeriods],
+      [tatouin.volunteer.id, tatouin.breakPeriods],
+      [nathan.volunteer.id, nathan.breakPeriods],
+      [bruce.volunteer.id, bruce.breakPeriods],
+      [amanda.volunteer.id, amanda.breakPeriods],
+    ]),
+  );
   const friends = new InMemoryFriends(new Map());
   const initialAssignments = [
     benevolant,
@@ -62,21 +84,30 @@ describe("Assign volunteers funnel", () => {
     nettoyerLeQgCatering,
     collageParcoursF,
   ];
-  const candidateFactory = new CandidateFactory(
-    inMemoryPlanning,
-    inMemoryAvailabilities,
-    friends,
-  );
+  const agendas = {
+    planning: inMemoryPlanning,
+    availabilities: inMemoryAvailabilities,
+    breakPeriods: inMemoryBreakPeriods,
+  };
+  const candidateFactory = new CandidateFactory(agendas, friends);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities}
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}
+      volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities            | breakPeriods
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
-      ({ volunteer, candidates, planning, task, team, availabilities }) => {
+      ({
+        volunteer,
+        candidates,
+        planning,
+        task,
+        team,
+        availabilities,
+        breakPeriods,
+      }) => {
         let everyCandidateFulfillsDemand: IActAsFunnel;
         let assignments: InMemoryAssignments;
         beforeAll(async () => {
@@ -88,11 +119,7 @@ describe("Assign volunteers funnel", () => {
               [ontaine.volunteer.id, [lea.volunteer, noel.volunteer]],
             ]),
           );
-          const candidateFactory = new CandidateFactory(
-            inMemoryPlanning,
-            inMemoryAvailabilities,
-            friends,
-          );
+          const candidateFactory = new CandidateFactory(agendas, friends);
           const funnel = WaitingForVolunteer.init(
             candidateFactory,
             assignments,
@@ -126,6 +153,11 @@ describe("Assign volunteers funnel", () => {
           expect(
             everyCandidateFulfillsDemand.candidates.at(0)?.availabilities,
           ).toStrictEqual(availabilities);
+        });
+        it("should expose his break periods", () => {
+          expect(
+            everyCandidateFulfillsDemand.candidates.at(0)?.breakPeriods,
+          ).toStrictEqual(breakPeriods);
         });
         it("should indicate it can't fulfill more demands (cause there is no demand any more)", () => {
           expect(
@@ -324,11 +356,7 @@ describe("Assign volunteers funnel", () => {
             [tatouin.volunteer.id, [ontaine.volunteer]],
           ]),
         );
-        const candidateFactory = new CandidateFactory(
-          inMemoryPlanning,
-          inMemoryAvailabilities,
-          friends,
-        );
+        const candidateFactory = new CandidateFactory(agendas, friends);
         assignments = new InMemoryAssignments(initialAssignments);
         funnel = await WaitingForVolunteer.init(
           candidateFactory,
@@ -392,11 +420,7 @@ describe("Assign volunteers funnel", () => {
             [noel.volunteer.id, [lea.volunteer]],
           ]),
         );
-        const candidateFactory = new CandidateFactory(
-          inMemoryPlanning,
-          inMemoryAvailabilities,
-          friends,
-        );
+        const candidateFactory = new CandidateFactory(agendas, friends);
         assignments = new InMemoryAssignments(initialAssignments);
         funnel = await WaitingForVolunteer.init(
           candidateFactory,
@@ -516,11 +540,7 @@ describe("Assign volunteers funnel", () => {
             [amanda.volunteer.id, [tatouin.volunteer]],
           ]),
         );
-        const candidateFactory = new CandidateFactory(
-          inMemoryPlanning,
-          inMemoryAvailabilities,
-          friends,
-        );
+        const candidateFactory = new CandidateFactory(agendas, friends);
         const assignments = new InMemoryAssignments(initialAssignments);
         const ontaineSelected = await WaitingForVolunteer.init(
           candidateFactory,
@@ -569,11 +589,7 @@ describe("Assign volunteers funnel", () => {
             [noel.volunteer.id, [lea.volunteer]],
           ]),
         );
-        const candidateFactory = new CandidateFactory(
-          inMemoryPlanning,
-          inMemoryAvailabilities,
-          friends,
-        );
+        const candidateFactory = new CandidateFactory(agendas, friends);
         const assignments = new InMemoryAssignments(initialAssignments);
         leaSelected = await WaitingForVolunteer.init(
           candidateFactory,
@@ -626,11 +642,7 @@ describe("Assign volunteers funnel", () => {
           [noel.volunteer.id, [lea.volunteer]],
         ]),
       );
-      const candidateFactory = new CandidateFactory(
-        inMemoryPlanning,
-        inMemoryAvailabilities,
-        friends,
-      );
+      const candidateFactory = new CandidateFactory(agendas, friends);
       const assignments = new InMemoryAssignments(initialAssignments);
       const leaSelected = await WaitingForVolunteer.init(
         candidateFactory,
@@ -720,11 +732,7 @@ describe("Assign volunteers funnel", () => {
           [noel.volunteer.id, [lea.volunteer]],
         ]),
       );
-      const candidateFactory = new CandidateFactory(
-        inMemoryPlanning,
-        inMemoryAvailabilities,
-        friends,
-      );
+      const candidateFactory = new CandidateFactory(agendas, friends);
       const assignments = new InMemoryAssignments(initialAssignments);
       funnel = await WaitingForVolunteer.init(
         candidateFactory,
