@@ -17,7 +17,7 @@
       <v-btn color="success" class="btn" @click="updateStats"> Appliquer</v-btn>
 
       <SearchTeams
-        :value="teams"
+        :teams="teams"
         class="filters__field"
         :boxed="false"
         @change="changeTeams"
@@ -29,7 +29,7 @@
       <OrgaNeedsDetailsCard
         v-if="selectedDetails"
         :orga-needs-details="selectedDetails"
-        :filter-teams="teams"
+        :filter-teams="teamCodes"
         @close-dialog="closeDialog"
       />
     </v-dialog>
@@ -51,7 +51,7 @@ const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 type OrgaNeedsData = {
   start?: Date;
   end?: Date;
-  teams: string[];
+  teams: Team[];
   isDetailsOpen: boolean;
   selectedDetails?: OrgaNeedDetails;
 };
@@ -80,6 +80,9 @@ export default Vue.extend({
     stats(): OrgaNeedDetails[] {
       return this.$accessor.orgaNeeds.stats;
     },
+    teamCodes(): string[] {
+      return this.teams.map(({ code }) => code);
+    },
   },
   async mounted() {
     await this.$accessor.configuration.fetch("eventDate");
@@ -90,7 +93,7 @@ export default Vue.extend({
   },
   methods: {
     changeTeams(teams: Team[]) {
-      this.teams = teams.map((team) => team.code);
+      this.teams = teams;
       this.updateStats();
     },
     updateStats() {
@@ -98,7 +101,7 @@ export default Vue.extend({
       this.$accessor.orgaNeeds.fetchStats({
         start: this.start,
         end: this.end,
-        teams: this.teams,
+        teams: this.teamCodes,
       });
     },
     selectDetails(index: number) {
