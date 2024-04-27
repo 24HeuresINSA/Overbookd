@@ -164,6 +164,7 @@ export const actions = actionTree(
       dispatch("user/getVolunteerAssignmentStats", volunteer.id, {
         root: true,
       });
+      dispatch("assignment/fetchStats", null, { root: true });
     },
 
     async unassign(
@@ -178,6 +179,7 @@ export const actions = actionTree(
       if (!state.selectedVolunteer) return;
       dispatch("fetchAllAssignmentsFor", state.selectedVolunteer.id);
       dispatch("fetchPotentialAssignmentsFor", state.selectedVolunteer.id);
+      dispatch("assignment/fetchStats", null, { root: true });
     },
 
     setHoverAssignment(

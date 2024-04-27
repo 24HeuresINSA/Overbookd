@@ -21,7 +21,7 @@
         @volunteers-assigned="refreshTaskAssignments"
       />
     </v-dialog>
-    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1350px">
       <AssignmentDetails
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"

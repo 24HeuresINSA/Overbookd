@@ -103,6 +103,12 @@
               </v-chip>
             </div>
           </template>
+          <template #item.assignmentDurations="{ item }">
+            <AssignmentUserStats
+              :stats="getVolunteerAssignmentStats(item.id)"
+              class="assignees__user-stats"
+            ></AssignmentUserStats>
+          </template>
           <template #item.actions="{ item }">
             <div class="assignees__actions">
               <v-tooltip top max-width="20rem">
@@ -146,6 +152,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
@@ -160,10 +167,11 @@ import {
   isTeamMember,
 } from "@overbookd/assignment";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import { VolunteerAssignmentStat } from "@overbookd/http";
 
 export default defineComponent({
   name: "AssignmentDetails",
-  components: { TeamChip },
+  components: { TeamChip, AssignmentUserStats },
   props: {
     assignmentDetails: {
       type: Object as () => AssignmentWithDetails,
@@ -249,11 +257,17 @@ export default defineComponent({
         value: "friends",
         sortable: false,
       };
+      const assignmentDurations = {
+        text: "Durées d'affectation",
+        value: "assignmentDurations",
+        width: "350px",
+        sortable: false,
+      };
       const actions = { text: "Actions", value: "actions", sortable: false };
       if (this.isUpdateAssignedTeamActive) {
         return [volunteer, assignedTeam, actions];
       }
-      return [volunteer, assignedTeam, friends, actions];
+      return [volunteer, assignedTeam, friends, assignmentDurations, actions];
     },
     isOrgaTaskMode(): boolean {
       return isOrgaTaskMode(this.$route.path);
@@ -267,6 +281,9 @@ export default defineComponent({
       if (!assigneeForDetails) return [];
       return [assigneeForDetails];
     },
+  },
+  created() {
+    this.$accessor.assignment.fetchStats();
   },
   methods: {
     unassignVolunteer(teamMember: TeamMemberForDetails) {
@@ -343,6 +360,14 @@ export default defineComponent({
     // updateAssignedTeam(assignee: TeamMemberForDetails) {
     //   //TODO
     // },
+    getVolunteerAssignmentStats(
+      volunteerId: number,
+    ): VolunteerAssignmentStat[] {
+      return (
+        this.$accessor.assignment.stats.find(({ id }) => id === volunteerId)
+          ?.stats ?? []
+      );
+    },
   },
 });
 </script>
@@ -382,6 +407,9 @@ export default defineComponent({
   }
   &__actions {
     display: block ruby;
+  }
+  &__user-stats {
+    justify-content: center;
   }
 }
 

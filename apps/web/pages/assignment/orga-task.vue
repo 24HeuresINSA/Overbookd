@@ -11,7 +11,7 @@
     <FilterableTaskAssignmentList class="task-list" />
     <SnackNotificationContainer />
 
-    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1350px">
       <AssignmentDetails
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
