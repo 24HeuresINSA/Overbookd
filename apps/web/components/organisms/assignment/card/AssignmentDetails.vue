@@ -54,11 +54,10 @@
           :items-per-page="-1"
           disable-pagination
           hide-default-footer
+          :value="selectedAssignee"
         >
           <template #item.firstname="{ item }">
-            <span :class="{ 'selected-assignee': isAssigneeSelected(item) }">
-              {{ item.firstname }} {{ item.lastname }}
-            </span>
+            {{ item.firstname }} {{ item.lastname }}
             <TeamChip
               v-for="team in item.teams"
               :key="team"
@@ -259,6 +258,15 @@ export default defineComponent({
     isOrgaTaskMode(): boolean {
       return isOrgaTaskMode(this.$route.path);
     },
+    selectedAssignee(): [TeamMemberForDetails] | [] {
+      if (!this.isOrgaTaskMode) return [];
+      const assignee = this.$accessor.assignVolunteerToTask.selectedVolunteer;
+      const assigneeForDetails = this.assignees.find(
+        ({ id }) => id === assignee?.id,
+      );
+      if (!assigneeForDetails) return [];
+      return [assigneeForDetails];
+    },
   },
   methods: {
     unassignVolunteer(teamMember: TeamMemberForDetails) {
@@ -331,12 +339,6 @@ export default defineComponent({
         isNumber(input.assigneeId) &&
         isString(input.team)
       );
-    },
-    isAssigneeSelected(assignee: TeamMemberForDetails): boolean {
-      if (!this.isOrgaTaskMode) return false;
-      const selectedVolunteer =
-        this.$accessor.assignVolunteerToTask.selectedVolunteer;
-      return assignee.id === selectedVolunteer?.id;
     },
     // updateAssignedTeam(assignee: TeamMemberForDetails) {
     //   //TODO
