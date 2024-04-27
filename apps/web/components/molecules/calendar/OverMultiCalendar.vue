@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { DateString, Hour } from "@overbookd/period";
+import { DateString, Hour, OverDate } from "@overbookd/period";
 import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
@@ -198,7 +198,8 @@ export default Vue.extend({
       const volunteer = this.retrieveVolunteer(volunteerId);
       if (!volunteer) return false;
 
-      return isItAvailableDuringThisHour(volunteer.availabilities, date, hour);
+      const overDate = OverDate.init({ date, hour });
+      return isItAvailableDuringThisHour(volunteer.availabilities, overDate);
     },
     buildPreviewEvents(eventToAdd: CalendarPlanningEvent): CalendarEvent[] {
       return this.volunteerIds.map((category) => ({

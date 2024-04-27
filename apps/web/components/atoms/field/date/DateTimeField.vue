@@ -10,6 +10,7 @@
     :hide-details="hideDetails"
     :error-messages="errorMessages"
     return-object
+    :disabled="disabled"
     @change="updateDate"
     @keydown.enter="enterKeyDown"
   >
@@ -51,6 +52,10 @@ export default Vue.extend({
       default: () => [],
     },
     hideDetails: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

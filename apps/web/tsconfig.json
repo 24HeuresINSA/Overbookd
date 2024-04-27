@@ -33,6 +33,7 @@
       "@overbookd/period": ["../../libraries/period/src"],
       "@overbookd/permission": ["../../constants/permission/src"],
       "@overbookd/personal-account": ["../../domains/personal-account/src"],
+      "@overbookd/planning": ["../../domains/planning/src"],
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/signa": ["../../domains/signa/src"],
       "@overbookd/slugify": ["../../libraries/slugify/src"],

@@ -30,7 +30,7 @@ export class Period {
   }
 
   static init({ start, end }: IProvidePeriod): Period {
-    if (this.isEndBeforeStart({ start, end })) {
+    if (Period.isEndBeforeStart({ start, end })) {
       throw new EndBeforeStart();
     }
     return new Period(start, end);

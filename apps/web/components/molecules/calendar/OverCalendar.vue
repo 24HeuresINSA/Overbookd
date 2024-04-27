@@ -44,6 +44,7 @@
         :event-ripple="true"
         :weekdays="weekdays"
         @click:date="selectDate"
+        @click:time="clickOnTime"
         @moved="updateDate"
       >
         <template
@@ -143,7 +144,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { DateString, OverDate } from "@overbookd/period";
+import { DateString, Hour, OverDate } from "@overbookd/period";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
 import {
@@ -194,7 +195,7 @@ export default defineComponent({
       default: null,
     },
   },
-  emits: ["update:date", "select:date"],
+  emits: ["update:date", "select:date", "click:time"],
   computed: {
     eventsWithPublicHolidays(): (CalendarEvent | DailyEvent)[] {
       return [...this.events, ...this.publicHolidayEvents];
@@ -264,6 +265,10 @@ export default defineComponent({
     },
     selectDate({ date }: { date: DateString }) {
       this.$emit("select:date", date);
+    },
+    clickOnTime(event: { date: DateString; hour: Hour }) {
+      const date = OverDate.init(event);
+      this.$emit("click:time", date);
     },
   },
 });
