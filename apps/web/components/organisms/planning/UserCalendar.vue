@@ -58,6 +58,7 @@ import { PlanningEvent } from "@overbookd/assignment";
 import { BreakDefinition } from "@overbookd/planning";
 import { isDesktop } from "~/utils/device/device.utils";
 import CreateBreakPeriodCard from "~/components/molecules/planning/CreateBreakPeriodCard.vue";
+import { convertToCalendarBreak } from "~/domain/common/planning-events";
 
 type UserCalendarData = {
   calendarCentralDate: Date;
@@ -121,15 +122,7 @@ export default Vue.extend({
           timed: true,
         }),
       );
-      const breakEvents = this.breakPeriods.map(
-        ({ start, end }): CalendarEvent => ({
-          start,
-          end,
-          name: "Pause",
-          color: "black",
-          timed: true,
-        }),
-      );
+      const breakEvents = this.breakPeriods.map(convertToCalendarBreak);
       return [...assignmentEvents, ...tasksEvents, ...breakEvents];
     },
     user(): UserPersonalData {

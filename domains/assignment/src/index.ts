@@ -52,6 +52,7 @@ export type {
   Task as PlanningTask,
   Availabilities,
   Friends,
+  BreakPeriods,
 } from "./assign-task-to-volunteer/funnel/planning";
 export type {
   Assignments,
