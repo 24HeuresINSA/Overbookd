@@ -10,3 +10,9 @@ export function isDailyEvent(
 export type CalendarEventWithIdentifier = CalendarEvent & {
   identifier: AssignmentIdentifier;
 };
+
+export function isWithIdentifier(
+  event: CalendarEventWithIdentifier | CalendarEvent,
+): event is CalendarEventWithIdentifier {
+  return Object.hasOwn(event, "identifier");
+}

@@ -79,3 +79,9 @@ export type AssignmentSummary = IProvidePeriod &
   AssignmentIdentifier & {
     teams: AssignmentTeam[];
   };
+
+export function isWithDetails(
+  assignment: Assignment | Assignment<{ withDetails: true }>,
+): assignment is Assignment<{ withDetails: true }> {
+  return Object.hasOwn(assignment, "appointment");
+}
