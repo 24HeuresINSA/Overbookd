@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Assignment, Task, Volunteer } from "../domain/task.model";
+import { Assignment, Contact, Task, Volunteer } from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 
@@ -36,6 +36,22 @@ class AssignmentRepresentation implements Assignment {
   volunteers: Volunteer[];
 }
 
+class ContactRepresentation implements Contact {
+  @ApiProperty({
+    name: "name",
+    description: "contact name",
+    type: String,
+  })
+  name: string;
+
+  @ApiProperty({
+    name: "phone",
+    description: "contact phone",
+    type: String,
+  })
+  phone: string;
+}
+
 export class TaskResponseDto implements Task {
   @ApiProperty({
     name: "name",
@@ -45,11 +61,11 @@ export class TaskResponseDto implements Task {
   name: string;
 
   @ApiProperty({
-    name: "description",
-    description: "task description",
+    name: "instructions",
+    description: "task instructions",
     type: String,
   })
-  description: string;
+  instructions: string;
 
   @ApiProperty({
     name: "period",
@@ -72,4 +88,12 @@ export class TaskResponseDto implements Task {
     isArray: true,
   })
   assignments: Assignment[];
+
+  @ApiProperty({
+    name: "contacts",
+    description: "task contacts",
+    type: ContactRepresentation,
+    isArray: true,
+  })
+  contacts: Contact[];
 }

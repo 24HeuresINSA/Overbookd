@@ -28,7 +28,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     const start = toDateArray(task.period.start);
     const end = toDateArray(task.period.end);
     const assignments = this.buildAssignmentsDescription(task.assignments);
-    const description = `${task.description}${assignments}`;
+    const description = `${task.instructions}${assignments}`;
 
     return {
       start,

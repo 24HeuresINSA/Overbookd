@@ -19,28 +19,28 @@ const brenda = { id: 14, name: "brenda" };
 
 const debarrierageAvenueDesArts = {
   name: "Debarierrage Avenue des Arts",
-  description: "Bonsoir, il faut enlever des barrieres",
+  instructions: "Bonsoir, il faut enlever des barrieres",
   id: 1,
   location: "Avenue des Arts",
 };
 
 const deplacerLeFen = {
   name: "Deplacer le FEN",
-  description: "Bonsoir, il faut deplacer le FEN vers les barrieres",
+  instructions: "Bonsoir, il faut deplacer le FEN vers les barrieres",
   id: 2,
   location: "Avenue des Arts",
 };
 
 const barrierageAvenueDesArts = {
   name: "Barierrage Avenue des Arts",
-  description: "Bonsoir, il faut porter des barrieres",
+  instructions: "Bonsoir, il faut porter des barrieres",
   id: 3,
   location: "Avenue des Arts",
 };
 
 const ambiancerLeQG = {
   name: "Ambiancer le QG",
-  description: "Mettre la grosse ambiance au QG",
+  instructions: "Mettre la grosse ambiance au QG",
   id: 4,
   location: "QG Orga",
 };

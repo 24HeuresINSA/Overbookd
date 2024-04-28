@@ -225,13 +225,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     name,
     period,
     location,
-    description,
+    instructions,
     assignments,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ["task"] };
-    const displayDescription = this.extractDescription(description);
+    const displayInstructions = this.extractInstructions(instructions);
     const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = {
       table: {
@@ -245,7 +245,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       displayName,
       displayPeriod,
       displayLocation,
-      displayDescription,
+      displayInstructions,
       displayAssignment,
       taskSeparator,
     ];
@@ -344,9 +344,9 @@ export class PdfRenderStrategy implements RenderStrategy {
     return displayPeriod;
   }
 
-  private extractDescription(description: string): Content {
-    const sanitizedDescription = sanitizeHtml(description);
-    return htmlToPdfMake(sanitizedDescription, {
+  private extractInstructions(instructions: string): Content {
+    const sanitizedInstructions = sanitizeHtml(instructions);
+    return htmlToPdfMake(sanitizedInstructions, {
       window,
       defaultStyles: this.htmlToPdfDefaultStyle,
     });
