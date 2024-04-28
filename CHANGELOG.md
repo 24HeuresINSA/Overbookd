@@ -1,3 +1,21 @@
+## [2.36.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.0...v2.36.1) (2024-04-28)
+
+
+### Bug Fixes
+
+* **assignment:** allow break periods deletion. [#1868](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1868) ([533cf2c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/533cf2c9c015eddc4bc16d2d6120e2c750b6eac5))
+* **assignment:** filter out assignments that overlappse break periods not only those included. [#1865](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1865) ([555148e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/555148e63f0b865018a5f00d795b739aff3e4d2d))
+* **assignment:** remove charisma-less volunteers in volunteers list stats. [#1866](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1866) ([8b8e32a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b8e32ac48bb623c01ab66500524e177b3fb8be1))
+* **festival-event:** count ready-to-assign festival tasks in stats percentage. [#1767](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1767) ([fbe9d57](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fbe9d57a24917393e8882ec42e93d5a6be51785b))
+* **festival-task:** display assignment periods and details on ready to assign tasks. [#1863](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1863) ([b26cab4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b26cab4876c3842cd227c3950d842809a5f63a49))
+* **orga-needs:** Delete teamchip when its cross is clicked in orga needs page [#1867](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1867) ([21d4834](https://gitlab.com/24-heures-insa/overbookd-mono/commit/21d4834cca1802bb6b06f41672384143b4c517fe))
+* **planning:** set current edition. [#1870](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1870) ([41f6aa1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/41f6aa18222e0bf282be4e9057c9f778e1c65a82))
+
+
+### Pre-Features
+
+* **assignment:** highlight selected volunteer name in details of orga task mode [#1861](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1861) ([a0667cb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a0667cb1b06bd198d7166308d41df5b968dea109))
+
 ## [2.36.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.35.4...v2.36.0) (2024-04-27)
 
 
