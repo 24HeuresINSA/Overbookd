@@ -1,3 +1,16 @@
+## [2.36.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.1...v2.36.2) (2024-04-28)
+
+
+### Bug Fixes
+
+* **planning:** adapt task model with new tasks [#1872](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1872) ([d17f028](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d17f028199754edc1d18955425ad2977d10eb22e))
+* **planning:** update vulunteers managers [#1871](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1871) ([f55012c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f55012c06f2ecb1c8544f02cd9e8d3c0bdc65652))
+
+
+### Performance Improvements
+
+* add index on is deleted columns. [#1876](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1876) ([d9deb03](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d9deb030c5b1c5700636701df7b8a632d2f3db13))
+
 ## [2.36.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.0...v2.36.1) (2024-04-28)
 
 
