@@ -199,11 +199,6 @@ $column-margins: 30px;
   }
 }
 
-.filters {
-  width: 100%;
-  height: $filters-height - 25px;
-}
-
 .volunteer-list {
   padding: 0 5px;
   height: calc(
@@ -212,8 +207,8 @@ $column-margins: 30px;
   );
   &--with-friend-list {
     max-height: calc(
-      100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$friends-height} -
-        #{$layout-padding} - #{$column-margins}
+      100vh - #{$filters-height} - #{$header-height} - #{$friends-height} - #{$layout-padding} -
+        #{$column-margins}
     );
   }
 }

@@ -2,7 +2,7 @@
   <div class="filters">
     <v-text-field
       :value="search"
-      class="filters__field"
+      class="filters__search"
       label="Recherche"
       hide-details
       @input="changeSearch"
@@ -155,17 +155,16 @@ export default defineComponent({
 <style lang="scss" scoped>
 .filters {
   width: 100%;
-  height: 270px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 25px;
-  gap: 15px;
+  height: fit-content;
+  padding: 0px 15px;
+  margin-top: auto;
 
   &__field {
     width: 100%;
-    padding: 0 25px;
+    padding: 5px, 0px;
+    height: 65px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   &__multi-select {
