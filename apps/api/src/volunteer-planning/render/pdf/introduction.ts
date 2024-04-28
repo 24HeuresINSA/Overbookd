@@ -9,7 +9,7 @@ export class Introduction {
         style: ["paragraph", "bold", "liteSpaceBetween"],
       },
       {
-        text: "Merci de rendre cet événement possible, vous êtes plus 400 à venir nous aider pour ce week-end de folie.",
+        text: "Merci de rendre cet événement possible, vous êtes plus de 400 à venir nous aider pour ce week-end de folie.",
         style: ["paragraph", "largeSpaceBetween"],
       },
       {
