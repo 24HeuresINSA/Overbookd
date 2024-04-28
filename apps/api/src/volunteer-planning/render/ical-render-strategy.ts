@@ -9,7 +9,7 @@ import { RenderStrategy } from "./render-strategy";
 import { Edition } from "@overbookd/contribution";
 
 export class IcalRenderStrategy implements RenderStrategy {
-  private readonly EMPTY_CALENDAR = `CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\nX-PUBLISHED-TTL:PT1H\nEND:VCALENDAR`;
+  private readonly EMPTY_CALENDAR = `CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\nX-PUBLISHED-TTL:PT1H\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\nEND:VCALENDAR`;
 
   render(tasks: Task[]) {
     if (tasks.length === 0) {
