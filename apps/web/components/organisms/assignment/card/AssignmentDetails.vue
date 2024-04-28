@@ -103,6 +103,9 @@
               </v-chip>
             </div>
           </template>
+          <template #item.assignmentDuration="{ item }">
+            {{ formatDuration(item.assignmentDuration) }}
+          </template>
           <template #item.actions="{ item }">
             <div class="assignees__actions">
               <v-tooltip top max-width="20rem">
@@ -160,6 +163,7 @@ import {
   isTeamMember,
 } from "@overbookd/assignment";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import { Duration } from "@overbookd/period";
 
 export default defineComponent({
   name: "AssignmentDetails",
@@ -249,11 +253,15 @@ export default defineComponent({
         value: "friends",
         sortable: false,
       };
+      const assignmentDuration = {
+        text: "Affectation totale",
+        value: "assignmentDuration",
+      };
       const actions = { text: "Actions", value: "actions", sortable: false };
       if (this.isUpdateAssignedTeamActive) {
-        return [volunteer, assignedTeam, actions];
+        return [volunteer, assignedTeam, assignmentDuration, actions];
       }
-      return [volunteer, assignedTeam, friends, actions];
+      return [volunteer, assignedTeam, friends, assignmentDuration, actions];
     },
     isOrgaTaskMode(): boolean {
       return isOrgaTaskMode(this.$route.path);
@@ -339,6 +347,9 @@ export default defineComponent({
         isNumber(input.assigneeId) &&
         isString(input.team)
       );
+    },
+    formatDuration(duration: number): string {
+      return Duration.ms(duration).toString();
     },
     // updateAssignedTeam(assignee: TeamMemberForDetails) {
     //   //TODO

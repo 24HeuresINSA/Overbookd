@@ -5,6 +5,7 @@ import {
   isTeamMember,
 } from "@overbookd/assignment";
 import { SELECT_PERIOD } from "./period.query";
+import { IProvidePeriod } from "@overbookd/period";
 
 export type DatabaseAssignee = {
   teamCode: string;
@@ -17,6 +18,7 @@ export type DatabaseAssignee = {
     teams: { teamCode: string }[];
     friends: { requestor: BaseAssigneeForDetails }[];
     friendRequestors: { friend: BaseAssigneeForDetails }[];
+    assigned: { assignment: IProvidePeriod }[];
   };
 };
 
@@ -50,6 +52,7 @@ const SELECT_ASSIGNEE_PERSONAL_DATA = {
   friendRequestors: {
     select: { friend: { select: SELECT_FRIEND_PERSONAL_DATA } },
   },
+  assigned: { select: { assignment: { select: SELECT_PERIOD } } },
 };
 
 const SELECT_ASSIGNEE = {
