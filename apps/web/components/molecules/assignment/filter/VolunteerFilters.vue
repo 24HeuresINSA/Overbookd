@@ -7,13 +7,13 @@
       @input="changeSearch"
     ></v-text-field>
     <SearchTeams
-      :value="teams"
+      :teams="teams"
       class="filters__field"
       :boxed="false"
       @change="changeTeams"
     ></SearchTeams>
     <SearchTeams
-      :value="excludedTeams"
+      :teams="excludedTeams"
       label="Exclure des équipes"
       class="filters__field"
       :boxed="false"
@@ -74,6 +74,14 @@ import {
 } from "~/utils/assignment/assignment.utils";
 import { SlugifyService } from "@overbookd/slugify";
 
+type VolunteerFiltersData = {
+  search: string;
+  teams: Team[];
+  excludedTeams: Team[];
+  sort: number;
+  hasNoFriends: boolean;
+};
+
 export default defineComponent({
   name: "VolunteerFilters",
   components: { SearchTeams },
@@ -95,7 +103,7 @@ export default defineComponent({
     "change:sort",
     "change:friend-filter",
   ],
-  data: () => ({
+  data: (): VolunteerFiltersData => ({
     search: "",
     teams: [],
     excludedTeams: [],
@@ -115,9 +123,11 @@ export default defineComponent({
       this.$emit("change:search", search);
     },
     changeTeams(teams: Team[]) {
+      this.teams = teams;
       this.$emit("change:teams", teams);
     },
     changeExcludedTeams(excludedTeams: Team[]) {
+      this.excludedTeams = excludedTeams;
       this.$emit("change:excluded-teams", excludedTeams);
     },
     updateSort() {
