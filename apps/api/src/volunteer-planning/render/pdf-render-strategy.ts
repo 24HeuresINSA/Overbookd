@@ -14,6 +14,7 @@ import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
 import { Introduction } from "./pdf/introduction";
 import { RenderStrategy } from "./render-strategy";
+import { Edition } from "@overbookd/contribution";
 
 class PdfException extends Error {}
 
@@ -180,7 +181,7 @@ export class PdfRenderStrategy implements RenderStrategy {
           {
             stack: [
               {
-                text: "24 heures de l'INSA - 48ème édition",
+                text: `24 heures de l'INSA - ${Edition.current}ème édition`,
                 alignment: "center",
                 style: ["edition"],
               },

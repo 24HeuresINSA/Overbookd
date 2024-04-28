@@ -6,10 +6,10 @@ import {
 } from "../../utils/date";
 import { Assignment, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
+import { Edition } from "@overbookd/contribution";
 
 export class IcalRenderStrategy implements RenderStrategy {
-  private readonly EMPTY_CALENDAR =
-    "CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - 48e\nX-PUBLISHED-TTL:PT1H\nEND:VCALENDAR";
+  private readonly EMPTY_CALENDAR = `CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\nX-PUBLISHED-TTL:PT1H\nEND:VCALENDAR`;
 
   render(tasks: Task[]) {
     if (tasks.length === 0) {
@@ -35,7 +35,7 @@ export class IcalRenderStrategy implements RenderStrategy {
       end,
       title: task.name,
       location: task.location,
-      calName: "24 Heures de l'INSA - 48e",
+      calName: `24 Heures de l'INSA - ${Edition.current}e`,
       description,
     };
   }
