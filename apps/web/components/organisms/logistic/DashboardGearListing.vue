@@ -63,7 +63,10 @@ export default defineComponent({
     headers: [
       { text: "Matos", value: "name" },
       { text: "Matos consommable", value: "isConsumable" },
-      { text: "Delta", value: "stockDiscrepancy" },
+      {
+        text: "Minimum de la différence entre le stock et les demandes",
+        value: "stockDiscrepancy",
+      },
       { text: "", value: "data-table-expand", sortable: false },
     ],
     selectedGearDetails: undefined,

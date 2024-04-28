@@ -14,12 +14,14 @@ export function listStockAndInquiriesSources(allDetails: GearDetails[]) {
   };
 }
 
-function stockSources({ inventory, borrows }: GearDetails): string {
+function stockSources({ inventory, borrows, purchases }: GearDetails): string {
   const inventoryDetail = inventory > 0 ? `• Inventaire: ${inventory}` : "";
   const borrowsDetail =
     borrows.length > 0 ? `• Emprunts: ${sumQuantities(borrows)}` : "";
+  const purchasesDetail =
+    purchases.length > 0 ? `• Achats: ${sumQuantities(purchases)}` : "";
 
-  return concatSources([inventoryDetail, borrowsDetail]);
+  return concatSources([inventoryDetail, borrowsDetail, purchasesDetail]);
 }
 
 function inquirySources({ activities, tasks }: GearDetails): string {
