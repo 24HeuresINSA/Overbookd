@@ -36,7 +36,8 @@
         >
           <strong>{{ event.name }}</strong> <br />
           <span v-if="event.end">
-            {{ event.start.getHours() }}h - {{ event.end.getHours() }}h
+            {{ displayForCalendar(event.start) }} -
+            {{ displayForCalendar(event.end) }}
           </span>
         </div>
       </template>
@@ -95,6 +96,7 @@ import { isDesktop } from "~/utils/device/device.utils";
 import CreateBreakPeriodCard from "~/components/molecules/planning/CreateBreakPeriodCard.vue";
 import { convertToCalendarBreak, PAUSE } from "~/domain/common/planning-events";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { displayForCalendar } from "~/utils/date/date.utils";
 
 type UserCalendarData = {
   calendarCentralDate: Date;
@@ -245,6 +247,7 @@ export default Vue.extend({
       const period = this.selectedBreak;
       this.$accessor.user.deleteVolunteerBreakPeriods({ volunteer, period });
     },
+    displayForCalendar,
   },
 });
 </script>
