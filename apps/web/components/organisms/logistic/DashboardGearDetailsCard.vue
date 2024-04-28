@@ -39,7 +39,7 @@
         </summary>
         <ul v-if="gearDetails.purchases.length">
           <li v-for="purchase in gearDetails.purchases" :key="purchase.id">
-            <nuxt-link :to="`/logistic/purchases/${purchase.id}`">
+            <nuxt-link :to="`/logistic/purchase/${purchase.id}`">
               Achat #{{ purchase.id }} - {{ purchase.seller }}:
               <strong>{{ purchase.quantity }}</strong>
             </nuxt-link>
