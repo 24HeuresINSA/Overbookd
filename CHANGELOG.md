@@ -1,3 +1,17 @@
+## [2.36.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.2...v2.36.3) (2024-04-28)
+
+
+### Bug Fixes
+
+* **assignment:** improve pages display [#1850](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1850) ([ad34e4f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ad34e4f0735f2fcc822bcd8542f19e9908afdc34))
+* **logistic-dashboard:** display purchases et detail card [#1848](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1848) ([0db3943](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0db394355e8cc57cfa29d0f152cd86880e029c49))
+* **planning:** display minutes on calendar events when needed. [#1877](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1877) ([b2062a2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b2062a23b5d183fa7ba578912b90bd89d9d8b64a))
+
+
+### Pre-Features
+
+* **assignment:** display assignment duration in details [#1860](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1860) ([0320ff5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0320ff538533a2062927acafa08faaa762803607))
+
 ## [2.36.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.1...v2.36.2) (2024-04-28)
 
 
