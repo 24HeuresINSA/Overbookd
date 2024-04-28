@@ -100,7 +100,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
           Period.init(assignment).isOverlapping(assignmentPeriod),
         );
         const isInBreakPeriod = volunteer.breaks.some((breakPeriod) =>
-          Period.init(breakPeriod).includes(assignmentPeriod),
+          Period.init(breakPeriod).isOverlapping(assignmentPeriod),
         );
 
         return isAvailable && !isAssigned && !isInBreakPeriod;
