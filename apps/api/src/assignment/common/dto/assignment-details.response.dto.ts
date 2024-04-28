@@ -37,6 +37,9 @@ class TeamMemberForDetailsDto
 
   @ApiProperty({ type: String, required: false })
   note?: string;
+
+  @ApiProperty({ type: Number })
+  assignmentDuration: number;
 }
 
 export class AssignmentWithDetailsResponseDto

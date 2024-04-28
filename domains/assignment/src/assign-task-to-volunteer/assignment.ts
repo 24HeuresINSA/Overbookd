@@ -28,6 +28,7 @@ export type TeamMemberForDetails = BaseAssigneeForDetails & {
   friends: BaseAssigneeForDetails[];
   comment?: string;
   note?: string;
+  assignmentDuration: number;
 };
 
 export type NamelyDemandedForDetails = BaseAssigneeForDetails;

@@ -23,6 +23,7 @@ import {
 import { UserService } from "../../../user/user.service";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { HAS_POSITIVE_CHARISMA } from "./common.query";
+import { Period } from "@overbookd/period";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -202,10 +203,18 @@ function toAssigneeForDetails(
   );
 
   const teams = assignee.personalData.teams.map(({ teamCode }) => teamCode);
+
+  const assignmentDuration = assignee.personalData.assigned.reduce(
+    (duration, { assignment }) =>
+      duration + Period.init(assignment).duration.inMilliseconds,
+    0,
+  );
+
   return {
     ...baseAssignee,
     teams,
     as: assignee.teamCode,
     friends,
+    assignmentDuration,
   };
 }
