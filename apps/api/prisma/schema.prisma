@@ -82,6 +82,7 @@ model User {
   festivalTasksToReview     FestivalTask[]                      @relation("task-reviewer")
   assigned                  Assignee[]
 
+  @@index([isDeleted])
   @@map("user")
 }
 
@@ -160,6 +161,7 @@ model Transaction {
   createdAt DateTime        @default(now()) @map("created_at")
   isDeleted Boolean         @default(false) @map("is_deleted")
 
+  @@index([isDeleted])
   @@map("transaction")
 }
 
@@ -270,6 +272,7 @@ model Ft {
   timeWindows FtTimeWindow[]
   reviews     FtReview[]
 
+  @@index([isDeleted])
   @@map("ft")
 }
 
