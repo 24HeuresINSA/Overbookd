@@ -225,13 +225,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     name,
     period,
     location,
-    description,
+    instructions,
     assignments,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ["task"] };
-    const displayDescription = this.extractDescription(description);
+    const displayDescription = this.extractDescription(instructions);
     const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = {
       table: {

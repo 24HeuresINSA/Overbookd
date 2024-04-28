@@ -118,7 +118,7 @@ export class PrismaTaskRepository implements TaskRepository {
     const period = { start: task.start, end: task.end };
     return {
       name,
-      description,
+      instructions: description,
       id,
       period,
       location: location.name,

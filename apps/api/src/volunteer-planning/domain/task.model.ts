@@ -10,10 +10,16 @@ export type Assignment = {
   volunteers: Volunteer[];
 };
 
+export type Contact = {
+  name: string;
+  phone: string;
+};
+
 export type Task = {
   name: string;
-  description: string;
+  instructions: string;
   period: IProvidePeriod;
   location: string;
   assignments: Assignment[];
+  contacts: Contact[];
 };
