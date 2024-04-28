@@ -28,7 +28,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     const start = toDateArray(task.period.start);
     const end = toDateArray(task.period.end);
     const assignments = this.buildAssignmentsDescription(task.assignments);
-    const description = `${task.instructions}${assignments}`;
+    const instructions = `${task.instructions}${assignments}`;
 
     return {
       start,
@@ -36,7 +36,7 @@ export class IcalRenderStrategy implements RenderStrategy {
       title: task.name,
       location: task.location,
       calName: `24 Heures de l'INSA - ${Edition.current}e`,
-      description,
+      description: instructions,
     };
   }
 
