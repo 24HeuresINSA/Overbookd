@@ -128,3 +128,7 @@ export function isSameDay(date1: Date, date2: Date): boolean {
     date1.getFullYear() === date2.getFullYear()
   );
 }
+
+export function displayForCalendar(date: Date): string {
+  return `${date.getHours()}h${date.getMinutes() || ""}`;
+}

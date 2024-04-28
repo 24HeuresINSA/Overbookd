@@ -34,7 +34,8 @@
         >
           <strong>{{ event.name }}</strong> <br />
           <span v-if="event.end">
-            {{ event.start.getHours() }}h - {{ event.end.getHours() }}h
+            {{ displayForCalendar(event.start) }} -
+            {{ displayForCalendar(event.end) }}
           </span>
         </div>
       </template>
@@ -67,6 +68,7 @@ import {
   CalendarEventWithIdentifier,
   isWithIdentifier,
 } from "~/utils/assignment/calendar-event";
+import { displayForCalendar } from "~/utils/date/date.utils";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 
 type FestivalTaskCalendarData = {
@@ -233,6 +235,7 @@ export default defineComponent({
     unassignVolunteer(form: UnassignForm) {
       this.$accessor.festivalTask.unassign(form);
     },
+    displayForCalendar,
   },
 });
 </script>
