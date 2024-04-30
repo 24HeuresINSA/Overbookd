@@ -135,7 +135,7 @@ export default defineComponent({
       hasAssignedFriends: boolean,
     ): (assignment: AssignmentSummaryWithTask) => boolean {
       return ({ hasFriendsAssigned }) =>
-        hasFriendsAssigned === hasAssignedFriends;
+        !hasAssignedFriends || hasFriendsAssigned;
     },
     isVolunteerAssignableTo(teamCode: string): boolean {
       if (!this.selectedVolunteer) return false;
