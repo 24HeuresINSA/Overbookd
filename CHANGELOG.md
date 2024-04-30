@@ -1,3 +1,11 @@
+## [2.36.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.4...v2.36.5) (2024-04-30)
+
+
+### Bug Fixes
+
+* **assignment:** has assigned friends filter [#1882](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1882) ([a0f451f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a0f451fb742b83f3bf2f8ed2a48e4c2fe8db49ae))
+* **festival-event:** remove fake name in web [#1883](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1883) ([6410500](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6410500e0578579f7a0030813eeb38fa933cdbc1))
+
 ## [2.36.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.3...v2.36.4) (2024-04-30)
 
 
