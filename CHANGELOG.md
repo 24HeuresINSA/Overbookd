@@ -1,3 +1,19 @@
+## [2.36.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.3...v2.36.4) (2024-04-30)
+
+
+### Bug Fixes
+
+* **assignment:** delete teamchip in volunteers filters lists when cross is clicked [#1878](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1878) ([6fbfa8b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6fbfa8b602b03f75c0b8f9188d8d04ad95c73cdb))
+* **assignment:** move coments and notes next to the name [#1879](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1879) ([aab129e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aab129e8a14e7023d9d8d4420bf44100755eebb2))
+* **planning:** add refresh duration every hour in Icalendar [#1875](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1875) ([c09fc46](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c09fc465707d5768658fb9cedd93ca299485f4e1))
+* **user:** delete team affect V2 [#1881](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1881) ([8c0cd55](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8c0cd55b4f45da5a866166fb175ef2b333ddc80e))
+
+
+### Pre-Features
+
+* **planning:** download many leafleats. [#1874](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1874) ([f4fbe68](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f4fbe68e31b5b66c079d9486e5a3bd8f363a9c7e))
+* **planning:** retrieve and filter volunteers with planning. [#1874](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1874) ([97d5316](https://gitlab.com/24-heures-insa/overbookd-mono/commit/97d5316c1c48a5293aca54a39d513829f565bbfb))
+
 ## [2.36.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.2...v2.36.3) (2024-04-28)
 
 
