@@ -53,7 +53,7 @@ type State = {
   selectedActivity: FestivalActivity;
 };
 
-const fakeActivity = defaultDraft(0, "Fake activity");
+const fakeActivity = defaultDraft(0, "");
 
 export const state = (): State => ({
   activities: {

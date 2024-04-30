@@ -53,7 +53,7 @@ const fakeTask: FestivalTaskWithConflicts = {
   status: DRAFT,
   festivalActivity: {
     id: 0,
-    name: "Fake FA",
+    name: "",
     status: DRAFT,
     timeWindows: [],
     location: null,
@@ -64,11 +64,11 @@ const fakeTask: FestivalTaskWithConflicts = {
     },
   },
   general: {
-    name: "Fake FA",
+    name: "",
     administrator: {
       id: 0,
-      firstname: "Fake",
-      lastname: "Adherent",
+      firstname: "",
+      lastname: "",
     },
     team: null,
   },
