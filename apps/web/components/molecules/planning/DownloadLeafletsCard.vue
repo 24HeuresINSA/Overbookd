@@ -8,6 +8,7 @@
     </v-card-title>
     <v-card-text class="download-leaflets-card__details">
       <v-alert
+        v-show="isMaximumVolunteerLimitReached"
         id="max-volunteers"
         icon="mdi-alert-circle"
         border="left"
@@ -42,13 +43,28 @@
           :items="displayedVolunteers"
           :headers="headers"
           :custom-sort="sortVolunteers"
-        ></v-data-table>
+        >
+          <template #item.volunteer="{ item }">
+            {{ formatUserNameWithNickname(item) }}
+          </template>
+
+          <template #item.teams="{ item }">
+            <div class="team-list">
+              <TeamChip
+                v-for="team of item.teams"
+                :key="team"
+                :team="team"
+                with-name
+              />
+            </div>
+          </template>
+        </v-data-table>
       </details>
     </v-card-text>
     <v-card-actions>
       <v-btn color="primary" :loading="downloadInProgress" x-large>
         <v-icon left>mdi-download</v-icon>
-        Télécharger
+        Télécharger {{ displayedVolunteers.length }} plannings
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -56,6 +72,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { VolunteerForPlanning, HasAssignment } from "~/store/planning";
 import {
@@ -71,6 +88,7 @@ import {
   keepMatchingSearchCriteria,
   Searchable,
 } from "~/utils/search/search.utils";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 const MAX_PLANNING_DOWNLOAD_IN_PARALLEL = 50;
 
@@ -90,13 +108,13 @@ function sortVolunteerOnAssignment(desc: boolean): SortFunction<HasAssignment> {
 
 export default defineComponent({
   name: "DownloadLeafletsCard",
-  components: { SearchTeams },
+  components: { SearchTeams, TeamChip },
   emits: ["close-dialog"],
   data: (): DownloadLeafletsCardData => ({
     headers: [
       { text: "Prénom Nom (Surnom)", value: "volunteer" },
       { text: "Équipes", value: "teams", sortable: false },
-      { text: "Affectaction", value: "assignment" },
+      { text: "Affectaction", value: "assignment", width: "120px" },
     ],
     teams: [],
     search: "",
@@ -116,6 +134,14 @@ export default defineComponent({
         return isPartOfTeams(volunteer) && hasSimilarName(volunteer);
       });
     },
+    isMaximumVolunteerLimitReached(): boolean {
+      return (
+        this.displayedVolunteers.length > MAX_PLANNING_DOWNLOAD_IN_PARALLEL
+      );
+    },
+  },
+  mounted() {
+    this.$accessor.planning.fetchVolunteers();
   },
   methods: {
     closeDialog() {
@@ -128,7 +154,7 @@ export default defineComponent({
     ): VolunteerForPlanning[] {
       const sortsOn = sortsBy.at(0);
       const desc = sortsDesc.at(0);
-      if (!sortsOn || !desc) return volunteers;
+      if (sortsOn === undefined || desc === undefined) return volunteers;
 
       const sortFunction =
         sortsOn === "volunteer"
@@ -148,6 +174,7 @@ export default defineComponent({
       );
       this.downloadInProgress = false;
     },
+    formatUserNameWithNickname,
   },
 });
 </script>
@@ -236,5 +263,12 @@ fieldset {
   .details {
     padding-right: 30px;
   }
+}
+
+.team-list {
+  display: flex;
+  gap: 5px 10px;
+  flex-wrap: wrap;
+  padding: 5px 0px;
 }
 </style>

@@ -649,6 +649,9 @@ importers:
       '@overbookd/personal-account':
         specifier: workspace:^
         version: link:../../domains/personal-account
+      '@overbookd/user':
+        specifier: workspace:^
+        version: link:../../domains/user
 
 packages:
 

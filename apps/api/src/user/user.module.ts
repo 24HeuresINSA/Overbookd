@@ -16,6 +16,7 @@ import { PrismaBreaks } from "./repository/breaks.prisma";
 import { PlanningService } from "./planning.service";
 import { BreakPeriods } from "@overbookd/planning";
 import { PlanningController } from "./planning.contoller";
+import { PrismaVolunteers } from "./repository/volunteers.prisma";
 
 @Module({
   imports: [VolunteerPlanningModule, RegistrationModule, PrismaModule],
@@ -32,6 +33,11 @@ import { PlanningController } from "./planning.contoller";
       inject: [PrismaService],
     },
     {
+      provide: PrismaVolunteers,
+      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: PreferenceService,
       useFactory: (preferences: PrismaPreferences) =>
         new PreferenceService(preferences),
@@ -44,9 +50,9 @@ import { PlanningController } from "./planning.contoller";
     },
     {
       provide: PlanningService,
-      useFactory: (breakPeriod: BreakPeriods) =>
-        new PlanningService(breakPeriod),
-      inject: [BreakPeriods],
+      useFactory: (breakPeriod: BreakPeriods, volunteers: PrismaVolunteers) =>
+        new PlanningService(breakPeriod, volunteers),
+      inject: [BreakPeriods, PrismaVolunteers],
     },
     {
       provide: UserService,

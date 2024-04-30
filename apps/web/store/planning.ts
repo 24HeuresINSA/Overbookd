@@ -1,8 +1,13 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
-import { User } from "@overbookd/user";
-import { UserRepository } from "~/repositories/user.repository";
+import {
+  HttpStringified,
+  VolunteerForPlanning as HttpVolunteerForPlanning,
+} from "@overbookd/http";
 import { Duration } from "@overbookd/period";
+import { User } from "@overbookd/user";
+import { safeCall } from "~/utils/api/calls";
+import { UserRepository } from "~/repositories/user.repository";
+import { PlanningRepository } from "~/repositories/planning.repository";
 
 export type HasAssignment = {
   assignment: Duration;
@@ -93,5 +98,16 @@ export const actions = actionTree(
       );
       commit("SET_VOLUNTEER_PLANNINGS", retrievedPlannings);
     },
+    async fetchVolunteers({ commit }) {
+      const res = await safeCall(this, PlanningRepository.getVolunteers(this));
+      if (!res) return;
+      const volunteers = res.data.map(castWithAssignmentDuration);
+      commit("SET_VOLUNTEERS", volunteers);
+    },
   },
 );
+function castWithAssignmentDuration(
+  volunteer: HttpStringified<HttpVolunteerForPlanning>,
+): VolunteerForPlanning {
+  return { ...volunteer, assignment: Duration.ms(volunteer.assignment) };
+}

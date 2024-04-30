@@ -1,4 +1,8 @@
-import { DuringBreakPeriods, HttpStringified } from "@overbookd/http";
+import {
+  DuringBreakPeriods,
+  HttpStringified,
+  VolunteerForPlanning,
+} from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { Context } from "./context";
 
@@ -30,6 +34,12 @@ export class PlanningRepository {
     return context.$axios.delete<HttpStringified<IProvidePeriod[]>>(
       `${this.basePath}/${volunteer}/break-periods`,
       { params: { start, end } },
+    );
+  }
+
+  static getVolunteers(context: Context) {
+    return context.$axios.get<HttpStringified<VolunteerForPlanning[]>>(
+      `${this.basePath}/volunteers`,
     );
   }
 }

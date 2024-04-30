@@ -28,6 +28,7 @@ import { PlanningService } from "./planning.service";
 import { BreakPeriodDuringRequestDto } from "./dto/break-period-during.request.dto";
 import { Duration, Period } from "@overbookd/period";
 import { ParseDatePipe } from "../common/pipes/parse-date.pipe";
+import { VolunteerForPlanningResponseDto } from "./dto/volunteer-for-planning.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("planning")
@@ -117,5 +118,19 @@ export class PlanningController {
   ): Promise<PeriodDto[]> {
     const breakPeriod = Period.init({ start, end });
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("volunteers")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteers with assignments",
+    type: VolunteerForPlanningResponseDto,
+    isArray: true,
+  })
+  async getVolunteers(): Promise<VolunteerForPlanningResponseDto[]> {
+    return this.planning.getVolunteers();
   }
 }
