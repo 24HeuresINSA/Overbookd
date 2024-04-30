@@ -38,8 +38,10 @@ import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team.model";
 import { Sort } from "~/utils/models/assignment.model";
-import { SlugifyService } from "@overbookd/slugify";
-import { Searchable } from "~/utils/search/search.utils";
+import {
+  keepMatchingSearchCriteria,
+  Searchable,
+} from "~/utils/search/search.utils";
 import {
   AssignmentVolunteer,
   isAssignableVolunteer,
@@ -51,6 +53,8 @@ import {
   AUCUN_AMI,
   FriendFilter,
 } from "~/utils/assignment/assignment.utils";
+import { toSearchable } from "~/utils/search/search-user";
+import { excludeMembersOf, keepMembersOf } from "~/utils/search/search-team";
 
 type FilterableVolunteerListData = {
   teams: Team[];
@@ -79,23 +83,22 @@ export default defineComponent({
       return this.$accessor.assignTaskToVolunteer.assignableVolunteers;
     },
     searchableVolunteers(): Searchable<AssignmentVolunteer>[] {
-      return this.volunteers.map((volunteer) => ({
-        ...volunteer,
-        searchable: SlugifyService.apply(
-          `${volunteer.firstname} ${volunteer.lastname} ${volunteer.nickname}`,
-        ),
-      }));
+      return this.volunteers.map(toSearchable);
     },
     displayedVolunteers(): AssignmentVolunteer[] {
+      const isPartOfIncludedTeams = keepMembersOf(this.teams);
+      const isNotPartOfExcludedTeams = excludeMembersOf(this.excludedTeams);
+      const hasSimilarName = keepMatchingSearchCriteria(this.searchVolunteer);
+      const isMatchingFriendCondition = this.filterVolunteerByFriendCondition(
+        this.friendFilter,
+      );
       const filteredVolunteers = this.searchableVolunteers.filter(
         (volunteer) => {
           return (
-            this.filterVolunteerByTeams(this.teams)(volunteer) &&
-            this.filterVolunteerByExcludedTeams(this.excludedTeams)(
-              volunteer,
-            ) &&
-            this.filterVolunteerByName(this.searchVolunteer)(volunteer) &&
-            this.filterVolunteerByFriendCondition(this.friendFilter)(volunteer)
+            isPartOfIncludedTeams(volunteer) &&
+            isNotPartOfExcludedTeams(volunteer) &&
+            hasSimilarName(volunteer) &&
+            isMatchingFriendCondition(volunteer)
           );
         },
       );
@@ -117,30 +120,6 @@ export default defineComponent({
     },
   },
   methods: {
-    filterVolunteerByTeams(
-      teamsSearched: Team[],
-    ): (volunteer: AssignmentVolunteer) => boolean {
-      return teamsSearched.length > 0
-        ? (volunteer) =>
-            teamsSearched.every((teamSearched) =>
-              volunteer.teams.some(
-                (volunteerTeamCode) => teamSearched.code === volunteerTeamCode,
-              ),
-            )
-        : () => true;
-    },
-    filterVolunteerByExcludedTeams(
-      teamsExcluded: Team[],
-    ): (volunteer: AssignmentVolunteer) => boolean {
-      return teamsExcluded.length > 0
-        ? (volunteer) =>
-            !teamsExcluded.some((teamExcluded) =>
-              volunteer.teams.some(
-                (volunteerTeamCode) => teamExcluded.code === volunteerTeamCode,
-              ),
-            )
-        : () => true;
-    },
     selectVolunteer(volunteer: AssignmentVolunteer) {
       this.$emit("select-volunteer", volunteer);
     },
@@ -154,12 +133,6 @@ export default defineComponent({
           ? charismaDifference
           : durationDifference * order;
       });
-    },
-    filterVolunteerByName(
-      search: string,
-    ): (volunteer: Searchable<AssignmentVolunteer>) => boolean {
-      const slugifiedSearch = SlugifyService.apply(search);
-      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
     filterVolunteerByFriendCondition(
       friendFilter: FriendFilter | undefined,

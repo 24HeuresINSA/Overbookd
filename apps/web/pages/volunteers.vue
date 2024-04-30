@@ -42,10 +42,14 @@ import VolunteerInformation from "~/components/organisms/user/VolunteerInformati
 import VolunteerListFilters from "~/components/molecules/user/filters/VolunteerListFilters.vue";
 import VolunteerStatsExportFilters from "~/components/molecules/user/filters/VolunteerStatsExportFilters.vue";
 import VolunteerList from "~/components/organisms/user/VolunteerList.vue";
-import { SlugifyService } from "@overbookd/slugify";
-import { Searchable } from "~/utils/search/search.utils";
+import {
+  keepMatchingSearchCriteria,
+  Searchable,
+} from "~/utils/search/search.utils";
 import { UserPersonalData } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
+import { excludeMembersOf, keepMembersOf } from "~/utils/search/search-team";
+import { toSearchable } from "~/utils/search/search-user";
 
 type VolunteersData = {
   filters: {
@@ -87,18 +91,11 @@ export default Vue.extend({
       return this.$accessor.user.volunteers;
     },
     searchableVolunteers(): Searchable<UserPersonalData>[] {
-      return this.volunteers.map((volunteer) => ({
-        ...volunteer,
-        searchable: SlugifyService.apply(
-          `${volunteer.firstname} ${volunteer.lastname} ${volunteer.nickname}`,
-        ),
-      }));
+      return this.volunteers.map(toSearchable);
     },
     displayedVolunteers(): UserPersonalData[] {
-      const matchTeams = this.filterVolunteersByTeams(this.filters.teams);
-      const matchExcludedTeams = this.filterVolunteersByExcludedTeams(
-        this.filters.excludedTeams,
-      );
+      const matchTeams = keepMembersOf(this.filters.teams);
+      const matchExcludedTeams = excludeMembersOf(this.filters.excludedTeams);
       const matchName = this.filterVolunteersByName(this.filters.search);
       return this.searchableVolunteers.filter((volunteer) => {
         return (
@@ -118,30 +115,7 @@ export default Vue.extend({
     filterVolunteersByName(
       search: string,
     ): (volunteer: Searchable<UserPersonalData>) => boolean {
-      const slugifiedSearch = SlugifyService.apply(search);
-      return ({ searchable }) => searchable.includes(slugifiedSearch);
-    },
-
-    filterVolunteersByTeams(
-      teamsSearched: Team[],
-    ): (volunteer: UserPersonalData) => boolean {
-      if (teamsSearched.length === 0) return () => true;
-
-      return (volunteer) =>
-        teamsSearched.every((teamSearched) =>
-          volunteer.teams.some((teamCode) => teamSearched.code === teamCode),
-        );
-    },
-
-    filterVolunteersByExcludedTeams(
-      teamsExcluded: Team[],
-    ): (volunteer: UserPersonalData) => boolean {
-      if (teamsExcluded.length === 0) return () => true;
-
-      return (volunteer) =>
-        !teamsExcluded.some((teamExcluded) =>
-          volunteer.teams.some((teamCode) => teamExcluded.code === teamCode),
-        );
+      return keepMatchingSearchCriteria(search);
     },
 
     addTeamInFilters(team: Team) {

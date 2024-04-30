@@ -2,13 +2,19 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
 import { User } from "@overbookd/user";
 import { UserRepository } from "~/repositories/user.repository";
+import { Duration } from "@overbookd/period";
+
+export type HasAssignment = {
+  assignment: Duration;
+};
+
+export type VolunteerForPlanning = User &
+  HasAssignment & {
+    teams: string[];
+  };
 
 type VolunteerWithItPLanning = {
-  volunteer: {
-    firstname: string;
-    lastname: string;
-    id: number;
-  };
+  volunteer: User;
   planningBase64Data: string;
 };
 
@@ -17,10 +23,18 @@ export type VolunteerPlanning = {
   planningBase64Data: string;
 };
 
-export const state = () => ({
-  link: null as string | null,
+type PlanningState = {
+  link: string | null;
+  planningBase64Data: string;
+  volunteerPlannings: VolunteerPlanning[];
+  volunteers: VolunteerForPlanning[];
+};
+
+export const state = (): PlanningState => ({
+  link: null,
   planningBase64Data: "",
-  volunteerPlannings: [] as VolunteerPlanning[],
+  volunteerPlannings: [],
+  volunteers: [],
 });
 
 export const mutations = mutationTree(state, {
@@ -32,6 +46,9 @@ export const mutations = mutationTree(state, {
   },
   SET_VOLUNTEER_PLANNINGS(state, volunteerPlannings: VolunteerPlanning[]) {
     state.volunteerPlannings = volunteerPlannings;
+  },
+  SET_VOLUNTEERS(state, volunteers: VolunteerForPlanning[]) {
+    state.volunteers = volunteers;
   },
 });
 

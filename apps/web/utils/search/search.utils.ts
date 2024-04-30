@@ -11,3 +11,10 @@ export function matchingSearchItems<T>(
     return searchable.includes(search);
   });
 }
+
+export function keepMatchingSearchCriteria<T>(
+  search: string,
+): (member: Searchable<T>) => boolean {
+  const slugifiedSearch = SlugifyService.apply(search);
+  return ({ searchable }) => searchable.includes(slugifiedSearch);
+}

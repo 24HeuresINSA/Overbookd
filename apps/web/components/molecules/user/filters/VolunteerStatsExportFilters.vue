@@ -1,38 +1,43 @@
 <template>
-  <v-card v-if="canManageUsers" class="stats-export-card">
-    <v-card-title>Mode stats</v-card-title>
+  <div>
+    <v-card v-if="canManageUsers" class="stats-export-card">
+      <v-card-title>Mode stats</v-card-title>
 
-    <v-card-text class="stats-export-card__content">
-      <v-switch
-        v-model="isStatsModeActive"
-        label="Afficher les stats"
-        @change="propagateStatsModeActivation"
-      />
+      <v-card-text class="stats-export-card__content">
+        <v-switch
+          v-model="isStatsModeActive"
+          label="Afficher les stats"
+          @change="propagateStatsModeActivation"
+        />
 
-      <v-btn @click="exportCSV"> exporter les bénévoles </v-btn>
+        <v-btn @click="exportCSV"> exporter les bénévoles </v-btn>
 
-      <v-btn :loading="planningLoading" @click="exportPlannings">
-        exporter les plannings
-      </v-btn>
-    </v-card-text>
-  </v-card>
+        <v-btn @click="openDownloadPlanning"> télécharger les plannings </v-btn>
+      </v-card-text>
+    </v-card>
+    <v-dialog v-model="isDownloadPlanningOpen" width="1000px">
+      <DownloadLeafletsCard @close-dialog="closeDownloadPlanning" />
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";
 import { VolunteerPlanning } from "~/store/planning";
-import { downloadPlanning } from "~/utils/planning/download";
 import { download } from "~/utils/file/file.utils";
+import DownloadLeafletsCard from "../../planning/DownloadLeafletsCard.vue";
 
 type VolunteerStatsExportFiltersData = {
   planningLoading: boolean;
   isStatsModeActive: boolean;
+  isDownloadPlanningOpen: boolean;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "VolunteerStatsExportFilters",
+  components: { DownloadLeafletsCard },
   props: {
     filteredVolunteers: {
       type: Array as () => UserPersonalData[],
@@ -43,6 +48,7 @@ export default Vue.extend({
   data: (): VolunteerStatsExportFiltersData => ({
     planningLoading: false,
     isStatsModeActive: false,
+    isDownloadPlanningOpen: false,
   }),
 
   computed: {
@@ -88,16 +94,11 @@ export default Vue.extend({
       const parsedCSV = csv.replace(regex, "");
       download("utilisateurs.csv", parsedCSV);
     },
-
-    async exportPlannings() {
-      this.planningLoading = true;
-      await this.$accessor.planning.fetchAllPdfPlannings(
-        this.filteredVolunteers.filter(({ charisma }) => charisma > 0),
-      );
-      this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
-        downloadPlanning(planningBase64Data, volunteer),
-      );
-      this.planningLoading = false;
+    openDownloadPlanning() {
+      this.isDownloadPlanningOpen = true;
+    },
+    closeDownloadPlanning() {
+      this.isDownloadPlanningOpen = false;
     },
   },
 });

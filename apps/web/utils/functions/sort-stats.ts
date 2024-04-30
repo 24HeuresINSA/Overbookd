@@ -9,6 +9,7 @@ import {
 import { AssignmentStats, VolunteerAssignmentStat } from "@overbookd/http";
 import { Duration } from "@overbookd/period";
 import { AUCUNE } from "../assignment/task-category";
+import { UserName } from "@overbookd/user";
 
 export function sumAssignmentDuration(stats: VolunteerAssignmentStat[]) {
   return Duration.ms(
@@ -16,33 +17,32 @@ export function sumAssignmentDuration(stats: VolunteerAssignmentStat[]) {
   );
 }
 
-export type AssignmentStatsSortFunction = (
-  a: AssignmentStats,
-  b: AssignmentStats,
-) => number;
+export type SortFunction<T> = (a: T, b: T) => number;
 
-export function sortVolunteerOnNamesFunction(
-  desc: boolean,
-): AssignmentStatsSortFunction {
+export function sortVolunteerOnNames(desc: boolean): SortFunction<UserName> {
   return (a, b) => {
     const order = desc ? -1 : 1;
     return a.firstname.localeCompare(b.firstname) * order;
   };
 }
 
-export function sortVolunteerOnCharismaFunction(
+type HasCharisma = {
+  charisma: number;
+};
+
+export function sortVolunteerOnCharisma(
   desc: boolean,
-): AssignmentStatsSortFunction {
+): SortFunction<HasCharisma> {
   return (a, b) => {
     const order = desc ? -1 : 1;
     return (a.charisma - b.charisma) * order;
   };
 }
 
-export function sortVolunteerOnTaskCategoryAssignmentDurationFunction(
+export function sortVolunteerOnTaskCategoryAssignmentDuration(
   desc: boolean,
   category?: Category,
-): AssignmentStatsSortFunction {
+): SortFunction<AssignmentStats> {
   const order = desc ? -1 : 1;
   if (!category) {
     return (a, b) => {
@@ -62,9 +62,9 @@ export function sortVolunteerOnTaskCategoryAssignmentDurationFunction(
   };
 }
 
-export function sortVolunteerOnTotalAssignmentDurationFunction(
+export function sortVolunteerOnTotalAssignmentDuration(
   desc: boolean,
-): AssignmentStatsSortFunction {
+): SortFunction<AssignmentStats> {
   const order = desc ? -1 : 1;
   return (a, b) => {
     const aTotalAssignmentDuration = sumAssignmentDuration(
@@ -80,25 +80,22 @@ export function sortVolunteerOnTotalAssignmentDurationFunction(
 export function getAssignmentStatsSortFunctionFromSortType(
   sortBy: string,
   sortDesc: boolean,
-): AssignmentStatsSortFunction {
+): SortFunction<AssignmentStats> {
   switch (sortBy) {
     case "volunteer":
-      return sortVolunteerOnNamesFunction(sortDesc);
+      return sortVolunteerOnNames(sortDesc);
     case "charisma":
-      return sortVolunteerOnCharismaFunction(sortDesc);
+      return sortVolunteerOnCharisma(sortDesc);
     case STATIQUE:
     case MANUTENTION:
     case BAR:
     case RELOU:
     case FUN:
-      return sortVolunteerOnTaskCategoryAssignmentDurationFunction(
-        sortDesc,
-        sortBy,
-      );
+      return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc, sortBy);
     case AUCUNE:
-      return sortVolunteerOnTaskCategoryAssignmentDurationFunction(sortDesc);
+      return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc);
     case "total":
-      return sortVolunteerOnTotalAssignmentDurationFunction(sortDesc);
+      return sortVolunteerOnTotalAssignmentDuration(sortDesc);
     default:
       return () => 0;
   }

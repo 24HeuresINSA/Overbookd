@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import {
   TaskCategoryEmoji,
   TaskCategoryEmojis,
@@ -80,7 +80,7 @@ function searchUnknown(stat: VolunteerAssignmentStat): boolean {
   return stat.category === null;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "VolunteerStatsTable",
   props: {
     volunteers: {
@@ -90,14 +90,14 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Benevole", value: "volunteer" },
+      { text: "Bénévole", value: "volunteer" },
       { text: "Charisme", value: "charisma" },
-      { text: "Creneaux statiques", value: STATIQUE },
-      { text: "Creneaux bar", value: BAR },
-      { text: "Creneaux manutention", value: MANUTENTION },
-      { text: "Creneaux fun", value: FUN },
-      { text: "Creneaux relous", value: RELOU },
-      { text: "Creneaux indetermines", value: AUCUNE },
+      { text: "Créneaux statiques", value: STATIQUE },
+      { text: "Créneaux bar", value: BAR },
+      { text: "Créneaux manutention", value: MANUTENTION },
+      { text: "Créneaux fun", value: FUN },
+      { text: "Créneaux relous", value: RELOU },
+      { text: "Créneaux indéterminés", value: AUCUNE },
       { text: "Totaux", value: "total" },
     ],
   }),
