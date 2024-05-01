@@ -7,36 +7,6 @@ import { TaskRepository } from "../domain/planning";
 import { JsonStoredTask } from "../domain/storedTask";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
-const SELECT_LEGACY_TASK = {
-  timeWindow: {
-    select: {
-      ft: {
-        select: {
-          id: true,
-          description: true,
-          name: true,
-          location: { select: { name: true } },
-        },
-      },
-    },
-  },
-  start: true,
-  end: true,
-};
-
-const SELECT_LEGACY_ASSIGNMENT = {
-  assignee: {
-    select: { id: true, firstname: true, lastname: true },
-  },
-  timeSpan: {
-    select: {
-      start: true,
-      end: true,
-      timeWindow: { select: { ftId: true } },
-    },
-  },
-};
-
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -55,24 +25,44 @@ const SELECT_MOBILIZATION = {
 
 const IS_NOT_DELETED = { isDeleted: false };
 
-type DatabaseStoredTask = {
-  start: Date;
-  end: Date;
-  timeWindow: {
-    ft: {
-      id: number;
-      name: string;
-      description: string;
-      location: {
-        name: string;
-      };
-    };
-  };
+const SELECT_CONTACT = {
+  contact: {
+    select: {
+      firstname: true,
+      lastname: true,
+      phone: true,
+    },
+  },
+};
+const SELECT_ASSIGNMENT = {
+  start: true,
+  end: true,
+  assignees: {
+    select: {
+      personalData: {
+        select: { id: true, firstname: true, lastname: true },
+      },
+    },
+  },
 };
 
-type DatabaseAssignment = {
-  timeSpan: IProvidePeriod & { timeWindow: { ftId: number } };
-  assignee: { id: number; firstname: string; lastname: string };
+type DatabaseTask = {
+  id: number;
+  name: string;
+  appointment: { name: string };
+  globalInstruction: string;
+  inChargeInstruction: string;
+  inChargeVolunteers: { volunteerId: number }[];
+  contacts: {
+    contact: { firstname: string; lastname: string; phone: string };
+  }[];
+  assignments: {
+    start: Date;
+    end: Date;
+    assignees: {
+      personalData: { id: number; firstname: string; lastname: string };
+    }[];
+  }[];
 };
 
 @Injectable()
@@ -82,48 +72,30 @@ export class PrismaTaskRepository implements TaskRepository {
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]> {
-    const tasks = await this.prisma.ftTimeSpan.findMany({
-      where: { assignments: { some: { assigneeId: volunteerId } } },
-      select: SELECT_LEGACY_TASK,
-      orderBy: { start: "asc" },
-    });
-    const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
-    const assignments = await this.prisma.oldAssignment.findMany({
+    const tasks = await this.prisma.festivalTask.findMany({
       where: {
-        timeSpan: { timeWindow: { ftId: { in: taskIds } } },
-        NOT: { assigneeId: volunteerId },
+        assignees: { some: { userId: volunteerId } },
+        ...IS_NOT_DELETED,
       },
-      select: SELECT_LEGACY_ASSIGNMENT,
-      orderBy: { timeSpan: { start: "asc" } },
+      select: {
+        id: true,
+        name: true,
+        appointment: { select: { name: true } },
+        globalInstruction: true,
+        inChargeInstruction: true,
+        inChargeVolunteers: {
+          select: { volunteerId: true },
+          where: { volunteerId },
+        },
+        contacts: { select: SELECT_CONTACT },
+        assignments: {
+          select: SELECT_ASSIGNMENT,
+          orderBy: { start: "asc" },
+        },
+      },
     });
 
-    return tasks.map((task) => this.formatTask(task, assignments));
-  }
-
-  private formatTask(
-    task: DatabaseStoredTask,
-    assignments: DatabaseAssignment[],
-  ): JsonStoredTask {
-    const { name, description, id, location } = task.timeWindow.ft;
-    const assignees = assignments
-      .filter(({ timeSpan }) => timeSpan.timeWindow.ftId === id)
-      .map(({ timeSpan: { start, end }, assignee }) => {
-        const name = buildVolunteerDisplayName(assignee);
-        return {
-          period: { start, end },
-          id: assignee.id,
-          name,
-        };
-      });
-    const period = { start: task.start, end: task.end };
-    return {
-      name,
-      instructions: description,
-      id,
-      period,
-      location: location.name,
-      assignees,
-    };
+    return tasks.map((task) => toTask(task, volunteerId));
   }
 
   async getVolunteerTasksHeIsPartOf(
@@ -145,4 +117,40 @@ export class PrismaTaskRepository implements TaskRepository {
       return { ...ft, timeWindow };
     });
   }
+}
+
+function toTask(task: DatabaseTask, volunteerId: number): JsonStoredTask {
+  const contacts = task.contacts.map(({ contact }) => ({
+    phone: contact.phone,
+    name: buildVolunteerDisplayName(contact),
+  }));
+  const instructions =
+    task.inChargeVolunteers.length === 0
+      ? task.globalInstruction
+      : task.inChargeInstruction;
+  const volunteerAssignment = task.assignments.find(({ assignees }) =>
+    assignees.some(({ personalData }) => personalData.id === volunteerId),
+  ) as IProvidePeriod;
+  const assignees = task.assignments
+    .flatMap(({ assignees, start, end }) => {
+      return assignees.map(({ personalData }) => {
+        if (personalData.id !== volunteerId) return null;
+        return {
+          period: { start, end },
+          id: personalData.id,
+          name: buildVolunteerDisplayName(personalData),
+        };
+      });
+    })
+    .filter((assignee) => assignee !== null);
+
+  return {
+    period: { start: volunteerAssignment.start, end: volunteerAssignment.end },
+    id: task.id,
+    name: task.name,
+    location: task.appointment.name,
+    instructions,
+    contacts,
+    assignees,
+  };
 }
