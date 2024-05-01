@@ -1,6 +1,7 @@
 import {
   DuringBreakPeriods,
   HttpStringified,
+  PDF,
   VolunteerForPlanning,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
@@ -41,5 +42,23 @@ export class PlanningRepository {
     return context.$axios.get<HttpStringified<VolunteerForPlanning[]>>(
       `${this.basePath}/volunteers`,
     );
+  }
+
+  static getPlanningSubscriptionLink(context: Context) {
+    return context.$axios.get<HttpStringified<{ link: string }>>(
+      `${this.basePath}/subscribe`,
+    );
+  }
+
+  static getMyPdf(context: Context) {
+    return context.$axios.get<string>(`${this.basePath}`, {
+      headers: { accept: PDF },
+    });
+  }
+
+  static getVolunteerPdf(context: Context, volunteerId: number) {
+    return context.$axios.get<string>(`${this.basePath}/${volunteerId}`, {
+      headers: { accept: PDF },
+    });
   }
 }

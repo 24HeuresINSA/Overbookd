@@ -3,7 +3,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateWithHoursAndMinutesOnly,
   toDateArray,
-} from "../../utils/date";
+} from "../../../utils/date";
 import { Assignment, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
 import { Edition } from "@overbookd/contribution";

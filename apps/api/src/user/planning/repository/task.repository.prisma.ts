@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
-import { PrismaService } from "../../src/prisma.service";
-import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
-import { TaskRepository } from "./domain/planning";
-import { JsonStoredTask } from "./domain/storedTask";
+import { PrismaService } from "../../../prisma.service";
+import { buildVolunteerDisplayName } from "../../../utils/volunteer";
+import { TaskRepository } from "../domain/planning";
+import { JsonStoredTask } from "../domain/storedTask";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
 const SELECT_LEGACY_TASK = {

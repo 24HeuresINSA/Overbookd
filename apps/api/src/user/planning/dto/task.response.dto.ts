@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Assignment, Contact, Task, Volunteer } from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
-import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
+import { PeriodDto } from "../../../volunteer-availability/dto/period.dto";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({

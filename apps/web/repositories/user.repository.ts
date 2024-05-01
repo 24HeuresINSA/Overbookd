@@ -3,7 +3,8 @@ import {
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
-import { HttpStringified, PDF, PlanningTask } from "@overbookd/http";
+import { PlanningEvent } from "@overbookd/assignment";
+import { HttpStringified, PlanningTask } from "@overbookd/http";
 import {
   MyUserInformation,
   Profile,
@@ -13,7 +14,6 @@ import {
 } from "@overbookd/user";
 import { ImageRepository } from "~/utils/image/image.repository";
 import { Context } from "./context";
-import { PlanningEvent } from "@overbookd/assignment";
 
 export class UserRepository {
   private static readonly basePath = "users";
@@ -150,24 +150,6 @@ export class UserRepository {
     return context.$axios.get<HttpStringified<VolunteerAssignmentStat[]>>(
       `${this.basePath}/${userId}/assignments/stats`,
     );
-  }
-
-  static getPlanningSubscriptionLink(context: Context) {
-    return context.$axios.get<HttpStringified<{ link: string }>>(
-      `${this.basePath}/me/planning/subscribe-link`,
-    );
-  }
-
-  static getMyPdfPlanning(context: Context) {
-    return context.$axios.get<string>(`${this.basePath}/me/planning`, {
-      headers: { accept: PDF },
-    });
-  }
-
-  static getPdfPlanning(context: Context, id: number) {
-    return context.$axios.get<string>(`${this.basePath}/${id}/planning`, {
-      headers: { accept: PDF },
-    });
   }
 
   static addTeamsToUser(context: Context, userId: number, teams: string[]) {

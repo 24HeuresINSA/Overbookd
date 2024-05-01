@@ -8,7 +8,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
-} from "../../utils/date";
+} from "../../../utils/date";
 import { Assignment, Task, Volunteer } from "../domain/task.model";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
@@ -75,12 +75,12 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   private fonts = {
     Roboto: {
-      normal: join(__dirname, "../../..", "/fonts/Roboto-Regular.ttf"),
-      bold: join(__dirname, "../../..", "/fonts/Roboto-Medium.ttf"),
-      italics: join(__dirname, "../../..", "/fonts/Roboto-Italic.ttf"),
+      normal: join(__dirname, "../../../..", "/fonts/Roboto-Regular.ttf"),
+      bold: join(__dirname, "../../../..", "/fonts/Roboto-Medium.ttf"),
+      italics: join(__dirname, "../../../..", "/fonts/Roboto-Italic.ttf"),
       bolditalics: join(
         __dirname,
-        "../../..",
+        "../../../..",
         "/fonts/Roboto-MediumItalic.ttf",
       ),
     },
@@ -173,7 +173,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       return {
         columns: [
           {
-            image: join(__dirname, "../../..", "/assets/logo_24h.png"),
+            image: join(__dirname, "../../../..", "/assets/logo_24h.png"),
             fit: [50, 50],
             width: 50,
             margin: [20, 15],
