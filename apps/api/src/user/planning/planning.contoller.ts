@@ -97,10 +97,53 @@ export class PlanningController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("volunteers")
+  @ApiResponse({
+    status: 200,
+    description: "Volunteers with assignments",
+    type: VolunteerForPlanningResponseDto,
+    isArray: true,
+  })
+  async getVolunteers(): Promise<VolunteerForPlanningResponseDto[]> {
+    return this.planning.getVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(DOWNLOAD_PLANNING)
+  @ApiBearerAuth()
+  @Get("subscribe")
+  @ApiResponse({
+    status: 200,
+    description: "Get current user subscription planning link",
+    type: VolunteerSubscriptionPlanningResponseDto,
+  })
+  async getCurrentVolunteerSubscriptionPlanningLink(
+    @RequestDecorator() { user }: RequestWithUserPayload,
+  ): Promise<PlanningSubscription> {
+    const volunteerId = user.id;
+    return this.planning.subscribe(volunteerId);
+  }
+
+  @Get("subscribe/:secret")
+  @ApiResponse({
+    status: 200,
+    description: "Ical format volunteer planning",
+  })
+  @Header("Content-Type", "text/calendar")
+  async syncVolunteerPlanning(@Param("secret") secret: string) {
+    const volunteerId = await this.retrieveVolunteerId(secret);
+    const { tasks } = await this.planning.getPlanning(volunteerId);
+    const icalRender = new IcalRenderStrategy();
+    return icalRender.render(tasks);
+  }
+
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Get(":id")
+  @Get(":volunteerId")
   @ApiResponse({
     status: 200,
     description: "Get volunteer planning",
@@ -109,7 +152,7 @@ export class PlanningController {
   })
   @ApiProduces(JSON, ICAL, PDF)
   async getVolunteerPlanning(
-    @Param("id", ParseIntPipe) volunteerId: number,
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
     @Res() response: Response,
   ): Promise<TaskResponseDto[]> {
@@ -126,15 +169,6 @@ export class PlanningController {
       }
       response.status(500).send(e);
     }
-  }
-
-  private async formatPlanning(volunteerId: number, format: string) {
-    const { tasks, volunteer } = await this.planning.getPlanning(volunteerId);
-    const renderStrategy = PlanningRenderStrategy.get(format);
-    return renderStrategy.render(tasks, {
-      id: volunteerId,
-      name: buildVolunteerDisplayName(volunteer),
-    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -216,47 +250,13 @@ export class PlanningController {
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
-  @Get("volunteers")
-  @ApiResponse({
-    status: 200,
-    description: "Volunteers with assignments",
-    type: VolunteerForPlanningResponseDto,
-    isArray: true,
-  })
-  async getVolunteers(): Promise<VolunteerForPlanningResponseDto[]> {
-    return this.planning.getVolunteers();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(DOWNLOAD_PLANNING)
-  @ApiBearerAuth()
-  @Get("subscribe")
-  @ApiResponse({
-    status: 200,
-    description: "Get current user subscription planning link",
-    type: VolunteerSubscriptionPlanningResponseDto,
-  })
-  async getCurrentVolunteerSubscriptionPlanningLink(
-    @RequestDecorator() { user }: RequestWithUserPayload,
-  ): Promise<PlanningSubscription> {
-    const volunteerId = user.id;
-    return this.planning.subscribe(volunteerId);
-  }
-
-  @Get("subscribe/:secret")
-  @ApiResponse({
-    status: 200,
-    description: "Ical format volunteer planning",
-  })
-  @Header("Content-Type", "text/calendar")
-  async syncVolunteerPlanning(@Param("secret") secret: string) {
-    const volunteerId = await this.retrieveVolunteerId(secret);
-    const { tasks } = await this.planning.getPlanning(volunteerId);
-    const icalRender = new IcalRenderStrategy();
-    return icalRender.render(tasks);
+  private async formatPlanning(volunteerId: number, format: string) {
+    const { tasks, volunteer } = await this.planning.getPlanning(volunteerId);
+    const renderStrategy = PlanningRenderStrategy.get(format);
+    return renderStrategy.render(tasks, {
+      id: volunteerId,
+      name: buildVolunteerDisplayName(volunteer),
+    });
   }
 
   private async retrieveVolunteerId(secret: string): Promise<number> {

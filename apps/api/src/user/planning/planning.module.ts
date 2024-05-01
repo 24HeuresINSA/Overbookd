@@ -1,15 +1,15 @@
 import { Module } from "@nestjs/common";
-import { PrismaModule } from "../../prisma.module";
-import { PlanningService, Volunteers } from "./planning.service";
-import { Planning } from "./domain/planning";
-import { BreakPeriods } from "@overbookd/planning";
-import { PrismaVolunteers } from "./repository/volunteers.prisma";
-import { PrismaBreaks } from "./repository/breaks.prisma";
-import { PrismaService } from "../../prisma.service";
 import { JwtService } from "@nestjs/jwt";
+import { BreakPeriods } from "@overbookd/planning";
 import { jwtConstants } from "../../authentication/constants";
-import { SecretService } from "./secret.service";
+import { PrismaModule } from "../../prisma.module";
+import { PrismaService } from "../../prisma.service";
+import { Planning } from "./domain/planning";
+import { PlanningService, Volunteers } from "./planning.service";
+import { PrismaBreaks } from "./repository/breaks.prisma";
 import { PrismaTaskRepository } from "./repository/task.repository.prisma";
+import { PrismaVolunteers } from "./repository/volunteers.prisma";
+import { SecretService } from "./secret.service";
 import { SubscriptionService } from "./subscription.service";
 
 @Module({
@@ -64,9 +64,7 @@ import { SubscriptionService } from "./subscription.service";
         breaks: BreakPeriods,
         volunteers: Volunteers,
         subscription: SubscriptionService,
-      ) => {
-        new PlanningService(planning, breaks, volunteers, subscription);
-      },
+      ) => new PlanningService(planning, breaks, volunteers, subscription),
       inject: [Planning, BreakPeriods, PrismaVolunteers, SubscriptionService],
     },
   ],
