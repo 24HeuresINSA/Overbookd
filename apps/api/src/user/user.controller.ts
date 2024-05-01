@@ -4,15 +4,12 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  Logger,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Put,
   Request as RequestDecorator,
-  Res,
   StreamableFile,
   UploadedFile,
   UseFilters,
@@ -23,7 +20,6 @@ import { FileInterceptor } from "@nestjs/platform-express/multer";
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiProduces,
   ApiResponse,
   ApiTags,
   ApiBadRequestResponse,
@@ -31,21 +27,11 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { randomUUID } from "crypto";
-import { Request, Response } from "express";
 import { diskStorage } from "multer";
 import { join } from "path";
 import { RequestWithUserPayload } from "../../src/app.controller";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
-import { TaskResponseDto } from "../volunteer-planning/dto/task.response.dto";
-import { VolunteerSubscriptionPlanningResponseDto } from "../volunteer-planning/dto/volunter-subscription-planning.response.dto";
-import { PlanningRenderStrategy } from "../volunteer-planning/render/render-strategy";
-import {
-  PlanningSubscription,
-  SubscriptionService,
-} from "../../src/volunteer-planning/subscription.service";
-import { VolunteerPlanningService } from "../../src/volunteer-planning/volunteer-planning.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
@@ -58,11 +44,9 @@ import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
 import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
-import { Task } from "../volunteer-planning/domain/task.model";
 import {
   AFFECT_TEAM,
   AFFECT_VOLUNTEER,
-  DOWNLOAD_PLANNING,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
   VIEW_VOLUNTEER,
@@ -74,9 +58,9 @@ import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
 import { BaseUserResponseDto } from "./dto/base-user.response.dto";
-import { ICAL, JSON, PDF } from "@overbookd/http";
-import { PlanningTaskResponseDto } from "../volunteer-planning/dto/planning-task.response.dto";
+import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
 import { PlanningEventResponseDto } from "../assignment/common/dto/planning-event.response.dto";
+import { PlanningService } from "./planning/planning.service";
 
 @ApiTags("users")
 @Controller("users")
@@ -84,12 +68,9 @@ import { PlanningEventResponseDto } from "../assignment/common/dto/planning-even
   description: "Bad Request",
 })
 export class UserController {
-  private readonly logger = new Logger(UserController.name);
-
   constructor(
     private readonly userService: UserService,
-    private readonly planningService: VolunteerPlanningService,
-    private readonly planningSubscription: SubscriptionService,
+    private readonly planningService: PlanningService,
     private readonly profilePictureService: ProfilePictureService,
     private readonly teamService: TeamService,
   ) {}
@@ -166,54 +147,6 @@ export class UserController {
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
     return this.userService.getMyInformation(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(DOWNLOAD_PLANNING)
-  @ApiBearerAuth()
-  @Get("me/planning")
-  @ApiResponse({
-    status: 200,
-    description: "Get current user planning",
-    isArray: true,
-    type: TaskResponseDto,
-  })
-  @ApiProduces(JSON, ICAL, PDF)
-  async getCurrentVolunteerPlanning(
-    @RequestDecorator() request: RequestWithUserPayload,
-    @Res() response: Response,
-  ): Promise<Task[]> {
-    const volunteerId = request.user.userId ?? request.user.id;
-    const format = request.headers.accept;
-    try {
-      const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader("content-type", format);
-      response.send(planning);
-      return;
-    } catch (e) {
-      this.logger.error(e);
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(DOWNLOAD_PLANNING)
-  @ApiBearerAuth()
-  @Get("me/planning/subscribe-link")
-  @ApiResponse({
-    status: 200,
-    description: "Get current user subscription planning link",
-    type: VolunteerSubscriptionPlanningResponseDto,
-  })
-  async getCurrentVolunteerSubscriptionPlanningLink(
-    @RequestDecorator() request: RequestWithUserPayload,
-  ): Promise<PlanningSubscription> {
-    const volunteerId = request.user.userId ?? request.user.id;
-    return this.planningSubscription.subscribe(volunteerId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -294,7 +227,7 @@ export class UserController {
   async getMobilizationsUserTakePartOf(
     @Param("id", ParseIntPipe) id: number,
   ): Promise<PlanningTaskResponseDto[]> {
-    return this.planningService.getVolunteerTasks(id);
+    return this.planningService.getMobilizationsHeIsPartOf(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -311,49 +244,6 @@ export class UserController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<PlanningEventResponseDto[]> {
     return this.userService.getVolunteerAssignments(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
-  @ApiBearerAuth()
-  @Get(":id/planning")
-  @ApiResponse({
-    status: 200,
-    description: "Get current user planning",
-    isArray: true,
-    type: TaskResponseDto,
-  })
-  @ApiProduces(JSON, ICAL, PDF)
-  async getVolunteerPlanning(
-    @Param("id", ParseIntPipe) volunteerId: number,
-    @RequestDecorator() request: Request,
-    @Res() response: Response,
-  ): Promise<TaskResponseDto[]> {
-    const format = request.headers.accept;
-    try {
-      const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader("content-type", format);
-      response.send(planning);
-      return;
-    } catch (e) {
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
-  }
-
-  private async formatPlanning(volunteerId: number, format: string) {
-    const [tasks, volunteer] = await Promise.all([
-      this.planningService.getVolunteerPlanning(volunteerId),
-      this.userService.getById(volunteerId),
-    ]);
-    const renderStrategy = PlanningRenderStrategy.get(format);
-    return renderStrategy.render(tasks, {
-      id: volunteerId,
-      name: buildVolunteerDisplayName(volunteer),
-    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

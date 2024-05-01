@@ -6,7 +6,6 @@ import {
 import { Duration } from "@overbookd/period";
 import { User } from "@overbookd/user";
 import { safeCall } from "~/utils/api/calls";
-import { UserRepository } from "~/repositories/user.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 
 export type HasAssignment = {
@@ -63,13 +62,13 @@ export const actions = actionTree(
     async fetchSubscriptionLink({ commit }) {
       const res = await safeCall(
         this,
-        UserRepository.getPlanningSubscriptionLink(this),
+        PlanningRepository.getPlanningSubscriptionLink(this),
       );
       if (!res) return;
       commit("SET_LINK", res.data.link);
     },
     async fetchMyPdfPlanning({ commit }) {
-      const res = await safeCall(this, UserRepository.getMyPdfPlanning(this));
+      const res = await safeCall(this, PlanningRepository.getMyPdf(this));
       if (!res) return;
       commit("SET_PLANNING_DATA", res.data);
     },
@@ -83,7 +82,7 @@ export const actions = actionTree(
           chunk.map(async ({ id, firstname, lastname }) => {
             const res = await safeCall(
               this,
-              UserRepository.getPdfPlanning(this, id),
+              PlanningRepository.getVolunteerPdf(this, id),
             );
             if (!res) return undefined;
             const volunteer = { firstname, lastname, id };

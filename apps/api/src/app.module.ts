@@ -25,7 +25,6 @@ import { TimelineModule } from "./timeline/timeline.module";
 import { TransactionModule } from "./transaction/transaction.module";
 import { UserModule } from "./user/user.module";
 import { VolunteerAvailabilityModule } from "./volunteer-availability/volunteer-availability.module";
-import { VolunteerPlanningModule } from "./volunteer-planning/volunteer-planning.module";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuardCustom } from "./throttler-custom.guard";
@@ -42,6 +41,7 @@ import { PersonalAccountModule } from "./personal-account/personal-account.modul
 import { SharedMealModule } from "./shared-meal/shared-meal.module";
 import { LogisticModule } from "./logistic/logistic.module";
 import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
+import { PlanningModule } from "./user/planning/planning.module";
 
 @Module({
   imports: [
@@ -84,7 +84,6 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
     FriendModule,
     AssignmentModule,
     OrgaNeedsModule,
-    VolunteerPlanningModule,
     TimelineModule,
     NeedHelpModule,
     RegistrationModule,
@@ -102,6 +101,7 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
     SharedMealModule,
     LogisticModule,
     FestivalTaskModule,
+    PlanningModule,
   ],
   controllers: [AppController],
   providers: [
