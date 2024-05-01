@@ -62,7 +62,12 @@
       </details>
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" :loading="downloadInProgress" x-large>
+      <v-btn
+        color="primary"
+        :loading="downloadInProgress"
+        x-large
+        @click="downloadAllPlannings"
+      >
         <v-icon left>mdi-download</v-icon>
         Télécharger {{ displayedVolunteers.length }} plannings
       </v-btn>
