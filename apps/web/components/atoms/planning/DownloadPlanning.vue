@@ -1,7 +1,7 @@
 <template>
   <div v-if="canDowloadPlanning">
     <v-list dense>
-      <v-list-group prepend-icon="mdi-calendar">
+      <v-list-group id="retrieve-planning" prepend-icon="mdi-calendar">
         <template #activator>
           <v-list-item-title>
             Récupérer
@@ -12,27 +12,32 @@
           <template #activator>
             <v-list-item-title>
               <v-icon>mdi-sync</v-icon>
-              Synchroniser mon agenda
+              Synchroniser <span class="desktop">mon agenda</span>
             </v-list-item-title>
           </template>
           <v-list-item link @click="syncWithGoogle">
             <v-list-item-icon>
               <v-icon>mdi-google</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Avec Google Calendar</v-list-item-title>
+            <v-list-item-title
+              ><span class="desktop">Avec</span> Google
+              Calendar</v-list-item-title
+            >
           </v-list-item>
           <v-list-item link @click="syncWithMicrosoft">
             <v-list-item-icon>
               <v-icon>mdi-microsoft-outlook</v-icon>
             </v-list-item-icon>
-            <v-list-item-title> Avec Microsoft Outlook </v-list-item-title>
+            <v-list-item-title
+              ><span class="desktop">Avec</span> Microsoft Outlook
+            </v-list-item-title>
           </v-list-item>
           <v-list-item link @click="copySyncLinkToClipboard">
             <v-list-item-icon>
               <v-icon>mdi-link</v-icon>
             </v-list-item-icon>
             <v-list-item-title>
-              Obtenir le lien de synchronisation
+              Obtenir le lien <span class="desktop"> de synchronisation</span>
             </v-list-item-title>
           </v-list-item>
         </v-list-group>
@@ -128,3 +133,19 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.desktop {
+  @media only screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
+}
+</style>
+
+<style lang="scss">
+#retrieve-planning {
+  .v-list-group__header__prepend-icon {
+    margin-right: 16px;
+  }
+}
+</style>

@@ -280,10 +280,6 @@ export default Vue.extend({
     flex-wrap: wrap;
     justify-content: center;
   }
-  .planning-ctas {
-    max-width: 350px;
-    min-width: 350px;
-  }
 }
 
 .available {
