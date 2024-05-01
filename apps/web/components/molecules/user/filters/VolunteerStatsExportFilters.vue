@@ -25,7 +25,6 @@
 import { defineComponent } from "vue";
 import { MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";
-import { VolunteerPlanning } from "~/store/planning";
 import { download } from "~/utils/file/file.utils";
 import DownloadLeafletsCard from "../../planning/DownloadLeafletsCard.vue";
 
@@ -54,9 +53,6 @@ export default defineComponent({
   computed: {
     volunteers(): UserPersonalData[] {
       return this.$accessor.user.volunteers;
-    },
-    volunteerPlannings(): VolunteerPlanning[] {
-      return this.$accessor.planning.volunteerPlannings;
     },
     canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);

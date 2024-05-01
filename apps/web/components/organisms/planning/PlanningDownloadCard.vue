@@ -110,7 +110,7 @@ export default Vue.extend({
   },
   methods: {
     async exportPlanning() {
-      await this.$accessor.planning.fetchMyPdfPlanning();
+      await this.$accessor.planning.downloadMyPdfPlanning();
       downloadPlanning(this.planningBase64Data, this.me);
     },
     async copyToClipBoard() {
