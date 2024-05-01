@@ -86,7 +86,6 @@ import {
 } from "~/utils/functions/sort-stats";
 import { Header } from "~/utils/models/data-table.model";
 import { Team } from "~/utils/models/team.model";
-import { downloadPlanning } from "~/utils/planning/download";
 import { keepMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";
 import {
@@ -170,12 +169,8 @@ export default defineComponent({
     },
     async downloadAllPlannings() {
       this.downloadInProgress = true;
-      await this.$accessor.planning.fetchAllPdfPlannings(
+      await this.$accessor.planning.downloadAllPdfPlannings(
         this.displayedVolunteers,
-      );
-      this.$accessor.planning.volunteerPlannings.map(
-        ({ volunteer, planningBase64Data }) =>
-          downloadPlanning(planningBase64Data, volunteer),
       );
       this.downloadInProgress = false;
     },

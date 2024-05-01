@@ -70,7 +70,6 @@
 import { defineComponent } from "vue";
 import { AFFECT_VOLUNTEER, DOWNLOAD_PLANNING } from "@overbookd/permission";
 import { User, UserPersonalData } from "@overbookd/user";
-import { downloadPlanning } from "~/utils/planning/download";
 import { Edition } from "@overbookd/contribution";
 
 export default defineComponent({
@@ -113,22 +112,15 @@ export default defineComponent({
     },
     async downloadPdf() {
       if (this.isMe) {
-        await this.$accessor.planning.fetchMyPdfPlanning();
-        downloadPlanning(this.$accessor.planning.planningBase64Data, this.me);
-        return;
+        return this.$accessor.planning.downloadMyPdfPlanning();
       }
-      await this.$accessor.planning.fetchAllPdfPlannings([this.user]);
-      this.$accessor.planning.volunteerPlannings.map(
-        ({ volunteer, planningBase64Data }) =>
-          downloadPlanning(planningBase64Data, volunteer),
-      );
+      return this.$accessor.planning.downloadAllPdfPlannings([this.user]);
     },
     async downloadIcal() {
       if (this.isMe) {
-        this.$accessor.planning.downloadMyIcalPlanning();
-        return;
+        return this.$accessor.planning.downloadMyIcalPlanning();
       }
-      this.$accessor.planning.downloadIcalPlanning(this.user.id);
+      return this.$accessor.planning.downloadIcalPlanning(this.user.id);
     },
   },
 });

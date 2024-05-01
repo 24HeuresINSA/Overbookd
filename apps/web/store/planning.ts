@@ -9,6 +9,7 @@ import { User } from "@overbookd/user";
 import { safeCall } from "~/utils/api/calls";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { Edition } from "@overbookd/contribution";
+import { downloadPlanning } from "~/utils/planning/download";
 
 export type HasAssignment = {
   assignment: Duration;
@@ -19,12 +20,7 @@ export type VolunteerForPlanning = User &
     teams: string[];
   };
 
-type VolunteerWithItPLanning = {
-  volunteer: User;
-  planningBase64Data: string;
-};
-
-export type VolunteerPlanning = {
+type VolunteerPlanning = {
   volunteer: User;
   planningBase64Data: string;
 };
@@ -32,14 +28,12 @@ export type VolunteerPlanning = {
 type PlanningState = {
   link: string | null;
   planningBase64Data: string;
-  volunteerPlannings: VolunteerPlanning[];
   volunteers: VolunteerForPlanning[];
 };
 
 export const state = (): PlanningState => ({
   link: null,
   planningBase64Data: "",
-  volunteerPlannings: [],
   volunteers: [],
 });
 
@@ -49,9 +43,6 @@ export const mutations = mutationTree(state, {
   },
   SET_PLANNING_DATA(state, planningData: string) {
     state.planningBase64Data = planningData;
-  },
-  SET_VOLUNTEER_PLANNINGS(state, volunteerPlannings: VolunteerPlanning[]) {
-    state.volunteerPlannings = volunteerPlannings;
   },
   SET_VOLUNTEERS(state, volunteers: VolunteerForPlanning[]) {
     state.volunteers = volunteers;
@@ -69,10 +60,12 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_LINK", res.data.link);
     },
-    async fetchMyPdfPlanning({ commit }) {
+    async downloadMyPdfPlanning({ rootState }) {
       const res = await safeCall(this, PlanningRepository.getMyPdf(this));
       if (!res) return;
-      commit("SET_PLANNING_DATA", res.data);
+      const { firstname, lastname, id } = rootState.user.me;
+      const volunteer = { firstname, lastname, id };
+      downloadPlanning(res.data, volunteer);
     },
     async downloadMyIcalPlanning() {
       const res = await safeCall(this, PlanningRepository.getMyPdf(this));
@@ -87,10 +80,9 @@ export const actions = actionTree(
       if (!res) return;
       downloadIcalFile(res.data);
     },
-    async fetchAllPdfPlannings({ commit }, volunteers: User[]) {
+    async downloadAllPdfPlannings(_, volunteers: User[]) {
       const maxRequests = 5;
 
-      const planningsRes: (VolunteerWithItPLanning | undefined)[] = [];
       for (let i = 0; i < volunteers.length; i += maxRequests) {
         const chunk = volunteers.slice(i, i + maxRequests);
         const plannings = await Promise.all(
@@ -105,12 +97,12 @@ export const actions = actionTree(
             return { volunteer, planningBase64Data };
           }),
         );
-        planningsRes.push(...plannings);
+        plannings
+          .filter((res): res is VolunteerPlanning => res !== undefined)
+          .map(({ volunteer, planningBase64Data }) =>
+            downloadPlanning(planningBase64Data, volunteer),
+          );
       }
-      const retrievedPlannings = planningsRes.filter(
-        (res): res is VolunteerPlanning => res !== undefined,
-      );
-      commit("SET_VOLUNTEER_PLANNINGS", retrievedPlannings);
     },
     async fetchVolunteers({ commit }) {
       const res = await safeCall(this, PlanningRepository.getVolunteers(this));
