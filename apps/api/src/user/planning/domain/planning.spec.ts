@@ -90,6 +90,7 @@ const debarrierageAvenueDesArtsOn12hTo14hMay15: JsonStoredTask = {
     ...volunteer,
     period: shift12hTo14hMay15,
   })),
+  contacts: [],
 };
 
 const debarrierageAvenueDesArtsOn14hTo16hMay15: JsonStoredTask = {
@@ -99,6 +100,7 @@ const debarrierageAvenueDesArtsOn14hTo16hMay15: JsonStoredTask = {
     ...volunteer,
     period: shift14hTo16hMay15,
   })),
+  contacts: [],
 };
 
 const deplacerLeFenOn12hTo14hMay12: JsonStoredTask = {
@@ -108,6 +110,7 @@ const deplacerLeFenOn12hTo14hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift12hTo14hMay12,
   })),
+  contacts: [],
 };
 
 const deplacerLeFenOn20hTo22hMay12: JsonStoredTask = {
@@ -117,6 +120,7 @@ const deplacerLeFenOn20hTo22hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift20hTo22hMay12,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn18hTo02hMay12: JsonStoredTask = {
@@ -132,6 +136,7 @@ const barrierageAvenueDesArtsOn18hTo02hMay12: JsonStoredTask = {
       end: shift00hTo02hMay13.end,
     },
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn20hTo03hMay12: JsonStoredTask = {
@@ -147,6 +152,7 @@ const barrierageAvenueDesArtsOn20hTo03hMay12: JsonStoredTask = {
       end: shift02hTo03hMay13.end,
     },
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn18hTo20hMay12: JsonStoredTask = {
@@ -156,6 +162,7 @@ const barrierageAvenueDesArtsOn18hTo20hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift18hTo20hMay12,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn20hTo22hMay12: JsonStoredTask = {
@@ -165,6 +172,7 @@ const barrierageAvenueDesArtsOn20hTo22hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift20hTo22hMay12,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn22hTo00hMay12: JsonStoredTask = {
@@ -174,6 +182,7 @@ const barrierageAvenueDesArtsOn22hTo00hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift22hTo00hMay12,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn23hTo01hMay12: JsonStoredTask = {
@@ -183,6 +192,7 @@ const barrierageAvenueDesArtsOn23hTo01hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift23hTo01hMay12,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn00hTo02hMay13: JsonStoredTask = {
@@ -192,6 +202,7 @@ const barrierageAvenueDesArtsOn00hTo02hMay13: JsonStoredTask = {
     ...volunteer,
     period: shift00hTo02hMay13,
   })),
+  contacts: [],
 };
 
 const barrierageAvenueDesArtsOn02hTo03hMay13: JsonStoredTask = {
@@ -201,6 +212,7 @@ const barrierageAvenueDesArtsOn02hTo03hMay13: JsonStoredTask = {
     ...volunteer,
     period: shift02hTo03hMay13,
   })),
+  contacts: [],
 };
 
 const ambiancerLeQGOn00hTo02hMay13: JsonStoredTask = {
@@ -210,6 +222,7 @@ const ambiancerLeQGOn00hTo02hMay13: JsonStoredTask = {
     ...volunteer,
     period: shift00hTo02hMay13,
   })),
+  contacts: [],
 };
 
 describe("Planning", () => {

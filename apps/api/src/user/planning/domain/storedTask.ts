@@ -6,7 +6,7 @@ type Assignee = { period: IProvidePeriod; id: number; name: string };
 
 export type JsonStoredTask = Pick<
   Task,
-  "instructions" | "location" | "name" | "period"
+  "instructions" | "location" | "name" | "period" | "contacts"
 > & {
   id: number;
   assignees: Assignee[];
@@ -39,14 +39,14 @@ export class StoredTask {
   }
 
   toTask(): Task {
-    const { name, instructions, period, location } = this.storedTask;
+    const { name, instructions, period, location, contacts } = this.storedTask;
     return {
       name,
       instructions,
       period,
       location,
       assignments: this.assignments,
-      contacts: [],
+      contacts,
     };
   }
 
