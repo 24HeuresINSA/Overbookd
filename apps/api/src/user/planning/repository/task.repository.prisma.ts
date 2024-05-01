@@ -127,14 +127,14 @@ function toTask(task: DatabaseTask, volunteerId: number): JsonStoredTask {
   const instructions =
     task.inChargeVolunteers.length === 0
       ? task.globalInstruction
-      : task.inChargeInstruction;
+      : `${task.globalInstruction}<br/>${task.inChargeInstruction}`;
   const volunteerAssignment = task.assignments.find(({ assignees }) =>
     assignees.some(({ personalData }) => personalData.id === volunteerId),
   ) as IProvidePeriod;
   const assignees = task.assignments
     .flatMap(({ assignees, start, end }) => {
       return assignees.map(({ personalData }) => {
-        if (personalData.id !== volunteerId) return null;
+        if (personalData.id === volunteerId) return null;
         return {
           period: { start, end },
           id: personalData.id,
