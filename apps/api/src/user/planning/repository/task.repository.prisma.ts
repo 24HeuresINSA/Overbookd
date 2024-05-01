@@ -34,7 +34,7 @@ const SELECT_CONTACT = {
     },
   },
 };
-const SELECT_ASSIGNMENT = {
+const SELECT_ASSIGNMENT_WITH_ASSIGNEES = {
   start: true,
   end: true,
   assignees: {
@@ -44,6 +44,7 @@ const SELECT_ASSIGNMENT = {
       },
     },
   },
+  festivalTaskId: true,
 };
 
 type DatabaseTask = {
@@ -56,12 +57,16 @@ type DatabaseTask = {
   contacts: {
     contact: { firstname: string; lastname: string; phone: string };
   }[];
-  assignments: {
-    start: Date;
-    end: Date;
-    assignees: {
-      personalData: { id: number; firstname: string; lastname: string };
-    }[];
+};
+
+type DatabaseAssignmentWithTask = IProvidePeriod & {
+  festivalTask: DatabaseTask;
+};
+
+type DatabaseAssignmentWithAssignees = IProvidePeriod & {
+  festivalTaskId: number;
+  assignees: {
+    personalData: { id: number; firstname: string; lastname: string };
   }[];
 };
 
@@ -72,30 +77,27 @@ export class PrismaTaskRepository implements TaskRepository {
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]> {
-    const tasks = await this.prisma.festivalTask.findMany({
+    const volunteerAssignments = await this.prisma.assignment.findMany({
       where: {
         assignees: { some: { userId: volunteerId } },
-        ...IS_NOT_DELETED,
+        festivalTask: IS_NOT_DELETED,
       },
-      select: {
-        id: true,
-        name: true,
-        appointment: { select: { name: true } },
-        globalInstruction: true,
-        inChargeInstruction: true,
-        inChargeVolunteers: {
-          select: { volunteerId: true },
-          where: { volunteerId },
-        },
-        contacts: { select: SELECT_CONTACT },
-        assignments: {
-          select: SELECT_ASSIGNMENT,
-          orderBy: { start: "asc" },
-        },
-      },
+      select: this.buildAssignmentWithTaskSelection(volunteerId),
     });
 
-    return tasks.map((task) => toTask(task, volunteerId));
+    const taskIds = volunteerAssignments.map(
+      ({ festivalTask }) => festivalTask.id,
+    );
+
+    const allAssignments = await this.prisma.assignment.findMany({
+      where: { festivalTaskId: { in: taskIds } },
+      select: SELECT_ASSIGNMENT_WITH_ASSIGNEES,
+      orderBy: { start: "asc" },
+    });
+
+    return volunteerAssignments.map((assignment) =>
+      toTask(assignment, allAssignments),
+    );
   }
 
   async getVolunteerTasksHeIsPartOf(
@@ -117,38 +119,57 @@ export class PrismaTaskRepository implements TaskRepository {
       return { ...ft, timeWindow };
     });
   }
+
+  private buildAssignmentWithTaskSelection(volunteerId: number) {
+    return {
+      start: true,
+      end: true,
+      festivalTask: {
+        select: {
+          id: true,
+          name: true,
+          appointment: { select: { name: true } },
+          globalInstruction: true,
+          inChargeInstruction: true,
+          inChargeVolunteers: {
+            select: { volunteerId: true },
+            where: { volunteerId },
+          },
+          contacts: { select: SELECT_CONTACT },
+        },
+      },
+    };
+  }
 }
 
-function toTask(task: DatabaseTask, volunteerId: number): JsonStoredTask {
-  const contacts = task.contacts.map(({ contact }) => ({
+function toTask(
+  { start, end, festivalTask }: DatabaseAssignmentWithTask,
+  assignments: DatabaseAssignmentWithAssignees[],
+): JsonStoredTask {
+  const contacts = festivalTask.contacts.map(({ contact }) => ({
     phone: contact.phone,
     name: buildVolunteerDisplayName(contact),
   }));
   const instructions =
-    task.inChargeVolunteers.length === 0
-      ? task.globalInstruction
-      : `${task.globalInstruction}<br/>${task.inChargeInstruction}`;
-  const volunteerAssignment = task.assignments.find(({ assignees }) =>
-    assignees.some(({ personalData }) => personalData.id === volunteerId),
-  ) as IProvidePeriod;
-  const assignees = task.assignments
-    .flatMap(({ assignees, start, end }) => {
-      return assignees.map(({ personalData }) => {
-        if (personalData.id === volunteerId) return null;
-        return {
-          period: { start, end },
-          id: personalData.id,
-          name: buildVolunteerDisplayName(personalData),
-        };
-      });
-    })
-    .filter((assignee) => assignee !== null);
+    festivalTask.inChargeVolunteers.length === 0
+      ? festivalTask.globalInstruction
+      : `${festivalTask.globalInstruction}<br/>${festivalTask.inChargeInstruction}`;
+
+  const assignees = assignments
+    .filter(({ festivalTaskId }) => festivalTaskId === festivalTask.id)
+    .flatMap(({ start, end, assignees }) => {
+      return assignees.map(({ personalData }) => ({
+        period: { start, end },
+        id: personalData.id,
+        name: buildVolunteerDisplayName(personalData),
+      }));
+    });
 
   return {
-    period: { start: volunteerAssignment.start, end: volunteerAssignment.end },
-    id: task.id,
-    name: task.name,
-    location: task.appointment.name,
+    period: { start, end },
+    id: festivalTask.id,
+    name: festivalTask.name,
+    location: festivalTask.appointment.name,
     instructions,
     contacts,
     assignees,
