@@ -34,18 +34,6 @@ const SELECT_CONTACT = {
     },
   },
 };
-const SELECT_ASSIGNMENT_WITH_ASSIGNEES = {
-  start: true,
-  end: true,
-  assignees: {
-    select: {
-      personalData: {
-        select: { id: true, firstname: true, lastname: true },
-      },
-    },
-  },
-  festivalTaskId: true,
-};
 
 type DatabaseTask = {
   id: number;
@@ -91,7 +79,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
     const allAssignments = await this.prisma.assignment.findMany({
       where: { festivalTaskId: { in: taskIds } },
-      select: SELECT_ASSIGNMENT_WITH_ASSIGNEES,
+      select: this.buildAssignmentWithAssigneesSelection(volunteerId),
       orderBy: { start: "asc" },
     });
 
@@ -137,6 +125,22 @@ export class PrismaTaskRepository implements TaskRepository {
           },
           contacts: { select: SELECT_CONTACT },
         },
+      },
+    };
+  }
+
+  private buildAssignmentWithAssigneesSelection(volunteerIdToAvoid: number) {
+    return {
+      start: true,
+      end: true,
+      festivalTaskId: true,
+      assignees: {
+        select: {
+          personalData: {
+            select: { id: true, firstname: true, lastname: true },
+          },
+        },
+        where: { userId: { not: volunteerIdToAvoid } },
       },
     };
   }
