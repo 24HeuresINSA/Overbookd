@@ -2,11 +2,13 @@ import { actionTree, mutationTree } from "typed-vuex";
 import {
   HttpStringified,
   VolunteerForPlanning as HttpVolunteerForPlanning,
+  ICAL,
 } from "@overbookd/http";
 import { Duration } from "@overbookd/period";
 import { User } from "@overbookd/user";
 import { safeCall } from "~/utils/api/calls";
 import { PlanningRepository } from "~/repositories/planning.repository";
+import { Edition } from "@overbookd/contribution";
 
 export type HasAssignment = {
   assignment: Duration;
@@ -72,6 +74,19 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_PLANNING_DATA", res.data);
     },
+    async downloadMyIcalPlanning() {
+      const res = await safeCall(this, PlanningRepository.getMyPdf(this));
+      if (!res) return;
+      downloadIcalFile(res.data);
+    },
+    async downloadIcalPlanning(_, volunteerId: number) {
+      const res = await safeCall(
+        this,
+        PlanningRepository.getVolunteerIcal(this, volunteerId),
+      );
+      if (!res) return;
+      downloadIcalFile(res.data);
+    },
     async fetchAllPdfPlannings({ commit }, volunteers: User[]) {
       const maxRequests = 5;
 
@@ -105,6 +120,23 @@ export const actions = actionTree(
     },
   },
 );
+
+function downloadIcalFile(content: string) {
+  const icalBlob = new Blob([content], { type: ICAL });
+  const icalUrl = URL.createObjectURL(icalBlob);
+
+  const icalLink = document.createElement("a");
+  icalLink.href = icalUrl;
+  icalLink.download = `Planning 24 Heures de l'INSA - ${Edition.current}e`;
+
+  icalLink.style.display = "none";
+  document.body.appendChild(icalLink);
+  icalLink.click();
+
+  document.body.removeChild(icalLink);
+  URL.revokeObjectURL(icalUrl);
+}
+
 function castWithAssignmentDuration(
   volunteer: HttpStringified<HttpVolunteerForPlanning>,
 ): VolunteerForPlanning {

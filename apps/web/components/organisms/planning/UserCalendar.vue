@@ -9,7 +9,8 @@
       <template #title>
         <div class="calendar-title__content">
           <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
-          <div class="ml-4">
+          <DownloadPlanning class="planning-ctas" />
+          <div class="teams">
             <TeamChip
               v-for="team in user?.teams"
               :key="team"
@@ -73,6 +74,7 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -97,6 +99,8 @@ import CreateBreakPeriodCard from "~/components/molecules/planning/CreateBreakPe
 import { convertToCalendarBreak, PAUSE } from "~/domain/common/planning-events";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { displayForCalendar } from "~/utils/date/date.utils";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import DownloadPlanning from "~/components/atoms/planning/DownloadPlanning.vue";
 
 type UserCalendarData = {
   calendarCentralDate: Date;
@@ -118,6 +122,8 @@ export default Vue.extend({
     AssignmentUserStats,
     CreateBreakPeriodCard,
     ConfirmationMessage,
+    SnackNotificationContainer,
+    DownloadPlanning,
   },
   props: {
     userId: { type: Number, default: () => 0 },
@@ -191,6 +197,7 @@ export default Vue.extend({
       this.$accessor.user.getVolunteerAssignments(this.userId),
       this.$accessor.user.getVolunteerTasks(this.userId),
       this.$accessor.user.getVolunteerBreakPeriods(this.userId),
+      this.$accessor.planning.fetchSubscriptionLink(),
     ]);
 
     if (this.shouldShowStats) {
@@ -254,14 +261,23 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .calendar-title__content {
-  flex-direction: row;
+  display: flex;
+  flex-direction: column;
   text-align: center;
+  align-items: center;
   line-height: 1;
   padding: 6px 0 4px 0;
+  gap: 10px;
   @media only screen and (min-width: $mobile-max-width) {
     padding-top: 0;
   }
   .user-stats {
+    justify-content: center;
+  }
+  .teams {
+    display: flex;
+    gap: 10px 5px;
+    flex-wrap: wrap;
     justify-content: center;
   }
 }
