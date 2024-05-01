@@ -45,7 +45,11 @@ export class Introduction {
         style: ["header"],
       },
       {
-        image: join(__dirname, "../../../..", "/assets/volunteer_plan_qr.png"),
+        image: join(
+          __dirname,
+          "../../../../..",
+          "/assets/volunteer_plan_qr.png",
+        ),
         fit: [300, 300],
         pageBreak: "after",
         style: {
