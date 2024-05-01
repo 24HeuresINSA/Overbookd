@@ -120,12 +120,7 @@ function downloadIcalFile(content: string) {
   const icalLink = document.createElement("a");
   icalLink.href = icalUrl;
   icalLink.download = `Planning 24 Heures de l'INSA - ${Edition.current}e`;
-
-  icalLink.style.display = "none";
-  document.body.appendChild(icalLink);
   icalLink.click();
-
-  document.body.removeChild(icalLink);
   URL.revokeObjectURL(icalUrl);
 }
 
