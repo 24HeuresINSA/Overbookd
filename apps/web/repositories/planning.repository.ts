@@ -1,6 +1,7 @@
 import {
   DuringBreakPeriods,
   HttpStringified,
+  ICAL,
   PDF,
   VolunteerForPlanning,
 } from "@overbookd/http";
@@ -56,9 +57,21 @@ export class PlanningRepository {
     });
   }
 
+  static getMyIcal(context: Context) {
+    return context.$axios.get<string>(`${this.basePath}`, {
+      headers: { accept: ICAL },
+    });
+  }
+
   static getVolunteerPdf(context: Context, volunteerId: number) {
     return context.$axios.get<string>(`${this.basePath}/${volunteerId}`, {
       headers: { accept: PDF },
+    });
+  }
+
+  static getVolunteerIcal(context: Context, volunteerId: number) {
+    return context.$axios.get<string>(`${this.basePath}/${volunteerId}`, {
+      headers: { accept: ICAL },
     });
   }
 }

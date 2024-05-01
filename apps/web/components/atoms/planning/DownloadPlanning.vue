@@ -120,10 +120,10 @@ export default defineComponent({
     },
     async downloadIcal() {
       if (this.isMe) {
-        console.log("get My planning");
+        this.$accessor.planning.downloadMyIcalPlanning();
         return;
       }
-      console.log("get", this.user.id, "planning");
+      this.$accessor.planning.downloadIcalPlanning(this.user.id);
     },
   },
 });
