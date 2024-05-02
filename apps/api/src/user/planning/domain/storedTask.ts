@@ -38,7 +38,7 @@ export class StoredTask {
     return new StoredTask({ ...this.storedTask, period, assignees });
   }
 
-  toTask(): Task {
+  toTask(volunteerId: number): Task {
     const { name, instructions, period, location, contacts } = this.storedTask;
     return {
       name,
@@ -46,7 +46,7 @@ export class StoredTask {
       period,
       location,
       assignments: this.assignments,
-      contacts,
+      contacts: contacts.filter(({ id }) => id !== volunteerId),
     };
   }
 
