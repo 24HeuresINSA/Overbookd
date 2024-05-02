@@ -38,6 +38,13 @@ class AssignmentRepresentation implements Assignment {
 
 class ContactRepresentation implements Contact {
   @ApiProperty({
+    name: "id",
+    description: "contact id",
+    type: Number,
+  })
+  id: number;
+
+  @ApiProperty({
     name: "name",
     description: "contact name",
     type: String,
