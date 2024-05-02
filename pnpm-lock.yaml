@@ -63,8 +63,8 @@ importers:
   apps/api:
     dependencies:
       '@nestjs-modules/mailer':
-        specifier: 1.11.2
-        version: 1.11.2(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.8(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(nodemailer@6.9.13)
+        specifier: 2.0.2
+        version: 2.0.2(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.8(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(nodemailer@6.9.13)
       '@nestjs/common':
         specifier: 10.3.8
         version: 10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -271,8 +271,8 @@ importers:
         specifier: 0.5.21
         version: 0.5.21
       supertest:
-        specifier: 6.3.4
-        version: 6.3.4
+        specifier: 7.0.0
+        version: 7.0.0
       ts-jest:
         specifier: 29.1.2
         version: 29.1.2(@babel/core@7.24.5)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.5))(jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.3.3)))(typescript@5.3.3)
@@ -1354,56 +1354,68 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@css-inline/css-inline-darwin-arm64@0.13.0':
-    resolution: {integrity: sha512-A4QvlZdhp8v+3IHKF/UftRf5GrAVUMEHCGRuk2Dx594xn/UR4ieh+B70aMm5rfONh2hv5mlR9UcoYAkVpEQ99g==}
+  '@css-inline/css-inline-android-arm-eabi@0.14.1':
+    resolution: {integrity: sha512-LNUR8TY4ldfYi0mi/d4UNuHJ+3o8yLQH9r2Nt6i4qeg1i7xswfL3n/LDLRXvGjBYqeEYNlhlBQzbPwMX1qrU6A==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@css-inline/css-inline-android-arm64@0.14.1':
+    resolution: {integrity: sha512-tH5us0NYGoTNBHOUHVV7j9KfJ4DtFOeTLA3cM0XNoMtArNu2pmaaBMFJPqECzavfXkLc7x5Z22UPZYjoyHfvCA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@css-inline/css-inline-darwin-arm64@0.14.1':
+    resolution: {integrity: sha512-QE5W1YRIfRayFrtrcK/wqEaxNaqLULPI0gZB4ArbFRd3d56IycvgBasDTHPre5qL2cXCO3VyPx+80XyHOaVkag==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@css-inline/css-inline-darwin-x64@0.13.0':
-    resolution: {integrity: sha512-px9z4ypzeECMyBEtlrNzTMpA1tnw5MmMIiMkBRhb8UGRr2pOBZY3yd/eEIxWzVVSPt0aIjVDwUOJ3+d0Z+BskA==}
+  '@css-inline/css-inline-darwin-x64@0.14.1':
+    resolution: {integrity: sha512-mAvv2sN8awNFsbvBzlFkZPbCNZ6GCWY5/YcIz7V5dPYw+bHHRbjnlkNTEZq5BsDxErVrMIGvz05PGgzuNvZvdQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@css-inline/css-inline-linux-arm-gnueabihf@0.13.0':
-    resolution: {integrity: sha512-+uo0coLQNgk/AKeOB8mXSRd8VIlUg38zRSB9B9q0ior9oBCDPtEdn1HuCSvWxHoOSJ8QNNk+uwbz0zW4CETzFw==}
+  '@css-inline/css-inline-linux-arm-gnueabihf@0.14.1':
+    resolution: {integrity: sha512-AWC44xL0X7BgKvrWEqfSqkT2tJA5kwSGrAGT+m0gt11wnTYySvQ6YpX0fTY9i3ppYGu4bEdXFjyK2uY1DTQMHA==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@css-inline/css-inline-linux-arm64-gnu@0.13.0':
-    resolution: {integrity: sha512-GVrsFbY5l0Hxyzxsm5S5JPGObvHm/Ybf2wZgnWBsQigxqGtr1FL535HaTwEnq6aHOpH3f08gR5Vx33gB7jG4pw==}
+  '@css-inline/css-inline-linux-arm64-gnu@0.14.1':
+    resolution: {integrity: sha512-drj0ciiJgdP3xKXvNAt4W+FH4KKMs8vB5iKLJ3HcH07sNZj58Sx++2GxFRS1el3p+GFp9OoYA6dgouJsGEqt0Q==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@css-inline/css-inline-linux-arm64-musl@0.13.0':
-    resolution: {integrity: sha512-V5h5+CRnE01EgoafI/kyjEcM8zvN+sKLnp17Aq9LqQfsut7mO3i72d8g/xeVC37DCLoGQFLvDCzbze2NbF2dIQ==}
+  '@css-inline/css-inline-linux-arm64-musl@0.14.1':
+    resolution: {integrity: sha512-FzknI+st8eA8YQSdEJU9ykcM0LZjjigBuynVF5/p7hiMm9OMP8aNhWbhZ8LKJpKbZrQsxSGS4g9Vnr6n6FiSdQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@css-inline/css-inline-linux-x64-gnu@0.13.0':
-    resolution: {integrity: sha512-vbRV++73MW7dvz/AIbozkv4R68/k/sEp57hno/L6lx034VYxpCwdfqtGN4D0W1TOTzdr2b6qBOGNZ1oLKQZOQQ==}
+  '@css-inline/css-inline-linux-x64-gnu@0.14.1':
+    resolution: {integrity: sha512-yubbEye+daDY/4vXnyASAxH88s256pPati1DfVoZpU1V0+KP0BZ1dByZOU1ktExurbPH3gZOWisAnBE9xon0Uw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@css-inline/css-inline-linux-x64-musl@0.13.0':
-    resolution: {integrity: sha512-2tCnwU23W/yMs9cGc2/i2jd9y2pjuntx0a5OytqX7s9fvUtmI3nc0Od6wuf51LnmdU+XAU8HLT9pZppsQiwPfQ==}
+  '@css-inline/css-inline-linux-x64-musl@0.14.1':
+    resolution: {integrity: sha512-6CRAZzoy1dMLPC/tns2rTt1ZwPo0nL/jYBEIAsYTCWhfAnNnpoLKVh5Nm+fSU3OOwTTqU87UkGrFJhObD/wobQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@css-inline/css-inline-win32-x64-msvc@0.13.0':
-    resolution: {integrity: sha512-6VFhFSXp4FH+NzJhLd6fFi7jKCPvIRW+vq0tV+CPuiQ3zPzMfC9nIk8sB/1VJR8EcvBAjMV53YnacuDjRFRT9g==}
+  '@css-inline/css-inline-win32-x64-msvc@0.14.1':
+    resolution: {integrity: sha512-nzotGiaiuiQW78EzsiwsHZXbxEt6DiMUFcDJ6dhiliomXxnlaPyBfZb6/FMBgRJOf6sknDt/5695OttNmbMYzg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@css-inline/css-inline@0.13.0':
-    resolution: {integrity: sha512-ZozAXBiW1I8hf6eW5eTNqhxUdNOBxrNNxxUnQRiKQpWcs5ORuGaiWwV5focMBTJ5WXGN+Z8VLP93BOwWFPzCJw==}
+  '@css-inline/css-inline@0.14.1':
+    resolution: {integrity: sha512-u4eku+hnPqqHIGq/ZUQcaP0TrCbYeLIYBaK7qClNRGZbnh8RC4gVxLEIo8Pceo1nOK9E5G4Lxzlw5KnXcvflfA==}
     engines: {node: '>= 10'}
 
   '@csstools/cascade-layer-name-parser@1.0.9':
@@ -1958,8 +1970,8 @@ packages:
   '@microsoft/tsdoc@0.14.2':
     resolution: {integrity: sha512-9b8mPpKrfeGRuhFH5iO1iwCLeIIsV6+H1sRfxbkoGXIyQE2BTsPd9zqSqQJ+pv5sJ/hT5M1zvOFL02MnEezFug==}
 
-  '@nestjs-modules/mailer@1.11.2':
-    resolution: {integrity: sha512-k07wyKbtCzxWMm6IqGwcGIisnXD/6sneGvUR8rBBZbxtLn1HE1FLGyiaXBrPui/0K7W41aS9x9jAIhfTawtlUg==}
+  '@nestjs-modules/mailer@2.0.2':
+    resolution: {integrity: sha512-+z4mADQasg0H1ZaGu4zZTuKv2pu+XdErqx99PLFPzCDNTN/q9U59WPgkxVaHnsvKHNopLj5Xap7G4ZpptduoYw==}
     peerDependencies:
       '@nestjs/common': '>=7.0.9'
       '@nestjs/core': '>=7.0.9'
@@ -2778,6 +2790,12 @@ packages:
 
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
+
+  '@types/mjml-core@4.7.4':
+    resolution: {integrity: sha512-hajbYITLm/wJU99Of50Dmn/k4ok+mrhJs4qDdnveJsINdiNJhQd+03C6Kt09vF9biB23cEI4pPeLrJNYfIZf7g==}
+
+  '@types/mjml@4.7.4':
+    resolution: {integrity: sha512-vyi1vzWgMzFMwZY7GSZYX0GU0dmtC8vLHwpgk+NWmwbwRSrlieVyJ9sn5elodwUfklJM7yGl0zQeet1brKTWaQ==}
 
   '@types/multer@1.4.11':
     resolution: {integrity: sha512-svK240gr6LVWvv3YGyhLlA+6LRRWA4mnGIU7RcNmgjBYFl6665wcXrRfxGp5tEPVHUNm5FMcmq7too9bxCwX/w==}
@@ -3970,10 +3988,6 @@ packages:
 
   cli-table3@0.6.3:
     resolution: {integrity: sha512-w5Jac5SykAeZJKntOxJCrm63Eg5/4dhMWIcuTbo9rpE+brgaSZo0RuNJZeOyMgsUdhDeojvgyQLmjI+K50ZGyg==}
-    engines: {node: 10.* || >= 12.*}
-
-  cli-table3@0.6.4:
-    resolution: {integrity: sha512-Lm3L0p+/npIQWNIiyF/nAn7T5dnOwR3xNTHXYEBFBFVPXzCVNZ5lqEC/1eo/EVfpDsQ1I+TX4ORPQgp+UI0CRw==}
     engines: {node: 10.* || >= 12.*}
 
   cli-width@3.0.0:
@@ -5460,8 +5474,8 @@ packages:
     resolution: {integrity: sha512-8e1++BCiTzUno9v5IZ2J6bv4RU+3UKDmqWUQD0MIMVCd9AdhWkO1gw57oo1mNEX1dMq2EGI+FbWz4B92pscSQg==}
     engines: {node: '>= 18'}
 
-  formidable@2.1.2:
-    resolution: {integrity: sha512-CM3GuJ57US06mlpQ47YcunuUZ9jpm8Vx+P2CGt2j7HpgkKZO/DJYQ0Bobim8G6PFQmK5lOqOOdUXboU+h73A4g==}
+  formidable@3.5.1:
+    resolution: {integrity: sha512-WJWKelbRHN41m5dumb0/k8TeAx7Id/y3a+Z7QfhxP/htI9Js5zYaEDtG8uMgG0vM0lOlqnmjE99/kfpOYi/0Og==}
 
   forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -6749,6 +6763,11 @@ packages:
 
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
+
+  liquidjs@10.12.0:
+    resolution: {integrity: sha512-ZpT27WEqUu8IeddXoLbdeBTbRfV5r7oUKDjJMthuQKQTScgI8pbLGbSWiiAktQVpPG7mHMGsJ0JVbZYn1w9Gtg==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   load-json-file@1.1.0:
     resolution: {integrity: sha512-cy7ZdNRXdablkXYNI049pthVeXFurRyb9+hA/dZzerZ0pGTx42z+y+ssxBaVV2l70t1muq5IdKhn4UtcoGUY9A==}
@@ -9654,14 +9673,13 @@ packages:
     resolution: {integrity: sha512-CY8u7DtbvucKuquCmOFEKhr9Besln7n9uN8eFbwcoGYWXOMW07u2o8njWaiXt11ylS3qoGF55pILjRmPlbodyg==}
     engines: {node: '>=18'}
 
-  superagent@8.1.2:
-    resolution: {integrity: sha512-6WTxW1EB6yCxV5VFOIPQruWGHqc3yI7hEmZK6h+pyk69Lk/Ut7rLUY6W/ONF2MjBuGjvmMiIpsrVJ2vjrHlslA==}
-    engines: {node: '>=6.4.0 <13 || >=14'}
-    deprecated: Please upgrade to v9.0.0+ as we have fixed a public vulnerability with formidable dependency. Note that v9.0.0+ requires Node.js v14.18.0+. See https://github.com/ladjs/superagent/pull/1800 for insight. This project is supported and maintained by the team at Forward Email @ https://forwardemail.net
+  superagent@9.0.2:
+    resolution: {integrity: sha512-xuW7dzkUpcJq7QnhOsnNUgtYp3xRwpt2F7abdRYIpCsAt0hhUqia0EdxyXZQQpNmGtsCzYHryaKSV3q3GJnq7w==}
+    engines: {node: '>=14.18.0'}
 
-  supertest@6.3.4:
-    resolution: {integrity: sha512-erY3HFDG0dPnhw4U+udPfrzXa4xhSG+n4rxfRuZWCUvjFWwKl+OxWf/7zk50s84/fAAs7vf5QAb9uRa0cCykxw==}
-    engines: {node: '>=6.4.0'}
+  supertest@7.0.0:
+    resolution: {integrity: sha512-qlsr7fIC0lSddmA3tzojvzubYxvlGtzumcdHgPwbFWMISQwL22MhM2Y3LNt+6w9Yyx7559VW5ab70dgphm8qQA==}
+    engines: {node: '>=14.18.0'}
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -11648,40 +11666,48 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@css-inline/css-inline-darwin-arm64@0.13.0':
+  '@css-inline/css-inline-android-arm-eabi@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-darwin-x64@0.13.0':
+  '@css-inline/css-inline-android-arm64@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-linux-arm-gnueabihf@0.13.0':
+  '@css-inline/css-inline-darwin-arm64@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-linux-arm64-gnu@0.13.0':
+  '@css-inline/css-inline-darwin-x64@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-linux-arm64-musl@0.13.0':
+  '@css-inline/css-inline-linux-arm-gnueabihf@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-linux-x64-gnu@0.13.0':
+  '@css-inline/css-inline-linux-arm64-gnu@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-linux-x64-musl@0.13.0':
+  '@css-inline/css-inline-linux-arm64-musl@0.14.1':
     optional: true
 
-  '@css-inline/css-inline-win32-x64-msvc@0.13.0':
+  '@css-inline/css-inline-linux-x64-gnu@0.14.1':
     optional: true
 
-  '@css-inline/css-inline@0.13.0':
+  '@css-inline/css-inline-linux-x64-musl@0.14.1':
+    optional: true
+
+  '@css-inline/css-inline-win32-x64-msvc@0.14.1':
+    optional: true
+
+  '@css-inline/css-inline@0.14.1':
     optionalDependencies:
-      '@css-inline/css-inline-darwin-arm64': 0.13.0
-      '@css-inline/css-inline-darwin-x64': 0.13.0
-      '@css-inline/css-inline-linux-arm-gnueabihf': 0.13.0
-      '@css-inline/css-inline-linux-arm64-gnu': 0.13.0
-      '@css-inline/css-inline-linux-arm64-musl': 0.13.0
-      '@css-inline/css-inline-linux-x64-gnu': 0.13.0
-      '@css-inline/css-inline-linux-x64-musl': 0.13.0
-      '@css-inline/css-inline-win32-x64-msvc': 0.13.0
+      '@css-inline/css-inline-android-arm-eabi': 0.14.1
+      '@css-inline/css-inline-android-arm64': 0.14.1
+      '@css-inline/css-inline-darwin-arm64': 0.14.1
+      '@css-inline/css-inline-darwin-x64': 0.14.1
+      '@css-inline/css-inline-linux-arm-gnueabihf': 0.14.1
+      '@css-inline/css-inline-linux-arm64-gnu': 0.14.1
+      '@css-inline/css-inline-linux-arm64-musl': 0.14.1
+      '@css-inline/css-inline-linux-x64-gnu': 0.14.1
+      '@css-inline/css-inline-linux-x64-musl': 0.14.1
+      '@css-inline/css-inline-win32-x64-msvc': 0.14.1
 
   '@csstools/cascade-layer-name-parser@1.0.9(@csstools/css-parser-algorithms@2.6.1(@csstools/css-tokenizer@2.2.4))(@csstools/css-tokenizer@2.2.4)':
     dependencies:
@@ -12329,20 +12355,22 @@ snapshots:
 
   '@microsoft/tsdoc@0.14.2': {}
 
-  '@nestjs-modules/mailer@1.11.2(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.8(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(nodemailer@6.9.13)':
+  '@nestjs-modules/mailer@2.0.2(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.8(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(nodemailer@6.9.13)':
     dependencies:
-      '@css-inline/css-inline': 0.13.0
+      '@css-inline/css-inline': 0.14.1
       '@nestjs/common': 10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.3.8(@nestjs/common@10.3.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      glob: 10.3.10
-      mjml: 4.15.3
+      glob: 10.3.12
       nodemailer: 6.9.13
-      preview-email: 3.0.19
     optionalDependencies:
       '@types/ejs': 3.1.5
+      '@types/mjml': 4.7.4
       '@types/pug': 2.0.10
       ejs: 3.1.10
       handlebars: 4.7.8
+      liquidjs: 10.12.0
+      mjml: 4.15.3
+      preview-email: 3.0.19
       pug: 3.0.2
     transitivePeerDependencies:
       - encoding
@@ -13078,7 +13106,8 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 22.2.0
 
-  '@one-ini/wasm@0.1.1': {}
+  '@one-ini/wasm@0.1.1':
+    optional: true
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -13178,6 +13207,7 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       selderee: 0.11.0
+    optional: true
 
   '@semantic-release/changelog@6.0.3(semantic-release@23.0.8(typescript@5.4.5))':
     dependencies:
@@ -13689,6 +13719,14 @@ snapshots:
       mime: 4.0.3
 
   '@types/minimist@1.2.5': {}
+
+  '@types/mjml-core@4.7.4':
+    optional: true
+
+  '@types/mjml@4.7.4':
+    dependencies:
+      '@types/mjml-core': 4.7.4
+    optional: true
 
   '@types/multer@1.4.11':
     dependencies:
@@ -14568,7 +14606,8 @@ snapshots:
 
   abbrev@1.1.1: {}
 
-  abbrev@2.0.0: {}
+  abbrev@2.0.0:
+    optional: true
 
   accepts@1.3.8:
     dependencies:
@@ -14670,6 +14709,7 @@ snapshots:
     dependencies:
       esprima: 1.2.5
       estraverse: 1.9.3
+    optional: true
 
   ansi-align@3.0.1:
     dependencies:
@@ -14801,7 +14841,8 @@ snapshots:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
 
-  assert-never@1.2.1: {}
+  assert-never@1.2.1:
+    optional: true
 
   assert@1.5.1:
     dependencies:
@@ -14959,6 +15000,7 @@ snapshots:
   babel-walk@3.0.0-canary-5:
     dependencies:
       '@babel/types': 7.24.5
+    optional: true
 
   balanced-match@1.0.2: {}
 
@@ -15337,6 +15379,7 @@ snapshots:
   character-parser@2.2.0:
     dependencies:
       is-regex: 1.1.4
+    optional: true
 
   chardet@0.7.0: {}
 
@@ -15366,6 +15409,7 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       domutils: 3.1.0
+    optional: true
 
   cheerio@1.0.0-rc.12:
     dependencies:
@@ -15376,6 +15420,7 @@ snapshots:
       htmlparser2: 8.0.2
       parse5: 7.1.2
       parse5-htmlparser2-tree-adapter: 7.0.0
+    optional: true
 
   chokidar@2.1.8:
     dependencies:
@@ -15479,12 +15524,6 @@ snapshots:
     optionalDependencies:
       '@colors/colors': 1.5.0
 
-  cli-table3@0.6.4:
-    dependencies:
-      string-width: 4.2.3
-    optionalDependencies:
-      '@colors/colors': 1.5.0
-
   cli-width@3.0.0: {}
 
   cli-width@4.1.0: {}
@@ -15548,7 +15587,8 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
-  commander@10.0.1: {}
+  commander@10.0.1:
+    optional: true
 
   commander@2.20.3: {}
 
@@ -15642,6 +15682,7 @@ snapshots:
     dependencies:
       '@babel/parser': 7.24.5
       '@babel/types': 7.24.5
+    optional: true
 
   constants-browserify@1.0.0: {}
 
@@ -16220,7 +16261,8 @@ snapshots:
 
   detect-indent@5.0.0: {}
 
-  detect-indent@6.1.0: {}
+  detect-indent@6.1.0:
+    optional: true
 
   detect-libc@2.0.3: {}
 
@@ -16255,6 +16297,7 @@ snapshots:
     dependencies:
       escape-string-applescript: 1.0.0
       run-applescript: 3.2.0
+    optional: true
 
   dns-packet@5.6.1:
     dependencies:
@@ -16264,7 +16307,8 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  doctypes@1.1.0: {}
+  doctypes@1.1.0:
+    optional: true
 
   dom-converter@0.2.0:
     dependencies:
@@ -16293,6 +16337,7 @@ snapshots:
   domhandler@3.3.0:
     dependencies:
       domelementtype: 2.3.0
+    optional: true
 
   domhandler@4.3.1:
     dependencies:
@@ -16358,6 +16403,7 @@ snapshots:
       commander: 10.0.1
       minimatch: 9.0.1
       semver: 7.6.0
+    optional: true
 
   ee-first@1.1.1: {}
 
@@ -16389,9 +16435,11 @@ snapshots:
 
   encodeurl@1.0.2: {}
 
-  encoding-japanese@2.0.0: {}
+  encoding-japanese@2.0.0:
+    optional: true
 
-  encoding-japanese@2.1.0: {}
+  encoding-japanese@2.1.0:
+    optional: true
 
   end-of-stream@1.4.4:
     dependencies:
@@ -16534,11 +16582,13 @@ snapshots:
 
   escalade@3.1.2: {}
 
-  escape-goat@3.0.0: {}
+  escape-goat@3.0.0:
+    optional: true
 
   escape-html@1.0.3: {}
 
-  escape-string-applescript@1.0.0: {}
+  escape-string-applescript@1.0.0:
+    optional: true
 
   escape-string-regexp@1.0.5: {}
 
@@ -16661,7 +16711,8 @@ snapshots:
       acorn-jsx: 5.3.2(acorn@8.11.3)
       eslint-visitor-keys: 3.4.3
 
-  esprima@1.2.5: {}
+  esprima@1.2.5:
+    optional: true
 
   esprima@4.0.1: {}
 
@@ -16673,7 +16724,8 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  estraverse@1.9.3: {}
+  estraverse@1.9.3:
+    optional: true
 
   estraverse@4.3.0: {}
 
@@ -16711,6 +16763,7 @@ snapshots:
       p-finally: 1.0.0
       signal-exit: 3.0.7
       strip-eof: 1.0.0
+    optional: true
 
   execa@1.0.0:
     dependencies:
@@ -16808,7 +16861,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  extend-object@1.0.0: {}
+  extend-object@1.0.0:
+    optional: true
 
   extend-shallow@2.0.1:
     dependencies:
@@ -16997,6 +17051,7 @@ snapshots:
       detect-newline: 3.1.0
       extend-object: 1.0.0
       rc: 1.2.8
+    optional: true
 
   flat-cache@3.2.0:
     dependencies:
@@ -17076,12 +17131,11 @@ snapshots:
 
   formdata-node@6.0.3: {}
 
-  formidable@2.1.2:
+  formidable@3.5.1:
     dependencies:
       dezalgo: 1.0.4
       hexoid: 1.0.0
       once: 1.4.0
-      qs: 6.12.1
 
   forwarded@0.2.0: {}
 
@@ -17194,11 +17248,13 @@ snapshots:
     dependencies:
       fs-memo: 1.2.0
 
-  get-port@5.1.1: {}
+  get-port@5.1.1:
+    optional: true
 
   get-stdin@4.0.1: {}
 
-  get-stream@3.0.0: {}
+  get-stream@3.0.0:
+    optional: true
 
   get-stream@4.1.0:
     dependencies:
@@ -17545,6 +17601,7 @@ snapshots:
       dom-serializer: 2.0.0
       htmlparser2: 8.0.2
       selderee: 0.11.0
+    optional: true
 
   html-webpack-plugin@4.5.2(webpack@4.47.0):
     dependencies:
@@ -17575,6 +17632,7 @@ snapshots:
       domhandler: 3.3.0
       domutils: 2.8.0
       entities: 2.2.0
+    optional: true
 
   htmlparser2@6.1.0:
     dependencies:
@@ -17596,6 +17654,7 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.1.0
       entities: 4.5.0
+    optional: true
 
   http-cache-semantics@4.1.1: {}
 
@@ -17901,6 +17960,7 @@ snapshots:
     dependencies:
       acorn: 7.4.1
       object-assign: 4.1.1
+    optional: true
 
   is-extendable@0.1.1: {}
 
@@ -17961,7 +18021,8 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  is-promise@2.2.2: {}
+  is-promise@2.2.2:
+    optional: true
 
   is-regex@1.1.4:
     dependencies:
@@ -18533,15 +18594,18 @@ snapshots:
     dependencies:
       config-chain: 1.1.13
       editorconfig: 1.0.4
-      glob: 10.3.10
+      glob: 10.3.12
       js-cookie: 3.0.5
       nopt: 7.2.0
+    optional: true
 
-  js-cookie@3.0.5: {}
+  js-cookie@3.0.5:
+    optional: true
 
   js-message@1.0.7: {}
 
-  js-stringify@1.0.2: {}
+  js-stringify@1.0.2:
+    optional: true
 
   js-tokens@4.0.0: {}
 
@@ -18674,6 +18738,7 @@ snapshots:
     dependencies:
       is-promise: 2.2.2
       promise: 7.3.1
+    optional: true
 
   juice@10.0.0:
     dependencies:
@@ -18684,6 +18749,7 @@ snapshots:
       web-resource-inliner: 6.0.1
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   jwa@1.4.1:
     dependencies:
@@ -18732,7 +18798,8 @@ snapshots:
       picocolors: 1.0.0
       shell-quote: 1.8.1
 
-  leac@0.6.0: {}
+  leac@0.6.0:
+    optional: true
 
   leaflet@1.9.4: {}
 
@@ -18743,9 +18810,11 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libbase64@1.2.1: {}
+  libbase64@1.2.1:
+    optional: true
 
-  libbase64@1.3.0: {}
+  libbase64@1.3.0:
+    optional: true
 
   libmime@5.2.0:
     dependencies:
@@ -18753,6 +18822,7 @@ snapshots:
       iconv-lite: 0.6.3
       libbase64: 1.2.1
       libqp: 2.0.1
+    optional: true
 
   libmime@5.3.5:
     dependencies:
@@ -18760,12 +18830,15 @@ snapshots:
       iconv-lite: 0.6.3
       libbase64: 1.3.0
       libqp: 2.1.0
+    optional: true
 
   libphonenumber-js@1.10.61: {}
 
-  libqp@2.0.1: {}
+  libqp@2.0.1:
+    optional: true
 
-  libqp@2.1.0: {}
+  libqp@2.1.0:
+    optional: true
 
   lilconfig@2.1.0: {}
 
@@ -18776,6 +18849,11 @@ snapshots:
   linkify-it@5.0.0:
     dependencies:
       uc.micro: 2.1.0
+
+  liquidjs@10.12.0:
+    dependencies:
+      commander: 10.0.1
+    optional: true
 
   load-json-file@1.1.0:
     dependencies:
@@ -18954,12 +19032,14 @@ snapshots:
       nodemailer: 6.9.13
       punycode.js: 2.3.1
       tlds: 1.252.0
+    optional: true
 
   mailsplit@5.4.0:
     dependencies:
       libbase64: 1.2.1
       libmime: 5.2.0
       libqp: 2.0.1
+    optional: true
 
   make-dir@1.3.0:
     dependencies:
@@ -19012,7 +19092,7 @@ snapshots:
       ansi-escapes: 6.2.1
       chalk: 5.3.0
       cli-highlight: 2.1.11
-      cli-table3: 0.6.4
+      cli-table3: 0.6.3
       marked: 12.0.2
       node-emoji: 2.1.3
       supports-hyperlinks: 3.0.0
@@ -19049,7 +19129,8 @@ snapshots:
       errno: 0.1.8
       readable-stream: 2.3.8
 
-  mensch@0.3.4: {}
+  mensch@0.3.4:
+    optional: true
 
   meow@12.1.1: {}
 
@@ -19171,6 +19252,7 @@ snapshots:
   minimatch@9.0.1:
     dependencies:
       brace-expansion: 2.0.1
+    optional: true
 
   minimatch@9.0.3:
     dependencies:
@@ -19239,6 +19321,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-body@4.15.3:
     dependencies:
@@ -19247,6 +19330,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-button@4.15.3:
     dependencies:
@@ -19255,6 +19339,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-carousel@4.15.3:
     dependencies:
@@ -19263,12 +19348,13 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-cli@4.15.3:
     dependencies:
       '@babel/runtime': 7.24.5
       chokidar: 3.6.0
-      glob: 10.3.10
+      glob: 10.3.12
       html-minifier: 4.0.0
       js-beautify: 1.15.1
       lodash: 4.17.21
@@ -19280,6 +19366,7 @@ snapshots:
       yargs: 17.7.2
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-column@4.15.3:
     dependencies:
@@ -19288,6 +19375,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-core@4.15.3:
     dependencies:
@@ -19303,6 +19391,7 @@ snapshots:
       mjml-validator: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-divider@4.15.3:
     dependencies:
@@ -19311,6 +19400,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-group@4.15.3:
     dependencies:
@@ -19319,6 +19409,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-attributes@4.15.3:
     dependencies:
@@ -19327,6 +19418,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-breakpoint@4.15.3:
     dependencies:
@@ -19335,6 +19427,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-font@4.15.3:
     dependencies:
@@ -19343,6 +19436,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-html-attributes@4.15.3:
     dependencies:
@@ -19351,6 +19445,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-preview@4.15.3:
     dependencies:
@@ -19359,6 +19454,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-style@4.15.3:
     dependencies:
@@ -19367,6 +19463,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head-title@4.15.3:
     dependencies:
@@ -19375,6 +19472,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-head@4.15.3:
     dependencies:
@@ -19383,6 +19481,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-hero@4.15.3:
     dependencies:
@@ -19391,6 +19490,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-image@4.15.3:
     dependencies:
@@ -19399,6 +19499,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-migrate@4.15.3:
     dependencies:
@@ -19410,6 +19511,7 @@ snapshots:
       yargs: 17.7.2
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-navbar@4.15.3:
     dependencies:
@@ -19418,6 +19520,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-parser-xml@4.15.3:
     dependencies:
@@ -19425,6 +19528,7 @@ snapshots:
       detect-node: 2.1.0
       htmlparser2: 9.1.0
       lodash: 4.17.21
+    optional: true
 
   mjml-preset-core@4.15.3:
     dependencies:
@@ -19456,6 +19560,7 @@ snapshots:
       mjml-wrapper: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-raw@4.15.3:
     dependencies:
@@ -19464,6 +19569,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-section@4.15.3:
     dependencies:
@@ -19472,6 +19578,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-social@4.15.3:
     dependencies:
@@ -19480,6 +19587,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-spacer@4.15.3:
     dependencies:
@@ -19488,6 +19596,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-table@4.15.3:
     dependencies:
@@ -19496,6 +19605,7 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-text@4.15.3:
     dependencies:
@@ -19504,10 +19614,12 @@ snapshots:
       mjml-core: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml-validator@4.15.3:
     dependencies:
       '@babel/runtime': 7.24.5
+    optional: true
 
   mjml-wrapper@4.15.3:
     dependencies:
@@ -19517,6 +19629,7 @@ snapshots:
       mjml-section: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mjml@4.15.3:
     dependencies:
@@ -19528,6 +19641,7 @@ snapshots:
       mjml-validator: 4.15.3
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   mkdirp@0.5.6:
     dependencies:
@@ -19717,6 +19831,7 @@ snapshots:
   nopt@7.2.0:
     dependencies:
       abbrev: 2.0.0
+    optional: true
 
   normalize-package-data@2.5.0:
     dependencies:
@@ -19969,6 +20084,7 @@ snapshots:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+    optional: true
 
   open@8.4.2:
     dependencies:
@@ -20021,6 +20137,7 @@ snapshots:
   p-event@4.2.0:
     dependencies:
       p-timeout: 3.2.0
+    optional: true
 
   p-filter@4.1.0:
     dependencies:
@@ -20080,6 +20197,7 @@ snapshots:
   p-timeout@3.2.0:
     dependencies:
       p-finally: 1.0.0
+    optional: true
 
   p-try@1.0.0: {}
 
@@ -20088,6 +20206,7 @@ snapshots:
   p-wait-for@3.2.0:
     dependencies:
       p-timeout: 3.2.0
+    optional: true
 
   pako@0.2.9: {}
 
@@ -20171,6 +20290,7 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       parse5: 7.1.2
+    optional: true
 
   parse5@5.1.1: {}
 
@@ -20184,6 +20304,7 @@ snapshots:
     dependencies:
       leac: 0.6.0
       peberminta: 0.9.0
+    optional: true
 
   parseurl@1.3.3: {}
 
@@ -20280,7 +20401,8 @@ snapshots:
       iconv-lite: 0.6.3
       xmldoc: 1.3.0
 
-  peberminta@0.9.0: {}
+  peberminta@0.9.0:
+    optional: true
 
   picocolors@0.2.1: {}
 
@@ -20973,6 +21095,7 @@ snapshots:
       p-wait-for: 3.2.0
       pug: 3.0.2
       uuid: 9.0.1
+    optional: true
 
   prisma@5.13.0:
     dependencies:
@@ -20996,6 +21119,7 @@ snapshots:
   promise@7.3.1:
     dependencies:
       asap: 2.0.6
+    optional: true
 
   prompts@2.4.2:
     dependencies:
@@ -21141,6 +21265,7 @@ snapshots:
       constantinople: 4.0.1
       js-stringify: 1.0.2
       pug-runtime: 3.0.1
+    optional: true
 
   pug-code-gen@3.0.2:
     dependencies:
@@ -21152,8 +21277,10 @@ snapshots:
       pug-runtime: 3.0.1
       void-elements: 3.1.0
       with: 7.0.2
+    optional: true
 
-  pug-error@2.0.0: {}
+  pug-error@2.0.0:
+    optional: true
 
   pug-filters@4.0.0:
     dependencies:
@@ -21162,35 +21289,43 @@ snapshots:
       pug-error: 2.0.0
       pug-walk: 2.0.0
       resolve: 1.22.8
+    optional: true
 
   pug-lexer@5.0.1:
     dependencies:
       character-parser: 2.2.0
       is-expression: 4.0.0
       pug-error: 2.0.0
+    optional: true
 
   pug-linker@4.0.0:
     dependencies:
       pug-error: 2.0.0
       pug-walk: 2.0.0
+    optional: true
 
   pug-load@3.0.0:
     dependencies:
       object-assign: 4.1.1
       pug-walk: 2.0.0
+    optional: true
 
   pug-parser@6.0.0:
     dependencies:
       pug-error: 2.0.0
       token-stream: 1.0.0
+    optional: true
 
-  pug-runtime@3.0.1: {}
+  pug-runtime@3.0.1:
+    optional: true
 
   pug-strip-comments@2.0.0:
     dependencies:
       pug-error: 2.0.0
+    optional: true
 
-  pug-walk@2.0.0: {}
+  pug-walk@2.0.0:
+    optional: true
 
   pug@3.0.2:
     dependencies:
@@ -21202,6 +21337,7 @@ snapshots:
       pug-parser: 6.0.0
       pug-runtime: 3.0.1
       pug-strip-comments: 2.0.0
+    optional: true
 
   pump@2.0.1:
     dependencies:
@@ -21570,6 +21706,7 @@ snapshots:
   run-applescript@3.2.0:
     dependencies:
       execa: 0.10.0
+    optional: true
 
   run-async@2.4.1: {}
 
@@ -21705,6 +21842,7 @@ snapshots:
   selderee@0.11.0:
     dependencies:
       parseley: 0.12.1
+    optional: true
 
   select-hose@2.0.0: {}
 
@@ -21914,7 +22052,8 @@ snapshots:
 
   slash@5.1.0: {}
 
-  slick@1.12.2: {}
+  slick@1.12.2:
+    optional: true
 
   snapdragon-node@2.1.1:
     dependencies:
@@ -22212,25 +22351,24 @@ snapshots:
       function-timeout: 1.0.1
       time-span: 5.1.0
 
-  superagent@8.1.2:
+  superagent@9.0.2:
     dependencies:
       component-emitter: 1.3.1
       cookiejar: 2.1.4
       debug: 4.3.4
       fast-safe-stringify: 2.1.1
       form-data: 4.0.0
-      formidable: 2.1.2
+      formidable: 3.5.1
       methods: 1.1.2
       mime: 2.6.0
       qs: 6.12.1
-      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
 
-  supertest@6.3.4:
+  supertest@7.0.0:
     dependencies:
       methods: 1.1.2
-      superagent: 8.1.2
+      superagent: 9.0.2
     transitivePeerDependencies:
       - supports-color
 
@@ -22434,7 +22572,8 @@ snapshots:
     dependencies:
       '@popperjs/core': 2.11.8
 
-  tlds@1.252.0: {}
+  tlds@1.252.0:
+    optional: true
 
   tmp@0.0.33:
     dependencies:
@@ -22468,7 +22607,8 @@ snapshots:
 
   toidentifier@1.0.1: {}
 
-  token-stream@1.0.0: {}
+  token-stream@1.0.0:
+    optional: true
 
   toposort@2.0.2: {}
 
@@ -22862,7 +23002,8 @@ snapshots:
 
   uuid@8.3.2: {}
 
-  uuid@9.0.1: {}
+  uuid@9.0.1:
+    optional: true
 
   v8-compile-cache-lib@3.0.1: {}
 
@@ -22872,7 +23013,8 @@ snapshots:
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
 
-  valid-data-url@3.0.1: {}
+  valid-data-url@3.0.1:
+    optional: true
 
   validate-npm-package-license@3.0.4:
     dependencies:
@@ -22947,7 +23089,8 @@ snapshots:
 
   vm-browserify@1.1.2: {}
 
-  void-elements@3.1.0: {}
+  void-elements@3.1.0:
+    optional: true
 
   vue-chartjs@3.5.1(chart.js@2.9.4):
     dependencies:
@@ -23243,6 +23386,7 @@ snapshots:
       valid-data-url: 3.0.1
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   webidl-conversions@3.0.1: {}
 
@@ -23536,6 +23680,7 @@ snapshots:
       '@babel/types': 7.24.5
       assert-never: 1.2.1
       babel-walk: 3.0.0-canary-5
+    optional: true
 
   word-wrap@1.2.5: {}
 
