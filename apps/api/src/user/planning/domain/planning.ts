@@ -23,7 +23,7 @@ export class Planning {
       (groupedTasks, task) => this.groupTasks(groupedTasks, task),
       [] as StoredTask[],
     );
-    return groupedTasks.map((storedTask) => storedTask.toTask());
+    return groupedTasks.map((storedTask) => storedTask.toTask(volunteerId));
   }
 
   async listVolunteerTasks(volunteerId: number): Promise<PlanningTask[]> {

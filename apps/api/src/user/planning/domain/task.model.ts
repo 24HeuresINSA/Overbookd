@@ -10,8 +10,7 @@ export type Assignment = {
   volunteers: Volunteer[];
 };
 
-export type Contact = {
-  name: string;
+export type Contact = Volunteer & {
   phone: string;
 };
 

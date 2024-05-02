@@ -5,14 +5,17 @@ import { InMemoryTaskRepository } from "./task.repository.inmemory";
 const julien = { id: 1, name: "julien" };
 const vincent = { id: 2, name: "vincent" };
 const antonin = { id: 3, name: "antonin" };
+const antoninContact = { id: 3, name: "antonin", phone: "06010203003" };
 const valerie = { id: 4, name: "valerie" };
 const lina = { id: 5, name: "lina" };
 const elodie = { id: 6, name: "elodie" };
+const elodieContact = { id: 6, name: "elodie", phone: "0601020306" };
 const loic = { id: 7, name: "loic" };
 const tristan = { id: 8, name: "tristan" };
 const constantin = { id: 9, name: "constantin" };
 const michel = { id: 10, name: "michel" };
 const ana = { id: 11, name: "ana" };
+const anaContact = { id: 11, name: "ana", phone: "0601020311" };
 const ambre = { id: 12, name: "ambre" };
 const antoine = { id: 13, name: "antoine" };
 const brenda = { id: 14, name: "brenda" };
@@ -90,7 +93,7 @@ const debarrierageAvenueDesArtsOn12hTo14hMay15: JsonStoredTask = {
     ...volunteer,
     period: shift12hTo14hMay15,
   })),
-  contacts: [],
+  contacts: [antoninContact],
 };
 
 const debarrierageAvenueDesArtsOn14hTo16hMay15: JsonStoredTask = {
@@ -100,7 +103,7 @@ const debarrierageAvenueDesArtsOn14hTo16hMay15: JsonStoredTask = {
     ...volunteer,
     period: shift14hTo16hMay15,
   })),
-  contacts: [],
+  contacts: [antoninContact],
 };
 
 const deplacerLeFenOn12hTo14hMay12: JsonStoredTask = {
@@ -110,7 +113,7 @@ const deplacerLeFenOn12hTo14hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift12hTo14hMay12,
   })),
-  contacts: [],
+  contacts: [elodieContact],
 };
 
 const deplacerLeFenOn20hTo22hMay12: JsonStoredTask = {
@@ -120,7 +123,7 @@ const deplacerLeFenOn20hTo22hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift20hTo22hMay12,
   })),
-  contacts: [],
+  contacts: [elodieContact],
 };
 
 const barrierageAvenueDesArtsOn18hTo02hMay12: JsonStoredTask = {
@@ -162,7 +165,7 @@ const barrierageAvenueDesArtsOn18hTo20hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift18hTo20hMay12,
   })),
-  contacts: [],
+  contacts: [anaContact],
 };
 
 const barrierageAvenueDesArtsOn20hTo22hMay12: JsonStoredTask = {
@@ -172,7 +175,7 @@ const barrierageAvenueDesArtsOn20hTo22hMay12: JsonStoredTask = {
     ...volunteer,
     period: shift20hTo22hMay12,
   })),
-  contacts: [],
+  contacts: [anaContact],
 };
 
 const barrierageAvenueDesArtsOn22hTo00hMay12: JsonStoredTask = {
@@ -257,13 +260,14 @@ describe("Planning", () => {
         expect(tasks).toMatchObject([barrierageAvenueDesArtShift]);
       });
     });
-    describe("when volunteer is assigned to both 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00 and from 2023-05-15 14:00 to 2023-05-15 16:00", () => {
+    describe("when volunteer is assigned to both 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00 and from 2023-05-15 14:00 to 2023-05-15 16:00 and is contact", () => {
       it("should retrieve 'Debarierrage Avenue des Arts' in tasks list", async () => {
         const tasks = await planning.generateForVolunteer(antonin.id);
         const { assignees, id, ...debarrierageAvenueDesArtShift } =
           debarrierageAvenueDesArtsOn12hTo14hMay15;
         const globalDebarrierageAvenueDesArtShift = {
           ...debarrierageAvenueDesArtShift,
+          contacts: [],
           period: {
             start: shift12hTo14hMay15.start,
             end: shift14hTo16hMay15.end,
@@ -302,8 +306,8 @@ describe("Planning", () => {
       it("should retrieve separated tasks in tasks list", async () => {
         const tasks = await planning.generateForVolunteer(elodie.id);
         const expectedShifts = [
-          deplacerLeFenOn12hTo14hMay12,
-          deplacerLeFenOn20hTo22hMay12,
+          { ...deplacerLeFenOn12hTo14hMay12, contacts: [] },
+          { ...deplacerLeFenOn20hTo22hMay12, contacts: [] },
         ].map(({ assignees, id, ...task }) => task);
         expect(tasks).toMatchObject(expectedShifts);
       });

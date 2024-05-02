@@ -28,6 +28,7 @@ const IS_NOT_DELETED = { isDeleted: false };
 const SELECT_CONTACT = {
   contact: {
     select: {
+      id: true,
       firstname: true,
       lastname: true,
       phone: true,
@@ -43,7 +44,7 @@ type DatabaseTask = {
   inChargeInstruction: string;
   inChargeVolunteers: { volunteerId: number }[];
   contacts: {
-    contact: { firstname: string; lastname: string; phone: string };
+    contact: { id: number; firstname: string; lastname: string; phone: string };
   }[];
 };
 
@@ -151,6 +152,7 @@ function toTask(
   assignments: DatabaseAssignmentWithAssignees[],
 ): JsonStoredTask {
   const contacts = festivalTask.contacts.map(({ contact }) => ({
+    id: contact.id,
     phone: contact.phone,
     name: buildVolunteerDisplayName(contact),
   }));

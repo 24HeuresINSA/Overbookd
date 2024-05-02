@@ -9,17 +9,19 @@ import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
 } from "../../../utils/date";
-import { Assignment, Task, Volunteer } from "../domain/task.model";
+import { Assignment, Contact, Task, Volunteer } from "../domain/task.model";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
 import { Introduction } from "./pdf/introduction";
 import { RenderStrategy } from "./render-strategy";
 import { Edition } from "@overbookd/contribution";
+import { updateItemToList } from "@overbookd/list";
 
 class PdfException extends Error {}
 
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
+const NB_CONTACTS_PER_LINE = 3;
 const MAX_LINES = 5;
 const SECURITY_PLAN_PAGE = 2;
 
@@ -53,7 +55,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
-    assign: { fontSize: 14, marginTop: 5 },
+    contact: { fontSize: 14, bold: true, marginTop: 5 },
+    assign: { fontSize: 14, marginTop: 10 },
     header: {
       fontSize: 18,
       marginTop: 20,
@@ -227,11 +230,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     location,
     instructions,
     assignments,
+    contacts,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ["task"] };
     const displayInstructions = this.extractInstructions(instructions);
+    const displayContacts = this.extractContacts(contacts);
     const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = {
       table: {
@@ -246,6 +251,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       displayPeriod,
       displayLocation,
       displayInstructions,
+      displayContacts,
       displayAssignment,
       taskSeparator,
     ];
@@ -291,6 +297,27 @@ export class PdfRenderStrategy implements RenderStrategy {
         const text = shouldDisplayEllipsis ? "..." : name;
         return { text };
       });
+  }
+
+  private extractContacts(contacts: Contact[]): Content {
+    if (contacts.length === 0) return "";
+
+    const header = {
+      text: "Peronnes à contacter en cas de problème",
+      style: ["contact"],
+    };
+    const listing = contacts
+      .reduce((rows, { name, phone }) => {
+        const previousRow = rows.at(-1);
+        const contact = { text: `${name} (${phone})` };
+        if (!previousRow) return [[contact]];
+        if (previousRow.length === NB_CONTACTS_PER_LINE)
+          return [...rows, [contact]];
+        return updateItemToList(rows, -1, [...previousRow, contact]);
+      }, [])
+      .map((row) => ({ columns: row }));
+
+    return [header, listing];
   }
 
   shouldDisplayEllipsis(
