@@ -55,7 +55,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
-    assign: { fontSize: 14, marginTop: 5 },
+    contact: { fontSize: 14, bold: true, marginTop: 5 },
+    assign: { fontSize: 14, marginTop: 10 },
     header: {
       fontSize: 18,
       marginTop: 20,
@@ -303,7 +304,7 @@ export class PdfRenderStrategy implements RenderStrategy {
 
     const header = {
       text: "Peronnes à contacter en cas de problème",
-      style: ["assign"],
+      style: ["contact"],
     };
     const listing = contacts
       .reduce((rows, { name, phone }) => {
