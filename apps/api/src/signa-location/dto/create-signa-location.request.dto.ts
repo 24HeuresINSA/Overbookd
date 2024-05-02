@@ -1,6 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsObject, IsString } from "class-validator";
-import { PointLocation, RoadLocation, AreaLocation } from "@overbookd/signa";
+import {
+  AreaLocation,
+  PointLocation,
+  RoadLocation,
+} from "@overbookd/geo-location";
 
 export class CreateSignaLocationRequestDto {
   @ApiProperty({
@@ -16,10 +20,10 @@ export class CreateSignaLocationRequestDto {
     description: "The coordinates of the location",
     example: {
       type: "POINT",
-      geoJson: { lat: 1, lng: 2 },
+      geoLocation: { lat: 1, lng: 2 },
     },
     required: false,
   })
   @IsObject()
-  geoJson: null | PointLocation | RoadLocation | AreaLocation;
+  geoLocation: null | PointLocation | RoadLocation | AreaLocation;
 }

@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/signa",
-  "version": "1.2.5",
-  "description": "Gestion de la signalétiques pour overbookd",
+  "name": "@overbookd/geo-location",
+  "version": "1.0.0",
+  "description": "Gestion des emplacements geographique pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "domains/signa"
+    "directory": "libraries/geo-location"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -25,14 +25,12 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test:unit": "echo 'No tests'",
-    "test:unit:ci": "echo 'No tests'"
-  },
-  "dependencies": {
-    "@overbookd/geo-location": "workspace:*"
+    "test:unit": "vitest --config ../../vitest.config.ts",
+    "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
   },
   "keywords": [
-    "signa"
+    "list",
+    "library"
   ],
   "engines": {
     "node": "20.12.2",

@@ -1,12 +1,11 @@
-import { Coordinate, ROAD, RoadLocation } from "@overbookd/signa";
-import { Location } from "./location";
 import { distanceBetweenPoints } from "./distance";
+import { AREA, AreaLocation, Coordinate, ManageLocation } from "./location";
 
-export class Line implements RoadLocation, Location {
+export class Polygon implements AreaLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate[]) {}
 
   static create(coordinates: Coordinate[] = []) {
-    return new Line(coordinates);
+    return new Polygon(coordinates);
   }
 
   addCoordinate(coordinate: Coordinate) {
@@ -23,11 +22,11 @@ export class Line implements RoadLocation, Location {
     return this._coordinates;
   }
 
-  get type(): typeof ROAD {
-    return ROAD;
+  get type(): typeof AREA {
+    return AREA;
   }
 
-  get geoJson(): RoadLocation {
+  get location(): AreaLocation {
     return {
       type: this.type,
       coordinates: [...this.coordinates],

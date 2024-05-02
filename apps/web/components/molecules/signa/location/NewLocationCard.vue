@@ -6,7 +6,7 @@
         v-model="newLocation.name"
         label="Nom du lieu"
       ></v-text-field>
-      <LocationMapEditor v-model="newLocation.geoJson" />
+      <LocationMapEditor v-model="newLocation.geoLocation" />
     </v-card-text>
     <v-card-actions>
       <v-btn :disabled="!isNewLocationDefined" @click="createNewLocation">
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Point } from "~/utils/signa-location/point";
+import { Point } from "@overbookd/geo-location";
 import LocationMapEditor from "./LocationMapEditor.vue";
 import { CreateLocation } from "~/utils/models/signa-location.model";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
@@ -29,7 +29,7 @@ type NewLocationCardDate = {
 
 const defaultLocation: CreateLocation = {
   name: "",
-  geoJson: Point.create(mapConfiguration.center),
+  geoLocation: Point.create(mapConfiguration.center),
 };
 
 export default defineComponent({

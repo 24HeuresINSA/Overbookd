@@ -26,6 +26,7 @@
       "@overbookd/festival-event-constants": [
         "../../constants/festival-event-constants/src"
       ],
+      "@overbookd/geo-location": ["../../libraries/geo-location/src"],
       "@overbookd/http": ["../../utils/http/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/logistic": ["../../domains/logistic/src"],

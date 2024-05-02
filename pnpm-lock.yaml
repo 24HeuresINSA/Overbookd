@@ -318,6 +318,9 @@ importers:
       '@overbookd/festival-event-constants':
         specifier: workspace:*
         version: link:../../constants/festival-event-constants
+      '@overbookd/geo-location':
+        specifier: workspace:*
+        version: link:../../libraries/geo-location
       '@overbookd/http':
         specifier: workspace:*
         version: link:../../utils/http
@@ -578,7 +581,11 @@ importers:
         specifier: 9.0.6
         version: 9.0.6
 
-  domains/signa: {}
+  domains/signa:
+    dependencies:
+      '@overbookd/geo-location':
+        specifier: workspace:*
+        version: link:../../libraries/geo-location
 
   domains/user:
     dependencies:
@@ -596,6 +603,8 @@ importers:
         version: link:../../libraries/period
 
   libraries/event: {}
+
+  libraries/geo-location: {}
 
   libraries/list: {}
 

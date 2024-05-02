@@ -12,7 +12,7 @@
           <l-marker
             v-for="(location, index) in points"
             :key="`point-${index}`"
-            :lat-lng="location.geoJson.coordinates"
+            :lat-lng="location.geoLocation.coordinates"
             @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
@@ -20,7 +20,7 @@
           <l-polyline
             v-for="(location, index) in roads"
             :key="`road-${index}`"
-            :lat-lngs="location.geoJson.coordinates"
+            :lat-lngs="location.geoLocation.coordinates"
             @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
@@ -28,7 +28,7 @@
           <l-polygon
             v-for="(location, index) in areas"
             :key="`area-${index}`"
-            :lat-lngs="location.geoJson.coordinates"
+            :lat-lngs="location.geoLocation.coordinates"
             @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
@@ -45,12 +45,11 @@ import {
   POINT,
   ROAD,
   AREA,
-  SignaLocation,
   PointLocation,
   RoadLocation,
   AreaLocation,
-  filterLocation,
-} from "@overbookd/signa";
+} from "@overbookd/geo-location";
+import { SignaLocation, filterLocation } from "@overbookd/signa";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
 
 export default defineComponent({

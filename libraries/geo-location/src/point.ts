@@ -1,8 +1,7 @@
-import { POINT, PointLocation, Coordinate } from "@overbookd/signa";
-import { Location } from "./location";
 import { distanceBetweenPoints } from "./distance";
+import { Coordinate, ManageLocation, POINT, PointLocation } from "./location";
 
-export class Point implements PointLocation, Location {
+export class Point implements PointLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate) {}
 
   static create(coordinates: Coordinate = { lat: 1, lng: 1 }) {
@@ -25,7 +24,7 @@ export class Point implements PointLocation, Location {
     return this._coordinates;
   }
 
-  get geoJson(): PointLocation {
+  get location(): PointLocation {
     return {
       type: this.type,
       coordinates: { ...this.coordinates },

@@ -1,4 +1,4 @@
-import { Coordinate } from "@overbookd/signa";
+import { Coordinate } from "./location";
 
 export function distanceBetweenPoints(
   point1: Coordinate,

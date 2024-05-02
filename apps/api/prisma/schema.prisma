@@ -180,7 +180,7 @@ model Contribution {
 model SignaLocation {
   id                 Int                @id @default(autoincrement())
   name               String             @db.VarChar(255)
-  geoJson            Json?              @map("geo_json")
+  geoLocation        Json?              @map("geo_location")
   fts                Ft[]
   festivalActivities FestivalActivity[]
   FestivalTask       FestivalTask[]

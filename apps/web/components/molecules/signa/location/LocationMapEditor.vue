@@ -46,18 +46,18 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
-  GeoJson,
+  GeoLocation,
   Coordinate,
-  isPointLocation,
   POINT,
   ROAD,
   AREA,
-} from "@overbookd/signa";
-import { Point } from "~/utils/signa-location/point";
-import { Line } from "~/utils/signa-location/line";
-import { Polygon } from "~/utils/signa-location/polygon";
+  Line,
+  Point,
+  Polygon,
+  ManageLocation,
+} from "@overbookd/geo-location";
+import { isPointLocation } from "@overbookd/signa";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
-import { Location } from "~/utils/signa-location/location";
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {
@@ -73,7 +73,7 @@ type LocationMapEditorData = {
   actions: ActionItem[];
   editing: boolean;
   mouseLatlng: Coordinate;
-  location: Location;
+  manage: ManageLocation;
 };
 
 const actions: ActionItem[] = [
@@ -86,35 +86,35 @@ export default defineComponent({
   name: "LocationMapEditor",
   model: {
     prop: "value",
-    event: "update:geo-json",
+    event: "update:geo-location",
   },
   props: {
     value: {
-      type: Object as () => GeoJson,
+      type: Object as () => GeoLocation | null,
       required: true,
     },
   },
-  emits: ["update:geo-json"],
+  emits: ["update:geo-location"],
   data: (): LocationMapEditorData => ({
     ...mapConfiguration,
     actions,
     editing: false,
     mouseLatlng: mapConfiguration.center,
-    location: Point.create(mapConfiguration.center),
+    manage: Point.create(mapConfiguration.center),
   }),
   computed: {
-    geoJson: {
-      get(): GeoJson {
+    geoLocation: {
+      get(): GeoLocation | null {
         return this.value;
       },
-      set(geoJson: GeoJson) {
-        this.$emit("update:geo-json", geoJson);
-        this.setLocation(geoJson);
+      set(geoLocation: GeoLocation) {
+        this.$emit("update:geo-location", geoLocation);
+        this.setManage(geoLocation);
       },
     },
     action: {
       get(): Action {
-        return this.geoJson?.type ?? POINT;
+        return this.geoLocation?.type ?? POINT;
       },
       set(action: Action) {
         this.reset(action);
@@ -130,25 +130,25 @@ export default defineComponent({
       return this.action === AREA;
     },
     previewNextCoordinate(): boolean {
-      if (isPointLocation(this.geoJson)) return false;
+      if (isPointLocation(this.geoLocation)) return false;
 
       return this.editing;
     },
     coordinates(): Coordinate | Coordinate[] {
-      if (!this.geoJson) return mapConfiguration.center;
+      if (!this.geoLocation) return mapConfiguration.center;
 
-      return isPointLocation(this.geoJson) || !this.editing
-        ? this.geoJson.coordinates
-        : [...this.geoJson.coordinates, this.mouseLatlng];
+      return isPointLocation(this.geoLocation) || !this.editing
+        ? this.geoLocation.coordinates
+        : [...this.geoLocation.coordinates, this.mouseLatlng];
     },
   },
   mounted() {
-    this.setLocation(this.geoJson);
+    this.setManage(this.geoLocation);
     this.initEditing();
   },
   methods: {
     initEditing() {
-      this.editing = this.geoJson === null;
+      this.editing = this.geoLocation === null;
     },
     updateZoom(zoom: number) {
       this.zoom = zoom;
@@ -161,39 +161,39 @@ export default defineComponent({
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (!this.editing) return;
-      this.location.addCoordinate(latlng);
-      this.geoJson = this.location.geoJson;
+      this.manage.addCoordinate(latlng);
+      this.geoLocation = this.manage.location;
     },
-    setLocation(geoJson: GeoJson) {
-      if (!geoJson) {
-        this.location = Point.create(this.center);
+    setManage(geoLocation: GeoLocation | null) {
+      if (!geoLocation) {
+        this.manage = Point.create(this.center);
         return;
       }
-      switch (geoJson.type) {
+      switch (geoLocation.type) {
         case POINT:
-          this.location = Point.create(geoJson.coordinates);
+          this.manage = Point.create(geoLocation.coordinates);
           break;
         case "ROAD":
-          this.location = Line.create(geoJson.coordinates);
+          this.manage = Line.create(geoLocation.coordinates);
           break;
         case "AREA":
-          this.location = Polygon.create(geoJson.coordinates);
+          this.manage = Polygon.create(geoLocation.coordinates);
           break;
       }
     },
     reset(action: Action) {
       switch (action) {
         case POINT:
-          this.location = Point.create(this.center);
+          this.manage = Point.create(this.center);
           break;
         case ROAD:
-          this.location = Line.create();
+          this.manage = Line.create();
           break;
         case AREA:
-          this.location = Polygon.create();
+          this.manage = Polygon.create();
           break;
       }
-      this.geoJson = this.location.geoJson;
+      this.geoLocation = this.manage.location;
       this.editing = true;
     },
   },

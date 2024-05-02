@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  SignaLocation,
   PointLocation,
   RoadLocation,
   AreaLocation,
-} from "@overbookd/signa";
+} from "@overbookd/geo-location";
+import { SignaLocation } from "@overbookd/signa";
 
 export class SignaLocationRepresentation implements SignaLocation {
   @ApiProperty({})
@@ -14,5 +14,5 @@ export class SignaLocationRepresentation implements SignaLocation {
   name: string;
 
   @ApiProperty({})
-  geoJson: null | PointLocation | RoadLocation | AreaLocation;
+  geoLocation: null | PointLocation | RoadLocation | AreaLocation;
 }

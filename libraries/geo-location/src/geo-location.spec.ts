@@ -1,5 +1,5 @@
-import { describe, expect, it } from "@jest/globals";
-import { POINT, ROAD, AREA } from "@overbookd/signa";
+import { describe, expect, it } from "vitest";
+import { POINT, ROAD, AREA } from "./location";
 import { Point } from "./point";
 import { Line } from "./line";
 import { Polygon } from "./polygon";
@@ -26,8 +26,8 @@ const pointF = { lat: 8, lng: 8 };
    0 1 2 3 4 5 6 7 8 9
 */
 
-describe("add coordinate to geo-json", () => {
-  describe("when the geo json is a point", () => {
+describe("add coordinate to geo-location", () => {
+  describe("when the geo location is a point", () => {
     it("should replace the coordinate by the new", () => {
       const point = Point.create(pointA);
       point.addCoordinate(pointB);
@@ -38,7 +38,7 @@ describe("add coordinate to geo-json", () => {
       expect(point.type).toBe(POINT);
     });
   });
-  describe("when the geo json is a line", () => {
+  describe("when the geo location is a line", () => {
     it("should add the new one to the coordinates", () => {
       const line = Line.create();
       line.addCoordinate(pointA);
@@ -51,7 +51,7 @@ describe("add coordinate to geo-json", () => {
       expect(line.type).toBe(ROAD);
     });
   });
-  describe("when the geo json is a polygon", () => {
+  describe("when the geo location is a polygon", () => {
     it("should add the new one to the coordinates", () => {
       const polygon = Polygon.create();
       polygon.addCoordinate(pointA);
@@ -81,7 +81,7 @@ describe("compare proximity with location", () => {
   `(
     "When looking for a range distance of $distance",
     ({ location, reference, distance, coordinate, expected }) => {
-      const l = location as any;
+      const l = location;
       const displayReference = `${l.name} ${JSON.stringify(reference)}`;
       const displayCoordinate = `Point ${JSON.stringify(coordinate)}`;
       const displayExpectation = expected ? "is near" : "is NOT near";

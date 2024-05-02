@@ -1,47 +1,34 @@
-export const POINT = "POINT";
-export const ROAD = "ROAD";
-export const AREA = "AREA";
+import {
+  AREA,
+  GeoLocation,
+  POINT,
+  PointLocation,
+  ROAD,
+} from "@overbookd/geo-location";
 
-export type PointLocation = {
-  type: typeof POINT;
-  coordinates: Coordinate;
-};
+type NullableGeoLocation = GeoLocation | null;
 
-export type RoadLocation = {
-  type: typeof ROAD;
-  coordinates: Coordinate[];
-};
+export type SignaLocation<T extends NullableGeoLocation = NullableGeoLocation> =
+  {
+    id: number;
+    name: string;
+    geoLocation: T;
+  };
 
-export type AreaLocation = {
-  type: typeof AREA;
-  coordinates: Coordinate[];
-};
-
-export type Coordinate = {
-  lat: number;
-  lng: number;
-};
-
-export type GeoJson = null | PointLocation | RoadLocation | AreaLocation;
-
-export type SignaLocation<T extends GeoJson = GeoJson> = {
-  id: number;
-  name: string;
-  geoJson: T;
-};
-
-export function isPointLocation(geoJson: GeoJson): geoJson is PointLocation {
-  return geoJson?.type === POINT;
+export function isPointLocation(
+  geoLocation: NullableGeoLocation,
+): geoLocation is PointLocation {
+  return geoLocation?.type === POINT;
 }
 
-export function filterLocation<
-  T extends typeof POINT | typeof ROAD | typeof AREA,
->(
+type GeoLocationType = typeof POINT | typeof ROAD | typeof AREA;
+
+export function filterLocation<T extends GeoLocationType>(
   type: T,
   locations: SignaLocation[],
-): SignaLocation<Extract<GeoJson, { type: T }>>[] {
+): SignaLocation<Extract<GeoLocation, { type: T }>>[] {
   return locations.filter(
-    (location): location is SignaLocation<Extract<GeoJson, { type: T }>> =>
-      location.geoJson?.type === type,
+    (location): location is SignaLocation<Extract<GeoLocation, { type: T }>> =>
+      location.geoLocation?.type === type,
   );
 }
