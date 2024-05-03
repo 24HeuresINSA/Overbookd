@@ -107,6 +107,9 @@ importers:
       '@overbookd/festival-event-constants':
         specifier: workspace:^
         version: link:../../constants/festival-event-constants
+      '@overbookd/geo-location':
+        specifier: workspace:^
+        version: link:../../libraries/geo-location
       '@overbookd/http':
         specifier: workspace:^
         version: link:../../utils/http

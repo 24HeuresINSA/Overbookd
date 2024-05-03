@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { GeoLocation } from "@overbookd/geo-location";
 import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import { buildVolunteerDisplayName } from "../../../utils/volunteer";
 import { TaskRepository } from "../domain/planning";
 import { JsonStoredTask } from "../domain/storedTask";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {
@@ -39,7 +41,7 @@ const SELECT_CONTACT = {
 type DatabaseTask = {
   id: number;
   name: string;
-  appointment: { name: string };
+  appointment: { name: string; geoLocation: JsonValue | null };
   globalInstruction: string;
   inChargeInstruction: string;
   inChargeVolunteers: { volunteerId: number }[];
@@ -117,7 +119,7 @@ export class PrismaTaskRepository implements TaskRepository {
         select: {
           id: true,
           name: true,
-          appointment: { select: { name: true } },
+          appointment: { select: { name: true, geoLocation: true } },
           globalInstruction: true,
           inChargeInstruction: true,
           inChargeVolunteers: {
@@ -171,11 +173,18 @@ function toTask(
       }));
     });
 
+  const { appointment } = festivalTask;
+
+  const location = {
+    name: appointment.name,
+    geoLocation: appointment.geoLocation as unknown as GeoLocation | null,
+  };
+
   return {
     period: { start, end },
     id: festivalTask.id,
     name: festivalTask.name,
-    location: festivalTask.appointment.name,
+    location,
     instructions,
     contacts,
     assignees,

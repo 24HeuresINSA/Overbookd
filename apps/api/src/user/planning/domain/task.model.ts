@@ -1,4 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
+import { GeoLocation } from "@overbookd/geo-location";
 
 export type Volunteer = {
   id: number;
@@ -14,11 +15,16 @@ export type Contact = Volunteer & {
   phone: string;
 };
 
+export type AppointmentLocation = {
+  name: string;
+  geoLocation: GeoLocation | null;
+};
+
 export type Task = {
   name: string;
   instructions: string;
   period: IProvidePeriod;
-  location: string;
+  location: AppointmentLocation;
   assignments: Assignment[];
   contacts: Contact[];
 };

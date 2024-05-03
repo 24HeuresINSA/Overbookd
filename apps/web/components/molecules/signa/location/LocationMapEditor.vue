@@ -55,6 +55,7 @@ import {
   Point,
   Polygon,
   ManageLocation,
+  LocationFactory,
 } from "@overbookd/geo-location";
 import { isPointLocation } from "@overbookd/signa";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
@@ -169,17 +170,7 @@ export default defineComponent({
         this.manage = Point.create(this.center);
         return;
       }
-      switch (geoLocation.type) {
-        case POINT:
-          this.manage = Point.create(geoLocation.coordinates);
-          break;
-        case "ROAD":
-          this.manage = Line.create(geoLocation.coordinates);
-          break;
-        case "AREA":
-          this.manage = Polygon.create(geoLocation.coordinates);
-          break;
-      }
+      this.manage = LocationFactory.create(geoLocation);
     },
     reset(action: Action) {
       switch (action) {

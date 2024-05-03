@@ -1,5 +1,12 @@
 import { distanceBetweenPoints } from "./distance";
-import { Coordinate, ManageLocation, ROAD, RoadLocation } from "./location";
+import {
+  Coordinate,
+  ManageLocation,
+  POINT,
+  PointLocation,
+  ROAD,
+  RoadLocation,
+} from "./location";
 
 export class Line implements RoadLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate[]) {}
@@ -30,6 +37,16 @@ export class Line implements RoadLocation, ManageLocation {
     return {
       type: this.type,
       coordinates: [...this.coordinates],
+    };
+  }
+
+  get barycentre(): PointLocation {
+    const index = Math.ceil(this._coordinates.length / 2) - 1;
+    const coordinates = this.coordinates.at(index);
+    if (!coordinates) throw new Error("Can't find barycentre");
+    return {
+      type: POINT,
+      coordinates,
     };
   }
 }

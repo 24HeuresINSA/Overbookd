@@ -1,4 +1,6 @@
-import { EventAttributes, createEvents } from "ics";
+import { EventAttributes, GeoCoordinates, createEvents } from "ics";
+import { Edition } from "@overbookd/contribution";
+import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateWithHoursAndMinutesOnly,
@@ -6,7 +8,6 @@ import {
 } from "../../../utils/date";
 import { Assignment, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
-import { Edition } from "@overbookd/contribution";
 
 export class IcalRenderStrategy implements RenderStrategy {
   private readonly EMPTY_CALENDAR = `CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\nX-PUBLISHED-TTL:PT1H\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\nEND:VCALENDAR`;
@@ -29,15 +30,25 @@ export class IcalRenderStrategy implements RenderStrategy {
     const end = toDateArray(task.period.end);
     const assignments = this.buildAssignmentsDescription(task.assignments);
     const description = `${task.instructions}${assignments}`;
+    const { geoLocation } = task.location;
+    const geo = geoLocation ? this.retrieveGeo(geoLocation) : undefined;
 
     return {
       start,
       end,
       title: task.name,
-      location: task.location,
+      location: task.location.name,
       calName: `24 Heures de l'INSA - ${Edition.current}e`,
       description,
+      geo,
+      htmlContent: description,
     };
+  }
+
+  private retrieveGeo(geoLocation: GeoLocation): GeoCoordinates {
+    const location = LocationFactory.create(geoLocation);
+    const { lat, lng } = location.barycentre.coordinates;
+    return { lat, lon: lng };
   }
 
   private buildAssignmentsDescription(assignments: Assignment[]) {

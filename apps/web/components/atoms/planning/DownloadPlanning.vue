@@ -97,7 +97,7 @@ export default defineComponent({
   methods: {
     syncWithGoogle() {
       if (!this.syncLink) return;
-      const link = `https://calendar.google.com/calendar/u/0/r?cid=${this.syncLink}`;
+      const link = `https://www.google.com/calendar/render?cid=${this.syncLink}`;
       window.open(link, "_blank");
     },
     syncWithMicrosoft() {

@@ -1,7 +1,14 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Assignment, Contact, Task, Volunteer } from "../domain/task.model";
+import {
+  Assignment,
+  Contact,
+  Task,
+  Volunteer,
+  AppointmentLocation,
+} from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { PeriodDto } from "../../../volunteer-availability/dto/period.dto";
+import { GeoLocation } from "@overbookd/geo-location";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
@@ -59,6 +66,25 @@ class ContactRepresentation implements Contact {
   phone: string;
 }
 
+class AppointmentLocationResponseDto implements AppointmentLocation {
+  @ApiProperty({
+    name: "name",
+    description: "appointment location name",
+    type: String,
+  })
+  name: string;
+
+  @ApiProperty({
+    description: "The coordinates of the location",
+    example: {
+      type: "POINT",
+      geoLocation: { lat: 1, lng: 2 },
+    },
+    required: false,
+  })
+  geoLocation: GeoLocation;
+}
+
 export class TaskResponseDto implements Task {
   @ApiProperty({
     name: "name",
@@ -84,9 +110,9 @@ export class TaskResponseDto implements Task {
   @ApiProperty({
     name: "location",
     description: "task location",
-    type: String,
+    type: AppointmentLocationResponseDto,
   })
-  location: string;
+  location: AppointmentLocation;
 
   @ApiProperty({
     name: "assignments",
