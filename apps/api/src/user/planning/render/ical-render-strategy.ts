@@ -41,6 +41,7 @@ export class IcalRenderStrategy implements RenderStrategy {
       calName: `24 Heures de l'INSA - ${Edition.current}e`,
       description,
       geo,
+      htmlContent: description,
     };
   }
 
