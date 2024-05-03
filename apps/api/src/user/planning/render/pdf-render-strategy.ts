@@ -218,10 +218,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generatePurpleCocktailWorkflows(): Content[] {
-    return [
-      ...PurpleCocktail.generateBarmanWorkflow(),
-      ...PurpleCocktail.generateLeaderWorkflow(),
-    ];
+    return [...PurpleCocktail.generateWorkflow()];
   }
 
   private generateTaskContent({
