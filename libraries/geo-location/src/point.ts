@@ -30,4 +30,8 @@ export class Point implements PointLocation, ManageLocation {
       coordinates: { ...this.coordinates },
     };
   }
+
+  get barycentre(): PointLocation {
+    return this.location;
+  }
 }

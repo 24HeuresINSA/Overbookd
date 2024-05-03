@@ -1,5 +1,12 @@
 import { distanceBetweenPoints } from "./distance";
-import { AREA, AreaLocation, Coordinate, ManageLocation } from "./location";
+import {
+  AREA,
+  AreaLocation,
+  Coordinate,
+  ManageLocation,
+  POINT,
+  PointLocation,
+} from "./location";
 
 export class Polygon implements AreaLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate[]) {}
@@ -30,6 +37,14 @@ export class Polygon implements AreaLocation, ManageLocation {
     return {
       type: this.type,
       coordinates: [...this.coordinates],
+    };
+  }
+
+  get barycentre(): PointLocation {
+    const [coordinates] = this.coordinates;
+    return {
+      type: POINT,
+      coordinates,
     };
   }
 }

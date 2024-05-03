@@ -28,4 +28,5 @@ export type ManageLocation = {
   addCoordinate(coordinate: Coordinate): void;
   isNear(coordinate: Coordinate, radius: number): boolean;
   location: GeoLocation;
+  barycentre: PointLocation;
 };

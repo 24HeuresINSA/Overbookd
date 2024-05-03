@@ -91,3 +91,28 @@ describe("compare proximity with location", () => {
     },
   );
 });
+
+describe("Get barycentre", () => {
+  describe.each`
+    structureName   | structure  | numberOfCoordinates | coordinates                                 | expectedBarycentreCoordinates
+    ${Point.name}   | ${Point}   | ${1}                | ${pointA}                                   | ${pointA}
+    ${Line.name}    | ${Line}    | ${2}                | ${[pointA, pointF]}                         | ${pointA}
+    ${Line.name}    | ${Line}    | ${3}                | ${[pointA, pointC, pointF]}                 | ${pointC}
+    ${Line.name}    | ${Line}    | ${4}                | ${[pointA, pointC, pointB, pointF]}         | ${pointC}
+    ${Line.name}    | ${Line}    | ${5}                | ${[pointA, pointC, pointB, pointF, pointE]} | ${pointB}
+    ${Polygon.name} | ${Polygon} | ${5}                | ${[pointA, pointB, pointE, pointF, pointC]} | ${pointA}
+  `(
+    "When asking for barycentre from $structureName with $numberOfCoordinates coordinates",
+    ({ structure, coordinates, expectedBarycentreCoordinates }) => {
+      it(`should retrieve a Point with ${JSON.stringify(expectedBarycentreCoordinates)} as coordinates`, () => {
+        const expectedBarycentre = {
+          type: POINT,
+          coordinates: expectedBarycentreCoordinates,
+        };
+        expect(structure.create(coordinates).barycentre).toStrictEqual(
+          expectedBarycentre,
+        );
+      });
+    },
+  );
+});
