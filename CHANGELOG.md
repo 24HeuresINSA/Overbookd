@@ -1,3 +1,26 @@
+## [2.36.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.5...v2.36.6) (2024-05-03)
+
+
+### Bug Fixes
+
+* **planning:** add a space before ':' in pdf calendar [#1890](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1890) ([74f2421](https://gitlab.com/24-heures-insa/overbookd-mono/commit/74f2421d6bd882237780df77d16ced52836950ea))
+* **planning:** add contact section. [#1885](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1885) ([558aecd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/558aecd5b7bf01a710e36ed9f679e7a034a6b134))
+* **planning:** add geo location on ical events. [#1891](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1891) ([9a1cf1a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9a1cf1afc3dff70625698d7732d0405c81e8fb2e))
+* **planning:** download in batch. [#1887](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1887) ([48af3c5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/48af3c528658ee0552296bf5862c433564aadeec))
+* **planning:** give only one purple cocktail instruction list [#1893](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1893) ([a5fa912](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a5fa9120666563d875fcf3b06ab4389494df2b8b))
+* **planning:** update request with new assignments [#1873](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1873) ([7cb27bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7cb27bbfe406363744b0fc8e9a8f19219e0d670d))
+* **planning:** update security map [#1895](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1895) ([98ad473](https://gitlab.com/24-heures-insa/overbookd-mono/commit/98ad473cd444163a9723dd89b9a0fb91a0a02300))
+
+
+### Pre-Features
+
+* **planning:** allow download or sync planning. [#1869](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1869) ([f09b7e6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f09b7e6534097b9e6a9e289e6708792d5505c7e8))
+
+
+### Refactor
+
+* **planning:** declare planning as it own module. [#1874](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1874) ([77fc4ae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/77fc4ae5e896c39369b93e7e30e5152771608b6e))
+
 ## [2.36.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.4...v2.36.5) (2024-04-30)
 
 
