@@ -24,28 +24,28 @@ const debarrierageAvenueDesArts = {
   name: "Debarierrage Avenue des Arts",
   instructions: "Bonsoir, il faut enlever des barrieres",
   id: 1,
-  location: "Avenue des Arts",
+  location: { name: "Avenue des Arts", geoLocation: null },
 };
 
 const deplacerLeFen = {
   name: "Deplacer le FEN",
   instructions: "Bonsoir, il faut deplacer le FEN vers les barrieres",
   id: 2,
-  location: "Avenue des Arts",
+  location: { name: "Avenue des Arts", geoLocation: null },
 };
 
 const barrierageAvenueDesArts = {
   name: "Barierrage Avenue des Arts",
   instructions: "Bonsoir, il faut porter des barrieres",
   id: 3,
-  location: "Avenue des Arts",
+  location: { name: "Avenue des Arts", geoLocation: null },
 };
 
 const ambiancerLeQG = {
   name: "Ambiancer le QG",
   instructions: "Mettre la grosse ambiance au QG",
   id: 4,
-  location: "QG Orga",
+  location: { name: "QG Orga", geoLocation: null },
 };
 
 const shift12hTo14hMay12 = {

@@ -8,7 +8,7 @@ import {
 } from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { PeriodDto } from "../../../volunteer-availability/dto/period.dto";
-import { GeoLocation } from @overbookd/geo-location";
+import { GeoLocation } from "@overbookd/geo-location";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
@@ -66,7 +66,7 @@ class ContactRepresentation implements Contact {
   phone: string;
 }
 
-export class AppointmentLocationResponseDto implements AppointmentLocation {
+class AppointmentLocationResponseDto implements AppointmentLocation {
   @ApiProperty({
     name: "name",
     description: "appointment location name",
