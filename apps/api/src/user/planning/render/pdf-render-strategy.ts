@@ -230,7 +230,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     contacts,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
-    const displayLocation = this.extractLocation(location);
+    const displayLocation = this.extractLocation(location.name);
     const displayName = { text: name, style: ["task"] };
     const displayInstructions = this.extractInstructions(instructions);
     const displayContacts = this.extractContacts(contacts);

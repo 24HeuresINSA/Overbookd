@@ -68,7 +68,7 @@ export const actions = actionTree(
       downloadPlanning(res.data, volunteer);
     },
     async downloadMyIcalPlanning() {
-      const res = await safeCall(this, PlanningRepository.getMyPdf(this));
+      const res = await safeCall(this, PlanningRepository.getMyIcal(this));
       if (!res) return;
       downloadIcalFile(res.data);
     },

@@ -58,6 +58,7 @@
     "@overbookd/domain-events": "workspace:^",
     "@overbookd/festival-event": "workspace:^",
     "@overbookd/festival-event-constants": "workspace:^",
+    "@overbookd/geo-location": "workspace:^",
     "@overbookd/http": "workspace:^",
     "@overbookd/list": "workspace:^",
     "@overbookd/logistic": "workspace:^",
