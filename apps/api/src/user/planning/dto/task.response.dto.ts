@@ -8,7 +8,7 @@ import {
 } from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { PeriodDto } from "../../../volunteer-availability/dto/period.dto";
-import { GeoLocation } from "../../../../../../libraries/geo-location/src/location";
+import { GeoLocation } from @overbookd/geo-location";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
