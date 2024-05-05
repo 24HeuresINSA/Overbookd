@@ -1,3 +1,10 @@
+## [2.36.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.6...v2.36.7) (2024-05-05)
+
+
+### Bug Fixes
+
+* **planning:** sort dates in split overlapping periods [#1899](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1899) ([1791477](https://gitlab.com/24-heures-insa/overbookd-mono/commit/17914777466ac91d2faf6e369d7f2e24efaf968b))
+
 ## [2.36.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.5...v2.36.6) (2024-05-03)
 
 
