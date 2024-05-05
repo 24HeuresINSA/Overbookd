@@ -69,7 +69,7 @@ export class PlanningController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
-  @Get("")
+  @Get()
   @ApiResponse({
     status: 200,
     description: "Get current volunteer planning",
@@ -93,6 +93,7 @@ export class PlanningController {
         response.status(e.getStatus()).send(e.message);
         return;
       }
+      console.error(e);
       response.status(500).send(e);
     }
   }
@@ -167,6 +168,7 @@ export class PlanningController {
         response.status(e.getStatus()).send(e.message);
         return;
       }
+      console.error(e);
       response.status(500).send(e);
     }
   }
