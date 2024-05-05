@@ -82,7 +82,7 @@
 import Vue from "vue";
 import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { UserPersonalData } from "@overbookd/user";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER, SYNC_PLANNING } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
@@ -187,6 +187,9 @@ export default Vue.extend({
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
+    canSyncPlanning(): boolean {
+      return this.$accessor.user.can(SYNC_PLANNING);
+    },
   },
   async created() {
     await Promise.all([
@@ -197,8 +200,11 @@ export default Vue.extend({
       this.$accessor.user.getVolunteerAssignments(this.userId),
       this.$accessor.user.getVolunteerTasks(this.userId),
       this.$accessor.user.getVolunteerBreakPeriods(this.userId),
-      this.$accessor.planning.fetchSubscriptionLink(),
     ]);
+
+    if (this.canSyncPlanning) {
+      await this.$accessor.planning.fetchSubscriptionLink();
+    }
 
     if (this.shouldShowStats) {
       await this.$accessor.user.getVolunteerAssignmentStats(this.userId);

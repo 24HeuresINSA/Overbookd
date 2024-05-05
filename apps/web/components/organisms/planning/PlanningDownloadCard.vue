@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Planning et Livret</v-card-title>
-    <v-card-text v-if="canViewPlanning">
+    <v-card-text v-if="canDownloadPlanning">
       <p>
         Ceci est un planning <strong> définitif</strong>, cependant des imprévus
         peuvent entrainer des mises à jour. 😞
@@ -75,7 +75,7 @@
     <v-card-actions>
       <v-btn
         color="primary"
-        :disabled="!canViewPlanning"
+        :disabled="!canDownloadPlanning"
         @click="exportPlanning"
       >
         Télécharger mon livret
@@ -95,7 +95,7 @@ export default Vue.extend({
     me() {
       return this.$accessor.user.me;
     },
-    canViewPlanning(): boolean {
+    canDownloadPlanning(): boolean {
       return this.$accessor.user.can(DOWNLOAD_PLANNING);
     },
     personalLink(): string {

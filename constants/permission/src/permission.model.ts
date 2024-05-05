@@ -42,6 +42,7 @@ import {
   PURCHASE_GEARS,
   BORROW_GEARS,
   FORCE_WRITE_FT,
+  SYNC_PLANNING,
 } from "./permissions";
 
 export type Permission =
@@ -73,6 +74,7 @@ export type Permission =
   | typeof ASK_FOR_HELP
   | typeof VIEW_PLANNING
   | typeof DOWNLOAD_PLANNING
+  | typeof SYNC_PLANNING
   | typeof ENROLL_HARD
   | typeof ENROLL_SOFT
   | typeof VIEW_TROMBINOSCOPE
