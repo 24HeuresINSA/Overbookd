@@ -15,7 +15,7 @@ import { PreferenceService } from "./preference.service";
 import { PrismaBreaks } from "./planning/repository/breaks.prisma";
 import { PrismaVolunteers } from "./planning/repository/volunteers.prisma";
 import { PlanningModule } from "./planning/planning.module";
-import { PlanningController } from "./planning/planning.contoller";
+import { PlanningController } from "./planning/planning.controller";
 
 @Module({
   imports: [PlanningModule, RegistrationModule, PrismaModule],

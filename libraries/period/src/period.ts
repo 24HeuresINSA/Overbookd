@@ -88,16 +88,16 @@ export class Period {
   }
 
   splitOverlapping(otherPeriod: Period): Period[] {
-    const [firstStart, firstEnd, sencondStart, secondEnd] = [
+    const [firstStart, firstEnd, secondStart, secondEnd] = [
       this.start,
       this.end,
       otherPeriod.start,
       otherPeriod.end,
-    ].sort();
+    ].sort((a, b) => a.getTime() - b.getTime());
 
     const firstPeriod = Period.init({ start: firstStart, end: firstEnd });
-    const secondPeriod = Period.init({ start: firstEnd, end: sencondStart });
-    const thirdPeriod = Period.init({ start: sencondStart, end: secondEnd });
+    const secondPeriod = Period.init({ start: firstEnd, end: secondStart });
+    const thirdPeriod = Period.init({ start: secondStart, end: secondEnd });
 
     return [firstPeriod, secondPeriod, thirdPeriod].filter(
       (period) => period.hasDuration,
