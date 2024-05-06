@@ -39,37 +39,50 @@
             :style="{
               width: computeAssignmentWidth(mobilization, assignment),
             }"
-            @click="openAssignmentDetailsDialog()"
+            @click="openAssignmentDetailsDialog(task, assignment)"
           ></div>
         </div>
       </div>
     </div>
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
-      <FtTimeSpanDetails @close-dialog="closeAssignmentDetailsDialog" />
+      <TimelineAssignmentDetails
+        v-if="selected"
+        :task="selected.task"
+        :assignment="selected.assignment"
+        @close-dialog="closeAssignmentDetailsDialog"
+      />
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import FtTimeSpanDetails from "~/components/organisms/festival-event/festival-task/FtTimeSpanDetails.vue";
+import TimelineAssignmentDetails from "~/components/molecules/timeline/TimelineAssignmentDetails.vue";
 import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 import {
+  TimelineAssignment,
   TimelineEvent,
   TimelineMobilization,
   TimelineTask,
 } from "@overbookd/http";
 
-export default Vue.extend({
+type TimelineEventsData = {
+  displayAssignmentDetailsDialog: boolean;
+  selected?: {
+    task: TimelineTask;
+    assignment: TimelineAssignment;
+  };
+};
+
+export default defineComponent({
   name: "TimelineEvents",
-  components: { TeamChip, FtTimeSpanDetails },
-  data: () => {
-    return {
-      displayAssignmentDetailsDialog: false,
-    };
-  },
+  components: { TeamChip, TimelineAssignmentDetails },
+  data: (): TimelineEventsData => ({
+    displayAssignmentDetailsDialog: false,
+    selected: undefined,
+  }),
   computed: {
     events(): TimelineEvent[] {
       return this.$accessor.timeline.filteredEvents;
@@ -144,12 +157,16 @@ export default Vue.extend({
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`, "_blank");
     },
-    openAssignmentDetailsDialog() {
-      //this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);
-      //this.displayAssignmentDetailsDialog = true;
+    openAssignmentDetailsDialog(
+      task: TimelineTask,
+      assignment: TimelineAssignment,
+    ) {
+      this.selected = { task, assignment };
+      this.displayAssignmentDetailsDialog = true;
     },
     closeAssignmentDetailsDialog() {
       this.displayAssignmentDetailsDialog = false;
+      this.selected = undefined;
     },
   },
 });

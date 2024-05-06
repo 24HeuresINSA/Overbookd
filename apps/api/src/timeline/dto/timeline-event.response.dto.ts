@@ -4,8 +4,59 @@ import {
   TimelineMobilization,
   TimelineTask,
   TimelineEvent,
+  TimelineAssignment,
+  TimelineAssignee,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
+
+class PeriodDto implements IProvidePeriod {
+  @ApiProperty({ type: Date })
+  start: Date;
+
+  @ApiProperty({ type: Date })
+  end: Date;
+}
+
+class TimelineAssigneeDto implements TimelineAssignee {
+  @ApiProperty({
+    required: true,
+    description: "The firstname of the assignee",
+    type: String,
+  })
+  firstname: string;
+
+  @ApiProperty({
+    required: true,
+    description: "The lastname of the assignee",
+    type: String,
+  })
+  lastname: string;
+
+  @ApiProperty({
+    required: true,
+    description: "The teams of the assignee",
+    type: String,
+    isArray: true,
+  })
+  teams: string[];
+
+  @ApiProperty({
+    required: true,
+    description: "The phone number of the assignee",
+    type: String,
+  })
+  phone: string;
+}
+
+class TimelineAssignmentDto extends PeriodDto implements TimelineAssignment {
+  @ApiProperty({
+    required: true,
+    description: "The assignees of the assignment",
+    type: TimelineAssigneeDto,
+    isArray: true,
+  })
+  assignees: TimelineAssignee[];
+}
 
 class TimelineActivityDto implements TimelineActivity {
   @ApiProperty({
@@ -30,14 +81,6 @@ class TimelineActivityDto implements TimelineActivity {
   team: string;
 }
 
-class PeriodDto implements IProvidePeriod {
-  @ApiProperty({ type: Date })
-  start: Date;
-
-  @ApiProperty({ type: Date })
-  end: Date;
-}
-
 class TimelineMobilizationDto
   extends PeriodDto
   implements TimelineMobilization
@@ -47,7 +90,7 @@ class TimelineMobilizationDto
     type: PeriodDto,
     isArray: true,
   })
-  assignments: PeriodDto[];
+  assignments: TimelineAssignmentDto[];
 }
 
 class TimelineTaskDto implements TimelineTask {
@@ -79,6 +122,13 @@ class TimelineTaskDto implements TimelineTask {
     type: Boolean,
   })
   topPriority: boolean;
+
+  @ApiProperty({
+    required: true,
+    description: "The appointment of the task",
+    type: String,
+  })
+  appointment: string;
 }
 
 export class TimelineEventResponseDto implements TimelineEvent {

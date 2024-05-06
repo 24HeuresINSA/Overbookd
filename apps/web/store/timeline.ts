@@ -10,12 +10,13 @@ import { safeCall } from "~/utils/api/calls";
 import { Team } from "~/utils/models/team.model";
 import {
   HttpStringified,
+  TimelineAssignment,
   TimelineEvent,
   TimelineMobilization,
   TimelineTask,
 } from "@overbookd/http";
 import { TimelineRepository } from "~/repositories/timeline.repository";
-import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/period";
 
 type WithName = {
   name: string;
@@ -179,6 +180,15 @@ function castTimelineMobilizationWithDate(
   return {
     ...mobilization,
     ...castPeriodWithDate(mobilization),
-    assignments: castPeriodsWithDate(mobilization.assignments),
+    assignments: mobilization.assignments.map(castTimelineAssignmentWithDate),
+  };
+}
+
+function castTimelineAssignmentWithDate(
+  assignment: HttpStringified<TimelineAssignment>,
+): TimelineAssignment {
+  return {
+    assignees: assignment.assignees,
+    ...castPeriodWithDate(assignment),
   };
 }
