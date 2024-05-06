@@ -49,6 +49,7 @@ import {
   AFFECT_VOLUNTEER,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
+  VIEW_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import { TeamService } from "../team/team.service";
@@ -216,7 +217,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
+  @Permission(VIEW_PLANNING)
   @Get(":id/mobilizations")
   @ApiResponse({
     status: 200,
@@ -232,7 +233,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
+  @Permission(VIEW_PLANNING)
   @Get(":id/assignments")
   @ApiResponse({
     status: 200,
