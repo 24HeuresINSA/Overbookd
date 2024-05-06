@@ -1,17 +1,25 @@
 <template>
-  <UserCalendar :user-id="userId" />
+  <div>
+    <UserCalendar :user="me" />
+    <SnackNotificationContainer />
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { MyUserInformation } from "@overbookd/user";
 import UserCalendar from "~/components/organisms/planning/UserCalendar.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "Planning",
-  components: { UserCalendar },
+  components: { UserCalendar, SnackNotificationContainer },
   computed: {
     userId(): number {
       return this.$accessor.user.me.id;
+    },
+    me(): MyUserInformation {
+      return this.$accessor.user.me;
     },
   },
 });
