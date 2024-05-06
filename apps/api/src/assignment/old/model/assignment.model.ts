@@ -14,14 +14,3 @@ type WithDatabaseFt = {
 export type DatabaseFtUserRequest = {
   ftTimeWindows: IProvidePeriod & WithDatabaseFt;
 };
-
-type WithDatabaseTimeWindow = {
-  timeWindow: WithDatabaseFt;
-};
-
-type DatabaseTimeSpan = IProvidePeriod & WithDatabaseTimeWindow;
-
-export type DatabaseAssignment = {
-  timeSpan: DatabaseTimeSpan;
-  timeSpanId: number;
-};
