@@ -1,3 +1,14 @@
+## [2.36.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.8...v2.36.9) (2024-05-06)
+
+
+### Bug Fixes
+
+* **planning:** add contacts in ical planning [#1898](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1898) ([89940e7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/89940e7bb2d02e2d37e41da6b8789c854be5e4ef))
+* **planning:** break periods permission [#1902](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1902) ([a5e7c92](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a5e7c9240187bfeb5e3b9dcdb6d47925ea91d448))
+* **planning:** contacts in ical [#1904](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1904) ([322512c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/322512c1c7216934daabc619bdfbd422db0bd40b))
+* **planning:** request perms ([3e44264](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3e4426444dabcb98699f875ae8a0f18916a62280))
+* **timeline:** display details [#1898](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1898) ([b11f1f2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b11f1f26c520bbdaa172027814b311ab32dd853f))
+
 ## [2.36.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.7...v2.36.8) (2024-05-06)
 
 
