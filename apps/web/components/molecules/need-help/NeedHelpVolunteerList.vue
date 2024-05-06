@@ -21,17 +21,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { HelpingVolunteer } from "@overbookd/http";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { Volunteer } from "~/utils/models/need-help.model";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
-export default Vue.extend({
+export default defineComponent({
   name: "NeedHelpVolunteerList",
   components: { TeamChip },
   computed: {
-    volunteers(): Volunteer[] {
+    volunteers(): HelpingVolunteer[] {
       return this.$accessor.needHelp.filteredVolunteers;
     },
     loading(): boolean {
@@ -56,9 +56,9 @@ export default Vue.extend({
       return [volunteer, teams, phone];
     },
   },
-  created() {
+  async mounted() {
     if (this.volunteers.length > 0) return;
-    this.$accessor.needHelp.fetchVolunteers();
+    await this.$accessor.needHelp.fetchVolunteers();
   },
   methods: {
     formatPhone(phone: string) {

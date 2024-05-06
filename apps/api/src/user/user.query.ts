@@ -95,21 +95,6 @@ export const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
   },
 };
 
-export const SELECT_VOLUNTEER_ASSIGNMENTS = {
-  timeSpan: {
-    select: {
-      start: true,
-      end: true,
-      timeWindow: {
-        select: {
-          ft: { select: { name: true, id: true, status: true } },
-        },
-      },
-    },
-  },
-  timeSpanId: true,
-};
-
 export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
   ft: { isDeleted: false, NOT: { status: ftStatuses.READY } },
 };

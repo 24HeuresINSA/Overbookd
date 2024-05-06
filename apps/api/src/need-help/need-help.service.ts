@@ -1,19 +1,16 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { IProvidePeriod } from "@overbookd/period";
-import { Volunteer } from "./need-help.model";
+import { HelpingVolunteer } from "@overbookd/http";
 
-export type VolunteerRepository = {
-  findAvailableOnPeriod(period: IProvidePeriod): Promise<Volunteer[]>;
+export type HelpingVolunteers = {
+  findAvailableOnPeriod(period: IProvidePeriod): Promise<HelpingVolunteer[]>;
 };
 
 @Injectable()
 export class NeedHelpService {
-  constructor(
-    @Inject("VOLUNTEER_REPOSITORY")
-    private readonly volunteerRepo: VolunteerRepository,
-  ) {}
+  constructor(private readonly volunteers: HelpingVolunteers) {}
 
-  getAvailableVolunteers(period: IProvidePeriod): Promise<Volunteer[]> {
-    return this.volunteerRepo.findAvailableOnPeriod(period);
+  getAvailableVolunteers(period: IProvidePeriod): Promise<HelpingVolunteer[]> {
+    return this.volunteers.findAvailableOnPeriod(period);
   }
 }

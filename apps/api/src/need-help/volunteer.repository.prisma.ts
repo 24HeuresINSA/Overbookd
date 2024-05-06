@@ -1,34 +1,35 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Volunteer } from "./need-help.model";
-import { VolunteerRepository } from "./need-help.service";
+import { HelpingVolunteers } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
 import { AssignmentService } from "../assignment/old/assignment.service";
 import { Injectable } from "@nestjs/common";
-import {
-  ACTIVE_NOT_ASSIGNED_FT_CONDITION,
-  SELECT_FT_USER_REQUESTS_BY_USER_ID,
-  SELECT_VOLUNTEER_ASSIGNMENTS,
-} from "../user/user.query";
-import { VolunteerTask } from "../user/user.model";
-import {
-  DatabaseAssignment,
-  DatabaseFtUserRequest,
-} from "../assignment/old/model/assignment.model";
-import {
-  formatAssignmentAsTask,
-  formatRequirementAsTask,
-} from "../utils/assignment";
 import { BENEVOLE_CODE } from "@overbookd/team";
+import { HelpingVolunteer } from "@overbookd/http";
 
-type DatabaseVolunteer = {
+type DatabaseHelpingVolunteer = {
   id: number;
   lastname: string;
   firstname: string;
   phone: string;
-  teams: { team: { code: string } }[];
+  teams: { teamCode: string }[];
   availabilities: IProvidePeriod[];
-  assignments: DatabaseAssignment[];
-  ftUserRequests: DatabaseFtUserRequest[];
+  assigned: {
+    assignment: IProvidePeriod & { festivalTask: { id: number; name: string } };
+  }[];
+};
+
+const SELECT_ASSIGNEES = {
+  assigned: {
+    select: {
+      assignment: {
+        select: {
+          start: true,
+          end: true,
+          festivalTask: { select: { id: true, name: true } },
+        },
+      },
+    },
+  },
 };
 
 const SELECT_VOLUNTEER = {
@@ -36,82 +37,65 @@ const SELECT_VOLUNTEER = {
   lastname: true,
   firstname: true,
   phone: true,
-  teams: { select: { team: { select: { code: true } } } },
+  teams: { select: { teamCode: true } },
   availabilities: { select: { start: true, end: true } },
+  ...SELECT_ASSIGNEES,
 };
 
 const IS_MEMBER_OF_VOLUNTEER_TEAM = {
-  teams: {
-    some: {
-      team: { code: BENEVOLE_CODE },
-    },
-  },
+  teams: { some: { team: { code: BENEVOLE_CODE } } },
 };
 
 @Injectable()
-export class PrismaVolunteerRepository implements VolunteerRepository {
+export class PrismaHelpingVolunteers implements HelpingVolunteers {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAvailableOnPeriod(period: IProvidePeriod): Promise<Volunteer[]> {
-    const select = SELECT_VOLUNTEER;
-    const where = this.buildIsAvailableCondition(period);
-
+  async findAvailableOnPeriod(
+    period: IProvidePeriod,
+  ): Promise<HelpingVolunteer[]> {
     const volunteers = await this.prisma.user.findMany({
-      select: {
-        ...select,
-        assignments: { select: SELECT_VOLUNTEER_ASSIGNMENTS },
-        ftUserRequests: {
-          select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
-          where: { ftTimeWindows: ACTIVE_NOT_ASSIGNED_FT_CONDITION },
-        },
-      },
-      where,
+      where: this.buildIsAvailableCondition(period),
+      select: SELECT_VOLUNTEER,
     });
 
-    return formatVolunteers(volunteers);
+    return volunteers.map(toHelpingVolunteer);
   }
 
   private buildIsAvailableCondition(period: IProvidePeriod) {
     const availabilities =
       AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(period);
 
-    const assignments =
-      AssignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
-        period,
-      );
-
     return {
       ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       isDeleted: false,
       availabilities,
-      assignments,
+      assigned: {
+        none: {
+          assignment: {
+            start: { lt: period.end },
+            end: { gt: period.start },
+          },
+        },
+      },
     };
   }
 }
 
-function formatVolunteers(volunteers: DatabaseVolunteer[]): Volunteer[] {
-  return volunteers.map((volunteer) => ({
+function toHelpingVolunteer(
+  volunteer: DatabaseHelpingVolunteer,
+): HelpingVolunteer {
+  return {
     id: volunteer.id,
     lastname: volunteer.lastname,
     firstname: volunteer.firstname,
     phone: volunteer.phone,
-    teams: volunteer.teams.map(({ team }) => team.code),
+    teams: volunteer.teams.map(({ teamCode }) => teamCode),
     availabilities: volunteer.availabilities,
-    tasks: [
-      ...formatVolunteerAssignments(volunteer.assignments),
-      ...formatVolunteerRequirements(volunteer.ftUserRequests),
-    ],
-  }));
-}
-
-function formatVolunteerAssignments(
-  assignments: DatabaseAssignment[],
-): VolunteerTask[] {
-  return assignments.map(formatAssignmentAsTask);
-}
-
-function formatVolunteerRequirements(
-  ftUserRequests: DatabaseFtUserRequest[],
-): VolunteerTask[] {
-  return ftUserRequests.map(formatRequirementAsTask);
+    assignments: volunteer.assigned.map((assignment) => ({
+      id: assignment.assignment.festivalTask.id,
+      name: assignment.assignment.festivalTask.name,
+      start: assignment.assignment.start,
+      end: assignment.assignment.end,
+    })),
+  };
 }

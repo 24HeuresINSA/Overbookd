@@ -6,16 +6,14 @@ import {
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
 import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/need-help.model";
 import { Team } from "~/utils/models/team.model";
-import { castVolunteerTaskWithDate } from "~/utils/models/user.model";
 import { UserName } from "@overbookd/user";
-import { HttpStringified } from "@overbookd/http";
+import { HelpingVolunteer, HttpStringified } from "@overbookd/http";
 import { NeedHelpRepository } from "~/repositories/need-help.repository";
-import { castPeriodsWithDate } from "~/utils/http/period";
+import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
 
 type NeedHelpState = {
-  volunteers: Volunteer[];
+  volunteers: HelpingVolunteer[];
   start: Date;
   end: Date;
   search: string;
@@ -47,7 +45,7 @@ export const getters = getterTree(state, {
   period(state): IProvidePeriod {
     return { start: state.start, end: state.end };
   },
-  filteredVolunteers(state): Volunteer[] {
+  filteredVolunteers(state): HelpingVolunteer[] {
     return state.volunteers.filter(
       (volunteer) =>
         isMatchingName(state.search, volunteer) &&
@@ -57,7 +55,7 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_VOLUNTEERS(state, volunteers: Volunteer[]) {
+  SET_VOLUNTEERS(state, volunteers: HelpingVolunteer[]) {
     state.volunteers = volunteers;
   },
   SET_START(state, start: Date) {
@@ -118,11 +116,14 @@ function isMatchingTeam(teamsSearch: Team[], { teams }: { teams: string[] }) {
 }
 
 function castVolunteerWithDate(
-  volunteer: HttpStringified<Volunteer>,
-): Volunteer {
+  volunteer: HttpStringified<HelpingVolunteer>,
+): HelpingVolunteer {
   return {
     ...volunteer,
     availabilities: castPeriodsWithDate(volunteer.availabilities),
-    tasks: castVolunteerTaskWithDate(volunteer.tasks),
+    assignments: volunteer.assignments.map((assignment) => ({
+      ...assignment,
+      ...castPeriodWithDate(assignment),
+    })),
   };
 }

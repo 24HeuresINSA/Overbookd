@@ -1,6 +1,6 @@
 <template>
   <div class="volunteer-card">
-    <span class="volunteer-name">{{ formattedVolunteerName }}</span>
+    <span class="volunteer-name">{{ volunteerName }}</span>
     <div class="teams">
       <TeamChip
         v-for="team of volunteer.teams"
@@ -19,26 +19,26 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { HelpingVolunteer } from "@overbookd/http";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Volunteer } from "~/utils/models/need-help.model";
 import {
   formatPhoneLink,
   formatUserPhone,
   formatUsername,
 } from "~/utils/user/user.utils";
 
-export default Vue.extend({
+export default defineComponent({
   name: "NeedHelpVolunteerResumeCalendarHeader",
   components: { TeamChip },
   props: {
     volunteer: {
-      type: Object as () => Volunteer,
+      type: Object as () => HelpingVolunteer,
       required: true,
     },
   },
   computed: {
-    formattedVolunteerName(): string {
+    volunteerName(): string {
       return formatUsername(this.volunteer);
     },
   },
@@ -65,6 +65,8 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
 .volunteer-name {

@@ -7,18 +7,25 @@
       <NeedHelpVolunteerList class="volunteers mobile" />
       <CalendarList class="volunteers desktop" />
     </div>
+    <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import CalendarList from "~/components/molecules/need-help/CalendarList.vue";
 import NeedHelpFormCard from "~/components/molecules/need-help/NeedHelpFormCard.vue";
 import NeedHelpVolunteerList from "~/components/molecules/need-help/NeedHelpVolunteerList.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "NeedHelp",
-  components: { NeedHelpFormCard, NeedHelpVolunteerList, CalendarList },
+  components: {
+    NeedHelpFormCard,
+    NeedHelpVolunteerList,
+    CalendarList,
+    SnackNotificationContainer,
+  },
   head: () => ({
     title: "A l'aide !",
   }),
