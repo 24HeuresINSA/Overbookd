@@ -8,11 +8,11 @@
     >
       <template #title>
         <div class="calendar-title__content">
-          <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
+          <h1>{{ user.firstname }} {{ user.lastname }}</h1>
           <DownloadPlanning class="planning-ctas" />
           <div class="teams">
             <TeamChip
-              v-for="team in user?.teams"
+              v-for="team in user.teams"
               :key="team"
               :team="team"
               :with-name="isDesktop"
@@ -79,9 +79,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { DateString, Hour, OverDate, Period } from "@overbookd/period";
-import { UserPersonalData } from "@overbookd/user";
 import { AFFECT_VOLUNTEER, SYNC_PLANNING } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
@@ -102,6 +101,13 @@ import { displayForCalendar } from "~/utils/date/date.utils";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DownloadPlanning from "~/components/atoms/planning/DownloadPlanning.vue";
 
+type User = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  teams: string[];
+};
+
 type UserCalendarData = {
   calendarCentralDate: Date;
   selectedDate: OverDate | null;
@@ -114,7 +120,7 @@ function isBreakPeriodEvent(event: CalendarEvent): boolean {
   return event.name === PAUSE;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "UserCalendar",
   components: {
     OverCalendar,
@@ -126,7 +132,10 @@ export default Vue.extend({
     DownloadPlanning,
   },
   props: {
-    userId: { type: Number, default: () => 0 },
+    user: {
+      type: Object as () => User,
+      required: true,
+    },
   },
   data: (): UserCalendarData => ({
     calendarCentralDate: new Date(),
@@ -175,9 +184,6 @@ export default Vue.extend({
       const breakEvents = this.breakPeriods.map(convertToCalendarBreak);
       return [...assignmentEvents, ...tasksEvents, ...breakEvents];
     },
-    user(): UserPersonalData {
-      return this.$accessor.user.selectedUser;
-    },
     isDesktop(): boolean {
       return isDesktop();
     },
@@ -196,16 +202,15 @@ export default Vue.extend({
   },
   async created() {
     await Promise.all([
-      this.$accessor.user.findUserById(this.userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId,
+        this.user.id,
       ),
-      this.$accessor.user.getVolunteerAssignments(this.userId),
-      this.$accessor.user.getVolunteerTasks(this.userId),
+      this.$accessor.user.getVolunteerAssignments(this.user.id),
+      this.$accessor.user.getVolunteerTasks(this.user.id),
     ]);
 
     if (this.canAssignVolunteer) {
-      await this.$accessor.user.getVolunteerBreakPeriods(this.userId);
+      await this.$accessor.user.getVolunteerBreakPeriods(this.user.id);
     }
 
     if (this.canSyncPlanning) {
@@ -213,7 +218,7 @@ export default Vue.extend({
     }
 
     if (this.shouldShowStats) {
-      await this.$accessor.user.getVolunteerAssignmentStats(this.userId);
+      await this.$accessor.user.getVolunteerAssignmentStats(this.user.id);
     }
 
     await this.$accessor.configuration.fetch("eventDate");
