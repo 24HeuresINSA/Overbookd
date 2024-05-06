@@ -88,7 +88,7 @@ export default defineComponent({
       return this.$accessor.planning.link;
     },
     isMe(): boolean {
-      return this.me.id === this.user.id;
+      return !this.user.id || this.me.id === this.user.id;
     },
     canDowloadPlanning(): boolean {
       if (!this.isMe) {
