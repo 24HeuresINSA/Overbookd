@@ -1,5 +1,5 @@
 <template>
-  <v-card class="timespan-details">
+  <v-card class="assignment-details">
     <v-btn class="close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
@@ -7,8 +7,8 @@
       {{ taskName }}
       <v-icon right @click="openFtInNewTab">mdi-open-in-new</v-icon>
     </v-card-title>
-    <v-card-text class="timespan-details__content">
-      <div class="timespan-metadata">
+    <v-card-text class="assignment-details__content">
+      <div class="assignment-metadata">
         <v-chip color="primary">
           <v-icon left>mdi-map-marker</v-icon>
           <span>{{ location }}</span>
@@ -88,28 +88,6 @@
               with-name
               show-hidden
             ></TeamChip>
-            <!--<div
-              v-if="isUpdateAssignedTeamActiveForAssignee(item.id)"
-              class="team-update"
-            >
-              <div class="team-update__teams">
-                <TeamChip
-                  v-for="team of getAssignableTeamsForVolunteer(item)"
-                  :key="team"
-                  :team="team"
-                  size="medium"
-                  with-name
-                  :class="{ 'not-selected': isTeamNotSelected(team) }"
-                  @click="selectTeamToAssign(team)"
-                ></TeamChip>
-              </div>
-              <v-icon color="red" @click="cancelUpdateAssignedTeam()">
-                mdi-close-circle
-              </v-icon>
-              <v-icon color="green" @click="updateAssignedTeam(item)">
-                mdi-check-circle
-              </v-icon>
-            </div>-->
           </template>
           <template #item.friends="{ item }">
             <div class="friend-list">
@@ -127,13 +105,6 @@
               <v-btn icon @click="openCalendarInNewTab(item.id)">
                 <v-icon>mdi-calendar</v-icon>
               </v-btn>
-              <v-btn
-                v-if="canActivateAssignedTeamUpdate(item)"
-                icon
-                @click="toggleUpdateAssignedTeam(item)"
-              >
-                <v-icon>mdi-swap-vertical</v-icon>
-              </v-btn>
               <v-btn icon @click="unassignVolunteer(item)">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -149,12 +120,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
-import { UpdateAssignedTeam } from "~/utils/models/assignment.model";
-import { TimeSpanAssignee } from "~/utils/models/ft-time-span.model";
-import { isNumber, isString } from "~/utils/types/check";
 import {
   AssignmentTeam,
   AssignmentWithDetails,
@@ -231,9 +198,6 @@ export default defineComponent({
             assignee !== undefined,
         );
     },
-    allTimeSpansTeamCodes(): string[] {
-      return [];
-    },
     isUpdateAssignedTeamActive(): boolean {
       return this.selectedAssigneeId !== null;
     },
@@ -301,59 +265,9 @@ export default defineComponent({
     openCalendarInNewTab(assigneeId: number) {
       window.open(`/planning/${assigneeId}`, "_blank");
     },
-    getAllVolunteerTeams(assignee: TimeSpanAssignee) {
-      const underlyingTeams = getUnderlyingTeams(assignee.teams);
-      return [...underlyingTeams, ...assignee.teams];
-    },
-    getAssignableTeamsForVolunteer(assignee: TimeSpanAssignee) {
-      const volunteerTeams = this.getAllVolunteerTeams(assignee);
-      const assignableTeams = this.allTimeSpansTeamCodes.filter(
-        (team) =>
-          volunteerTeams.includes(team) && team !== assignee.assignedTeam,
-      );
-      return [assignee.assignedTeam, ...assignableTeams];
-    },
-    canActivateAssignedTeamUpdate(assignee: TimeSpanAssignee): boolean {
-      return this.getAssignableTeamsForVolunteer(assignee).length > 1;
-    },
-    toggleUpdateAssignedTeam(assignee: TimeSpanAssignee) {
-      if (this.isUpdateAssignedTeamActive) {
-        this.cancelUpdateAssignedTeam();
-        return;
-      }
-      this.selectedAssigneeId = assignee.id;
-      this.selectedTeamToAssign = assignee.assignedTeam;
-    },
-    isUpdateAssignedTeamActiveForAssignee(assigneeId: number): boolean {
-      return this.selectedAssigneeId === assigneeId;
-    },
-    selectTeamToAssign(team: string) {
-      this.selectedTeamToAssign = team;
-    },
-    isTeamNotSelected(team: string): boolean {
-      return this.selectedTeamToAssign !== team;
-    },
-    cancelUpdateAssignedTeam() {
-      this.selectedAssigneeId = null;
-      this.selectedTeamToAssign = null;
-    },
-    canUpdateAssignedTeam(input: {
-      timeSpanId?: number | null;
-      assigneeId: number | null;
-      team: string | null;
-    }): input is UpdateAssignedTeam {
-      return (
-        isNumber(input.timeSpanId) &&
-        isNumber(input.assigneeId) &&
-        isString(input.team)
-      );
-    },
     formatDuration(duration: number): string {
       return Duration.ms(duration).toString();
     },
-    // updateAssignedTeam(assignee: TeamMemberForDetails) {
-    //   //TODO
-    // },
   },
 });
 </script>
@@ -365,12 +279,12 @@ export default defineComponent({
   right: 3px;
 }
 
-.timespan-metadata {
+.assignment-metadata {
   display: flex;
   gap: 15px;
 }
 
-.timespan-details {
+.assignment-details {
   &__content {
     display: flex;
     flex-direction: column;
@@ -394,20 +308,6 @@ export default defineComponent({
   &__actions {
     display: block ruby;
   }
-}
-
-.team-update {
-  display: flex;
-  gap: 3px;
-  &__teams {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-}
-
-.not-selected {
-  opacity: 0.4;
 }
 
 .volunteer-list {

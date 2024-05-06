@@ -54,6 +54,8 @@ export type {
   OrgaNeedRequest,
 } from "./orga-need";
 export type {
+  TimelineAssignee,
+  TimelineAssignment,
   TimelineActivity,
   TimelineEvent,
   TimelineMobilization,

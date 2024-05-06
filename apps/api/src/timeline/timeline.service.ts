@@ -1,10 +1,27 @@
 import { Injectable } from "@nestjs/common";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
-import { TimelineEvent } from "@overbookd/http";
+import {
+  TimelineAssignment,
+  TimelineEvent,
+  TimelineMobilization,
+  TimelineTask,
+} from "@overbookd/http";
+
+type DatabaseAssignment = IProvidePeriod & {
+  assignees: {
+    personalData: {
+      firstname: string;
+      lastname: string;
+      phone: string;
+      teams: { teamCode: string }[];
+    };
+    as?: { teamCode: string };
+  }[];
+};
 
 type DatabaseMobilization = IProvidePeriod & {
-  assignments: IProvidePeriod[];
+  assignments: DatabaseAssignment[];
 };
 
 type DatabaseTask = {
@@ -12,6 +29,7 @@ type DatabaseTask = {
   name: string;
   mobilizations: DatabaseMobilization[];
   topPriority: boolean;
+  appointment: { name: string };
 };
 
 type DatabaseTimeline = {
@@ -37,16 +55,16 @@ export class TimelineService {
   }
 
   private buildTimelineSelection(period: IProvidePeriod) {
-    const ftsSelection = this.buildTasksSelection(period);
-    const ftsCondition = this.buildTasksCondition(period);
+    const tasksSelection = this.buildTasksSelection(period);
+    const tasksCondition = this.buildTasksCondition(period);
 
     return {
       id: true,
       name: true,
       teamCode: true,
       festivalTasks: {
-        select: ftsSelection,
-        where: ftsCondition,
+        select: tasksSelection,
+        where: tasksCondition,
       },
     };
   }
@@ -64,12 +82,25 @@ export class TimelineService {
       id: true,
       name: true,
       topPriority: true,
+      appointment: { select: { name: true } },
       ...mobilizationSelection,
     };
   }
 
   private buildMobilizationsWithAssignmentsSelection(period: IProvidePeriod) {
     const overlapPeriodCondition = this.buildOverlapPeriodCondition(period);
+    const selectAssignee = {
+      personalData: {
+        select: {
+          firstname: true,
+          lastname: true,
+          phone: true,
+          teams: { select: { teamCode: true } },
+        },
+      },
+      as: true,
+    };
+
     return {
       mobilizations: {
         where: overlapPeriodCondition,
@@ -81,6 +112,7 @@ export class TimelineService {
             select: {
               start: true,
               end: true,
+              assignees: { select: selectAssignee },
             },
           },
         },
@@ -115,6 +147,40 @@ function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
       name: timeline.name,
       team: timeline.teamCode,
     },
-    tasks: timeline.festivalTasks,
+    tasks: timeline.festivalTasks.map(formatTask),
+  };
+}
+
+function formatTask(task: DatabaseTask): TimelineTask {
+  return {
+    id: task.id,
+    name: task.name,
+    appointment: task.appointment.name,
+    mobilizations: task.mobilizations.map(formatMobilization),
+    topPriority: task.topPriority,
+  };
+}
+
+function formatMobilization(
+  mobilization: DatabaseMobilization,
+): TimelineMobilization {
+  return {
+    start: mobilization.start,
+    end: mobilization.end,
+    assignments: mobilization.assignments.map(formatAssignment),
+  };
+}
+
+function formatAssignment(assignment: DatabaseAssignment): TimelineAssignment {
+  return {
+    start: assignment.start,
+    end: assignment.end,
+    assignees: assignment.assignees.map((assignee) => ({
+      firstname: assignee.personalData.firstname,
+      lastname: assignee.personalData.lastname,
+      phone: assignee.personalData.phone,
+      teams: assignee.personalData.teams.map(({ teamCode }) => teamCode),
+      as: assignee.as?.teamCode,
+    })),
   };
 }
