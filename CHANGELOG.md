@@ -1,3 +1,10 @@
+## [2.36.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.7...v2.36.8) (2024-05-06)
+
+
+### Bug Fixes
+
+* **planning:** split planning permissions [#1900](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1900) ([808134b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/808134b729dd7e33931230231c2f4f9431f87aff))
+
 ## [2.36.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.6...v2.36.7) (2024-05-05)
 
 
