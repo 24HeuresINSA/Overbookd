@@ -1,3 +1,10 @@
+## [2.36.10](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.9...v2.36.10) (2024-05-06)
+
+
+### Bug Fixes
+
+* **planning:** fetch authorized user resource [#1906](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1906) ([6e9029d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e9029df4918df1395ddf26169271bc5c6e9a63e))
+
 ## [2.36.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.8...v2.36.9) (2024-05-06)
 
 
