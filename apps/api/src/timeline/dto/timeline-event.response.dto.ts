@@ -20,21 +20,21 @@ class PeriodDto implements IProvidePeriod {
 class TimelineAssigneeDto implements TimelineAssignee {
   @ApiProperty({
     required: true,
-    description: "The firstname of the assignee",
+    description: "The assignee's first name",
     type: String,
   })
   firstname: string;
 
   @ApiProperty({
     required: true,
-    description: "The lastname of the assignee",
+    description: "The assignee's last name",
     type: String,
   })
   lastname: string;
 
   @ApiProperty({
     required: true,
-    description: "The teams of the assignee",
+    description: "The assignee's teams",
     type: String,
     isArray: true,
   })
@@ -42,7 +42,7 @@ class TimelineAssigneeDto implements TimelineAssignee {
 
   @ApiProperty({
     required: true,
-    description: "The phone number of the assignee",
+    description: "The assignee's phone number",
     type: String,
   })
   phone: string;
