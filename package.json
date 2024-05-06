@@ -47,20 +47,20 @@
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/gitlab": "13.0.3",
+    "@semantic-release/gitlab": "13.0.4",
     "@semantic-release/npm": "11.0.3",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
-    "@vitest/coverage-v8": "1.5.2",
+    "@vitest/coverage-v8": "1.6.0",
     "conventional-changelog-conventionalcommits": "7.0.2",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-security": "2.1.1",
-    "eslint-plugin-unused-imports": "3.1.0",
+    "eslint-plugin-unused-imports": "3.2.0",
     "prettier": "3.2.5",
     "semantic-release": "23.0.8",
     "ts-prune": "0.10.3",
     "typescript": "5.4.5",
-    "vitest": "1.5.2"
+    "vitest": "1.6.0"
   }
 }
