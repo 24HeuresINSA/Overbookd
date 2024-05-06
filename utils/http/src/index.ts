@@ -69,3 +69,4 @@ export type {
 } from "./assignment";
 export type { During as DuringBreakPeriods } from "./planning/break-periods";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer";
+export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";

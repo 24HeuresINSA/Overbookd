@@ -10,16 +10,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  CalendarPlanningEvent,
-  convertTaskToPlanningEvent,
-} from "~/domain/common/planning-events";
+import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
 import { CalendarUser } from "~/utils/models/calendar.model";
+import { HelpingVolunteerAssignment } from "@overbookd/http";
+import { PURPLE } from "~/domain/common/status-color";
 
-export default Vue.extend({
+export default defineComponent({
   name: "CalendarList",
   components: { OverMultiCalendar },
   data: () => {
@@ -42,8 +41,10 @@ export default Vue.extend({
       };
     },
     tasksAsEvents(): CalendarPlanningEvent[] {
-      return this.$accessor.needHelp.volunteers.flatMap(({ tasks, id }) =>
-        tasks.map((task) => convertTaskToPlanningEvent(task, id)),
+      return this.$accessor.needHelp.volunteers.flatMap(({ assignments, id }) =>
+        assignments.map((assignment) =>
+          this.convertAssignmentToPlanningEvent(assignment, id),
+        ),
       );
     },
   },
@@ -54,6 +55,20 @@ export default Vue.extend({
   },
   created() {
     this.date = this.$accessor.needHelp.start;
+  },
+  methods: {
+    convertAssignmentToPlanningEvent(
+      { id, name, start, end }: HelpingVolunteerAssignment,
+      volunteerId: number,
+    ): CalendarPlanningEvent {
+      return {
+        start,
+        end,
+        name: `[${id}] ${name}`,
+        color: PURPLE,
+        volunteerId,
+      };
+    },
   },
 });
 </script>

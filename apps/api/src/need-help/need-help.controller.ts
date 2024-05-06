@@ -12,7 +12,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { NeedHelpService } from "./need-help.service";
-import { VolunteerResponseDto } from "./dto/volunteer.response.dto";
+import { HelpingVolunteerResponseDto } from "./dto/helping-volunteer.response.dto";
 import { ASK_FOR_HELP } from "@overbookd/permission";
 
 @ApiBearerAuth()
@@ -49,7 +49,7 @@ export class NeedHelpController {
   @ApiResponse({
     status: 200,
     description: "Available volunteers",
-    type: VolunteerResponseDto,
+    type: HelpingVolunteerResponseDto,
     isArray: true,
   })
   getAvailableVolunteers(@Query("start") start: Date, @Query("end") end: Date) {

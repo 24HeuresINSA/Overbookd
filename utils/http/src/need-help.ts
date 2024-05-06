@@ -1,12 +1,16 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { VolunteerTask } from "../user/user.model";
 
-export type Volunteer = {
+export type HelpingVolunteerAssignment = IProvidePeriod & {
+  id: number;
+  name: string;
+};
+
+export type HelpingVolunteer = {
   id: number;
   firstname: string;
   lastname: string;
   phone: string;
   teams: string[];
   availabilities: IProvidePeriod[];
-  tasks: VolunteerTask[];
+  assignments: HelpingVolunteerAssignment[];
 };
