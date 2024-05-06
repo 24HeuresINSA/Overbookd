@@ -28,6 +28,7 @@ export const VIEW_TIMELINE = "view-timeline";
 export const ASK_FOR_HELP = "ask-for-help";
 export const VIEW_PLANNING = "view-planning";
 export const DOWNLOAD_PLANNING = "download-planning";
+export const SYNC_PLANNING = "sync-planning";
 export const ENROLL_HARD = "enroll-hard";
 export const ENROLL_SOFT = "enroll-soft";
 export const VIEW_TROMBINOSCOPE = "view-trombinoscope";
@@ -73,6 +74,7 @@ const permissions = [
   ASK_FOR_HELP,
   VIEW_PLANNING,
   DOWNLOAD_PLANNING,
+  SYNC_PLANNING,
   ENROLL_HARD,
   ENROLL_SOFT,
   VIEW_TROMBINOSCOPE,

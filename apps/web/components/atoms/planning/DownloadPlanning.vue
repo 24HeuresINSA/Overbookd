@@ -1,5 +1,5 @@
 <template>
-  <div v-if="canDowloadPlanning">
+  <div v-if="canDowloadPlanning || canSyncPlanning">
     <v-list dense>
       <v-list-group id="retrieve-planning" prepend-icon="mdi-calendar">
         <template #activator>
@@ -8,7 +8,7 @@
             {{ isMe ? "mon" : "le" }} planning
           </v-list-item-title>
         </template>
-        <v-list-group v-if="isMe" no-action sub-group>
+        <v-list-group v-if="canSyncPlanning" no-action sub-group>
           <template #activator>
             <v-list-item-title>
               <v-icon>mdi-sync</v-icon>
@@ -19,10 +19,9 @@
             <v-list-item-icon>
               <v-icon>mdi-google</v-icon>
             </v-list-item-icon>
-            <v-list-item-title
-              ><span class="desktop">Avec</span> Google
-              Calendar</v-list-item-title
-            >
+            <v-list-item-title>
+              <span class="desktop">Avec</span> Google Calendar
+            </v-list-item-title>
           </v-list-item>
           <v-list-item link @click="syncWithMicrosoft">
             <v-list-item-icon>
@@ -41,7 +40,7 @@
             </v-list-item-title>
           </v-list-item>
         </v-list-group>
-        <v-list-group no-action sub-group>
+        <v-list-group v-if="canDowloadPlanning" no-action sub-group>
           <template #activator>
             <v-list-item-title>
               <v-icon>mdi-download</v-icon>
@@ -68,7 +67,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { AFFECT_VOLUNTEER, DOWNLOAD_PLANNING } from "@overbookd/permission";
+import {
+  AFFECT_VOLUNTEER,
+  DOWNLOAD_PLANNING,
+  SYNC_PLANNING,
+} from "@overbookd/permission";
 import { User, UserPersonalData } from "@overbookd/user";
 import { Edition } from "@overbookd/contribution";
 
@@ -92,6 +95,9 @@ export default defineComponent({
         return this.$accessor.user.can(AFFECT_VOLUNTEER);
       }
       return this.$accessor.user.can(DOWNLOAD_PLANNING);
+    },
+    canSyncPlanning(): boolean {
+      return this.$accessor.user.can(SYNC_PLANNING);
     },
   },
   methods: {

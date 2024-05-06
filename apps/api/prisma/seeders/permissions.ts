@@ -34,6 +34,7 @@ import {
   VIEW_GEAR_DASHBOARD,
   PURCHASE_GEARS,
   BORROW_GEARS,
+  SYNC_PLANNING,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -330,6 +331,15 @@ export const permissions = [
   {
     name: DOWNLOAD_PLANNING,
     description: "Peut télécharger son planning",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: SYNC_PLANNING,
+    description: "Peut synchroniser son planning",
     teams: {
       createMany: {
         data: [{ teamCode: "benevole" }],

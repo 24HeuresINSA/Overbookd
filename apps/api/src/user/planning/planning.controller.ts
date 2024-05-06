@@ -33,6 +33,7 @@ import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 import {
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
+  SYNC_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
@@ -113,7 +114,7 @@ export class PlanningController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(DOWNLOAD_PLANNING)
+  @Permission(SYNC_PLANNING)
   @ApiBearerAuth()
   @Get("subscribe")
   @ApiResponse({
