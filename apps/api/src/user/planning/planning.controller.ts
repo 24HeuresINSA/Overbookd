@@ -34,7 +34,6 @@ import {
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
   SYNC_PLANNING,
-  VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
@@ -176,7 +175,7 @@ export class PlanningController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
+  @Permission(AFFECT_VOLUNTEER)
   @Get(":volunteerId/break-periods")
   @ApiResponse({
     status: 200,

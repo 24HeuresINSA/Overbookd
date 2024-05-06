@@ -181,8 +181,11 @@ export default Vue.extend({
     isDesktop(): boolean {
       return isDesktop();
     },
+    canAssignVolunteer(): boolean {
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
+    },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER) && this.isDesktop;
+      return this.canAssignVolunteer && this.isDesktop;
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -199,8 +202,11 @@ export default Vue.extend({
       ),
       this.$accessor.user.getVolunteerAssignments(this.userId),
       this.$accessor.user.getVolunteerTasks(this.userId),
-      this.$accessor.user.getVolunteerBreakPeriods(this.userId),
     ]);
+
+    if (this.canAssignVolunteer) {
+      await this.$accessor.user.getVolunteerBreakPeriods(this.userId);
+    }
 
     if (this.canSyncPlanning) {
       await this.$accessor.planning.fetchSubscriptionLink();
