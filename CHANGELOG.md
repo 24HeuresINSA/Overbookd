@@ -1,3 +1,12 @@
+## [2.36.11](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.10...v2.36.11) (2024-05-06)
+
+
+### Bug Fixes
+
+* **need-help:** display assignments & fix volunteer condition [#1901](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1901) ([4790dd3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4790dd3e2c809fb99e482dd4421f42ef708f8191))
+* **planning:** planning download [#1909](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1909) ([54fccce](https://gitlab.com/24-heures-insa/overbookd-mono/commit/54fccce60dafc7789c29cb157099f189a1abc98f))
+* **planning:** use new map qr code for pdf planning [#1908](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1908) ([6379ef4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6379ef46c1f588cf125690ccc509ae595e8bdcb6))
+
 ## [2.36.10](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.9...v2.36.10) (2024-05-06)
 
 
