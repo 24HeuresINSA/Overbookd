@@ -300,7 +300,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     if (contacts.length === 0) return "";
 
     const header = {
-      text: "Peronnes à contacter en cas de problème",
+      text: "Personne(s) à contacter en cas de problème",
       style: ["contact"],
     };
     const listing = contacts

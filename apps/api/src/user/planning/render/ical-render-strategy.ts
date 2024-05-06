@@ -6,7 +6,7 @@ import {
   formatDateWithHoursAndMinutesOnly,
   toDateArray,
 } from "../../../utils/date";
-import { Assignment, Task } from "../domain/task.model";
+import { Assignment, Contact, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
 
 export class IcalRenderStrategy implements RenderStrategy {
@@ -29,7 +29,8 @@ export class IcalRenderStrategy implements RenderStrategy {
     const start = toDateArray(task.period.start);
     const end = toDateArray(task.period.end);
     const assignments = this.buildAssignmentsDescription(task.assignments);
-    const description = `${task.instructions}${assignments}`;
+    const contacts = this.buildContacts(task.contacts);
+    const description = `${task.instructions}${contacts}${assignments}`;
     const { geoLocation } = task.location;
     const geo = geoLocation ? this.retrieveGeo(geoLocation) : undefined;
 
@@ -60,6 +61,18 @@ export class IcalRenderStrategy implements RenderStrategy {
       const period = this.generatePeriodHeader(assignment.period);
       return `${description}<li>${period}<ul>${volunteers}</ul></li>`;
     }, "");
+
+    return `${header}<ul>${listing}</ul>`;
+  }
+
+  private buildContacts(contacts: Contact[]) {
+    if (contacts.length === 0) return "";
+
+    const header = "<h2>Personne(s) à contacter en cas de problème</h2>";
+    const listing = contacts.reduce(
+      (description, contact) => `${description}<li>${contact}</li>`,
+      "",
+    );
 
     return `${header}<ul>${listing}</ul>`;
   }
