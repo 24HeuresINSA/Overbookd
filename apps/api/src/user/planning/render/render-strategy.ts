@@ -1,5 +1,5 @@
 import { ICAL, JSON, PDF } from "@overbookd/http";
-import { Task, Volunteer } from "../domain/task.model";
+import { Task, VolunteerWithTeams } from "../domain/task.model";
 import { IcalRenderStrategy } from "./ical-render-strategy";
 import { JsonRenderStrategy } from "./json-render-strategy";
 import { PdfRenderStrategy } from "./pdf-render-strategy";
@@ -22,5 +22,5 @@ export class PlanningRenderStrategy {
 }
 
 export type RenderStrategy = {
-  render(tasks: Task[], volunteer?: Volunteer): Promise<unknown>;
+  render(tasks: Task[], volunteer?: VolunteerWithTeams): Promise<unknown>;
 };

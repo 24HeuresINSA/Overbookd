@@ -7,14 +7,16 @@ import { Task } from "./domain/task.model";
 import { SubscriptionService } from "./subscription.service";
 import { UserName } from "@overbookd/user";
 
+export type UserNameWithTeams = UserName & { teams: string[] };
+
 export type Volunteers = {
   all(): Promise<VolunteerForPlanning[]>;
-  find(volunteerId: number): Promise<UserName | null>;
+  find(volunteerId: number): Promise<UserNameWithTeams | null>;
 };
 
 type VolunteerWithTasks = {
   tasks: Task[];
-  volunteer: UserName;
+  volunteer: UserNameWithTeams;
 };
 
 @Injectable()

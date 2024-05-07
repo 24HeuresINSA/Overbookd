@@ -149,10 +149,9 @@ export class PurpleCocktail {
     procedureSteps: { text: (string | { text: string; style: string[] })[] }[],
   ): Content {
     return [
-      { text: "Procédure:", style: ["paragraph", "liteSpaceBetween"] },
       {
         ol: procedureSteps,
-        margin: [75, 0, 50, 5],
+        margin: [75, 20, 50, 5],
       },
     ];
   }
