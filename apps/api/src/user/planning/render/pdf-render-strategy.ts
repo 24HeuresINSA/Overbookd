@@ -9,13 +9,21 @@ import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
 } from "../../../utils/date";
-import { Assignment, Contact, Task, Volunteer } from "../domain/task.model";
+import {
+  AppointmentLocation,
+  Assignment,
+  Contact,
+  Task,
+  Volunteer,
+} from "../domain/task.model";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
 import { Introduction } from "./pdf/introduction";
 import { RenderStrategy } from "./render-strategy";
 import { Edition } from "@overbookd/contribution";
 import { updateItemToList } from "@overbookd/list";
+import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
+import { GeoCoordinates } from "ics";
 
 class PdfException extends Error {}
 
@@ -54,9 +62,10 @@ export class PdfRenderStrategy implements RenderStrategy {
     bold: { bold: true },
     task: { fontSize: 20, bold: true, marginBottom: 5 },
     details: { fontSize: 14, marginBottom: 3 },
+    link: { color: "blue" },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
-    contact: { fontSize: 14, bold: true, marginTop: 5 },
-    assign: { fontSize: 14, marginTop: 10 },
+    contact: { fontSize: 14, bold: true, marginBottom: 2 },
+    assign: { fontSize: 14, bold: true, marginTop: 15 },
     header: {
       fontSize: 18,
       marginTop: 20,
@@ -195,10 +204,7 @@ export class PdfRenderStrategy implements RenderStrategy {
               },
             ],
           },
-          {
-            text: "",
-            width: 50,
-          },
+          { text: "", width: 50 },
         ],
       };
     };
@@ -230,7 +236,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     contacts,
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
-    const displayLocation = this.extractLocation(location.name);
+    const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ["task"] };
     const displayInstructions = this.extractInstructions(instructions);
     const displayContacts = this.extractContacts(contacts);
@@ -346,14 +352,25 @@ export class PdfRenderStrategy implements RenderStrategy {
     return { text: `${start} - ${end}`, style: ["period"] };
   }
 
-  private extractLocation(location: string): Content {
+  private extractLocation(location: AppointmentLocation): Content {
+    const { lat, lon } = this.retrieveGeo(location.geoLocation);
     return {
       text: [
-        { text: "Lieu: ", style: ["details", "bold"] },
-        { text: location, style: ["details"] },
+        { text: "Lieu de rendez-vous: ", style: ["details", "bold"] },
+        {
+          text: location.name,
+          style: ["details", "link"],
+          link: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`,
+        },
       ],
       margin: [0, 0, 0, 5],
     };
+  }
+
+  private retrieveGeo(geoLocation: GeoLocation): GeoCoordinates {
+    const location = LocationFactory.create(geoLocation);
+    const { lat, lng } = location.barycentre.coordinates;
+    return { lat, lon: lng };
   }
 
   private extractPeriod(period: IProvidePeriod): Content {
@@ -369,7 +386,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractInstructions(instructions: string): Content {
-    const sanitizedInstructions = sanitizeHtml(instructions);
+    const sanitizedInstructions = sanitizeHtml(`${instructions}<hr>`);
     return htmlToPdfMake(sanitizedInstructions, {
       window,
       defaultStyles: this.htmlToPdfDefaultStyle,

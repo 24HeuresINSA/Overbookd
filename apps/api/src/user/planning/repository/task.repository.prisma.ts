@@ -74,6 +74,7 @@ export class PrismaTaskRepository implements TaskRepository {
         festivalTask: IS_NOT_DELETED,
       },
       select: this.buildAssignmentWithTaskSelection(volunteerId),
+      orderBy: { start: "asc" },
     });
 
     const taskIds = volunteerAssignments.map(
@@ -161,7 +162,7 @@ function toTask(
   const instructions =
     festivalTask.inChargeVolunteers.length === 0
       ? festivalTask.globalInstruction
-      : `${festivalTask.globalInstruction}<br/>${festivalTask.inChargeInstruction}`;
+      : `${festivalTask.globalInstruction}<hr><h3>Instructions responsables</h3>${festivalTask.inChargeInstruction}`;
 
   const assignees = assignments
     .filter(({ festivalTaskId }) => festivalTaskId === festivalTask.id)
@@ -177,7 +178,7 @@ function toTask(
 
   const location = {
     name: appointment.name,
-    geoLocation: appointment.geoLocation as unknown as GeoLocation | null,
+    geoLocation: appointment.geoLocation as GeoLocation | null,
   };
 
   return {
