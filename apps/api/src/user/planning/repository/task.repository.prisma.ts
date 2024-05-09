@@ -161,8 +161,8 @@ function toTask(
   }));
   const instructions =
     festivalTask.inChargeVolunteers.length === 0
-      ? festivalTask.globalInstruction
-      : `${festivalTask.globalInstruction}<hr><h3>Instructions responsables</h3>${festivalTask.inChargeInstruction}`;
+      ? `<hr>${festivalTask.globalInstruction}`
+      : `<hr>${festivalTask.globalInstruction}<hr><h3>Instructions responsables :</h3>${festivalTask.inChargeInstruction}`;
 
   const assignees = assignments
     .filter(({ festivalTaskId }) => festivalTaskId === festivalTask.id)
