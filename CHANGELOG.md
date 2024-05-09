@@ -1,3 +1,11 @@
+## [2.36.12](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.11...v2.36.12) (2024-05-09)
+
+
+### Bug Fixes
+
+* **planning:** add frequency page in pdf and improve display [#1911](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1911) ([ed84c78](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed84c78ae0e2a4d18c76ab83f6ebb3a711dedd0f))
+* **planning:** add separator and location link [#1910](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1910) ([d181e4e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d181e4ec7067d8b2fcf6ea52101c8a5c1bf0e1bb))
+
 ## [2.36.11](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.10...v2.36.11) (2024-05-06)
 
 
