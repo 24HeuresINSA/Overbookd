@@ -1,1 +1,1 @@
-export { BENEVOLE_CODE } from "./team";
+export * from "./team";

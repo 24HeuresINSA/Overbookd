@@ -15,6 +15,7 @@ import {
   Contact,
   Task,
   Volunteer,
+  VolunteerWithTeams,
 } from "../domain/task.model";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
@@ -24,6 +25,7 @@ import { Edition } from "@overbookd/contribution";
 import { updateItemToList } from "@overbookd/list";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { GeoCoordinates } from "ics";
+import { TalkieFrequencies } from "./pdf/talkie-frequencies";
 
 class PdfException extends Error {}
 
@@ -75,7 +77,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       alignment: "center",
     },
     paragraph: {
-      fontSize: 10,
+      fontSize: 11,
       marginLeft: 50,
       marginRight: 50,
     },
@@ -83,6 +85,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     largeSpaceBetween: { marginBottom: 20 },
     edition: { fontSize: 12, marginBottom: 10, marginTop: 10 },
     volunteer: { fontSize: 22 },
+    frequency: { fontSize: 16, marginBottom: 10 },
+    emergencyFrequency: { fontSize: 12, marginBottom: 10 },
   };
 
   private fonts = {
@@ -102,8 +106,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     this.printer = new Printer(this.fonts);
   }
 
-  render(tasks: Task[], volunteer: Volunteer): Promise<unknown> {
-    const pdfContent = this.generateContent(tasks);
+  render(tasks: Task[], volunteer: VolunteerWithTeams): Promise<unknown> {
+    const pdfContent = this.generateContent(tasks, volunteer);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();
     const info = this.generateMetadata(volunteer);
@@ -160,8 +164,8 @@ export class PdfRenderStrategy implements RenderStrategy {
           {
             stack: [
               { text: "PC Sécurité", style: ["bold"] },
-              "Principal: 04 28 29 22 11",
-              "Secondaire: 04 72 43 70 70",
+              "Principal : 04 28 29 22 11",
+              "Secondaire : 04 72 43 70 70",
             ],
             width: 150,
           },
@@ -210,14 +214,19 @@ export class PdfRenderStrategy implements RenderStrategy {
     };
   }
 
-  private generateContent(tasks: Task[]): Content[] {
+  private generateContent(
+    tasks: Task[],
+    { teams }: VolunteerWithTeams,
+  ): Content[] {
     const introductionPage = Introduction.generatePage();
     const securityPlan = SecurityPlan.generatePage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
     const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
+    const talkieFrequencies = this.generateTalkieFrequencies(teams);
     return [
       introductionPage,
       securityPlan,
+      talkieFrequencies,
       ...assignments,
       ...cocktailPurpleWorkflows,
     ];
@@ -225,6 +234,10 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   private generatePurpleCocktailWorkflows(): Content[] {
     return [...PurpleCocktail.generateWorkflow()];
+  }
+
+  private generateTalkieFrequencies(teams: string[]): Content[] {
+    return [...TalkieFrequencies.generateWorkflow(teams)];
   }
 
   private generateTaskContent({
@@ -356,7 +369,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     const { lat, lon } = this.retrieveGeo(location.geoLocation);
     return {
       text: [
-        { text: "Lieu de rendez-vous: ", style: ["details", "bold"] },
+        { text: "Lieu de rendez-vous : ", style: ["details", "bold"] },
         {
           text: location.name,
           style: ["details", "link"],

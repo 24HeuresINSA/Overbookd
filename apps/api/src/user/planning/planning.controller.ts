@@ -258,6 +258,7 @@ export class PlanningController {
     return renderStrategy.render(tasks, {
       id: volunteerId,
       name: buildVolunteerDisplayName(volunteer),
+      teams: volunteer.teams,
     });
   }
 

@@ -1,14 +1,14 @@
 import { VolunteerForPlanning } from "@overbookd/http";
 import { PrismaService } from "../../../prisma.service";
-import { Volunteers } from "../planning.service";
+import { UserNameWithTeams, Volunteers } from "../planning.service";
 import { SELECT_PERIOD } from "../../../assignment/common/repository/period.query";
 import { Period } from "@overbookd/period";
-import { UserName } from "@overbookd/user";
 
-const SELECT_VOLUNTEER_NAME = {
+const SELECT_VOLUNTEER = {
   firstname: true,
   lastname: true,
   nickname: true,
+  teams: { select: { teamCode: true } },
 };
 
 export class PrismaVolunteers implements Volunteers {
@@ -19,7 +19,7 @@ export class PrismaVolunteers implements Volunteers {
       where: { assigned: { some: {} }, preference: { paperPlanning: true } },
       select: {
         id: true,
-        ...SELECT_VOLUNTEER_NAME,
+        ...SELECT_VOLUNTEER,
         teams: { select: { teamCode: true } },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
       },
@@ -35,10 +35,14 @@ export class PrismaVolunteers implements Volunteers {
     });
   }
 
-  find(id: number): Promise<UserName> {
-    return this.prisma.user.findUnique({
+  async find(id: number): Promise<UserNameWithTeams> {
+    const volunteer = await this.prisma.user.findUnique({
       where: { id },
-      select: SELECT_VOLUNTEER_NAME,
+      select: SELECT_VOLUNTEER,
     });
+    return {
+      ...volunteer,
+      teams: volunteer.teams.map(({ teamCode }) => teamCode),
+    };
   }
 }

@@ -6,6 +6,10 @@ export type Volunteer = {
   name: string;
 };
 
+export type VolunteerWithTeams = Volunteer & {
+  teams: string[];
+};
+
 export type Assignment = {
   period: IProvidePeriod;
   volunteers: Volunteer[];

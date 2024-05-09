@@ -2,7 +2,7 @@ import { Content } from "pdfmake/interfaces";
 
 export class PurpleCocktail {
   static generateWorkflow(): Content[] {
-    const headerText = "Procédure Cocktail Purple - 24h de l’INSA";
+    const headerText = "Procédure Cocktail Purple\n- 24h de l’INSA -";
     const descriptionText =
       "Définition : Cocktail Purple est un dispositif mis en place par l’association Purple Effect en milieu festif. Une victime de VHSS (violences et harcèlement sexistes et sexuels) a la possibilité de commander au bar de l’événement un cocktail purple, qui est un nom de code permettant de la mettre en sécurité et de prévenir les équipes de sécurité et de prévention.";
     const procedureSteps = [
@@ -135,7 +135,7 @@ export class PurpleCocktail {
   ): Content {
     return [
       {
-        text: "Consignes de sécurité:",
+        text: "Consignes de sécurité :",
         style: ["paragraph", "liteSpaceBetween"],
       },
       {
@@ -149,10 +149,10 @@ export class PurpleCocktail {
     procedureSteps: { text: (string | { text: string; style: string[] })[] }[],
   ): Content {
     return [
-      { text: "Procédure:", style: ["paragraph", "liteSpaceBetween"] },
       {
         ol: procedureSteps,
-        margin: [75, 0, 50, 5],
+        style: ["paragraph", "liteSpaceBetween"],
+        margin: [75, 20, 50, 5],
       },
     ];
   }
