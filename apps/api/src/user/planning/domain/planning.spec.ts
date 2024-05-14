@@ -455,7 +455,7 @@ describe("Planning", () => {
         });
       });
       describe("when volunteer is alone on a period", () => {
-        it("should not generate an assigment for this period", async () => {
+        it("should not generate an assignment for this period", async () => {
           const tasks = await planning.generateForVolunteer(brenda.id);
           expect(tasks.at(0)?.assignments).toHaveLength(0);
         });

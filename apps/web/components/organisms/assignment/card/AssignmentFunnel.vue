@@ -93,7 +93,7 @@ import {
 import { assignments, candidateFactory } from "~/utils/assignment/funnel";
 import CandidateHeader from "~/components/molecules/assignment/calendar/CandidateHeader.vue";
 
-type AssingmentFunnelData = {
+type AssignmentFunnelData = {
   calendarDate: Date;
   funnel: IActAsFunnel | null;
   candidatesByStringifiedIds: Record<string, IDefineCandidate>;
@@ -117,7 +117,7 @@ export default defineComponent({
     },
   },
   emits: ["close-dialog", "volunteers-assigned"],
-  data: (): AssingmentFunnelData => {
+  data: (): AssignmentFunnelData => {
     return {
       calendarDate: new Date(),
       funnel: null,
