@@ -1,7 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { HelpingVolunteers } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
-import { AssignmentService } from "../assignment/old/assignment.service";
 import { Injectable } from "@nestjs/common";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { HelpingVolunteer } from "@overbookd/http";
@@ -61,19 +60,21 @@ export class PrismaHelpingVolunteers implements HelpingVolunteers {
     return volunteers.map(toHelpingVolunteer);
   }
 
-  private buildIsAvailableCondition(period: IProvidePeriod) {
-    const availabilities =
-      AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(period);
-
+  private buildIsAvailableCondition({ start, end }: IProvidePeriod) {
     return {
       ...IS_MEMBER_OF_VOLUNTEER_TEAM,
       isDeleted: false,
-      availabilities,
+      availabilities: {
+        some: {
+          start: { lte: start },
+          end: { gte: end },
+        },
+      },
       assigned: {
         none: {
           assignment: {
-            start: { lt: period.end },
-            end: { gt: period.start },
+            start: { lt: end },
+            end: { gt: start },
           },
         },
       },

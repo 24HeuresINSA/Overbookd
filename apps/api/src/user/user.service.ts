@@ -5,12 +5,8 @@ import {
 } from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { getPeriodDuration } from "../utils/duration";
 import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
-import {
-  DatabaseOldVolunteerAssignmentStat,
-  DatabaseVolunteerAssignmentStat,
-} from "./volunteer-assignment.model";
+import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
@@ -233,20 +229,6 @@ export class UserService {
     return [...stats.values()];
   }
 
-  static formatOldAssignmentStats(
-    assignments: DatabaseOldVolunteerAssignmentStat[],
-  ) {
-    const stats = assignments.reduce((stats, { timeSpan }) => {
-      const category = timeSpan.timeWindow.ft.category;
-      const durationToAdd = getPeriodDuration(timeSpan);
-      const previousDuration = stats.get(category)?.duration ?? 0;
-      const duration = previousDuration + durationToAdd;
-      stats.set(category, { category, duration });
-      return stats;
-    }, new Map<Category, VolunteerAssignmentStat>());
-    return [...stats.values()];
-  }
-
   static formatToPersonalData(
     user: DatabaseUserPersonalData,
   ): UserPersonalData {
@@ -275,7 +257,7 @@ export class UserService {
       ...userWithoutCount,
       teams,
       permissions: [...permissions],
-      tasksCount: _count.assignments,
+      tasksCount: _count.assigned,
     };
   }
 

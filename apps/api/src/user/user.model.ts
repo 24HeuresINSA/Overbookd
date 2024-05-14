@@ -1,7 +1,7 @@
 import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { TeamWithNestedPermissions } from "../team/utils/permissions";
 import { IProvidePeriod } from "@overbookd/period";
-import { FtStatus } from "../ft/ft.model";
+import { FestivalTask } from "@overbookd/festival-event";
 
 export type UserPasswordOnly = {
   password: string;
@@ -12,14 +12,14 @@ export type DatabaseMyUserInformation = Omit<
   "teams" | "permissions" | "tasksCount"
 > & {
   teams: TeamWithNestedPermissions[];
-  _count: { assignments: number };
+  _count: { assigned: number };
 };
 
 export type VolunteerTask = IProvidePeriod & {
   ft: {
     id: number;
     name: string;
-    status: FtStatus;
+    status: FestivalTask["status"];
   };
   timeSpanId?: number;
 };

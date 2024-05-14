@@ -1,4 +1,3 @@
-import { ftStatuses } from "../ft/ft.model";
 import { Permission } from "@overbookd/permission";
 
 export const SELECT_BASE_USER = {
@@ -51,7 +50,7 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
 const SELECT_USER_TASKS_COUNT = {
   _count: {
     select: {
-      assignments: true,
+      assigned: true,
     },
   },
 };
@@ -71,50 +70,6 @@ export const SELECT_USER_PERSONAL_DATA = {
 export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
   ...SELECT_USER_PERSONAL_DATA,
   note: true,
-};
-
-export const SELECT_USERNAME_WITH_ID = {
-  id: true,
-  firstname: true,
-  lastname: true,
-};
-
-export const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
-  ftTimeWindows: {
-    select: {
-      start: true,
-      end: true,
-      ft: {
-        select: {
-          id: true,
-          name: true,
-          status: true,
-        },
-      },
-    },
-  },
-};
-
-export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
-  ft: { isDeleted: false, NOT: { status: ftStatuses.READY } },
-};
-
-export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
-  timeSpan: {
-    select: {
-      start: true,
-      end: true,
-      timeWindow: {
-        select: {
-          ft: {
-            select: {
-              category: true,
-            },
-          },
-        },
-      },
-    },
-  },
 };
 
 export const SELECT_PERIOD_AND_CATEGORY = {

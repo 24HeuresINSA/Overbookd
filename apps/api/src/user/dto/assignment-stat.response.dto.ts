@@ -1,8 +1,8 @@
-import { TaskCategory } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
+import { Category } from "@overbookd/festival-event-constants";
 
 export type VolunteerAssignmentStat = {
-  category: TaskCategory;
+  category: Category;
   duration: number;
 };
 
@@ -14,7 +14,7 @@ export class VolunteerAssignmentStatResponseDto
     description: "The task category of the stats",
     type: String,
   })
-  category: TaskCategory;
+  category: Category;
 
   @ApiProperty({
     required: true,
