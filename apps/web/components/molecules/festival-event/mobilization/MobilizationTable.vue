@@ -138,10 +138,7 @@ import {
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { AddMobilizationForm } from "@overbookd/http";
-import {
-  SortablePeriodHeader,
-  periodsSorts,
-} from "~/utils/functions/sort-period";
+import { SortablePeriodHeader, periodsSorts } from "~/utils/sort/sort-period";
 
 type MobilizationTableData = {
   headers: Header[];
@@ -293,3 +290,4 @@ export default defineComponent({
   }
 }
 </style>
+~/utils/sort/sort-period

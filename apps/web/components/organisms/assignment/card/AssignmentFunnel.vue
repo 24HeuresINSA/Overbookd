@@ -55,7 +55,7 @@
             <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Affecter
           </v-btn>
         </div>
-        <aside class="add-cadidate-corridor">
+        <aside class="add-candidate-corridor">
           <v-btn
             id="add-candidate"
             :class="{ invalid: canNotAssignMoreVolunteer }"
@@ -76,7 +76,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { TaskAssignment } from "~/domain/timespan-assignment/timeSpanAssignment";
 import {
   CalendarPlanningEvent,
   convertAssignmentPlanningEventForCalendar,
@@ -126,9 +125,6 @@ export default defineComponent({
     };
   },
   computed: {
-    taskAssignment(): TaskAssignment {
-      return this.$accessor.assignment.taskAssignment;
-    },
     taskTitle(): string {
       const { taskId, name } = this.assignment;
       return `[${taskId}] ${name}`;
@@ -214,10 +210,6 @@ export default defineComponent({
     isNotAssignedAs(teamCode: string, candidate: IDefineCandidate): boolean {
       return candidate.as !== teamCode;
     },
-    canChangeCandidates(id: string): boolean {
-      const canChange = this.funnel?.canChangeLastCandidate ?? false;
-      return this.isLastAddedCandidate(id) && canChange;
-    },
     retrieveVolunteer(id: string): boolean {
       const storedIds = Object.keys(this.candidatesByStringifiedIds);
       const isAlreadyStored = storedIds.includes(id);
@@ -252,20 +244,6 @@ export default defineComponent({
     async nextCandidate() {
       if (!this.funnel?.canChangeLastCandidate) return;
       this.funnel = await this.funnel.nextCandidate();
-    },
-    isLastAddedCandidate(volunteerId: string): boolean {
-      const lastCandidate = this.candidates.at(-1);
-      return lastCandidate?.id === +volunteerId;
-    },
-    isFirstAddedCandidate(volunteerId: string): boolean {
-      const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId,
-      );
-      return candidateIndex === 0;
-    },
-    isRemovable(volunteerId: string): boolean {
-      const canRevoke = this.funnel?.canRevokeLastCandidate ?? false;
-      return this.isLastAddedCandidate(volunteerId) && canRevoke;
     },
     revokeLastCandidate(): void {
       if (!this.funnel?.canRevokeLastCandidate) return;

@@ -22,13 +22,13 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Duration } from "~/utils/date/duration";
 import { moveAtFirstIndex } from "@overbookd/list";
 import { formatUsername } from "~/utils/user/user.utils";
 import {
   IDefineCandidate,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
+import { Duration } from "@overbookd/period";
 
 export default Vue.extend({
   name: "AssignmentVolunteerResumeCalendarHeader",
@@ -61,9 +61,7 @@ export default Vue.extend({
       return this.$accessor.assignTaskToVolunteer.selectedTask;
     },
     assignmentStats(): string {
-      const duration = Duration.fromMilliseconds(
-        this.volunteer.assignmentDuration,
-      );
+      const duration = Duration.ms(this.volunteer.assignmentDuration);
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {

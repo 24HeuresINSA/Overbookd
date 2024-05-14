@@ -7,7 +7,7 @@ import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
 import { formatRequirementAsTask } from "../utils/assignment";
 import { getPeriodDuration } from "../utils/duration";
-import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
+import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
 import {
   DatabaseOldVolunteerAssignmentStat,
   DatabaseVolunteerAssignmentStat,
