@@ -337,7 +337,7 @@
 
 ### Features
 
-* **assignment:** sort volunteers in AssignmentDetails ([9443c66](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9443c6607e73898ee927753c885b7db75e8b093d))
+* **assignment:** sort volunteers in AssigmentDetails ([9443c66](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9443c6607e73898ee927753c885b7db75e8b093d))
 
 
 ### Bug Fixes
@@ -2059,7 +2059,7 @@ All notable changes to this project will be documented in this file. See [commit
 
 * add unique constrain on timespan. [#1029](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1029) ([341851e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/341851e6a3428ea2bc9ead4ef95ad1c053ddb4b3))
 * orga needs condition builder. ([ff1170c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ff1170c0ddf96356df260d6adfa2a10759895837))
-* **planning:** don't generate assignments when volunteer is alone. [#1027](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1027) ([d638171](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d6381712f3f2c04235f30164f13b342570e0bc8a))
+* **planning:** don't generate assigments when volunteer is alone. [#1027](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1027) ([d638171](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d6381712f3f2c04235f30164f13b342570e0bc8a))
 
 ## [1.12.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v1.12.6...v1.12.7) (2023-04-19)
 
@@ -2338,7 +2338,7 @@ All notable changes to this project will be documented in this file. See [commit
 * **catalog:** insert consumable gears. [#891](https://gitlab.com/24-heures-insa/overbookd-mono/issues/891) ([275ef8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/275ef8eb9d0c8327949cdef51d64b212bedb96f1))
 * create assignment back ([4417d56](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4417d56c13e903728fcaf773ef2d97df89699f4f))
 * Envoyer un mail de bienvenue lors de l'inscription ([2422d05](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2422d05636f5eb6a0e0d6643b476b07c94fbdecb))
-* **front:** add user list component in assignment V1 ([cdc1634](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cdc163466d192638b313e3a20cbc1aae151be152))
+* **front:** add user list component in assigment V1 ([cdc1634](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cdc163466d192638b313e3a20cbc1aae151be152))
 * **gear-request:** allow gear requests deletion on validation phase. [#894](https://gitlab.com/24-heures-insa/overbookd-mono/issues/894) ([d663a61](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d663a619eced8b2a7bd3b3d04df1974aad92951d))
 
 
