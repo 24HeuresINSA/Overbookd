@@ -25,17 +25,17 @@
 </template>
 
 <script lang="ts">
+import { Duration } from "@overbookd/period";
 import Vue from "vue";
 import {
   AUCUNE,
   DisplayableCategory,
   displayableCategories,
 } from "~/utils/assignment/task-category";
-import { Duration } from "~/utils/date/duration";
 import {
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
-} from "~/utils/models/ft-time-span.model";
+} from "~/utils/assignment/task-category";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 
 export default Vue.extend({
@@ -62,7 +62,7 @@ export default Vue.extend({
         });
     },
     displayedTotalDuration(): string {
-      return Duration.fromMilliseconds(
+      return Duration.ms(
         this.sortedStats.reduce((total, { duration }) => total + duration, 0),
       ).toString();
     },
@@ -76,7 +76,7 @@ export default Vue.extend({
       return category?.toLowerCase() ?? "indeterminé";
     },
     getDisplayedDuration(duration: number): string {
-      return Duration.fromMilliseconds(duration).toString();
+      return Duration.ms(duration).toString();
     },
     getDisplayedStat(stat: VolunteerAssignmentStat): string {
       const emoji = this.getStatCategoryEmoji(stat.category);

@@ -80,10 +80,7 @@ import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { VolunteerForPlanning, HasAssignment } from "~/store/planning";
-import {
-  sortVolunteerOnNames,
-  SortFunction,
-} from "~/utils/functions/sort-stats";
+import { sortVolunteerOnNames, SortFunction } from "~/utils/sort/sort-stats";
 import { Header } from "~/utils/models/data-table.model";
 import { Team } from "~/utils/models/team.model";
 import { keepMembersOf } from "~/utils/search/search-team";
@@ -272,3 +269,4 @@ fieldset {
   padding: 5px 0px;
 }
 </style>
+~/utils/sort/sort-stats

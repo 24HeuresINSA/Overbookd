@@ -7,7 +7,10 @@ import {
   PlanningEvent,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
-import { AssignmentStats, DisplayableAssignment } from "@overbookd/http";
+import {
+  VolunteerWithAssignmentStats,
+  DisplayableAssignment,
+} from "@overbookd/http";
 
 export type AssignmentRepository = Assignments & {
   findOne<T extends boolean>(
@@ -15,7 +18,7 @@ export type AssignmentRepository = Assignments & {
     withDetails: T,
   ): Promise<Assignment<{ withDetails: T }>>;
   findAllFor(volunteerId: number): Promise<DisplayableAssignment[]>;
-  getVolunteersAssignmentStats(): Promise<AssignmentStats[]>;
+  getVolunteersAssignmentStats(): Promise<VolunteerWithAssignmentStats[]>;
 };
 
 @Injectable()
@@ -53,7 +56,9 @@ export class AssignmentService {
     return this.assignments.unassign(assignment, assigneeId);
   }
 
-  async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
+  async getVolunteersAssignmentStats(): Promise<
+    VolunteerWithAssignmentStats[]
+  > {
     return this.assignments.getVolunteersAssignmentStats();
   }
 }

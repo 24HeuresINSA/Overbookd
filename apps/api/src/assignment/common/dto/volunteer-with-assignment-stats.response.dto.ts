@@ -1,11 +1,26 @@
-import { AssignmentStats } from "@overbookd/http";
-import {
-  VolunteerAssignmentDto,
-  VolunteerAssignmentStat,
-} from "../../../user/dto/volunteer-assignment-stat.response.dto";
+import { AssignmentStat, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { ApiProperty } from "@nestjs/swagger";
+import { Category } from "@overbookd/festival-event-constants";
 
-export class AssignmentStatsResponseDto implements AssignmentStats {
+class AssignmentStatResponseDto implements AssignmentStat {
+  @ApiProperty({
+    required: true,
+    description: "category",
+    type: String,
+  })
+  category: Category;
+
+  @ApiProperty({
+    required: true,
+    description: "duration",
+    type: Number,
+  })
+  duration: number;
+}
+
+export class VolunteerWithAssignmentStatsResponseDto
+  implements VolunteerWithAssignmentStats
+{
   @ApiProperty({
     required: true,
     description: "volunteer id",
@@ -37,7 +52,7 @@ export class AssignmentStatsResponseDto implements AssignmentStats {
   @ApiProperty({
     required: true,
     description: "volunteer assignments stats",
-    type: VolunteerAssignmentDto,
+    type: AssignmentStatResponseDto,
   })
-  stats: VolunteerAssignmentStat[];
+  stats: AssignmentStat[];
 }

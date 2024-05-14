@@ -13,15 +13,15 @@ export type DisplayableAssignment = AssignmentIdentifier &
     name: string;
   };
 
-export type VolunteerAssignmentStat = {
+export type AssignmentStat = {
   category: Category;
   duration: number;
 };
 
-export type AssignmentStats = {
+export type VolunteerWithAssignmentStats = {
   id: number;
   firstname: string;
   lastname: string;
   charisma: number;
-  stats: VolunteerAssignmentStat[];
+  stats: AssignmentStat[];
 };

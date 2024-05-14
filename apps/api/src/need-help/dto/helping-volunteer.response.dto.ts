@@ -3,7 +3,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 import { HelpingVolunteer, HelpingVolunteerAssignment } from "@overbookd/http";
 
-class HelpingVolunteerAssingmentDto implements HelpingVolunteerAssignment {
+class HelpingVolunteerAssignmentDto implements HelpingVolunteerAssignment {
   @ApiProperty({ type: Number })
   id: number;
 
@@ -50,7 +50,7 @@ export class HelpingVolunteerResponseDto implements HelpingVolunteer {
 
   @ApiProperty({
     description: "Volunteer tasks",
-    type: HelpingVolunteerAssingmentDto,
+    type: HelpingVolunteerAssignmentDto,
     isArray: true,
   })
   assignments: HelpingVolunteerAssignment[];

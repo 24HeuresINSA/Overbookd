@@ -38,7 +38,7 @@ import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
-} from "./dto/volunteer-assignment-stat.response.dto";
+} from "./dto/assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
 import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";

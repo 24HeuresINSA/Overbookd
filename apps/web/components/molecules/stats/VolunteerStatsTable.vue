@@ -39,7 +39,7 @@ import { defineComponent } from "vue";
 import {
   TaskCategoryEmoji,
   TaskCategoryEmojis,
-} from "~/utils/models/ft-time-span.model";
+} from "~/utils/assignment/task-category";
 import {
   BAR,
   FUN,
@@ -48,35 +48,35 @@ import {
   STATIQUE,
 } from "@overbookd/festival-event-constants";
 import { AUCUNE } from "~/utils/assignment/task-category";
-import { VolunteerAssignmentStat, AssignmentStats } from "@overbookd/http";
+import { AssignmentStat, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { UserPersonalData } from "@overbookd/user";
 import {
   getAssignmentStatsSortFunctionFromSortType,
   sumAssignmentDuration,
-} from "~/utils/functions/sort-stats";
+} from "~/utils/sort/sort-stats";
 import { Duration } from "@overbookd/period";
 
-function searchStatic(stat: VolunteerAssignmentStat): boolean {
+function searchStatic(stat: AssignmentStat): boolean {
   return stat.category === STATIQUE;
 }
 
-function searchBar(stat: VolunteerAssignmentStat): boolean {
+function searchBar(stat: AssignmentStat): boolean {
   return stat.category === BAR;
 }
 
-function searchManutention(stat: VolunteerAssignmentStat): boolean {
+function searchManutention(stat: AssignmentStat): boolean {
   return stat.category === MANUTENTION;
 }
 
-function searchFun(stat: VolunteerAssignmentStat): boolean {
+function searchFun(stat: AssignmentStat): boolean {
   return stat.category === FUN;
 }
 
-function searchRelou(stat: VolunteerAssignmentStat): boolean {
+function searchRelou(stat: AssignmentStat): boolean {
   return stat.category === RELOU;
 }
 
-function searchUnknown(stat: VolunteerAssignmentStat): boolean {
+function searchUnknown(stat: AssignmentStat): boolean {
   return stat.category === null;
 }
 
@@ -102,11 +102,12 @@ export default defineComponent({
     ],
   }),
   computed: {
-    displayedVolunteers(): AssignmentStats[] {
-      return this.$accessor.assignment.stats.filter(({ id }) =>
-        this.volunteers.some(
-          ({ id: displayedVolunteerId }) => displayedVolunteerId === id,
-        ),
+    displayedVolunteers(): VolunteerWithAssignmentStats[] {
+      return this.$accessor.user.volunteersWithAssignmentStats.filter(
+        ({ id }) =>
+          this.volunteers.some(
+            ({ id: displayedVolunteerId }) => displayedVolunteerId === id,
+          ),
       );
     },
     staticEmoji(): TaskCategoryEmoji {
@@ -129,39 +130,39 @@ export default defineComponent({
     },
   },
   created() {
-    this.$accessor.assignment.fetchStats();
+    this.$accessor.user.fetchVolunteersWithAssignmentStats();
   },
   methods: {
     retrieveStat(
-      stats: VolunteerAssignmentStat[],
-      searchFunction: (stat: VolunteerAssignmentStat) => boolean,
+      stats: AssignmentStat[],
+      searchFunction: (stat: AssignmentStat) => boolean,
     ): string {
       const stat = stats.find(searchFunction);
       return Duration.ms(stat?.duration ?? 0).toString();
     },
-    retrieveStaticStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveStaticStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchStatic);
     },
-    retrieveBarStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveBarStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchBar);
     },
-    retrieveManutentionStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveManutentionStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchManutention);
     },
-    retrieveFunStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveFunStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchFun);
     },
-    retrieveRelouStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveRelouStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchRelou);
     },
-    retrieveUnknownStat(stats: VolunteerAssignmentStat[]): string {
+    retrieveUnknownStat(stats: AssignmentStat[]): string {
       return this.retrieveStat(stats, searchUnknown);
     },
-    retrieveTotalDuration(stats: VolunteerAssignmentStat[]): string {
+    retrieveTotalDuration(stats: AssignmentStat[]): string {
       return sumAssignmentDuration(stats).toString();
     },
     assignmentStatsSort: function (
-      volunteers: AssignmentStats[],
+      volunteers: VolunteerWithAssignmentStats[],
       sortsBy: string[],
       sortsDesc: boolean[],
     ) {
@@ -180,5 +181,4 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped></style>
+~/utils/sort/sort-stats

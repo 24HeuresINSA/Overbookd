@@ -1,8 +1,4 @@
-import {
-  Consumer,
-  VolunteerAssignmentStat,
-  VolunteerTask,
-} from "~/utils/models/user.model";
+import { Consumer, VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { PlanningEvent } from "@overbookd/assignment";
 import { HttpStringified, PlanningTask } from "@overbookd/http";
 import {
@@ -122,12 +118,6 @@ export class UserRepository {
   ) {
     return context.$axios.delete<HttpStringified<User>>(
       `friends/${userId}/${friendId}`,
-    );
-  }
-
-  static getUserFtRequests(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `${this.basePath}/${userId}/ft-requests`,
     );
   }
 

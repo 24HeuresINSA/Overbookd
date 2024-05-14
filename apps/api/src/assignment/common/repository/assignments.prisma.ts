@@ -15,7 +15,10 @@ import {
   updateAssigneesOnAssignment,
 } from "./assignment.query";
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
-import { AssignmentStats, DisplayableAssignment } from "@overbookd/http";
+import {
+  VolunteerWithAssignmentStats,
+  DisplayableAssignment,
+} from "@overbookd/http";
 import {
   SELECT_PERIOD_AND_CATEGORY,
   hasPermission,
@@ -100,7 +103,9 @@ export class PrismaAssignments implements AssignmentRepository {
     });
   }
 
-  async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
+  async getVolunteersAssignmentStats(): Promise<
+    VolunteerWithAssignmentStats[]
+  > {
     const volunteers = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {

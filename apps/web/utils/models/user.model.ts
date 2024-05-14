@@ -21,6 +21,9 @@ export type Task = {
   status: FestivalTask["status"];
 };
 
+/**
+ * @deprecated Used in the old version of assignment
+ */
 export type VolunteerTask = IProvidePeriod & {
   ft: Task;
   timeSpanId?: number;
@@ -38,20 +41,6 @@ export function castUserWithDate(
     ...user,
     birthdate: new Date(user.birthdate),
   };
-}
-
-export function castUsersWithDate(users: HttpStringified<UserPersonalData[]>) {
-  return users.map(castUserWithDate);
-}
-
-export function castVolunteerTaskWithDate(
-  periods: HttpStringified<VolunteerTask[]>,
-): VolunteerTask[] {
-  return periods.map((task) => ({
-    ...task,
-    start: new Date(task.start),
-    end: new Date(task.end),
-  }));
 }
 
 export function castVolunteerPlanningTasksWithDate(

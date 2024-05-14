@@ -24,7 +24,7 @@ import {
 } from "./assign-volunteers-funnel.test-utils";
 import { CandidateFactory } from "./candidate";
 import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams";
-import { InMemoryAvailabilities } from "./availabilties.inmemory";
+import { InMemoryAvailabilities } from "./availabilities.inmemory";
 import { InMemoryFriends } from "./friends.inmemory";
 import { IActAsFunnel } from "./funnel";
 import { BreakPeriods } from "./planning";

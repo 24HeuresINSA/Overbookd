@@ -1,4 +1,3 @@
-import { VolunteerTask } from "~/utils/models/user.model";
 import { getColorByStatus } from "./status-color";
 import { PlanningEvent } from "@overbookd/assignment";
 import { CalendarEvent } from "~/utils/models/calendar.model";
@@ -10,19 +9,6 @@ export type CalendarPlanningEvent = {
   name: string;
   color?: string;
 };
-
-export function convertTaskToPlanningEvent(
-  { start, end, ft: { id, name, status } }: VolunteerTask,
-  volunteerId: number,
-): CalendarPlanningEvent {
-  return {
-    start,
-    end,
-    name: `[${id}] ${name}`,
-    color: getColorByStatus(status),
-    volunteerId,
-  };
-}
 
 export function convertAssignmentPlanningEventForCalendar(
   { start, end, task }: PlanningEvent,

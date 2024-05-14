@@ -67,10 +67,7 @@ import {
   DisplayableCategory,
   displayableCategories,
 } from "~/utils/assignment/task-category";
-import {
-  TaskPriorities,
-  TaskPriority,
-} from "~/utils/models/ft-time-span.model";
+import { TaskPriorities, TaskPriority } from "~/utils/assignment/task-priority";
 import { Team } from "~/utils/models/team.model";
 
 type TaskFiltersData = {

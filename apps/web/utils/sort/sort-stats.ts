@@ -6,12 +6,12 @@ import {
   RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
-import { AssignmentStats, VolunteerAssignmentStat } from "@overbookd/http";
+import { VolunteerWithAssignmentStats, AssignmentStat } from "@overbookd/http";
 import { Duration } from "@overbookd/period";
 import { AUCUNE } from "../assignment/task-category";
 import { UserName } from "@overbookd/user";
 
-export function sumAssignmentDuration(stats: VolunteerAssignmentStat[]) {
+export function sumAssignmentDuration(stats: AssignmentStat[]) {
   return Duration.ms(
     stats.reduce((total, { duration }) => total + duration, 0),
   );
@@ -42,7 +42,7 @@ export function sortVolunteerOnCharisma(
 export function sortVolunteerOnTaskCategoryAssignmentDuration(
   desc: boolean,
   category?: Category,
-): SortFunction<AssignmentStats> {
+): SortFunction<VolunteerWithAssignmentStats> {
   const order = desc ? -1 : 1;
   if (!category) {
     return (a, b) => {
@@ -64,7 +64,7 @@ export function sortVolunteerOnTaskCategoryAssignmentDuration(
 
 export function sortVolunteerOnTotalAssignmentDuration(
   desc: boolean,
-): SortFunction<AssignmentStats> {
+): SortFunction<VolunteerWithAssignmentStats> {
   const order = desc ? -1 : 1;
   return (a, b) => {
     const aTotalAssignmentDuration = sumAssignmentDuration(
@@ -80,7 +80,7 @@ export function sortVolunteerOnTotalAssignmentDuration(
 export function getAssignmentStatsSortFunctionFromSortType(
   sortBy: string,
   sortDesc: boolean,
-): SortFunction<AssignmentStats> {
+): SortFunction<VolunteerWithAssignmentStats> {
   switch (sortBy) {
     case "volunteer":
       return sortVolunteerOnNames(sortDesc);

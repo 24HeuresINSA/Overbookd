@@ -5,10 +5,8 @@ import {
   MyUserInformationWithProfilePicture,
   UserPersonalDataWithProfilePicture,
   VolunteerAssignmentStat,
-  VolunteerTask,
   castUserWithDate,
   castVolunteerPlanningTasksWithDate,
-  castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import {
   MyUserInformation,
@@ -20,13 +18,14 @@ import {
 import { Permission } from "@overbookd/permission";
 import { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
 import { Consumer } from "~/utils/models/user.model";
-import { PlanningTask } from "@overbookd/http";
+import { PlanningTask, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningEvent } from "@overbookd/assignment";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { Period } from "@overbookd/period";
 import { castPeriodWithDate } from "~/utils/http/period";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -37,13 +36,13 @@ type State = {
   users: UserDataWithPotentialyProfilePicture[];
   selectedUser: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
-  selectedUserFtRequests: VolunteerTask[];
   selectedUserAssignments: PlanningEvent[];
   selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
   selectedUserAssignmentStats: VolunteerAssignmentStat[];
   personalAccountConsumers: Consumer[];
   volunteers: UserDataWithPotentialyProfilePicture[];
+  volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
   friends: User[];
   mFriends: User[];
@@ -54,13 +53,13 @@ export const state = (): State => ({
   users: [],
   selectedUser: {} as UserDataWithPotentialyProfilePicture,
   selectedUserFriends: [],
-  selectedUserFtRequests: [],
   selectedUserAssignments: [],
   selectedUserBreakPeriods: [],
   selectedUserTasks: [],
   selectedUserAssignmentStats: [],
   personalAccountConsumers: [],
   volunteers: [],
+  volunteersWithAssignmentStats: [],
   adherents: [],
   friends: [],
   mFriends: [],
@@ -87,9 +86,6 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;
-  },
-  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: VolunteerTask[]) {
-    state.selectedUserFtRequests = periods;
   },
   SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: PlanningEvent[]) {
     state.selectedUserAssignments = assignments;
@@ -161,6 +157,12 @@ export const mutations = mutationTree(state, {
   SET_ADHERENTS(state: UserState, adherents: User[]) {
     state.adherents = adherents;
   },
+  SET_VOLUNTEERS_WITH_STATS(
+    state: UserState,
+    volunteers: VolunteerWithAssignmentStats[],
+  ) {
+    state.volunteersWithAssignmentStats = volunteers;
+  },
 });
 
 export const getters = getterTree(state, {
@@ -222,6 +224,14 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepository.getAdherents(this));
       if (!res) return;
       commit("SET_ADHERENTS", res.data);
+    },
+    async fetchVolunteersWithAssignmentStats({ commit }) {
+      const res = await safeCall(
+        this,
+        AssignmentsRepository.fetchVolunteersWithAssignmentStats(this),
+      );
+      if (!res) return;
+      commit("SET_VOLUNTEERS_WITH_STATS", res.data);
     },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, UserRepository.getFriends(this));
@@ -397,17 +407,6 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepository.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
-    },
-
-    async getUserFtRequests({ commit }, userId: number) {
-      const res = await safeCall(
-        this,
-        UserRepository.getUserFtRequests(this, userId),
-      );
-
-      if (!res) return;
-      const periods = castVolunteerTaskWithDate(res.data);
-      commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
 
     async addProfilePicture({ commit }, profilePicture: FormData) {

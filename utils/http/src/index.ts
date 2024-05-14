@@ -64,8 +64,8 @@ export type {
 export type {
   AssignmentSummaryWithTask,
   DisplayableAssignment,
-  AssignmentStats,
-  VolunteerAssignmentStat,
+  VolunteerWithAssignmentStats,
+  AssignmentStat,
 } from "./assignment";
 export type { During as DuringBreakPeriods } from "./planning/break-periods";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer";

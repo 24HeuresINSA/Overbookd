@@ -21,9 +21,8 @@
 import { defineComponent } from "vue";
 import TaskFilters from "~/components/molecules/assignment/filter/TaskFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
-import { TaskPriority } from "~/utils/models/ft-time-span.model";
+import { TaskPriority, TaskPriorities } from "~/utils/assignment/task-priority";
 import { Team } from "~/utils/models/team.model";
-import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import { MissingAssignmentTask } from "@overbookd/assignment";
