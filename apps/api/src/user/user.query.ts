@@ -19,15 +19,7 @@ const SELECT_USER = {
 };
 
 export const SELECT_USER_TEAMS = {
-  teams: {
-    select: {
-      team: {
-        select: {
-          code: true,
-        },
-      },
-    },
-  },
+  teams: { select: { team: { select: { code: true } } } },
 };
 
 export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
@@ -36,11 +28,7 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
       team: {
         select: {
           code: true,
-          permissions: {
-            select: {
-              permissionName: true,
-            },
-          },
+          permissions: { select: { permissionName: true } },
         },
       },
     },
@@ -48,11 +36,7 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
 };
 
 const SELECT_USER_TASKS_COUNT = {
-  _count: {
-    select: {
-      assigned: true,
-    },
-  },
+  _count: { select: { assigned: true } },
 };
 
 export const SELECT_MY_USER_INFORMATION = {
@@ -75,11 +59,7 @@ export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
 export const SELECT_PERIOD_AND_CATEGORY = {
   start: true,
   end: true,
-  festivalTask: {
-    select: {
-      category: true,
-    },
-  },
+  festivalTask: { select: { category: true } },
 };
 
 export function hasPermission(permission: Permission) {
@@ -87,9 +67,7 @@ export function hasPermission(permission: Permission) {
     teams: {
       some: {
         team: {
-          permissions: {
-            some: { permission: { name: permission } },
-          },
+          permissions: { some: { permission: { name: permission } } },
         },
       },
     },
