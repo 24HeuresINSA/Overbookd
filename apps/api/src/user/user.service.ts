@@ -5,7 +5,6 @@ import {
 } from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { formatRequirementAsTask } from "../utils/assignment";
 import { getPeriodDuration } from "../utils/duration";
 import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
 import {
@@ -26,12 +25,9 @@ import {
   DatabaseTeamCode,
   DatabaseUserPersonalData,
   UserPasswordOnly,
-  VolunteerTask,
 } from "./user.model";
 import {
-  ACTIVE_NOT_ASSIGNED_FT_CONDITION,
   SELECT_BASE_USER,
-  SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
@@ -147,16 +143,6 @@ export class UserService {
       select: { ...SELECT_USER_PERSONAL_DATA, balance: true },
     });
     return users.map(UserService.formatToConsumer);
-  }
-
-  async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
-    const ftTimeWindows = ACTIVE_NOT_ASSIGNED_FT_CONDITION;
-    const userRequests = await this.prisma.ftUserRequest.findMany({
-      where: { userId, ftTimeWindows },
-      select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
-    });
-
-    return userRequests.map(formatRequirementAsTask);
   }
 
   async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
