@@ -35,7 +35,7 @@ import {
 import {
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
-} from "~/utils/models/ft-time-span.model";
+} from "~/utils/assignment/task-category";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 
 export default Vue.extend({

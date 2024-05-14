@@ -33,7 +33,7 @@ import TaskAssignmentList from "~/components/molecules/assignment/list/TaskAssig
 import {
   TaskPriorities,
   TaskPriority,
-} from "~/utils/models/ft-time-span.model";
+} from "~/utils/assignment/task-priority";
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { Searchable } from "~/utils/search/search.utils";

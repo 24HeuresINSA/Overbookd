@@ -39,7 +39,7 @@ import { defineComponent } from "vue";
 import {
   TaskCategoryEmoji,
   TaskCategoryEmojis,
-} from "~/utils/models/ft-time-span.model";
+} from "~/utils/assignment/task-category";
 import {
   BAR,
   FUN,

@@ -5,10 +5,8 @@ import {
   MyUserInformationWithProfilePicture,
   UserPersonalDataWithProfilePicture,
   VolunteerAssignmentStat,
-  VolunteerTask,
   castUserWithDate,
   castVolunteerPlanningTasksWithDate,
-  castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import {
   MyUserInformation,
@@ -38,7 +36,6 @@ type State = {
   users: UserDataWithPotentialyProfilePicture[];
   selectedUser: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
-  selectedUserFtRequests: VolunteerTask[];
   selectedUserAssignments: PlanningEvent[];
   selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
@@ -56,7 +53,6 @@ export const state = (): State => ({
   users: [],
   selectedUser: {} as UserDataWithPotentialyProfilePicture,
   selectedUserFriends: [],
-  selectedUserFtRequests: [],
   selectedUserAssignments: [],
   selectedUserBreakPeriods: [],
   selectedUserTasks: [],
@@ -90,9 +86,6 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;
-  },
-  SET_SELECTED_USER_FT_REQUESTS(state: UserState, periods: VolunteerTask[]) {
-    state.selectedUserFtRequests = periods;
   },
   SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: PlanningEvent[]) {
     state.selectedUserAssignments = assignments;
@@ -414,17 +407,6 @@ export const actions = actionTree(
       const res = await safeCall(this, UserRepository.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
-    },
-
-    async getUserFtRequests({ commit }, userId: number) {
-      const res = await safeCall(
-        this,
-        UserRepository.getUserFtRequests(this, userId),
-      );
-
-      if (!res) return;
-      const periods = castVolunteerTaskWithDate(res.data);
-      commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
 
     async addProfilePicture({ commit }, profilePicture: FormData) {

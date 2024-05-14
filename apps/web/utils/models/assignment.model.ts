@@ -1,5 +1,8 @@
 import { User } from "@overbookd/user";
 
+/**
+ * @deprecated Used in the old version of assignment
+ */
 export type Volunteer = User & {
   charisma: number;
   comment?: string;
@@ -8,12 +11,6 @@ export type Volunteer = User & {
   friendAvailable?: boolean;
   isRequestedOnSamePeriod?: boolean;
   hasFriendAssigned?: boolean;
-};
-
-export type UpdateAssignedTeam = {
-  timeSpanId: number;
-  assigneeId: number;
-  team: string;
 };
 
 export const Sort = {
