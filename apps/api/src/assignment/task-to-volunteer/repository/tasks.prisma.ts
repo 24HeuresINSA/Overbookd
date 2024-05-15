@@ -16,7 +16,10 @@ export class PrismaTasks implements Tasks {
 
   async findAll(): Promise<Task[]> {
     const tasks = await this.prisma.festivalTask.findMany({
-      where: IS_READY_AND_EXISTS,
+      where: {
+        ...IS_READY_AND_EXISTS,
+        ...this.willHappenInFutureCondition(),
+      },
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
     return tasks.map(toTask);
@@ -29,6 +32,10 @@ export class PrismaTasks implements Tasks {
     });
     if (!task) throw new TaskNotFoundError(id);
     return toTask(task);
+  }
+
+  private willHappenInFutureCondition() {
+    return { assignments: { some: { end: { gt: new Date() } } } };
   }
 }
 
