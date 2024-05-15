@@ -5,13 +5,8 @@ import {
 } from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { formatRequirementAsTask } from "../utils/assignment";
-import { getPeriodDuration } from "../utils/duration";
 import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
-import {
-  DatabaseOldVolunteerAssignmentStat,
-  DatabaseVolunteerAssignmentStat,
-} from "./volunteer-assignment.model";
+import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
@@ -26,12 +21,9 @@ import {
   DatabaseTeamCode,
   DatabaseUserPersonalData,
   UserPasswordOnly,
-  VolunteerTask,
 } from "./user.model";
 import {
-  ACTIVE_NOT_ASSIGNED_FT_CONDITION,
   SELECT_BASE_USER,
-  SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
@@ -149,16 +141,6 @@ export class UserService {
     return users.map(UserService.formatToConsumer);
   }
 
-  async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
-    const ftTimeWindows = ACTIVE_NOT_ASSIGNED_FT_CONDITION;
-    const userRequests = await this.prisma.ftUserRequest.findMany({
-      where: { userId, ftTimeWindows },
-      select: SELECT_FT_USER_REQUESTS_BY_USER_ID,
-    });
-
-    return userRequests.map(formatRequirementAsTask);
-  }
-
   async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
     const assignments = await this.prisma.assignment.findMany({
       where: {
@@ -247,20 +229,6 @@ export class UserService {
     return [...stats.values()];
   }
 
-  static formatOldAssignmentStats(
-    assignments: DatabaseOldVolunteerAssignmentStat[],
-  ) {
-    const stats = assignments.reduce((stats, { timeSpan }) => {
-      const category = timeSpan.timeWindow.ft.category;
-      const durationToAdd = getPeriodDuration(timeSpan);
-      const previousDuration = stats.get(category)?.duration ?? 0;
-      const duration = previousDuration + durationToAdd;
-      stats.set(category, { category, duration });
-      return stats;
-    }, new Map<Category, VolunteerAssignmentStat>());
-    return [...stats.values()];
-  }
-
   static formatToPersonalData(
     user: DatabaseUserPersonalData,
   ): UserPersonalData {
@@ -289,7 +257,7 @@ export class UserService {
       ...userWithoutCount,
       teams,
       permissions: [...permissions],
-      tasksCount: _count.assignments,
+      tasksCount: _count.assigned,
     };
   }
 

@@ -1,4 +1,3 @@
-import { ftStatuses } from "../ft/ft.model";
 import { Permission } from "@overbookd/permission";
 
 export const SELECT_BASE_USER = {
@@ -20,15 +19,7 @@ const SELECT_USER = {
 };
 
 export const SELECT_USER_TEAMS = {
-  teams: {
-    select: {
-      team: {
-        select: {
-          code: true,
-        },
-      },
-    },
-  },
+  teams: { select: { team: { select: { code: true } } } },
 };
 
 export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
@@ -37,11 +28,7 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
       team: {
         select: {
           code: true,
-          permissions: {
-            select: {
-              permissionName: true,
-            },
-          },
+          permissions: { select: { permissionName: true } },
         },
       },
     },
@@ -49,11 +36,7 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
 };
 
 const SELECT_USER_TASKS_COUNT = {
-  _count: {
-    select: {
-      assignments: true,
-    },
-  },
+  _count: { select: { assigned: true } },
 };
 
 export const SELECT_MY_USER_INFORMATION = {
@@ -73,58 +56,10 @@ export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
   note: true,
 };
 
-export const SELECT_USERNAME_WITH_ID = {
-  id: true,
-  firstname: true,
-  lastname: true,
-};
-
-export const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
-  ftTimeWindows: {
-    select: {
-      start: true,
-      end: true,
-      ft: {
-        select: {
-          id: true,
-          name: true,
-          status: true,
-        },
-      },
-    },
-  },
-};
-
-export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
-  ft: { isDeleted: false, NOT: { status: ftStatuses.READY } },
-};
-
-export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
-  timeSpan: {
-    select: {
-      start: true,
-      end: true,
-      timeWindow: {
-        select: {
-          ft: {
-            select: {
-              category: true,
-            },
-          },
-        },
-      },
-    },
-  },
-};
-
 export const SELECT_PERIOD_AND_CATEGORY = {
   start: true,
   end: true,
-  festivalTask: {
-    select: {
-      category: true,
-    },
-  },
+  festivalTask: { select: { category: true } },
 };
 
 export function hasPermission(permission: Permission) {
@@ -132,9 +67,7 @@ export function hasPermission(permission: Permission) {
     teams: {
       some: {
         team: {
-          permissions: {
-            some: { permission: { name: permission } },
-          },
+          permissions: { some: { permission: { name: permission } } },
         },
       },
     },

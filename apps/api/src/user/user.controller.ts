@@ -35,10 +35,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import {
-  VolunteerAssignmentDto,
-  VolunteerAssignmentStatResponseDto,
-} from "./dto/assignment-stat.response.dto";
+import { VolunteerAssignmentStatResponseDto } from "./dto/assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
 import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
@@ -197,22 +194,6 @@ export class UserController {
     @RequestDecorator() { user }: RequestWithUserPayload,
   ): Promise<UserPersonalData> {
     return this.userService.getById(id, new JwtUtil(user));
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
-  @Get(":id/ft-requests")
-  @ApiResponse({
-    status: 200,
-    description: "Get tasks a volunteer is required on",
-    isArray: true,
-    type: VolunteerAssignmentDto,
-  })
-  async getFtUserRequestsByUserId(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<VolunteerAssignmentDto[]> {
-    return this.userService.getFtUserRequestsByUserId(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

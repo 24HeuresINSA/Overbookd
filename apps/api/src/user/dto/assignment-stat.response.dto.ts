@@ -1,23 +1,8 @@
-import { TaskCategory } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
-import { VolunteerTask } from "../user.model";
-import { FtStatus, ftStatuses } from "../../ft/ft.model";
-
-class FtRepresentation {
-  id: number;
-  name: string;
-  @ApiProperty({ type: String, enum: ftStatuses })
-  status: FtStatus;
-}
-
-export class VolunteerAssignmentDto implements VolunteerTask {
-  ft: FtRepresentation;
-  start: Date;
-  end: Date;
-}
+import { Category } from "@overbookd/festival-event-constants";
 
 export type VolunteerAssignmentStat = {
-  category: TaskCategory;
+  category: Category;
   duration: number;
 };
 
@@ -29,7 +14,7 @@ export class VolunteerAssignmentStatResponseDto
     description: "The task category of the stats",
     type: String,
   })
-  category: TaskCategory;
+  category: Category;
 
   @ApiProperty({
     required: true,

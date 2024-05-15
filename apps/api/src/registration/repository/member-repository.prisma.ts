@@ -17,7 +17,7 @@ export class PrismaMemberRepository implements MemberRepository {
     const exist = await this.prisma.user.findFirst({
       where: {
         email,
-        assignments: { some: { timeSpan: { end: { gt: new Date() } } } },
+        assigned: { some: { assignment: { end: { gt: new Date() } } } },
       },
     });
     return exist ? true : false;
