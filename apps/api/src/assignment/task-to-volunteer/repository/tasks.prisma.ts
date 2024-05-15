@@ -18,7 +18,7 @@ export class PrismaTasks implements Tasks {
     const tasks = await this.prisma.festivalTask.findMany({
       where: {
         ...IS_READY_AND_EXISTS,
-        ...this.buildHasAtLeatOneFuturePeriodCondition(),
+        ...this.willHappenInFutureCondition(),
       },
       select: SELECT_TASK_WITH_ASSIGNMENTS,
     });
@@ -34,7 +34,7 @@ export class PrismaTasks implements Tasks {
     return toTask(task);
   }
 
-  private buildHasAtLeatOneFuturePeriodCondition() {
+  private willHappenInFutureCondition() {
     return { assignments: { some: { end: { gt: new Date() } } } };
   }
 }
