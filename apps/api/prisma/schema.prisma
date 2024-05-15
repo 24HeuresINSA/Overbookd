@@ -174,7 +174,7 @@ model SignaLocation {
   name               String             @db.VarChar(255)
   geoLocation        Json?              @map("geo_location")
   festivalActivities FestivalActivity[]
-  FestivalTasks      FestivalTask[]
+  festivalTasks      FestivalTask[]
 
   @@map("signa_location")
 }
