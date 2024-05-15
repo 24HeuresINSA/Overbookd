@@ -1,3 +1,12 @@
+## [2.36.13](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.12...v2.36.13) (2024-05-15)
+
+
+### Bug Fixes
+
+* **api:** clean old assignment and ft [#1916](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1916) ([c04e479](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c04e4798c7477e3e9964f8f283d422c0b671e800))
+* **assignment:** do not display finished period [#1914](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1914) ([2574421](https://gitlab.com/24-heures-insa/overbookd-mono/commit/257442161f814f50faa829d3579dbe1970f53c62))
+* **web:** clean unused functions and variables [#1915](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1915) ([c670884](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c67088454b40d462dba577529a536c995916bbb1))
+
 ## [2.36.12](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.11...v2.36.12) (2024-05-09)
 
 
