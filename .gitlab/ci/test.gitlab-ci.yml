@@ -29,7 +29,7 @@ overbookd/api_unit_test:
 
 overbookd/api_e2e_test:
   services:
-    - name: postgres:15
+    - name: postgres:16
       alias: integration-tests-prisma
   variables:
     POSTGRES_USER: prisma
