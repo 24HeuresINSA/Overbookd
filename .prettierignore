@@ -2,6 +2,10 @@
 logs
 *.log
 
+# Ignore artifacts:
+build
+coverage
+
 # Runtime data
 pids
 *.pid
@@ -48,6 +52,8 @@ npm-debug.log
 *.old
 
 dist
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 .triage-policies.yml
 /backend/dist/

@@ -174,10 +174,10 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ob-dev-web-new.entrypoints=websecure"
-      - "traefik.http.services.ob-dev-web-new.loadbalancer.server.port=3000"
-      - "traefik.http.routers.ob-dev-web-new.rule=Host(`overbookd-next.${DOMAIN}`)"
-      - "traefik.http.routers.ob-dev-web-new.tls=true"
+      - "traefik.http.routers.ob-dev-new-web.entrypoints=websecure"
+      - "traefik.http.services.ob-dev-new-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.ob-dev-new-web.rule=Host(`overbookd-new.${DOMAIN}`)"
+      - "traefik.http.routers.ob-dev-new-web.tls=true"
     command:
       - /bin/sh
       - -c
