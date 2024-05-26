@@ -23,7 +23,7 @@ async function bootstrap() {
       const isSameOrigin = !origin || origin.includes(process.env.DOMAIN);
       const isNextOrigin =
         !origin ||
-        (origin.includes("overbookd-next.traefik.me") &&
+        (origin.includes("overbookd-new.traefik.me") &&
           process.env.DOMAIN == "overbookd.traefik.me");
 
       if (isSameOrigin || isNextOrigin) {
