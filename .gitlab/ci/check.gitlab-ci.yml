@@ -27,9 +27,6 @@ gemnasium-python-dependency_scanning:
   variables:
     DS_MAX_DEPTH: 5
 
-nodejs-scan-sast:
-  <<: *security
-
 semgrep-sast:
   <<: *security
 
