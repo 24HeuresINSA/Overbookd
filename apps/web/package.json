@@ -16,7 +16,7 @@
     "directory": "apps/web"
   },
   "scripts": {
-    "build": "nuxi build",
+    "build": "nuxi prepare && nuxi build",
     "build:ci": "CI=1 pnpm run build",
     "dev": "nuxi dev",
     "dev:host": "nuxi --hostname '0'",
