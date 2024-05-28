@@ -1,4 +1,4 @@
-import type { HttpStringified } from "./http-stringified";
+import type { HttpStringified } from "@overbookd/http";
 
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
