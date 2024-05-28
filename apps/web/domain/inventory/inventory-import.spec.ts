@@ -52,11 +52,7 @@ const scieCirculaireInLocal: InventoryImportRaw = {
 };
 
 describe("Inventory import", () => {
-  const gearRepository = new InMemoryGears([
-    marteau,
-    perceuse,
-    scieCirculaire,
-  ]);
+  const gearRepository = new InMemoryGears([marteau, perceuse, scieCirculaire]);
   describe("When importing file with only valid raws", () => {
     const importContainer = new FakeInventoryImportContainer(
       [
