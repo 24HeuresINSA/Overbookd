@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"],
+      "@overbookd/alerts": ["../../utils/alerts/src"],
+      "@overbookd/assignment": ["../../domains/assignment/src"],
+      "@overbookd/configuration": ["../../domains/configuration/src"],
+      "@overbookd/contribution": ["../../domains/contribution/src"],
+      "@overbookd/domain-events": ["../../utils/domain-events/src"],
+      "@overbookd/festival-event": ["../../domains/festival-event/src"],
+      "@overbookd/festival-event-constants": [
+        "../../constants/festival-event-constants/src"
+      ],
+      "@overbookd/geo-location": ["../../libraries/geo-location/src"],
+      "@overbookd/http": ["../../utils/http/src"],
+      "@overbookd/list": ["../../libraries/list/src"],
+      "@overbookd/logistic": ["../../domains/logistic/src"],
+      "@overbookd/money": ["../../libraries/money/src"],
+      "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/permission": ["../../constants/permission/src"],
+      "@overbookd/personal-account": ["../../domains/personal-account/src"],
+      "@overbookd/planning": ["../../domains/planning/src"],
+      "@overbookd/registration": ["../../domains/registration/src"],
+      "@overbookd/signa": ["../../domains/signa/src"],
+      "@overbookd/slugify": ["../../libraries/slugify/src"],
+      "@overbookd/team": ["../../constants/team/src"],
+      "@overbookd/user": ["../../domains/user/src"],
+      "@overbookd/volunteer-availability": [
+        "../../domains/volunteer-availability/src"
+      ]
+    },
+    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node", "nuxt-leaflet"]
+  },
+  "exclude": ["**/node_modules", ".nuxt", "**/dist"]
+}

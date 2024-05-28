@@ -1,95 +1,97 @@
 <template>
-  <v-img :src="randomURL" class="background" cover />
-  <div class="opacity-filter" />
-  <v-form>
-    <v-container class="form-container">
-      <v-row class="logo">
-        <v-img src="/img/logo/logo_home_white.png" alt="overbookd" />
-      </v-row>
-      <v-row class="version justify-center">
-        <h2>{{ version }}</h2>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.email"
-          label="Email"
-          name="email"
-          autocomplete="email"
-          inputmode="email"
-          type="text"
-          bg-color="white"
-          required
-          autofocus
-          outlined
-          solo
-          @keydown.enter="login"
-        />
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.password"
-          label="Mot de passe"
-          type="password"
-          bg-color="white"
-          required
-          outlined
-          clearable
-          solo
-          @keydown.enter="login"
-        />
-      </v-row>
-      <v-row class="ctas">
-        <v-btn
-          color="primary"
-          elevation="2"
-          rounded="xl"
-          class="btn btn-primary"
-          @click="login"
-        >
-          connexion
-        </v-btn>
-        <v-btn
-          color="secondary"
-          elevation="2"
-          to="/register"
-          rounded="xl"
-          class="btn btn-secondary"
-        >
-          s'inscrire
-        </v-btn>
-      </v-row>
-      <v-row class="ctas">
-        <v-btn class="btn btn-tertiary" to="/forgot">
-          Mot de passe oublié ?
-        </v-btn>
-        <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
-          Un problème
-          <span class="desktop">&nbsp;lors de l'inscription </span>?
-        </v-btn>
-      </v-row>
-    </v-container>
-  </v-form>
+  <div>
+    <v-img :src="randomURL" class="img-background"></v-img>
+    <div class="opacity-filter"></div>
+    <v-form>
+      <v-container class="form-container">
+        <v-row class="logo">
+          <v-img src="img/logo/logo_home_white.png" alt="overbookd" />
+        </v-row>
+        <v-row class="version justify-center">
+          <h2>{{ version }}</h2>
+        </v-row>
+        <v-row>
+          <v-text-field
+            v-model="credentials.email"
+            label="email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            type="text"
+            required
+            autofocus
+            outlined
+            solo
+            @keydown.enter="login()"
+          ></v-text-field>
+        </v-row>
+        <v-row>
+          <v-text-field
+            v-model="credentials.password"
+            label="mot de passe"
+            type="password"
+            required
+            outlined
+            clearable
+            solo
+            @keydown.enter="login()"
+          ></v-text-field>
+        </v-row>
+        <v-row class="ctas">
+          <v-btn
+            color="primary"
+            elevation="2"
+            class="login-btn btn btn-primary"
+            @click="login"
+          >
+            connexion
+          </v-btn>
+          <v-btn
+            color="secondary"
+            elevation="2"
+            class="btn btn-secondary"
+            to="/register"
+          >
+            s'inscrire
+          </v-btn>
+        </v-row>
+        <v-row class="ctas">
+          <v-btn class="btn btn-tertiary" to="/forgot">
+            Mot de passe oublié ?
+          </v-btn>
+          <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
+            Un problème
+            <span class="desktop">&nbsp;lors de l'inscription </span>?
+          </v-btn>
+        </v-row>
+      </v-container>
+    </v-form>
 
-  <v-dialog v-model="isDialogOpen" max-width="800">
-    <v-card>
-      <v-card-title>Demander de l'aide</v-card-title>
-      <v-card-text>
-        Si vous avez rencontré un problème lors de l'inscription vous pouvez
-        nous envoyer un mail à l'adresse humains@24heures.org
-        <br />
-        Nous nous en occuperons au plus vite.
-      </v-card-text>
-      <v-card-actions>
-        <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <v-dialog v-model="isDialogOpen" max-width="800">
+      <v-card>
+        <v-card-title>Demander de l'aide</v-card-title>
+        <v-card-text>
+          <h4>
+            Si vous avez rencontré un problème lors de l'inscription vous pouvez
+            nous envoyer un mail à l'adresse humains@24heures.org
+            <br />
+            Nous nous en occuperons au plus vite.
+          </h4>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <SnackNotificationContainer></SnackNotificationContainer>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { storeToRefs } from "pinia"; // import storeToRefs helper hook from pinia
-import { useAuthStore } from "~/stores/auth"; // import the auth store we just created
+<script lang="ts">
+import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
+const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
@@ -143,35 +145,92 @@ const BACKGROUNDS_URL = [
 
 const version = process.env.OVERBOOKD_VERSION;
 
-const authStore = useAuthStore();
-const { authenticated } = storeToRefs(authStore);
+export default Vue.extend({
+  name: "Login",
+  auth: false,
+  components: { SnackNotificationContainer },
+  layout: "none",
 
-const randomURL =
-  BACKGROUNDS_URL[Math.floor(Math.random() * BACKGROUNDS_URL.length)];
+  data: () => ({
+    credentials: {
+      email: "",
+      password: "",
+    },
+    feedbackMessage: undefined,
+    timeout: 5000,
+    version,
+    randomURL: "",
+    isDialogOpen: false,
+  }),
 
-const credentials = ref({
-  email: "",
-  password: "",
+  async beforeCreate() {
+    if (this.$auth.loggedIn) {
+      await this.$router.push({
+        path: REDIRECT_URL,
+      }); // redirect to homepage
+    }
+  },
+
+  async mounted() {
+    this.randomURL = this.getRandomBackgroundURL();
+    if (this.$auth.loggedIn) {
+      await this.$router.push({
+        path: REDIRECT_URL,
+      }); // redirect to homepage
+    }
+  },
+
+  methods: {
+    async login() {
+      try {
+        if (this.credentials.email && this.credentials.password) {
+          await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
+          await this.$router.push({
+            path: REDIRECT_URL,
+          }); // redirect to homepage
+          const audio = new Audio("audio/jaune.m4a");
+          await audio.play();
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- can't cast with instanceof
+      } catch (e: any) {
+        if (e.response.status === 429) {
+          return this.$store.dispatch("notif/pushNotification", {
+            type: "error",
+            message:
+              "Tu as essayé de te connecter trop de fois ... 👨‍💻 Attends 30 secs",
+          });
+        }
+        if (e.response.status === 423) {
+          return this.$store.dispatch("notif/pushNotification", {
+            type: "error",
+            message:
+              "Ton compte est bloqué pour le moment... 🤷‍♂️ Envoie un mail à overbookd@24heures.org",
+          });
+        }
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Ton email ou ton mot de passe est incorrect 😞",
+        });
+      }
+    },
+
+    getRandomBackgroundURL() {
+      return BACKGROUNDS_URL[
+        Math.floor(Math.random() * BACKGROUNDS_URL.length)
+      ];
+    },
+  },
 });
-
-const isDialogOpen = ref(false);
-
-const router = useRouter();
-
-const login = async () => {
-  await authStore.login(credentials.value);
-  if (authenticated) router.push("/");
-};
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .logo {
   width: 20em;
   height: 20em;
   align-self: center;
 }
 
-.background {
+.img-background {
   position: absolute;
   left: 0;
   top: 0;
@@ -210,10 +269,11 @@ const login = async () => {
   flex-direction: column;
   align-self: center;
   justify-self: center;
-  margin-top: 5%;
+  margin-top: 10%;
   width: 75%;
   max-width: 600px;
 }
+
 .ctas {
   display: flex;
   align-items: center;
@@ -238,9 +298,6 @@ const login = async () => {
 }
 
 @media only screen and (max-width: 740px) {
-  .form-container {
-    margin-top: 15%;
-  }
   .sub-form {
     flex-direction: column;
 
