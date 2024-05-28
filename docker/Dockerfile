@@ -1,4 +1,4 @@
-FROM node:20.13.1-alpine
+FROM node:22.2.0-alpine
 
 COPY ./aliases /etc/profile.d/aliases.sh
 
