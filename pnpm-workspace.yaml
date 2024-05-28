@@ -3,5 +3,6 @@ packages:
   - domains/**
   - libraries/**
   - apps/**
+  - '!apps/old-web/**'
   - utils/**
   - '!**/dist/**'
