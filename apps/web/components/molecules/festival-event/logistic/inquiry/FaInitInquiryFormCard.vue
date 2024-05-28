@@ -43,14 +43,13 @@
 import { defineComponent } from "vue";
 import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import InquiryFormFields from "./InquiryFormFields.vue";
-import { InitInquiryRequest } from "@overbookd/http";
+import { CatalogGear, InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
-import { Gear } from "~/utils/models/catalog.model";
 
 type FaInitInquiryCardData = InputRulesData &
   IProvidePeriod & {
-    gear: Gear | null;
+    gear: CatalogGear | null;
     quantity: number;
   };
 
@@ -115,7 +114,7 @@ export default defineComponent({
     updateEnd(end: Date) {
       this.end = end;
     },
-    updateGear(gear: Gear) {
+    updateGear(gear: CatalogGear) {
       this.gear = gear;
     },
     updateQuantity(quantity: number) {

@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts">
+import { CatalogGear } from "@overbookd/http";
 import { defineComponent } from "vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
-import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default defineComponent({
@@ -30,7 +30,7 @@ export default defineComponent({
   components: { SearchGear },
   props: {
     gear: {
-      type: Object as () => Gear | null,
+      type: Object as () => CatalogGear | null,
       default: () => null,
     },
     quantity: {
@@ -59,7 +59,7 @@ export default defineComponent({
     },
   },
   methods: {
-    updateGear(gear: Gear) {
+    updateGear(gear: CatalogGear) {
       this.$emit("update:gear", gear);
     },
     updateQuantity(quantity: number) {

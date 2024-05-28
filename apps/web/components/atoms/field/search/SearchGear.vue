@@ -36,11 +36,10 @@
 <script lang="ts">
 import { SlugifyService } from "@overbookd/slugify";
 import Vue from "vue";
-import { GearSearchOptions } from "@overbookd/http";
-import { Gear } from "~/utils/models/catalog.model";
+import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 
 type SearchGearData = {
-  gear?: Gear;
+  gear?: CatalogGear;
   loading: boolean;
 };
 
@@ -114,10 +113,10 @@ export default Vue.extend({
       await this.$accessor.catalogGear.fetchGears(searchOptions);
       this.loading = false;
     },
-    propagateEvent(gear: Gear) {
+    propagateEvent(gear: CatalogGear) {
       this.$emit("change", gear);
     },
-    matchingGear(gear: Gear, queryText: string | null) {
+    matchingGear(gear: CatalogGear, queryText: string | null) {
       if (queryText === null) return true;
       const search = SlugifyService.apply(queryText);
       return gear.slug.includes(search);

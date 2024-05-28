@@ -32,11 +32,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CategorySearchOptions } from "~/store/catalog";
-import { Category } from "~/utils/models/catalog.model";
+import { CatalogCategory, CategorySearchOptions } from "@overbookd/http";
 
 type SearchCategoryData = {
-  category?: Category;
+  category?: CatalogCategory;
   loading: boolean;
 };
 
@@ -88,7 +87,7 @@ export default Vue.extend({
       await this.$accessor.catalog.fetchCategories(searchOptions);
       this.loading = false;
     },
-    propagateEvent(category: Category) {
+    propagateEvent(category: CatalogCategory) {
       this.$emit("change", category);
     },
   },

@@ -47,14 +47,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearForm } from "~/store/catalogGear";
-import { Category, Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
+import { CatalogCategory, CatalogGear, CatalogGearForm } from "@overbookd/http";
 
 type GearFormData = InputRulesData & {
   name: string;
-  category?: Category;
+  category?: CatalogCategory;
   isPonctualUsage: boolean;
   isConsumable: boolean;
 };
@@ -92,15 +91,15 @@ export default Vue.extend({
     },
   },
   watch: {
-    gear: function (g: Gear) {
-      this.name = g.name;
-      this.category = g.category;
-      this.isPonctualUsage = g.isPonctualUsage;
+    gear: function (gear: CatalogGear) {
+      this.name = gear.name;
+      this.category = gear.category;
+      this.isPonctualUsage = gear.isPonctualUsage;
     },
   },
   methods: {
     async createOrUpdateGear() {
-      let gear: GearForm = {
+      let gear: CatalogGearForm = {
         name: this.name,
         isPonctualUsage: this.isPonctualUsage,
         isConsumable: this.isConsumable,

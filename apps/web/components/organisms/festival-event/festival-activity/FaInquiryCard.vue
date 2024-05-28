@@ -209,18 +209,17 @@ import {
   REJECTED,
   AssignDrive,
 } from "@overbookd/festival-event";
-import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
 import { min, isNumber } from "~/utils/rules/input.rules";
 import { IProvidePeriod } from "@overbookd/period";
-import { InitInquiryRequest } from "@overbookd/http";
+import { CatalogGear, InitInquiryRequest } from "@overbookd/http";
 import FaInitInquiryFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiryFormCard.vue";
 
 type FaInquiryCardData = InputRulesData & {
   isInitInquiryDialogOpen: boolean;
   isLinkDriveDialogOpen: boolean;
   selectedOwner: InquiryOwner;
-  gear: Gear | null;
+  gear: CatalogGear | null;
   quantity: number;
 
   MATOS: typeof MATOS;
@@ -384,7 +383,7 @@ export default defineComponent({
     clearInquiry() {
       this.$accessor.festivalActivity.clearInquiry();
     },
-    updateGear(gear: Gear | null) {
+    updateGear(gear: CatalogGear | null) {
       this.gear = gear;
     },
     updateQuantity(quantity: number) {

@@ -56,8 +56,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "@overbookd/http";
-import { Gear } from "~/utils/models/catalog.model";
+import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import GearForm from "../../molecules/logistic/GearForm.vue";
@@ -69,7 +68,7 @@ type GearListingData = {
   headers: Header[];
   filter: FilterGear;
   loading: boolean;
-  selectedGear?: Gear;
+  selectedGear?: CatalogGear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
 };
@@ -103,7 +102,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    gears(): Gear[] {
+    gears(): CatalogGear[] {
       return this.$accessor.catalogGear.gears;
     },
     canSearch(): boolean {
@@ -132,11 +131,11 @@ export default Vue.extend({
       await this.$accessor.catalogGear.fetchGears(searchOptions);
       this.loading = false;
     },
-    openUpdateGearDialog(gear: Gear) {
+    openUpdateGearDialog(gear: CatalogGear) {
       this.selectedGear = gear;
       this.isUpdateGearDialogOpen = true;
     },
-    openDeleteGearDialog(gear: Gear) {
+    openDeleteGearDialog(gear: CatalogGear) {
       this.selectedGear = gear;
       this.isDeleteGearDialogOpen = true;
     },
