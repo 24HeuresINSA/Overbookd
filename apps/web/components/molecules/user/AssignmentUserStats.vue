@@ -37,7 +37,7 @@ import {
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
 } from "~/utils/assignment/task-category";
-import { DisplayableAssignmentStat } from "~/utils/http/user";
+import { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
 export default Vue.extend({
   name: "AssignmentUserStats",
