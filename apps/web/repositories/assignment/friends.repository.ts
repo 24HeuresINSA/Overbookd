@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Context } from "../context";
+import { Context } from "../../utils/api/axios";
 import { AssignableVolunteer, Friends } from "@overbookd/assignment";
 
 export type FriendsRepositoryContext = Context & {

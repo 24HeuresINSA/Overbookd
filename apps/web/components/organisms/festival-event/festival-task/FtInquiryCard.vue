@@ -47,11 +47,11 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
-import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
+import { CatalogGear } from "@overbookd/http";
 
 type FtInquiryCardData = InputRulesData & {
-  gear: Gear | null;
+  gear: CatalogGear | null;
   quantity: number;
   MATOS: typeof MATOS;
 };
@@ -104,7 +104,7 @@ export default defineComponent({
     removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalTask.removeInquiryRequest(inquiry.slug);
     },
-    updateGear(gear: Gear) {
+    updateGear(gear: CatalogGear) {
       this.gear = gear;
     },
     updateQuantity(quantity: number) {

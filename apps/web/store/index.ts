@@ -11,7 +11,6 @@ import * as configuration from "./configuration";
 import * as dialog from "./dialog";
 import * as festivalActivity from "./festivalActivity";
 import * as festivalTask from "./festivalTask";
-import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
 import * as needHelp from "./needHelp";
 import * as notification from "./notification";
@@ -72,7 +71,6 @@ export const accessorType = getAccessorType({
     permission,
     stats,
     inventory,
-    gearRequest,
     charismaPeriod,
     volunteerAvailability,
     theme,

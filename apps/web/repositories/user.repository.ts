@@ -9,7 +9,7 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 import { ImageRepository } from "~/utils/image/image.repository";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class UserRepository {
   private static readonly basePath = "users";

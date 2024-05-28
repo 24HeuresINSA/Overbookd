@@ -1,5 +1,5 @@
 import { CreateTransferForm, Transaction } from "@overbookd/personal-account";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class TransactionRepository {
   private static readonly basePath = "transactions";

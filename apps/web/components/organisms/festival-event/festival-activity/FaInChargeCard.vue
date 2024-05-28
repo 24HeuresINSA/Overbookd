@@ -82,7 +82,7 @@ import { User } from "@overbookd/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import ContractorTable from "~/components/molecules/festival-event/contractor/ContractorTable.vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 export default defineComponent({
   name: "FaGeneralCard",

@@ -93,7 +93,7 @@ import { formatDate } from "~/utils/date/date.utils";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { TeamMobilization, Volunteer } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";

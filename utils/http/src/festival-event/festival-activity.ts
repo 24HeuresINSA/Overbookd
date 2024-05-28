@@ -6,7 +6,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { AddInquiryRequestForm } from "./common.model";
+import { AddInquiryRequestForm } from "./common";
 import { FestivalEventIdentifier } from "@overbookd/festival-event";
 
 export type PrepareInChargeForm = {

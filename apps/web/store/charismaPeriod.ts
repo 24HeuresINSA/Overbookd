@@ -3,11 +3,10 @@ import { updateItemToList } from "@overbookd/list";
 import {
   castCharismaPeriodsWithDate,
   castCharismaPeriodWithDate,
-  CharismaPeriod,
-  SavedCharismaPeriod,
-} from "~/utils/models/charisma-period.model";
+} from "~/utils/charisma-period/charisma-period.utils";
 import { safeCall } from "~/utils/api/calls";
 import { CharismaPeriodRepository } from "~/repositories/charisma-period.repository";
+import { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
 
 export const state = () => ({
   charismaPeriods: [] as SavedCharismaPeriod[],

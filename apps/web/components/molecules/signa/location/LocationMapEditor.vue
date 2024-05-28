@@ -58,7 +58,7 @@ import {
   LocationFactory,
 } from "@overbookd/geo-location";
 import { isPointLocation } from "@overbookd/signa";
-import { mapConfiguration } from "~/utils/models/signa-location.model";
+import { mapConfiguration } from "~/utils/location/map";
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {

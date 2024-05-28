@@ -47,7 +47,7 @@ import {
   Searchable,
 } from "~/utils/search/search.utils";
 import { UserPersonalData } from "@overbookd/user";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { excludeMembersOf, keepMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";
 

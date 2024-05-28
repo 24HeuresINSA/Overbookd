@@ -1,23 +1,19 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { GearRepository } from "~/domain/inventory/gear.repository";
-import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
+import { Gears } from "~/domain/inventory/gears";
+import { InMemoryGears } from "~/domain/inventory/gears.inmemory";
 import { safeCall } from "~/utils/api/calls";
-import { Gear } from "~/utils/models/catalog.model";
-import { GearSearchOptions } from "@overbookd/http";
+import {
+  CatalogGear,
+  CatalogGearForm,
+  GearSearchOptions,
+} from "@overbookd/http";
 import { GearsRepository } from "~/repositories/catalog.repository";
 
 type State = {
-  gears: Gear[];
+  gears: CatalogGear[];
 };
 
-export type GearForm = {
-  name: string;
-  category?: number;
-  isPonctualUsage: boolean;
-  isConsumable: boolean;
-};
-
-type GearUpdateForm = GearForm & {
+type GearUpdateForm = CatalogGearForm & {
   id: number;
 };
 
@@ -26,24 +22,24 @@ export const state = (): State => ({
 });
 
 export const getters = getterTree(state, {
-  gearRepository(state): GearRepository {
-    return new InMemoryGearRepository(state.gears);
+  gearRepository(state): Gears {
+    return new InMemoryGears(state.gears);
   },
 });
 
 export const mutations = mutationTree(state, {
-  SET_GEARS(state, gears: Gear[]) {
+  SET_GEARS(state, gears: CatalogGear[]) {
     state.gears = gears;
   },
-  ADD_GEAR(state, gear: Gear) {
+  ADD_GEAR(state, gear: CatalogGear) {
     state.gears.push(gear);
   },
-  UPDATE_GEAR(state, gear: Gear) {
+  UPDATE_GEAR(state, gear: CatalogGear) {
     const index = state.gears.findIndex((g) => g.id === gear.id);
     if (index < 0) return;
     state.gears.splice(index, 1, gear);
   },
-  DELETE_GEAR(state, gear: Gear) {
+  DELETE_GEAR(state, gear: CatalogGear) {
     state.gears = state.gears.filter((g) => g.id !== gear.id);
   },
 });
@@ -55,7 +51,7 @@ export const actions = actionTree(
       { commit },
       gearSearchOptions: GearSearchOptions,
     ): Promise<void> {
-      const res = await safeCall<Gear[]>(
+      const res = await safeCall<CatalogGear[]>(
         this,
         GearsRepository.searchGears(this, gearSearchOptions),
       );
@@ -63,8 +59,8 @@ export const actions = actionTree(
       commit("SET_GEARS", res.data);
     },
 
-    async createGear({ commit }, gearForm: GearForm): Promise<void> {
-      const res = await safeCall<Gear>(
+    async createGear({ commit }, gearForm: CatalogGearForm): Promise<void> {
+      const res = await safeCall<CatalogGear>(
         this,
         GearsRepository.createGear(this, gearForm),
         {
@@ -78,7 +74,7 @@ export const actions = actionTree(
 
     async updateGear({ commit }, form: GearUpdateForm): Promise<void> {
       const { id, ...gearForm } = form;
-      const res = await safeCall<Gear>(
+      const res = await safeCall<CatalogGear>(
         this,
         GearsRepository.updateGear(this, id, gearForm),
         {
@@ -90,7 +86,7 @@ export const actions = actionTree(
       commit("UPDATE_GEAR", res.data);
     },
 
-    async deleteGear({ commit }, gear: Gear): Promise<void> {
+    async deleteGear({ commit }, gear: CatalogGear): Promise<void> {
       const res = await safeCall(
         this,
         GearsRepository.deleteGear(this, gear.id),

@@ -1,7 +1,5 @@
 import { describe, beforeAll, expect, it } from "@jest/globals";
-
-import { Gear } from "~/utils/models/catalog.model";
-import { InMemoryGearRepository } from "./inmemory-gear.repository";
+import { InMemoryGears } from "./gears.inmemory";
 import { InventoryRecord } from "./inventory-record";
 import {
   DisplayableManualInventoryRecordError,
@@ -9,6 +7,7 @@ import {
   ManualInventoryRecordError,
 } from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";
+import { CatalogGear } from "@overbookd/http";
 
 describe("Inventory Fill Form", () => {
   describe("When using a manual record with existing gear", () => {
@@ -23,9 +22,9 @@ describe("Inventory Fill Form", () => {
         let record: InventoryRecord;
         beforeAll(async () => {
           const gears = [marteau, perceuse, scieCirculaire];
-          const gearRepository = new InMemoryGearRepository(gears);
+          const gearRepository = new InMemoryGears(gears);
           const manualRecord = new ManualInventoryRecord(
-            (gear as Gear).name,
+            (gear as CatalogGear).name,
             quantity as number,
             storage as string,
             gearRepository,
@@ -49,7 +48,7 @@ describe("Inventory Fill Form", () => {
     let manualRecord: ManualInventoryRecord;
     beforeAll(async () => {
       const gears = [marteau, perceuse, scieCirculaire];
-      const gearRepository = new InMemoryGearRepository(gears);
+      const gearRepository = new InMemoryGears(gears);
       manualRecord = new ManualInventoryRecord(
         inexistingGearName,
         12,
@@ -70,7 +69,7 @@ describe("Inventory Fill Form", () => {
   });
   describe("When updating an error with existing gear", () => {
     const gears = [marteau, perceuse, scieCirculaire];
-    const gearRepository = new InMemoryGearRepository(gears);
+    const gearRepository = new InMemoryGears(gears);
     const quantity = 12;
     const storage = "local";
     const manualRecord = new ManualInventoryRecord(

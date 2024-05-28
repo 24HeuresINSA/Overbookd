@@ -132,7 +132,7 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FaFilter from "~/components/organisms/festival-event/festival-activity/FaFilter.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatUsername } from "~/utils/user/user.utils";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";

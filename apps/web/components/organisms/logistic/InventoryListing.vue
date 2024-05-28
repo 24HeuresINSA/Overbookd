@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { InventoryGroupedRecord } from "~/store/inventory";
+import { InventoryGroupedRecord } from "@overbookd/http";
 import { Header } from "~/utils/models/data-table.model";
 
 type InventoryListingData = {

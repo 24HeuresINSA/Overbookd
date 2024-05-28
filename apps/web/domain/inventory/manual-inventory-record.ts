@@ -1,5 +1,5 @@
-import { Gear } from "~/utils/models/catalog.model";
-import { GearRepository } from "./gear.repository";
+import { CatalogGear } from "@overbookd/http";
+import { Gears } from "./gears";
 import { InventoryRecord } from "./inventory-record";
 
 export class ManualInventoryRecord {
@@ -7,7 +7,7 @@ export class ManualInventoryRecord {
     public readonly gear: string,
     public readonly quantity: number,
     public readonly storage: string,
-    private readonly gearRepository: GearRepository,
+    private readonly gearRepository: Gears,
   ) {}
 
   async toInventoryRecord(): Promise<InventoryRecord> {
@@ -16,7 +16,7 @@ export class ManualInventoryRecord {
     return new InventoryRecord(gear, this.quantity, this.storage);
   }
 
-  private findGear(): Promise<Gear | undefined> {
+  private findGear(): Promise<CatalogGear | undefined> {
     return this.gearRepository.find(this.gear);
   }
 }
@@ -42,7 +42,7 @@ export class DisplayableManualInventoryRecordError {
     );
   }
 
-  toInventoryRecord(gear: Gear) {
+  toInventoryRecord(gear: CatalogGear) {
     return new InventoryRecord(gear, this.record.quantity, this.record.storage);
   }
 }

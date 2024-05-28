@@ -89,7 +89,7 @@ import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 import { PlanningTask } from "@overbookd/http";
 import { PlanningEvent } from "@overbookd/assignment";
 import { BreakDefinition } from "@overbookd/planning";

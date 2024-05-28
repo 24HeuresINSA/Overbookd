@@ -1,6 +1,6 @@
 import { HttpStringified } from "@overbookd/http";
 import { Configuration } from "@overbookd/configuration";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class ConfigurationRepository {
   private static readonly basePath = "configuration";

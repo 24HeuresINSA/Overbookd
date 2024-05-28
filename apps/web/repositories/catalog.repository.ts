@@ -1,22 +1,36 @@
-import { GearSearchOptions } from "@overbookd/http";
-import { CategoryForm, CategorySearchOptions } from "~/store/catalog";
-import { GearForm } from "~/store/catalogGear";
-import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
-import { Context } from "./context";
+import {
+  CategoryForm,
+  CategorySearchOptions,
+  CatalogGear,
+  GearSearchOptions,
+  CatalogCategory,
+  CatalogCategoryTree,
+  CatalogGearForm,
+} from "@overbookd/http";
+import { Context } from "../utils/api/axios";
 
 export class GearsRepository {
   private static readonly basePath = "logistic/gears";
 
   static searchGears(context: Context, searchOptions?: GearSearchOptions) {
-    return context.$axios.get<Gear[]>(this.basePath, { params: searchOptions });
+    return context.$axios.get<CatalogGear[]>(this.basePath, {
+      params: searchOptions,
+    });
   }
 
-  static createGear(context: Context, gearForm: GearForm) {
-    return context.$axios.post<Gear>(this.basePath, gearForm);
+  static createGear(context: Context, gearForm: CatalogGearForm) {
+    return context.$axios.post<CatalogGear>(this.basePath, gearForm);
   }
 
-  static updateGear(context: Context, gearId: number, gearForm: GearForm) {
-    return context.$axios.put<Gear>(`${this.basePath}/${gearId}`, gearForm);
+  static updateGear(
+    context: Context,
+    gearId: number,
+    gearForm: CatalogGearForm,
+  ) {
+    return context.$axios.put<CatalogGear>(
+      `${this.basePath}/${gearId}`,
+      gearForm,
+    );
   }
 
   static deleteGear(context: Context, gearId: number) {
@@ -31,17 +45,17 @@ export class CategoryRepository {
     context: Context,
     searchOptions?: CategorySearchOptions,
   ) {
-    return context.$axios.get<Category[]>(this.basePath, {
+    return context.$axios.get<CatalogCategory[]>(this.basePath, {
       params: searchOptions,
     });
   }
 
   static getCategoryTree(context: Context) {
-    return context.$axios.get<CategoryTree[]>(`${this.basePath}/tree`);
+    return context.$axios.get<CatalogCategoryTree[]>(`${this.basePath}/tree`);
   }
 
   static createCategory(context: Context, categoryForm: CategoryForm) {
-    return context.$axios.post<Category>(this.basePath, categoryForm);
+    return context.$axios.post<CatalogCategory>(this.basePath, categoryForm);
   }
 
   static updateCategory(
@@ -49,7 +63,7 @@ export class CategoryRepository {
     categoryId: number,
     categoryForm: CategoryForm,
   ) {
-    return context.$axios.put<Category>(
+    return context.$axios.put<CatalogCategory>(
       `${this.basePath}/${categoryId}`,
       categoryForm,
     );
@@ -60,6 +74,8 @@ export class CategoryRepository {
   }
 
   static getCategory(context: Context, categoryId: number) {
-    return context.$axios.get<Category>(`${this.basePath}/${categoryId}`);
+    return context.$axios.get<CatalogCategory>(
+      `${this.basePath}/${categoryId}`,
+    );
   }
 }

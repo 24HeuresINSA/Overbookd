@@ -4,7 +4,7 @@ import {
   GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class LogisticDashboardRepository {
   private static readonly basePath = "logistic/dashboard";

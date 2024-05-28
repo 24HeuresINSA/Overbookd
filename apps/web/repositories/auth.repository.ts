@@ -1,4 +1,4 @@
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class AuthRepository {
   static requestResetPassword(context: Context, data: { email: string }) {

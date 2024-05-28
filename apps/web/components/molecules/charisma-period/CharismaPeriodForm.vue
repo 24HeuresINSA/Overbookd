@@ -43,12 +43,9 @@
 </template>
 
 <script lang="ts">
+import { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
-import {
-  CharismaPeriod,
-  SavedCharismaPeriod,
-} from "~/utils/models/charisma-period.model";
 import { isNumber, min, required } from "~/utils/rules/input.rules";
 
 export default Vue.extend({

@@ -1,4 +1,4 @@
-import { Team } from "../models/team.model";
+import { Team } from "@overbookd/http";
 
 type HasTeam = {
   teams: string[];

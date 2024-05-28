@@ -1,5 +1,4 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Team } from "~/utils/models/team.model";
 import { safeCall } from "~/utils/api/calls";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import {
@@ -7,6 +6,7 @@ import {
   requirableTeamsExtended,
 } from "@overbookd/festival-event";
 import { TeamRepository } from "~/repositories/team.repository";
+import { Team } from "@overbookd/http";
 
 // The state types definitions
 type State = {

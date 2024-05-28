@@ -111,7 +111,7 @@ import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { SlugifyService } from "@overbookd/slugify";
 import { Header } from "~/utils/models/data-table.model";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Searchable } from "~/utils/search/search.utils";

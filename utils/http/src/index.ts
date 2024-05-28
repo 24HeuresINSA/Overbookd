@@ -1,7 +1,7 @@
 export type {
   AddInquiryRequestForm,
   PublishFeedbackForm,
-} from "./festival-event/common.model";
+} from "./festival-event/common";
 export type {
   PrepareInChargeForm,
   PrepareSignaForm,
@@ -13,8 +13,8 @@ export type {
   PreviewForCommunication,
   LogisticInquiry,
   PreviewForLogistic,
-} from "./festival-event/festival-activity.model";
-export type { Statistics } from "./festival-event/festival-event.model";
+} from "./festival-event/festival-activity";
+export type { Statistics } from "./festival-event/festival-event";
 export type {
   FestivalTaskCreationForm,
   UpdateGeneralForm,
@@ -26,10 +26,10 @@ export type {
   AddVolunteerToMobilizationForm,
   Draft as DraftWithConflicts,
   Reviewable as ReviewableWithConflicts,
-} from "./festival-event/festival-task.model";
+} from "./festival-event/festival-task";
 export type { HttpStringified } from "./http-stringified";
-export type { OfferMeal } from "./shared-meal.model";
-export type { AddGearRequestForm } from "./logistic/borrow.model";
+export type { OfferMeal } from "./shared-meal";
+export type { AddGearRequestForm } from "./logistic/borrow";
 export type {
   Inquiry,
   BaseGearDetails,
@@ -40,14 +40,29 @@ export type {
   GearPreview,
   GearWithDetails,
   Inquiry as GearDetailsInquiry,
-} from "./logistic/dashboard.model";
-export type { GearSearchOptions } from "./logistic/gear.model";
+} from "./logistic/dashboard";
+export type {
+  InventoryGroupedRecord,
+  InventoryRecord,
+  LiteInventoryRecord,
+} from "./logistic/inventory";
+export type {
+  GearSearchOptions,
+  CatalogGear,
+  CatalogGearForm,
+} from "./logistic/gear";
+export type {
+  CategoryForm,
+  CategorySearchOptions,
+  CatalogCategory,
+  CatalogCategoryTree,
+} from "./logistic/catalog";
 export { JSON, CSV, ICAL, PDF } from "./mime";
 export type { AvailabilityForm } from "./volunteer-availability";
-export type { Task as PlanningTask } from "./planning";
+export type { Task as PlanningTask } from "./planning/task";
 export type { EnrollableStaff, EnrollableVolunteer } from "./registration";
 export type { EditAmountForm } from "./contribution";
-export type { Preference } from "./preference.model";
+export type { Preference } from "./preference";
 export type {
   OrgaNeedDetails,
   OrgaNeedTask,
@@ -68,5 +83,10 @@ export type {
   AssignmentStat,
 } from "./assignment";
 export type { During as DuringBreakPeriods } from "./planning/break-periods";
+export type { PublicHoliday } from "./planning/public-holiday";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer";
 export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";
+export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period";
+export type { CreatePermissionForm, Permission } from "./permission";
+export type { CreateLocation } from "./location";
+export type { Team } from "./team";

@@ -55,7 +55,7 @@
 import Vue from "vue";
 import { InputRulesData, required } from "~/utils/rules/input.rules";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 type TeamFormData = InputRulesData & {
   name?: string;

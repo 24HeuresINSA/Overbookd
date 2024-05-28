@@ -1,4 +1,4 @@
-import { GearRepository } from "./gear.repository";
+import { Gears } from "./gears";
 import { InventoryRecord } from "./inventory-record";
 import {
   ManualInventoryRecord,
@@ -12,7 +12,7 @@ export type InventoryImportRaw = {
 };
 
 export abstract class InventoryImportContainer {
-  constructor(protected readonly gearRepository: GearRepository) {}
+  constructor(protected readonly gearRepository: Gears) {}
   abstract extractManualRecords(): Promise<ManualInventoryRecord[]>;
   protected convertImportRawsToManualRecords(
     raws: InventoryImportRaw[],

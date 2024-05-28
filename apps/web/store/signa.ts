@@ -1,8 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
-import { CreateLocation } from "~/utils/models/signa-location.model";
 import { SignaLocation } from "@overbookd/signa";
 import { SignaLocationRepository } from "~/repositories/signa-location.repository";
+import { CreateLocation } from "@overbookd/http";
 
 export const state = () => ({
   locations: [] as SignaLocation[],

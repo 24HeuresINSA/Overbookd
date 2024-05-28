@@ -1,6 +1,6 @@
 import { Signage, SignageForm } from "@overbookd/signa";
 import { ImageRepository } from "~/utils/image/image.repository";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class CatalogSignageRepository {
   private static readonly basePath = "signages";

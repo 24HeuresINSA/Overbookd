@@ -1,15 +1,15 @@
-import { Category, Gear } from "~/utils/models/catalog.model";
+import { CatalogCategory, CatalogGear } from "@overbookd/http";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 
-const outils: Category = {
+const outils: CatalogCategory = {
   id: 2,
   name: "Outils",
   path: "bricollage->outils",
   owner: teamMatos,
   parent: 1,
 };
-export const marteau: Gear = {
+export const marteau: CatalogGear = {
   id: 1,
   name: "Marteau",
   slug: "marteau",
@@ -23,7 +23,7 @@ export const marteau: Gear = {
   isPonctualUsage: true,
   isConsumable: false,
 };
-export const perceuse: Gear = {
+export const perceuse: CatalogGear = {
   id: 2,
   name: "Perceuse",
   slug: "perceuse",
@@ -37,7 +37,7 @@ export const perceuse: Gear = {
   isPonctualUsage: true,
   isConsumable: false,
 };
-export const scieCirculaire: Gear = {
+export const scieCirculaire: CatalogGear = {
   id: 2,
   name: "Scie Circulaire",
   slug: "scie-circulaire",

@@ -66,7 +66,7 @@ import {
   reviewStatusLabel,
 } from "~/utils/festival-event/festival-event.utils";
 import { nonEmptyString } from "~/utils/festival-event/festival-event.filter";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 type ReviewerTeam = Team & {
   code: Reviewer<"FA">;

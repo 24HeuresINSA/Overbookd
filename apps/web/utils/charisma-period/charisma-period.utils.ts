@@ -1,15 +1,5 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
-import { HttpStringified } from "@overbookd/http";
-
-export type CharismaPeriod = IProvidePeriod & {
-  name: string;
-  description: string;
-  charisma: number;
-};
-
-export type SavedCharismaPeriod = CharismaPeriod & {
-  id: number;
-};
+import { Period } from "@overbookd/period";
+import { HttpStringified, SavedCharismaPeriod } from "@overbookd/http";
 
 export function castCharismaPeriodsWithDate(
   charismaPeriods: HttpStringified<SavedCharismaPeriod[]>,

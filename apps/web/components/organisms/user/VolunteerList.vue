@@ -55,7 +55,7 @@ import {
   formatPhoneLink,
   formatUserNameWithNickname,
 } from "~/utils/user/user.utils";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 type VolunteerListData = {
   headers: Header[];

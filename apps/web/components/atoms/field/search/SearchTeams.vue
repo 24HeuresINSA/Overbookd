@@ -34,7 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "../../chip/TeamChip.vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 type SearchTeamData = {
   loading: boolean;

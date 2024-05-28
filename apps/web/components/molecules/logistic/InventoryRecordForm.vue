@@ -39,11 +39,11 @@
 import Vue from "vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
 import { DisplayableManualInventoryRecordError } from "~/domain/inventory/manual-inventory-record";
-import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
+import { CatalogGear } from "@overbookd/http";
 
 type InventoryRecordFormData = InputRulesData & {
-  gear?: Gear;
+  gear?: CatalogGear;
 };
 
 export default Vue.extend({
@@ -65,7 +65,7 @@ export default Vue.extend({
   },
   data(): InventoryRecordFormData {
     return {
-      gear: undefined as Gear | undefined,
+      gear: undefined as CatalogGear | undefined,
       rules: {},
     };
   },

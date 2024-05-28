@@ -1,12 +1,5 @@
 import { moveAtFirstIndex } from "@overbookd/list";
 
-export type Team = {
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-};
-
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter((team) => team !== "admin" && team !== "orga");
 

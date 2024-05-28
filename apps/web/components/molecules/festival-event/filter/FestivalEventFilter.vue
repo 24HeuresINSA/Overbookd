@@ -40,7 +40,7 @@ import {
   FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { User } from "@overbookd/user";
 import {
   FtStatusLabel,

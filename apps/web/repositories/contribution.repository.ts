@@ -1,6 +1,6 @@
 import { Adherent, PayContributionForm } from "@overbookd/contribution";
 import { HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class ContributionRepository {
   private static readonly basePath = "contributions";

@@ -34,10 +34,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import CharismaPeriodCalendar from "~/components/molecules/charisma-period/CharismaPeriodCalendar.vue";
 import CharismaPeriodForm from "~/components/molecules/charisma-period/CharismaPeriodForm.vue";
 import CharismaPeriodTable from "~/components/molecules/charisma-period/CharismaPeriodTable.vue";
-import {
-  CharismaPeriod,
-  SavedCharismaPeriod,
-} from "~/utils/models/charisma-period.model";
+import { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
 
 export default Vue.extend({
   name: "CharismaPeriods",

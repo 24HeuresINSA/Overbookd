@@ -43,8 +43,7 @@ import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
 import OrgaNeedsDetailsCard from "~/components/organisms/orga-needs/OrgaNeedsDetailsCard.vue";
-import { Team } from "~/utils/models/team.model";
-import { OrgaNeedDetails } from "@overbookd/http";
+import { OrgaNeedDetails, Team } from "@overbookd/http";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 

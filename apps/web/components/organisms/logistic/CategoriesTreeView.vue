@@ -44,15 +44,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import CategoryDetails from "../../molecules/logistic/CategoryDetails.vue";
 import CategoryForm from "../../molecules/logistic/CategoryForm.vue";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
 
 type CategoryTreeViewData = {
   isCreateDialogOpen: boolean;
   isInformationDialogOpen: boolean;
-  selectedCategory?: Category;
+  selectedCategory?: CatalogCategory;
 };
 
 export default Vue.extend({
@@ -83,7 +83,7 @@ export default Vue.extend({
     closeCreationDialog() {
       this.isCreateDialogOpen = false;
     },
-    async openInformationDialog(category: CategoryTree) {
+    async openInformationDialog(category: CatalogCategoryTree) {
       this.selectedCategory = await this.$accessor.catalog.fetchCategory(
         category.id,
       );

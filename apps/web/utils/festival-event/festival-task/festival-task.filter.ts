@@ -14,8 +14,8 @@ import {
   DRAFT,
 } from "@overbookd/festival-event-constants";
 import { User } from "@overbookd/user";
-import { Team } from "../../models/team.model";
 import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
+import { Team } from "@overbookd/http";
 
 export type TaskReviewsFilter = {
   humain?: ReviewStatus;

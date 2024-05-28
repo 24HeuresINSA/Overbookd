@@ -81,7 +81,7 @@ import {
   convertAssignmentPlanningEventForCalendar,
   convertToCalendarBreak,
 } from "~/domain/common/planning-events";
-import { CalendarUser } from "~/utils/models/calendar.model";
+import { CalendarUser } from "~/utils/calendar/user";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import {
   Assignment,

@@ -76,16 +76,16 @@
 import Vue from "vue";
 import { removeItemAtIndex } from "@overbookd/list";
 import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
-import { GearRepository } from "~/domain/inventory/gear.repository";
+import { Gears } from "~/domain/inventory/gears";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryImport } from "~/domain/inventory/inventory-import";
-import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/data-table.model";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
 import InventoryRecordForm from "../../molecules/logistic/InventoryRecordForm.vue";
+import { CatalogGear } from "@overbookd/http";
 
 type InventoryData = {
   inventoryRecords: InventoryRecord[];
@@ -124,10 +124,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    gearRepository(): GearRepository {
+    gearRepository(): Gears {
       return this.$accessor.catalogGear.gearRepository;
     },
-    gears(): Gear[] {
+    gears(): CatalogGear[] {
       return this.$accessor.catalogGear.gears;
     },
     hasError(): boolean {

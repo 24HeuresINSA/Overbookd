@@ -1,5 +1,5 @@
+import { PublicHoliday } from "@overbookd/http";
 import { isDateString } from "@overbookd/period";
-import { PublicHoliday } from "~/store/publicHoliday";
 
 type FrenchGouvPublicHoliday = {
   [date: string]: string;

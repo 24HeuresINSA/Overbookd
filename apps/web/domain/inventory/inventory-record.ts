@@ -1,17 +1,13 @@
+import {
+  CatalogGear,
+  LiteInventoryRecord,
+  InventoryRecord as Record,
+} from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { Gear } from "~/utils/models/catalog.model";
-
-export type Record = {
-  gear: Gear;
-  quantity: number;
-  storage: string;
-};
-
-export type LiteInventoryRecord = Omit<Record, "gear">;
 
 export class InventoryRecord implements Record {
   constructor(
-    public readonly gear: Gear,
+    public readonly gear: CatalogGear,
     public readonly quantity: number,
     public readonly storage: string,
   ) {}

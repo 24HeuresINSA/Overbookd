@@ -1,9 +1,9 @@
 import {
   CharismaPeriod,
+  HttpStringified,
   SavedCharismaPeriod,
-} from "~/utils/models/charisma-period.model";
-import { HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
+} from "@overbookd/http";
+import { Context } from "../utils/api/axios";
 
 export class CharismaPeriodRepository {
   private static readonly basePath = "charisma-period";

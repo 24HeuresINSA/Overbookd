@@ -3,7 +3,7 @@ import {
   OrgaNeedDetails,
   OrgaNeedRequest,
 } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class OrgaNeedsRepository {
   private static readonly basePath = "orga-needs";

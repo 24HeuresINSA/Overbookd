@@ -1,6 +1,6 @@
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-import { InventoryGroupedRecord } from "~/store/inventory";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
+import { InventoryGroupedRecord } from "@overbookd/http";
 
 export class InventoryRepository {
   private static readonly basePath = "logistic/inventory";

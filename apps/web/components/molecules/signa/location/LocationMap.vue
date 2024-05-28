@@ -50,7 +50,7 @@ import {
   AreaLocation,
 } from "@overbookd/geo-location";
 import { SignaLocation, filterLocation } from "@overbookd/signa";
-import { mapConfiguration } from "~/utils/models/signa-location.model";
+import { mapConfiguration } from "~/utils/location/map";
 
 export default defineComponent({
   name: "LocationMap",

@@ -101,7 +101,8 @@
 import Vue from "vue";
 import { DateString, Hour, OverDate } from "@overbookd/period";
 import { CalendarPlanningEvent } from "~/domain/common/planning-events";
-import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
+import { CalendarUser } from "~/utils/calendar/user";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";

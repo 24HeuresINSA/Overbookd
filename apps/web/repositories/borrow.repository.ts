@@ -5,7 +5,7 @@ import {
   InitBorrowForm,
   PlanBorrowForm,
 } from "@overbookd/logistic";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class BorrowRepository {
   private static readonly basePath = "logistic/borrows";

@@ -142,7 +142,7 @@ import {
 } from "~/utils/user/user.utils";
 import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
 import { MyUserInformation, User, UserUpdateForm } from "@overbookd/user";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import {
   InputRulesData,

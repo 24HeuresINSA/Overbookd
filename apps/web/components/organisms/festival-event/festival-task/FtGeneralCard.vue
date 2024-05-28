@@ -44,7 +44,7 @@
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { User } from "@overbookd/user";
 import { FestivalTask } from "@overbookd/festival-event";
 

@@ -1,4 +1,4 @@
-import { Context } from "../context";
+import { Context } from "../../utils/api/axios";
 import { HttpStringified } from "@overbookd/http";
 import { BreakPeriods } from "@overbookd/assignment";
 import { IProvidePeriod } from "@overbookd/period";

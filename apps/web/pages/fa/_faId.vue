@@ -52,7 +52,7 @@ import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 import ChildFtCard from "~/components/organisms/festival-event/festival-activity/ChildFtCard.vue";
 
 type FestivalActivityDetailsData = {

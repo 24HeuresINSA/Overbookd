@@ -31,7 +31,7 @@ import { defineComponent } from "vue";
 import TaskFilters from "~/components/molecules/assignment/filter/TaskFilters.vue";
 import TaskAssignmentList from "~/components/molecules/assignment/list/TaskAssignmentList.vue";
 import { TaskPriorities, TaskPriority } from "~/utils/assignment/task-priority";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { DisplayableCategory } from "~/utils/assignment/task-category";

@@ -39,7 +39,7 @@ import {
 } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";

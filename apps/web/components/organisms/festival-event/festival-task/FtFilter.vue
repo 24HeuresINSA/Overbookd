@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue";
 import {
   FestivalTask,
   ReviewStatus,
@@ -59,7 +60,6 @@ import {
   elec,
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
-import { defineComponent } from "vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import { nonEmptyString } from "~/utils/festival-event/festival-event.filter";
 import {
@@ -72,7 +72,7 @@ import {
   ReviewLabel,
   reviewStatusLabel,
 } from "~/utils/festival-event/festival-event.utils";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 
 type ReviewerTeam = Team & {
