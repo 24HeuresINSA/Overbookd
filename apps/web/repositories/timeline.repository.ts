@@ -1,6 +1,6 @@
 import { Period } from "@overbookd/period";
 import { HttpStringified, TimelineEvent } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class TimelineRepository {
   private static readonly basePath = "timeline";

@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
+import { SavedCharismaPeriod } from "@overbookd/http";
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
-import { CalendarEvent } from "~/utils/models/calendar.model";
-import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 
 const PRIMARY_COLOR = {
   RED_LEVEL: 33,

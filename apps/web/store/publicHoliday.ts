@@ -1,10 +1,6 @@
+import { PublicHoliday } from "@overbookd/http";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FrenchGovPublicHolidayRepository } from "~/repositories/french-gov-public-holiday.repository";
-
-export type PublicHoliday = {
-  date: Date;
-  name: string;
-};
 
 export type PublicHolidays = { all: () => Promise<PublicHoliday[]> };
 

@@ -1,6 +1,6 @@
 import { SignaLocation } from "@overbookd/signa";
-import { CreateLocation } from "~/utils/models/signa-location.model";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
+import { CreateLocation } from "@overbookd/http";
 
 export class SignaLocationRepository {
   private static readonly basePath = "signa-location";

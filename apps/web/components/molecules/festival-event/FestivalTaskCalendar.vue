@@ -69,7 +69,7 @@ import {
   isWithIdentifier,
 } from "~/utils/assignment/calendar-event";
 import { displayForCalendar } from "~/utils/date/date.utils";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 
 type FestivalTaskCalendarData = {
   displayMobilizationsOrAssignments: boolean;

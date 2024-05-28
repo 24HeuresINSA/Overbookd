@@ -31,7 +31,7 @@ import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
-import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
+import { SavedCharismaPeriod } from "@overbookd/http";
 
 type AvailabilitiesSumupData = {
   calendarMarker: Date;

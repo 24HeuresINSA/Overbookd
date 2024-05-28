@@ -6,9 +6,8 @@ import {
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
 import { safeCall } from "~/utils/api/calls";
-import { Team } from "~/utils/models/team.model";
 import { UserName } from "@overbookd/user";
-import { HelpingVolunteer, HttpStringified } from "@overbookd/http";
+import { HelpingVolunteer, HttpStringified, Team } from "@overbookd/http";
 import { NeedHelpRepository } from "~/repositories/need-help.repository";
 import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
 

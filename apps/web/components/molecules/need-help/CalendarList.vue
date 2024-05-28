@@ -14,7 +14,7 @@ import { defineComponent } from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import { CalendarPlanningEvent } from "~/domain/common/planning-events";
 import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
-import { CalendarUser } from "~/utils/models/calendar.model";
+import { CalendarUser } from "~/utils/calendar/user";
 import { HelpingVolunteerAssignment } from "@overbookd/http";
 import { PURPLE } from "~/domain/common/status-color";
 

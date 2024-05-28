@@ -1,10 +1,7 @@
+import { CreatePermissionForm, Permission } from "@overbookd/http";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { PermissionRepository } from "~/repositories/permission.repository";
 import { safeCall } from "~/utils/api/calls";
-import {
-  CreatePermissionForm,
-  Permission,
-} from "~/utils/models/permission.model";
 
 // The state types definitions
 type State = {

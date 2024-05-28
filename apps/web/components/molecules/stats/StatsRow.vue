@@ -50,7 +50,7 @@ import {
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { StatsPayload } from "~/utils/models/stats.model";
 import { faStatusLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { ftStatusLabels } from "~/utils/festival-event/festival-task/festival-task.model";

@@ -1,18 +1,9 @@
 import { mutationTree, getterTree, actionTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
-import {
-  InventoryRecord,
-  LiteInventoryRecord,
-} from "~/domain/inventory/inventory-record";
+import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { safeCall } from "~/utils/api/calls";
-import { Gear } from "~/utils/models/catalog.model";
 import { InventoryRepository } from "~/repositories/inventory.repository";
-
-export type InventoryGroupedRecord = {
-  gear: Gear;
-  quantity: number;
-  records: LiteInventoryRecord[];
-};
+import { InventoryGroupedRecord } from "@overbookd/http";
 
 type State = {
   groupedRecords: InventoryGroupedRecord[];

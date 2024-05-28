@@ -57,17 +57,17 @@
 </template>
 
 <script lang="ts">
+import { CatalogGear } from "@overbookd/http";
 import { GearRequest } from "@overbookd/logistic";
 import { defineComponent } from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { Gear } from "~/utils/models/catalog.model";
 
 type PurchaseDetailsData = {
   headers: Header[];
-  gear: Gear | null;
+  gear: CatalogGear | null;
   quantity: number;
 };
 
@@ -127,7 +127,7 @@ export default defineComponent({
     removeGearRequest(gear: GearRequest) {
       this.$accessor.purchase.removeGearRequest(gear.slug);
     },
-    updateGear(gear: Gear) {
+    updateGear(gear: CatalogGear) {
       this.gear = gear;
     },
     updateQuantity(quantity: number) {

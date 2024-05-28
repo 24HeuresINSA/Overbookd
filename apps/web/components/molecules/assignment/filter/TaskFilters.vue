@@ -68,7 +68,7 @@ import {
   displayableCategories,
 } from "~/utils/assignment/task-category";
 import { TaskPriorities, TaskPriority } from "~/utils/assignment/task-priority";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 type TaskFiltersData = {
   completed: boolean;

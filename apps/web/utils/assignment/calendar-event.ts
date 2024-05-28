@@ -1,5 +1,5 @@
 import { AssignmentIdentifier } from "@overbookd/assignment";
-import { CalendarEvent, DailyEvent } from "../models/calendar.model";
+import { CalendarEvent, DailyEvent } from "../calendar/event";
 
 export function isDailyEvent(
   event: AssignmentIdentifier | DailyEvent,

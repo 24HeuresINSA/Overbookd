@@ -6,7 +6,7 @@ import {
   VolunteerForPlanning,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class PlanningRepository {
   private static readonly basePath = "planning";

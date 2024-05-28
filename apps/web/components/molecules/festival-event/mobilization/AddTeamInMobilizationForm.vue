@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { Mobilization } from "@overbookd/festival-event";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 

@@ -1,9 +1,9 @@
-import { HttpStringified } from "@overbookd/http";
 import {
-  Permission,
   CreatePermissionForm,
-} from "~/utils/models/permission.model";
-import { Context } from "./context";
+  HttpStringified,
+  Permission,
+} from "@overbookd/http";
+import { Context } from "../utils/api/axios";
 
 export class PermissionRepository {
   private static readonly basePath = "permissions";

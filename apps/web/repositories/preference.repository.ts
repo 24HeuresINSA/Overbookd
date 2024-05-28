@@ -1,5 +1,5 @@
 import { HttpStringified, Preference } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class PreferenceRepository {
   private static readonly basePath = "preferences";

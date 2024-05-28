@@ -25,9 +25,9 @@
 </template>
 
 <script lang="ts">
+import { SavedCharismaPeriod } from "@overbookd/http";
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 
 export default Vue.extend({
   name: "CharismaPeriodTable",

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
-import { GearRepository } from "./gear.repository";
-import { InMemoryGearRepository } from "./inmemory-gear.repository";
+import { Gears } from "./gears";
+import { InMemoryGears } from "./gears.inmemory";
 import {
   InventoryImport,
   InventoryImportContainer,
@@ -12,7 +12,7 @@ import { marteau, perceuse, scieCirculaire } from "./test-helper";
 class FakeInventoryImportContainer extends InventoryImportContainer {
   constructor(
     private readonly raws: InventoryImportRaw[],
-    gearRepository: GearRepository,
+    gearRepository: Gears,
   ) {
     super(gearRepository);
   }
@@ -52,7 +52,7 @@ const scieCirculaireInLocal: InventoryImportRaw = {
 };
 
 describe("Inventory import", () => {
-  const gearRepository = new InMemoryGearRepository([
+  const gearRepository = new InMemoryGears([
     marteau,
     perceuse,
     scieCirculaire,

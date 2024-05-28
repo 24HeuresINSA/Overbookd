@@ -1,5 +1,5 @@
 import { Planning, PlanningEvent } from "@overbookd/assignment";
-import { Context } from "../context";
+import { Context } from "../../utils/api/axios";
 import { HttpStringified } from "@overbookd/http";
 
 export class PlanningRepository implements Planning {

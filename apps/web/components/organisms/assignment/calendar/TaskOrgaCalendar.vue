@@ -30,7 +30,7 @@ import {
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent, DailyEvent } from "~/utils/calendar/event";
 import {
   isDailyEvent,
   CalendarEventWithIdentifier,

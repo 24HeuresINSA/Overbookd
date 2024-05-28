@@ -5,7 +5,7 @@ import {
   GearRequest,
   PlanPurchaseForm,
 } from "@overbookd/logistic";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class PurchaseRepository {
   private static readonly basePath = "logistic/purchases";

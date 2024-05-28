@@ -20,8 +20,8 @@
 import { defineComponent } from "vue";
 import { Point } from "@overbookd/geo-location";
 import LocationMapEditor from "./LocationMapEditor.vue";
-import { CreateLocation } from "~/utils/models/signa-location.model";
-import { mapConfiguration } from "~/utils/models/signa-location.model";
+import { CreateLocation } from "~/utils/location/map";
+import { mapConfiguration } from "~/utils/location/map";
 
 type NewLocationCardDate = {
   newLocation: CreateLocation;

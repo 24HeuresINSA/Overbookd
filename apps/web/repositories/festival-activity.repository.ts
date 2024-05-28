@@ -33,7 +33,7 @@ import {
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequestForm, PublishFeedbackForm } from "@overbookd/http";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class FestivalActivityRepository {
   private static readonly basePath = "festival-activities";

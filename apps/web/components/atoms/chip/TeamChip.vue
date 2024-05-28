@@ -33,8 +33,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team.model";
 import { BENEVOLE_CODE } from "@overbookd/team";
+import { Team } from "@overbookd/http";
 
 export default Vue.extend({
   name: "TeamChip",

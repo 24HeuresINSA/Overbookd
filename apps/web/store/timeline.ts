@@ -7,9 +7,9 @@ import {
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
 import { safeCall } from "~/utils/api/calls";
-import { Team } from "~/utils/models/team.model";
 import {
   HttpStringified,
+  Team,
   TimelineAssignment,
   TimelineEvent,
   TimelineMobilization,

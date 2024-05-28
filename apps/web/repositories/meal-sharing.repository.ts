@@ -4,7 +4,7 @@ import {
   PastSharedMeal,
   SharedMeal,
 } from "@overbookd/personal-account";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class MealSharingRepository {
   private static readonly basePath = "shared-meals";

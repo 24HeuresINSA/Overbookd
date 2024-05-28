@@ -68,12 +68,12 @@ import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Borrow, GearRequest } from "@overbookd/logistic";
-import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/data-table.model";
+import { CatalogGear } from "@overbookd/http";
 
 type BorrowDetailsData = {
   headers: Header[];
-  gear: Gear | null;
+  gear: CatalogGear | null;
   quantity: number;
 };
 
@@ -129,7 +129,7 @@ export default defineComponent({
     removeGearRequest(gear: GearRequest) {
       this.$accessor.borrow.removeGearRequest(gear.slug);
     },
-    updateGear(gear: Gear) {
+    updateGear(gear: CatalogGear) {
       this.gear = gear;
     },
     updateQuantity(quantity: number) {

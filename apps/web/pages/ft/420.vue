@@ -197,7 +197,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 export default Vue.extend({
   name: "Ft420",

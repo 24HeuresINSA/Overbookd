@@ -1,23 +1,17 @@
+import {
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategoryForm,
+  CategorySearchOptions,
+} from "@overbookd/http";
 import { actionTree, mutationTree } from "typed-vuex";
 import { CategoryRepository } from "~/repositories/catalog.repository";
 import { safeCall } from "~/utils/api/calls";
-import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import { SnackNotif } from "~/utils/models/notif.model";
 
 type State = {
-  categories: Category[];
-  categoryTree: CategoryTree[];
-};
-
-export type CategorySearchOptions = {
-  name?: string;
-  owner?: string;
-};
-
-export type CategoryForm = {
-  name: string;
-  owner?: string;
-  parent?: number;
+  categories: CatalogCategory[];
+  categoryTree: CatalogCategoryTree[];
 };
 
 export type CategoryUpdateForm = CategoryForm & {
@@ -30,26 +24,26 @@ export const state = (): State => ({
 });
 
 export const mutations = mutationTree(state, {
-  SET_CATEGORIES(state, categories: Category[]) {
+  SET_CATEGORIES(state, categories: CatalogCategory[]) {
     state.categories = categories;
   },
-  SET_CATEGORY_TREE(state, categoryTree: CategoryTree[]) {
+  SET_CATEGORY_TREE(state, categoryTree: CatalogCategoryTree[]) {
     state.categoryTree = categoryTree;
   },
-  ADD_CATEGORY(state, category: Category) {
+  ADD_CATEGORY(state, category: CatalogCategory) {
     state.categories.push(category);
   },
-  DELETE_CATEGORY(state, category: Category) {
+  DELETE_CATEGORY(state, category: CatalogCategory) {
     state.categories = state.categories.filter((c) => c.id !== category.id);
   },
-  UPDATE_CATEGORY(state, category: Category) {
+  UPDATE_CATEGORY(state, category: CatalogCategory) {
     const index = state.categories.findIndex((c) => c.id === category.id);
     if (index < 0) return;
     state.categories.splice(index, 1, category);
   },
 });
 
-const DEFAULT_ERROR = "Quelque chose s'est mal passe";
+const DEFAULT_ERROR = "Quelque chose s'est mal passé";
 export const actions = actionTree(
   { state, mutations },
   {
@@ -57,7 +51,7 @@ export const actions = actionTree(
       context,
       categorySerchOptions: CategorySearchOptions,
     ): Promise<void> {
-      const call = await safeCall<Category[]>(
+      const call = await safeCall<CatalogCategory[]>(
         this,
         CategoryRepository.searchCategories(this, categorySerchOptions),
       );
@@ -66,7 +60,7 @@ export const actions = actionTree(
     },
 
     async fetchCategoryTree(context): Promise<void> {
-      const call = await safeCall<CategoryTree[]>(
+      const call = await safeCall<CatalogCategoryTree[]>(
         this,
         CategoryRepository.getCategoryTree(this),
       );
@@ -75,7 +69,7 @@ export const actions = actionTree(
     },
 
     async createCategory(context, categoryForm: CategoryForm): Promise<void> {
-      const call = await safeCall<Category>(
+      const call = await safeCall<CatalogCategory>(
         this,
         CategoryRepository.createCategory(this, categoryForm),
         {
@@ -88,7 +82,7 @@ export const actions = actionTree(
       this.dispatch("catalog/fetchCategoryTree");
     },
 
-    async deleteCategory(context, category: Category): Promise<void> {
+    async deleteCategory(context, category: CatalogCategory): Promise<void> {
       try {
         await CategoryRepository.deleteCategory(this, category.id);
         sendNotification(this, `${category.name} supprime`);
@@ -102,7 +96,7 @@ export const actions = actionTree(
 
     async updateCategory(context, form: CategoryUpdateForm): Promise<void> {
       const { id, ...categoryForm } = form;
-      const call = await safeCall<Category>(
+      const call = await safeCall<CatalogCategory>(
         this,
         CategoryRepository.updateCategory(this, id, categoryForm),
         {
@@ -118,12 +112,12 @@ export const actions = actionTree(
     async fetchCategory(
       context,
       categoryId: number,
-    ): Promise<Category | undefined> {
+    ): Promise<CatalogCategory | undefined> {
       const storedCategory = context.state.categories.find(
         (category) => category.id === categoryId,
       );
       if (storedCategory) return storedCategory;
-      const call = await safeCall<Category>(
+      const call = await safeCall<CatalogCategory>(
         this,
         CategoryRepository.getCategory(this, categoryId),
       );

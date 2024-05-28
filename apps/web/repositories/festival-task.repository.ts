@@ -29,7 +29,7 @@ import {
   ForceInstructions,
   ReadyToAssignWithConflicts,
 } from "@overbookd/festival-event";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 type ReadyToAssign = Extract<
   FestivalTaskWithConflicts,

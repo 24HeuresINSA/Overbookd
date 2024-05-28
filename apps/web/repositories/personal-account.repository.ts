@@ -1,6 +1,6 @@
 import { ConfiguredBarrel, NewBarrel } from "@overbookd/personal-account";
 import { HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class PersonalAccountRepository {
   private static readonly basePath = "personal-account";

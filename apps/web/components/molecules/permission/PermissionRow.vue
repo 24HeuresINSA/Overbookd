@@ -48,7 +48,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 
 export default Vue.extend({
   name: "PermissionRow",

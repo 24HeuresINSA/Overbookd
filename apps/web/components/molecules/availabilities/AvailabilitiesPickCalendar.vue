@@ -52,16 +52,14 @@ import {
   ALL_HOURS,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
-import {
-  SavedCharismaPeriod,
-  getPeriodCharisma,
-} from "~/utils/models/charisma-period.model";
+import { getPeriodCharisma } from "~/utils/charisma-period/charisma-period.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import {
   formatDateDayName,
   formatDateDayNumber,
   computeTomorrowDate,
 } from "~/utils/date/date.utils";
+import { SavedCharismaPeriod } from "@overbookd/http";
 
 export default defineComponent({
   name: "AvailabilitiesPickCalendar",

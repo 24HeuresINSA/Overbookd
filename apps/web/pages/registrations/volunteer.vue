@@ -76,7 +76,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableVolunteer, Team } from "@overbookd/http";
 import { removeItemAtIndex } from "@overbookd/list";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
@@ -89,7 +89,6 @@ import { TEAM_CODES, VOLUNTEER } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { Team } from "~/utils/models/team.model";
 
 type RegistrationsData = {
   headers: Header[];

@@ -146,13 +146,13 @@
 import { defineComponent } from "vue";
 import { DateString, Hour, OverDate } from "@overbookd/period";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
-import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent, DailyEvent } from "~/utils/calendar/event";
 import {
   VuetifyCalendar,
   VuetifyCalendarType,
 } from "~/utils/calendar/vuetify-calendar";
 import { formatMonthWithYear } from "~/utils/date/date.utils";
-import { PublicHoliday } from "~/store/publicHoliday";
+import { PublicHoliday } from "@overbookd/http";
 
 export default defineComponent({
   name: "OverCalendar",

@@ -38,6 +38,7 @@
     "@overbookd/logistic": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/personal-account": "workspace:^",
+    "@overbookd/signa": "workspace:^",
     "@overbookd/user": "workspace:^"
   },
   "engines": {

@@ -4,7 +4,7 @@ import {
   Assignments,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
-import { Context } from "../context";
+import { Context } from "../../utils/api/axios";
 import {
   DisplayableAssignment,
   HttpStringified,

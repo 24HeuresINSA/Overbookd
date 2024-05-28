@@ -1,6 +1,6 @@
 import { Period } from "@overbookd/period";
 import { HelpingVolunteer, HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class NeedHelpRepository {
   private static readonly basePath = "need-help";

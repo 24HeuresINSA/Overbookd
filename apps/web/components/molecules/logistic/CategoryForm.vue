@@ -40,16 +40,14 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeamVue from "~/components/atoms/field/search/SearchTeam.vue";
-import { CategoryForm } from "~/store/catalog";
-import { Category } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
-import { Team } from "~/utils/models/team.model";
+import { CatalogCategory, CategoryForm, Team } from "@overbookd/http";
 
 type CategoryFormData = InputRulesData & {
   name: string;
   owner?: Pick<Team, "code" | "name">;
-  parent?: Category;
+  parent?: CatalogCategory;
 };
 
 const nameMinLength = 3;
@@ -82,15 +80,19 @@ export default Vue.extend({
     },
   },
   watch: {
-    category: async function (c: Category) {
-      this.spreadCategory(c);
+    category: async function (category: CatalogCategory) {
+      this.spreadCategory(category);
     },
   },
   async mounted() {
     await this.spreadCategory(this.category);
   },
   methods: {
-    async spreadCategory({ name, owner, parent }: Category): Promise<void> {
+    async spreadCategory({
+      name,
+      owner,
+      parent,
+    }: CatalogCategory): Promise<void> {
       this.name = name;
       this.owner = owner;
       this.parent = parent
@@ -121,7 +123,9 @@ export default Vue.extend({
 
       return { ...name, ...parent, ...owner };
     },
-    async getCategory(categoryId: number): Promise<Category | undefined> {
+    async getCategory(
+      categoryId: number,
+    ): Promise<CatalogCategory | undefined> {
       return this.$accessor.catalog.fetchCategory(categoryId);
     },
     closeDialog(): void {

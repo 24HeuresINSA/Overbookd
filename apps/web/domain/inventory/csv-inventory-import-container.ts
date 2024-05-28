@@ -1,4 +1,4 @@
-import { GearRepository } from "./gear.repository";
+import { Gears } from "./gears";
 import {
   InventoryImportContainer,
   InventoryImportRaw,
@@ -22,7 +22,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
 
   constructor(
     private readonly file: File,
-    gearRepository: GearRepository,
+    gearRepository: Gears,
   ) {
     super(gearRepository);
   }

@@ -1,6 +1,6 @@
 import { getColorByStatus } from "./status-color";
 import { PlanningEvent } from "@overbookd/assignment";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent } from "~/utils/calendar/event";
 
 export type CalendarPlanningEvent = {
   start: Date;

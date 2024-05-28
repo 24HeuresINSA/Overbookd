@@ -82,7 +82,7 @@ import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { VolunteerForPlanning, HasAssignment } from "~/store/planning";
 import { sortVolunteerOnNames, SortFunction } from "~/utils/sort/sort-stats";
 import { Header } from "~/utils/models/data-table.model";
-import { Team } from "~/utils/models/team.model";
+import { Team } from "@overbookd/http";
 import { keepMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";
 import {

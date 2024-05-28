@@ -1,6 +1,5 @@
-import { Team } from "~/utils/models/team.model";
-import { HttpStringified } from "@overbookd/http";
-import { Context } from "./context";
+import { HttpStringified, Team } from "@overbookd/http";
+import { Context } from "../utils/api/axios";
 
 export class TeamRepository {
   private static readonly basePath = "teams";

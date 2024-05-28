@@ -1,6 +1,6 @@
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { AssignmentSummaryWithTask, HttpStringified } from "@overbookd/http";
-import { Context } from "../context";
+import { Context } from "../../utils/api/axios";
 
 export class VolunteerToTaskRepository {
   private static readonly basePath = "assignments/volunteer-to-task";

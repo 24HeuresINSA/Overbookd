@@ -1,4 +1,4 @@
-import { Context } from "./context";
+import { Context } from "../utils/api/axios";
 
 export class NotificationRepository {
   private static readonly basePath = "notifications";

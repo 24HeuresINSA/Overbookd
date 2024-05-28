@@ -1,8 +1,7 @@
-import { Category } from "./catalog.model";
-import { Team } from "./team.model";
+import { CatalogCategory, Team } from "@overbookd/http";
 
 export type FilterGear = {
   name: string;
-  category: Category | null;
+  category: CatalogCategory | null;
   team: Pick<Team, "name" | "code"> | null;
 };
