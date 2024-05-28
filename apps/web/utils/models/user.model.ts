@@ -1,6 +1,4 @@
-import { FestivalTask } from "@overbookd/festival-event";
 import { HttpStringified, PlanningTask } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
 import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { DisplayableCategory } from "../assignment/task-category";
 
@@ -14,20 +12,6 @@ export type UserPersonalDataWithProfilePicture = UserPersonalData &
 
 export type MyUserInformationWithProfilePicture = MyUserInformation &
   WithPotentialProfilePicture;
-
-export type Task = {
-  id: number;
-  name: string;
-  status: FestivalTask["status"];
-};
-
-/**
- * @deprecated Used in the old version of assignment
- */
-export type VolunteerTask = IProvidePeriod & {
-  ft: Task;
-  timeSpanId?: number;
-};
 
 export type VolunteerAssignmentStat = {
   category: DisplayableCategory;
