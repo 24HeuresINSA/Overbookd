@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
-import { FilterGear } from "~/utils/models/filter-gear.model";
+import { FilterGear } from "~/utils/logistic/filter-gear";
 import DashboardGearListing from "~/components/organisms/logistic/DashboardGearListing.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";

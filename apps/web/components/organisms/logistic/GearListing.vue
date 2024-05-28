@@ -57,12 +57,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import GearForm from "../../molecules/logistic/GearForm.vue";
 import GearFilter from "../../molecules/logistic/GearFilter.vue";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
-import { FilterGear } from "~/utils/models/filter-gear.model";
+import { FilterGear } from "~/utils/logistic/filter-gear";
 
 type GearListingData = {
   headers: Header[];

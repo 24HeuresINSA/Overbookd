@@ -25,7 +25,7 @@
 import { defineComponent } from "vue";
 import { Borrow } from "@overbookd/logistic";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type BorrowTableData = {
   headers: Header[];

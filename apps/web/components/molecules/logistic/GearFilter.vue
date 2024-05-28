@@ -29,7 +29,7 @@
 import Vue from "vue";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 import SearchTeam from "../../atoms/field/search/SearchTeam.vue";
-import { FilterGear } from "~/utils/models/filter-gear.model";
+import { FilterGear } from "~/utils/logistic/filter-gear";
 
 type GearFilterData = FilterGear & {
   delay?: ReturnType<typeof setTimeout>;

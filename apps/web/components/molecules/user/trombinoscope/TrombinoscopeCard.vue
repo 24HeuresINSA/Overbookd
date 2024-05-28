@@ -17,7 +17,7 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",

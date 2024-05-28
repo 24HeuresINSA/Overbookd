@@ -2,13 +2,6 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
 import {
-  MyUserInformationWithProfilePicture,
-  UserPersonalDataWithProfilePicture,
-  VolunteerAssignmentStat,
-  castUserWithDate,
-  castVolunteerPlanningTasksWithDate,
-} from "~/utils/models/user.model";
-import {
   MyUserInformation,
   Profile,
   User,
@@ -17,8 +10,12 @@ import {
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 import { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
-import { Consumer } from "~/utils/models/user.model";
-import { PlanningTask, VolunteerWithAssignmentStats } from "@overbookd/http";
+import {
+  AssignmentStat,
+  Consumer,
+  PlanningTask,
+  VolunteerWithAssignmentStats,
+} from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningEvent } from "@overbookd/assignment";
@@ -26,6 +23,12 @@ import { PlanningRepository } from "~/repositories/planning.repository";
 import { Period } from "@overbookd/period";
 import { castPeriodWithDate } from "~/utils/http/period";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import {
+  MyUserInformationWithProfilePicture,
+  UserPersonalDataWithProfilePicture,
+} from "~/utils/user/user-information";
+import { castUserWithDate } from "~/utils/http/user";
+import { castVolunteerPlanningTasksWithDate } from "~/utils/http/volunteer-planning";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -39,7 +42,7 @@ type State = {
   selectedUserAssignments: PlanningEvent[];
   selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
-  selectedUserAssignmentStats: VolunteerAssignmentStat[];
+  selectedUserAssignmentStats: AssignmentStat[];
   personalAccountConsumers: Consumer[];
   volunteers: UserDataWithPotentialyProfilePicture[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
@@ -95,7 +98,7 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_ASSIGNMENT_STATS(
     state: UserState,
-    stats: VolunteerAssignmentStat[],
+    stats: AssignmentStat[],
   ) {
     state.selectedUserAssignmentStats = stats;
   },

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { StatsPayload } from "~/utils/models/stats.model";
+import { StatsPayload } from "~/utils/festival-event/stats";
 import StatsRow from "~/components/molecules/stats/StatsRow.vue";
 import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 

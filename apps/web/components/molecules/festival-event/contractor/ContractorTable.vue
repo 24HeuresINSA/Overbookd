@@ -47,7 +47,7 @@ import {
   Contractor,
   PrepareContractorCreation,
 } from "@overbookd/festival-event";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type ContractorData = {
   headers: Header[];

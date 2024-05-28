@@ -90,3 +90,4 @@ export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period";
 export type { CreatePermissionForm, Permission } from "./permission";
 export type { CreateLocation } from "./location";
 export type { Team } from "./team";
+export type { Consumer } from "./consumer";

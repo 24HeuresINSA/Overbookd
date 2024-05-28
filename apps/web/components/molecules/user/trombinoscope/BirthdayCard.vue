@@ -11,8 +11,8 @@
 <script lang="ts">
 import Vue from "vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",

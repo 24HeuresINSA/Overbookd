@@ -81,7 +81,7 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { VolunteerForPlanning, HasAssignment } from "~/store/planning";
 import { sortVolunteerOnNames, SortFunction } from "~/utils/sort/sort-stats";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { Team } from "@overbookd/http";
 import { keepMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";

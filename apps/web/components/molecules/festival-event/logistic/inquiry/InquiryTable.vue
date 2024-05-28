@@ -44,7 +44,7 @@ import {
   drives,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type InquiryTableData = {
   headers: Header[];

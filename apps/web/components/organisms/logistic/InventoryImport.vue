@@ -79,7 +79,7 @@ import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-im
 import { Gears } from "~/domain/inventory/gears";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryImport } from "~/domain/inventory/inventory-import";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,

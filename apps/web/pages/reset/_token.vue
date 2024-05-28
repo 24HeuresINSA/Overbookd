@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
-import { Snack } from "~/utils/models/snack.model";
+import { Snack } from "~/utils/notification/snack";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { AuthRepository } from "~/repositories/auth.repository";
 

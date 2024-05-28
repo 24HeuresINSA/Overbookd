@@ -53,7 +53,7 @@ import {
 } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type FestivalEvent = FestivalActivity | FestivalTask;

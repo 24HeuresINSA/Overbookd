@@ -68,7 +68,7 @@ import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Borrow, GearRequest } from "@overbookd/logistic";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { CatalogGear } from "@overbookd/http";
 
 type BorrowDetailsData = {

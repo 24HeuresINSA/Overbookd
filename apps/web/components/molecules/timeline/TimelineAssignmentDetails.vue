@@ -65,7 +65,7 @@ import { TimelineAssignment, TimelineTask } from "@overbookd/http";
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
 type TimelineAssignmentDetailsData = {

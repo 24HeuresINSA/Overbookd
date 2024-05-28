@@ -3,7 +3,7 @@ import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { safeCall } from "~/utils/api/calls";
 import { CatalogSignageRepository } from "~/repositories/catalog-signage.repository";
 import { updateItemToList } from "@overbookd/list";
-import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
+import { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 type State = {
   signages: SignageWithPotentialImage[];

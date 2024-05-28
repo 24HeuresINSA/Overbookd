@@ -51,7 +51,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "@overbookd/http";
-import { StatsPayload } from "~/utils/models/stats.model";
+import { StatsPayload } from "~/utils/festival-event/stats";
 import { faStatusLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { ftStatusLabels } from "~/utils/festival-event/festival-task/festival-task.model";
 

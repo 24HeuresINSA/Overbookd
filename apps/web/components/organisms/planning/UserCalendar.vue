@@ -85,12 +85,11 @@ import { AFFECT_VOLUNTEER, SYNC_PLANNING } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
-import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 import { CalendarEvent } from "~/utils/calendar/event";
-import { PlanningTask } from "@overbookd/http";
+import { AssignmentStat, PlanningTask } from "@overbookd/http";
 import { PlanningEvent } from "@overbookd/assignment";
 import { BreakDefinition } from "@overbookd/planning";
 import { isDesktop } from "~/utils/device/device.utils";
@@ -157,7 +156,7 @@ export default defineComponent({
     tasks(): PlanningTask[] {
       return this.$accessor.user.selectedUserTasks;
     },
-    stats(): VolunteerAssignmentStat[] {
+    stats(): AssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
     events(): CalendarEvent[] {

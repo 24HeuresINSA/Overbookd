@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { UserPersonalData } from "@overbookd/user";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 
 export default Vue.extend({
   name: "ProfilePicture",

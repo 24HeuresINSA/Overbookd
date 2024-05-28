@@ -43,7 +43,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { InventoryGroupedRecord } from "@overbookd/http";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type InventoryListingData = {
   headers: Header[];

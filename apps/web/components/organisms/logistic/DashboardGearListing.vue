@@ -37,7 +37,7 @@ import { defineComponent } from "vue";
 import { GearDetails, GearPreview, GearWithDetails } from "@overbookd/http";
 import DashboardGearDetailsGraph from "./DashboardGearDetailsGraph.vue";
 import DashboardGearDetailsCard from "./DashboardGearDetailsCard.vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type DashboardGearListingData = {
   headers: Header[];
