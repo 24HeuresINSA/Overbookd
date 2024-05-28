@@ -32,7 +32,6 @@ import TaskFilters from "~/components/molecules/assignment/filter/TaskFilters.vu
 import TaskAssignmentList from "~/components/molecules/assignment/list/TaskAssignmentList.vue";
 import { TaskPriorities, TaskPriority } from "~/utils/assignment/task-priority";
 import { Team } from "~/utils/models/team.model";
-import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { DisplayableCategory } from "~/utils/assignment/task-category";
@@ -70,9 +69,9 @@ export default defineComponent({
       }));
     },
     filteredAssignments(): AssignmentSummaryWithTask[] {
-      return this.searchableAssignments
-        .filter((assignment) => this.isMatchingFilter(assignment))
-        .map((assignment) => this.removeUnavailableTeamRequests(assignment));
+      return this.searchableAssignments.filter((assignment) =>
+        this.isMatchingFilter(assignment),
+      );
     },
     selectedVolunteer(): VolunteerWithAssignmentDuration | null {
       return this.$accessor.assignVolunteerToTask.selectedVolunteer;
@@ -134,40 +133,16 @@ export default defineComponent({
       return ({ hasFriendsAssigned }) =>
         !hasAssignedFriends || hasFriendsAssigned;
     },
-    isVolunteerAssignableTo(teamCode: string): boolean {
-      if (!this.selectedVolunteer) return false;
-      const candidate = new AssignmentCandidate(this.selectedVolunteer);
-      return candidate.canBeAssignedAs(teamCode);
-    },
-    removeUnavailableTeamRequests(
-      assignment: AssignmentSummaryWithTask,
-    ): AssignmentSummaryWithTask {
-      const teams = assignment.teams.filter(
-        ({ team, assigned, demand }) =>
-          this.isVolunteerAssignableTo(team) && demand > assigned,
-      );
-      return { ...assignment, teams };
-    },
     isMatchingFilter(
       assignment: Searchable<AssignmentSummaryWithTask>,
     ): boolean {
       return (
-        this.hasAssignableSlotsAvailable(assignment) &&
         this.filterByRequestedTeams(this.requiredTeams)(assignment) &&
         this.filterByInChargeTeam(this.inChargeTeam)(assignment) &&
         this.filterByCatergoryOrPriority(this.category)(assignment) &&
         this.filterByHasAssignedFriends(this.hasAssignedFriends)(assignment) &&
         this.filterByTaskName(this.searchTaskName)(assignment)
       );
-    },
-    hasAssignableSlotsAvailable(
-      assignment: AssignmentSummaryWithTask,
-    ): boolean {
-      return assignment.teams.some(({ team, demand, assigned }) => {
-        if (!this.selectedVolunteer) return false;
-        const candidate = new AssignmentCandidate(this.selectedVolunteer);
-        return demand > assigned && candidate.canBeAssignedAs(team);
-      });
     },
     filterByTaskName(
       search: string,
