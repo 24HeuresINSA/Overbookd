@@ -133,7 +133,7 @@ import FaFilter from "~/components/organisms/festival-event/festival-activity/Fa
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "@overbookd/http";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { WRITE_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";

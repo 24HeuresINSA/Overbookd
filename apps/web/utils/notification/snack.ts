@@ -19,3 +19,9 @@ export class Snack {
     this.active = true;
   }
 }
+
+export type SnackNotif = {
+  message: string;
+  timeout?: number;
+  id?: number;
+};

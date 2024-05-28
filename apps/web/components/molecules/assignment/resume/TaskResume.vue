@@ -21,7 +21,7 @@
 import { MissingAssignmentTask } from "@overbookd/assignment";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { sortTeamsForAssignment } from "~/utils/models/team.model";
+import { sortTeamsForAssignment } from "~/utils/sort/sort-teams";
 
 export default Vue.extend({
   name: "TaskResume",

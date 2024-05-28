@@ -96,7 +96,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { SignaLocation } from "@overbookd/signa";
 import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";

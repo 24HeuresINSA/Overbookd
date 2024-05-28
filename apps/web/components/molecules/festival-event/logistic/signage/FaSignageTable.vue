@@ -46,7 +46,7 @@ import {
   APPROVED,
 } from "@overbookd/festival-event";
 import { Signage as CatalogSignage } from "@overbookd/signa";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type FaSignageTableData = {
   headers: Header[];

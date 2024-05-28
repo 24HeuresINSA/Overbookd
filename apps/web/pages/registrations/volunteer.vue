@@ -81,7 +81,7 @@ import { removeItemAtIndex } from "@overbookd/list";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatLocalDate } from "~/utils/date/date.utils";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";

@@ -3,7 +3,7 @@ import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
 import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
 import { safeCall } from "~/utils/api/calls";
-import { StatsPayload } from "~/utils/models/stats.model";
+import { StatsPayload } from "~/utils/festival-event/stats";
 
 export const state = () => ({
   statsFA: [] as StatsPayload<FestivalActivity>[],

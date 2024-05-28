@@ -36,7 +36,7 @@
 import { defineComponent } from "vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
-import { Consumer } from "~/utils/models/user.model";
+import { Consumer } from "@overbookd/http";
 
 type CreateTransferFormData = {
   amount: number;

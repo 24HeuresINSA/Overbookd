@@ -110,7 +110,7 @@ import Vue from "vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { SlugifyService } from "@overbookd/slugify";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { Team } from "@overbookd/http";
 import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";

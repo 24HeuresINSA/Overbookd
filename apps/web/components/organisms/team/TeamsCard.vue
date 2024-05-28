@@ -67,7 +67,7 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { Team } from "@overbookd/http";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import TeamForm from "~/components/molecules/team/TeamForm.vue";
 
 type TeamsCardData = {

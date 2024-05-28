@@ -143,7 +143,6 @@ import {
 import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
 import { MyUserInformation, User, UserUpdateForm } from "@overbookd/user";
 import { Team } from "@overbookd/http";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import {
   InputRulesData,
   isEmail,
@@ -152,6 +151,7 @@ import {
   isNumber,
   required,
 } from "~/utils/rules/input.rules";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 
 type VolunteerPersonalDataFormData = InputRulesData & {
   nickname: string | null;

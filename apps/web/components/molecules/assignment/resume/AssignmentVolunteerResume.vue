@@ -114,7 +114,7 @@ import {
   isAssignableVolunteer,
 } from "~/utils/assignment/assignment-volunteer";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
-import { sortTeamsForAssignment } from "~/utils/models/team.model";
+import { sortTeamsForAssignment } from "~/utils/sort/sort-teams";
 import { formatUsername } from "~/utils/user/user.utils";
 
 export default Vue.extend({

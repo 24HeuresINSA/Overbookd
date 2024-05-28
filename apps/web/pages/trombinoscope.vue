@@ -23,8 +23,8 @@ import Vue from "vue";
 import { UserPersonalData } from "@overbookd/user";
 import BirthdayCard from "~/components/molecules/user/trombinoscope/BirthdayCard.vue";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import TrombinoscopeGroup from "~/components/molecules/user/trombinoscope/TrombinoscopeGroup.vue";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 
 type Volunteer = UserPersonalData | UserPersonalDataWithProfilePicture;
 

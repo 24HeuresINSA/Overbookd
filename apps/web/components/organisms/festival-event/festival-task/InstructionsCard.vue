@@ -114,7 +114,7 @@ import {
 } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { InitInChargeForm } from "@overbookd/http";

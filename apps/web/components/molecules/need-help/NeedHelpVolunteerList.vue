@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 import { HelpingVolunteer } from "@overbookd/http";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
 export default defineComponent({

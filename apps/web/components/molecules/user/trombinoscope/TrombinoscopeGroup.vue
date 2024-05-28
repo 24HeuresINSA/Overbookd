@@ -19,8 +19,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { UserPersonalData } from "@overbookd/user";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import TrombinoscopeCard from "./TrombinoscopeCard.vue";
+import { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
 
 type Volunteer = UserPersonalData | UserPersonalDataWithProfilePicture;
 

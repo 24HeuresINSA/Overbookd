@@ -28,7 +28,7 @@
 <script lang="ts">
 import Vue from "vue";
 import ContributionRow from "../../molecules/contribution/ContributionRow.vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { Adherent } from "@overbookd/contribution";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Purchase } from "@overbookd/logistic";
 

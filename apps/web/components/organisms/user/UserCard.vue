@@ -120,7 +120,6 @@ import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { MyUserInformationWithProfilePicture } from "~/utils/models/user.model";
 import {
   InputRulesData,
   isMobilePhoneNumber,
@@ -133,6 +132,7 @@ import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
 import { Preference } from "@overbookd/http";
+import { MyUserInformationWithProfilePicture } from "~/utils/user/user-information";
 
 type UserCardData = InputRulesData & {
   firstname: string;

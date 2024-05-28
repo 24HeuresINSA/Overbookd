@@ -127,7 +127,7 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import CreateMobilizationForm from "./CreateMobilizationForm.vue";
 import UpdateMobilizationForm from "./UpdateMobilizationForm.vue";
 import VolunteerWithConflictsChip from "~/components/atoms/chip/VolunteerWithConflictsChip.vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import {
   FestivalTask,
   Mobilization,

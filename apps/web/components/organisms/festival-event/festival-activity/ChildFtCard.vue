@@ -39,7 +39,7 @@ import {
   FtStatusLabel,
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 
 type ChildFtCardData = {
   headers: Header[];

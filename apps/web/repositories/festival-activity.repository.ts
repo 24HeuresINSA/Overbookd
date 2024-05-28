@@ -32,8 +32,8 @@ import {
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequestForm, PublishFeedbackForm } from "@overbookd/http";
-import { StatsPayload } from "~/utils/models/stats.model";
 import { Context } from "../utils/api/axios";
+import { StatsPayload } from "~/utils/festival-event/stats";
 
 export class FestivalActivityRepository {
   private static readonly basePath = "festival-activities";

@@ -37,7 +37,7 @@ import AssignmentVolunteerList from "~/components/molecules/assignment/list/Assi
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "@overbookd/http";
-import { Sort } from "~/utils/models/assignment.model";
+import { Sort } from "~/utils/sort/sort.utils";
 import {
   keepMatchingSearchCriteria,
   Searchable,

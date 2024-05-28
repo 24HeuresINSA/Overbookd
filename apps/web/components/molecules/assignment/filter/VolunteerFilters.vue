@@ -65,7 +65,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Team } from "@overbookd/http";
-import { nextSortDirection } from "~/utils/models/assignment.model";
+import { nextSortDirection } from "~/utils/sort/sort.utils";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {

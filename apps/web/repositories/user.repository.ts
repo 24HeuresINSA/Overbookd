@@ -1,6 +1,10 @@
-import { Consumer, VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { PlanningEvent } from "@overbookd/assignment";
-import { HttpStringified, PlanningTask } from "@overbookd/http";
+import {
+  AssignmentStat,
+  Consumer,
+  HttpStringified,
+  PlanningTask,
+} from "@overbookd/http";
 import {
   MyUserInformation,
   Profile,
@@ -137,7 +141,7 @@ export class UserRepository {
   }
 
   static getVolunteerAssignmentStats(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<VolunteerAssignmentStat[]>>(
+    return context.$axios.get<HttpStringified<AssignmentStat[]>>(
       `${this.basePath}/${userId}/assignments/stats`,
     );
   }

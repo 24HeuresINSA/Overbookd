@@ -7,7 +7,7 @@ import {
 import { actionTree, mutationTree } from "typed-vuex";
 import { CategoryRepository } from "~/repositories/catalog.repository";
 import { safeCall } from "~/utils/api/calls";
-import { SnackNotif } from "~/utils/models/notif.model";
+import { SnackNotif } from "~/utils/notification/snack";
 
 type State = {
   categories: CatalogCategory[];

@@ -46,7 +46,7 @@ import PeriodForm from "~/components/molecules/period/PeriodForm.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { SortablePeriodHeader, periodsSorts } from "~/utils/sort/sort-period";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import { IProvidePeriod } from "@overbookd/period";
 
 type FaTimeWindowTableData = {

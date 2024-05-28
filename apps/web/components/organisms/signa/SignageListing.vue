@@ -80,14 +80,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import SignageForm from "~/components/molecules/signa/SignageForm.vue";
 import DisplayImageSigna from "~/components/molecules/signa/DisplayImageSigna.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
-import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
+import { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 type SignageListingData = {
   headers: Header[];

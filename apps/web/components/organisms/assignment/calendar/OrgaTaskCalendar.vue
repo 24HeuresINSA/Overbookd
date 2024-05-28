@@ -40,12 +40,12 @@ import {
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { CalendarEvent } from "~/utils/calendar/event";
-import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import {
+  AssignmentStat,
   AssignmentSummaryWithTask,
   DisplayableAssignment,
   PlanningTask,
@@ -104,7 +104,7 @@ export default defineComponent({
     hourToScrollTo(): number | undefined {
       return this.hoverAssignment?.start.getHours();
     },
-    stats(): VolunteerAssignmentStat[] {
+    stats(): AssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
   },

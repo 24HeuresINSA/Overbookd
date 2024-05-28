@@ -50,7 +50,7 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { UserPersonalData } from "@overbookd/user";
-import { Header } from "~/utils/models/data-table.model";
+import { Header } from "~/utils/data-table/header";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,

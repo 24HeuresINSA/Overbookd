@@ -25,6 +25,7 @@
 </template>
 
 <script lang="ts">
+import { AssignmentStat } from "@overbookd/http";
 import { Duration } from "@overbookd/period";
 import Vue from "vue";
 import {
@@ -36,18 +37,18 @@ import {
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
 } from "~/utils/assignment/task-category";
-import { VolunteerAssignmentStat } from "~/utils/models/user.model";
+import { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
 export default Vue.extend({
   name: "AssignmentUserStats",
   props: {
     stats: {
-      type: Array as () => VolunteerAssignmentStat[],
+      type: Array as () => AssignmentStat[],
       required: true,
     },
   },
   computed: {
-    sortedStats(): VolunteerAssignmentStat[] {
+    sortedStats(): DisplayableAssignmentStat[] {
       return displayableCategories
         .map((displayableCategory) => {
           const categoryStat = this.stats.find(
@@ -78,7 +79,7 @@ export default Vue.extend({
     getDisplayedDuration(duration: number): string {
       return Duration.ms(duration).toString();
     },
-    getDisplayedStat(stat: VolunteerAssignmentStat): string {
+    getDisplayedStat(stat: DisplayableAssignmentStat): string {
       const emoji = this.getStatCategoryEmoji(stat.category);
       const duration = this.getDisplayedDuration(stat.duration);
       return `${emoji} ${duration}`;
