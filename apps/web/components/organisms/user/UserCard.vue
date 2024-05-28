@@ -174,7 +174,7 @@ export default defineComponent({
   },
 
   computed: {
-    me(): MyUserInformationWithProfilePicture  {
+    me(): MyUserInformationWithProfilePicture {
       return this.$accessor.user.me;
     },
     myId(): number {
