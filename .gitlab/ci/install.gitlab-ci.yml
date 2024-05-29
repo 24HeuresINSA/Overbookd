@@ -17,5 +17,5 @@ install:
       - .pnpm-store
       - pnpm-lock.yaml
       - node_modules
-      - .nuxt
+      - apps/web/.nuxt
     expire_in: 1 hour
