@@ -487,6 +487,9 @@ importers:
       '@overbookd/alerts':
         specifier: workspace:*
         version: link:../../utils/alerts
+      '@overbookd/assignment':
+        specifier: workspace:*
+        version: link:../../domains/assignment
       '@overbookd/configuration':
         specifier: workspace:*
         version: link:../../domains/configuration
@@ -499,6 +502,12 @@ importers:
       '@overbookd/festival-event':
         specifier: workspace:*
         version: link:../../domains/festival-event
+      '@overbookd/festival-event-constants':
+        specifier: workspace:*
+        version: link:../../constants/festival-event-constants
+      '@overbookd/geo-location':
+        specifier: workspace:*
+        version: link:../../libraries/geo-location
       '@overbookd/http':
         specifier: workspace:*
         version: link:../../utils/http
@@ -508,6 +517,9 @@ importers:
       '@overbookd/logistic':
         specifier: workspace:*
         version: link:../../domains/logistic
+      '@overbookd/money':
+        specifier: workspace:*
+        version: link:../../libraries/money
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
@@ -526,6 +538,9 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
+      '@overbookd/team':
+        specifier: workspace:*
+        version: link:../../constants/team
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../domains/user
@@ -538,9 +553,6 @@ importers:
       jwt-decode:
         specifier: 3.1.2
         version: 3.1.2
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
       pinia:
         specifier: 2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.19(typescript@5.4.5))
@@ -14482,7 +14494,7 @@ snapshots:
       lru-cache: 10.2.2
       npm-pick-manifest: 9.0.1
       proc-log: 4.2.0
-      promise-inflight: 1.0.1(bluebird@3.7.2)
+      promise-inflight: 1.0.1
       promise-retry: 2.0.1
       semver: 7.6.2
       which: 4.0.0
@@ -16644,7 +16656,7 @@ snapshots:
   '@unocss/transformer-attributify-jsx-babel@0.60.3':
     dependencies:
       '@babel/core': 7.24.5
-      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.5)
+      '@babel/plugin-syntax-jsx': 7.24.6(@babel/core@7.24.5)
       '@babel/preset-typescript': 7.24.6(@babel/core@7.24.5)
       '@unocss/core': 0.60.3
     transitivePeerDependencies:
@@ -17877,7 +17889,7 @@ snapshots:
 
   axios@0.26.1:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6
     transitivePeerDependencies:
       - debug
 
@@ -20251,6 +20263,8 @@ snapshots:
   focus-trap@7.5.4:
     dependencies:
       tabbable: 6.2.0
+
+  follow-redirects@1.15.6: {}
 
   follow-redirects@1.15.6(debug@4.3.4):
     optionalDependencies:
@@ -24872,6 +24886,8 @@ snapshots:
       figures: 2.0.0
       log-update: 2.3.0
       webpack: 5.91.0
+
+  promise-inflight@1.0.1: {}
 
   promise-inflight@1.0.1(bluebird@3.7.2):
     optionalDependencies:

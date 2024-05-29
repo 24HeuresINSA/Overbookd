@@ -1,6 +1,7 @@
 import { useAuthStore } from "~/stores/auth";
 import jwt_decode from "jwt-decode";
 import { isSuccess } from "~/utils/http/http-request";
+import type { RouteLocationNormalized } from "vue-router";
 
 type Token = { exp: number };
 
@@ -18,18 +19,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const decodedToken: Token = jwt_decode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
-    if (to?.name === "login") return navigateTo("/");
+    if (isTargettingLoginPage(to)) return navigateTo("/");
     return;
   }
 
   const res = await AuthRepository.refresh(refreshToken.value);
   if (!isSuccess(res)) return handleUnauthenticatedRedirect();
 
-  authenticate(res.data.accessToken, res.data.refreshToken);
+  authenticate(res.accessToken, res.refreshToken);
 
   function handleUnauthenticatedRedirect() {
     logout();
-    if (to.name === "login") return;
+    if (isTargettingLoginPage(to)) return;
     abortNavigation();
     return navigateTo("/login");
   }
@@ -37,4 +38,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
 function isAccessTokenValid(token: Token): boolean {
   return token.exp * 1000 > Date.now();
+}
+
+function isTargettingLoginPage(to: RouteLocationNormalized): boolean {
+  return to.name === "login";
 }

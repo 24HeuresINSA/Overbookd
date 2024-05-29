@@ -19,8 +19,8 @@ export const useAuthStore = defineStore("auth", {
     async login(form: LoginForm) {
       const res = await AuthRepository.login(form);
 
-      if (!isSuccess(res)) return;
-      this.authenticate(res.data.accessToken, res.data.refreshToken);
+      if (!isSuccess(res)) return console.error(res);
+      this.authenticate(res.accessToken, res.refreshToken);
     },
     logout() {
       const accessToken = useCookie("accessToken");

@@ -2,17 +2,13 @@ import type { HttpStringified } from "@overbookd/http";
 
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-type HttpResponse<T extends object> = {
-  status: number;
-  ok: boolean;
-  data: HttpStringified<T>;
-};
+type HttpResponse<T extends object> = HttpStringified<T> | Error;
 
 async function apiFetch<T extends object>(
   url: string,
   method: Method,
   body?: object,
-): Promise<HttpResponse<T> | Error> {
+): Promise<HttpResponse<T>> {
   const config = useRuntimeConfig();
 
   const fullUrl = `${config.public.baseURL}/${url}`;
@@ -29,40 +25,38 @@ async function apiFetch<T extends object>(
 }
 
 export class HttpRequest {
-  static get<T extends object>(url: string): Promise<HttpResponse<T> | Error> {
+  static get<T extends object>(url: string): Promise<HttpResponse<T>> {
     return apiFetch<T>(url, "GET");
   }
 
   static post<T extends object>(
     url: string,
     body: object,
-  ): Promise<HttpResponse<T> | Error> {
+  ): Promise<HttpResponse<T>> {
     return apiFetch<T>(url, "POST", body);
   }
 
   static put<T extends object>(
     url: string,
     body: object,
-  ): Promise<HttpResponse<T> | Error> {
+  ): Promise<HttpResponse<T>> {
     return apiFetch<T>(url, "PUT", body);
   }
 
   static patch<T extends object>(
     url: string,
     body: object,
-  ): Promise<HttpResponse<T> | Error> {
+  ): Promise<HttpResponse<T>> {
     return apiFetch<T>(url, "PATCH", body);
   }
 
-  static delete<T extends object>(
-    url: string,
-  ): Promise<HttpResponse<T> | Error> {
+  static delete<T extends object>(url: string): Promise<HttpResponse<T>> {
     return apiFetch<T>(url, "DELETE");
   }
 }
 
 export function isSuccess<T extends object>(
-  res: HttpResponse<T> | Error,
-): res is HttpResponse<T> {
-  return !(res instanceof Error) && res.ok;
+  res: HttpResponse<T>,
+): res is HttpStringified<T> {
+  return !(res instanceof Error);
 }
