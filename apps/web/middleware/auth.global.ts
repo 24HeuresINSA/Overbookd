@@ -1,5 +1,6 @@
 import { useAuthStore } from "~/stores/auth";
 import jwt_decode from "jwt-decode";
+import { isSuccess } from "~/utils/http/http-request";
 
 type Token = { exp: number };
 
@@ -22,7 +23,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const res = await AuthRepository.refresh(refreshToken.value);
-  if (!res.ok) return handleUnauthenticatedRedirect();
+  if (!isSuccess(res)) return handleUnauthenticatedRedirect();
 
   authenticate(res.data.accessToken, res.data.refreshToken);
 

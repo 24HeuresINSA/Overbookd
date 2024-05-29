@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { isSuccess } from "~/utils/http/http-request";
 
 export type LoginForm = {
   email: string;
@@ -18,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
     async login(form: LoginForm) {
       const res = await AuthRepository.login(form);
 
-      if (!res.ok) return;
+      if (!isSuccess(res)) return;
       this.authenticate(res.data.accessToken, res.data.refreshToken);
     },
     logout() {
