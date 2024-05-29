@@ -52,8 +52,8 @@ preprod_overbookd-web_publish:
     APP_PATH: apps/web
     APP_NAME: web
     VERSION_TAG_PREFIX: "pre-prod_"
-    TAG: "pre-prod"
-    BASE_IMAGE: "web_pre-prod"
+    TAG: "pre-prod-next"
+    BASE_IMAGE: "web_pre-prod-next"
 
 prod_overbookd-api_publish:
   extends: .docker-publish
