@@ -24,11 +24,8 @@ async function apiFetch<T extends object>(
 
   const res = await fetch(fullUrl, options);
   const data = await res.json();
-  return {
-    status: res.status,
-    ok: res.ok,
-    data,
-  };
+  if (!res.ok) return new Error(data.message);
+  return data;
 }
 
 export class HttpRequest {

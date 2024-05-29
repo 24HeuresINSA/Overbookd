@@ -16,7 +16,7 @@
     "directory": "apps/web"
   },
   "scripts": {
-    "postinstall": "nuxi prepare && pwd && ls .nuxt",
+    "postinstall": "nuxi prepare",
     "build": "nuxi build",
     "build:ci": "CI=1 pnpm run build",
     "dev": "nuxi dev",
