@@ -49,9 +49,9 @@ overbookd-web_docker_pre_build:
     - echo $OVERBOOKD_VERSION
   script:
     - '[ -n "$CI_COMMIT_BRANCH" ] && VERSION_TAG_PREFIX="pre-prod_" || VERSION_TAG_PREFIX=""'
-    - '[ -n "$CI_COMMIT_BRANCH" ] && TAG="pre-prod" || TAG="latest"'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && TAG="pre-prod-next" || TAG="latest"'
     - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD'
-    - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_IMAGE="web_pre-prod" || BASE_IMAGE="web_prod"'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_IMAGE="web_pre-prod-next" || BASE_IMAGE="web_prod"'
     - docker load -i ${APP_NAME}_installer.tar
     - >
       docker build
@@ -96,7 +96,7 @@ overbookd-web_docker_build:
     - when: never
   artifacts:
     paths:
-      - web_pre-prod.tar
+      - web_pre-prod-next.tar
       - web_prod.tar
     expire_in: 1 hour
 

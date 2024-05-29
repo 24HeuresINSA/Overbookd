@@ -51,7 +51,7 @@ preprod_overbookd-web_publish:
   variables:
     APP_PATH: apps/web
     APP_NAME: web
-    VERSION_TAG_PREFIX: "pre-prod_"
+    VERSION_TAG_PREFIX: "pre-prod-next_"
     TAG: "pre-prod-next"
     BASE_IMAGE: "web_pre-prod-next"
 
