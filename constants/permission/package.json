@@ -32,7 +32,7 @@
     "permission"
   ],
   "engines": {
-    "node": "20.12.2",
+    "node": "22.2.0",
     "pnpm": "9.1.2"
   }
 }
