@@ -29,7 +29,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   function handleUnauthenticatedRedirect() {
     logout();
-    if (to?.name === "login") return;
+    if (to.name === "login") return;
     abortNavigation();
     return navigateTo("/login");
   }
