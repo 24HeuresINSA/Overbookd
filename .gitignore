@@ -54,3 +54,4 @@ dist
 /backend/node_modules/
 
 .pnpm-store
+**/.output
