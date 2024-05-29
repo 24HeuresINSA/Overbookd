@@ -16,13 +16,13 @@
     "directory": "apps/web"
   },
   "scripts": {
-    "build": "nuxi prepare && nuxi build",
+    "build": "nuxi build",
     "build:ci": "CI=1 pnpm run build",
     "dev": "nuxi dev",
     "dev:host": "nuxi --hostname '0'",
     "generate": "nuxi generate",
     "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\"",
-    "lint": "eslint --ext \".ts,.vue\" --ignore-path .gitignore . --fix",
+    "lint": "nuxi build && eslint --ext \".ts,.vue\" --ignore-path .gitignore . --fix",
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
