@@ -43,7 +43,7 @@ secret_detection:
 
 overbookd/format:
   extends: .format
-  needs: [install]
+  needs: [overbookd-web_docker_build]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
