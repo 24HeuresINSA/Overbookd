@@ -7,100 +7,180 @@
     ":semanticCommitTypeAll(chore)"
   ],
   "timezone": "Europe/Paris",
-  "schedule": ["after 5pm on monday"],
+  "schedule": [
+    "after 5pm on monday"
+  ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "reviewers": ["LeoMouyna", "titouan-joseph", "LeonDumestre"],
-  "labels": ["Type::Dependencies"],
+  "reviewers": [
+    "LeoMouyna",
+    "titouan-joseph",
+    "LeonDumestre"
+  ],
+  "labels": [
+    "Type::Dependencies"
+  ],
   "pre-commit": {
     "enabled": true
+  },
+  "gitlabci": {
+    "fileMatch": [
+      "\\.gitlab-ci\\.ya?ml$",
+      "\\.gitlab/ci/.*\\.gitlab-ci\\.ya?ml$"
+    ]
   },
   "rangeStrategy": "pin",
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["after 5pm on the first day of the month"]
+    "schedule": [
+      "after 5pm on the first day of the month"
+    ]
   },
   "packageRules": [
     {
       "description": "Group all dependencies from the api directory",
-      "matchFileNames": ["apps/api/**"],
-      "addLabels": ["Scope::Api"],
+      "matchFileNames": [
+        "apps/api/**"
+      ],
+      "addLabels": [
+        "Scope::Api"
+      ],
       "groupName": "API dependencies",
       "groupSlug": "api-dependencies",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the web directory",
-      "matchFileNames": ["apps/web/**"],
-      "addLabels": ["Scope::Web"],
+      "matchFileNames": [
+        "apps/web/**"
+      ],
+      "addLabels": [
+        "Scope::Web"
+      ],
       "groupName": "Web dependencies",
       "groupSlug": "web-dependencies",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days",
-      "excludePackageNames": ["axios"]
+      "excludePackageNames": [
+        "axios"
+      ]
     },
     {
       "description": "Group all dependencies from the libs directory",
-      "matchFileNames": ["libraries/**"],
-      "addLabels": ["Scope::Libs"],
+      "matchFileNames": [
+        "libraries/**"
+      ],
+      "addLabels": [
+        "Scope::Libs"
+      ],
       "groupName": "Libs dependencies",
       "groupSlug": "libs-dependencies",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the domains or constants directories",
-      "matchFileNames": ["domains/**", "constants/**"],
-      "addLabels": ["Scope::Domain"],
+      "matchFileNames": [
+        "domains/**",
+        "constants/**"
+      ],
+      "addLabels": [
+        "Scope::Domain"
+      ],
       "groupName": "Domain dependencies",
       "groupSlug": "domain-dependencies",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all gitlab-ci dependencies",
-      "matchFileNames": [".gitlab-ci.yml", ".gitlab/ci/**"],
-      "addLabels": ["Scope::CI", "gitlabci"],
+      "matchFileNames": [
+        ".gitlab-ci.yml",
+        ".gitlab/ci/**"
+      ],
+      "addLabels": [
+        "Scope::CI",
+        "gitlabci"
+      ],
       "groupName": "Gitlab CI dependencies",
       "groupSlug": "gitlab-ci-dependencies"
     },
     {
       "description": "Group all Dockerfile dependencies",
-      "matchDatasources": ["docker"],
+      "matchDatasources": [
+        "docker"
+      ],
       "versioning": "docker",
-      "matchFileNames": ["**/Dockerfile", "**/docker-compose.yml"],
-      "addLabels": ["Scope::CI", "docker"],
+      "matchFileNames": [
+        "**/Dockerfile",
+        "**/docker-compose.yml"
+      ],
+      "addLabels": [
+        "Scope::CI",
+        "docker"
+      ],
       "groupName": "Dockerfile dependencies",
       "groupSlug": "dockerfile-dependencies"
     },
     {
       "description": "Group all pre-commit dependencies",
-      "matchFileNames": [".pre-commit-config.yaml"],
-      "addLabels": ["Scope::CI"],
+      "matchFileNames": [
+        ".pre-commit-config.yaml"
+      ],
+      "addLabels": [
+        "Scope::CI"
+      ],
       "groupName": "Pre-commit dependencies",
       "groupSlug": "pre-commit-dependencies"
     },
     {
       "description": "Group all root dependencies",
-      "matchFileNames": ["package.json"],
-      "addLabels": ["Scope::Config"],
+      "matchFileNames": [
+        "package.json"
+      ],
+      "addLabels": [
+        "Scope::Config"
+      ],
       "groupName": "Root package dependencies",
       "groupSlug": "root-package-dependencies",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
+      "description": "Group all update of node",
+      "matchPackageNames": [
+        "node"
+      ],
+      "groupName": "node update",
+      "groupSlug": "node-update",
+      "minimumReleaseAge": "3 days"
+    },
+    {
       "description": "Group all update of pnpm",
-      "matchPackageNames": ["pnpm"],
+      "matchPackageNames": [
+        "pnpm"
+      ],
       "groupName": "Pnpm update",
       "groupSlug": "pnpm-update",
-      "matchDatasources": ["npm"],
+      "matchDatasources": [
+        "npm"
+      ],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
