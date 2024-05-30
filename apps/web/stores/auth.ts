@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
     async login(form: LoginForm) {
       const res = await AuthRepository.login(form);
 
-      if (!isSuccess(res)) return console.error(res);
+      if (!isSuccess(res)) return console.error(res.message);
       this.authenticate(res.accessToken, res.refreshToken);
     },
     logout() {
