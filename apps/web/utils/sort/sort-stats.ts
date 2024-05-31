@@ -82,21 +82,21 @@ export function getAssignmentStatsSortFunctionFromSortType(
   sortDesc: boolean,
 ): SortFunction<VolunteerWithAssignmentStats> {
   switch (sortBy) {
-    case "volunteer":
-      return sortVolunteerOnNames(sortDesc);
-    case "charisma":
-      return sortVolunteerOnCharisma(sortDesc);
-    case STATIQUE:
-    case MANUTENTION:
-    case BAR:
-    case RELOU:
-    case FUN:
-      return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc, sortBy);
-    case AUCUNE:
-      return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc);
-    case "total":
-      return sortVolunteerOnTotalAssignmentDuration(sortDesc);
-    default:
-      return () => 0;
+  case "volunteer":
+    return sortVolunteerOnNames(sortDesc);
+  case "charisma":
+    return sortVolunteerOnCharisma(sortDesc);
+  case STATIQUE:
+  case MANUTENTION:
+  case BAR:
+  case RELOU:
+  case FUN:
+    return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc, sortBy);
+  case AUCUNE:
+    return sortVolunteerOnTaskCategoryAssignmentDuration(sortDesc);
+  case "total":
+    return sortVolunteerOnTotalAssignmentDuration(sortDesc);
+  default:
+    return () => 0;
   }
 }

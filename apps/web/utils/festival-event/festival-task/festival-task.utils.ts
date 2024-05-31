@@ -31,14 +31,14 @@ export function getTaskReviewStatus(
 ): ReviewStatus {
   if (isDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
-    case humain:
-      return festivalTask.reviews.humain;
-    case matos:
-      return festivalTask.reviews.matos;
-    case elec:
-      return festivalTask.reviews.elec;
-    default:
-      return NOT_ASKING_TO_REVIEW;
+  case humain:
+    return festivalTask.reviews.humain;
+  case matos:
+    return festivalTask.reviews.matos;
+  case elec:
+    return festivalTask.reviews.elec;
+  default:
+    return NOT_ASKING_TO_REVIEW;
   }
 }
 
@@ -55,14 +55,14 @@ export function getPreviewReviewStatus(
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {
-    case humain:
-      return preview.reviews.humain;
-    case matos:
-      return preview.reviews.matos;
-    case elec:
-      return preview.reviews.elec;
-    default:
-      return NOT_ASKING_TO_REVIEW;
+  case humain:
+    return preview.reviews.humain;
+  case matos:
+    return preview.reviews.matos;
+  case elec:
+    return preview.reviews.elec;
+  default:
+    return NOT_ASKING_TO_REVIEW;
   }
 }
 
