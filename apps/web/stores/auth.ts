@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { isSuccess } from "~/utils/http/http-request";
+import { isSuccess } from "~/utils/http/api-fetch";
 
 export type LoginForm = {
   email: string;
