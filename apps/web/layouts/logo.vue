@@ -8,13 +8,13 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
 
-const version = process.env.OVERBOOKD_VERSION;
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
 
+const config = useRuntimeConfig();
 const counter = ref(0);
 
-const versionString = computed(() => `v${version}` ?? "");
+const versionString = computed(() => `v${config.public.version}` ?? "");
 
 const logo = computed(() => {
   if (counter.value >= FIFTY_ONE) return "Pastis.png";

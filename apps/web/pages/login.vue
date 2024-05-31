@@ -87,8 +87,8 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia"; // import storeToRefs helper hook from pinia
-import { useAuthStore } from "~/stores/auth"; // import the auth store we just created
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "~/stores/auth";
 
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
@@ -141,7 +141,8 @@ const BACKGROUNDS_URL = [
   "https://live.staticflickr.com/65535/52617420469_0994528701_b.jpg",
 ];
 
-const version = process.env.OVERBOOKD_VERSION;
+const config = useRuntimeConfig();
+const version = config.public.version;
 
 const authStore = useAuthStore();
 const { authenticated } = storeToRefs(authStore);
