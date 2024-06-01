@@ -1,4 +1,4 @@
-FROM node:20.1.0-alpine AS installer
+FROM node:20.9.0-alpine AS installer
 
 WORKDIR /overbookd
 
@@ -42,7 +42,7 @@ COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
-FROM node:20.1.0-alpine
+FROM node:20.9.0-alpine
 
 ARG WEB_VERSION
 
