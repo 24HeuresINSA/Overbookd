@@ -34,7 +34,7 @@
     "purchase"
   ],
   "engines": {
-    "node": "22.2.0",
+    "node": "20.1.0",
     "pnpm": "9.1.2"
   },
   "dependencies": {
