@@ -1,4 +1,4 @@
-FROM node:20.9.0-alpine AS installer
+FROM node:20.14.0-alpine AS installer
 
 WORKDIR /overbookd
 
@@ -30,7 +30,7 @@ COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
 
-FROM node:20.9.0-alpine
+FROM node:20.14.0-alpine
 
 ARG WEB_VERSION
 
