@@ -1,14 +1,12 @@
-import { Context } from "../utils/api/axios";
+import type { AuthResponse, LoginForm } from "~/stores/auth";
+import { HttpRequest } from "~/utils/http/http-request";
 
 export class AuthRepository {
-  static requestResetPassword(context: Context, data: { email: string }) {
-    return context.$axios.post("/forgot", data);
+  static login(body: LoginForm) {
+    return HttpRequest.post<AuthResponse>("login", body);
   }
 
-  static resetPassword(
-    context: Context,
-    data: { token: string; password: string; password2: string },
-  ) {
-    return context.$axios.post("/reset", data);
+  static refresh(refreshToken: string) {
+    return HttpRequest.post<AuthResponse>("refresh", { refreshToken });
   }
 }

@@ -17,6 +17,7 @@
     "sourceType": "module",
     "project": [
       "./apps/*/tsconfig.json",
+      "!./apps/old-web/tsconfig.json",
       "!./apps/web/tsconfig.json",
       "./constants/*/tsconfig.json",
       "./domains/*/tsconfig.json",
@@ -46,7 +47,7 @@
       }
     },
     {
-      "files": ["./apps/web"],
+      "files": ["./apps/old-web"],
       "env": {
         "browser": true,
         "es2021": true,

@@ -10,12 +10,23 @@ RUN pnpm fetch
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
 
-COPY apps/web /overbookd/apps/web
-COPY libraries /overbookd/libraries
-COPY domains /overbookd/domains
-COPY utils /overbookd/utils
+WORKDIR /overbookd/apps/old-web
+COPY apps/old-web/ ./
 
-RUN pnpm install --recursive --offline --filter '@overbookd/web...'
+WORKDIR /overbookd/libraries
+COPY libraries/ ./
+
+WORKDIR /overbookd/domains
+COPY domains/ ./
+
+WORKDIR /overbookd/constants
+COPY constants/ ./
+
+WORKDIR /overbookd/utils
+COPY utils/ ./
+
+WORKDIR /overbookd
+RUN pnpm install --recursive --offline --filter '@overbookd/old-web...'
 
 FROM installer AS builder
 
@@ -29,17 +40,18 @@ COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
+RUN pnpm --filter '@overbookd/old-web...' run build:ci
 
 FROM node:20.9.0-alpine
 
-ARG WEB_VERSION
+ARG OLD_WEB_VERSION
 
-LABEL org.24heures.overbookd.image.title="Overbookd-web" \
+LABEL org.24heures.overbookd.image.title="Overbookd-old-web" \
   org.24heures.overbookd.image.documentation="https://gitlab.com/24-heures-insa/overbookd-mono/-/wikis/home" \
   org.24heures.overbookd.image.licenses="https://gitlab.com/24-heures-insa/overbookd-mono/-/blob/main/LICENSE" \
   org.24heures.overbookd.image.source="https://gitlab.com/24-heures-insa/overbookd-mono" \
   org.24heures.overbookd.image.authors="https://gitlab.com/24-heures-insa/overbookd-mono/-/graphs/main" \
-  org.24heures.overbookd.image.version=${WEB_VERSION}
+  org.24heures.overbookd.image.version=${OLD_WEB_VERSION}
 
 ENV NODE_ENV production
 
@@ -49,10 +61,12 @@ RUN chown -R node:node /app
 
 USER node
 
-COPY --chown=node:node --from=builder /overbookd/apps/web/.output ./output
+RUN npm install serve --silent
 
-EXPOSE 3000
+COPY --chown=node:node --from=builder /overbookd/apps/web/dist ./dist
 
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
+EXPOSE 1234
 
-CMD [ "node", "output/server/index.mjs" ]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:1234/"]
+
+CMD ["./node_modules/.bin/serve", "--single", "--listen", "1234", "dist"]

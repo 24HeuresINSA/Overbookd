@@ -2,7 +2,7 @@
   extends: .setup-pnpm
   stage: test
   interruptible: true
-  image: node:20.13.1-alpine
+  image: node:20.9.0-alpine
   script:
     - pnpm i
     - pnpm --filter "${PNPM_WORKSPACE}^..." run build
