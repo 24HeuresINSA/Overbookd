@@ -28,6 +28,9 @@ overbookd-web_docker_pre_build:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/web/Dockerfile
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -112,6 +115,9 @@ overbookd-api_docker_build:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/api/Dockerfile
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: manual
       allow_failure: true

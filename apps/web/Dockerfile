@@ -14,6 +14,7 @@ COPY apps/web /overbookd/apps/web
 COPY libraries /overbookd/libraries
 COPY domains /overbookd/domains
 COPY utils /overbookd/utils
+COPY constants /overbookd/constants
 
 RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 
@@ -29,6 +30,7 @@ COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
+RUN pnpm --filter '@overbookd/web...' run build:ci
 
 FROM node:20.14.0-alpine
 
