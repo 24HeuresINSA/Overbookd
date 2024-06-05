@@ -1,15 +1,6 @@
+import type { LoginForm } from "@overbookd/http";
 import { defineStore } from "pinia";
-import { isSuccess } from "~/utils/http/http-request";
-
-export type LoginForm = {
-  email: string;
-  password: string;
-};
-
-export type AuthResponse = {
-  accessToken: string;
-  refreshToken: string;
-};
+import { isSuccess } from "~/utils/http/api-fetch";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

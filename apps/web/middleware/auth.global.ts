@@ -1,6 +1,6 @@
 import { useAuthStore } from "~/stores/auth";
 import jwt_decode from "jwt-decode";
-import { isSuccess } from "~/utils/http/http-request";
+import { isSuccess } from "~/utils/http/api-fetch";
 import type { RouteLocationNormalized } from "vue-router";
 
 type Token = { exp: number };

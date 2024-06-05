@@ -1,12 +1,12 @@
-import type { AuthResponse, LoginForm } from "~/stores/auth";
-import { HttpRequest } from "~/utils/http/http-request";
+import type { AuthResponse, LoginForm } from "@overbookd/http";
+import { HttpClient } from "~/utils/http/http-client";
 
 export class AuthRepository {
   static login(body: LoginForm) {
-    return HttpRequest.post<AuthResponse>("login", body);
+    return HttpClient.post<AuthResponse>("login", body);
   }
 
   static refresh(refreshToken: string) {
-    return HttpRequest.post<AuthResponse>("refresh", { refreshToken });
+    return HttpClient.post<AuthResponse>("refresh", { refreshToken });
   }
 }
