@@ -1,5 +1,3 @@
-version: "3"
-
 networks:
   overbookd_net-api:
   traefik-public:
@@ -7,6 +5,7 @@ networks:
 
 volumes:
   certs:
+
 
 services:
   certs-downloader:
