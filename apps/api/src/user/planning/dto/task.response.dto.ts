@@ -7,8 +7,8 @@ import {
   AppointmentLocation,
 } from "../domain/task.model";
 import { ApiProperty } from "@nestjs/swagger";
-import { PeriodDto } from "../../../volunteer-availability/dto/period.dto";
 import { GeoLocation } from "@overbookd/geo-location";
+import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
@@ -30,7 +30,7 @@ class AssignmentRepresentation implements Assignment {
   @ApiProperty({
     name: "period",
     description: "period volunteers are assigned",
-    type: PeriodDto,
+    type: PeriodResponseDto,
   })
   period: IProvidePeriod;
 
@@ -103,7 +103,7 @@ export class TaskResponseDto implements Task {
   @ApiProperty({
     name: "period",
     description: "task period",
-    type: PeriodDto,
+    type: PeriodResponseDto,
   })
   period: IProvidePeriod;
 

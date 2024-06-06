@@ -1,4 +1,4 @@
-import { SELECT_PERIOD } from "./period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 
 export const SELECT_TASK = { name: true, status: true, id: true };
 

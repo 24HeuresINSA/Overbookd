@@ -4,12 +4,12 @@ import { Type } from "class-transformer";
 import { IsDate } from "class-validator";
 
 export class PeriodRequestDto implements IProvidePeriod {
-  @ApiProperty({})
+  @ApiProperty()
   @IsDate()
   @Type(() => Date)
   start: Date;
 
-  @ApiProperty({})
+  @ApiProperty()
   @IsDate()
   @Type(() => Date)
   end: Date;

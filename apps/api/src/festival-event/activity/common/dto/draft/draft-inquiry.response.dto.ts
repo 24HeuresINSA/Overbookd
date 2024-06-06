@@ -4,7 +4,7 @@ import {
   InquiryWithPotentialRequests,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { PeriodResponseDto } from "../../../../common/dto/period.response.dto";
+import { PeriodResponseDto } from "../../../../../common/dto/period.response.dto";
 import { UnassignedInquiryRequestResponseDto } from "../inquiry-request.response.dto";
 
 export class InquiryDto implements InquiryWithPotentialRequests {

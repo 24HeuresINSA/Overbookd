@@ -1,5 +1,6 @@
 import { APPROVED, FestivalActivity, secu } from "@overbookd/festival-event";
 import { VALIDATED, IN_REVIEW } from "@overbookd/festival-event-constants";
+import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   id: true,
@@ -7,7 +8,7 @@ export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   teamCode: true,
   specialNeed: true,
   freePass: true,
-  generalTimeWindows: { select: { start: true, end: true, id: true } },
+  generalTimeWindows: { select: SELECT_PERIOD_WITH_ID },
 };
 
 export const SHOULD_BE_IN_SECURITY_DASHBOARD = {
@@ -25,7 +26,7 @@ export const SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD = {
   id: true,
   status: true,
   name: true,
-  generalTimeWindows: { select: { start: true, end: true, id: true } },
+  generalTimeWindows: { select: SELECT_PERIOD_WITH_ID },
   description: true,
   photoLink: true,
   isFlagship: true,
@@ -36,7 +37,7 @@ export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
   id: true,
   name: true,
   status: true,
-  inquiryTimeWindows: { select: { start: true, end: true, id: true } },
+  inquiryTimeWindows: { select: SELECT_PERIOD_WITH_ID },
   inquiries: {
     select: {
       quantity: true,

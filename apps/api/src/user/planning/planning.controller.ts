@@ -29,7 +29,6 @@ import {
 } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 import {
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
@@ -52,6 +51,8 @@ import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
 import { buildVolunteerDisplayName } from "../../utils/volunteer";
 import { PlanningRenderStrategy } from "./render/render-strategy";
+import { PeriodResponseDto } from "../../common/dto/period.response.dto";
+import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 
 @ApiTags("planning")
 @Controller("planning")
@@ -180,12 +181,12 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   async getVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
-  ): Promise<PeriodDto[]> {
+  ): Promise<PeriodResponseDto[]> {
     return this.planning.getBreakPeriods(volunteerId);
   }
 
@@ -196,7 +197,7 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   @ApiBody({
@@ -206,7 +207,7 @@ export class PlanningController {
   async addVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteer: number,
     @Body() { start, durationInHours }: BreakPeriodDuringRequestDto,
-  ): Promise<PeriodDto[]> {
+  ): Promise<PeriodResponseDto[]> {
     const duration = Duration.hours(durationInHours);
     return this.planning.addBreakPeriod({
       volunteer,
@@ -221,12 +222,12 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   @ApiBody({
     description: "Period to remove break from",
-    type: PeriodDto,
+    type: PeriodRequestDto,
   })
   @ApiParam({
     name: "volunteerId",
@@ -247,7 +248,7 @@ export class PlanningController {
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
     @Query("start", ParseDatePipe) start: Date,
     @Query("end", ParseDatePipe) end: Date,
-  ): Promise<PeriodDto[]> {
+  ): Promise<PeriodResponseDto[]> {
     const breakPeriod = Period.init({ start, end });
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
   }

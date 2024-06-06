@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { Teams } from "@overbookd/registration";
-import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
+import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
 export class EnrollableStaffResponseDto implements EnrollableStaff {
   @ApiProperty({
@@ -58,7 +58,7 @@ export class EnrollableVolunteerResponseDto
   @ApiProperty({ required: true })
   mobilePhone: string;
 
-  @ApiProperty({ required: true, isArray: true, type: PeriodDto })
+  @ApiProperty({ required: true, isArray: true, type: PeriodResponseDto })
   availabilities: IProvidePeriod[];
 
   @ApiProperty({ required: false })

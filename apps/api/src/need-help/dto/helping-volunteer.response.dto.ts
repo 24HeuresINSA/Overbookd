@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IProvidePeriod } from "@overbookd/period";
-import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 import { HelpingVolunteer, HelpingVolunteerAssignment } from "@overbookd/http";
+import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
 class HelpingVolunteerAssignmentDto implements HelpingVolunteerAssignment {
   @ApiProperty({ type: Number })
@@ -43,7 +43,7 @@ export class HelpingVolunteerResponseDto implements HelpingVolunteer {
 
   @ApiProperty({
     description: "Volunteer availabilities",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   availabilities: IProvidePeriod[];

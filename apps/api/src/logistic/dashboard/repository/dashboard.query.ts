@@ -1,3 +1,5 @@
+import { SELECT_PERIOD } from "../../../common/query/period.query";
+
 const SELECT_BASE_GEAR = {
   id: true,
   name: true,
@@ -25,10 +27,7 @@ const SELECT_ACTIVITY_GEAR_INQUIRIES = {
           id: true,
           name: true,
           inquiryTimeWindows: {
-            select: {
-              start: true,
-              end: true,
-            },
+            select: SELECT_PERIOD,
           },
         },
       },
@@ -46,10 +45,7 @@ const SELECT_TASK_GEAR_INQUIRIES = {
           id: true,
           name: true,
           mobilizations: {
-            select: {
-              start: true,
-              end: true,
-            },
+            select: SELECT_PERIOD,
           },
         },
       },

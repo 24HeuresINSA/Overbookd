@@ -8,9 +8,9 @@ import {
   OrgaNeedRequest,
   OrgaNeedTask,
 } from "@overbookd/http";
+import { SELECT_PERIOD } from "../common/query/period.query";
 
 const IS_NOT_DELETED = { isDeleted: false };
-const SELECT_PERIOD = { start: true, end: true };
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
@@ -370,8 +370,7 @@ export class OrgaNeedsService {
         mobilizations: {
           where: isValidMobilization,
           select: {
-            start: true,
-            end: true,
+            ...SELECT_PERIOD,
             teams: {
               where: this.teamIsSearchedCondition(teams),
               select: { count: true },

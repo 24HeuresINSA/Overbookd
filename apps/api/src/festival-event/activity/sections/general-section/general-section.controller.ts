@@ -27,7 +27,7 @@ import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
-import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
+import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
 import { RefusedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import { ValidatedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import { InReviewFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";

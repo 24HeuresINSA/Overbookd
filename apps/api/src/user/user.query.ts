@@ -1,4 +1,5 @@
 import { Permission } from "@overbookd/permission";
+import { SELECT_PERIOD } from "../common/query/period.query";
 
 export const SELECT_BASE_USER = {
   id: true,
@@ -57,8 +58,7 @@ export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
 };
 
 export const SELECT_PERIOD_AND_CATEGORY = {
-  start: true,
-  end: true,
+  ...SELECT_PERIOD,
   festivalTask: { select: { category: true } },
 };
 

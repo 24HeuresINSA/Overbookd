@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IProvidePeriod } from "@overbookd/period";
 
 export class PeriodResponseDto implements IProvidePeriod {
-  @ApiProperty({ type: Date })
+  @ApiProperty()
   start: Date;
 
-  @ApiProperty({ type: Date })
+  @ApiProperty()
   end: Date;
 }

@@ -7,7 +7,7 @@ import {
 } from "@overbookd/volunteer-availability";
 import { PrismaService } from "../prisma.service";
 import { formatDateWithMinutes } from "../utils/date";
-import { PeriodDto } from "./dto/period.dto";
+import { SELECT_PERIOD } from "../common/query/period.query";
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -43,20 +43,15 @@ export class VolunteerAvailabilityService {
 
   async findUserAvailabilities(userId: number): Promise<IProvidePeriod[]> {
     return this.prisma.volunteerAvailability.findMany({
-      where: {
-        userId,
-      },
-      select: {
-        start: true,
-        end: true,
-      },
+      where: { userId },
+      select: SELECT_PERIOD,
     });
   }
 
   async addAvailabilitiesWithoutCheck(
     userId: number,
-    newPeriods: PeriodDto[],
-  ): Promise<PeriodDto[]> {
+    newPeriods: IProvidePeriod[],
+  ): Promise<IProvidePeriod[]> {
     const previousAvailabilityPeriods =
       await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init();
@@ -81,19 +76,14 @@ export class VolunteerAvailabilityService {
     return this.findUserAvailabilities(userId);
   }
 
-  private async computeCharismaPoints(params: PeriodDto): Promise<number> {
+  private async computeCharismaPoints(params: IProvidePeriod): Promise<number> {
     const allCharismaPeriods = await this.prisma.charismaPeriod.findMany({
       where: {
-        start: {
-          lte: params.end,
-        },
-        end: {
-          gte: params.start,
-        },
+        start: { lte: params.end },
+        end: { gte: params.start },
       },
       select: {
-        start: true,
-        end: true,
+        ...SELECT_PERIOD,
         charisma: true,
       },
     });
@@ -112,8 +102,8 @@ export class VolunteerAvailabilityService {
   }
 
   private async computeCharismaDifference(
-    oldPeriods: PeriodDto[],
-    newPeriods: PeriodDto[],
+    oldPeriods: IProvidePeriod[],
+    newPeriods: IProvidePeriod[],
   ): Promise<number> {
     let newCharismaPoints = 0;
     for (const period of newPeriods) {
@@ -128,7 +118,7 @@ export class VolunteerAvailabilityService {
 
   private async updateVolunteer(
     userId: number,
-    updatedAvailabilityPeriods: PeriodDto[],
+    updatedAvailabilityPeriods: IProvidePeriod[],
     charismaDelta: number,
   ) {
     const deleteAvailabilities = this.prisma.volunteerAvailability.deleteMany({
@@ -142,15 +132,9 @@ export class VolunteerAvailabilityService {
       })),
     });
     const updateVolunteerCharisma = this.prisma.user.update({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
       select: { id: true },
-      data: {
-        charisma: {
-          increment: charismaDelta,
-        },
-      },
+      data: { charisma: { increment: charismaDelta } },
     });
 
     await this.prisma.$transaction(

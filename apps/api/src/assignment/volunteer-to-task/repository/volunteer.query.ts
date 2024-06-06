@@ -4,7 +4,7 @@ import {
   COUNT_FRIENDS,
   DatabaseFriendCount,
 } from "../../common/repository/friend.query";
-import { SELECT_PERIOD } from "../../common/repository/period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 
 export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: {

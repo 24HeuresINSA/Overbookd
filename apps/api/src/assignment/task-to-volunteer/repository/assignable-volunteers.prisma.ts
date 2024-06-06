@@ -14,7 +14,7 @@ import {
   SELECT_PERIOD,
   overlapPeriodCondition,
   includePeriodCondition,
-} from "../../common/repository/period.query";
+} from "../../../common/query/period.query";
 import {
   COUNT_FRIENDS,
   hasAtLeastOneFriend,

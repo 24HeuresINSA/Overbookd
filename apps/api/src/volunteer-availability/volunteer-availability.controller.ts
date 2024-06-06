@@ -21,10 +21,10 @@ import {
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PeriodDto } from "./dto/period.dto";
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { AvailabilitiesRequestDto } from "./dto/availabilities.dto";
+import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
+import { PeriodResponseDto } from "../common/dto/period.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("volunteer-availability")
@@ -45,7 +45,7 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 201,
     description: "Volunteer's availability periods successfully created.",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   @ApiNotFoundResponse({
@@ -64,7 +64,7 @@ export class VolunteerAvailabilityController {
   add(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() { availabilities }: AvailabilitiesRequestDto,
-  ): Promise<PeriodDto[]> {
+  ): Promise<PeriodResponseDto[]> {
     return this.volunteerAvailabilityService.addAvailabilities(
       userId,
       availabilities,
@@ -76,7 +76,7 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 200,
     description: "Volunteer's availability periods",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -88,7 +88,9 @@ export class VolunteerAvailabilityController {
   @ApiNotFoundResponse({
     description: "User not found.",
   })
-  findOne(@Param("userId", ParseIntPipe) userId: number): Promise<PeriodDto[]> {
+  findOne(
+    @Param("userId", ParseIntPipe) userId: number,
+  ): Promise<PeriodResponseDto[]> {
     return this.volunteerAvailabilityService.findUserAvailabilities(userId);
   }
 
@@ -108,7 +110,7 @@ export class VolunteerAvailabilityController {
   @ApiResponse({
     status: 201,
     description: "Volunteer's availability periods successfully created.",
-    type: PeriodDto,
+    type: PeriodResponseDto,
     isArray: true,
   })
   @ApiNotFoundResponse({
@@ -117,7 +119,7 @@ export class VolunteerAvailabilityController {
   overrideHuman(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() { availabilities }: AvailabilitiesRequestDto,
-  ): Promise<PeriodDto[]> {
+  ): Promise<PeriodResponseDto[]> {
     return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
       userId,
       availabilities,

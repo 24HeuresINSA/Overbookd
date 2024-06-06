@@ -1,24 +1,19 @@
 import { FestivalTask } from "@overbookd/festival-event";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
-
-const SELECT_TIME_WINDOW = {
-  id: true,
-  start: true,
-  end: true,
-};
+import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   name: true,
   status: true,
   generalTimeWindows: {
-    select: SELECT_TIME_WINDOW,
+    select: SELECT_PERIOD_WITH_ID,
   },
   location: {
     select: SELECT_LOCATION,
   },
   inquiryTimeWindows: {
-    select: SELECT_TIME_WINDOW,
+    select: SELECT_PERIOD_WITH_ID,
   },
   inquiries: {
     select: {

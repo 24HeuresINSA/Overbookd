@@ -1,25 +1,18 @@
 import { Volunteer } from "@overbookd/festival-event";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
+import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 
 const SELECT_TEAM = {
   count: true,
   teamCode: true,
 };
 
-const SELECT_ASSIGNMENT = {
-  id: true,
-  start: true,
-  end: true,
-};
-
 export const SELECT_MOBILIZATION = {
-  id: true,
-  start: true,
-  end: true,
+  ...SELECT_PERIOD_WITH_ID,
   volunteers: { select: { volunteer: { select: SELECT_VOLUNTEER } } },
   teams: { select: SELECT_TEAM },
   durationSplitInHour: true,
-  assignments: { select: SELECT_ASSIGNMENT },
+  assignments: { select: SELECT_PERIOD_WITH_ID },
 };
 
 type DatabaseTeam = {

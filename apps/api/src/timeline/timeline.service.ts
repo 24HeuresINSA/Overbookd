@@ -7,6 +7,7 @@ import {
   TimelineMobilization,
   TimelineTask,
 } from "@overbookd/http";
+import { SELECT_PERIOD } from "../common/query/period.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   assignees: {
@@ -105,13 +106,11 @@ export class TimelineService {
       mobilizations: {
         where: overlapPeriodCondition,
         select: {
-          start: true,
-          end: true,
+          ...SELECT_PERIOD,
           assignments: {
             where: overlapPeriodCondition,
             select: {
-              start: true,
-              end: true,
+              ...SELECT_PERIOD,
               assignees: { select: selectAssignee },
             },
           },

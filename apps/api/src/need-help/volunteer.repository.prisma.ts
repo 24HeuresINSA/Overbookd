@@ -4,6 +4,7 @@ import { PrismaService } from "../prisma.service";
 import { Injectable } from "@nestjs/common";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { HelpingVolunteer } from "@overbookd/http";
+import { SELECT_PERIOD } from "../common/query/period.query";
 
 type DatabaseHelpingVolunteer = {
   id: number;
@@ -22,8 +23,7 @@ const SELECT_ASSIGNEES = {
     select: {
       assignment: {
         select: {
-          start: true,
-          end: true,
+          ...SELECT_PERIOD,
           festivalTask: { select: { id: true, name: true } },
         },
       },
@@ -37,7 +37,7 @@ const SELECT_VOLUNTEER = {
   firstname: true,
   phone: true,
   teams: { select: { teamCode: true } },
-  availabilities: { select: { start: true, end: true } },
+  availabilities: { select: SELECT_PERIOD },
   ...SELECT_ASSIGNEES,
 };
 

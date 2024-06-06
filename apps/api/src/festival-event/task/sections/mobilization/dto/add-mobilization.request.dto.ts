@@ -4,7 +4,7 @@ import { AddMobilizationForm } from "@overbookd/http";
 import { IsArray, IsNumber, IsOptional, ValidateNested } from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
 import { Type } from "class-transformer";
-import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
+import { PeriodRequestDto } from "../../../../../common/dto/period.request.dto";
 
 export class AddMobilizationRequestDto
   extends PeriodRequestDto

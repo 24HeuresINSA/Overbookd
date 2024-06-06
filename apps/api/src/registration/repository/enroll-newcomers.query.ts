@@ -2,6 +2,7 @@ import { VOLUNTEER } from "@overbookd/registration";
 import { BENEVOLE_CODE } from "@overbookd/team";
 import { SELECT_USER_TEAMS } from "../../user/user.query";
 import { IProvidePeriod } from "@overbookd/period";
+import { SELECT_PERIOD } from "../../common/query/period.query";
 
 export const SELECT_STAFF = {
   id: true,
@@ -15,7 +16,7 @@ export const SELECT_STAFF = {
 export const SELECT_VOLUNTEER = {
   ...SELECT_STAFF,
   charisma: true,
-  availabilities: { select: { start: true, end: true } },
+  availabilities: { select: SELECT_PERIOD },
   phone: true,
   birthdate: true,
   comment: true,

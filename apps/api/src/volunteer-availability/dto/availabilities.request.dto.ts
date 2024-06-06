@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { AvailabilityForm } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
-import { PeriodDto } from "./period.dto";
 import { IsArray, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 
 export class AvailabilitiesRequestDto implements AvailabilityForm {
-  @ApiProperty({ type: PeriodDto, isArray: true })
+  @ApiProperty({ type: PeriodRequestDto, isArray: true })
   @IsArray()
-  @Type(() => PeriodDto)
+  @Type(() => PeriodRequestDto)
   @ValidateNested({ each: true })
   availabilities: IProvidePeriod[];
 }

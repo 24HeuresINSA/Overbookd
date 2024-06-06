@@ -16,18 +16,13 @@ import {
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
+import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 
 export const IS_NOT_DELETED = { isDeleted: false };
 
 const SELECT_REVIEW = {
   team: true,
   status: true,
-};
-
-const SELECT_TIME_WINDOW = {
-  id: true,
-  start: true,
-  end: true,
 };
 
 const SELECT_GENERAL = {
@@ -37,7 +32,7 @@ const SELECT_GENERAL = {
   photoLink: true,
   isFlagship: true,
   categories: true,
-  generalTimeWindows: { select: SELECT_TIME_WINDOW },
+  generalTimeWindows: { select: SELECT_PERIOD_WITH_ID },
 };
 
 const SELECT_IN_CHARGE = {
@@ -95,7 +90,7 @@ const SELECT_SUPPLY = {
 };
 
 const SELECT_INQUIRY = {
-  inquiryTimeWindows: { select: SELECT_TIME_WINDOW },
+  inquiryTimeWindows: { select: SELECT_PERIOD_WITH_ID },
   inquiries: {
     select: {
       slug: true,

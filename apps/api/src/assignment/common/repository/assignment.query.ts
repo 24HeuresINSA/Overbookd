@@ -4,7 +4,7 @@ import {
   BaseAssigneeForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
-import { SELECT_PERIOD } from "./period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod } from "@overbookd/period";
 
 export type DatabaseAssignee = {

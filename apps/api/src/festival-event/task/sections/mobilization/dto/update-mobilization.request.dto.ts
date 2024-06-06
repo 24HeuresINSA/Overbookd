@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { UpdateMobilization } from "@overbookd/festival-event";
 import { IsOptional } from "class-validator";
-import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
+import { PeriodRequestDto } from "../../../../../common/dto/period.request.dto";
 
 export class UpdateMobilizationRequestDto
   extends PeriodRequestDto

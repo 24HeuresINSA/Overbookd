@@ -1,7 +1,7 @@
 import { VolunteerForPlanning } from "@overbookd/http";
 import { PrismaService } from "../../../prisma.service";
 import { UserNameWithTeams, Volunteers } from "../planning.service";
-import { SELECT_PERIOD } from "../../../assignment/common/repository/period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { Period } from "@overbookd/period";
 
 const SELECT_VOLUNTEER = {

@@ -8,6 +8,10 @@ import { buildVolunteerDisplayName } from "../../../utils/volunteer";
 import { TaskRepository } from "../domain/planning";
 import { JsonStoredTask } from "../domain/storedTask";
 import { JsonValue } from "@prisma/client/runtime/library";
+import {
+  SELECT_PERIOD,
+  SELECT_PERIOD_WITH_ID,
+} from "../../../common/query/period.query";
 
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {
@@ -17,9 +21,7 @@ const SELECT_FESTIVAL_TASK = {
   appointment: { select: SELECT_LOCATION },
 };
 const SELECT_MOBILIZATION = {
-  id: true,
-  start: true,
-  end: true,
+  ...SELECT_PERIOD_WITH_ID,
   ft: {
     select: SELECT_FESTIVAL_TASK,
   },
@@ -114,8 +116,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
   private buildAssignmentWithTaskSelection(volunteerId: number) {
     return {
-      start: true,
-      end: true,
+      ...SELECT_PERIOD,
       festivalTask: {
         select: {
           id: true,
@@ -135,8 +136,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
   private buildAssignmentWithAssigneesSelection(volunteerIdToAvoid: number) {
     return {
-      start: true,
-      end: true,
+      ...SELECT_PERIOD,
       festivalTaskId: true,
       assignees: {
         select: {
