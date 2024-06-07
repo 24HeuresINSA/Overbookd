@@ -1,89 +1,95 @@
 <template>
-  <v-img :src="randomURL" class="background" cover />
-  <div class="opacity-filter" />
-  <v-form>
-    <v-container class="form-container">
-      <v-row class="logo">
-        <v-img src="/img/logo/logo_home_white.png" alt="overbookd" />
-      </v-row>
-      <v-row class="version justify-center">
-        <h2>{{ version }}</h2>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.email"
-          label="Email"
-          name="email"
-          autocomplete="email"
-          inputmode="email"
-          type="text"
-          bg-color="white"
-          required
-          autofocus
-          outlined
-          solo
-          @keydown.enter="login"
-        />
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="credentials.password"
-          label="Mot de passe"
-          type="password"
-          bg-color="white"
-          required
-          outlined
-          clearable
-          solo
-          @keydown.enter="login"
-        />
-      </v-row>
-      <v-row class="ctas">
-        <v-btn
-          color="primary"
-          elevation="2"
-          rounded="xl"
-          class="btn btn-primary"
-          @click="login"
-        >
-          connexion
-        </v-btn>
-        <v-btn
-          color="secondary"
-          elevation="2"
-          to="/register"
-          rounded="xl"
-          class="btn btn-secondary"
-        >
-          s'inscrire
-        </v-btn>
-      </v-row>
-      <v-row class="ctas">
-        <v-btn class="btn btn-tertiary" to="/forgot">
-          Mot de passe oublié ?
-        </v-btn>
-        <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
-          Un problème
-          <span class="desktop">&nbsp;lors de l'inscription </span>?
-        </v-btn>
-      </v-row>
-    </v-container>
-  </v-form>
+  <div class="background-wrapper">
+    <v-img :src="randomURL" class="background" cover />
+    <div class="opacity-filter" />
+    <div class="scrollable-content">
+      <v-form>
+        <v-container class="form-container">
+          <v-row class="logo">
+            <v-img src="/img/logo/logo_home_white.png" alt="overbookd" />
+          </v-row>
+          <v-row class="version justify-center">
+            <h2>{{ version }}</h2>
+          </v-row>
+          <v-row>
+            <v-text-field
+              v-model="credentials.email"
+              label="Email"
+              name="email"
+              autocomplete="email"
+              inputmode="email"
+              type="text"
+              bg-color="white"
+              required
+              autofocus
+              outlined
+              solo
+              @keydown.enter="login"
+            />
+          </v-row>
+          <v-row>
+            <v-text-field
+              v-model="credentials.password"
+              label="Mot de passe"
+              type="password"
+              bg-color="white"
+              required
+              outlined
+              clearable
+              solo
+              @keydown.enter="login"
+            />
+          </v-row>
+          <v-row class="ctas">
+            <v-btn
+              color="primary"
+              elevation="2"
+              rounded="xl"
+              class="btn btn-primary"
+              @click="login"
+            >
+              connexion
+            </v-btn>
+            <v-btn
+              color="secondary"
+              elevation="2"
+              to="/register"
+              rounded="xl"
+              class="btn btn-secondary"
+            >
+              s'inscrire
+            </v-btn>
+          </v-row>
+          <v-row class="ctas">
+            <v-btn class="btn btn-tertiary" to="/forgot">
+              Mot de passe oublié ?
+            </v-btn>
+            <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
+              Un problème
+              <span class="desktop">&nbsp;lors de l'inscription </span>?
+            </v-btn>
+          </v-row>
+        </v-container>
+      </v-form>
 
-  <v-dialog v-model="isDialogOpen" max-width="800">
-    <v-card>
-      <v-card-title>Demander de l'aide</v-card-title>
-      <v-card-text>
-        Si vous avez rencontré un problème lors de l'inscription vous pouvez
-        nous envoyer un mail à l'adresse humains@24heures.org
-        <br />
-        Nous nous en occuperons au plus vite.
-      </v-card-text>
-      <v-card-actions>
-        <v-btn :href="`mailto:humains@24heures.org`"> Envoyer le mail </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      <v-dialog v-model="isDialogOpen" max-width="800">
+        <v-card>
+          <v-card-title>Demander de l'aide</v-card-title>
+          <v-card-text>
+            Si vous avez rencontré un problème lors de l'inscription vous pouvez
+            nous envoyer un mail à l'adresse humains@24heures.org
+            <br />
+            Nous nous en occuperons au plus vite.
+          </v-card-text>
+          <v-card-actions>
+            <v-btn :href="`mailto:humain@24heures.org`">
+              Envoyer le mail
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -138,7 +144,10 @@ const BACKGROUNDS_URL = [
   "https://live.staticflickr.com/65535/52617420469_0994528701_b.jpg",
 ];
 
-const version = process.env.OVERBOOKD_VERSION;
+definePageMeta({ layout: false });
+
+const config = useRuntimeConfig();
+const version = config.public.version;
 
 const authStore = useAuthStore();
 const { authenticated } = storeToRefs(authStore);
@@ -162,10 +171,11 @@ const login = async () => {
 </script>
 
 <style lang="scss" scoped>
-.logo {
-  width: 20em;
-  height: 20em;
-  align-self: center;
+.background-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
 .background {
@@ -174,22 +184,31 @@ const login = async () => {
   top: 0;
   height: 100%;
   width: 100%;
-  padding: 0;
-}
-
-.img-center {
-  transform: translate(100px, 0);
+  z-index: 1;
 }
 
 .opacity-filter {
-  opacity: 0.3;
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
   width: 100%;
-  padding: 0;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.scrollable-content {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.logo {
+  width: 20em;
+  height: 20em;
+  align-self: center;
 }
 
 .version {
@@ -211,19 +230,23 @@ const login = async () => {
   width: 75%;
   max-width: 600px;
 }
+
 .ctas {
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 15px;
   margin-bottom: 30px;
+
   .btn {
     border-radius: 20px/50%;
+
     &-primary,
     &-secondary {
       height: 48px;
       width: 100%;
     }
+
     &-tertiary {
       background-color: rgba(50, 50, 50, 0.7);
       color: white;
@@ -238,6 +261,7 @@ const login = async () => {
   .form-container {
     margin-top: 15%;
   }
+
   .sub-form {
     flex-direction: column;
 
@@ -246,9 +270,11 @@ const login = async () => {
       position: absolute;
     }
   }
+
   .desktop {
     display: none;
   }
+
   .ctas {
     .btn {
       &-tertiary {
