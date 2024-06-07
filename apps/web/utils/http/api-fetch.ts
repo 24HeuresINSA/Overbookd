@@ -1,13 +1,17 @@
 import type { HttpStringified } from "@overbookd/http";
 import type { Method } from "./http-client";
 
-export type HttpResponse<T> = T extends object
-  ? HttpStringified<T> | Error
-  : T | Error;
+type ApiResponse = object | void;
+
+type Success<T extends ApiResponse> = T extends object
+  ? HttpStringified<T>
+  : void;
+
+export type HttpResponse<T extends ApiResponse> = Success<T> | Error;
 
 type EmptyOr<T extends Record<string, unknown>> = T | Record<never, unknown>;
 
-export async function apiFetch<T>(
+export async function apiFetch<T extends ApiResponse>(
   url: string,
   method: Method,
   body?: object,
@@ -36,8 +40,8 @@ export async function apiFetch<T>(
   return data;
 }
 
-export function isSuccess<T extends object>(
+export function isSuccess<T extends ApiResponse>(
   res: HttpResponse<T>,
-): res is HttpStringified<T> {
+): res is Success<T> {
   return !(res instanceof Error);
 }
