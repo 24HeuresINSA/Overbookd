@@ -21,7 +21,7 @@ class MealDateRepresentationDto implements MealDate {
 }
 
 export class OfferMealRequestDto implements OfferMeal {
-  @ApiProperty({})
+  @ApiProperty()
   @IsString()
   menu: string;
 

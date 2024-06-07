@@ -1,20 +1,10 @@
 import { Inject } from "@nestjs/common";
-import { Gear } from "../catalog/types";
 import { SlugifyService } from "@overbookd/slugify";
-
-export type LiteInventoryRecord = Omit<InventoryRecord, "gear">;
-
-export type GroupedRecord = {
-  quantity: number;
-  gear: Gear;
-  records: LiteInventoryRecord[];
-};
-
-export type InventoryRecord = {
-  quantity: number;
-  gear: Gear;
-  storage: string;
-};
+import {
+  InventoryGroupedRecord,
+  InventoryRecord,
+  LiteInventoryRecord,
+} from "@overbookd/http";
 
 export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
   return { quantity: record.quantity, storage: record.storage };
@@ -25,8 +15,8 @@ export type GroupedRecordSearch = {
 };
 
 export type InventoryRepository = {
-  searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]>;
-  resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]>;
+  searchGroupedRecords(gearSlug?: string): Promise<InventoryGroupedRecord[]>;
+  resetRecords(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]>;
   getRecords(gearId: number): Promise<InventoryRecord[]>;
 };
 
@@ -36,11 +26,11 @@ export class InventoryService {
     private inventoryRepository: InventoryRepository,
   ) {}
 
-  setup(records: InventoryRecord[]): Promise<GroupedRecord[]> {
+  setup(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]> {
     return this.inventoryRepository.resetRecords(records);
   }
 
-  search({ name }: GroupedRecordSearch): Promise<GroupedRecord[]> {
+  search({ name }: GroupedRecordSearch): Promise<InventoryGroupedRecord[]> {
     const gearSlug = SlugifyService.applyOnOptional(name);
     return this.inventoryRepository.searchGroupedRecords(gearSlug);
   }

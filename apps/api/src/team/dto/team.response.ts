@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Team } from "../team.model";
+import { Team } from "@overbookd/http";
 
 export class TeamResponseDto implements Team {
   @ApiProperty({

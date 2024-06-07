@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
 import { PrismaService } from "../../../../prisma.service";
-import { Gear, GearAlreadyExists, GearRepository } from "../../types";
-import { GearSearchOptions } from "@overbookd/http";
-import { GearQueryBuilder } from "../../../common/gear.query";
+import { GearRepository } from "../catalog-repositories";
+import { GearAlreadyExists } from "../../catalog.error";
+import { CatalogGear, GearSearchOptions } from "@overbookd/http";
+import { GearQueryBuilder } from "../../../common/repositories/gear.query";
 
 type DatabaseGear = {
   id: number;
@@ -71,7 +72,7 @@ export class PrismaGearRepository implements GearRepository {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getGear(id: number): Promise<Gear | undefined> {
+  async getGear(id: number): Promise<CatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
       select: this.SELECT_GEAR,
       where: { id },
@@ -82,7 +83,7 @@ export class PrismaGearRepository implements GearRepository {
     return convertGearToApiContract(gear);
   }
 
-  async addGear(gear: Omit<Gear, "id">): Promise<Gear> {
+  async addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear> {
     try {
       const data = this.buildUpsertData(gear);
       const newGear = await this.prismaService.catalogGear.create({
@@ -98,7 +99,7 @@ export class PrismaGearRepository implements GearRepository {
     }
   }
 
-  private buildUpsertData(gear: Omit<Gear, "id">) {
+  private buildUpsertData(gear: Omit<CatalogGear, "id">) {
     const { category, owner, ...baseGear } = gear;
     const categoryLink = category
       ? { category: { connect: { id: category.id } } }
@@ -107,7 +108,7 @@ export class PrismaGearRepository implements GearRepository {
     return { ...baseGear, ...categoryLink };
   }
 
-  async updateGear(gear: Omit<Gear, "owner">): Promise<Gear> {
+  async updateGear(gear: Omit<CatalogGear, "owner">): Promise<CatalogGear> {
     const { id, category, ...data } = gear;
     const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },
@@ -121,7 +122,7 @@ export class PrismaGearRepository implements GearRepository {
     await this.prismaService.catalogGear.delete({ where: { id } });
   }
 
-  async searchGear(options: GearSearchOptions): Promise<Gear[]> {
+  async searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
     const where = GearQueryBuilder.find(options);
     return (
       await this.prismaService.catalogGear.findMany({

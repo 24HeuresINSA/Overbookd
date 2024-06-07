@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { Team, TeamRepository } from "../../types";
+import { TeamRepository } from "../catalog-repositories";
+import { CategoryOwner } from "@overbookd/http";
 
 @Injectable()
 export class InMemoryTeamRepository implements TeamRepository {
-  teams: Team[] = [];
+  teams: CategoryOwner[] = [];
 
-  getTeam(code: string): Promise<Team | undefined> {
+  getTeam(code: string): Promise<CategoryOwner | undefined> {
     return Promise.resolve(this.teams.find((team) => team.code === code));
   }
 }

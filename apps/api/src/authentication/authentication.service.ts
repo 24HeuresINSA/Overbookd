@@ -15,10 +15,10 @@ import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
 import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
 import { ONE_HOUR_IN_MS } from "@overbookd/period";
-import { RefreshAccessRequest, UserAccess } from "./authentication.model";
+import { UserAccess, UserCredentials } from "@overbookd/http";
 
-type UserCredentials = { email: string; password: string };
 type UserEmail = { email: string };
+export type RefreshAccessRequest = { refreshToken: string };
 
 @Injectable()
 export class AuthenticationService {

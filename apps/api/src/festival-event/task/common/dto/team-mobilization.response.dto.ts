@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 
 export class TeamMobilizationResponseDto implements TeamMobilization {
-  @ApiProperty({})
+  @ApiProperty()
   count: number;
 
-  @ApiProperty({})
+  @ApiProperty()
   team: string;
 }

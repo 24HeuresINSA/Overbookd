@@ -6,10 +6,10 @@ import { signaLocations } from "./seeders/signa-locations";
 import { Configuration } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "../src/team/team.model";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
+import { Team } from "@overbookd/http";
 
 const prisma = new PrismaClient();
 

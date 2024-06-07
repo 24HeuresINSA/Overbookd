@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TeamRepresentation } from "../../common/dto/gear-representation.dto";
-import { Category, Team } from "../types";
+import { CatalogCategory, CategoryOwner } from "@overbookd/http";
+import { CategoryOwnerResponseDto } from "./category-owner.response.dto";
 
-export class CategoryResponseDto implements Category {
+export class CategoryResponseDto implements CatalogCategory {
   @ApiProperty({
     required: true,
     description: "Category id",
@@ -34,7 +34,7 @@ export class CategoryResponseDto implements Category {
   @ApiProperty({
     required: false,
     description: "Category owner",
-    type: TeamRepresentation,
+    type: CategoryOwnerResponseDto,
   })
-  owner?: Team;
+  owner?: CategoryOwner;
 }

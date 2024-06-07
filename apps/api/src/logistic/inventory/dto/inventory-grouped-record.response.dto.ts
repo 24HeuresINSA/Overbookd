@@ -1,31 +1,41 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Gear } from "../../catalog/types";
-import { GearRepresentation } from "../../common/dto/gear-representation.dto";
-import { GroupedRecord, LiteInventoryRecord } from "../inventory.service";
+import {
+  CatalogGear,
+  InventoryGroupedRecord,
+  LiteInventoryRecord,
+} from "@overbookd/http";
+import { CatalogGearResponseDto } from "../../common/dto/catalog-gear.response.dto";
 
-class LiteInventoryRecordRepresentation implements LiteInventoryRecord {
+class LiteInventoryRecordDto implements LiteInventoryRecord {
+  @ApiProperty()
   quantity: number;
+
+  @ApiProperty()
   storage: string;
 }
 
-export class InventoryGroupedRecordResponseDto implements GroupedRecord {
+export class InventoryGroupedRecordResponseDto
+  implements InventoryGroupedRecord
+{
   @ApiProperty({
     required: true,
     description: "Gear quantity",
     type: Number,
   })
   quantity: number;
+
   @ApiProperty({
     required: true,
     description: "Gear",
-    type: GearRepresentation,
+    type: CatalogGearResponseDto,
   })
-  gear: Gear;
+  gear: CatalogGear;
+
   @ApiProperty({
     required: true,
     description: "All records for the gear",
     isArray: true,
-    type: LiteInventoryRecordRepresentation,
+    type: LiteInventoryRecordDto,
   })
   records: LiteInventoryRecord[];
 }

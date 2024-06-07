@@ -9,20 +9,23 @@ export type CategoryForm = {
   parent?: number;
 };
 
-type BaseCategory = {
+export type CategoryOwner = {
+  code: string;
+  name: string;
+};
+
+export type CatalogCategoryIdentifier = {
   id: number;
   name: string;
   path: string;
-  owner?: {
-    code: string;
-    name: string;
-  };
 };
 
-export type CatalogCategoryTree = BaseCategory & {
+export type CatalogCategoryTree = CatalogCategoryIdentifier & {
+  owner?: CategoryOwner;
   subCategories?: CatalogCategoryTree[];
 };
 
-export type CatalogCategory = BaseCategory & {
+export type CatalogCategory = CatalogCategoryIdentifier & {
+  owner?: CategoryOwner;
   parent?: number;
 };

@@ -11,7 +11,7 @@ import {
 type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
 
 export class UnlinkedSignageResponseDto implements BaseSignage {
-  @ApiProperty({})
+  @ApiProperty()
   id: string;
 
   @ApiProperty({
@@ -19,10 +19,10 @@ export class UnlinkedSignageResponseDto implements BaseSignage {
   })
   quantity: number;
 
-  @ApiProperty({})
+  @ApiProperty()
   text: string;
 
-  @ApiProperty({})
+  @ApiProperty()
   size: string;
 
   @ApiProperty({
@@ -31,7 +31,7 @@ export class UnlinkedSignageResponseDto implements BaseSignage {
   })
   type: SignageType;
 
-  @ApiProperty({})
+  @ApiProperty()
   comment: string;
 }
 

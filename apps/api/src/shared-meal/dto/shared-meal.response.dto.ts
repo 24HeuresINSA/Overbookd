@@ -9,7 +9,7 @@ import {
 } from "@overbookd/personal-account";
 
 class AboutMealResponseDto implements AboutMeal {
-  @ApiProperty({})
+  @ApiProperty()
   menu: string;
 
   @ApiProperty({ description: "day with moment string" })
@@ -17,7 +17,7 @@ class AboutMealResponseDto implements AboutMeal {
 }
 
 class AdherentResponseDto implements Adherent {
-  @ApiProperty({})
+  @ApiProperty()
   id: number;
 
   @ApiProperty({ description: "complete name" })
@@ -30,7 +30,7 @@ class ShotgunResponseDto extends AdherentResponseDto implements Shotgun {
 }
 
 export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
-  @ApiProperty({})
+  @ApiProperty()
   id: number;
 
   @ApiProperty({ type: AboutMealResponseDto })

@@ -1,17 +1,21 @@
-import { Gear } from "../catalog/types";
 import {
-  GroupedRecord,
+  CatalogGear,
+  InventoryGroupedRecord,
   InventoryRecord,
   LiteInventoryRecord,
-  toLiteRecord,
-} from "./inventory.service";
+} from "@overbookd/http";
+import { toLiteRecord } from "./inventory.service";
 
-export class InventoryGroupedRecord implements GroupedRecord {
+export class GroupInventoryRecord implements InventoryGroupedRecord {
   quantity: number;
-  gear: Gear;
+  gear: CatalogGear;
   records: LiteInventoryRecord[];
 
-  constructor(quantity: number, gear: Gear, records: LiteInventoryRecord[]) {
+  constructor(
+    quantity: number,
+    gear: CatalogGear,
+    records: LiteInventoryRecord[],
+  ) {
     this.quantity = quantity;
     this.gear = gear;
     this.records = records;
@@ -19,18 +23,22 @@ export class InventoryGroupedRecord implements GroupedRecord {
 
   static fromInventoryRecord(record: InventoryRecord) {
     const { quantity, gear } = record;
-    return new InventoryGroupedRecord(quantity, gear, [toLiteRecord(record)]);
+    return new GroupInventoryRecord(quantity, gear, [toLiteRecord(record)]);
   }
 
   static isSimilar(
-    record: GroupedRecord,
-  ): (value: GroupedRecord, index: number, obj: GroupedRecord[]) => boolean {
+    record: InventoryGroupedRecord,
+  ): (
+    value: InventoryGroupedRecord,
+    index: number,
+    obj: InventoryGroupedRecord[],
+  ) => boolean {
     return (r) => r.gear.id === record.gear.id;
   }
 
-  add({ quantity, records }: GroupedRecord) {
+  add({ quantity, records }: InventoryGroupedRecord) {
     const summedQuantities = this.quantity + quantity;
-    return new InventoryGroupedRecord(summedQuantities, this.gear, [
+    return new GroupInventoryRecord(summedQuantities, this.gear, [
       ...records,
       ...this.records,
     ]);

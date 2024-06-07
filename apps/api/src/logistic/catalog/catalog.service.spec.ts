@@ -1,5 +1,5 @@
+import { CatalogCategory, CatalogGear } from "@overbookd/http";
 import { CatalogService } from "./catalog.service";
-import { Category, Gear } from "./types";
 import {
   InMemoryCategoryRepository,
   InMemoryGearRepository,
@@ -8,7 +8,7 @@ import {
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamBarriere = { name: "Orga Logistique et Securite", code: "barrieres" };
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: CatalogCategory[] = [
   {
     id: 1,
     name: "Bricollage",
@@ -47,7 +47,7 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-const PERCEUSE: Gear = {
+const PERCEUSE: CatalogGear = {
   id: 1,
   name: "Perceuse",
   slug: "perceuse",
@@ -62,7 +62,7 @@ const PERCEUSE: Gear = {
   isConsumable: false,
 };
 
-const GEARS: Gear[] = [
+const GEARS: CatalogGear[] = [
   PERCEUSE,
   {
     id: 2,
@@ -87,7 +87,7 @@ const GEARS: Gear[] = [
   },
 ];
 
-const TABLIER: Gear = {
+const TABLIER: CatalogGear = {
   id: 4,
   name: "Tablier",
   slug: "tablier",
@@ -95,7 +95,7 @@ const TABLIER: Gear = {
   isConsumable: false,
 };
 
-const PONCEUSE: Gear = {
+const PONCEUSE: CatalogGear = {
   id: 5,
   name: "Ponçeuse",
   slug: "ponceuse",
@@ -110,7 +110,7 @@ const PONCEUSE: Gear = {
   isConsumable: false,
 };
 
-const SIMILAR_GEARS: Gear[] = [
+const SIMILAR_GEARS: CatalogGear[] = [
   ...GEARS,
   TABLIER,
   PONCEUSE,
@@ -181,7 +181,7 @@ describe("Catalog", () => {
         expectedCodeStart,
         expectedOwner,
       }) => {
-        let gear: Gear;
+        let gear: CatalogGear;
         afterAll(() => {
           gearRepository.gears = GEARS;
         });

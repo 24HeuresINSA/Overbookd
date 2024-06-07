@@ -1,16 +1,13 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CategoryNotFoundException } from "./category.service";
-import { Category, CategoryRepository, Gear, GearRepository } from "./types";
+import {
+  CategoryRepository,
+  GearRepository,
+} from "./repositories/catalog-repositories";
 import { SlugifyService } from "@overbookd/slugify";
+import { CatalogCategory, CatalogGear, CatalogGearForm } from "@overbookd/http";
 
-export type GearForm = {
-  name: string;
-  category?: number;
-  isPonctualUsage: boolean;
-  isConsumable: boolean;
-};
-
-type GearUpdateForm = GearForm & {
+type GearUpdateForm = CatalogGearForm & {
   id: number;
 };
 
@@ -41,7 +38,7 @@ export class CatalogService {
     category: categoryId,
     isPonctualUsage,
     isConsumable,
-  }: GearForm): Promise<Gear> {
+  }: CatalogGearForm): Promise<CatalogGear> {
     const { category, slug, owner } = await this.generateComputedProperties(
       name,
       categoryId,
@@ -56,11 +53,11 @@ export class CatalogService {
     });
   }
 
-  async find(id: number): Promise<Gear | undefined> {
+  async find(id: number): Promise<CatalogGear | undefined> {
     return this.gearRepository.getGear(id);
   }
 
-  async update(gear: GearUpdateForm): Promise<Gear> {
+  async update(gear: GearUpdateForm): Promise<CatalogGear> {
     const { category, slug } = await this.generateComputedProperties(
       gear.name,
       gear.category,
@@ -78,7 +75,7 @@ export class CatalogService {
     return this.gearRepository.removeGear(id);
   }
 
-  async search(searchOptions: GearSearchRequest): Promise<Gear[]> {
+  async search(searchOptions: GearSearchRequest): Promise<CatalogGear[]> {
     return this.gearRepository.searchGear(searchOptions);
   }
 
@@ -94,7 +91,7 @@ export class CatalogService {
 
   private async getCategory(
     categoryId?: number,
-  ): Promise<Category | undefined> {
+  ): Promise<CatalogCategory | undefined> {
     if (!categoryId) return undefined;
     const storedCategory =
       await this.categoryRepository.getCategory(categoryId);

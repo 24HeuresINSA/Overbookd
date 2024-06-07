@@ -16,9 +16,9 @@ export class KeyEventResponseDto implements KeyEvent {
   @ApiProperty({ type: AdherentResponseDto })
   by: Adherent;
 
-  @ApiProperty({})
+  @ApiProperty()
   at: Date;
 
-  @ApiProperty({})
+  @ApiProperty()
   description: string;
 }

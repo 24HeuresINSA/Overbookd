@@ -25,13 +25,13 @@ import {
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
-import { Category, CategoryTree } from "./types";
 import { CategoryResponseDto } from "./dto/category.response.dto";
 import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("logistic/catalog")
@@ -65,7 +65,7 @@ export class CategoryController {
   })
   search(
     @Query() { name, owner }: CategorySearchRequestDto,
-  ): Promise<Category[]> {
+  ): Promise<CatalogCategory[]> {
     return this.categoryService.search({ name, owner });
   }
 
@@ -77,7 +77,7 @@ export class CategoryController {
     type: CategoryTreeResponseDto,
     isArray: true,
   })
-  getAll(): Promise<CategoryTree[]> {
+  getAll(): Promise<CatalogCategoryTree[]> {
     return this.categoryService.getAll();
   }
 
@@ -100,7 +100,7 @@ export class CategoryController {
     description: "Category id",
     required: true,
   })
-  find(@Param("id", ParseIntPipe) id: number): Promise<Category> {
+  find(@Param("id", ParseIntPipe) id: number): Promise<CatalogCategory> {
     return this.categoryService.find(id);
   }
 
@@ -141,7 +141,9 @@ export class CategoryController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() categoryForm: CategoryFormRequestDto): Promise<Category> {
+  create(
+    @Body() categoryForm: CategoryFormRequestDto,
+  ): Promise<CatalogCategory> {
     return this.categoryService.create(categoryForm);
   }
 
@@ -171,7 +173,7 @@ export class CategoryController {
   update(
     @Param("id", ParseIntPipe) id: number,
     @Body() categoryForm: CategoryFormRequestDto,
-  ): Promise<Category> {
+  ): Promise<CatalogCategory> {
     return this.categoryService.update({ id, ...categoryForm });
   }
 }

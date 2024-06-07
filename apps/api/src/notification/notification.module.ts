@@ -9,7 +9,7 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { RegistrationModule } from "../registration/registration.module";
 import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtModule, JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "../authentication/constants";
+import { jwtConstants } from "../authentication/jwt-constants";
 
 @Module({
   controllers: [NotificationController],

@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { BreakPeriods } from "@overbookd/planning";
-import { jwtConstants } from "../../authentication/constants";
+import { jwtConstants } from "../../authentication/jwt-constants";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { Planning } from "./domain/planning";

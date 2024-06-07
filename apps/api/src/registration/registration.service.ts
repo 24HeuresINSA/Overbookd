@@ -14,7 +14,7 @@ import {
   isStaffRegistered,
   isVolunteerRegistered,
 } from "@overbookd/registration";
-import { jwtConstants } from "../authentication/constants";
+import { jwtConstants } from "../authentication/jwt-constants";
 import { InviteStaff } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";

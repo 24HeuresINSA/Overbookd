@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UpdateTeamForm } from "../team.model";
 import {
   IsOptional,
   IsString,
   Matches,
   ValidationArguments,
 } from "class-validator";
+import { UpdateTeamForm } from "../team.service";
 
 const optionalHexCode = new RegExp("^#[0-9|a-f|A-F]{6}$");
 const optionalMdiIcon = new RegExp("^mdi-.+");

@@ -12,9 +12,9 @@ export class KeyEventResponseDto implements KeyEvent {
   @ApiProperty({ type: AdherentResponseDto })
   by: KeyEvent["by"];
 
-  @ApiProperty({})
+  @ApiProperty()
   at: KeyEvent["at"];
 
-  @ApiProperty({})
+  @ApiProperty()
   description: KeyEvent["description"];
 }

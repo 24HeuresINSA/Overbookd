@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CategoryForm } from "@overbookd/http";
 import {
   IsDefined,
   IsInt,
@@ -6,7 +7,6 @@ import {
   IsString,
   MinLength,
 } from "class-validator";
-import { CategoryForm } from "../category.service";
 
 export class CategoryFormRequestDto implements CategoryForm {
   @ApiProperty({

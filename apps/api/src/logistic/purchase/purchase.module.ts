@@ -11,7 +11,7 @@ import { PrismaModule } from "../../prisma.module";
 import { PrismaPlanPurchases } from "./repository/plan-purchase.prisma";
 import { PrismaCancelPurchases } from "./repository/cancel-purchase.prisma";
 import { LogisticCommonModule } from "../common/logistic-common.module";
-import { PrismaGears } from "../common/repository/gears.prisma";
+import { PrismaGears } from "../common/repositories/gears.prisma";
 import { PrismaService } from "../../prisma.service";
 import { PrismaViewPurchases } from "./repository/view-purchases.prisma";
 

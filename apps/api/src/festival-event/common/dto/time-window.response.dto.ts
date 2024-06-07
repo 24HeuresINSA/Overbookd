@@ -6,6 +6,6 @@ export class TimeWindowResponseDto
   extends PeriodResponseDto
   implements TimeWindow
 {
-  @ApiProperty({})
+  @ApiProperty()
   id: string;
 }

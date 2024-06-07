@@ -1,3 +1,5 @@
+import { CatalogCategoryIdentifier, CategoryOwner } from "./catalog";
+
 export type GearSearchOptions = {
   name?: string;
   category?: string;
@@ -11,16 +13,9 @@ export type CatalogGear = {
   isPonctualUsage: boolean;
   isConsumable: boolean;
   slug: string;
-  owner?: {
-    code: string;
-    name: string;
-  };
-  category?: {
-    id: number;
-    name: string;
-    path: string;
-  };
-  code: string;
+  owner?: CategoryOwner;
+  category?: CatalogCategoryIdentifier;
+  code?: string;
 };
 
 export type CatalogGearForm = {

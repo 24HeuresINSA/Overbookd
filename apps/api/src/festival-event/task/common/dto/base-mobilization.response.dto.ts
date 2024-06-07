@@ -8,6 +8,6 @@ export class BaseMobilizationResponseDto
   extends TimeWindowResponseDto
   implements BaseMobilization
 {
-  @ApiProperty({})
+  @ApiProperty()
   durationSplitInHour: number;
 }

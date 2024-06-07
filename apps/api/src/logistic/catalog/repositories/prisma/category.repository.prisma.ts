@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../../prisma.service";
+import { CategoryRepository } from "../catalog-repositories";
+import { CategoryAlreadyExists } from "../../catalog.error";
 import {
-  Category,
-  CategoryAlreadyExists,
-  CategoryRepository,
-  CategoryTree,
-  SearchCategory,
-} from "../../types";
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategorySearchOptions,
+} from "@overbookd/http";
 
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepository {
@@ -25,14 +25,14 @@ export class PrismaCategoryRepository implements CategoryRepository {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  getCategory(id: number): Promise<Category> {
+  getCategory(id: number): Promise<CatalogCategory> {
     return this.prismaService.catalogCategory.findUnique({
       select: this.SELECT_CATEGORY,
       where: { id },
     });
   }
 
-  getSubCategories(parentId: number): Promise<Category[]> {
+  getSubCategories(parentId: number): Promise<CatalogCategory[]> {
     return this.prismaService.catalogCategory.findMany({
       select: this.SELECT_CATEGORY,
       where: {
@@ -41,7 +41,9 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  async addCategory(category: Omit<Category, "id">): Promise<Category> {
+  async addCategory(
+    category: Omit<CatalogCategory, "id">,
+  ): Promise<CatalogCategory> {
     try {
       const data = this.buildUpsertData(category);
       return await this.prismaService.catalogCategory.create({
@@ -56,17 +58,17 @@ export class PrismaCategoryRepository implements CategoryRepository {
     }
   }
 
-  removeCategory(id: number): Promise<Category> {
+  removeCategory(id: number): Promise<CatalogCategory> {
     return this.prismaService.catalogCategory.delete({ where: { id } });
   }
 
-  updateCategories(categories: Category[]): Promise<Category[]> {
+  updateCategories(categories: CatalogCategory[]): Promise<CatalogCategory[]> {
     return this.prismaService.$transaction(
       categories.map((category) => this.updateCategory(category)),
     );
   }
 
-  updateCategory(category: Category) {
+  updateCategory(category: CatalogCategory) {
     const { id, ...baseCategory } = category;
     const data = this.buildUpsertData(baseCategory);
     return this.prismaService.catalogCategory.update({
@@ -76,7 +78,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  getCategoryTrees(): Promise<CategoryTree[]> {
+  getCategoryTrees(): Promise<CatalogCategoryTree[]> {
     return this.prismaService.catalogCategory.findMany({
       select: {
         ...this.SELECT_CATEGORY,
@@ -100,7 +102,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  searchCategory(search: SearchCategory): Promise<Category[]> {
+  searchCategory(search: CategorySearchOptions): Promise<CatalogCategory[]> {
     const where = this.buildSearchConditions(search);
     return this.prismaService.catalogCategory.findMany({
       select: this.SELECT_CATEGORY,
@@ -108,7 +110,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  private buildSearchConditions({ name, owner }: SearchCategory) {
+  private buildSearchConditions({ name, owner }: CategorySearchOptions) {
     const nameCondition = name ? { path: { contains: name } } : {};
     const ownerCondition = owner
       ? {
@@ -123,7 +125,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     return { ...nameCondition, ...ownerCondition };
   }
 
-  private buildUpsertData(category: Omit<Category, "id">) {
+  private buildUpsertData(category: Omit<CatalogCategory, "id">) {
     const { owner, parent, ...baseCategory } = category;
     const ownerLink = owner ? { owner: { connect: { code: owner.code } } } : {};
     const parentLink = parent

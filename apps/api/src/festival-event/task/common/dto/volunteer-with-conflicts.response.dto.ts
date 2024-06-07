@@ -7,10 +7,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
 class FestivalTaskLinkDto implements FestivalTaskLink {
-  @ApiProperty({})
+  @ApiProperty()
   id: FestivalTaskLink["id"];
 
-  @ApiProperty({})
+  @ApiProperty()
   name: FestivalTaskLink["name"];
 }
 
@@ -18,7 +18,7 @@ class ConflictsDto implements Conflicts {
   @ApiProperty({ type: FestivalTaskLinkDto, isArray: true })
   tasks: FestivalTaskLink[];
 
-  @ApiProperty({})
+  @ApiProperty()
   availability: boolean;
 
   @ApiProperty({ type: FestivalTaskLinkDto, isArray: true })

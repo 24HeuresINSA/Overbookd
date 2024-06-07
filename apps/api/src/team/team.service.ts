@@ -8,9 +8,15 @@ import {
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team, UpdateTeamForm } from "./team.model";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
+import { Team } from "@overbookd/http";
+
+export type UpdateTeamForm = {
+  name?: string;
+  color?: string;
+  icon?: string;
+};
 
 @Injectable()
 export class TeamService {

@@ -6,7 +6,7 @@ import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
 import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
 import { BorrowService, BorrowsForView, Gears } from "./borrow.service";
-import { PrismaGears } from "../common/repository/gears.prisma";
+import { PrismaGears } from "../common/repositories/gears.prisma";
 import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
 import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
 import { LogisticCommonModule } from "../common/logistic-common.module";

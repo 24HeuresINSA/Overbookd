@@ -17,7 +17,7 @@ import { InquiryDto } from "./draft-inquiry.response.dto";
 import { FestivalTaskResponseDto } from "../festival-task.response.dto";
 
 export class DraftFestivalActivityResponseDto implements Draft {
-  @ApiProperty({})
+  @ApiProperty()
   id: number;
 
   @ApiProperty({

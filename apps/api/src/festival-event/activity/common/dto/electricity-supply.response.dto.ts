@@ -30,7 +30,7 @@ const electricitySupplyConnections = [
 ];
 
 export class ElectricitySupplyResponseDto implements ElectricitySupply {
-  @ApiProperty({})
+  @ApiProperty()
   id: string;
 
   @ApiProperty({
@@ -39,13 +39,13 @@ export class ElectricitySupplyResponseDto implements ElectricitySupply {
   })
   connection: ElectricityConnection;
 
-  @ApiProperty({})
+  @ApiProperty()
   device: string;
 
-  @ApiProperty({})
+  @ApiProperty()
   power: number;
 
-  @ApiProperty({})
+  @ApiProperty()
   count: number;
 
   @ApiProperty({

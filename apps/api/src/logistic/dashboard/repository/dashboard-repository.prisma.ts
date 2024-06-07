@@ -8,7 +8,7 @@ import {
   GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
-import { GearQueryBuilder } from "../../common/gear.query";
+import { GearQueryBuilder } from "../../common/repositories/gear.query";
 
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}

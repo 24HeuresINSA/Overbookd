@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CatalogGearForm } from "@overbookd/http";
 import {
   IsBoolean,
   IsDefined,
@@ -7,9 +8,8 @@ import {
   IsString,
   MinLength,
 } from "class-validator";
-import { GearForm } from "../catalog.service";
 
-export class GearFormRequestDto implements GearForm {
+export class GearFormRequestDto implements CatalogGearForm {
   @ApiProperty({
     required: true,
     description: "Gear name",

@@ -5,8 +5,9 @@ import {
   PointLocation,
   RoadLocation,
 } from "@overbookd/geo-location";
+import { CreateLocation } from "@overbookd/http";
 
-export class CreateSignaLocationRequestDto {
+export class CreateSignaLocationRequestDto implements CreateLocation {
   @ApiProperty({
     description: "The name of the location",
     example: "Devant les humas",

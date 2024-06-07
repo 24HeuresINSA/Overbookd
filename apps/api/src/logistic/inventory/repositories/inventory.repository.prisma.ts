@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { Gear } from "../../catalog/types";
 import { convertGearToApiContract } from "../../catalog/repositories/prisma/gear.repository.prisma";
-import {
-  GroupedRecord,
-  InventoryRecord,
-  InventoryRepository,
-  LiteInventoryRecord,
-} from "../inventory.service";
+import { InventoryRepository } from "../inventory.service";
 import { PrismaService } from "../../../prisma.service";
+import {
+  CatalogGear,
+  InventoryGroupedRecord,
+  InventoryRecord,
+  LiteInventoryRecord,
+} from "@overbookd/http";
 
 type AggregatedInventoryRecord = {
   gearId: number;
@@ -67,7 +67,9 @@ export class PrismaInventoryRepository implements InventoryRepository {
     }));
   }
 
-  async searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]> {
+  async searchGroupedRecords(
+    gearSlug?: string,
+  ): Promise<InventoryGroupedRecord[]> {
     const aggregatedRecords = await this.aggregateRecords(gearSlug);
     return Promise.all(
       aggregatedRecords.map((aggregation) =>
@@ -76,7 +78,9 @@ export class PrismaInventoryRepository implements InventoryRepository {
     );
   }
 
-  async resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]> {
+  async resetRecords(
+    records: InventoryRecord[],
+  ): Promise<InventoryGroupedRecord[]> {
     await this.prismaService.$transaction([
       this.deleteAllRecords(),
       this.insertRecords(records),
@@ -84,7 +88,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
     return this.searchGroupedRecords();
   }
 
-  private async findGear(gearId: number): Promise<Gear> {
+  private async findGear(gearId: number): Promise<CatalogGear> {
     const gear = await this.prismaService.catalogGear.findUnique({
       select: this.SELECT_GEAR,
       where: { id: gearId },
@@ -127,7 +131,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
 
   private async convertToGroupedRecord(
     aggregation: AggregatedInventoryRecord,
-  ): Promise<GroupedRecord> {
+  ): Promise<InventoryGroupedRecord> {
     const [gear, records] = await Promise.all([
       this.findGear(aggregation.gearId),
       this.getLiteRecords(aggregation.gearId),

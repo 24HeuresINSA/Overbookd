@@ -52,7 +52,9 @@ export type {
   CatalogGearForm,
 } from "./logistic/gear";
 export type {
+  CategoryOwner,
   CategoryForm,
+  CatalogCategoryIdentifier,
   CategorySearchOptions,
   CatalogCategory,
   CatalogCategoryTree,
@@ -91,4 +93,4 @@ export type { CreatePermissionForm, Permission } from "./permission";
 export type { CreateLocation } from "./location";
 export type { Team } from "./team";
 export type { Consumer } from "./consumer";
-export type { AuthResponse, LoginForm } from "./auth";
+export type { UserAccess, UserCredentials } from "./auth";

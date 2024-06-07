@@ -1,11 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  SimplifiedCategoryRepresentation,
-  TeamRepresentation,
-} from "../../common/dto/gear-representation.dto";
-import { Gear, SimplifiedCategory, Team } from "../types";
+  CatalogCategoryIdentifier,
+  CatalogGear,
+  CategoryOwner,
+} from "@overbookd/http";
+import { CategoryOwnerResponseDto } from "../../catalog/dto/category-owner.response.dto";
+import { CatalogCategoryIdentifierResponseDto } from "./catalog-category-identifier.dto";
 
-export class GearResponseDto implements Gear {
+export class CatalogGearResponseDto implements CatalogGear {
   @ApiProperty({
     required: true,
     description: "Gear id",
@@ -30,16 +32,16 @@ export class GearResponseDto implements Gear {
   @ApiProperty({
     required: false,
     description: "Gear category",
-    type: SimplifiedCategoryRepresentation,
+    type: CatalogCategoryIdentifierResponseDto,
   })
-  category?: SimplifiedCategory;
+  category?: CatalogCategoryIdentifier;
 
   @ApiProperty({
     required: false,
     description: "Gear owner",
-    type: TeamRepresentation,
+    type: CategoryOwnerResponseDto,
   })
-  owner?: Team;
+  owner?: CategoryOwner;
 
   @ApiProperty({
     required: false,

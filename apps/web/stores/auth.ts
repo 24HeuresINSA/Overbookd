@@ -1,4 +1,4 @@
-import type { LoginForm } from "@overbookd/http";
+import type { UserCredentials } from "@overbookd/http";
 import { defineStore } from "pinia";
 import { isSuccess } from "~/utils/http/api-fetch";
 
@@ -7,7 +7,7 @@ export const useAuthStore = defineStore("auth", {
     authenticated: false,
   }),
   actions: {
-    async login(form: LoginForm) {
+    async login(form: UserCredentials) {
       const res = await AuthRepository.login(form);
 
       if (!isSuccess(res)) return console.error(res.message);

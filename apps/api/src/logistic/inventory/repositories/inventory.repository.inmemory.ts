@@ -1,9 +1,6 @@
-import {
-  GroupedRecord,
-  InventoryRecord,
-  InventoryRepository,
-} from "../inventory.service";
-import { InventoryGroupedRecord } from "../inventory-grouped-record";
+import { InventoryRepository } from "../inventory.service";
+import { GroupInventoryRecord } from "../inventory-grouped-record";
+import { InventoryGroupedRecord, InventoryRecord } from "@overbookd/http";
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];
@@ -12,20 +9,20 @@ export class InMemoryInventoryRepository implements InventoryRepository {
     this.records = records ?? [];
   }
 
-  resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]> {
+  resetRecords(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]> {
     this.records = records;
     return this.searchGroupedRecords();
   }
 
-  searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]> {
+  searchGroupedRecords(gearSlug?: string): Promise<InventoryGroupedRecord[]> {
     return Promise.resolve(
       this.records
         .filter((record) => record.gear.slug.includes(gearSlug ?? ""))
         .reduce((groupedRecords, record) => {
           const groupedRecord =
-            InventoryGroupedRecord.fromInventoryRecord(record);
+            GroupInventoryRecord.fromInventoryRecord(record);
           const similarRecordIndex = groupedRecords.findIndex(
-            InventoryGroupedRecord.isSimilar(groupedRecord),
+            GroupInventoryRecord.isSimilar(groupedRecord),
           );
           if (similarRecordIndex === -1)
             return [...groupedRecords, groupedRecord];
@@ -36,7 +33,7 @@ export class InMemoryInventoryRepository implements InventoryRepository {
             mergedRecord,
             ...groupedRecords.slice(similarRecordIndex + 1),
           ];
-        }, [] as GroupedRecord[]),
+        }, []),
     );
   }
 

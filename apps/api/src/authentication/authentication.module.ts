@@ -6,7 +6,7 @@ import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { UserModule } from "../user/user.module";
 import { AuthenticationController } from "./authentication.controller";
 import { AuthenticationService } from "./authentication.service";
-import { jwtConstants } from "./constants";
+import { jwtConstants } from "./jwt-constants";
 import { JwtStrategy } from "./jwt.strategy";
 import { MailModule } from "../mail/mail.module";
 import { PrismaModule } from "../prisma.module";

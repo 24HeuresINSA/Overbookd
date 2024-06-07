@@ -51,7 +51,7 @@ type BaseReviewableWithConflicts = Omit<
 class BaseReviewableWithConflictsResponseDto
   implements BaseReviewableWithConflicts
 {
-  @ApiProperty({})
+  @ApiProperty()
   id: Reviewable["id"];
 
   @ApiProperty({

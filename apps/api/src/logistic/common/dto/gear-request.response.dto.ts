@@ -2,12 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import { GearRequest } from "@overbookd/logistic";
 
 export class GearRequestDto implements GearRequest {
-  @ApiProperty({})
+  @ApiProperty()
   slug: GearRequest["slug"];
 
-  @ApiProperty({})
+  @ApiProperty()
   name: GearRequest["name"];
 
-  @ApiProperty({})
+  @ApiProperty()
   quantity: GearRequest["quantity"];
 }

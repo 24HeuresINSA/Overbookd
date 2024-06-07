@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Team } from "@overbookd/http";
 import {
   IsNotEmpty,
   IsString,
   Matches,
   ValidationArguments,
 } from "class-validator";
-import { Team } from "../team.model";
 
 const hexCode = new RegExp("^#[0-9|a-f|A-F]{6}$");
 const mdiIcon = new RegExp("^mdi-.+");

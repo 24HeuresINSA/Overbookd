@@ -3,13 +3,13 @@ import { Purchase } from "@overbookd/logistic";
 import { GearRequestDto } from "../../common/dto/gear-request.response.dto";
 
 export class PurchaseResponseDto {
-  @ApiProperty({})
+  @ApiProperty()
   id: Purchase["id"];
 
-  @ApiProperty({})
+  @ApiProperty()
   seller: Purchase["seller"];
 
-  @ApiProperty({})
+  @ApiProperty()
   availableOn: Purchase["availableOn"];
 
   @ApiProperty({ type: GearRequestDto, isArray: true })

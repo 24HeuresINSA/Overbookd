@@ -8,9 +8,9 @@ export class FeedbackResponseDto implements Feedback {
   })
   author: Adherent;
 
-  @ApiProperty({})
+  @ApiProperty()
   content: string;
 
-  @ApiProperty({})
+  @ApiProperty()
   publishedAt: Date;
 }

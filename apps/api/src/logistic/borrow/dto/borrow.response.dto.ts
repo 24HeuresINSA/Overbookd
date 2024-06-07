@@ -3,16 +3,16 @@ import { Borrow } from "@overbookd/logistic";
 import { GearRequestDto } from "../../common/dto/gear-request.response.dto";
 
 export class BorrowResponseDto implements Borrow {
-  @ApiProperty({})
+  @ApiProperty()
   id: Borrow["id"];
 
-  @ApiProperty({})
+  @ApiProperty()
   lender: Borrow["lender"];
 
-  @ApiProperty({})
+  @ApiProperty()
   availableOn: Borrow["availableOn"];
 
-  @ApiProperty({})
+  @ApiProperty()
   unavailableOn: Borrow["unavailableOn"];
 
   @ApiProperty({ type: GearRequestDto, isArray: true })

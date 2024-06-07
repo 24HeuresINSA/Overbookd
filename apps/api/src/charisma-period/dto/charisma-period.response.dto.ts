@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CharismaPeriod } from "@prisma/client";
+import { SavedCharismaPeriod } from "@overbookd/http";
 
-export class CharismaPeriodResponseDto implements CharismaPeriod {
+export class CharismaPeriodResponseDto implements SavedCharismaPeriod {
   @ApiProperty({
     required: true,
     description: "The id of the Charisma Period",
@@ -21,7 +21,7 @@ export class CharismaPeriodResponseDto implements CharismaPeriod {
     description: "The description of the Charisma Period",
     type: String,
   })
-  description: string;
+  description?: string;
 
   @ApiProperty({
     required: true,

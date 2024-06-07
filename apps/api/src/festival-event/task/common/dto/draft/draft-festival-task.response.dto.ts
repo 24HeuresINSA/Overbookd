@@ -14,7 +14,7 @@ import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto"
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 
 export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
-  @ApiProperty({})
+  @ApiProperty()
   id: Draft["id"];
 
   @ApiProperty({ enum: [DRAFT] })

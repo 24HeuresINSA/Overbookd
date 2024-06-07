@@ -8,13 +8,13 @@ import {
 } from "@overbookd/festival-event";
 
 export class UnassignedInquiryRequestResponseDto implements BaseInquiryRequest {
-  @ApiProperty({})
+  @ApiProperty()
   slug: string;
 
-  @ApiProperty({})
+  @ApiProperty()
   quantity: number;
 
-  @ApiProperty({})
+  @ApiProperty()
   name: string;
 }
 

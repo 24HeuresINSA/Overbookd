@@ -2,8 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
 import { GearNotFoundException } from "../../catalog.service";
-import { Gear, GearAlreadyExists, GearRepository } from "../../types";
-import { GearSearchOptions } from "@overbookd/http";
+import { GearRepository } from "../catalog-repositories";
+import { GearAlreadyExists } from "../../catalog.error";
+import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 
 class GearSearchBuilder {
@@ -11,9 +12,9 @@ class GearSearchBuilder {
   private slugCondition = true;
   private categoryContion = true;
   private ponctualUsageContion = true;
-  private gear: Gear;
+  private gear: CatalogGear;
 
-  constructor(gear: Gear) {
+  constructor(gear: CatalogGear) {
     this.gear = gear;
   }
 
@@ -57,15 +58,15 @@ class GearSearchBuilder {
 
 @Injectable()
 export class InMemoryGearRepository implements GearRepository {
-  gears: Gear[] = [];
+  gears: CatalogGear[] = [];
 
-  getGear(id: number): Promise<Gear | undefined> {
+  getGear(id: number): Promise<CatalogGear | undefined> {
     const gear = this.gears.find((gear) => gear.id === id);
     if (!gear) return Promise.reject(new GearNotFoundException(id));
     return Promise.resolve(gear);
   }
 
-  addGear(gear: Omit<Gear, "id">): Promise<Gear> {
+  addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear> {
     const existingGear = this.gears.find((g) => g.slug === gear.slug);
     if (existingGear) throw new GearAlreadyExists(existingGear);
     const id = this.gears.length + 1;
@@ -77,7 +78,9 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve(createdGear);
   }
 
-  updateGear(gear: Omit<Gear, "owner">): Promise<Gear | undefined> {
+  updateGear(
+    gear: Omit<CatalogGear, "owner">,
+  ): Promise<CatalogGear | undefined> {
     const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
     if (gearIndex === -1) return Promise.resolve(undefined);
     this.gears = updateItemToList(this.gears, gearIndex, gear);
@@ -91,7 +94,7 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve();
   }
 
-  searchGear(search: GearSearchOptions): Promise<Gear[]> {
+  searchGear(search: GearSearchOptions): Promise<CatalogGear[]> {
     return Promise.resolve(
       this.gears.filter((gear) => this.isMatchingSearch(search, gear)),
     );
@@ -99,7 +102,7 @@ export class InMemoryGearRepository implements GearRepository {
 
   private isMatchingSearch(
     { category, name, owner, ponctualUsage }: GearSearchOptions,
-    gear: Gear,
+    gear: CatalogGear,
   ): boolean {
     const slug = SlugifyService.applyOnOptional(name);
     const categorySlug = SlugifyService.applyOnOptional(category);

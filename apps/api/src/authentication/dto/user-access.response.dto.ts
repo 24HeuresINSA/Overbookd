@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserAccess } from "../authentication.model";
+import { UserAccess } from "@overbookd/http";
 
 export class UserAccessResponseDto implements UserAccess {
   @ApiProperty({

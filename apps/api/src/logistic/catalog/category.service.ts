@@ -1,13 +1,16 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import {
-  Category,
   CategoryRepository,
-  CategoryTree,
-  SearchCategory,
-  Team,
   TeamRepository,
-} from "./types";
+} from "./repositories/catalog-repositories";
 import { SlugifyService } from "@overbookd/slugify";
+import {
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategoryForm,
+  CategoryOwner,
+  CategorySearchOptions,
+} from "@overbookd/http";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
@@ -15,13 +18,7 @@ export class CategoryNotFoundException extends NotFoundException {
   }
 }
 
-export type CategoryForm = {
-  name: string;
-  owner?: string;
-  parent?: number;
-};
-
-type updateCategoryForm = CategoryForm & { id: number };
+type UpdateCategoryForm = CategoryForm & { id: number };
 
 @Injectable()
 export class CategoryService {
@@ -32,7 +29,11 @@ export class CategoryService {
     private readonly teamRepository: TeamRepository,
   ) {}
 
-  async create({ name, owner, parent }: CategoryForm): Promise<Category> {
+  async create({
+    name,
+    owner,
+    parent,
+  }: CategoryForm): Promise<CatalogCategory> {
     const { path, ownerTeam } = await this.buildOwnerAndPath({
       parent,
       name,
@@ -58,7 +59,7 @@ export class CategoryService {
     parent,
     owner,
     id,
-  }: updateCategoryForm): Promise<Category> {
+  }: UpdateCategoryForm): Promise<CatalogCategory> {
     const { path, ownerTeam } = await this.buildOwnerAndPath({
       parent,
       name,
@@ -76,7 +77,7 @@ export class CategoryService {
     return updatedCategory;
   }
 
-  private async updateSubCategories(updatedCategory: Category) {
+  private async updateSubCategories(updatedCategory: CatalogCategory) {
     const subCategories = await this.categoryRepository.getSubCategories(
       updatedCategory.id,
     );
@@ -92,13 +93,13 @@ export class CategoryService {
     await this.categoryRepository.updateCategories(categoriesWithNewOwner);
   }
 
-  async find(id: number): Promise<Category> {
+  async find(id: number): Promise<CatalogCategory> {
     const category = await this.categoryRepository.getCategory(id);
     if (!category) throw new CategoryNotFoundException(id);
     return category;
   }
 
-  async getAll(): Promise<CategoryTree[]> {
+  async getAll(): Promise<CatalogCategoryTree[]> {
     return this.categoryRepository.getCategoryTrees();
   }
 
@@ -109,7 +110,7 @@ export class CategoryService {
     await this.categoryRepository.removeCategory(id);
   }
 
-  search({ name, owner }: SearchCategory): Promise<Category[]> {
+  search({ name, owner }: CategorySearchOptions): Promise<CatalogCategory[]> {
     const nameSlug = SlugifyService.applyOnOptional(name);
     const ownerSlug = SlugifyService.applyOnOptional(owner);
     return this.categoryRepository.searchCategory({
@@ -118,7 +119,7 @@ export class CategoryService {
     });
   }
 
-  private async cascadingUpdateSubCategories(currentCategory: Category) {
+  private async cascadingUpdateSubCategories(currentCategory: CatalogCategory) {
     const newParent = currentCategory.parent
       ? await this.categoryRepository.getCategory(currentCategory.parent)
       : undefined;
@@ -137,10 +138,10 @@ export class CategoryService {
   }
 
   private async pathComputeCascading(
-    currentCategory: Category,
-    subCategories: Category[],
-    toUpdateCategories: Category[] = [],
-  ): Promise<Category[]> {
+    currentCategory: CatalogCategory,
+    subCategories: CatalogCategory[],
+    toUpdateCategories: CatalogCategory[] = [],
+  ): Promise<CatalogCategory[]> {
     if (!subCategories.length) return toUpdateCategories;
 
     const updatedSubCategories = subCategories.map((subCategory) => ({
@@ -162,7 +163,10 @@ export class CategoryService {
     return toUpdateCategoriesListing.flat();
   }
 
-  private async linkSubCategoriesToNewParent(id: number, newParent: Category) {
+  private async linkSubCategoriesToNewParent(
+    id: number,
+    newParent: CatalogCategory,
+  ) {
     const categories = await this.categoryRepository.getSubCategories(id);
 
     const updatedSubCategories = categories.map((subCategory) => ({
@@ -177,7 +181,7 @@ export class CategoryService {
     return this.find(parent);
   }
 
-  private generatePath(name: string, parentCategory?: Category): string {
+  private generatePath(name: string, parentCategory?: CatalogCategory): string {
     return parentCategory
       ? `${parentCategory.path}->${SlugifyService.apply(name)}`
       : SlugifyService.apply(name);
@@ -185,8 +189,8 @@ export class CategoryService {
 
   private async findOwner(
     owner?: string,
-    parentCategory?: Category,
-  ): Promise<Team | undefined> {
+    parentCategory?: CatalogCategory,
+  ): Promise<CategoryOwner | undefined> {
     if (parentCategory) {
       return parentCategory?.owner ?? this.findOwner(owner);
     }

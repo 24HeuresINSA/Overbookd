@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { CategoryRepository } from "../catalog-repositories";
+import { CategoryAlreadyExists } from "../../catalog.error";
 import {
-  Category,
-  CategoryAlreadyExists,
-  CategoryRepository,
-  CategoryTree,
-  SearchCategory,
-} from "../../types";
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategorySearchOptions,
+} from "@overbookd/http";
 
 class CategorySearchBuilder {
   private ownerCondition = true;
   private nameCondition = true;
-  private category: Category;
+  private category: CatalogCategory;
 
-  constructor(category: Category) {
+  constructor(category: CatalogCategory) {
     this.category = category;
   }
 
@@ -38,21 +38,23 @@ class CategorySearchBuilder {
 
 @Injectable()
 export class InMemoryCategoryRepository implements CategoryRepository {
-  categories: Category[] = [];
+  categories: CatalogCategory[] = [];
 
-  getCategory(id: number): Promise<Category | undefined> {
+  getCategory(id: number): Promise<CatalogCategory | undefined> {
     return Promise.resolve(
       this.categories.find((categorie) => categorie.id === id),
     );
   }
 
-  getSubCategories(parentId: number): Promise<Category[]> {
+  getSubCategories(parentId: number): Promise<CatalogCategory[]> {
     return Promise.resolve(
       this.categories.filter((category) => category.parent === parentId),
     );
   }
 
-  async addCategory(category: Omit<Category, "id">): Promise<Category> {
+  async addCategory(
+    category: Omit<CatalogCategory, "id">,
+  ): Promise<CatalogCategory> {
     const existingCategory = this.categories.find(
       (categ) => categ.path === category.path,
     );
@@ -66,7 +68,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     return Promise.resolve(createdCategory);
   }
 
-  removeCategory(id: number): Promise<Category | undefined> {
+  removeCategory(id: number): Promise<CatalogCategory | undefined> {
     const categoryIndex = this.categories.findIndex(
       (category) => category.id === id,
     );
@@ -76,13 +78,13 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     return Promise.resolve(category);
   }
 
-  updateCategories(categories: Category[]): Promise<Category[]> {
+  updateCategories(categories: CatalogCategory[]): Promise<CatalogCategory[]> {
     return Promise.all(
       categories.map((category) => this.updateCategory(category)),
     );
   }
 
-  updateCategory(category: Category): Promise<Category> {
+  updateCategory(category: CatalogCategory): Promise<CatalogCategory> {
     const categoryIndex = this.categories.findIndex(
       (categ) => categ.id === category.id,
     );
@@ -95,7 +97,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     return Promise.resolve(category);
   }
 
-  getCategoryTrees(): Promise<CategoryTree[]> {
+  getCategoryTrees(): Promise<CatalogCategoryTree[]> {
     const mainCategories = this.categories.filter(
       (category) => !category.parent,
     );
@@ -103,8 +105,8 @@ export class InMemoryCategoryRepository implements CategoryRepository {
   }
 
   private async buildCategoriesTree(
-    categories: Category[],
-  ): Promise<CategoryTree[]> {
+    categories: CatalogCategory[],
+  ): Promise<CatalogCategoryTree[]> {
     return Promise.all(
       categories.map(async (category) => {
         const subCategories = await this.getSubCategories(category.id);
@@ -114,7 +116,10 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     );
   }
 
-  searchCategory({ name, owner }: SearchCategory): Promise<Category[]> {
+  searchCategory({
+    name,
+    owner,
+  }: CategorySearchOptions): Promise<CatalogCategory[]> {
     return Promise.resolve(
       this.categories.filter((category) => {
         const search = new CategorySearchBuilder(category)

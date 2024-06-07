@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CharismaPeriod } from "@overbookd/http";
 import {
   IsDateString,
   IsDefined,
@@ -8,7 +9,7 @@ import {
   IsString,
 } from "class-validator";
 
-export class CreateCharismaPeriodRequestDto {
+export class CreateCharismaPeriodRequestDto implements CharismaPeriod {
   @ApiProperty({
     required: true,
     description: "The name of the Charisma Period",

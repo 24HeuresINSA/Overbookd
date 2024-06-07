@@ -1,17 +1,17 @@
-import { Category, Team } from "./types";
 import {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,
 } from "./repositories/in-memory";
 import { CategoryService } from "./category.service";
+import { CatalogCategory, CategoryOwner } from "@overbookd/http";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamSigna = { name: "Orga Signaletique", code: "signa" };
 const teamElec = { name: "Orga Logistique Electricite & Eau", code: "elec" };
 
-const TEAMS: Team[] = [teamMatos, teamSigna, teamElec];
+const TEAMS: CategoryOwner[] = [teamMatos, teamSigna, teamElec];
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: CatalogCategory[] = [
   {
     id: 1,
     name: "Bricollage",
@@ -543,7 +543,7 @@ describe("Category", () => {
   });
 });
 
-function getSignaCategories(): Category[] {
+function getSignaCategories(): CatalogCategory[] {
   const owner = teamSigna;
   return [
     { id: 1, name: "Signaletique", path: "signaletique", owner },

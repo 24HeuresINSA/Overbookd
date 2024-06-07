@@ -1,14 +1,14 @@
-import { Category, Gear } from "../catalog/types";
 import {
-  GroupedRecord,
-  InventoryService,
-  toLiteRecord,
-} from "./inventory.service";
+  CatalogCategory,
+  CatalogGear,
+  InventoryGroupedRecord,
+} from "@overbookd/http";
+import { InventoryService, toLiteRecord } from "./inventory.service";
 import { InMemoryInventoryRepository } from "./repositories/inventory.repository.inmemory";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 
-const OUTILS: Category = {
+const OUTILS: CatalogCategory = {
   id: 2,
   name: "Outils",
   path: "bricollage->outils",
@@ -16,14 +16,14 @@ const OUTILS: Category = {
   parent: 1,
 };
 
-const MOBILIER: Category = {
+const MOBILIER: CatalogCategory = {
   id: 3,
   name: "Mobilier",
   path: "mobilier",
   owner: teamMatos,
 };
 
-const PONCEUSE: Gear = {
+const PONCEUSE: CatalogGear = {
   id: 5,
   name: "Ponçeuse",
   slug: "ponceuse",
@@ -38,7 +38,7 @@ const PONCEUSE: Gear = {
   isConsumable: false,
 };
 
-const MARTEAU: Gear = {
+const MARTEAU: CatalogGear = {
   id: 1,
   name: "Marteau",
   slug: "marteau",
@@ -53,7 +53,7 @@ const MARTEAU: Gear = {
   isConsumable: false,
 };
 
-const TABLE: Gear = {
+const TABLE: CatalogGear = {
   id: 6,
   name: "Table",
   slug: "table",
@@ -73,7 +73,7 @@ describe("Inventory Service", () => {
     const inventoryRepository = new InMemoryInventoryRepository();
     const inventoryService = new InventoryService(inventoryRepository);
     describe("when ask to setup inventory with 2 records for different gear", () => {
-      let inventory: GroupedRecord[];
+      let inventory: InventoryGroupedRecord[];
       beforeAll(async () => {
         inventory = await inventoryService.setup([
           {

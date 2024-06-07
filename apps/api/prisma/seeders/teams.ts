@@ -1,4 +1,4 @@
-import { Team } from "../../src/team/team.model";
+import { Team } from "@overbookd/http";
 
 export const teams: Team[] = [
   {

@@ -25,12 +25,12 @@ import {
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CatalogService } from "./catalog.service";
 import { GearFormRequestDto } from "./dto/gear-form.request.dto";
-import { GearResponseDto } from "./dto/gear.response.dto";
-import { Gear } from "./types";
+import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
+import { CatalogGear } from "@overbookd/http";
 
 @Controller("logistic/gears")
 @ApiTags("logistic/catalog")
@@ -48,7 +48,7 @@ export class GearController {
     status: 200,
     description: "Get gears that match search",
     isArray: true,
-    type: GearResponseDto,
+    type: CatalogGearResponseDto,
   })
   @ApiQuery({
     name: "name",
@@ -70,7 +70,7 @@ export class GearController {
   })
   search(
     @Query() { name, category, owner, ponctualUsage }: GearSearchRequestDto,
-  ): Promise<Gear[]> {
+  ): Promise<CatalogGear[]> {
     return this.catalogService.search({ name, category, owner, ponctualUsage });
   }
 
@@ -79,7 +79,7 @@ export class GearController {
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
-    type: GearResponseDto,
+    type: CatalogGearResponseDto,
   })
   @ApiBadRequestResponse({
     description: "Request is not formated as expected",
@@ -93,7 +93,7 @@ export class GearController {
     description: "Gear id",
     required: true,
   })
-  get(@Param("id", ParseIntPipe) id: number): Promise<Gear> {
+  get(@Param("id", ParseIntPipe) id: number): Promise<CatalogGear> {
     return this.catalogService.find(id);
   }
 
@@ -103,7 +103,7 @@ export class GearController {
   @ApiResponse({
     status: 201,
     description: "Creating a new gear",
-    type: GearResponseDto,
+    type: CatalogGearResponseDto,
   })
   @ApiBadRequestResponse({
     description: "Request is not formated as expected",
@@ -111,7 +111,7 @@ export class GearController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() gearForm: GearFormRequestDto): Promise<Gear> {
+  create(@Body() gearForm: GearFormRequestDto): Promise<CatalogGear> {
     return this.catalogService.add(gearForm);
   }
 
@@ -120,7 +120,7 @@ export class GearController {
   @ApiResponse({
     status: 200,
     description: "Updating a gear",
-    type: GearResponseDto,
+    type: CatalogGearResponseDto,
   })
   @ApiBadRequestResponse({
     description: "Request is not formated as expected",
@@ -140,7 +140,7 @@ export class GearController {
   update(
     @Param("id", ParseIntPipe) id: number,
     @Body() gearForm: GearFormRequestDto,
-  ): Promise<Gear> {
+  ): Promise<CatalogGear> {
     return this.catalogService.update({ id, ...gearForm });
   }
 

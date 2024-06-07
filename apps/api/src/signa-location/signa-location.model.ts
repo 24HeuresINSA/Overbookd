@@ -7,12 +7,12 @@ import {
 import { SignaLocation } from "@overbookd/signa";
 
 export class SignaLocationRepresentation implements SignaLocation {
-  @ApiProperty({})
+  @ApiProperty()
   id: number;
 
-  @ApiProperty({})
+  @ApiProperty()
   name: string;
 
-  @ApiProperty({})
+  @ApiProperty()
   geoLocation: null | PointLocation | RoadLocation | AreaLocation;
 }
