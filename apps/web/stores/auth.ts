@@ -1,5 +1,4 @@
 import type { UserCredentials } from "@overbookd/http";
-import { defineStore } from "pinia";
 import { isSuccess } from "~/utils/http/api-fetch";
 
 export const useAuthStore = defineStore("auth", {

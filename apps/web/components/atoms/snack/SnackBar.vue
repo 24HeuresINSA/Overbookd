@@ -1,0 +1,45 @@
+<template>
+  <v-snackbar
+    v-model="isShowing"
+    :timeout="currentTimeout"
+    @update:model-value="updateDisplay"
+  >
+    {{ currentSnack?.message }}
+    <template #actions>
+      <v-btn variant="text" @click="close">Close</v-btn>
+    </template>
+  </v-snackbar>
+</template>
+
+<script lang="ts" setup>
+import { ref, computed } from "vue";
+
+const isShowing = ref(false);
+const store = useSnackNotificationStore();
+const { queue } = storeToRefs(store);
+
+const currentSnack = computed(() => queue.value.at(0));
+const currentTimeout = computed(
+  () => currentSnack.value?.timeout || DEFAULT_SNACK_TIMEOUT,
+);
+
+watch(
+  queue,
+  (newQueue) => {
+    if (newQueue.length === 0) return (isShowing.value = false);
+    if (!isShowing.value) isShowing.value = true;
+  },
+  { immediate: true },
+);
+
+const close = () => {
+  isShowing.value = false;
+  setTimeout(() => {
+    store.popFirstNotification();
+  }, 200);
+};
+
+const updateDisplay = (isShowing: boolean) => {
+  if (!isShowing) close();
+};
+</script>

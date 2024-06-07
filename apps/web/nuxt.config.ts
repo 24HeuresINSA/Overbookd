@@ -36,6 +36,15 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["stores", "repositories"],
   },
+  components: {
+    dirs: [
+      {
+        path: "~/components",
+        pathPrefix: false,
+        extensions: [".vue"],
+      },
+    ],
+  },
   alias: {
     "@overbookd/alerts": "../../../utils/alerts/src",
     "@overbookd/assignment": "../../../domains/assignment/src",
