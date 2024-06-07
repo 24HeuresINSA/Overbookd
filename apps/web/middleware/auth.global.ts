@@ -1,5 +1,5 @@
 import { useAuthStore } from "~/stores/auth";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { isSuccess } from "~/utils/http/api-fetch";
 import type { RouteLocationNormalized } from "vue-router";
 
@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return handleUnauthenticatedRedirect();
   }
 
-  const decodedToken: Token = jwt_decode(accessToken.value);
+  const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
     if (isTargettingLoginPage(to)) return navigateTo("/");
