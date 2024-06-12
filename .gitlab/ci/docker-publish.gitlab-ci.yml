@@ -31,8 +31,8 @@ preprod_overbookd-api_publish:
   variables:
     APP_PATH: apps/api
     APP_NAME: api
-    VERSION_TAG_PREFIX: "pre-prod_"
-    TAG: "pre-prod"
+    VERSION_TAG_PREFIX: "next_"
+    TAG: "next"
     BASE_IMAGE: "api"
 
 preprod_overbookd-web_publish:

@@ -1,0 +1,69 @@
+.docker:
+  stage: docker-build
+  interruptible: true
+  image: docker:26.1.4
+  services:
+    - name: docker:26.1.4
+      command: ["--experimental"]
+  needs: []
+
+.pre-build:
+  extends: .docker
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}_${APP_NAME}
+    paths:
+      - ${APP_NAME}_installer.tar
+    policy: pull-push
+  script:
+    - '[[ -f ${APP_NAME}_installer.tar ]] && exit 0'
+    - >
+      docker build
+      --target installer
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:installer
+      --file $APP_PATH/Dockerfile .
+    - docker save $CI_REGISTRY_IMAGE/$APP_NAME:installer > ${APP_NAME}_installer.tar
+
+.docker-build:
+  extends: .docker
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}_${APP_NAME}
+    paths:
+      - ${APP_NAME}_installer.tar
+    policy: pull
+  before_script:
+    - apk update
+    - apk add jq
+    - VERSION=$(jq -r '.version' ./${APP_PATH}/package.json)
+    - OVERBOOKD_VERSION=$(jq -r '.version' package.json | tr -d '"')
+    - echo $OVERBOOKD_VERSION
+  script:
+    - '[ -n "$CI_COMMIT_BRANCH" ] && VERSION_TAG_PREFIX="next_" || VERSION_TAG_PREFIX=""'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && TAG="next" || TAG="latest"'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD'
+    - docker load -i ${APP_NAME}_installer.tar
+    - >
+      docker build
+      --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+      --build-arg BASE_URL=$BASE_URL
+      --build-arg API_VERSION=$VERSION
+      --build-arg WEB_VERSION=$VERSION
+      --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION
+      --file $APP_PATH/Dockerfile .
+    - >
+      docker save -o ${VERSION_TAG_PREFIX}${APP_NAME}.tar
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:latest
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION}
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${TAG}
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION_TAG_PREFIX}${VERSION}
+  after_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+  artifacts:
+    paths:
+      - ${VERSION_TAG_PREFIX}${APP_NAME}.tar
+    expire_in: 1 hour

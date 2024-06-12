@@ -28,7 +28,7 @@ overbookd-web_scan:
     CS_IMAGE: $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
     CS_DOCKERFILE_PATH: $APP_PATH/Dockerfile
   after_script:
-    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/4375993/tags/$CI_COMMIT_SHORT_SHA"'
 
 overbookd-api_scan:
   extends: container_scanning
@@ -50,4 +50,4 @@ overbookd-api_scan:
     CS_IMAGE: $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
     CS_DOCKERFILE_PATH: $APP_PATH/Dockerfile
   after_script:
-    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685488/tags/$CI_COMMIT_SHORT_SHA"'
+    - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/4375990/tags/$CI_COMMIT_SHORT_SHA"'
