@@ -1,6 +1,6 @@
-import { PastSharedMeal } from "../../meal-sharing/meals.model";
-import { ONE_EURO_IN_CENTS, SHARED_MEAL } from "../transaction.model";
-import { AmountTooHigh } from "./shared-meal.error";
+import { PastSharedMeal } from "../../meal-sharing/meals.model.js";
+import { ONE_EURO_IN_CENTS, SHARED_MEAL } from "../transaction.model.js";
+import { AmountTooHigh } from "./shared-meal.error.js";
 
 export type SharedMealTransaction = {
   amount: number;

@@ -1,4 +1,4 @@
-import { Field } from "./field";
+import { Field } from "./field.js";
 
 export class NicknameField implements Field<string | undefined> {
   private constructor(private readonly nickname?: string) {}

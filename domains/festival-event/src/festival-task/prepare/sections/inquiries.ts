@@ -2,8 +2,8 @@ import {
   InquiryRequest,
   BaseInquiryRequest,
   AssignDrive,
-} from "../../../common/inquiry-request";
-import { GearAlreadyRequested } from "../../festival-task.error";
+} from "../../../common/inquiry-request.js";
+import { GearAlreadyRequested } from "../../festival-task.error.js";
 
 export class Inquiries {
   private constructor(private inquiries: InquiryRequest[]) {}

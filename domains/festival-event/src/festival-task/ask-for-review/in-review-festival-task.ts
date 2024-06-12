@@ -1,7 +1,7 @@
 import { IN_REVIEW } from "@overbookd/festival-event-constants";
-import { REJECTED } from "../../common/action";
-import { Adherent } from "../../common/adherent";
-import { WaitingForReview } from "../../common/notifications";
+import { REJECTED } from "../../common/action.js";
+import { Adherent } from "../../common/adherent.js";
+import { WaitingForReview } from "../../common/notifications.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
@@ -9,20 +9,20 @@ import {
   humain,
   matos,
   elec,
-} from "../../common/review";
+} from "../../common/review.js";
 import {
   Draft,
   FestivalActivity,
   FestivalTask,
   InReview,
   Refused,
-} from "../festival-task";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { AskForReviewError } from "./ask-for-review.error";
+} from "../festival-task.js";
+import { FestivalTaskKeyEvents } from "../festival-task.event.js";
+import { AskForReviewError } from "./ask-for-review.error.js";
 import {
   InReviewSpecification,
   WithoutStatus,
-} from "./in-review-specification";
+} from "./in-review-specification.js";
 
 const NO_SUPPLY_REQUEST_TASK_REVIEWS = {
   elec: NOT_ASKING_TO_REVIEW,

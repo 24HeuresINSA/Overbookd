@@ -1,1 +1,1 @@
-export { Money } from "./money";
+export { Money } from "./money.js";

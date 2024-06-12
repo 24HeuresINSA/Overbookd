@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DateString } from "@overbookd/period";
-import { AvailabilityDateOddHourError } from "./volunteer-availability.error";
-import { AvailabilityDate } from "./date";
+import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
+import { AvailabilityDate } from "./date.js";
 
 const friday: DateString = "2024-05-17";
 

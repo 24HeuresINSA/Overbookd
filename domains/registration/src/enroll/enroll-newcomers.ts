@@ -1,4 +1,4 @@
-import { JoinableTeam } from "./joinable-team";
+import { JoinableTeam } from "./joinable-team.js";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 export type NewcomerToEnroll = {

@@ -1,4 +1,4 @@
-import { Borrow } from "../borrow";
+import { Borrow } from "../borrow.js";
 
 export type BorrowsForCancel = {
   remove(id: Borrow["id"]): Promise<void>;

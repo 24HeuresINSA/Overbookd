@@ -1,5 +1,5 @@
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
-import { Member, MemberRepository } from "./transfer";
+import { Member, MemberRepository } from "./transfer.js";
 
 type StoredMember = {
   id: number;

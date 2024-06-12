@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Volunteer } from "../volunteer";
+import { Volunteer } from "../volunteer.js";
 
 type NamelyDemanded = { id: Volunteer["id"] };
 export type TeamMember = { id: Volunteer["id"]; as: string };

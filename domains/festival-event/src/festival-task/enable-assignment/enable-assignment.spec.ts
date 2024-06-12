@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import {
   barCashier,
   cleanPressConference,
@@ -12,15 +11,16 @@ import {
   leadPressConference,
   preparePressConference,
   uninstallPreventionVillage,
-} from "../festival-task.fake";
+} from "../festival-task.fake.js";
 import {
   BAR,
   FUN,
   MANUTENTION,
   RELOU,
   STATIQUE,
+  READY_TO_ASSIGN,
 } from "@overbookd/festival-event-constants";
-import { ASSIGNMENT_STARTED } from "../../common/action";
+import { ASSIGNMENT_STARTED } from "../../common/action.js";
 import {
   friday18hfriday20h,
   friday20hfriday22h,
@@ -55,16 +55,16 @@ import {
   sunday20hsunday22h,
   sunday22hmonday00h,
   valery,
-} from "../festival-task.test-util";
-import { EnableAssignment } from "./enable-assignment";
-import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory";
+} from "../festival-task.test-util.js";
+import { EnableAssignment } from "./enable-assignment.js";
+import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory.js";
 import {
   FestivalTaskNotFound,
   FestivalTaskNotValidated,
   ReadyToAssignError,
-} from "../festival-task.error";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+} from "../festival-task.error.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
 const expectedGuardPsAssignments = [
   { ...friday18hfriday20h, assignees: [] },

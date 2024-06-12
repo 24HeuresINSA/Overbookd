@@ -1,5 +1,5 @@
-import { friday17At12, sunday20At10, table } from "../logistic.test-utils";
-import { Borrow } from "./borrow";
+import { friday17At12, sunday20At10, table } from "../logistic.test-utils.js";
+import { Borrow } from "./borrow.js";
 
 export const karnaBorrow: Borrow = {
   id: 1,

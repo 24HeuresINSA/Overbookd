@@ -1,7 +1,7 @@
-import { NotEnoughQuantity } from "../../logistic.error";
-import { GearRequest, GearRequests } from "../../gear-request";
-import { Purchase } from "../purchase";
-import { PurchaseNotFound } from "../purchase.error";
+import { NotEnoughQuantity } from "../../logistic.error.js";
+import { GearRequest, GearRequests } from "../../gear-request.js";
+import { Purchase } from "../purchase.js";
+import { PurchaseNotFound } from "../purchase.error.js";
 
 export type PurchasesForPlan = {
   find(id: Purchase["id"]): Promise<Purchase | undefined>;

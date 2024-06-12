@@ -1,5 +1,5 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
-import { TimeWindow } from "../../common/time-window";
+import { TimeWindow } from "../../common/time-window.js";
 
 export type DraftGeneral = {
   name: string;

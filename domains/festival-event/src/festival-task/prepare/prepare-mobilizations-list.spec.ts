@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { EndBeforeStart } from "@overbookd/period";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { PrepareFestivalTask } from "./prepare";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PrepareFestivalTask } from "./prepare.js";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
   TeamAlreadyPartOfMobilization,
-} from "../festival-task.error";
+} from "../festival-task.error.js";
 import {
   friday11hfriday18hMobilization,
   saturday11hsaturday18hMobilization,
@@ -34,12 +34,12 @@ import {
   requestGabMobilization,
   gab,
   saturday14h,
-} from "../festival-task.test-util";
+} from "../festival-task.test-util.js";
 import {
   gabIsAssignedTo,
   installEscapeGame,
   uninstallEscapeGame,
-} from "../festival-task.fake";
+} from "../festival-task.fake.js";
 import {
   presentEscapeGame,
   guardEscapeGame,
@@ -53,18 +53,18 @@ import {
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
   approvedByMatosRejectedByHumainAndElec,
-} from "../festival-task.fake";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
-import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
+} from "../festival-task.fake.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
   elec,
   humain,
   matos,
-} from "../../common/review";
-import { AlreadyApprovedBy } from "../../common/review.error";
-import { isDraft } from "../../festival-event";
+} from "../../common/review.js";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import { isDraft } from "../../festival-event.js";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;

@@ -1,11 +1,11 @@
 import { ONE_DAY_IN_MS } from "@overbookd/period";
 import { beforeEach, describe, expect, it } from "vitest";
-import { ForgetMember } from "./forget-member";
+import { ForgetMember } from "./forget-member.js";
 import {
   StoredMember,
   InMemoryMemberRepository,
-} from "./member-repository.inmemory";
-import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member";
+} from "./member-repository.inmemory.js";
+import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member.js";
 import {
   ALREADY_HAVE_TRANSACTIONS,
   ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
@@ -13,7 +13,7 @@ import {
   I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
   I_M_IN_DEBT_ERROR_MESSAGE,
   WRONG_CREDENTIALS_ERROR_MESSAGE,
-} from "./forget-member.error";
+} from "./forget-member.error.js";
 
 const withTaskMember: StoredMember = {
   id: 1,

@@ -1,23 +1,26 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import {
+  installEscapeGame,
+  uninstallEscapeGame,
+} from "../festival-task.fake.js";
 import {
   presentEscapeGame,
   guardJustDance,
   installBarbecue,
   onlyApprovedByHumain,
-} from "../festival-task.fake";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { PrepareFestivalTask } from "./prepare";
-import { ficelle, sacPoubelle } from "../festival-task.test-util";
-import { GearAlreadyRequested } from "../festival-task.error";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
-import { onlyApprovedByMatos } from "../festival-task.fake";
-import { APPROVED } from "../../common/action";
-import { REVIEWING } from "../../common/review";
-import { isDraft } from "../../festival-event";
-import { PARKING_EIFFEL } from "../../common/inquiry-request";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error";
+} from "../festival-task.fake.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PrepareFestivalTask } from "./prepare.js";
+import { ficelle, sacPoubelle } from "../festival-task.test-util.js";
+import { GearAlreadyRequested } from "../festival-task.error.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { onlyApprovedByMatos } from "../festival-task.fake.js";
+import { APPROVED } from "../../common/action.js";
+import { REVIEWING } from "../../common/review.js";
+import { isDraft } from "../../festival-event.js";
+import { PARKING_EIFFEL } from "../../common/inquiry-request.js";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;

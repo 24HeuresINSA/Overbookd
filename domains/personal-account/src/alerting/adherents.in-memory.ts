@@ -1,4 +1,4 @@
-import { Adherents } from "./adherents";
+import { Adherents } from "./adherents.js";
 
 type Adherent = {
   id: number;

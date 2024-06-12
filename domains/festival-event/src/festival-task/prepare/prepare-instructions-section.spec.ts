@@ -7,13 +7,13 @@ import {
   noel,
   noelContact,
   mdeHall,
-} from "../festival-task.test-util";
+} from "../festival-task.test-util.js";
 import {
   gabIsAssignedTo,
   installEscapeGame,
   parcoursCollageTrajetA,
   uninstallEscapeGame,
-} from "../festival-task.fake";
+} from "../festival-task.fake.js";
 import {
   installBarbecue,
   guardJustDance,
@@ -26,27 +26,27 @@ import {
   approvedByMatosRejectedByHumainAndElec,
   onlyApprovedByMatos,
   uninstallBarbecue,
-} from "../festival-task.fake";
-import { PrepareFestivalTask } from "./prepare";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { FestivalTaskNotFound } from "../festival-task.error";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { AlreadyApprovedBy } from "../../common/review.error";
-import { isDraft } from "../../festival-event";
+} from "../festival-task.fake.js";
+import { PrepareFestivalTask } from "./prepare.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import { isDraft } from "../../festival-event.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
   elec,
   humain,
   matos,
-} from "../../common/review";
+} from "../../common/review.js";
 import {
   APPROVED,
   FORCED_UPDATE,
   REJECTED,
   RESET_REVIEW,
-} from "../../common/action";
+} from "../../common/action.js";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;

@@ -1,6 +1,6 @@
 import { Period } from "@overbookd/period";
-import { Friends } from "./planning";
-import { AssignableVolunteer } from "../assignable-volunteer";
+import { Friends } from "./planning.js";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 
 export class InMemoryFriends implements Friends {
   constructor(

@@ -1,14 +1,17 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import { Volunteer } from "../../sections/instructions";
-import { Mobilization, TeamMobilization } from "../../sections/mobilizations";
+import { Volunteer } from "../../sections/instructions.js";
+import {
+  Mobilization,
+  TeamMobilization,
+} from "../../sections/mobilizations.js";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
   TeamAlreadyPartOfMobilization,
-} from "../../festival-task.error";
+} from "../../festival-task.error.js";
 import { updateItemToList } from "@overbookd/list";
-import { AddMobilization, UpdateMobilization } from "../prepare";
+import { AddMobilization, UpdateMobilization } from "../prepare.js";
 
 type ListItem<T> = {
   index: number;

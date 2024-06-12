@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { Member, PayContribution } from "./pay-contribution";
-import { EXPIRATION_DATE } from "./contribute";
-import { InMemoryPayContributions } from "./pay-contributions.inmemory";
+import { Member, PayContribution } from "./pay-contribution.js";
+import { EXPIRATION_DATE } from "./contribute.js";
+import { InMemoryPayContributions } from "./pay-contributions.inmemory.js";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE,
-} from "./pay-contribution.error";
+} from "./pay-contribution.error.js";
 import { ONE_YEAR_IN_MS } from "@overbookd/period";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { Contribution } from "../contribution";
-import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error";
+import { Contribution } from "../contribution.js";
+import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
 
 const lea: Member = {
   id: 1,

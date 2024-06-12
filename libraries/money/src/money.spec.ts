@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Money } from "./money";
+import { Money } from "./money.js";
 
 describe("Converting cents and euros", () => {
   describe.each`

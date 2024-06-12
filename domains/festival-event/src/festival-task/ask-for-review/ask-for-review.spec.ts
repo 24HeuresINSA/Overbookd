@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { IN_REVIEW } from "@overbookd/festival-event-constants";
-import { lea, noel } from "../festival-task.test-util";
+import { lea, noel } from "../festival-task.test-util.js";
 import {
   guardEscapeGame,
   installPreventionVillage,
@@ -17,9 +17,9 @@ import {
   flashMobOnPreventionVillage,
   flashMobOnJustDance,
   approvedByElecRejectedByMatos,
-} from "../festival-task.fake";
-import { READY_TO_REVIEW } from "../../common/action";
-import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory";
+} from "../festival-task.fake.js";
+import { READY_TO_REVIEW } from "../../common/action.js";
+import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
@@ -27,13 +27,13 @@ import {
   elec,
   humain,
   matos,
-} from "../../common/review";
-import { ReadyForReviewError } from "../../common/ready-for-review.error";
-import { AskForReview } from "./ask-for-review";
-import { InMemoryReviewers } from "./reviewers.inmemory";
-import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+} from "../../common/review.js";
+import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
+import { AskForReview } from "./ask-for-review.js";
+import { InMemoryReviewers } from "./reviewers.inmemory.js";
+import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
 describe("Festival Task - ask for review", () => {
   let notifications: InMemoryNotifications<"FT">;

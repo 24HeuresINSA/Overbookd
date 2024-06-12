@@ -1,5 +1,5 @@
-import { Adherent } from "../contribution";
-import { Adherents } from "./edit-contribution";
+import { Adherent } from "../contribution.js";
+import { Adherents } from "./edit-contribution.js";
 
 export class InMemoryAdherents implements Adherents {
   constructor(private readonly adherents: Adherent[]) {}

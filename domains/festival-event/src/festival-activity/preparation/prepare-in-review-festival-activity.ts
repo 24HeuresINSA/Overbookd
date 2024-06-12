@@ -3,15 +3,15 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { InitInquiry, Prepare } from "./prepare-festival-activity";
-import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
-import { Contractors } from "./section-aggregates/contractors";
-import { TimeWindows } from "./section-aggregates/time-windows";
+import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
+import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
+import { Contractors } from "./section-aggregates/contractors.js";
+import { TimeWindows } from "./section-aggregates/time-windows.js";
 import { IProvidePeriod } from "@overbookd/period";
-import { FestivalActivity, Reviewable } from "../festival-activity";
-import { isValidatedReviews } from "../../common/review";
-import { Reviews } from "../../common/review";
-import { isRefusedReviews } from "../../common/review";
+import { FestivalActivity, Reviewable } from "../festival-activity.js";
+import { isValidatedReviews } from "../../common/review.js";
+import { Reviews } from "../../common/review.js";
+import { isRefusedReviews } from "../../common/review.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
@@ -22,14 +22,14 @@ import {
   matos,
   secu,
   signa,
-} from "../../common/review";
-import { APPROVED } from "../../common/action";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
-import { InquiryRequest } from "../../common/inquiry-request";
-import { ElectricitySupply } from "../sections/supply";
-import { Signage } from "../sections/signa";
-import { Contractor } from "../sections/in-charge";
-import { TimeWindow } from "../../common/time-window";
+} from "../../common/review.js";
+import { APPROVED } from "../../common/action.js";
+import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import { InquiryRequest } from "../../common/inquiry-request.js";
+import { ElectricitySupply } from "../sections/supply.js";
+import { Signage } from "../sections/signa.js";
+import { Contractor } from "../sections/in-charge.js";
+import { TimeWindow } from "../../common/time-window.js";
 import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
@@ -45,11 +45,11 @@ import {
   LinkInquiryDrive,
   LinkSignageCatalogItem,
   PrepareSecurityUpdate,
-} from "./prepare-festival-activity.model";
+} from "./prepare-festival-activity.model.js";
 import {
   FestivalActivityError,
   FreePassMustBePositive,
-} from "../festival-activity.error";
+} from "../festival-activity.error.js";
 import { hasAtLeastOneItem } from "@overbookd/list";
 import {
   AlreadyInitialized,
@@ -57,10 +57,10 @@ import {
   CantRemoveLastTimeWindow,
   Inquiries,
   NotYetInitialized,
-} from "./section-aggregates/inquiries";
-import { LocationIsRequired, Signages } from "./section-aggregates/signages";
-import { isPrivate } from "../sections/general";
-import { AlreadyApprovedBy } from "../../common/review.error";
+} from "./section-aggregates/inquiries.js";
+import { LocationIsRequired, Signages } from "./section-aggregates/signages.js";
+import { isPrivate } from "../sections/general.js";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {

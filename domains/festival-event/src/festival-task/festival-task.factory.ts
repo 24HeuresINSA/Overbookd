@@ -6,7 +6,7 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { isKeyOf } from "../is-key-of";
+import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,
   FestivalActivity,
@@ -15,8 +15,8 @@ import {
   Refused,
   Reviewable,
   Validated,
-} from "./festival-task";
-import { FestivalTaskKeyEvents } from "./festival-task.event";
+} from "./festival-task.js";
+import { FestivalTaskKeyEvents } from "./festival-task.event.js";
 import {
   MobilizationBuilder,
   deuxTables,
@@ -29,15 +29,15 @@ import {
   lea,
   noel,
   noelContact,
-} from "./festival-task.test-util";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
+} from "./festival-task.test-util.js";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review.js";
 import {
   ReadyToAssignWithConflicts,
   WithConflicts,
-} from "./volunteer-conflicts";
-import { isDraft } from "../festival-event";
-import { APPROVED, REJECTED } from "../common/action";
-import { Assignments } from "./enable-assignment/enable-assignment";
+} from "./volunteer-conflicts.js";
+import { isDraft } from "../festival-event.js";
+import { APPROVED, REJECTED } from "../common/action.js";
+import { Assignments } from "./enable-assignment/enable-assignment.js";
 
 type FestivalTaskSection =
   | WithConflicts["general"]

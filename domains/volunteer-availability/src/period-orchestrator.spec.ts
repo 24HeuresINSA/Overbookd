@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PeriodOrchestrator } from "./period-orchestrator";
+import { PeriodOrchestrator } from "./period-orchestrator.js";
 import { Period } from "@overbookd/period";
 
 describe("Period orchestrator", () => {

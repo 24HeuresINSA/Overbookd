@@ -1,5 +1,5 @@
-import { Purchase } from "../purchase";
-import { PurchasesForInit } from "./init";
+import { Purchase } from "../purchase.js";
+import { PurchasesForInit } from "./init.js";
 
 export class InMemoryPurchases implements PurchasesForInit {
   constructor(private purchases: Purchase[] = []) {}

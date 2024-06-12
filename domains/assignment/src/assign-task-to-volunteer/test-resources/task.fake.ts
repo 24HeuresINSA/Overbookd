@@ -5,7 +5,7 @@ import {
   RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
-import { getTaskFactory } from "./factory/task.factory";
+import { getTaskFactory } from "./factory/task.factory.js";
 import {
   friday09hto10h,
   friday18hto19h,
@@ -17,7 +17,7 @@ import {
   missingOneHardAndOneBenevoleAssignment,
   missingOnePlaizirAssignment,
   missingTwoVieuxAssignment,
-} from "./assign-task-to-volunteer.test.utils";
+} from "./assign-task-to-volunteer.test.utils.js";
 
 const factory = getTaskFactory();
 

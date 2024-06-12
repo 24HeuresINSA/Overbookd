@@ -4,32 +4,31 @@ import {
   FestivalTask,
   ReadyToAssign,
   isReadyToAssign,
-} from "../festival-task";
-import { Adherent } from "../../common/adherent";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
+} from "../festival-task.js";
+import { Adherent } from "../../common/adherent.js";
+import { FestivalTaskKeyEvents } from "../festival-task.event.js";
 import {
   FestivalTaskTranslator,
   ReadyToAssignWithConflicts,
   ReadyToAssignWithoutConflicts,
   WithoutConflicts,
-} from "../volunteer-conflicts";
+} from "../volunteer-conflicts.js";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
   FestivalTaskNotValidated,
   ReadyToAssignError,
-} from "../festival-task.error";
+} from "../festival-task.error.js";
 
-import { isValidated } from "../../festival-event";
-import { ValidatedWithConflicts } from "../festival-task.factory";
+import { isValidated } from "../../festival-event.js";
+import { ValidatedWithConflicts } from "../festival-task.factory.js";
 import {
   Assignment,
   ReviewableMobilization,
   VolunteerWithConflicts,
-} from "../sections/mobilizations";
+} from "../sections/mobilizations.js";
 import { Item } from "@overbookd/list";
-import { Period } from "@overbookd/period";
-import { Duration } from "@overbookd/period";
+import { Period, Duration } from "@overbookd/period";
 
 export type FestivalTasksForEnableAssignment = {
   findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null>;

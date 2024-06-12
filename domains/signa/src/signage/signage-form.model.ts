@@ -1,4 +1,4 @@
-import { SignageType } from "./signage";
+import { SignageType } from "./signage.js";
 
 export type SignageForm = {
   name: string;

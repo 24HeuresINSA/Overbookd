@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect } from "vitest";
-import { Availability } from "./volunteer-availability";
-import { AvailabilityRegistery } from "./volunteer-availability.registery";
+import { Availability } from "./volunteer-availability.js";
+import { AvailabilityRegistery } from "./volunteer-availability.registery.js";
 
 describe("Volunteer availability registery", () => {
   describe("Add volunteer availability period", () => {

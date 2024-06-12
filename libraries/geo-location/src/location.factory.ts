@@ -1,7 +1,7 @@
-import { Line } from "./line";
-import { AREA, GeoLocation, POINT, ROAD } from "./location";
-import { Point } from "./point";
-import { Polygon } from "./polygon";
+import { Line } from "./line.js";
+import { AREA, GeoLocation, POINT, ROAD } from "./location.js";
+import { Point } from "./point.js";
+import { Polygon } from "./polygon.js";
 
 export class LocationFactory {
   static create(geoLocation: GeoLocation) {

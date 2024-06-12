@@ -12,10 +12,10 @@ import {
   Refused,
   Reviewable,
   Validated,
-} from "./festival-activity";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
-import { APPROVED, REJECTED } from "../common/action";
-import { Public } from "./sections/general";
+} from "./festival-activity.js";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review.js";
+import { APPROVED, REJECTED } from "../common/action.js";
+import { Public } from "./sections/general.js";
 import {
   saturday11hToSaturday18h,
   friday18hToMonday00h,
@@ -23,10 +23,10 @@ import {
   local24h,
   george,
   noel,
-} from "./festival-activity.fake";
-import { FestivalActivityKeyEvents } from "./festival-activity.event";
-import { isKeyOf } from "../is-key-of";
-import { isDraft } from "../festival-event";
+} from "./festival-activity.fake.js";
+import { FestivalActivityKeyEvents } from "./festival-activity.event.js";
+import { isKeyOf } from "../is-key-of.js";
+import { isDraft } from "../festival-event.js";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]

@@ -1,19 +1,19 @@
-import { Adherent } from "./adherent";
+import { Adherent } from "./adherent.js";
 import {
   OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
   isPastMeal,
-} from "./meals.model";
+} from "./meals.model.js";
 import {
   ChefNotFound,
   MealNotFound,
   GuestNotFound,
   RecordExpenseByChiefOnly,
-} from "./meal-sharing.error";
-import { Expense } from "./meals.model";
-import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
-import { PastSharedMealBuilder } from "./past-shared-meal.builder";
+} from "./meal-sharing.error.js";
+import { Expense } from "./meals.model.js";
+import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder.js";
+import { PastSharedMealBuilder } from "./past-shared-meal.builder.js";
 
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";

@@ -1,5 +1,5 @@
-import { friday17At12, table } from "../logistic.test-utils";
-import { Purchase } from "./purchase";
+import { friday17At12, table } from "../logistic.test-utils.js";
+import { Purchase } from "./purchase.js";
 
 export const leroyMerlinPurchase: Purchase = {
   id: 1,

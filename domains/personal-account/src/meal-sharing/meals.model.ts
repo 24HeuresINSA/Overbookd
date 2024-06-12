@@ -1,4 +1,4 @@
-import { Adherent, Shotgun } from "./adherent";
+import { Adherent, Shotgun } from "./adherent.js";
 
 export type Expense = {
   amount: number;

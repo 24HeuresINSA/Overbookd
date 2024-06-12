@@ -1,4 +1,4 @@
-import { FestivalEventError } from "../festival-event";
+import { FestivalEventError } from "../festival-event.js";
 
 function buildFestivalActivityNotFoundErrorMessage(id: number) {
   return `❌ La fiche activité #${id} n'a pas été trouvée`;

@@ -1,5 +1,5 @@
-import { LogisticError } from "../logistic.error";
-import { Purchase } from "./purchase";
+import { LogisticError } from "../logistic.error.js";
+import { Purchase } from "./purchase.js";
 
 class PurchaseError extends LogisticError {}
 

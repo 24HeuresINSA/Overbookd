@@ -1,6 +1,6 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { updateItemToList } from "@overbookd/list";
-import { Availability } from "./volunteer-availability";
+import { Availability } from "./volunteer-availability.js";
 
 export type PeriodWithError = IProvidePeriod & {
   message: string;

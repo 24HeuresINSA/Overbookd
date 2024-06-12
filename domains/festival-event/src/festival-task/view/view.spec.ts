@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { FestivalTaskNotFound } from "../festival-task.error";
-import { ViewFestivalTask } from "./view";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { PreviewDraft, Preview } from "../festival-task";
-import { installEscapeGame } from "../festival-task.fake";
-import { uninstallEscapeGame } from "../festival-task.fake";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
+import { ViewFestivalTask } from "./view.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PreviewDraft, Preview } from "../festival-task.js";
+import { installEscapeGame } from "../festival-task.fake.js";
+import { uninstallEscapeGame } from "../festival-task.fake.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
 const installEscapeGamePreview: PreviewDraft = {
   id: installEscapeGame.id,

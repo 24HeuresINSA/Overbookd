@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { Purchase } from "../purchase";
+import { Purchase } from "../purchase.js";
 
 export type InitPurchaseForm = {
   seller: string;

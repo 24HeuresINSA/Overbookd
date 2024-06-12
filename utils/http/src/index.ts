@@ -1,7 +1,7 @@
 export type {
   AddInquiryRequestForm,
   PublishFeedbackForm,
-} from "./festival-event/common";
+} from "./festival-event/common.js";
 export type {
   PrepareInChargeForm,
   PrepareSignaForm,
@@ -13,8 +13,8 @@ export type {
   PreviewForCommunication,
   LogisticInquiry,
   PreviewForLogistic,
-} from "./festival-event/festival-activity";
-export type { Statistics } from "./festival-event/festival-event";
+} from "./festival-event/festival-activity.js";
+export type { Statistics } from "./festival-event/festival-event.js";
 export type {
   FestivalTaskCreationForm,
   UpdateGeneralForm,
@@ -26,10 +26,10 @@ export type {
   AddVolunteerToMobilizationForm,
   Draft as DraftWithConflicts,
   Reviewable as ReviewableWithConflicts,
-} from "./festival-event/festival-task";
-export type { HttpStringified } from "./http-stringified";
-export type { OfferMeal } from "./shared-meal";
-export type { AddGearRequestForm } from "./logistic/borrow";
+} from "./festival-event/festival-task.js";
+export type { HttpStringified } from "./http-stringified.js";
+export type { OfferMeal } from "./shared-meal.js";
+export type { AddGearRequestForm } from "./logistic/borrow.js";
 export type {
   Inquiry,
   BaseGearDetails,
@@ -40,17 +40,17 @@ export type {
   GearPreview,
   GearWithDetails,
   Inquiry as GearDetailsInquiry,
-} from "./logistic/dashboard";
+} from "./logistic/dashboard.js";
 export type {
   InventoryGroupedRecord,
   InventoryRecord,
   LiteInventoryRecord,
-} from "./logistic/inventory";
+} from "./logistic/inventory.js";
 export type {
   GearSearchOptions,
   CatalogGear,
   CatalogGearForm,
-} from "./logistic/gear";
+} from "./logistic/gear.js";
 export type {
   CategoryOwner,
   CategoryForm,
@@ -58,18 +58,18 @@ export type {
   CategorySearchOptions,
   CatalogCategory,
   CatalogCategoryTree,
-} from "./logistic/catalog";
-export { JSON, CSV, ICAL, PDF } from "./mime";
-export type { AvailabilityForm } from "./volunteer-availability";
-export type { Task as PlanningTask } from "./planning/task";
-export type { EnrollableStaff, EnrollableVolunteer } from "./registration";
-export type { EditAmountForm } from "./contribution";
-export type { Preference } from "./preference";
+} from "./logistic/catalog.js";
+export { JSON, CSV, ICAL, PDF } from "./mime.js";
+export type { AvailabilityForm } from "./volunteer-availability.js";
+export type { Task as PlanningTask } from "./planning/task.js";
+export type { EnrollableStaff, EnrollableVolunteer } from "./registration.js";
+export type { EditAmountForm } from "./contribution.js";
+export type { Preference } from "./preference.js";
 export type {
   OrgaNeedDetails,
   OrgaNeedTask,
   OrgaNeedRequest,
-} from "./orga-need";
+} from "./orga-need.js";
 export type {
   TimelineAssignee,
   TimelineAssignment,
@@ -77,20 +77,23 @@ export type {
   TimelineEvent,
   TimelineMobilization,
   TimelineTask,
-} from "./timeline";
+} from "./timeline.js";
 export type {
   AssignmentSummaryWithTask,
   DisplayableAssignment,
   VolunteerWithAssignmentStats,
   AssignmentStat,
-} from "./assignment";
-export type { During as DuringBreakPeriods } from "./planning/break-periods";
-export type { PublicHoliday } from "./planning/public-holiday";
-export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer";
-export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";
-export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period";
-export type { CreatePermissionForm, Permission } from "./permission";
-export type { CreateLocation } from "./location";
-export type { Team } from "./team";
-export type { Consumer } from "./consumer";
-export type { UserAccess, UserCredentials } from "./auth";
+} from "./assignment.js";
+export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
+export type { PublicHoliday } from "./planning/public-holiday.js";
+export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
+export type {
+  HelpingVolunteerAssignment,
+  HelpingVolunteer,
+} from "./need-help.js";
+export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period.js";
+export type { CreatePermissionForm, Permission } from "./permission.js";
+export type { CreateLocation } from "./location.js";
+export type { Team } from "./team.js";
+export type { Consumer } from "./consumer.js";
+export type { UserAccess, UserCredentials } from "./auth.js";

@@ -1,7 +1,7 @@
-import { AssignableVolunteer } from "../assignable-volunteer";
-import { Assignment } from "../assignment";
-import { Assignments } from "../repositories/assignments";
-import { CandidateFactory, IDefineCandidate } from "./candidate";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { Assignment } from "../assignment.js";
+import { Assignments } from "../repositories/assignments.js";
+import { CandidateFactory, IDefineCandidate } from "./candidate.js";
 
 export class FunnelError extends Error {}
 

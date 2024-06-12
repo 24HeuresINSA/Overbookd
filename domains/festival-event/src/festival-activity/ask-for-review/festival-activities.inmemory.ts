@@ -1,7 +1,7 @@
 import { updateItemToList } from "@overbookd/list";
-import { FestivalActivity, Reviewable } from "../festival-activity";
-import { FestivalActivityNotFound } from "../festival-activity.error";
-import { AskForReviewFestivalActivityRepository } from "./ask-for-review";
+import { FestivalActivity, Reviewable } from "../festival-activity.js";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
+import { AskForReviewFestivalActivityRepository } from "./ask-for-review.js";
 
 export class InMemoryAskForReviewFestivalActivityRepository
   implements AskForReviewFestivalActivityRepository

@@ -1,4 +1,4 @@
-export * from "./joinable-team";
-export type { EnrollNewcomersForm } from "./enroll-newcomers-form.model";
-export { EnrollNewcomers } from "./enroll-newcomers";
-export type { NewcomerToEnroll, EnrolledNewcomer } from "./enroll-newcomers";
+export * from "./joinable-team.js";
+export type { EnrollNewcomersForm } from "./enroll-newcomers-form.model.js";
+export { EnrollNewcomers } from "./enroll-newcomers.js";
+export type { NewcomerToEnroll, EnrolledNewcomer } from "./enroll-newcomers.js";

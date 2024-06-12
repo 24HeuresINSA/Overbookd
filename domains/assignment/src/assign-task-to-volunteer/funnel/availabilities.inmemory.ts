@@ -1,6 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Availabilities } from "./planning";
-import { AssignableVolunteer } from "../assignable-volunteer";
+import { Availabilities } from "./planning.js";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 
 export class InMemoryAvailabilities implements Availabilities {
   constructor(

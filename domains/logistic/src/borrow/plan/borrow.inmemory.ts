@@ -1,5 +1,5 @@
-import { Borrow } from "../borrow";
-import { BorrowsForPlan } from "./plan";
+import { Borrow } from "../borrow.js";
+import { BorrowsForPlan } from "./plan.js";
 
 export class InMemoryBorrows implements BorrowsForPlan {
   constructor(private borrows: Borrow[] = []) {}

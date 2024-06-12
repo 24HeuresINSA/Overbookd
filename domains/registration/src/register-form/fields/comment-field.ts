@@ -1,4 +1,4 @@
-import { Field } from "./field";
+import { Field } from "./field.js";
 
 export class CommentField implements Field<string | undefined> {
   private constructor(private readonly comment?: string) {}

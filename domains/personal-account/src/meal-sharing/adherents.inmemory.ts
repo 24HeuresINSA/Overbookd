@@ -1,5 +1,5 @@
-import { Adherents } from "./meal-sharing";
-import { Adherent } from "./adherent";
+import { Adherents } from "./meal-sharing.js";
+import { Adherent } from "./adherent.js";
 
 export class InMemoryAdherents implements Adherents {
   constructor(private readonly adherents: Adherent[]) {}

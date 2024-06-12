@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { AssignVolunteerToTask } from "./assign-volunteer-to-task";
-import { InMemoryVolunteers } from "./volunteers.inmemory";
+import { AssignVolunteerToTask } from "./assign-volunteer-to-task.js";
+import { InMemoryVolunteers } from "./volunteers.inmemory.js";
 import {
   leaAssignee,
   noelAssignee,
   noelExpected,
   leaExpected,
-} from "./assign-volunteer-to-task.test-utils";
+} from "./assign-volunteer-to-task.test-utils.js";
 
 describe("Assign volunteer to task", () => {
   const volunteers = new InMemoryVolunteers([leaAssignee, noelAssignee]);

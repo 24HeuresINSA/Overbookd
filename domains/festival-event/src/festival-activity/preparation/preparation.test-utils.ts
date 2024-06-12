@@ -1,5 +1,5 @@
-import { Reviewable } from "../festival-activity";
-import { getFactory } from "../festival-activity.factory";
+import { Reviewable } from "../festival-activity.js";
+import { getFactory } from "../festival-activity.factory.js";
 import {
   friday18hToMonday00h,
   lafarge,
@@ -7,7 +7,7 @@ import {
   pelouseHumas,
   agora,
   creuxCgu,
-} from "../festival-activity.fake";
+} from "../festival-activity.fake.js";
 import {
   friday12hToFriday14h,
   noel,
@@ -32,8 +32,8 @@ import {
   sunday14hToSunday18h,
   friday12hToMonday00h,
   george,
-} from "../festival-activity.fake";
-import { APPROVED } from "../../common/action";
+} from "../festival-activity.fake.js";
+import { APPROVED } from "../../common/action.js";
 
 const factory = getFactory();
 

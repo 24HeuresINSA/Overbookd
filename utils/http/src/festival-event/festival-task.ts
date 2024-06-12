@@ -1,5 +1,8 @@
 import {
   Adherent,
+  Contact,
+  FestivalTask,
+  UpdateGeneral,
   UpdateInstructions,
   Volunteer,
   AddMobilization,
@@ -8,9 +11,6 @@ import {
   FestivalTaskDraft,
   FestivalTaskReviewable,
 } from "@overbookd/festival-event";
-import { Contact } from "@overbookd/festival-event";
-import { UpdateGeneral } from "@overbookd/festival-event";
-import { FestivalTask } from "@overbookd/festival-event";
 
 export type FestivalTaskCreationForm = {
   name: FestivalTask["general"]["name"];

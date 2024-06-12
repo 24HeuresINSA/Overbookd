@@ -3,9 +3,12 @@ import {
   HaveTransactions,
   InDebt,
   WrongCrendentials,
-} from "./forget-member.error";
-import { AnonymousMember } from "./anonymous-member";
-import { WithTransactions, WithoutTransactions } from "./forget-about.strategy";
+} from "./forget-member.error.js";
+import { AnonymousMember } from "./anonymous-member.js";
+import {
+  WithTransactions,
+  WithoutTransactions,
+} from "./forget-about.strategy.js";
 
 export type Credentials = {
   email: string;

@@ -1,5 +1,5 @@
-import { FestivalEventIdentifier } from "./festival-event";
-import { Reviewer } from "./review";
+import { FestivalEventIdentifier } from "./festival-event.js";
+import { Reviewer } from "./review.js";
 
 export type WaitingForReview<T extends FestivalEventIdentifier> = {
   id: number;

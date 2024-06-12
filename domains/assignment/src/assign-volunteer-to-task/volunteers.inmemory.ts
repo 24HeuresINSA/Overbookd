@@ -1,7 +1,7 @@
 import {
   VolunteerWithAssignments,
   Volunteers,
-} from "./assign-volunteer-to-task";
+} from "./assign-volunteer-to-task.js";
 
 export class InMemoryVolunteers implements Volunteers {
   constructor(private volunteers: VolunteerWithAssignments[] = []) {}

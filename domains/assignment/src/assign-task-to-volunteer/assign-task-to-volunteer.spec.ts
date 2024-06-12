@@ -8,11 +8,11 @@ import {
   missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
   missingTwoVieuxDuring19hto20h,
   fulfillAssignmentThenMissingOneHardTask,
-} from "./test-resources/task.fake";
-import { InMemoryTasks } from "./repositories/tasks.inmemory";
-import { AssignTaskToVolunteer } from "./assign-task-to-volunteer";
-import { AssignableVolunteer } from "./assignable-volunteer";
-import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory";
+} from "./test-resources/task.fake.js";
+import { InMemoryTasks } from "./repositories/tasks.inmemory.js";
+import { AssignTaskToVolunteer } from "./assign-task-to-volunteer.js";
+import { AssignableVolunteer } from "./assignable-volunteer.js";
+import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory.js";
 import {
   fulfilledAssignment,
   leaAsAvailableVolunteer,
@@ -20,8 +20,8 @@ import {
   missingOnePlaizirAssignment,
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
-} from "./test-resources/assign-task-to-volunteer.test.utils";
-import { HARD, VIEUX } from "../teams";
+} from "./test-resources/assign-task-to-volunteer.test.utils.js";
+import { HARD, VIEUX } from "../teams.js";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Assign task to volunteer", () => {

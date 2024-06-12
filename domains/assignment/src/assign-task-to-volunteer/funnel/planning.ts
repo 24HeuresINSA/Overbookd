@@ -1,6 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Status } from "@overbookd/festival-event-constants";
-import { AssignableVolunteer } from "../assignable-volunteer";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 
 export type Task = { name: string; id: number; status: Status };
 

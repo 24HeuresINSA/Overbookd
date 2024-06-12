@@ -1,5 +1,5 @@
-import { Assignee, Assignment, TeamDemanded } from "../../assignment";
-import { AssignmentSummaryFactory } from "./assignment-summary.factory";
+import { Assignee, Assignment, TeamDemanded } from "../../assignment.js";
+import { AssignmentSummaryFactory } from "./assignment-summary.factory.js";
 import { Period } from "@overbookd/period";
 
 type InitAssignment = {

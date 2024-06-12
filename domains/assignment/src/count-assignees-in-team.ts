@@ -1,4 +1,4 @@
-import { Assignee, isMemberOf } from "./assign-task-to-volunteer/assignment";
+import { Assignee, isMemberOf } from "./assign-task-to-volunteer/assignment.js";
 
 export function countAssigneesInTeam(
   team: string,

@@ -5,9 +5,9 @@ export type {
   Coordinate,
   GeoLocation,
   ManageLocation,
-} from "./location";
-export { POINT, ROAD, AREA } from "./location";
-export { Line } from "./line";
-export { Point } from "./point";
-export { Polygon } from "./polygon";
-export { LocationFactory } from "./location.factory";
+} from "./location.js";
+export { POINT, ROAD, AREA } from "./location.js";
+export { Line } from "./line.js";
+export { Point } from "./point.js";
+export { Polygon } from "./polygon.js";
+export { LocationFactory } from "./location.factory.js";

@@ -1,1 +1,1 @@
-export type { Event } from "./event";
+export type { Event } from "./event.js";

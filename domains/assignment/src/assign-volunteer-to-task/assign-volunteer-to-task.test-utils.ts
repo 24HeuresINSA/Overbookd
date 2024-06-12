@@ -1,10 +1,9 @@
-import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
+import { ONE_HOUR_IN_MS, QUARTER_IN_MS, Period } from "@overbookd/period";
 import {
   VolunteerWithAssignmentDuration,
   VolunteerWithAssignments,
   VolunteerWithFriendFilter,
-} from "./assign-volunteer-to-task";
-import { Period } from "@overbookd/period";
+} from "./assign-volunteer-to-task.js";
 
 const friday08hTo10h = Period.init({
   start: new Date("2022-07-01T08:00:00Z"),

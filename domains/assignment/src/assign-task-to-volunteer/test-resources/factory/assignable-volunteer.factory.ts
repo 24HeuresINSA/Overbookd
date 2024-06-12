@@ -1,10 +1,10 @@
 import { Period } from "@overbookd/period";
-import { FormatVolunteer, Volunteer } from "../../../volunteer";
+import { FormatVolunteer, Volunteer } from "../../../volunteer.js";
 import {
   AssignableVolunteer,
   StoredAssignableVolunteer,
   StoredAssignment,
-} from "../../assignable-volunteer";
+} from "../../assignable-volunteer.js";
 import {
   BAR,
   Category,

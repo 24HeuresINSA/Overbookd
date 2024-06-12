@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
-import { getFactory } from "../festival-activity.factory";
+import { getFactory } from "../festival-activity.factory.js";
 import {
   barrieres,
   communication,
@@ -9,15 +9,15 @@ import {
   matos,
   secu,
   signa,
-} from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
+} from "../../common/review.js";
+import { APPROVED, REJECTED } from "../../common/action.js";
 import {
   BACKLINE,
   CONTENEUR_SCENE_ROOTS,
   LOCAL_24H,
   MAGASIN,
   PARKING_EIFFEL,
-} from "../../common/inquiry-request";
+} from "../../common/inquiry-request.js";
 import {
   afficheJustDanceA2,
   bacheBienvenue10m,
@@ -32,14 +32,16 @@ import {
   uneBouilloire,
   uneMultiprise,
   uneMultiprise3Prises,
-} from "../festival-activity.fake";
-import { Reviewing } from "./reviewing";
-import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error";
-import { AlreadyApproved } from "../../common/review.error";
-import { ShouldAssignDrive } from "../../common/review.error";
-import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
-import { Reviewable } from "../festival-activity";
-import { NotAskingToReview } from "../../common/review.error";
+} from "../festival-activity.fake.js";
+import { Reviewing } from "./reviewing.js";
+import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error.js";
+import {
+  AlreadyApproved,
+  NotAskingToReview,
+  ShouldAssignDrive,
+} from "../../common/review.error.js";
+import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory.js";
+import { Reviewable } from "../festival-activity.js";
 
 const factory = getFactory();
 

@@ -1,6 +1,6 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
-import { Adherent } from "../../common/adherent";
-import { Location } from "../../common/location";
+import { Adherent } from "../../common/adherent.js";
+import { Location } from "../../common/location.js";
 
 export type Contact = Adherent & {
   phone: string;

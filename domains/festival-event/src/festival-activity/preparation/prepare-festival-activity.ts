@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { FestivalActivityNotFound } from "../festival-activity.error";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import {
   LinkInquiryDrive,
   LinkSignageCatalogItem,
@@ -15,18 +15,18 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
-} from "./prepare-festival-activity.model";
-import { FestivalActivity } from "../festival-activity";
-import { PreviewFestivalActivity } from "../festival-activity";
-import { InquiryRequest } from "../../common/inquiry-request";
-import { ElectricitySupply } from "../sections/supply";
-import { Signage } from "../sections/signa";
-import { Contractor } from "../sections/in-charge";
-import { Adherent } from "../../common/adherent";
-import { TimeWindow } from "../../common/time-window";
-import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
-import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
-import { isDraft } from "../../festival-event";
+} from "./prepare-festival-activity.model.js";
+import { FestivalActivity } from "../festival-activity.js";
+import { PreviewFestivalActivity } from "../festival-activity.js";
+import { InquiryRequest } from "../../common/inquiry-request.js";
+import { ElectricitySupply } from "../sections/supply.js";
+import { Signage } from "../sections/signa.js";
+import { Contractor } from "../sections/in-charge.js";
+import { Adherent } from "../../common/adherent.js";
+import { TimeWindow } from "../../common/time-window.js";
+import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity.js";
+import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity.js";
+import { isDraft } from "../../festival-event.js";
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;

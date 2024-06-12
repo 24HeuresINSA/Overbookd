@@ -6,9 +6,9 @@ import {
   PayeeNotHavePersonalAccount,
   PayorNotHavePersonalAccount,
   TransferToYourself,
-} from "./transfer.error";
-import { TransferForm } from "./payor";
-import { ONE_EURO_IN_CENTS } from "../transaction.model";
+} from "./transfer.error.js";
+import { TransferForm } from "./payor.js";
+import { ONE_EURO_IN_CENTS } from "../transaction.model.js";
 
 type NonAdherent = {
   havePersonalAccount: false;

@@ -1,7 +1,7 @@
-import { Notifications, Notifyee } from "../../common/notifications";
-import { WaitingForReview } from "../../common/notifications";
-import { Reviewer } from "../../common/review";
-import { FestivalEventIdentifier } from "../../common/festival-event";
+import { Notifications, Notifyee } from "../../common/notifications.js";
+import { WaitingForReview } from "../../common/notifications.js";
+import { Reviewer } from "../../common/review.js";
+import { FestivalEventIdentifier } from "../../common/festival-event.js";
 
 type FestivalActivityToReview = Omit<WaitingForReview<"FA">, "reviewers">;
 

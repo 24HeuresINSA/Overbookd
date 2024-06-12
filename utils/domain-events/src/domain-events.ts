@@ -5,19 +5,19 @@ import type {
   FestivalActivityApprovedEvent,
   FestivalActivityReadyToReviewEvent,
   FestivalActivityRejectedEvent,
-} from "./festival-activity";
-import type { SharedMealClosedEvent } from "./shared-meal";
+} from "./festival-activity.js";
+import type { SharedMealClosedEvent } from "./shared-meal.js";
 import {
   FestivalTaskApprovedEvent,
   FestivalTaskCreatedEvent,
   FestivalTaskReadyToReviewEvent,
   FestivalTaskRejectedEvent,
-} from "./festival-task";
+} from "./festival-task.js";
 import {
   StaffRegisteredEvent,
   VolunteerEnrolledEvent,
   VolunteerRegisteredEvent,
-} from "./registration";
+} from "./registration.js";
 
 export type DomainEvent =
   | StaffRegisteredEvent

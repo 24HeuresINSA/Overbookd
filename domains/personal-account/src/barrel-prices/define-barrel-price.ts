@@ -2,7 +2,7 @@ import { SlugifyService as Slugify } from "@overbookd/slugify";
 import {
   SimilarBarrelExist,
   BarrelNotConfigured,
-} from "./define-barrel-price.error";
+} from "./define-barrel-price.error.js";
 
 export type NewBarrel = {
   drink: string;

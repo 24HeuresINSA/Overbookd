@@ -3,11 +3,11 @@ import {
   VolunteerAvailabilities,
   VolunteerConflicts,
   WithConflicts,
-} from "./volunteer-conflicts";
-import { Volunteer } from "./sections/instructions";
-import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";
-import { Mobilization } from "./sections/mobilizations";
-import { FestivalTask, isReadyToAssign } from "./festival-task";
+} from "./volunteer-conflicts.js";
+import { Volunteer } from "./sections/instructions.js";
+import { Conflicts, FestivalTaskLink } from "./sections/mobilizations.js";
+import { Mobilization } from "./sections/mobilizations.js";
+import { FestivalTask, isReadyToAssign } from "./festival-task.js";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(

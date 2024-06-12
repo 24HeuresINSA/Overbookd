@@ -1,6 +1,6 @@
 import { Item, hasAtLeastOneItem, isEmpty } from "@overbookd/list";
-import { Draft, FestivalTask, InReview } from "../festival-task";
-import { DraftGeneral } from "../sections/general";
+import { Draft, FestivalTask, InReview } from "../festival-task.js";
+import { DraftGeneral } from "../sections/general.js";
 
 export type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
 export class InReviewSpecification {

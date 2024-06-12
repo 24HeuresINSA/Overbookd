@@ -13,6 +13,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
+import { ONE_SECOND_IN_MS } from "@overbookd/period";
 
 const isShowing = ref(false);
 const store = useSnackNotificationStore();
@@ -36,7 +37,7 @@ const close = () => {
   isShowing.value = false;
   setTimeout(() => {
     store.popFirstNotification();
-  }, 200);
+  }, ONE_SECOND_IN_MS / 5);
 };
 
 const updateDisplay = (isShowing: boolean) => {

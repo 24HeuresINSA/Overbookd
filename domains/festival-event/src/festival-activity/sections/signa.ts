@@ -1,4 +1,4 @@
-import { Location } from "../../common/location";
+import { Location } from "../../common/location.js";
 
 export const BACHE = "BACHE";
 export const PANNEAU = "PANNEAU";

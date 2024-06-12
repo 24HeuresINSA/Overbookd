@@ -1,10 +1,10 @@
-import { FestivalTask, ReadyToAssign } from "../../festival-task";
+import { FestivalTask, ReadyToAssign } from "../../festival-task.js";
 import {
   Contact,
   Volunteer,
   hasInChargeInstructions,
-} from "../../sections/instructions";
-import { UpdateInstructions } from "../prepare";
+} from "../../sections/instructions.js";
+import { UpdateInstructions } from "../prepare.js";
 
 export type InitInCharge = {
   volunteers: Volunteer[];

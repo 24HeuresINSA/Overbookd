@@ -1,7 +1,7 @@
-import { FestivalTaskBuilder } from "../festival-task.builder";
-import { FestivalTasksForView } from "./view";
-import { Preview } from "../festival-task";
-import { WithoutConflicts } from "../volunteer-conflicts";
+import { FestivalTaskBuilder } from "../festival-task.builder.js";
+import { FestivalTasksForView } from "./view.js";
+import { Preview } from "../festival-task.js";
+import { WithoutConflicts } from "../volunteer-conflicts.js";
 
 export class InMemoryFestivalTasks implements FestivalTasksForView {
   constructor(private readonly tasks: WithoutConflicts[]) {}

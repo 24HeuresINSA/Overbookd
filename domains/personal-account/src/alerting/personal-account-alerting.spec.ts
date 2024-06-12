@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { Adherents } from "./adherents";
-import { PersonalAccountAlerting } from "./personal-account-alerting";
-import { InMemoryAdhrents } from "./adherents.in-memory";
+import { Adherents } from "./adherents.js";
+import { PersonalAccountAlerting } from "./personal-account-alerting.js";
+import { InMemoryAdhrents } from "./adherents.in-memory.js";
 import { NEGATIVE_BALANCE } from "../in-debt";
 import { CURRENT_BALANCE_MESSAGE } from "../current-balance";
 

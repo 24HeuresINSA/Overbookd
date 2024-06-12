@@ -1,5 +1,5 @@
-import { Borrow } from "../borrow";
-import { BorrowsForCancel } from "./cancel";
+import { Borrow } from "../borrow.js";
+import { BorrowsForCancel } from "./cancel.js";
 
 export class InMemoryBorrows implements BorrowsForCancel {
   constructor(private borrows: Borrow[] = []) {}

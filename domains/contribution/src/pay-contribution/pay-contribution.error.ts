@@ -1,4 +1,4 @@
-import { ContributionError } from "../contribution.error";
+import { ContributionError } from "../contribution.error.js";
 
 export const HAS_ALREADY_PAYED_ERROR_MESSAGE =
   "Le bénévole a déjà payé sa cotisation pour cette édition";

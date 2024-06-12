@@ -1,8 +1,8 @@
 import { Duration } from "@overbookd/period";
-import { FestivalTask } from "./festival-task";
-import { TeamMobilization } from "./sections/mobilizations";
-import { InquiryRequest } from "../common/inquiry-request";
-import { FestivalEventError } from "../festival-event";
+import { FestivalTask } from "./festival-task.js";
+import { TeamMobilization } from "./sections/mobilizations.js";
+import { InquiryRequest } from "../common/inquiry-request.js";
+import { FestivalEventError } from "../festival-event.js";
 
 export class FestivalTaskError extends FestivalEventError {}
 

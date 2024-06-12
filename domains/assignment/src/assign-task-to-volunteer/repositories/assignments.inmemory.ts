@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
-import { Assignment, AssignmentIdentifier } from "../assignment";
-import { Assignments, VolunteersForAssignment } from "./assignments";
+import { Assignment, AssignmentIdentifier } from "../assignment.js";
+import { Assignments, VolunteersForAssignment } from "./assignments.js";
 
 export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}

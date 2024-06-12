@@ -1,5 +1,5 @@
 import { Permission } from "@overbookd/permission";
-import { Permissions } from "./settle-alerting";
+import { Permissions } from "./settle-alerting.js";
 
 export type Member = {
   id: number;

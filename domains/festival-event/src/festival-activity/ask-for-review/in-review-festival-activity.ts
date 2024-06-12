@@ -4,26 +4,28 @@ import {
   InReview,
   Refused,
   Reviewable,
-} from "../festival-activity";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review";
-import { InReviewReviews, RefusedReviews } from "../../common/review";
-import { REJECTED } from "../../common/action";
+} from "../festival-activity.js";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+  InReviewReviews,
+  RefusedReviews,
+} from "../../common/review.js";
+import { REJECTED } from "../../common/action.js";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
   PublicGeneral,
-} from "./specifications/general-section-specification";
-import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification";
-import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
-import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification";
-import { ReadyForReviewError } from "../../common/ready-for-review.error";
-import { WaitingForReview } from "../../common/notifications";
+} from "./specifications/general-section-specification.js";
+import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification.js";
+import { ActivitySignaSpecification } from "./specifications/signa-section-specification.js";
+import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification.js";
+import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
+import { WaitingForReview } from "../../common/notifications.js";
 import {
   Reviewer,
   PrivateActivityReviewer,
   PublicActivityReviewer,
-} from "../../common/review";
-import {
   humain,
   signa,
   secu,
@@ -31,9 +33,9 @@ import {
   elec,
   barrieres,
   communication,
-} from "../../common/review";
-import { FestivalActivityKeyEvents } from "../festival-activity.event";
-import { Adherent } from "../../common/adherent";
+} from "../../common/review.js";
+import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
+import { Adherent } from "../../common/adherent.js";
 
 type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;

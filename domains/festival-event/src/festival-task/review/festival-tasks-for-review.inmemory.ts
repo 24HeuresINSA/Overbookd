@@ -1,7 +1,7 @@
-import { ReviewableWithoutConflicts } from "../volunteer-conflicts";
-import { FestivalTaskNotFound } from "../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
-import { FestivalTasksForReview } from "./review";
+import { ReviewableWithoutConflicts } from "../volunteer-conflicts.js";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
+import { FestivalTasksForReview } from "./review.js";
 
 export class InMemoryFestivalTasksForReview implements FestivalTasksForReview {
   constructor(private tasks: ReviewableWithoutConflicts[]) {}

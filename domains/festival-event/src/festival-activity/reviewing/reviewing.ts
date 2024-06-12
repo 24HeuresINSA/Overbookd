@@ -3,11 +3,7 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { FestivalActivity, Refused, Reviewable } from "../festival-activity";
-import { isValidatedReviews } from "../../common/review";
-import { Reviews } from "../../common/review";
-import { isRefusedReviews } from "../../common/review";
-import { Reviewer } from "../../common/review";
+import { FestivalActivity, Refused, Reviewable } from "../festival-activity.js";
 import {
   NOT_ASKING_TO_REVIEW,
   barrieres,
@@ -17,23 +13,29 @@ import {
   matos,
   secu,
   signa,
-} from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
-import { FestivalActivityNotFound } from "../festival-activity.error";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
+  isValidatedReviews,
+  Reviews,
+  isRefusedReviews,
+  Reviewer,
+  Rejection,
+} from "../../common/review.js";
+import { APPROVED, REJECTED } from "../../common/action.js";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
+import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
 import {
   InDraft,
   AlreadyRejected,
   ShouldLinkCatalogItem,
-} from "./reviewing.error";
-import { AlreadyApproved } from "../../common/review.error";
-import { ShouldAssignDrive } from "../../common/review.error";
-import { Adherent } from "../../common/adherent";
-import { FestivalActivityKeyEvents } from "../festival-activity.event";
-import { isLinkedToCatalogItem } from "../sections/signa";
-import { NotAskingToReview } from "../../common/review.error";
-import { Rejection } from "../../common/review";
-import { isDraft } from "../../festival-event";
+} from "./reviewing.error.js";
+import {
+  AlreadyApproved,
+  NotAskingToReview,
+  ShouldAssignDrive,
+} from "../../common/review.error.js";
+import { Adherent } from "../../common/adherent.js";
+import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
+import { isLinkedToCatalogItem } from "../sections/signa.js";
+import { isDraft } from "../../festival-event.js";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;

@@ -1,4 +1,4 @@
-import { AlreadyAddedGear } from "./logistic.error";
+import { AlreadyAddedGear } from "./logistic.error.js";
 
 export type Gear = {
   slug: string;

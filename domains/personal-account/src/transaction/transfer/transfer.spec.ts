@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { InMemoryTransferRepository } from "./transfer-repository.inmemory";
+import { InMemoryTransferRepository } from "./transfer-repository.inmemory.js";
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
   AmountTooHigh,
@@ -9,10 +9,10 @@ import {
   PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
   PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
-} from "./transfer.error";
-import { Payor } from "./payor";
-import { InMemoryMemberRepository } from "./member-repository.inmemory";
-import { Transfer } from "./transfer";
+} from "./transfer.error.js";
+import { Payor } from "./payor.js";
+import { InMemoryMemberRepository } from "./member-repository.inmemory.js";
+import { Transfer } from "./transfer.js";
 
 const lea = {
   id: 1,

@@ -1,22 +1,22 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  FulfilledRegistration,
-  KARNA_CODE,
-  RegistrationError,
-  TECKOS_CODE,
-  Teams,
-} from "./register-form";
-import { RegisterNewcomer } from "./register-newcomer";
-import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
-import {
   ENROLL_HARD,
   ENROLL_SOFT,
   READ_FA,
   READ_FT,
 } from "@overbookd/permission";
-import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
-import { StoredNotifyee } from "./notification-repository.inmemory";
-import { STAFF, NewcomerRegistered, VOLUNTEER } from "./newcomer";
+import {
+  FulfilledRegistration,
+  KARNA_CODE,
+  RegistrationError,
+  TECKOS_CODE,
+  Teams,
+} from "./register-form/index.js";
+import { RegisterNewcomer } from "./register-newcomer.js";
+import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
+import { InMemoryNotificationRepository } from "./notification-repository.inmemory.js";
+import { StoredNotifyee } from "./notification-repository.inmemory.js";
+import { STAFF, NewcomerRegistered, VOLUNTEER } from "./newcomer.js";
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },

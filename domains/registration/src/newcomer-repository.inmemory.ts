@@ -1,13 +1,13 @@
 import { numberGenerator } from "@overbookd/list";
-import { FulfilledRegistration } from "./register-form";
-import { NewcomerRepository } from "./register-newcomer";
+import { FulfilledRegistration } from "./register-form/index.js";
+import { NewcomerRepository } from "./register-newcomer.js";
 import {
   NewcomerRegistered,
   Membership,
   StaffRegistered,
   VolunteerRegistered,
-} from "./newcomer";
-import { isStaffRegistered, isVolunteerRegistered } from "./newcomer";
+} from "./newcomer.js";
+import { isStaffRegistered, isVolunteerRegistered } from "./newcomer.js";
 
 export class InMemoryNewcomerRepository implements NewcomerRepository {
   private idGenerator: Generator<number>;

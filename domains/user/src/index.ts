@@ -1,3 +1,3 @@
-export * from "./user.model";
-export * from "./user-form.model";
-export { nicknameOrName } from "./user-name";
+export * from "./user.model.js";
+export * from "./user-form.model.js";
+export { nicknameOrName } from "./user-name.js";

@@ -4,7 +4,14 @@ export {
   VALIDATED,
   REFUSED,
   READY_TO_ASSIGN,
-} from "./status";
-export type { Status } from "./status";
-export type { Category } from "./category";
-export { STATIQUE, BAR, MANUTENTION, FUN, RELOU, categories } from "./category";
+} from "./status.js";
+export type { Status } from "./status.js";
+export type { Category } from "./category.js";
+export {
+  STATIQUE,
+  BAR,
+  MANUTENTION,
+  FUN,
+  RELOU,
+  categories,
+} from "./category.js";

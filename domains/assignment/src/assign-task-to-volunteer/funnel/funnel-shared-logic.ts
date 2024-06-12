@@ -1,17 +1,17 @@
-import { AssignableVolunteer } from "../assignable-volunteer";
-import { Assignment, TeamDemanded, isMemberOf } from "../assignment";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { Assignment, TeamDemanded, isMemberOf } from "../assignment.js";
 import {
   Candidate,
   CandidateFulfillingDemand,
   IDefineCandidate,
   isFulfillingDemand,
-} from "./candidate";
+} from "./candidate.js";
 import {
   FunnelRepositories,
   IActAsFunnel,
   FulfillDemand,
   IStartupFunnel,
-} from "./funnel";
+} from "./funnel.js";
 
 export abstract class CommonFunnel implements IActAsFunnel {
   protected constructor(

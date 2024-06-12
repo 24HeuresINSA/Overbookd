@@ -1,4 +1,4 @@
-import { SharedMeal } from "./meals.model";
+import { SharedMeal } from "./meals.model.js";
 
 export class MealSharingError extends Error {}
 

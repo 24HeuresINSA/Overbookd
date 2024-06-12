@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { Edition } from "../edition";
+import { Edition } from "../edition.js";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { InMemoryContributions } from "./contributions.inmemory";
-import { InMemoryPermissions, Member } from "./permissions.inmemory";
-import { SettleAlerting } from "./settle-alerting";
-import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
+import { InMemoryContributions } from "./contributions.inmemory.js";
+import { InMemoryPermissions, Member } from "./permissions.inmemory.js";
+import { SettleAlerting } from "./settle-alerting.js";
+import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant.js";
 
 const CURRENT_EDITION = Edition.current;
 

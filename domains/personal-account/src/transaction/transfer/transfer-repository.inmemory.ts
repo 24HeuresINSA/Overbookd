@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
-import { TransferForm } from "./payor";
-import { TransferRepository, TransferResponse } from "./transfer";
+import { TransferForm } from "./payor.js";
+import { TransferRepository, TransferResponse } from "./transfer.js";
 
 type Adherent = {
   id: number;

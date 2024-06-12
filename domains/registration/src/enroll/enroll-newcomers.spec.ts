@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { EnrollNewcomers } from "./enroll-newcomers";
+import { EnrollNewcomers } from "./enroll-newcomers.js";
 import { BENEVOLE_CODE } from "@overbookd/team";
 
 describe("Enroll newcomers to a joinable team", () => {

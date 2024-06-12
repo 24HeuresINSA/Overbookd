@@ -1,17 +1,17 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
 import {
   escapeGame,
   justDance,
   pcSecurite,
   approvedByHumain,
-} from "./preparation.test-utils";
-import { george, lafarge } from "../festival-activity.fake";
+} from "./preparation.test-utils.js";
+import { george, lafarge } from "../festival-activity.fake.js";
 import { lea } from "../festival-activity.fake";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { ContractorNotFound } from "../festival-activity.error";
-import { humain } from "../../common/review";
-import { PrepareError } from "./prepare-in-review-festival-activity";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import { ContractorNotFound } from "../festival-activity.error.js";
+import { humain } from "../../common/review.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

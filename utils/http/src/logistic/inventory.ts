@@ -1,4 +1,4 @@
-import { CatalogGear } from "./gear";
+import { CatalogGear } from "./gear.js";
 
 export type InventoryRecord = {
   gear: CatalogGear;

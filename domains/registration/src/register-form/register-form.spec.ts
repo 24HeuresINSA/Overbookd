@@ -6,8 +6,8 @@ import {
   STRASBOURG_CODE,
   KARNA_CODE,
   Teams,
-} from "./fulfilled-registration";
-import { RegisterForm } from "./register-form";
+} from "./fulfilled-registration.js";
+import { RegisterForm } from "./register-form.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
   "Il faut au moins 12 caractères dans le mot de passe";

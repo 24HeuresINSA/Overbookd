@@ -1,14 +1,14 @@
-import { Field } from "./fields/field";
-import { EmailField } from "./fields/email-field";
-import { FirstnameField } from "./fields/firstname-field";
-import { LastnameField } from "./fields/lastname-field";
-import { PasswordField } from "./fields/password-field";
-import { MobilePhoneField } from "./fields/mobile-phone-field";
-import { NicknameField } from "./fields/nickname-field";
-import { BirthdateField } from "./fields/birthdate-field";
-import { CommentField } from "./fields/comment-field";
-import { TeamsField } from "./fields/teams-field";
-import { FulfilledRegistration, Teams } from "./fulfilled-registration";
+import { Field } from "./fields/field.js";
+import { EmailField } from "./fields/email-field.js";
+import { FirstnameField } from "./fields/firstname-field.js";
+import { LastnameField } from "./fields/lastname-field.js";
+import { PasswordField } from "./fields/password-field.js";
+import { MobilePhoneField } from "./fields/mobile-phone-field.js";
+import { NicknameField } from "./fields/nickname-field.js";
+import { BirthdateField } from "./fields/birthdate-field.js";
+import { CommentField } from "./fields/comment-field.js";
+import { TeamsField } from "./fields/teams-field.js";
+import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
 
 export class RegisterForm {
   private email: EmailField;

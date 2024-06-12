@@ -10,23 +10,23 @@ import {
   george,
   lea,
   noel,
-} from "../festival-task.test-util";
+} from "../festival-task.test-util.js";
 import {
   guardJustDance,
   serveWaterOnJustDance,
   uninstallPreventionVillage,
-} from "../festival-task.fake";
-import { Approval, elec, humain, matos } from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
-import { NotAskingToReview } from "../../common/review.error";
-import { Review } from "./review";
-import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request";
-import { getFactory } from "../festival-task.factory";
-import { ShouldAssignDrive } from "../../common/review.error";
-import { AlreadyApproved } from "../../common/review.error";
+} from "../festival-task.fake.js";
+import { Approval, elec, humain, matos } from "../../common/review.js";
+import { APPROVED, REJECTED } from "../../common/action.js";
+import { NotAskingToReview } from "../../common/review.error.js";
+import { Review } from "./review.js";
+import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
+import { getFactory } from "../festival-task.factory.js";
+import { ShouldAssignDrive } from "../../common/review.error.js";
+import { AlreadyApproved } from "../../common/review.error.js";
 
 const factory = getFactory();
 

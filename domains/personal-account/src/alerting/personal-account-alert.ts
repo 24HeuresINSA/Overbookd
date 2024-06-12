@@ -1,5 +1,5 @@
-import { CURRENT_BALANCE_MESSAGE } from "../current-balance";
-import { NEGATIVE_BALANCE } from "../in-debt";
+import { CURRENT_BALANCE_MESSAGE } from "../current-balance/index.js";
+import { NEGATIVE_BALANCE } from "../in-debt/index.js";
 
 export type Summary = typeof NEGATIVE_BALANCE | typeof CURRENT_BALANCE_MESSAGE;
 

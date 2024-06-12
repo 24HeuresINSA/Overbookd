@@ -1,8 +1,8 @@
 import { Period } from "@overbookd/period";
-import { Borrow } from "../borrow";
-import { BorrowNotFound } from "../borrow.error";
-import { GearRequest, GearRequests } from "../../gear-request";
-import { NotEnoughQuantity } from "../../logistic.error";
+import { Borrow } from "../borrow.js";
+import { BorrowNotFound } from "../borrow.error.js";
+import { GearRequest, GearRequests } from "../../gear-request.js";
+import { NotEnoughQuantity } from "../../logistic.error.js";
 
 export type PlanBorrowForm = {
   lender?: Borrow["lender"];

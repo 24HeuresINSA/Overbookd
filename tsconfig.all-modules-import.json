@@ -2,7 +2,6 @@
   "compilerOptions": {
     "paths": {
       "@overbookd/alerts": ["./utils/alerts/src"],
-      "@overbookd/api": ["./apps/api/src"],
       "@overbookd/assignment": ["./domains/assignment/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./domains/configuration/src"],
@@ -26,7 +25,9 @@
       "@overbookd/slugify": ["./libraries/slugify/src"],
       "@overbookd/team": ["./constants/team/src"],
       "@overbookd/user": ["./domains/user/src"],
-      "@overbookd/web": ["./apps/web/src"]
+      "@overbookd/volunteer-availability": [
+        "./domains/volunteer-availability/src"
+      ]
     }
   }
 }

@@ -1,5 +1,5 @@
-import { PersonalAccountAlert } from "../alerting/personal-account-alert";
-import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant";
+import { PersonalAccountAlert } from "../alerting/personal-account-alert.js";
+import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant.js";
 
 export class InDebtAlert extends PersonalAccountAlert {
   constructor(balance: number) {

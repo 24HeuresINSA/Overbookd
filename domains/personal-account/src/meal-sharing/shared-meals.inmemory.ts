@@ -1,9 +1,16 @@
-import { SharedMealBuilder, SharedMeals } from "./meal-sharing";
-import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
-import { SharedMealCreation } from "./meal-sharing";
-import { PastSharedMealBuilder } from "./past-shared-meal.builder";
+import {
+  SharedMealBuilder,
+  SharedMealCreation,
+  SharedMeals,
+} from "./meal-sharing.js";
+import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder.js";
+import { PastSharedMealBuilder } from "./past-shared-meal.builder.js";
 import { numberGenerator, updateItemToList } from "@overbookd/list";
-import { OnGoingSharedMeal, PastSharedMeal, SharedMeal } from "./meals.model";
+import {
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  SharedMeal,
+} from "./meals.model.js";
 
 export class InMemorySharedMeals implements SharedMeals {
   private idGenerator: Generator<number>;

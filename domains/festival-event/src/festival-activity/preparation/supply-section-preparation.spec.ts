@@ -1,25 +1,25 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   escapeGame,
   justDance,
   approvedByElec,
-} from "./preparation.test-utils";
+} from "./preparation.test-utils.js";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
-} from "../festival-activity.error";
+} from "../festival-activity.error.js";
 import {
   P17_16A_MONO,
   P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
-} from "../sections/supply";
-import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model";
-import { elec } from "../../common/review";
-import { PrepareError } from "./prepare-in-review-festival-activity";
-import { nintendoSwitchSupply } from "../festival-activity.fake";
+} from "../sections/supply.js";
+import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model.js";
+import { elec } from "../../common/review.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { nintendoSwitchSupply } from "../festival-activity.fake.js";
 
 describe("Supply section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

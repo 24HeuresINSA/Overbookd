@@ -1,8 +1,8 @@
 import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "@overbookd/festival-event-constants";
-import { Draft, FestivalActivity } from "../festival-activity";
-import { FestivalActivityKeyEvents } from "../festival-activity.event";
-import { Adherent } from "../../common/adherent";
+import { Draft, FestivalActivity } from "../festival-activity.js";
+import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
+import { Adherent } from "../../common/adherent.js";
 
 export type FestivalActivityCreationForm = {
   name: string;

@@ -1,5 +1,5 @@
-import { FestivalEventError } from "../festival-event";
-import { FestivalEventIdentifier } from "./festival-event";
+import { FestivalEventError } from "../festival-event.js";
+import { FestivalEventIdentifier } from "./festival-event.js";
 
 export class AssignDriveInDraft<
   T extends FestivalEventIdentifier,

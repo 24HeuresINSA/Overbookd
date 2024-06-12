@@ -7,8 +7,8 @@ import {
   READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
-} from "../common/action";
-import { Adherent } from "../common/adherent";
+} from "../common/action.js";
+import { Adherent } from "../common/adherent.js";
 
 type Action =
   | typeof CREATED

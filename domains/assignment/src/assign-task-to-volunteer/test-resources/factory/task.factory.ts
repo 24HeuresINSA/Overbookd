@@ -1,7 +1,7 @@
 import { numberGenerator } from "@overbookd/list";
-import { Task } from "../../task";
+import { Task } from "../../task.js";
 import { Category } from "@overbookd/festival-event-constants";
-import { AssignmentBuilder } from "./assignment.builder";
+import { AssignmentBuilder } from "./assignment.builder.js";
 
 class TaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}

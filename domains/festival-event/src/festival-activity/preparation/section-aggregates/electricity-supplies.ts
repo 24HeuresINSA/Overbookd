@@ -1,15 +1,15 @@
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
-} from "../../festival-activity.error";
+} from "../../festival-activity.error.js";
 import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
-} from "../prepare-festival-activity.model";
+} from "../prepare-festival-activity.model.js";
 import {
   ElectricityConnection,
   ElectricitySupply,
-} from "../../sections/supply";
+} from "../../sections/supply.js";
 import { updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";
 

@@ -1,9 +1,9 @@
 import {
   AssignableVolunteers,
   AssignmentSpecification,
-} from "../assign-task-to-volunteer";
-import { StoredAssignableVolunteer } from "../assignable-volunteer";
-import { AssignmentIdentifier } from "../assignment";
+} from "../assign-task-to-volunteer.js";
+import { StoredAssignableVolunteer } from "../assignable-volunteer.js";
+import { AssignmentIdentifier } from "../assignment.js";
 
 export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}

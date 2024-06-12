@@ -1,5 +1,5 @@
-import { Purchase } from "../purchase";
-import { PurchasesForPlan } from "./plan";
+import { Purchase } from "../purchase.js";
+import { PurchasesForPlan } from "./plan.js";
 
 export class InMemoryPurchases implements PurchasesForPlan {
   constructor(private purchases: Purchase[] = []) {}

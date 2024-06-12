@@ -1,10 +1,10 @@
-import { chaise, saturday19At16, table } from "../../logistic.test-utils";
 import { beforeEach, describe, expect, it } from "vitest";
-import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error";
-import { InMemoryPurchases } from "./purchase.inmemory";
-import { PlanPurchase } from "./plan";
-import { PurchaseNotFound } from "../purchase.error";
-import { leroyMerlinPurchase } from "../purchase.fake";
+import { chaise, saturday19At16, table } from "../../logistic.test-utils.js";
+import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error.js";
+import { InMemoryPurchases } from "./purchase.inmemory.js";
+import { PlanPurchase } from "./plan.js";
+import { PurchaseNotFound } from "../purchase.error.js";
+import { leroyMerlinPurchase } from "../purchase.fake.js";
 
 describe("Plan purchase", () => {
   let purchases: InMemoryPurchases;

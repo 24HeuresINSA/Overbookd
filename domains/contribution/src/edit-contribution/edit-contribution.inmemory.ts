@@ -1,6 +1,6 @@
-import { Contribution, areSameContributions } from "../contribution";
-import { EditContributions } from "./edit-contribution";
-import { NotFoundContribution } from "./edit-contribution.error";
+import { Contribution, areSameContributions } from "../contribution.js";
+import { EditContributions } from "./edit-contribution.js";
+import { NotFoundContribution } from "./edit-contribution.error.js";
 import { updateItemToList } from "@overbookd/list";
 
 export class InMemoryEditContributions implements EditContributions {

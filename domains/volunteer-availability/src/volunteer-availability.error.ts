@@ -1,4 +1,4 @@
-import { SHIFT_HOURS } from "./shift.constant";
+import { SHIFT_HOURS } from "./shift.constant.js";
 
 export const AVAILABILITY_ERROR_MESSAGES = {
   PERIOD_TIMELINE: "start should be before end",

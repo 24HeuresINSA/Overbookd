@@ -6,7 +6,7 @@ import {
   LINK_EXPIRED,
   TOKEN,
   WithExpiration,
-} from "./invite-staff";
+} from "./invite-staff.js";
 
 const domain = "test.com";
 const secret = "secret";

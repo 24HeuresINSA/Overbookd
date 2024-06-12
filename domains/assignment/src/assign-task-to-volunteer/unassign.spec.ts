@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryAssignments } from "./repositories/assignments.inmemory";
+import { InMemoryAssignments } from "./repositories/assignments.inmemory.js";
 import {
   gererLaCaisse,
   lea,
   rendreKangoo,
-} from "./funnel/assign-volunteers-funnel.test-utils";
-import { Unassign } from "./unassign";
+} from "./funnel/assign-volunteers-funnel.test-utils.js";
+import { Unassign } from "./unassign.js";
 
 describe("Unassign volunteer", () => {
   const assignments = new InMemoryAssignments([rendreKangoo, gererLaCaisse]);

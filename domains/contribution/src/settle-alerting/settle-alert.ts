@@ -1,4 +1,4 @@
-import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
+import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant.js";
 
 export type Summary = typeof HAVE_TO_SETTLE_CONTRIBUTION;
 

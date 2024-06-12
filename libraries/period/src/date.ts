@@ -1,5 +1,5 @@
-import { ONE_HOUR_IN_MS } from "./duration.constant";
-import { IProvidePeriod, Period } from "./period";
+import { ONE_HOUR_IN_MS } from "./duration.constant.js";
+import { IProvidePeriod, Period } from "./period.js";
 
 type January = "01";
 type February = "02";

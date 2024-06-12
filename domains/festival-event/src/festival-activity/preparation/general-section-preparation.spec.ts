@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
 import {
   FestivalActivityError,
   TimeWindowAlreadyExists,
-} from "../festival-activity.error";
+} from "../festival-activity.error.js";
 import { EndBeforeStart } from "@overbookd/period";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   baladeEnPoney,
   escapeGame,
@@ -16,11 +16,11 @@ import {
   approvedByCommunication,
   validatedBySecu,
   publicApprovedByHumain,
-} from "./preparation.test-utils";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review";
-import { PrepareError } from "./prepare-in-review-festival-activity";
-import { sunday14hToSunday18h } from "../festival-activity.fake";
-import { isDraft } from "../../festival-event";
+} from "./preparation.test-utils.js";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { sunday14hToSunday18h } from "../festival-activity.fake.js";
+import { isDraft } from "../../festival-event.js";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

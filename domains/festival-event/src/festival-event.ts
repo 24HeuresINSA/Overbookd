@@ -4,8 +4,8 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { FestivalActivity } from "./festival-activity/festival-activity";
-import { FestivalTask } from "./festival-task/festival-task";
+import { FestivalActivity } from "./festival-activity/festival-activity.js";
+import { FestivalTask } from "./festival-task/festival-task.js";
 
 export type FestivalEvent = FestivalActivity | FestivalTask;
 

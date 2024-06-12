@@ -1,20 +1,20 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { FestivalActivity } from "../../festival-activity";
-import { InquiryRequest } from "../../../common/inquiry-request";
-import { TimeWindow } from "../../../common/time-window";
+import { FestivalActivity } from "../../festival-activity.js";
+import { InquiryRequest } from "../../../common/inquiry-request.js";
+import { TimeWindow } from "../../../common/time-window.js";
 import {
   FestivalActivityError,
   InquiryAlreadyExists,
-} from "../../festival-activity.error";
-import { TimeWindows } from "./time-windows";
+} from "../../festival-activity.error.js";
+import { TimeWindows } from "./time-windows.js";
 import {
   LinkInquiryDrive,
   PrepareInquiryRequestCreation,
-} from "../prepare-festival-activity.model";
-import { AssignDrive } from "../../../common/inquiry-request";
-import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
+} from "../prepare-festival-activity.model.js";
+import { AssignDrive } from "../../../common/inquiry-request.js";
+import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry.js";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
-import { FestivalTaskError } from "../../../festival-task/festival-task.error";
+import { FestivalTaskError } from "../../../festival-task/festival-task.error.js";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {

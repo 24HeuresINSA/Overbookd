@@ -1,11 +1,11 @@
 import { IProvidePeriod, TWO_HOURS_IN_MS } from "@overbookd/period";
-import { SHIFT_HOURS_UTC } from "./shift.constant";
+import { SHIFT_HOURS_UTC } from "./shift.constant.js";
 import {
   AvailabilityMinimumPeriodDurationError,
   AvailabilityPeriodsJointError,
   AvailabilityPeriodTimelineError,
   AvailabilityStartError,
-} from "./volunteer-availability.error";
+} from "./volunteer-availability.error.js";
 
 export class Availability {
   public start: Date;

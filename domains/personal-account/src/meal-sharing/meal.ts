@@ -1,5 +1,5 @@
-import { AboutMeal } from "./meals.model";
-import { MealDate } from "./meal-sharing";
+import { AboutMeal } from "./meals.model.js";
+import { MealDate } from "./meal-sharing.js";
 
 export class Meal implements AboutMeal {
   private constructor(

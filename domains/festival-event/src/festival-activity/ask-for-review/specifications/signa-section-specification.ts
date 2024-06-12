@@ -1,4 +1,4 @@
-import { FestivalActivity } from "../../festival-activity";
+import { FestivalActivity } from "../../festival-activity.js";
 
 const REQUIRED_LOCATION = "Le lieu est nécessaire";
 

@@ -1,4 +1,4 @@
-import { FestivalActivity } from "../../festival-activity";
+import { FestivalActivity } from "../../festival-activity.js";
 
 const REQUIRED_DESCRIPTION = "Une description est nécessaire";
 const REQUIRED_PHOTO_ON_PUBLIC_ACTIVITY =

@@ -3,7 +3,7 @@ import {
   AssignDrive,
   BaseInquiryRequest,
   InquiryRequest,
-} from "../../common/inquiry-request";
+} from "../../common/inquiry-request.js";
 import {
   FestivalTask,
   InReview,
@@ -12,15 +12,15 @@ import {
   Reviewable,
   Validated,
   isReadyToAssign,
-} from "../festival-task";
-import { Volunteer } from "../sections/instructions";
-import { Contact } from "../sections/instructions";
-import { Mobilization, TeamMobilization } from "../sections/mobilizations";
+} from "../festival-task.js";
+import { Volunteer } from "../sections/instructions.js";
+import { Contact } from "../sections/instructions.js";
+import { Mobilization, TeamMobilization } from "../sections/mobilizations.js";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
   ForceUpdateError,
-} from "../festival-task.error";
+} from "../festival-task.error.js";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
@@ -28,10 +28,10 @@ import {
   RefusedWithoutConflicts,
   WithConflicts,
   WithoutConflicts,
-} from "../volunteer-conflicts";
-import { Mobilizations } from "./sections/mobilizations";
-import { Adherent } from "../../common/adherent";
-import { isDraft, isRefused, isValidated } from "../../festival-event";
+} from "../volunteer-conflicts.js";
+import { Mobilizations } from "./sections/mobilizations.js";
+import { Adherent } from "../../common/adherent.js";
+import { isDraft, isRefused, isValidated } from "../../festival-event.js";
 import {
   REVIEWING,
   RejectionReviewStatus,
@@ -39,22 +39,22 @@ import {
   elec,
   humain,
   matos,
-} from "../../common/review";
-import { APPROVED } from "../../common/action";
-import { AlreadyApprovedBy } from "../../common/review.error";
-import { Inquiries } from "./sections/inquiries";
+} from "../../common/review.js";
+import { APPROVED } from "../../common/action.js";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import { Inquiries } from "./sections/inquiries.js";
 import {
   ForceInstructions,
   InitInCharge,
   Instructions,
-} from "./sections/instructions";
-import { InReviewSpecification } from "../ask-for-review/in-review-specification";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
+} from "./sections/instructions.js";
+import { InReviewSpecification } from "../ask-for-review/in-review-specification.js";
+import { FestivalTaskKeyEvents } from "../festival-task.event.js";
 import {
   readablePeriodFrom,
   readablePeriodFromId,
-} from "../../common/time-window";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error";
+} from "../../common/time-window.js";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];

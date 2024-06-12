@@ -1,5 +1,5 @@
-import { Draft } from "../festival-activity";
-import { getFactory } from "../festival-activity.factory";
+import { Draft } from "../festival-activity.js";
+import { getFactory } from "../festival-activity.factory.js";
 import {
   friday09hToMonday08h,
   saturday19hToSunday01h,
@@ -11,9 +11,9 @@ import {
   agora,
   local24h,
   george,
-} from "../festival-activity.fake";
-import { REVIEWING } from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
+} from "../festival-activity.fake.js";
+import { REVIEWING } from "../../common/review.js";
+import { APPROVED, REJECTED } from "../../common/action.js";
 
 const factory = getFactory();
 

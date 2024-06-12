@@ -1,20 +1,20 @@
-import { Draft, FestivalTask, InReview, Refused } from "../festival-task";
-import { Adherent } from "../../common/adherent";
+import { Draft, FestivalTask, InReview, Refused } from "../festival-task.js";
+import { Adherent } from "../../common/adherent.js";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
-} from "../festival-task.error";
-import { Notifications } from "../../common/notifications";
+} from "../festival-task.error.js";
+import { Notifications } from "../../common/notifications.js";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
   InReviewWithConflicts,
   InReviewWithoutConflicts,
   RefusedWithoutConflicts,
-} from "../volunteer-conflicts";
-import { InReviewFestivalTask } from "./in-review-festival-task";
-import { isDraft, isRefused } from "../../festival-event";
-import { CantAskForReview } from "../../common/review.error";
+} from "../volunteer-conflicts.js";
+import { InReviewFestivalTask } from "./in-review-festival-task.js";
+import { isDraft, isRefused } from "../../festival-event.js";
+import { CantAskForReview } from "../../common/review.error.js";
 
 export type AskForReviewTasks = {
   findById(

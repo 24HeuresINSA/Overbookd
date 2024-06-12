@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame, justDance } from "./preparation.test-utils";
-import { lea, noel } from "../festival-activity.fake";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import { escapeGame, justDance } from "./preparation.test-utils.js";
+import { lea, noel } from "../festival-activity.fake.js";
 
 describe("Feedbacks section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

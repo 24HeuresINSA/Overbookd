@@ -1,9 +1,9 @@
-import { Expense, AboutMeal, OnGoingSharedMeal } from "./meals.model";
-import { Meal } from "./meal";
-import { MealDate } from "./meal-sharing";
-import { Adherent, Shotgun, Shotguns } from "./adherent";
-import { PastSharedMealBuilder } from "./past-shared-meal.builder";
-import { AlreadyShotguned } from "./meal-sharing.error";
+import { Expense, AboutMeal, OnGoingSharedMeal } from "./meals.model.js";
+import { Meal } from "./meal.js";
+import { MealDate } from "./meal-sharing.js";
+import { Adherent, Shotgun, Shotguns } from "./adherent.js";
+import { PastSharedMealBuilder } from "./past-shared-meal.builder.js";
+import { AlreadyShotguned } from "./meal-sharing.error.js";
 
 type InitSharedMeal = {
   id: number;

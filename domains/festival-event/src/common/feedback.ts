@@ -1,4 +1,4 @@
-import { Adherent } from "./adherent";
+import { Adherent } from "./adherent.js";
 
 export type Feedback = {
   content: string;

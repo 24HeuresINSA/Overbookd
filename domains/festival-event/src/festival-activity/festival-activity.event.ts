@@ -1,7 +1,7 @@
-import { KeyEvent } from "./festival-activity";
-import { CREATED, READY_TO_REVIEW } from "../common/action";
-import { Adherent } from "../common/adherent";
-import { APPROVED, REJECTED } from "../common/action";
+import { KeyEvent } from "./festival-activity.js";
+import { CREATED, READY_TO_REVIEW } from "../common/action.js";
+import { Adherent } from "../common/adherent.js";
+import { APPROVED, REJECTED } from "../common/action.js";
 
 export class FestivalActivityKeyEvents {
   static created(by: Adherent): KeyEvent {

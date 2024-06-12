@@ -1,5 +1,5 @@
-import { LogisticError } from "../logistic.error";
-import { Borrow } from "./borrow";
+import { LogisticError } from "../logistic.error.js";
+import { Borrow } from "./borrow.js";
 
 class BorrowError extends LogisticError {}
 

@@ -5,8 +5,8 @@ import {
   OverDate,
   Period,
 } from "@overbookd/period";
-import { SHIFT_HOURS } from "./shift.constant";
-import { AvailabilityDateOddHourError } from "./volunteer-availability.error";
+import { SHIFT_HOURS } from "./shift.constant.js";
+import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
 
 export type InitOverDate = {
   date: DateString;

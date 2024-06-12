@@ -1,5 +1,5 @@
 import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
-import { FestivalTask, Validated } from "../festival-task";
+import { FestivalTask, Validated } from "../festival-task.js";
 import {
   Approval,
   NOT_ASKING_TO_REVIEW,
@@ -8,22 +8,22 @@ import {
   elec,
   humain,
   matos,
-} from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
+} from "../../common/review.js";
+import { APPROVED, REJECTED } from "../../common/action.js";
+import { FestivalTaskKeyEvents } from "../festival-task.event.js";
 import {
   FestivalTaskTranslator,
   RefusedWithConflicts,
   RefusedWithoutConflicts,
   ReviewableWithoutConflicts,
   ValidatedWithoutConflicts,
-} from "../volunteer-conflicts";
-import { FestivalTaskNotFound } from "../festival-task.error";
+} from "../volunteer-conflicts.js";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
 import {
   AlreadyApproved,
   NotAskingToReview,
   ShouldAssignDrive,
-} from "../../common/review.error";
+} from "../../common/review.error.js";
 
 export type FestivalTasksForReview = {
   findById(

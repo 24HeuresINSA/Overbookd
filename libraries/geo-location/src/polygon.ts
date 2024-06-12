@@ -1,4 +1,4 @@
-import { distanceBetweenPoints } from "./distance";
+import { distanceBetweenPoints } from "./distance.js";
 import {
   AREA,
   AreaLocation,
@@ -6,8 +6,7 @@ import {
   ManageLocation,
   POINT,
   PointLocation,
-} from "./location";
-
+} from "./location.js";
 export class Polygon implements AreaLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate[]) {}
 

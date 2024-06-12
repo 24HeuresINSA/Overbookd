@@ -1,6 +1,6 @@
-import { FestivalEventIdentifier, FA } from "./festival-event";
-import { APPROVED, REJECTED } from "./action";
-import { Adherent } from "./adherent";
+import { FestivalEventIdentifier, FA } from "./festival-event.js";
+import { APPROVED, REJECTED } from "./action.js";
+import { Adherent } from "./adherent.js";
 
 export const REVIEWING = "REVIEWING";
 export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";

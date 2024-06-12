@@ -43,7 +43,7 @@ import {
   BORROW_GEARS,
   FORCE_WRITE_FT,
   SYNC_PLANNING,
-} from "./permissions";
+} from "./permissions.js";
 
 export type Permission =
   | typeof HAVE_PERSONAL_ACCOUNT

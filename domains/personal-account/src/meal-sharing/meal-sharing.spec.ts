@@ -1,18 +1,21 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { MealSharing } from "./meal-sharing";
-import { Adherents } from "./meal-sharing";
-import { SharedMeals } from "./meal-sharing";
+import {
+  Adherents,
+  MealSharing,
+  SharedMeals,
+  SOIR,
+  MIDI,
+} from "./meal-sharing.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
   AlreadyShotguned,
   RecordExpenseByChiefOnly,
-} from "./meal-sharing.error";
-import { PastSharedMeal } from "./meals.model";
-import { SOIR, MIDI } from "./meal-sharing";
-import { Meal } from "./meal";
-import { InMemorySharedMeals } from "./shared-meals.inmemory";
-import { InMemoryAdherents } from "./adherents.inmemory";
-import { PAST_MEAL_ERROR } from "./past-shared-meal.builder";
+} from "./meal-sharing.error.js";
+import { PastSharedMeal } from "./meals.model.js";
+import { Meal } from "./meal.js";
+import { InMemorySharedMeals } from "./shared-meals.inmemory.js";
+import { InMemoryAdherents } from "./adherents.inmemory.js";
+import { PAST_MEAL_ERROR } from "./past-shared-meal.builder.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
 const lea = { id: 2, name: "Lea Mauyno" };

@@ -1,4 +1,4 @@
-import { Adherent } from "../../common/adherent";
+import { Adherent } from "../../common/adherent.js";
 
 export type DraftGeneral = {
   name: string;

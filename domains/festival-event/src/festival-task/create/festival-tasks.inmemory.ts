@@ -1,5 +1,5 @@
-import { Draft } from "../festival-task";
-import { FestivalTasksForCreate } from "./create";
+import { Draft } from "../festival-task.js";
+import { FestivalTasksForCreate } from "./create.js";
 
 export class InMemoryFestivalTasks implements FestivalTasksForCreate {
   constructor(private festivalTasks: Draft[] = []) {}

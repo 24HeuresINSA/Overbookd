@@ -4,17 +4,17 @@ import {
   IN_REVIEW,
   REFUSED,
 } from "@overbookd/festival-event-constants";
-import { FestivalActivity, Draft, Reviewable } from "../festival-activity";
+import { FestivalActivity, Draft, Reviewable } from "../festival-activity.js";
 import {
   PreviewFestivalActivity,
   PreviewDraft,
   PreviewReviewable,
-} from "../festival-activity";
-import { FestivalActivityNotFound } from "../festival-activity.error";
-import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { isValidatedReviews } from "../../common/review";
-import { isRefusedReviews } from "../../common/review";
-import { isDraft } from "../../festival-event";
+} from "../festival-activity.js";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
+import { PrepareFestivalActivityRepository } from "./prepare-festival-activity.js";
+import { isValidatedReviews } from "../../common/review.js";
+import { isRefusedReviews } from "../../common/review.js";
+import { isDraft } from "../../festival-event.js";
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository

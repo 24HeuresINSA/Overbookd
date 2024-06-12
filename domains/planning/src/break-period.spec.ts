@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { Period, Duration } from "@overbookd/period";
-import { BreakPeriods } from "./break-periods";
-import { InMemoryBreakRepository } from "./break-repository.inmemory";
+import { BreakPeriods } from "./break-periods.js";
+import { InMemoryBreakRepository } from "./break-repository.inmemory.js";
 
 const saturday02h = new Date("2024-05-18T02:00+02:00");
 const saturday04h = new Date("2024-05-18T04:00+02:00");

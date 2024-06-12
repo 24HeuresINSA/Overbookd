@@ -1,4 +1,4 @@
-import { Period } from "./period";
+import { Period } from "./period.js";
 
 export const friday08hto08h15 = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),

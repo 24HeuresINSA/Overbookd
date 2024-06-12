@@ -1,4 +1,4 @@
-import { Coordinate } from "./location";
+import { Coordinate } from "./location.js";
 
 export function distanceBetweenPoints(
   point1: Coordinate,

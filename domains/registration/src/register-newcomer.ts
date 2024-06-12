@@ -4,14 +4,14 @@ import {
   FulfilledRegistration,
   RegisterForm,
   RegistrationError,
-} from "./register-form";
+} from "./register-form/index.js";
 import {
   StaffRegistered,
   Membership,
   NewcomerRegistered,
   VolunteerRegistered,
   MemberRegistered,
-} from "./newcomer";
+} from "./newcomer.js";
 
 export type NewcomerRepository = {
   isEmailUsed(email: string): Promise<boolean>;

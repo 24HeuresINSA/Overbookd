@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   escapeGame,
   pcSecurite,
   validatedBySecu,
-} from "./preparation.test-utils";
-import { secu } from "../../common/review";
-import { PrepareError } from "./prepare-in-review-festival-activity";
-import { FreePassMustBePositive } from "../festival-activity.error";
+} from "./preparation.test-utils.js";
+import { secu } from "../../common/review.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { FreePassMustBePositive } from "../festival-activity.error.js";
 
 describe("Security section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

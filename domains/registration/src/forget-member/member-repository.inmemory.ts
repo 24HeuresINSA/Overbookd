@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
-import { AnonymousMember } from "./anonymous-member";
-import { Credentials, Member, MemberRepository } from "./forget-member";
+import { AnonymousMember } from "./anonymous-member.js";
+import { Credentials, Member, MemberRepository } from "./forget-member.js";
 
 type Task = {
   end: Date;

@@ -1,5 +1,5 @@
-import { Draft } from "../festival-activity";
-import { CreateFestivalActivityRepository } from "./creation";
+import { Draft } from "../festival-activity.js";
+import { CreateFestivalActivityRepository } from "./creation.js";
 
 export class InMemoryCreateFestivalActivityRepository
   implements CreateFestivalActivityRepository

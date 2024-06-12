@@ -2,8 +2,8 @@ import {
   AnonymousMember,
   ANONYMOUS,
   ANONYMOUS_MOBILE_PHONE,
-} from "./anonymous-member";
-import { MemberRepository } from "./forget-member";
+} from "./anonymous-member.js";
+import { MemberRepository } from "./forget-member.js";
 
 type ForgetAboutMember = {
   forget(): Promise<void | AnonymousMember>;

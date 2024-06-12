@@ -1,19 +1,19 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { HARD, VIEUX, CONFIANCE } from "../../teams";
+import { HARD, VIEUX, CONFIANCE } from "../../teams.js";
 import {
   Assignment,
   isMemberOf,
   TeamDemanded,
   TeamMember,
-} from "../assignment";
+} from "../assignment.js";
 import {
   Availabilities,
   BreakPeriods,
   Friends,
   Planning,
   PlanningEvent,
-} from "./planning";
-import { AssignableVolunteer } from "../assignable-volunteer";
+} from "./planning.js";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 
 type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
   friends: AssignableVolunteer[];

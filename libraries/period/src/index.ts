@@ -1,6 +1,6 @@
-export * from "./duration.constant";
-export { Duration } from "./duration";
-export type { IProvidePeriod } from "./period";
-export { Period, EndBeforeStart } from "./period";
-export { OverDate, isDateString, isHour } from "./date";
-export type { DateString, Hour } from "./date";
+export * from "./duration.constant.js";
+export { Duration } from "./duration.js";
+export type { IProvidePeriod } from "./period.js";
+export { Period, EndBeforeStart } from "./period.js";
+export { OverDate, isDateString, isHour } from "./date.js";
+export type { DateString, Hour } from "./date.js";

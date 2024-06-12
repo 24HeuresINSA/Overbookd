@@ -1,11 +1,11 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
-import { Draft } from "../festival-activity";
-import { InquiryRequest } from "../../common/inquiry-request";
-import { ElectricitySupply } from "../sections/supply";
-import { Signage } from "../sections/signa";
-import { Contractor } from "../sections/in-charge";
-import { TimeWindow } from "../../common/time-window";
+import { Draft } from "../festival-activity.js";
+import { InquiryRequest } from "../../common/inquiry-request.js";
+import { ElectricitySupply } from "../sections/supply.js";
+import { Signage } from "../sections/signa.js";
+import { Contractor } from "../sections/in-charge.js";
+import { TimeWindow } from "../../common/time-window.js";
 import {
   PrepareGeneralUpdate,
   PrepareSignaUpdate,
@@ -19,17 +19,20 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
   PrepareSecurityUpdate,
-} from "./prepare-festival-activity.model";
-import { TimeWindows } from "./section-aggregates/time-windows";
-import { Contractors } from "./section-aggregates/contractors";
-import { AlreadyInitialized, Inquiries } from "./section-aggregates/inquiries";
-import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
-import { Signages } from "./section-aggregates/signages";
+} from "./prepare-festival-activity.model.js";
+import { TimeWindows } from "./section-aggregates/time-windows.js";
+import { Contractors } from "./section-aggregates/contractors.js";
+import {
+  AlreadyInitialized,
+  Inquiries,
+} from "./section-aggregates/inquiries.js";
+import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
+import { Signages } from "./section-aggregates/signages.js";
 import {
   FestivalActivityError,
   FreePassMustBePositive,
-} from "../festival-activity.error";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error";
+} from "../festival-activity.error.js";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 
 export class AssignCatalogItemInDraftActivity extends FestivalActivityError {
   constructor() {

@@ -1,10 +1,10 @@
-import { FestivalTask } from "../festival-task";
-import { FestivalTaskNotFound } from "../festival-task.error";
-import { Preview } from "../festival-task";
+import { FestivalTask } from "../festival-task.js";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
+import { Preview } from "../festival-task.js";
 import {
   FestivalTaskTranslator,
   WithoutConflicts,
-} from "../volunteer-conflicts";
+} from "../volunteer-conflicts.js";
 
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;

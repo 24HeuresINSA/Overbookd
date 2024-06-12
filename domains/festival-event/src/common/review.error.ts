@@ -1,6 +1,6 @@
-import { Reviewer } from "./review";
-import { FA, FestivalEventIdentifier } from "./festival-event";
-import { FestivalEventError } from "../festival-event";
+import { Reviewer } from "./review.js";
+import { FA, FestivalEventIdentifier } from "./festival-event.js";
+import { FestivalEventError } from "../festival-event.js";
 
 export class NotAskingToReview<
   T extends FestivalEventIdentifier,

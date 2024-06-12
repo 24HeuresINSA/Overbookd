@@ -1,5 +1,5 @@
-import { AssignableVolunteer } from "../assignable-volunteer";
-import { Planning, PlanningEvent } from "./planning";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { Planning, PlanningEvent } from "./planning.js";
 
 export class InMemoryPlanning implements Planning {
   constructor(

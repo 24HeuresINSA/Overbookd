@@ -1,12 +1,17 @@
-import { isDraft, isInReview, isRefused, isValidated } from "../festival-event";
+import {
+  isDraft,
+  isInReview,
+  isRefused,
+  isValidated,
+} from "../festival-event.js";
 import {
   PreviewDraft,
   PreviewInReview,
   PreviewReadyToAssign,
   PreviewRefused,
   PreviewValidated,
-} from "./festival-task";
-import { Preview } from "./festival-task";
+} from "./festival-task.js";
+import { Preview } from "./festival-task.js";
 import {
   DraftWithoutConflicts,
   InReviewWithoutConflicts,
@@ -14,7 +19,7 @@ import {
   RefusedWithoutConflicts,
   ValidatedWithoutConflicts,
   WithoutConflicts,
-} from "./volunteer-conflicts";
+} from "./volunteer-conflicts.js";
 
 export class FestivalTaskBuilder {
   private constructor(private readonly task: WithoutConflicts) {}

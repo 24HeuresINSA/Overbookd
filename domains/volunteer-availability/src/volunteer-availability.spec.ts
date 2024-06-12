@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Period } from "@overbookd/period";
-import { Availability } from "./volunteer-availability";
-import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
+import { Availability } from "./volunteer-availability.js";
+import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 
 function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {

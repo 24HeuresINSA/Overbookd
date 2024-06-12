@@ -1,5 +1,10 @@
-import { distanceBetweenPoints } from "./distance";
-import { Coordinate, ManageLocation, POINT, PointLocation } from "./location";
+import { distanceBetweenPoints } from "./distance.js";
+import {
+  Coordinate,
+  ManageLocation,
+  POINT,
+  PointLocation,
+} from "./location.js";
 
 export class Point implements PointLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate) {}

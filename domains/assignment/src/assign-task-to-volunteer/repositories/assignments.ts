@@ -1,4 +1,4 @@
-import { Assignment, AssignmentIdentifier, TeamMember } from "../assignment";
+import { Assignment, AssignmentIdentifier, TeamMember } from "../assignment.js";
 
 export type VolunteersForAssignment = {
   assignment: AssignmentIdentifier;

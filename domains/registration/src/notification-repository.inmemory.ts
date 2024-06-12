@@ -1,10 +1,10 @@
-import { StaffRegistered } from "./newcomer";
+import { Permission } from "@overbookd/permission";
+import { StaffRegistered } from "./newcomer.js";
 import {
   FilterNotifyees,
   NotificationRepository,
   Notifyee,
-} from "./register-newcomer";
-import { Permission } from "@overbookd/permission";
+} from "./register-newcomer.js";
 
 type StoredNotification = {
   event: StaffRegistered;

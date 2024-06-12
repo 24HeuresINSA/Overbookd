@@ -5,26 +5,26 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
-import { Feedback } from "../common/feedback";
-import { TimeWindow } from "../common/time-window";
-import { InquiryRequest } from "../common/inquiry-request";
-import { Location } from "../common/location";
-import { KeyEvent } from "./festival-task.event";
-import { DraftGeneral, General } from "./sections/general";
+import { PreviewFestivalActivity } from "../festival-activity/festival-activity.js";
+import { Feedback } from "../common/feedback.js";
+import { TimeWindow } from "../common/time-window.js";
+import { InquiryRequest } from "../common/inquiry-request.js";
+import { Location } from "../common/location.js";
+import { KeyEvent } from "./festival-task.event.js";
+import { DraftGeneral, General } from "./sections/general.js";
 import {
   Mobilization,
   MobilizationOptions,
   ReviewableMobilization,
-} from "./sections/mobilizations";
-import { DraftInstructions, Instructions } from "./sections/instructions";
+} from "./sections/mobilizations.js";
+import { DraftInstructions, Instructions } from "./sections/instructions.js";
 import {
   InReviewReviews,
   RefusedReviews,
   ValidatedReviews,
-} from "../common/review";
-import { Adherent } from "../common/adherent";
-import { Category } from "@overbookd/festival-event-constants";
+} from "../common/review.js";
+import { Adherent } from "../common/adherent.js";
+import { type Category } from "@overbookd/festival-event-constants";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];

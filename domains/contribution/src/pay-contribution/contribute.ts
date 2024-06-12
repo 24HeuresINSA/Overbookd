@@ -1,5 +1,5 @@
-import { Contribution } from "../contribution";
-import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "../edition";
+import { Contribution } from "../contribution.js";
+import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "../edition.js";
 
 const AUGUST = 7;
 

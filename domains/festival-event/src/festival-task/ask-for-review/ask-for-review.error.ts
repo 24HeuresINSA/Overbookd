@@ -1,6 +1,6 @@
-import { Draft } from "../festival-task";
-import { ReadyForReviewError } from "../../common/ready-for-review.error";
-import { InReviewSpecification } from "./in-review-specification";
+import { Draft } from "../festival-task.js";
+import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
+import { InReviewSpecification } from "./in-review-specification.js";
 
 export class AskForReviewError extends ReadyForReviewError {
   constructor(task: Draft) {

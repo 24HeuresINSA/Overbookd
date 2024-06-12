@@ -1,5 +1,5 @@
-import { Field } from "./field";
-import { Rule } from "./rule";
+import { Field } from "./field.js";
+import { Rule } from "./rule.js";
 
 export class EmailField implements Field<string> {
   private readonly emailPattern = new RegExp(

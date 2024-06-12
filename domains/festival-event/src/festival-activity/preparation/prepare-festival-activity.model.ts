@@ -1,15 +1,15 @@
-import { InquiryOwner } from "../sections/inquiry";
+import { InquiryOwner } from "../sections/inquiry.js";
 import {
   ElectricityConnection,
   ElectricitySupply,
   Supply,
-} from "../sections/supply";
-import { Signage, SignageCatalogItem, SignageType } from "../sections/signa";
-import { Location } from "../../common/location";
-import { BaseInquiryRequest } from "../../common/inquiry-request";
-import { Contractor } from "../sections/in-charge";
-import { Adherent } from "../../common/adherent";
-import { AssignDrive } from "../../common/inquiry-request";
+} from "../sections/supply.js";
+import { Signage, SignageCatalogItem, SignageType } from "../sections/signa.js";
+import { Location } from "../../common/location.js";
+import { BaseInquiryRequest } from "../../common/inquiry-request.js";
+import { Contractor } from "../sections/in-charge.js";
+import { Adherent } from "../../common/adherent.js";
+import { AssignDrive } from "../../common/inquiry-request.js";
 
 export type PrepareGeneralUpdate = {
   name?: string;

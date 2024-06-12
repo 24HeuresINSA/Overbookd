@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { Borrow } from "../borrow";
+import { Borrow } from "../borrow.js";
 import { Period } from "@overbookd/period";
 
 export type InitBorrowForm = Pick<

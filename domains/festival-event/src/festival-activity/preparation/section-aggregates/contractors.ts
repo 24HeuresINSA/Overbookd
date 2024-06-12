@@ -1,9 +1,9 @@
-import { ContractorNotFound } from "../../festival-activity.error";
+import { ContractorNotFound } from "../../festival-activity.error.js";
 import {
   PrepareContractorCreation,
   PrepareContractorUpdate,
-} from "../prepare-festival-activity.model";
-import { Contractor } from "../../sections/in-charge";
+} from "../prepare-festival-activity.model.js";
+import { Contractor } from "../../sections/in-charge.js";
 import { updateItemToList } from "@overbookd/list";
 
 export class Contractors {

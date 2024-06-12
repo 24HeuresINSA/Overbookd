@@ -1,4 +1,4 @@
-import { Permission } from "./permission.model";
+import { Permission } from "./permission.model.js";
 
 export const HAVE_PERSONAL_ACCOUNT = "have-personal-account";
 export const AFFECT_TEAM = "affect-team";

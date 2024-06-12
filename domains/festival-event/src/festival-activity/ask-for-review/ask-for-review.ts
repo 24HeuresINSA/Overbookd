@@ -1,15 +1,15 @@
-import { FestivalActivityNotFound } from "../festival-activity.error";
-import { CantAskForReview } from "../../common/review.error";
-import { InReviewFestivalActivity } from "./in-review-festival-activity";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
+import { CantAskForReview } from "../../common/review.error.js";
+import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
 import {
   Draft,
   FestivalActivity,
   Refused,
   Reviewable,
-} from "../festival-activity";
-import { Adherent } from "../../common/adherent";
-import { Notifications } from "../../common/notifications";
-import { isDraft, isRefused } from "../../festival-event";
+} from "../festival-activity.js";
+import { Adherent } from "../../common/adherent.js";
+import { Notifications } from "../../common/notifications.js";
+import { isDraft, isRefused } from "../../festival-event.js";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;

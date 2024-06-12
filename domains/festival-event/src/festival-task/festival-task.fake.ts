@@ -1,6 +1,6 @@
-import { BACKLINE, MAGASIN } from "../common/inquiry-request";
-import { APPROVED, REJECTED } from "../common/action";
-import { REVIEWING } from "../common/review";
+import { BACKLINE, MAGASIN } from "../common/inquiry-request.js";
+import { APPROVED, REJECTED } from "../common/action.js";
+import { REVIEWING } from "../common/review.js";
 import {
   escapeGame,
   humaGrass,
@@ -49,12 +49,12 @@ import {
   saturday12h,
   gab,
   saturday09h,
-} from "./festival-task.test-util";
+} from "./festival-task.test-util.js";
 import {
   InReviewWithConflicts,
   ValidatedWithConflicts,
   getFactory,
-} from "./festival-task.factory";
+} from "./festival-task.factory.js";
 
 const factory = getFactory();
 

@@ -1,5 +1,5 @@
-import { Reviewer } from "../../common/review";
-import { FestivalActivityError } from "../festival-activity.error";
+import { Reviewer } from "../../common/review.js";
+import { FestivalActivityError } from "../festival-activity.error.js";
 
 export class InDraft extends FestivalActivityError {
   constructor(festivalActivityId: number) {

@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { FormatVolunteer, Volunteer } from "../volunteer";
+import { FormatVolunteer, Volunteer } from "../volunteer.js";
 
 export type VolunteerWithFriendFilter = Volunteer & {
   hasAtLeastOneFriend: boolean;

@@ -1,4 +1,4 @@
-import { ContributionError } from "../contribution.error";
+import { ContributionError } from "../contribution.error.js";
 
 const NOT_FOUND_CONTRIBUTION_ERROR_MESSAGE =
   "La cotisation n'a pas été trouvée";

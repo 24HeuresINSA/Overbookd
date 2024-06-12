@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { POINT, ROAD, AREA } from "./location";
-import { Point } from "./point";
-import { Line } from "./line";
-import { Polygon } from "./polygon";
+import { POINT, ROAD, AREA } from "./location.js";
+import { Point } from "./point.js";
+import { Line } from "./line.js";
+import { Polygon } from "./polygon.js";
 
 const pointA = { lat: 0, lng: 0 };
 const pointB = { lat: 1, lng: 2 };

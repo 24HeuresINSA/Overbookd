@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   InquiryAlreadyExists,
   TimeWindowAlreadyExists,
-} from "../festival-activity.error";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+} from "../festival-activity.error.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   baladeEnPoney,
   escapeGame,
@@ -22,24 +22,24 @@ import {
   approvedByMatosAndBarrieresWithoutRequest,
   approvedByMatosWithoutRequests,
   approvedByElecWithNoRequestAtAll,
-} from "./preparation.test-utils";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
-import { barrieres } from "../../common/review";
+} from "./preparation.test-utils.js";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { BARRIERES, ELEC, MATOS } from "../sections/inquiry.js";
+import { barrieres } from "../../common/review.js";
 import {
   MAGASIN,
   LOCAL_24H,
   PARKING_EIFFEL,
-} from "../../common/inquiry-request";
+} from "../../common/inquiry-request.js";
 import {
   AlreadyInitialized,
   CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   NotYetInitialized,
-} from "./section-aggregates/inquiries";
-import { elec, matos } from "../../common/review";
-import { WithInquiries } from "../sections/inquiry";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error";
+} from "./section-aggregates/inquiries.js";
+import { elec, matos } from "../../common/review.js";
+import { WithInquiries } from "../sections/inquiry.js";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 import {
   cinqGuirlandeLED,
   friday12hToFriday14h,
@@ -47,8 +47,8 @@ import {
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
   troisTables,
-} from "../festival-activity.fake";
-import { PrepareError } from "./prepare-in-review-festival-activity";
+} from "../festival-activity.fake.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
 
 const branleCanisse = {
   slug: "branle-canisse",

@@ -1,6 +1,6 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
-import { InquiryRequest } from "../../common/inquiry-request";
-import { TimeWindow } from "../../common/time-window";
+import { InquiryRequest } from "../../common/inquiry-request.js";
+import { TimeWindow } from "../../common/time-window.js";
 
 export const MATOS = "matos";
 export const BARRIERES = "barrieres";

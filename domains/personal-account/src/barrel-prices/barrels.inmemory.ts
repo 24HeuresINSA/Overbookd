@@ -1,6 +1,6 @@
 import { SlugifyService as Slugify } from "@overbookd/slugify";
 import { updateItemToList } from "@overbookd/list";
-import { Barrels, ConfiguredBarrel, NewBarrel } from "./define-barrel-price";
+import { Barrels, ConfiguredBarrel, NewBarrel } from "./define-barrel-price.js";
 
 export class InMemoryBarrels implements Barrels {
   private barrels: ConfiguredBarrel[];

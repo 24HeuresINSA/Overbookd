@@ -1,17 +1,17 @@
 import { Period } from "@overbookd/period";
-import { FormatVolunteer } from "../volunteer";
+import { FormatVolunteer } from "../volunteer.js";
 import {
   StoredAssignableVolunteer,
   AssignableVolunteer,
-} from "./assignable-volunteer";
-import { Assignment, AssignmentIdentifier } from "./assignment";
+} from "./assignable-volunteer.js";
+import { Assignment, AssignmentIdentifier } from "./assignment.js";
 import {
   Task,
   TaskIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
-} from "./task";
-import { countAssigneesInTeam } from "../count-assignees-in-team";
+} from "./task.js";
+import { countAssigneesInTeam } from "../count-assignees-in-team.js";
 
 export type Tasks = {
   findAll(): Promise<Task[]>;

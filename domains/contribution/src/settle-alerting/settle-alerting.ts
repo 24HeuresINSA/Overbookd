@@ -1,6 +1,6 @@
 import { PAY_CONTRIBUTION, Permission } from "@overbookd/permission";
-import { Edition } from "../edition";
-import { IAlertAboutContribution, SettleAlert } from "./settle-alert";
+import { Edition } from "../edition.js";
+import { IAlertAboutContribution, SettleAlert } from "./settle-alert.js";
 
 export type Permissions = {
   mine(id: number): Promise<Permission[]>;

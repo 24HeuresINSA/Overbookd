@@ -1,5 +1,5 @@
-import { Borrow } from "../borrow";
-import { BorrowsForInit } from "./init";
+import { Borrow } from "../borrow.js";
+import { BorrowsForInit } from "./init.js";
 
 export class InMemoryBorrows implements BorrowsForInit {
   constructor(private borrows: Borrow[] = []) {}

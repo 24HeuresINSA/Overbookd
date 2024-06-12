@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { Breaks } from "./break-periods";
+import { Breaks } from "./break-periods.js";
 
 export class InMemoryBreakRepository implements Breaks {
   constructor(private breaks: Map<number, Period[]>) {}

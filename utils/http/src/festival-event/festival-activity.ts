@@ -1,13 +1,13 @@
-import { InquiryRequestAssigned } from "@overbookd/festival-event";
 import {
   FestivalActivity,
+  FestivalEventIdentifier,
+  InquiryRequestAssigned,
   Reviewer,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { AddInquiryRequestForm } from "./common";
-import { FestivalEventIdentifier } from "@overbookd/festival-event";
+import { AddInquiryRequestForm } from "./common.js";
 
 export type PrepareInChargeForm = {
   adherentId?: number;

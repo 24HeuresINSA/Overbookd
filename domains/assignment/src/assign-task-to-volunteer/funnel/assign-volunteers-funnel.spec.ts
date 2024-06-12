@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { BENEVOLE_CODE } from "@overbookd/team";
-import { WaitingForVolunteer } from "./startup-funnel";
-import { InMemoryPlanning } from "./planning.inmemory";
-import { InMemoryAssignments } from "../repositories/assignments.inmemory";
+import { WaitingForVolunteer } from "./startup-funnel.js";
+import { InMemoryPlanning } from "./planning.inmemory.js";
+import { InMemoryAssignments } from "../repositories/assignments.inmemory.js";
 import {
   noel,
   lea,
@@ -21,15 +21,15 @@ import {
   amanda,
   barmanBarDeLambiance,
   collageParcoursF,
-} from "./assign-volunteers-funnel.test-utils";
-import { CandidateFactory } from "./candidate";
-import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams";
-import { InMemoryAvailabilities } from "./availabilities.inmemory";
-import { InMemoryFriends } from "./friends.inmemory";
-import { IActAsFunnel } from "./funnel";
-import { BreakPeriods } from "./planning";
+} from "./assign-volunteers-funnel.test-utils.js";
+import { CandidateFactory } from "./candidate.js";
+import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
+import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
+import { InMemoryFriends } from "./friends.inmemory.js";
+import { IActAsFunnel } from "./funnel.js";
+import { BreakPeriods } from "./planning.js";
 import { IProvidePeriod } from "@overbookd/period";
-import { Volunteer } from "../../volunteer";
+import { Volunteer } from "../../volunteer.js";
 
 class InMemoryBreakPeriods implements BreakPeriods {
   constructor(private breakPeriods: Map<Volunteer["id"], IProvidePeriod[]>) {}

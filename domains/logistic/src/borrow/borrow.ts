@@ -1,4 +1,4 @@
-import { GearRequest } from "../gear-request";
+import { GearRequest } from "../gear-request.js";
 
 export type Borrow = {
   id: number;

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { DRAFT } from "@overbookd/festival-event-constants";
-import { CREATED } from "../../common/action";
-import { CreateFestivalTask } from "./create";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { noel, escapeGame } from "../festival-task.test-util";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { CREATED } from "../../common/action.js";
+import { CreateFestivalTask } from "./create.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { noel, escapeGame } from "../festival-task.test-util.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
 describe("Create festival task", () => {
   describe(`when ${noel.firstname} create Install escape game task`, async () => {

@@ -1,5 +1,5 @@
-import { Field } from "./field";
-import { Rule } from "./rule";
+import { Field } from "./field.js";
+import { Rule } from "./rule.js";
 
 export class BirthdateField implements Field<Date> {
   private readonly minimumBirthdate = new Date("1950-01-01");

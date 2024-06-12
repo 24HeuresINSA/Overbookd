@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
-    "lib": ["ES2020", "ES2022"],
+    "lib": ["ES2020", "ES2022", "dom", "dom.iterable"],
     "esModuleInterop": true,
     "isolatedModules": true,
     "sourceMap": true,

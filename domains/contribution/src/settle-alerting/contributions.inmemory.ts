@@ -1,4 +1,4 @@
-import { Contributions, IDefineContribution } from "./settle-alerting";
+import { Contributions, IDefineContribution } from "./settle-alerting.js";
 
 export class InMemoryContributions implements Contributions {
   constructor(private readonly contributions: IDefineContribution[]) {}

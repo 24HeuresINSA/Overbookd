@@ -1,5 +1,5 @@
-import { FestivalEventError } from "../festival-event";
-import { FestivalEventIdentifier } from "./festival-event";
+import { FestivalEventError } from "../festival-event.js";
+import { FestivalEventIdentifier } from "./festival-event.js";
 
 export const CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE =
   "n'a pas pu être passée en relecture";

@@ -2,9 +2,9 @@ import {
   Adherent,
   Contribution,
   MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
-} from "../contribution";
-import { InsufficientAmount } from "../contribution.error";
-import { NotFoundContribution } from "./edit-contribution.error";
+} from "../contribution.js";
+import { InsufficientAmount } from "../contribution.error.js";
+import { NotFoundContribution } from "./edit-contribution.error.js";
 
 export type AdherentWithContribution = Adherent & {
   amount: Contribution["amount"];

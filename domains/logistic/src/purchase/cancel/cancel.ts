@@ -1,4 +1,4 @@
-import { Purchase } from "../purchase";
+import { Purchase } from "../purchase.js";
 
 export type PurchasesForCancel = {
   remove(id: Purchase["id"]): void;

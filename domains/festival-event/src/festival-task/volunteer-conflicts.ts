@@ -8,10 +8,10 @@ import {
   Refused,
   Reviewable,
   Validated,
-} from "./festival-task";
-import { Volunteer } from "./sections/instructions";
-import { Conflicts } from "./sections/mobilizations";
-import { FestivalTaskError } from "./festival-task.error";
+} from "./festival-task.js";
+import { Volunteer } from "./sections/instructions.js";
+import { Conflicts } from "./sections/mobilizations.js";
+import { FestivalTaskError } from "./festival-task.error.js";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;

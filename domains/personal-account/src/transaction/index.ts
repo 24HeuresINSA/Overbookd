@@ -7,7 +7,7 @@ export type {
   BarrelTransaction,
   ProvisionsTransaction,
   TransactionUser,
-} from "./transaction.model";
+} from "./transaction.model.js";
 export {
   BARREL,
   DEPOSIT,
@@ -16,16 +16,16 @@ export {
   SHARED_MEAL,
   doIReceive,
   transactionTypes,
-} from "./transaction.model";
-export { Transfer } from "./transfer/transfer";
+} from "./transaction.model.js";
+export { Transfer } from "./transfer/transfer.js";
 export type {
   Member,
   MemberRepository,
   TransferRepository,
   TransferResponse,
-} from "./transfer/transfer";
-export { Payor } from "./transfer/payor";
-export type { CreateTransferForm, TransferForm } from "./transfer/payor";
-export { TransferError } from "./transfer/transfer.error";
-export { SharedMeal as SharedMealPayment } from "./shared-meal/shared-meal";
-export type { SharedMealTransaction } from "./shared-meal/shared-meal";
+} from "./transfer/transfer.js";
+export { Payor } from "./transfer/payor.js";
+export type { CreateTransferForm, TransferForm } from "./transfer/payor.js";
+export { TransferError } from "./transfer/transfer.error.js";
+export { SharedMeal as SharedMealPayment } from "./shared-meal/shared-meal.js";
+export type { SharedMealTransaction } from "./shared-meal/shared-meal.js";

@@ -1,7 +1,7 @@
-import { FestivalActivity, Reviewable } from "../festival-activity";
-import { FestivalActivityNotFound } from "../festival-activity.error";
+import { FestivalActivity, Reviewable } from "../festival-activity.js";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { updateItemToList } from "@overbookd/list";
-import { ReviewingFestivalActivities } from "./reviewing";
+import { ReviewingFestivalActivities } from "./reviewing.js";
 
 export class InMemoryReviewingFestivalActivities
   implements ReviewingFestivalActivities

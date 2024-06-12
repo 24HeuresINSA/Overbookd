@@ -1,5 +1,5 @@
 import { Category } from "@overbookd/festival-event-constants";
-import { AssignmentSummary, Assignment } from "./assignment";
+import { AssignmentSummary, Assignment } from "./assignment.js";
 
 export type TaskIdentifier = {
   id: number;

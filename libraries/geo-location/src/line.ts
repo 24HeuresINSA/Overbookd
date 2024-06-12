@@ -1,4 +1,4 @@
-import { distanceBetweenPoints } from "./distance";
+import { distanceBetweenPoints } from "./distance.js";
 import {
   Coordinate,
   ManageLocation,
@@ -6,7 +6,7 @@ import {
   PointLocation,
   ROAD,
   RoadLocation,
-} from "./location";
+} from "./location.js";
 
 export class Line implements RoadLocation, ManageLocation {
   private constructor(private _coordinates: Coordinate[]) {}
