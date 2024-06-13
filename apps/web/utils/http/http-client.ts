@@ -29,7 +29,7 @@ export class HttpClient {
 
   static post<T extends object>(
     url: Endpoint | string,
-    body: object,
+    body?: object,
     header?: Partial<RequestHeader>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
