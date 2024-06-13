@@ -1,5 +1,6 @@
 import type { HttpStringified } from "@overbookd/http";
 import { CSV, ICAL, JSON as JSON_TYPE, PDF } from "@overbookd/http";
+import { sendNotification } from "../notification/send-notification";
 
 type MethodWithBody = "POST" | "PUT" | "PATCH";
 type MethodWithoutBody = "GET" | "DELETE";
@@ -46,7 +47,11 @@ export async function apiFetch<T extends ApiResponse>(
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
-  if (!res.ok) return new Error(data.message || res.statusText);
+  if (!res.ok) {
+    const message = data.message || res.statusText;
+    sendNotification(message);
+    return new Error(message);
+  }
   return data;
 }
 

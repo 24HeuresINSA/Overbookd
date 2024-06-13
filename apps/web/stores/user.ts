@@ -16,7 +16,6 @@ import type {
 } from "@overbookd/user";
 import { isSuccess } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
-import { sendRequestNotification } from "~/utils/http/send-notification";
 import {
   castConsumerWithDate,
   castMyUserInformationWithoutDate,
@@ -28,6 +27,7 @@ import type {
   UserDataWithPotentialyProfilePicture,
   UserPersonalDataWithProfilePicture,
 } from "~/utils/user/user-information";
+import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   loggedUser?: MyUserInformation | MyUserInformationWithProfilePicture;
@@ -149,21 +149,15 @@ export const useUserStore = defineStore("user", {
 
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
-      sendRequestNotification(res, {
-        success: `${friend.firstname} a été ajouté à tes amis 🎉`,
-        error: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
-      });
       if (!isSuccess(res)) return;
+      sendNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
       this.mFriends = [...this.mFriends, friend];
     },
 
     async removeFriend(friend: User) {
       const res = await UserRepository.removeFriend(friend.id);
-      sendRequestNotification(res, {
-        success: `${friend.firstname} a été supprimé de tes amis`,
-        error: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
-      });
       if (!isSuccess(res)) return;
+      sendNotification(`${friend.firstname} a été supprimé de tes amis`);
       this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
     },
 
@@ -173,11 +167,10 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         friend.id,
       );
-      sendRequestNotification(res, {
-        success: `${friend.firstname} a été ajouté aux amis de ${this.selectedUser.firstname} 🎉`,
-        error: `${friend.firstname} n'a pas pu être ajouté aux amis de ${this.selectedUser.firstname} 😢`,
-      });
       if (!isSuccess(res)) return;
+      sendNotification(
+        `${friend.firstname} a été ajouté aux amis de ${this.selectedUser.firstname} 🎉`,
+      );
       this.selectedUserFriends = [...this.selectedUserFriends, res];
     },
 
@@ -187,11 +180,10 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         friend.id,
       );
-      sendRequestNotification(res, {
-        success: `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname}`,
-        error: `${friend.firstname} n'a pas pu être supprimé des amis de ${this.selectedUser.firstname}`,
-      });
       if (!isSuccess(res)) return;
+      sendNotification(
+        `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname}`,
+      );
       this.selectedUserFriends = this.selectedUserFriends.filter(
         (f) => f.id !== friend.id,
       );
@@ -205,11 +197,8 @@ export const useUserStore = defineStore("user", {
 
     async updateUser(id: number, user: UserPersonalData) {
       const res = await UserRepository.updateUser(id, user);
-      sendRequestNotification(res, {
-        success: "Profil mis à jour ! 🎉",
-        error: "Mince, le profil n'a pas pu être mis à jour 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castUserPersonalDataWithDate(res);
       this.users = this.users.map((u) => (u.id === id ? updated : u));
@@ -219,11 +208,8 @@ export const useUserStore = defineStore("user", {
 
     async updateComment(comment: string) {
       const res = await UserRepository.updateMyProfile({ comment });
-      sendRequestNotification(res, {
-        success: "Commentaire mis à jour ! 🎉",
-        error: "Mince, le commentaire n'a pas pu être mis à jour 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Commentaire mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithoutDate(res);
       this.loggedUser = updated;
@@ -232,11 +218,8 @@ export const useUserStore = defineStore("user", {
 
     async updateMyProfile(profile: Profile) {
       const res = await UserRepository.updateMyProfile(profile);
-      sendRequestNotification(res, {
-        success: "Profil mis à jour ! 🎉",
-        error: "Mince, le profil n'a pas pu être mis à jour 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithoutDate(res);
       this.loggedUser = updated;
@@ -245,11 +228,8 @@ export const useUserStore = defineStore("user", {
 
     async deleteUser(userId: number) {
       const res = await UserRepository.deleteUser(userId);
-      sendRequestNotification(res, {
-        success: "Utilisateur supprimé ! 🎉",
-        error: "L'utilisateur n'a pas pu être supprimé 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Utilisateur supprimé ! 🎉");
 
       this.users = this.users.filter((u) => u.id !== userId);
       this.volunteers = this.volunteers.filter((v) => v.id !== userId);
@@ -261,11 +241,8 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         teams,
       );
-      sendRequestNotification(res, {
-        success: "Equipe(s) ajoutée(s) ! 🎉",
-        error: "Mince, l'équipe n'a pas pu être ajoutée 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Equipe(s) ajoutée(s) ! 🎉");
 
       this.selectedUser = { ...this.selectedUser, teams: res };
       this.users = this.users.map((u) =>
@@ -283,11 +260,8 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         team,
       );
-      sendRequestNotification(res, {
-        success: "Equipe retirée ! 🎉",
-        error: "Mince, l'équipe n'a pas pu être retirée 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Equipe retirée ! 🎉");
 
       this.selectedUser.teams = this.selectedUser.teams.filter(
         (t) => t !== team,
@@ -309,11 +283,8 @@ export const useUserStore = defineStore("user", {
 
     async addProfilePicture(profilePicture: FormData) {
       const res = await UserRepository.addProfilePicture(profilePicture);
-      sendRequestNotification(res, {
-        success: "Photo de profil mise à jour ! 🎉",
-        error: "Mince, la photo de profil n'a pas pu être mise à jour 😢",
-      });
       if (!isSuccess(res)) return;
+      sendNotification("Photo de profil mise à jour ! 🎉");
       this.loggedUser = castMyUserInformationWithoutDate(res);
     },
 
