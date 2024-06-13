@@ -6,7 +6,6 @@ import {
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
-  Permission,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   READ_FT,
@@ -25,6 +24,7 @@ import {
   PURCHASE_GEARS,
   BORROW_GEARS,
 } from "@overbookd/permission";
+import type { Permission } from "@overbookd/permission";
 
 export type Page = {
   icon: string;

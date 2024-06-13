@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
-    if (isTargettingLoginPage(to)) return navigateTo("/");
+    if (isTargettingLoginPage(to)) return "/";
     return;
   }
 
@@ -32,7 +32,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     logout();
     if (isTargettingLoginPage(to)) return;
     abortNavigation();
-    return navigateTo("/login");
+    return "/login";
   }
 });
 
