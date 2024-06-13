@@ -75,9 +75,7 @@ export class UserRepository {
   }
 
   static addFriend(friendId: number) {
-    return HttpClient.post<User>("friends", {
-      id: friendId,
-    });
+    return HttpClient.post<User>("friends", { id: friendId });
   }
 
   static removeFriend(friendId: number) {
@@ -85,9 +83,7 @@ export class UserRepository {
   }
 
   static addFriendToUser(userId: number, friendId: number) {
-    return HttpClient.post<User>(`friends/${userId}`, {
-      id: friendId,
-    });
+    return HttpClient.post<User>(`friends/${userId}`, { id: friendId });
   }
 
   static removeFriendFromUser(userId: number, friendId: number) {

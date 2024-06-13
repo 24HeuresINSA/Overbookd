@@ -1,5 +1,18 @@
 import type { HttpStringified } from "@overbookd/http";
-import type { Method } from "./http-client";
+import { CSV, ICAL, JSON as JSON_TYPE, PDF } from "@overbookd/http";
+
+type MethodWithBody = "POST" | "PUT" | "PATCH";
+type MethodWithoutBody = "GET" | "DELETE";
+export type Method = MethodWithBody | MethodWithoutBody;
+
+export type RequestGeneral = {
+  url: URL;
+  method: Method;
+};
+
+export type RequestHeader = {
+  acceptedType: typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
+};
 
 type ApiResponse = object | void;
 
@@ -12,20 +25,19 @@ export type HttpResponse<T extends ApiResponse> = Success<T> | Error;
 type EmptyOr<T extends Record<string, unknown>> = T | Record<never, unknown>;
 
 export async function apiFetch<T extends ApiResponse>(
-  url: string,
-  method: Method,
+  general: RequestGeneral,
+  { acceptedType }: RequestHeader,
   body?: object,
 ): Promise<HttpResponse<T>> {
-  const config = useRuntimeConfig();
-
-  const fullUrl = `${config.public.baseURL}/${url}`;
+  const { url, method } = general;
 
   const accessToken = useCookie("accessToken").value;
-  const contentType = { "Content-Type": "application/json" };
+  const contentType = { "Content-Type": JSON_TYPE };
   const authorization: EmptyOr<{ Authorization: string }> = accessToken
     ? { Authorization: `Bearer ${accessToken}` }
     : {};
-  const headers = { ...contentType, ...authorization };
+  const accept = { Accept: acceptedType };
+  const headers = { ...contentType, ...authorization, ...accept };
 
   const requestOptions: RequestInit = {
     method,
@@ -33,7 +45,7 @@ export async function apiFetch<T extends ApiResponse>(
     body: body ? JSON.stringify(body) : undefined,
   };
 
-  const res = await fetch(fullUrl, requestOptions);
+  const res = await fetch(url, requestOptions);
   const data = await res.json();
 
   if (!res.ok) return new Error(data.message || res.statusText);
