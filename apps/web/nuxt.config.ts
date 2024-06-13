@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   },
   modules: ["@pinia/nuxt"],
   imports: {
-    dirs: ["stores", "repositories"],
+    dirs: ["stores", "repositories", "repositories/**"],
   },
   components: {
     dirs: [

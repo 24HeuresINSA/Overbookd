@@ -1,5 +1,5 @@
-import { MyUserInformation, UserPersonalData } from "@overbookd/user";
-import { DisplayableCategory } from "../assignment/task-category";
+import type { MyUserInformation, UserPersonalData } from "@overbookd/user";
+import type { DisplayableCategory } from "../assignment/task-category";
 
 type WithPotentialProfilePicture = {
   profilePicture?: string;
@@ -16,3 +16,7 @@ export type DisplayableAssignmentStat = {
   category: DisplayableCategory;
   duration: number;
 };
+
+export type UserDataWithPotentialyProfilePicture =
+  | UserPersonalData
+  | UserPersonalDataWithProfilePicture;

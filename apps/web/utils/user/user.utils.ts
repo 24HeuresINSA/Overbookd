@@ -1,4 +1,4 @@
-import { UserName } from "@overbookd/user";
+import type { UserName } from "@overbookd/user";
 
 export function formatUsername({ firstname, lastname }: UserName): string {
   return `${firstname} ${lastname}`;

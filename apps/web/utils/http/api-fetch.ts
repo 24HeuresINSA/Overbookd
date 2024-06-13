@@ -14,7 +14,7 @@ export type RequestHeader = {
   acceptedType: typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
 };
 
-type ApiResponse = object | void;
+export type ApiResponse = object | void;
 
 type Success<T extends ApiResponse> = T extends object
   ? HttpStringified<T>
@@ -54,4 +54,10 @@ export function isSuccess<T extends ApiResponse>(
   res: HttpResponse<T>,
 ): res is Success<T> {
   return !(res instanceof Error);
+}
+
+export function isError<T extends ApiResponse>(
+  res: HttpResponse<T>,
+): res is Error {
+  return res instanceof Error;
 }
