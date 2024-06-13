@@ -25,12 +25,10 @@ export type HttpResponse<T extends ApiResponse> = Success<T> | Error;
 type EmptyOr<T extends Record<string, unknown>> = T | Record<never, unknown>;
 
 export async function apiFetch<T extends ApiResponse>(
-  general: RequestGeneral,
+  { url, method }: RequestGeneral,
   { acceptedType }: RequestHeader,
   body?: object,
 ): Promise<HttpResponse<T>> {
-  const { url, method } = general;
-
   const accessToken = useCookie("accessToken").value;
   const contentType = { "Content-Type": JSON_TYPE };
   const authorization: EmptyOr<{ Authorization: string }> = accessToken
