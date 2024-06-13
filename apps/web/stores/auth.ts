@@ -19,6 +19,9 @@ export const useAuthStore = defineStore("auth", {
       refreshToken.value = null;
 
       this.authenticated = false;
+
+      const { clearLoggedUser } = useUserStore();
+      clearLoggedUser();
     },
     authenticate(newAccessToken: string, newRefreshToken: string) {
       const accessToken = useCookie("accessToken");

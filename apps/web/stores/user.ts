@@ -106,7 +106,7 @@ export const useUserStore = defineStore("user", {
       this.loggedUser = castMyUserInformationWithoutDate(res);
     },
 
-    cleanUser() {
+    clearLoggedUser() {
       this.loggedUser = undefined;
     },
 
