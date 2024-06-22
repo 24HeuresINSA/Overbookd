@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
 import { ONE_SECOND_IN_MS } from "@overbookd/period";
 
 const isShowing = ref(false);

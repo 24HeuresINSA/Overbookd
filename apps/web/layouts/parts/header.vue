@@ -12,9 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-
 import Logo from "./logo.vue";
 
 const router = useRouter();

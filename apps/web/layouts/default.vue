@@ -22,5 +22,6 @@ import Footer from "~/layouts/parts/footer.vue";
 
 .content {
   flex: 1;
+  margin: 0.8em;
 }
 </style>

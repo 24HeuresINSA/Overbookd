@@ -6,8 +6,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue";
-
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
 
