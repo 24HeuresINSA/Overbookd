@@ -18,7 +18,7 @@ import { isSuccess } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 import {
   castConsumerWithDate,
-  castMyUserInformationWithoutDate,
+  castMyUserInformationWithDate,
   castUserPersonalDataWithDate,
 } from "~/utils/http/user";
 import { castVolunteerPlanningTasksWithDate } from "~/utils/http/volunteer-planning";
@@ -103,7 +103,7 @@ export const useUserStore = defineStore("user", {
     async fetchMyInformation() {
       const res = await UserRepository.getMyUser();
       if (!isSuccess(res)) return;
-      this.loggedUser = castMyUserInformationWithoutDate(res);
+      this.loggedUser = castMyUserInformationWithDate(res);
     },
 
     clearLoggedUser() {
@@ -201,8 +201,7 @@ export const useUserStore = defineStore("user", {
       sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castUserPersonalDataWithDate(res);
-      this.users = this.users.map((u) => (u.id === id ? updated : u));
-      this.volunteers = this.volunteers.map((v) => (v.id === id ? updated : v));
+      this._updateUserInformationInLists(updated);
       if (this.selectedUser?.id === this.me.id) this.fetchUser();
     },
 
@@ -211,9 +210,9 @@ export const useUserStore = defineStore("user", {
       if (!isSuccess(res)) return;
       sendNotification("Commentaire mis à jour ! 🎉");
 
-      const updated = castMyUserInformationWithoutDate(res);
+      const updated = castMyUserInformationWithDate(res);
       this.loggedUser = updated;
-      this.users = this.users.map((u) => (u.id === this.me.id ? updated : u));
+      this._updateUserInformationInLists(updated);
     },
 
     async updateMyProfile(profile: Profile) {
@@ -221,9 +220,9 @@ export const useUserStore = defineStore("user", {
       if (!isSuccess(res)) return;
       sendNotification("Profil mis à jour ! 🎉");
 
-      const updated = castMyUserInformationWithoutDate(res);
+      const updated = castMyUserInformationWithDate(res);
       this.loggedUser = updated;
-      this.users = this.users.map((u) => (u.id === this.me.id ? updated : u));
+      this._updateUserInformationInLists(updated);
     },
 
     async deleteUser(userId: number) {
@@ -245,12 +244,7 @@ export const useUserStore = defineStore("user", {
       sendNotification("Equipe(s) ajoutée(s) ! 🎉");
 
       this.selectedUser = { ...this.selectedUser, teams: res };
-      this.users = this.users.map((u) =>
-        u.id === this.selectedUser?.id ? this.selectedUser : u,
-      );
-      this.volunteers = this.volunteers.map((v) =>
-        v.id === this.selectedUser?.id ? this.selectedUser : v,
-      );
+      this._updateUserInformationInLists(this.selectedUser);
       if (this.selectedUser.id === this.me.id) this.fetchMyInformation();
     },
 
@@ -266,12 +260,7 @@ export const useUserStore = defineStore("user", {
       this.selectedUser.teams = this.selectedUser.teams.filter(
         (t) => t !== team,
       );
-      this.users = this.users.map((u) =>
-        u.id === this.selectedUser?.id ? this.selectedUser : u,
-      );
-      this.volunteers = this.volunteers.map((v) =>
-        v.id === this.selectedUser?.id ? this.selectedUser : v,
-      );
+      this._updateUserInformationInLists(this.selectedUser);
       if (this.selectedUser.id === this.me.id) this.fetchMyInformation();
     },
 
@@ -285,7 +274,7 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.addProfilePicture(profilePicture);
       if (!isSuccess(res)) return;
       sendNotification("Photo de profil mise à jour ! 🎉");
-      this.loggedUser = castMyUserInformationWithoutDate(res);
+      this.loggedUser = castMyUserInformationWithDate(res);
     },
 
     getProfilePicture(
@@ -325,10 +314,7 @@ export const useUserStore = defineStore("user", {
       if (profilePictureBlob instanceof Error) return;
 
       const updated = { ...user, profilePictureBlob };
-      this.users = this.users.map((u) => (u.id === user.id ? updated : u));
-      this.volunteers = this.volunteers.map((v) =>
-        v.id === user.id ? updated : v,
-      );
+      this._updateUserInformationInLists(updated);
     },
 
     async getVolunteerTasks(volunteerId: number) {
@@ -376,6 +362,13 @@ export const useUserStore = defineStore("user", {
       if (!isSuccess(res)) return;
       this.selectedUserBreakPeriods = res.map((period) =>
         Period.init(castPeriodWithDate(period)),
+      );
+    },
+
+    _updateUserInformationInLists(user: UserPersonalData) {
+      this.users = this.users.map((u) => (u.id === user.id ? user : u));
+      this.volunteers = this.volunteers.map((v) =>
+        v.id === user.id ? user : v,
       );
     },
   },

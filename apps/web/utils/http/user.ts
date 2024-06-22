@@ -7,7 +7,7 @@ export function castUserPersonalDataWithDate(
   return { ...user, birthdate: new Date(user.birthdate) };
 }
 
-export function castMyUserInformationWithoutDate(
+export function castMyUserInformationWithDate(
   user: HttpStringified<MyUserInformation>,
 ): MyUserInformation {
   return { ...user, birthdate: new Date(user.birthdate) };
