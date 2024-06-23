@@ -3,6 +3,10 @@
     <Logo />
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
+      <nuxt-link class="action profile" to="/profile">
+        <ProfilePicture small class="profile-picture" :user="me" />
+        <span class="action__text">{{ myName }}</span>
+      </nuxt-link>
       <span class="action logout" @click="logout">
         <v-icon>mdi-logout</v-icon>
         <span class="action__text"> Deconnexion </span>
@@ -15,7 +19,8 @@
 import Logo from "./logo.vue";
 
 const router = useRouter();
-const auth = useAuthStore();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const isPreProd = computed(
   () => process.env.BASE_URL?.includes("preprod") ?? false,
@@ -24,6 +29,9 @@ const isCetaitMieuxAvant = computed(
   () => process.env.BASE_URL?.includes("cetaitmieuxavant") ?? false,
 );
 
+const { me } = storeToRefs(userStore);
+const myName = computed(() => me.value.nickname || me.value.firstname);
+
 const watermark = computed(() => {
   if (isPreProd.value) return "preprod";
   if (isCetaitMieuxAvant.value) return "ctma";
@@ -31,8 +39,9 @@ const watermark = computed(() => {
 });
 
 const logout = async () => {
-  await auth.logout();
+  authStore.logout();
   await router.push({ path: "/login" });
+  userStore.clearLoggedUser();
 };
 </script>
 
