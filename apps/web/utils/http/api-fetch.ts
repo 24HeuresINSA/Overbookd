@@ -15,11 +15,13 @@ export type RequestHeader = {
   acceptedType: typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
 };
 
-export type ApiResponse = object | void;
+export type ApiResponse = object | string | void;
 
 type Success<T extends ApiResponse> = T extends object
   ? HttpStringified<T>
-  : void;
+  : T extends string
+    ? string
+    : void;
 
 export type HttpResponse<T extends ApiResponse> = Success<T> | Error;
 
