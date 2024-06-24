@@ -11,10 +11,7 @@ import {
   HttpCode,
   UseFilters,
 } from "@nestjs/common";
-import {
-  TransactionService,
-  TransactionWithSenderAndReceiver,
-} from "./transaction.service";
+import { TransactionService } from "./transaction.service";
 import { Transaction as PrismaTransaction } from "@prisma/client";
 import {
   ApiBadRequestResponse,
@@ -38,7 +35,11 @@ import {
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
 import { TransferService } from "./transfer.service";
-import { CreateTransferForm, Transaction } from "@overbookd/personal-account";
+import {
+  CreateTransferForm,
+  Transaction,
+  TransactionWithSenderAndReceiver,
+} from "@overbookd/personal-account";
 import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
 import {
   BarrelTransactionDto,

@@ -23,6 +23,7 @@ export type {
   BarrelTransaction,
   ProvisionsTransaction,
   TransactionUser,
+  TransactionWithSenderAndReceiver,
   SharedMealTransaction,
 } from "./transaction/index.js";
 export {

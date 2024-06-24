@@ -15,18 +15,10 @@ import {
   SharedMealPayment,
   SharedMealTransaction,
   Transaction,
-  TransactionUser,
+  TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
 import { DomainEventService } from "../domain-event/domain-event.service";
-
-export type TransactionWithSenderAndReceiver = Omit<
-  PrismaTransaction,
-  "to" | "from"
-> & {
-  payor: TransactionUser;
-  payee: TransactionUser;
-};
 
 @Injectable()
 export class TransactionService implements OnApplicationBootstrap {

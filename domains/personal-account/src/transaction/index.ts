@@ -7,6 +7,7 @@ export type {
   BarrelTransaction,
   ProvisionsTransaction,
   TransactionUser,
+  TransactionWithSenderAndReceiver,
 } from "./transaction.model.js";
 export {
   BARREL,

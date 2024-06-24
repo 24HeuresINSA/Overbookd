@@ -1,7 +1,9 @@
 import { TransactionType } from "@prisma/client";
-import { TransactionWithSenderAndReceiver } from "../transaction.service";
 import { ApiProperty } from "@nestjs/swagger";
-import { TransactionUser } from "@overbookd/personal-account";
+import {
+  TransactionUser,
+  TransactionWithSenderAndReceiver,
+} from "@overbookd/personal-account";
 
 export class UserRepresentation implements TransactionUser {
   id: number;
