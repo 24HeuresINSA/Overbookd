@@ -60,18 +60,18 @@
     "chart.js": "4.4.3",
     "jwt-decode": "4.0.0",
     "pinia": "2.1.7",
-    "sass": "1.77.5",
+    "sass": "1.77.6",
     "vue-chartjs": "5.3.1",
-    "vuetify": "3.6.9"
+    "vuetify": "3.6.10"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "0.3.13",
     "@pinia/nuxt": "0.5.1",
     "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.26.0",
-    "nuxt": "3.12.1",
+    "nuxt": "3.12.2",
     "vue": "3.4.29",
-    "vue-router": "4.3.3"
+    "vue-router": "4.4.0"
   },
   "engines": {
     "node": "20.14.0",
