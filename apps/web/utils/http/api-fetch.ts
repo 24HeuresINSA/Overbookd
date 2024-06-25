@@ -57,13 +57,7 @@ export async function apiFetch<T extends ApiResponse>(
   return data;
 }
 
-export function isSuccess<T extends ApiResponse>(
-  res: HttpResponse<T>,
-): res is Success<T> {
-  return !(res instanceof Error);
-}
-
-export function isError<T extends ApiResponse>(
+export function isHttpError<T extends ApiResponse>(
   res: HttpResponse<T>,
 ): res is Error {
   return res instanceof Error;

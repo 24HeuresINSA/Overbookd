@@ -2,29 +2,29 @@ import type { CreateLocation } from "@overbookd/http";
 import type { SignaLocation } from "@overbookd/signa";
 import { HttpClient } from "~/utils/http/http-client";
 
-export class SignaLocationRepository {
+export class LocationRepository {
   private static readonly basePath = "signa-location";
 
-  static getAllSignaLocations() {
+  static getAllLocations() {
     return HttpClient.get<SignaLocation[]>(this.basePath);
   }
 
-  static getSignaLocationById(id: number) {
+  static getLocationById(id: number) {
     return HttpClient.get<SignaLocation>(`${this.basePath}/${id}`);
   }
 
-  static createNewSignaLocation(signaLocation: CreateLocation) {
+  static createNewLocation(signaLocation: CreateLocation) {
     return HttpClient.post<SignaLocation>(this.basePath, signaLocation);
   }
 
-  static updateSignaLocation(signaLocation: SignaLocation) {
+  static updateLocation(signaLocation: SignaLocation) {
     return HttpClient.put<SignaLocation>(
       `${this.basePath}/${signaLocation.id}`,
       signaLocation,
     );
   }
 
-  static deleteSignaLocation(id: number) {
+  static deleteLocation(id: number) {
     return HttpClient.delete(`${this.basePath}/${id}`);
   }
 }

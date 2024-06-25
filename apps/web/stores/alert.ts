@@ -1,6 +1,6 @@
 import type { Alerts } from "@overbookd/alerts";
 import { AlertRepository } from "~/repositories/alert.repository";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
   alerts: Alerts;
@@ -13,7 +13,7 @@ export const useAlertStore = defineStore("alert", {
   actions: {
     async fetchAlerts() {
       const res = await AlertRepository.getMyAlerts();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.alerts = res;
     },
 

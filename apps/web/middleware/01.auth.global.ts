@@ -1,6 +1,6 @@
 import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import type { RouteLocationNormalized } from "vue-router";
 
 type Token = { exp: number };
@@ -24,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const res = await AuthRepository.refresh(refreshToken.value);
-  if (!isSuccess(res)) return handleUnauthenticatedRedirect();
+  if (isHttpError(res)) return handleUnauthenticatedRedirect();
 
   authenticate(res.accessToken, res.refreshToken);
 

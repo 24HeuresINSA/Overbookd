@@ -1,7 +1,7 @@
 import type { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
@@ -36,19 +36,19 @@ export const useConfigurationStore = defineStore("configuration", {
   actions: {
     async fetchAll() {
       const res = await ConfigurationRepository.getAll();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.configurations = res;
     },
 
     async fetch(key: string) {
       const res = await ConfigurationRepository.fetch(key);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this._updateConfig(res);
     },
 
     async save(config: Configuration) {
       const res = await ConfigurationRepository.save(config);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("La configuration a été sauvegardée avec succès ✅");
       this._updateConfig(res);
     },

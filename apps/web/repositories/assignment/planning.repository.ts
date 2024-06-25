@@ -1,7 +1,7 @@
 import type { Planning, PlanningEvent } from "@overbookd/assignment";
 import type { HttpStringified } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 export class AssignmentPlanningRepository implements Planning {
@@ -12,7 +12,7 @@ export class AssignmentPlanningRepository implements Planning {
       `${this.basePath}/${volunteer}/planning`,
     );
 
-    if (!isSuccess(res)) throw res;
+    if (isHttpError(res)) throw res;
     return castPlanningEventsWithDate(res);
   }
 }

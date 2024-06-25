@@ -14,7 +14,7 @@ import type {
   User,
   UserPersonalData,
 } from "@overbookd/user";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 import {
   castConsumerWithDate,
@@ -89,7 +89,7 @@ export const useUserStore = defineStore("user", {
   actions: {
     async setSelectedUser(user: UserPersonalData) {
       const res = await UserRepository.getUserFriends(user.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserFriends = res;
       this.selectedUser = user;
     },
@@ -102,7 +102,7 @@ export const useUserStore = defineStore("user", {
 
     async fetchMyInformation() {
       const res = await UserRepository.getMyUser();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.loggedUser = castMyUserInformationWithDate(res);
     },
 
@@ -112,51 +112,51 @@ export const useUserStore = defineStore("user", {
 
     async fetchUsers() {
       const res = await UserRepository.getAllUsers();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.users = res.map(castUserPersonalDataWithDate);
     },
 
     async fetchVolunteers() {
       const res = await UserRepository.getVolunteers();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.volunteers = res.map(castUserPersonalDataWithDate);
     },
 
     async fetchAdherents() {
       const res = await UserRepository.getAdherents();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.adherents = res;
     },
 
     async fetchVolunteersWithAssignmentStats() {
       const res =
         await AssignmentsRepository.fetchVolunteersWithAssignmentStats();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.volunteersWithAssignmentStats = res;
     },
 
     async fetchFriends() {
       const res = await UserRepository.getFriends();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.friends = res;
     },
 
     async fetchMyFriends() {
       const res = await UserRepository.getUserFriends(this.me.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.mFriends = res;
     },
 
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
       this.mFriends = [...this.mFriends, friend];
     },
 
     async removeFriend(friend: User) {
       const res = await UserRepository.removeFriend(friend.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`${friend.firstname} a été supprimé de tes amis`);
       this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
     },
@@ -167,7 +167,7 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         friend.id,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(
         `${friend.firstname} a été ajouté aux amis de ${this.selectedUser.firstname} 🎉`,
       );
@@ -180,7 +180,7 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         friend.id,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(
         `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname}`,
       );
@@ -191,13 +191,13 @@ export const useUserStore = defineStore("user", {
 
     async fetchPersonalAccountConsumers() {
       const res = await UserRepository.getAllPersonalAccountConsumers();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.personalAccountConsumers = res.map(castConsumerWithDate);
     },
 
     async updateUser(id: number, user: UserPersonalData) {
       const res = await UserRepository.updateUser(id, user);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castUserPersonalDataWithDate(res);
@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", {
 
     async updateComment(comment: string) {
       const res = await UserRepository.updateMyProfile({ comment });
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Commentaire mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithDate(res);
@@ -217,7 +217,7 @@ export const useUserStore = defineStore("user", {
 
     async updateMyProfile(profile: Profile) {
       const res = await UserRepository.updateMyProfile(profile);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithDate(res);
@@ -227,7 +227,7 @@ export const useUserStore = defineStore("user", {
 
     async deleteUser(userId: number) {
       const res = await UserRepository.deleteUser(userId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Utilisateur supprimé ! 🎉");
 
       this.users = this.users.filter((u) => u.id !== userId);
@@ -240,7 +240,7 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         teams,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Equipe(s) ajoutée(s) ! 🎉");
 
       this.selectedUser = { ...this.selectedUser, teams: res };
@@ -254,7 +254,7 @@ export const useUserStore = defineStore("user", {
         this.selectedUser.id,
         team,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Equipe retirée ! 🎉");
 
       this.selectedUser.teams = this.selectedUser.teams.filter(
@@ -266,13 +266,13 @@ export const useUserStore = defineStore("user", {
 
     async findUserById(id: number) {
       const res = await UserRepository.getUser(id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUser = castUserPersonalDataWithDate(res);
     },
 
     async addProfilePicture(profilePicture: FormData) {
       const res = await UserRepository.addProfilePicture(profilePicture);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Photo de profil mise à jour ! 🎉");
       this.loggedUser = castMyUserInformationWithDate(res);
     },
@@ -320,25 +320,25 @@ export const useUserStore = defineStore("user", {
     async getVolunteerTasks(volunteerId: number) {
       const res =
         await UserRepository.getMobilizationsVolunteerTakePartOf(volunteerId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserTasks = castVolunteerPlanningTasksWithDate(res);
     },
 
     async getVolunteerAssignments(userId: number) {
       const res = await UserRepository.getVolunteerAssignments(userId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserAssignments = castPlanningEventsWithDate(res);
     },
 
     async getVolunteerAssignmentStats(userId: number) {
       const res = await UserRepository.getVolunteerAssignmentStats(userId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserAssignmentStats = res;
     },
 
     async getVolunteerBreakPeriods(volunteerId: number) {
       const res = await PlanningRepository.getBreakPeriods(volunteerId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserBreakPeriods = res.map((period) =>
         Period.init(castPeriodWithDate(period)),
       );
@@ -350,7 +350,7 @@ export const useUserStore = defineStore("user", {
     }: BreakDefinition) {
       const during = { start, durationInHours: duration.inHours };
       const res = await PlanningRepository.addBreakPeriod(volunteer, during);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
 
       this.selectedUserBreakPeriods = res.map((period) =>
         Period.init(castPeriodWithDate(period)),
@@ -359,7 +359,7 @@ export const useUserStore = defineStore("user", {
 
     async deleteVolunteerBreakPeriods({ volunteer, period }: BreakIdentifier) {
       const res = await PlanningRepository.removeBreakPeriod(volunteer, period);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedUserBreakPeriods = res.map((period) =>
         Period.init(castPeriodWithDate(period)),
       );

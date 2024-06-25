@@ -1,6 +1,6 @@
 import type { Adherent, PayContributionForm } from "@overbookd/contribution";
 import { ContributionRepository } from "~/repositories/contribution.repository";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
@@ -14,7 +14,7 @@ export const useContributionStore = defineStore("contribution", {
   actions: {
     async fetchAdherentsOutToDate() {
       const res = await ContributionRepository.fetchAdherentsOutToDate();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.adherentsOutToDate = res;
     },
 
@@ -22,7 +22,7 @@ export const useContributionStore = defineStore("contribution", {
       const form: PayContributionForm = { adherentId: adherent.id, amount };
       const res = await ContributionRepository.payContribution(form);
 
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("La cotisation a été payée avec succès 💰");
       this.adherentsOutToDate = this.adherentsOutToDate.filter(
         ({ id }) => id !== adherent.id,

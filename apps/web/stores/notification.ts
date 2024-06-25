@@ -1,5 +1,5 @@
 import { NotificationRepository } from "~/repositories/notification.repository";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
   hasNotifications: boolean;
@@ -12,13 +12,13 @@ export const useNotificationStore = defineStore("notification", {
   actions: {
     async fetchNotifications() {
       const res = await NotificationRepository.hasNotifications();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.hasNotifications = res.hasNotifications;
     },
 
     async readNotification() {
       const res = await NotificationRepository.readMyNotification();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.hasNotifications = false;
     },
 

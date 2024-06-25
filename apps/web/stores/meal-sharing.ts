@@ -9,7 +9,7 @@ import {
   isPastMeal,
 } from "@overbookd/personal-account";
 import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
   sharedMeal?: SharedMeal;
@@ -32,33 +32,33 @@ export const useMealSharingStore = defineStore("meal-sharing", {
   actions: {
     async offerSharedMeal(offerMeal: OfferMeal) {
       const res = await MealSharingRepository.offer(offerMeal);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.sharedMeal = castSharedMealWithDate(res);
       await this.fetchAll();
     },
 
     async find(mealId: number) {
       const res = await MealSharingRepository.find(mealId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.sharedMeal = castSharedMealWithDate(res);
     },
 
     async fetchAll() {
       const res = await MealSharingRepository.all();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.meals = res.map(castSharedMealWithDate);
     },
 
     async shotgun(mealId: SharedMeal["id"]) {
       const res = await MealSharingRepository.shotgun(mealId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       const sharedMeal = castSharedMealWithDate(res);
       this._updateMealInsideMeals(sharedMeal);
     },
 
     async recordExpense(mealId: SharedMeal["id"], expense: Expense) {
       const res = await MealSharingRepository.recordExpense(mealId, expense);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       const sharedMeal = castSharedMealWithDate(res);
       this._updateMealInsideMeals(sharedMeal);
     },

@@ -38,7 +38,7 @@ import {
   castPreviewForSecurityWithDate,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { sendNotification } from "~/utils/notification/send-notification";
 
 const repo = FestivalActivityRepository;
@@ -69,19 +69,19 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     /* FETCH */
     async fetchAllActivities() {
       const res = await repo.getAll();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.activities.forAll = res;
     },
 
     async fetchSecurityPreviews() {
       const res = await repo.getSecurityPreviews();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.activities.forSecurity = res.map(castPreviewForSecurityWithDate);
     },
 
     async fetchCommunicationPreviews() {
       const res = await repo.getCommunicationPreviews();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.activities.forCommunication = res.map(
         castPreviewForCommunicationWithDate,
       );
@@ -89,20 +89,20 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
 
     async fetchLogisticPreviews() {
       const res = await repo.getCSVLogisticPreviews();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.activities.forLogistic.csv = res;
     },
 
     async fetchActivity(id: number) {
       const res = await repo.getOne(id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* CREATE */
     async create(form: CreateFestivalActivityForm) {
       const res = await repo.create(form);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
       await this.fetchAllActivities();
     },
@@ -110,7 +110,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     /* ASK FOR REVIEW */
     async askForReview() {
       const res = await repo.askForReview(this.selectedActivity.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
       await this.fetchAllActivities();
     },
@@ -118,7 +118,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     /* REMOVE */
     async remove(id: FestivalActivity["id"]) {
       const res = await repo.remove(id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`FA #${id} supprimée 🗑️`);
       this.selectedActivity = fakeActivity;
       await this.fetchAllActivities();
@@ -127,7 +127,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     /* UPDATE GENERAL SECTION */
     async updateGeneral(general: PrepareGeneralUpdate) {
       const res = await repo.updateGeneral(this.selectedActivity.id, general);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -136,7 +136,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         timeWindow,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -145,14 +145,14 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         timeWindowId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* UPDATE IN CHARGE SECTION */
     async updateInCharge(inCharge: PrepareInChargeForm) {
       const res = await repo.updateInCharge(this.selectedActivity.id, inCharge);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -161,7 +161,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         contractor,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -170,7 +170,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         contractor,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -179,32 +179,32 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         contractorId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* UPDATE SIGNA SECTION */
     async updateSigna(signa: PrepareSignaForm) {
       const res = await repo.updateSigna(this.selectedActivity.id, signa);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async addSignage(signage: PrepareSignageCreation) {
       const res = await repo.addSignage(this.selectedActivity.id, signage);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async updateSignage(signage: PrepareSignageUpdate) {
       const res = await repo.updateSignage(this.selectedActivity.id, signage);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async removeSignage(signageId: Signage["id"]) {
       const res = await repo.removeSignage(this.selectedActivity.id, signageId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -218,21 +218,21 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         signageId,
         form,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* UPDATE SECURITY SECTION */
     async updateSecurity(security: PrepareSecurityUpdate) {
       const res = await repo.updateSecurity(this.selectedActivity.id, security);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* UPDATE SUPPLY SECTION */
     async updateSupply(supply: PrepareSupplyUpdate) {
       const res = await repo.updateSupply(this.selectedActivity.id, supply);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -241,7 +241,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         supply,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -250,7 +250,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         supply,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -259,7 +259,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         supplyId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -269,7 +269,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         timeWindow,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -278,7 +278,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         timeWindowId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -287,7 +287,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         request,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -296,25 +296,25 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         slug,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async initInquiry(form: InitInquiryRequest) {
       const res = await repo.initInquiry(this.selectedActivity.id, form);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async clearInquiry() {
       const res = await repo.clearInquiry(this.selectedActivity.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async linkDrive(link: AssignDrive) {
       const res = await repo.linkDrive(this.selectedActivity.id, link);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
@@ -324,21 +324,21 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         this.selectedActivity.id,
         feedback,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },
 
     /* REVIEW */
     async approveAs(reviewer: Reviewer<"FA">) {
       const res = await repo.approve(this.selectedActivity.id, reviewer);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`✅ FA approuvée par l'équipe ${reviewer}`);
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async rejectBecause(rejection: ReviewRejection<"FA">) {
       const res = await repo.reject(this.selectedActivity.id, rejection);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`🛑 FA rejetée par l'équipe ${rejection.team}`);
       this.selectedActivity = castActivityWithDate(res);
     },

@@ -4,7 +4,7 @@ import type {
   Transaction,
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
@@ -18,13 +18,13 @@ export const useTransactionStore = defineStore("transaction", {
   actions: {
     async fetchMyTransactions() {
       const res = await TransactionRepository.getMyTransactions();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.myTransactions = res.map(castTransactionWithDate);
     },
 
     async sendTransfer(transferForm: CreateTransferForm) {
       const res = await TransactionRepository.sendTransfer(transferForm);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("Le virement a bien été effectué 💸");
 
       await this.fetchMyTransactions();

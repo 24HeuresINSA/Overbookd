@@ -35,7 +35,7 @@ import {
   type UnassignForm,
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { sendNotification } from "~/utils/notification/send-notification";
 
 const repo = FestivalTaskRepository;
@@ -89,20 +89,20 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     /* VIEW */
     async fetchAllTasks() {
       const res = await repo.getAll();
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.tasks.forAll = res;
     },
 
     async fetchTask(id: number) {
       const res = await repo.getOne(id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     /* CREATE */
     async create(form: FestivalTaskCreationForm) {
       const res = await repo.create(form);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
       await this.fetchAllTasks();
     },
@@ -110,7 +110,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     /* ASK FOR REVIEW */
     async askForReview() {
       const res = await repo.askForReview(this.selectedTask.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
       await this.fetchAllTasks();
     },
@@ -118,7 +118,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     /* REMOVE */
     async remove(id: FestivalTaskWithConflicts["id"]) {
       const res = await repo.remove(id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`FT #${id} supprimée 🗑️`);
       this.selectedTask = fakeTask;
       await this.fetchAllTasks();
@@ -127,7 +127,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     /* UPDATE GENERAL SECTION */
     async updateGeneral(general: UpdateGeneralForm) {
       const res = await repo.updateGeneral(this.selectedTask.id, general);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -137,7 +137,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         instructions,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -146,19 +146,19 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         instructions,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     async addContact(contactId: Contact["id"]) {
       const res = await repo.addContact(this.selectedTask.id, { contactId });
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     async removeContact(contactId: Contact["id"]) {
       const res = await repo.removeContact(this.selectedTask.id, contactId);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -166,7 +166,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       const res = await repo.addInChargeVolunteer(this.selectedTask.id, {
         volunteerId,
       });
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -175,19 +175,19 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         volunteerId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     async initInCharge(form: InitInChargeForm) {
       const res = await repo.initInCharge(this.selectedTask.id, form);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     async clearInCharge() {
       const res = await repo.clearInCharge(this.selectedTask.id);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -197,7 +197,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         mobilization,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -210,7 +210,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
         mobilization,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -219,7 +219,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         mobilizationId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -233,7 +233,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
         form,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -246,7 +246,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
         volunteerId,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -259,7 +259,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
         team,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -272,14 +272,14 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
         team,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     /* UPDATE INQUIRY SECTION */
     async addInquiryRequest(inquiry: AddInquiryRequestForm) {
       const res = await repo.addInquiryRequest(this.selectedTask.id, inquiry);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -288,34 +288,34 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         this.selectedTask.id,
         inquirySlug,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     async linkDrive(link: AssignDrive) {
       const res = await repo.linkDrive(this.selectedTask.id, link);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     /* PUBLISH FEEDBACK */
     async publishFeedback(feedback: PublishFeedbackForm) {
       const res = await repo.publishFeedback(this.selectedTask.id, feedback);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
 
     /* REVIEW */
     async rejectBecause(rejection: ReviewRejection<"FT">) {
       const res = await repo.reject(this.selectedTask.id, rejection);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`🛑 FT rejetée par l'équipe ${rejection.team}`);
       this.selectedTask = castTaskWithDate(res);
     },
 
     async approve(approval: ReviewApproval<"FT">) {
       const res = await repo.approve(this.selectedTask.id, approval);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification(`✅ FT approuvée par l'équipe ${approval.team}`);
       this.selectedTask = castTaskWithDate(res);
     },
@@ -323,7 +323,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     /* ASSIGNMENT */
     async enableAssignment(categorize: Categorize) {
       const res = await repo.enableAssignment(this.selectedTask.id, categorize);
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       sendNotification("✅ FT prête pour affectation");
       this.selectedTask = castTaskWithDate(res);
     },
@@ -333,7 +333,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         assignmentIdentifier,
         true,
       );
-      if (!isSuccess(res)) return;
+      if (isHttpError(res)) return;
       const assignment = castAssignmentWithDate(res);
       if (!isWithDetails(assignment)) return;
       this.assignmentDetails = assignment;

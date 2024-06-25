@@ -9,7 +9,7 @@ import type {
   HttpStringified,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
-import { isSuccess } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/api-fetch";
 import { HttpClient } from "~/utils/http/http-client";
 import { castPeriodWithDate } from "~/utils/http/period";
 
@@ -23,7 +23,7 @@ export class AssignmentsRepository implements Assignments {
       `${AssignmentsRepository.basePath}`,
       volunteersForAssignment,
     );
-    if (!isSuccess(res)) throw res;
+    if (isHttpError(res)) throw res;
     return castWithDate(res);
   }
 
