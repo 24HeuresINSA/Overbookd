@@ -1,9 +1,9 @@
 import {
-  Draft,
-  FestivalActivity,
+  type Draft,
+  type FestivalActivity,
   NOT_ASKING_TO_REVIEW,
-  PreviewFestivalActivity,
-  ReviewStatus,
+  type PreviewFestivalActivity,
+  type ReviewStatus,
   barrieres,
   communication,
   elec,
@@ -13,7 +13,7 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-event";
-import {
+import type {
   HttpStringified,
   PreviewForCommunication,
   PreviewForSecurity,

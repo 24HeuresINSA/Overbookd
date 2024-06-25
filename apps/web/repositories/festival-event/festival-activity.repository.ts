@@ -58,7 +58,7 @@ export class FestivalActivityRepository {
   }
 
   static getCSVLogisticPreviews() {
-    return HttpClient.get(`${this.basePath}/for-logistic`, {
+    return HttpClient.get<string>(`${this.basePath}/for-logistic`, {
       acceptedType: CSV,
     });
   }
@@ -68,7 +68,7 @@ export class FestivalActivityRepository {
   }
 
   static getStats() {
-    return HttpClient.get<StatsPayload<FestivalActivity[]>>(
+    return HttpClient.get<StatsPayload<FestivalActivity>[]>(
       `${this.basePath}/statistics`,
     );
   }
