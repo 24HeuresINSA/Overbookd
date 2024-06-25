@@ -85,7 +85,6 @@ export type {
   AssignmentStat,
 } from "./assignment.js";
 export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
-export type { PublicHoliday } from "./planning/public-holiday.js";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
 export type {
   HelpingVolunteerAssignment,

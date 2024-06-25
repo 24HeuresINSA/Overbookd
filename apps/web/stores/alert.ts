@@ -2,12 +2,12 @@ import type { Alerts } from "@overbookd/alerts";
 import { AlertRepository } from "~/repositories/alert.repository";
 import { isSuccess } from "~/utils/http/api-fetch";
 
-type AlertState = {
+type State = {
   alerts: Alerts;
 };
 
 export const useAlertStore = defineStore("alert", {
-  state: (): AlertState => ({
+  state: (): State => ({
     alerts: {},
   }),
   actions: {

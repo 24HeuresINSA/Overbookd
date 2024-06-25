@@ -1,4 +1,3 @@
-import type { PublicHoliday } from "@overbookd/http";
 import { isDateString } from "@overbookd/period";
 
 type FrenchGouvPublicHoliday = {
@@ -10,11 +9,7 @@ export class FrenchGovPublicHolidayRepository {
     const path = "https://calendrier.api.gouv.fr/jours-feries/metropole.json";
 
     const response = await fetch(path);
-    if (!response.ok) {
-      throw new Error(
-        "❌ Impossible de récupérer les jours fériés de gouv.fr.",
-      );
-    }
+    if (!response.ok) return [];
     const data: FrenchGouvPublicHoliday = await response.json();
 
     return Object.entries(data)
