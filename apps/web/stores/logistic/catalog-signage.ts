@@ -67,7 +67,7 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
 
     _updateSignage(signage: SignageWithPotentialImage) {
       const index = this.signages.findIndex((s) => s.id === signage.id);
-      if (index < 0) return;
+      if (index === -1) return;
       this.signages = updateItemToList(this.signages, index, signage);
       this.signage = signage;
     },

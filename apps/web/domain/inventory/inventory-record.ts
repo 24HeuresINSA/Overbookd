@@ -1,4 +1,4 @@
-import {
+import type {
   CatalogGear,
   LiteInventoryRecord,
   InventoryRecord as Record,

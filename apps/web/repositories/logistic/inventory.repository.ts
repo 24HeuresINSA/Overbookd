@@ -1,4 +1,7 @@
-import type { InventoryGroupedRecord } from "@overbookd/http";
+import type {
+  InventoryGroupedRecord,
+  InventoryRecord as Record,
+} from "@overbookd/http";
 import type { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -15,6 +18,6 @@ export class InventoryRepository {
   }
 
   static getRecords(gearId: number) {
-    return HttpClient.get<InventoryRecord[]>(`${this.basePath}/${gearId}`);
+    return HttpClient.get<Record[]>(`${this.basePath}/${gearId}`);
   }
 }
