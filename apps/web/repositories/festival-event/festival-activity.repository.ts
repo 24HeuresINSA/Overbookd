@@ -33,8 +33,8 @@ import type { IProvidePeriod } from "@overbookd/period";
 import type {
   AddInquiryRequestForm,
   PublishFeedbackForm,
+  Statistics,
 } from "@overbookd/http";
-import type { StatsPayload } from "~/utils/festival-event/stats";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class FestivalActivityRepository {
@@ -68,7 +68,7 @@ export class FestivalActivityRepository {
   }
 
   static getStats() {
-    return HttpClient.get<StatsPayload<FestivalActivity>[]>(
+    return HttpClient.get<Statistics<FestivalActivity>[]>(
       `${this.basePath}/statistics`,
     );
   }

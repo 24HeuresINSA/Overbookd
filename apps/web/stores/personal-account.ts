@@ -12,7 +12,7 @@ type State = {
   barrels: ConfiguredBarrel[];
 };
 
-export const usePersonalAccountStore = defineStore("personalAccount", {
+export const usePersonalAccountStore = defineStore("personal-account", {
   state: (): State => ({
     barrels: [],
   }),

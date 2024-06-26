@@ -27,6 +27,7 @@ import type {
   FestivalTaskReadyToAssign,
   ForceInstructions,
   ReadyToAssignWithConflicts,
+  FestivalTask,
 } from "@overbookd/festival-event";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -48,7 +49,7 @@ export class FestivalTaskRepository {
   }
 
   static getStats() {
-    return HttpClient.get<Statistics<FestivalTaskWithConflicts>>(
+    return HttpClient.get<Statistics<FestivalTask>[]>(
       `${this.basePath}/statistics`,
     );
   }

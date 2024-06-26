@@ -11,7 +11,7 @@ type State = {
   queue: SnackNotification[];
 };
 
-export const useSnackNotificationStore = defineStore("snackNotification", {
+export const useSnackNotificationStore = defineStore("snack-notification", {
   state: (): State => ({
     queue: [],
   }),
@@ -20,6 +20,7 @@ export const useSnackNotificationStore = defineStore("snackNotification", {
       const notification = { message, timeout };
       this.queue = [...this.queue, notification];
     },
+
     popFirstNotification() {
       if (this.queue.length === 0) return;
       this.queue = this.queue.slice(1);
