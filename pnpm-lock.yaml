@@ -381,6 +381,9 @@ importers:
       vue-chartjs:
         specifier: 5.3.1
         version: 5.3.1(chart.js@4.4.3)(vue@3.4.29(typescript@5.5.2))
+      vue-safe-html:
+        specifier: 3.0.1
+        version: 3.0.1
       vuetify:
         specifier: 3.6.10
         version: 3.6.10(typescript@5.5.2)(vue@3.4.29(typescript@5.5.2))
@@ -501,16 +504,12 @@ importers:
       '@overbookd/team':
         specifier: workspace:^
         version: link:../../constants/team
-      jsonwebtoken:
-        specifier: 9.0.2
-        version: 9.0.2
+      jose:
+        specifier: 5.4.1
+        version: 5.4.1
       jwt-decode:
         specifier: 4.0.0
         version: 4.0.0
-    devDependencies:
-      '@types/jsonwebtoken':
-        specifier: 9.0.6
-        version: 9.0.6
 
   domains/signa:
     dependencies:
@@ -5402,6 +5401,9 @@ packages:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
+  jose@5.4.1:
+    resolution: {integrity: sha512-U6QajmpV/nhL9SyfAewo000fkiRQ+Yd2H0lBxJJ9apjpOgkOcBQJWOrMo917lxLptdS/n/o/xPzMkXhF46K8hQ==}
+
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -8484,6 +8486,9 @@ packages:
     resolution: {integrity: sha512-HB+t2p611aIZraV2aPSRNXf0Z/oLZFrlygJm+sZbdJaW6lcFqEDQwnzUBXn+DApw+/QzDU/I9TeWx9izEjTmsA==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue-safe-html@3.0.1:
+    resolution: {integrity: sha512-Qkp78n2bGg0nNowwRVCowGgn79tG/m9iFjltkgUNPs2O7dAMGC5CuDhIyKNx9M4gVaYHs4m+dGgbL6p5IOuI/g==}
 
   vue-virtual-scroller@2.0.0-beta.8:
     resolution: {integrity: sha512-b8/f5NQ5nIEBRTNi6GcPItE4s7kxNHw2AIHLtDp+2QvqdTjVN0FgONwX9cr53jWRgnu+HRLPaWDOR2JPI5MTfQ==}
@@ -14865,6 +14870,8 @@ snapshots:
 
   jiti@1.21.6: {}
 
+  jose@5.4.1: {}
+
   joycon@3.1.1: {}
 
   js-beautify@1.15.1:
@@ -18484,6 +18491,8 @@ snapshots:
     dependencies:
       '@vue/devtools-api': 6.6.2
       vue: 3.4.29(typescript@5.5.2)
+
+  vue-safe-html@3.0.1: {}
 
   vue-virtual-scroller@2.0.0-beta.8(vue@3.4.29(typescript@5.5.2)):
     dependencies:

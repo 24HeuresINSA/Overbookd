@@ -72,10 +72,11 @@ export const useRegistrationStore = defineStore("registration", {
       this.inviteStaffLink = new URL(res);
     },
 
-    async register(form: RegisterForm, token?: string) {
+    async register(form: RegisterForm, token?: string): Promise<boolean> {
       const res = await RegistrationRepository.registerNewcomer(form, token);
-      if (isHttpError(res)) return;
+      if (isHttpError(res)) return false;
       sendNotification("Tu as bien été enregistré ✅");
+      return true;
     },
 
     async forgetMe(credentials: Credentials, token: string) {

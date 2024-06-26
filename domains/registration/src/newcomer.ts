@@ -1,4 +1,4 @@
-import { TEAM_CODES, Teams } from "./register-form/index.js";
+import { TEAM_CODES, Teams } from "./register-form/fulfilled-registration.js";
 
 export function isJoinableTeams(teams: string[]): teams is Teams {
   const maxTwoTeams = teams.length <= 2;

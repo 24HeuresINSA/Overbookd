@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { FulfilledRegistration } from "./register-form/index.js";
+import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
 import { NewcomerRepository } from "./register-newcomer.js";
 import {
   NewcomerRegistered,

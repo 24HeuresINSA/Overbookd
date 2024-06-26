@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 import { ONE_SECOND_IN_MS } from "@overbookd/period";
 
 export type WithExpiration = {
@@ -7,7 +7,7 @@ export type WithExpiration = {
 };
 
 export const TOKEN = "token";
-export const LINK_EXPIRED = "Le lien a expire";
+export const LINK_EXPIRED = "Le lien a expiré";
 
 type LinkGeneration = {
   domain: string;
@@ -20,9 +20,13 @@ type CheckInvitation = {
 };
 
 export class InviteStaff {
-  static byLink({ domain, secret }: LinkGeneration): URL {
+  static async byLink({ domain, secret }: LinkGeneration): Promise<URL> {
     const baseUrl = new URL(`https://${domain}/register`);
-    const token = jwt.sign({}, secret, { expiresIn: "30 days" });
+    const secretKey = new TextEncoder().encode(secret);
+    const token = await new SignJWT()
+      .setExpirationTime("30 days")
+      .setProtectedHeader({ alg: "HS256" })
+      .sign(secretKey);
     baseUrl.searchParams.append(TOKEN, token);
     return baseUrl;
   }
@@ -45,9 +49,10 @@ export class InviteStaff {
     }
   }
 
-  static isInvitationValid({ token, secret }: CheckInvitation) {
+  static async isInvitationValid({ token, secret }: CheckInvitation) {
     try {
-      jwt.verify(token, secret, { ignoreExpiration: false });
+      const secretKey = new TextEncoder().encode(secret);
+      await jwtVerify(token, secretKey);
       return true;
     } catch {
       return false;

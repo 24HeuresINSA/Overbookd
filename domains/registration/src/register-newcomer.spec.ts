@@ -8,15 +8,15 @@ import {
 import {
   FulfilledRegistration,
   KARNA_CODE,
-  RegistrationError,
   TECKOS_CODE,
   Teams,
-} from "./register-form/index.js";
+} from "./register-form/fulfilled-registration.js";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory.js";
 import { StoredNotifyee } from "./notification-repository.inmemory.js";
 import { STAFF, NewcomerRegistered, VOLUNTEER } from "./newcomer.js";
+import { RegistrationError } from "./register-form/register-form.js";
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },

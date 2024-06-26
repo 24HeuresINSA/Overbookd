@@ -1,10 +1,4 @@
 import { ENROLL_HARD, ENROLL_SOFT, Permission } from "@overbookd/permission";
-
-import {
-  FulfilledRegistration,
-  RegisterForm,
-  RegistrationError,
-} from "./register-form/index.js";
 import {
   StaffRegistered,
   Membership,
@@ -12,6 +6,11 @@ import {
   VolunteerRegistered,
   MemberRegistered,
 } from "./newcomer.js";
+import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
+import {
+  RegisterForm,
+  RegistrationError,
+} from "./register-form/register-form.js";
 
 export type NewcomerRepository = {
   isEmailUsed(email: string): Promise<boolean>;

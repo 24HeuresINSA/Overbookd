@@ -1,0 +1,65 @@
+<template>
+  <div class="background-wrapper">
+    <v-img
+      src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg"
+      class="background"
+      cover
+    />
+    <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
+    <RegistrationStepper v-else class="stepper" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
+
+definePageMeta({ layout: false });
+
+const route = useRoute();
+
+const token = computed(() => {
+  const tokenParam = route.query.token;
+  return Array.isArray(tokenParam) ? undefined : tokenParam ?? undefined;
+});
+
+const isInvitationExpired = computed(() => {
+  if (!token.value) return false;
+
+  const currentUrl = new URL(window.location.href);
+  return InviteStaff.isLinkExpired(currentUrl) === LINK_EXPIRED;
+});
+</script>
+
+<style scoped lang="scss">
+.background-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.alert {
+  z-index: 2;
+  flex: none;
+  margin: 0.5em;
+}
+
+.stepper {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  margin: 0.5em;
+}
+</style>

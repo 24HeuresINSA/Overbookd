@@ -1,7 +1,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
 import { isHttpError } from "~/utils/http/api-fetch";
-import type { RouteLocationNormalized } from "vue-router";
+import { needToBeLoggedIn } from "~/utils/pages/logout-pages";
 
 type Token = { exp: number };
 
@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
-    if (isTargettingLoginPage(to)) return "/";
+    if (!needToBeLoggedIn(to)) return "/";
     return;
   }
 
@@ -30,7 +30,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   function handleUnauthenticatedRedirect() {
     logout();
-    if (isTargettingLoginPage(to)) return;
+    if (!needToBeLoggedIn(to)) return;
     abortNavigation();
     return "/login";
   }
@@ -38,8 +38,4 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
 function isAccessTokenValid(token: Token): boolean {
   return token.exp * 1000 > Date.now();
-}
-
-function isTargettingLoginPage(to: RouteLocationNormalized): boolean {
-  return to.name === "login";
 }

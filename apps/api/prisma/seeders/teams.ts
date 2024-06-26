@@ -259,4 +259,10 @@ export const teams: Team[] = [
     color: "#ACBB62",
     icon: "mdi-sausage",
   },
+  {
+    name: "INSA Centre Val de Loire",
+    code: "cvl",
+    color: "#18CE5C",
+    icon: "mdi-waves",
+  },
 ];

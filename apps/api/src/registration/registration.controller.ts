@@ -61,8 +61,10 @@ export class RegistrationController {
     description: "Register a newcomer",
     type: RegistrationRequestDto,
   })
-  @HttpCode(201)
-  registerNewcomer(@Body() { newcomer, token }: RegistrationRequestDto) {
+  @HttpCode(204)
+  registerNewcomer(
+    @Body() { newcomer, token }: RegistrationRequestDto,
+  ): Promise<void> {
     return this.registrationService.register(newcomer, token);
   }
 

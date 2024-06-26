@@ -93,6 +93,8 @@
 </template>
 
 <script lang="ts" setup>
+import { sendNotification } from "~/utils/notification/send-notification";
+
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
@@ -148,6 +150,7 @@ definePageMeta({ layout: false });
 
 const config = useRuntimeConfig();
 const version = config.public.version;
+const router = useRouter();
 
 const authStore = useAuthStore();
 const { authenticated } = storeToRefs(authStore);
@@ -159,12 +162,14 @@ const credentials = ref({
   email: "",
   password: "",
 });
-
 const isDialogOpen = ref(false);
 
-const router = useRouter();
-
 const login = async () => {
+  if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
+    return sendNotification(
+      "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
+    );
+  }
   await authStore.login(credentials.value);
   if (authenticated) router.push("/");
 };

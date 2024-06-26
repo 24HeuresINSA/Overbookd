@@ -46,15 +46,28 @@ export async function apiFetch<T extends ApiResponse>(
     body: body ? JSON.stringify(body) : undefined,
   };
 
-  const res = await fetch(url, requestOptions);
-  const data = await res.json();
+  const res = await fetch(url.toString(), requestOptions);
 
   if (!res.ok) {
-    const message = data.message || res.statusText;
+    const error = await res.json();
+    const message = error.message || res.statusText;
     sendNotification(message);
     return new Error(message);
   }
-  return data;
+
+  if (res.status === 204) return undefined as Success<T>;
+
+  if (acceptedType === JSON_TYPE) {
+    const jsonResponse: T = await res.json();
+    return jsonResponse as Success<T>;
+  }
+
+  if (acceptedType === PDF || acceptedType === CSV || acceptedType === ICAL) {
+    const textResponse: string = await res.text();
+    return textResponse as Success<T>;
+  }
+
+  return undefined as Success<T>;
 }
 
 export function isHttpError<T extends ApiResponse>(
