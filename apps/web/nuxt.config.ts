@@ -13,7 +13,24 @@ export default defineNuxtConfig({
     strict: true,
   },
   app: {
-    head: { title: "Overbookd" },
+    head: {
+      title: "Overbookd",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          hid: "description",
+          name: "description",
+          content: "Overbookd - Organisation du festival des 24h de l’INSA",
+        },
+      ],
+      link: [
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap",
+        },
+      ],
+    },
   },
   css: [
     "vuetify/lib/styles/main.sass",
