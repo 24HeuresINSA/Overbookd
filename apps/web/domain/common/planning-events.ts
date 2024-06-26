@@ -1,6 +1,7 @@
 import { getColorByStatus } from "./status-color";
-import { PlanningEvent } from "@overbookd/assignment";
-import { CalendarEvent } from "~/utils/calendar/event";
+import type { PlanningEvent } from "@overbookd/assignment";
+import type { IProvidePeriod } from "@overbookd/period";
+import type { CalendarEvent } from "~/utils/calendar/event";
 
 export type CalendarPlanningEvent = {
   start: Date;
@@ -25,6 +26,9 @@ export function convertAssignmentPlanningEventForCalendar(
 
 export const PAUSE = "Pause";
 
-export function convertToCalendarBreak({ start, end }): CalendarEvent {
+export function convertToCalendarBreak({
+  start,
+  end,
+}: IProvidePeriod): CalendarEvent {
   return { start, end, name: PAUSE, color: "black", timed: true };
 }

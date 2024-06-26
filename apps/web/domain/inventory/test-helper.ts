@@ -1,4 +1,4 @@
-import { CatalogCategory, CatalogGear } from "@overbookd/http";
+import type { CatalogCategory, CatalogGear } from "@overbookd/http";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 

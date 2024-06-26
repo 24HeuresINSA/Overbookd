@@ -1,10 +1,10 @@
-import { describe, it, expect } from "@jest/globals";
-import { Gears } from "./gears";
+import { describe, it, expect } from "vitest";
+import type { Gears } from "./gears";
 import { InMemoryGears } from "./gears.inmemory";
 import {
   InventoryImport,
   InventoryImportContainer,
-  InventoryImportRaw,
+  type InventoryImportRaw,
 } from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";

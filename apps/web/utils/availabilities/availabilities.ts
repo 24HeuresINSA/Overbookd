@@ -1,4 +1,9 @@
-import { Hour, IProvidePeriod, OverDate, isHour } from "@overbookd/period";
+import {
+  type Hour,
+  type IProvidePeriod,
+  OverDate,
+  isHour,
+} from "@overbookd/period";
 import { isPartyShift } from "../shift/shift";
 
 export const ALL_HOURS: Hour[] = Array.from(

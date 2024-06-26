@@ -1,4 +1,4 @@
-import { Signage } from "@overbookd/signa";
+import type { Signage } from "@overbookd/signa";
 
 type WithPotentialImage = {
   image?: string;

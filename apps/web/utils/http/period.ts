@@ -1,5 +1,5 @@
-import { HttpStringified } from "@overbookd/http";
-import { IProvidePeriod, Period } from "@overbookd/period";
+import type { HttpStringified } from "@overbookd/http";
+import { type IProvidePeriod, Period } from "@overbookd/period";
 
 export function castPeriodsWithDate(
   periods: HttpStringified<IProvidePeriod[]>,

@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { HttpStringified, SavedCharismaPeriod } from "@overbookd/http";
+import type { HttpStringified, SavedCharismaPeriod } from "@overbookd/http";
 
 export function castCharismaPeriodsWithDate(
   charismaPeriods: HttpStringified<SavedCharismaPeriod[]>,

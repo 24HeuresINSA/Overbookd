@@ -1,7 +1,7 @@
 import {
-  ReviewStatus,
-  PreviewFestivalTask,
-  FestivalTaskWithConflicts as FestivalTask,
+  type ReviewStatus,
+  type PreviewFestivalTask,
+  type FestivalTaskWithConflicts as FestivalTask,
   humain,
   matos,
   elec,
@@ -10,7 +10,10 @@ import {
   extractApprovers,
   isRefused,
 } from "@overbookd/festival-event";
-import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
+import type {
+  DraftWithConflicts as Draft,
+  HttpStringified,
+} from "@overbookd/http";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-task.model";

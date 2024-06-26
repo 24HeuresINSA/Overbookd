@@ -2,7 +2,7 @@ import {
   APPROVED,
   REJECTED,
   REVIEWING,
-  ReviewStatus,
+  type ReviewStatus,
 } from "@overbookd/festival-event";
 
 const A_RELIRE = "À relire";

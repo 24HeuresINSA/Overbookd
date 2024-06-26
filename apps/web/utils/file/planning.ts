@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { UserName } from "@overbookd/user";
+import type { UserName } from "@overbookd/user";
 
 export function downloadPlanning(
   planningBase64Data: string,

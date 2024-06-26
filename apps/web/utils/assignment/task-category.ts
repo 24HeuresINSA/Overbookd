@@ -1,6 +1,6 @@
 import {
   BAR,
-  Category,
+  type Category,
   FUN,
   MANUTENTION,
   RELOU,

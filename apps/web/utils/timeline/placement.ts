@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { type IProvidePeriod, Period } from "@overbookd/period";
 
 function getIdleBeforePercent(
   container: IProvidePeriod,

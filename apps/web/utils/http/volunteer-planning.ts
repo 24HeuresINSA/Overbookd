@@ -1,4 +1,4 @@
-import { HttpStringified, PlanningTask } from "@overbookd/http";
+import type { HttpStringified, PlanningTask } from "@overbookd/http";
 
 export function castVolunteerPlanningTasksWithDate(
   tasks: HttpStringified<PlanningTask[]>,

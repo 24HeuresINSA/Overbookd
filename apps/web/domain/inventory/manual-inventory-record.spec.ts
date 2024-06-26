@@ -1,4 +1,4 @@
-import { describe, beforeAll, expect, it } from "@jest/globals";
+import { describe, beforeAll, expect, it } from "vitest";
 import { InMemoryGears } from "./gears.inmemory";
 import { InventoryRecord } from "./inventory-record";
 import {
@@ -7,7 +7,7 @@ import {
   ManualInventoryRecordError,
 } from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";
-import { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/http";
 
 describe("Inventory Fill Form", () => {
   describe("When using a manual record with existing gear", () => {

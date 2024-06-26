@@ -1,4 +1,4 @@
-import { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/http";
 
 type HasTeam = {
   teams: string[];

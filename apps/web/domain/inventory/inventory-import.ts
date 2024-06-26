@@ -1,4 +1,4 @@
-import { Gears } from "./gears";
+import type { Gears } from "./gears";
 import { InventoryRecord } from "./inventory-record";
 import {
   ManualInventoryRecord,

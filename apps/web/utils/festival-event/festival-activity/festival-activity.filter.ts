@@ -1,10 +1,10 @@
 import {
   APPROVED,
-  FestivalActivity,
+  type FestivalActivity,
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
-  ReviewStatus,
+  type ReviewStatus,
 } from "@overbookd/festival-event";
 import {
   IN_REVIEW,
@@ -12,9 +12,12 @@ import {
   REFUSED,
   DRAFT,
 } from "@overbookd/festival-event-constants";
-import { User } from "@overbookd/user";
-import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
-import { Team } from "@overbookd/http";
+import type { User } from "@overbookd/user";
+import {
+  type QueryParamsValue,
+  strigifyQueryParam,
+} from "../festival-event.filter";
+import type { Team } from "@overbookd/http";
 
 export type ActivityReviewsFilter = {
   humain?: ReviewStatus;

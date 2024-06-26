@@ -1,4 +1,7 @@
-import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
+import type {
+  DraftWithConflicts as Draft,
+  HttpStringified,
+} from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastDraft {

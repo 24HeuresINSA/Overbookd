@@ -1,4 +1,4 @@
-import { FestivalEvent } from "@overbookd/festival-event";
+import type { FestivalEvent } from "@overbookd/festival-event";
 import {
   DRAFT,
   REFUSED,

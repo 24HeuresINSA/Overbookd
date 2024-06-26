@@ -1,5 +1,5 @@
-import { CatalogGear } from "@overbookd/http";
-import { Gears } from "./gears";
+import type { CatalogGear } from "@overbookd/http";
+import type { Gears } from "./gears";
 import { InventoryRecord } from "./inventory-record";
 
 export class ManualInventoryRecord {

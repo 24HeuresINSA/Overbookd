@@ -1,4 +1,4 @@
-import {
+import type {
   AssignableVolunteer,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";

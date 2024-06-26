@@ -1,4 +1,4 @@
-import { Coordinate } from "@overbookd/geo-location";
+import type { Coordinate } from "@overbookd/geo-location";
 
 export const mapConfiguration: {
   url: string;

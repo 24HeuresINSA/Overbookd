@@ -1,10 +1,10 @@
-import {
+import type {
   Reviewable,
   InquiryWithRequests,
   PublicGeneral,
   FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import type { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 import { withAtLeastOneTimeWindowWithDate } from "../cast-time-windows";
 

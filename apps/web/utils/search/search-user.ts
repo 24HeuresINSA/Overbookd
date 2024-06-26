@@ -1,5 +1,5 @@
-import { UserName } from "@overbookd/user";
-import { Searchable } from "./search.utils";
+import type { UserName } from "@overbookd/user";
+import type { Searchable } from "./search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 
 export function toSearchable<T extends UserName>(user: T): Searchable<T> {

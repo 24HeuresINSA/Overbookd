@@ -1,10 +1,10 @@
-import { Gears } from "./gears";
+import type { Gears } from "./gears";
 import {
   InventoryImportContainer,
-  InventoryImportRaw,
+  type InventoryImportRaw,
 } from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
-import { Options, parse } from "csv-parse/lib/sync";
+import { type Options, parse } from "csv-parse/lib/sync";
 
 export class CSVInventoryImportContainer extends InventoryImportContainer {
   private static readonly headerTranslation: Record<

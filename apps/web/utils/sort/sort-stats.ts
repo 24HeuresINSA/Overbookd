@@ -1,15 +1,18 @@
 import {
   BAR,
-  Category,
+  type Category,
   FUN,
   MANUTENTION,
   RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
-import { VolunteerWithAssignmentStats, AssignmentStat } from "@overbookd/http";
+import type {
+  VolunteerWithAssignmentStats,
+  AssignmentStat,
+} from "@overbookd/http";
 import { Duration } from "@overbookd/period";
 import { AUCUNE } from "../assignment/task-category";
-import { UserName } from "@overbookd/user";
+import type { UserName } from "@overbookd/user";
 
 export function sumAssignmentDuration(stats: AssignmentStat[]) {
   return Duration.ms(

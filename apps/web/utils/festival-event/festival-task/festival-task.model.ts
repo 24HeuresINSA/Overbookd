@@ -1,4 +1,4 @@
-import {
+import type {
   FestivalTask,
   PreviewFestivalTask as Preview,
   PreviewFestivalTaskDraft as PreviewDraft,

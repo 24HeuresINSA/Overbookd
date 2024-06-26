@@ -1,5 +1,5 @@
-import { FestivalTaskReadyToAssign } from "@overbookd/festival-event";
-import {
+import type { FestivalTaskReadyToAssign } from "@overbookd/festival-event";
+import type {
   HttpStringified,
   ReviewableWithConflicts as Reviewable,
 } from "@overbookd/http";

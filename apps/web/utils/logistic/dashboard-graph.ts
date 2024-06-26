@@ -1,6 +1,6 @@
-import { ConsumableGearDetails, GearDetails } from "@overbookd/http";
-import { Tooltip } from "../graph/graph";
-import { sumQuantities } from "./logistic";
+import type { ConsumableGearDetails, GearDetails } from "@overbookd/http";
+import type { Tooltip } from "../graph/graph";
+import { sumQuantities } from "./quantity";
 
 export function listStockAndInquiriesSources(allDetails: GearDetails[]) {
   return function (tooltipItem: Tooltip) {

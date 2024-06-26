@@ -1,5 +1,5 @@
-import { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
-import { HttpStringified } from "@overbookd/http";
+import type { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
+import type { HttpStringified } from "@overbookd/http";
 import { castPeriodWithDate } from "../http/period";
 
 export function castAssignmentWithDate(

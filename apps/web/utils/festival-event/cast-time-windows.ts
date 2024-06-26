@@ -1,6 +1,6 @@
-import { TimeWindow } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
-import { WithAtLeastOneItem } from "@overbookd/list";
+import type { TimeWindow } from "@overbookd/festival-event";
+import type { HttpStringified } from "@overbookd/http";
+import type { WithAtLeastOneItem } from "@overbookd/list";
 
 export function castTimeWindowWithDate(
   timeWindow: HttpStringified<TimeWindow>,

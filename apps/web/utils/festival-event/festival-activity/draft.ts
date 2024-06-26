@@ -1,5 +1,5 @@
-import { Draft, FestivalActivity } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import type { Draft, FestivalActivity } from "@overbookd/festival-event";
+import type { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastDraft {

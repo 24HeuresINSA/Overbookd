@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/period";
 
 export type SortablePeriodHeader = "start" | "end";
 
