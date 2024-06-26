@@ -24,8 +24,9 @@ export class PermissionRepository {
   }
 
   static linkPermissionToTeams(permissionId: number, teamCodes: string[]) {
-    return HttpClient.post<void>(`${this.basePath}/link/${permissionId}`, {
-      teamCodes,
-    });
+    return HttpClient.post<Permission>(
+      `${this.basePath}/link/${permissionId}`,
+      { teamCodes },
+    );
   }
 }

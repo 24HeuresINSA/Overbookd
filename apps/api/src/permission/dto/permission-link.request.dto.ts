@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class PermissionLinkResponseDto {
+export class PermissionLinkRequestDto {
   @ApiProperty({
     name: "teamCodes",
     required: true,
