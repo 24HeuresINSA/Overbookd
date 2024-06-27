@@ -1,18 +1,18 @@
-import { Period } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/period";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class VolunteerAvailabilityRepository {
   private static readonly basePath = "volunteer-availability";
 
   static async getVolunteerAvailabilities(userId: number) {
-    return HttpClient.get<Period[]>(`${this.basePath}/${userId}`);
+    return HttpClient.get<IProvidePeriod[]>(`${this.basePath}/${userId}`);
   }
 
   static async updateVolunteerAvailabilities(
     userId: number,
-    availabilities: Period[],
+    availabilities: IProvidePeriod[],
   ) {
-    return HttpClient.post<Period[]>(
+    return HttpClient.post<IProvidePeriod[]>(
       `${this.basePath}/${userId}`,
       availabilities,
     );
@@ -20,9 +20,9 @@ export class VolunteerAvailabilityRepository {
 
   static async overrideVolunteerAvailabilities(
     userId: number,
-    availabilities: Period[],
+    availabilities: IProvidePeriod[],
   ) {
-    return HttpClient.patch<Period[]>(
+    return HttpClient.patch<IProvidePeriod[]>(
       `${this.basePath}/${userId}`,
       availabilities,
     );
