@@ -36,17 +36,19 @@ export const usePermissionStore = defineStore("permission", {
     async removePermission(permissionId: number) {
       const res = await PermissionRepository.removePermission(permissionId);
       if (isHttpError(res)) return;
+      sendNotification("Permission supprimée ✅");
       this.permissions = this.permissions.filter(
         (permission) => permission.id !== permissionId,
       );
     },
 
-    async linkPermissionToTeams(permissionId: number, teamCodes: string[]) {
-      const res = await PermissionRepository.linkPermissionToTeams(
+    async linkTeamsToPermission(permissionId: number, teamCodes: string[]) {
+      const res = await PermissionRepository.linkTeamsToPermission(
         permissionId,
         teamCodes,
       );
       if (isHttpError(res)) return;
+      sendNotification("Équipes mises à jour ✅");
       this._updatePermission(res);
     },
 

@@ -20,7 +20,6 @@ import {
   Highlight,
   Heading,
   Table,
-  Fullscreen,
   History,
 } from "vuetify-pro-tiptap";
 
@@ -38,7 +37,6 @@ const extensions = [
   Highlight,
   Heading,
   Table,
-  Fullscreen,
   History,
 ];
 
@@ -49,5 +47,5 @@ const props = defineProps({
   },
 });
 
-const content = ref("");
+const content = defineModel<string>();
 </script>

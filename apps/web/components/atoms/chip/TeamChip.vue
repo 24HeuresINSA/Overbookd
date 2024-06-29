@@ -10,7 +10,7 @@
     @click="sendEvent"
     @click:close="sendCloseEvent"
   >
-    <v-icon v-if="teamMetadata" :size="size" color="white">
+    <v-icon v-if="teamMetadata" :size="size">
       {{ teamMetadata.icon }}
     </v-icon>
     <span v-if="withName" class="name">
@@ -84,11 +84,9 @@ const sendCloseEvent = () => {
 <style lang="scss" scoped>
 .v-chip {
   margin: 2px;
-  color: white;
   cursor: default;
 }
 span.name {
-  color: white;
   margin-left: 4px;
 }
 .flip {

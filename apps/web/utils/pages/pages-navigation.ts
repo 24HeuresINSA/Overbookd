@@ -233,7 +233,7 @@ export const pages: Page[] = [
     icon: "mdi-cog",
     title: "Config Système",
     permission: MANAGE_CONFIG,
-    to: "/config",
+    to: "/configuration",
     description: "Permet de configurer Overbookd",
     mobileSupport: false,
     keywords: ["admin", "system", "configuration"],
