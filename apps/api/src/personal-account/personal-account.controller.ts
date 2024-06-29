@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -100,6 +101,7 @@ export class PersonalAccountController {
 
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Delete("barrels/:slug")
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Barrel removed",

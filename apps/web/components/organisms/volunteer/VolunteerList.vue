@@ -3,6 +3,10 @@
     :headers="headers"
     :items="props.volunteers"
     items-per-page="20"
+    :loading="loading"
+    loading-text="Chargement des bénévoles..."
+    no-data-text="Aucun bénévole trouvé"
+    return-object
   >
     <template #item.name="{ item }">
       {{ formatUserNameWithNickname(item) }}
@@ -23,21 +27,19 @@
 
     <template #item.actions="{ item }">
       <div class="list-actions">
-        <v-btn size="small" @click="openCalendar(item.id)">
-          <v-icon>mdi-calendar</v-icon>
-        </v-btn>
-
-        <v-btn size="small" :href="formatPhoneLink(item.phone)">
-          <v-icon>mdi-phone</v-icon>
-        </v-btn>
-
-        <v-btn size="small" :href="`mailto:${item.email}`">
-          <v-icon>mdi-email</v-icon>
-        </v-btn>
+        <v-btn
+          icon="mdi-calendar"
+          size="small"
+          @click="openCalendar(item.id)"
+        />
+        <v-btn
+          icon="mdi-phone"
+          size="small"
+          :href="formatPhoneLink(item.phone)"
+        />
+        <v-btn icon="mdi-email" size="small" :href="`mailto:${item.email}`" />
       </div>
     </template>
-
-    <template #no-data> Aucun bénévole trouvé </template>
   </v-data-table>
 </template>
 
@@ -53,6 +55,10 @@ const props = defineProps({
   volunteers: {
     type: Array as PropType<UserPersonalData[]>,
     required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 

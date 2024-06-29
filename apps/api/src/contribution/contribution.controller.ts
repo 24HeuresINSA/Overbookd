@@ -80,8 +80,9 @@ export class ContributionController {
   @ApiBearerAuth()
   @Permission(MANAGE_CONTRIBUTIONS)
   @Post()
+  @HttpCode(204)
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: "Pay contribution",
   })
   @ApiBody({
@@ -96,8 +97,9 @@ export class ContributionController {
   @ApiBearerAuth()
   @Permission(MANAGE_CONTRIBUTIONS)
   @Patch("adherents/:adherentId/editions/:edition")
+  @HttpCode(204)
   @ApiResponse({
-    status: 201,
+    status: 204,
     description: "Edit contribution",
   })
   @ApiParam({

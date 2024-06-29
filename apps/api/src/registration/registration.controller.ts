@@ -57,11 +57,15 @@ export class RegistrationController {
 
   @Post()
   @UseFilters(new RegistrationErrorFilter())
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Newcomer registered",
+  })
   @ApiBody({
     description: "Register a newcomer",
     type: RegistrationRequestDto,
   })
-  @HttpCode(204)
   registerNewcomer(
     @Body() { newcomer, token }: RegistrationRequestDto,
   ): Promise<void> {
@@ -102,13 +106,14 @@ export class RegistrationController {
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
   @Post("staffs/enroll")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Staff enrolled to a team",
+  })
   @ApiBody({
     description: "Staffs to enroll to a team",
     type: EnrollNewcomersRequestDto,
-  })
-  @ApiResponse({
-    status: 201,
-    description: "Enroll staffs to a team",
   })
   enrollStaffs(
     @Body() { newcomers }: EnrollNewcomersRequestDto,
@@ -152,13 +157,14 @@ export class RegistrationController {
   @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Post("volunteers/enroll")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Volunteer enrolled to a team",
+  })
   @ApiBody({
     description: "Volunteer to enroll to a team",
     type: EnrollNewcomersRequestDto,
-  })
-  @ApiResponse({
-    status: 201,
-    description: "Enroll volunteer to a team",
   })
   enrollVolunteer(
     @Body() { newcomers }: EnrollNewcomersRequestDto,

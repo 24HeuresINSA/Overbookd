@@ -10,6 +10,7 @@
     <div class="table-container">
       <VolunteerList
         :volunteers="displayedVolunteers"
+        :loading="loading"
         @click:team="addTeamInFilters"
       />
     </div>
@@ -39,8 +40,11 @@ const filters = reactive<Filters>({
   excludedTeams: [],
 });
 
+const loading = ref(false);
 onMounted(async () => {
+  loading.value = true;
   await userStore.fetchVolunteers();
+  loading.value = false;
 });
 
 const volunteers = computed(() => userStore.volunteers);

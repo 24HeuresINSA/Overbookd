@@ -129,7 +129,7 @@ export class RegistrationService {
   async generateStaffInvitationLink(): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
     const secret = jwtConstants.secret;
-    const link = InviteStaff.byLink({ domain, secret });
+    const link = await InviteStaff.byLink({ domain, secret });
     await this.repositories.configurations.saveInviteStaffLink(link.toString());
     return link;
   }

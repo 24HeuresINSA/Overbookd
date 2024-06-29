@@ -48,7 +48,9 @@ export const useRegistrationStore = defineStore("registration", {
       sendNotification(
         "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
       );
-      this._removeEnrolledNewcomers(staffs);
+      this.staffs = this.staffs.filter(
+        (staff) => !staffs.some(({ id }) => id === staff.id),
+      );
     },
 
     async enrollNewVolunteers(volunteers: EnrollableVolunteer[]) {
@@ -57,7 +59,9 @@ export const useRegistrationStore = defineStore("registration", {
       sendNotification(
         "Le nouvel arrivant sélectionné a bien été enrôlé en tant que soft ✅",
       );
-      this._removeEnrolledNewcomers(volunteers);
+      this.volunteers = this.volunteers.filter(
+        (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),
+      );
     },
 
     async fetchInviteStaffLink() {
@@ -88,6 +92,7 @@ export const useRegistrationStore = defineStore("registration", {
     async forget(membership: Membership, email: string) {
       const res = await RegistrationRepository.forgetHim(email);
       if (isHttpError(res)) return;
+      sendNotification("Bénévole supprimé avec succès 🗑️");
       if (membership === STAFF) await this.getStaffs();
       else await this.getVolunteers();
     },
@@ -101,21 +106,6 @@ export const useRegistrationStore = defineStore("registration", {
         this.volunteers,
         volunteerIndex,
         volunteer,
-      );
-    },
-
-    _removeEnrolledNewcomers(enrolled: EnrollableStaff[]) {
-      this.staffs = this.staffs.filter(
-        (staff) =>
-          !enrolled.some(
-            (enrolledNewcomer) => enrolledNewcomer.id === staff.id,
-          ),
-      );
-      this.volunteers = this.volunteers.filter(
-        (volunteer) =>
-          !enrolled.some(
-            (enrolledNewcomer) => enrolledNewcomer.id === volunteer.id,
-          ),
       );
     },
   },
