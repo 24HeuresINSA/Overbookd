@@ -32,7 +32,7 @@
 
 <script lang="ts" setup>
 import { isDesktop } from "~/utils/device/device.utils";
-import { pages } from "~/utils/pages/pages-navigation";
+import { pages } from "~/utils/pages/navigation";
 
 const userStore = useUserStore();
 
@@ -132,3 +132,4 @@ aside {
   }
 }
 </style>
+~/utils/pages/list

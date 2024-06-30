@@ -61,35 +61,26 @@
             </v-btn>
           </v-row>
           <v-row class="ctas">
-            <v-btn class="btn btn-tertiary" to="/forgot">
+            <v-btn class="btn btn-tertiary" @click="isForgotDialogOpen = true">
               Mot de passe oublié ?
             </v-btn>
-            <v-btn class="btn btn-tertiary" @click="isDialogOpen = true">
+            <v-btn class="btn btn-tertiary" @click="isHelpDialogOpen = true">
               Un problème
-              <span class="desktop">&nbsp;lors de l'inscription </span>?
+              <span class="desktop">&nbsp;lors de l'inscription</span> ?
             </v-btn>
           </v-row>
         </v-container>
       </v-form>
-
-      <v-dialog v-model="isDialogOpen" max-width="800">
-        <v-card>
-          <v-card-title>Demander de l'aide</v-card-title>
-          <v-card-text>
-            Si vous avez rencontré un problème lors de l'inscription vous pouvez
-            nous envoyer un mail à l'adresse humains@24heures.org
-            <br />
-            Nous nous en occuperons au plus vite.
-          </v-card-text>
-          <v-card-actions>
-            <v-btn :href="`mailto:humain@24heures.org`">
-              Envoyer le mail
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </div>
   </div>
+
+  <v-dialog v-model="isForgotDialogOpen" max-width="800">
+    <ForgotPasswordCard @close="isForgotDialogOpen = false" />
+  </v-dialog>
+
+  <v-dialog v-model="isHelpDialogOpen" max-width="800">
+    <LoginHelp />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -162,7 +153,8 @@ const credentials = ref({
   email: "",
   password: "",
 });
-const isDialogOpen = ref(false);
+const isForgotDialogOpen = ref(false);
+const isHelpDialogOpen = ref(false);
 
 const login = async () => {
   if (!credentials.value.email.trim() || !credentials.value.password.trim()) {

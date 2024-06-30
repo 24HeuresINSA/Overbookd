@@ -9,4 +9,12 @@ export class AuthRepository {
   static refresh(refreshToken: string) {
     return HttpClient.post<UserAccess>("refresh", { refreshToken });
   }
+
+  static requestPasswordReset(email: string) {
+    return HttpClient.post("forgot", { email });
+  }
+
+  static resetPassword(token: string, password: string, password2: string) {
+    return HttpClient.post("reset", { token, password, password2 });
+  }
 }

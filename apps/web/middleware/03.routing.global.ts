@@ -1,4 +1,4 @@
-import { pages } from "../utils/pages/pages-navigation";
+import { pages } from "../utils/pages/navigation";
 
 export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore();

@@ -1,8 +1,7 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
@@ -22,13 +21,13 @@ import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/period";
 export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
 
-  @Throttle({ default: { limit: 10, ttl: THIRTY_SECONDS_IN_MS } })
   @Post("login")
+  @Throttle({ default: { limit: 10, ttl: THIRTY_SECONDS_IN_MS } })
   @ApiBody({
-    description: "Route de connection",
+    description: "Login credentials",
     type: LoginRequestDto,
   })
-  @ApiCreatedResponse({
+  @ApiResponse({
     description: "User access token",
     type: UserAccessResponseDto,
   })
@@ -44,50 +43,42 @@ export class AuthenticationController {
 
   @Post("refresh")
   @ApiBody({
-    description: "Route de refresh du token",
+    description: "Refresh token",
     type: RefreshAccessRequestDto,
   })
   @ApiResponse({
     description: "User access token",
     type: UserAccessResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: "Wrong refresh token",
-  })
-  @ApiBadRequestResponse({
-    description: "Bad Request",
-  })
+  @ApiUnauthorizedResponse({ description: "Wrong refresh token" })
+  @ApiBadRequestResponse({ description: "Bad Request" })
   refresh(@Body() refreshToken: RefreshAccessRequestDto) {
     return this.authService.refresh(refreshToken);
   }
 
+  @Post("forgot")
   @Throttle({ default: { limit: 2, ttl: ONE_MINUTE_IN_MS } })
+  @HttpCode(204)
   @ApiBody({
-    description:
-      "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
+    description: "Email for password reset",
     type: ForgotPasswordRequestDto,
   })
-  @ApiNotFoundResponse({
-    description: "User not found",
-  })
-  @Post("forgot")
+  @ApiNotFoundResponse({ description: "User not found" })
   async forgot(@Body() user: ForgotPasswordRequestDto) {
     return this.authService.forgot(user);
   }
 
+  @Post("reset")
   @Throttle({ default: { limit: 2, ttl: ONE_MINUTE_IN_MS } })
+  @HttpCode(204)
   @ApiBody({
-    description:
-      "Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe",
+    description: "New password and token for password reset",
     type: ResetPasswordRequestDto,
   })
   @ApiBadRequestResponse({
     description: "Password don't match or don't respect the rules",
   })
-  @ApiUnauthorizedResponse({
-    description: "Token expired",
-  })
-  @Post("reset")
+  @ApiUnauthorizedResponse({ description: "Token expired" })
   async reset(@Body() userTokenAndPassword: ResetPasswordRequestDto) {
     return this.authService.recoverPassword(userTokenAndPassword);
   }

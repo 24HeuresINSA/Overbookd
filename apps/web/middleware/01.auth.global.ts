@@ -1,7 +1,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { needToBeLoggedIn } from "~/utils/pages/logout-pages";
+import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
 
 type Token = { exp: number };
 

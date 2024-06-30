@@ -91,6 +91,7 @@
                 rules.birthdayMinDate,
               ]"
             />
+            <CommentField v-model="comment" />
           </v-form>
           <div class="stepper-actions">
             <v-btn color="primary" @click="step = 3"> Vous savez tout 🕵️</v-btn>
@@ -143,7 +144,6 @@
               persistent-hint
               :rules="[twoTeamsMaximumRule]"
             />
-            <!--<CommentField v-model="comment" />-->
           </v-form>
           <div class="stepper-actions">
             <v-btn color="primary" @click="step = 4"> On se capte 🤙 </v-btn>
