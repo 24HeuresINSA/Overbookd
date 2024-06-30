@@ -7,6 +7,7 @@
     loading-text="Chargement des bénévoles..."
     no-data-text="Aucun bénévole trouvé"
     return-object
+    @click:row="openInformationDialog"
   >
     <template #item.name="{ item }">
       {{ formatUserNameWithNickname(item) }}
@@ -44,11 +45,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserPersonalData } from "@overbookd/user";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
 } from "~/utils/user/user.utils";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { UserPersonalData } from "@overbookd/user";
 import type { Team } from "@overbookd/http";
 
 const props = defineProps({
@@ -62,7 +64,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["click:team"]);
+const userStore = useUserStore();
+
+const emit = defineEmits(["open-dialog", "click:team"]);
 
 const headers = [
   { title: "Prénom Nom (Surnom)", value: "name" },
@@ -70,6 +74,15 @@ const headers = [
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Actions", value: "actions" },
 ];
+
+const openInformationDialog = (
+  event: MouseEvent,
+  { item }: { item: UserDataWithPotentialyProfilePicture },
+) => {
+  const volunteer = { ...item };
+  userStore.setSelectedUser(volunteer);
+  emit("open-dialog");
+};
 
 const openCalendar = (volunteerId: number) => {
   window.open(`/planning/${volunteerId}`, "_blank");

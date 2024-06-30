@@ -1,19 +1,6 @@
-import type { PlanningEvent } from "@overbookd/assignment";
-import type {
-  AssignmentStat,
-  Consumer,
-  PlanningTask,
-  VolunteerWithAssignmentStats,
-} from "@overbookd/http";
-import { Period } from "@overbookd/period";
+import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
+import type { PlanningEvent, PlanningTask } from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
-import type { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
-import type {
-  MyUserInformation,
-  Profile,
-  User,
-  UserPersonalData,
-} from "@overbookd/user";
 import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 import {
@@ -25,9 +12,20 @@ import { castVolunteerPlanningTasksWithDate } from "~/utils/http/volunteer-plann
 import type {
   MyUserInformationWithProfilePicture,
   UserDataWithPotentialyProfilePicture,
-  UserPersonalDataWithProfilePicture,
 } from "~/utils/user/user-information";
 import { sendNotification } from "~/utils/notification/send-notification";
+import type {
+  MyUserInformation,
+  Profile,
+  User,
+  UserPersonalData,
+} from "@overbookd/user";
+import { Period } from "@overbookd/period";
+import type {
+  AssignmentStat,
+  Consumer,
+  VolunteerWithAssignmentStats,
+} from "@overbookd/http";
 
 type State = {
   loggedUser?: MyUserInformation | MyUserInformationWithProfilePicture;
@@ -157,7 +155,7 @@ export const useUserStore = defineStore("user", {
     async removeFriend(friend: User) {
       const res = await UserRepository.removeFriend(friend.id);
       if (isHttpError(res)) return;
-      sendNotification(`${friend.firstname} a été supprimé de tes amis`);
+      sendNotification(`${friend.firstname} a été supprimé de tes amis 😯`);
       this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
     },
 
@@ -182,7 +180,7 @@ export const useUserStore = defineStore("user", {
       );
       if (isHttpError(res)) return;
       sendNotification(
-        `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname}`,
+        `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname} 😢`,
       );
       this.selectedUserFriends = this.selectedUserFriends.filter(
         (f) => f.id !== friend.id,
@@ -280,7 +278,7 @@ export const useUserStore = defineStore("user", {
     getProfilePicture(
       user:
         | MyUserInformationWithProfilePicture
-        | UserPersonalDataWithProfilePicture,
+        | UserDataWithPotentialyProfilePicture,
     ) {
       if (!user.profilePicture) return undefined;
       if (user.profilePictureBlob) return user.profilePictureBlob;

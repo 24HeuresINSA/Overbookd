@@ -11,11 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserPersonalDataWithProfilePicture } from "~/utils/user/user-information";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const props = defineProps({
   user: {
-    type: Object as () => UserPersonalDataWithProfilePicture,
+    type: Object as () => UserDataWithPotentialyProfilePicture,
     required: true,
   },
   small: {

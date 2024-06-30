@@ -6,9 +6,6 @@ type WithPotentialProfilePicture = {
   profilePictureBlob?: string;
 };
 
-export type UserPersonalDataWithProfilePicture = UserPersonalData &
-  WithPotentialProfilePicture;
-
 export type MyUserInformationWithProfilePicture = MyUserInformation &
   WithPotentialProfilePicture;
 
@@ -17,6 +14,5 @@ export type DisplayableAssignmentStat = {
   duration: number;
 };
 
-export type UserDataWithPotentialyProfilePicture =
-  | UserPersonalData
-  | UserPersonalDataWithProfilePicture;
+export type UserDataWithPotentialyProfilePicture = UserPersonalData &
+  WithPotentialProfilePicture;

@@ -13,6 +13,7 @@ export const useAuthStore = defineStore("auth", {
       if (isHttpError(res)) return console.error(res.message);
       this.authenticate(res.accessToken, res.refreshToken);
     },
+
     logout() {
       const accessToken = useCookie("accessToken");
       const refreshToken = useCookie("refreshToken");
@@ -21,6 +22,16 @@ export const useAuthStore = defineStore("auth", {
 
       this.authenticated = false;
     },
+
+    async refreshTokens() {
+      const refreshToken = useCookie("refreshToken");
+      if (!refreshToken.value) return;
+      const res = await AuthRepository.refresh(refreshToken.value);
+
+      if (isHttpError(res)) return console.error(res.message);
+      this.authenticate(res.accessToken, res.refreshToken);
+    },
+
     authenticate(newAccessToken: string, newRefreshToken: string) {
       const accessToken = useCookie("accessToken");
       const refreshToken = useCookie("refreshToken");

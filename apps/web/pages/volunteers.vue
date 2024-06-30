@@ -11,9 +11,14 @@
       <VolunteerList
         :volunteers="displayedVolunteers"
         :loading="loading"
+        @open-dialog="openVolunteerInfoDialog"
         @click:team="addTeamInFilters"
       />
     </div>
+
+    <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="800">
+      <VolunteerInformation @updated="closeVolunteerInfoDialog" />
+    </v-dialog>
   </div>
 </template>
 
@@ -34,6 +39,9 @@ type Filters = {
   teams: Team[];
   excludedTeams: Team[];
 };
+
+const isVolunteerInfoDialogOpen = ref(false);
+
 const filters = reactive<Filters>({
   search: "",
   teams: [],
@@ -69,10 +77,19 @@ const filterVolunteersByName = (
 ): ((volunteer: Searchable<UserPersonalData>) => boolean) => {
   return keepMatchingSearchCriteria(search);
 };
+
 const addTeamInFilters = (team: Team) => {
   const teamAlreadyInFilters = filters.teams.some((t) => t.code === team.code);
   if (teamAlreadyInFilters) return;
   filters.teams = [...filters.teams, team];
+};
+
+const openVolunteerInfoDialog = () => {
+  isVolunteerInfoDialogOpen.value = true;
+};
+
+const closeVolunteerInfoDialog = () => {
+  isVolunteerInfoDialogOpen.value = false;
 };
 </script>
 
