@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-const comment = defineModel<string>({ required: true });
+const comment = defineModel<string | null | undefined>({ required: true });
 </script>
 
 <style lang="scss" scoped>

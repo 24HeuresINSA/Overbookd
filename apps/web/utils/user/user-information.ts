@@ -6,7 +6,7 @@ type WithPotentialProfilePicture = {
   profilePictureBlob?: string;
 };
 
-export type MyUserInformationWithProfilePicture = MyUserInformation &
+export type MyUserInformationWithPotentialyProfilePicture = MyUserInformation &
   WithPotentialProfilePicture;
 
 export type DisplayableAssignmentStat = {

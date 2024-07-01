@@ -20,6 +20,8 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 
+if (userStore.friends.length === 0) userStore.fetchFriends();
+
 const friend = defineModel<User | null>({ required: true });
 
 const { label, disabled } = defineProps({
@@ -34,10 +36,6 @@ const { label, disabled } = defineProps({
 });
 
 const friends = computed(() => userStore.friends);
-
-onMounted(() => {
-  userStore.fetchFriends();
-});
 
 const filterFriends = (friend: User, typedSearch: string) => {
   const { firstname, lastname, nickname } = friend;

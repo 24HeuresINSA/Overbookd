@@ -6,7 +6,11 @@ export class PrismaPreferences implements Preferences {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(userId: number): Promise<Preference> {
-    return this.prisma.preference.findUnique({ where: { userId } });
+    const defaultPreference = { paperPlanning: null };
+    const preference = await this.prisma.preference.findUnique({
+      where: { userId },
+    });
+    return preference || defaultPreference;
   }
 
   async save(userId: number, preference: Preference): Promise<Preference> {

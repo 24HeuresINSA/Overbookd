@@ -10,16 +10,11 @@ import {
 } from "~/utils/http/user";
 import { castVolunteerPlanningTasksWithDate } from "~/utils/http/volunteer-planning";
 import type {
-  MyUserInformationWithProfilePicture,
+  MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
 import { sendNotification } from "~/utils/notification/send-notification";
-import type {
-  MyUserInformation,
-  Profile,
-  User,
-  UserPersonalData,
-} from "@overbookd/user";
+import type { Profile, User, UserPersonalData } from "@overbookd/user";
 import { Period } from "@overbookd/period";
 import type {
   AssignmentStat,
@@ -28,7 +23,7 @@ import type {
 } from "@overbookd/http";
 
 type State = {
-  loggedUser?: MyUserInformation | MyUserInformationWithProfilePicture;
+  loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   users: UserDataWithPotentialyProfilePicture[];
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
@@ -219,7 +214,10 @@ export const useUserStore = defineStore("user", {
       sendNotification("Profil mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithDate(res);
-      this.loggedUser = updated;
+      this.loggedUser = {
+        ...updated,
+        profilePictureBlob: this.loggedUser?.profilePictureBlob,
+      };
       this._updateUserInformationInLists(updated);
     },
 
@@ -277,7 +275,7 @@ export const useUserStore = defineStore("user", {
 
     getProfilePicture(
       user:
-        | MyUserInformationWithProfilePicture
+        | MyUserInformationWithPotentialyProfilePicture
         | UserDataWithPotentialyProfilePicture,
     ) {
       if (!user.profilePicture) return undefined;

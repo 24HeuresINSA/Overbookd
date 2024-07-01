@@ -32,18 +32,24 @@ export async function apiFetch<T extends ApiResponse>(
   { acceptedType }: RequestHeader,
   body?: object,
 ): Promise<HttpResponse<T>> {
+  const isFormData = body instanceof FormData;
+
   const accessToken = useCookie("accessToken").value;
-  const contentType = { "Content-Type": JSON_TYPE };
+  const contentType: EmptyOr<{ "Content-Type": string }> = isFormData
+    ? {}
+    : { "Content-Type": JSON_TYPE };
   const authorization: EmptyOr<{ Authorization: string }> = accessToken
     ? { Authorization: `Bearer ${accessToken}` }
     : {};
   const accept = { Accept: acceptedType };
   const headers = { ...contentType, ...authorization, ...accept };
 
+  const formattedBody = isFormData ? body : JSON.stringify(body);
+
   const requestOptions: RequestInit = {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body ? formattedBody : undefined,
   };
 
   const res = await fetch(url.toString(), requestOptions);

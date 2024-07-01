@@ -1,0 +1,286 @@
+<template>
+  <div class="user-card">
+    <ProfilePictureDialog v-model="isProfilePictureDialogOpen" />
+    <v-card>
+      <v-card-text class="user-card__content">
+        <div class="picture">
+          <ProfilePicture :user="me" class="profilePicture" />
+          <v-btn @click="isProfilePictureDialogOpen = true">
+            📸 {{ me.profilePicture ? `Changer` : `Ajouter` }}
+          </v-btn>
+        </div>
+        <v-form class="identity">
+          <v-text-field
+            v-model="firstname"
+            prepend-icon="mdi-account"
+            label="Prénom"
+            required
+            :rules="[rules.required]"
+            @input="defectSave"
+          />
+          <v-text-field
+            v-model="lastname"
+            prepend-icon="mdi-account"
+            label="Nom"
+            required
+            :rules="[rules.required]"
+            @input="defectSave"
+          />
+          <v-text-field
+            v-model="nickname"
+            prepend-icon="mdi-account"
+            label="Surnom"
+            hide-details
+            clearable
+            @click:clear()="nickname = null"
+            @input="defectSave"
+          />
+        </v-form>
+        <div class="team-and-stats">
+          <div class="teams">
+            <TeamChip
+              v-for="team of me.teams"
+              :key="team"
+              :team="team"
+              with-name
+            />
+          </div>
+          <p>
+            <v-icon>{{ charismaIcon }}</v-icon>
+            {{ me.charisma }} points de charisme
+          </p>
+          <p><v-icon>mdi-account-multiple</v-icon> {{ friendsCount }} amis</p>
+          <p>
+            <v-icon>mdi-account-hard-hat</v-icon>
+            {{ me.tasksCount }} tâches affectées
+          </p>
+          <v-card class="planning-preference elevation-1" outlined>
+            <v-btn-toggle
+              :model-value="preferences?.paperPlanning"
+              color="primary"
+              group
+              :mandatory="hasFilledPreferences"
+              @update:model-value="updatePaperPlanningPreference"
+            >
+              <v-btn :value="true"> <strong>OUI</strong> </v-btn>
+              <v-btn :value="false"> <strong>NON</strong> </v-btn>
+            </v-btn-toggle>
+            <p class="planning-preference__label">
+              Je souhaite avoir une version imprimée de mon planning
+            </p>
+          </v-card>
+        </div>
+        <v-form class="personal-information">
+          <v-text-field
+            v-model="phone"
+            prepend-icon="mdi-phone"
+            label="Téléphone portable"
+            :rules="[rules.required, rules.mobilePhone]"
+            @input="defectSave"
+          />
+          <v-text-field
+            v-model="birthday"
+            prepend-icon="mdi-cake-variant"
+            label="Date de naissance*"
+            type="date"
+            :rules="[
+              rules.required,
+              rules.birthdayMaxDate,
+              rules.birthdayMinDate,
+            ]"
+            @input="defectSave"
+          />
+          <v-text-field
+            v-model="email"
+            prepend-icon="mdi-email-outline"
+            label="Email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            readonly
+            hint="Pour changer ton email il faut passer par les responsables bénévoles ou le.a secrétaire général.e. 🙏"
+            persistent-hint
+            @input="defectSave"
+          />
+        </v-form>
+        <CommentField
+          v-model="comment"
+          class="comment"
+          @update:model-value="defectSave"
+        />
+        <FriendsCard id="friends" />
+      </v-card-text>
+    </v-card>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import {
+  isMobilePhoneNumber,
+  maxDate,
+  minDate,
+  required,
+} from "~/utils/rules/input.rules";
+import { formatLocalDate } from "~/utils/date/date.utils";
+import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
+
+const userStore = useUserStore();
+const preferenceStore = usePreferenceStore();
+
+userStore.setMyProfilePicture();
+preferenceStore.fetchMyPreferences();
+
+const me = computed(() => userStore.me);
+const friendsCount = computed(() => userStore.mFriends.length);
+const preferences = computed(() => preferenceStore.myPreferences);
+const hasFilledPreferences = computed(
+  () =>
+    preferences.value?.paperPlanning !== undefined &&
+    preferences.value?.paperPlanning !== null,
+);
+const charismaIcon = computed(() =>
+  me.value.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon,
+);
+
+const firstname = ref(me.value.firstname);
+const lastname = ref(me.value.lastname);
+const nickname = ref(me.value.nickname);
+const birthday = ref(formatLocalDate(me.value.birthdate));
+const email = ref(me.value.email);
+const phone = ref(me.value.phone);
+const comment = ref(me.value.comment);
+
+const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const isProfilePictureDialogOpen = ref(false);
+
+const rules = {
+  required,
+  birthdayMinDate: minDate(new Date("1950-01-01")),
+  birthdayMaxDate: maxDate(),
+  mobilePhone: isMobilePhoneNumber,
+};
+
+const isValid = () => {
+  const isValidFirstname = rules.required(firstname.value) === true;
+  const isValidLastname = rules.required(lastname.value) === true;
+  const isValidBirthdate = [
+    rules.required(birthday.value),
+    rules.birthdayMinDate(birthday.value),
+    rules.birthdayMaxDate(birthday.value),
+  ].every((rule) => rule === true);
+  const isValidPhone = [
+    rules.required(phone.value),
+    rules.mobilePhone(phone.value),
+  ].every((rule) => rule === true);
+
+  return (
+    isValidFirstname && isValidLastname && isValidBirthdate && isValidPhone
+  );
+};
+const defectSave = () => {
+  if (delay.value) clearInterval(delay.value);
+  if (!isValid()) return;
+  delay.value = setTimeout(save, 800);
+};
+const save = () => {
+  const myInfo = {
+    firstname: firstname.value,
+    lastname: lastname.value,
+    nickname: nickname.value ? nickname.value : null,
+    birthdate: new Date(birthday.value),
+    email: email.value,
+    phone: phone.value,
+    comment: comment.value ? comment.value : null,
+  };
+  userStore.updateMyProfile(myInfo);
+};
+const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
+  if (paperPlanning === null) return;
+  preferenceStore.updateMyPreferences({ paperPlanning });
+};
+</script>
+
+<style scoped lang="scss">
+.user-card {
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 15px;
+    > * {
+      justify-self: center;
+      align-self: center;
+    }
+    .picture {
+      grid-column: 1 / span 1;
+      grid-row: 1 / span 1;
+    }
+    .identity {
+      grid-column: 3 / span 1;
+      grid-row: 1 / span 1;
+    }
+    .team-and-stats {
+      grid-column: 2 / span 1;
+      grid-row-start: 1 / span 1;
+      .teams,
+      > p {
+        margin-bottom: 16px;
+      }
+    }
+    .personal-information {
+      grid-column: 3 / span 1;
+      grid-row: 2 / span 1;
+    }
+    .comment {
+      grid-column: 1 / span 2;
+      grid-row: 2 / span 1;
+    }
+    #friends {
+      grid-column: 1 / span 3;
+      grid-row: 3 / span 1;
+      min-width: 100%;
+    }
+    @media only screen and (max-width: $mobile-max-width) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      gap: 10px;
+      > * {
+        align-self: unset;
+      }
+    }
+    form {
+      min-width: 100%;
+    }
+    .picture {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      gap: 2px;
+      @media only screen and (min-width: $mobile-max-width) {
+        width: 50%;
+      }
+    }
+  }
+}
+.profilePicture {
+  border-radius: 50%;
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 15px;
+}
+.planning-preference {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  &__label {
+    margin: 0 10px;
+  }
+  .v-btn-group {
+    flex-shrink: 0;
+  }
+}
+</style>

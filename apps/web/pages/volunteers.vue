@@ -32,6 +32,8 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 
+useHead({ title: "Liste des bénévoles" });
+
 const userStore = useUserStore();
 
 type Filters = {
