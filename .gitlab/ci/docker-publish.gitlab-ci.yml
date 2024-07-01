@@ -1,9 +1,9 @@
 .docker-publish:
   stage: docker-publish
   interruptible: true
-  image: docker:26.1.4
+  image: docker:27.0.2
   services:
-    - name: docker:26.1.4
+    - name: docker:27.0.2
       command: ["--experimental"]
   before_script:
     - apk update
