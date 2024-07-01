@@ -92,11 +92,6 @@ const isDeleteConfirmationDialogOpen = ref(false);
 
 const teams = computed(() => teamStore.teams);
 
-onMounted(async () => {
-  if (teamStore.teams.length > 0) return;
-  await teamStore.fetchTeams();
-});
-
 const createTeam = async (team: Team) => {
   await teamStore.createTeam(team);
 };

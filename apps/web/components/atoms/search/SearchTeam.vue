@@ -41,9 +41,4 @@ const { label, disabled, hideDetails } = defineProps({
 const teamStore = useTeamStore();
 const team = defineModel<Team>({ required: false });
 const allTeams = computed(() => teamStore.teams);
-
-onMounted(() => {
-  if (allTeams.value.length) return;
-  teamStore.fetchTeams();
-});
 </script>

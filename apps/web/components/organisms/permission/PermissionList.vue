@@ -88,11 +88,7 @@ const newPermissionName = ref("");
 const newPermissionDescription = ref("");
 
 const permissions = computed(() => permissionStore.permissions);
-
-onMounted(async () => {
-  if (permissions.value.length > 0) return;
-  await permissionStore.fetchPermissions();
-});
+permissionStore.fetchPermissions();
 
 const addPermission = async () => {
   await permissionStore.createPermission({

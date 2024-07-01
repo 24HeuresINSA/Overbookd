@@ -65,20 +65,14 @@
 
 <script lang="ts" setup>
 import { defaultCommitmentPresentation } from "@overbookd/registration";
-import { onMounted } from "vue";
 
 useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
+await configurationStore.fetchAll();
 
-const dateEventStart = ref(new Date());
-const registerFormDescription = ref("");
-
-onMounted(async () => {
-  await configurationStore.fetchAll();
-  dateEventStart.value = configurationStore.eventStartDate;
-  registerFormDescription.value = configurationStore.registerFormDescription;
-});
+const dateEventStart = ref(configurationStore.eventStartDate);
+const registerFormDescription = ref(configurationStore.registerFormDescription);
 
 const replaceRegisterDescriptionByTemplate = () => {
   registerFormDescription.value = defaultCommitmentPresentation;

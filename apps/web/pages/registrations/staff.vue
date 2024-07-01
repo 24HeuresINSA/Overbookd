@@ -90,16 +90,16 @@ const searchNewcomer = ref("");
 const selectedStaffs = ref<EnrollableStaff[]>([]);
 
 const loading = ref(false);
-onMounted(() => {
-  loading.value = true;
-  registrationStore.getStaffs();
-  loading.value = false;
-});
+const staffs = computed(() => registrationStore.staffs);
+
+if (staffs.value.length === 0) loading.value = true;
+registrationStore.getStaffs();
+watchEffect(() => (loading.value = staffs.value.length === 0));
 
 const noStaffSelected = computed(() => selectedStaffs.value.length === 0);
 
 const searchableNewcomers = computed(() => {
-  return registrationStore.staffs.map((newcomer) => ({
+  return staffs.value.map((newcomer) => ({
     ...newcomer,
     searchable: SlugifyService.apply(
       `${newcomer.firstname} ${newcomer.lastname}`,

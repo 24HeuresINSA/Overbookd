@@ -51,13 +51,12 @@ const filters = reactive<Filters>({
 });
 
 const loading = ref(false);
-onMounted(async () => {
-  loading.value = true;
-  await userStore.fetchVolunteers();
-  loading.value = false;
-});
-
 const volunteers = computed(() => userStore.volunteers);
+
+if (volunteers.value.length === 0) loading.value = true;
+userStore.fetchVolunteers();
+watchEffect(() => (loading.value = volunteers.value.length === 0));
+
 const searchableVolunteers = computed(() =>
   volunteers.value.map((volunteer) => toSearchable(volunteer)),
 );

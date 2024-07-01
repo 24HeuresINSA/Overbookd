@@ -43,14 +43,14 @@ import { sendNotification } from "~/utils/notification/send-notification";
 
 const registrationStore = useRegistrationStore();
 
+registrationStore.fetchInviteStaffLink();
+
 const inviteStaffLink = computed(() => registrationStore.inviteStaffLink);
 const hasInviteStaffLink = computed(() => inviteStaffLink.value !== undefined);
 const expirationInviteStaffLinkDate = computed(() => {
   if (!inviteStaffLink.value) return "";
   return InviteStaff.isLinkExpired(inviteStaffLink.value);
 });
-
-onMounted(() => registrationStore.fetchInviteStaffLink());
 
 const copyToClipBoard = async () => {
   if (!inviteStaffLink.value?.toString()) return;

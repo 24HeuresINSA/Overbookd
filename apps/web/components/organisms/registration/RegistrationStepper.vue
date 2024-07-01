@@ -226,6 +226,8 @@ const authStore = useAuthStore();
 const registrationStore = useRegistrationStore();
 const configurationStore = useConfigurationStore();
 
+configurationStore.fetchAll();
+
 const step = ref(1);
 const firstname = ref("");
 const lastname = ref("");
@@ -319,10 +321,6 @@ const isFormInvalid = computed(() => {
     repeatPasswordRule.value(repeatPassword.value) !== true ||
     registerForm.value.reasons.length > 0
   );
-});
-
-onMounted(async () => {
-  await configurationStore.fetchAll();
 });
 
 const commentAction = (form: RegisterForm) => {
