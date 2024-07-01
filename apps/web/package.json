@@ -71,7 +71,7 @@
     "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.26.0",
     "nuxt": "3.12.2",
-    "vue": "3.4.29",
+    "vue": "3.4.31",
     "vue-router": "4.4.0"
   },
   "engines": {
