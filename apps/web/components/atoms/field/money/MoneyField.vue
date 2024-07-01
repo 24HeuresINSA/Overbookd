@@ -45,7 +45,9 @@ const rules = {
 
 const displayedEuros = ref<string>(Money.cents(euros.value).inEuros.toString());
 
-watch(euros, (value) => emit("update:model-value", value));
+watch(euros, (value) => {
+  displayedEuros.value = Money.cents(value).inEuros.toString();
+});
 
 const propagateValue = (euros: string) => {
   const formatted = euros.replace(",", ".");

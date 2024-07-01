@@ -1,32 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CreateTransactionForm } from "@overbookd/http";
 
 enum TransactionType {
   DEPOSIT = "DEPOSIT",
   BARREL = "BARREL",
-  TRANSFER = "TRANSFER",
   PROVISIONS = "PROVISIONS",
 }
 
-export class CreateTransactionRequestDto {
+export class CreateTransactionRequestDto implements CreateTransactionForm {
   @ApiProperty({
     required: true,
     description: "The type of the transaction",
   })
   type: TransactionType;
-
-  @ApiProperty({
-    required: true,
-    description: "The ID of the user who initiate the transaction",
-  })
-  from: number;
-
-  @ApiProperty({
-    required: false,
-    description:
-      "The ID of the user who receive the transaction, -1 if the transaction is an expense",
-    default: -1,
-  })
-  to: number;
 
   @ApiProperty({
     required: true,
@@ -42,16 +28,14 @@ export class CreateTransactionRequestDto {
   context: string;
 
   @ApiProperty({
-    required: false,
-    description: "The date of the transaction",
-    default: new Date(),
+    required: true,
+    description: "The id of the payee",
   })
-  createdAt: Date;
+  from: number;
 
   @ApiProperty({
-    required: false,
-    description: "If the transaction has been deleted",
-    default: true,
+    required: true,
+    description: "The id of the payor",
   })
-  isDeleted: boolean;
+  to: number;
 }

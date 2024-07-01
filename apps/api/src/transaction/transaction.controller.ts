@@ -12,7 +12,6 @@ import {
   UseFilters,
 } from "@nestjs/common";
 import { TransactionService } from "./transaction.service";
-import { Transaction as PrismaTransaction } from "@prisma/client";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -132,7 +131,7 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
-  @Post("sg")
+  @Post()
   @ApiBody({
     description: "transactions to generate",
     isArray: true,
@@ -144,10 +143,11 @@ export class TransactionController {
     type: TransactionResponseDto,
     isArray: true,
   })
-  addSgTransaction(
-    @Body() transactionData: PrismaTransaction[],
+  addTransactions(
+    @Body()
+    transactions: CreateTransactionRequestDto[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.transactionService.addSgTransaction(transactionData);
+    return this.transactionService.addTransactions(transactions);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -26,14 +26,14 @@ export const usePersonalAccountStore = defineStore("personal-account", {
     async removeBarrel(slug: string) {
       const res = await PersonalAccountRepository.removeBarrelPrice(slug);
       if (isHttpError(res)) return;
-      sendNotification("Fût retiré");
+      sendNotification("Fût retiré ✅");
       this.barrels = this.barrels.filter((barrel) => barrel.slug !== slug);
     },
 
     async createBarrel(barrel: NewBarrel) {
       const res = await PersonalAccountRepository.createBarrel(barrel);
       if (isHttpError(res)) return;
-      sendNotification("Fût ajouté");
+      sendNotification("Fût ajouté ✅");
       this.barrels = [...this.barrels, res];
     },
 
@@ -43,7 +43,7 @@ export const usePersonalAccountStore = defineStore("personal-account", {
         price,
       );
       if (isHttpError(res)) return;
-      sendNotification("Prix du fût ajusté");
+      sendNotification("Prix du fût ajusté ✅");
       const index = this.barrels.findIndex(({ slug }) => slug === res.slug);
       if (index === -1) return;
       this.barrels = updateItemToList(this.barrels, index, res);

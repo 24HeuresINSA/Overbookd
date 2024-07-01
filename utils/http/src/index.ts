@@ -96,3 +96,4 @@ export type { CreateLocation } from "./location.js";
 export type { Team } from "./team.js";
 export type { Consumer } from "./consumer.js";
 export type { UserAccess, UserCredentials } from "./auth.js";
+export type { CreateTransactionForm } from "./transaction.js";

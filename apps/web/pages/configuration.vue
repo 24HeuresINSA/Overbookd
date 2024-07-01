@@ -67,9 +67,7 @@
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { onMounted } from "vue";
 
-useHead({
-  title: "Config admin",
-});
+useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
 

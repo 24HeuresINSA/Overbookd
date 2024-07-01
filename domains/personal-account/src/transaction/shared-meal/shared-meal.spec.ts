@@ -37,7 +37,7 @@ describe("Generate all transactions to refound shared meal chef", () => {
     expect(
       transactions.every(
         ({ context }) =>
-          context === "Repas partage du dimanche 31 decembre soir",
+          context === "Repas partagé du dimanche 31 decembre soir",
       ),
     ).toBe(true);
   });

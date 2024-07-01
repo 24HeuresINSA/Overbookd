@@ -72,9 +72,7 @@ import type { Searchable } from "~/utils/search/search.utils";
 
 type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;
 
-useHead({
-  title: "Admissions organisateur",
-});
+useHead({ title: "Admissions organisateur" });
 
 const registrationStore = useRegistrationStore();
 

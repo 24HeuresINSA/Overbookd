@@ -6,11 +6,11 @@ import {
   OnApplicationBootstrap,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { Transaction as PrismaTransaction } from "@prisma/client";
 import { User } from "@prisma/client";
 import { SELECT_TRANSACTION } from "./transaction.query";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import {
+  DEPOSIT,
   PastSharedMeal,
   SharedMealPayment,
   SharedMealTransaction,
@@ -19,6 +19,7 @@ import {
 } from "@overbookd/personal-account";
 import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
 import { DomainEventService } from "../domain-event/domain-event.service";
+import { CreateTransactionForm } from "@overbookd/http";
 
 @Injectable()
 export class TransactionService implements OnApplicationBootstrap {
@@ -49,19 +50,19 @@ export class TransactionService implements OnApplicationBootstrap {
     return this.transactions.getMine(user.id);
   }
 
-  async addSgTransaction(
-    transactions: PrismaTransaction[],
+  async addTransactions(
+    transactions: CreateTransactionForm[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
     return Promise.all(
       transactions.map(async (transaction) => {
         this.checkTransactionAmount(transaction.amount);
         //Check if user exists
         const userId =
-          transaction.type === "DEPOSIT" ? transaction.to : transaction.from;
+          transaction.type === DEPOSIT ? transaction.to : transaction.from;
         const users = await this.userExists([userId]);
         const user = users.find((user) => user.id === userId);
         const newBalance =
-          transaction.type === "DEPOSIT"
+          transaction.type === DEPOSIT
             ? user.balance + transaction.amount
             : user.balance - transaction.amount;
         //Update the user and create the transaction

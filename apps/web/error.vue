@@ -41,9 +41,7 @@ const context = isPageNotFoundError.value ? lost : other;
 const message = nuxtError.value?.message || "";
 const error: PageError = { ...context, message };
 
-useHead(() => {
-  return { title: error.title };
-});
+useHead({ title: error.title });
 </script>
 
 <style lang="scss" scoped>
