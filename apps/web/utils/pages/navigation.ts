@@ -1,28 +1,11 @@
 import {
-  AFFECT_VOLUNTEER,
-  ASK_FOR_HELP,
   ENROLL_HARD,
-  ENROLL_SOFT,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
-  READ_ANIMATION_TO_PUBLISH,
-  READ_FA,
-  READ_FT,
-  READ_GEAR_CATALOG,
-  READ_SIGNAGE_CATALOG,
-  VIEW_LOCATION,
-  VIEW_FESTIVAL_EVENTS_STATS,
-  VIEW_PLANNING,
-  VIEW_TIMELINE,
-  VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
-  WRITE_INVENTORY,
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
-  VIEW_GEAR_DASHBOARD,
-  PURCHASE_GEARS,
-  BORROW_GEARS,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -86,7 +69,7 @@ export const pages: Page[] = [
       "repas-orgas",
     ],
   },
-  {
+  /*{
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,
@@ -115,7 +98,7 @@ export const pages: Page[] = [
       "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
     mobileSupport: true,
     keywords: ["fts", "fiche-taches"],
-  },
+  },*/
   {
     icon: "mdi-account-group",
     title: "Liste des bénévoles",
@@ -125,7 +108,7 @@ export const pages: Page[] = [
     mobileSupport: true,
     keywords: ["benevoles", "orgas"],
   },
-  {
+  /*{
     icon: "mdi-clock",
     title: "Mes dispos",
     to: "/availabilities",
@@ -142,7 +125,7 @@ export const pages: Page[] = [
     description: "Permet d'avoir un apercu de son planning sur le festival",
     mobileSupport: true,
     keywords: ["planning", "calendrier", "taches", "affectation"],
-  },
+  },*/
   {
     icon: "mdi-account-multiple-plus",
     title: "Admission organisateurs",
@@ -152,7 +135,7 @@ export const pages: Page[] = [
     mobileSupport: true,
     keywords: ["arrivants", "inscriptions", "admissions", "orgas", "hards"],
   },
-  {
+  /*{
     icon: "mdi-account-multiple-check",
     title: "Admission bénévoles",
     permission: ENROLL_SOFT,
@@ -160,7 +143,7 @@ export const pages: Page[] = [
     description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
     mobileSupport: false,
     keywords: ["arrivants", "inscriptions", "admissions", "benevoles", "softs"],
-  },
+  },*/
   {
     icon: "mdi-cash-multiple",
     title: "Cotisations",
@@ -171,7 +154,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["cotisations", "contributions"],
   },
-  {
+  /*{
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: AFFECT_VOLUNTEER,
@@ -228,7 +211,7 @@ export const pages: Page[] = [
       "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
     mobileSupport: true,
     keywords: ["aide-ponctuelle", "disponible"],
-  },
+  },*/
   {
     icon: "mdi-cog",
     title: "Config Système",
@@ -264,7 +247,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["virements", "compte-perso", "transactions"],
   },
-  {
+  /*{
     icon: "mdi-bookshelf",
     title: "Catalogue Matos",
     permission: READ_GEAR_CATALOG,
@@ -363,5 +346,5 @@ export const pages: Page[] = [
       "fiche-taches",
       "animations",
     ],
-  },
+  },*/
 ];
