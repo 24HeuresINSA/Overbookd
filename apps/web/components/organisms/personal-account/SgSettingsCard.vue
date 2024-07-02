@@ -3,9 +3,9 @@
     <div class="settings__mode-choice">
       <h2>Mode</h2>
       <v-btn-toggle v-model="mode" tile color="primary">
-        <v-btn :value="CASK_MODE" size="small"> Fût</v-btn>
-        <v-btn :value="CLOSET_MODE" size="small"> Placard </v-btn>
-        <v-btn :value="DEPOSIT_MODE" size="small"> Dépôt </v-btn>
+        <v-btn :value="CASK_MODE" size="small"> {{ FUT }} </v-btn>
+        <v-btn :value="CLOSET_MODE" size="small"> {{ PLACARD }} </v-btn>
+        <v-btn :value="DEPOSIT_MODE" size="small"> {{ DEPOT }} </v-btn>
       </v-btn-toggle>
     </div>
 
@@ -93,6 +93,7 @@ import {
   type SgMode,
 } from "~/utils/transaction/sg-mode";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
+import { FUT, PLACARD, DEPOT } from "~/utils/transaction/transaction";
 
 const personalAccountStore = usePersonalAccountStore();
 

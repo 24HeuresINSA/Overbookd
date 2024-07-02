@@ -1,4 +1,5 @@
 import type { HttpStringified, CreateTransactionForm } from "@overbookd/http";
+import { updateItemToList } from "@overbookd/list";
 import type {
   CreateTransferForm,
   Transaction,
@@ -9,17 +10,25 @@ import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
   myTransactions: Transaction[];
+  allTransactions: TransactionWithSenderAndReceiver[];
 };
 
 export const useTransactionStore = defineStore("transaction", {
   state: (): State => ({
     myTransactions: [],
+    allTransactions: [],
   }),
   actions: {
     async fetchMyTransactions() {
       const res = await TransactionRepository.getMyTransactions();
       if (isHttpError(res)) return;
       this.myTransactions = res.map(castTransactionWithDate);
+    },
+
+    async fetchAllTransactions() {
+      const res = await TransactionRepository.getTransactions();
+      if (isHttpError(res)) return;
+      this.allTransactions = res.map(castTransactionWithPayorAndPayeeWithDate);
     },
 
     async sendTransfer(transferForm: CreateTransferForm) {
@@ -29,7 +38,7 @@ export const useTransactionStore = defineStore("transaction", {
 
       await this.fetchMyTransactions();
       const userStore = useUserStore();
-      await userStore.fetchMyInformation();
+      userStore.fetchMyInformation();
     },
 
     async createTransactions(transactions: CreateTransactionForm[]) {
@@ -37,17 +46,42 @@ export const useTransactionStore = defineStore("transaction", {
       if (isHttpError(res)) return;
       sendSuccessNotification("Les transactions ont bien été enregistrées 💸");
 
-      const userStore = useUserStore();
-      const myId = userStore.me.id;
       const castedTransactions = res.map(
         castTransactionWithPayorAndPayeeWithDate,
       );
-      const isOneOfMyTransactions = castedTransactions.some(
+      this._fetchMyInformationIfNeeded(castedTransactions);
+    },
+
+    async deleteTransaction(transaction: TransactionWithSenderAndReceiver) {
+      const res = await TransactionRepository.deleteTransaction(transaction.id);
+      if (isHttpError(res)) return;
+      sendSuccessNotification("La transaction a bien été supprimée 💸");
+
+      const transactionIndex = this.allTransactions.findIndex(
+        ({ id }) => id === transaction.id,
+      );
+      if (transactionIndex === -1) return;
+      const updatedTransaction = { ...transaction, isDeleted: true };
+      this.allTransactions = updateItemToList(
+        this.allTransactions,
+        transactionIndex,
+        updatedTransaction,
+      );
+
+      this._fetchMyInformationIfNeeded([transaction]);
+    },
+
+    _fetchMyInformationIfNeeded(
+      transactions: TransactionWithSenderAndReceiver[],
+    ) {
+      const userStore = useUserStore();
+      const myId = userStore.me.id;
+      const isOneOfMyTransactions = transactions.some(
         ({ payor, payee }) => payor.id === myId || payee.id === myId,
       );
       if (isOneOfMyTransactions) {
-        await this.fetchMyTransactions();
-        await userStore.fetchMyInformation();
+        this.fetchMyTransactions();
+        userStore.fetchMyInformation();
       }
     },
   },

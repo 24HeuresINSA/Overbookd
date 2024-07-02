@@ -89,12 +89,9 @@ const last30DaysNewcomers = ref(true);
 const searchNewcomer = ref("");
 const selectedStaffs = ref<EnrollableStaff[]>([]);
 
-const loading = ref(false);
 const staffs = computed(() => registrationStore.staffs);
-
-if (staffs.value.length === 0) loading.value = true;
-registrationStore.getStaffs();
-watchEffect(() => (loading.value = staffs.value.length === 0));
+const loading = ref(staffs.value.length === 0);
+registrationStore.getStaffs().then(() => (loading.value = false));
 
 const noStaffSelected = computed(() => selectedStaffs.value.length === 0);
 

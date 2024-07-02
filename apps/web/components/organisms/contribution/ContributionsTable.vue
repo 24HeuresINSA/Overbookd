@@ -41,10 +41,8 @@ const adherents = computed<Adherent[]>(() => {
   return contributionStore.adherentsOutToDate;
 });
 
-const loading = ref(true);
-if (adherents.value.length > 0) loading.value = false;
-contributionStore.fetchAdherentsOutToDate();
-watch(adherents, () => (loading.value = false));
+const loading = ref(adherents.value.length === 0);
+contributionStore.fetchAdherentsOutToDate().then(() => (loading.value = false));
 
 const searchableAdherents = computed<Searchable<Adherent>[]>(() => {
   return adherents.value.map((adherent) => ({

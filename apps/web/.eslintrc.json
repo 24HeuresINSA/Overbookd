@@ -23,7 +23,11 @@
     "vue/no-unused-components": "error",
     "vue/multi-word-component-names": "off",
     "vue/no-multiple-template-root": "off",
-    "indent": ["error", 2, { "ignoredNodes": ["PropertyDefinition"] }],
+    "indent": [
+      "error",
+      2,
+      { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }
+    ],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],

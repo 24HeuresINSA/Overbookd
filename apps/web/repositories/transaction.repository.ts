@@ -24,7 +24,7 @@ export class TransactionRepository {
     );
   }
 
-  static deleteTransaction(transactionId: string) {
+  static deleteTransaction(transactionId: number) {
     return HttpClient.delete(`${this.basePath}/${transactionId}`);
   }
 

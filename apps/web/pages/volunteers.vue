@@ -50,12 +50,9 @@ const filters = reactive<Filters>({
   excludedTeams: [],
 });
 
-const loading = ref(false);
 const volunteers = computed(() => userStore.volunteers);
-
-if (volunteers.value.length === 0) loading.value = true;
-userStore.fetchVolunteers();
-watchEffect(() => (loading.value = volunteers.value.length === 0));
+const loading = ref(volunteers.value.length === 0);
+userStore.fetchVolunteers().then(() => (loading.value = false));
 
 const searchableVolunteers = computed(() =>
   volunteers.value.map((volunteer) => toSearchable(volunteer)),

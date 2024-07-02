@@ -63,22 +63,22 @@ export function getActivityReviewStatus(
 ): ReviewStatus {
   if (isDraft(festivalActivity)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
-  case humain:
-    return festivalActivity.reviews.humain;
-  case signa:
-    return festivalActivity.reviews.signa;
-  case secu:
-    return festivalActivity.reviews.secu;
-  case matos:
-    return festivalActivity.reviews.matos;
-  case elec:
-    return festivalActivity.reviews.elec;
-  case barrieres:
-    return festivalActivity.reviews.barrieres;
-  case communication:
-    return festivalActivity.reviews.communication;
-  default:
-    return NOT_ASKING_TO_REVIEW;
+    case humain:
+      return festivalActivity.reviews.humain;
+    case signa:
+      return festivalActivity.reviews.signa;
+    case secu:
+      return festivalActivity.reviews.secu;
+    case matos:
+      return festivalActivity.reviews.matos;
+    case elec:
+      return festivalActivity.reviews.elec;
+    case barrieres:
+      return festivalActivity.reviews.barrieres;
+    case communication:
+      return festivalActivity.reviews.communication;
+    default:
+      return NOT_ASKING_TO_REVIEW;
   }
 }
 
@@ -89,21 +89,21 @@ export function getPreviewReviewStatus(
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {
-  case humain:
-    return preview.reviews.humain;
-  case signa:
-    return preview.reviews.signa;
-  case secu:
-    return preview.reviews.secu;
-  case matos:
-    return preview.reviews.matos;
-  case elec:
-    return preview.reviews.elec;
-  case barrieres:
-    return preview.reviews.barrieres;
-  case communication:
-    return preview.reviews.communication;
-  default:
-    return NOT_ASKING_TO_REVIEW;
+    case humain:
+      return preview.reviews.humain;
+    case signa:
+      return preview.reviews.signa;
+    case secu:
+      return preview.reviews.secu;
+    case matos:
+      return preview.reviews.matos;
+    case elec:
+      return preview.reviews.elec;
+    case barrieres:
+      return preview.reviews.barrieres;
+    case communication:
+      return preview.reviews.communication;
+    default:
+      return NOT_ASKING_TO_REVIEW;
   }
 }
