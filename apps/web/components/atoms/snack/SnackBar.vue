@@ -2,6 +2,7 @@
   <v-snackbar
     v-model="isShowing"
     :timeout="currentTimeout"
+    :color="currentSnackColor"
     @update:model-value="updateDisplay"
   >
     {{ currentSnack?.message }}
@@ -21,6 +22,9 @@ const { queue } = storeToRefs(store);
 const currentSnack = computed(() => queue.value.at(0));
 const currentTimeout = computed(
   () => currentSnack.value?.timeout || DEFAULT_SNACK_TIMEOUT,
+);
+const currentSnackColor = computed(() =>
+  currentSnack.value?.type === "error" ? "red" : "green",
 );
 
 watch(

@@ -72,7 +72,6 @@
 
 <script lang="ts" setup>
 import type { Permission, Team } from "@overbookd/http";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 const permissionStore = usePermissionStore();
 
@@ -107,7 +106,9 @@ const linkTeamToPermission = async (permission: Permission, team: Team) => {
     (teamCode) => teamCode === team.code,
   );
   if (alreadyHasTeam) {
-    return sendNotification("Cette équipe est déjà liée à cette permission");
+    return sendFailureNotification(
+      "Cette équipe est déjà liée à cette permission",
+    );
   }
   const teamCodes = [...permission.teams, team.code];
   await permissionStore.linkTeamsToPermission(permission.id, teamCodes);

@@ -6,7 +6,6 @@ import {
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodsWithDate } from "~/utils/http/period";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 const repo = VolunteerAvailabilityRepository;
 
@@ -43,7 +42,7 @@ export const useVolunteerAvailabilityStore = defineStore(
           this.availabilities.list,
         );
         if (isHttpError(res)) return;
-        sendNotification("Disponibilitiés sauvegardées 🥳");
+        sendSuccessNotification("Disponibilitiés sauvegardées 🥳");
         this._initAvailabilities(castPeriodsWithDate(res));
 
         const userStore = useUserStore();
@@ -59,7 +58,7 @@ export const useVolunteerAvailabilityStore = defineStore(
           availabilities,
         );
         if (isHttpError(res)) return;
-        sendNotification("Disponibilitiés sauvegardées 🥳");
+        sendSuccessNotification("Disponibilitiés sauvegardées 🥳");
         this._initAvailabilities(castPeriodsWithDate(res));
       },
 

@@ -9,7 +9,6 @@ import { updateItemToList } from "@overbookd/list";
 import { RegistrationRepository } from "~/repositories/registration.repository";
 import { castPeriodsWithDate } from "~/utils/http/period";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   staffs: EnrollableStaff[];
@@ -45,7 +44,7 @@ export const useRegistrationStore = defineStore("registration", {
     async enrollStaffs(staffs: EnrollableStaff[]) {
       const res = await RegistrationRepository.enrollStaffs(staffs);
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
       );
       this.staffs = this.staffs.filter(
@@ -56,7 +55,7 @@ export const useRegistrationStore = defineStore("registration", {
     async enrollNewVolunteers(volunteers: EnrollableVolunteer[]) {
       const res = await RegistrationRepository.enrollNewVolunteers(volunteers);
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         "Le nouvel arrivant sélectionné a bien été enrôlé en tant que soft ✅",
       );
       this.volunteers = this.volunteers.filter(
@@ -79,20 +78,22 @@ export const useRegistrationStore = defineStore("registration", {
     async register(form: RegisterForm, token?: string): Promise<boolean> {
       const res = await RegistrationRepository.registerNewcomer(form, token);
       if (isHttpError(res)) return false;
-      sendNotification("Tu as bien été enregistré ✅");
+      sendSuccessNotification("Tu as bien été enregistré ✅");
       return true;
     },
 
     async forgetMe(credentials: Credentials, token: string) {
       const res = await RegistrationRepository.forgetMe(credentials, token);
       if (isHttpError(res)) return;
-      sendNotification("Les informations liées à ce compte sont supprimées 🗑️");
+      sendSuccessNotification(
+        "Les informations liées à ce compte sont supprimées 🗑️",
+      );
     },
 
     async forget(membership: Membership, email: string) {
       const res = await RegistrationRepository.forgetHim(email);
       if (isHttpError(res)) return;
-      sendNotification("Bénévole supprimé avec succès 🗑️");
+      sendSuccessNotification("Bénévole supprimé avec succès 🗑️");
       if (membership === STAFF) await this.getStaffs();
       else await this.getVolunteers();
     },

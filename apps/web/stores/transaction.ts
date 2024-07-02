@@ -6,7 +6,6 @@ import type {
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   myTransactions: Transaction[];
@@ -26,7 +25,7 @@ export const useTransactionStore = defineStore("transaction", {
     async sendTransfer(transferForm: CreateTransferForm) {
       const res = await TransactionRepository.sendTransfer(transferForm);
       if (isHttpError(res)) return;
-      sendNotification("Le virement a bien été effectué 💸");
+      sendSuccessNotification("Le virement a bien été effectué 💸");
 
       await this.fetchMyTransactions();
       const userStore = useUserStore();
@@ -36,7 +35,7 @@ export const useTransactionStore = defineStore("transaction", {
     async createTransactions(transactions: CreateTransactionForm[]) {
       const res = await TransactionRepository.createTransactions(transactions);
       if (isHttpError(res)) return;
-      sendNotification("Les transactions ont bien été enregistrées 💸");
+      sendSuccessNotification("Les transactions ont bien été enregistrées 💸");
 
       const userStore = useUserStore();
       const myId = userStore.me.id;

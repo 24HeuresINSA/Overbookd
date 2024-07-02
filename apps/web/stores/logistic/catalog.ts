@@ -6,7 +6,6 @@ import type {
 } from "@overbookd/http";
 import { CategoryRepository } from "~/repositories/logistic/catalog.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   categories: CatalogCategory[];
@@ -37,7 +36,9 @@ export const useCatalogStore = defineStore("catalog", {
     async createCategory(categoryForm: CategoryForm) {
       const res = await CategoryRepository.createCategory(categoryForm);
       if (isHttpError(res)) return;
-      sendNotification(`La catégorie ${categoryForm.name} a été créée ✅`);
+      sendSuccessNotification(
+        `La catégorie ${categoryForm.name} a été créée ✅`,
+      );
       this.categories = [...this.categories, res];
       await this.fetchCategoryTree();
     },
@@ -45,7 +46,9 @@ export const useCatalogStore = defineStore("catalog", {
     async deleteCategory(category: CatalogCategory) {
       const res = await CategoryRepository.deleteCategory(category.id);
       if (isHttpError(res)) return;
-      sendNotification(`La catégorie ${category.name} a été supprimée ✅`);
+      sendSuccessNotification(
+        `La catégorie ${category.name} a été supprimée ✅`,
+      );
       this.categories = this.categories.filter((c) => c.id !== category.id);
       await this.fetchCategoryTree();
     },
@@ -56,7 +59,7 @@ export const useCatalogStore = defineStore("catalog", {
     ): Promise<void> {
       const res = await CategoryRepository.updateCategory(id, categoryForm);
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         `La catégorie ${categoryForm.name} a été mise à jour ✅`,
       );
 

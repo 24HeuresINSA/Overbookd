@@ -31,7 +31,6 @@ import {
   type ConfiguredBarrel,
 } from "@overbookd/personal-account";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
-import { sendNotification } from "~/utils/notification/send-notification";
 import { isInteger } from "~/utils/rules/input.rules";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
 import {
@@ -163,7 +162,7 @@ const invalidInputsReasons = computed<string[]>(() => {
 
 const saveTransactions = async () => {
   if (invalidInputsReasons.value.length > 0) {
-    sendNotification(invalidInputsReasons.value);
+    sendFailureNotification(invalidInputsReasons.value);
     return;
   }
   const transactions = consumersWithConsumption.value.map((consumer) => {

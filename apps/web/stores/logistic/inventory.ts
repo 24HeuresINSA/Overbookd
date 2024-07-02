@@ -3,7 +3,6 @@ import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
 import type { InventoryGroupedRecord } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   groupedRecords: InventoryGroupedRecord[];
@@ -17,7 +16,7 @@ export const useInventoryStore = defineStore("inventory", {
     async importInventory(records: InventoryRecord[]) {
       const res = await InventoryRepository.setupInventory(records);
       if (isHttpError(res)) return;
-      sendNotification("L'inventaire a été reinitialisé ✅");
+      sendSuccessNotification("L'inventaire a été reinitialisé ✅");
       this.groupedRecords = res;
     },
 

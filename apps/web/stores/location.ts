@@ -2,7 +2,6 @@ import type { SignaLocation } from "@overbookd/signa";
 import { LocationRepository } from "~/repositories/location.repository";
 import type { CreateLocation } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   all: SignaLocation[];
@@ -27,21 +26,21 @@ export const useLocationStore = defineStore("location", {
     async createLocation(location: CreateLocation) {
       const res = await LocationRepository.createNewLocation(location);
       if (isHttpError(res)) return;
-      sendNotification("Lieu ajouté 🥳");
+      sendSuccessNotification("Lieu ajouté 🥳");
       await this.getAllLocations();
     },
 
     async editLocation(location: SignaLocation) {
       const res = await LocationRepository.updateLocation(location);
       if (!isHttpError(res)) return;
-      sendNotification("Lieu modifié 🥳");
+      sendSuccessNotification("Lieu modifié 🥳");
       await this.getAllLocations();
     },
 
     async deleteLocation(location: SignaLocation) {
       const res = await LocationRepository.deleteLocation(location.id);
       if (isHttpError(res)) return;
-      sendNotification("Lieu supprimé 🥳");
+      sendSuccessNotification("Lieu supprimé 🥳");
       await this.getAllLocations();
     },
   },

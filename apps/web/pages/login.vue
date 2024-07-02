@@ -84,8 +84,6 @@
 </template>
 
 <script lang="ts" setup>
-import { sendNotification } from "~/utils/notification/send-notification";
-
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
@@ -158,7 +156,7 @@ const isHelpDialogOpen = ref(false);
 
 const login = async () => {
   if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
-    return sendNotification(
+    return sendFailureNotification(
       "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
     );
   }

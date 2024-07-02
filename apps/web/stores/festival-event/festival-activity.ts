@@ -39,7 +39,6 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 const repo = FestivalActivityRepository;
 
@@ -119,7 +118,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     async remove(id: FestivalActivity["id"]) {
       const res = await repo.remove(id);
       if (isHttpError(res)) return;
-      sendNotification(`FA #${id} supprimée 🗑️`);
+      sendSuccessNotification(`FA #${id} supprimée 🗑️`);
       this.selectedActivity = fakeActivity;
       await this.fetchAllActivities();
     },
@@ -332,14 +331,14 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     async approveAs(reviewer: Reviewer<"FA">) {
       const res = await repo.approve(this.selectedActivity.id, reviewer);
       if (isHttpError(res)) return;
-      sendNotification(`✅ FA approuvée par l'équipe ${reviewer}`);
+      sendSuccessNotification(`✅ FA approuvée par l'équipe ${reviewer}`);
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async rejectBecause(rejection: ReviewRejection<"FA">) {
       const res = await repo.reject(this.selectedActivity.id, rejection);
       if (isHttpError(res)) return;
-      sendNotification(`🛑 FA rejetée par l'équipe ${rejection.team}`);
+      sendSuccessNotification(`🛑 FA rejetée par l'équipe ${rejection.team}`);
       this.selectedActivity = castActivityWithDate(res);
     },
   },

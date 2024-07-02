@@ -25,13 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import { sendNotification } from "~/utils/notification/send-notification";
-
 const humainsEmail = "humains@24heures.org";
 
 const copyEmail = async () => {
   await navigator.clipboard.writeText(humainsEmail);
-  sendNotification("Email copié ✅");
+  sendSuccessNotification("Email copié ✅");
 };
 </script>
 

@@ -13,7 +13,6 @@ import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import { sendNotification } from "~/utils/notification/send-notification";
 import type { Profile, User, UserPersonalData } from "@overbookd/user";
 import { Period } from "@overbookd/period";
 import type {
@@ -143,14 +142,16 @@ export const useUserStore = defineStore("user", {
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
       if (isHttpError(res)) return;
-      sendNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
+      sendSuccessNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
       this.mFriends = [...this.mFriends, friend];
     },
 
     async removeFriend(friend: User) {
       const res = await UserRepository.removeFriend(friend.id);
       if (isHttpError(res)) return;
-      sendNotification(`${friend.firstname} a été supprimé de tes amis 😯`);
+      sendSuccessNotification(
+        `${friend.firstname} a été supprimé de tes amis 😯`,
+      );
       this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
     },
 
@@ -161,7 +162,7 @@ export const useUserStore = defineStore("user", {
         friend.id,
       );
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         `${friend.firstname} a été ajouté aux amis de ${this.selectedUser.firstname} 🎉`,
       );
       this.selectedUserFriends = [...this.selectedUserFriends, res];
@@ -174,7 +175,7 @@ export const useUserStore = defineStore("user", {
         friend.id,
       );
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname} 😢`,
       );
       this.selectedUserFriends = this.selectedUserFriends.filter(
@@ -191,7 +192,7 @@ export const useUserStore = defineStore("user", {
     async updateUser(id: number, user: UserPersonalData) {
       const res = await UserRepository.updateUser(id, user);
       if (isHttpError(res)) return;
-      sendNotification("Profil mis à jour ! 🎉");
+      sendSuccessNotification("Profil mis à jour ! 🎉");
 
       const updated = castUserPersonalDataWithDate(res);
       this._updateUserInformationInLists(updated);
@@ -201,7 +202,7 @@ export const useUserStore = defineStore("user", {
     async updateComment(comment: string) {
       const res = await UserRepository.updateMyProfile({ comment });
       if (isHttpError(res)) return;
-      sendNotification("Commentaire mis à jour ! 🎉");
+      sendSuccessNotification("Commentaire mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithDate(res);
       this.loggedUser = updated;
@@ -211,7 +212,7 @@ export const useUserStore = defineStore("user", {
     async updateMyProfile(profile: Profile) {
       const res = await UserRepository.updateMyProfile(profile);
       if (isHttpError(res)) return;
-      sendNotification("Profil mis à jour ! 🎉");
+      sendSuccessNotification("Profil mis à jour ! 🎉");
 
       const updated = castMyUserInformationWithDate(res);
       this.loggedUser = {
@@ -224,7 +225,7 @@ export const useUserStore = defineStore("user", {
     async deleteUser(userId: number) {
       const res = await UserRepository.deleteUser(userId);
       if (isHttpError(res)) return;
-      sendNotification("Utilisateur supprimé ! 🎉");
+      sendSuccessNotification("Utilisateur supprimé ! 🎉");
 
       this.users = this.users.filter((u) => u.id !== userId);
       this.volunteers = this.volunteers.filter((v) => v.id !== userId);
@@ -237,7 +238,7 @@ export const useUserStore = defineStore("user", {
         teams,
       );
       if (isHttpError(res)) return;
-      sendNotification("Equipe(s) ajoutée(s) ! 🎉");
+      sendSuccessNotification("Equipe(s) ajoutée(s) ! 🎉");
 
       this.selectedUser = { ...this.selectedUser, teams: res };
       this._updateUserInformationInLists(this.selectedUser);
@@ -251,7 +252,7 @@ export const useUserStore = defineStore("user", {
         team,
       );
       if (isHttpError(res)) return;
-      sendNotification("Equipe retirée ! 🎉");
+      sendSuccessNotification("Equipe retirée ! 🎉");
 
       this.selectedUser.teams = this.selectedUser.teams.filter(
         (t) => t !== team,
@@ -269,7 +270,7 @@ export const useUserStore = defineStore("user", {
     async addProfilePicture(profilePicture: FormData) {
       const res = await UserRepository.addProfilePicture(profilePicture);
       if (isHttpError(res)) return;
-      sendNotification("Photo de profil mise à jour ! 🎉");
+      sendSuccessNotification("Photo de profil mise à jour ! 🎉");
       this.loggedUser = castMyUserInformationWithDate(res);
     },
 

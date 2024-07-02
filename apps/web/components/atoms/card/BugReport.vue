@@ -64,7 +64,6 @@
 
 <script lang="ts" setup>
 import { BugReport } from "~/utils/bug-report/bug-report.constant";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 const expectedBehaviour = ref("");
 const actualBehaviour = ref("");
@@ -76,7 +75,7 @@ const stepsToReproducePlaceholder = "- Étape 1\n- Étape 2\n...";
 
 const copyEmail = async () => {
   await navigator.clipboard.writeText(bugReportEmail);
-  sendNotification("Email copié ✅");
+  sendSuccessNotification("Email copié ✅");
 };
 
 const copyIssueTemplate = async () => {
@@ -87,7 +86,7 @@ const copyIssueTemplate = async () => {
       stepsToReproduce.value,
     ),
   );
-  sendNotification("Modèle copié ✅");
+  sendSuccessNotification("Modèle copié ✅");
 };
 </script>
 

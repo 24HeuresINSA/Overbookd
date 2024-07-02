@@ -1,6 +1,5 @@
 import type { UserCredentials } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -43,7 +42,7 @@ export const useAuthStore = defineStore("auth", {
     async requestPasswordReset(email: string) {
       const res = await AuthRepository.requestPasswordReset(email);
       if (isHttpError(res)) return;
-      sendNotification(
+      sendSuccessNotification(
         "Un email de réinitialisation de mot de passe t'as été envoyé ✅",
       );
     },
@@ -54,7 +53,7 @@ export const useAuthStore = defineStore("auth", {
         password2,
       );
       if (isHttpError(res)) return;
-      sendNotification("Ton mot de passe a bien été réinitialisé ✅");
+      sendSuccessNotification("Ton mot de passe a bien été réinitialisé ✅");
     },
   },
 });

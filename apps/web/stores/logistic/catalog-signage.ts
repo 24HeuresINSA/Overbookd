@@ -3,7 +3,6 @@ import { CatalogSignageRepository } from "~/repositories/logistic/catalog-signag
 import { updateItemToList } from "@overbookd/list";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   signages: SignageWithPotentialImage[];
@@ -32,7 +31,7 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
     async createSignage(signageForm: SignageForm) {
       const res = await CatalogSignageRepository.createSignage(signageForm);
       if (isHttpError(res)) return;
-      sendNotification("La signalétique a été créé avec succès ✅");
+      sendSuccessNotification("La signalétique a été créé avec succès ✅");
       this.signages = [...this.signages, res];
     },
 
@@ -40,14 +39,16 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
       const { id, ...signageForm } = form;
       const res = await CatalogSignageRepository.updateSignage(id, signageForm);
       if (isHttpError(res)) return;
-      sendNotification("La signalétique a été mis a jour avec succès ✅");
+      sendSuccessNotification(
+        "La signalétique a été mis a jour avec succès ✅",
+      );
       this._updateSignage(res);
     },
 
     async deleteSignage(signage: Signage) {
       const res = await CatalogSignageRepository.deleteSignage(signage.id);
       if (isHttpError(res)) return;
-      sendNotification("La signalétique a été supprimé avec succès ✅");
+      sendSuccessNotification("La signalétique a été supprimé avec succès ✅");
       this.signages = this.signages.filter((s) => s.id !== signage.id);
     },
 
@@ -57,7 +58,9 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
         signageImage,
       );
       if (isHttpError(res)) return;
-      sendNotification("Image de la signalétique mise à jour avec succès ✅");
+      sendSuccessNotification(
+        "Image de la signalétique mise à jour avec succès ✅",
+      );
 
       const imageBlob =
         await CatalogSignageRepository.getSignageImage(signageId);

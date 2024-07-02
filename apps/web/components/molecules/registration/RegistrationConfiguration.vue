@@ -39,7 +39,6 @@
 
 <script lang="ts" setup>
 import { InviteStaff } from "@overbookd/registration";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 const registrationStore = useRegistrationStore();
 
@@ -55,7 +54,7 @@ const expirationInviteStaffLinkDate = computed(() => {
 const copyToClipBoard = async () => {
   if (!inviteStaffLink.value?.toString()) return;
   await navigator.clipboard.writeText(inviteStaffLink.value.toString());
-  sendNotification("Lien copié ✅");
+  sendSuccessNotification("Lien copié ✅");
 };
 const refreshInviteStaffLink = () =>
   registrationStore.generateInviteStaffLink();

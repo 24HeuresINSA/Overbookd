@@ -2,7 +2,6 @@ import type { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { isHttpError } from "~/utils/http/api-fetch";
-import { sendNotification } from "~/utils/notification/send-notification";
 
 type State = {
   configurations: Configuration[];
@@ -49,7 +48,9 @@ export const useConfigurationStore = defineStore("configuration", {
     async save(config: Configuration) {
       const res = await ConfigurationRepository.save(config);
       if (isHttpError(res)) return;
-      sendNotification("La configuration a été sauvegardée avec succès ✅");
+      sendSuccessNotification(
+        "La configuration a été sauvegardée avec succès ✅",
+      );
       this._updateConfig(res);
     },
 
