@@ -1,4 +1,8 @@
-export function sendNotification(message: string, duration?: number) {
+export function sendNotification(
+  message: string | string[],
+  duration?: number,
+) {
+  const stringMessage = Array.isArray(message) ? message.join("\n") : message;
   const { pushNotification } = useSnackNotificationStore();
-  pushNotification(message, duration);
+  pushNotification(stringMessage, duration);
 }

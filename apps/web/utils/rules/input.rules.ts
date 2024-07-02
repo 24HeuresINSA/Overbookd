@@ -3,6 +3,12 @@ export function isNumber(value: string | null): boolean | string {
   return (value != undefined && !isNaN(parseInt(value, 10))) || message;
 }
 
+export function isInteger(value: string | null): boolean | string {
+  const message = "La valeur doit être un nombre entier";
+  const regex = new RegExp("^\\d*$");
+  return (value != undefined && regex.test(value)) || message;
+}
+
 export function min(minValue: number) {
   const message = `La valeur doit être au moins de ${minValue}`;
   return function (value: string | null) {

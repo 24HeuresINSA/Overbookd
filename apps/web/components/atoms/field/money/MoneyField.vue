@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     v-model="displayedEuros"
-    :label="label"
+    :label="hideLabel ? undefined : label"
     suffix="€"
     :rules="[rules.min]"
     :readonly="readonly"
@@ -24,6 +24,10 @@ const { label, min, readonly, hideDetails } = defineProps({
   label: {
     type: String,
     default: "Montant",
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false,
   },
   min: {
     type: Number,

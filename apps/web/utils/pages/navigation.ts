@@ -225,7 +225,7 @@ export const pages: Page[] = [
     icon: "mdi-format-list-bulleted",
     title: "SG",
     permission: MANAGE_PERSONAL_ACCOUNTS,
-    to: "/SG",
+    to: "/sg",
     description:
       "Permet de répartir les consommations des comptes perso aux adhérants",
     mobileSupport: false,
