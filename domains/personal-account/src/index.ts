@@ -32,6 +32,7 @@ export {
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
+  ONE_EURO_IN_CENTS,
   doIReceive,
   transactionTypes,
   TransferError,

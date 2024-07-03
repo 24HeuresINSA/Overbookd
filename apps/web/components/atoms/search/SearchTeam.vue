@@ -10,12 +10,10 @@
     clearable
     hide-selected
     return-object
+    no-data-text="Aucune équipe correspondante"
   >
     <template #selection="{ item }">
       <TeamChip :team="item.value" with-name show-hidden />
-    </template>
-    <template #no-data>
-      <v-list-item> Aucune équipe correspondante </v-list-item>
     </template>
   </v-combobox>
 </template>

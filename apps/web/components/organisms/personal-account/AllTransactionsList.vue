@@ -31,7 +31,7 @@
     </template>
 
     <template #item.context="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
+      <span class="transaction__context" :class="{ deleted: item.isDeleted }">
         {{ item.context }}
       </span>
     </template>
@@ -160,5 +160,11 @@ const deleteTransaction = (transaction: TransactionWithSenderAndReceiver) => {
 .deleted {
   color: red;
   text-decoration: line-through;
+}
+
+.transaction {
+  &__context {
+    word-break: break-word;
+  }
 }
 </style>

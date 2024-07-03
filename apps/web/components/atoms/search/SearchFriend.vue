@@ -14,14 +14,16 @@
 </template>
 
 <script lang="ts" setup>
-import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 
 userStore.fetchFriends();
-const friends = computed(() => userStore.friends);
 
 const friend = defineModel<User | null>({ required: true });
 
@@ -36,11 +38,11 @@ const { label, disabled } = defineProps({
   },
 });
 
-const filterFriends = (friend: User, typedSearch: string) => {
-  const { firstname, lastname, nickname } = friend;
-  const searchable = `${firstname} ${lastname} ${nickname ?? ""}`;
-  const search = SlugifyService.apply(typedSearch);
+const friends = computed(() => userStore.friends);
 
-  return SlugifyService.apply(searchable).includes(search);
+const filterFriends = (
+  search: string,
+): ((friend: Searchable<User>) => boolean) => {
+  return keepMatchingSearchCriteria(search);
 };
 </script>

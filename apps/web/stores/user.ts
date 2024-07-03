@@ -95,7 +95,10 @@ export const useUserStore = defineStore("user", {
     async fetchMyInformation() {
       const res = await UserRepository.getMyUser();
       if (isHttpError(res)) return;
-      this.loggedUser = castMyUserInformationWithDate(res);
+      this.loggedUser = {
+        ...this.loggedUser,
+        ...castMyUserInformationWithDate(res),
+      };
     },
 
     clearLoggedUser() {
@@ -199,26 +202,16 @@ export const useUserStore = defineStore("user", {
       if (this.selectedUser?.id === this.me.id) this.fetchUser();
     },
 
-    async updateComment(comment: string) {
-      const res = await UserRepository.updateMyProfile({ comment });
-      if (isHttpError(res)) return;
-      sendSuccessNotification("Commentaire mis à jour ! 🎉");
-
-      const updated = castMyUserInformationWithDate(res);
-      this.loggedUser = updated;
-      this._updateUserInformationInLists(updated);
-    },
-
     async updateMyProfile(profile: Profile) {
       const res = await UserRepository.updateMyProfile(profile);
       if (isHttpError(res)) return;
       sendSuccessNotification("Profil mis à jour ! 🎉");
 
-      const updated = castMyUserInformationWithDate(res);
-      this.loggedUser = {
-        ...updated,
-        profilePictureBlob: this.loggedUser?.profilePictureBlob,
+      const updated = {
+        ...this.loggedUser,
+        ...castMyUserInformationWithDate(res),
       };
+      this.loggedUser = updated;
       this._updateUserInformationInLists(updated);
     },
 
