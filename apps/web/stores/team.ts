@@ -21,9 +21,9 @@ export const useTeamStore = defineStore("team", {
   getters: {
     getTeamByCode:
       (state) =>
-        (code: string): Team | undefined => {
-          return state.teams.find((team) => team.code === code);
-        },
+      (code: string): Team | undefined => {
+        return state.teams.find((team) => team.code === code);
+      },
     mobilizableTeams(state): Team[] {
       const userStore = useUserStore();
       const mobilizableTeams = userStore.can(AFFECT_VOLUNTEER)

@@ -71,12 +71,12 @@ export const useUserStore = defineStore("user", {
     },
     isMemberOf:
       ({ loggedUser }) =>
-        (team: string) => {
-          if (!loggedUser) return false;
-          return (
-            loggedUser.teams.includes("admin") || loggedUser.teams.includes(team)
-          );
-        },
+      (team: string) => {
+        if (!loggedUser) return false;
+        return (
+          loggedUser.teams.includes("admin") || loggedUser.teams.includes(team)
+        );
+      },
   },
   actions: {
     async setSelectedUser(user: UserPersonalData) {

@@ -26,7 +26,13 @@
     "indent": [
       "error",
       2,
-      { "SwitchCase": 1, "ignoredNodes": ["PropertyDefinition"] }
+      {
+        "SwitchCase": 1,
+        "ignoredNodes": [
+          "PropertyDefinition",
+          "ArrowFunctionExpression > ArrowFunctionExpression"
+        ]
+      }
     ],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
