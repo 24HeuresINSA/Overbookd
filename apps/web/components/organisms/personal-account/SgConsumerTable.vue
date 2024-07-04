@@ -63,7 +63,6 @@
 </template>
 
 <script lang="ts" setup>
-import { SlugifyService } from "@overbookd/slugify";
 import { HARD_CODE, VIEUX_CODE } from "@overbookd/team";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
@@ -75,6 +74,7 @@ import {
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
+import { toSearchable } from "~/utils/search/search-user";
 
 const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {
   required: true,
@@ -99,7 +99,7 @@ const props = defineProps({
 });
 
 const headers = [
-  { title: "Nom", value: "firstname", width: "30%", sortable: false },
+  { title: "Nom", value: "name", width: "30%", sortable: false },
   { title: "CP", value: "balance", width: "20%" },
   { title: "Nouvelle conso", value: "newConsumption", width: "20%" },
   { title: "Action", value: "action", width: "30%", sortable: false },
@@ -126,12 +126,7 @@ const calculatedConsumption = computed<Record<number, number>>(() => {
 const searchConsumer = ref("");
 const searchableConsumers = computed<Searchable<ConsumerWithConsumption>[]>(
   () => {
-    return consumers.value.map((consumer) => ({
-      ...consumer,
-      searchable: SlugifyService.apply(
-        `${consumer.firstname} ${consumer.lastname}`,
-      ),
-    }));
+    return consumers.value.map(toSearchable);
   },
 );
 

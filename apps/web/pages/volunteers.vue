@@ -54,9 +54,7 @@ const volunteers = computed(() => userStore.volunteers);
 const loading = ref(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (loading.value = false));
 
-const searchableVolunteers = computed(() =>
-  volunteers.value.map((volunteer) => toSearchable(volunteer)),
-);
+const searchableVolunteers = computed(() => volunteers.value.map(toSearchable));
 const displayedVolunteers = computed(() => {
   const matchTeams = keepMembersOf(filters.teams);
   const matchExcludedTeams = excludeMembersOf(filters.excludedTeams);

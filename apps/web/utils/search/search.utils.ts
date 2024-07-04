@@ -18,3 +18,8 @@ export function keepMatchingSearchCriteria<T>(
   const slugifiedSearch = SlugifyService.apply(search);
   return ({ searchable }) => searchable.includes(slugifiedSearch);
 }
+
+export function slugifiedFilter(itemFilterKey: string, typedSearch: string) {
+  const search = SlugifyService.apply(typedSearch);
+  return SlugifyService.apply(itemFilterKey).indexOf(search);
+}

@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
     v-model="user"
-    :items="users"
+    :items="userList"
     chips
     clearable
     item-value="id"
@@ -10,7 +10,7 @@
     :disabled="disabled"
     :hide-details="hideDetails"
     return-object
-    :filter="filterUsers"
+    :custom-filter="slugifiedFilter"
     no-data-text="Aucun utilisateur correspondant"
   />
 </template>
@@ -18,10 +18,7 @@
 <script lang="ts" setup>
 import type { UserPersonalData } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import {
-  keepMatchingSearchCriteria,
-  type Searchable,
-} from "~/utils/search/search.utils";
+import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
 userStore.fetchUsers();
@@ -37,21 +34,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  list: {
-    type: Array as () => UserPersonalData[] | null,
-    default: () => null,
-  },
   hideDetails: {
     type: Boolean,
     default: false,
   },
+  list: {
+    type: Array as () => UserPersonalData[] | null,
+    default: () => null,
+  },
 });
 
-const users = computed<UserPersonalData[]>(() => props.list ?? userStore.users);
-
-const filterUsers = (
-  search: string,
-): ((user: Searchable<UserPersonalData>) => boolean) => {
-  return keepMatchingSearchCriteria(search);
-};
+const userList = computed<UserPersonalData[]>(
+  () => props.list ?? userStore.users,
+);
 </script>

@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import type { Adherent } from "@overbookd/contribution";
-import { SlugifyService } from "@overbookd/slugify";
+import { toSearchable } from "~/utils/search/search-user";
 import {
   type Searchable,
   matchingSearchItems,
@@ -45,12 +45,7 @@ const loading = ref(adherents.value.length === 0);
 contributionStore.fetchAdherentsOutToDate().then(() => (loading.value = false));
 
 const searchableAdherents = computed<Searchable<Adherent>[]>(() => {
-  return adherents.value.map((adherent) => ({
-    ...adherent,
-    searchable: SlugifyService.apply(
-      `${adherent.firstname} ${adherent.lastname} ${adherent.nickname}`,
-    ),
-  }));
+  return adherents.value.map(toSearchable);
 });
 
 const filteredAdherents = computed<Adherent[]>(() => {
