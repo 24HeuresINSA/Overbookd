@@ -13,19 +13,19 @@
           :team="team"
           with-name
           :show-hidden="canManageUsers"
-          :close="canManageUsers"
+          :closable="canManageUsers"
           @close="removeTeam"
         />
       </div>
       <div v-if="canManageUsers" class="team-add">
-        <v-select
-          v-model="newTeam"
+        <SearchTeams
+          v-model="newTeams"
           label="Choix de l'équipe"
-          :items="assignableTeams"
-          item-value="code"
-          item-title="name"
+          hide-details
+          closable-chips
+          :list="assignableTeams"
         />
-        <v-btn small class="mx-2" @click="addTeam">
+        <v-btn small class="mx-2" @click="addTeams">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
@@ -147,7 +147,7 @@ const nickname = ref<string | null>(null);
 const phone = ref("");
 const email = ref("");
 const charisma = ref(0);
-const newTeam = ref<string | undefined>(undefined);
+const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
 
@@ -198,12 +198,14 @@ watch(
   { immediate: true },
 );
 
-const addTeam = async () => {
-  if (!newTeam.value) return;
-  await userStore.addTeamsToSelectedUser([newTeam.value]);
+const addTeams = async () => {
+  if (!newTeams.value) return;
+  await userStore.addTeamsToSelectedUser(
+    newTeams.value.map((team) => team.code),
+  );
   await authStore.refreshTokens();
   await updateVolunteerInformations();
-  newTeam.value = undefined;
+  newTeams.value = [];
 };
 
 const removeTeam = async (team: string) => {

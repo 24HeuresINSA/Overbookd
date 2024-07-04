@@ -8,11 +8,13 @@
         :teams="teams"
         label="Équipe(s)"
         :disabled="disabled"
+        closable-chips
       />
       <SearchTeams
         v-model="excludedTeams"
         label="Équipe(s) à exclure"
         :disabled="disabled"
+        closable-chips
       />
     </v-card-text>
   </v-card>

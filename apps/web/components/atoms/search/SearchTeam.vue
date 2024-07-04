@@ -1,7 +1,7 @@
 <template>
-  <v-combobox
+  <v-autocomplete
     v-model="team"
-    :items="allTeams"
+    :items="teamList"
     item-title="name"
     item-value="code"
     :label="label"
@@ -10,18 +10,22 @@
     clearable
     hide-selected
     return-object
+    :custom-filter="slugifiedFilter"
     no-data-text="Aucune équipe correspondante"
   >
     <template #selection="{ item }">
       <TeamChip :team="item.value" with-name show-hidden />
     </template>
-  </v-combobox>
+  </v-autocomplete>
 </template>
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/http";
+import { slugifiedFilter } from "~/utils/search/search.utils";
 
-const { label, disabled, hideDetails } = defineProps({
+const team = defineModel<Team>({ required: false });
+
+const props = defineProps({
   label: {
     type: String,
     default: "Chercher des équipes",
@@ -34,9 +38,12 @@ const { label, disabled, hideDetails } = defineProps({
     type: Boolean,
     default: false,
   },
+  list: {
+    type: Array as () => Team[] | null,
+    default: () => null,
+  },
 });
 
 const teamStore = useTeamStore();
-const team = defineModel<Team>({ required: false });
-const allTeams = computed(() => teamStore.teams);
+const teamList = computed(() => props.list ?? teamStore.teams);
 </script>
