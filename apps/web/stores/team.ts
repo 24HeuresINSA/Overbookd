@@ -48,7 +48,7 @@ export const useTeamStore = defineStore("team", {
       this.faReviewers = res;
     },
 
-    async fetchFtValidators(): Promise<void> {
+    async fetchFtReviewers(): Promise<void> {
       const res = await TeamRepository.getFtReviewers();
       if (isHttpError(res)) return;
       this.ftReviewers = res;
