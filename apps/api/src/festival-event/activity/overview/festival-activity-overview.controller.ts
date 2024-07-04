@@ -118,7 +118,7 @@ export class FestivalActivityOverviewController {
   })
   findById(
     @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-  ): Promise<FestivalActivity | null> {
+  ): Promise<FestivalActivity> {
     return this.overviewService.findById(id);
   }
 

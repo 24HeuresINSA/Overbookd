@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import type {
   CreateFestivalActivity,
@@ -23,8 +23,14 @@ export class FestivalActivityOverviewService {
     private readonly eventStore: DomainEventService,
   ) {}
 
-  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
-    return this.prepare.findById(id);
+  async findById(id: FestivalActivity["id"]): Promise<FestivalActivity> {
+    const activity = await this.prepare.findById(id);
+    if (!activity) {
+      throw new NotFoundException(
+        `Oups 😬 J'ai l'impression que la fiche activité #${id} n'existe pas`,
+      );
+    }
+    return activity;
   }
 
   async create({ id }: JwtPayload, name: string): Promise<Draft> {
