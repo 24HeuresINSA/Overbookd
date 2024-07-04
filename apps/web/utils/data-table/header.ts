@@ -1,8 +1,3 @@
-export type Header = {
-  text: string;
-  value: string;
-  align?: string;
-  sortable?: boolean;
-  width?: string;
-  filter?: (value: never) => boolean;
-};
+import type { VDataTable } from "vuetify/components";
+
+export type TableHeaders = VDataTable["$props"]["headers"];

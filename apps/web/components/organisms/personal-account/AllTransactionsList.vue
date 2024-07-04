@@ -77,6 +77,7 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 import { VIREMENT, DEPOT, FUT, PLACARD } from "~/utils/transaction/transaction";
+import type { TableHeaders } from "~/utils/data-table/header";
 
 const transactionStore = useTransactionStore();
 
@@ -87,13 +88,13 @@ const transactions = computed<TransactionWithSenderAndReceiver[]>(() => {
 const loading = ref<boolean>(transactions.value.length === 0);
 transactionStore.fetchAllTransactions().then(() => (loading.value = false));
 
-const headers = [
-  { title: "Type", value: "type" },
+const headers: TableHeaders = [
+  { title: "Type", value: "type", sortable: true },
   { title: "Depuis", value: "from" },
   { title: "Vers", value: "to" },
   { title: "Contexte", value: "context" },
-  { title: "Date", value: "createdAt" },
-  { title: "Montant", value: "amount" },
+  { title: "Date", value: "createdAt", sortable: true },
+  { title: "Montant", value: "amount", sortable: true },
   { title: "Supprimer", value: "delete" },
 ];
 

@@ -9,7 +9,7 @@
     return-object
     @click:row="openInformationDialog"
   >
-    <template #item.name="{ item }">
+    <template #item.firstname="{ item }">
       {{ formatUserNameWithNickname(item) }}
     </template>
 
@@ -52,6 +52,7 @@ import {
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { UserPersonalData } from "@overbookd/user";
 import type { Team } from "@overbookd/http";
+import type { TableHeaders } from "~/utils/data-table/header";
 
 const props = defineProps({
   volunteers: {
@@ -68,8 +69,12 @@ const userStore = useUserStore();
 
 const emit = defineEmits(["open-dialog", "click:team"]);
 
-const headers = [
-  { title: "Prénom Nom (Surnom)", value: "name" },
+const headers: TableHeaders = [
+  {
+    title: "Prénom Nom (Surnom)",
+    key: "firstname",
+    sortable: true,
+  },
   { title: "Equipes", value: "teams" },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Actions", value: "actions" },

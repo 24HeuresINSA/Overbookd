@@ -74,6 +74,7 @@
 <script lang="ts" setup>
 import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import type { TableHeaders } from "~/utils/data-table/header";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 
 const catalogGearStore = useCatalogGearStore();
@@ -85,11 +86,11 @@ const actionHeader = computed(() =>
     ? { title: "Actions", value: "actions", sortable: false }
     : {},
 );
-const headers = computed(() => [
-  { title: "Matos", value: "name" },
-  { title: "Référence", value: "code" },
-  { title: "Matos d'appoint", value: "isPonctualUsage" },
-  { title: "Matos consommable", value: "isConsumable" },
+const headers = computed<TableHeaders>(() => [
+  { title: "Matos", value: "name", sortable: true },
+  { title: "Référence", value: "code", sortable: true },
+  { title: "Matos d'appoint", value: "isPonctualUsage", sortable: true },
+  { title: "Matos consommable", value: "isConsumable", sortable: true },
   { title: "Catégorie", value: "category" },
   actionHeader.value,
 ]);

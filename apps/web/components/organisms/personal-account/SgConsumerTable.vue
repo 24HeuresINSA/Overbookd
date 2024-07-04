@@ -24,7 +24,7 @@
       </div>
     </template>
 
-    <template #item.name="{ item }">
+    <template #item.firstname="{ item }">
       {{ formatUserNameWithNickname(item) }}
     </template>
 
@@ -75,6 +75,7 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/search-user";
+import type { TableHeaders } from "~/utils/data-table/header";
 
 const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {
   required: true,
@@ -98,11 +99,16 @@ const props = defineProps({
   },
 });
 
-const headers = [
-  { title: "Nom", value: "name", width: "30%", sortable: false },
-  { title: "CP", value: "balance", width: "20%" },
-  { title: "Nouvelle conso", value: "newConsumption", width: "20%" },
-  { title: "Action", value: "action", width: "30%", sortable: false },
+const headers: TableHeaders = [
+  { title: "Nom", value: "firstname", width: "30%", sortable: true },
+  { title: "CP", value: "balance", width: "20%", sortable: true },
+  {
+    title: "Nouvelle conso",
+    value: "newConsumption",
+    width: "20%",
+    sortable: true,
+  },
+  { title: "Action", value: "action", width: "30%" },
 ];
 
 const isMode = (value: SgMode) => props.mode === value;
@@ -134,14 +140,12 @@ const teamFilter = ref<string[]>([HARD_CODE, VIEUX_CODE]);
 const matchingTeamFilter = (consumerTeams: string[]) => {
   return teamFilter.value.some((team) => consumerTeams.includes(team));
 };
-const filteredConsumers = computed<Searchable<ConsumerWithConsumption>[]>(
-  () => {
-    const filteredByTeam = searchableConsumers.value.filter((consumer) =>
-      matchingTeamFilter(consumer.teams),
-    );
-    return matchingSearchItems(filteredByTeam, searchConsumer.value);
-  },
-);
+const filteredConsumers = computed<ConsumerWithConsumption[]>(() => {
+  const filteredByTeam = searchableConsumers.value.filter((consumer) =>
+    matchingTeamFilter(consumer.teams),
+  );
+  return matchingSearchItems(filteredByTeam, searchConsumer.value);
+});
 
 const updateNewConsumption = (
   consumer: ConsumerWithConsumption,
@@ -149,6 +153,7 @@ const updateNewConsumption = (
 ) => {
   if (typeof value == "string" && !isNumber(value)) return;
   const consumerFromModel = consumers.value.find((c) => c.id === consumer.id);
+  if (!consumerFromModel) return;
   const numberValue = Number(value);
   consumerFromModel.newConsumption = numberValue >= 0 ? numberValue : 0;
 };

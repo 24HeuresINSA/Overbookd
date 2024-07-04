@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import type { Adherent } from "@overbookd/contribution";
+import type { TableHeaders } from "~/utils/data-table/header";
 import { toSearchable } from "~/utils/search/search-user";
 import {
   type Searchable,
@@ -28,11 +29,11 @@ import {
 
 const contributionStore = useContributionStore();
 
-const headers = [
-  { title: "Prénom", value: "firstname" },
-  { title: "Nom", value: "lastname" },
-  { title: "Surnom", value: "nickname" },
-  { title: "Paiement", value: "payment", width: "30%", sortable: false },
+const headers: TableHeaders = [
+  { title: "Prénom", value: "firstname", sortable: true },
+  { title: "Nom", value: "lastname", sortable: true },
+  { title: "Surnom", value: "nickname", sortable: true },
+  { title: "Paiement", value: "payment", width: "30%" },
 ];
 
 const search = ref("");

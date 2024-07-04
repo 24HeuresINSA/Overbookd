@@ -24,7 +24,7 @@ const currentTimeout = computed(
   () => currentSnack.value?.timeout || DEFAULT_SNACK_TIMEOUT,
 );
 const currentSnackColor = computed(() =>
-  currentSnack.value?.type === "error" ? "red" : "green",
+  currentSnack.value?.type === "error" ? "#ab2a20" : "#3c8c3f",
 );
 
 watch(
