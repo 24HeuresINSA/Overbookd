@@ -7,6 +7,7 @@
     loading-text="Chargement des bénévoles..."
     no-data-text="Aucun bénévole trouvé"
     return-object
+    hover
     @click:row="openInformationDialog"
   >
     <template #item.firstname="{ item }">
@@ -80,12 +81,12 @@ const headers: TableHeaders = [
   { title: "Actions", value: "actions" },
 ];
 
-const openInformationDialog = (
-  event: MouseEvent,
+const openInformationDialog = async (
+  _: MouseEvent,
   { item }: { item: UserDataWithPotentialyProfilePicture },
 ) => {
   const volunteer = { ...item };
-  userStore.setSelectedUser(volunteer);
+  await userStore.setSelectedUser(volunteer);
   emit("open-dialog");
 };
 

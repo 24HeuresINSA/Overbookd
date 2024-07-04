@@ -332,7 +332,7 @@ export class UserController {
   @Patch(":userId/teams")
   @ApiResponse({
     status: 200,
-    description: "Link a user with different teams",
+    description: "User's teams",
     type: String,
     isArray: true,
   })

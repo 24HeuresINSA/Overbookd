@@ -158,32 +158,27 @@ export const useUserStore = defineStore("user", {
       this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
     },
 
-    async addFriendToSelectedUser(friend: User) {
-      if (!this.selectedUser) return;
-      const res = await UserRepository.addFriendToUser(
-        this.selectedUser.id,
-        friend.id,
-      );
+    async addFriendToUser(userId: number, friend: User) {
+      const res = await UserRepository.addFriendToUser(userId, friend.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        `${friend.firstname} a été ajouté aux amis de ${this.selectedUser.firstname} 🎉`,
-      );
-      this.selectedUserFriends = [...this.selectedUserFriends, res];
+      sendSuccessNotification(`${friend.firstname} a été ajouté à ses amis 🎉`);
+      if (this.selectedUser?.id === userId) {
+        this.selectedUserFriends = [...this.selectedUserFriends, res];
+      }
     },
 
-    async removeFriendFromSelectedUser(friend: User) {
-      if (!this.selectedUser) return;
-      const res = await UserRepository.removeFriendFromUser(
-        this.selectedUser.id,
-        friend.id,
-      );
+    async removeFriendFromUser(userId: number, friend: User) {
+      const res = await UserRepository.removeFriendFromUser(userId, friend.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `${friend.firstname} a été supprimé des amis de ${this.selectedUser.firstname} 😢`,
+        `${friend.firstname} a été supprimé de ses amis😢`,
       );
-      this.selectedUserFriends = this.selectedUserFriends.filter(
-        (f) => f.id !== friend.id,
-      );
+
+      if (this.selectedUser?.id === userId) {
+        this.selectedUserFriends = this.selectedUserFriends.filter(
+          (f) => f.id !== friend.id,
+        );
+      }
     },
 
     async fetchPersonalAccountConsumers() {
@@ -224,34 +219,28 @@ export const useUserStore = defineStore("user", {
       this.volunteers = this.volunteers.filter((v) => v.id !== userId);
     },
 
-    async addTeamsToSelectedUser(teams: string[]) {
-      if (!this.selectedUser) return;
-      const res = await UserRepository.addTeamsToUser(
-        this.selectedUser.id,
-        teams,
-      );
+    async addTeamsToUser(userId: number, teams: string[]) {
+      const res = await UserRepository.addTeamsToUser(userId, teams);
       if (isHttpError(res)) return;
       sendSuccessNotification("Equipe(s) ajoutée(s) ! 🎉");
 
+      if (this.selectedUser?.id !== userId) return;
       this.selectedUser = { ...this.selectedUser, teams: res };
       this._updateUserInformationInLists(this.selectedUser);
-      if (this.selectedUser.id === this.me.id) this.fetchMyInformation();
+      if (userId === this.me.id) this.fetchMyInformation();
     },
 
-    async removeTeamFromSelectedUser(team: string) {
-      if (!this.selectedUser) return;
-      const res = await UserRepository.removeTeamFromUser(
-        this.selectedUser.id,
-        team,
-      );
+    async removeTeamFromUser(userId: number, team: string) {
+      const res = await UserRepository.removeTeamFromUser(userId, team);
       if (isHttpError(res)) return;
       sendSuccessNotification("Equipe retirée ! 🎉");
 
+      if (this.selectedUser?.id !== userId) return;
       this.selectedUser.teams = this.selectedUser.teams.filter(
         (t) => t !== team,
       );
       this._updateUserInformationInLists(this.selectedUser);
-      if (this.selectedUser.id === this.me.id) this.fetchMyInformation();
+      if (userId === this.me.id) this.fetchMyInformation();
     },
 
     async findUserById(id: number) {

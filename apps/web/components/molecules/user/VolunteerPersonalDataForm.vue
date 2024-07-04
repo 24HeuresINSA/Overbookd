@@ -1,34 +1,30 @@
 <template>
   <v-card-title class="card-title">
     <ProfilePicture :user="volunteer" class="profile-picture" />
-    <h2>{{ formatVolunteerNameWithNickname }}</h2>
+    <h2>{{ formatUserNameWithNickname(volunteer) }}</h2>
   </v-card-title>
 
   <v-card-text class="card-content">
-    <div>
-      <div class="team-list">
-        <TeamChip
-          v-for="team in volunteer.teams"
-          :key="team"
-          :team="team"
-          with-name
-          :show-hidden="canManageUsers"
-          :closable="canManageUsers"
-          @close="removeTeam"
-        />
-      </div>
-      <div v-if="canManageUsers" class="team-add">
-        <SearchTeams
-          v-model="newTeams"
-          label="Choix de l'équipe"
-          hide-details
-          closable-chips
-          :list="assignableTeams"
-        />
-        <v-btn small class="mx-2" @click="addTeams">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </div>
+    <div class="team-list">
+      <TeamChip
+        v-for="team in volunteer.teams"
+        :key="team"
+        :team="team"
+        with-name
+        :show-hidden="canManageUsers"
+        :closable="canManageUsers"
+        @close="removeTeam"
+      />
+    </div>
+    <div v-if="canManageUsers" class="team-add">
+      <SearchTeams
+        v-model="newTeams"
+        label="Choix de l'équipe"
+        hide-details
+        closable-chips
+        :list="assignableTeams"
+      />
+      <v-btn icon="mdi-plus" :disabled="hasNotNewTeamToAdd" @click="addTeams" />
     </div>
 
     <v-text-field
@@ -136,12 +132,13 @@ const authStore = useAuthStore();
 
 const emit = defineEmits(["updated"]);
 
-const { volunteer } = defineProps({
+const props = defineProps({
   volunteer: {
     type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,
   },
 });
+const volunteerId = computed(() => props.volunteer.id);
 
 const nickname = ref<string | null>(null);
 const phone = ref("");
@@ -162,72 +159,67 @@ const rules = {
 const selectedVolunteerFriends = computed(() => userStore.selectedUserFriends);
 const me = computed(() => userStore.me);
 const canManageUsers = computed(() => userStore.can(MANAGE_USERS));
-const userName = computed(() => ({
-  firstname: volunteer.firstname,
-  lastname: volunteer.lastname,
-  nickname: volunteer.nickname,
-}));
-const formatVolunteerNameWithNickname = computed(() =>
-  formatUserNameWithNickname(userName.value),
-);
-const isMe = computed(() => me.value.id === volunteer.id);
+const isMe = computed(() => me.value.id === volunteerId.value);
+
 const assignableTeams = computed(() => {
   const teamsToAdd = teamStore.teams.filter(
-    (team: Team) => !volunteer.teams?.includes(team.code),
+    (team: Team) => !props.volunteer.teams?.includes(team.code),
   );
   if (userStore.can(MANAGE_ADMINS)) return teamsToAdd;
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
 });
 
 const updateVolunteerInformations = async () => {
-  nickname.value = volunteer.nickname ?? null;
-  phone.value = volunteer.phone ?? "";
-  email.value = volunteer.email ?? "";
-  charisma.value = volunteer.charisma ?? 0;
-  note.value = volunteer.note ?? null;
+  nickname.value = props.volunteer.nickname ?? null;
+  phone.value = props.volunteer.phone ?? "";
+  email.value = props.volunteer.email ?? "";
+  charisma.value = props.volunteer.charisma ?? 0;
+  note.value = props.volunteer.note ?? null;
 
-  if (volunteer.profilePictureBlob) return;
+  if (props.volunteer.profilePictureBlob) return;
   await userStore.setSelectedUserProfilePicture();
 };
 
 watch(
-  volunteer,
+  props.volunteer,
   async () => {
     await updateVolunteerInformations();
   },
   { immediate: true },
 );
 
+const hasNotNewTeamToAdd = computed(() => newTeams.value.length === 0);
 const addTeams = async () => {
-  if (!newTeams.value) return;
-  await userStore.addTeamsToSelectedUser(
-    newTeams.value.map((team) => team.code),
-  );
-  await authStore.refreshTokens();
+  if (hasNotNewTeamToAdd.value) return;
+  const teams = newTeams.value.map((team) => team.code);
+  await userStore.addTeamsToUser(volunteerId.value, teams);
   await updateVolunteerInformations();
   newTeams.value = [];
+  authStore.refreshTokens();
 };
 
 const removeTeam = async (team: string) => {
-  await userStore.removeTeamFromSelectedUser(team);
-  await authStore.refreshTokens();
+  await userStore.removeTeamFromUser(volunteerId.value, team);
   await updateVolunteerInformations();
+  authStore.refreshTokens();
 };
 
-const sendFriendRequest = async () => {
-  if (newFriend.value === null || volunteer.id === newFriend.value.id) return;
-  await userStore.addFriendToSelectedUser(newFriend.value);
+const sendFriendRequest = () => {
+  if (newFriend.value === null || volunteerId.value === newFriend.value.id) {
+    return;
+  }
+  userStore.addFriendToUser(volunteerId.value, newFriend.value);
   newFriend.value = null;
 };
 
 const removeFriend = (friend: User) => {
-  userStore.removeFriendFromSelectedUser(friend);
+  userStore.removeFriendFromUser(volunteerId.value, friend);
 };
 
 const updatedVolunteer = computed(() => {
   const trimmedNote = note.value?.trim() || null;
   return {
-    ...volunteer,
+    ...props.volunteer,
     nickname: nickname.value,
     phone: phone.value,
     email: email.value,
@@ -237,24 +229,21 @@ const updatedVolunteer = computed(() => {
 });
 
 const savePersonalData = async () => {
-  if (!volunteer) return;
-  const id = volunteer.id;
-  const user = updatedVolunteer.value;
-  await userStore.updateUser(id, user);
+  await userStore.updateUser(volunteerId.value, updatedVolunteer.value);
   emit("updated");
 };
 
 const deleteVolunteer = async () => {
-  await userStore.deleteUser(volunteer.id);
+  await userStore.deleteUser(volunteerId.value);
   emit("updated");
 };
 
 const sendEmail = () => {
-  window.location.href = `mailto:${volunteer.email}`;
+  window.location.href = `mailto:${props.volunteer.email}`;
 };
 
 const callPhoneNumber = () => {
-  window.location.href = formatPhoneLink(volunteer.phone);
+  window.location.href = formatPhoneLink(props.volunteer.phone);
 };
 </script>
 
@@ -277,7 +266,7 @@ const callPhoneNumber = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 0 25px;
+  padding-top: 0 !important;
 }
 
 .team-list {
@@ -292,7 +281,7 @@ const callPhoneNumber = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 10px;
+  margin-bottom: 15px;
 }
 
 .friends {

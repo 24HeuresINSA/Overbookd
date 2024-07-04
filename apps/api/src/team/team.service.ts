@@ -58,10 +58,7 @@ export class TeamService {
   }
 
   async deleteTeam(code: string): Promise<void> {
-    await this.prisma.team.delete({
-      where: { code },
-    });
-    return;
+    await this.prisma.team.delete({ where: { code } });
   }
 
   async addTeamsToUser(
@@ -75,26 +72,15 @@ export class TeamService {
     }
 
     const existingTeams = await this.fetchExistingTeams(teams);
-    const userTeamLinks = existingTeams.map((teamCode) => {
-      return { userId, teamCode };
+    await this.prisma.userTeam.createMany({
+      data: existingTeams.map((team) => ({ userId, teamCode: team })),
     });
 
-    const actions = userTeamLinks.map((link) => {
-      return this.prisma.userTeam.upsert({
-        where: {
-          userId_teamCode: {
-            userId: link.userId,
-            teamCode: link.teamCode,
-          },
-        },
-        create: link,
-        update: {},
-        select: { teamCode: true },
-      });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { teams: { select: { teamCode: true } } },
     });
-
-    const result = await this.prisma.$transaction(actions);
-    return result.map((link) => link.teamCode);
+    return user.teams.map((t) => t.teamCode);
   }
 
   async removeTeamFromUser(
@@ -109,12 +95,7 @@ export class TeamService {
 
     try {
       await this.prisma.userTeam.delete({
-        where: {
-          userId_teamCode: {
-            userId,
-            teamCode: team,
-          },
-        },
+        where: { userId_teamCode: { userId, teamCode: team } },
       });
     } catch (e) {
       this.logger.warn(`Try to remove ${team} unexisting team`);
@@ -122,13 +103,7 @@ export class TeamService {
   }
 
   static buildIsMemberOfCondition(teamCodes: string[]) {
-    return {
-      some: {
-        team: {
-          code: { in: teamCodes },
-        },
-      },
-    };
+    return { some: { team: { code: { in: teamCodes } } } };
   }
 
   static checkMembership(user: JwtUtil, team: string) {
@@ -148,9 +123,7 @@ export class TeamService {
 
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
-    if (!user) {
-      throw new NotFoundException("Utilisateur inconnu");
-    }
+    if (!user) throw new NotFoundException("Utilisateur inconnu");
   }
 
   private canManageTeams(teams: string[], author: JwtUtil) {
