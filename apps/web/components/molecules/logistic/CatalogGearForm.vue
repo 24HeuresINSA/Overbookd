@@ -1,0 +1,156 @@
+<template>
+  <v-card class="gear">
+    <v-btn icon="mdi-close" variant="flat" class="close-btn" @click="close" />
+    <v-card-title class="gear__title">
+      <h2>Matos</h2>
+    </v-card-title>
+    <v-card-text>
+      <div class="fields">
+        <v-text-field
+          v-model="name"
+          append-icon="mdi-hammer-screwdriver"
+          label="Nom du matos"
+          clear-icon="mdi-close-circle-outline"
+          clearable
+          outlined
+          counter
+          :rules="[rules.nameMinLength]"
+        />
+        <v-switch
+          v-model="isPonctualUsage"
+          :false-value="false"
+          color="primary"
+          label="Est du matos d'appoint"
+          hide-details
+        />
+        <v-switch
+          v-model="isConsumable"
+          :false-value="false"
+          color="primary"
+          label="Est du matos consommable"
+          hide-details
+        />
+        <SearchCategory
+          v-model="category"
+          label="Choisis une categorie associée"
+          hide-details
+        />
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
+        prepend-icon="mdi-checkbox-marked-circle-outline"
+        text="Sauvegarder"
+        color="success"
+        size="large"
+        variant="elevated"
+        :disabled="canNotCreateOrUpdateGear"
+        @click="createOrUpdateGear"
+      />
+    </v-card-actions>
+  </v-card>
+</template>
+
+<script lang="ts" setup>
+import { minLength } from "~/utils/rules/input.rules";
+import type {
+  CatalogCategory,
+  CatalogGear,
+  CatalogGearForm,
+} from "@overbookd/http";
+
+const catalogGearStore = useCatalogGearStore();
+
+const NAME_MIN_LENGTH = 3;
+const rules = { nameMinLength: minLength(NAME_MIN_LENGTH) };
+
+const props = defineProps({
+  gear: {
+    type: Object as PropType<CatalogGear>,
+    default: () => ({
+      name: "",
+      category: undefined,
+      isPonctualUsage: false,
+      isConsumable: false,
+    }),
+  },
+});
+
+const name = ref(props.gear.name);
+const category = ref<CatalogCategory | undefined>(props.gear.category);
+const isPonctualUsage = ref(props.gear.isPonctualUsage);
+const isConsumable = ref(props.gear.isConsumable);
+
+watch(
+  () => props.gear,
+  (gear: CatalogGear) => {
+    name.value = gear.name;
+    category.value = gear.category;
+    isPonctualUsage.value = gear.isPonctualUsage;
+  },
+);
+
+const shouldUpdateCategory = computed(
+  () => category.value || props.gear.category,
+);
+
+const emit = defineEmits(["close"]);
+const close = () => emit("close");
+
+const canNotCreateOrUpdateGear = computed(
+  () => name.value.length < NAME_MIN_LENGTH || !category.value,
+);
+const createOrUpdateGear = async () => {
+  if (canNotCreateOrUpdateGear.value) return;
+  const categoryParams = shouldUpdateCategory.value
+    ? { category: category.value?.id }
+    : {};
+  const gear: CatalogGearForm = {
+    name: name.value,
+    isPonctualUsage: isPonctualUsage.value,
+    isConsumable: isConsumable.value,
+    ...categoryParams,
+  };
+  props.gear.id
+    ? await catalogGearStore.updateGear(props.gear.id, gear)
+    : await catalogGearStore.createGear(gear);
+
+  close();
+  name.value = "";
+  category.value = undefined;
+  isPonctualUsage.value = false;
+  isConsumable.value = false;
+};
+</script>
+
+<style lang="scss" scoped>
+.gear {
+  &__title {
+    display: flex;
+    justify-content: center;
+    h2 {
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .fields {
+      width: 80%;
+    }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+
+  .v-card-actions {
+    justify-content: center !important;
+  }
+}
+</style>

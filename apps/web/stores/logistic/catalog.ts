@@ -18,9 +18,7 @@ export const useCatalogStore = defineStore("catalog", {
     categoryTree: [],
   }),
   actions: {
-    async fetchCategories(
-      categorySerchOptions: CategorySearchOptions,
-    ): Promise<void> {
+    async fetchCategories(categorySerchOptions?: CategorySearchOptions) {
       const res =
         await CategoryRepository.searchCategories(categorySerchOptions);
       if (isHttpError(res)) return;
@@ -53,10 +51,7 @@ export const useCatalogStore = defineStore("catalog", {
       await this.fetchCategoryTree();
     },
 
-    async updateCategory(
-      id: number,
-      categoryForm: CategoryForm,
-    ): Promise<void> {
+    async updateCategory(id: number, categoryForm: CategoryForm) {
       const res = await CategoryRepository.updateCategory(id, categoryForm);
       if (isHttpError(res)) return;
       sendSuccessNotification(

@@ -12,12 +12,17 @@
       </p>
     </v-card-text>
     <v-card-actions class="btn-group">
-      <v-btn :color="abortColor" size="large" @click="close">
+      <v-btn :color="abortColor" variant="elevated" size="large" @click="close">
         <slot name="abort-btn-content">
           <v-icon left> mdi-close-circle-outline </v-icon>Annuler
         </slot>
       </v-btn>
-      <v-btn :color="confirmColor" size="large" @click="confirm">
+      <v-btn
+        :color="confirmColor"
+        variant="elevated"
+        size="large"
+        @click="confirm"
+      >
         <slot name="confirm-btn-content">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
           Confirmer
