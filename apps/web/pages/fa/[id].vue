@@ -1,7 +1,9 @@
 <template>
   <div class="activity fa">
-    <h1>FA #{{ activityIdFromUrl }} - {{ selectedActivity.general.name }}</h1>
-    <FaInChargeCard />
+    <FestivalEventSidebar festival-event="FA" class="sidebar" />
+    <article class="container fa">
+      <FaInChargeCard id="in-charge" />
+    </article>
   </div>
 </template>
 
@@ -26,3 +28,50 @@ useHead({
   title: `FA ${selectedActivity.value.id} - ${selectedActivity.value.general.name}`,
 });
 </script>
+
+<style lang="scss" scoped>
+$sidebar-width: 350px;
+
+.activity {
+  display: flex;
+  height: calc(100vh - #{$header-height} - #{$footer-height});
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.sidebar {
+  position: fixed;
+  width: $sidebar-width;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: calc(100vw - #{$sidebar-width} - 90px);
+  padding: 12px;
+  margin-left: $sidebar-width;
+  gap: 20px;
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+  .activity {
+    flex-direction: column;
+    overflow-y: scroll;
+    height: auto;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    margin: unset;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    overflow: visible;
+    margin: unset;
+    padding: unset;
+  }
+}
+</style>
