@@ -1,23 +1,18 @@
 <template>
   <v-text-field
-    v-model="dateStringified"
+    :model-value="dateStringified"
     :label="label"
     type="datetime-local"
-    :step="fieldStep"
     :hide-details="hideDetails"
     :error-messages="errorMessages"
-    return-object
     :disabled="disabled"
-    @change="updateDate"
+    @update:model-value="updateDate"
     @keydown.enter="enterKeyDown"
   />
 </template>
 
 <script lang="ts" setup>
-import { ONE_MINUTE_IN_MS, ONE_SECOND_IN_MS } from "@overbookd/period";
 import { formatLocalDateTime, roundMinutes } from "~/utils/date/date.utils";
-
-const ONE_MINUTE_IN_SECONDS = ONE_MINUTE_IN_MS / ONE_SECOND_IN_MS;
 
 const date = defineModel<Date>({ required: true });
 
@@ -45,9 +40,6 @@ const { label, disabled, hideDetails, step, errorMessages } = defineProps({
 });
 
 const dateStringified = ref<string>("");
-
-const fieldStep = computed(() => step * ONE_MINUTE_IN_SECONDS);
-
 const stringifyDate = (date?: Date | string): string => {
   if (!date) return "";
   return formatLocalDateTime(new Date(date));
@@ -55,9 +47,7 @@ const stringifyDate = (date?: Date | string): string => {
 
 watch(
   () => date.value,
-  () => {
-    dateStringified.value = stringifyDate(date.value);
-  },
+  () => (dateStringified.value = stringifyDate(date.value)),
   { immediate: true },
 );
 

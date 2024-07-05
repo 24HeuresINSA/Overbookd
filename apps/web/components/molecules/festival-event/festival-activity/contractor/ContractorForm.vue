@@ -35,7 +35,6 @@
       <v-text-field
         v-model="comment"
         label="Commentaire"
-        hide-details
         @keydown.enter="confirmContractor"
       />
     </template>

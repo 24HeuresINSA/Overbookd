@@ -1,0 +1,61 @@
+<template>
+  <CardForDialog @close="close">
+    <template #title> Ajouter un créneau </template>
+
+    <template #subtitle>
+      La manif commencera le {{ displayedEventDate }}.
+    </template>
+
+    <template #content>
+      <PeriodFormFields
+        v-model:start="start"
+        v-model:end="end"
+        @enter="addPeriod"
+      />
+    </template>
+
+    <template #actions>
+      <v-btn
+        :disabled="!isValid"
+        color="primary"
+        prepend-icon="mdi-checkbox-marked-circle-outline"
+        text="Ajouter le créneau"
+        size="large"
+        variant="elevated"
+        @click="addPeriod"
+      />
+    </template>
+  </CardForDialog>
+</template>
+
+<script lang="ts" setup>
+import { formatDate } from "~/utils/date/date.utils";
+import { type IProvidePeriod, Period } from "@overbookd/period";
+
+const configurationStore = useConfigurationStore();
+
+await configurationStore.fetch("eventDate");
+
+const start = ref(configurationStore.eventStartDate);
+const end = ref(configurationStore.eventStartDate);
+
+const displayedEventDate = computed(
+  () => `vendredi ${formatDate(configurationStore.eventStartDate)}`,
+);
+const period = computed<IProvidePeriod>(() => ({
+  start: start.value,
+  end: end.value,
+}));
+const isValid = computed<boolean>(() => Period.isValid(period.value));
+
+const emit = defineEmits(["add", "close"]);
+const close = () => emit("close");
+const addPeriod = () => {
+  if (!isValid.value) return;
+  emit("add", period.value);
+  close();
+
+  start.value = configurationStore.eventStartDate;
+  end.value = configurationStore.eventStartDate;
+};
+</script>

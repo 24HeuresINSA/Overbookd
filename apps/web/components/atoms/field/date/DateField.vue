@@ -1,11 +1,10 @@
 <template>
   <v-text-field
-    v-model="dateStringified"
+    :model-value="dateStringified"
     :label="label"
     type="date"
     :disabled="disabled"
     :hide-details="hideDetails"
-    return-object
     @update:model-value="updateDate"
   />
 </template>
@@ -41,9 +40,7 @@ const stringifyDate = (date?: Date | string): string => {
 
 watch(
   () => date.value,
-  () => {
-    dateStringified.value = stringifyDate(date.value);
-  },
+  () => (dateStringified.value = stringifyDate(date.value)),
   { immediate: true },
 );
 
