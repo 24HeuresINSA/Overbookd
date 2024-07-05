@@ -10,7 +10,12 @@
       @update:model-value="defectNameUpdate($event)"
     />
     <SearchCategory v-model="category" label="Catégorie" hide-details />
-    <SearchTeam v-model="team" label="Equipe responsable" hide-details />
+    <SearchTeam
+      v-model="team"
+      label="Equipe responsable"
+      hide-details
+      clearable
+    />
   </form>
 </template>
 

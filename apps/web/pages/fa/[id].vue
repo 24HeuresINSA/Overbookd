@@ -1,5 +1,8 @@
 <template>
-  <h1>FA #{{ activityIdFromUrl }} - {{ selectedActivity.general.name }}</h1>
+  <div class="activity fa">
+    <h1>FA #{{ activityIdFromUrl }} - {{ selectedActivity.general.name }}</h1>
+    <FaInChargeCard />
+  </div>
 </template>
 
 <script lang="ts" setup>

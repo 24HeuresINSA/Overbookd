@@ -3,27 +3,28 @@
     v-model="user"
     :items="userList"
     chips
-    clearable
+    :clearable="clearable"
     item-value="id"
     :item-title="formatUserNameWithNickname"
     :label="label"
     :disabled="disabled"
     :hide-details="hideDetails"
     return-object
+    hide-selected
     :custom-filter="slugifiedFilter"
     no-data-text="Aucun utilisateur correspondant"
   />
 </template>
 
 <script lang="ts" setup>
-import type { UserPersonalData } from "@overbookd/user";
+import type { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
 userStore.fetchUsers();
 
-const user = defineModel<UserPersonalData | null>({ required: true });
+const user = defineModel<User | null>({ required: true });
 
 const props = defineProps({
   label: {
@@ -34,17 +35,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  clearable: {
+    type: Boolean,
+    default: false,
+  },
   hideDetails: {
     type: Boolean,
     default: false,
   },
   list: {
-    type: Array as () => UserPersonalData[] | null,
+    type: Array as () => User[] | null,
     default: () => null,
   },
 });
 
-const userList = computed<UserPersonalData[]>(
-  () => props.list ?? userStore.users,
-);
+const userList = computed<User[]>(() => props.list ?? userStore.users);
 </script>

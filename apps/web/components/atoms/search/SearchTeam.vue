@@ -7,7 +7,7 @@
     :label="label"
     :disabled="disabled"
     :hide-details="hideDetails"
-    clearable
+    :clearable="clearable"
     hide-selected
     return-object
     :custom-filter="slugifiedFilter"
@@ -31,6 +31,10 @@ const props = defineProps({
     default: "Chercher des équipes",
   },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  clearable: {
     type: Boolean,
     default: false,
   },

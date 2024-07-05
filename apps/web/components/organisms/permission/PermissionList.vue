@@ -40,6 +40,7 @@
         <SearchTeam
           label="Lier une équipe"
           hide-details
+          clearable
           @update:model-value="linkTeamToPermission(item, $event)"
         />
         <v-btn
