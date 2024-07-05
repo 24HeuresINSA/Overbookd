@@ -7,6 +7,7 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
   READ_FA,
+  READ_GEAR_CATALOG,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -248,7 +249,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["virements", "compte-perso", "transactions"],
   },
-  /*{
+  {
     icon: "mdi-bookshelf",
     title: "Catalogue Matos",
     permission: READ_GEAR_CATALOG,
@@ -258,7 +259,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["catalogue-matos", "catalogue-materiel"],
   },
-  {
+  /*{
     icon: "mdi-warehouse",
     title: "Inventaire",
     permission: WRITE_INVENTORY,

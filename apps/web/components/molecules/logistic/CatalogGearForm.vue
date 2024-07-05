@@ -1,43 +1,38 @@
 <template>
-  <v-card class="gear">
-    <v-btn icon="mdi-close" variant="flat" class="close-btn" @click="close" />
-    <v-card-title class="gear__title">
-      <h2>Matos</h2>
-    </v-card-title>
-    <v-card-text>
-      <div class="fields">
-        <v-text-field
-          v-model="name"
-          append-icon="mdi-hammer-screwdriver"
-          label="Nom du matos"
-          clear-icon="mdi-close-circle-outline"
-          clearable
-          outlined
-          counter
-          :rules="[rules.nameMinLength]"
-        />
-        <v-switch
-          v-model="isPonctualUsage"
-          :false-value="false"
-          color="primary"
-          label="Est du matos d'appoint"
-          hide-details
-        />
-        <v-switch
-          v-model="isConsumable"
-          :false-value="false"
-          color="primary"
-          label="Est du matos consommable"
-          hide-details
-        />
-        <SearchCategory
-          v-model="category"
-          label="Choisis une categorie associée"
-          hide-details
-        />
-      </div>
-    </v-card-text>
-    <v-card-actions>
+  <DialogCard @close="close">
+    <template #title> Matos </template>
+    <template #content>
+      <v-text-field
+        v-model="name"
+        append-icon="mdi-hammer-screwdriver"
+        label="Nom du matos"
+        clear-icon="mdi-close-circle-outline"
+        clearable
+        outlined
+        counter
+        :rules="[rules.nameMinLength]"
+      />
+      <v-switch
+        v-model="isPonctualUsage"
+        :false-value="false"
+        color="primary"
+        label="Est du matos d'appoint"
+        hide-details
+      />
+      <v-switch
+        v-model="isConsumable"
+        :false-value="false"
+        color="primary"
+        label="Est du matos consommable"
+        hide-details
+      />
+      <SearchCategory
+        v-model="category"
+        label="Choisis une categorie associée"
+        hide-details
+      />
+    </template>
+    <template #actions>
       <v-btn
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Sauvegarder"
@@ -47,8 +42,8 @@
         :disabled="canNotCreateOrUpdateGear"
         @click="createOrUpdateGear"
       />
-    </v-card-actions>
-  </v-card>
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -122,35 +117,3 @@ const createOrUpdateGear = async () => {
   isConsumable.value = false;
 };
 </script>
-
-<style lang="scss" scoped>
-.gear {
-  &__title {
-    display: flex;
-    justify-content: center;
-    h2 {
-      flex: 1;
-      text-align: center;
-    }
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .fields {
-      width: 80%;
-    }
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-  }
-
-  .v-card-actions {
-    justify-content: center !important;
-  }
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <CardForDialog @close="close">
+  <DialogCard @close="close">
     <template #title> {{ typeFormLabel }} un prestataire </template>
     <template #content>
       <v-text-field
@@ -50,7 +50,7 @@
         @click="confirmContractor"
       />
     </template>
-  </CardForDialog>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>

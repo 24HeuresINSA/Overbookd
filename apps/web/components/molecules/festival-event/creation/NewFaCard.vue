@@ -1,16 +1,15 @@
 <template>
-  <v-card>
-    <v-card-title>Créer une nouvelle Fiche Activité</v-card-title>
-    <v-card-text>
+  <DialogCard @close="close">
+    <template #title>Créer une nouvelle Fiche Activité</template>
+    <template #content>
       <v-text-field
         v-model="name"
         label="Nom de la FA"
         hide-details
         @keydown.enter="createNewActivity"
       />
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
+    </template>
+    <template #actions>
       <v-btn
         variant="elevated"
         size="large"
@@ -19,8 +18,8 @@
         :disabled="canNotCreate"
         @click="createNewActivity"
       />
-    </v-card-actions>
-  </v-card>
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -29,12 +28,13 @@ import type { FestivalActivity } from "@overbookd/festival-event";
 const router = useRouter();
 const faStore = useFestivalActivityStore();
 
-const emit = defineEmits(["close"]);
-
 const name = ref("");
 const selectedActivity = computed<FestivalActivity>(() => {
   return faStore.selectedActivity;
 });
+
+const emit = defineEmits(["close"]);
+const close = () => emit("close");
 
 const canNotCreate = computed<boolean>(() => name.value === "");
 const createNewActivity = async () => {
@@ -45,6 +45,6 @@ const createNewActivity = async () => {
 
   if (!selectedActivity.value?.id) return;
   router.push({ path: `/fa/${selectedActivity.value.id}` });
-  emit("close");
+  close();
 };
 </script>

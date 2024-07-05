@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isOpen" max-width="600">
-    <v-card>
-      <v-card-text>
+    <DialogCard @close="isOpen = false">
+      <template #content>
         <v-file-input
           v-model="profilePicture"
           :rules="rules"
@@ -11,13 +11,18 @@
           show-size
           multiple
         />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn :disabled="invalidImage" @click="uploadProfilePicture">
-          Enregistrer
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+      </template>
+      <template #actions>
+        <v-btn
+          text="Enregistrer"
+          variant="elevated"
+          color="primary"
+          size="large"
+          :disabled="invalidImage"
+          @click="uploadProfilePicture"
+        />
+      </template>
+    </DialogCard>
   </v-dialog>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <CardForDialog @close="close">
+  <DialogCard @close="close">
     <template #title> Ajouter un créneau </template>
 
     <template #subtitle>
@@ -25,7 +25,7 @@
         @click="addPeriod"
       />
     </template>
-  </CardForDialog>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>

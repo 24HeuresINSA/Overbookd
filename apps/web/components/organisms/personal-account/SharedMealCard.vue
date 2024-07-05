@@ -47,7 +47,6 @@
     <v-dialog v-model="isRecordExpenseDialogOpen" max-width="600px">
       <RecordSharedMealExpenseForm
         :shared="shared"
-        closable
         @close="closeRecordExpenseDialog"
       />
     </v-dialog>

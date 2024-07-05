@@ -1,7 +1,7 @@
 <template>
-  <v-card>
-    <v-card-title>Ben alors, on oublie son mot de passe ?</v-card-title>
-    <v-card-text>
+  <DialogCard @close="close">
+    <template #title>Ben alors, on oublie son mot de passe ?</template>
+    <template #content>
       <v-img
         max-height="200"
         src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmp1dGthNXE3em44ZjVhdmxsZ3dyZTZuZjRsbnpkZm93cHJ0eTM0dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cO39srN2EUIRaVqaVq/giphy.gif"
@@ -19,19 +19,18 @@
         autofocus
         @keydown.enter="sendResetRequest"
       />
-    </v-card-text>
-    <v-card-actions>
+    </template>
+    <template #actions>
       <v-btn
+        text="Envoyer le mail"
         variant="elevated"
         size="large"
         color="primary"
         :disabled="isNotValid"
         @click="sendResetRequest"
-      >
-        Envoyer le mail
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      />
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -40,7 +39,6 @@ import { required, isEmail, isInsaEmail } from "~/utils/rules/input.rules";
 const email = ref("");
 
 const authStore = useAuthStore();
-const emit = defineEmits(["close"]);
 
 const rules = {
   required,
@@ -55,9 +53,12 @@ const isNotValid = computed(() => {
   return !exists || !isEmail;
 });
 
+const emit = defineEmits(["close"]);
+const close = () => emit("close");
+
 const sendResetRequest = async () => {
   if (isNotValid.value) return;
   await authStore.requestPasswordReset(email.value);
-  emit("close");
+  close();
 };
 </script>

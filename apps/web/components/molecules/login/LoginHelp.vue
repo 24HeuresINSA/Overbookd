@@ -1,14 +1,26 @@
 <template>
-  <v-card>
-    <v-card-title>Demander de l'aide</v-card-title>
-    <v-card-text>
+  <DialogCard @close="close">
+    <template #title>Demander de l'aide</template>
+    <template #content>
       Si vous avez rencontré un problème lors de l'inscription vous pouvez nous
-      envoyer un mail à l'adresse humains@24heures.org
+      envoyer un mail à l'adresse
+      <a href="mailto:humain@24heures.org">humains@24heures.org</a>.
       <br />
       Nous nous en occuperons au plus vite.
-    </v-card-text>
-    <v-card-actions>
-      <v-btn :href="`mailto:humain@24heures.org`"> Envoyer le mail </v-btn>
-    </v-card-actions>
-  </v-card>
+    </template>
+    <template #actions>
+      <v-btn
+        href="mailto:humain@24heures.org"
+        text="Envoyer le mail"
+        variant="elevated"
+        size="large"
+        color="primary"
+      />
+    </template>
+  </DialogCard>
 </template>
+
+<script lang="ts" setup>
+const emit = defineEmits(["close"]);
+const close = () => emit("close");
+</script>

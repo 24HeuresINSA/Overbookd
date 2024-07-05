@@ -79,7 +79,7 @@
   </v-dialog>
 
   <v-dialog v-model="isHelpDialogOpen" max-width="800">
-    <LoginHelp />
+    <LoginHelp @close="isHelpDialogOpen = false" />
   </v-dialog>
 </template>
 

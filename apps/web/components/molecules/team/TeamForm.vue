@@ -1,11 +1,8 @@
 <template>
-  <v-card>
-    <v-card-title class="title">
-      <v-icon>mdi-account</v-icon>
-      <span>{{ formLabel }} une équipe</span>
-    </v-card-title>
-    <v-card-text>
-      <v-form class="form">
+  <DialogCard @close="close">
+    <template #title> {{ formLabel }} une équipe </template>
+    <template #content>
+      <form class="form">
         <v-text-field
           v-model="name"
           label="Nom"
@@ -28,7 +25,7 @@
           :rules="[rules.required]"
           required
         />
-      </v-form>
+      </form>
 
       <div class="render">
         <h3>Aperçu</h3>
@@ -37,19 +34,18 @@
           <span class="name"> {{ name }} </span>
         </v-chip>
       </div>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn @click="close"> Annuler </v-btn>
-      <v-spacer />
+    </template>
+    <template #actions>
       <v-btn
+        :text="`${formLabel} l'équipe`"
+        variant="elevated"
+        size="large"
         color="primary"
         :disabled="!isValidForm"
         @click="createOrUpdateTeam"
-      >
-        {{ formLabel }} l'équipe
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      />
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -116,12 +112,6 @@ const createOrUpdateTeam = () => {
 </script>
 
 <style lang="scss" scoped>
-.title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .form {
   display: flex;
   flex-direction: column;

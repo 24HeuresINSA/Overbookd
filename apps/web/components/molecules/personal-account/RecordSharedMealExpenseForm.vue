@@ -1,19 +1,10 @@
 <template>
-  <v-card>
-    <v-btn
-      v-if="closable"
-      class="close-btn"
-      density="comfortable"
-      rounded="0"
-      icon="mdi-close"
-      variant="plain"
-      @click="close"
-    />
-    <v-card-title id="expense-meal">
-      <h2>Dépense du repas</h2>
+  <DialogCard @close="close">
+    <template #title> Dépense du repas </template>
+    <template #subtitle>
       <h3>{{ shared.meal.date }}</h3>
-    </v-card-title>
-    <v-card-text>
+    </template>
+    <template #content>
       <v-textarea
         :model-value="shared.meal.menu"
         variant="outlined"
@@ -33,16 +24,19 @@
           label="Somme totale du repas"
           hide-details
         />
-        <v-btn
-          color="primary"
-          size="large"
-          text="Renseigner"
-          append-icon="mdi-cash-multiple"
-          @click="recordExpense"
-        />
       </form>
-    </v-card-text>
-  </v-card>
+    </template>
+    <template #actions>
+      <v-btn
+        text="Renseigner"
+        color="primary"
+        size="large"
+        variant="elevated"
+        append-icon="mdi-cash-multiple"
+        @click="recordExpense"
+      />
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -51,10 +45,6 @@ import type { OnGoingSharedMeal } from "@overbookd/personal-account";
 const mealSharingStore = useMealSharingStore();
 
 const props = defineProps({
-  closable: {
-    type: Boolean,
-    default: false,
-  },
   shared: {
     type: Object as PropType<OnGoingSharedMeal>,
     required: true,
