@@ -8,6 +8,7 @@ import {
   SHOTGUN_SHARED_MEAL,
   READ_FA,
   READ_GEAR_CATALOG,
+  VIEW_TROMBINOSCOPE,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -71,7 +72,7 @@ export const pages: Page[] = [
       "repas-orgas",
     ],
   },
-  /*{
+  {
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,
@@ -80,7 +81,7 @@ export const pages: Page[] = [
       "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
     mobileSupport: true,
     keywords: ["trombinoscope", "photos"],
-  },*/
+  },
   {
     icon: "mdi-chart-bubble",
     title: "Fiches Activités",

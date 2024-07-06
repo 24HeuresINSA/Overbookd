@@ -32,7 +32,7 @@
             label="Surnom"
             hide-details
             clearable
-            @click:clear()="nickname = null"
+            @click:clear="clearNickname"
             @input="defectSave"
           />
         </v-form>
@@ -193,6 +193,10 @@ const save = () => {
     comment: comment.value ? comment.value : null,
   };
   userStore.updateMyProfile(myInfo);
+};
+const clearNickname = () => {
+  nickname.value = null;
+  save();
 };
 const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   if (paperPlanning === null) return;

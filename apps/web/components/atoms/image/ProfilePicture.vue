@@ -1,6 +1,6 @@
 <template>
   <img
-    v-if="hasProfilePicture"
+    v-if="hasProfilePictureBlob"
     class="userProfilePicture"
     :class="{ small }"
     :src="user.profilePictureBlob"
@@ -15,7 +15,7 @@ import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-inf
 
 const props = defineProps({
   user: {
-    type: Object as () => UserDataWithPotentialyProfilePicture,
+    type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,
   },
   small: {
@@ -26,15 +26,18 @@ const props = defineProps({
 const userStore = useUserStore();
 
 const hasProfilePicture = computed(() => props.user.profilePicture !== null);
+const hasProfilePictureBlob = computed(
+  () => props.user.profilePictureBlob !== undefined,
+);
 
 const fetchProfilePictureBlob = () => {
   return userStore.setProfilePicture(props.user);
 };
 
 watch(
-  props.user,
+  () => props.user.profilePictureBlob,
   () => {
-    if (!hasProfilePicture.value) return;
+    if (!hasProfilePicture.value || hasProfilePictureBlob.value) return;
     fetchProfilePictureBlob();
   },
   { immediate: true },
