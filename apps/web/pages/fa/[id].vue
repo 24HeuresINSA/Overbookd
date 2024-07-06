@@ -5,6 +5,7 @@
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
       <SecurityCard id="security" />
+      <SupplyCard id="supply" />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedActivity"
