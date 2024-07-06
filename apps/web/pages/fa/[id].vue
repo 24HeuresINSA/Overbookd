@@ -4,6 +4,7 @@
     <article class="container fa">
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
+      <SecurityCard id="security" />
     </article>
   </div>
 </template>
