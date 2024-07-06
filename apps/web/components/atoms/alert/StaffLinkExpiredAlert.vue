@@ -11,9 +11,7 @@
       </strong>
       <br />
       Contacte
-      <a href="mailto:secretaire.general@24heures.org">
-        le.a secrétaire général.e
-      </a>
+      <a :href="`mailto:${SG_EMAIL}`"> le.a secrétaire général.e </a>
       pour recevoir un nouveau lien.
     </p>
     <p>
@@ -25,6 +23,8 @@
 </template>
 
 <script lang="ts" setup>
+import { SG_EMAIL } from "~/utils/mail/mail.constant";
+
 const router = useRouter();
 
 const returnToLogin = () => {

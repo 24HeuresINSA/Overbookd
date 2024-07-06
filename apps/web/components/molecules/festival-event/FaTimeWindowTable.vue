@@ -6,7 +6,7 @@
       :items-per-page="-1"
       hide-default-footer
       density="comfortable"
-      :sort-by="[{ key: 'start' }, { key: 'end' }]"
+      :sort-by="[{ key: 'start' }]"
       no-data-text="Aucun créneau"
     >
       <template #item.start="{ item }">
@@ -18,15 +18,19 @@
       </template>
 
       <template #item.removal="{ item }">
-        <v-btn icon="mdi-trash-can" @click="removeTimeWindow(item)" />
+        <v-btn
+          icon="mdi-trash-can"
+          density="comfortable"
+          @click="removeTimeWindow(item)"
+        />
       </template>
     </v-data-table>
 
     <v-btn
       v-show="!disabled"
+      text="Ajouter un créneau"
       color="primary"
       class="time-windows__add"
-      text="Ajouter un créneau"
       @click="openAddDialog"
     />
 

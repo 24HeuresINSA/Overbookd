@@ -2,6 +2,7 @@
   <div class="activity fa">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container fa">
+      <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
     </article>
   </div>
@@ -34,7 +35,6 @@ $sidebar-width: 350px;
 
 .activity {
   display: flex;
-  height: calc(100vh - #{$header-height} - #{$footer-height});
   overflow: auto;
   scroll-behavior: smooth;
 }

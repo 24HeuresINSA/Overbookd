@@ -39,7 +39,7 @@
           <p>
             Si tu as la moindre question sur le festival et ce que tu peux faire
             pour nous aider, n'hésite pas à
-            <a href="mailto:humains@24heures.org">
+            <a :href="`mailto:${HUMAINS_EMAIL}`">
               contacter les responsables bénévoles
             </a>
             .
@@ -219,6 +219,7 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
+import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
 const router = useRouter();
 const route = useRoute();

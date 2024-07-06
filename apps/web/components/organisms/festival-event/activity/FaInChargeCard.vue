@@ -4,12 +4,13 @@
     <v-card-subtitle>
       <p>
         N'hésite pas si tu as des questions à contacter
-        <a href="mailto:humain@24heures.org">humain@24heures.org</a>.
+        <a :href="`mailto:${HUMAINS_EMAIL}`">{{ HUMAINS_EMAIL }}</a
+        >.
       </p>
       <p>
         Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
         <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
-        en te connectant avec jeuneetcon@24heures.org.
+        en te connectant avec {{ CTMA_EMAIL }}.
       </p>
     </v-card-subtitle>
     <v-card-text>
@@ -46,6 +47,7 @@ import type {
 } from "@overbookd/festival-event";
 import type { User } from "@overbookd/user";
 import type { Team } from "@overbookd/http";
+import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();

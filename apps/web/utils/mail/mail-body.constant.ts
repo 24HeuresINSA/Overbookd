@@ -1,3 +1,5 @@
+import { SG_EMAIL } from "./mail.constant";
+
 const LINE_BREAK = "%0D%0A";
 
 export const NEGATIVE_CP_BODY_TEMPLATE = `Bonsoir !${LINE_BREAK}
@@ -15,7 +17,7 @@ Des bisous,${LINE_BREAK}
 Thomas Garon${LINE_BREAK}
 Secrétaire Général${LINE_BREAK}
 Club des 24 heures de l'INSA${LINE_BREAK}
-secretaire.general@24heures.org${LINE_BREAK}
+${SG_EMAIL}${LINE_BREAK}
 06.58.62.45.21${LINE_BREAK}
 20, avenue Albert Einstein${LINE_BREAK}
 69621 Villeurbanne Cedex${LINE_BREAK}

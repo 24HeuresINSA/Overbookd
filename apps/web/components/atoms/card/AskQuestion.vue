@@ -4,7 +4,7 @@
     <v-card-text>
       <h5>
         Si tu as un problème ou que tu te poses une question, contacte par mail
-        les responsables bénévoles à l'adresse <code>{{ humainsEmail }}</code>
+        les responsables bénévoles à l'adresse <code>{{ HUMAINS_EMAIL }}</code>
         <br />
         Nous nous en occuperons au plus vite.
       </h5>
@@ -16,7 +16,7 @@
       <v-btn
         id="send-email-button"
         variant="elevated"
-        :href="`mailto:${humainsEmail}`"
+        :href="`mailto:${HUMAINS_EMAIL}`"
       >
         Envoyer un mail
       </v-btn>
@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts" setup>
-const humainsEmail = "humains@24heures.org";
+import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
 const copyEmail = async () => {
-  await navigator.clipboard.writeText(humainsEmail);
+  await navigator.clipboard.writeText(HUMAINS_EMAIL);
   sendSuccessNotification("Email copié ✅");
 };
 </script>
