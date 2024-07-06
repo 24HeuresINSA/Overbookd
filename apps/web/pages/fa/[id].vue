@@ -5,6 +5,12 @@
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
       <SecurityCard id="security" />
+      <FeedbackCard
+        id="feedback"
+        :festival-event="selectedActivity"
+        @publish="publishFeedback"
+      />
+      <ChildFtCard id="ft" />
     </article>
   </div>
 </template>
@@ -29,6 +35,10 @@ if (selectedActivity.value.id !== activityIdFromUrl.value) {
 useHead({
   title: `FA ${selectedActivity.value.id} - ${selectedActivity.value.general.name}`,
 });
+
+const publishFeedback = (content: string) => {
+  faStore.publishFeedback({ content });
+};
 </script>
 
 <style lang="scss" scoped>
