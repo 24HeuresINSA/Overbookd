@@ -14,7 +14,9 @@
           :type="item.type"
           :readonly="cantLinkCatalogItem"
           hide-label
-          @update-model-value="linkCatalogItem($event, item)"
+          hide-details
+          dense
+          @update:model-value="linkCatalogItem(item.id, $event?.id)"
         />
       </template>
 
@@ -128,14 +130,11 @@ const cantLinkCatalogItem = computed(() => {
   return !isSignaMember || isAlreadyApproved;
 });
 const linkCatalogItem = (
-  catalogSignage: CatalogSignage,
-  faSignage: FaSignage,
+  faSignageId: FaSignage["id"],
+  catalogSignageId?: CatalogSignage["id"],
 ) => {
-  if (cantLinkCatalogItem.value) return;
-  faStore.linkSignageCatalogItem({
-    signageId: faSignage.id,
-    catalogItem: catalogSignage,
-  });
+  if (cantLinkCatalogItem.value || !catalogSignageId) return;
+  faStore.linkSignageCatalogItem(faSignageId, catalogSignageId);
 };
 
 const signageCatalogItem = (signage: FaSignage): SignageCatalogItem | null => {

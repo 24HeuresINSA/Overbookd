@@ -4,6 +4,7 @@
     <article class="container fa">
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
+      <SignaCard id="signa" />
       <SecurityCard id="security" />
       <SupplyCard id="supply" />
       <FeedbackCard

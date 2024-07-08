@@ -9,6 +9,7 @@
     :label="hideLabel ? '' : label"
     :hide-details="hideDetails"
     :readonly="readonly"
+    :density="dense ? 'comfortable' : 'default'"
     no-data-text="Aucune signalétique correspondante"
     :custom-filter="slugifiedFilter"
     return-object
@@ -47,6 +48,10 @@ const props = defineProps({
     default: false,
   },
   hideDetails: {
+    type: Boolean,
+    default: false,
+  },
+  dense: {
     type: Boolean,
     default: false,
   },

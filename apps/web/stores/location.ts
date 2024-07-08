@@ -17,7 +17,7 @@ export const useLocationStore = defineStore("location", {
     },
   },
   actions: {
-    async getAllLocations() {
+    async fetchAllLocations() {
       const res = await LocationRepository.getAllLocations();
       if (isHttpError(res)) return;
       this.all = res;
@@ -27,21 +27,21 @@ export const useLocationStore = defineStore("location", {
       const res = await LocationRepository.createNewLocation(location);
       if (isHttpError(res)) return;
       sendSuccessNotification("Lieu ajouté 🥳");
-      await this.getAllLocations();
+      await this.fetchAllLocations();
     },
 
     async editLocation(location: SignaLocation) {
       const res = await LocationRepository.updateLocation(location);
       if (!isHttpError(res)) return;
       sendSuccessNotification("Lieu modifié 🥳");
-      await this.getAllLocations();
+      await this.fetchAllLocations();
     },
 
     async deleteLocation(location: SignaLocation) {
       const res = await LocationRepository.deleteLocation(location.id);
       if (isHttpError(res)) return;
       sendSuccessNotification("Lieu supprimé 🥳");
-      await this.getAllLocations();
+      await this.fetchAllLocations();
     },
   },
 });

@@ -174,7 +174,6 @@ export type {
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
-  LinkSignageCatalogItem,
 } from "./festival-activity/preparation/prepare-festival-activity.model.js";
 
 //ASK FOR REVIEW

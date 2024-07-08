@@ -17,7 +17,6 @@ import {
   type TimeWindow,
   type InquiryRequest,
   type Reviewer,
-  type LinkSignageCatalogItem,
   type AssignDrive,
   defaultDraft,
 } from "@overbookd/festival-event";
@@ -207,15 +206,14 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.selectedActivity = castActivityWithDate(res);
     },
 
-    async linkSignageCatalogItem({
-      signageId,
-      catalogItem,
-    }: LinkSignageCatalogItem) {
-      const form = { catalogItemId: catalogItem.id };
+    async linkSignageCatalogItem(
+      activitySignageId: string,
+      catalogItemId: number,
+    ) {
       const res = await repo.linkSignageCatalogItem(
         this.selectedActivity.id,
-        signageId,
-        form,
+        activitySignageId,
+        { catalogItemId },
       );
       if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);

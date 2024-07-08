@@ -17,10 +17,11 @@
         @keydown.enter="confirmSignage"
       />
       <v-text-field
-        v-model="quantity"
+        :model-value="quantity"
         label="Quantité *"
         type="number"
         :rules="[rules.number, rules.min, rules.required]"
+        @update:model-value="updateQuantity"
         @keydown.enter="confirmSignage"
       />
       <v-text-field
@@ -67,6 +68,7 @@ const text = ref<string>("");
 const quantity = ref<number>(1);
 const size = ref<string>("");
 const comment = ref<string | null>(null);
+const updateQuantity = (value: string) => (quantity.value = +value);
 
 const isUpdate = computed<boolean>(() => props.signage !== null);
 const typeFormLabel = computed<string>(() =>
