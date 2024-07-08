@@ -2,6 +2,7 @@
   <v-autocomplete
     v-model="friend"
     :items="friends"
+    :loading="loading"
     clearable
     item-value="id"
     :item-title="formatUserNameWithNickname"
@@ -20,7 +21,9 @@ import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
 
-userStore.fetchFriends();
+const friends = computed(() => userStore.friends);
+const loading = ref<boolean>(friends.value.length === 0);
+userStore.fetchFriends().then(() => (loading.value = false));
 
 const friend = defineModel<User | null>({ required: true });
 
@@ -34,6 +37,4 @@ const { label, disabled } = defineProps({
     default: false,
   },
 });
-
-const friends = computed(() => userStore.friends);
 </script>

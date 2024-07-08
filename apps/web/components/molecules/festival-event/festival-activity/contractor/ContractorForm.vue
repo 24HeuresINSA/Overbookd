@@ -77,8 +77,8 @@ const email = ref<string | null>(null);
 const company = ref<string | null>(null);
 const comment = ref<string | null>(null);
 
-const typeFormLabel = computed(() => (isUpdate.value ? "Modifier" : "Ajouter"));
 const isUpdate = computed(() => props.contractor !== null);
+const typeFormLabel = computed(() => (isUpdate.value ? "Modifier" : "Ajouter"));
 
 const rules = {
   required: required,
@@ -86,6 +86,14 @@ const rules = {
   phone: isMobilePhoneNumber,
 };
 
+const clearContractor = () => {
+  firstname.value = "";
+  lastname.value = "";
+  phone.value = "";
+  email.value = null;
+  company.value = null;
+  comment.value = null;
+};
 const setContractor = () => {
   if (!props.contractor) return clearContractor();
 
@@ -95,14 +103,6 @@ const setContractor = () => {
   email.value = props.contractor.email;
   company.value = props.contractor.company;
   comment.value = props.contractor.comment;
-};
-const clearContractor = () => {
-  firstname.value = "";
-  lastname.value = "";
-  phone.value = "";
-  email.value = null;
-  company.value = null;
-  comment.value = null;
 };
 watch(() => props.contractor, setContractor, { immediate: true });
 
@@ -137,18 +137,3 @@ const confirmContractor = () => {
   clearContractor();
 };
 </script>
-
-<style lang="scss" scoped>
-.contractor-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  &__form {
-    padding-bottom: 0;
-  }
-  strong {
-    font-weight: 900;
-  }
-}
-</style>
