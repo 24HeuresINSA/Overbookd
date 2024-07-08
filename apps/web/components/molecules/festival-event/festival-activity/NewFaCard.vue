@@ -15,7 +15,7 @@
         size="large"
         color="primary"
         text="Créer la Fiche Activité"
-        :disabled="canNotCreate"
+        :disabled="cantCreate"
         @click="createNewActivity"
       />
     </template>
@@ -36,9 +36,9 @@ const selectedActivity = computed<FestivalActivity>(() => {
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const canNotCreate = computed<boolean>(() => name.value === "");
+const cantCreate = computed<boolean>(() => name.value === "");
 const createNewActivity = async () => {
-  if (canNotCreate.value) return;
+  if (cantCreate.value) return;
 
   const blankFa = { name: name.value };
   await faStore.create(blankFa);

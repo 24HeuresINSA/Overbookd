@@ -39,7 +39,7 @@
         color="success"
         size="large"
         variant="elevated"
-        :disabled="canNotCreateOrUpdateGear"
+        :disabled="cantCreateOrUpdateGear"
         @click="createOrUpdateGear"
       />
     </template>
@@ -92,11 +92,11 @@ const shouldUpdateCategory = computed(
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const canNotCreateOrUpdateGear = computed(
+const cantCreateOrUpdateGear = computed(
   () => name.value.length < NAME_MIN_LENGTH || !category.value,
 );
 const createOrUpdateGear = async () => {
-  if (canNotCreateOrUpdateGear.value) return;
+  if (cantCreateOrUpdateGear.value) return;
   const categoryParams = shouldUpdateCategory.value
     ? { category: category.value?.id }
     : {};

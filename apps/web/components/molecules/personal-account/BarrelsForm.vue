@@ -29,7 +29,7 @@
           size="small"
           color="primary"
           class="barrel__action"
-          :disabled="canNotAddBarrel"
+          :disabled="cantAddBarrel"
           @click="addNewBarrel"
         />
       </div>
@@ -48,9 +48,9 @@ const price = ref(100);
 const barrels = computed(() => personalAccountStore.barrels);
 const fetchBarrels = () => personalAccountStore.fetchBarrels();
 
-const canNotAddBarrel = computed(() => !drink.value || price.value <= 0);
+const cantAddBarrel = computed(() => !drink.value || price.value <= 0);
 const addNewBarrel = async () => {
-  if (canNotAddBarrel.value) return;
+  if (cantAddBarrel.value) return;
   await personalAccountStore.createBarrel({
     drink: drink.value,
     price: price.value,
