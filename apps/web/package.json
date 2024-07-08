@@ -62,15 +62,15 @@
     "pinia": "2.1.7",
     "sass": "1.77.6",
     "vue-chartjs": "5.3.1",
-    "vuetify": "3.6.10",
+    "vuetify": "3.6.11",
     "vuetify-pro-tiptap": "2.5.2"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "0.3.13",
     "@pinia/nuxt": "0.5.1",
     "eslint-plugin-nuxt": "4.0.0",
-    "eslint-plugin-vue": "9.26.0",
-    "nuxt": "3.12.2",
+    "eslint-plugin-vue": "9.27.0",
+    "nuxt": "3.12.3",
     "vue": "3.4.31",
     "vue-router": "4.4.0"
   },
