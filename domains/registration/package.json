@@ -58,7 +58,7 @@
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",
     "@overbookd/team": "workspace:^",
-    "jose": "5.6.2",
+    "jose": "5.6.3",
     "jwt-decode": "4.0.0"
   }
 }
