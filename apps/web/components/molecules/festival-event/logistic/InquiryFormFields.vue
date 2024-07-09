@@ -1,18 +1,21 @@
 <template>
   <v-form class="inquiry-form">
     <v-text-field
-      v-model="quantity"
+      :model-value="quantity"
       type="number"
       label="Quantité"
       :rules="[rules.number, rules.min]"
       class="inquiry-form__quantity"
       :disabled="disabled"
+      :hide-details="hideDetails"
+      @update:model-value="updateQuantity"
     />
     <SearchGear
       v-model="gear"
       class="inquiry-form__search"
       :ponctual-usage="ponctualUsage"
       :disabled="disabled"
+      :hide-details="hideDetails"
     />
   </v-form>
 </template>
@@ -24,7 +27,7 @@ import { isNumber, min } from "~/utils/rules/input.rules";
 const gear = defineModel<CatalogGear | null>("gear", { required: true });
 const quantity = defineModel<number>("quantity", { required: true });
 
-const { disabled, ponctualUsage } = defineProps({
+const { disabled, ponctualUsage, hideDetails } = defineProps({
   ponctualUsage: {
     type: Boolean,
     default: undefined,
@@ -33,9 +36,16 @@ const { disabled, ponctualUsage } = defineProps({
     type: Boolean,
     default: false,
   },
+  hideDetails: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const rules = { number: isNumber, min: min(1) };
+
+const emit = defineEmits(["update:quantity"]);
+const updateQuantity = (value: string) => emit("update:quantity", +value);
 </script>
 
 <style lang="scss" scoped>

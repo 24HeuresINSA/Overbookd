@@ -34,8 +34,6 @@ import { type IProvidePeriod, Period } from "@overbookd/period";
 
 const configurationStore = useConfigurationStore();
 
-await configurationStore.fetch("eventDate");
-
 const start = ref(configurationStore.eventStartDate);
 const end = ref(configurationStore.eventStartDate);
 

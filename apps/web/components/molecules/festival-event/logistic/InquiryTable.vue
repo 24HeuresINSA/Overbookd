@@ -25,7 +25,7 @@
     <template #item.actions="{ item }">
       <v-btn
         icon="mdi-trash-can"
-        densisty="comfortable"
+        density="comfortable"
         @click="removeInquiry(item)"
       />
     </template>
@@ -60,6 +60,10 @@ const props = defineProps({
     type: String as PropType<InquiryOwner>,
     required: true,
   },
+  hideDrive: {
+    type: Boolean,
+    default: false,
+  },
   disabled: {
     type: Boolean,
     default: false,
@@ -70,10 +74,22 @@ const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Quantité", value: "quantity", width: "20%", sortable: true },
     { title: "Nom", value: "name", sortable: true },
-    { title: "Lieu de retrait", value: "drive", sortable: true },
   ];
-  const actionHeader = { title: "Actions", value: "actions" };
-  return props.disabled ? baseHeaders : [...baseHeaders, actionHeader];
+  const driveHeader = {
+    title: "Lieu de retrait",
+    value: "drive",
+    sortable: true,
+  };
+  const actionHeader = {
+    title: "Actions",
+    value: "actions",
+    width: "15%",
+  };
+  return [
+    ...baseHeaders,
+    ...(props.hideDrive ? [] : [driveHeader]),
+    ...(props.disabled ? [] : [actionHeader]),
+  ];
 });
 
 const noDataMessage = computed<string>(() => {

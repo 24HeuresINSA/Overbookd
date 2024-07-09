@@ -7,6 +7,7 @@
       <SignaCard id="signa" />
       <SecurityCard id="security" />
       <SupplyCard id="supply" />
+      <FaInquiryCard id="inquiry" />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedActivity"
