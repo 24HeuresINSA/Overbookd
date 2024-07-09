@@ -25,7 +25,6 @@ import type {
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
-  Reviewer,
   Signage,
   TimeWindow,
 } from "@overbookd/festival-event";
@@ -33,6 +32,7 @@ import type { IProvidePeriod } from "@overbookd/period";
 import type {
   AddInquiryRequestForm,
   PublishFeedbackForm,
+  ReviewApproval,
   Statistics,
 } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
@@ -329,10 +329,10 @@ export class FestivalActivityRepository {
     );
   }
 
-  static approve(faId: FestivalActivity["id"], team: Reviewer<"FA">) {
+  static approve(faId: FestivalActivity["id"], approval: ReviewApproval<"FA">) {
     return HttpClient.post<FestivalActivity>(
       `${this.basePath}/${faId}/approve`,
-      { team },
+      approval,
     );
   }
 

@@ -30,7 +30,8 @@
         "SwitchCase": 1,
         "ignoredNodes": [
           "PropertyDefinition",
-          "ArrowFunctionExpression > ArrowFunctionExpression"
+          "ArrowFunctionExpression > ArrowFunctionExpression",
+          "ConditionalExpression > CallExpression"
         ]
       }
     ],

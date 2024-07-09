@@ -16,7 +16,6 @@ import {
   type Signage,
   type TimeWindow,
   type InquiryRequest,
-  type Reviewer,
   type AssignDrive,
   defaultDraft,
 } from "@overbookd/festival-event";
@@ -28,6 +27,7 @@ import type {
   PreviewForSecurity,
   PreviewForCommunication,
   PublishFeedbackForm,
+  ReviewApproval,
 } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
@@ -326,7 +326,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     },
 
     /* REVIEW */
-    async approveAs(reviewer: Reviewer<"FA">) {
+    async approve(reviewer: ReviewApproval<"FA">) {
       const res = await repo.approve(this.selectedActivity.id, reviewer);
       if (isHttpError(res)) return;
       sendSuccessNotification(`✅ FA approuvée par l'équipe ${reviewer}`);

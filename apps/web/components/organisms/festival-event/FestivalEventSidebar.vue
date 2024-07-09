@@ -17,28 +17,59 @@
       </div>
     </div>
 
-    <v-btn
-      id="ask-for-review"
-      text="Demande de relecture"
-      :disabled="!canAskForReview"
-      @click="askForReview"
-    />
+    <div id="scrollable-content">
+      <v-btn
+        id="ask-for-review"
+        class="review-btn"
+        text="Demande de relecture"
+        :disabled="!canAskForReview"
+        @click="askForReview"
+      />
 
-    <slot name="additional-actions" />
+      <div v-for="team in myReviewers" :key="team.code" class="team-review">
+        <v-btn
+          :text="`Approuver pour ${team.name}`"
+          class="approve review-btn"
+          :disabled="cantApproveAs(team)"
+          size="small"
+          @click="approve(team)"
+        />
+        <v-btn
+          :text="`Rejeter pour ${team.name}`"
+          class="reject review-btn"
+          :disabled="cantRejectAs(team)"
+          size="small"
+          @click="openRejectDialog(team)"
+        />
+      </div>
 
-    <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+      <slot name="additional-actions" />
+
+      <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+    </div>
+
+    <v-dialog v-model="isRejectDialogOpen" max-width="600">
+      <AskRejectReasonCard
+        :identifier="festivalEvent"
+        @reject="reject"
+        @close="closeRejectDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
+  APPROVED,
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
   isDraft,
   isRefused,
+  REJECTED,
+  type Reviewer,
 } from "@overbookd/festival-event";
-import type { Team } from "@overbookd/http";
+import type { ReviewApproval, ReviewRejection, Team } from "@overbookd/http";
 import {
   type FtStatusLabel,
   ftStatusLabels,
@@ -50,11 +81,16 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { BROUILLON } from "~/utils/festival-event/festival-event.model";
 import { getTaskReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
+import {
+  hasReviewerAlreadyDoneHisTaskReview,
+  hasReviewerAlreadyDoneHisActivityReview,
+} from "~/utils/festival-event/festival-event.utils";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
+const userStore = useUserStore();
 
 const props = defineProps({
   festivalEvent: {
@@ -87,6 +123,9 @@ if (reviewers.value.length === 0) {
     ? teamStore.fetchFaReviewers()
     : teamStore.fetchFtReviewers();
 }
+const myReviewers = computed<Team[]>(() =>
+  reviewers.value.filter((reviewer) => userStore.isMemberOf(reviewer.code)),
+);
 
 const statusLabel = computed<FaStatusLabel | FtStatusLabel>(() =>
   isActivity.value
@@ -116,6 +155,62 @@ const askForReview = async () => {
     ? await faStore.askForReview()
     : await ftStore.askForReview();
 };
+
+const isRejectDialogOpen = ref<boolean>(false);
+const rejecter = ref<Reviewer<"FA"> | Reviewer<"FT"> | null>(null);
+
+const openRejectDialog = (team: Team) => {
+  rejecter.value = team.code as Reviewer<"FA"> | Reviewer<"FT">;
+  isRejectDialogOpen.value = true;
+};
+const closeRejectDialog = () => (isRejectDialogOpen.value = false);
+
+const reject = (reason: string) => {
+  if (!rejecter.value) return;
+  const form = { reason, team: rejecter.value };
+  isActivity.value
+    ? faStore.rejectBecause(form)
+    : ftStore.rejectBecause(form as ReviewRejection<"FT">);
+  closeRejectDialog();
+};
+const approve = (team: Team) => {
+  const form = { team: team.code };
+  isActivity.value
+    ? faStore.approve(form as ReviewApproval<"FA">)
+    : ftStore.approve(form as ReviewApproval<"FT">);
+};
+
+const cantApproveAs = (team: Team): boolean => {
+  const isAlreadyApprovedBy = isActivity.value
+    ? hasReviewerAlreadyDoneHisActivityReview(
+        selectedActivity.value,
+        team.code as Reviewer<"FA">,
+        APPROVED,
+      )
+    : hasReviewerAlreadyDoneHisTaskReview(
+        selectedTask.value,
+        team.code as Reviewer<"FT">,
+        REJECTED,
+      );
+  const isTeamMember = userStore.isMemberOf(team.code);
+  return isAlreadyApprovedBy || !isTeamMember;
+};
+const cantRejectAs = (team: Team): boolean => {
+  const isAlreadyRejectedBy = isActivity.value
+    ? hasReviewerAlreadyDoneHisActivityReview(
+        selectedActivity.value,
+        team.code as Reviewer<"FA">,
+        REJECTED,
+      )
+    : hasReviewerAlreadyDoneHisTaskReview(
+        selectedTask.value,
+        team.code as Reviewer<"FT">,
+        REJECTED,
+      );
+
+  const isTeamMember = userStore.isMemberOf(team.code);
+  return isAlreadyRejectedBy || !isTeamMember;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -123,15 +218,9 @@ const askForReview = async () => {
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  padding-right: 20px;
   width: 350px;
   height: calc(100vh - #{$header-height} - #{$footer-height});
   overflow-y: auto;
-
-  #ask-for-review {
-    background-color: $submitted-color;
-    margin-left: 16px;
-  }
 
   #title {
     font-size: 1.7rem;
@@ -194,6 +283,38 @@ const askForReview = async () => {
   .icon:hover .icon-detail {
     visibility: visible;
   }
+
+  #scrollable-content {
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  #ask-for-review {
+    background-color: $submitted-color;
+    margin-bottom: 10px;
+  }
+
+  .review-btn {
+    width: calc(100% - 25px);
+    margin-left: 15px;
+    margin-right: 10px;
+  }
+
+  .team-review {
+    .reject,
+    .approve {
+      color: whitesmoke;
+      font-weight: bolder;
+      margin-bottom: 5px;
+    }
+    .reject {
+      background-color: $refused-color;
+    }
+    .approve {
+      background-color: $validated-color;
+      margin-top: 5px;
+    }
+  }
 }
 
 @media only screen and (max-width: $mobile-max-width) {
@@ -203,7 +324,15 @@ const askForReview = async () => {
     overflow: visible;
     padding: unset;
 
-    #ask-for-review {
+    #scrollable-content,
+    .team-review {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .review-btn {
       width: 80%;
       margin-left: auto;
       margin-right: auto;
