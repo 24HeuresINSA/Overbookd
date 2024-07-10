@@ -19,7 +19,7 @@
       label="Confirme ton nouveau mot de passe"
       type="password"
       bg-color="white"
-      :rules="repeatPasswordRule"
+      :rules="[rules.required, repeatPasswordRule]"
       @keydown.enter="sendResetRequest"
     />
     <v-btn
@@ -39,6 +39,7 @@ import {
   password as passwordRule,
   isSame,
 } from "~/utils/rules/input.rules";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 definePageMeta({ layout: false });
 
@@ -66,11 +67,8 @@ const isNotValid = computed(() => {
 
 const sendResetRequest = async () => {
   if (isNotValid.value) return;
-  await authStore.resetPassword(
-    route.params.token,
-    password.value,
-    password2.value,
-  );
+  const token = stringifyQueryParam(route.params.token);
+  await authStore.resetPassword(token, password.value, password2.value);
   await router.push({ path: "/" });
 };
 </script>
@@ -99,3 +97,4 @@ const sendResetRequest = async () => {
   z-index: -1;
 }
 </style>
+~/utils/festival-event/url-params.utils

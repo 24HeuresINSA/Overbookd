@@ -14,11 +14,9 @@ import {
   DRAFT,
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
-import {
-  type QueryParamsValue,
-  strigifyQueryParam,
-} from "../festival-event.filter";
+import { stringifyQueryParam } from "../../http/url-params.utils";
 import type { Team } from "@overbookd/http";
+import type { LocationQuery } from "vue-router";
 
 export type TaskReviewsFilter = {
   humain?: ReviewStatus;
@@ -68,48 +66,48 @@ export class TaskFilterBuilder {
   }
 
   extractQueryParamsValue(
-    params: Record<string, QueryParamsValue>,
+    params: LocationQuery,
     key: keyof TaskFilters,
   ): TaskFilters {
     switch (key) {
       case "search": {
-        const searchString = strigifyQueryParam(params.search);
+        const searchString = stringifyQueryParam(params.search);
         const search = this.isNotEmpty(searchString);
         return search ? { search } : {};
       }
       case "team": {
-        const teamCode = strigifyQueryParam(params.team);
+        const teamCode = stringifyQueryParam(params.team);
         const team = this.isExistingTeam(teamCode);
         return team ? { team } : {};
       }
       case "adherent": {
-        const adherentId = strigifyQueryParam(params.adherent);
+        const adherentId = stringifyQueryParam(params.adherent);
         const defaultId = isNaN(+adherentId) ? 0 : +adherentId;
         const adherent = this.isExistingAdherent(defaultId);
         return adherent ? { adherent } : {};
       }
       case "status": {
-        const statusString = strigifyQueryParam(params.status);
+        const statusString = stringifyQueryParam(params.status);
         const status = this.isExistingStatus(statusString);
         return status ? { status } : {};
       }
       case "humain": {
-        const review = strigifyQueryParam(params.humain);
+        const review = stringifyQueryParam(params.humain);
         const humain = this.isExistingReview(review);
         return humain ? { humain } : {};
       }
       case "matos": {
-        const review = strigifyQueryParam(params.matos);
+        const review = stringifyQueryParam(params.matos);
         const matos = this.isExistingReview(review);
         return matos ? { matos } : {};
       }
       case "elec": {
-        const review = strigifyQueryParam(params.elec);
+        const review = stringifyQueryParam(params.elec);
         const elec = this.isExistingReview(review);
         return elec ? { elec } : {};
       }
       case "reviewer": {
-        const reviewerId = strigifyQueryParam(params.reviewer);
+        const reviewerId = stringifyQueryParam(params.reviewer);
         const defaultId = isNaN(+reviewerId) ? 0 : +reviewerId;
         const reviewer = this.isExistingAdherent(defaultId);
         return reviewer ? { reviewer } : {};

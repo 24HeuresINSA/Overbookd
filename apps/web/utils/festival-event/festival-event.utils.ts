@@ -15,6 +15,12 @@ import {
   type Reviewer,
   type ReviewStatus,
 } from "@overbookd/festival-event";
+import {
+  DRAFT,
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 
 const A_RELIRE = "À relire";
 const REJETEE = "Rejetée";
@@ -30,7 +36,7 @@ export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
 
 export function hasReviewerAlreadyDoneHisTaskReview(
   task: FestivalTask,
-  reviewer: Reviewer<"FA">,
+  reviewer: Reviewer<"FT">,
   status: ReviewStatus,
 ) {
   if (isDraft(task)) return true;
@@ -70,4 +76,19 @@ export function hasReviewerAlreadyDoneHisActivityReview(
     default:
       return false;
   }
+}
+
+export type FestivalEventStatus =
+  | FestivalActivity["status"]
+  | FestivalTask["status"];
+
+export function isFestivalActivityStatus(
+  status: FestivalEventStatus,
+): status is FestivalActivity["status"] {
+  return (
+    status === DRAFT ||
+    status === IN_REVIEW ||
+    status === REFUSED ||
+    status === VALIDATED
+  );
 }

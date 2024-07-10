@@ -1,10 +1,17 @@
 import {
   APPROVED,
+  barrieres,
+  communication,
+  elec,
   type FestivalActivity,
+  humain,
+  matos,
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
   type ReviewStatus,
+  secu,
+  signa,
 } from "@overbookd/festival-event";
 import {
   IN_REVIEW,
@@ -13,11 +20,9 @@ import {
   DRAFT,
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
-import {
-  type QueryParamsValue,
-  strigifyQueryParam,
-} from "../festival-event.filter";
+import { stringifyQueryParam } from "../../http/url-params.utils";
 import type { Team } from "@overbookd/http";
+import type { LocationQuery } from "vue-router";
 
 export type ActivityReviewsFilter = {
   humain?: ReviewStatus;
@@ -36,100 +41,99 @@ export type ActivityFilters = ActivityReviewsFilter & {
   status?: FestivalActivity["status"];
 };
 
-type IsNotEmpty = (value: string) => string | undefined;
-type IsExistingStatus = (
-  value: string,
-) => FestivalActivity["status"] | undefined;
-type IsExistingTeam = (value: string) => Team | undefined;
-type IsExistingAdherent = (id: User["id"]) => User | undefined;
-type IsExistingReview = (value: string) => ReviewStatus | undefined;
-
-type InitFilterBuilder = {
-  isNotEmpty: IsNotEmpty;
-  isExistingStatus: IsExistingStatus;
-  isExistingTeam: IsExistingTeam;
-  isExistingAdherent: IsExistingAdherent;
-  isExistingReview: IsExistingReview;
-};
-
 export class ActivityFilterBuilder {
-  private constructor(
-    private readonly isNotEmpty: IsNotEmpty,
-    private readonly isExistingStatus: IsExistingStatus,
-    private readonly isExistingTeam: IsExistingTeam,
-    private readonly isExistingAdherent: IsExistingAdherent,
-    private readonly isExistingReview: IsExistingReview,
-  ) {}
-
-  static init(initializer: InitFilterBuilder) {
-    return new ActivityFilterBuilder(
-      initializer.isNotEmpty,
-      initializer.isExistingStatus,
-      initializer.isExistingTeam,
-      initializer.isExistingAdherent,
-      initializer.isExistingReview,
+  static getFromRouteQuery(query: LocationQuery): ActivityFilters {
+    const search = this.extractQueryParamsValue(query, "search");
+    const team = this.extractQueryParamsValue(query, "team");
+    const adherent = this.extractQueryParamsValue(query, "adherent");
+    const status = this.extractQueryParamsValue(query, "status");
+    const humainReview = this.extractQueryParamsValue(query, humain);
+    const matosReview = this.extractQueryParamsValue(query, matos);
+    const elecReview = this.extractQueryParamsValue(query, elec);
+    const barrieresReview = this.extractQueryParamsValue(query, barrieres);
+    const signaReview = this.extractQueryParamsValue(query, signa);
+    const secuReview = this.extractQueryParamsValue(query, secu);
+    const communicationReview = this.extractQueryParamsValue(
+      query,
+      communication,
     );
+
+    return {
+      ...search,
+      ...team,
+      ...adherent,
+      ...status,
+      ...humainReview,
+      ...matosReview,
+      ...elecReview,
+      ...barrieresReview,
+      ...signaReview,
+      ...secuReview,
+      ...communicationReview,
+    };
   }
 
-  extractQueryParamsValue(
-    params: Record<string, QueryParamsValue>,
+  private static extractQueryParamsValue(
+    params: LocationQuery,
     key: keyof ActivityFilters,
   ): ActivityFilters {
     switch (key) {
       case "search": {
-        const searchString = strigifyQueryParam(params.search);
-        const search = this.isNotEmpty(searchString);
+        const searchString = stringifyQueryParam(params.search);
+        const search = searchString ? searchString : undefined;
         return search ? { search } : {};
       }
       case "team": {
-        const teamCode = strigifyQueryParam(params.team);
-        const team = this.isExistingTeam(teamCode);
+        const teamCode = stringifyQueryParam(params.team);
+        const teamStore = useTeamStore();
+        const team = teamStore.getTeamByCode(teamCode);
         return team ? { team } : {};
       }
       case "adherent": {
-        const adherentId = strigifyQueryParam(params.adherent);
+        const adherentId = stringifyQueryParam(params.adherent);
         const defaultId = isNaN(+adherentId) ? 0 : +adherentId;
-        const adherent = this.isExistingAdherent(defaultId);
+        const userStore = useUserStore();
+        const adherent = userStore.adherents.find(({ id }) => id === defaultId);
         return adherent ? { adherent } : {};
       }
       case "status": {
-        const statusString = strigifyQueryParam(params.status);
-        const status = this.isExistingStatus(statusString);
+        const statusString = stringifyQueryParam(params.status);
+        const status = findStatus(statusString);
         return status ? { status } : {};
       }
       case "humain": {
-        const review = strigifyQueryParam(params.humain);
-        const humain = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.humain);
+        const humain = findReviewStatus(review);
         return humain ? { humain } : {};
       }
       case "communication": {
-        const review = strigifyQueryParam(params.communication);
-        const communication = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.communication);
+        const communication = findReviewStatus(review);
         return communication ? { communication } : {};
       }
       case "matos": {
-        const review = strigifyQueryParam(params.matos);
-        const matos = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.matos);
+        const matos = findReviewStatus(review);
         return matos ? { matos } : {};
       }
       case "secu": {
-        const review = strigifyQueryParam(params.secu);
-        const secu = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.secu);
+        const secu = findReviewStatus(review);
         return secu ? { secu } : {};
       }
       case "signa": {
-        const review = strigifyQueryParam(params.signa);
-        const signa = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.signa);
+        const signa = findReviewStatus(review);
         return signa ? { signa } : {};
       }
       case "barrieres": {
-        const review = strigifyQueryParam(params.barrieres);
-        const barrieres = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.barrieres);
+        const barrieres = findReviewStatus(review);
         return barrieres ? { barrieres } : {};
       }
       case "elec": {
-        const review = strigifyQueryParam(params.elec);
-        const elec = this.isExistingReview(review);
+        const review = stringifyQueryParam(params.elec);
+        const elec = findReviewStatus(review);
         return elec ? { elec } : {};
       }
     }

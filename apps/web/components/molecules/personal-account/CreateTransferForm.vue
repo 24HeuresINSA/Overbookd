@@ -31,11 +31,11 @@ const transactionStore = useTransactionStore();
 userStore.fetchPersonalAccountConsumers();
 
 const amount = ref(ONE_EURO_IN_CENTS);
-const payee = ref<Consumer | null>(null);
+const payee = ref<Consumer | undefined>(undefined);
 const context = ref("");
 
 const isTransferValid = computed(
-  () => amount.value > 0 && payee.value !== null && context.value !== "",
+  () => amount.value > 0 && payee.value && context.value !== "",
 );
 const adherents = computed<Consumer[]>(() =>
   userStore.personalAccountConsumers.filter(
@@ -53,6 +53,10 @@ const sendTransfer = async () => {
   });
 
   close();
+
+  amount.value = ONE_EURO_IN_CENTS;
+  payee.value = undefined;
+  context.value = "";
 };
 
 const emit = defineEmits(["close"]);

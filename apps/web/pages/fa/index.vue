@@ -1,10 +1,11 @@
 <template>
   <h1>Fiches Activités</h1>
   <div class="activity fa">
+    <FaFilter v-model="filters" class="activity__filtering" />
     <v-card class="activity__listing">
       <v-data-table
         :headers="headers"
-        :items="activities"
+        :items="filteredActivities"
         :items-per-page="20"
         class="activity__table"
         :loading="loading"
@@ -92,19 +93,30 @@
 </template>
 
 <script lang="ts" setup>
-import { formatUsername } from "~/utils/user/user.utils";
 import type { Team } from "@overbookd/http";
 import { WRITE_FA } from "@overbookd/permission";
 import type {
+  FestivalActivity,
   PreviewFestivalActivity,
   Reviewer,
 } from "@overbookd/festival-event";
-import { findReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.filter";
+import { SlugifyService } from "@overbookd/slugify";
+import type { User } from "@overbookd/user";
+import {
+  ActivityFilterBuilder,
+  findReviewStatus,
+  type ActivityFilters,
+  type ActivityReviewsFilter,
+} from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { TableHeaders } from "~/utils/data-table/header";
+import type { Searchable } from "~/utils/search/search.utils";
+import { formatUsername } from "~/utils/user/user.utils";
+import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 
 useHead({ title: "Fiches Activités" });
 
+const route = useRoute();
 const router = useRouter();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
@@ -175,11 +187,105 @@ const getReviewerStatus = (
   const status = activity.reviews[reviewerCode];
   return (findReviewStatus(status) ?? "").toLowerCase();
 };
+
+const filters = ref<ActivityFilters>({});
+onMounted(
+  () => (filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query)),
+);
+
+const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
+  () =>
+    activities.value.map((fa) => ({
+      ...fa,
+      searchable: SlugifyService.apply(`${fa.id} ${fa.name}`),
+    })),
+);
+const filterActivityByTeam =
+  (teamSearched?: Team) =>
+  ({ team }: PreviewFestivalActivity) => {
+    return teamSearched ? team === teamSearched.code : true;
+  };
+const filterActivityByAdherent =
+  (adherentSearched?: User) =>
+  ({ adherent }: PreviewFestivalActivity) => {
+    return adherentSearched ? adherent.id === adherentSearched.id : true;
+  };
+const filterActivityByStatus =
+  (statusSearched?: FestivalActivity["status"]) =>
+  ({ status }: PreviewFestivalActivity) => {
+    return statusSearched ? status === statusSearched : true;
+  };
+const filterActivityByNameAndId =
+  (search?: string) =>
+  ({ searchable }: Searchable<PreviewFestivalActivity>) => {
+    const slugifiedSearch = SlugifyService.apply(search ?? "");
+    return searchable.includes(slugifiedSearch);
+  };
+const filterActivityByReviews =
+  (reviews: ActivityReviewsFilter) =>
+  (activity: Searchable<PreviewFestivalActivity>) => {
+    const reviewersWithStatus = Object.entries(reviews).filter(
+      ([, status]) => status !== undefined,
+    );
+    const reviewsAreEmpty = reviewersWithStatus.length === 0;
+    if (reviewsAreEmpty) return true;
+
+    if (isDraftPreview(activity)) return false;
+    return reviewersWithStatus.every(
+      ([reviewer, status]) =>
+        getPreviewReviewStatus(activity, reviewer) === status,
+    );
+  };
+const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
+  const { team, status, search, adherent, ...reviews } = filters.value;
+
+  return searchableActivities.value.filter((activity) => {
+    return (
+      filterActivityByTeam(team)(activity) &&
+      filterActivityByAdherent(adherent)(activity) &&
+      filterActivityByStatus(status)(activity) &&
+      filterActivityByNameAndId(search)(activity) &&
+      filterActivityByReviews(reviews)(activity)
+    );
+  });
+});
 </script>
 
 <style lang="scss" scoped>
-#status {
-  font-weight: bold;
+.activity {
+  display: flex;
+  padding: 10px 30px 10px 10px;
+  gap: 15px;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    padding: 10px;
+  }
+  &__listing {
+    margin-left: 20px;
+    margin-bottom: 40px;
+    height: fit-content;
+    width: 100vw;
+    flex-grow: 3;
+  }
+  &__filtering {
+    flex-grow: 1;
+    min-width: 300px;
+  }
+  &__table {
+    cursor: pointer;
+  }
+  #status {
+    font-weight: bold;
+  }
+}
+
+.additional-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
 }
 
 .btn-plus {
@@ -188,6 +294,15 @@ const getReviewerStatus = (
   position: fixed;
   @media screen and (max-width: $mobile-max-width) {
     bottom: 70px;
+  }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+  .activity {
+    &__listing {
+      margin: 0;
+      width: 100%;
+    }
   }
 }
 </style>
