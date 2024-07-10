@@ -37,10 +37,7 @@ export class PrismaEditContributions implements EditContributions {
   ): Promise<void> {
     await this.prisma.contribution.delete({
       where: {
-        adherentId_edition: {
-          adherentId,
-          edition,
-        },
+        adherentId_edition: { adherentId, edition },
       },
     });
   }

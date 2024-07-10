@@ -40,7 +40,7 @@ export class HttpClient {
     return apiFetch<T>(general, requestHeader, body);
   }
 
-  static put<T extends object>(
+  static put<T extends object | void>(
     url: Endpoint | string,
     body: object,
     header?: Partial<RequestHeader>,
@@ -53,7 +53,7 @@ export class HttpClient {
     return apiFetch<T>(general, requestHeader, body);
   }
 
-  static patch<T extends object>(
+  static patch<T extends object | void>(
     url: Endpoint | string,
     body: object,
     header?: Partial<RequestHeader>,

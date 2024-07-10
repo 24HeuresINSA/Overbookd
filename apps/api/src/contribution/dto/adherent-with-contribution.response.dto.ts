@@ -11,4 +11,16 @@ export class AdherentWithContributionResponseDto
     type: Number,
   })
   amount: number;
+
+  @ApiProperty({
+    description: "Contribution payment date",
+    type: Date,
+  })
+  paymentDate: Date;
+
+  @ApiProperty({
+    description: "Contribution edition",
+    type: Number,
+  })
+  edition: number;
 }

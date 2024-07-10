@@ -13,23 +13,22 @@
       no-data-text="Aucun nouvel arrivant"
       show-select
       return-object
-      class="newcomer-listing"
     >
       <template #top>
         <div class="filters">
           <v-text-field
             v-model="searchNewcomer"
             label="Rechercher un nouvel arrivant"
-            class="search"
+            clearable
+            hide-details
+            @click:clear="searchNewcomer = ''"
           />
           <v-btn
-            class="ma-2"
+            text="Inscrits dans les 30 derniers jours"
             color="primary"
             :variant="last30DaysNewcomers ? 'elevated' : 'outlined'"
             @click="toggleLast30DaysNewcomers"
-          >
-            Inscrits dans les 30 derniers jours
-          </v-btn>
+          />
         </div>
       </template>
 
@@ -42,22 +41,23 @@
       </template>
 
       <template #item.action="{ item }">
-        <v-btn color="primary" @click="forgetHim(item.email)">
-          Supprimer l'inscription
-        </v-btn>
+        <v-btn
+          text="Supprimer l'inscription"
+          color="primary"
+          @click="forgetHim(item.email)"
+        />
       </template>
     </v-data-table>
 
     <v-card-actions>
       <v-spacer />
       <v-btn
+        text=" Enrôler en tant que hard"
         color="primary"
         variant="elevated"
         :disabled="noStaffSelected"
         @click="enrollNewcomers"
-      >
-        Enrôler en tant que hard
-      </v-btn>
+      />
     </v-card-actions>
   </div>
 </template>
@@ -137,15 +137,9 @@ const forgetHim = (email: string) => {
 </script>
 
 <style lang="scss" scoped>
-.registrations {
-  margin-left: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    margin-left: 0;
-  }
-}
-
 .filters {
   display: flex;
+  align-items: center;
   gap: 20px;
   margin: 10px 20px;
 }

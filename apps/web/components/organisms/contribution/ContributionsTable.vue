@@ -4,22 +4,46 @@
     :items="filteredAdherents"
     :items-per-page="20"
     class="elevation-1"
-    :loading="loading"
+    :loading="displayOutToDateCustomers ? outToDateLoading : validLoading"
     loading-text="Chargement des bénévoles..."
     no-data-text="Aucun bénévole trouvé"
   >
     <template #top>
-      <v-text-field v-model="search" label="Chercher un bénévole" />
+      <div class="filters">
+        <v-text-field
+          v-model="search"
+          label="Chercher un bénévole"
+          clearable
+          hide-details
+          @click:clear="search = ''"
+        />
+        <v-btn
+          :text="toggleBtnLabbel"
+          color="primary"
+          size="large"
+          @click="toggleOutToDateCustomers"
+        />
+      </div>
     </template>
 
-    <template #item.payment="{ item }">
-      <ContributionPaymentForm :adherent="item" />
+    <template #item.amount="{ item }">
+      <ContributionPaymentForm
+        v-if="displayOutToDateCustomers"
+        :adherent="item"
+      />
+      <ContributionEditionForm
+        v-else
+        :adherent="item as AdherentWithContribution"
+      />
     </template>
   </v-data-table>
 </template>
 
 <script lang="ts" setup>
-import type { Adherent } from "@overbookd/contribution";
+import type {
+  Adherent,
+  AdherentWithContribution,
+} from "@overbookd/contribution";
 import type { TableHeaders } from "~/utils/data-table/header";
 import { toSearchable } from "~/utils/search/search-user";
 import {
@@ -33,23 +57,64 @@ const headers: TableHeaders = [
   { title: "Prénom", value: "firstname", sortable: true },
   { title: "Nom", value: "lastname", sortable: true },
   { title: "Surnom", value: "nickname", sortable: true },
-  { title: "Paiement", value: "payment", width: "30%" },
+  { title: "Paiement", value: "amount", width: "40%", sortable: true },
 ];
 
 const search = ref("");
 
-const adherents = computed<Adherent[]>(() => {
+const displayOutToDateCustomers = ref(true);
+const toggleOutToDateCustomers = () => {
+  displayOutToDateCustomers.value = !displayOutToDateCustomers.value;
+};
+const toggleBtnLabbel = computed<string>(() =>
+  displayOutToDateCustomers.value
+    ? "Afficher les cotisants"
+    : "Afficher les non cotisants",
+);
+
+const outToDateAdherents = computed<Adherent[]>(() => {
   return contributionStore.adherentsOutToDate;
 });
-
-const loading = ref(adherents.value.length === 0);
-contributionStore.fetchAdherentsOutToDate().then(() => (loading.value = false));
-
-const searchableAdherents = computed<Searchable<Adherent>[]>(() => {
-  return adherents.value.map(toSearchable);
+const outToDateLoading = ref(outToDateAdherents.value.length === 0);
+contributionStore
+  .fetchAdherentsOutToDate()
+  .then(() => (outToDateLoading.value = false));
+contributionStore.fetchAdherentsWithValidContribution();
+const searchableOutToDateAdherents = computed<Searchable<Adherent>[]>(() => {
+  return outToDateAdherents.value.map(toSearchable);
 });
 
-const filteredAdherents = computed<Adherent[]>(() => {
-  return matchingSearchItems(searchableAdherents.value, search.value);
+const validAdherents = computed<Adherent[]>(() => {
+  return contributionStore.adherentsOutToDate;
 });
+const validLoading = ref(validAdherents.value.length === 0);
+contributionStore
+  .fetchAdherentsOutToDate()
+  .then(() => (validLoading.value = false));
+contributionStore.fetchAdherentsWithValidContribution().then(() => {
+  validLoading.value = false;
+});
+const searchableValidAdherents = computed<
+  Searchable<AdherentWithContribution>[]
+>(() => {
+  return contributionStore.validAdherents.map(toSearchable);
+});
+
+const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
+  () => {
+    const adherents = displayOutToDateCustomers.value
+      ? searchableOutToDateAdherents.value
+      : searchableValidAdherents.value;
+    return matchingSearchItems(adherents, search.value);
+  },
+);
 </script>
+
+<style lang="scss" scoped>
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 20px;
+}
+</style>

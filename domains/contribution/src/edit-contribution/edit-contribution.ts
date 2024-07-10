@@ -8,6 +8,8 @@ import { NotFoundContribution } from "./edit-contribution.error.js";
 
 export type AdherentWithContribution = Adherent & {
   amount: Contribution["amount"];
+  paymentDate: Contribution["paymentDate"];
+  edition: Contribution["edition"];
 };
 
 export type EditContributions = {
@@ -57,10 +59,10 @@ export class EditContribution {
       await this.contributions.findCurrentContributions(edition);
 
     const contributionsWithAdherent = await Promise.all(
-      contributions.map(async ({ adherentId, amount }) => {
+      contributions.map(async ({ adherentId, amount, paymentDate }) => {
         const adherent = await this.adherents.find(adherentId);
         if (!adherent) return null;
-        return { amount, ...adherent };
+        return { amount, paymentDate, edition, ...adherent };
       }),
     );
 

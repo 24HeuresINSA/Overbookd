@@ -6,6 +6,7 @@
     :rules="[rules.min]"
     :readonly="readonly"
     :hide-details="hideDetails"
+    :density="dense ? 'comfortable' : 'default'"
     @update:model-value="propagateValue"
     @update:error="propagateError"
   />
@@ -38,6 +39,10 @@ const { label, min, readonly, hideDetails } = defineProps({
     default: false,
   },
   hideDetails: {
+    type: Boolean,
+    default: false,
+  },
+  dense: {
     type: Boolean,
     default: false,
   },

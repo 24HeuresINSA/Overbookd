@@ -98,6 +98,8 @@ describe("Edit contribution", () => {
       const expectedNoel: AdherentWithContribution = {
         ...noel,
         amount: noelContrib.amount,
+        paymentDate: noelContrib.paymentDate,
+        edition: noelContrib.edition,
       };
       expect(contributions).toMatchObject([expectedNoel]);
     });
