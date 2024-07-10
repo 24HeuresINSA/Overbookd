@@ -22,6 +22,15 @@ export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
+// return format dd/mm
+export function formatDateWithoutYear(date: string | Date): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    month: "2-digit",
+    day: "2-digit",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
+
 // return format month YYYY
 export function formatMonthWithYear(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {

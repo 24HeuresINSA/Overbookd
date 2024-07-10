@@ -7,11 +7,27 @@ import {
 } from "./define-barrel-price.error";
 import { InMemoryBarrels } from "./barrels.inmemory";
 
-const ambree = { drink: "Ambrée", price: 8000 };
-const blonde = { drink: "Blonde", price: 8100 };
-const api = { drink: "API", price: 9000 };
-const triple = { drink: "Triple", price: 12000 };
-const cidre = { drink: "Cidre", price: 10000 };
+const ambree = {
+  drink: "Ambrée",
+  price: 8000,
+  openedOn: new Date("2024-07-10"),
+};
+const blonde = {
+  drink: "Blonde",
+  price: 8100,
+  openedOn: new Date("2024-02-22"),
+};
+const api = { drink: "API", price: 9000, openedOn: new Date("2024-01-01") };
+const triple = {
+  drink: "Triple",
+  price: 12000,
+  openedOn: new Date("2024-05-01"),
+};
+const cidre = {
+  drink: "Cidre",
+  price: 10000,
+  openedOn: new Date("2024-07-12"),
+};
 
 describe("Define barrel price", () => {
   describe.each`
@@ -99,13 +115,34 @@ describe("Define barrel price", () => {
       const barrels = new InMemoryBarrels(alreadyConfigured);
       defineBarrelPrice = new DefineBarrelPrice(barrels);
 
-      updatedBarrel = await defineBarrelPrice.adjustPrice({
+      updatedBarrel = await defineBarrelPrice.adjustPrice({ slug, price });
+    });
+    it("should update the configuration", () => {
+      expect(updatedBarrel).toEqual({ ...ambree, price, slug });
+    });
+    it("should be listed in the configurated barrel", async () => {
+      const allConfigured = await defineBarrelPrice.list();
+      expect(allConfigured).toHaveLength(allConfigured.length);
+      expect(allConfigured).toContain(updatedBarrel);
+    });
+  });
+  describe("when adjusting an existing barrel opening date", () => {
+    const alreadyConfigured = [ambree];
+    const slug = Slugify.apply(ambree.drink);
+    const openedOn = new Date("2025-01-01");
+    let defineBarrelPrice: DefineBarrelPrice;
+    let updatedBarrel: ConfiguredBarrel;
+    beforeAll(async () => {
+      const barrels = new InMemoryBarrels(alreadyConfigured);
+      defineBarrelPrice = new DefineBarrelPrice(barrels);
+
+      updatedBarrel = await defineBarrelPrice.adjustOpeningDate({
         slug,
-        price,
+        openedOn,
       });
     });
     it("should update the configuration", () => {
-      expect(updatedBarrel).toEqual({ drink: ambree.drink, price, slug });
+      expect(updatedBarrel).toEqual({ ...ambree, slug, openedOn });
     });
     it("should be listed in the configurated barrel", async () => {
       const allConfigured = await defineBarrelPrice.list();

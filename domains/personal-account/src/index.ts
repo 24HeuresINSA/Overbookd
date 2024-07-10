@@ -44,6 +44,7 @@ export type {
   ConfiguredBarrel,
   NewBarrel,
   AdjustPrice,
+  AdjustOpeningDate,
 } from "./barrel-prices/define-barrel-price.js";
 export { DefineBarrelPrice } from "./barrel-prices/define-barrel-price.js";
 export {

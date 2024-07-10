@@ -15,6 +15,10 @@ export class PersonalAccountService {
     return this.defineBarrelPrice.adjustPrice({ slug, price });
   }
 
+  adjustOpeningDate(slug: string, openedOn: Date): Promise<ConfiguredBarrel> {
+    return this.defineBarrelPrice.adjustOpeningDate({ slug, openedOn });
+  }
+
   createBarrel(barrel: NewBarrel): Promise<ConfiguredBarrel> {
     return this.defineBarrelPrice.add(barrel);
   }

@@ -43,9 +43,12 @@
         hide-details
       />
     </div>
-    <v-btn :disabled="hasErrors" color="primary" @click="saveTransactions">
-      Enregistrer
-    </v-btn>
+    <v-btn
+      text="Enregistrer"
+      :disabled="hasErrors"
+      color="primary"
+      @click="saveTransactions"
+    />
 
     <v-divider class="divider" />
 
@@ -66,19 +69,28 @@
         :items="barrels"
         item-title="drink"
         return-object
+        hide-details
         @update:model-value="updateTotalPriceByBarrel"
       />
-      <v-btn class="bottom-button" @click="openBarrelsDialog">
-        Gestion des fûts
-      </v-btn>
-      <v-dialog v-model="isBarrelsDialogOpen" width="600">
-        <BarrelsForm @close="closeBarrelsDialog" />
-      </v-dialog>
+      <p v-if="selectedBarrel" class="barrel-date">
+        Date d'ouverture : {{ formatDate(selectedBarrel.openedOn) }}
+      </p>
+      <v-btn
+        text="Gestion des fûts"
+        class="bottom-button"
+        @click="openBarrelsDialog"
+      />
     </div>
 
-    <v-btn class="bottom-button" :href="negativeBalanceMailLink">
-      Envoyer un mail aux CP négatifs
-    </v-btn>
+    <v-btn
+      text="Envoyer un mail aux CP négatifs"
+      class="bottom-button"
+      :href="negativeBalanceMailLink"
+    />
+
+    <v-dialog v-model="isBarrelsDialogOpen" width="800">
+      <BarrelsForm @close="closeBarrelsDialog" />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -94,6 +106,7 @@ import {
 } from "~/utils/transaction/sg-mode";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
 import { FUT, PLACARD, DEPOT } from "~/utils/transaction/transaction";
+import { formatDate } from "~/utils/date/date.utils";
 
 const personalAccountStore = usePersonalAccountStore();
 
@@ -141,14 +154,10 @@ const openBarrelsDialog = () => (isBarrelsDialogOpen.value = true);
 const closeBarrelsDialog = () => (isBarrelsDialogOpen.value = false);
 
 const emit = defineEmits(["save-transactions"]);
-const saveTransactions = () => {
-  emit("save-transactions");
-};
+const saveTransactions = () => emit("save-transactions");
 
 const isMode = (value: SgMode) => mode.value === value;
-const hasErrors = computed<boolean>(() => {
-  return props.errors.length > 0;
-});
+const hasErrors = computed<boolean>(() => props.errors.length > 0);
 
 const negativeBalanceMailLink = computed<string>(() => {
   const inDebtConsumers = props.consumers.filter((c) => c.balance < 0);
@@ -196,5 +205,12 @@ const negativeBalanceMailLink = computed<string>(() => {
 .bottom-button {
   width: 100%;
   margin-bottom: 10px;
+}
+
+.barrel-date {
+  font-size: 0.9rem;
+  color: grey;
+  margin-top: 4px;
+  margin-bottom: 15px;
 }
 </style>

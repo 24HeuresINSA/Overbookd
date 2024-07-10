@@ -6,7 +6,12 @@
     </v-card-title>
     <v-card-text>
       <div v-for="barrel in barrels" :key="barrel.slug" class="barrel">
-        <v-text-field :value="barrel.drink" readonly />
+        <v-text-field :model-value="barrel.drink" label="Fût" readonly />
+        <DateField
+          v-model="barrel.openedOn"
+          label="Date d'ouverture"
+          @update:model-value="adjustBarrelOpeningDate(barrel.slug, $event)"
+        />
         <MoneyField
           v-model="barrel.price"
           @update:model-value="adjustBarrelPrice(barrel.slug, $event)"
@@ -23,6 +28,7 @@
     <v-card-text class="barrel-form__add">
       <div class="barrel">
         <v-text-field v-model="drink" label="Fût" />
+        <DateField v-model="openedOn" label="Date d'ouverture" />
         <MoneyField v-model="price" />
         <v-btn
           icon="mdi-plus"
@@ -44,6 +50,7 @@ const personalAccountStore = usePersonalAccountStore();
 
 const drink = ref("");
 const price = ref(100);
+const openedOn = ref(new Date());
 
 const barrels = computed(() => personalAccountStore.barrels);
 const fetchBarrels = () => personalAccountStore.fetchBarrels();
@@ -54,13 +61,27 @@ const addNewBarrel = async () => {
   await personalAccountStore.createBarrel({
     drink: drink.value,
     price: price.value,
+    openedOn: openedOn.value,
   });
   fetchBarrels();
   drink.value = "";
   price.value = 100;
+  openedOn.value = new Date();
 };
-const adjustBarrelPrice = async (slug: string, price: number) => {
-  await personalAccountStore.adjustBarrelPrice({ slug, price });
+const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const adjustBarrelPrice = (slug: string, price: number) => {
+  if (delay.value) clearInterval(delay.value);
+  delay.value = setTimeout(
+    () => personalAccountStore.adjustBarrelPrice({ slug, price }),
+    800,
+  );
+};
+const adjustBarrelOpeningDate = (slug: string, openedOn: Date) => {
+  if (delay.value) clearInterval(delay.value);
+  delay.value = setTimeout(
+    () => personalAccountStore.adjustBarrelOpeningDate({ slug, openedOn }),
+    800,
+  );
 };
 const removeBarrel = async (barrel: ConfiguredBarrel) => {
   await personalAccountStore.removeBarrel(barrel.slug);

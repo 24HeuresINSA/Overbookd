@@ -1,11 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { NewBarrel } from "@overbookd/personal-account";
-import { IsPositive, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsNotEmpty, IsPositive, MinLength } from "class-validator";
 
 export class CreateBarrelRequestDto implements NewBarrel {
-  @ApiProperty({
-    example: "Blonde",
-  })
+  @ApiProperty({ example: "Blonde" })
   @MinLength(3)
   drink: string;
 
@@ -15,4 +14,10 @@ export class CreateBarrelRequestDto implements NewBarrel {
   })
   @IsPositive()
   price: number;
+
+  @ApiProperty()
+  @IsDate()
+  @Type(() => Date)
+  @IsNotEmpty()
+  openedOn: Date;
 }

@@ -277,9 +277,10 @@ model CatalogSignage {
 }
 
 model Barrel {
-  slug  String @id
-  drink String
-  price Int
+  slug     String   @id
+  drink    String
+  price    Int
+  openedOn DateTime @default(now()) @map("opened_on")
 
   @@map("barrel")
 }

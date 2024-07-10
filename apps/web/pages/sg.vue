@@ -39,6 +39,7 @@ import {
   CLOSET_MODE,
   DEPOSIT_MODE,
 } from "~/utils/transaction/sg-mode";
+import { formatDateWithoutYear } from "~/utils/date/date.utils";
 
 useHead({ title: "SG" });
 
@@ -106,7 +107,7 @@ const stickWord = (consumption: number) => {
 const defineTransactionContext = (consumption: number) => {
   if (isMode(CASK_MODE)) {
     const barrel = selectedBarrel.value
-      ? `Fût de ${selectedBarrel.value.drink}`
+      ? `Fût de ${selectedBarrel.value.drink} du ${formatDateWithoutYear(selectedBarrel.value.openedOn)}`
       : "Fût";
     return `${barrel}: ${consumption} ${stickWord(consumption)}`;
   }

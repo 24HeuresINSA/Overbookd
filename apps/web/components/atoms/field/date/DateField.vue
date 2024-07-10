@@ -12,8 +12,6 @@
 <script lang="ts" setup>
 import { formatLocalDate } from "~/utils/date/date.utils";
 
-const emit = defineEmits(["update:model-value"]);
-
 const date = defineModel<Date>({ required: true });
 
 const { label, disabled, hideDetails } = defineProps({
@@ -32,7 +30,6 @@ const { label, disabled, hideDetails } = defineProps({
 });
 
 const dateStringified = ref<string>("");
-
 const stringifyDate = (date?: Date | string): string => {
   if (!date) return "";
   return formatLocalDate(new Date(date));
@@ -44,6 +41,7 @@ watch(
   { immediate: true },
 );
 
+const emit = defineEmits(["update:model-value"]);
 const updateDate = (date: string) => {
   emit("update:model-value", new Date(date));
 };

@@ -17,12 +17,19 @@ export class PersonalAccountRepository {
 
   static adjustBarrelPrice(slug: string, price: number) {
     return HttpClient.patch<ConfiguredBarrel>(
-      `${this.basePath}/barrels/${slug}`,
+      `${this.basePath}/barrels/${slug}/price`,
       { price },
     );
   }
 
-  static removeBarrelPrice(slug: string) {
+  static adjustBarrelOpeningDate(slug: string, openedOn: Date) {
+    return HttpClient.patch<ConfiguredBarrel>(
+      `${this.basePath}/barrels/${slug}/opening`,
+      { openedOn },
+    );
+  }
+
+  static removeBarrel(slug: string) {
     return HttpClient.delete(`${this.basePath}/barrels/${slug}`);
   }
 }
