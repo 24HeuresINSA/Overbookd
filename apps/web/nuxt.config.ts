@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  modules: ["@pinia/nuxt"],
+  modules: ["@pinia/nuxt", "@nuxtjs/leaflet"],
   imports: {
     dirs: ["stores", "stores/**", "repositories", "repositories/**"],
   },
