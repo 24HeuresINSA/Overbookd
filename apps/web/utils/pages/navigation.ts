@@ -9,6 +9,7 @@ import {
   READ_FA,
   READ_GEAR_CATALOG,
   VIEW_TROMBINOSCOPE,
+  READ_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -312,7 +313,7 @@ export const pages: Page[] = [
       "Permet de définir l'ensemble des lieux disponible sur le festival",
     mobileSupport: false,
     keywords: ["lieux-signaletique"],
-  },
+  },*/
   {
     icon: "mdi-bookshelf",
     title: "Catalogue Signa",
@@ -323,7 +324,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["catalogue-signaletique"],
   },
-  {
+  /*{
     icon: "mdi-web-sync",
     title: "Animations à publier",
     permission: READ_ANIMATION_TO_PUBLISH,

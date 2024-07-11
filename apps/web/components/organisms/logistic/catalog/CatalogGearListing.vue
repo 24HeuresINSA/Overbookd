@@ -148,7 +148,7 @@ const deleteGear = async () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .category-details {
   display: flex;
   flex-direction: column;

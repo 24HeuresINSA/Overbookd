@@ -33,6 +33,7 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
       if (isHttpError(res)) return;
       sendSuccessNotification("La signalétique a été créé avec succès ✅");
       this.signages = [...this.signages, res];
+      this.signage = res;
     },
 
     async updateSignage(form: SignageUpdateForm) {

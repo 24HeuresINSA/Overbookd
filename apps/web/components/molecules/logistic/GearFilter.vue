@@ -38,7 +38,7 @@ const defectNameUpdate = (name: string) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .filter {
   display: flex;
   gap: 5%;

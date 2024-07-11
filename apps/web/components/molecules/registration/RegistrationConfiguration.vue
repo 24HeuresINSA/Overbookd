@@ -60,7 +60,7 @@ const refreshInviteStaffLink = () =>
   registrationStore.generateInviteStaffLink();
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .registration-configuration {
   margin: 0 20px;
 }
