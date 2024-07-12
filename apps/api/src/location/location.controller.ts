@@ -6,38 +6,38 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { CreateSignaLocationRequestDto } from "./dto/create-signa-location.request.dto";
-import { UpdateSignaLocationRequestDto } from "./dto/update-signa-location.request.dto";
-import { SignaLocationService } from "./signa-location.service";
-import { SignaLocationRepresentation } from "./signa-location.model";
+import { CreateLocationRequestDto } from "./dto/create-location.request.dto";
+import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
+import { LocationService } from "./location.service";
+import { LocationRequestDto } from "./dto/location.request.dto.";
 import { MANAGE_LOCATION, VIEW_LOCATION } from "@overbookd/permission";
 
 @ApiBearerAuth()
-@ApiTags("signa-location")
-@Controller("signa-location")
-export class SignaLocationController {
-  constructor(private readonly signaLocationService: SignaLocationService) {}
+@ApiTags("locations")
+@Controller("locations")
+export class LocationController {
+  constructor(private readonly locationService: LocationService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_LOCATION)
   @Post()
   @ApiBody({
-    type: CreateSignaLocationRequestDto,
+    type: CreateLocationRequestDto,
   })
   @ApiResponse({
     status: 201,
-    type: SignaLocationRepresentation,
+    type: LocationRequestDto,
   })
-  create(@Body() createSignaLocationDto: CreateSignaLocationRequestDto) {
-    return this.signaLocationService.create(createSignaLocationDto);
+  create(@Body() location: CreateLocationRequestDto) {
+    return this.locationService.create(location);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -46,10 +46,10 @@ export class SignaLocationController {
   @ApiResponse({
     status: 200,
     isArray: true,
-    type: SignaLocationRepresentation,
+    type: LocationRequestDto,
   })
   findAll() {
-    return this.signaLocationService.findAll();
+    return this.locationService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -57,24 +57,24 @@ export class SignaLocationController {
   @Get(":id")
   @ApiResponse({
     status: 200,
-    type: SignaLocationRepresentation,
+    type: LocationRequestDto,
   })
   findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.signaLocationService.findOne(id);
+    return this.locationService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_LOCATION)
-  @Patch(":id")
+  @Put(":id")
   @ApiResponse({
     status: 200,
-    type: SignaLocationRepresentation,
+    type: LocationRequestDto,
   })
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateSignaLocationDto: UpdateSignaLocationRequestDto,
+    @Body() location: UpdateLocationRequestDto,
   ) {
-    return this.signaLocationService.update(id, updateSignaLocationDto);
+    return this.locationService.update(id, location);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -83,6 +83,6 @@ export class SignaLocationController {
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   remove(@Param("id", ParseIntPipe) id: number) {
-    return this.signaLocationService.remove(id);
+    return this.locationService.remove(id);
   }
 }

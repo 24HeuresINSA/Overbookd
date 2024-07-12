@@ -13,7 +13,7 @@ import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
 import { NeedHelpModule } from "./need-help/need-help.module";
 import { OrgaNeedsModule } from "./orga-needs/orga-needs.module";
 import { PermissionModule } from "./permission/permission.module";
-import { SignaLocationModule } from "./signa-location/signa-location.module";
+import { LocationModule } from "./location/location.module";
 import { TeamModule } from "./team/team.module";
 import { TimelineModule } from "./timeline/timeline.module";
 import { TransactionModule } from "./transaction/transaction.module";
@@ -65,7 +65,7 @@ import { PlanningModule } from "./user/planning/planning.module";
       },
     }),
     ConfigurationModule,
-    SignaLocationModule,
+    LocationModule,
     PermissionModule,
     CharismaPeriodModule,
     VolunteerAvailabilityModule,

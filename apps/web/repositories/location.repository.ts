@@ -3,7 +3,7 @@ import type { SignaLocation } from "@overbookd/signa";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class LocationRepository {
-  private static readonly basePath = "signa-location";
+  private static readonly basePath = "locations";
 
   static getAllLocations() {
     return HttpClient.get<SignaLocation[]>(this.basePath);

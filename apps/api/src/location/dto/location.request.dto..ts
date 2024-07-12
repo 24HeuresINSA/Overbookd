@@ -6,7 +6,7 @@ import {
 } from "@overbookd/geo-location";
 import { SignaLocation } from "@overbookd/signa";
 
-export class SignaLocationRepresentation implements SignaLocation {
+export class LocationRequestDto implements SignaLocation {
   @ApiProperty()
   id: number;
 

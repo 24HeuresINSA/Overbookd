@@ -12,7 +12,7 @@ import {
   IsOptional,
 } from "class-validator";
 
-export class UpdateSignaLocationRequestDto {
+export class UpdateLocationRequestDto {
   @ApiProperty({
     description: "The name of the location",
     example: "Devant les humas",

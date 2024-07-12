@@ -31,7 +31,7 @@ const geoLocation = ref<Point>(defaultGeoLocation);
 
 const isNewLocationDefined = computed(() => name.value.length > 0);
 
-const emit = defineEmits(["created", "close"]);
+const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
 const createNewLocation = async () => {
@@ -41,8 +41,8 @@ const createNewLocation = async () => {
     geoLocation: geoLocation.value,
   });
 
+  close();
   name.value = "";
   geoLocation.value = defaultGeoLocation;
-  emit("created");
 };
 </script>

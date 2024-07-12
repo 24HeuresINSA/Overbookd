@@ -10,6 +10,7 @@
         text="Modifier le lieu"
         color="primary"
         variant="elevated"
+        size="large"
         :disabled="noChange"
         @click="editLocation"
       />
@@ -38,7 +39,7 @@ const noChange = computed<boolean>(() => {
   return sameName && sameLocation;
 });
 
-const emit = defineEmits(["edited", "close"]);
+const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
 const editLocation = async () => {
@@ -49,6 +50,6 @@ const editLocation = async () => {
     geoLocation: geoLocation.value,
   });
 
-  emit("edited");
+  close();
 };
 </script>

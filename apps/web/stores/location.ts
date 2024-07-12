@@ -32,7 +32,7 @@ export const useLocationStore = defineStore("location", {
 
     async editLocation(location: SignaLocation) {
       const res = await LocationRepository.updateLocation(location);
-      if (!isHttpError(res)) return;
+      if (isHttpError(res)) return;
       sendSuccessNotification("Lieu modifié 🥳");
       await this.fetchAllLocations();
     },

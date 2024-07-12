@@ -10,6 +10,7 @@ import {
   READ_GEAR_CATALOG,
   VIEW_TROMBINOSCOPE,
   READ_SIGNAGE_CATALOG,
+  VIEW_LOCATION,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -303,7 +304,7 @@ export const pages: Page[] = [
     description: "Permet de gérer les emprunts de matériel",
     mobileSupport: false,
     keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
-  },
+  },*/
   {
     icon: "mdi-map-marker",
     title: "Lieux de la Signa",
@@ -313,7 +314,7 @@ export const pages: Page[] = [
       "Permet de définir l'ensemble des lieux disponible sur le festival",
     mobileSupport: false,
     keywords: ["lieux-signaletique"],
-  },*/
+  },
   {
     icon: "mdi-bookshelf",
     title: "Catalogue Signa",
