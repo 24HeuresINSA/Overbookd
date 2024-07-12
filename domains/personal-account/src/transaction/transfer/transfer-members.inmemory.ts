@@ -1,5 +1,5 @@
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
-import { Member, MemberRepository } from "./transfer.js";
+import { Member, TransferMembers } from "./transfer.js";
 
 type StoredMember = {
   id: number;
@@ -7,7 +7,7 @@ type StoredMember = {
   permissions: Permission[];
 };
 
-export class InMemoryMemberRepository implements MemberRepository {
+export class InMemoryTransferMembers implements TransferMembers {
   constructor(private readonly members: StoredMember[]) {}
 
   getById(adherentId: number): Promise<Member> {

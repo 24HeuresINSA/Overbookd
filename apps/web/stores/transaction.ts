@@ -2,14 +2,14 @@ import type { HttpStringified, CreateTransactionForm } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import type {
   CreateTransferForm,
-  Transaction,
+  MyTransaction,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
-  myTransactions: Transaction[];
+  myTransactions: MyTransaction[];
   allTransactions: TransactionWithSenderAndReceiver[];
 };
 
@@ -88,8 +88,8 @@ export const useTransactionStore = defineStore("transaction", {
 });
 
 function castTransactionWithDate(
-  transaction: HttpStringified<Transaction>,
-): Transaction {
+  transaction: HttpStringified<MyTransaction>,
+): MyTransaction {
   return {
     ...transaction,
     date: new Date(transaction.date),

@@ -1,9 +1,9 @@
-import { Transaction } from "@overbookd/personal-account";
+import { MyTransaction } from "@overbookd/personal-account";
 
 export type CreateTransactionForm = {
-  amount: Transaction["amount"];
-  type: Transaction["type"];
-  context: Transaction["context"];
+  amount: MyTransaction["amount"];
+  type: MyTransaction["type"];
+  context: MyTransaction["context"];
   to: number;
   from: number;
 };

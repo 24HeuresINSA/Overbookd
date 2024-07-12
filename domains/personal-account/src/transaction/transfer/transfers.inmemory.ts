@@ -1,13 +1,13 @@
 import { updateItemToList } from "@overbookd/list";
 import { TransferForm } from "./payor.js";
-import { TransferRepository, TransferResponse } from "./transfer.js";
+import { Transfers, TransferResponse } from "./transfer.js";
 
 type Adherent = {
   id: number;
   balance: number;
 };
 
-export class InMemoryTransferRepository implements TransferRepository {
+export class InMemoryTransfers implements Transfers {
   constructor(private adherents: Adherent[]) {}
 
   create(transfer: TransferForm): Promise<TransferResponse> {

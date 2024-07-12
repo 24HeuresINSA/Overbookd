@@ -14,10 +14,10 @@ import {
   PastSharedMeal,
   SharedMealPayment,
   SharedMealTransaction,
-  Transaction,
+  MyTransaction,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
+import { PrismaTransactions } from "./repository/transactions.prisma";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { CreateTransactionForm } from "@overbookd/http";
 
@@ -26,7 +26,7 @@ export class TransactionService implements OnApplicationBootstrap {
   private logger = new Logger(TransactionService.name);
 
   constructor(
-    private readonly transactions: PrismaTransactionRepository,
+    private readonly transactions: PrismaTransactions,
     private readonly prisma: PrismaService,
     private readonly eventStore: DomainEventService,
   ) {}
@@ -46,7 +46,7 @@ export class TransactionService implements OnApplicationBootstrap {
     });
   }
 
-  async getMyTransactions(user: JwtPayload): Promise<Transaction[]> {
+  async getMyTransactions(user: JwtPayload): Promise<MyTransaction[]> {
     return this.transactions.getMine(user.id);
   }
 

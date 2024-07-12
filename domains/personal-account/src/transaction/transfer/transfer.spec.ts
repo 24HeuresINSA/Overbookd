@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { InMemoryTransferRepository } from "./transfer-repository.inmemory.js";
+import { InMemoryTransfers } from "./transfers.inmemory.js";
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
   AmountTooHigh,
@@ -11,7 +11,7 @@ import {
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
 } from "./transfer.error.js";
 import { Payor } from "./payor.js";
-import { InMemoryMemberRepository } from "./member-repository.inmemory.js";
+import { InMemoryTransferMembers } from "./transfer-members.inmemory.js";
 import { Transfer } from "./transfer.js";
 
 const lea = {
@@ -45,13 +45,13 @@ const members = [...adherents, neimad];
 
 describe("Transfer", () => {
   let transfer: Transfer;
-  let transferRepository: InMemoryTransferRepository;
-  let memberRepository: InMemoryMemberRepository;
+  let transferRepository: InMemoryTransfers;
+  let memberRepository: InMemoryTransferMembers;
 
   describe("when member create transfer", () => {
     beforeEach(() => {
-      transferRepository = new InMemoryTransferRepository(adherents);
-      memberRepository = new InMemoryMemberRepository(members);
+      transferRepository = new InMemoryTransfers(adherents);
+      memberRepository = new InMemoryTransferMembers(members);
       transfer = new Transfer(transferRepository, memberRepository);
     });
 

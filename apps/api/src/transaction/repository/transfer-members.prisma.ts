@@ -1,8 +1,8 @@
-import { Member, MemberRepository } from "@overbookd/personal-account";
+import { Member, TransferMembers } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
 import { CAN_HAVE_PERSONAL_ACCOUNT } from "../transaction.query";
 
-export class PrismaMemberRepository implements MemberRepository {
+export class PrismaTransferMembers implements TransferMembers {
   constructor(private readonly prisma: PrismaService) {}
 
   async getById(adherentId: number): Promise<Member> {

@@ -4,10 +4,10 @@ import { TransactionService } from "./transaction.service";
 import { TransactionController } from "./transaction.controller";
 import { PrismaService } from "../prisma.service";
 import { PrismaModule } from "../prisma.module";
-import { PrismaTransferRepository } from "./repository/transfer-repository.prisma";
-import { PrismaMemberRepository } from "./repository/member-repository.prisma";
+import { PrismaTransfers } from "./repository/transfers.prisma";
+import { PrismaTransferMembers } from "./repository/transfer-members.prisma";
 import { TransferService } from "./transfer.service";
-import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
+import { PrismaTransactions } from "./repository/transactions.prisma";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 
@@ -15,38 +15,36 @@ import { DomainEventService } from "../domain-event/domain-event.service";
   controllers: [TransactionController],
   providers: [
     {
-      provide: PrismaTransactionRepository,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaTransactionRepository(prisma),
+      provide: PrismaTransactions,
+      useFactory: (prisma: PrismaService) => new PrismaTransactions(prisma),
       inject: [PrismaService],
     },
     {
       provide: TransactionService,
       useFactory: (
-        transactions: PrismaTransactionRepository,
+        transactions: PrismaTransactions,
         prisma: PrismaService,
         eventStore: DomainEventService,
       ) => new TransactionService(transactions, prisma, eventStore),
-      inject: [PrismaTransactionRepository, PrismaService, DomainEventService],
+      inject: [PrismaTransactions, PrismaService, DomainEventService],
     },
     {
-      provide: PrismaTransferRepository,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaTransferRepository(prisma),
+      provide: PrismaTransfers,
+      useFactory: (prisma: PrismaService) => new PrismaTransfers(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaMemberRepository,
-      useFactory: (prisma: PrismaService) => new PrismaMemberRepository(prisma),
+      provide: PrismaTransferMembers,
+      useFactory: (prisma: PrismaService) => new PrismaTransferMembers(prisma),
       inject: [PrismaService],
     },
     {
       provide: Transfer,
       useFactory: (
-        transferRepository: PrismaTransferRepository,
-        memberRepository: PrismaMemberRepository,
+        transferRepository: PrismaTransfers,
+        memberRepository: PrismaTransferMembers,
       ) => new Transfer(transferRepository, memberRepository),
-      inject: [PrismaTransferRepository, PrismaMemberRepository],
+      inject: [PrismaTransfers, PrismaTransferMembers],
     },
     {
       provide: TransferService,

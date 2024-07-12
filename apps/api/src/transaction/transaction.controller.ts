@@ -36,7 +36,7 @@ import {
 import { TransferService } from "./transfer.service";
 import {
   CreateTransferForm,
-  Transaction,
+  MyTransaction,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
@@ -106,7 +106,7 @@ export class TransactionController {
   })
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
-  ): Promise<Transaction[]> {
+  ): Promise<MyTransaction[]> {
     return this.transactionService.getMyTransactions(request.user);
   }
 

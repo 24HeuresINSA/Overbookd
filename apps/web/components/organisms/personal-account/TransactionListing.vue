@@ -42,7 +42,7 @@ import {
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
-  type Transaction,
+  type MyTransaction,
   type TransactionType,
   doIReceive,
 } from "@overbookd/personal-account";
@@ -54,7 +54,7 @@ transactionStore.fetchMyTransactions();
 
 const transactions = computed(() => transactionStore.myTransactions);
 
-const isCredit = (transaction: Transaction) => {
+const isCredit = (transaction: MyTransaction) => {
   switch (transaction.type) {
     case BARREL:
     case PROVISIONS:
@@ -66,7 +66,7 @@ const isCredit = (transaction: Transaction) => {
       return doIReceive(transaction);
   }
 };
-const isDebit = (transaction: Transaction) => !isCredit(transaction);
+const isDebit = (transaction: MyTransaction) => !isCredit(transaction);
 const getTransactionIcon = (type: TransactionType) => {
   switch (type) {
     case BARREL:
@@ -81,11 +81,11 @@ const getTransactionIcon = (type: TransactionType) => {
       return "mdi-food-variant";
   }
 };
-const formatAmount = (transaction: Transaction) => {
+const formatAmount = (transaction: MyTransaction) => {
   const symbol = isDebit(transaction) ? "-" : "";
   return `${symbol}${Money.cents(transaction.amount).toString()}`;
 };
-const getTransferMessage = (transaction: Transaction) => {
+const getTransferMessage = (transaction: MyTransaction) => {
   switch (transaction.type) {
     case BARREL:
     case PROVISIONS:

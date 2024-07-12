@@ -31,15 +31,15 @@ export type TransactionUser = {
   nickname?: string;
 };
 
-export type DepositTransaction = BaseTransaction & {
+export type MyDepositTransaction = BaseTransaction & {
   type: typeof DEPOSIT;
 };
 
-export type BarrelTransaction = BaseTransaction & {
+export type MyBarrelTransaction = BaseTransaction & {
   type: typeof BARREL;
 };
 
-export type ProvisionsTransaction = BaseTransaction & {
+export type MyProvisionsTransaction = BaseTransaction & {
   type: typeof PROVISIONS;
 };
 
@@ -51,16 +51,16 @@ type SharedMealIOfferTransaction = Receive<typeof SHARED_MEAL>;
 
 type SharedMealIShotgunTransaction = Send<typeof SHARED_MEAL>;
 
-export type Transaction =
-  | DepositTransaction
-  | BarrelTransaction
-  | ProvisionsTransaction
+export type MyTransaction =
+  | MyDepositTransaction
+  | MyBarrelTransaction
+  | MyProvisionsTransaction
   | TransferIReceiveTransaction
   | TransferISendTransaction
   | SharedMealIOfferTransaction
   | SharedMealIShotgunTransaction;
 
-export type TransactionType = Transaction["type"];
+export type TransactionType = MyTransaction["type"];
 
 export const transactionTypes: TransactionType[] = [
   DEPOSIT,

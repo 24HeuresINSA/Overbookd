@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   BARREL,
-  BarrelTransaction,
+  MyBarrelTransaction,
   DEPOSIT,
-  DepositTransaction,
+  MyDepositTransaction,
   PROVISIONS,
-  ProvisionsTransaction,
+  MyProvisionsTransaction,
   TRANSFER,
   TransactionUser,
   TransferIReceiveTransaction,
@@ -36,7 +36,7 @@ class BaseTransactionDto {
 
 export class DepositTransactionDto
   extends BaseTransactionDto
-  implements DepositTransaction
+  implements MyDepositTransaction
 {
   @ApiProperty({
     description: "Transaction type",
@@ -48,7 +48,7 @@ export class DepositTransactionDto
 
 export class BarrelTransactionDto
   extends BaseTransactionDto
-  implements BarrelTransaction
+  implements MyBarrelTransaction
 {
   @ApiProperty({
     description: "Transaction type",
@@ -60,7 +60,7 @@ export class BarrelTransactionDto
 
 export class ProvisionsTransactionDto
   extends BaseTransactionDto
-  implements ProvisionsTransaction
+  implements MyProvisionsTransaction
 {
   @ApiProperty({
     description: "Transaction type",

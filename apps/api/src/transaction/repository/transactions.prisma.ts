@@ -4,15 +4,15 @@ import {
   PROVISIONS,
   SHARED_MEAL,
   TRANSFER,
-  Transaction,
+  MyTransaction,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_TRANSACTION_USER } from "../transaction.query";
 
-export class PrismaTransactionRepository {
+export class PrismaTransactions {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMine(myId: number): Promise<Transaction[]> {
+  async getMine(myId: number): Promise<MyTransaction[]> {
     const transactions = await this.prisma.transaction.findMany({
       where: { isDeleted: false, OR: [{ from: myId }, { to: myId }] },
       select: {
@@ -32,9 +32,10 @@ export class PrismaTransactionRepository {
 
       switch (type) {
         case DEPOSIT:
+          return { type, amount, context, date, to: payee };
         case BARREL:
         case PROVISIONS:
-          return { type, amount, context, date };
+          return { type, amount, context, date, from: payor };
         case TRANSFER:
           if (this.isPayor(payor.id, myId)) {
             return { type, amount, context, date, to: payee };

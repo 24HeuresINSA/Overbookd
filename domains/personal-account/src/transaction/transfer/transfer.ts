@@ -31,11 +31,11 @@ export type TransferResponse = {
   to: TransferParticipant;
 };
 
-export type MemberRepository = {
+export type TransferMembers = {
   getById: (adherentId: number) => Promise<Member>;
 };
 
-export type TransferRepository = {
+export type Transfers = {
   create: (transfer: TransferForm) => Promise<TransferResponse>;
 };
 
@@ -43,8 +43,8 @@ const MAX_TRANSFER_AMOUNT = ONE_EURO_IN_CENTS * 500;
 
 export class Transfer {
   constructor(
-    private readonly transfers: TransferRepository,
-    private readonly members: MemberRepository,
+    private readonly transfers: Transfers,
+    private readonly members: TransferMembers,
   ) {}
 
   async send(transfer: TransferForm): Promise<TransferResponse> {

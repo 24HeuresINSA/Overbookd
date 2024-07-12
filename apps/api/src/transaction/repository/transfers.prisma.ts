@@ -1,6 +1,6 @@
 import {
   TransferForm,
-  TransferRepository,
+  Transfers,
   TransferResponse,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
@@ -10,7 +10,7 @@ const SELECT_TRANFER_PARTICIPANT = {
   balance: true,
 };
 
-export class PrismaTransferRepository implements TransferRepository {
+export class PrismaTransfers implements Transfers {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(transfer: TransferForm): Promise<TransferResponse> {

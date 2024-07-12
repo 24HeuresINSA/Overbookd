@@ -1,31 +1,24 @@
-export { PersonalAccountAlerting as PersonalAccountAlerting } from "./alerting/personal-account-alerting.js";
-export { PersonalAccountAlert as PersonalAccountAlert } from "./alerting/personal-account-alert.js";
-export { CURRENT_BALANCE_MESSAGE } from "./current-balance/index.js";
-export { NEGATIVE_BALANCE } from "./in-debt/index.js";
+// ALERTING
+export { PersonalAccountAlerting } from "./alerting/personal-account-alerting.js";
+export { PersonalAccountAlert } from "./alerting/personal-account-alert.js";
 export type { Adherents } from "./alerting/adherents.js";
 export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./alerting/personal-account-alert.js";
-export { Payor, Transfer, SharedMealPayment } from "./transaction/index.js";
+
+// TRANSACTION
 export type {
-  CreateTransferForm,
-  Member,
-  MemberRepository,
-  Transaction,
+  MyTransaction,
   TransactionType,
   TransferIReceiveTransaction,
   TransferISendTransaction,
-  TransferRepository,
-  TransferResponse,
-  TransferForm,
-  DepositTransaction,
-  BarrelTransaction,
-  ProvisionsTransaction,
+  MyDepositTransaction,
+  MyBarrelTransaction,
+  MyProvisionsTransaction,
   TransactionUser,
   TransactionWithSenderAndReceiver,
-  SharedMealTransaction,
-} from "./transaction/index.js";
+} from "./transaction/transaction.model.js";
 export {
   BARREL,
   DEPOSIT,
@@ -35,8 +28,22 @@ export {
   ONE_EURO_IN_CENTS,
   doIReceive,
   transactionTypes,
-  TransferError,
-} from "./transaction/index.js";
+} from "./transaction/transaction.model.js";
+export { Transfer } from "./transaction/transfer/transfer.js";
+export type {
+  Member,
+  TransferMembers,
+  Transfers,
+  TransferResponse,
+} from "./transaction/transfer/transfer.js";
+export { Payor } from "./transaction/transfer/payor.js";
+export type {
+  CreateTransferForm,
+  TransferForm,
+} from "./transaction/transfer/payor.js";
+export { TransferError } from "./transaction/transfer/transfer.error.js";
+export { SharedMeal as SharedMealPayment } from "./transaction/shared-meal/shared-meal.js";
+export type { SharedMealTransaction } from "./transaction/shared-meal/shared-meal.js";
 export { SharedMealError } from "./transaction/shared-meal/shared-meal.error.js";
 
 export type {
@@ -52,6 +59,7 @@ export {
   SimilarBarrelExist,
 } from "./barrel-prices/define-barrel-price.error.js";
 
+// MEAL SHARING
 export { MealSharing, SOIR, MIDI } from "./meal-sharing/meal-sharing.js";
 export type {
   MealDate,
