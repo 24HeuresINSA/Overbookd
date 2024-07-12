@@ -51,7 +51,7 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
   org.24heures.overbookd.image.authors="https://gitlab.com/24-heures-insa/overbookd-mono/-/graphs/main" \
   org.24heures.overbookd.image.version=${API_VERSION}
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN npm install -g pnpm@9.4.0
 

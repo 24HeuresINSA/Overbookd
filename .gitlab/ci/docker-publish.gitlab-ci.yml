@@ -11,7 +11,7 @@
     - VERSION_TAG=${VERSION_TAG_PREFIX}$(jq -r '.version' ./${APP_PATH}/package.json)
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker load -i ${VERSION_TAG_PREFIX}${APP_NAME}.tar
+    - docker load -i ${APP_NAME}.tar
     - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$TAG
     - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG
 
@@ -31,8 +31,8 @@ preprod_overbookd-api_publish:
   variables:
     APP_PATH: apps/api
     APP_NAME: api
-    VERSION_TAG_PREFIX: "next_"
-    TAG: "next"
+    VERSION_TAG_PREFIX: "pre-prod_"
+    TAG: "pre-prod"
 
 preprod_overbookd-web_publish:
   extends: .docker-publish
@@ -50,8 +50,8 @@ preprod_overbookd-web_publish:
   variables:
     APP_PATH: apps/web
     APP_NAME: web
-    VERSION_TAG_PREFIX: "next_"
-    TAG: "next"
+    VERSION_TAG_PREFIX: "pre-prod_"
+    TAG: "pre-prod"
 
 prod_overbookd-api_publish:
   extends: .docker-publish
