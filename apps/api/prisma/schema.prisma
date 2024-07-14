@@ -48,6 +48,7 @@ model User {
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   registrationMembership RegistrationMembership? @map("registration_membership")
   note                   String?                 @db.Text
+  hasApprovedGCU         Boolean                 @default(false) @map("has_approved_gcu")
 
   preference Preference?
   teams      UserTeam[]

@@ -14,7 +14,6 @@ export class MyUserInformationResponseDto
   balance: number;
 
   @ApiProperty({
-    name: "permissions",
     description: "User permissions",
     type: String,
     isArray: true,
@@ -22,9 +21,14 @@ export class MyUserInformationResponseDto
   permissions: Permission[];
 
   @ApiProperty({
-    name: "tasksCount",
     description: "User tasks count",
     type: Number,
   })
   tasksCount: number;
+
+  @ApiProperty({
+    description: "User has approved GCU",
+    type: Boolean,
+  })
+  hasApprovedGCU: boolean;
 }
