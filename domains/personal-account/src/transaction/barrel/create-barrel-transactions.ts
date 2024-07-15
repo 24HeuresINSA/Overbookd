@@ -3,7 +3,7 @@ import { BARREL, MyBarrelTransaction, TransactionUser } from "../transaction";
 import {
   AtLeastOneInsufficientConsumption,
   NoConsumer,
-} from "./barrel-transaction.error";
+} from "../transaction.error";
 
 type CreateBarrelTransaction = {
   consumer: number;

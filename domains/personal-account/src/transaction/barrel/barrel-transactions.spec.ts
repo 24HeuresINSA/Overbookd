@@ -6,7 +6,7 @@ import { ConfiguredBarrel } from "../../barrel-prices/define-barrel-price";
 import {
   AtLeastOneInsufficientConsumption,
   NoConsumer,
-} from "./barrel-transaction.error";
+} from "../transaction.error";
 
 const ambree: ConfiguredBarrel = {
   slug: "ambree",
