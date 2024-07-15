@@ -62,9 +62,9 @@
     "csv-parse": "5.5.6",
     "jwt-decode": "4.0.0",
     "pinia": "2.1.7",
-    "sass": "1.77.6",
+    "sass": "1.77.8",
     "vue-chartjs": "5.3.1",
-    "vuetify": "3.6.11",
+    "vuetify": "3.6.12",
     "vuetify-pro-tiptap": "2.5.2"
   },
   "devDependencies": {
