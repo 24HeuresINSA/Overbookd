@@ -50,7 +50,7 @@
     "@nestjs/passport": "10.0.3",
     "@nestjs/platform-express": "10.3.10",
     "@nestjs/swagger": "7.4.0",
-    "@nestjs/throttler": "5.2.0",
+    "@nestjs/throttler": "6.0.0",
     "@overbookd/alerts": "workspace:*",
     "@overbookd/assignment": "workspace:*",
     "@overbookd/configuration": "workspace:*",
@@ -91,7 +91,7 @@
     "passport-local": "1.0.0",
     "pdfmake": "0.2.10",
     "reflect-metadata": "0.2.2",
-    "rimraf": "5.0.9",
+    "rimraf": "6.0.1",
     "rxjs": "7.8.1",
     "sanitize-html": "2.13.0"
   },
