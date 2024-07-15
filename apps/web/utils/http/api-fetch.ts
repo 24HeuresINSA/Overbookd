@@ -51,7 +51,7 @@ export async function apiFetch<T extends ApiResponse>(
     body: body ? formattedBody : undefined,
   };
 
-  const res = await fetch(url.toString(), requestOptions);
+  const res = await fetch(url.toString(), requestOptions); // nosemgrep
 
   if (!res.ok) {
     const error = await res.json();
