@@ -37,7 +37,7 @@ secret_detection:
 
 .format:
   extends: .check
-  image: node:20.15.0-alpine
+  image: node:20.15.1-alpine
   before_script:
     - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
@@ -62,7 +62,7 @@ overbookd/format:
 
 overbookd/prune:
   extends: .check
-  image: node:20.15.0-alpine
+  image: node:20.15.1-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
