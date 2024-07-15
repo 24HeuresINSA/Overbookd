@@ -1,4 +1,4 @@
-import { HARD_CODE, VIEUX_CODE } from "@overbookd/team";
+import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 import { Content } from "pdfmake/interfaces";
 
 export class TalkieFrequencies {

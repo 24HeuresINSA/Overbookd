@@ -22,7 +22,7 @@ import {
   noelAsAvailableVolunteer,
 } from "./test-resources/assign-task-to-volunteer.test.utils.js";
 import { HARD, VIEUX } from "../teams.js";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 describe("Assign task to volunteer", () => {
   const taskList = [

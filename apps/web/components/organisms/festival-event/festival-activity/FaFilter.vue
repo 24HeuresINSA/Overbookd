@@ -52,7 +52,7 @@ import {
 import { type ActivityFilters } from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 
 const teamStore = useTeamStore();
 

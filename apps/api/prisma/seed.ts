@@ -9,7 +9,7 @@ import { SlugifyService } from "@overbookd/slugify";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
-import { Team } from "@overbookd/http";
+import { Team } from "@overbookd/team";
 
 const prisma = new PrismaClient();
 

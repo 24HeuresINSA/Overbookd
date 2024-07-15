@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 const { team, size, withName, showHidden, closable, clickable, prefix } =
   defineProps({

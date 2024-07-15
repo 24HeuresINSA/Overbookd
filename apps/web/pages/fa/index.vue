@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import { WRITE_FA } from "@overbookd/permission";
 import type {
   FestivalActivity,

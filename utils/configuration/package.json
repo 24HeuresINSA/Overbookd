@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/user",
-  "version": "1.2.1",
-  "description": "Gestion des utilisateurs pour overbookd",
+  "name": "@overbookd/configuration",
+  "version": "1.2.0",
+  "description": "Gestion de la configuration pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "domains/user"
+    "directory": "utils/configuration"
   },
   "type": "module",
   "exports": {
@@ -46,13 +46,11 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "keywords": [
-    "user"
+    "configuration",
+    "domain"
   ],
   "engines": {
     "node": "20.15.0",
     "pnpm": "9.4.0"
-  },
-  "dependencies": {
-    "@overbookd/permission": "workspace:^"
   }
 }

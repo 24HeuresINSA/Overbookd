@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "../../tsconfig.all-modules-import.json",
+    "../../tsconfig.package.json"
+  ],
+  "include": ["src"],
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
+}

@@ -47,7 +47,7 @@ import {
   type FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import {
   type FtStatusLabel,

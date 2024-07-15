@@ -46,7 +46,7 @@ import type {
   Contractor,
 } from "@overbookd/festival-event";
 import type { User } from "@overbookd/user";
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
 const faStore = useFestivalActivityStore();

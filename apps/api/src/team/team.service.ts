@@ -10,7 +10,7 @@ import { UserService } from "../../src/user/user.service";
 import { SlugifyService } from "@overbookd/slugify";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
-import { Team } from "@overbookd/http";
+import { Team } from "@overbookd/team";
 
 export type UpdateTeamForm = {
   name?: string;

@@ -1,4 +1,4 @@
-import type { UserName } from "./user.model.js";
+import type { UserName } from "./user.js";
 
 export function nicknameOrName(user: UserName): string {
   const { nickname, firstname, lastname } = user;

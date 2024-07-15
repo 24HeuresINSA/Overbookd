@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogCategory, Team } from "@overbookd/http";
+import type { CatalogCategory } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 
 const name = defineModel<string>("name", { required: true });
 const category = defineModel<CatalogCategory | undefined>("category", {

@@ -2,7 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { HelpingVolunteers } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
 import { Injectable } from "@nestjs/common";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import { HelpingVolunteer } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
 

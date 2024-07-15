@@ -2,7 +2,7 @@ import {
   requirableTeams,
   requirableTeamsExtended,
 } from "@overbookd/festival-event";
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/api-fetch";
 

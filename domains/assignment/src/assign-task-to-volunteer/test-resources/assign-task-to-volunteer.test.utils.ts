@@ -11,7 +11,7 @@ import {
 } from "./factory/assignable-volunteer.factory.js";
 import { BAR } from "@overbookd/festival-event-constants";
 import { HARD } from "../../teams.js";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),

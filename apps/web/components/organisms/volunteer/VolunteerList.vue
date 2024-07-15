@@ -52,7 +52,7 @@ import {
 } from "~/utils/user/user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { UserPersonalData } from "@overbookd/user";
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import type { TableHeaders } from "~/utils/data-table/header";
 
 const props = defineProps({

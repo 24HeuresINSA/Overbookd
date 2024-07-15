@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Team } from "@overbookd/http";
+import { Team } from "@overbookd/team";
 import {
   IsNotEmpty,
   IsString,

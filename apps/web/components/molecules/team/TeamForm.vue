@@ -51,8 +51,7 @@
 <script lang="ts" setup>
 import { required } from "~/utils/rules/input.rules";
 import { SlugifyService } from "@overbookd/slugify";
-import type { Team } from "@overbookd/http";
-import { type PropType, watch } from "vue";
+import type { Team } from "@overbookd/team";
 
 const emit = defineEmits(["create", "update", "close"]);
 

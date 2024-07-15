@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import {
   COUNT_FRIENDS,
   DatabaseFriendCount,

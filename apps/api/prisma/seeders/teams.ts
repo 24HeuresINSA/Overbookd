@@ -1,4 +1,4 @@
-import { Team } from "@overbookd/http";
+import { Team } from "@overbookd/team";
 
 export const teams: Team[] = [
   {

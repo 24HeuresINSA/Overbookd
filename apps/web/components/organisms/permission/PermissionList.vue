@@ -72,7 +72,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Permission, Team } from "@overbookd/http";
+import type { Permission } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 
 const permissionStore = usePermissionStore();
 

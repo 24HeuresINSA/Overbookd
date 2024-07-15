@@ -69,7 +69,8 @@ import {
   REJECTED,
   type Reviewer,
 } from "@overbookd/festival-event";
-import type { ReviewApproval, ReviewRejection, Team } from "@overbookd/http";
+import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import {
   type FtStatusLabel,
   ftStatusLabels,

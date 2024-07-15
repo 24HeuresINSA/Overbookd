@@ -1,5 +1,5 @@
 import { VOLUNTEER } from "@overbookd/registration";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import { SELECT_USER_TEAMS } from "../../user/user.query";
 import { IProvidePeriod } from "@overbookd/period";
 import { SELECT_PERIOD } from "../../common/query/period.query";

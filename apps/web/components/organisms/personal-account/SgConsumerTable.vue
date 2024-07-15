@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HARD_CODE, VIEUX_CODE } from "@overbookd/team";
+import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
 import {

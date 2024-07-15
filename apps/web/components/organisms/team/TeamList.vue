@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 
 const teamStore = useTeamStore();
 

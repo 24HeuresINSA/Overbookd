@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import type { UserPersonalData } from "@overbookd/user";
 import { keepMembersOf, excludeMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";

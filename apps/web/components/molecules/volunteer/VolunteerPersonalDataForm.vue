@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import { MANAGE_ADMINS, MANAGE_USERS } from "@overbookd/permission";
 import type { User } from "@overbookd/user";
 import {

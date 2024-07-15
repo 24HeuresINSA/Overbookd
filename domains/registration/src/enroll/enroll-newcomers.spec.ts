@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { EnrollNewcomers } from "./enroll-newcomers.js";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 describe("Enroll newcomers to a joinable team", () => {
   const newcomers = [{ id: 1 }, { id: 2 }, { id: 3 }];

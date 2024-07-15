@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { BENEVOLE_CODE } from "@overbookd/team";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import { WaitingForVolunteer } from "./startup-funnel.js";
 import { InMemoryPlanning } from "./planning.inmemory.js";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory.js";

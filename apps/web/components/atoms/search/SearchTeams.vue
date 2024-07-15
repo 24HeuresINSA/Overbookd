@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const teams = defineModel<Team[]>({ required: true });
