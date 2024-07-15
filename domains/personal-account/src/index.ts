@@ -18,7 +18,7 @@ export type {
   MyProvisionsTransaction,
   TransactionUser,
   TransactionWithSenderAndReceiver,
-} from "./transaction/transaction.model.js";
+} from "./transaction/transaction.js";
 export {
   BARREL,
   DEPOSIT,
@@ -28,7 +28,7 @@ export {
   ONE_EURO_IN_CENTS,
   doIReceive,
   transactionTypes,
-} from "./transaction/transaction.model.js";
+} from "./transaction/transaction.js";
 export { Transfer } from "./transaction/transfer/transfer.js";
 export type {
   Member,

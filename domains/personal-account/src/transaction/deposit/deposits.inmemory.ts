@@ -1,4 +1,4 @@
-import { MyTransaction, TransactionUser } from "../transaction.model";
+import { MyTransaction, TransactionUser } from "../transaction";
 import {
   Deposits,
   DepositTransaction,

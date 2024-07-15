@@ -8,7 +8,7 @@ import {
   TransferToYourself,
 } from "./transfer.error.js";
 import { TransferForm } from "./payor.js";
-import { ONE_EURO_IN_CENTS } from "../transaction.model.js";
+import { ONE_EURO_IN_CENTS } from "../transaction.js";
 
 type NonAdherent = {
   havePersonalAccount: false;

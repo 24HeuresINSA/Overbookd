@@ -1,8 +1,8 @@
+import { DEPOSIT, MyDepositTransaction, TransactionUser } from "../transaction";
 import {
-  DEPOSIT,
-  MyDepositTransaction,
-  TransactionUser,
-} from "../transaction.model";
+  AtLeastOneInsufficientAmount,
+  InsufficientAmount,
+} from "./deposit.error";
 
 type CreateDepositForm = {
   amount: number;
@@ -22,7 +22,12 @@ export type Deposits = {
 export class Deposit {
   constructor(private readonly deposits: Deposits) {}
 
-  apply({ amount, depositor }: CreateDepositForm): Promise<DepositTransaction> {
+  async apply({
+    amount,
+    depositor,
+  }: CreateDepositForm): Promise<DepositTransaction> {
+    if (amount <= 0) throw new InsufficientAmount();
+
     const deposit: DepositTransactionForm = {
       amount,
       to: depositor,
@@ -33,9 +38,11 @@ export class Deposit {
     return this.deposits.save(deposit);
   }
 
-  applyMultiple(
+  async applyMultiple(
     deposits: CreateDepositForm[],
   ): Promise<MyDepositTransaction[]> {
+    const insufficientAmount = deposits.some(({ amount }) => amount <= 0);
+    if (insufficientAmount) throw new AtLeastOneInsufficientAmount();
     return Promise.all(deposits.map((deposit) => this.apply(deposit)));
   }
 }

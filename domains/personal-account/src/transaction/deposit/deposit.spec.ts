@@ -1,7 +1,11 @@
 import { beforeEach, describe, it, expect } from "vitest";
-import { DEPOSIT, TransactionUser } from "../transaction.model";
+import { DEPOSIT, TransactionUser } from "../transaction";
 import { InMemoryDeposits } from "./deposits.inmemory";
 import { Deposit } from "./deposit";
+import {
+  AtLeastOneInsufficientAmount,
+  InsufficientAmount,
+} from "./deposit.error";
 
 const olop: TransactionUser = {
   id: 1,
@@ -62,6 +66,23 @@ describe("Deposit", () => {
     });
   });
 
+  describe("when adding a deposit with negative amount", () => {
+    it("should indicate that amount cannot be negative", () => {
+      const negativeDepositForm = { amount: -10, depositor: olop.id };
+      const applyDeposit = () => deposit.apply(negativeDepositForm);
+
+      expect(applyDeposit).rejects.toThrow(InsufficientAmount);
+    });
+  });
+  describe("when adding a deposit with null amount", () => {
+    it("should indicate that amount cannot be negative", () => {
+      const nullDepositForm = { amount: 0, depositor: olop.id };
+      const applyDeposit = () => deposit.apply(nullDepositForm);
+
+      expect(applyDeposit).rejects.toThrow(InsufficientAmount);
+    });
+  });
+
   describe("when adding multiple deposits from adherents", () => {
     const depositForms = [
       { amount: 100, depositor: olop.id },
@@ -88,6 +109,19 @@ describe("Deposit", () => {
     it("should add deposits to the list of deposits", async () => {
       await deposit.applyMultiple(depositForms);
       expect(deposits.all).toHaveLength(2);
+    });
+  });
+
+  describe("when adding multiple deposits with at least one negative or null amount", () => {
+    const depositForms = [
+      { amount: 100, depositor: olop.id },
+      { amount: -200, depositor: cul.id },
+    ];
+    it("should indicate that amount cannot be negative or null", () => {
+      const applyMultipleDeposits = () => deposit.applyMultiple(depositForms);
+      expect(applyMultipleDeposits).rejects.toThrow(
+        AtLeastOneInsufficientAmount,
+      );
     });
   });
 });

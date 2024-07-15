@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SHARED_MEAL } from "../transaction.model.js";
+import { SHARED_MEAL } from "../transaction.js";
 import { SharedMeal } from "./shared-meal.js";
 import { PastSharedMealBuilder } from "../../meal-sharing/past-shared-meal.builder.js";
 import { AmountTooHigh } from "./shared-meal.error.js";
