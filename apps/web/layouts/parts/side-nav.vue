@@ -81,6 +81,12 @@ aside {
   z-index: 8;
   height: calc(100vh - #{$header-height});
   overflow-y: auto;
+  background-color: $background-color;
+  min-width: 35px;
+  padding: 5px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   @media only screen and (max-width: $mobile-max-width) {
     position: fixed;
     bottom: 0;
@@ -98,12 +104,6 @@ aside {
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: row;
   }
-  background-color: $background-color;
-  min-width: 35px;
-  padding: 5px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   &:hover {
     .page__title,
     .dialog__title {
@@ -115,6 +115,8 @@ aside {
   .dialog,
   .page {
     padding: 5px;
+    display: flex;
+    gap: 3px;
     &:hover {
       cursor: pointer;
       background-color: change-color(
@@ -122,8 +124,6 @@ aside {
         $blackness: 60%
       );
     }
-    display: flex;
-    gap: 3px;
     &__title {
       transition: max-width 0.5s;
       overflow: hidden;
@@ -136,12 +136,12 @@ aside {
   }
 
   nav {
+    display: flex;
+    flex-direction: column;
     a {
       text-decoration: none;
       color: black;
     }
-    display: flex;
-    flex-direction: column;
     @media only screen and (max-width: $mobile-max-width) {
       flex-direction: row;
       max-width: 80%;

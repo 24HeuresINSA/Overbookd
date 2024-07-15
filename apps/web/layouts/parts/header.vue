@@ -107,16 +107,16 @@ header {
             background-color: $blue-24h;
             position: relative;
             z-index: 4;
+            left: 28px;
+            bottom: 7px;
+            min-width: 10px;
+            min-height: 10px;
             @media only screen and (max-width: $mobile-max-width) {
               left: 40px;
               bottom: 10px;
               min-width: 15px;
               min-height: 15px;
             }
-            left: 28px;
-            bottom: 7px;
-            min-width: 10px;
-            min-height: 10px;
           }
         }
       }
@@ -136,11 +136,11 @@ header {
     border-radius: 50%;
     max-width: 55px;
     max-height: 55px;
+    padding: unset;
     @media only screen and (max-width: $mobile-max-width) {
       max-width: 45px;
       max-height: 45px;
     }
-    padding: unset;
   }
 
   .watermark {

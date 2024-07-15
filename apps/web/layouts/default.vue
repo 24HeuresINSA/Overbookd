@@ -29,10 +29,10 @@ import Footer from "~/layouts/parts/footer.vue";
 .side-with-main {
   flex: 1;
   display: flex;
+  min-height: calc(100% - #{$header-height});
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
   }
-  min-height: calc(100% - #{$header-height});
   .main {
     display: flex;
     justify-content: space-between;
