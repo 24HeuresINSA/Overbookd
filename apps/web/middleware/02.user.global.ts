@@ -6,4 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const userStore = useUserStore();
   if (userStore.loggedUser !== undefined) return;
   await userStore.fetchUser();
+
+  const navigationBadgeStore = useNavigationBadgeStore();
+  navigationBadgeStore.fetchAll();
 });

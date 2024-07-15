@@ -7,7 +7,7 @@ import {
 } from "@overbookd/festival-event";
 import { PrismaModule } from "../../../prisma.module";
 import { PrismaService } from "../../../prisma.service";
-import { StatisticsModule } from "../../../statistics/statistics.module";
+import { StatisticsModule } from "../../statistics/statistics.module";
 import { PrismaAdherents } from "./repository/adherents.prisma";
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";

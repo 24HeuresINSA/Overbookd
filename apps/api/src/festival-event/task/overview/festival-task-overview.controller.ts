@@ -40,9 +40,9 @@ import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../common/dto/inquiry-request.response.dto";
-import { StatisticsService } from "../../../statistics/statistics.service";
+import { StatisticsService } from "../../statistics/statistics.service";
 import { Statistics } from "@overbookd/http";
-import { StatisticsResponseDto } from "../../../statistics/dto/statistics.response.dto";
+import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.dto";
 import { LocationResponseDto } from "../../common/dto/location.response.dto";
 import { AdherentResponseDto } from "../../common/dto/adherent.response.dto";
 import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto";

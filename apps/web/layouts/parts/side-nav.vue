@@ -7,7 +7,14 @@
         :to="page.to"
         class="page"
       >
-        <v-icon>{{ page.icon }}</v-icon>
+        <v-badge
+          v-if="badgeContent(page) > 0"
+          :content="badgeContent(page)"
+          color="red"
+        >
+          <v-icon>{{ page.icon }}</v-icon>
+        </v-badge>
+        <v-icon v-else>{{ page.icon }}</v-icon>
         <span class="page__title">{{ page.title }}</span>
       </nuxt-link>
     </nav>
@@ -32,9 +39,10 @@
 
 <script lang="ts" setup>
 import { isDesktop } from "~/utils/device/device.utils";
-import { pages } from "~/utils/pages/navigation";
+import { pages, type Page } from "~/utils/pages/navigation";
 
 const userStore = useUserStore();
+const navigationBadgeStore = useNavigationBadgeStore();
 
 const askQuestion = ref(false);
 const reportBug = ref(false);
@@ -47,6 +55,17 @@ const filteredPages = computed(() =>
     return isSupportedByDevice && hasAccess;
   }),
 );
+
+const badgeContent = ({ to }: Page): number => {
+  switch (to) {
+    case "/fa":
+      return navigationBadgeStore.myRefusedActivities;
+    case "/registrations/staff":
+      return navigationBadgeStore.unrenrolledStaffs;
+    default:
+      return 0;
+  }
+};
 </script>
 
 <style lang="scss" scoped>

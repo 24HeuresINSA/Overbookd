@@ -73,6 +73,10 @@ export class FestivalActivityRepository {
     );
   }
 
+  static getMyRefusalsCount() {
+    return HttpClient.get<number>(`${this.basePath}/my-refusals/count`);
+  }
+
   /* CREATE */
   static create(data: CreateFestivalActivityForm) {
     return HttpClient.post<FestivalActivity>(this.basePath, data);

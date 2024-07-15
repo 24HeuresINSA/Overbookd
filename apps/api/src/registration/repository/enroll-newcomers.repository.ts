@@ -4,6 +4,7 @@ import { EnrolledNewcomer } from "@overbookd/registration";
 export type EnrollNewcomersRepository = {
   enroll: (newcomers: EnrolledNewcomer[]) => Promise<void>;
   findEnrollableStaffs: () => Promise<EnrollableStaff[]>;
+  countUnenrolledStaffs: () => Promise<number>;
   findEnrollableVolunteers: () => Promise<EnrollableVolunteer[]>;
   findEnrollableVolunteer: (
     volunteerId: EnrollableVolunteer["id"],

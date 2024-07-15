@@ -9,7 +9,7 @@ export const useAuthStore = defineStore("auth", {
     async login(form: UserCredentials) {
       const res = await AuthRepository.login(form);
 
-      if (isHttpError(res)) return console.error(res.message);
+      if (isHttpError(res)) return;
       this.authenticate(res.accessToken, res.refreshToken);
     },
 
@@ -27,7 +27,7 @@ export const useAuthStore = defineStore("auth", {
       if (!refreshToken.value) return;
       const res = await AuthRepository.refresh(refreshToken.value);
 
-      if (isHttpError(res)) return console.error(res.message);
+      if (isHttpError(res)) return;
       this.authenticate(res.accessToken, res.refreshToken);
     },
 

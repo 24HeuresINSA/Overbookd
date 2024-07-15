@@ -29,8 +29,8 @@ import { RequestWithUserPayload } from "../../../app.controller";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
-import { StatisticsResponseDto } from "../../../statistics/dto/statistics.response.dto";
-import { StatisticsService } from "../../../statistics/statistics.service";
+import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.dto";
+import { StatisticsService } from "../../statistics/statistics.service";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
   UnassignedInquiryRequestResponseDto,
@@ -120,6 +120,19 @@ export class FestivalActivityOverviewController {
     @Param("id", ParseIntPipe) id: FestivalActivity["id"],
   ): Promise<FestivalActivity> {
     return this.overviewService.findById(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("my-refusals/count")
+  @ApiResponse({
+    status: 200,
+    description: "Number of refused festival activities for the user",
+  })
+  getMyRefusedActivitiesCount(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<number> {
+    return this.statistics.countRefusedActivitiesByUser(user.id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

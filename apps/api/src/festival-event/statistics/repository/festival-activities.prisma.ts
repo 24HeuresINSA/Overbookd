@@ -1,8 +1,9 @@
 import { FestivalActivity } from "@overbookd/festival-event";
 import { Statistics } from "@overbookd/http";
 import { FestivalEventStatistics } from "../statistics.service";
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import { FestivalEventStatisticsBuilder } from "./festival-event-statistics.builder";
+import { REFUSED } from "@overbookd/festival-event-constants";
 
 const INIT_STATUS_STATISTICS: Statistics["status"] = {
   DRAFT: 0,
@@ -26,5 +27,15 @@ export class PrismaFestivalActivityStatistics<
       INIT_STATUS_STATISTICS,
       statusStatistics,
     );
+  }
+
+  countRefusalsByUser(adherentId: number): Promise<number> {
+    return this.prisma.festivalActivity.count({
+      where: {
+        isDeleted: false,
+        status: REFUSED,
+        adherentId,
+      },
+    });
   }
 }

@@ -138,6 +138,10 @@ export class RegistrationService {
     return this.repositories.newcomers.findEnrollableStaffs();
   }
 
+  getUnenrolledStaffsCount(): Promise<number> {
+    return this.repositories.newcomers.countUnenrolledStaffs();
+  }
+
   getVolunteers(): Promise<EnrollableVolunteer[]> {
     return this.repositories.newcomers.findEnrollableVolunteers();
   }

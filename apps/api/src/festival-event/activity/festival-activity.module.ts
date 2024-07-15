@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { FestivalActivityCommonModule } from "./common/festival-activity-common.module";
-import { StatisticsModule } from "../../statistics/statistics.module";
+import { StatisticsModule } from "../statistics/statistics.module";
 import { GeneralSectionController } from "./sections/general-section/general-section.controller";
 import { GeneralSectionModule } from "./sections/general-section/general-section.module";
 import { InChargeSectionController } from "./sections/in-charge-section/in-charge-section.controller";

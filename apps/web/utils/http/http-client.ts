@@ -14,7 +14,7 @@ const DEFAULT_HEADER: RequestHeader = {
 export class HttpClient {
   private constructor() {}
 
-  static get<T extends object | string>(
+  static get<T extends object | string | number>(
     url: Endpoint | string,
     header?: Partial<RequestHeader>,
   ): Promise<HttpResponse<T>> {

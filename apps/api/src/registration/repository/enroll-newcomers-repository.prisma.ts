@@ -51,6 +51,16 @@ export class PrismaEnrollNewcomersRepository
     return staffs.map(formatToEnrollableStaff);
   }
 
+  countUnenrolledStaffs(): Promise<number> {
+    return this.prisma.user.count({
+      where: {
+        isDeleted: false,
+        registrationMembership: STAFF,
+        ...NOT_VOLUNTEER_YET,
+      },
+    });
+  }
+
   async findEnrollableVolunteers(): Promise<EnrollableVolunteer[]> {
     const volunteers = await this.prisma.user.findMany({
       orderBy: { id: "desc" },

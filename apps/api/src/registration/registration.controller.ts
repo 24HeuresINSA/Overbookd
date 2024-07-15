@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -51,8 +50,6 @@ import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
   description: "User dont have the right to access this route",
 })
 export class RegistrationController {
-  private readonly logger = new Logger(RegistrationController.name);
-
   constructor(private readonly registrationService: RegistrationService) {}
 
   @Post()
@@ -100,6 +97,18 @@ export class RegistrationController {
   })
   getEnrollableStaffs(): Promise<EnrollableStaff[]> {
     return this.registrationService.getStaffs();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
+  @Get("staffs/unenrolled/count")
+  @ApiResponse({
+    status: 200,
+    description: "Get the count of unenrolled staffs",
+  })
+  getUnenrolledStaffsCount(): Promise<number> {
+    return this.registrationService.getUnenrolledStaffsCount();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
