@@ -3,18 +3,18 @@ import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {
   myRefusedActivities: number;
-  unrenrolledStaffs: number;
+  recentStaffNewcomers: number;
 };
 
 export const useNavigationBadgeStore = defineStore("navigation-badge", {
   state: (): State => ({
     myRefusedActivities: 0,
-    unrenrolledStaffs: 0,
+    recentStaffNewcomers: 0,
   }),
   actions: {
     async fetchAll() {
       await this.fetchMyRefusedActivities();
-      await this.fetchUnenrolledStaffs();
+      await this.fetchRecentStaffNewcomers();
     },
 
     async fetchMyRefusedActivities() {
@@ -24,11 +24,11 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
       this.myRefusedActivities = res;
     },
 
-    async fetchUnenrolledStaffs() {
+    async fetchRecentStaffNewcomers() {
       if (!this._hasPermission(ENROLL_HARD)) return;
-      const res = await RegistrationRepository.getUnenrolledStaffsCount();
+      const res = await RegistrationRepository.getRecentStaffNewcomersCount();
       if (isHttpError(res)) return;
-      this.unrenrolledStaffs = res;
+      this.recentStaffNewcomers = res;
     },
 
     _hasPermission(permission: Permission) {

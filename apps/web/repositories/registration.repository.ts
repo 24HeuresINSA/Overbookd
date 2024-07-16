@@ -13,7 +13,7 @@ export class RegistrationRepository {
     return HttpClient.get<EnrollableStaff[]>(`${this.basePath}/staffs`);
   }
 
-  static getUnenrolledStaffsCount() {
+  static getRecentStaffNewcomersCount() {
     return HttpClient.get<number>(`${this.basePath}/staffs/unenrolled/count`);
   }
 

@@ -16,6 +16,7 @@ import {
 } from "./enroll-newcomers.query";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
+import { ONE_DAY_IN_MS } from "@overbookd/period";
 
 export class PrismaEnrollNewcomersRepository
   implements EnrollNewcomersRepository
@@ -51,12 +52,14 @@ export class PrismaEnrollNewcomersRepository
     return staffs.map(formatToEnrollableStaff);
   }
 
-  countUnenrolledStaffs(): Promise<number> {
+  countRecentStaffNewcomers(): Promise<number> {
+    const thirtyDaysAgo = new Date(Date.now() - 30 * ONE_DAY_IN_MS);
     return this.prisma.user.count({
       where: {
         isDeleted: false,
         registrationMembership: STAFF,
         ...NOT_VOLUNTEER_YET,
+        createdAt: { gte: thirtyDaysAgo },
       },
     });
   }

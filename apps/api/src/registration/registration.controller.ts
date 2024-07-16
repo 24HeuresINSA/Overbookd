@@ -107,8 +107,8 @@ export class RegistrationController {
     status: 200,
     description: "Get the count of unenrolled staffs",
   })
-  getUnenrolledStaffsCount(): Promise<number> {
-    return this.registrationService.getUnenrolledStaffsCount();
+  getRecentStaffNewcomersCount(): Promise<number> {
+    return this.registrationService.countRecentStaffNewcomers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

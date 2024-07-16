@@ -10,7 +10,7 @@
         <v-badge
           v-if="badgeContent(page) > 0"
           :content="badgeContent(page)"
-          color="red"
+          :color="badgeColor(page)"
         >
           <v-icon>{{ page.icon }}</v-icon>
         </v-badge>
@@ -61,9 +61,19 @@ const badgeContent = ({ to }: Page): number => {
     case "/fa":
       return navigationBadgeStore.myRefusedActivities;
     case "/registrations/staff":
-      return navigationBadgeStore.unrenrolledStaffs;
+      return navigationBadgeStore.recentStaffNewcomers;
     default:
       return 0;
+  }
+};
+const badgeColor = (page: Page): string => {
+  switch (page.to) {
+    case "/fa":
+      return "red";
+    case "/registrations/staff":
+      return "blue";
+    default:
+      return "grey";
   }
 };
 </script>
