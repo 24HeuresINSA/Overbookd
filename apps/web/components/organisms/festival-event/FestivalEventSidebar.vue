@@ -64,8 +64,10 @@ import {
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
+  isActivityReviewer,
   isDraft,
   isRefused,
+  NOT_ASKING_TO_REVIEW,
   REJECTED,
   type Reviewer,
 } from "@overbookd/festival-event";
@@ -124,9 +126,20 @@ if (reviewers.value.length === 0) {
     ? teamStore.fetchFaReviewers()
     : teamStore.fetchFtReviewers();
 }
-const myReviewers = computed<Team[]>(() =>
-  reviewers.value.filter((reviewer) => userStore.isMemberOf(reviewer.code)),
-);
+const myReviewers = computed<Team[]>(() => {
+  const activity = selectedActivity.value;
+  if (isDraft(activity)) return [];
+
+  return reviewers.value.filter((reviewer) => {
+    const reviewerCode = reviewer.code;
+    if (!isActivityReviewer(reviewerCode)) return false;
+    const isReviewer = userStore.isMemberOf(reviewerCode);
+    const shouldReview =
+      // eslint-disable-next-line security/detect-object-injection
+      activity.reviews[reviewerCode] !== NOT_ASKING_TO_REVIEW;
+    return isReviewer && shouldReview;
+  });
+});
 
 const statusLabel = computed<FaStatusLabel | FtStatusLabel>(() =>
   isActivity.value

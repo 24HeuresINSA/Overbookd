@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { DRAFT, IN_REVIEW } from "@overbookd/festival-event-constants";
-import { Reviewer } from "../../common/review.js";
 import {
   barrieres,
   communication,
   elec,
   humain,
   matos,
+  Reviewer,
   secu,
   signa,
 } from "../../common/review.js";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
 import { READY_TO_REVIEW } from "../../common/action.js";
 import { REVIEWING, NOT_ASKING_TO_REVIEW } from "../../common/review.js";
-import { AskForReview } from "./ask-for-review.js";
+import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { Notifications } from "../../common/notifications.js";
 import {
   pcSecurite,
@@ -35,12 +35,6 @@ import { InMemoryNotifications } from "./notifications.inmemory.js";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import { george, lea } from "../festival-activity.fake.js";
 import { CantAskForReview } from "../../common/review.error.js";
-
-function isReviewer(team: string): team is Reviewer<"FA"> {
-  return [barrieres, communication, elec, humain, matos, secu, signa].includes(
-    team,
-  );
-}
 
 describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;

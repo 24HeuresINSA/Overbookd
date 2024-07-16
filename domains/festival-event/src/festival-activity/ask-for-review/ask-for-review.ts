@@ -2,6 +2,16 @@ import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { CantAskForReview } from "../../common/review.error.js";
 import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
 import {
+  barrieres,
+  communication,
+  elec,
+  humain,
+  matos,
+  Reviewer,
+  secu,
+  signa,
+} from "../../common/review.js";
+import {
   Draft,
   FestivalActivity,
   Refused,
@@ -59,4 +69,10 @@ export class AskForReview {
     this.notifications.add(inReview.readyForReview);
     return this.festivalActivities.save(inReview);
   }
+}
+
+export function isReviewer(team: string): team is Reviewer<"FA"> {
+  return [barrieres, communication, elec, humain, matos, secu, signa].includes(
+    team,
+  );
 }

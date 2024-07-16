@@ -185,6 +185,7 @@ export type {
 export { ReviewableSpecification } from "./festival-activity/ask-for-review/in-review-festival-activity.js";
 export { AskForReview } from "./festival-activity/ask-for-review/ask-for-review.js";
 export type { AskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/ask-for-review.js";
+export { isReviewer as isActivityReviewer } from "./festival-activity/ask-for-review/ask-for-review.js";
 
 // Reviewing
 export { Reviewing } from "./festival-activity/reviewing/reviewing.js";
