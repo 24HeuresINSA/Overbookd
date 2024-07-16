@@ -101,6 +101,13 @@ export class UserService {
     return UserService.formatToMyInformation(updatedUser);
   }
 
+  async approveEndUserLicenceAgreement({ id }: JwtPayload): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { hasApprovedEULA: true },
+    });
+  }
+
   async getAll(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },

@@ -9,6 +9,7 @@ import { BirthdateField } from "./fields/birthdate-field.js";
 import { CommentField } from "./fields/comment-field.js";
 import { TeamsField } from "./fields/teams-field.js";
 import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
+import { EULAField } from "./fields/EULA-field.js";
 
 export class RegisterForm {
   private email: EmailField;
@@ -20,6 +21,7 @@ export class RegisterForm {
   private birthdate: BirthdateField;
   private comment: CommentField;
   private teams: TeamsField;
+  private EULA: EULAField;
 
   private constructor({
     email,
@@ -31,6 +33,7 @@ export class RegisterForm {
     birthdate,
     comment,
     teams,
+    hasApprovedEULA,
   }: Partial<FulfilledRegistration>) {
     this.email = EmailField.build(email ?? "");
     this.firstname = FirstnameField.build(firstname ?? "");
@@ -41,6 +44,7 @@ export class RegisterForm {
     this.birthdate = BirthdateField.build(birthdate ?? new Date("1949-12-25"));
     this.comment = CommentField.build(comment);
     this.teams = TeamsField.build(teams ?? []);
+    this.EULA = EULAField.build(hasApprovedEULA);
   }
 
   static init(): RegisterForm {
@@ -140,6 +144,20 @@ export class RegisterForm {
     return new RegisterForm({ ...this.currentRegistration, teams: [] });
   }
 
+  approveEndUserLicenceAgreement(): RegisterForm {
+    return new RegisterForm({
+      ...this.currentRegistration,
+      hasApprovedEULA: true,
+    });
+  }
+
+  denyEndUserLicenceAgreement(): RegisterForm {
+    return new RegisterForm({
+      ...this.currentRegistration,
+      hasApprovedEULA: false,
+    });
+  }
+
   private get currentRegistration(): Partial<FulfilledRegistration> {
     return {
       email: this.email.value,
@@ -151,6 +169,7 @@ export class RegisterForm {
       birthdate: this.birthdate.value,
       comment: this.comment.value,
       teams: this.teams.value,
+      hasApprovedEULA: this.EULA.value,
     };
   }
 
@@ -165,6 +184,7 @@ export class RegisterForm {
       this.birthdate,
       this.comment,
       this.teams,
+      this.EULA,
     ];
   }
 

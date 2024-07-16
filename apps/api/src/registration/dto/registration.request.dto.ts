@@ -3,6 +3,7 @@ import { FulfilledRegistration, Teams } from "@overbookd/registration";
 import { Type } from "class-transformer";
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsDefined,
   IsEmail,
@@ -53,6 +54,11 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @IsArray()
   @Type(() => String)
   teams: Teams;
+
+  @ApiProperty({ example: true })
+  @IsDefined()
+  @IsBoolean()
+  hasApprovedEULA: boolean;
 }
 
 export class RegistrationRequestDto {

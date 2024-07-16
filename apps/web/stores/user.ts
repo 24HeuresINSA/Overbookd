@@ -57,7 +57,7 @@ export const useUserStore = defineStore("user", {
   }),
   getters: {
     me: (state) => {
-      if (!state.loggedUser) throw new Error("No logged user");
+      if (!state.loggedUser) throw new Error("Pas d'utilisateur connecté");
       return state.loggedUser;
     },
     can: (state) => (permission?: Permission) => {
@@ -99,6 +99,13 @@ export const useUserStore = defineStore("user", {
         ...this.loggedUser,
         ...castMyUserInformationWithDate(res),
       };
+    },
+
+    async approveEndUserLicenceAgreement() {
+      const res = await UserRepository.approveEndUserLicenceAgreement();
+      if (isHttpError(res)) return;
+      sendSuccessNotification("CGU approuvées ! 🎉");
+      this.loggedUser = { ...this.me, hasApprovedEULA: true };
     },
 
     clearLoggedUser() {

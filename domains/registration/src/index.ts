@@ -69,14 +69,3 @@ export {
   RegisterForm,
   RegistrationError,
 } from "./register-form/register-form.js";
-export { BirthdateField } from "./register-form/fields/birthdate-field.js";
-export { CommentField } from "./register-form/fields/comment-field.js";
-export { EmailField } from "./register-form/fields/email-field.js";
-export { FirstnameField } from "./register-form/fields/firstname-field.js";
-export { LastnameField } from "./register-form/fields/lastname-field.js";
-export { MobilePhoneField } from "./register-form/fields/mobile-phone-field.js";
-export { NicknameField } from "./register-form/fields/nickname-field.js";
-export { TeamsField } from "./register-form/fields/teams-field.js";
-export { PasswordField } from "./register-form/fields/password-field.js";
-export type { Rule } from "./register-form/fields/rule.js";
-export type { Field } from "./register-form/fields/field.js";

@@ -45,7 +45,7 @@ export const SELECT_MY_USER_INFORMATION = {
   ...SELECT_USER_TEAMS_AND_PERMISSIONS,
   ...SELECT_USER_TASKS_COUNT,
   balance: true,
-  hasApprovedGCU: true,
+  hasApprovedEULA: true,
 };
 
 export const SELECT_USER_PERSONAL_DATA = {

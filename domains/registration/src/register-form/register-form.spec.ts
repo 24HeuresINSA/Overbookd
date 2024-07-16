@@ -40,7 +40,8 @@ function validForm() {
     .fillNickname(nickname)
     .fillBirthdate(birthdate)
     .fillComment(comment)
-    .fillTeams(teams);
+    .fillTeams(teams)
+    .approveEndUserLicenceAgreement();
 }
 
 describe("Register form", () => {
@@ -62,6 +63,7 @@ describe("Register form", () => {
           password,
           email,
           mobilePhone,
+          hasApprovedEULA: true,
         });
       });
     });
@@ -276,6 +278,20 @@ describe("Register form", () => {
           "Tu ne peux pas rejoindre plus de 2 équipes",
         ]);
       });
+    });
+  });
+  describe("EULA rules", () => {
+    const form = validForm().denyEndUserLicenceAgreement();
+    describe("when EULA is cleared", () => {
+      it("should indicate form is invalid", () => {
+        expect(form.isValid).toBe(false);
+      });
+    });
+    it("should indicate that EULA approval is required", () => {
+      expect(form.reasons).toHaveLength(1);
+      expect(form.reasons).include(
+        "Les Condidtions Générales d'Utilisation doivent être approuvées",
+      );
     });
   });
 });

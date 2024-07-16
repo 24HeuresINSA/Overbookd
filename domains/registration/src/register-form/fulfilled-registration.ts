@@ -37,4 +37,5 @@ export type FulfilledRegistration = {
   birthdate: Date;
   comment?: string;
   teams: Teams;
+  hasApprovedEULA: boolean;
 };

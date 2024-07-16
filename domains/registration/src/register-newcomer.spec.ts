@@ -58,6 +58,7 @@ const registerForm: FulfilledRegistration = {
   teams,
   nickname,
   email,
+  hasApprovedEULA: true,
 };
 
 let registerNewcomer: RegisterNewcomer;
@@ -164,10 +165,7 @@ describe("Register newcomer", () => {
             expect(
               async () =>
                 await registerNewcomer.fromRegisterForm(
-                  {
-                    ...registerForm,
-                    email: registerEmail,
-                  },
+                  { ...registerForm, email: registerEmail },
                   STAFF,
                 ),
             ).rejects.toThrow(RegistrationError);

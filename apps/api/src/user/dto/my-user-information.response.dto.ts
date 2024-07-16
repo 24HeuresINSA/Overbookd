@@ -27,8 +27,8 @@ export class MyUserInformationResponseDto
   tasksCount: number;
 
   @ApiProperty({
-    description: "User has approved GCU",
+    description: "User has approved EULA",
     type: Boolean,
   })
-  hasApprovedGCU: boolean;
+  hasApprovedEULA: boolean;
 }

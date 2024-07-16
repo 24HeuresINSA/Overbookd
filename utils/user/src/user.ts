@@ -31,5 +31,5 @@ export type MyUserInformation = UserPersonalData & {
   balance: number;
   permissions: Permission[];
   tasksCount: number;
-  hasApprovedGCU: boolean;
+  hasApprovedEULA: boolean;
 };

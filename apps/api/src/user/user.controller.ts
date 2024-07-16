@@ -166,6 +166,20 @@ export class UserController {
     return this.userService.updateMyInformation(req.user, userData);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post("me/approve-eula")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Approve End User Licence Agreement",
+  })
+  async approveEndUserLicenceAgreement(
+    @RequestDecorator() req: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.userService.approveEndUserLicenceAgreement(req.user);
+  }
+
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @ApiBearerAuth()

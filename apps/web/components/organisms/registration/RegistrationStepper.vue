@@ -184,6 +184,31 @@
               :rules="[repeatPasswordRule]"
             />
           </v-form>
+          <v-checkbox
+            v-model="hasApprovedEULA"
+            color="primary"
+            density="comfortable"
+            hide-details
+          >
+            <template #label>
+              <div>
+                Je reconnais avoir lu et compris les
+                <v-tooltip location="bottom">
+                  <template #activator="{ props }">
+                    <span
+                      v-bind="props"
+                      class="eula-link"
+                      @click.stop="openEULADialog"
+                    >
+                      CGU
+                    </span>
+                  </template>
+                  Lire les Conditions Générales d'Utilisation
+                </v-tooltip>
+                et je les accepte.
+              </div>
+            </template>
+          </v-checkbox>
           <div class="stepper-actions">
             <v-btn color="primary" :disabled="isFormInvalid" @click="register">
               M'inscrire
@@ -194,6 +219,14 @@
       </v-stepper-window>
     </v-stepper>
   </v-card>
+
+  <v-dialog
+    v-model="isEULADialogOpen"
+    transition="dialog-bottom-transition"
+    fullscreen
+  >
+    <EULADialogCard @close="closeEULADialog" />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -240,6 +273,7 @@ const comment = ref("");
 const teams = ref<Teams>([]);
 const password = ref("");
 const repeatPassword = ref("");
+const hasApprovedEULA = ref(false);
 
 const rules = {
   required,
@@ -266,8 +300,8 @@ const membership = computed(() =>
 
 const cleanNickname = computed(() => nickname.value || undefined);
 
-const registerForm = computed(() => {
-  return commentAction(nicknameAction(RegisterForm.init()))
+const registerForm = computed<RegisterForm>(() => {
+  const form = commentAction(nicknameAction(RegisterForm.init()))
     .fillBirthdate(birthdayDate.value)
     .fillEmail(email.value)
     .fillFirstname(firstname.value)
@@ -275,6 +309,9 @@ const registerForm = computed(() => {
     .fillMobilePhone(phone.value)
     .fillTeams(teams.value)
     .fillPassword(password.value);
+  return hasApprovedEULA.value
+    ? form.approveEndUserLicenceAgreement()
+    : form.approveEndUserLicenceAgreement();
 });
 
 const birthdayDate = computed(() => new Date(birthday.value));
@@ -308,6 +345,7 @@ const contactRules = computed(() => [
 const securityRules = computed(() => [
   () => step.value <= 3 || rules.required(password.value),
   () => step.value <= 3 || rules.password(password.value),
+  () => step.value <= 3 || rules.required(hasApprovedEULA.value),
 ]);
 
 const repeatPasswordRule = computed(() => isSame(password.value));
@@ -344,9 +382,11 @@ const register = async () => {
   router.push("/");
 };
 
-const returnToLogin = () => {
-  router.push("/login");
-};
+const returnToLogin = () => router.push("/login");
+
+const isEULADialogOpen = ref(false);
+const openEULADialog = () => (isEULADialogOpen.value = true);
+const closeEULADialog = () => (isEULADialogOpen.value = false);
 </script>
 
 <style scoped lang="scss">
@@ -396,5 +436,11 @@ const returnToLogin = () => {
   &.dense {
     gap: 0px;
   }
+}
+
+.eula-link {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

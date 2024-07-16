@@ -25,6 +25,10 @@ export class UserRepository {
     return HttpClient.patch<MyUserInformation>(`${this.basePath}/me`, profile);
   }
 
+  static approveEndUserLicenceAgreement() {
+    return HttpClient.post(`${this.basePath}/me/approve-eula`);
+  }
+
   static getAllUsers() {
     return HttpClient.get<UserPersonalData[]>(this.basePath);
   }

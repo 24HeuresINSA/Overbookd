@@ -10,6 +10,15 @@
         <Footer />
       </div>
     </div>
+
+    <v-dialog
+      v-model="shouldApproveEULA"
+      transition="dialog-bottom-transition"
+      max-width="600"
+      persistent
+    >
+      <ApproveEULADialogCard />
+    </v-dialog>
   </div>
 </template>
 
@@ -17,6 +26,10 @@
 import Header from "~/layouts/parts/header.vue";
 import SideNav from "~/layouts/parts/side-nav.vue";
 import Footer from "~/layouts/parts/footer.vue";
+
+const userStore = useUserStore();
+
+const shouldApproveEULA = computed(() => !userStore.me.hasApprovedEULA);
 </script>
 
 <style lang="scss">
