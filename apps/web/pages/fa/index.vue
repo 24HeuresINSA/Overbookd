@@ -11,7 +11,7 @@
         :loading="loading"
         loading-text="Chargement des fiches activités..."
         no-data-text="Aucune fiche activité trouvée"
-        hover
+        :hover="filteredActivities.length > 0"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"
       >
@@ -270,9 +270,6 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
   &__filtering {
     flex-grow: 1;
     min-width: 300px;
-  }
-  &__table {
-    cursor: pointer;
   }
   #status {
     font-weight: bold;

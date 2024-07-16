@@ -8,7 +8,7 @@
         :items-per-page="-1"
         hide-default-footer
         no-data-text="Aucune FT associée"
-        hover
+        :hover="selectedActivity.tasks.length > 0"
         @click:row="openTask"
         @auxclick:row="openTaskInNewTab"
       >

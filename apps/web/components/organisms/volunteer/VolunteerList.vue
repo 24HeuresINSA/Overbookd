@@ -1,13 +1,13 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="props.volunteers"
+    :items="volunteers"
     items-per-page="20"
     :loading="loading"
     loading-text="Chargement des bénévoles..."
     no-data-text="Aucun bénévole trouvé"
+    :hover="volunteers.length > 0"
     return-object
-    hover
     @click:row="openInformationDialog"
   >
     <template #item.firstname="{ item }">
@@ -55,7 +55,7 @@ import type { UserPersonalData } from "@overbookd/user";
 import type { Team } from "@overbookd/team";
 import type { TableHeaders } from "~/utils/data-table/header";
 
-const props = defineProps({
+const { volunteers, loading } = defineProps({
   volunteers: {
     type: Array as PropType<UserPersonalData[]>,
     required: true,
