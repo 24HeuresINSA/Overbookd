@@ -1,7 +1,7 @@
 type BaseTransaction = {
   amount: number;
   context: string;
-  createdAt: Date;
+  date: Date;
   isDeleted: boolean;
 };
 
@@ -36,3 +36,4 @@ export const PLACARD = "Placard";
 export const DEPOT = "Dépôt";
 export const VIREMENT = "Virement";
 export const REPAS_PARTAGE = "Repas partagé";
+export const INITIALISATION = "Initialisation";

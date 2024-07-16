@@ -20,13 +20,13 @@
 
     <template #item.from="{ item }">
       <span :class="{ deleted: item.isDeleted }">
-        {{ shouldHavePayor(item) ? formatUsername(item.payor) : "" }}
+        {{ shouldHavePayor(item) ? formatTransactionUsername(item.payor) : "" }}
       </span>
     </template>
 
     <template #item.to="{ item }">
       <span :class="{ deleted: item.isDeleted }">
-        {{ shouldHavePayee(item) ? formatUsername(item.payee) : "" }}
+        {{ shouldHavePayee(item) ? formatTransactionUsername(item.payee) : "" }}
       </span>
     </template>
 
@@ -36,9 +36,9 @@
       </span>
     </template>
 
-    <template #item.createdAt="{ item }">
+    <template #item.date="{ item }">
       <span :class="{ deleted: item.isDeleted }">
-        {{ formatDateWithMinutes(item.createdAt) }}
+        {{ formatDateWithMinutes(item.date) }}
       </span>
     </template>
 
@@ -65,8 +65,10 @@ import { Money } from "@overbookd/money";
 import {
   BARREL,
   DEPOSIT,
+  INITIALIZATION,
   PROVISIONS,
   TRANSFER,
+  type TransactionUser,
   type TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { formatUsername } from "~/utils/user/user.utils";
@@ -76,7 +78,13 @@ import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
-import { VIREMENT, DEPOT, FUT, PLACARD } from "~/utils/transaction/transaction";
+import {
+  VIREMENT,
+  DEPOT,
+  FUT,
+  PLACARD,
+  INITIALISATION,
+} from "~/utils/transaction/transaction";
 import type { TableHeaders } from "~/utils/data-table/header";
 
 const transactionStore = useTransactionStore();
@@ -93,10 +101,14 @@ const headers: TableHeaders = [
   { title: "Depuis", value: "from" },
   { title: "Vers", value: "to" },
   { title: "Contexte", value: "context" },
-  { title: "Date", value: "createdAt", sortable: true },
+  { title: "Date", value: "date", sortable: true },
   { title: "Montant", value: "amount", sortable: true },
   { title: "Supprimer", value: "delete" },
 ];
+
+const formatTransactionUsername = (user?: TransactionUser) => {
+  return user ? formatUsername(user) : "";
+};
 
 const search = ref<string>("");
 const searchableTransactions = computed<
@@ -104,15 +116,15 @@ const searchableTransactions = computed<
 >(() => {
   return transactions.value.map((transaction) => {
     const payor = shouldHavePayor(transaction)
-      ? formatUsername(transaction.payor)
+      ? formatTransactionUsername(transaction.payor)
       : "";
     const payee = shouldHavePayee(transaction)
-      ? formatUsername(transaction.payee)
+      ? formatTransactionUsername(transaction.payee)
       : "";
     return {
       ...transaction,
       searchable: SlugifyService.apply(
-        `${payor} ${payee} ${transaction.type} ${transaction.amount} ${transaction.createdAt} ${transaction.context}`,
+        `${payor} ${payee} ${transaction.type} ${transaction.amount} ${transaction.date} ${transaction.context}`,
       ),
     };
   });
@@ -147,6 +159,8 @@ const displayableType = (type: string): string => {
       return FUT;
     case PROVISIONS:
       return PLACARD;
+    case INITIALIZATION:
+      return INITIALISATION;
     default:
       return type;
   }

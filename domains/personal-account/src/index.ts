@@ -16,6 +16,8 @@ export type {
   MyDepositTransaction,
   MyBarrelTransaction,
   MyProvisionsTransaction,
+  MyNegativeInitializationTransaction,
+  MyPositiveInitializationTransaction,
   TransactionUser,
   TransactionWithSenderAndReceiver,
 } from "./transaction/transaction.js";
@@ -25,6 +27,7 @@ export {
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
+  INITIALIZATION,
   ONE_EURO_IN_CENTS,
   doIReceive,
   transactionTypes,

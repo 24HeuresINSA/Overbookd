@@ -12,6 +12,7 @@ datasource db {
 }
 
 enum TransactionType {
+  INITIALIZATION
   DEPOSIT
   TRANSFER
   BARREL

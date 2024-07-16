@@ -17,7 +17,7 @@
       </v-btn>
     </div>
 
-    <TransactionListing />
+    <MyTransactionListing />
 
     <v-dialog v-model="isTransferDialogOpen" max-width="600px">
       <CreateTransferForm @close="isTransferDialogOpen = false" />

@@ -77,7 +77,7 @@ export const useTransactionStore = defineStore("transaction", {
       const userStore = useUserStore();
       const myId = userStore.me.id;
       const isOneOfMyTransactions = transactions.some(
-        ({ payor, payee }) => payor.id === myId || payee.id === myId,
+        ({ payor, payee }) => payor?.id === myId || payee?.id === myId,
       );
       if (isOneOfMyTransactions) {
         this.fetchMyTransactions();
@@ -101,6 +101,6 @@ function castTransactionWithPayorAndPayeeWithDate(
 ): TransactionWithSenderAndReceiver {
   return {
     ...transaction,
-    createdAt: new Date(transaction.createdAt),
+    date: new Date(transaction.date),
   };
 }

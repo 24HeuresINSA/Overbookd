@@ -3,6 +3,7 @@ export const BARREL = "BARREL";
 export const PROVISIONS = "PROVISIONS";
 export const TRANSFER = "TRANSFER";
 export const SHARED_MEAL = "SHARED_MEAL";
+export const INITIALIZATION = "INITIALIZATION";
 
 export const ONE_EURO_IN_CENTS = 100;
 
@@ -12,7 +13,10 @@ type BaseTransaction = {
   date: Date;
 };
 
-type ReceiveOrSendTransaction = typeof SHARED_MEAL | typeof TRANSFER;
+type ReceiveOrSendTransaction =
+  | typeof SHARED_MEAL
+  | typeof TRANSFER
+  | typeof INITIALIZATION;
 
 type Send<T extends ReceiveOrSendTransaction> = BaseTransaction & {
   type: T;
@@ -51,6 +55,12 @@ type SharedMealIOfferTransaction = Receive<typeof SHARED_MEAL>;
 
 type SharedMealIShotgunTransaction = Send<typeof SHARED_MEAL>;
 
+export type MyPositiveInitializationTransaction = Receive<
+  typeof INITIALIZATION
+>;
+
+export type MyNegativeInitializationTransaction = Send<typeof INITIALIZATION>;
+
 export type MyTransaction =
   | MyDepositTransaction
   | MyBarrelTransaction
@@ -58,7 +68,9 @@ export type MyTransaction =
   | TransferIReceiveTransaction
   | TransferISendTransaction
   | SharedMealIOfferTransaction
-  | SharedMealIShotgunTransaction;
+  | SharedMealIShotgunTransaction
+  | MyPositiveInitializationTransaction
+  | MyNegativeInitializationTransaction;
 
 export type TransactionType = MyTransaction["type"];
 

@@ -45,6 +45,7 @@ import {
   type MyTransaction,
   type TransactionType,
   doIReceive,
+  INITIALIZATION,
 } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
 import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
@@ -63,6 +64,7 @@ const isCredit = (transaction: MyTransaction) => {
       return true;
     case TRANSFER:
     case SHARED_MEAL:
+    case INITIALIZATION:
       return doIReceive(transaction);
   }
 };
@@ -79,6 +81,8 @@ const getTransactionIcon = (type: TransactionType) => {
       return "mdi-swap-vertical";
     case SHARED_MEAL:
       return "mdi-food-variant";
+    case INITIALIZATION:
+      return "mdi-restart";
   }
 };
 const formatAmount = (transaction: MyTransaction) => {
@@ -90,6 +94,7 @@ const getTransferMessage = (transaction: MyTransaction) => {
     case BARREL:
     case PROVISIONS:
     case DEPOSIT:
+    case INITIALIZATION:
       return "";
     case TRANSFER:
     case SHARED_MEAL:

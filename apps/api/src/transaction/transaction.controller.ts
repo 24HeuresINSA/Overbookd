@@ -42,6 +42,8 @@ import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
 import {
   MyBarrelTransactionResponseDto,
   MyDepositTransactionResponseDto,
+  MyNegativeInitializationTransactionResponseDto,
+  MyPositiveInitializationTransactionResponseDto,
   MyProvisionsTransactionResponseDto,
   TransferIReceiveTransactionResponseDto,
   TransferISendTransactionResponseDto,
@@ -88,6 +90,8 @@ export class TransactionController {
     MyProvisionsTransactionResponseDto,
     TransferIReceiveTransactionResponseDto,
     TransferISendTransactionResponseDto,
+    MyPositiveInitializationTransactionResponseDto,
+    MyNegativeInitializationTransactionResponseDto,
   )
   @ApiResponse({
     status: 200,
@@ -99,6 +103,8 @@ export class TransactionController {
         { $ref: getSchemaPath(MyProvisionsTransactionResponseDto) },
         { $ref: getSchemaPath(TransferIReceiveTransactionResponseDto) },
         { $ref: getSchemaPath(TransferISendTransactionResponseDto) },
+        { $ref: getSchemaPath(MyPositiveInitializationTransactionResponseDto) },
+        { $ref: getSchemaPath(MyNegativeInitializationTransactionResponseDto) },
       ],
     },
   })

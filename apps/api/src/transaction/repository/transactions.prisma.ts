@@ -5,6 +5,7 @@ import {
   SHARED_MEAL,
   TRANSFER,
   MyTransaction,
+  INITIALIZATION,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_TRANSACTION_USER } from "./transaction.query";
@@ -37,12 +38,17 @@ export class PrismaTransactions {
         case PROVISIONS:
           return { type, amount, context, date, from: payor };
         case TRANSFER:
-          if (this.isPayor(payor.id, myId)) {
+          if (payor && this.isPayor(payor.id, myId)) {
             return { type, amount, context, date, to: payee };
           }
           return { type, amount, context, date, from: payor };
         case SHARED_MEAL:
-          if (this.isPayor(payor.id, myId)) {
+          if (payor && this.isPayor(payor.id, myId)) {
+            return { type, amount, context, date, to: payee };
+          }
+          return { type, amount, context, date, from: payor };
+        case INITIALIZATION:
+          if (payor && this.isPayor(payor.id, myId)) {
             return { type, amount, context, date, to: payee };
           }
           return { type, amount, context, date, from: payor };

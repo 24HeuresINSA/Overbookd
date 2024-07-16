@@ -10,6 +10,9 @@ import {
   TransactionUser,
   TransferIReceiveTransaction,
   TransferISendTransaction,
+  MyPositiveInitializationTransaction,
+  INITIALIZATION,
+  MyNegativeInitializationTransaction,
 } from "@overbookd/personal-account";
 import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 import { BaseTransactionResponseDto } from "./base-transaction.response.dto";
@@ -80,7 +83,43 @@ export class TransferISendTransactionResponseDto
   type: typeof TRANSFER;
 
   @ApiProperty({
-    description: "Transaction reveiver",
+    description: "Transaction receiver",
+    type: TransactionUserResponseDto,
+  })
+  to: TransactionUser;
+}
+
+export class MyPositiveInitializationTransactionResponseDto
+  extends BaseTransactionResponseDto
+  implements MyPositiveInitializationTransaction
+{
+  @ApiProperty({
+    description: "Transaction type",
+    type: INITIALIZATION,
+    example: INITIALIZATION,
+  })
+  type: typeof INITIALIZATION;
+
+  @ApiProperty({
+    description: "Transaction sender",
+    type: TransactionUserResponseDto,
+  })
+  from: TransactionUser;
+}
+
+export class MyNegativeInitializationTransactionResponseDto
+  extends BaseTransactionResponseDto
+  implements MyNegativeInitializationTransaction
+{
+  @ApiProperty({
+    description: "Transaction type",
+    type: INITIALIZATION,
+    example: INITIALIZATION,
+  })
+  type: typeof INITIALIZATION;
+
+  @ApiProperty({
+    description: "Transaction receiver",
     type: TransactionUserResponseDto,
   })
   to: TransactionUser;
