@@ -70,15 +70,12 @@ export const transactionTypes: TransactionType[] = [
   SHARED_MEAL,
 ];
 
-export type TransactionWithSenderAndReceiver = {
+export type TransactionWithSenderAndReceiver = BaseTransaction & {
   id: number;
   type: TransactionType;
-  amount: number;
-  context: string;
-  createdAt: Date;
   isDeleted: boolean;
-  payor: TransactionUser;
-  payee: TransactionUser;
+  payor?: TransactionUser;
+  payee?: TransactionUser;
 };
 
 export function doIReceive<T extends ReceiveOrSendTransaction>(

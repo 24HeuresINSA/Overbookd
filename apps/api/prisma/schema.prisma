@@ -145,10 +145,10 @@ model TeamPermission {
 model Transaction {
   id        Int             @id @default(autoincrement())
   type      TransactionType @default(TRANSFER)
-  from      Int
-  payor     User            @relation("from", fields: [from], references: [id])
-  to        Int
-  payee     User            @relation("to", fields: [to], references: [id])
+  from      Int?
+  payor     User?           @relation("from", fields: [from], references: [id])
+  to        Int?
+  payee     User?           @relation("to", fields: [to], references: [id])
   amount    Int
   context   String          @default("") @db.VarChar(255)
   createdAt DateTime        @default(now()) @map("created_at")

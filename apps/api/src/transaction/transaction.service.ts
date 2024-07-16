@@ -7,26 +7,47 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { User } from "@prisma/client";
-import { SELECT_TRANSACTION } from "./transaction.query";
+import { SELECT_COMPLETE_TRANSACTION } from "./repository/transaction.query";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import {
-  DEPOSIT,
   PastSharedMeal,
   SharedMealPayment,
   SharedMealTransaction,
   MyTransaction,
   TransactionWithSenderAndReceiver,
+  CreateDepositForm,
+  Deposit,
+  CreateBarrelTransaction,
+  CreateBarrelTransactions,
+  ConfiguredBarrel,
+  CreateProvisionsTransactions,
+  CreateProvisionsTransaction,
 } from "@overbookd/personal-account";
 import { PrismaTransactions } from "./repository/transactions.prisma";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { CreateTransactionForm } from "@overbookd/http";
+
+export type Barrels = {
+  findBySlug: (slug: string) => Promise<ConfiguredBarrel>;
+};
+
+type Repositories = {
+  transactions: Readonly<PrismaTransactions>;
+  barrels: Readonly<Barrels>;
+};
+
+type UseCases = {
+  deposit: Readonly<Deposit>;
+  barrelTransactions: Readonly<CreateBarrelTransactions>;
+  provisionsTransactions: Readonly<CreateProvisionsTransactions>;
+};
 
 @Injectable()
 export class TransactionService implements OnApplicationBootstrap {
   private logger = new Logger(TransactionService.name);
 
   constructor(
-    private readonly transactions: PrismaTransactions,
+    private readonly repositories: Repositories,
+    private readonly useCases: UseCases,
     private readonly prisma: PrismaService,
     private readonly eventStore: DomainEventService,
   ) {}
@@ -40,65 +61,45 @@ export class TransactionService implements OnApplicationBootstrap {
   }
 
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.prisma.transaction.findMany({
-      select: SELECT_TRANSACTION,
+    const transactions = await this.prisma.transaction.findMany({
+      select: SELECT_COMPLETE_TRANSACTION,
       orderBy: { createdAt: "desc" },
     });
+    return transactions.map(({ createdAt, ...transaction }) => ({
+      ...transaction,
+      date: createdAt,
+    }));
   }
 
   async getMyTransactions(user: JwtPayload): Promise<MyTransaction[]> {
-    return this.transactions.getMine(user.id);
+    return this.repositories.transactions.getMine(user.id);
   }
 
-  async addTransactions(
-    transactions: CreateTransactionForm[],
-  ): Promise<TransactionWithSenderAndReceiver[]> {
-    return Promise.all(
-      transactions.map(async (transaction) => {
-        this.checkTransactionAmount(transaction.amount);
-        //Check if user exists
-        const userId =
-          transaction.type === DEPOSIT ? transaction.to : transaction.from;
-        const users = await this.userExists([userId]);
-        const user = users.find((user) => user.id === userId);
-        const newBalance =
-          transaction.type === DEPOSIT
-            ? user.balance + transaction.amount
-            : user.balance - transaction.amount;
-        //Update the user and create the transaction
-        const [savedTransaction] = await this.prisma.$transaction([
-          this.prisma.transaction.create({
-            select: SELECT_TRANSACTION,
-            data: transaction,
-          }),
-          this.prisma.user.update({
-            where: { id: Number(userId) },
-            data: { balance: newBalance },
-          }),
-        ]);
-        return savedTransaction;
-      }),
-    );
+  async addDeposits(deposits: CreateDepositForm[]): Promise<void> {
+    await this.useCases.deposit.applyMultiple(deposits);
+  }
+
+  async addBarrelTransactions(
+    barrelSlug: string,
+    transactions: CreateBarrelTransaction[],
+  ): Promise<void> {
+    const barrel = await this.repositories.barrels.findBySlug(barrelSlug);
+    await this.useCases.barrelTransactions.apply(barrel, transactions);
+  }
+
+  async addProvisionsTransactions(
+    stickPrice: number,
+    transactions: CreateProvisionsTransaction[],
+  ): Promise<void> {
+    await this.useCases.provisionsTransactions.apply(stickPrice, transactions);
   }
 
   async deleteTransaction(id: number): Promise<void> {
-    const transaction = await this.transactionExists(id);
-
-    const updateTransactionOperation = this.prisma.transaction.update({
+    await this.checkTransactionExistence(id);
+    await this.prisma.transaction.update({
       where: { id },
       data: { isDeleted: true },
     });
-
-    const balanceOperationParameters =
-      await this.getUserBalanceUpdateOperationParameters(transaction);
-
-    const balanceOperations = balanceOperationParameters
-      .filter((operation) => operation !== undefined)
-      .map((operation) => this.prisma.user.update(operation));
-
-    const operations = [updateTransactionOperation, ...balanceOperations];
-    await this.prisma.$transaction(operations);
-    return;
   }
 
   private async generateForMeal(event: PastSharedMeal) {
@@ -169,12 +170,10 @@ export class TransactionService implements OnApplicationBootstrap {
     }
   }
 
-  private async transactionExists(
-    transactionId: number,
-  ): Promise<TransactionWithSenderAndReceiver> {
+  private async checkTransactionExistence(transactionId: number) {
     const transaction = await this.prisma.transaction.findFirst({
       where: { id: transactionId },
-      select: SELECT_TRANSACTION,
+      select: SELECT_COMPLETE_TRANSACTION,
     });
     if (!transaction) {
       throw new NotFoundException(
@@ -186,7 +185,6 @@ export class TransactionService implements OnApplicationBootstrap {
         `Transaction with ID ${transactionId} is already deleted`,
       );
     }
-    return transaction;
   }
 
   private async getUserBalanceUpdateOperationParameters(

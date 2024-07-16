@@ -4,7 +4,7 @@ import {
   InsufficientAmount,
 } from "./deposit.error";
 
-type CreateDepositForm = {
+export type CreateDepositForm = {
   amount: number;
   depositor: number;
 };
@@ -40,7 +40,7 @@ export class Deposit {
 
   async applyMultiple(
     deposits: CreateDepositForm[],
-  ): Promise<MyDepositTransaction[]> {
+  ): Promise<DepositTransaction[]> {
     const insufficientAmount = deposits.some(({ amount }) => amount <= 0);
     if (insufficientAmount) throw new AtLeastOneInsufficientAmount();
     return Promise.all(deposits.map((deposit) => this.apply(deposit)));

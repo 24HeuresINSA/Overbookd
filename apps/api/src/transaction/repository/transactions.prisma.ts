@@ -7,7 +7,7 @@ import {
   MyTransaction,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_TRANSACTION_USER } from "../transaction.query";
+import { SELECT_TRANSACTION_USER } from "./transaction.query";
 
 export class PrismaTransactions {
   constructor(private readonly prisma: PrismaService) {}

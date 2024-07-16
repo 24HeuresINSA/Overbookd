@@ -7,19 +7,19 @@ export const SELECT_TRANSACTION_USER = {
   nickname: true,
 };
 
-export const SELECT_TRANSACTION = {
-  id: true,
+export const SELECT_BASE_TRANSACTION = {
   type: true,
-  payor: {
-    select: SELECT_TRANSACTION_USER,
-  },
-  payee: {
-    select: SELECT_TRANSACTION_USER,
-  },
   amount: true,
   context: true,
   createdAt: true,
+};
+
+export const SELECT_COMPLETE_TRANSACTION = {
+  id: true,
   isDeleted: true,
+  ...SELECT_BASE_TRANSACTION,
+  payor: { select: SELECT_TRANSACTION_USER },
+  payee: { select: SELECT_TRANSACTION_USER },
 };
 
 export const CAN_HAVE_PERSONAL_ACCOUNT = {

@@ -1,3 +1,4 @@
+// FESTIVAL EVENT
 export type {
   AddInquiryRequestForm,
   PublishFeedbackForm,
@@ -27,8 +28,16 @@ export type {
   Draft as DraftWithConflicts,
   Reviewable as ReviewableWithConflicts,
 } from "./festival-event/festival-task.js";
-export type { HttpStringified } from "./http-stringified.js";
-export type { OfferMeal } from "./shared-meal.js";
+
+// PERSONAL ACCOUNT
+export type { OfferMeal } from "./personal-account/shared-meal.js";
+export type { Consumer } from "./personal-account/consumer.js";
+export type {
+  CreateBarrelTransactionsForm,
+  CreateProvisionsTransactionsForm,
+} from "./personal-account/transaction.js";
+
+// LOGISTIC
 export type { AddGearRequestForm } from "./logistic/borrow.js";
 export type {
   Inquiry,
@@ -59,9 +68,14 @@ export type {
   CatalogCategory,
   CatalogCategoryTree,
 } from "./logistic/catalog.js";
+
+// PLANNING
+export type { Task as PlanningTask } from "./planning/task.js";
+export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
+export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
+
 export { JSON, CSV, ICAL, PDF } from "./mime.js";
 export type { AvailabilityForm } from "./volunteer-availability.js";
-export type { Task as PlanningTask } from "./planning/task.js";
 export type { EnrollableStaff, EnrollableVolunteer } from "./registration.js";
 export type { EditAmountForm } from "./contribution.js";
 export type { Preference } from "./preference.js";
@@ -84,8 +98,6 @@ export type {
   VolunteerWithAssignmentStats,
   AssignmentStat,
 } from "./assignment.js";
-export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
-export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
 export type {
   HelpingVolunteerAssignment,
   HelpingVolunteer,
@@ -93,6 +105,5 @@ export type {
 export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period.js";
 export type { CreatePermissionForm, Permission } from "./permission.js";
 export type { CreateLocation } from "./location.js";
-export type { Consumer } from "./consumer.js";
 export type { UserAccess, UserCredentials } from "./auth.js";
-export type { CreateTransactionForm } from "./transaction.js";
+export type { HttpStringified } from "./http-stringified.js";

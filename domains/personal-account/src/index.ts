@@ -45,6 +45,28 @@ export { TransferError } from "./transaction/transfer/transfer.error.js";
 export { SharedMeal as SharedMealPayment } from "./transaction/shared-meal/shared-meal.js";
 export type { SharedMealTransaction } from "./transaction/shared-meal/shared-meal.js";
 export { SharedMealError } from "./transaction/shared-meal/shared-meal.error.js";
+export {
+  type CreateDepositForm,
+  type Deposits,
+  type DepositTransaction,
+  type DepositTransactionForm,
+  Deposit,
+} from "./transaction/deposit/deposit.js";
+export {
+  type BarrelTransaction,
+  type BarrelTransactionForm,
+  type BarrelTransactions,
+  type CreateBarrelTransaction,
+  CreateBarrelTransactions,
+} from "./transaction/barrel/create-barrel-transactions.js";
+export {
+  type CreateProvisionsTransaction,
+  type ProvisionsTransaction,
+  type ProvisionsTransactionForm,
+  type ProvisionsTransactions,
+  CreateProvisionsTransactions,
+} from "./transaction/provisions/create-provisions-transactions.js";
+export { TransactionError } from "./transaction/transaction.error.js";
 
 export type {
   Barrels,

@@ -1,3 +1,5 @@
+import { TransactionError } from "../transaction.error";
+
 export const NEGATIVE_AMOUNT_ERROR_MESSAGE = "Le montant doit être positif";
 
 export const INSUFFICIENT_AMOUNT_ERROR_MESSAGE =
@@ -18,7 +20,7 @@ const NEGATIVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
 const AMOUNT_TOO_HIGH_ERRROR_MESSAGE =
   "Le montant de la transaction est trop élevé";
 
-export class TransferError extends Error {}
+export class TransferError extends TransactionError {}
 
 export class NegativeAmount extends TransferError {
   constructor() {

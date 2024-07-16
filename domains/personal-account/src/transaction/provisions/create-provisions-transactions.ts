@@ -9,7 +9,7 @@ import {
 } from "../transaction.error";
 import { InsufficientStickPrice } from "./provisions.error";
 
-type CreateProvisionsTransaction = {
+export type CreateProvisionsTransaction = {
   consumer: number;
   consumption: number;
 };

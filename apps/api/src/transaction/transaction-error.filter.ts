@@ -1,11 +1,11 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
-import { TransferError } from "@overbookd/personal-account";
+import { TransactionError } from "@overbookd/personal-account";
 import { Response, Request } from "express";
 import { RouteLogger } from "../route-logger";
 
-@Catch(TransferError)
-export class TransferErrorFilter implements ExceptionFilter {
-  catch(exception: TransferError, host: ArgumentsHost) {
+@Catch(TransactionError)
+export class TransactionErrorFilter implements ExceptionFilter {
+  catch(exception: TransactionError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const { method, url } = ctx.getRequest<Request>();

@@ -5,7 +5,7 @@ import {
   NoConsumer,
 } from "../transaction.error";
 
-type CreateBarrelTransaction = {
+export type CreateBarrelTransaction = {
   consumer: number;
   consumption: number;
 };

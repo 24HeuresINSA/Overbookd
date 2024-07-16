@@ -23,7 +23,6 @@ import {
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { CreateTransactionRequestDto } from "./dto/create-transaction.request.dto";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -41,24 +40,23 @@ import {
 } from "@overbookd/personal-account";
 import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
 import {
-  BarrelTransactionDto,
-  DepositTransactionDto,
-  ProvisionsTransactionDto,
-  TransferIReceiveTransactionDto,
-  TransferISendTransactionDto,
+  MyBarrelTransactionResponseDto,
+  MyDepositTransactionResponseDto,
+  MyProvisionsTransactionResponseDto,
+  TransferIReceiveTransactionResponseDto,
+  TransferISendTransactionResponseDto,
 } from "./dto/my-transaction.response.dto";
-import { TransferErrorFilter } from "./transfer-error.filter";
+import { TransactionErrorFilter } from "./transaction-error.filter";
+import { CreateDepositRequestDto } from "./dto/create-deposit.request.dto";
+import { CreateBarrelTransactionsRequestDto } from "./dto/create-barrel-transactions.request.dto";
+import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-transactions.request.dto";
 
 @ApiBearerAuth()
-@UseFilters(new TransferErrorFilter())
+@UseFilters(TransactionErrorFilter)
 @ApiTags("transactions")
 @Controller("transactions")
-@ApiBadRequestResponse({
-  description: "Bad Request",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBadRequestResponse({ description: "Bad Request" })
+@ApiForbiddenResponse({ description: "User can't access this resource" })
 @ApiUnauthorizedResponse({
   description: "User don't have the right to access this route",
 })
@@ -85,22 +83,22 @@ export class TransactionController {
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("me")
   @ApiExtraModels(
-    DepositTransactionDto,
-    BarrelTransactionDto,
-    ProvisionsTransactionDto,
-    TransferIReceiveTransactionDto,
-    TransferISendTransactionDto,
+    MyDepositTransactionResponseDto,
+    MyBarrelTransactionResponseDto,
+    MyProvisionsTransactionResponseDto,
+    TransferIReceiveTransactionResponseDto,
+    TransferISendTransactionResponseDto,
   )
   @ApiResponse({
     status: 200,
     description: "Get all transactions of self",
     schema: {
       oneOf: [
-        { $ref: getSchemaPath(DepositTransactionDto) },
-        { $ref: getSchemaPath(BarrelTransactionDto) },
-        { $ref: getSchemaPath(ProvisionsTransactionDto) },
-        { $ref: getSchemaPath(TransferIReceiveTransactionDto) },
-        { $ref: getSchemaPath(TransferISendTransactionDto) },
+        { $ref: getSchemaPath(MyDepositTransactionResponseDto) },
+        { $ref: getSchemaPath(MyBarrelTransactionResponseDto) },
+        { $ref: getSchemaPath(MyProvisionsTransactionResponseDto) },
+        { $ref: getSchemaPath(TransferIReceiveTransactionResponseDto) },
+        { $ref: getSchemaPath(TransferISendTransactionResponseDto) },
       ],
     },
   })
@@ -131,23 +129,62 @@ export class TransactionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
-  @Post()
+  @Post("deposits")
+  @HttpCode(204)
   @ApiBody({
-    description: "transactions to generate",
+    description: "Deposits to create",
+    type: CreateDepositRequestDto,
     isArray: true,
-    type: CreateTransactionRequestDto,
   })
   @ApiResponse({
-    description: "generated transactions",
-    status: 201,
-    type: TransactionResponseDto,
-    isArray: true,
+    description: "Generated deposits",
+    status: 204,
   })
-  addTransactions(
+  addDeposits(@Body() deposits: CreateDepositRequestDto[]): Promise<void> {
+    return this.transactionService.addDeposits(deposits);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Post("barrels")
+  @HttpCode(204)
+  @ApiBody({
+    description: "Barrel transactions to create",
+    type: CreateBarrelTransactionsRequestDto,
+  })
+  @ApiResponse({
+    description: "Created barrel transactions",
+    status: 204,
+  })
+  addBarrelTransactions(
+    @Body() { barrelSlug, transactions }: CreateBarrelTransactionsRequestDto,
+  ): Promise<void> {
+    return this.transactionService.addBarrelTransactions(
+      barrelSlug,
+      transactions,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Post("provisions")
+  @HttpCode(204)
+  @ApiBody({
+    description: "Provisions transactions to create",
+    type: CreateProvisionsTransactionsRequestDto,
+  })
+  @ApiResponse({
+    description: "Created provisions transactions",
+    status: 204,
+  })
+  addProvisionsTransactions(
     @Body()
-    transactions: CreateTransactionRequestDto[],
-  ): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.transactionService.addTransactions(transactions);
+    { stickPrice, transactions }: CreateProvisionsTransactionsRequestDto,
+  ): Promise<void> {
+    return this.transactionService.addProvisionsTransactions(
+      stickPrice,
+      transactions,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

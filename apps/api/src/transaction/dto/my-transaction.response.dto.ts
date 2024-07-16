@@ -11,31 +11,11 @@ import {
   TransferIReceiveTransaction,
   TransferISendTransaction,
 } from "@overbookd/personal-account";
-import { UserRepresentation } from "./transaction.response.dto";
+import { TransactionUserResponseDto } from "./transaction-user.response.dto";
+import { BaseTransactionResponseDto } from "./base-transaction.response.dto";
 
-class BaseTransactionDto {
-  @ApiProperty({
-    description: "Transaction amount in cents",
-    type: Number,
-    example: 100,
-  })
-  amount: number;
-
-  @ApiProperty({
-    description: "Transaction context",
-    type: String,
-  })
-  context: string;
-
-  @ApiProperty({
-    description: "Transaction date",
-    type: Date,
-  })
-  date: Date;
-}
-
-export class DepositTransactionDto
-  extends BaseTransactionDto
+export class MyDepositTransactionResponseDto
+  extends BaseTransactionResponseDto
   implements MyDepositTransaction
 {
   @ApiProperty({
@@ -46,8 +26,8 @@ export class DepositTransactionDto
   type: typeof DEPOSIT;
 }
 
-export class BarrelTransactionDto
-  extends BaseTransactionDto
+export class MyBarrelTransactionResponseDto
+  extends BaseTransactionResponseDto
   implements MyBarrelTransaction
 {
   @ApiProperty({
@@ -58,8 +38,8 @@ export class BarrelTransactionDto
   type: typeof BARREL;
 }
 
-export class ProvisionsTransactionDto
-  extends BaseTransactionDto
+export class MyProvisionsTransactionResponseDto
+  extends BaseTransactionResponseDto
   implements MyProvisionsTransaction
 {
   @ApiProperty({
@@ -70,8 +50,8 @@ export class ProvisionsTransactionDto
   type: typeof PROVISIONS;
 }
 
-export class TransferIReceiveTransactionDto
-  extends BaseTransactionDto
+export class TransferIReceiveTransactionResponseDto
+  extends BaseTransactionResponseDto
   implements TransferIReceiveTransaction
 {
   @ApiProperty({
@@ -83,13 +63,13 @@ export class TransferIReceiveTransactionDto
 
   @ApiProperty({
     description: "Transaction sender",
-    type: UserRepresentation,
+    type: TransactionUserResponseDto,
   })
   from: TransactionUser;
 }
 
-export class TransferISendTransactionDto
-  extends BaseTransactionDto
+export class TransferISendTransactionResponseDto
+  extends BaseTransactionResponseDto
   implements TransferISendTransaction
 {
   @ApiProperty({
@@ -101,7 +81,7 @@ export class TransferISendTransactionDto
 
   @ApiProperty({
     description: "Transaction reveiver",
-    type: UserRepresentation,
+    type: TransactionUserResponseDto,
   })
   to: TransactionUser;
 }
