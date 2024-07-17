@@ -1,9 +1,13 @@
 import type {
+  CreateDepositForm,
   CreateTransferForm,
-  Transaction,
+  MyTransaction,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import type { CreateTransactionForm } from "@overbookd/http";
+import type {
+  CreateBarrelTransactionsForm,
+  CreateProvisionsTransactionsForm,
+} from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class TransactionRepository {
@@ -14,14 +18,21 @@ export class TransactionRepository {
   }
 
   static getMyTransactions() {
-    return HttpClient.get<Transaction[]>(`${this.basePath}/me`);
+    return HttpClient.get<MyTransaction[]>(`${this.basePath}/me`);
   }
 
-  static createTransactions(transactions: CreateTransactionForm[]) {
-    return HttpClient.post<TransactionWithSenderAndReceiver[]>(
-      `${this.basePath}`,
-      transactions,
-    );
+  static createDeposits(deposits: CreateDepositForm[]) {
+    return HttpClient.post<void>(`${this.basePath}/deposits`, deposits);
+  }
+
+  static createBarrelTransactions(transactions: CreateBarrelTransactionsForm) {
+    return HttpClient.post<void>(`${this.basePath}/barrels`, transactions);
+  }
+
+  static createProvisionsTransactions(
+    transactions: CreateProvisionsTransactionsForm,
+  ) {
+    return HttpClient.post<void>(`${this.basePath}/provisions`, transactions);
   }
 
   static deleteTransaction(transactionId: number) {

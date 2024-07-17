@@ -1,6 +1,9 @@
-import type { HttpStringified, CreateTransactionForm } from "@overbookd/http";
+import type { HttpStringified } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import type {
+  CreateBarrelTransaction,
+  CreateDepositForm,
+  CreateProvisionsTransaction,
   CreateTransferForm,
   MyTransaction,
   TransactionWithSenderAndReceiver,
@@ -22,7 +25,7 @@ export const useTransactionStore = defineStore("transaction", {
     async fetchMyTransactions() {
       const res = await TransactionRepository.getMyTransactions();
       if (isHttpError(res)) return;
-      this.myTransactions = res.map(castTransactionWithDate);
+      this.myTransactions = res.map(castMyTransactionWithDate);
     },
 
     async fetchAllTransactions() {
@@ -36,20 +39,51 @@ export const useTransactionStore = defineStore("transaction", {
       if (isHttpError(res)) return;
       sendSuccessNotification("Le virement a bien été effectué 💸");
 
-      await this.fetchMyTransactions();
-      const userStore = useUserStore();
-      userStore.fetchMyInformation();
+      await this._fetchMyInformation();
     },
 
-    async createTransactions(transactions: CreateTransactionForm[]) {
-      const res = await TransactionRepository.createTransactions(transactions);
+    async createDeposits(deposits: CreateDepositForm[]) {
+      const res = await TransactionRepository.createDeposits(deposits);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Les transactions ont bien été enregistrées 💸");
+      sendSuccessNotification("Les dépôts ont été enregistrés 💸");
 
-      const castedTransactions = res.map(
-        castTransactionWithPayorAndPayeeWithDate,
+      const isMine = deposits.some(
+        ({ depositor }) => depositor === this._getLoggedUserId(),
       );
-      this._fetchMyInformationIfNeeded(castedTransactions);
+      if (isMine) await this._fetchMyInformation();
+    },
+
+    async createBarrelTransactions(
+      barrelSlug: string,
+      transactions: CreateBarrelTransaction[],
+    ) {
+      const form = { barrelSlug, transactions };
+      const res = await TransactionRepository.createBarrelTransactions(form);
+      if (isHttpError(res)) return;
+      sendSuccessNotification("Les transactions fût ont été enregistrées 💸");
+
+      const isMine = transactions.some(
+        ({ consumer }) => consumer === this._getLoggedUserId(),
+      );
+      if (isMine) await this._fetchMyInformation();
+    },
+
+    async createProvisionsTransactions(
+      stickPrice: number,
+      transactions: CreateProvisionsTransaction[],
+    ) {
+      const form = { stickPrice, transactions };
+      const res =
+        await TransactionRepository.createProvisionsTransactions(form);
+      if (isHttpError(res)) return;
+      sendSuccessNotification(
+        "Les transactions placard ont été enregistrées 💸",
+      );
+
+      const isMine = transactions.some(
+        ({ consumer }) => consumer === this._getLoggedUserId(),
+      );
+      if (isMine) await this._fetchMyInformation();
     },
 
     async deleteTransaction(transaction: TransactionWithSenderAndReceiver) {
@@ -68,26 +102,26 @@ export const useTransactionStore = defineStore("transaction", {
         updatedTransaction,
       );
 
-      this._fetchMyInformationIfNeeded([transaction]);
+      const myId = this._getLoggedUserId();
+      const isMine =
+        transaction.payee?.id === myId || transaction.payor?.id === myId;
+      if (isMine) await this._fetchMyInformation();
     },
 
-    _fetchMyInformationIfNeeded(
-      transactions: TransactionWithSenderAndReceiver[],
-    ) {
+    _getLoggedUserId(): number {
       const userStore = useUserStore();
-      const myId = userStore.me.id;
-      const isOneOfMyTransactions = transactions.some(
-        ({ payor, payee }) => payor?.id === myId || payee?.id === myId,
-      );
-      if (isOneOfMyTransactions) {
-        this.fetchMyTransactions();
-        userStore.fetchMyInformation();
-      }
+      return userStore.me.id;
+    },
+
+    async _fetchMyInformation() {
+      await this.fetchMyTransactions();
+      const userStore = useUserStore();
+      userStore.fetchMyInformation();
     },
   },
 });
 
-function castTransactionWithDate(
+function castMyTransactionWithDate(
   transaction: HttpStringified<MyTransaction>,
 ): MyTransaction {
   return {

@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateTransactionForm } from "@overbookd/http";
 import {
   BARREL,
   PROVISIONS,
@@ -39,7 +38,6 @@ import {
   CLOSET_MODE,
   DEPOSIT_MODE,
 } from "~/utils/transaction/sg-mode";
-import { formatDateWithoutYear } from "~/utils/date/date.utils";
 
 useHead({ title: "SG" });
 
@@ -78,7 +76,11 @@ const totalConsumptions = computed<number>(() => {
 
 const closetStickPrice = ref<number>(60);
 const caskStickPrice = computed<number>(() => {
-  return computeUnitPrice(totalPrice.value, totalConsumptions.value);
+  const existsOnlyOneConsumer =
+    consumers.value.filter((c) => c.newConsumption > 0).length === 1;
+  return existsOnlyOneConsumer
+    ? totalPrice.value
+    : computeUnitPrice(totalPrice.value, totalConsumptions.value);
 });
 
 const mode = ref<SgMode>(CASK_MODE);
@@ -94,28 +96,6 @@ const transactionType = computed(() => {
   if (isMode(CLOSET_MODE)) return PROVISIONS;
   return DEPOSIT;
 });
-
-const calculateSpentAmount = (consumption: number) => {
-  if (isMode(CASK_MODE)) return caskStickPrice.value * consumption;
-  if (isMode(CLOSET_MODE)) return closetStickPrice.value * consumption;
-  return consumption;
-};
-
-const stickWord = (consumption: number) => {
-  return consumption > 1 ? "bâtons" : "bâton";
-};
-const defineTransactionContext = (consumption: number) => {
-  if (isMode(CASK_MODE)) {
-    const barrel = selectedBarrel.value
-      ? `Fût de ${selectedBarrel.value.drink} du ${formatDateWithoutYear(selectedBarrel.value.openedOn)}`
-      : "Fût";
-    return `${barrel}: ${consumption} ${stickWord(consumption)}`;
-  }
-  if (isMode(CLOSET_MODE)) {
-    return `Conso placard: ${consumption} ${stickWord(consumption)}`;
-  }
-  return "Recharge de compte perso";
-};
 
 const consumersWithConsumption = computed(() => {
   return consumers.value.filter((consumer) => consumer.newConsumption);
@@ -166,25 +146,42 @@ const saveTransactions = async () => {
     sendFailureNotification(invalidInputsReasons.value);
     return;
   }
-  const transactions = consumersWithConsumption.value.map((consumer) => {
-    const type = transactionType.value;
-    const amount = calculateSpentAmount(consumer.newConsumption);
-    const context = defineTransactionContext(consumer.newConsumption);
-    const transaction: CreateTransactionForm = {
-      from: consumer.id,
-      to: consumer.id,
-      type,
-      amount,
-      context,
-    };
 
-    consumer.balance =
-      type === DEPOSIT ? consumer.balance + amount : consumer.balance - amount;
+  switch (transactionType.value) {
+    case DEPOSIT: {
+      const transactions = consumersWithConsumption.value.map(
+        ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
+      );
+      await transactionStore.createDeposits(transactions);
+      break;
+    }
+    case BARREL: {
+      const barrelSlug = selectedBarrel.value?.slug;
+      if (!barrelSlug) return;
+      const transactions = consumersWithConsumption.value.map(
+        ({ id, newConsumption }) => ({
+          consumer: id,
+          consumption: newConsumption,
+        }),
+      );
+      await transactionStore.createBarrelTransactions(barrelSlug, transactions);
+      break;
+    }
+    case PROVISIONS: {
+      const transactions = consumersWithConsumption.value.map(
+        ({ id, newConsumption }) => ({
+          consumer: id,
+          consumption: newConsumption,
+        }),
+      );
+      await transactionStore.createProvisionsTransactions(
+        closetStickPrice.value,
+        transactions,
+      );
+      break;
+    }
+  }
 
-    return transaction;
-  });
-
-  await transactionStore.createTransactions(transactions);
   await userStore.fetchPersonalAccountConsumers();
   resetConsumers();
 };

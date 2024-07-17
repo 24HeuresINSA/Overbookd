@@ -32,7 +32,7 @@
       <MoneyField v-model="item.balance" readonly hide-details hide-label />
     </template>
 
-    <template #item.newConsumption="{ item }">
+    <template #item.recap="{ item }">
       <MoneyField
         v-model="calculatedConsumption[item.id]"
         readonly
@@ -70,6 +70,7 @@ import {
   type SgMode,
   CASK_MODE,
   CLOSET_MODE,
+  DEPOSIT_MODE,
 } from "~/utils/transaction/sg-mode";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import type { Searchable } from "~/utils/search/search.utils";
@@ -99,25 +100,36 @@ const props = defineProps({
   },
 });
 
-const headers: TableHeaders = [
-  { title: "Nom", value: "firstname", width: "30%", sortable: true },
-  { title: "CP", value: "balance", width: "20%", sortable: true },
-  {
-    title: "Nouvelle conso",
-    value: "newConsumption",
-    width: "20%",
-    sortable: true,
-  },
-  { title: "Action", value: "action", width: "30%" },
-];
+const headers = computed<TableHeaders>(() => {
+  const recapTitle = isMode(DEPOSIT_MODE) ? "Nouveau dépôt" : "Nouvelle conso";
+  return [
+    { title: "Nom", value: "firstname", width: "30%", sortable: true },
+    { title: "CP", value: "balance", width: "20%", sortable: true },
+    {
+      title: recapTitle,
+      value: "recap",
+      width: "20%",
+      sortable: true,
+    },
+    { title: "Action", value: "action", width: "30%" },
+  ];
+});
 
 const isMode = (value: SgMode) => props.mode === value;
 const isExpenseMode = computed<boolean>(
   () => isMode(CASK_MODE) || isMode(CLOSET_MODE),
 );
 
+const existsOnlyOneConsumer = computed<boolean>(() => {
+  return consumers.value.filter((c) => c.newConsumption > 0).length === 1;
+});
 const calculateSpentAmount = (consumption: number) => {
-  if (isMode(CASK_MODE)) return props.caskStickPrice * consumption;
+  if (isMode(CASK_MODE)) {
+    const hasConsumption = consumption > 0;
+    return hasConsumption && existsOnlyOneConsumer.value
+      ? props.caskStickPrice
+      : props.caskStickPrice * consumption;
+  }
   if (isMode(CLOSET_MODE)) return props.closetStickPrice * consumption;
   return consumption;
 };
