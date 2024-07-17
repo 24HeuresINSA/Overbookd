@@ -7,7 +7,7 @@
     :closable="closable"
     :ripple="clickable"
     variant="elevated"
-    @click="sendEvent"
+    @click.stop="sendEvent"
     @click:close="sendCloseEvent"
   >
     <v-icon v-if="teamMetadata" :size="size">
