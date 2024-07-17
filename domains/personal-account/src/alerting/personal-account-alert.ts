@@ -1,4 +1,4 @@
-import { CURRENT_BALANCE_MESSAGE } from "../current-balance/current-balance.constant";
+import { CURRENT_BALANCE_MESSAGE } from "../balance/current-balance.constant";
 import { NEGATIVE_BALANCE } from "../in-debt/in-debt-alerting.constant";
 
 export type Summary = typeof NEGATIVE_BALANCE | typeof CURRENT_BALANCE_MESSAGE;

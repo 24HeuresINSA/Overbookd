@@ -71,6 +71,7 @@ export {
 } from "./transaction/provisions/create-provisions-transactions.js";
 export { TransactionError } from "./transaction/transaction.error.js";
 
+// BARREL PRICES
 export type {
   Barrels,
   ConfiguredBarrel,
@@ -106,3 +107,6 @@ export type { Adherent, Shotgun } from "./meal-sharing/adherent.js";
 export { MealSharingError } from "./meal-sharing/meal-sharing.error.js";
 export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder.js";
 export { OnGoingSharedMealBuilder } from "./meal-sharing/on-going-shared-meal.builder.js";
+
+// BALANCE
+export { Balance } from "./balance/balance.js";

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { Adherents } from "./adherents.js";
 import { PersonalAccountAlerting } from "./personal-account-alerting.js";
 import { InMemoryAdhrents } from "./adherents.in-memory.js";
-import { CURRENT_BALANCE_MESSAGE } from "../current-balance/current-balance.constant.js";
+import { CURRENT_BALANCE_MESSAGE } from "../balance/current-balance.constant.js";
 import { NEGATIVE_BALANCE } from "../in-debt/in-debt-alerting.constant.js";
 
 const adherentWithCredit = { id: 1, balance: 13 };

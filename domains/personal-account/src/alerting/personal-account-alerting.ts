@@ -1,5 +1,5 @@
 import { Adherents } from "./adherents.js";
-import { CurrentBalanceAlert } from "../current-balance/current-balance-alert.js";
+import { CurrentBalanceAlert } from "../balance/current-balance-alert.js";
 import { InDebtAlert } from "../in-debt/in-debt-alert.js";
 
 export class PersonalAccountAlerting {
