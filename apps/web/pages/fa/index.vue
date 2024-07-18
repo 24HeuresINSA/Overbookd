@@ -113,11 +113,14 @@ import type { TableHeaders } from "~/utils/data-table/header";
 import type { Searchable } from "~/utils/search/search.utils";
 import { formatUsername } from "~/utils/user/user.utils";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import {
+  openActivity,
+  openActivityInNewTab,
+} from "~/utils/festival-event/festival-activity/open-activity";
 
 useHead({ title: "Fiches Activités" });
 
 const route = useRoute();
-const router = useRouter();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -143,23 +146,6 @@ faStore.fetchAllActivities().then(() => (loading.value = false));
 const isNewActivityDialogOpen = ref(false);
 const openNewActivityDialog = () => (isNewActivityDialogOpen.value = true);
 const closeNewActivityDialog = () => (isNewActivityDialogOpen.value = false);
-
-const openActivityInNewTab = (
-  _: PointerEvent,
-  { item }: { item: PreviewFestivalActivity },
-) => {
-  const { id } = { ...item };
-  const activityRoute = router.resolve({ path: `/fa/${id}` });
-  window.open(activityRoute.href, "_blank");
-};
-const openActivity = (
-  event: PointerEvent,
-  target: { item: PreviewFestivalActivity },
-) => {
-  if (event.ctrlKey) return openActivityInNewTab(event, target);
-  const { id } = { ...target.item };
-  router.push({ path: `/fa/${id}` });
-};
 
 const activityToRemove = ref<PreviewFestivalActivity | undefined>(undefined);
 const isRemovalDialogOpen = ref(false);

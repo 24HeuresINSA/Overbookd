@@ -11,6 +11,7 @@ import {
   VIEW_TROMBINOSCOPE,
   READ_SIGNAGE_CATALOG,
   VIEW_LOCATION,
+  READ_ANIMATION_TO_PUBLISH,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -325,7 +326,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["catalogue-signaletique"],
   },
-  /*{
+  {
     icon: "mdi-web-sync",
     title: "Animations à publier",
     permission: READ_ANIMATION_TO_PUBLISH,
@@ -335,7 +336,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["animations", "communication", "publier", "publication"],
   },
-  {
+  /*{
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
     permission: VIEW_FESTIVAL_EVENTS_STATS,

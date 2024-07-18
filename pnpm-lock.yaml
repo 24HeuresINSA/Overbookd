@@ -390,6 +390,9 @@ importers:
       vue-chartjs:
         specifier: 5.3.1
         version: 5.3.1(chart.js@4.4.3)(vue@3.4.31(typescript@5.5.3))
+      vue-html-secure:
+        specifier: 1.0.10
+        version: 1.0.10
       vuetify:
         specifier: 3.6.12
         version: 3.6.12(typescript@5.5.3)(vue@3.4.31(typescript@5.5.3))
@@ -8201,6 +8204,9 @@ packages:
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=6.0.0'
+
+  vue-html-secure@1.0.10:
+    resolution: {integrity: sha512-Cvlg0vYQiRxouXMFHQ87n5AIadl8SnrTNKbNENhJMlQIyrFkbXZ8yjn4c03BB0BeoPOf8vHKSx8f4yR3BIqYjQ==}
 
   vue-router@4.4.0:
     resolution: {integrity: sha512-HB+t2p611aIZraV2aPSRNXf0Z/oLZFrlygJm+sZbdJaW6lcFqEDQwnzUBXn+DApw+/QzDU/I9TeWx9izEjTmsA==}
@@ -17496,6 +17502,8 @@ snapshots:
       semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
+
+  vue-html-secure@1.0.10: {}
 
   vue-router@4.4.0(vue@3.4.31(typescript@5.5.3)):
     dependencies:
