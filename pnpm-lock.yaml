@@ -95,6 +95,9 @@ importers:
       '@overbookd/assignment':
         specifier: workspace:*
         version: link:../../domains/assignment
+      '@overbookd/charisma':
+        specifier: workspace:*
+        version: link:../../domains/charisma
       '@overbookd/configuration':
         specifier: workspace:*
         version: link:../../utils/configuration
@@ -306,6 +309,9 @@ importers:
       '@overbookd/assignment':
         specifier: workspace:*
         version: link:../../domains/assignment
+      '@overbookd/charisma':
+        specifier: workspace:*
+        version: link:../../domains/charisma
       '@overbookd/configuration':
         specifier: workspace:*
         version: link:../../utils/configuration
@@ -445,6 +451,8 @@ importers:
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
+
+  domains/charisma: {}
 
   domains/contribution:
     dependencies:

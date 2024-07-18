@@ -3,6 +3,7 @@
     "paths": {
       "@overbookd/alerts": ["./utils/alerts/src"],
       "@overbookd/assignment": ["./domains/assignment/src"],
+      "@overbookd/charisma": ["./domains/charisma/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./utils/configuration/src"],
       "@overbookd/domain-events": ["./utils/domain-events/src"],
