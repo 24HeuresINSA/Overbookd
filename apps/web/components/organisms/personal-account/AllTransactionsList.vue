@@ -67,6 +67,7 @@ import {
   DEPOSIT,
   INITIALIZATION,
   PROVISIONS,
+  SHARED_MEAL,
   TRANSFER,
   type TransactionUser,
   type TransactionWithSenderAndReceiver,
@@ -84,6 +85,7 @@ import {
   FUT,
   PLACARD,
   INITIALISATION,
+  REPAS_PARTAGE,
 } from "~/utils/transaction/transaction";
 import type { TableHeaders } from "~/utils/data-table/header";
 
@@ -159,6 +161,8 @@ const displayableType = (type: string): string => {
       return FUT;
     case PROVISIONS:
       return PLACARD;
+    case SHARED_MEAL:
+      return REPAS_PARTAGE;
     case INITIALIZATION:
       return INITIALISATION;
     default:

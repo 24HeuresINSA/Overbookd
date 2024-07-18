@@ -1,5 +1,6 @@
 import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { TeamWithNestedPermissions } from "../team/utils/permissions";
+import { WithTransactionsForBalance } from "../common/query/transaction.query";
 
 export type UserPasswordOnly = {
   password: string;
@@ -7,11 +8,12 @@ export type UserPasswordOnly = {
 
 export type DatabaseMyUserInformation = Omit<
   MyUserInformation,
-  "teams" | "permissions" | "tasksCount"
-> & {
-  teams: TeamWithNestedPermissions[];
-  _count: { assigned: number };
-};
+  "teams" | "permissions" | "tasksCount" | "balance"
+> &
+  WithTransactionsForBalance & {
+    teams: TeamWithNestedPermissions[];
+    _count: { assigned: number };
+  };
 
 export type DatabaseTeamCode = {
   team: {
@@ -29,4 +31,5 @@ type WithBalance = {
 
 export type Consumer = UserPersonalData & WithBalance;
 
-export type DatabaseConsumer = DatabaseUserPersonalData & WithBalance;
+export type DatabaseConsumer = DatabaseUserPersonalData &
+  WithTransactionsForBalance;

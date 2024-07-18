@@ -42,6 +42,8 @@ import { PlanningEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
 import { Period } from "@overbookd/period";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
+import { Balance } from "@overbookd/personal-account";
 
 @Injectable()
 export class UserService {
@@ -143,7 +145,10 @@ export class UserService {
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
       where: hasPermission(HAVE_PERSONAL_ACCOUNT),
-      select: { ...SELECT_USER_PERSONAL_DATA, balance: true },
+      select: {
+        ...SELECT_USER_PERSONAL_DATA,
+        ...SELECT_TRANSACTIONS_FOR_BALANCE,
+      },
     });
     return users.map(UserService.formatToConsumer);
   }
@@ -247,10 +252,12 @@ export class UserService {
   }
 
   static formatToConsumer(user: DatabaseConsumer): Consumer {
-    const { teams, ...userWithoutTeams } = user;
+    const { teams, transactionsFrom, transactionsTo, ...userWithoutTeams } =
+      user;
     return {
       ...userWithoutTeams,
       teams: extractTeamCodes(teams),
+      balance: Balance.calculate({ transactionsFrom, transactionsTo }),
     };
   }
 
@@ -259,12 +266,14 @@ export class UserService {
   ): MyUserInformation {
     const teams = extractTeamCodes(user.teams);
     const permissions = retrievePermissions(user.teams);
-    const { _count, ...userWithoutCount } = user;
+    const { _count, transactionsFrom, transactionsTo, ...userWithoutCount } =
+      user;
     return {
       ...userWithoutCount,
       teams,
       permissions: [...permissions],
       tasksCount: _count.assigned,
+      balance: Balance.calculate({ transactionsFrom, transactionsTo }),
     };
   }
 

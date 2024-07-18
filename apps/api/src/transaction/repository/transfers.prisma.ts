@@ -2,41 +2,35 @@ import {
   TransferForm,
   Transfers,
   TransferResponse,
+  Balance,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../common/query/transaction.query";
 
 const SELECT_TRANFER_PARTICIPANT = {
   id: true,
-  balance: true,
+  ...SELECT_TRANSACTIONS_FOR_BALANCE,
 };
 
 export class PrismaTransfers implements Transfers {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(transfer: TransferForm): Promise<TransferResponse> {
-    const transactionCreation = this.prisma.transaction.create({
+    const { payee, payor } = await this.prisma.transaction.create({
       data: transfer,
-      select: { id: true },
+      select: {
+        payee: { select: SELECT_TRANFER_PARTICIPANT },
+        payor: { select: SELECT_TRANFER_PARTICIPANT },
+      },
     });
-    const payorUpdate = this.prisma.user.update({
-      where: { id: transfer.from },
-      data: { balance: { decrement: transfer.amount } },
-      select: SELECT_TRANFER_PARTICIPANT,
-    });
-    const payeeUpdate = this.prisma.user.update({
-      where: { id: transfer.to },
-      data: { balance: { increment: transfer.amount } },
-      select: SELECT_TRANFER_PARTICIPANT,
-    });
-
-    const [, payor, payee] = await Promise.all([
-      transactionCreation,
-      payorUpdate,
-      payeeUpdate,
-    ]);
-    return {
-      from: payor,
-      to: payee,
+    const payorWithBalance = {
+      id: payor.id,
+      balance: Balance.calculate(payor),
     };
+    const payeeWithBalance = {
+      id: payee.id,
+      balance: Balance.calculate(payee),
+    };
+    return { from: payorWithBalance, to: payeeWithBalance };
   }
 }

@@ -2,16 +2,21 @@ type Transaction = {
   amount: number;
 };
 
+type TransactionsForBalance = {
+  transactionsFrom: Transaction[];
+  transactionsTo: Transaction[];
+};
+
 export class Balance {
-  static calculate(
-    transactionsIReceived: Transaction[],
-    transactionsISent: Transaction[],
-  ) {
-    const benefit = transactionsIReceived.reduce(
+  static calculate({
+    transactionsFrom,
+    transactionsTo,
+  }: TransactionsForBalance) {
+    const benefit = transactionsTo.reduce(
       (acc, transaction) => acc + transaction.amount,
       0,
     );
-    const expense = transactionsISent.reduce(
+    const expense = transactionsFrom.reduce(
       (acc, transaction) => acc + transaction.amount,
       0,
     );

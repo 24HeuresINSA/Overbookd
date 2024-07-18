@@ -1,5 +1,6 @@
 import { Permission } from "@overbookd/permission";
 import { SELECT_PERIOD } from "../common/query/period.query";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 
 export const SELECT_BASE_USER = {
   id: true,
@@ -44,7 +45,7 @@ export const SELECT_MY_USER_INFORMATION = {
   ...SELECT_USER,
   ...SELECT_USER_TEAMS_AND_PERMISSIONS,
   ...SELECT_USER_TASKS_COUNT,
-  balance: true,
+  ...SELECT_TRANSACTIONS_FOR_BALANCE,
   hasApprovedEULA: true,
 };
 

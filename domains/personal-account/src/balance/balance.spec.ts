@@ -11,7 +11,8 @@ describe("Balance", () => {
     ${"with two transactions I sent and one I received"} | ${[{ amount: 10 }, { amount: 200 }]} | ${[{ amount: 5 }]}  | ${-205}
   `("calculate balance $context", ({ ISent, IReceived, expectedBalance }) => {
     it("should return the right balance", () => {
-      const balance = Balance.calculate(IReceived, ISent);
+      const form = { transactionsFrom: ISent, transactionsTo: IReceived };
+      const balance = Balance.calculate(form);
       expect(balance).toBe(expectedBalance);
     });
   });

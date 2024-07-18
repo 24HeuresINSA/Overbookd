@@ -6,6 +6,8 @@ import {
 } from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
 import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../common/query/transaction.query";
+import { Balance } from "@overbookd/personal-account";
 
 export class PrismaMemberRepository implements MemberRepository {
   constructor(
@@ -24,10 +26,12 @@ export class PrismaMemberRepository implements MemberRepository {
   }
 
   async hasDebts(email: string): Promise<boolean> {
-    const exist = await this.prisma.user.findFirst({
-      where: { email, balance: { lt: 0 } },
+    const user = await this.prisma.user.findFirst({
+      where: { email },
+      select: SELECT_TRANSACTIONS_FOR_BALANCE,
     });
-    return exist ? true : false;
+    const balance = Balance.calculate(user);
+    return balance < 0;
   }
 
   async hasTransactions(email: string): Promise<boolean> {
