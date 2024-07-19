@@ -6,21 +6,15 @@
     loading-text="Chargement des animations à publier..."
     no-data-text="Aucune animation à publier"
     :hover="animations.length > 0"
+    class="fa"
     @click:row="openActivity"
     @auxclick:row="openActivityInNewTab"
   >
     <template #item.id="{ item }">
-      <div class="fa">
-        <v-chip-group class="fa status">
-          <v-chip
-            :class="item.status.toLowerCase()"
-            size="small"
-            class="fa__chip"
-          >
-            {{ item.id }}
-          </v-chip>
-        </v-chip-group>
-        <p class="fa__name">{{ item.name }}</p>
+      <div class="status">
+        <v-chip :class="item.status.toLowerCase()">
+          {{ item.id }}
+        </v-chip>
       </div>
     </template>
 
@@ -45,9 +39,11 @@
     </template>
 
     <template #item.categories="{ item }">
-      <v-chip v-for="category in item.categories" :key="category" class="mr-1">
-        {{ category }}
-      </v-chip>
+      <div class="chips">
+        <v-chip v-for="category in item.categories" :key="category">
+          {{ category }}
+        </v-chip>
+      </div>
     </template>
 
     <template #item.isFlagship="{ item }">
@@ -65,14 +61,15 @@
     </template>
 
     <template #item.timeWindows="{ item }">
-      <v-chip
-        v-for="timeWindow in sortTimeWindows(item.timeWindows)"
-        :key="timeWindow.id"
-        class="mr-1"
-      >
-        {{ formatDateWithMinutes(timeWindow.start) }} -
-        {{ formatDateWithMinutes(timeWindow.end) }}
-      </v-chip>
+      <div class="chips">
+        <v-chip
+          v-for="timeWindow in sortTimeWindows(item.timeWindows)"
+          :key="timeWindow.id"
+        >
+          {{ formatDateWithMinutes(timeWindow.start) }} -
+          {{ formatDateWithMinutes(timeWindow.end) }}
+        </v-chip>
+      </div>
     </template>
   </v-data-table>
 </template>
@@ -94,8 +91,13 @@ const faStore = useFestivalActivityStore();
 
 const tableHeaders: TableHeaders = [
   {
-    title: "FA",
+    title: "Statut",
     value: "id",
+    sortable: true,
+  },
+  {
+    title: "Name",
+    value: "name",
     sortable: true,
   },
   {
@@ -110,7 +112,7 @@ const tableHeaders: TableHeaders = [
     title: "Anim phare",
     value: "isFlagship",
     align: "center",
-    width: "100px",
+    width: "80px",
   },
   { title: "Créneaux", value: "timeWindows" },
 ];
@@ -131,14 +133,10 @@ const openPhotoLinkInNewTab = (photoLink: string) => {
 </script>
 
 <style lang="scss" scoped>
-.fa {
-  text-decoration: none;
+.chips {
   display: flex;
-  align-items: center;
-
-  &__chip,
-  &__name {
-    font-weight: bold;
-  }
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 3px 0;
 }
 </style>
