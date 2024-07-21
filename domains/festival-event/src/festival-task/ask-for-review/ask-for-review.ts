@@ -15,6 +15,7 @@ import {
 import { InReviewFestivalTask } from "./in-review-festival-task.js";
 import { isDraft, isRefused } from "../../festival-event.js";
 import { CantAskForReview } from "../../common/review.error.js";
+import { elec, humain, matos, Reviewer } from "../../common/review.js";
 
 export type AskForReviewTasks = {
   findById(
@@ -82,4 +83,8 @@ export class AskForReview {
 
     return reviewer.adherent;
   }
+}
+
+export function isReviewer(team: string): team is Reviewer<"FT"> {
+  return [humain, matos, elec].includes(team);
 }

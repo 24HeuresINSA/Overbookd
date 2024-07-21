@@ -65,6 +65,7 @@ import {
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
   isActivityReviewer,
+  isTaskReviewer,
   isDraft,
   isRefused,
   NOT_ASKING_TO_REVIEW,
@@ -126,20 +127,31 @@ if (reviewers.value.length === 0) {
     ? teamStore.fetchFaReviewers()
     : teamStore.fetchFtReviewers();
 }
-const myReviewers = computed<Team[]>(() => {
+const myActivityReviewers = computed<Team[]>(() => {
   const activity = selectedActivity.value;
   if (isDraft(activity)) return [];
 
-  return reviewers.value.filter((reviewer) => {
-    const reviewerCode = reviewer.code;
-    if (!isActivityReviewer(reviewerCode)) return false;
-    const isReviewer = userStore.isMemberOf(reviewerCode);
-    const shouldReview =
-      // eslint-disable-next-line security/detect-object-injection
-      activity.reviews[reviewerCode] !== NOT_ASKING_TO_REVIEW;
+  return reviewers.value.filter(({ code }) => {
+    if (!isActivityReviewer(code)) return false;
+    const isReviewer = userStore.isMemberOf(code);
+    const shouldReview = activity.reviews[`${code}`] !== NOT_ASKING_TO_REVIEW;
     return isReviewer && shouldReview;
   });
 });
+const myTaskReviewers = computed<Team[]>(() => {
+  const task = selectedTask.value;
+  if (isDraft(task)) return [];
+
+  return reviewers.value.filter(({ code }) => {
+    if (!isTaskReviewer(code)) return false;
+    const isReviewer = userStore.isMemberOf(code);
+    const shouldReview = task.reviews[`${code}`] !== NOT_ASKING_TO_REVIEW;
+    return isReviewer && shouldReview;
+  });
+});
+const myReviewers = computed<Team[]>(() =>
+  isActivity.value ? myActivityReviewers.value : myTaskReviewers.value,
+);
 
 const statusLabel = computed<FaStatusLabel | FtStatusLabel>(() =>
   isActivity.value
@@ -204,7 +216,7 @@ const cantApproveAs = (team: Team): boolean => {
     : hasReviewerAlreadyDoneHisTaskReview(
         selectedTask.value,
         team.code as Reviewer<"FT">,
-        REJECTED,
+        APPROVED,
       );
   const isTeamMember = userStore.isMemberOf(team.code);
   return isAlreadyApprovedBy || !isTeamMember;
@@ -305,7 +317,7 @@ const cantRejectAs = (team: Team): boolean => {
 
   #ask-for-review {
     background-color: $submitted-color;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .review-btn {

@@ -202,7 +202,10 @@ export type {
   Reviewers,
   ReviewerStat,
 } from "./festival-task/ask-for-review/ask-for-review.js";
-export { AskForReview as AskForReviewTask } from "./festival-task/ask-for-review/ask-for-review.js";
+export {
+  AskForReview as AskForReviewTask,
+  isReviewer as isTaskReviewer,
+} from "./festival-task/ask-for-review/ask-for-review.js";
 export {
   InReviewSpecification,
   InChargeInstructionsSpecification,

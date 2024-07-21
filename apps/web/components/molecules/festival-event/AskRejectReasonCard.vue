@@ -2,11 +2,9 @@
   <DialogCard @close="close">
     <template #title> Rejeter une {{ eventIdentifier }} </template>
     <template #subtitle>
-      <p>
-        Tu es sur le point de rejeter la {{ identifier }}
-        <strong>{{ name }}</strong> .
-      </p>
-      <p>Il faut que tu expliques ce qui ne va pas dedans.</p>
+      Tu es sur le point de rejeter la {{ identifier }}
+      <strong>{{ name }}</strong
+      >. Pourquoi tu veux faire ça ?
     </template>
     <template #content>
       <v-textarea
