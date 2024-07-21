@@ -32,7 +32,7 @@ import type {
   FestivalActivity,
   FestivalTaskChild,
 } from "@overbookd/festival-event";
-import { BROUILLON } from "~/utils/festival-event/festival-event.model";
+import { BROUILLON } from "~/utils/festival-event/festival-event.constant";
 import {
   type FtStatusLabel,
   ftStatusLabels,

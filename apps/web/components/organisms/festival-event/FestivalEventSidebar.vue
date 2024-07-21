@@ -82,7 +82,7 @@ import {
   type FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { BROUILLON } from "~/utils/festival-event/festival-event.model";
+import { BROUILLON } from "~/utils/festival-event/festival-event.constant";
 import { getTaskReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 import {
   hasReviewerAlreadyDoneHisTaskReview,

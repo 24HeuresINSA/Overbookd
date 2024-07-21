@@ -16,7 +16,7 @@ import {
   REFUSEE,
   RELECTURE_EN_COURS,
   VALIDEE,
-} from "../festival-event.model";
+} from "../festival-event.constant";
 
 export type FtStatusLabel =
   | typeof BROUILLON

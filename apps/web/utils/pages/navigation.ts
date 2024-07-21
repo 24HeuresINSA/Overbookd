@@ -12,6 +12,7 @@ import {
   READ_SIGNAGE_CATALOG,
   VIEW_LOCATION,
   READ_ANIMATION_TO_PUBLISH,
+  VIEW_FESTIVAL_EVENTS_STATS,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -336,7 +337,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["animations", "communication", "publier", "publication"],
   },
-  /*{
+  {
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
     permission: VIEW_FESTIVAL_EVENTS_STATS,
@@ -352,5 +353,5 @@ export const pages: Page[] = [
       "fiche-taches",
       "animations",
     ],
-  },*/
+  },
 ];
