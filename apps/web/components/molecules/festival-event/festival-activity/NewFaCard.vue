@@ -29,14 +29,14 @@ const router = useRouter();
 const faStore = useFestivalActivityStore();
 
 const name = ref("");
-const selectedActivity = computed<FestivalActivity>(() => {
-  return faStore.selectedActivity;
-});
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const cantCreate = computed<boolean>(() => name.value === "");
+const cantCreate = computed<boolean>(() => name.value.trim() === "");
+const selectedActivity = computed<FestivalActivity>(() => {
+  return faStore.selectedActivity;
+});
 const createNewActivity = async () => {
   if (cantCreate.value) return;
 

@@ -83,7 +83,7 @@ import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
   openActivity,
   openActivityInNewTab,
-} from "~/utils/festival-event/festival-activity/open-activity";
+} from "~/utils/festival-event/open-page";
 
 useHead({ title: "Animations à publier" });
 

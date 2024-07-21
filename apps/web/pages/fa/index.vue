@@ -4,7 +4,7 @@
     <FaFilter v-model="filters" class="activity__filtering" />
     <v-card class="activity__listing">
       <v-data-table
-        :headers="headers"
+        :headers="tableHeaders"
         :items="filteredActivities"
         :items-per-page="20"
         class="activity__table"
@@ -46,10 +46,8 @@
 
         <template #item.removal="{ item }">
           <v-btn
-            v-show="canRemoveActivity"
             icon="mdi-delete"
             size="small"
-            density="comfortable"
             @click.stop="openRemovalDialog(item)"
           />
         </template>
@@ -116,7 +114,7 @@ import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity
 import {
   openActivity,
   openActivityInNewTab,
-} from "~/utils/festival-event/festival-activity/open-activity";
+} from "~/utils/festival-event/open-page";
 
 useHead({ title: "Fiches Activités" });
 
@@ -125,14 +123,20 @@ const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 
-const headers: TableHeaders = [
-  { title: "Statut", value: "id", sortable: true },
-  { title: "Validations", value: "reviews" },
-  { title: "Nom", value: "name", sortable: true },
-  { title: "Equipe", value: "team", sortable: true },
-  { title: "Responsable", value: "adherent" },
-  { title: "Suppression", value: "removal" },
-];
+const canRemoveActivity = computed<boolean>(() => userStore.can(WRITE_FA));
+const tableHeaders = computed<TableHeaders>(() => {
+  const baseHeaders = [
+    { title: "Statut", value: "id", sortable: true },
+    { title: "Validations", value: "reviews" },
+    { title: "Nom", value: "name", sortable: true },
+    { title: "Equipe", value: "team", sortable: true },
+    { title: "Responsable", value: "adherent" },
+  ];
+  const removalHeader = { title: "Suppression", value: "removal" };
+  return canRemoveActivity.value
+    ? [...baseHeaders, removalHeader]
+    : baseHeaders;
+});
 
 const activities = computed<PreviewFestivalActivity[]>(
   () => faStore.activities.forAll,
@@ -149,7 +153,6 @@ const closeNewActivityDialog = () => (isNewActivityDialogOpen.value = false);
 
 const activityToRemove = ref<PreviewFestivalActivity | undefined>(undefined);
 const isRemovalDialogOpen = ref(false);
-const canRemoveActivity = computed<boolean>(() => userStore.can(WRITE_FA));
 const openRemovalDialog = (activity: PreviewFestivalActivity) => {
   activityToRemove.value = activity;
   isRemovalDialogOpen.value = true;
@@ -169,8 +172,7 @@ const getReviewerStatus = (
 ): string => {
   if (isDraftPreview(activity)) return "";
   const reviewerCode = reviewer.code as Reviewer<"FA">;
-  // eslint-disable-next-line security/detect-object-injection
-  const status = activity.reviews[reviewerCode];
+  const status = activity.reviews[`${reviewerCode}`];
   return (findReviewStatus(status) ?? "").toLowerCase();
 };
 

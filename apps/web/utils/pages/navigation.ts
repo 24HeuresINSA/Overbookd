@@ -12,6 +12,7 @@ import {
   READ_SIGNAGE_CATALOG,
   VIEW_LOCATION,
   READ_ANIMATION_TO_PUBLISH,
+  READ_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
@@ -96,7 +97,7 @@ export const pages: Page[] = [
     mobileSupport: true,
     keywords: ["fas", "fiches-activites", "animations"],
   },
-  /*{
+  {
     icon: "mdi-format-color-highlight",
     title: "Fiches Tâches",
     permission: READ_FT,
@@ -105,7 +106,7 @@ export const pages: Page[] = [
       "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
     mobileSupport: true,
     keywords: ["fts", "fiche-taches"],
-  },*/
+  },
   {
     icon: "mdi-account-group",
     title: "Liste des bénévoles",
