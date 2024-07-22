@@ -6,12 +6,15 @@
           v-if="canEnableAssignment"
           id="enable-assignment"
           text="Commencer l'affectation"
-          :disabled="cannotStartAssignment"
+          :disabled="cantStartAssignment"
           @click="openEnableAssignment"
         />
       </template>
     </FestivalEventSidebar>
-    <article class="container ft"></article>
+    <article class="container ft">
+      <FtGeneralCard id="general" :disabled="cantUpdate" />
+      <ParentFaCard id="fa" />
+    </article>
   </div>
 
   <v-dialog v-model="isEnableAssignmentOpen" width="600">
@@ -27,6 +30,7 @@ import {
   type Categorize,
   type FestivalTask,
   isValidated,
+  isReadyToAssign,
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
@@ -47,10 +51,15 @@ useHead({
   title: `FT ${selectedTask.value.id} - ${selectedTask.value.general.name}`,
 });
 
+const cantUpdate = computed<boolean>(() => {
+  const isTaskValidated = isValidated(selectedTask.value);
+  const isTaskReadyToAssign = isReadyToAssign(selectedTask.value);
+  return isTaskValidated || isTaskReadyToAssign;
+});
 const canEnableAssignment = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
-const cannotStartAssignment = computed<boolean>(
+const cantStartAssignment = computed<boolean>(
   () => !isValidated(selectedTask.value),
 );
 

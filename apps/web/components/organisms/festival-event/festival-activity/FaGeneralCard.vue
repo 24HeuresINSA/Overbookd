@@ -4,7 +4,7 @@
       <v-card-title>Général</v-card-title>
       <v-card-subtitle>
         <p>
-          N'hésite pas si tu as des questions à contacter
+          Si tu as des questions, n'hésite pas à contacter
           <a :href="`mailto:${contact}`"> {{ contact }} </a>.
         </p>
         <p>
