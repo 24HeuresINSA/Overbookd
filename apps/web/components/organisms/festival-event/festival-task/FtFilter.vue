@@ -4,8 +4,17 @@
     v-model:team="filters.team"
     v-model:adherent="filters.adherent"
     v-model:status="filters.status"
+    identifier="FT"
   >
     <template #additional-filters>
+      <SearchUser
+        v-if="isHumainMember"
+        v-model="filters.reviewer"
+        :list="assignableReviewers"
+        label="Relecteur"
+        clearable
+        @update:model-value="updateReviewerParam"
+      />
       <div
         v-for="reviewer of reviewerTeams"
         :key="reviewer.code"
@@ -16,7 +25,7 @@
           color="primary"
           class="review-filter"
           group
-          @update:model-value="updateReviewerParams(reviewer.code, $event)"
+          @update:model-value="updateReviewParams(reviewer.code, $event)"
         >
           <v-icon size="small" class="review-filter__icon">
             {{ reviewer.icon }}
@@ -39,33 +48,23 @@
 import {
   type ReviewStatus,
   type Reviewer,
-  barrieres,
-  communication,
   elec,
   humain,
   matos,
-  secu,
-  signa,
 } from "@overbookd/festival-event";
-import type { ActivityFilters } from "~/utils/festival-event/festival-activity/festival-activity.filter";
+import type { Team } from "@overbookd/team";
+import type { User } from "@overbookd/user";
+import type { TaskFilters } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import type { Team } from "@overbookd/team";
 
 const teamStore = useTeamStore();
+const userStore = useUserStore();
 
-const filters = defineModel<ActivityFilters>({ required: true });
+const filters = defineModel<TaskFilters>({ required: true });
 
-const reviewers: Reviewer<"FA">[] = [
-  humain,
-  matos,
-  secu,
-  barrieres,
-  signa,
-  elec,
-  communication,
-];
-type ReviewerTeam = Team & { code: Reviewer<"FA"> };
+const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
+type ReviewerTeam = Team & { code: Reviewer<"FT"> };
 const reviewerTeams = computed<ReviewerTeam[]>(() => {
   return reviewers
     .map((reviewer) => teamStore.getTeamByCode(reviewer))
@@ -73,11 +72,20 @@ const reviewerTeams = computed<ReviewerTeam[]>(() => {
 });
 const reviewStatusLabels = [...reviewStatusLabel.entries()];
 
-const updateReviewerParams = (
-  reviewer: Reviewer<"FA">,
+const isHumainMember = computed(() => userStore.isMemberOf(humain));
+const assignableReviewers = computed<User[]>(() =>
+  userStore.users.filter(({ teams }) => teams.includes(humain)),
+);
+
+const updateReviewParams = (
+  reviewer: Reviewer<"FT">,
   review?: ReviewStatus,
 ) => {
   updateQueryParams(reviewer, review);
+};
+
+const updateReviewerParam = (reviewer?: User) => {
+  updateQueryParams("reviewer", reviewer?.id);
 };
 </script>
 

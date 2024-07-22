@@ -102,7 +102,6 @@ import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
 import {
   ActivityFilterBuilder,
-  findReviewStatus,
   type ActivityFilters,
   type ActivityReviewsFilter,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
@@ -115,6 +114,7 @@ import {
   openActivity,
   openActivityInNewTab,
 } from "~/utils/festival-event/open-page";
+import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 
 useHead({ title: "Fiches Activités" });
 
@@ -261,15 +261,6 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
   }
   #status {
     font-weight: bold;
-  }
-}
-
-.additional-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    display: none;
   }
 }
 

@@ -1,15 +1,17 @@
 <template>
+  <h1>Fiches Tâches</h1>
   <div class="task ft">
+    <FtFilter v-model="filters" class="task__filtering" />
     <v-card class="task__listing">
       <v-data-table
         :headers="tableHeaders"
-        :items="tasks"
+        :items="filteredTasks"
         :items-per-page="20"
         class="task__table"
         :loading="loading"
         loading-text="Chargement des fiches tâches..."
         no-data-text="Aucune fiche tâche trouvée"
-        :hover="tasks.length > 0"
+        :hover="filteredTasks.length > 0"
         @click:row="openTask"
         @auxclick:row="openTaskInNewTab"
       >
@@ -89,17 +91,31 @@
 </template>
 
 <script lang="ts" setup>
-import type { PreviewFestivalTask, Reviewer } from "@overbookd/festival-event";
+import type {
+  PreviewFestivalTask,
+  FestivalTask,
+  Reviewer,
+} from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
+import { SlugifyService } from "@overbookd/slugify";
+import type { User } from "@overbookd/user";
+import type { Searchable } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/data-table/header";
 import { formatUsername } from "~/utils/user/user.utils";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
-import { findReviewStatus } from "~/utils/festival-event/festival-task/festival-task.filter";
+import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
+import {
+  type TaskFilters,
+  type TaskReviewsFilter,
+  TaskFilterBuilder,
+} from "~/utils/festival-event/festival-task/festival-task.filter";
+import { getPreviewReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 useHead({ title: "Fiches Tâches" });
 
+const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -149,15 +165,114 @@ const getReviewerStatus = (task: PreviewFestivalTask, reviewer: Team) => {
   const status = task.reviews[`${reviewerCode}`];
   return (findReviewStatus(status) ?? "").toLowerCase();
 };
+
+const filters = ref<TaskFilters>({});
+onMounted(
+  () => (filters.value = TaskFilterBuilder.getFromRouteQuery(route.query)),
+);
+
+const searchableTasks = computed<Searchable<PreviewFestivalTask>[]>(() =>
+  tasks.value.map((ft) => ({
+    ...ft,
+    searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
+  })),
+);
+const filterTaskByTeam =
+  (teamSearched?: Team) =>
+  ({ team }: PreviewFestivalTask) => {
+    return teamSearched ? team === teamSearched.code : true;
+  };
+const filterTaskByAdministrator =
+  (adherentSearched?: User) =>
+  ({ administrator }: PreviewFestivalTask) => {
+    return adherentSearched ? administrator.id === adherentSearched.id : true;
+  };
+const filterTaskByStatus =
+  (statusSearched?: FestivalTask["status"]) =>
+  ({ status }: PreviewFestivalTask) => {
+    return statusSearched ? status === statusSearched : true;
+  };
+const filterTaskByNameAndId =
+  (search?: string) =>
+  ({ searchable }: Searchable<PreviewFestivalTask>) => {
+    const slugifiedSearch = SlugifyService.apply(search ?? "");
+    return searchable.includes(slugifiedSearch);
+  };
+const filterTaskByReviews =
+  (reviews: TaskReviewsFilter) => (task: Searchable<PreviewFestivalTask>) => {
+    const reviewersWithStatus = Object.entries(reviews).filter(
+      ([, status]) => status !== undefined,
+    );
+    const reviewsAreEmpty = reviewersWithStatus.length === 0;
+    if (reviewsAreEmpty) return true;
+
+    if (isDraftPreview(task)) return false;
+    return reviewersWithStatus.every(
+      ([reviewer, status]) => getPreviewReviewStatus(task, reviewer) === status,
+    );
+  };
+const filterTaskByReviewer =
+  (adherentSearched?: User) => (task: PreviewFestivalTask) => {
+    if (isDraftPreview(task)) return false;
+    return adherentSearched ? task.reviewer.id === adherentSearched.id : true;
+  };
+const filteredTasks = computed<PreviewFestivalTask[]>(() => {
+  const { team, status, search, adherent, reviewer, ...reviews } =
+    filters.value;
+
+  return searchableTasks.value.filter((task) => {
+    return (
+      filterTaskByTeam(team)(task) &&
+      filterTaskByAdministrator(adherent)(task) &&
+      filterTaskByStatus(status)(task) &&
+      filterTaskByNameAndId(search)(task) &&
+      filterTaskByReviews(reviews)(task) &&
+      filterTaskByReviewer(reviewer)(task)
+    );
+  });
+});
 </script>
 
 <style lang="scss" scoped>
+.task {
+  display: flex;
+  padding: 10px 30px 10px 10px;
+  gap: 15px;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    padding: 10px;
+  }
+  &__listing {
+    margin-left: 20px;
+    margin-bottom: 40px;
+    height: fit-content;
+    width: 100vw;
+    flex-grow: 3;
+  }
+  &__filtering {
+    flex-grow: 1;
+    min-width: 300px;
+  }
+  #status {
+    font-weight: bold;
+  }
+}
+
 .btn-plus {
   right: 20px;
   bottom: 45px;
   position: fixed;
   @media screen and (max-width: $mobile-max-width) {
     bottom: 70px;
+  }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+  .task {
+    &__listing {
+      margin: 0;
+      width: 100%;
+    }
   }
 }
 </style>

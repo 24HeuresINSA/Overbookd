@@ -6,6 +6,7 @@ import {
   humain,
   isDraft,
   matos,
+  NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
   secu,
@@ -91,4 +92,19 @@ export function isFestivalActivityStatus(
     status === REFUSED ||
     status === VALIDATED
   );
+}
+
+export function findReviewStatus(status: string): ReviewStatus | undefined {
+  if (!status) return undefined;
+  switch (status) {
+    case REJECTED:
+      return REJECTED;
+    case APPROVED:
+      return APPROVED;
+    case REVIEWING:
+      return REVIEWING;
+    case NOT_ASKING_TO_REVIEW:
+    default:
+      return NOT_ASKING_TO_REVIEW;
+  }
 }
