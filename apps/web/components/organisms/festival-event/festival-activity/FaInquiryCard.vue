@@ -120,7 +120,7 @@ import type { IProvidePeriod } from "@overbookd/period";
 
 const faStore = useFestivalActivityStore();
 
-const gear = ref<CatalogGear | null>(null);
+const gear = ref<CatalogGear | undefined>();
 const quantity = ref<number>(1);
 
 const selectedActivity = computed<FestivalActivity>(
@@ -156,7 +156,7 @@ const addInquiry = () => {
     quantity: quantity.value,
   };
   faStore.addInquiryRequest(inquiry);
-  gear.value = null;
+  gear.value = undefined;
   quantity.value = 1;
 };
 const removeInquiry = (inquiry: InquiryRequest) => {

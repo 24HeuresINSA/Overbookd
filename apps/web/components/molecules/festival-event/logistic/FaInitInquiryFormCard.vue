@@ -29,7 +29,7 @@ import { type IProvidePeriod, Period } from "@overbookd/period";
 const configurationStore = useConfigurationStore();
 const faStore = useFestivalActivityStore();
 
-const gear = ref<CatalogGear | null>(null);
+const gear = ref<CatalogGear | undefined>();
 const quantity = ref<number>(1);
 const start = ref<Date>(configurationStore.eventStartDate);
 const end = ref<Date>(configurationStore.eventStartDate);
@@ -62,7 +62,7 @@ const initInquiry = () => {
   faStore.initInquiry(form);
   close();
 
-  gear.value = null;
+  gear.value = undefined;
   quantity.value = 1;
   start.value = configurationStore.eventStartDate;
   end.value = configurationStore.eventStartDate;

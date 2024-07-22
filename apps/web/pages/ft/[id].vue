@@ -14,6 +14,12 @@
     <article class="container ft">
       <FtGeneralCard id="general" :disabled="cantUpdate" />
       <ParentFaCard id="fa" />
+      <FtInquiryCard id="inquiry" :disabled="cantUpdate" />
+      <FeedbackCard
+        id="feedback"
+        :festival-event="selectedTask"
+        @publish="publishFeedback"
+      />
     </article>
   </div>
 
@@ -69,6 +75,10 @@ const closeEnableAssignment = () => (isEnableAssignmentOpen.value = false);
 
 const enableAssignment = async (categorize: Categorize) => {
   await ftStore.enableAssignment(categorize);
+};
+
+const publishFeedback = (content: string) => {
+  ftStore.publishFeedback({ content });
 };
 </script>
 

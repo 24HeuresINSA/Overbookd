@@ -18,7 +18,6 @@
         v-else
         :model-value="gearDrive(item)"
         :items="drives"
-        :readonly="disabled"
         hide-details
         @update:model-value="(drive) => linkDrive(item.slug, drive)"
       />

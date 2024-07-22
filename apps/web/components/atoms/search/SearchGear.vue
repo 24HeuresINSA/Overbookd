@@ -26,7 +26,7 @@ import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
 
 const catalogGearStore = useCatalogGearStore();
 
-const gear = defineModel<CatalogGear | null>({ required: true });
+const gear = defineModel<CatalogGear>({ required: false });
 
 const { label, hideDetails, disabled, ponctualUsage, owner } = defineProps({
   label: {

@@ -24,7 +24,7 @@
 import type { CatalogGear } from "@overbookd/http";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
-const gear = defineModel<CatalogGear | null>("gear", { required: true });
+const gear = defineModel<CatalogGear>("gear", { required: false });
 const quantity = defineModel<number>("quantity", { required: true });
 
 const { disabled, ponctualUsage, hideDetails } = defineProps({

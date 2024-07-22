@@ -20,6 +20,9 @@ export class InquirySectionService {
     { slug, quantity }: AddInquiryRequestForm,
   ): Promise<FestivalTask> {
     const gear = await this.inquiries.find(slug);
+    if (!gear) {
+      throw new NotFoundException("❌ Le matos recherché n'existe pas");
+    }
     const inquiry = { ...gear, quantity };
     return this.prepare.addInquiry(id, inquiry);
   }
