@@ -11,9 +11,9 @@
       <h2><slot name="title" /></h2>
     </v-card-title>
 
-    <v-card-subtitle class="card__subtitle">
-      <slot name="subtitle" />
-    </v-card-subtitle>
+    <div class="card__subtitle">
+      <p><slot name="subtitle" /></p>
+    </div>
 
     <v-card-text class="card__content">
       <slot name="content" />
@@ -41,8 +41,11 @@ const close = () => emit("close");
     }
   }
   &__subtitle {
-    display: flex;
-    justify-content: center;
+    margin: 0 16px 5px 16px;
+    p {
+      color: rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
   }
   &__content {
     padding-bottom: 5px !important;

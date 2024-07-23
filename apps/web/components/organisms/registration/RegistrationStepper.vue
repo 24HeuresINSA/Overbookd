@@ -287,7 +287,7 @@ const rules = {
 
 const token = computed(() => {
   const tokenParam = route.query.token;
-  return Array.isArray(tokenParam) ? undefined : tokenParam ?? undefined;
+  return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
 });
 
 const isVolunteerRegistration = computed(() => !token.value);

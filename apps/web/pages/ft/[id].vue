@@ -12,9 +12,13 @@
       </template>
     </FestivalEventSidebar>
     <article class="container ft">
-      <FtGeneralCard id="general" :disabled="cantUpdate" />
+      <FtGeneralCard id="general" :disabled="isValidatedOrReadyToAssign" />
       <ParentFaCard id="fa" />
-      <FtInquiryCard id="inquiry" :disabled="cantUpdate" />
+      <FtInquiryCard id="inquiry" :disabled="isValidatedOrReadyToAssign" />
+      <InstructionsCard
+        id="instructions"
+        :disabled="isValidatedOrReadyToAssign"
+      />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedTask"
@@ -57,13 +61,13 @@ useHead({
   title: `FT ${selectedTask.value.id} - ${selectedTask.value.general.name}`,
 });
 
-const cantUpdate = computed<boolean>(() => {
+const isValidatedOrReadyToAssign = computed<boolean>(() => {
   const isTaskValidated = isValidated(selectedTask.value);
   const isTaskReadyToAssign = isReadyToAssign(selectedTask.value);
   return isTaskValidated || isTaskReadyToAssign;
 });
-const canEnableAssignment = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+const canEnableAssignment = computed<boolean>(
+  () => userStore.can(AFFECT_VOLUNTEER) && isValidatedOrReadyToAssign.value,
 );
 const cantStartAssignment = computed<boolean>(
   () => !isValidated(selectedTask.value),

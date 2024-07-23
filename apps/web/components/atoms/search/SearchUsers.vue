@@ -60,21 +60,17 @@ const userList = computed<User[]>(() => props.list ?? userStore.users);
 
 const propagateChange = (selectedUsers: User[]) => {
   const addedUsers = selectedUsers.filter(
-    (user) => !lastUsers.value.includes(user),
+    (user) => !lastUsers.value.some(({ id }) => id === user.id),
   );
   const removedUsers = lastUsers.value.filter(
-    (user) => !selectedUsers.includes(user),
+    (user) => !selectedUsers.some(({ id }) => id === user.id),
   );
+
+  lastUsers.value = selectedUsers;
 
   addedUsers.forEach((addedUser) => propagateAdd(addedUser));
   removedUsers.forEach((removedUser) => propagateRemove(removedUser));
-
-  lastUsers.value = selectedUsers;
 };
-const propagateAdd = (user: User) => {
-  emit("add", user);
-};
-const propagateRemove = (user: User) => {
-  emit("remove", user);
-};
+const propagateAdd = (user: User) => emit("add", user);
+const propagateRemove = (user: User) => emit("remove", user);
 </script>

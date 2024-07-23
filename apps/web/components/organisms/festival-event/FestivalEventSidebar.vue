@@ -155,8 +155,8 @@ const myReviewers = computed<Team[]>(() =>
 
 const statusLabel = computed<FaStatusLabel | FtStatusLabel>(() =>
   isActivity.value
-    ? faStatusLabels.get(selectedActivity.value.status) ?? BROUILLON
-    : ftStatusLabels.get(selectedTask.value.status) ?? BROUILLON,
+    ? (faStatusLabels.get(selectedActivity.value.status) ?? BROUILLON)
+    : (ftStatusLabels.get(selectedTask.value.status) ?? BROUILLON),
 );
 const status = computed<string>(() =>
   isActivity.value

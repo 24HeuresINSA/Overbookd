@@ -8,8 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-import { VuetifyTiptap } from "vuetify-pro-tiptap";
-import "vuetify-pro-tiptap/style.css";
 import {
   BaseKit,
   Bold,
@@ -21,7 +19,9 @@ import {
   Heading,
   Table,
   History,
+  VuetifyTiptap,
 } from "vuetify-pro-tiptap";
+import "vuetify-pro-tiptap/style.css";
 
 const extensions = [
   BaseKit.configure({
@@ -47,5 +47,5 @@ const props = defineProps({
   },
 });
 
-const content = defineModel<string>();
+const content = defineModel<string>({ required: false });
 </script>
