@@ -455,7 +455,14 @@ importers:
         specifier: workspace:*
         version: link:../../constants/team-constants
 
-  domains/charisma: {}
+  domains/charisma:
+    dependencies:
+      '@overbookd/slugify':
+        specifier: workspace:*
+        version: link:../../libraries/slugify
+      '@overbookd/user':
+        specifier: workspace:*
+        version: link:../../utils/user
 
   domains/contribution:
     dependencies:
