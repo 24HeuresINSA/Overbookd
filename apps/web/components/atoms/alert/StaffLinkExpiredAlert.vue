@@ -26,10 +26,7 @@
 import { SG_EMAIL } from "~/utils/mail/mail.constant";
 
 const router = useRouter();
-
-const returnToLogin = () => {
-  router.push("/login");
-};
+const returnToLogin = () => router.push("/login");
 </script>
 
 <style lang="scss" scoped>

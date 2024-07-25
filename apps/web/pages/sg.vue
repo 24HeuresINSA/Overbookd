@@ -47,7 +47,7 @@ const transactionStore = useTransactionStore();
 
 await personalAccountStore.fetchBarrels();
 
-const consumerLoading = ref(false);
+const consumerLoading = ref<boolean>(false);
 if (userStore.personalAccountConsumers.length === 0) {
   consumerLoading.value = true;
 }
@@ -62,7 +62,9 @@ const resetConsumers = () => {
   }));
 };
 
-const barrels = computed(() => personalAccountStore.barrels);
+const barrels = computed<ConfiguredBarrel[]>(
+  () => personalAccountStore.barrels,
+);
 const selectedBarrel = ref<ConfiguredBarrel | null>(
   barrels.value.at(0) ?? null,
 );
@@ -91,7 +93,7 @@ watch(
 );
 const isMode = (value: SgMode) => mode.value === value;
 
-const transactionType = computed(() => {
+const transactionType = computed<string>(() => {
   if (isMode(CASK_MODE)) return BARREL;
   if (isMode(CLOSET_MODE)) return PROVISIONS;
   return DEPOSIT;
@@ -108,15 +110,12 @@ const invalidInputsReasons = computed<string[]>(() => {
         : "Pas de nouvelle consommation",
     ];
   }
-
   if (isMode(CASK_MODE) && !selectedBarrel.value) {
     return ["Aucun fût n'est sélectionné"];
   }
-
   if (isMode(CLOSET_MODE) && closetStickPrice.value <= 0) {
     return ["Le prix du bâton de placard ne peut pas être nul ou négatif"];
   }
-
   if (totalPrice.value === 0) {
     return ["Le prix total ne peut pas être nul"];
   }

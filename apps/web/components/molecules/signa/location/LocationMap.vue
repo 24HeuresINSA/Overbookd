@@ -40,7 +40,10 @@
 <script lang="ts" setup>
 import { POINT, ROAD, AREA } from "@overbookd/geo-location";
 import { type SignaLocation, filterLocation } from "@overbookd/signa";
-import { mapConfiguration } from "~/utils/location/map";
+import {
+  type MapConfiguration,
+  defaultMapConfiguration,
+} from "~/utils/location/map";
 
 const props = defineProps({
   locations: {
@@ -49,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const map = ref({ ...mapConfiguration });
+const map = ref<MapConfiguration>({ ...defaultMapConfiguration });
 
 const points = computed(() => filterLocation(POINT, props.locations));
 const roads = computed(() => filterLocation(ROAD, props.locations));

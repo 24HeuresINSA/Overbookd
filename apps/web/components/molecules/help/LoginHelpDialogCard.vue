@@ -4,8 +4,7 @@
     <template #content>
       Si vous avez rencontré un problème lors de l'inscription vous pouvez nous
       envoyer un mail à l'adresse
-      <a :href="`mailto:${HUMAINS_EMAIL}`">{{ HUMAINS_EMAIL }}</a
-      >.
+      <a :href="`mailto:${HUMAINS_EMAIL}`">{{ HUMAINS_EMAIL }} </a>.
       <br />
       Nous nous en occuperons au plus vite.
     </template>

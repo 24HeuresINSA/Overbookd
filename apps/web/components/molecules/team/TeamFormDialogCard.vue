@@ -53,8 +53,6 @@ import { required } from "~/utils/rules/input.rules";
 import { SlugifyService } from "@overbookd/slugify";
 import type { Team } from "@overbookd/team";
 
-const emit = defineEmits(["create", "update", "close"]);
-
 const { team } = defineProps({
   team: {
     type: Object as PropType<Team>,
@@ -67,11 +65,13 @@ const color = ref<string>("#000000");
 const icon = ref<string>();
 const rules = { required };
 
-const isValidForm = computed(() =>
+const isValidForm = computed<boolean>(() =>
   Boolean(name.value && color.value && icon.value),
 );
-const isCreateForm = computed(() => team === undefined);
-const formLabel = computed(() => (isCreateForm.value ? "Créer" : "Modifier"));
+const isCreateForm = computed<boolean>(() => team === undefined);
+const formLabel = computed<string>(() =>
+  isCreateForm.value ? "Créer" : "Modifier",
+);
 
 watch(
   () => team,
@@ -83,6 +83,7 @@ watch(
   { immediate: true },
 );
 
+const emit = defineEmits(["create", "update", "close"]);
 const close = () => emit("close");
 const createTeam = () => {
   const newTeam = {

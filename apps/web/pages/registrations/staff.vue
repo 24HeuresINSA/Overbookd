@@ -40,7 +40,7 @@
         <TeamChip v-for="team of item.teams" :key="team" :team="team" />
       </template>
 
-      <template #item.action="{ item }">
+      <template #item.removal="{ item }">
         <v-btn
           text="Supprimer l'inscription"
           color="primary"
@@ -77,25 +77,27 @@ useHead({ title: "Admissions organisateur" });
 const registrationStore = useRegistrationStore();
 
 const headers = [
-  { title: "Prénom", value: "firstname" },
-  { title: "Nom", value: "lastname" },
-  { title: "Email", value: "email" },
-  { title: "Date d'inscription", value: "registeredAt" },
-  { title: "Équipes", value: "teams", sortable: false },
-  { title: "Action", value: "action", sortable: false },
+  { title: "Prénom", value: "firstname", sortable: true },
+  { title: "Nom", value: "lastname", sortable: true },
+  { title: "Email", value: "email", sortable: true },
+  { title: "Date d'inscription", value: "registeredAt", sortable: true },
+  { title: "Équipes", value: "teams" },
+  { title: "Suppression", value: "removal" },
 ];
 
-const last30DaysNewcomers = ref(true);
-const searchNewcomer = ref("");
+const last30DaysNewcomers = ref<boolean>(true);
+const searchNewcomer = ref<string>("");
 const selectedStaffs = ref<EnrollableStaff[]>([]);
 
-const staffs = computed(() => registrationStore.staffs);
-const loading = ref(staffs.value.length === 0);
+const staffs = computed<EnrollableStaff[]>(() => registrationStore.staffs);
+const loading = ref<boolean>(staffs.value.length === 0);
 registrationStore.getStaffs().then(() => (loading.value = false));
 
-const noStaffSelected = computed(() => selectedStaffs.value.length === 0);
+const noStaffSelected = computed<boolean>(
+  () => selectedStaffs.value.length === 0,
+);
 
-const searchableNewcomers = computed(() => {
+const searchableNewcomers = computed<Searchable<EnrollableStaff>[]>(() => {
   return staffs.value.map((newcomer) => ({
     ...newcomer,
     searchable: SlugifyService.apply(
@@ -103,7 +105,7 @@ const searchableNewcomers = computed(() => {
     ),
   }));
 });
-const filteredNewcomers = computed(() => {
+const filteredNewcomers = computed<EnrollableStaff[]>(() => {
   const search = SlugifyService.apply(searchNewcomer.value);
   const thirtyDaysAgo = Date.now() - 30 * ONE_DAY_IN_MS;
   return searchableNewcomers.value.filter((newcomer) => {

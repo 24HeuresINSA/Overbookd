@@ -35,7 +35,7 @@
     />
 
     <v-dialog v-model="isAddDialogOpen" max-width="600px">
-      <AddPeriodForm @add="addTimeWindow" @close="closeAddDialog" />
+      <CreatePeriodDialogCard @add="addTimeWindow" @close="closeAddDialog" />
     </v-dialog>
   </div>
 </template>
@@ -70,7 +70,7 @@ const emit = defineEmits(["add", "remove"]);
 const addTimeWindow = (period: IProvidePeriod) => emit("add", period);
 const removeTimeWindow = (timeWindow: TimeWindow) => emit("remove", timeWindow);
 
-const isAddDialogOpen = ref(false);
+const isAddDialogOpen = ref<boolean>(false);
 const openAddDialog = () => (isAddDialogOpen.value = true);
 const closeAddDialog = () => (isAddDialogOpen.value = false);
 </script>

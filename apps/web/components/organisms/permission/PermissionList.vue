@@ -64,9 +64,12 @@
         placeholder="Description"
         class="w-1/3 px-4"
       />
-      <v-btn color="primary" class="mr-2" @click="addPermission">
-        Ajouter une permission
-      </v-btn>
+      <v-btn
+        text="Ajouter une permission"
+        color="primary"
+        class="mr-2"
+        @click="addPermission"
+      />
     </template>
   </v-data-table>
 </template>
@@ -84,11 +87,11 @@ const headers = [
   { title: "Actions", value: "actions", width: "25%", sortable: false },
 ];
 
-const search = ref("");
-const newPermissionName = ref("");
-const newPermissionDescription = ref("");
+const search = ref<string>("");
+const newPermissionName = ref<string>("");
+const newPermissionDescription = ref<string>("");
 
-const permissions = computed(() => permissionStore.permissions);
+const permissions = computed<Permission[]>(() => permissionStore.permissions);
 permissionStore.fetchPermissions();
 
 const addPermission = async () => {

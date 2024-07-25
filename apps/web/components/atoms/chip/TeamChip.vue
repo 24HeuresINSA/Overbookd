@@ -24,6 +24,7 @@
 
 <script lang="ts" setup>
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import type { Team } from "@overbookd/team";
 
 const { team, size, withName, showHidden, closable, clickable, prefix } =
   defineProps({
@@ -57,28 +58,25 @@ const { team, size, withName, showHidden, closable, clickable, prefix } =
     },
   });
 
-const emit = defineEmits(["click", "close"]);
 const teamStore = useTeamStore();
 
-const teamMetadata = computed(() => teamStore.getTeamByCode(team));
-const showTeam = computed(() => showHidden || team !== BENEVOLE_CODE);
-const teamText = computed(() => {
+const teamMetadata = computed<Team | undefined>(() =>
+  teamStore.getTeamByCode(team),
+);
+const showTeam = computed<boolean>(() => showHidden || team !== BENEVOLE_CODE);
+const teamText = computed<string>(() => {
   const chipPrefix = prefix ? `${prefix} ` : "";
   return `${chipPrefix}${teamMetadata.value?.name}`;
 });
-const color = computed(() => teamMetadata.value?.color ?? "grey");
+const color = computed<string>(() => teamMetadata.value?.color ?? "grey");
 const classes = computed(() => ({
   clickable: clickable,
   flip: team === "bde",
 }));
 
-const sendEvent = () => {
-  emit("click", teamMetadata.value);
-};
-
-const sendCloseEvent = () => {
-  emit("close", team);
-};
+const emit = defineEmits(["click", "close"]);
+const sendEvent = () => emit("click", teamMetadata.value);
+const sendCloseEvent = () => emit("close", team);
 </script>
 
 <style lang="scss" scoped>

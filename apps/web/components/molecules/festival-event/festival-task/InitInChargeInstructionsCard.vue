@@ -41,7 +41,7 @@ import {
 const volunteers = ref<Adherent[]>([]);
 const instruction = ref<string | undefined>(undefined);
 
-const cantInit = computed(() => {
+const cantInit = computed<boolean>(() => {
   if (instruction.value === undefined) return true;
   return !InChargeInstructionsSpecification.isSatisfiedBy({
     volunteers: volunteers.value,

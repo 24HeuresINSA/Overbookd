@@ -51,8 +51,8 @@ const props = defineProps({
   },
 });
 
-const date = ref(new Date());
-const amount = ref(0);
+const date = ref<Date>(new Date());
+const amount = ref<number>(0);
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");

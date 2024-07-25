@@ -5,9 +5,10 @@
       <v-card-text class="user-card__content">
         <div class="picture">
           <ProfilePicture :user="me" class="profilePicture" />
-          <v-btn @click="isProfilePictureDialogOpen = true">
-            📸 {{ me.profilePicture ? `Changer` : `Ajouter` }}
-          </v-btn>
+          <v-btn
+            :text="`📸 ${me.profilePicture ? 'Changer' : 'Ajouter'}`"
+            @click="isProfilePictureDialogOpen = true"
+          />
         </div>
         <v-form class="identity">
           <v-text-field
@@ -115,6 +116,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Preference } from "@overbookd/http";
 import {
   isMobilePhoneNumber,
   maxDate,
@@ -131,27 +133,29 @@ userStore.setMyProfilePicture();
 preferenceStore.fetchMyPreferences();
 
 const me = computed(() => userStore.me);
-const friendsCount = computed(() => userStore.mFriends.length);
-const preferences = computed(() => preferenceStore.myPreferences);
-const hasFilledPreferences = computed(
+const friendsCount = computed<number>(() => userStore.mFriends.length);
+const preferences = computed<Preference | null>(
+  () => preferenceStore.myPreferences,
+);
+const hasFilledPreferences = computed<boolean>(
   () =>
     preferences.value?.paperPlanning !== undefined &&
     preferences.value?.paperPlanning !== null,
 );
-const charismaIcon = computed(() =>
+const charismaIcon = computed<string>(() =>
   me.value.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon,
 );
 
-const firstname = ref(me.value.firstname);
-const lastname = ref(me.value.lastname);
-const nickname = ref(me.value.nickname);
-const birthday = ref(formatLocalDate(me.value.birthdate));
-const email = ref(me.value.email);
-const phone = ref(me.value.phone);
-const comment = ref(me.value.comment);
+const firstname = ref<string>(me.value.firstname);
+const lastname = ref<string>(me.value.lastname);
+const nickname = ref<string | null | undefined>(me.value.nickname);
+const birthday = ref<string>(formatLocalDate(me.value.birthdate));
+const email = ref<string>(me.value.email);
+const phone = ref<string>(me.value.phone);
+const comment = ref<string | null | undefined>(me.value.comment);
 
 const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
-const isProfilePictureDialogOpen = ref(false);
+const isProfilePictureDialogOpen = ref<boolean>(false);
 
 const rules = {
   required,
@@ -160,7 +164,7 @@ const rules = {
   mobilePhone: isMobilePhoneNumber,
 };
 
-const isValid = () => {
+const isValid = (): boolean => {
   const isValidFirstname = rules.required(firstname.value) === true;
   const isValidLastname = rules.required(lastname.value) === true;
   const isValidBirthdate = [

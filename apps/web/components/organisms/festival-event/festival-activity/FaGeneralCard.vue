@@ -76,7 +76,7 @@
     </v-card>
 
     <v-dialog v-model="isAskPublicDialogOpen" max-width="600">
-      <AskPublicFormCard @close="closeAskPublicDialog" />
+      <AskPublicActivityDialogCard @close="closeAskPublicDialog" />
     </v-dialog>
   </div>
 </template>
@@ -97,7 +97,7 @@ import {
 
 const faStore = useFestivalActivityStore();
 
-const isAskPublicDialogOpen = ref(false);
+const isAskPublicDialogOpen = ref<boolean>(false);
 const openAskPublicDialog = () => (isAskPublicDialogOpen.value = true);
 const closeAskPublicDialog = () => (isAskPublicDialogOpen.value = false);
 
@@ -145,10 +145,12 @@ const updateToPublishOrAskPublic = (canBeNull: boolean | null) => {
   faStore.updateGeneral({ toPublish });
 };
 
-const addTimeWindow = (period: IProvidePeriod) =>
+const addTimeWindow = (period: IProvidePeriod) => {
   faStore.addGeneralTimeWindow(period);
-const removeTimeWindow = (timeWindow: TimeWindow) =>
+};
+const removeTimeWindow = (timeWindow: TimeWindow) => {
   faStore.removeGeneralTimeWindow(timeWindow.id);
+};
 </script>
 
 <style lang="scss" scoped>

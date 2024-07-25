@@ -52,7 +52,7 @@ const { disabled } = defineProps({
 });
 
 const gear = ref<CatalogGear | undefined>();
-const quantity = ref(1);
+const quantity = ref<number>(1);
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const inquiries = computed<FestivalTask["inquiries"]>(
@@ -78,8 +78,9 @@ const addInquiry = () => {
   }
 };
 const linkDrive = (link: AssignDrive) => ftStore.linkDrive(link);
-const removeInquiry = (inquiry: InquiryRequest) =>
+const removeInquiry = (inquiry: InquiryRequest) => {
   ftStore.removeInquiryRequest(inquiry.slug);
+};
 </script>
 
 <style lang="scss" scoped>

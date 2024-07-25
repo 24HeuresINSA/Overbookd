@@ -22,17 +22,17 @@ const router = useRouter();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const isPreProd = computed(
+const isPreProd = computed<boolean>(
   () => process.env.BASE_URL?.includes("preprod") ?? false,
 );
-const isCetaitMieuxAvant = computed(
+const isCetaitMieuxAvant = computed<boolean>(
   () => process.env.BASE_URL?.includes("cetaitmieuxavant") ?? false,
 );
 
 const { me } = storeToRefs(userStore);
-const myName = computed(() => me.value.nickname || me.value.firstname);
+const myName = computed<string>(() => me.value.nickname || me.value.firstname);
 
-const watermark = computed(() => {
+const watermark = computed<string>(() => {
   if (isPreProd.value) return "preprod";
   if (isCetaitMieuxAvant.value) return "ctma";
   return "";

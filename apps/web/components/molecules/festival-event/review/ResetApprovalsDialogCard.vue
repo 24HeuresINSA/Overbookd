@@ -1,5 +1,5 @@
 <template>
-  <ConfirmationMessage
+  <ConfirmationDialogCard
     confirm-color="success"
     @close="close"
     @confirm="confirm"
@@ -13,7 +13,7 @@
     <template #confirm-btn-content>
       <v-icon left> mdi-plus-circle-outline </v-icon>Continuer
     </template>
-  </ConfirmationMessage>
+  </ConfirmationDialogCard>
 </template>
 
 <script lang="ts" setup>

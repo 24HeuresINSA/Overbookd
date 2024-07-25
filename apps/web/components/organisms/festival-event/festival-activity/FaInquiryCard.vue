@@ -99,7 +99,7 @@
     </v-card>
 
     <v-dialog v-model="isInitInquiryDialogOpen" max-width="600">
-      <FaInitInquiryFormCard @close="closeInitInquiryDialog" />
+      <InitFaInquiryDialogCard @close="closeInitInquiryDialog" />
     </v-dialog>
   </div>
 </template>

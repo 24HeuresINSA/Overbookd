@@ -7,20 +7,19 @@
       </div>
 
       <v-btn
-        rounded
+        text="Faire un virement"
         size="x-large"
         class="transfer-btn"
         color="primary"
+        rounded
         @click="isTransferDialogOpen = true"
-      >
-        Faire un virement
-      </v-btn>
+      />
     </div>
 
     <MyTransactionListing />
 
     <v-dialog v-model="isTransferDialogOpen" max-width="600px">
-      <CreateTransferForm @close="isTransferDialogOpen = false" />
+      <CreateTransferDialogCard @close="isTransferDialogOpen = false" />
     </v-dialog>
   </div>
 </template>
@@ -32,9 +31,10 @@ useHead({ title: "Mon compte perso" });
 
 const userStore = useUserStore();
 
-const isTransferDialogOpen = ref(false);
-
-const balance = computed(() => Money.cents(userStore.me.balance).toString());
+const isTransferDialogOpen = ref<boolean>(false);
+const balance = computed<string>(() =>
+  Money.cents(userStore.me.balance).toString(),
+);
 </script>
 
 <style lang="scss" scoped>

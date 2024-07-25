@@ -10,11 +10,11 @@ const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
 
 const config = useRuntimeConfig();
-const counter = ref(0);
+const counter = ref<number>(0);
 
-const versionString = computed(() => `v${config.public.version}` ?? "");
+const versionString = computed<string>(() => `v${config.public.version}`);
 
-const logo = computed(() => {
+const logo = computed<string>(() => {
   if (counter.value >= FIFTY_ONE) return "Pastis.png";
   if (counter.value >= TWENTY_FOUR) return "Ricard.png";
   if (window.innerWidth <= 960) return "logo_mobile.png";

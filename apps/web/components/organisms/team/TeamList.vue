@@ -35,14 +35,17 @@
       </template>
 
       <template #footer.prepend>
-        <v-btn color="primary" class="mr-2" @click="openAddTeamDialog">
-          Ajouter une équipe
-        </v-btn>
+        <v-btn
+          text="Ajouter une équipe"
+          color="primary"
+          class="mr-2"
+          @click="openAddTeamDialog"
+        />
       </template>
     </v-data-table>
 
     <v-dialog v-model="isTeamDialogOpen" width="600px">
-      <TeamForm
+      <TeamFormDialogCard
         :team="selectedTeam"
         @close="closeTeamDialog"
         @create="createTeam"
@@ -51,7 +54,7 @@
     </v-dialog>
 
     <v-dialog v-model="isDeleteConfirmationDialogOpen" width="600px">
-      <ConfirmationMessage
+      <ConfirmationDialogCard
         confirm-color="error"
         @close="closeDeleteConfirmationDialog"
         @confirm="removeSelectedTeam"
@@ -63,7 +66,7 @@
           Cette équipe sera supprimée DEFINITIVEMENT !!! <br />
           Vérifie bien que tu ne te trompes pas d'équipe.
         </template>
-      </ConfirmationMessage>
+      </ConfirmationDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -85,12 +88,12 @@ const headers = [
   },
 ];
 
-const search = ref("");
+const search = ref<string>("");
 const selectedTeam = ref<Team | undefined>(undefined);
-const isTeamDialogOpen = ref(false);
-const isDeleteConfirmationDialogOpen = ref(false);
+const isTeamDialogOpen = ref<boolean>(false);
+const isDeleteConfirmationDialogOpen = ref<boolean>(false);
 
-const teams = computed(() => teamStore.teams);
+const teams = computed<Team[]>(() => teamStore.teams);
 
 const createTeam = async (team: Team) => {
   await teamStore.createTeam(team);

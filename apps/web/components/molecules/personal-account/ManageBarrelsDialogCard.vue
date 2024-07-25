@@ -1,10 +1,7 @@
 <template>
-  <v-card class="barrels-form">
-    <v-card-title class="barrels-form__title">
-      <h2>Gestion des fûts</h2>
-      <v-btn icon="mdi-close" variant="flat" @click="close" />
-    </v-card-title>
-    <v-card-text>
+  <DialogCard without-actions @close="close">
+    <template #title>Gestion des fûts</template>
+    <template #content>
       <div v-for="barrel in barrels" :key="barrel.slug" class="barrel">
         <v-text-field :model-value="barrel.drink" label="Fût" readonly />
         <DateField
@@ -24,23 +21,25 @@
           @click="removeBarrel(barrel)"
         />
       </div>
-    </v-card-text>
-    <v-card-text class="barrel-form__add">
-      <div class="barrel">
-        <v-text-field v-model="drink" label="Fût" />
-        <DateField v-model="openedOn" label="Date d'ouverture" />
-        <MoneyField v-model="price" />
-        <v-btn
-          icon="mdi-plus"
-          size="small"
-          color="primary"
-          class="barrel__action"
-          :disabled="cantAddBarrel"
-          @click="addNewBarrel"
-        />
+      <div class="actions">
+        <h2>Ajouter un fût</h2>
+        <div class="barrel">
+          <v-text-field v-model="drink" label="Fût" />
+          <DateField v-model="openedOn" label="Date d'ouverture" />
+          <MoneyField v-model="price" />
+          <v-btn
+            icon="mdi-plus"
+            size="small"
+            color="primary"
+            variant="elevated"
+            class="barrel__action"
+            :disabled="cantAddBarrel"
+            @click="addNewBarrel"
+          />
+        </div>
       </div>
-    </v-card-text>
-  </v-card>
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
@@ -48,14 +47,16 @@ import type { ConfiguredBarrel } from "@overbookd/personal-account";
 
 const personalAccountStore = usePersonalAccountStore();
 
-const drink = ref("");
-const price = ref(100);
-const openedOn = ref(new Date());
+const drink = ref<string>("");
+const price = ref<number>(100);
+const openedOn = ref<Date>(new Date());
 
-const barrels = computed(() => personalAccountStore.barrels);
+const barrels = computed<ConfiguredBarrel[]>(
+  () => personalAccountStore.barrels,
+);
 const fetchBarrels = () => personalAccountStore.fetchBarrels();
 
-const cantAddBarrel = computed(() => !drink.value || price.value <= 0);
+const cantAddBarrel = computed<boolean>(() => !drink.value || price.value <= 0);
 const addNewBarrel = async () => {
   if (cantAddBarrel.value) return;
   await personalAccountStore.createBarrel({
@@ -93,17 +94,6 @@ const close = () => emit("close");
 </script>
 
 <style lang="scss" scoped>
-.barrels-form {
-  &__title {
-    display: flex;
-    justify-content: center;
-    h2 {
-      flex: 1;
-      text-align: center;
-    }
-  }
-}
-
 .barrel {
   display: flex;
   flex-direction: row;
@@ -111,6 +101,17 @@ const close = () => emit("close");
   align-items: center;
   &__action {
     margin-bottom: 10px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  gap: 5px;
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
   }
 }
 </style>

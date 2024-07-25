@@ -77,8 +77,10 @@ const email = ref<string | null>(null);
 const company = ref<string | null>(null);
 const comment = ref<string | null>(null);
 
-const isUpdate = computed(() => props.contractor !== null);
-const typeFormLabel = computed(() => (isUpdate.value ? "Modifier" : "Ajouter"));
+const isUpdate = computed<boolean>(() => props.contractor !== null);
+const typeFormLabel = computed<string>(() =>
+  isUpdate.value ? "Modifier" : "Ajouter",
+);
 
 const rules = {
   required: required,
@@ -106,7 +108,7 @@ const setContractor = () => {
 };
 watch(() => props.contractor, setContractor, { immediate: true });
 
-const canConfirmContractor = computed(() => {
+const canConfirmContractor = computed<boolean>(() => {
   const hasFirstname = firstname.value.trim() !== "";
   const hasLastname = lastname.value.trim() !== "";
   const hasPhone = phone.value.trim() !== "";

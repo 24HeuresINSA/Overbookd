@@ -63,7 +63,7 @@ import {
   LocationFactory,
 } from "@overbookd/geo-location";
 import { isPointLocation } from "@overbookd/signa";
-import { mapConfiguration } from "~/utils/location/map";
+import { defaultMapConfiguration } from "~/utils/location/map";
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {
@@ -79,25 +79,27 @@ const actions: ActionItem[] = [
 
 const geoLocation = defineModel<GeoLocation | null>({ required: true });
 
-const editing = ref(geoLocation.value === null);
-const mouseLatlng = ref<Coordinate>(mapConfiguration.center);
-const manage = ref<ManageLocation>(Point.create(mapConfiguration.center));
-const zoom = ref(mapConfiguration.zoom);
-const center = ref(mapConfiguration.center);
-const url = ref(mapConfiguration.url);
-const attribution = ref(mapConfiguration.attribution);
+const editing = ref<boolean>(geoLocation.value === null);
+const mouseLatlng = ref<Coordinate>(defaultMapConfiguration.center);
+const manage = ref<ManageLocation>(
+  Point.create(defaultMapConfiguration.center),
+);
+const zoom = ref<number>(defaultMapConfiguration.zoom);
+const center = ref<Coordinate>(defaultMapConfiguration.center);
+const url = ref<string>(defaultMapConfiguration.url);
+const attribution = ref<string>(defaultMapConfiguration.attribution);
 
 const action = computed<Action>({
   get: () => geoLocation.value?.type ?? POINT,
   set: (action: Action) => reset(action),
 });
 
-const isPointEdition = computed(() => action.value === POINT);
-const isRoadEdition = computed(() => action.value === ROAD);
-const isAreaEdition = computed(() => action.value === AREA);
+const isPointEdition = computed<boolean>(() => action.value === POINT);
+const isRoadEdition = computed<boolean>(() => action.value === ROAD);
+const isAreaEdition = computed<boolean>(() => action.value === AREA);
 
 const coordinates = computed<Coordinate | Coordinate[]>(() => {
-  if (!geoLocation.value) return mapConfiguration.center;
+  if (!geoLocation.value) return defaultMapConfiguration.center;
   return isPointLocation(geoLocation.value) || !editing.value
     ? geoLocation.value.coordinates
     : [...geoLocation.value.coordinates, mouseLatlng.value];

@@ -1,7 +1,7 @@
 <template>
   <h1>Repas partagés</h1>
   <div class="form-and-list">
-    <OfferSharedMealForm class="form desktop" />
+    <OfferSharedMealFormCard class="form desktop" />
     <div class="meals">
       <SharedMealCard
         v-for="meal in meals"
@@ -12,17 +12,14 @@
     </div>
   </div>
   <v-btn
-    rounded
-    x-large
+    text="Proposer un repas"
     class="offer-btn"
     color="primary"
     @click="openOfferDialog"
-  >
-    Proposer un repas
-  </v-btn>
+  />
 
   <v-dialog v-model="isOfferDialogOpen" max-width="600px">
-    <OfferSharedMealForm closable @close="closeOfferDialog" />
+    <OfferSharedMealFormCard closable @close="closeOfferDialog" />
   </v-dialog>
 </template>
 
@@ -33,7 +30,7 @@ useHead({ title: "Repas partagés" });
 
 const mealSharingStore = useMealSharingStore();
 
-const isOfferDialogOpen = ref(false);
+const isOfferDialogOpen = ref<boolean>(false);
 const openOfferDialog = () => (isOfferDialogOpen.value = true);
 const closeOfferDialog = () => (isOfferDialogOpen.value = false);
 

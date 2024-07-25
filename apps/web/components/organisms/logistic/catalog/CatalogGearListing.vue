@@ -47,11 +47,14 @@
     </v-data-table>
 
     <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
-      <CatalogGearForm :gear="selectedGear" @close="closeUpdateGearDialog" />
+      <CatalogGearFormDialogCard
+        :gear="selectedGear"
+        @close="closeUpdateGearDialog"
+      />
     </v-dialog>
 
     <v-dialog v-model="isDeleteGearDialogOpen" width="600px">
-      <ConfirmationMessage
+      <ConfirmationDialogCard
         confirm-color="error"
         @close="closeDeleteGearDialog"
         @confirm="deleteGear"
@@ -66,7 +69,7 @@
         <template #confirm-btn-content>
           <v-icon left> mdi-delete </v-icon>Supprimer
         </template>
-      </ConfirmationMessage>
+      </ConfirmationDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -80,20 +83,22 @@ import type { FilterGear } from "~/utils/logistic/filter-gear";
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
 
-const isCatalogWriter = computed(() => userStore.can(WRITE_GEAR_CATALOG));
-const actionHeader = computed(() =>
-  isCatalogWriter
-    ? { title: "Actions", value: "actions", sortable: false }
-    : {},
+const isCatalogWriter = computed<boolean>(() =>
+  userStore.can(WRITE_GEAR_CATALOG),
 );
-const headers = computed<TableHeaders>(() => [
-  { title: "Matos", value: "name", sortable: true },
-  { title: "Référence", value: "code", sortable: true },
-  { title: "Matos d'appoint", value: "isPonctualUsage", sortable: true },
-  { title: "Matos consommable", value: "isConsumable", sortable: true },
-  { title: "Catégorie", value: "category" },
-  actionHeader.value,
-]);
+const headers = computed<TableHeaders>(() => {
+  const commonHeaders = [
+    { title: "Matos", value: "name", sortable: true },
+    { title: "Référence", value: "code", sortable: true },
+    { title: "Matos d'appoint", value: "isPonctualUsage", sortable: true },
+    { title: "Matos consommable", value: "isConsumable", sortable: true },
+    { title: "Catégorie", value: "category" },
+  ];
+  const actionsHeader = { title: "Actions", value: "actions" };
+  return isCatalogWriter.value
+    ? [...commonHeaders, actionsHeader]
+    : commonHeaders;
+});
 
 const filters = reactive<FilterGear>({
   name: "",
@@ -103,7 +108,7 @@ const filters = reactive<FilterGear>({
 
 const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
 
-const loading = ref(gears.value.length === 0);
+const loading = ref<boolean>(gears.value.length === 0);
 catalogGearStore.fetchGears({}).then(() => (loading.value = false));
 
 const selectedGear = ref<CatalogGear | undefined>();
@@ -123,7 +128,7 @@ const searchGears = async () => {
 };
 watch(filters, searchGears, { deep: true });
 
-const isUpdateGearDialogOpen = ref(false);
+const isUpdateGearDialogOpen = ref<boolean>(false);
 const openUpdateGearDialog = (gear: CatalogGear) => {
   selectedGear.value = gear;
   isUpdateGearDialogOpen.value = true;
@@ -132,7 +137,7 @@ const closeUpdateGearDialog = () => {
   isUpdateGearDialogOpen.value = false;
 };
 
-const isDeleteGearDialogOpen = ref(false);
+const isDeleteGearDialogOpen = ref<boolean>(false);
 const openDeleteGearDialog = (gear: CatalogGear) => {
   selectedGear.value = gear;
   isDeleteGearDialogOpen.value = true;

@@ -64,11 +64,11 @@
   />
 
   <v-dialog v-model="isNewActivityDialogOpen" max-width="600">
-    <NewFaCard @close="closeNewActivityDialog" />
+    <CreateFaDialogCard @close="closeNewActivityDialog" />
   </v-dialog>
 
   <v-dialog v-model="isRemovalDialogOpen" max-width="600">
-    <ConfirmationMessage
+    <ConfirmationDialogCard
       confirm-color="error"
       @close="closeRemovalDialog"
       @confirm="removeActivity"
@@ -86,7 +86,7 @@
       <template #confirm-btn-content>
         <v-icon left> mdi-delete </v-icon>Supprimer
       </template>
-    </ConfirmationMessage>
+    </ConfirmationDialogCard>
   </v-dialog>
 </template>
 
@@ -144,15 +144,15 @@ const activities = computed<PreviewFestivalActivity[]>(
 const reviewers = computed<Team[]>(() => teamStore.faReviewers);
 
 await teamStore.fetchFaReviewers();
-const loading = ref(activities.value.length === 0);
+const loading = ref<boolean>(activities.value.length === 0);
 faStore.fetchAllActivities().then(() => (loading.value = false));
 
-const isNewActivityDialogOpen = ref(false);
+const isNewActivityDialogOpen = ref<boolean>(false);
 const openNewActivityDialog = () => (isNewActivityDialogOpen.value = true);
 const closeNewActivityDialog = () => (isNewActivityDialogOpen.value = false);
 
 const activityToRemove = ref<PreviewFestivalActivity | undefined>(undefined);
-const isRemovalDialogOpen = ref(false);
+const isRemovalDialogOpen = ref<boolean>(false);
 const openRemovalDialog = (activity: PreviewFestivalActivity) => {
   activityToRemove.value = activity;
   isRemovalDialogOpen.value = true;

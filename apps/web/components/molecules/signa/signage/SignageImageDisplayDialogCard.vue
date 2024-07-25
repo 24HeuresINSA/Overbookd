@@ -21,13 +21,14 @@ const props = defineProps({
   },
 });
 
-const image = computed(() => catalogSignageStore.signage?.imageBlob);
+const image = computed<string | undefined>(
+  () => catalogSignageStore.signage?.imageBlob,
+);
 
 watch(
   () => props.signage,
   (signage: SignageWithPotentialImage) => {
-    if (!signage.id) return;
-    catalogSignageStore.fetchSignageImage(signage);
+    if (signage.id) catalogSignageStore.fetchSignageImage(signage);
   },
   { immediate: true },
 );

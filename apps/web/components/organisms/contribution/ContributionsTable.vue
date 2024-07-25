@@ -27,11 +27,11 @@
     </template>
 
     <template #item.amount="{ item }">
-      <ContributionPaymentForm
+      <PayContributionRowForm
         v-if="displayOutToDateCustomers"
         :adherent="item"
       />
-      <ContributionEditionForm
+      <EditContributionRowForm
         v-else
         :adherent="item as AdherentWithContribution"
       />
@@ -60,9 +60,9 @@ const headers: TableHeaders = [
   { title: "Paiement", value: "amount", width: "40%", sortable: true },
 ];
 
-const search = ref("");
+const search = ref<string>("");
 
-const displayOutToDateCustomers = ref(true);
+const displayOutToDateCustomers = ref<boolean>(true);
 const toggleOutToDateCustomers = () => {
   displayOutToDateCustomers.value = !displayOutToDateCustomers.value;
 };
@@ -75,11 +75,10 @@ const toggleBtnLabbel = computed<string>(() =>
 const outToDateAdherents = computed<Adherent[]>(() => {
   return contributionStore.adherentsOutToDate;
 });
-const outToDateLoading = ref(outToDateAdherents.value.length === 0);
+const outToDateLoading = ref<boolean>(outToDateAdherents.value.length === 0);
 contributionStore
   .fetchAdherentsOutToDate()
   .then(() => (outToDateLoading.value = false));
-contributionStore.fetchAdherentsWithValidContribution();
 const searchableOutToDateAdherents = computed<Searchable<Adherent>[]>(() => {
   return outToDateAdherents.value.map(toSearchable);
 });
@@ -87,10 +86,7 @@ const searchableOutToDateAdherents = computed<Searchable<Adherent>[]>(() => {
 const validAdherents = computed<Adherent[]>(() => {
   return contributionStore.adherentsOutToDate;
 });
-const validLoading = ref(validAdherents.value.length === 0);
-contributionStore
-  .fetchAdherentsOutToDate()
-  .then(() => (validLoading.value = false));
+const validLoading = ref<boolean>(validAdherents.value.length === 0);
 contributionStore.fetchAdherentsWithValidContribution().then(() => {
   validLoading.value = false;
 });

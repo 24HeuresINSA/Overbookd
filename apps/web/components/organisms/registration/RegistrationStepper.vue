@@ -47,8 +47,8 @@
             du festival. 😎
           </p>
           <div class="stepper-actions">
-            <v-btn color="primary" @click="step = 2"> C'est parti ! 🚀 </v-btn>
-            <v-btn variant="text" @click="returnToLogin"> Annuler </v-btn>
+            <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
+            <v-btn text="Annuler" variant="text" @click="returnToLogin" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -94,8 +94,12 @@
             <CommentField v-model="comment" />
           </v-form>
           <div class="stepper-actions">
-            <v-btn color="primary" @click="step = 3"> Vous savez tout 🕵️</v-btn>
-            <v-btn variant="text" @click="step = 1"> Revenir</v-btn>
+            <v-btn
+              text="Vous savez tout 🕵️"
+              color="primary"
+              @click="step = 3"
+            />
+            <v-btn text="Revenir" variant="text" @click="step = 1" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -146,8 +150,8 @@
             />
           </v-form>
           <div class="stepper-actions">
-            <v-btn color="primary" @click="step = 4"> On se capte 🤙 </v-btn>
-            <v-btn variant="text" @click="step = 2"> Revenir </v-btn>
+            <v-btn text="On se capte 🤙" color="primary" @click="step = 4" />
+            <v-btn text="Revenir" variant="text" @click="step = 2" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -210,10 +214,13 @@
             </template>
           </v-checkbox>
           <div class="stepper-actions">
-            <v-btn color="primary" :disabled="isFormInvalid" @click="register">
-              M'inscrire
-            </v-btn>
-            <v-btn variant="text" @click="step = 3"> Revenir </v-btn>
+            <v-btn
+              text="M'inscrire"
+              color="primary"
+              :disabled="isFormInvalid"
+              @click="register"
+            />
+            <v-btn text="Revenir" variant="text" @click="step = 3" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -262,18 +269,18 @@ const configurationStore = useConfigurationStore();
 
 configurationStore.fetchAll();
 
-const step = ref(1);
-const firstname = ref("");
-const lastname = ref("");
-const nickname = ref("");
-const birthday = ref("2000-01-01");
-const email = ref("");
-const phone = ref("");
-const comment = ref("");
+const step = ref<number>(1);
+const firstname = ref<string>("");
+const lastname = ref<string>("");
+const nickname = ref<string>("");
+const birthday = ref<string>("2000-01-01");
+const email = ref<string>("");
+const phone = ref<string>("");
+const comment = ref<string>("");
 const teams = ref<Teams>([]);
-const password = ref("");
-const repeatPassword = ref("");
-const hasApprovedEULA = ref(false);
+const password = ref<string>("");
+const repeatPassword = ref<string>("");
+const hasApprovedEULA = ref<boolean>(false);
 
 const rules = {
   required,
@@ -285,20 +292,24 @@ const rules = {
   password: passwordRule,
 };
 
-const token = computed(() => {
+const token = computed<string | undefined>(() => {
   const tokenParam = route.query.token;
   return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
 });
 
-const isVolunteerRegistration = computed(() => !token.value);
+const isVolunteerRegistration = computed<boolean>(() => !token.value);
 
-const cleanComment = computed(() => comment.value || undefined);
+const cleanComment = computed<string | undefined>(
+  () => comment.value || undefined,
+);
 
-const membership = computed(() =>
+const membership = computed<string>(() =>
   isVolunteerRegistration.value ? "Bénévole" : "Organisateur",
 );
 
-const cleanNickname = computed(() => nickname.value || undefined);
+const cleanNickname = computed<string | undefined>(
+  () => nickname.value || undefined,
+);
 
 const registerForm = computed<RegisterForm>(() => {
   const form = commentAction(nicknameAction(RegisterForm.init()))
@@ -314,9 +325,9 @@ const registerForm = computed<RegisterForm>(() => {
     : form.approveEndUserLicenceAgreement();
 });
 
-const birthdayDate = computed(() => new Date(birthday.value));
+const birthdayDate = computed<Date>(() => new Date(birthday.value));
 
-const comingFromTeams = computed(() => [
+const comingFromTeams: string[] = [
   BDE_CODE,
   STRASBOURG_CODE,
   KFET_CODE,
@@ -324,7 +335,7 @@ const comingFromTeams = computed(() => [
   CVL_CODE,
   TECKOS_CODE,
   TENDRESTIVAL_CODE,
-]);
+];
 
 const presentationRules = computed(() => [
   () => step.value <= 2 || rules.required(firstname.value),
@@ -349,10 +360,9 @@ const securityRules = computed(() => [
 ]);
 
 const repeatPasswordRule = computed(() => isSame(password.value));
-
 const twoTeamsMaximumRule = computed(() => maxLength(2));
 
-const isFormInvalid = computed(() => {
+const isFormInvalid = computed<boolean>(() => {
   return (
     presentationRules.value.some((rule) => rule() !== true) ||
     contactRules.value.some((rule) => rule() !== true) ||
@@ -384,7 +394,7 @@ const register = async () => {
 
 const returnToLogin = () => router.push("/login");
 
-const isEULADialogOpen = ref(false);
+const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
 </script>

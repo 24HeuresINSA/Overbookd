@@ -43,7 +43,7 @@ const rules = [isImage, isSupportedImageFile, isImageSizeWithinLimit];
 
 const me = computed(() => userStore.me);
 
-const invalidImage = computed(() =>
+const invalidImage = computed<boolean>(() =>
   rules.some((rule) => rule(profilePicture.value) !== true),
 );
 

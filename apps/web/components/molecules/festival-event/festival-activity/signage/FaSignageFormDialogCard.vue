@@ -41,7 +41,7 @@
       <v-btn
         :text="`${typeFormLabel} la signalétique`"
         prepend-icon="mdi-checkbox-marked-circle-outline"
-        :disabled="!canConfirmSignage"
+        :disabled="cantConfirmSignage"
         color="success"
         variant="elevated"
         @click="confirmSignage"
@@ -96,16 +96,16 @@ const setSignage = () => {
 };
 watch(() => props.signage, setSignage, { immediate: true });
 
-const canConfirmSignage = computed(() => {
+const cantConfirmSignage = computed<boolean>(() => {
   const hasType = type.value !== null;
   const hasAtLeastOne = quantity.value > 0;
   const hasText = text.value.trim() !== "";
   const hasSize = size.value.trim() !== "";
-  return hasType && hasAtLeastOne && hasText && hasSize;
+  return !hasType || !hasAtLeastOne || !hasText || !hasSize;
 });
 const close = () => emit("close");
 const confirmSignage = () => {
-  if (!canConfirmSignage.value) return;
+  if (cantConfirmSignage.value) return;
 
   const commentValue = comment.value?.trim();
   const signage = {

@@ -32,10 +32,10 @@ const category = defineModel<CatalogCategory | undefined>({
   required: true,
 });
 
-const { label } = defineProps({
+const { label, hideDetails } = defineProps({
   label: {
     type: String,
-    default: "Chercher une categorie",
+    default: "Chercher une catégorie",
   },
   hideDetails: {
     type: Boolean,
@@ -45,7 +45,7 @@ const { label } = defineProps({
 
 const categories = computed<CatalogCategory[]>(() => catalogStore.categories);
 
-const loading = ref(categories.value.length === 0);
+const loading = ref<boolean>(categories.value.length === 0);
 catalogStore.fetchCategories().then(() => (loading.value = false));
 
 const searchCategory = (categoryName: string | null) => {

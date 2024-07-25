@@ -70,7 +70,5 @@ const updateAdministrator = (administrator: User) => {
   const administratorId = administrator.id;
   ftStore.updateGeneral({ administratorId });
 };
-const updateTeam = (team: Team) => {
-  ftStore.updateGeneral({ team: team.code });
-};
+const updateTeam = (team: Team) => ftStore.updateGeneral({ team: team.code });
 </script>

@@ -44,9 +44,11 @@ const registrationStore = useRegistrationStore();
 
 registrationStore.fetchInviteStaffLink();
 
-const inviteStaffLink = computed(() => registrationStore.inviteStaffLink);
-const hasInviteStaffLink = computed(() => inviteStaffLink.value !== undefined);
-const expirationInviteStaffLinkDate = computed(() => {
+const inviteStaffLink = computed<URL | undefined>(
+  () => registrationStore.inviteStaffLink,
+);
+const hasInviteStaffLink = computed<boolean>(() => !!inviteStaffLink.value);
+const expirationInviteStaffLinkDate = computed<string>(() => {
   if (!inviteStaffLink.value) return "";
   return InviteStaff.isLinkExpired(inviteStaffLink.value);
 });

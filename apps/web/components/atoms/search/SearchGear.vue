@@ -63,6 +63,6 @@ const fetchGears = async () => {
 };
 
 const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
-const loading = ref(gears.value.length === 0);
+const loading = ref<boolean>(gears.value.length === 0);
 fetchGears().then(() => (loading.value = false));
 </script>

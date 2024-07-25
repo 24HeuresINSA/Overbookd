@@ -34,6 +34,8 @@
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Sauvegarder la signalisation"
         color="success"
+        size="large"
+        variant="elevated"
         :disabled="cantCreateOrUpdateSignage"
         @click="createOrUpdateSignage"
       />
@@ -48,7 +50,11 @@ import {
   isImageSizeWithinLimit,
   isSupportedImageFile,
 } from "~/utils/rules/input.rules";
-import { type SignageForm, signageTypes } from "@overbookd/signa";
+import {
+  type SignageForm,
+  type SignageType,
+  signageTypes,
+} from "@overbookd/signa";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 const catalogSignageStore = useCatalogSignageStore();
@@ -71,11 +77,11 @@ const props = defineProps({
   },
 });
 
-const name = ref(props.signage.name);
-const type = ref(props.signage.type);
+const name = ref<string>(props.signage.name);
+const type = ref<SignageType>(props.signage.type);
 const uploadedImage = ref<File[]>([]);
 
-const cantCreateOrUpdateSignage = computed(() => {
+const cantCreateOrUpdateSignage = computed<boolean>(() => {
   const isNameValid = name.value.length >= NAME_MIN_LENGTH;
   const isTypeValid = type.value !== undefined;
   const isUploadValid =
@@ -83,7 +89,7 @@ const cantCreateOrUpdateSignage = computed(() => {
 
   return !isNameValid || !isTypeValid || !isUploadValid;
 });
-const isImageValid = computed(() =>
+const isImageValid = computed<boolean>(() =>
   imageRules.every((rule) => rule(uploadedImage.value) === true),
 );
 

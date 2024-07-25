@@ -20,16 +20,16 @@
 
 <script lang="ts" setup>
 import { Point } from "@overbookd/geo-location";
-import { mapConfiguration } from "~/utils/location/map";
+import { defaultMapConfiguration } from "~/utils/location/map";
 
 const locationStore = useLocationStore();
 
-const defaultGeoLocation = Point.create(mapConfiguration.center);
+const defaultGeoLocation = Point.create(defaultMapConfiguration.center);
 
 const name = ref<string>("");
 const geoLocation = ref<Point>(defaultGeoLocation);
 
-const isNewLocationDefined = computed(() => name.value.length > 0);
+const isNewLocationDefined = computed<boolean>(() => name.value.length > 0);
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");

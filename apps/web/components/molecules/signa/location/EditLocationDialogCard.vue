@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import type { SignaLocation } from "@overbookd/signa";
+import type { GeoLocation } from "@overbookd/geo-location";
 
 const locationStore = useLocationStore();
 
@@ -31,7 +32,7 @@ const props = defineProps({
 });
 
 const name = ref<string>(props.location.name);
-const geoLocation = ref(props.location.geoLocation);
+const geoLocation = ref<GeoLocation | null>(props.location.geoLocation);
 
 const noChange = computed<boolean>(() => {
   const sameName = name.value === props.location.name || name.value === "";

@@ -21,7 +21,7 @@ import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
 
-const friends = computed(() => userStore.friends);
+const friends = computed<User[]>(() => userStore.friends);
 const loading = ref<boolean>(friends.value.length === 0);
 userStore.fetchFriends().then(() => (loading.value = false));
 

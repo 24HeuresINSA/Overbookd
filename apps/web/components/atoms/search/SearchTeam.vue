@@ -43,11 +43,11 @@ const props = defineProps({
     default: false,
   },
   list: {
-    type: Array as () => Team[] | null,
+    type: Array as PropType<Team[] | null>,
     default: () => null,
   },
 });
 
 const teamStore = useTeamStore();
-const teamList = computed(() => props.list ?? teamStore.teams);
+const teamList = computed<Team[]>(() => props.list ?? teamStore.teams);
 </script>

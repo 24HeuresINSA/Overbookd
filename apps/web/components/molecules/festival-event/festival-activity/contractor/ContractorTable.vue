@@ -77,7 +77,7 @@ const tableHeaders = computed<TableHeaders>(() => {
 
 const selectedContractor = ref<Contractor | null>(null);
 
-const isContractorDialogOpen = ref(false);
+const isContractorDialogOpen = ref<boolean>(false);
 const openAddContractorDialog = () => {
   selectedContractor.value = null;
   isContractorDialogOpen.value = true;

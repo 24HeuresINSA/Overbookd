@@ -7,7 +7,7 @@
   >
     {{ currentSnack?.message }}
     <template #actions>
-      <v-btn variant="text" @click="close">Close</v-btn>
+      <v-btn text="Close" variant="text" @click="close" />
     </template>
   </v-snackbar>
 </template>
@@ -15,15 +15,17 @@
 <script lang="ts" setup>
 import { ONE_SECOND_IN_MS } from "@overbookd/period";
 
-const isShowing = ref(false);
+const isShowing = ref<boolean>(false);
 const store = useSnackNotificationStore();
 const { queue } = storeToRefs(store);
 
-const currentSnack = computed(() => queue.value.at(0));
-const currentTimeout = computed(
+const currentSnack = computed<SnackNotification | undefined>(() =>
+  queue.value.at(0),
+);
+const currentTimeout = computed<number>(
   () => currentSnack.value?.timeout || DEFAULT_SNACK_TIMEOUT,
 );
-const currentSnackColor = computed(() =>
+const currentSnackColor = computed<string>(() =>
   currentSnack.value?.type === "error" ? "#ab2a20" : "#3c8c3f",
 );
 

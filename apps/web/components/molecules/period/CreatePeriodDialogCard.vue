@@ -34,10 +34,10 @@ import { type IProvidePeriod, Period } from "@overbookd/period";
 
 const configurationStore = useConfigurationStore();
 
-const start = ref(configurationStore.eventStartDate);
-const end = ref(configurationStore.eventStartDate);
+const start = ref<Date>(configurationStore.eventStartDate);
+const end = ref<Date>(configurationStore.eventStartDate);
 
-const displayedEventDate = computed(
+const displayedEventDate = computed<string>(
   () => `vendredi ${formatDate(configurationStore.eventStartDate)}`,
 );
 const period = computed<IProvidePeriod>(() => ({

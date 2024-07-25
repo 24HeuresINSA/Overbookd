@@ -56,22 +56,24 @@ export const useUserStore = defineStore("user", {
     mFriends: [],
   }),
   getters: {
-    me: (state) => {
+    me: (state): MyUserInformationWithPotentialyProfilePicture => {
       if (!state.loggedUser) throw new Error("Pas d'utilisateur connecté");
       return state.loggedUser;
     },
-    can: (state) => (permission?: Permission) => {
-      if (!permission) return true;
-      if (!state.loggedUser) return false;
-      return (
-        state.loggedUser.teams.includes("admin") ||
-        state.loggedUser.permissions.includes(permission) ||
-        false
-      );
-    },
+    can:
+      (state) =>
+      (permission?: Permission): boolean => {
+        if (!permission) return true;
+        if (!state.loggedUser) return false;
+        return (
+          state.loggedUser.teams.includes("admin") ||
+          state.loggedUser.permissions.includes(permission) ||
+          false
+        );
+      },
     isMemberOf:
       ({ loggedUser }) =>
-      (team: string) => {
+      (team: string): boolean => {
         if (!loggedUser) return false;
         return (
           loggedUser.teams.includes("admin") || loggedUser.teams.includes(team)

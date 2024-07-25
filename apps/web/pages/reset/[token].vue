@@ -23,13 +23,12 @@
       @keydown.enter="sendResetRequest"
     />
     <v-btn
+      text="Enregistrer le mot de passe"
       color="primary"
       size="large"
       :disabled="isNotValid"
       @click="sendResetRequest"
-    >
-      Enregistrer le mot de passe
-    </v-btn>
+    />
   </v-container>
 </template>
 
@@ -43,20 +42,17 @@ import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 definePageMeta({ layout: false });
 
-const password = ref("");
-const password2 = ref("");
-
-const rules = {
-  required,
-  password: passwordRule,
-};
-const repeatPasswordRule = computed(() => isSame(password.value));
-
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const isNotValid = computed(() => {
+const password = ref<string>("");
+const password2 = ref<string>("");
+
+const rules = { required, password: passwordRule };
+const repeatPasswordRule = computed(() => isSame(password.value));
+
+const isNotValid = computed<boolean>(() => {
   const exists = password.value && password2.value;
   const isPassword =
     rules.password(password.value) === true &&

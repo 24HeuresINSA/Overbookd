@@ -17,7 +17,12 @@
     </div>
 
     <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="800">
-      <VolunteerInformation @updated="closeVolunteerInfoDialog" />
+      <VolunteerInformation
+        v-if="selectedVolunteer"
+        :volunteer="selectedVolunteer"
+        @updated="closeVolunteerInfoDialog"
+        @close="closeVolunteerInfoDialog"
+      />
     </v-dialog>
   </div>
 </template>
@@ -42,8 +47,6 @@ type Filters = {
   excludedTeams: Team[];
 };
 
-const isVolunteerInfoDialogOpen = ref(false);
-
 const filters = reactive<Filters>({
   search: "",
   teams: [],
@@ -51,7 +54,7 @@ const filters = reactive<Filters>({
 });
 
 const volunteers = computed(() => userStore.volunteers);
-const loading = ref(volunteers.value.length === 0);
+const loading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (loading.value = false));
 
 const searchableVolunteers = computed(() => volunteers.value.map(toSearchable));
@@ -80,10 +83,9 @@ const addTeamInFilters = (team: Team) => {
   filters.teams = [...filters.teams, team];
 };
 
-const openVolunteerInfoDialog = () => {
-  isVolunteerInfoDialogOpen.value = true;
-};
-
+const selectedVolunteer = computed(() => userStore.selectedUser);
+const isVolunteerInfoDialogOpen = ref<boolean>(false);
+const openVolunteerInfoDialog = () => (isVolunteerInfoDialogOpen.value = true);
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
 };

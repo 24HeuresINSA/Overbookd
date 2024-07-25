@@ -8,17 +8,18 @@
       dense
     />
     <v-btn
-      text="Valider le paiement"
+      text="Modifier"
       color="primary"
       :disabled="isAmountInvalid"
-      @click="payContribution"
+      @click="editContribution"
     />
+    <v-btn text="Supprimer" color="error" @click="removeContribution" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
-  type Adherent,
+  type AdherentWithContribution,
   MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
 } from "@overbookd/contribution";
 
@@ -26,19 +27,23 @@ const contributionStore = useContributionStore();
 
 const { adherent } = defineProps({
   adherent: {
-    type: Object as () => Adherent,
+    type: Object as PropType<AdherentWithContribution>,
     required: true,
   },
 });
 
-const amount = ref(MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS);
+const amount = ref<number>(adherent.amount);
+
 const isAmountInvalid = computed<boolean>(() => {
   return amount.value < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
 });
 
-const payContribution = () => {
+const editContribution = () => {
   if (isAmountInvalid.value) return;
-  contributionStore.payContribution(adherent, amount.value);
+  contributionStore.editContribution(adherent, amount.value);
+};
+const removeContribution = () => {
+  contributionStore.removeContribution(adherent);
 };
 </script>
 

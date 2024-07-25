@@ -43,7 +43,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
 
-const isEULADialogOpen = ref(false);
+const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
 

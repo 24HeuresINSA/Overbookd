@@ -17,14 +17,13 @@ definePageMeta({ layout: false });
 
 const route = useRoute();
 
-const token = computed(() => {
+const token = computed<string | undefined>(() => {
   const tokenParam = route.query.token;
   return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
 });
 
-const isInvitationExpired = computed(() => {
+const isInvitationExpired = computed<boolean>(() => {
   if (!token.value) return false;
-
   const currentUrl = new URL(window.location.href);
   return InviteStaff.isLinkExpired(currentUrl) === LINK_EXPIRED;
 });

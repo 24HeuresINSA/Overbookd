@@ -28,7 +28,7 @@ import type { FestivalActivity } from "@overbookd/festival-event";
 const router = useRouter();
 const faStore = useFestivalActivityStore();
 
-const name = ref("");
+const name = ref<string>("");
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");

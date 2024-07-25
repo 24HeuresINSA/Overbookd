@@ -71,10 +71,10 @@ const props = defineProps({
   },
 });
 
-const name = ref(props.gear.name);
+const name = ref<string>(props.gear.name);
 const category = ref<CatalogCategory | undefined>(props.gear.category);
-const isPonctualUsage = ref(props.gear.isPonctualUsage);
-const isConsumable = ref(props.gear.isConsumable);
+const isPonctualUsage = ref<boolean>(props.gear.isPonctualUsage);
+const isConsumable = ref<boolean>(props.gear.isConsumable);
 
 watch(
   () => props.gear,
@@ -85,14 +85,14 @@ watch(
   },
 );
 
-const shouldUpdateCategory = computed(
-  () => category.value || props.gear.category,
+const shouldUpdateCategory = computed<boolean>(
+  () => category.value !== undefined || props.gear.category !== undefined,
 );
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const cantCreateOrUpdateGear = computed(
+const cantCreateOrUpdateGear = computed<boolean>(
   () => name.value.length < NAME_MIN_LENGTH || !category.value,
 );
 const createOrUpdateGear = async () => {

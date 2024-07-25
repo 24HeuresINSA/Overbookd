@@ -141,7 +141,7 @@ const calculatedConsumption = computed<Record<number, number>>(() => {
   return result;
 });
 
-const searchConsumer = ref("");
+const searchConsumer = ref<string>("");
 const searchableConsumers = computed<Searchable<ConsumerWithConsumption>[]>(
   () => {
     return consumers.value.map(toSearchable);

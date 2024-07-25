@@ -71,8 +71,10 @@ useHead({ title: "Config admin" });
 const configurationStore = useConfigurationStore();
 await configurationStore.fetchAll();
 
-const dateEventStart = ref(configurationStore.eventStartDate);
-const registerFormDescription = ref(configurationStore.registerFormDescription);
+const dateEventStart = ref<Date>(configurationStore.eventStartDate);
+const registerFormDescription = ref<string>(
+  configurationStore.registerFormDescription,
+);
 
 const replaceRegisterDescriptionByTemplate = () => {
   registerFormDescription.value = defaultCommitmentPresentation;

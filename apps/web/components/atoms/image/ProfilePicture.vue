@@ -25,8 +25,10 @@ const props = defineProps({
 });
 const userStore = useUserStore();
 
-const hasProfilePicture = computed(() => props.user.profilePicture !== null);
-const hasProfilePictureBlob = computed(
+const hasProfilePicture = computed<boolean>(
+  () => props.user.profilePicture !== null,
+);
+const hasProfilePictureBlob = computed<boolean>(
   () => props.user.profilePictureBlob !== undefined,
 );
 

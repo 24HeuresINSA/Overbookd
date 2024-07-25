@@ -53,7 +53,9 @@ import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
 const transactionStore = useTransactionStore();
 transactionStore.fetchMyTransactions();
 
-const transactions = computed(() => transactionStore.myTransactions);
+const transactions = computed<MyTransaction[]>(
+  () => transactionStore.myTransactions,
+);
 
 const isCredit = (transaction: MyTransaction) => {
   switch (transaction.type) {

@@ -45,7 +45,7 @@
     </v-card>
 
     <v-dialog v-model="isRecordExpenseDialogOpen" max-width="600px">
-      <RecordSharedMealExpenseForm
+      <RecordSharedMealExpenseDialogCard
         :shared="shared"
         @close="closeRecordExpenseDialog"
       />
@@ -86,7 +86,7 @@ const hasShotgun = computed<boolean>(() =>
   builder.value.hasShotgun(me.value.id),
 );
 
-const isRecordExpenseDialogOpen = ref(false);
+const isRecordExpenseDialogOpen = ref<boolean>(false);
 const openRecordExpenseDialog = () => {
   isRecordExpenseDialogOpen.value = true;
 };

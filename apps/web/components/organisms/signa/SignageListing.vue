@@ -51,23 +51,25 @@
       </v-icon>
     </template>
     <template #item.actions="{ item }">
-      <v-icon
-        size="default"
-        class="mr-2"
-        @click="openUpdateSignageDialog(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon size="default" @click="openDeleteSignageDialog(item)">
-        mdi-delete
-      </v-icon>
+      <div class="actions">
+        <v-btn
+          icon="mdi-pencil"
+          density="comfortable"
+          @click="openUpdateSignageDialog(item)"
+        />
+        <v-btn
+          icon="mdi-delete"
+          density="comfortable"
+          @click="openDeleteSignageDialog(item)"
+        />
+      </div>
     </template>
   </v-data-table>
 
   <div style="text-align: center"></div>
 
   <v-dialog v-model="isCreateOrUpdateSignageDialogOpen" width="600px">
-    <SignageForm
+    <SignageFormDialogCard
       :signage="selectedSignage"
       @close="closeCreateOrUpdateSignageDialog"
     />
@@ -78,14 +80,14 @@
     width="unset"
     height="unset"
   >
-    <SignageImageDisplay
+    <SignageImageDisplayDialogCard
       :signage="selectedSignage"
       @close="closeSignageImageDisplayDialog"
     />
   </v-dialog>
 
   <v-dialog v-model="isDeleteSignageDialogOpen" width="600px">
-    <ConfirmationMessage
+    <ConfirmationDialogCard
       confirm-color="error"
       @close="closeDeleteSignageDialog"
       @confirm="deleteSignage"
@@ -100,13 +102,12 @@
       <template #confirm-btn-content>
         <v-icon left> mdi-delete </v-icon>Supprimer
       </template>
-    </ConfirmationMessage>
+    </ConfirmationDialogCard>
   </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { TableHeaders } from "~/utils/data-table/header";
-import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { type Signage, type SignageType, signageTypes } from "@overbookd/signa";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
@@ -124,7 +125,9 @@ const isCreateOrUpdateSignageDialogOpen = ref<boolean>(false);
 const isDeleteSignageDialogOpen = ref<boolean>(false);
 const isSignageImageDisplayDialogOpen = ref<boolean>(false);
 
-const isCatalogWriter = computed(() => userStore.can(WRITE_SIGNAGE_CATALOG));
+const isCatalogWriter = computed<boolean>(() =>
+  userStore.can(WRITE_SIGNAGE_CATALOG),
+);
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Nom", value: "name" },
@@ -134,8 +137,10 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionHeader = { title: "Actions", value: "actions", sortable: false };
   return [...baseHeaders, ...(isCatalogWriter.value ? [actionHeader] : [])];
 });
-const signages = computed(() => catalogSignageStore.signages);
-const filteredSignages = computed(() =>
+const signages = computed<SignageWithPotentialImage[]>(
+  () => catalogSignageStore.signages,
+);
+const filteredSignages = computed<SignageWithPotentialImage[]>(() =>
   signages.value.filter(
     (signage) =>
       filterSignagesByName(searchName.value)(signage) &&
@@ -143,7 +148,7 @@ const filteredSignages = computed(() =>
   ),
 );
 
-const loading = ref(signages.value.length === 0);
+const loading = ref<boolean>(signages.value.length === 0);
 catalogSignageStore.fetchSignages().then(() => (loading.value = false));
 
 const openCreateSignageDialog = () => {
@@ -219,5 +224,10 @@ const filterSignagesByType = (
       margin-top: 5px;
     }
   }
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
 }
 </style>

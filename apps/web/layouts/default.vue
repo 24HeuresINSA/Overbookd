@@ -29,7 +29,9 @@ import Footer from "~/layouts/parts/footer.vue";
 
 const userStore = useUserStore();
 
-const shouldApproveEULA = computed(() => !userStore.me.hasApprovedEULA);
+const shouldApproveEULA = computed<boolean>(
+  () => !userStore.me.hasApprovedEULA,
+);
 </script>
 
 <style lang="scss">

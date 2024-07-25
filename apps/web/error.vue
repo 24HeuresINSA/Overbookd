@@ -15,7 +15,7 @@ const pageNotFoundErrorCode = 404;
 const pageNotFound = "404 Not Found";
 const otherError = "An error occurred";
 
-const isPageNotFoundError = computed(
+const isPageNotFoundError = computed<boolean>(
   () => nuxtError.value?.statusCode === pageNotFoundErrorCode,
 );
 

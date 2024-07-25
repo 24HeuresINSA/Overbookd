@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { required, isEmail, isInsaEmail } from "~/utils/rules/input.rules";
 
-const email = ref("");
+const email = ref<string>("");
 
 const authStore = useAuthStore();
 
@@ -46,7 +46,7 @@ const rules = {
   insaEmail: isInsaEmail,
 };
 
-const isNotValid = computed(() => {
+const isNotValid = computed<boolean>(() => {
   const exists = email.value;
   const isEmail =
     rules.email(email.value) === true && rules.insaEmail(email.value) === true;

@@ -93,10 +93,7 @@ const openInformationDialog = async (
 const openCalendar = (volunteerId: number) => {
   window.open(`/planning/${volunteerId}`, "_blank");
 };
-
-const propagateClickedTeam = (team: Team) => {
-  emit("click:team", team);
-};
+const propagateClickedTeam = (team: Team) => emit("click:team", team);
 </script>
 
 <style lang="scss" scoped>

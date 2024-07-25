@@ -26,7 +26,7 @@ const AUTHORS = [
   "Tristan - XL 🛵",
 ];
 
-const randomAuthor = computed(() => {
+const randomAuthor = computed<string>(() => {
   const randomIndex = Math.floor(Math.random() * AUTHORS.length);
   return AUTHORS.at(randomIndex) ?? "";
 });

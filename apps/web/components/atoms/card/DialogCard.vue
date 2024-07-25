@@ -19,13 +19,20 @@
       <slot name="content" />
     </v-card-text>
 
-    <v-card-actions class="card__actions">
+    <v-card-actions v-if="!withoutActions" class="card__actions">
       <slot name="actions" />
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
+const { withoutActions } = defineProps({
+  withoutActions: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 </script>

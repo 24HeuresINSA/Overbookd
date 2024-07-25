@@ -36,7 +36,7 @@
     />
 
     <v-dialog v-model="isSupplyDialogOpen" max-width="600">
-      <ElectricitySupplyForm
+      <ElectricitySupplyFormDialogCard
         :supply="selectedSupply"
         @add="addSupply"
         @update="updateSupply"
@@ -79,7 +79,7 @@ const headers = computed<TableHeaders>(() => {
 });
 
 const selectedSupply = ref<ElectricitySupply | null>(null);
-const isSupplyDialogOpen = ref(false);
+const isSupplyDialogOpen = ref<boolean>(false);
 const openAddSupplyDialog = () => {
   selectedSupply.value = null;
   isSupplyDialogOpen.value = true;
@@ -98,8 +98,9 @@ const getConnectionLabel = (connection: ElectricityConnection): string => {
 };
 
 const emit = defineEmits(["add", "update", "remove"]);
-const addSupply = (supply: PrepareElectricitySupplyCreation) =>
+const addSupply = (supply: PrepareElectricitySupplyCreation) => {
   emit("add", supply);
+};
 const updateSupply = (supply: ElectricitySupply) => emit("update", supply);
 const removeSupply = (supply: ElectricitySupply) => emit("remove", supply);
 </script>

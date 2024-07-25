@@ -48,7 +48,7 @@
   />
 
   <v-dialog v-model="isNewLocationDialogOpen" max-width="1200">
-    <NewLocationCard @close="closeNewLocationDialog" />
+    <CreateLocationDialogCard @close="closeNewLocationDialog" />
   </v-dialog>
 
   <v-dialog
@@ -56,7 +56,7 @@
     max-width="1200"
     @update:return-value="closeEditLocationDialog"
   >
-    <EditLocationCard
+    <EditLocationDialogCard
       v-if="locationToEdit"
       :location="locationToEdit"
       @close="closeEditLocationDialog"
@@ -68,7 +68,7 @@
     max-width="600"
     @update:return-value="closeDeleteLocationDialog"
   >
-    <ConfirmationMessage
+    <ConfirmationDialogCard
       @confirm="deleteLocation"
       @close="closeDeleteLocationDialog"
     >
@@ -80,7 +80,7 @@
         problèmes. <br />
         Es-tu sûr de vouloir continuer ?
       </template>
-    </ConfirmationMessage>
+    </ConfirmationDialogCard>
   </v-dialog>
 </template>
 

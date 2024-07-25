@@ -29,10 +29,10 @@
       </span>
     </div>
     <v-dialog v-model="askQuestion" max-width="800px">
-      <AskQuestion />
+      <AskQuestionDialogCard @close="askQuestion = false" />
     </v-dialog>
     <v-dialog v-model="reportBug" max-width="800px">
-      <BugReport />
+      <BugReportDialogCard @close="reportBug = false" />
     </v-dialog>
   </aside>
 </template>
@@ -44,14 +44,13 @@ import { pages, type Page } from "~/utils/pages/navigation";
 const userStore = useUserStore();
 const navigationBadgeStore = useNavigationBadgeStore();
 
-const askQuestion = ref(false);
-const reportBug = ref(false);
+const askQuestion = ref<boolean>(false);
+const reportBug = ref<boolean>(false);
 
-const filteredPages = computed(() =>
+const filteredPages = computed<Page[]>(() =>
   pages.filter(({ permission, mobileSupport }) => {
     const isSupportedByDevice = isDesktop() || mobileSupport;
     const hasAccess = userStore.can(permission);
-
     return isSupportedByDevice && hasAccess;
   }),
 );

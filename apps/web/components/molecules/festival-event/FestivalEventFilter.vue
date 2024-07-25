@@ -73,7 +73,7 @@ const { identifier } = defineProps({
   },
 });
 
-const isActivity = computed(() => identifier === "FA");
+const isActivity = computed<boolean>(() => identifier === "FA");
 
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }

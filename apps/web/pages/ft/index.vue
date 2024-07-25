@@ -64,11 +64,11 @@
   />
 
   <v-dialog v-model="isNewTaskDialogOpen" width="600">
-    <NewFtCard @close="closeNewTaskDialog" />
+    <CreateFtDialogCard @close="closeNewTaskDialog" />
   </v-dialog>
 
   <v-dialog v-model="isRemovalDialogOpen" max-width="600">
-    <ConfirmationMessage
+    <ConfirmationDialogCard
       confirm-color="error"
       @close="closeRemovalDialog"
       @confirm="removeTask"
@@ -86,7 +86,7 @@
       <template #confirm-btn-content>
         <v-icon left> mdi-delete </v-icon>Supprimer
       </template>
-    </ConfirmationMessage>
+    </ConfirmationDialogCard>
   </v-dialog>
 </template>
 

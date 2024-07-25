@@ -1,8 +1,8 @@
 <template>
-  <v-card>
-    <v-card-title>Signaler un bug ou feature request</v-card-title>
-    <v-card-text>
-      <h5>
+  <DialogCard @close="close">
+    <template #title>Signaler un bug ou feature request</template>
+    <template #content>
+      <p>
         Pour signaler un bug, envoie un mail à <br />
         <code>{{ bugReportEmail }}</code>
         <br />
@@ -13,9 +13,7 @@
         copier l'adresse mail et le template. <br />
         ⚠️ Le formulaire ci-dessous permet de remplir le modèle. Utilise le bien
         pour ton mail, cela nous aide vraiment pour notre travail. Merci 🙏
-      </h5>
-    </v-card-text>
-    <v-card-text>
+      </p>
       <v-textarea
         v-model="expectedBehaviour"
         class="expected-behaviour-input"
@@ -38,40 +36,44 @@
         no-resize
         rows="4"
       />
-    </v-card-text>
-    <v-card-actions id="actions">
-      <v-btn id="copy-email-button" variant="elevated" @click="copyEmail">
-        Copier l'adresse mail
-      </v-btn>
+    </template>
+    <template #actions>
+      <v-btn
+        id="copy-email-button"
+        text="Copier l'adresse mail"
+        variant="elevated"
+        @click="copyEmail"
+      />
       <v-btn
         id="copy-template-button"
+        text="Copier le modèle"
         variant="elevated"
         @click="copyIssueTemplate"
-      >
-        Copier le modèle
-      </v-btn>
+      />
       <v-btn
         id="send-email-button"
+        text="Envoyer le mail"
         variant="elevated"
         :href="`mailto:${bugReportEmail}`"
         @click="copyIssueTemplate"
-      >
-        Envoyer le mail
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      />
+    </template>
+  </DialogCard>
 </template>
 
 <script lang="ts" setup>
 import { BugReport } from "~/utils/bug-report/bug-report.constant";
 
-const expectedBehaviour = ref("");
-const actualBehaviour = ref("");
-const stepsToReproduce = ref("");
+const expectedBehaviour = ref<string>("");
+const actualBehaviour = ref<string>("");
+const stepsToReproduce = ref<string>("");
 
 const bugReportEmail =
   "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com";
 const stepsToReproducePlaceholder = "- Étape 1\n- Étape 2\n...";
+
+const emit = defineEmits(["close"]);
+const close = () => emit("close");
 
 const copyEmail = async () => {
   await navigator.clipboard.writeText(bugReportEmail);
@@ -91,20 +93,12 @@ const copyIssueTemplate = async () => {
 </script>
 
 <style scoped lang="scss">
-#actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  align-items: center;
-  justify-content: center;
+#copy-email-button,
+#copy-template-button {
+  background-color: orange;
+}
 
-  #copy-email-button,
-  #copy-template-button {
-    background-color: orange;
-  }
-
-  #send-email-button {
-    background-color: deepskyblue;
-  }
+#send-email-button {
+  background-color: deepskyblue;
 }
 </style>

@@ -88,7 +88,7 @@
     </v-dialog>
 
     <v-dialog v-model="isResetApprovalsDialogOpen" max-width="600">
-      <ResetApprovalsCard
+      <ResetApprovalsDialogCard
         @confirm="approveResetAlert"
         @close="declineResetApprovalsDialog"
       />

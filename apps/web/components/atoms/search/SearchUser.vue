@@ -44,7 +44,7 @@ const props = defineProps({
     default: false,
   },
   list: {
-    type: Array as () => User[] | null,
+    type: Array as PropType<User[] | null>,
     default: () => null,
   },
 });

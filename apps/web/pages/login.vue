@@ -42,28 +42,28 @@
           </v-row>
           <v-row class="ctas">
             <v-btn
+              text="Connexion"
               color="primary"
               elevation="2"
               rounded="xl"
               class="btn btn-primary"
               @click="login"
-            >
-              connexion
-            </v-btn>
+            />
             <v-btn
+              text="S'inscrire"
               color="secondary"
               elevation="2"
               to="/register"
               rounded="xl"
               class="btn btn-secondary"
-            >
-              s'inscrire
-            </v-btn>
+            />
           </v-row>
           <v-row class="ctas">
-            <v-btn class="btn btn-tertiary" @click="isForgotDialogOpen = true">
-              Mot de passe oublié ?
-            </v-btn>
+            <v-btn
+              text="Mot de passe oublié ?"
+              class="btn btn-tertiary"
+              @click="isForgotDialogOpen = true"
+            />
             <v-btn class="btn btn-tertiary" @click="isHelpDialogOpen = true">
               Un problème
               <span class="desktop">&nbsp;lors de l'inscription</span> ?
@@ -75,11 +75,11 @@
   </div>
 
   <v-dialog v-model="isForgotDialogOpen" max-width="800">
-    <ForgotPasswordCard @close="isForgotDialogOpen = false" />
+    <ForgotPasswordDialogCard @close="isForgotDialogOpen = false" />
   </v-dialog>
 
   <v-dialog v-model="isHelpDialogOpen" max-width="800">
-    <LoginHelp @close="isHelpDialogOpen = false" />
+    <LoginHelpDialogCard @close="isHelpDialogOpen = false" />
   </v-dialog>
 </template>
 
@@ -151,8 +151,8 @@ const credentials = ref({
   email: "",
   password: "",
 });
-const isForgotDialogOpen = ref(false);
-const isHelpDialogOpen = ref(false);
+const isForgotDialogOpen = ref<boolean>(false);
+const isHelpDialogOpen = ref<boolean>(false);
 
 const login = async () => {
   if (!credentials.value.email.trim() || !credentials.value.password.trim()) {

@@ -38,8 +38,8 @@ import {
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
 import type { TableHeaders } from "~/utils/data-table/header";
+import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 
-const router = useRouter();
 const faStore = useFestivalActivityStore();
 
 const headers: TableHeaders = [
@@ -57,19 +57,5 @@ const getStatusColor = ({ status }: FestivalTaskChild): string => {
 };
 const getStatusLabel = ({ status }: FestivalTaskChild): FtStatusLabel => {
   return ftStatusLabels.get(status) ?? BROUILLON;
-};
-
-const openTaskInNewTab = (
-  _: PointerEvent,
-  target: { item: FestivalTaskChild },
-) => {
-  const { id } = { ...target.item };
-  const activityRoute = router.resolve({ path: `/ft/${id}` });
-  window.open(activityRoute.href, "_blank");
-};
-const openTask = (event: PointerEvent, target: { item: FestivalTaskChild }) => {
-  if (event.ctrlKey) return openTaskInNewTab(event, target);
-  const { id } = { ...target.item };
-  router.push({ path: `/ft/${id}` });
 };
 </script>

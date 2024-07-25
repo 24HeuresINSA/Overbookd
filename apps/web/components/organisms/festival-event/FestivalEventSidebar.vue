@@ -49,7 +49,7 @@
     </div>
 
     <v-dialog v-model="isRejectDialogOpen" max-width="600">
-      <AskRejectReasonCard
+      <AskRejectReasonDialogCard
         :identifier="festivalEvent"
         @reject="reject"
         @close="closeRejectDialog"

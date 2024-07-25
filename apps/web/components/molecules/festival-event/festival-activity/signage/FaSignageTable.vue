@@ -44,7 +44,7 @@
     />
 
     <v-dialog v-model="isSignageDialogOpen" max-width="600">
-      <FaSignageForm
+      <FaSignageFormDialogCard
         :signage="selectedSignage"
         @add="addSignage"
         @update="updateSignage"
@@ -65,8 +65,6 @@ import {
 } from "@overbookd/festival-event";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
 import type { TableHeaders } from "~/utils/data-table/header";
-
-const emit = defineEmits(["add", "update", "remove"]);
 
 const faStore = useFestivalActivityStore();
 
@@ -96,7 +94,7 @@ const tableHeaders = computed<TableHeaders>(() => {
 
 const selectedSignage = ref<FaSignage | null>(null);
 
-const isSignageDialogOpen = ref(false);
+const isSignageDialogOpen = ref<boolean>(false);
 const openAddSignageDialog = () => {
   selectedSignage.value = null;
   isSignageDialogOpen.value = true;
@@ -110,20 +108,15 @@ const closeDialog = () => {
   selectedSignage.value = null;
 };
 
-const addSignage = (signage: FaSignage) => {
-  emit("add", signage);
-};
-const updateSignage = (signage: FaSignage) => {
-  emit("update", signage);
-};
-const removeSignage = (signage: FaSignage) => {
-  emit("remove", signage);
-};
+const emit = defineEmits(["add", "update", "remove"]);
+const addSignage = (signage: FaSignage) => emit("add", signage);
+const updateSignage = (signage: FaSignage) => emit("update", signage);
+const removeSignage = (signage: FaSignage) => emit("remove", signage);
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
-const cantLinkCatalogItem = computed(() => {
+const cantLinkCatalogItem = computed<boolean>(() => {
   if (isDraft(selectedActivity.value)) return true;
   const isSignaMember = useUserStore().isMemberOf(signa);
   const isAlreadyApproved = selectedActivity.value.reviews.signa === APPROVED;

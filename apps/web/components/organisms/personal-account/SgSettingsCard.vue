@@ -89,7 +89,7 @@
     />
 
     <v-dialog v-model="isBarrelsDialogOpen" width="800">
-      <BarrelsForm @close="closeBarrelsDialog" />
+      <ManageBarrelsDialogCard @close="closeBarrelsDialog" />
     </v-dialog>
   </v-card>
 </template>
@@ -143,13 +143,15 @@ const totalConsumptions = computed<number>(() => {
   );
 });
 
-const barrels = computed(() => personalAccountStore.barrels);
+const barrels = computed<ConfiguredBarrel[]>(
+  () => personalAccountStore.barrels,
+);
 const updateTotalPriceByBarrel = (barrel: ConfiguredBarrel) => {
   const barrelCopy = { ...barrel };
   totalPrice.value = barrelCopy.price;
 };
 
-const isBarrelsDialogOpen = ref(false);
+const isBarrelsDialogOpen = ref<boolean>(false);
 const openBarrelsDialog = () => (isBarrelsDialogOpen.value = true);
 const closeBarrelsDialog = () => (isBarrelsDialogOpen.value = false);
 
