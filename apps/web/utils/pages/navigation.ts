@@ -14,6 +14,7 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   READ_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
+  WRITE_INVENTORY,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -265,7 +266,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["catalogue-matos", "catalogue-materiel"],
   },
-  /*{
+  {
     icon: "mdi-warehouse",
     title: "Inventaire",
     permission: WRITE_INVENTORY,
@@ -275,7 +276,7 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["inventaire", "matos", "materiel"],
   },
-  {
+  /*{
     icon: "mdi-chart-histogram",
     title: "Récap Matos",
     permission: VIEW_GEAR_DASHBOARD,
