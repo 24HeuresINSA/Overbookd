@@ -27,7 +27,7 @@ export type CreateParticipation = Omit<Participation, "participant"> & {
   participantId: number;
 };
 
-type CharismaEventDefinition = {
+export type CharismaEventDefinition = {
   name: string;
   charismaPerHour: number;
   eventDate: Date;

@@ -74,6 +74,13 @@ export type { Task as PlanningTask } from "./planning/task.js";
 export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
 
+// CHARISMA
+export type {
+  CharismaPeriod,
+  SavedCharismaPeriod,
+} from "./charisma/charisma-period.js";
+export type { CreateCharismaEventParticipationsForm } from "./charisma/charisma-event.js";
+
 export { JSON, CSV, ICAL, PDF } from "./mime.js";
 export type { AvailabilityForm } from "./volunteer-availability.js";
 export type { EnrollableStaff, EnrollableVolunteer } from "./registration.js";
@@ -102,7 +109,6 @@ export type {
   HelpingVolunteerAssignment,
   HelpingVolunteer,
 } from "./need-help.js";
-export type { CharismaPeriod, SavedCharismaPeriod } from "./charisma-period.js";
 export type { CreatePermissionForm, Permission } from "./permission.js";
 export type { CreateLocation } from "./location.js";
 export type { UserAccess, UserCredentials } from "./auth.js";

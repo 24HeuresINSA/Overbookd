@@ -36,6 +36,7 @@ import { SharedMealModule } from "./shared-meal/shared-meal.module";
 import { LogisticModule } from "./logistic/logistic.module";
 import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
+import { CharismaEventModule } from "./charisma-event/charisma-event.module";
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { PlanningModule } from "./user/planning/planning.module";
     LocationModule,
     PermissionModule,
     CharismaPeriodModule,
+    CharismaEventModule,
     VolunteerAvailabilityModule,
     FriendModule,
     AssignmentModule,

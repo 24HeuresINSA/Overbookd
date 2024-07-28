@@ -35,6 +35,7 @@ import {
   PURCHASE_GEARS,
   BORROW_GEARS,
   SYNC_PLANNING,
+  MANAGE_CHARISMA_EVENTS,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -388,6 +389,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: MANAGE_CHARISMA_EVENTS,
+    description: "Peut gérer les événements charismatiques",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "bureau" }],
       },
     },
   },

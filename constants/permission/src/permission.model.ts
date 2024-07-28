@@ -43,6 +43,7 @@ import {
   BORROW_GEARS,
   FORCE_WRITE_FT,
   SYNC_PLANNING,
+  MANAGE_CHARISMA_EVENTS,
 } from "./permissions.js";
 
 export type Permission =
@@ -89,4 +90,5 @@ export type Permission =
   | typeof OFFER_SHARED_MEAL
   | typeof SHOTGUN_SHARED_MEAL
   | typeof PURCHASE_GEARS
-  | typeof BORROW_GEARS;
+  | typeof BORROW_GEARS
+  | typeof MANAGE_CHARISMA_EVENTS;

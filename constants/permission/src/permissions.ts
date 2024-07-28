@@ -44,6 +44,7 @@ export const OFFER_SHARED_MEAL = "offer-shared-meal";
 export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
 export const PURCHASE_GEARS = "purchase-gears";
 export const BORROW_GEARS = "borrow-gears";
+export const MANAGE_CHARISMA_EVENTS = "manage-charisma-events";
 
 const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -90,6 +91,7 @@ const permissions = [
   SHOTGUN_SHARED_MEAL,
   PURCHASE_GEARS,
   BORROW_GEARS,
+  MANAGE_CHARISMA_EVENTS,
 ];
 
 export function isPermission(permission: string): permission is Permission {

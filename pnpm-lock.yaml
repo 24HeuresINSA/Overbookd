@@ -606,6 +606,9 @@ importers:
       '@overbookd/assignment':
         specifier: workspace:*
         version: link:../../domains/assignment
+      '@overbookd/charisma':
+        specifier: workspace:*
+        version: link:../../domains/charisma
       '@overbookd/festival-event':
         specifier: workspace:*
         version: link:../../domains/festival-event

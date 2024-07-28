@@ -1,6 +1,6 @@
 import { User } from "@overbookd/user";
 
-class CharismaEventError extends Error {}
+export class CharismaEventError extends Error {}
 
 const INVALID_NAME_ERROR_MESSAGE = "Le nom de l'événement n'est pas valide";
 
