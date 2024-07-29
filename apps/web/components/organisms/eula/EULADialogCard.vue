@@ -4,7 +4,7 @@
       <v-btn icon="mdi-close" @click="close" />
       <v-toolbar-title>Conditions Générales d'Utilisation</v-toolbar-title>
     </v-toolbar>
-    <v-card-subtitle>En vigueur au 15/07/2024</v-card-subtitle>
+    <v-card-subtitle>En vigueur au 29/07/2024</v-card-subtitle>
     <v-card-text>
       <p>
         Les présentes conditions générales d'utilisation (dites «
@@ -32,9 +32,9 @@
       <h2>Article 1 : Les mentions légales</h2>
       <p>
         L'édition du site {{ LINK }} est assurée par l’association du Club des
-        24 heures de l'INSA, régie par la du 1er juillet 1901, immatriculée au
-        RCS de Villeurbanne sous le numéro 32292767400018, dont le siège social
-        est situé au 10 avenue Albert Einstein 69100 Villeurbanne.
+        24 heures de l'INSA, régie par la loi du 1er juillet 1901, immatriculée
+        au RCS de Villeurbanne sous le numéro 32292767400018, dont le siège
+        social est situé au 20 avenue Albert Einstein 69100 Villeurbanne.
         <br />
         Numéro de téléphone : <a href="tel:+33472437000">+33 4 72 43 70 00</a>
         <br />
@@ -167,7 +167,7 @@
         <br />
         Le site {{ LINK }} ne peut être tenu pour responsable d’éventuels virus
         qui pourraient infecter l’ordinateur ou tout matériel informatique de
-        l’Internaute, suite à une utilisation, à l’accès, ou au téléchargement
+        l’Utilisateur, suite à une utilisation, à l’accès, ou au téléchargement
         provenant de ce site.
       </p>
       <p>
@@ -239,8 +239,8 @@
       <h2>ARTICLE 9 : Droit applicable et juridiction compétente</h2>
       <p>
         La législation française s'applique au présent contrat. En cas d'absence
-        de résolution amiable d'un litige né entre les parties, les tribunaux
-        français seront seuls compétents pour en connaître.
+        de résolution amiable d'un litige né entre les parties, les tribunaux de
+        Lyon seront seuls compétents pour en connaître.
         <br />
         Pour toute question relative à l’application des présentes CGU, vous
         pouvez joindre l’éditeur aux coordonnées inscrites à l’ARTICLE 1.

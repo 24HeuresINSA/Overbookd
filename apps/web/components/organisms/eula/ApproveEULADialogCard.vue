@@ -8,7 +8,7 @@
       à jour ! Pour continuer à utiliser ton site préféré, tu dois les accepter.
       <br />
       Consulte les en cliquant juste
-      <span class="gcu-link" @click="openEULADialog">ICI</span>.
+      <span class="eula-link" @click="openEULADialog">ICI</span>.
       <br />
       Approuver les CGU signifie que tu reconnais les avoir lues, comprises et
       acceptées.
