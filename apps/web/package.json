@@ -62,7 +62,7 @@
     "chart.js": "4.4.3",
     "csv-parse": "5.5.6",
     "jwt-decode": "4.0.0",
-    "pinia": "2.1.7",
+    "pinia": "2.2.0",
     "sass": "1.77.8",
     "vite-plugin-vuetify": "2.0.3",
     "vue-chartjs": "5.3.1",
@@ -72,13 +72,13 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "0.3.13",
-    "@pinia/nuxt": "0.5.1",
+    "@pinia/nuxt": "0.5.2",
     "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.27.0",
     "nuxt": "3.12.4",
-    "vue": "3.4.33",
+    "vue": "3.4.34",
     "vue-router": "4.4.0",
-    "vue-tsc": "2.0.26"
+    "vue-tsc": "2.0.29"
   },
   "engines": {
     "node": "20.15.1",
