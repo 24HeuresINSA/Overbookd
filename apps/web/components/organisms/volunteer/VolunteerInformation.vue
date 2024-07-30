@@ -180,9 +180,10 @@ const rules = {
 const selectedVolunteerFriends = computed<User[]>(
   () => userStore.selectedUserFriends,
 );
-const me = computed(() => userStore.me);
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
-const isMe = computed<boolean>(() => me.value.id === volunteerId.value);
+const isMe = computed<boolean>(
+  () => userStore.loggedUser?.id === volunteerId.value,
+);
 
 const assignableTeams = computed<Team[]>(() => {
   const teamsToAdd = teamStore.teams.filter(

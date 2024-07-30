@@ -1,38 +1,40 @@
 <template>
   <section class="map-section">
     <div class="map-container">
-      <l-map
-        id="location-map"
-        :zoom="map.zoom"
-        :center="map.center"
-        :use-global-leaflet="false"
-      >
-        <l-tile-layer :url="map.url" :attribution="map.attribution" />
-        <l-marker
-          v-for="(location, index) in points"
-          :key="`point-${index}`"
-          :lat-lng="location.geoLocation.coordinates"
-          @click="showLocation(location)"
+      <client-only>
+        <l-map
+          id="location-map"
+          :zoom="map.zoom"
+          :center="map.center"
+          :use-global-leaflet="false"
         >
-          <l-tooltip>{{ location.name }}</l-tooltip>
-        </l-marker>
-        <l-polyline
-          v-for="(location, index) in roads"
-          :key="`road-${index}`"
-          :lat-lngs="location.geoLocation.coordinates"
-          @click="showLocation(location)"
-        >
-          <l-tooltip>{{ location.name }}</l-tooltip>
-        </l-polyline>
-        <l-polygon
-          v-for="(location, index) in areas"
-          :key="`area-${index}`"
-          :lat-lngs="location.geoLocation.coordinates"
-          @click="showLocation(location)"
-        >
-          <l-tooltip>{{ location.name }}</l-tooltip>
-        </l-polygon>
-      </l-map>
+          <l-tile-layer :url="map.url" :attribution="map.attribution" />
+          <l-marker
+            v-for="(location, index) in points"
+            :key="`point-${index}`"
+            :lat-lng="location.geoLocation.coordinates"
+            @click="showLocation(location)"
+          >
+            <l-tooltip>{{ location.name }}</l-tooltip>
+          </l-marker>
+          <l-polyline
+            v-for="(location, index) in roads"
+            :key="`road-${index}`"
+            :lat-lngs="location.geoLocation.coordinates"
+            @click="showLocation(location)"
+          >
+            <l-tooltip>{{ location.name }}</l-tooltip>
+          </l-polyline>
+          <l-polygon
+            v-for="(location, index) in areas"
+            :key="`area-${index}`"
+            :lat-lngs="location.geoLocation.coordinates"
+            @click="showLocation(location)"
+          >
+            <l-tooltip>{{ location.name }}</l-tooltip>
+          </l-polygon>
+        </l-map>
+      </client-only>
     </div>
   </section>
 </template>

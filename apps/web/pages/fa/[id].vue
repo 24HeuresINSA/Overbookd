@@ -30,10 +30,12 @@ const selectedActivity = computed<FestivalActivity>(
 );
 const activityIdFromUrl = computed<number>(() => +route.params.id);
 
-await faStore.fetchActivity(activityIdFromUrl.value);
-if (selectedActivity.value.id !== activityIdFromUrl.value) {
-  router.push({ path: "/fa" });
-}
+onMounted(async () => {
+  await faStore.fetchActivity(activityIdFromUrl.value);
+  if (selectedActivity.value.id !== activityIdFromUrl.value) {
+    router.push({ path: "/fa" });
+  }
+});
 
 useHead({
   title: `FA ${selectedActivity.value.id} - ${selectedActivity.value.general.name}`,

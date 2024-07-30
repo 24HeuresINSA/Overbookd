@@ -110,7 +110,7 @@ export const useTransactionStore = defineStore("transaction", {
 
     _getLoggedUserId(): number {
       const userStore = useUserStore();
-      return userStore.me.id;
+      return userStore.loggedUser?.id ?? 0;
     },
 
     async _fetchMyInformation() {

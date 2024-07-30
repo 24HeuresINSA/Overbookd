@@ -29,7 +29,7 @@ export const useVolunteerAvailabilityStore = defineStore(
 
       async fetchVolunteerAvailabilities(userId: number) {
         const userStore = useUserStore();
-        this.currentCharisma = userStore.me.charisma;
+        this.currentCharisma = userStore.loggedUser?.charisma ?? 0;
 
         const res = await repo.getVolunteerAvailabilities(userId);
         if (isHttpError(res)) return;

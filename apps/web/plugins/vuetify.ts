@@ -3,7 +3,7 @@ import { fr } from "vuetify/locale";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
-    ssr: false,
+    ssr: true,
     locale: {
       locale: "fr",
       messages: { fr },

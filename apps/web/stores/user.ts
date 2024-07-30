@@ -20,6 +20,7 @@ import type {
   Consumer,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
+import { jwtDecode } from "jwt-decode";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
@@ -37,6 +38,8 @@ type State = {
   friends: User[];
   mFriends: User[];
 };
+
+type Token = { teams: string[]; permissions: Permission[] };
 
 export const useUserStore = defineStore("user", {
   state: (): State => ({
@@ -56,20 +59,18 @@ export const useUserStore = defineStore("user", {
     mFriends: [],
   }),
   getters: {
-    me: (state): MyUserInformationWithPotentialyProfilePicture => {
-      if (!state.loggedUser) throw new Error("Pas d'utilisateur connecté");
-      return state.loggedUser;
-    },
     can:
-      (state) =>
+      () =>
       (permission?: Permission): boolean => {
         if (!permission) return true;
-        if (!state.loggedUser) return false;
-        return (
-          state.loggedUser.teams.includes("admin") ||
-          state.loggedUser.permissions.includes(permission) ||
-          false
-        );
+
+        const accessToken = useCookie("accessToken");
+        if (!accessToken.value) return false;
+        const decodedToken: Token = jwtDecode(accessToken.value);
+
+        const isAdmin = decodedToken.teams.includes("admin");
+        const hasPermission = decodedToken.permissions.includes(permission);
+        return isAdmin || hasPermission;
       },
     isMemberOf:
       ({ loggedUser }) =>
@@ -107,7 +108,8 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.approveEndUserLicenceAgreement();
       if (isHttpError(res)) return;
       sendSuccessNotification("CGU approuvées ! 🎉");
-      this.loggedUser = { ...this.me, hasApprovedEULA: true };
+      if (!this.loggedUser) return;
+      this.loggedUser = { ...this.loggedUser, hasApprovedEULA: true };
     },
 
     clearLoggedUser() {
@@ -146,7 +148,8 @@ export const useUserStore = defineStore("user", {
     },
 
     async fetchMyFriends() {
-      const res = await UserRepository.getUserFriends(this.me.id);
+      if (!this.loggedUser) return;
+      const res = await UserRepository.getUserFriends(this.loggedUser.id);
       if (isHttpError(res)) return;
       this.mFriends = res;
     },
@@ -203,7 +206,7 @@ export const useUserStore = defineStore("user", {
 
       const updated = castUserPersonalDataWithDate(res);
       this._updateUserInformationInLists(updated);
-      if (this.selectedUser?.id === this.me.id) this.fetchUser();
+      if (this.selectedUser?.id === this.loggedUser?.id) this.fetchUser();
     },
 
     async updateMyProfile(profile: Profile) {
@@ -236,7 +239,7 @@ export const useUserStore = defineStore("user", {
       if (this.selectedUser?.id !== userId) return;
       this.selectedUser = { ...this.selectedUser, teams: res };
       this._updateUserInformationInLists(this.selectedUser);
-      if (userId === this.me.id) this.fetchMyInformation();
+      if (userId === this.loggedUser?.id) this.fetchMyInformation();
     },
 
     async removeTeamFromUser(userId: number, team: string) {
@@ -249,7 +252,7 @@ export const useUserStore = defineStore("user", {
         (t) => t !== team,
       );
       this._updateUserInformationInLists(this.selectedUser);
-      if (userId === this.me.id) this.fetchMyInformation();
+      if (userId === this.loggedUser?.id) this.fetchMyInformation();
     },
 
     async findUserById(id: number) {

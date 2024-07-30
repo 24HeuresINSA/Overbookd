@@ -2,11 +2,11 @@
   <div class="user-card">
     <ProfilePictureDialog v-model="isProfilePictureDialogOpen" />
     <v-card>
-      <v-card-text class="user-card__content">
+      <v-card-text v-if="loggedUser" class="user-card__content">
         <div class="picture">
-          <ProfilePicture :user="me" class="profilePicture" />
+          <ProfilePicture :user="loggedUser" class="profilePicture" />
           <v-btn
-            :text="`📸 ${me.profilePicture ? 'Changer' : 'Ajouter'}`"
+            :text="`📸 ${loggedUser.profilePicture ? 'Changer' : 'Ajouter'}`"
             @click="isProfilePictureDialogOpen = true"
           />
         </div>
@@ -40,7 +40,7 @@
         <div class="team-and-stats">
           <div class="teams">
             <TeamChip
-              v-for="team of me.teams"
+              v-for="team of loggedUser.teams"
               :key="team"
               :team="team"
               with-name
@@ -48,12 +48,12 @@
           </div>
           <p>
             <v-icon>{{ charismaIcon }}</v-icon>
-            {{ me.charisma }} points de charisme
+            {{ loggedUser.charisma }} points de charisme
           </p>
           <p><v-icon>mdi-account-multiple</v-icon> {{ friendsCount }} amis</p>
           <p>
             <v-icon>mdi-account-hard-hat</v-icon>
-            {{ me.tasksCount }} tâches affectées
+            {{ loggedUser.tasksCount }} tâches affectées
           </p>
           <v-card class="planning-preference elevation-1" outlined>
             <v-btn-toggle
@@ -132,7 +132,7 @@ const preferenceStore = usePreferenceStore();
 userStore.setMyProfilePicture();
 preferenceStore.fetchMyPreferences();
 
-const me = computed(() => userStore.me);
+const loggedUser = computed(() => userStore.loggedUser);
 const friendsCount = computed<number>(() => userStore.mFriends.length);
 const preferences = computed<Preference | null>(
   () => preferenceStore.myPreferences,
@@ -143,16 +143,18 @@ const hasFilledPreferences = computed<boolean>(
     preferences.value?.paperPlanning !== null,
 );
 const charismaIcon = computed<string>(() =>
-  me.value.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon,
+  loggedUser.value?.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon,
 );
 
-const firstname = ref<string>(me.value.firstname);
-const lastname = ref<string>(me.value.lastname);
-const nickname = ref<string | null | undefined>(me.value.nickname);
-const birthday = ref<string>(formatLocalDate(me.value.birthdate));
-const email = ref<string>(me.value.email);
-const phone = ref<string>(me.value.phone);
-const comment = ref<string | null | undefined>(me.value.comment);
+const firstname = ref<string>(loggedUser.value?.firstname ?? "");
+const lastname = ref<string>(loggedUser.value?.lastname ?? "");
+const nickname = ref<string | null | undefined>(loggedUser.value?.nickname);
+const birthday = ref<string>(
+  loggedUser.value ? formatLocalDate(loggedUser.value.birthdate) : "",
+);
+const email = ref<string>(loggedUser.value?.email ?? "");
+const phone = ref<string>(loggedUser.value?.phone ?? "");
+const comment = ref<string | null | undefined>(loggedUser.value?.comment);
 
 const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
 const isProfilePictureDialogOpen = ref<boolean>(false);

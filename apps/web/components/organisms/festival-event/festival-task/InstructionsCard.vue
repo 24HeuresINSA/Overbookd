@@ -139,7 +139,7 @@ const instructions = computed<FestivalTaskWithConflicts["instructions"]>(
 
 const contact = ref<Contact | undefined>();
 
-await userStore.fetchAdherents();
+userStore.fetchAdherents();
 const adherents = computed<User[]>(() => userStore.adherents);
 const potentialContacts = computed<User[]>(() => {
   return adherents.value.filter((adherent) => {

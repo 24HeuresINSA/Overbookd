@@ -14,21 +14,23 @@
     />
     <v-lazy>
       <div class="map">
-        <l-map
-          id="location-map-editor"
-          :zoom="zoom"
-          :center="center"
-          :use-global-leaflet="false"
-          @click="userAction"
-          @contextmenu="switchEditing"
-          @mousemove="userHover"
-          @update:zoom="updateZoom"
-        >
-          <l-tile-layer :url="url" :attribution="attribution" />
-          <l-marker v-if="isPointEdition" :lat-lng="coordinates" />
-          <l-polyline v-if="isRoadEdition" :lat-lngs="coordinates" />
-          <l-polygon v-if="isAreaEdition" :lat-lngs="coordinates" />
-        </l-map>
+        <client-only>
+          <l-map
+            id="location-map-editor"
+            :zoom="zoom"
+            :center="center"
+            :use-global-leaflet="false"
+            @click="userAction"
+            @contextmenu="switchEditing"
+            @mousemove="userHover"
+            @update:zoom="updateZoom"
+          >
+            <l-tile-layer :url="url" :attribution="attribution" />
+            <l-marker v-if="isPointEdition" :lat-lng="coordinates" />
+            <l-polyline v-if="isRoadEdition" :lat-lngs="coordinates" />
+            <l-polygon v-if="isAreaEdition" :lat-lngs="coordinates" />
+          </l-map>
+        </client-only>
       </div>
     </v-lazy>
     <div class="editor-container">

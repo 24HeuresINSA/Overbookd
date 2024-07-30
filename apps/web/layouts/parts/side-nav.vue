@@ -38,18 +38,22 @@
 </template>
 
 <script lang="ts" setup>
-import { isDesktop } from "~/utils/device/device.utils";
 import { pages, type Page } from "~/utils/pages/navigation";
 
+const deviceStore = useDeviceStore();
 const userStore = useUserStore();
 const navigationBadgeStore = useNavigationBadgeStore();
+
+onMounted(() => {
+  navigationBadgeStore.fetchAll();
+});
 
 const askQuestion = ref<boolean>(false);
 const reportBug = ref<boolean>(false);
 
 const filteredPages = computed<Page[]>(() =>
   pages.filter(({ permission, mobileSupport }) => {
-    const isSupportedByDevice = isDesktop() || mobileSupport;
+    const isSupportedByDevice = deviceStore.isDesktop || mobileSupport;
     const hasAccess = userStore.can(permission);
     return isSupportedByDevice && hasAccess;
   }),

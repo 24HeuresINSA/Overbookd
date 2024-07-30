@@ -33,7 +33,7 @@ const userStore = useUserStore();
 
 const isTransferDialogOpen = ref<boolean>(false);
 const balance = computed<string>(() =>
-  Money.cents(userStore.me.balance).toString(),
+  Money.cents(userStore.loggedUser?.balance ?? 0).toString(),
 );
 </script>
 

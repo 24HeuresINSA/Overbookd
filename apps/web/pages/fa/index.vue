@@ -143,7 +143,7 @@ const activities = computed<PreviewFestivalActivity[]>(
 );
 const reviewers = computed<Team[]>(() => teamStore.faReviewers);
 
-await teamStore.fetchFaReviewers();
+teamStore.fetchFaReviewers();
 const loading = ref<boolean>(activities.value.length === 0);
 faStore.fetchAllActivities().then(() => (loading.value = false));
 

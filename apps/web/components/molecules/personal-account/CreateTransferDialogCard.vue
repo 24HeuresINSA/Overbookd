@@ -39,7 +39,7 @@ const isTransferValid = computed<boolean>(
 );
 const adherents = computed<Consumer[]>(() =>
   userStore.personalAccountConsumers.filter(
-    (consumer) => consumer.id !== userStore.me.id,
+    (consumer) => consumer.id !== userStore.loggedUser?.id,
   ),
 );
 

@@ -57,13 +57,13 @@ const howToMakeFriends =
 
 const newFriend = ref<User | null>(null);
 
-const me = computed(() => userStore.me);
+const loggedUser = computed(() => userStore.loggedUser);
 const myFriends = computed(() => userStore.mFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
 
 const sendFriendRequest = async () => {
   if (newFriend.value === null) return;
-  const isAskingHimSelf = me.value.id === newFriend.value.id;
+  const isAskingHimSelf = loggedUser.value?.id === newFriend.value.id;
   if (isAskingHimSelf) {
     window.open(howToMakeFriends);
     return;

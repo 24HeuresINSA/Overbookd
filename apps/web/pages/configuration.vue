@@ -69,7 +69,10 @@ import { defaultCommitmentPresentation } from "@overbookd/registration";
 useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
-await configurationStore.fetchAll();
+
+onMounted(async () => {
+  await configurationStore.fetchAll();
+});
 
 const dateEventStart = ref<Date>(configurationStore.eventStartDate);
 const registerFormDescription = ref<string>(

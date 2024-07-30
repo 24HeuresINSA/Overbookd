@@ -4,7 +4,12 @@
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
       <nuxt-link class="action profile" to="/profile">
-        <ProfilePicture small class="profile-picture" :user="me" />
+        <ProfilePicture
+          v-if="loggedUser"
+          :user="loggedUser"
+          class="profile-picture"
+          small
+        />
         <span class="action__text">{{ myName }}</span>
       </nuxt-link>
       <span class="action logout" @click="logout">
@@ -29,8 +34,10 @@ const isCetaitMieuxAvant = computed<boolean>(
   () => process.env.BASE_URL?.includes("cetaitmieuxavant") ?? false,
 );
 
-const { me } = storeToRefs(userStore);
-const myName = computed<string>(() => me.value.nickname || me.value.firstname);
+const loggedUser = computed(() => userStore.loggedUser);
+const myName = computed<string>(
+  () => loggedUser.value?.nickname || loggedUser.value?.firstname || "",
+);
 
 const watermark = computed<string>(() => {
   if (isPreProd.value) return "preprod";

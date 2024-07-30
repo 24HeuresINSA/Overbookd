@@ -28,10 +28,19 @@ import SideNav from "~/layouts/parts/side-nav.vue";
 import Footer from "~/layouts/parts/footer.vue";
 
 const userStore = useUserStore();
+const teamStore = useTeamStore();
+const configurationStore = useConfigurationStore();
 
-const shouldApproveEULA = computed<boolean>(
-  () => !userStore.me.hasApprovedEULA,
-);
+const loggedUser = computed(() => userStore.loggedUser);
+const shouldApproveEULA = computed<boolean>(() => {
+  return loggedUser.value?.hasApprovedEULA === false;
+});
+
+onBeforeMount(async () => {
+  await userStore.fetchMyInformation();
+  teamStore.fetchTeams();
+  configurationStore.fetch("eventDate");
+});
 </script>
 
 <style lang="scss">

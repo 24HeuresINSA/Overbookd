@@ -41,14 +41,18 @@ const profilePicture = ref<File[] | undefined>(undefined);
 
 const rules = [isImage, isSupportedImageFile, isImageSizeWithinLimit];
 
-const me = computed(() => userStore.me);
+const loggedUser = computed(() => userStore.loggedUser);
 
 const invalidImage = computed<boolean>(() =>
   rules.some((rule) => rule(profilePicture.value) !== true),
 );
 
 const uploadProfilePicture = async () => {
-  if (!me.value || !profilePicture.value || !profilePicture.value.length)
+  if (
+    !loggedUser.value ||
+    !profilePicture.value ||
+    !profilePicture.value.length
+  )
     return;
 
   const picture = profilePicture.value[0];

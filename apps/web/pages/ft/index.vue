@@ -136,7 +136,7 @@ const tableHeaders = computed<TableHeaders>(() => {
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
 const reviewers = computed<Team[]>(() => teamStore.ftReviewers);
 
-await teamStore.fetchFtReviewers();
+teamStore.fetchFtReviewers();
 const loading = ref<boolean>(tasks.value.length === 0);
 ftStore.fetchAllTasks().then(() => (loading.value = false));
 

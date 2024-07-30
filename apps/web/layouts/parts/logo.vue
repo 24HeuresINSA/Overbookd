@@ -10,15 +10,17 @@ const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
 
 const config = useRuntimeConfig();
-const counter = ref<number>(0);
-
 const versionString = computed<string>(() => `v${config.public.version}`);
+
+const deviceStore = useDeviceStore();
+
+const counter = ref<number>(0);
 
 const logo = computed<string>(() => {
   if (counter.value >= FIFTY_ONE) return "Pastis.png";
   if (counter.value >= TWENTY_FOUR) return "Ricard.png";
-  if (window.innerWidth <= 960) return "logo_mobile.png";
-  return "logo_desktop.png";
+  if (deviceStore.isDesktop) return "logo_desktop.png";
+  return "logo_mobile.png";
 });
 
 const track = "audio/jaune.m4a";

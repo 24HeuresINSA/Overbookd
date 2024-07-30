@@ -52,10 +52,12 @@ const userStore = useUserStore();
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const taskIdFromUrl = computed<number>(() => +route.params.id);
 
-await ftStore.fetchTask(taskIdFromUrl.value);
-if (selectedTask.value.id !== taskIdFromUrl.value) {
-  router.push({ path: "/ft" });
-}
+onMounted(async () => {
+  await ftStore.fetchTask(taskIdFromUrl.value);
+  if (selectedTask.value.id !== taskIdFromUrl.value) {
+    router.push({ path: "/ft" });
+  }
+});
 
 useHead({
   title: `FT ${selectedTask.value.id} - ${selectedTask.value.general.name}`,

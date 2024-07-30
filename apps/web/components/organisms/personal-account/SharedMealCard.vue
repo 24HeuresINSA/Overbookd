@@ -72,7 +72,9 @@ const props = defineProps({
 });
 
 const me = computed<Adherent>(() => {
-  const { id, ...me } = userStore.me;
+  const loggedUser = userStore.loggedUser;
+  if (!loggedUser) return { id: 0, name: "" };
+  const { id, ...me } = loggedUser;
   return { id, name: nicknameOrName(me) };
 });
 const iAmChef = computed<boolean>(() => props.shared.chef.id === me.value.id);

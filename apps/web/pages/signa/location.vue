@@ -11,6 +11,8 @@
       :headers="tableHeaders"
       :items="filteredLocations"
       :items-per-page="20"
+      :loading="loading"
+      loading-text="Chargement des lieux..."
       class="elevation-1"
       no-data-text="Aucun lieu trouvé"
     >

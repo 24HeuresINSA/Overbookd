@@ -45,14 +45,15 @@ const userStore = useUserStore();
 const personalAccountStore = usePersonalAccountStore();
 const transactionStore = useTransactionStore();
 
-await personalAccountStore.fetchBarrels();
+personalAccountStore.fetchBarrels();
 
-const consumerLoading = ref<boolean>(false);
-if (userStore.personalAccountConsumers.length === 0) {
-  consumerLoading.value = true;
-}
-await userStore.fetchPersonalAccountConsumers();
-consumerLoading.value = false;
+const consumerLoading = ref<boolean>(
+  userStore.personalAccountConsumers.length === 0,
+);
+userStore.fetchPersonalAccountConsumers().then(() => {
+  consumerLoading.value = false;
+  resetConsumers();
+});
 
 const consumers = ref<ConsumerWithConsumption[]>([]);
 const resetConsumers = () => {
