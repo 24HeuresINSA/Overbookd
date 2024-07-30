@@ -39,8 +39,8 @@
 
 <script lang="ts" setup>
 import { pages, type Page } from "~/utils/pages/navigation";
+import { isDesktop } from "~/utils/device/device.utils";
 
-const deviceStore = useDeviceStore();
 const userStore = useUserStore();
 const navigationBadgeStore = useNavigationBadgeStore();
 
@@ -53,7 +53,7 @@ const reportBug = ref<boolean>(false);
 
 const filteredPages = computed<Page[]>(() =>
   pages.filter(({ permission, mobileSupport }) => {
-    const isSupportedByDevice = deviceStore.isDesktop || mobileSupport;
+    const isSupportedByDevice = isDesktop() || mobileSupport;
     const hasAccess = userStore.can(permission);
     return isSupportedByDevice && hasAccess;
   }),

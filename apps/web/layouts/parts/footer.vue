@@ -1,8 +1,6 @@
 <template>
   <footer>
-    <client-only>
-      <span>Fait avec ❤️ par {{ randomAuthor }}</span>
-    </client-only>
+    <span>Fait avec ❤️ par {{ randomAuthor }}</span>
   </footer>
 </template>
 

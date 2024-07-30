@@ -9,9 +9,7 @@
     />
     <h2>FT</h2>
   </div>
-  <client-only>
-    <Bar :options="options" :data="data" />
-  </client-only>
+  <Bar :options="options" :data="data" />
 </template>
 
 <script lang="ts" setup>
