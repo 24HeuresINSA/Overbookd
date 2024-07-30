@@ -5,8 +5,8 @@ import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { Category } from "@overbookd/festival-event-constants";
 import { countAssigneesInTeam } from "@overbookd/assignment";
-import { IS_NOT_DELETED } from "../../common/repository/common.query";
 import { extendOneOfTeams } from "../../common/extend-teams";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
   id: string;

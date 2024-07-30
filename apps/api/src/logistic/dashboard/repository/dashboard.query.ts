@@ -1,3 +1,4 @@
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 
 const SELECT_BASE_GEAR = {
@@ -15,8 +16,8 @@ const SELECT_INVENTORY = {
   },
 };
 
-const ACTIVE_FA = { fa: { isDeleted: false } };
-const ACTIVE_FT = { ft: { isDeleted: false } };
+const ACTIVE_FA = { fa: IS_NOT_DELETED };
+const ACTIVE_FT = { ft: IS_NOT_DELETED };
 
 const SELECT_ACTIVITY_GEAR_INQUIRIES = {
   festivalActivityInquiries: {

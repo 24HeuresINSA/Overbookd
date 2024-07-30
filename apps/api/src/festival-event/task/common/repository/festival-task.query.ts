@@ -26,6 +26,7 @@ import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { Item } from "@overbookd/list";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 const SELECT_REVIEWS = {
   reviews: {
@@ -414,8 +415,6 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
     publishedAt: feedback.publishedAt,
   };
 }
-
-export const IS_NOT_DELETED = { isDeleted: false };
 
 export function buildFestivalTaskCondition(id: FestivalTask["id"]) {
   return { id, ...IS_NOT_DELETED };

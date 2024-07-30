@@ -29,14 +29,14 @@ import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.req
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 @ApiBearerAuth()
-@ApiTags("charisma-period")
+@ApiTags("charisma-periods")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller("charisma-period")
+@Controller("charisma-periods")
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
 

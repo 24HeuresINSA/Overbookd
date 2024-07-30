@@ -2,9 +2,9 @@ import { IProvidePeriod } from "@overbookd/period";
 import { HelpingVolunteers } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
 import { Injectable } from "@nestjs/common";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import { HelpingVolunteer } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
+import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../common/query/user.query";
 
 type DatabaseHelpingVolunteer = {
   id: number;
@@ -39,10 +39,6 @@ const SELECT_VOLUNTEER = {
   teams: { select: { teamCode: true } },
   availabilities: { select: SELECT_PERIOD },
   ...SELECT_ASSIGNEES,
-};
-
-const IS_MEMBER_OF_VOLUNTEER_TEAM = {
-  teams: { some: { team: { code: BENEVOLE_CODE } } },
 };
 
 @Injectable()

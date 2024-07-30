@@ -8,6 +8,7 @@ import {
 import { IProvidePeriod } from "@overbookd/period";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PrismaService } from "../../../../prisma.service";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export class PrismaVolunteerConflicts implements VolunteerConflicts {
   constructor(private readonly prisma: PrismaService) {}
@@ -30,7 +31,7 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
   ): Promise<FestivalTaskLink[]> {
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
-        ft: { isDeleted: false },
+        ft: IS_NOT_DELETED,
         start: { lt: end },
         end: { gt: start },
         volunteers: { some: { volunteerId } },
@@ -67,7 +68,7 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
   ): Promise<FestivalTaskLink[]> {
     const conflicts = await this.prisma.assignment.findMany({
       where: {
-        festivalTask: { isDeleted: false },
+        festivalTask: IS_NOT_DELETED,
         start: { lt: end },
         end: { gt: start },
         assignees: { some: { userId } },

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CharismaEventParticipation } from "@overbookd/charisma";
 import { User } from "@overbookd/user";
-import { BaseUserResponseDto } from "../../user/dto/base-user.response.dto";
+import { UserIdentifierResponseDto } from "../../common/dto/user-identifier.response.dto";
 
 export class CharismaEventParticipationResponseDto
   implements CharismaEventParticipation
@@ -12,7 +12,7 @@ export class CharismaEventParticipationResponseDto
   @ApiProperty({ example: "Comptage vélo #1" })
   name: string;
 
-  @ApiProperty({ type: BaseUserResponseDto })
+  @ApiProperty({ type: UserIdentifierResponseDto })
   participant: User;
 
   @ApiProperty({ example: 10 })

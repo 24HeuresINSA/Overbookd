@@ -55,7 +55,7 @@ import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
-import { BaseUserResponseDto } from "./dto/base-user.response.dto";
+import { UserIdentifierResponseDto } from "../common/dto/user-identifier.response.dto";
 import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
 import { PlanningEventResponseDto } from "../assignment/common/dto/planning-event.response.dto";
 import { PlanningService } from "./planning/planning.service";
@@ -126,7 +126,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get all adherents",
-    type: BaseUserResponseDto,
+    type: UserIdentifierResponseDto,
     isArray: true,
   })
   getAdherents(): Promise<User[]> {

@@ -33,7 +33,7 @@ import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
-import { getPeriodCharisma } from "~/utils/charisma-period/charisma-period.utils";
+import { getPeriodCharisma } from "~/utils/charisma/charisma-period.utils";
 import { SavedCharismaPeriod } from "@overbookd/http";
 
 export default Vue.extend({

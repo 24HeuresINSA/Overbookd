@@ -17,8 +17,7 @@ import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
-
-export const IS_NOT_DELETED = { isDeleted: false };
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 const SELECT_REVIEW = {
   team: true,

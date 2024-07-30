@@ -1,18 +1,9 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import {
   COUNT_FRIENDS,
   DatabaseFriendCount,
 } from "../../common/repository/friend.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-
-export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
-  teams: {
-    some: {
-      team: { code: BENEVOLE_CODE },
-    },
-  },
-};
 
 const SELECT_VOLUNTEER = {
   id: true,

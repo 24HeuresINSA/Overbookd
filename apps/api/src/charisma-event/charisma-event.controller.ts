@@ -1,4 +1,11 @@
-import { Controller, UseGuards, UseFilters, Post, Body } from "@nestjs/common";
+import {
+  Controller,
+  UseGuards,
+  UseFilters,
+  Post,
+  Body,
+  Get,
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -12,9 +19,10 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CharismaEventService } from "./charisma-event.service";
 import { CharismaEventErrorFilter } from "./charisma-event-error.filter";
 import { MANAGE_CHARISMA_EVENTS } from "@overbookd/permission";
-import { CharismaEventParticipationResponseDto } from "./dto/charisma-event-participation.response.dto";
+import { CharismaEventParticipationResponseDto } from "./dto/participation.response.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-charisma-event-participations.request.dto";
+import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
+import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 
 @ApiTags("charisma-events")
 @Controller("charisma-events")
@@ -27,6 +35,22 @@ import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-charis
 })
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Get("potential-participants")
+  @ApiResponse({
+    status: 200,
+    description: "List of all potential charisma event participants",
+    type: CharismaEventPotentialParticipantResponseDto,
+    isArray: true,
+  })
+  fetchPotentialParticipants(): Promise<
+    CharismaEventPotentialParticipantResponseDto[]
+  > {
+    return this.charismaEvent.fetchPotentialParticipants();
+  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()

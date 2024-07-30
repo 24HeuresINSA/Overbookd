@@ -1,16 +1,14 @@
 import { Period } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
 import {
-  IS_MEMBER_OF_VOLUNTEER_TEAM,
   DatabaseAssigneeWithAssignments,
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
 import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
 import { hasAtLeastOneFriend } from "../../common/repository/friend.query";
-import {
-  HAS_POSITIVE_CHARISMA,
-  IS_NOT_DELETED,
-} from "../../common/repository/common.query";
+import { HAS_POSITIVE_CHARISMA } from "../../common/repository/common.query";
+import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}

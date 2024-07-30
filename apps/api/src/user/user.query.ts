@@ -1,16 +1,10 @@
 import { Permission } from "@overbookd/permission";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
-
-export const SELECT_BASE_USER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  nickname: true,
-};
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 
 const SELECT_USER = {
-  ...SELECT_BASE_USER,
+  ...SELECT_USER_IDENTIFIER,
   email: true,
   birthdate: true,
   phone: true,

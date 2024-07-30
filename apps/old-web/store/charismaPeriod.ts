@@ -3,7 +3,7 @@ import { updateItemToList } from "@overbookd/list";
 import {
   castCharismaPeriodsWithDate,
   castCharismaPeriodWithDate,
-} from "~/utils/charisma-period/charisma-period.utils";
+} from "~/utils/charisma/charisma-period.utils";
 import { safeCall } from "~/utils/api/calls";
 import { CharismaPeriodRepository } from "~/repositories/charisma-period.repository";
 import { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";

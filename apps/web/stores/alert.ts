@@ -1,5 +1,4 @@
 import type { Alerts } from "@overbookd/alerts";
-import { AlertRepository } from "~/repositories/alert.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
 
 type State = {

@@ -5,9 +5,9 @@ import {
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./charisma-event-participation.query";
+import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 import { User } from "@overbookd/user";
-import { SELECT_BASE_USER } from "../../user/user.query";
+import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 
 export class PrismaCharismaEventParticipations
   implements CharismaEventParticipations
@@ -26,7 +26,7 @@ export class PrismaCharismaEventParticipations
           eventDate,
           participantId: { in: participants.map(({ id }) => id) },
         },
-        select: { participant: { select: SELECT_BASE_USER } },
+        select: { participant: { select: SELECT_USER_IDENTIFIER } },
       });
     return participations.map(({ participant }) => participant);
   }

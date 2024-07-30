@@ -2,7 +2,7 @@ import type { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class CharismaPeriodRepository {
-  private static readonly basePath = "charisma-period";
+  private static readonly basePath = "charisma-periods";
 
   static async getCharismaPeriods() {
     return HttpClient.get<SavedCharismaPeriod[]>(`${this.basePath}`);

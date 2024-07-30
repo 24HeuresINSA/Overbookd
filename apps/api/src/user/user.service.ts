@@ -23,7 +23,6 @@ import {
   UserPasswordOnly,
 } from "./user.model";
 import {
-  SELECT_BASE_USER,
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
@@ -44,6 +43,8 @@ import { toPlanningEventFromAssignment } from "../assignment/common/repository/p
 import { Period } from "@overbookd/period";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 @Injectable()
 export class UserService {
@@ -113,7 +114,7 @@ export class UserService {
   async getAll(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
-      where: { isDeleted: false },
+      where: IS_NOT_DELETED,
       select: SELECT_USER_PERSONAL_DATA,
     });
     return users.map(UserService.formatToPersonalData);
@@ -138,7 +139,7 @@ export class UserService {
         isDeleted: false,
         ...hasPermission(PAY_CONTRIBUTION),
       },
-      select: SELECT_BASE_USER,
+      select: SELECT_USER_IDENTIFIER,
     });
   }
 
@@ -157,7 +158,7 @@ export class UserService {
     const assignments = await this.prisma.assignment.findMany({
       where: {
         assignees: { some: { userId: volunteerId } },
-        festivalTask: { isDeleted: false },
+        festivalTask: IS_NOT_DELETED,
       },
       select: SELECT_PLANNING_EVENT,
     });
@@ -219,7 +220,7 @@ export class UserService {
     const assignments = await this.prisma.assignment.findMany({
       where: {
         assignees: { some: { userId: volunteerId } },
-        festivalTask: { isDeleted: false },
+        festivalTask: IS_NOT_DELETED,
       },
       select: SELECT_PERIOD_AND_CATEGORY,
     });

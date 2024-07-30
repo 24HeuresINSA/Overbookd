@@ -15,6 +15,7 @@ import {
   READ_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
   WRITE_INVENTORY,
+  MANAGE_CHARISMA_EVENTS,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -162,6 +163,16 @@ export const pages: Page[] = [
       "Permet d'enregistrer les cotisations des adhérents à l'association",
     mobileSupport: false,
     keywords: ["cotisations", "contributions"],
+  },
+  {
+    icon: "mdi-emoticon-cool",
+    title: "Gestion du charisme",
+    permission: MANAGE_CHARISMA_EVENTS,
+    to: "/charisma/events/manage",
+    description:
+      "Permet de gérer le charisme des bénévoles via la création d'événements",
+    mobileSupport: false,
+    keywords: ["charisme", "evenements"],
   },
   /*{
     icon: "mdi-clock-edit",

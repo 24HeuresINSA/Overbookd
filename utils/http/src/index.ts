@@ -79,7 +79,10 @@ export type {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "./charisma/charisma-period.js";
-export type { CreateCharismaEventParticipationsForm } from "./charisma/charisma-event.js";
+export type {
+  CreateCharismaEventParticipationsForm,
+  CharismaEventPotentialParticipant,
+} from "./charisma/charisma-event.js";
 
 export { JSON, CSV, ICAL, PDF } from "./mime.js";
 export type { AvailabilityForm } from "./volunteer-availability.js";

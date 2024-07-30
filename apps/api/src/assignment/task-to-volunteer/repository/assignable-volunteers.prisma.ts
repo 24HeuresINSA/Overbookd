@@ -19,12 +19,10 @@ import {
   COUNT_FRIENDS,
   hasAtLeastOneFriend,
 } from "../../common/repository/friend.query";
-import {
-  HAS_POSITIVE_CHARISMA,
-  IS_NOT_DELETED,
-} from "../../common/repository/common.query";
+import { HAS_POSITIVE_CHARISMA } from "../../common/repository/common.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 import { extendOneOfTeams } from "../../common/extend-teams";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}

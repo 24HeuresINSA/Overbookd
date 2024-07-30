@@ -6,11 +6,11 @@ import {
 import { PrismaService } from "../../../../prisma.service";
 import {
   SELECT_FESTIVAL_ACTIVITY,
-  IS_NOT_DELETED,
   buildFestivalActivityCondition,
 } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { FestivalActivityQueryBuilder } from "./festival-activity.query";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export class PrismaPrepareFestivalActivities
   implements PrepareFestivalActivityRepository

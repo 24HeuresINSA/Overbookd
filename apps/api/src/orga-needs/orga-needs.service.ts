@@ -9,8 +9,7 @@ import {
   OrgaNeedTask,
 } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
-
-const IS_NOT_DELETED = { isDeleted: false };
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;

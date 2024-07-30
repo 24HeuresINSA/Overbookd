@@ -57,5 +57,6 @@ export class CreateCharismaEventParticipationsRequestDto
     type: ParticipantTakingPartInCharismaEventDto,
     isArray: true,
   })
+  @IsDefined()
   participants: ParticipantTakingPartInCharismaEvent[];
 }

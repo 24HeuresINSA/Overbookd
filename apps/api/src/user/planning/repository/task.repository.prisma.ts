@@ -12,6 +12,7 @@ import {
   SELECT_PERIOD,
   SELECT_PERIOD_WITH_ID,
 } from "../../../common/query/period.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {
@@ -26,8 +27,6 @@ const SELECT_MOBILIZATION = {
     select: SELECT_FESTIVAL_TASK,
   },
 };
-
-const IS_NOT_DELETED = { isDeleted: false };
 
 const SELECT_CONTACT = {
   contact: {

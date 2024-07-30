@@ -1,6 +1,7 @@
 import { FestivalEvent } from "@overbookd/festival-event";
 import { Statistics } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 const TEAM = "teamCode";
 const STATUS = "status";
@@ -12,7 +13,7 @@ const ORDER_BY_ASC_TEAM_CODE = { teamCode: "asc" } as const;
 const COUNT_STATUS = { status: true } as const;
 const GROUP_BY_TEAM_AND_STATUS = {
   by: TEAM_AND_STATUS,
-  where: { isDeleted: false },
+  where: IS_NOT_DELETED,
   _count: COUNT_STATUS,
   orderBy: ORDER_BY_ASC_TEAM_CODE,
 };
