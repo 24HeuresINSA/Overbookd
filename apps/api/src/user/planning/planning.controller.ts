@@ -49,7 +49,7 @@ import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
 import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
-import { buildVolunteerDisplayName } from "../../utils/volunteer";
+import { buildUserName } from "@overbookd/user";
 import { PlanningRenderStrategy } from "./render/render-strategy";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
@@ -258,7 +258,7 @@ export class PlanningController {
     const renderStrategy = PlanningRenderStrategy.get(format);
     return renderStrategy.render(tasks, {
       id: volunteerId,
-      name: buildVolunteerDisplayName(volunteer),
+      name: buildUserName(volunteer),
       teams: volunteer.teams,
     });
   }

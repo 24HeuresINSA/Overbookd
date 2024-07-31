@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatLocalDate } from "~/utils/date/date.utils";
+import { formatLocalDate } from "@overbookd/date";
 
 const date = defineModel<Date>({ required: true });
 

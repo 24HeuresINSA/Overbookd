@@ -14,7 +14,7 @@ import {
   REJECTED,
 } from "@overbookd/festival-event";
 import { Rejected, FestivalTaskRejected } from "@overbookd/domain-events";
-import { Profile } from "@overbookd/user";
+import { nicknameOrName, Profile } from "@overbookd/user";
 import { Membership } from "@overbookd/registration";
 
 type EmailResetPassword = {
@@ -249,9 +249,7 @@ export class MailService implements OnApplicationBootstrap {
     activity,
   }: ActivityRejected) {
     try {
-      const rejectorName = rejector.nickname
-        ? `${rejector.nickname}`
-        : `${rejector.firstname} ${rejector.lastname}`;
+      const rejectorName = nicknameOrName(rejector);
       const mail = await this.mailerService.sendMail({
         to: email,
         subject: `${activity.name} rejetée 🙀`,
@@ -275,9 +273,7 @@ export class MailService implements OnApplicationBootstrap {
 
   async festivalTaskRejected({ email, reason, rejector, task }: TaskRejected) {
     try {
-      const rejectorName = rejector.nickname
-        ? `${rejector.nickname}`
-        : `${rejector.firstname} ${rejector.lastname}`;
+      const rejectorName = nicknameOrName(rejector);
       const mail = await this.mailerService.sendMail({
         to: email,
         subject: `[FT] ${task.name} rejetée 🙀`,

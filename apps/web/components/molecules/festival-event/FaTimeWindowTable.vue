@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { formatDateWithMinutes } from "@overbookd/date";
 import type { TimeWindow } from "@overbookd/festival-event";
 import type { IProvidePeriod } from "@overbookd/period";
 import type { TableHeaders } from "~/utils/data-table/header";

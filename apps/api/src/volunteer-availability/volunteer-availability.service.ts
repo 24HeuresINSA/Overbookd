@@ -6,7 +6,7 @@ import {
   PeriodWithError,
 } from "@overbookd/volunteer-availability";
 import { PrismaService } from "../prisma.service";
-import { formatDateWithMinutes } from "../utils/date";
+import { formatDateWithMinutes } from "@overbookd/date";
 import { SELECT_PERIOD } from "../common/query/period.query";
 
 @Injectable()

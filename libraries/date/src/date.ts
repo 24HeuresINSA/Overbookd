@@ -1,5 +1,4 @@
-import { ONE_HOUR_IN_MS } from "./duration.constant.js";
-import { IProvidePeriod, Period } from "./period.js";
+import { ONE_HOUR_IN_MS, IProvidePeriod, Period } from "@overbookd/period";
 
 type January = "01";
 type February = "02";
@@ -75,7 +74,7 @@ type Enumerate<
 
 export type Hour = Enumerate<24>;
 
-const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
+export const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
   timeZone: "Europe/Paris",
 };
 

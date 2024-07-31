@@ -4,7 +4,7 @@ import { GeoLocation } from "@overbookd/geo-location";
 import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
-import { buildVolunteerDisplayName } from "../../../utils/volunteer";
+import { buildUserName } from "@overbookd/user";
 import { TaskRepository } from "../domain/planning";
 import { JsonStoredTask } from "../domain/storedTask";
 import { JsonValue } from "@prisma/client/runtime/library";
@@ -156,7 +156,7 @@ function toTask(
   const contacts = festivalTask.contacts.map(({ contact }) => ({
     id: contact.id,
     phone: contact.phone,
-    name: buildVolunteerDisplayName(contact),
+    name: buildUserName(contact),
   }));
   const instructions =
     festivalTask.inChargeVolunteers.length === 0
@@ -169,7 +169,7 @@ function toTask(
       return assignees.map(({ personalData }) => ({
         period: { start, end },
         id: personalData.id,
-        name: buildVolunteerDisplayName(personalData),
+        name: buildUserName(personalData),
       }));
     });
 

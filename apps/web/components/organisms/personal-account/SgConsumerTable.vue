@@ -25,7 +25,7 @@
     </template>
 
     <template #item.firstname="{ item }">
-      {{ formatUserNameWithNickname(item) }}
+      {{ buildUserNameWithNickname(item) }}
     </template>
 
     <template #item.balance="{ item }">
@@ -64,6 +64,7 @@
 
 <script lang="ts" setup>
 import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
 import {
@@ -72,7 +73,6 @@ import {
   CLOSET_MODE,
   DEPOSIT_MODE,
 } from "~/utils/transaction/sg-mode";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/search-user";

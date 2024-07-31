@@ -1,4 +1,4 @@
-import { OverDate } from "@overbookd/period";
+import { OverDate } from "@overbookd/date";
 
 export const chaise = {
   slug: "chaise",

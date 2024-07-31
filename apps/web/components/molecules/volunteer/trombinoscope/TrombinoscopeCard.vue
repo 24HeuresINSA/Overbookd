@@ -2,7 +2,7 @@
   <v-card class="profilePictureCard">
     <v-card-title class="name-with-picture">
       <ProfilePicture :user="volunteer" />
-      <span class="name">{{ formatUserNameWithNickname(volunteer) }}</span>
+      <span class="name">{{ buildUserNameWithNickname(volunteer) }}</span>
     </v-card-title>
     <v-card-subtitle opacity="1">
       <div class="teams">
@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 const { volunteer } = defineProps({
   volunteer: {

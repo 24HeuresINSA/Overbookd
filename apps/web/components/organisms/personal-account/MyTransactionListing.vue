@@ -47,8 +47,8 @@ import {
   doIReceive,
   INITIALIZATION,
 } from "@overbookd/personal-account";
-import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
-import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
+import { formatDateWithExplicitMonthAndDay } from "@overbookd/date";
+import { nicknameOrName } from "@overbookd/user";
 
 const transactionStore = useTransactionStore();
 transactionStore.fetchMyTransactions();
@@ -101,8 +101,8 @@ const getTransferMessage = (transaction: MyTransaction) => {
     case TRANSFER:
     case SHARED_MEAL:
       return doIReceive(transaction)
-        ? `(de ${formatDisplayedNameWithLastname(transaction.from)})`
-        : `(vers ${formatDisplayedNameWithLastname(transaction.to)})`;
+        ? `(de ${nicknameOrName(transaction.from)})`
+        : `(vers ${nicknameOrName(transaction.to)})`;
   }
 };
 </script>

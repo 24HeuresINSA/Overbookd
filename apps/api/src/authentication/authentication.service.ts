@@ -16,6 +16,7 @@ import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
 import { ONE_HOUR_IN_MS } from "@overbookd/period";
 import { UserAccess, UserCredentials } from "@overbookd/http";
+import { buildUserName } from "@overbookd/user";
 
 type UserEmail = { email: string };
 export type RefreshAccessRequest = { refreshToken: string };
@@ -68,7 +69,7 @@ export class AuthenticationService {
       userId: userWithPayload.id,
       teams: teams,
       permissions: [...permissions],
-      username: `${userWithPayload.firstname} ${userWithPayload.lastname}`,
+      username: buildUserName(userWithPayload),
     };
   }
 

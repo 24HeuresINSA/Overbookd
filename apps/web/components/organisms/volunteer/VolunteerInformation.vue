@@ -3,7 +3,7 @@
     <template #title>
       <div class="card-title">
         <ProfilePicture :user="volunteer" class="profile-picture" />
-        <h2>{{ formatUserNameWithNickname(volunteer) }}</h2>
+        <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
       </div>
     </template>
 
@@ -93,7 +93,7 @@
             :closable="canManageUsers"
             @click:close="removeFriend(friend)"
           >
-            {{ formatUsername(friend) }}
+            {{ buildUserName(friend) }}
           </v-chip>
           <span v-show="selectedVolunteerFriends.length === 0">
             Aucun ami
@@ -134,7 +134,12 @@
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
 import { MANAGE_ADMINS, MANAGE_USERS } from "@overbookd/permission";
-import type { User, UserPersonalData } from "@overbookd/user";
+import {
+  type User,
+  type UserPersonalData,
+  buildUserName,
+  buildUserNameWithNickname,
+} from "@overbookd/user";
 import {
   isEmail,
   isInsaEmail,
@@ -143,11 +148,7 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import {
-  formatPhoneLink,
-  formatUsername,
-  formatUserNameWithNickname,
-} from "~/utils/user/user.utils";
+import { formatPhoneLink } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();

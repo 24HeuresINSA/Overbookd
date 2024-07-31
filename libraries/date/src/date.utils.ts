@@ -1,8 +1,10 @@
 import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "@overbookd/period";
+import { PARIS_TIMEZONE } from "./date";
 
 // return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -15,6 +17,7 @@ export function formatDateWithMinutes(date: string | Date): string {
 // return format dd/mm/yyyy
 export function formatDate(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -72,6 +75,7 @@ export function roundMinutes(date: Date, round: number): Date | null {
 // return month YYYY
 export function formatDateWithExplicitMonth(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     year: "numeric",
     month: "long",
   };
@@ -81,6 +85,7 @@ export function formatDateWithExplicitMonth(date: Date | string): string {
 // return dd month YYYY
 export function formatDateWithExplicitMonthAndDay(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -90,12 +95,14 @@ export function formatDateWithExplicitMonthAndDay(date: Date | string): string {
 
 export function formatDateDayName(date: Date | string): string {
   return new Date(date).toLocaleDateString("fr-FR", {
+    ...PARIS_TIMEZONE,
     weekday: "short",
   });
 }
 
 export function formatDateDayNumber(date: Date | string): string {
   return new Date(date).toLocaleDateString("fr-FR", {
+    ...PARIS_TIMEZONE,
     day: "numeric",
   });
 }
@@ -106,6 +113,7 @@ export function computeTomorrowDate(date: Date): Date {
 
 export function formatDateToHumanReadable(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     dateStyle: "long",
     timeStyle: "short",
   };
@@ -114,9 +122,9 @@ export function formatDateToHumanReadable(date: Date | string): string {
 
 export function formatDateWithHoursAndMinutesOnly(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     hour: "2-digit",
     minute: "2-digit",
-    timeZone: "Europe/Paris",
   };
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }

@@ -41,7 +41,7 @@
         </template>
 
         <template #item.administrator="{ item }">
-          {{ formatUsername(item.administrator) }}
+          {{ buildUserName(item.administrator) }}
         </template>
 
         <template #item.removal="{ item }">
@@ -102,7 +102,7 @@ import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
 import type { Searchable } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/data-table/header";
-import { formatUsername } from "~/utils/user/user.utils";
+import { buildUserName } from "@overbookd/user";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
 import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";

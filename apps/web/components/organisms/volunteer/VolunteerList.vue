@@ -11,7 +11,7 @@
     @click:row="openInformationDialog"
   >
     <template #item.firstname="{ item }">
-      {{ formatUserNameWithNickname(item) }}
+      {{ buildUserNameWithNickname(item) }}
     </template>
 
     <template #item.teams="{ item }">
@@ -46,12 +46,12 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  formatPhoneLink,
-  formatUserNameWithNickname,
-} from "~/utils/user/user.utils";
+import { formatPhoneLink } from "~/utils/user/user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import type { UserPersonalData } from "@overbookd/user";
+import {
+  type UserPersonalData,
+  buildUserNameWithNickname,
+} from "@overbookd/user";
 import type { Team } from "@overbookd/team";
 import type { TableHeaders } from "~/utils/data-table/header";
 

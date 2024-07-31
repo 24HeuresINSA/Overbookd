@@ -10,7 +10,7 @@
       <div class="friends-management">
         <ul class="friends-list">
           <li v-for="(friend, index) in myFriends" :key="index" class="friend">
-            <span class="name">{{ formatUserNameWithNickname(friend) }}</span>
+            <span class="name">{{ buildUserNameWithNickname(friend) }}</span>
             <v-btn
               density="compact"
               icon="mdi-close"
@@ -30,8 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from "@overbookd/user";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import { type User, buildUserNameWithNickname } from "@overbookd/user";
 
 const userStore = useUserStore();
 

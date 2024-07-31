@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/festival-event",
-  "version": "1.20.3",
+  "version": "1.20.4",
   "description": "Gestion des activités sur le festival pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -56,6 +56,7 @@
     "pnpm": "9.6.0"
   },
   "dependencies": {
+    "@overbookd/date": "workspace:*",
     "@overbookd/festival-event-constants": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",

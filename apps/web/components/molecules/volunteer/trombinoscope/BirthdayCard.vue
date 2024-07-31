@@ -3,14 +3,14 @@
     <v-card-title class="birthday-card__heading">
       <ProfilePicture :user="volunteer" />
       <p>Joyeux anniv 🎂</p>
-      <p class="name">{{ formatUserNameWithNickname(volunteer) }}</p>
+      <p class="name">{{ buildUserNameWithNickname(volunteer) }}</p>
     </v-card-title>
   </v-card>
 </template>
 
 <script lang="ts" setup>
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 const { volunteer } = defineProps({
   volunteer: {

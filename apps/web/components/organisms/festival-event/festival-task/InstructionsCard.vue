@@ -65,7 +65,7 @@
           hide-details
         >
           <template #item.volunteer="{ item }">
-            {{ formatUserNameWithNickname(item) }}
+            {{ buildUserNameWithNickname(item) }}
           </template>
 
           <template #item.removal="{ item }">
@@ -103,11 +103,10 @@ import {
   isDraft,
 } from "@overbookd/festival-event";
 import type { SignaLocation } from "@overbookd/signa";
-import type { User } from "@overbookd/user";
+import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import type { InitInChargeForm } from "@overbookd/http";
 import { FORCE_WRITE_FT } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/data-table/header";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const ftStore = useFestivalTaskStore();

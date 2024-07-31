@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/period",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Gestion des periodes pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -46,7 +46,8 @@
     "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
   },
   "keywords": [
-    "period"
+    "period",
+    "duration"
   ],
   "engines": {
     "node": "20.16.0",

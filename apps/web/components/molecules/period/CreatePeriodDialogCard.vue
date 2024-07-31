@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDate } from "~/utils/date/date.utils";
+import { formatDate } from "@overbookd/date";
 import { type IProvidePeriod, Period } from "@overbookd/period";
 
 const configurationStore = useConfigurationStore();

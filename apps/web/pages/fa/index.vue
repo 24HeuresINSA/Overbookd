@@ -37,7 +37,7 @@
         </template>
 
         <template #item.adherent="{ item }">
-          {{ item.adherent ? formatUsername(item.adherent) : "" }}
+          {{ item.adherent ? buildUserName(item.adherent) : "" }}
         </template>
 
         <template #item.team="{ item }">
@@ -99,7 +99,7 @@ import type {
   Reviewer,
 } from "@overbookd/festival-event";
 import { SlugifyService } from "@overbookd/slugify";
-import type { User } from "@overbookd/user";
+import { type User, buildUserName } from "@overbookd/user";
 import {
   ActivityFilterBuilder,
   type ActivityFilters,
@@ -108,7 +108,6 @@ import {
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { TableHeaders } from "~/utils/data-table/header";
 import type { Searchable } from "~/utils/search/search.utils";
-import { formatUsername } from "~/utils/user/user.utils";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   openActivity,

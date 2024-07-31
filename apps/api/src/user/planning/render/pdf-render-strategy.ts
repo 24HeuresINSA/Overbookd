@@ -8,7 +8,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
-} from "../../../utils/date";
+} from "@overbookd/date";
 import {
   AppointmentLocation,
   Assignment,

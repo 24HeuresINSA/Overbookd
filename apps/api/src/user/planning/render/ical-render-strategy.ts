@@ -1,11 +1,8 @@
-import { EventAttributes, GeoCoordinates, createEvents } from "ics";
+import { DateArray, EventAttributes, GeoCoordinates, createEvents } from "ics";
 import { Edition } from "@overbookd/contribution";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  formatDateWithHoursAndMinutesOnly,
-  toDateArray,
-} from "../../../utils/date";
+import { formatDateWithHoursAndMinutesOnly } from "@overbookd/date";
 import { Assignment, Contact, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
 
@@ -88,4 +85,15 @@ export class IcalRenderStrategy implements RenderStrategy {
   private generateVolunteerList(assignment: Assignment) {
     return assignment.volunteers.map(({ name }) => `<li>${name}</li>`).join("");
   }
+}
+
+function toDateArray(date: string | Date): DateArray {
+  const d = new Date(date);
+  return [
+    d.getFullYear(),
+    d.getMonth() + 1,
+    d.getDate(),
+    d.getHours(),
+    d.getMinutes(),
+  ];
 }

@@ -1,4 +1,4 @@
-import { isDateString } from "@overbookd/period";
+import { isDateString } from "@overbookd/date";
 
 type FrenchGouvPublicHoliday = {
   [date: string]: string;

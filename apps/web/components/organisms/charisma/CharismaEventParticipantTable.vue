@@ -16,7 +16,7 @@
     </template>
 
     <template #item.firstname="{ item }">
-      {{ formatUserNameWithNickname(item) }}
+      {{ buildUserNameWithNickname(item) }}
     </template>
 
     <template #item.newCharisma="{ item }">
@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts" setup>
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CharismaEventParticipant } from "~/utils/charisma/charisma-event";
 import type { TableHeaders } from "~/utils/data-table/header";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/search-user";
 import {

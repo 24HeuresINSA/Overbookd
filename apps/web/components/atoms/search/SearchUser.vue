@@ -5,7 +5,7 @@
     chips
     :clearable="clearable"
     item-value="id"
-    :item-title="formatUserNameWithNickname"
+    :item-title="buildUserNameWithNickname"
     :label="label"
     :disabled="disabled"
     :hide-details="hideDetails"
@@ -17,8 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { User } from "@overbookd/user";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();

@@ -72,8 +72,8 @@ import {
   type TransactionUser,
   type TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import { formatUsername } from "~/utils/user/user.utils";
-import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { buildUserName } from "@overbookd/user";
+import { formatDateWithMinutes } from "@overbookd/date";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   matchingSearchItems,
@@ -109,7 +109,7 @@ const headers: TableHeaders = [
 ];
 
 const formatTransactionUsername = (user?: TransactionUser) => {
-  return user ? formatUsername(user) : "";
+  return user ? buildUserName(user) : "";
 };
 
 const search = ref<string>("");

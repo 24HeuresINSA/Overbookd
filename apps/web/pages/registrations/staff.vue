@@ -67,7 +67,7 @@ import { STAFF } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
 import type { EnrollableStaff } from "@overbookd/http";
-import { formatLocalDate } from "~/utils/date/date.utils";
+import { formatLocalDate } from "@overbookd/date";
 import type { Searchable } from "~/utils/search/search.utils";
 
 type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;

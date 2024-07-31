@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DateString } from "@overbookd/period";
+import { DateString } from "@overbookd/date";
 import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
 import { AvailabilityDate } from "./date.js";
 

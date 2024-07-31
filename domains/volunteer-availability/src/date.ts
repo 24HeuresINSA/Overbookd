@@ -1,10 +1,5 @@
-import {
-  DateString,
-  Hour,
-  ONE_HOUR_IN_MS,
-  OverDate,
-  Period,
-} from "@overbookd/period";
+import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { DateString, Hour, OverDate } from "@overbookd/date";
 import { SHIFT_HOURS } from "./shift.constant.js";
 import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
 

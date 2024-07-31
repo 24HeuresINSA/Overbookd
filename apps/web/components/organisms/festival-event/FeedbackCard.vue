@@ -14,7 +14,7 @@
           <span class="action__emoji">{{ getActionEmoji(item.action) }}</span>
         </template>
         <template #item.by="{ item }">
-          {{ formatUserNameWithNickname(item.by) }}
+          {{ buildUserNameWithNickname(item.by) }}
         </template>
         <template #item.at="{ item }">
           {{ formatDateWithMinutes(item.at) }}
@@ -54,8 +54,8 @@ import {
   ASSIGNMENT_STARTED,
   FORCED_UPDATE,
 } from "@overbookd/festival-event";
-import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import { formatDateWithMinutes } from "@overbookd/date";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { TableHeaders } from "~/utils/data-table/header";
 
 type FestivalEvent = FestivalActivity | FestivalTask;
