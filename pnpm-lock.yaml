@@ -457,6 +457,9 @@ importers:
 
   domains/charisma:
     dependencies:
+      '@overbookd/period':
+        specifier: workspace:*
+        version: link:../../libraries/period
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
