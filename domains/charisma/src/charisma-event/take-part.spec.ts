@@ -22,8 +22,10 @@ const cul: User = {
   lastname: "Nehgahrednav",
 };
 
-const eventDate1 = new Date("2024-01-01");
-const eventDate2 = new Date("2025-06-02");
+const eventDateString1 = "2024-01-01";
+const eventDate1 = new Date(`${eventDateString1}T10:00+02:00`);
+const eventDateString2 = "2025-06-02";
+const eventDate2 = new Date(`${eventDateString2}T10:00+02:00`);
 
 const oneParticipant = [{ id: lea.id, hours: 2 }];
 const expectedEventWithOneParticipant = [
@@ -32,7 +34,7 @@ const expectedEventWithOneParticipant = [
     name: "Event with one participant",
     participant: lea,
     charisma: 20,
-    eventDate: eventDate1,
+    eventDate: eventDateString1,
   },
 ];
 
@@ -46,14 +48,14 @@ const expectedEventWithTwoParticipants = [
     name: "Event with two participants",
     participant: lea,
     charisma: 5,
-    eventDate: eventDate2,
+    eventDate: eventDateString2,
   },
   {
     slug: "event-with-two-participants",
     name: "Event with two participants",
     participant: cul,
     charisma: 20,
-    eventDate: eventDate2,
+    eventDate: eventDateString2,
   },
 ];
 

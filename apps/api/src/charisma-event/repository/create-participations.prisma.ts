@@ -8,15 +8,16 @@ import { PrismaService } from "../../prisma.service";
 import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
+import { DateString } from "@overbookd/date";
 
-export class PrismaCharismaEventParticipations
+export class PrismaCreateCharismaEventParticipations
   implements CharismaEventParticipations
 {
   constructor(private readonly prisma: PrismaService) {}
 
   async areAlreadyParticipating(
     eventSlug: string,
-    eventDate: Date,
+    eventDate: DateString,
     participants: ParticipantTakingPartInCharismaEvent[],
   ): Promise<User[]> {
     const participations =
@@ -34,7 +35,7 @@ export class PrismaCharismaEventParticipations
   async add(
     ...participations: CreateCharismaEventParticipation[]
   ): Promise<CharismaEventParticipation[]> {
-    return Promise.all(
+    const newParticipations = await Promise.all(
       participations.map((participation) =>
         this.prisma.charismaEventParticipation.create({
           data: participation,
@@ -42,5 +43,9 @@ export class PrismaCharismaEventParticipations
         }),
       ),
     );
+    return newParticipations.map((participation) => ({
+      ...participation,
+      eventDate: participation.eventDate as DateString,
+    }));
   }
 }

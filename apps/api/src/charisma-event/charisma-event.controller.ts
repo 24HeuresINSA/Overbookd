@@ -5,12 +5,17 @@ import {
   Post,
   Body,
   Get,
+  Delete,
+  HttpCode,
+  Param,
+  ParseIntPipe,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -23,6 +28,7 @@ import { CharismaEventParticipationResponseDto } from "./dto/participation.respo
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
+import { DateString } from "@overbookd/date";
 
 @ApiTags("charisma-events")
 @Controller("charisma-events")
@@ -35,6 +41,20 @@ import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-pa
 })
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Get("all-participations")
+  @ApiResponse({
+    status: 200,
+    description: "List of all charisma event participations",
+    type: CharismaEventParticipationResponseDto,
+    isArray: true,
+  })
+  fetchAll(): Promise<CharismaEventParticipationResponseDto[]> {
+    return this.charismaEvent.fetchAll();
+  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
@@ -71,5 +91,37 @@ export class CharismaEventController {
     { event, participants }: CreateCharismaEventParticipationsRequestDto,
   ): Promise<CharismaEventParticipationResponseDto[]> {
     return this.charismaEvent.addParticipations(event, participants);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Delete(":slug/date/:date/participant/:participantId")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Charisma event participation deleted",
+  })
+  @ApiParam({
+    name: "slug",
+    description: "Charisma event slug",
+    type: String,
+  })
+  @ApiParam({
+    name: "date",
+    description: "Charisma event date",
+    type: String,
+  })
+  @ApiParam({
+    name: "participantId",
+    description: "Charisma event participant id",
+    type: Number,
+  })
+  removeParticipation(
+    @Param("slug") slug: string,
+    @Param("date") date: DateString,
+    @Param("participantId", ParseIntPipe) participantId: number,
+  ): Promise<void> {
+    return this.charismaEvent.removeParticipation(slug, date, participantId);
   }
 }

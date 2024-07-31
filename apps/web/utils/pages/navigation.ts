@@ -174,6 +174,16 @@ export const pages: Page[] = [
     mobileSupport: false,
     keywords: ["charisme", "evenements"],
   },
+  {
+    icon: "mdi-format-list-numbered",
+    title: "Evénements charismes",
+    permission: MANAGE_CHARISMA_EVENTS,
+    to: "/charisma/events/list",
+    description:
+      "Permet de voir la liste des participations aux événements charismatiques",
+    mobileSupport: false,
+    keywords: ["charisme", "evenements"],
+  },
   /*{
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",

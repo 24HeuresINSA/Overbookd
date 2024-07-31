@@ -9,13 +9,14 @@ import {
   SameParticipantMultipleTimes,
   AlreadyExists,
 } from "./charisma-event.error";
+import { DateString, OverDate } from "@overbookd/date";
 
 export type Participation = {
   slug: string;
   name: string;
   participant: User;
   charisma: number;
-  eventDate: Date;
+  eventDate: DateString;
 };
 
 export type ParticipantTakingPart = {
@@ -36,7 +37,7 @@ export type CharismaEventDefinition = {
 export type CharismaEventParticipations = {
   areAlreadyParticipating(
     eventSlug: string,
-    eventDate: Date,
+    eventDate: DateString,
     participants: ParticipantTakingPart[],
   ): Promise<User[]>;
   add(...participations: CreateParticipation[]): Promise<Participation[]>;
@@ -51,12 +52,14 @@ export class CharismaEvent {
   ): Promise<Participation[]> {
     const slug = this.generateSlug(name);
     this.checkCharismaPerHour(charismaPerHour);
-    await this.checkParticipants(participants, slug, eventDate);
+
+    const dateString = OverDate.from(eventDate).dateString;
+    await this.checkParticipants(participants, slug, dateString);
 
     const newEvents = participants.map((participant) => ({
       slug,
       name,
-      eventDate,
+      eventDate: dateString,
       participantId: participant.id,
       charisma: charismaPerHour * participant.hours,
     }));
@@ -77,7 +80,7 @@ export class CharismaEvent {
   private async checkParticipants(
     participants: ParticipantTakingPart[],
     eventSlug: string,
-    eventDate: Date,
+    eventDate: DateString,
   ): Promise<void> {
     if (participants.length === 0) throw new NoParticipant();
 

@@ -5,6 +5,7 @@ import {
   CreateParticipation,
   ParticipantTakingPart,
 } from "./charisma-event";
+import { DateString } from "@overbookd/date";
 
 export class InMemoryCharismaEventParticipations
   implements CharismaEventParticipations
@@ -16,7 +17,7 @@ export class InMemoryCharismaEventParticipations
 
   async areAlreadyParticipating(
     eventSlug: string,
-    eventDate: Date,
+    eventDate: DateString,
     participants: ParticipantTakingPart[],
   ): Promise<User[]> {
     return this.participations

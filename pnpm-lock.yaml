@@ -463,6 +463,9 @@ importers:
 
   domains/charisma:
     dependencies:
+      '@overbookd/date':
+        specifier: workspace:*
+        version: link:../../libraries/date
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period

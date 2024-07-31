@@ -5,7 +5,7 @@
     :items-per-page="-1"
     :search="search"
     class="my-4"
-    dense
+    density="comfortable"
   >
     <template #top>
       <v-text-field

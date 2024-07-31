@@ -1,4 +1,5 @@
 import { ONE_HOUR_IN_MS, IProvidePeriod, Period } from "@overbookd/period";
+import { formatLocalDate } from "./date.utils";
 
 type January = "01";
 type February = "02";
@@ -90,13 +91,13 @@ export class OverDate {
     protected readonly _hour: Hour,
   ) {}
 
-  static init({ date, hour }: { date: DateString; hour: Hour }) {
+  static init({ date, hour }: { date: DateString; hour: Hour }): OverDate {
     const hours = hour.toString().padStart(2, "0");
     const dateString = `${date}T${hours}:00+02:00`;
     return new OverDate(new Date(dateString), hour);
   }
 
-  static from(international: Date) {
+  static from(international: Date): OverDate {
     const [hourWithPad] = Intl.DateTimeFormat("fr", DISPLAY_HOUR)
       .format(international)
       .split(":");
@@ -114,6 +115,12 @@ export class OverDate {
 
   get date(): Date {
     return this._date;
+  }
+
+  get dateString(): DateString {
+    const date = formatLocalDate(this._date);
+    if (!isDateString(date)) throw new Error("Date invalide");
+    return date;
   }
 
   get hour(): Hour {

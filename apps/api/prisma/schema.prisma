@@ -175,10 +175,10 @@ model Contribution {
 model CharismaEventParticipation {
   slug          String
   name          String
-  participantId Int      @map("participant_id")
-  participant   User     @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  participantId Int    @map("participant_id")
+  participant   User   @relation(fields: [participantId], references: [id], onDelete: Cascade)
   charisma      Int
-  eventDate     DateTime @map("event_date")
+  eventDate     String @map("event_date") @db.VarChar(20)
 
   @@id([participantId, slug, eventDate])
   @@map("charisma_event_participation")

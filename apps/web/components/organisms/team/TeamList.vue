@@ -5,7 +5,7 @@
       :items="teams"
       :items-per-page="-1"
       :search="search"
-      dense
+      density="comfortable"
     >
       <template #top>
         <v-text-field

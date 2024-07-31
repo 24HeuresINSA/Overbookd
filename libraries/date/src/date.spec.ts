@@ -5,6 +5,7 @@ const friday: DateString = "2024-05-17";
 const saturday: DateString = "2024-05-18";
 const friday10h = new Date(`${friday}T10:00+02:00`);
 const friday12h = new Date(`${friday}T12:00+02:00`);
+const saturdayDate = new Date(saturday);
 
 describe("Over Date [Paris based date]", () => {
   describe.each`
@@ -70,5 +71,18 @@ describe("Over Date [Paris based date]", () => {
         });
       },
     );
+  });
+  describe("Generate date string", () => {
+    describe.each`
+      date            | expected
+      ${friday10h}    | ${friday}
+      ${friday12h}    | ${friday}
+      ${saturdayDate} | ${saturday}
+    `("when asking date string for $date", ({ date, expected }) => {
+      it(`should return ${expected}`, () => {
+        const availabilityDate = OverDate.from(date);
+        expect(availabilityDate.dateString).toBe(expected);
+      });
+    });
   });
 });

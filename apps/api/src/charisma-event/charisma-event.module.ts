@@ -3,9 +3,10 @@ import { CharismaEventController } from "./charisma-event.controller";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import { CharismaEventService } from "./charisma-event.service";
-import { PrismaCharismaEventParticipations } from "./repository/participations.prisma";
+import { PrismaCreateCharismaEventParticipations } from "./repository/create-participations.prisma";
 import { CharismaEvent } from "@overbookd/charisma";
 import { PrismaCharismaEventPotentialParticipants } from "./repository/potential-participants.prisma";
+import { PrismaViewCharismaEventParticipations } from "./repository/view-participations.prisma";
 
 @Module({
   controllers: [CharismaEventController],
@@ -17,27 +18,41 @@ import { PrismaCharismaEventPotentialParticipants } from "./repository/potential
       inject: [PrismaService],
     },
     {
-      provide: PrismaCharismaEventParticipations,
+      provide: PrismaCreateCharismaEventParticipations,
       useFactory: (prisma: PrismaService) =>
-        new PrismaCharismaEventParticipations(prisma),
+        new PrismaCreateCharismaEventParticipations(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaViewCharismaEventParticipations,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaViewCharismaEventParticipations(prisma),
       inject: [PrismaService],
     },
     {
       provide: CharismaEvent,
-      useFactory: (participants: PrismaCharismaEventParticipations) => {
+      useFactory: (participants: PrismaCreateCharismaEventParticipations) => {
         return new CharismaEvent(participants);
       },
-      inject: [PrismaCharismaEventParticipations],
+      inject: [PrismaCreateCharismaEventParticipations],
     },
     {
       provide: CharismaEventService,
       useFactory: (
         charismaEvent: CharismaEvent,
         potentialParticipants: PrismaCharismaEventPotentialParticipants,
+        viewParticipations: PrismaViewCharismaEventParticipations,
       ) => {
-        return new CharismaEventService(charismaEvent, potentialParticipants);
+        return new CharismaEventService(charismaEvent, {
+          potentialParticipants,
+          viewParticipations,
+        });
       },
-      inject: [CharismaEvent, PrismaCharismaEventPotentialParticipants],
+      inject: [
+        CharismaEvent,
+        PrismaCharismaEventPotentialParticipants,
+        PrismaViewCharismaEventParticipations,
+      ],
     },
   ],
   imports: [PrismaModule],
