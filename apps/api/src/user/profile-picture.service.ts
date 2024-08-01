@@ -4,6 +4,7 @@ import { FileService } from "../utils/file.service";
 import { SELECT_MY_USER_INFORMATION } from "./user.query";
 import { UserService } from "./user.service";
 import { MyUserInformation } from "@overbookd/user";
+import { SELECT_CHARISMA_PERIOD } from "../common/query/charisma.query";
 
 @Injectable()
 export class ProfilePictureService {
@@ -28,12 +29,15 @@ export class ProfilePictureService {
     if (currentProfilePicture) {
       this.fileService.deleteFile(currentProfilePicture);
     }
-    const user = await this.prisma.user.update({
-      where: { id: userId },
-      data: { profilePicture },
-      select: SELECT_MY_USER_INFORMATION,
-    });
-    return UserService.formatToMyInformation(user);
+    const [user, charismaPeriods] = await Promise.all([
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { profilePicture },
+        select: SELECT_MY_USER_INFORMATION,
+      }),
+      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+    ]);
+    return UserService.formatToMyInformation(user, charismaPeriods);
   }
 
   async streamProfilePicture(userId: number): Promise<StreamableFile> {

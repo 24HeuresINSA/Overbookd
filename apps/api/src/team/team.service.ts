@@ -11,6 +11,7 @@ import { SlugifyService } from "@overbookd/slugify";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 import { Team } from "@overbookd/team";
+import { SELECT_TEAMS_CODE } from "../common/query/user.query";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -78,7 +79,7 @@ export class TeamService {
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { teams: { select: { teamCode: true } } },
+      select: SELECT_TEAMS_CODE,
     });
     return user.teams.map((t) => t.teamCode);
   }

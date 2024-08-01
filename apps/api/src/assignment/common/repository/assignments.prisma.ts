@@ -25,8 +25,15 @@ import {
 } from "../../../user/user.query";
 import { UserService } from "../../../user/user.service";
 import { BE_AFFECTED } from "@overbookd/permission";
-import { HAS_POSITIVE_CHARISMA } from "./common.query";
+import { HAS_AVAILABILITIES } from "./availabilities.query";
 import { Period } from "@overbookd/period";
+import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import {
+  SELECT_CHARISMA_PERIOD,
+  SELECT_USER_DATA_FOR_CHARISMA,
+} from "../../../common/query/charisma.query";
+import { Charisma } from "@overbookd/charisma";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -106,29 +113,41 @@ export class PrismaAssignments implements AssignmentRepository {
   async getVolunteersAssignmentStats(): Promise<
     VolunteerWithAssignmentStats[]
   > {
-    const volunteers = await this.prisma.user.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        ...hasPermission(BE_AFFECTED),
-        ...HAS_POSITIVE_CHARISMA,
-      },
-      select: {
-        id: true,
-        firstname: true,
-        lastname: true,
-        charisma: true,
-        assigned: {
-          select: { assignment: { select: SELECT_PERIOD_AND_CATEGORY } },
+    const [volunteers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        where: {
+          ...IS_NOT_DELETED,
+          ...hasPermission(BE_AFFECTED),
+          ...HAS_AVAILABILITIES,
         },
+        select: {
+          ...SELECT_USER_IDENTIFIER,
+          ...SELECT_USER_DATA_FOR_CHARISMA,
+          assigned: {
+            select: { assignment: { select: SELECT_PERIOD_AND_CATEGORY } },
+          },
+        },
+        orderBy: { id: "asc" },
+      }),
+      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+    ]);
+    return volunteers.map(
+      ({
+        assigned,
+        charismaEventParticipations,
+        availabilities,
+        ...volunteer
+      }) => {
+        const stats = UserService.formatAssignmentStats(
+          assigned.map(({ assignment }) => assignment),
+        );
+        const charisma = Charisma.init()
+          .addEvents(charismaEventParticipations)
+          .addAvailabilities(availabilities, charismaPeriods)
+          .calculate();
+        return { ...volunteer, charisma, stats };
       },
-    });
-    return volunteers.map(({ assigned, ...volunteer }) => {
-      const stats = UserService.formatAssignmentStats(
-        assigned.map(({ assignment }) => assignment),
-      );
-      return { ...volunteer, stats };
-    });
+    );
   }
 }
 

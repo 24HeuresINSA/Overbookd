@@ -41,6 +41,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       sendSuccessNotification(
         `Les participants ont bien été ajoutés à l'événement ${event.name} ✅`,
       );
+      this.fetchPotentialParticipants();
     },
 
     async removeParticipation(participation: CharismaEventParticipation) {

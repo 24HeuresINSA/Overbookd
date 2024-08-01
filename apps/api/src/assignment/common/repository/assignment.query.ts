@@ -6,13 +6,15 @@ import {
 } from "@overbookd/assignment";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod } from "@overbookd/period";
+import {
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../../../common/query/user.query";
+import { User } from "@overbookd/user";
 
 export type DatabaseAssignee = {
   teamCode: string;
-  personalData: {
-    id: number;
-    firstname: string;
-    lastname: string;
+  personalData: User & {
     comment?: string;
     note?: string;
     teams: { teamCode: string }[];
@@ -22,9 +24,7 @@ export type DatabaseAssignee = {
   };
 };
 
-export type DatabaseAssignment = {
-  start: Date;
-  end: Date;
+export type DatabaseAssignment = IProvidePeriod & {
   festivalTask: {
     name: string;
     appointment: { name: string };
@@ -35,22 +35,14 @@ export type DatabaseAssignment = {
   };
 };
 
-const SELECT_FRIEND_PERSONAL_DATA = {
-  id: true,
-  lastname: true,
-  firstname: true,
-};
-
 const SELECT_ASSIGNEE_PERSONAL_DATA = {
-  id: true,
-  firstname: true,
-  lastname: true,
+  ...SELECT_USER_IDENTIFIER,
+  ...SELECT_TEAMS_CODE,
   comment: true,
   note: true,
-  teams: { select: { teamCode: true } },
-  friends: { select: { requestor: { select: SELECT_FRIEND_PERSONAL_DATA } } },
+  friends: { select: { requestor: { select: SELECT_USER_IDENTIFIER } } },
   friendRequestors: {
-    select: { friend: { select: SELECT_FRIEND_PERSONAL_DATA } },
+    select: { friend: { select: SELECT_USER_IDENTIFIER } },
   },
   assigned: { select: { assignment: { select: SELECT_PERIOD } } },
 };

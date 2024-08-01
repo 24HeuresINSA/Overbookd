@@ -19,10 +19,15 @@ import {
   COUNT_FRIENDS,
   hasAtLeastOneFriend,
 } from "../../common/repository/friend.query";
-import { HAS_POSITIVE_CHARISMA } from "../../common/repository/common.query";
+import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { Charisma } from "@overbookd/charisma";
+import {
+  MinimalCharismaPeriod,
+  SELECT_CHARISMA_PERIOD,
+} from "../../../common/query/charisma.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -33,22 +38,29 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period } = assignmentSpecification;
 
-    const volunteers = await this.prisma.user.findMany({
-      where: isAssignableOn(oneOfTheTeams, period),
-      select: {
-        ...SELECT_VOLUNTEER,
-        ...this.buildVolunteerAssignmentSelection(),
-        ...this.buildFestivalTaskMobilizationSelection(period),
-        ...this.buildAssignableFriendSelection(
-          assignmentIdentifier,
-          assignmentSpecification,
-        ),
-        ...COUNT_FRIENDS,
-      },
-    });
+    const [volunteers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        where: isAssignableOn(oneOfTheTeams, period),
+        select: {
+          ...SELECT_VOLUNTEER,
+          ...this.buildVolunteerAssignmentSelection(),
+          ...this.buildFestivalTaskMobilizationSelection(period),
+          ...this.buildAssignableFriendSelection(
+            assignmentIdentifier,
+            assignmentSpecification,
+          ),
+          ...COUNT_FRIENDS,
+        },
+      }),
+      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+    ]);
 
     return volunteers.map((volunteer) =>
-      toStoredAssignableVolunteer(volunteer, assignmentIdentifier),
+      toStoredAssignableVolunteer(
+        volunteer,
+        assignmentIdentifier,
+        charismaPeriods,
+      ),
     );
   }
 
@@ -134,6 +146,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 function toStoredAssignableVolunteer(
   volunteer: DatabaseStoredAssignableVolunteer,
   { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
+  charismaPeriods: MinimalCharismaPeriod[],
 ): StoredAssignableVolunteer {
   const assignments = volunteer.assigned.flatMap(({ assignment }) => ({
     start: assignment.start,
@@ -166,12 +179,16 @@ function toStoredAssignableVolunteer(
     })
     .map(({ id }) => id);
 
+  const charisma = Charisma.init()
+    .addEvents(volunteer.charismaEventParticipations)
+    .addAvailabilities(volunteer.availabilities, charismaPeriods)
+    .calculate();
   return {
     id: volunteer.id,
     firstname: volunteer.firstname,
     lastname: volunteer.lastname,
     nickname: volunteer.nickname,
-    charisma: volunteer.charisma,
+    charisma,
     comment: volunteer.comment,
     note: volunteer.note,
     teams: volunteer.teams.map((team) => team.teamCode),
@@ -186,7 +203,7 @@ function toStoredAssignableVolunteer(
 function isAssignableOn(oneOfTheTeams: string[], period: Period) {
   return {
     ...IS_NOT_DELETED,
-    ...HAS_POSITIVE_CHARISMA,
+    ...HAS_AVAILABILITIES,
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
     breaks: { none: overlapPeriodCondition(period) },

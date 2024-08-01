@@ -3,13 +3,12 @@ import { PrismaService } from "../../../prisma.service";
 import { UserNameWithTeams, Volunteers } from "../planning.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { Period } from "@overbookd/period";
+import {
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../../../common/query/user.query";
 
-const SELECT_VOLUNTEER = {
-  firstname: true,
-  lastname: true,
-  nickname: true,
-  teams: { select: { teamCode: true } },
-};
+const SELECT_VOLUNTEER = { ...SELECT_USER_IDENTIFIER, ...SELECT_TEAMS_CODE };
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -18,9 +17,7 @@ export class PrismaVolunteers implements Volunteers {
     const volunteers = await this.prisma.user.findMany({
       where: { assigned: { some: {} }, preference: { paperPlanning: true } },
       select: {
-        id: true,
         ...SELECT_VOLUNTEER,
-        teams: { select: { teamCode: true } },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
       },
     });

@@ -7,6 +7,7 @@ import { Category } from "@overbookd/festival-event-constants";
 import { countAssigneesInTeam } from "@overbookd/assignment";
 import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
 
 type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
   id: string;
@@ -32,7 +33,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
     const volunteer = await this.prisma.user.findUnique({
       where: { id: volunteerId, ...IS_NOT_DELETED },
       select: {
-        teams: { select: { teamCode: true } },
+        ...SELECT_TEAMS_CODE,
         availabilities: { select: SELECT_PERIOD },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
         breaks: { select: SELECT_PERIOD },

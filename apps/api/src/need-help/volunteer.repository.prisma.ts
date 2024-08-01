@@ -4,7 +4,11 @@ import { PrismaService } from "../prisma.service";
 import { Injectable } from "@nestjs/common";
 import { HelpingVolunteer } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
-import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../common/query/user.query";
+import {
+  IS_MEMBER_OF_VOLUNTEER_TEAM,
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../common/query/user.query";
 
 type DatabaseHelpingVolunteer = {
   id: number;
@@ -32,13 +36,11 @@ const SELECT_ASSIGNEES = {
 };
 
 const SELECT_VOLUNTEER = {
-  id: true,
-  lastname: true,
-  firstname: true,
-  phone: true,
-  teams: { select: { teamCode: true } },
-  availabilities: { select: SELECT_PERIOD },
+  ...SELECT_USER_IDENTIFIER,
+  ...SELECT_TEAMS_CODE,
   ...SELECT_ASSIGNEES,
+  phone: true,
+  availabilities: { select: SELECT_PERIOD },
 };
 
 @Injectable()

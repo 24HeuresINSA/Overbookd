@@ -41,7 +41,6 @@ model User {
   resetPasswordToken     String?                 @unique @map("reset_password_token")
   resetPasswordExpires   DateTime?               @map("reset_password_expires")
   profilePicture         String?                 @map("profile_picture")
-  charisma               Int                     @default(0)
   balance                Int                     @default(0)
   password               String                  @default("")
   createdAt              DateTime                @default(now()) @map("created_at")

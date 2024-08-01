@@ -10,3 +10,7 @@ export const SELECT_USER_IDENTIFIER = {
 export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: { some: { team: { code: BENEVOLE_CODE } } },
 };
+
+export const SELECT_TEAMS_CODE = {
+  teams: { select: { teamCode: true } },
+};

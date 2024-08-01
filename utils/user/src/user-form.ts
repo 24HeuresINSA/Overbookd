@@ -7,6 +7,5 @@ export type UserUpdateForm = {
   phone?: string;
   comment?: string | null;
   profilePicture?: string;
-  charisma?: number;
   note?: string | null;
 };

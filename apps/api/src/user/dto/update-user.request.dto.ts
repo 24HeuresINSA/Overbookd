@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsMobilePhone,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
 } from "class-validator";
@@ -82,15 +81,6 @@ export class UpdateUserRequestDto implements UserUpdateForm {
   @IsString()
   @IsNotEmpty()
   profilePicture?: string;
-
-  @ApiProperty({
-    required: false,
-    description: "The user charisma points",
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsNumber()
-  charisma?: number;
 
   @ApiProperty({
     required: false,

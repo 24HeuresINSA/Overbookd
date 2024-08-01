@@ -8,6 +8,9 @@
     </template>
 
     <template #content>
+      <p class="charisma">
+        Charisme: <strong>{{ volunteer.charisma }}</strong> 😎
+      </p>
       <div class="team-list">
         <TeamChip
           v-for="team in volunteer.teams"
@@ -40,15 +43,6 @@
         label="Surnom"
         prepend-icon="mdi-account"
         :readonly="!canManageUsers"
-      />
-
-      <v-text-field
-        v-model="charisma"
-        type="number"
-        label="Points de charisme"
-        prepend-icon="mdi-emoticon-cool-outline"
-        :rules="[rules.required, rules.number]"
-        :disabled="!canManageUsers"
       />
 
       <v-text-field
@@ -165,7 +159,6 @@ const volunteerId = computed<number>(() => props.volunteer.id);
 const nickname = ref<string | null>(null);
 const phone = ref<string>("");
 const email = ref<string>("");
-const charisma = ref<number>(0);
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
@@ -198,7 +191,6 @@ const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
   phone.value = props.volunteer.phone ?? "";
   email.value = props.volunteer.email ?? "";
-  charisma.value = props.volunteer.charisma ?? 0;
   note.value = props.volunteer.note ?? null;
 
   if (props.volunteer.profilePictureBlob) return;
@@ -244,7 +236,6 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
     nickname: nickname.value,
     phone: phone.value,
     email: email.value,
-    charisma: +charisma.value,
     note: trimmedNote,
   };
 });
@@ -273,7 +264,10 @@ const callPhoneNumber = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
+  h2 {
+    line-height: 1;
+  }
   @media only screen and (max-width: $mobile-max-width) {
     .profile-picture {
       max-width: 100px;
@@ -281,6 +275,12 @@ const callPhoneNumber = () => {
       font-size: 80px;
     }
   }
+}
+
+.charisma {
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 3px;
 }
 
 .team-list {

@@ -8,6 +8,7 @@ import {
   TimelineTask,
 } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
+import { SELECT_TEAMS_CODE } from "../common/query/user.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   assignees: {
@@ -96,7 +97,7 @@ export class TimelineService {
           firstname: true,
           lastname: true,
           phone: true,
-          teams: { select: { teamCode: true } },
+          ...SELECT_TEAMS_CODE,
         },
       },
       as: true,

@@ -45,6 +45,11 @@ import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.que
 import { Balance } from "@overbookd/personal-account";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import {
+  MinimalCharismaPeriod,
+  SELECT_CHARISMA_PERIOD,
+} from "../common/query/charisma.query";
+import { Charisma } from "@overbookd/charisma";
 
 @Injectable()
 export class UserService {
@@ -62,19 +67,22 @@ export class UserService {
         ? SELECT_USER_PERSONAL_DATA_WITH_NOTE
         : SELECT_USER_PERSONAL_DATA;
 
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select,
-    });
-    return UserService.formatToPersonalData(user);
+    const [user, charismaPeriods] = await Promise.all([
+      this.prisma.user.findUnique({ where: { id }, select }),
+      this.selectCharismaPeriods(),
+    ]);
+    return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
   async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: SELECT_MY_USER_INFORMATION,
-    });
-    return UserService.formatToMyInformation(user);
+    const [user, charismaPeriods] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { id },
+        select: SELECT_MY_USER_INFORMATION,
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return UserService.formatToMyInformation(user, charismaPeriods);
   }
 
   async getUserPassword(email: string): Promise<UserPasswordOnly | null> {
@@ -96,12 +104,15 @@ export class UserService {
     authorInformation: JwtPayload,
     profile: Partial<Profile>,
   ): Promise<MyUserInformation | null> {
-    const updatedUser = await this.prisma.user.update({
-      where: { id: authorInformation.id },
-      data: profile,
-      select: SELECT_MY_USER_INFORMATION,
-    });
-    return UserService.formatToMyInformation(updatedUser);
+    const [updatedUser, charismaPeriods] = await Promise.all([
+      this.prisma.user.update({
+        where: { id: authorInformation.id },
+        data: profile,
+        select: SELECT_MY_USER_INFORMATION,
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return UserService.formatToMyInformation(updatedUser, charismaPeriods);
   }
 
   async approveEndUserLicenceAgreement({ id }: JwtPayload): Promise<void> {
@@ -112,46 +123,55 @@ export class UserService {
   }
 
   async getAll(): Promise<UserPersonalData[]> {
-    const users = await this.prisma.user.findMany({
-      orderBy: { id: "asc" },
-      where: IS_NOT_DELETED,
-      select: SELECT_USER_PERSONAL_DATA,
-    });
-    return users.map(UserService.formatToPersonalData);
+    const [users, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        where: IS_NOT_DELETED,
+        select: SELECT_USER_PERSONAL_DATA,
+        orderBy: { id: "asc" },
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return users.map((user) =>
+      UserService.formatToPersonalData(user, charismaPeriods),
+    );
   }
 
   async getVolunteers(): Promise<UserPersonalData[]> {
-    const users = await this.prisma.user.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        ...hasPermission(BE_AFFECTED),
-      },
-      select: SELECT_USER_PERSONAL_DATA,
-    });
-    return users.map(UserService.formatToPersonalData);
+    const [volunteers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        where: { ...IS_NOT_DELETED, ...hasPermission(BE_AFFECTED) },
+        select: SELECT_USER_PERSONAL_DATA,
+        orderBy: { id: "asc" },
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return volunteers.map((volunteer) =>
+      UserService.formatToPersonalData(volunteer, charismaPeriods),
+    );
   }
 
   getAdherents(): Promise<User[]> {
     return this.prisma.user.findMany({
       orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        ...hasPermission(PAY_CONTRIBUTION),
-      },
+      where: { ...IS_NOT_DELETED, ...hasPermission(PAY_CONTRIBUTION) },
       select: SELECT_USER_IDENTIFIER,
     });
   }
 
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
-    const users = await this.prisma.user.findMany({
-      where: hasPermission(HAVE_PERSONAL_ACCOUNT),
-      select: {
-        ...SELECT_USER_PERSONAL_DATA,
-        ...SELECT_TRANSACTIONS_FOR_BALANCE,
-      },
-    });
-    return users.map(UserService.formatToConsumer);
+    const [consumers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        where: hasPermission(HAVE_PERSONAL_ACCOUNT),
+        select: {
+          ...SELECT_USER_PERSONAL_DATA,
+          ...SELECT_TRANSACTIONS_FOR_BALANCE,
+        },
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return consumers.map((consumer) =>
+      UserService.formatToConsumer(consumer, charismaPeriods),
+    );
   }
 
   async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
@@ -187,14 +207,15 @@ export class UserService {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
-    const filteredPersonalData = this.filterUpdatableUserData(author, userData);
-
-    const user = await this.prisma.user.update({
-      select: SELECT_USER_PERSONAL_DATA,
-      data: filteredPersonalData,
-      where: { id: targetId },
-    });
-    return UserService.formatToPersonalData(user);
+    const [user, charismaPeriods] = await Promise.all([
+      this.prisma.user.update({
+        where: { id: targetId },
+        select: SELECT_USER_PERSONAL_DATA,
+        data: userData,
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -205,6 +226,12 @@ export class UserService {
     if (!user) return;
 
     return this.softDeleteUser(id);
+  }
+
+  private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
+    return this.prisma.charismaPeriod.findMany({
+      select: SELECT_CHARISMA_PERIOD,
+    });
   }
 
   private async softDeleteUser(id: number): Promise<void> {
@@ -244,35 +271,53 @@ export class UserService {
 
   static formatToPersonalData(
     user: DatabaseUserPersonalData,
+    charismaPeriods: MinimalCharismaPeriod[],
   ): UserPersonalData {
-    const { teams, ...userWithoutTeams } = user;
+    const {
+      teams,
+      availabilities,
+      charismaEventParticipations,
+      ...userWithoutTeams
+    } = user;
+
+    const charisma = Charisma.init()
+      .addEvents(charismaEventParticipations)
+      .addAvailabilities(availabilities, charismaPeriods)
+      .calculate();
     return {
       ...userWithoutTeams,
+      charisma,
       teams: extractTeamCodes(teams),
     };
   }
 
-  static formatToConsumer(user: DatabaseConsumer): Consumer {
-    const { teams, transactionsFrom, transactionsTo, ...userWithoutTeams } =
-      user;
+  static formatToConsumer(
+    user: DatabaseConsumer,
+    charismaPeriods: MinimalCharismaPeriod[],
+  ): Consumer {
+    const { transactionsFrom, transactionsTo, ...personalData } = user;
     return {
-      ...userWithoutTeams,
-      teams: extractTeamCodes(teams),
+      ...this.formatToPersonalData(personalData, charismaPeriods),
       balance: Balance.calculate({ transactionsFrom, transactionsTo }),
     };
   }
 
   static formatToMyInformation(
     user: DatabaseMyUserInformation,
+    charismaPeriods: MinimalCharismaPeriod[],
   ): MyUserInformation {
-    const teams = extractTeamCodes(user.teams);
-    const permissions = retrievePermissions(user.teams);
-    const { _count, transactionsFrom, transactionsTo, ...userWithoutCount } =
-      user;
+    const {
+      _count,
+      transactionsFrom,
+      transactionsTo,
+      hasApprovedEULA,
+      ...personalData
+    } = user;
+
     return {
-      ...userWithoutCount,
-      teams,
-      permissions: [...permissions],
+      ...this.formatToPersonalData(personalData, charismaPeriods),
+      hasApprovedEULA,
+      permissions: [...retrievePermissions(user.teams)],
       tasksCount: _count.assigned,
       balance: Balance.calculate({ transactionsFrom, transactionsTo }),
     };
@@ -280,14 +325,6 @@ export class UserService {
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
     return author.can(MANAGE_USERS) || author.id === targetUserId;
-  }
-
-  private filterUpdatableUserData(
-    author: JwtUtil,
-    userData: UserUpdateForm,
-  ): UserUpdateForm {
-    const charisma = author.can(MANAGE_USERS) ? userData.charisma : undefined;
-    return { ...userData, charisma };
   }
 }
 

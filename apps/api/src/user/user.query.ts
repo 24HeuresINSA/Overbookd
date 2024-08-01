@@ -2,15 +2,16 @@ import { Permission } from "@overbookd/permission";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import { SELECT_USER_DATA_FOR_CHARISMA } from "../common/query/charisma.query";
 
 const SELECT_USER = {
   ...SELECT_USER_IDENTIFIER,
+  ...SELECT_USER_DATA_FOR_CHARISMA,
   email: true,
   birthdate: true,
   phone: true,
   comment: true,
   profilePicture: true,
-  charisma: true,
   note: true,
 };
 
