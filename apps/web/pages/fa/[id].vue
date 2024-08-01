@@ -29,6 +29,11 @@ const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
 const activityIdFromUrl = computed<number>(() => +route.params.id);
+const name = computed<string>(() => selectedActivity.value.general.name);
+const headTitle = computed<string>(() => {
+  const displayedName = name.value ? ` - ${name.value}` : "";
+  return `FA ${activityIdFromUrl.value}${displayedName}`;
+});
 
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
@@ -37,9 +42,8 @@ onMounted(async () => {
   }
 });
 
-useHead({
-  title: `FA ${selectedActivity.value.id} - ${selectedActivity.value.general.name}`,
-});
+useHead({ title: headTitle.value });
+watch(name, () => (document.title = headTitle.value));
 
 const publishFeedback = (content: string) => {
   faStore.publishFeedback({ content });

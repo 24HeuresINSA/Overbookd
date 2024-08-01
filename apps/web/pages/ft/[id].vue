@@ -51,6 +51,11 @@ const userStore = useUserStore();
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const taskIdFromUrl = computed<number>(() => +route.params.id);
+const name = computed<string>(() => selectedTask.value.general.name);
+const headTitle = computed<string>(() => {
+  const displayedName = name.value ? ` - ${name.value}` : "";
+  return `FT ${taskIdFromUrl.value}${displayedName}`;
+});
 
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
@@ -59,9 +64,8 @@ onMounted(async () => {
   }
 });
 
-useHead({
-  title: `FT ${selectedTask.value.id} - ${selectedTask.value.general.name}`,
-});
+useHead({ title: headTitle.value });
+watch(name, () => (document.title = headTitle.value));
 
 const isValidatedOrReadyToAssign = computed<boolean>(() => {
   const isTaskValidated = isValidated(selectedTask.value);
