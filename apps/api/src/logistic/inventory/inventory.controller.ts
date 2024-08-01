@@ -20,7 +20,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { WRITE_INVENTORY } from "@overbookd/permission";
+import { READ_INVENTORY, WRITE_INVENTORY } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
@@ -45,7 +45,7 @@ import { InventoryService } from "./inventory.service";
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Permission(WRITE_INVENTORY)
+  @Permission(READ_INVENTORY)
   @Get()
   @ApiResponse({
     status: 200,
@@ -86,7 +86,7 @@ export class InventoryController {
     return this.inventoryService.setup(records);
   }
 
-  @Permission(WRITE_INVENTORY)
+  @Permission(READ_INVENTORY)
   @Get(":gearId")
   @ApiResponse({
     status: 200,

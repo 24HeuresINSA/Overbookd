@@ -10,6 +10,7 @@ export const WRITE_SIGNAGE_CATALOG = "write-signage-catalog";
 export const VIEW_GEAR_DASHBOARD = "view-gear-dashboard";
 export const VIEW_LOCATION = "view-location";
 export const MANAGE_LOCATION = "manage-location";
+export const READ_INVENTORY = "read-inventory";
 export const WRITE_INVENTORY = "write-inventory";
 export const MANAGE_PERSONAL_ACCOUNTS = "manage-personal-accounts";
 export const MANAGE_USERS = "manage-users";
@@ -56,6 +57,7 @@ const permissions = [
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
   VIEW_LOCATION,
+  READ_INVENTORY,
   WRITE_INVENTORY,
   MANAGE_PERSONAL_ACCOUNTS,
   MANAGE_USERS,

@@ -44,6 +44,7 @@ import {
   FORCE_WRITE_FT,
   SYNC_PLANNING,
   MANAGE_CHARISMA_EVENTS,
+  READ_INVENTORY,
 } from "./permissions.js";
 
 export type Permission =
@@ -56,6 +57,7 @@ export type Permission =
   | typeof READ_SIGNAGE_CATALOG
   | typeof WRITE_SIGNAGE_CATALOG
   | typeof VIEW_LOCATION
+  | typeof READ_INVENTORY
   | typeof WRITE_INVENTORY
   | typeof MANAGE_PERSONAL_ACCOUNTS
   | typeof MANAGE_USERS

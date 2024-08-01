@@ -36,6 +36,7 @@ import {
   BORROW_GEARS,
   SYNC_PLANNING,
   MANAGE_CHARISMA_EVENTS,
+  READ_INVENTORY,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -138,6 +139,19 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "signa" }, { teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: READ_INVENTORY,
+    description: "Peut lire l'inventaire",
+    teams: {
+      createMany: {
+        data: [
+          { teamCode: "matos" },
+          { teamCode: "elec" },
+          { teamCode: "hard" },
+        ],
       },
     },
   },

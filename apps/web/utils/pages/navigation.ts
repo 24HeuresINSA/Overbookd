@@ -14,8 +14,8 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   READ_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
-  WRITE_INVENTORY,
   MANAGE_CHARISMA_EVENTS,
+  READ_INVENTORY,
 } from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
 
@@ -290,7 +290,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-warehouse",
     title: "Inventaire",
-    permission: WRITE_INVENTORY,
+    permission: READ_INVENTORY,
     to: "/logistic/inventory",
     description:
       "Permet de compter l'ensemble du matériel appartenant à l'association",
