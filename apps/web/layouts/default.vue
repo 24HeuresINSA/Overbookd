@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <v-app class="layout">
     <Header />
     <div class="side-with-main">
       <SideNav />
@@ -19,7 +19,7 @@
     >
       <ApproveEULADialogCard />
     </v-dialog>
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts" setup>
