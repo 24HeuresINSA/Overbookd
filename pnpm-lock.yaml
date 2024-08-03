@@ -15,8 +15,8 @@ importers:
         specifier: 10.0.1
         version: 10.0.1(semantic-release@23.1.1(typescript@5.5.4))
       '@semantic-release/gitlab':
-        specifier: 13.2.0
-        version: 13.2.0(semantic-release@23.1.1(typescript@5.5.4))
+        specifier: 13.2.1
+        version: 13.2.1(semantic-release@23.1.1(typescript@5.5.4))
       '@semantic-release/npm':
         specifier: 11.0.3
         version: 11.0.3(semantic-release@23.1.1(typescript@5.5.4))
@@ -2184,8 +2184,8 @@ packages:
     peerDependencies:
       semantic-release: '>=20.1.0'
 
-  '@semantic-release/gitlab@13.2.0':
-    resolution: {integrity: sha512-bkEc4kR2OeVUtqjhIzATFsQ5QpMlOpXY6goDLSWPinqCqJcN+hWIS1M4qqu8SXsL2XvKaV2RAQY8Yd38duStJQ==}
+  '@semantic-release/gitlab@13.2.1':
+    resolution: {integrity: sha512-uvajKL3RbvouunvF6rWCEWmvYFW5tCq8irXvb2tW40cdI5rK22q9Uma1m/PxPtUTjggqfap86G0gst1hgeFuow==}
     engines: {node: '>=20.8.1'}
     peerDependencies:
       semantic-release: '>=20.1.0'
@@ -10292,7 +10292,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/gitlab@13.2.0(semantic-release@23.1.1(typescript@5.5.4))':
+  '@semantic-release/gitlab@13.2.1(semantic-release@23.1.1(typescript@5.5.4))':
     dependencies:
       '@semantic-release/error': 4.0.0
       aggregate-error: 5.0.0
