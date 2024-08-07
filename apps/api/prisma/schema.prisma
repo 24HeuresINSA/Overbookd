@@ -637,7 +637,7 @@ model FestivalTaskMobilizationVolunteer {
   mobilizationftId Int                      @map("mobilization_ft_id")
 
   @@id([volunteerId, mobilizationId, mobilizationftId])
-  @@map("festival_task_moblilization_volunteer")
+  @@map("festival_task_mobilization_volunteer")
 }
 
 model FestivalTaskMobilizationTeam {
