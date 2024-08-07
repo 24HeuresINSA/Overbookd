@@ -8,6 +8,7 @@ export type {
 export type { UserUpdateForm } from "./user-form.js";
 export {
   buildUserName,
+  nicknameOrFirstName,
   nicknameOrName,
   buildUserNameWithNickname,
 } from "./user.utils.js";

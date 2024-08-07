@@ -4,7 +4,7 @@
     <v-card>
       <v-card-text v-if="loggedUser" class="user-card__content">
         <div class="picture">
-          <ProfilePicture :user="loggedUser" class="profilePicture" />
+          <ProfilePicture :user="loggedUser" class="profile-picture" />
           <v-btn
             :text="`📸 ${loggedUser.profilePicture ? 'Changer' : 'Ajouter'}`"
             @click="isProfilePictureDialogOpen = true"
@@ -276,10 +276,7 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
     }
   }
 }
-.profilePicture {
-  border-radius: 50%;
-  max-width: 100px;
-  max-height: 100px;
+.profile-picture {
   margin-bottom: 15px;
 }
 .planning-preference {

@@ -7,7 +7,6 @@
         <div class="content">
           <slot />
         </div>
-        <Footer />
       </div>
     </div>
 
@@ -23,9 +22,8 @@
 </template>
 
 <script lang="ts" setup>
-import Header from "~/layouts/parts/header.vue";
-import SideNav from "~/layouts/parts/side-nav.vue";
-import Footer from "~/layouts/parts/footer.vue";
+import Header from "~/layouts/parts/Header.vue";
+import SideNav from "~/layouts/parts/SideNav.vue";
 
 const userStore = useUserStore();
 

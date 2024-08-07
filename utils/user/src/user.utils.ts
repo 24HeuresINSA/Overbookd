@@ -9,6 +9,10 @@ export function nicknameOrName(user: UserName): string {
   return nickname ?? buildUserName(name);
 }
 
+export function nicknameOrFirstName({ nickname, firstname }: UserName): string {
+  return nickname ?? firstname;
+}
+
 export function buildUserNameWithNickname(user: UserName): string {
   const { nickname, ...name } = user;
   const displayedNickname = nickname ? ` (${nickname})` : "";

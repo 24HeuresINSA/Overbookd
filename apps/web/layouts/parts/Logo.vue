@@ -26,22 +26,20 @@ const logo = computed<string>(() => {
 const track = "audio/jaune.m4a";
 
 watch(counter, (newCounter) => {
-  if (newCounter === TWENTY_FOUR) {
-    const audio = new Audio(track);
-    audio.play();
-  }
+  if (newCounter !== TWENTY_FOUR) return;
+  const audio = new Audio(track);
+  audio.play();
 });
 
-function increment() {
-  counter.value++;
-}
+const increment = () => counter.value++;
 </script>
 
 <style lang="scss" scoped>
 .application {
   display: flex;
-  gap: 3px;
+  gap: 6px;
   align-items: center;
+  text-decoration: none;
 
   .logo {
     max-width: 200px;
@@ -49,7 +47,10 @@ function increment() {
   }
 
   .version {
+    margin-top: 2px;
     font-weight: 600;
+    font-size: 0.95rem;
+    color: rgb(var(--v-theme-on-surface));
     @media only screen and (max-width: $mobile-max-width) {
       display: none;
     }

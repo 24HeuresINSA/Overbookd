@@ -86,10 +86,6 @@ $background-color: $white;
 
 aside {
   position: fixed;
-  box-shadow:
-    0 2px 4px 0px rgba(0, 0, 0, 0.4),
-    0 4px 5px 0 rgba(0, 0, 0, 0.34),
-    0 1px 10px 0 rgba(0, 0, 0, 0.32);
   top: $header-height;
   z-index: 8;
   height: calc(100vh - #{$header-height});

@@ -4,6 +4,8 @@ export class BugReport {
     actualBehavior: string,
     stepsToReproduce: string,
   ): string {
+    const config = useRuntimeConfig();
+
     return `# URL ou page
 ${window.location.href}
 
@@ -17,7 +19,7 @@ ${actualBehavior}
 ${stepsToReproduce}
 
 # Informations complémentaires
-version: ${process.env.OVERBOOKD_VERSION}  
+version: ${config.public.version}  
 user agent: ${navigator.userAgent}  
 date: ${Date().toLocaleString()}  
 resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;

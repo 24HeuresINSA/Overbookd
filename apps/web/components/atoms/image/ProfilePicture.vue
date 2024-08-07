@@ -1,11 +1,11 @@
 <template>
   <img
     v-if="hasProfilePictureBlob"
-    class="userProfilePicture"
+    class="profile-picture__photo"
     :class="{ small }"
     :src="user.profilePictureBlob"
   />
-  <v-icon v-else class="defaultProfilePicture" :class="{ small }">
+  <v-icon v-else class="profile-picture__icon" :class="{ small }">
     mdi-account-circle
   </v-icon>
 </template>
@@ -32,9 +32,7 @@ const hasProfilePictureBlob = computed<boolean>(
   () => props.user.profilePictureBlob !== undefined,
 );
 
-const fetchProfilePictureBlob = () => {
-  return userStore.setProfilePicture(props.user);
-};
+const fetchProfilePictureBlob = () => userStore.setProfilePicture(props.user);
 
 watch(
   () => props.user.profilePictureBlob,
@@ -47,21 +45,29 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.userProfilePicture {
-  height: 150px;
-  width: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  padding: 15px;
-}
+.profile-picture {
+  &__photo {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    &.small {
+      height: 50px;
+      width: 50px;
+      @media only screen and (max-width: $mobile-max-width) {
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
 
-.defaultProfilePicture {
-  font-size: 150px;
-  align-self: center;
-  &.small {
-    font-size: 55px;
-    @media only screen and (max-width: $mobile-max-width) {
-      font-size: 45px;
+  &__icon {
+    font-size: 150px;
+    &.small {
+      font-size: 50px;
+      @media only screen and (max-width: $mobile-max-width) {
+        font-size: 40px;
+      }
     }
   }
 }
