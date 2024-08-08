@@ -42,6 +42,7 @@ const close = () => emit("close");
   &__title {
     display: flex;
     justify-content: center;
+    padding-bottom: 0 !important;
     h2 {
       flex: 1;
       text-align: center;
@@ -55,6 +56,7 @@ const close = () => emit("close");
     }
   }
   &__content {
+    padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
   &__actions {

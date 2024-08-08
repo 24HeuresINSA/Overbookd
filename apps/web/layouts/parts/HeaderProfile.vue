@@ -79,6 +79,9 @@ const logout = async () => {
     max-width: 300px;
     height: 100%;
     cursor: pointer;
+    @media only screen and (max-width: $mobile-max-width) {
+      min-width: unset;
+    }
   }
 
   &__data {
@@ -89,6 +92,9 @@ const logout = async () => {
   &__information {
     display: flex;
     flex-direction: column;
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
   }
   &__name {
     font-size: 1.1rem;
@@ -100,6 +106,9 @@ const logout = async () => {
   }
   .extend-icon {
     transition: transform 0.3s ease;
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
   }
   &:hover .extend-icon {
     transform: rotate(180deg);

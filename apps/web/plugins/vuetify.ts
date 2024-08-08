@@ -5,7 +5,7 @@ const classicLightTheme: ThemeDefinition = {
   dark: false,
   colors: {
     primary: "#41C5E5",
-    "primary-light": "#81D3E7",
+    "primary-lighten": "#81D3E7",
     "on-primary": "#FFFFFF",
     secondary: "#FFCB29",
     "on-secondary": "#2A2A2A",
@@ -22,6 +22,10 @@ const classicLightTheme: ThemeDefinition = {
     "on-warning": "#2A2A2A",
     error: "#ED1D45",
     "on-error": "#FFFFFF",
+  },
+  variables: {
+    "high-emphasis-opacity": 0.98,
+    "medium-emphasis-opacity": 0.95,
   },
 };
 

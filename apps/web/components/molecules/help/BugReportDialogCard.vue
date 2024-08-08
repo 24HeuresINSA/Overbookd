@@ -1,6 +1,6 @@
 <template>
   <DialogCard @close="close">
-    <template #title>Signaler un bug ou feature request</template>
+    <template #title>Signaler un bug</template>
     <template #content>
       <p>
         Pour signaler un bug, envoie un mail à <br />

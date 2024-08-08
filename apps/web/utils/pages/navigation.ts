@@ -31,7 +31,7 @@ export type Page = {
 
 export const pages: Page[] = [
   {
-    icon: "mdi-apps",
+    icon: "mdi-home",
     title: "Accueil",
     to: "/",
     description: "Page principale pour se rediriger vers toutes les autres",
