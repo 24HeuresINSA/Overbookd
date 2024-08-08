@@ -32,7 +32,6 @@
         <TipTap
           :model-value="general.description ?? ''"
           label="Description"
-          class="elevation-1"
           @update:model-value="updateDescription"
         />
 

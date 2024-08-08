@@ -9,7 +9,7 @@
       class="charisma-event__settings"
       @save="addParticipations"
     />
-    <CharismaEventParticipantTable
+    <CharismaEventParticipantTableCard
       v-model:potential-participants="potentialParticipantsWithHours"
       :charisma-per-hour="charismaPerHour"
       :loading="loading"

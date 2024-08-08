@@ -1,39 +1,43 @@
 <template>
   <h1 class="page-title">Participations aux événements charismatiques</h1>
-  <v-data-table
-    :headers="tableHeaders"
-    :items="filteredParticipations"
-    :items-per-page="50"
-    :loading="loading"
-    density="comfortable"
-    loading-text="Chargement des participations aux événements..."
-    no-data-text="Aucune participation aux événements"
-  >
-    <template #top>
-      <v-text-field
-        v-model="search"
-        label="Rechercher une participation"
-        hide-details
-      />
-    </template>
-
-    <template #item.eventDate="{ item }">
-      {{ formatDate(new Date(item.eventDate)) }}
-    </template>
-
-    <template #item.participant="{ item }">
-      {{ buildUserNameWithNickname(item.participant) }}
-    </template>
-
-    <template #item.removal="{ item }">
-      <v-btn
-        icon="mdi-delete"
-        size="small"
+  <v-card>
+    <v-card-text>
+      <v-data-table
+        :headers="tableHeaders"
+        :items="filteredParticipations"
+        :items-per-page="50"
+        :loading="loading"
         density="comfortable"
-        @click="removeParticipation(item)"
-      />
-    </template>
-  </v-data-table>
+        loading-text="Chargement des participations aux événements..."
+        no-data-text="Aucune participation aux événements"
+      >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Rechercher une participation"
+            hide-details
+          />
+        </template>
+
+        <template #item.eventDate="{ item }">
+          {{ formatDate(new Date(item.eventDate)) }}
+        </template>
+
+        <template #item.participant="{ item }">
+          {{ buildUserNameWithNickname(item.participant) }}
+        </template>
+
+        <template #item.removal="{ item }">
+          <v-btn
+            icon="mdi-delete"
+            size="small"
+            density="comfortable"
+            @click="removeParticipation(item)"
+          />
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

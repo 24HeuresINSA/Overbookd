@@ -1,78 +1,80 @@
 <template>
   <h1 class="page-title">Animations à publier</h1>
-  <v-data-table
-    :headers="tableHeaders"
-    :items="animations"
-    :loading="loading"
-    loading-text="Chargement des animations à publier..."
-    no-data-text="Aucune animation à publier"
-    :hover="animations.length > 0"
-    class="fa"
-    @click:row="openActivity"
-    @auxclick:row="openActivityInNewTab"
-  >
-    <template #item.id="{ item }">
-      <div class="status">
-        <v-chip :class="item.status.toLowerCase()">
-          {{ item.id }}
-        </v-chip>
-      </div>
-    </template>
+  <v-card>
+    <v-data-table
+      :headers="tableHeaders"
+      :items="animations"
+      :loading="loading"
+      loading-text="Chargement des animations à publier..."
+      no-data-text="Aucune animation à publier"
+      :hover="animations.length > 0"
+      class="fa"
+      @click:row="openActivity"
+      @auxclick:row="openActivityInNewTab"
+    >
+      <template #item.id="{ item }">
+        <div class="status">
+          <v-chip :class="item.status.toLowerCase()">
+            {{ item.id }}
+          </v-chip>
+        </div>
+      </template>
 
-    <template #item.photoLink="{ item }">
-      <v-tooltip v-if="item.photoLink" location="top">
-        <template #activator="{ props }">
-          <v-btn
-            v-bind="props"
-            icon="mdi-camera"
-            size="large"
-            variant="flat"
-            density="comfortable"
-            @click.stop="openPhotoLinkInNewTab(item.photoLink)"
-          />
-        </template>
-        {{ item.photoLink }}
-      </v-tooltip>
-    </template>
+      <template #item.photoLink="{ item }">
+        <v-tooltip v-if="item.photoLink" location="top">
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-camera"
+              size="large"
+              variant="flat"
+              density="comfortable"
+              @click.stop="openPhotoLinkInNewTab(item.photoLink)"
+            />
+          </template>
+          {{ item.photoLink }}
+        </v-tooltip>
+      </template>
 
-    <template #item.description="{ item }">
-      <div v-html-safe="item.description" />
-    </template>
+      <template #item.description="{ item }">
+        <div v-html-safe="item.description" />
+      </template>
 
-    <template #item.categories="{ item }">
-      <div class="chips">
-        <v-chip v-for="category in item.categories" :key="category">
-          {{ category }}
-        </v-chip>
-      </div>
-    </template>
+      <template #item.categories="{ item }">
+        <div class="chips">
+          <v-chip v-for="category in item.categories" :key="category">
+            {{ category }}
+          </v-chip>
+        </div>
+      </template>
 
-    <template #item.isFlagship="{ item }">
-      <v-icon
-        v-if="item.isFlagship"
-        color="green"
-        size="large"
-        title="Animation phare"
-      >
-        mdi-check-circle
-      </v-icon>
-      <v-icon v-else color="red" size="large" title="Animation non phare">
-        mdi-close-circle
-      </v-icon>
-    </template>
-
-    <template #item.timeWindows="{ item }">
-      <div class="chips">
-        <v-chip
-          v-for="timeWindow in sortTimeWindows(item.timeWindows)"
-          :key="timeWindow.id"
+      <template #item.isFlagship="{ item }">
+        <v-icon
+          v-if="item.isFlagship"
+          color="green"
+          size="large"
+          title="Animation phare"
         >
-          {{ formatDateWithMinutes(timeWindow.start) }} -
-          {{ formatDateWithMinutes(timeWindow.end) }}
-        </v-chip>
-      </div>
-    </template>
-  </v-data-table>
+          mdi-check-circle
+        </v-icon>
+        <v-icon v-else color="red" size="large" title="Animation non phare">
+          mdi-close-circle
+        </v-icon>
+      </template>
+
+      <template #item.timeWindows="{ item }">
+        <div class="chips">
+          <v-chip
+            v-for="timeWindow in sortTimeWindows(item.timeWindows)"
+            :key="timeWindow.id"
+          >
+            {{ formatDateWithMinutes(timeWindow.start) }} -
+            {{ formatDateWithMinutes(timeWindow.end) }}
+          </v-chip>
+        </div>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

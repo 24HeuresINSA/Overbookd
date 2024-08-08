@@ -1,50 +1,56 @@
 <template>
-  <div>
-    <h2>Matos</h2>
-    <GearFilter
-      v-model:name="filters.name"
-      v-model:category="filters.category"
-      v-model:team="filters.team"
-    />
-    <v-data-table
-      :headers="headers"
-      :items="gears"
-      :name="filters.name"
-      :category="filters.category"
-      :loading="loading"
-      loading-text="Chargement du matos..."
-      no-data-text="Aucun matos trouvé"
-    >
-      <template #item.isPonctualUsage="{ item }">
-        <v-icon v-if="item.isPonctualUsage" icon="mdi-check-circle" />
-      </template>
+  <v-card>
+    <v-card-text>
+      <GearFilter
+        v-model:name="filters.name"
+        v-model:category="filters.category"
+        v-model:team="filters.team"
+      />
+      <v-data-table
+        :headers="headers"
+        :items="gears"
+        :name="filters.name"
+        :category="filters.category"
+        :loading="loading"
+        :items-per-page="30"
+        loading-text="Chargement du matos..."
+        no-data-text="Aucun matos trouvé"
+      >
+        <template #item.isPonctualUsage="{ item }">
+          <v-icon v-if="item.isPonctualUsage" icon="mdi-check-circle" />
+        </template>
 
-      <template #item.isConsumable="{ item }">
-        <v-icon v-if="item.isConsumable" icon="mdi-check-circle" />
-      </template>
+        <template #item.isConsumable="{ item }">
+          <v-icon v-if="item.isConsumable" icon="mdi-check-circle" />
+        </template>
 
-      <template #item.category="{ item }">
-        <div v-show="item.category" class="category-details">
-          <span class="category-details__name">{{ item.category?.name }}</span>
-          <span class="category-details__path"> {{ item.category?.path }}</span>
-        </div>
-      </template>
+        <template #item.category="{ item }">
+          <div v-show="item.category" class="category-details">
+            <span class="category-details__name">{{
+              item.category?.name
+            }}</span>
+            <span class="category-details__path">
+              {{ item.category?.path }}</span
+            >
+          </div>
+        </template>
 
-      <template #item.actions="{ item }">
-        <div class="actions">
-          <v-btn
-            icon="mdi-pencil"
-            size="small"
-            @click="openUpdateGearDialog(item)"
-          />
-          <v-btn
-            icon="mdi-delete"
-            size="small"
-            @click="openDeleteGearDialog(item)"
-          />
-        </div>
-      </template>
-    </v-data-table>
+        <template #item.actions="{ item }">
+          <div class="actions">
+            <v-btn
+              icon="mdi-pencil"
+              size="small"
+              @click="openUpdateGearDialog(item)"
+            />
+            <v-btn
+              icon="mdi-delete"
+              size="small"
+              @click="openDeleteGearDialog(item)"
+            />
+          </div>
+        </template>
+      </v-data-table>
+    </v-card-text>
 
     <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
       <CatalogGearFormDialogCard
@@ -71,7 +77,7 @@
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

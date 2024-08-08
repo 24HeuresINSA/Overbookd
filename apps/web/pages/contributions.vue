@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title">Cotisations</h1>
-  <ContributionsTable />
+  <ContributionsTableCard />
 </template>
 
 <script lang="ts" setup>

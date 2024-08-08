@@ -1,64 +1,71 @@
 <template>
-  <div class="registrations">
+  <div>
     <h1 class="page-title">Admission organisateurs</h1>
-    <RegistrationConfiguration class="registration-configuration" />
-    <v-divider />
-    <v-data-table
-      v-model="selectedStaffs"
-      :headers="headers"
-      :items="filteredNewcomers"
-      :items-per-page="30"
-      :loading="loading"
-      loading-text="Chargement des nouveaux arrivants..."
-      no-data-text="Aucun nouvel arrivant"
-      show-select
-      return-object
-    >
-      <template #top>
-        <div class="filters">
-          <v-text-field
-            v-model="searchNewcomer"
-            label="Rechercher un nouvel arrivant"
-            clearable
-            hide-details
-            @click:clear="searchNewcomer = ''"
-          />
+    <div class="registrations">
+      <RegistrationConfigurationCard class="registration-configuration" />
+
+      <v-card>
+        <v-card-title>Nouveaux arrivants</v-card-title>
+        <v-card-text>
+          <v-data-table
+            v-model="selectedStaffs"
+            :headers="headers"
+            :items="filteredNewcomers"
+            :items-per-page="30"
+            :loading="loading"
+            loading-text="Chargement des nouveaux arrivants..."
+            no-data-text="Aucun nouvel arrivant"
+            show-select
+            return-object
+          >
+            <template #top>
+              <div class="filters">
+                <v-text-field
+                  v-model="searchNewcomer"
+                  label="Rechercher un nouvel arrivant"
+                  clearable
+                  hide-details
+                  @click:clear="searchNewcomer = ''"
+                />
+                <v-btn
+                  text="Inscrits dans les 30 derniers jours"
+                  color="primary"
+                  :variant="last30DaysNewcomers ? 'elevated' : 'outlined'"
+                  @click="toggleLast30DaysNewcomers"
+                />
+              </div>
+            </template>
+
+            <template #item.registeredAt="{ item }">
+              {{ formatLocalDate(item.registeredAt) }}
+            </template>
+
+            <template #item.teams="{ item }">
+              <TeamChip v-for="team of item.teams" :key="team" :team="team" />
+            </template>
+
+            <template #item.removal="{ item }">
+              <v-btn
+                text="Supprimer l'inscription"
+                color="primary"
+                @click="forgetHim(item.email)"
+              />
+            </template>
+          </v-data-table>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
           <v-btn
-            text="Inscrits dans les 30 derniers jours"
+            text=" Enrôler en tant que hard"
             color="primary"
-            :variant="last30DaysNewcomers ? 'elevated' : 'outlined'"
-            @click="toggleLast30DaysNewcomers"
+            variant="elevated"
+            :disabled="noStaffSelected"
+            @click="enrollNewcomers"
           />
-        </div>
-      </template>
-
-      <template #item.registeredAt="{ item }">
-        {{ formatLocalDate(item.registeredAt) }}
-      </template>
-
-      <template #item.teams="{ item }">
-        <TeamChip v-for="team of item.teams" :key="team" :team="team" />
-      </template>
-
-      <template #item.removal="{ item }">
-        <v-btn
-          text="Supprimer l'inscription"
-          color="primary"
-          @click="forgetHim(item.email)"
-        />
-      </template>
-    </v-data-table>
-
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        text=" Enrôler en tant que hard"
-        color="primary"
-        variant="elevated"
-        :disabled="noStaffSelected"
-        @click="enrollNewcomers"
-      />
-    </v-card-actions>
+        </v-card-actions>
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -139,11 +146,16 @@ const forgetHim = (email: string) => {
 </script>
 
 <style lang="scss" scoped>
+.registrations {
+  display: flex;
+  flex-direction: column;
+  gap: $card-gap;
+}
+
 .filters {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin: 10px 20px;
 }
 
 .registration-configuration {

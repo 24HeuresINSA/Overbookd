@@ -7,7 +7,7 @@
           <v-lazy class="contain-card">
             <TrombinoscopeCard
               :volunteer="volunteer"
-              class="trombinoscopeCard"
+              class="trombinoscope-card"
             />
           </v-lazy>
         </v-sheet>
@@ -45,7 +45,8 @@ const { volunteers, heading } = defineProps({
   justify-content: center;
   .contain-card {
     height: 100%;
-    .trombinoscopeCard {
+    background: rgb(var(--v-theme-background));
+    .trombinoscope-card {
       height: 100%;
     }
   }

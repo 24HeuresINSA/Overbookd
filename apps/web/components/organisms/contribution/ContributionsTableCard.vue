@@ -1,42 +1,43 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="filteredAdherents"
-    :items-per-page="20"
-    class="elevation-1"
-    :loading="displayOutToDateCustomers ? outToDateLoading : validLoading"
-    loading-text="Chargement des bénévoles..."
-    no-data-text="Aucun bénévole trouvé"
-  >
-    <template #top>
-      <div class="filters">
-        <v-text-field
-          v-model="search"
-          label="Chercher un bénévole"
-          clearable
-          hide-details
-          @click:clear="search = ''"
-        />
-        <v-btn
-          :text="toggleBtnLabbel"
-          color="primary"
-          size="large"
-          @click="toggleOutToDateCustomers"
-        />
-      </div>
-    </template>
+  <v-card>
+    <v-data-table
+      :headers="headers"
+      :items="filteredAdherents"
+      :items-per-page="20"
+      :loading="displayOutToDateCustomers ? outToDateLoading : validLoading"
+      loading-text="Chargement des bénévoles..."
+      no-data-text="Aucun bénévole trouvé"
+    >
+      <template #top>
+        <div class="filters">
+          <v-text-field
+            v-model="search"
+            label="Chercher un bénévole"
+            clearable
+            hide-details
+            @click:clear="search = ''"
+          />
+          <v-btn
+            :text="toggleBtnLabbel"
+            color="primary"
+            size="large"
+            @click="toggleOutToDateCustomers"
+          />
+        </div>
+      </template>
 
-    <template #item.amount="{ item }">
-      <PayContributionRowForm
-        v-if="displayOutToDateCustomers"
-        :adherent="item"
-      />
-      <EditContributionRowForm
-        v-else
-        :adherent="item as AdherentWithContribution"
-      />
-    </template>
-  </v-data-table>
+      <template #item.amount="{ item }">
+        <PayContributionRowForm
+          v-if="displayOutToDateCustomers"
+          :adherent="item"
+        />
+        <EditContributionRowForm
+          v-else
+          :adherent="item as AdherentWithContribution"
+        />
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

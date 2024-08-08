@@ -38,12 +38,10 @@ const balance = computed<string>(() =>
 </script>
 
 <style lang="scss" scoped>
-$footer-height: 34px;
-
 .personal-account {
   display: flex;
   justify-content: center;
-  height: calc(100vh - #{$header-height} - #{$footer-height} - 20px);
+  height: calc(100vh - #{$header-height} - 20px);
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     margin: 0 5px;

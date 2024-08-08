@@ -4,7 +4,6 @@
       class="card__close-btn"
       variant="flat"
       icon="mdi-close"
-      rounded="0"
       @click="close"
     />
     <v-card-title class="card__title">

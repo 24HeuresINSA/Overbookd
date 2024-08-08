@@ -1,65 +1,69 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="filteredConsumers"
-    class="consumer-table elevation-1"
-    density="comfortable"
-    items-per-page="20"
-    :loading="loading"
-    loading-text="Chargement des bénévoles..."
-    no-data-text="Aucun bénévole"
-    :sort-by="[{ key: 'firstname', order: 'asc' }]"
-  >
-    <template #top>
-      <div class="consumer-table__filters">
-        <v-btn-toggle v-model="teamFilter" color="primary" tile multiple>
-          <v-btn :value="HARD_CODE"> Hard</v-btn>
-          <v-btn :value="VIEUX_CODE"> Vieux </v-btn>
-        </v-btn-toggle>
-        <v-text-field
-          v-model="searchConsumer"
-          label="Rechercher un bénévole"
-          hide-details
-        />
-      </div>
-    </template>
+  <v-card>
+    <v-card-text>
+      <v-data-table
+        :headers="headers"
+        :items="filteredConsumers"
+        class="consumer-table"
+        density="comfortable"
+        items-per-page="20"
+        :loading="loading"
+        loading-text="Chargement des bénévoles..."
+        no-data-text="Aucun bénévole"
+        :sort-by="[{ key: 'firstname', order: 'asc' }]"
+      >
+        <template #top>
+          <div class="consumer-table__filters">
+            <v-btn-toggle v-model="teamFilter" color="primary" tile multiple>
+              <v-btn :value="HARD_CODE"> Hard</v-btn>
+              <v-btn :value="VIEUX_CODE"> Vieux </v-btn>
+            </v-btn-toggle>
+            <v-text-field
+              v-model="searchConsumer"
+              label="Rechercher un bénévole"
+              hide-details
+            />
+          </div>
+        </template>
 
-    <template #item.firstname="{ item }">
-      {{ buildUserNameWithNickname(item) }}
-    </template>
+        <template #item.firstname="{ item }">
+          {{ buildUserNameWithNickname(item) }}
+        </template>
 
-    <template #item.balance="{ item }">
-      <MoneyField v-model="item.balance" readonly hide-details hide-label />
-    </template>
+        <template #item.balance="{ item }">
+          <MoneyField v-model="item.balance" readonly hide-details hide-label />
+        </template>
 
-    <template #item.recap="{ item }">
-      <MoneyField
-        v-model="calculatedConsumption[item.id]"
-        readonly
-        hide-details
-        hide-label
-      />
-    </template>
+        <template #item.recap="{ item }">
+          <MoneyField
+            v-model="calculatedConsumption[item.id]"
+            readonly
+            hide-details
+            hide-label
+          />
+        </template>
 
-    <template #item.action="{ item }">
-      <v-text-field
-        v-if="isExpenseMode"
-        v-model="item.newConsumption"
-        label="Nombre de bâtons"
-        :rules="[min(0), isInteger]"
-        type="number"
-        hide-details
-        @update:model-value="updateNewConsumption(item, $event)"
-      />
-      <MoneyField
-        v-else
-        v-model="item.newConsumption"
-        label="Moula"
-        hide-details
-        @update:model-value="updateNewConsumption(item, $event)"
-      />
-    </template>
-  </v-data-table>
+        <template #item.action="{ item }">
+          <v-text-field
+            v-if="isExpenseMode"
+            v-model="item.newConsumption"
+            label="Nombre de bâtons"
+            :rules="[min(0), isInteger]"
+            type="number"
+            hide-details
+            @update:model-value="updateNewConsumption(item, $event)"
+          />
+          <MoneyField
+            v-else
+            v-model="item.newConsumption"
+            label="Moula"
+            hide-details
+            @update:model-value="updateNewConsumption(item, $event)"
+          />
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

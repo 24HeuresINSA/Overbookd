@@ -7,6 +7,7 @@
           <ProfilePicture :user="loggedUser" class="profile-picture" />
           <v-btn
             :text="`📸 ${loggedUser.profilePicture ? 'Changer' : 'Ajouter'}`"
+            color="primary"
             @click="isProfilePictureDialogOpen = true"
           />
         </div>
@@ -55,7 +56,7 @@
             <v-icon>mdi-account-hard-hat</v-icon>
             {{ loggedUser.tasksCount }} tâches affectées
           </p>
-          <v-card class="planning-preference elevation-1" outlined>
+          <v-card class="planning-preference" outlined>
             <v-btn-toggle
               :model-value="preferences?.paperPlanning"
               color="primary"
@@ -109,7 +110,6 @@
           class="comment"
           @update:model-value="defectSave"
         />
-        <FriendsCard id="friends" />
       </v-card-text>
     </v-card>
   </div>
@@ -244,11 +244,6 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
     .comment {
       grid-column: 1 / span 2;
       grid-row: 2 / span 1;
-    }
-    #friends {
-      grid-column: 1 / span 3;
-      grid-row: 3 / span 1;
-      min-width: 100%;
     }
     @media only screen and (max-width: $mobile-max-width) {
       display: flex;

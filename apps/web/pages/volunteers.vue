@@ -9,7 +9,7 @@
       />
     </div>
     <div class="table-container">
-      <VolunteerList
+      <VolunteerListCard
         :volunteers="displayedVolunteers"
         :loading="loading"
         @open-dialog="openVolunteerInfoDialog"
@@ -95,7 +95,7 @@ const closeVolunteerInfoDialog = () => {
 <style lang="scss" scoped>
 .volunteers-page {
   display: flex;
-  gap: 1em;
+  gap: $card-gap;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     margin-left: 0;

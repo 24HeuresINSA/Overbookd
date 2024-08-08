@@ -12,7 +12,7 @@
       class="sg-page__settings"
       @save-transactions="saveTransactions"
     />
-    <SgConsumerTable
+    <SgConsumerTableCard
       v-model:consumers="consumers"
       :mode="mode"
       :cask-stick-price="caskStickPrice"
@@ -192,12 +192,12 @@ const saveTransactions = async () => {
 .sg-page {
   display: flex;
   width: 100%;
-  gap: 1rem;
+  gap: $card-gap;
   &__settings {
-    width: 20%;
+    width: 30%;
   }
   &__consumer-table {
-    width: 80%;
+    width: 70%;
   }
 }
 </style>

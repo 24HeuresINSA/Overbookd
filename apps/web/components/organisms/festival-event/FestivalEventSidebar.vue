@@ -1,52 +1,54 @@
 <template>
-  <div class="sidebar fa ft">
-    <h1 id="title">{{ titleWithId }}</h1>
-    <h2 id="name">{{ name }}</h2>
+  <v-card class="sidebar fa ft">
+    <v-card-title id="title">{{ titleWithId }}</v-card-title>
+    <v-card-subtitle id="name">{{ name }}</v-card-subtitle>
 
-    <div id="status">
-      <span id="dot" :class="status"></span>
-      <h3>{{ statusLabel }}</h3>
-    </div>
-
-    <div class="icons">
-      <div v-for="reviewer of reviewers" :key="reviewer.code" class="icon">
-        <v-icon :class="getReviewerStatus(reviewer)" size="26">
-          {{ reviewer.icon }}
-        </v-icon>
-        <span class="icon-detail">{{ reviewer.name }}</span>
-      </div>
-    </div>
-
-    <div id="scrollable-content">
-      <v-btn
-        id="ask-for-review"
-        class="review-btn"
-        text="Demande de relecture"
-        :disabled="!canAskForReview"
-        @click="askForReview"
-      />
-
-      <div v-for="team in myReviewers" :key="team.code" class="team-review">
-        <v-btn
-          :text="`Approuver pour ${team.name}`"
-          class="approve review-btn"
-          :disabled="cantApproveAs(team)"
-          size="small"
-          @click="approve(team)"
-        />
-        <v-btn
-          :text="`Rejeter pour ${team.name}`"
-          class="reject review-btn"
-          :disabled="cantRejectAs(team)"
-          size="small"
-          @click="openRejectDialog(team)"
-        />
+    <v-card-text>
+      <div id="status">
+        <span id="dot" :class="status"></span>
+        <h3>{{ statusLabel }}</h3>
       </div>
 
-      <slot name="additional-actions" />
+      <div class="icons">
+        <div v-for="reviewer of reviewers" :key="reviewer.code" class="icon">
+          <v-icon :class="getReviewerStatus(reviewer)" size="26">
+            {{ reviewer.icon }}
+          </v-icon>
+          <span class="icon-detail">{{ reviewer.name }}</span>
+        </div>
+      </div>
 
-      <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
-    </div>
+      <div id="scrollable-content">
+        <v-btn
+          id="ask-for-review"
+          class="review-btn"
+          text="Demande de relecture"
+          :disabled="!canAskForReview"
+          @click="askForReview"
+        />
+
+        <div v-for="team in myReviewers" :key="team.code" class="team-review">
+          <v-btn
+            :text="`Approuver pour ${team.name}`"
+            class="approve review-btn"
+            :disabled="cantApproveAs(team)"
+            size="small"
+            @click="approve(team)"
+          />
+          <v-btn
+            :text="`Rejeter pour ${team.name}`"
+            class="reject review-btn"
+            :disabled="cantRejectAs(team)"
+            size="small"
+            @click="openRejectDialog(team)"
+          />
+        </div>
+
+        <slot name="additional-actions" />
+
+        <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+      </div>
+    </v-card-text>
 
     <v-dialog v-model="isRejectDialogOpen" max-width="600">
       <AskRejectReasonDialogCard
@@ -55,7 +57,7 @@
         @close="closeRejectDialog"
       />
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -243,23 +245,18 @@ const cantRejectAs = (team: Team): boolean => {
 .sidebar {
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto;
   width: 350px;
-  height: calc(100vh - #{$header-height} - #{$footer-height});
-  overflow-y: auto;
 
   #title {
-    font-size: 1.7rem;
-    margin: 16px;
-    margin-bottom: 4px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding-bottom: 0;
   }
 
   #name {
     font-size: 1.2rem;
     font-weight: normal;
     color: rgb(89, 89, 89);
-    margin: 16px;
-    margin-top: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: auto;
@@ -275,14 +272,13 @@ const cantRejectAs = (team: Team): boolean => {
       width: 25px;
       border-radius: 50%;
       display: inline-block;
-      margin-left: 16px;
       margin-right: 10px;
     }
   }
 
   .icons {
     display: flex;
-    margin: 20px 5px 20px 16px;
+    margin: 20px 0 20px 0;
 
     .icon {
       position: relative;
@@ -321,9 +317,7 @@ const cantRejectAs = (team: Team): boolean => {
   }
 
   .review-btn {
-    width: calc(100% - 25px);
-    margin-left: 15px;
-    margin-right: 10px;
+    width: 100%;
   }
 
   .team-review {

@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title">Catalogue Signa</h1>
-  <SignageListing />
+  <SignageListingCard />
 </template>
 
 <script lang="ts" setup>

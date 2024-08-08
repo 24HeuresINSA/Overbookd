@@ -6,38 +6,43 @@
       @show:location="openEditLocationDialog"
     />
   </v-container>
-  <v-container class="location-table">
-    <v-data-table
-      :headers="tableHeaders"
-      :items="filteredLocations"
-      :items-per-page="20"
-      :loading="loading"
-      loading-text="Chargement des lieux..."
-      class="elevation-1"
-      no-data-text="Aucun lieu trouvé"
-    >
-      <template #top>
-        <v-text-field v-model="search" label="Chercher un lieu" hide-details />
-      </template>
+  <v-card>
+    <v-card-text>
+      <v-data-table
+        :headers="tableHeaders"
+        :items="filteredLocations"
+        :items-per-page="20"
+        :loading="loading"
+        loading-text="Chargement des lieux..."
+        no-data-text="Aucun lieu trouvé"
+      >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Chercher un lieu"
+            hide-details
+          />
+        </template>
 
-      <template #item.actions="{ item }">
-        <div class="actions">
-          <v-btn
-            v-show="canManageLocations"
-            icon="mdi-circle-edit-outline"
-            size="small"
-            @click="openEditLocationDialog(item)"
-          />
-          <v-btn
-            v-show="canManageLocations"
-            icon="mdi-delete"
-            size="small"
-            @click="openDeleteLocationDialog(item)"
-          />
-        </div>
-      </template>
-    </v-data-table>
-  </v-container>
+        <template #item.actions="{ item }">
+          <div class="actions">
+            <v-btn
+              v-show="canManageLocations"
+              icon="mdi-circle-edit-outline"
+              size="small"
+              @click="openEditLocationDialog(item)"
+            />
+            <v-btn
+              v-show="canManageLocations"
+              icon="mdi-delete"
+              size="small"
+              @click="openDeleteLocationDialog(item)"
+            />
+          </div>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 
   <v-btn
     v-show="canManageLocations"

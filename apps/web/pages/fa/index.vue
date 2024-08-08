@@ -241,15 +241,11 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
 <style lang="scss" scoped>
 .activity {
   display: flex;
-  padding: 10px 30px 10px 10px;
-  gap: 15px;
+  gap: $card-gap;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
-    padding: 10px;
   }
   &__listing {
-    margin-left: 20px;
-    margin-bottom: 40px;
     height: fit-content;
     width: 100vw;
     flex-grow: 3;

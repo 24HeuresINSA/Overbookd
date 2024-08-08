@@ -1,15 +1,19 @@
 <template>
   <h1 class="page-title">Statistiques 📈</h1>
-  <div class="switch">
-    <h2>FA</h2>
-    <v-switch
-      v-model="displayTaskStats"
-      hide-details
-      @update:model-value="updateTitle"
-    />
-    <h2>FT</h2>
-  </div>
-  <Bar :options="options" :data="data" />
+  <v-card>
+    <v-card-text>
+      <div class="switch">
+        <h2>FA</h2>
+        <v-switch
+          v-model="displayTaskStats"
+          hide-details
+          @update:model-value="updateTitle"
+        />
+        <h2>FT</h2>
+      </div>
+      <Bar :options="options" :data="data" />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

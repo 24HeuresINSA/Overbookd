@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title">Catalogue Matos</h1>
-  <CatalogGearListing />
+  <CatalogGearListingCard />
 </template>
 
 <script lang="ts" setup>

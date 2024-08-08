@@ -1,92 +1,98 @@
 <template>
   <v-card class="settings">
-    <div class="settings__mode-choice">
-      <h2>Mode</h2>
-      <v-btn-toggle v-model="mode" tile color="primary">
-        <v-btn :value="CASK_MODE" size="small"> {{ FUT }} </v-btn>
-        <v-btn :value="CLOSET_MODE" size="small"> {{ PLACARD }} </v-btn>
-        <v-btn :value="DEPOSIT_MODE" size="small"> {{ DEPOT }} </v-btn>
-      </v-btn-toggle>
-    </div>
+    <v-card-text>
+      <div class="settings__mode-choice">
+        <h2>Mode</h2>
+        <v-btn-toggle v-model="mode" tile color="primary">
+          <v-btn :value="CASK_MODE" size="small"> {{ FUT }} </v-btn>
+          <v-btn :value="CLOSET_MODE" size="small"> {{ PLACARD }} </v-btn>
+          <v-btn :value="DEPOSIT_MODE" size="small"> {{ DEPOT }} </v-btn>
+        </v-btn-toggle>
+      </div>
 
-    <v-list v-if="hasErrors">
-      <v-list-item v-for="(reason, key) in errors" :key="key">
-        <v-list-item-title class="settings__input-error">
-          {{ reason }}
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
+      <v-list v-if="hasErrors">
+        <v-list-item v-for="(reason, key) in errors" :key="key">
+          <v-list-item-title class="settings__input-error">
+            {{ reason }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
 
-    <div v-if="isMode(CASK_MODE)">
-      <MoneyField v-model="totalPrice" label="Prix du fût" />
-      <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
-      <MoneyField
-        v-model="caskStickPrice"
-        label="Prix du bâton"
-        class="settings__field-without-details"
-        readonly
-        hide-details
-      />
-    </div>
+      <div v-if="isMode(CASK_MODE)">
+        <MoneyField v-model="totalPrice" label="Prix du fût" />
+        <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
+        <MoneyField
+          v-model="caskStickPrice"
+          label="Prix du bâton"
+          class="settings__field-without-details"
+          readonly
+          hide-details
+        />
+      </div>
 
-    <div v-if="isMode(CLOSET_MODE)">
-      <MoneyField v-model="closetStickPrice" label="Prix du bâton" :min="1" />
-      <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
-    </div>
+      <div v-if="isMode(CLOSET_MODE)">
+        <MoneyField v-model="closetStickPrice" label="Prix du bâton" :min="1" />
+        <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
+      </div>
 
-    <div v-if="isMode(DEPOSIT_MODE)">
-      <MoneyField
-        v-model="totalConsumptions"
-        label="Dépôt total"
-        class="settings__field-without-details"
-        readonly
-        hide-details
-      />
-    </div>
-    <v-btn
-      text="Enregistrer"
-      :disabled="hasErrors"
-      color="primary"
-      @click="saveTransactions"
-    />
-
-    <v-divider class="divider" />
-
-    <MoneyField
-      v-model="totalPersonalAccountBalance"
-      label="Solde de la caisse"
-      class="settings__field-without-details"
-      readonly
-      hide-details
-    />
-
-    <div v-if="isMode(CASK_MODE)">
-      <v-select
-        v-model="selectedBarrel"
-        prepend-icon="mdi-beer"
-        label="Fût"
-        variant="outlined"
-        :items="barrels"
-        item-title="drink"
-        return-object
-        hide-details
-        @update:model-value="updateTotalPriceByBarrel"
-      />
-      <p v-if="selectedBarrel" class="barrel-date">
-        Date d'ouverture : {{ formatDate(selectedBarrel.openedOn) }}
-      </p>
+      <div v-if="isMode(DEPOSIT_MODE)">
+        <MoneyField
+          v-model="totalConsumptions"
+          label="Dépôt total"
+          class="settings__field-without-details"
+          readonly
+          hide-details
+        />
+      </div>
       <v-btn
-        text="Gestion des fûts"
-        class="bottom-button"
-        @click="openBarrelsDialog"
+        text="Enregistrer"
+        :disabled="hasErrors"
+        color="primary"
+        class="button"
+        @click="saveTransactions"
       />
-    </div>
 
-    <v-btn
-      text="Envoyer un mail aux CP négatifs"
-      class="bottom-button"
-      :href="negativeBalanceMailLink"
-    />
+      <v-divider class="divider" />
+
+      <MoneyField
+        v-model="totalPersonalAccountBalance"
+        label="Solde de la caisse"
+        class="settings__field-without-details"
+        readonly
+        hide-details
+      />
+
+      <div v-if="isMode(CASK_MODE)">
+        <v-select
+          v-model="selectedBarrel"
+          prepend-icon="mdi-beer"
+          label="Fût"
+          variant="outlined"
+          :items="barrels"
+          item-title="drink"
+          return-object
+          hide-details
+          @update:model-value="updateTotalPriceByBarrel"
+        />
+        <p v-if="selectedBarrel" class="barrel-date">
+          Date d'ouverture : {{ formatDate(selectedBarrel.openedOn) }}
+        </p>
+        <v-btn
+          text="Gestion des fûts"
+          class="button mt-3"
+          color="tertiary"
+          @click="openBarrelsDialog"
+        />
+      </div>
+
+      <v-divider class="divider" />
+      <v-btn
+        text="Envoyer un mail aux CP négatifs"
+        class="button"
+        color="secondary"
+        :href="negativeBalanceMailLink"
+      />
+    </v-card-text>
 
     <v-dialog v-model="isBarrelsDialogOpen" width="800">
       <ManageBarrelsDialogCard @close="closeBarrelsDialog" />
@@ -187,6 +193,10 @@ const negativeBalanceMailLink = computed<string>(() => {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 5px;
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
   }
 
   &__input-error {
@@ -204,9 +214,8 @@ const negativeBalanceMailLink = computed<string>(() => {
   margin: 16px 0;
 }
 
-.bottom-button {
+.button {
   width: 100%;
-  margin-bottom: 10px;
 }
 
 .barrel-date {

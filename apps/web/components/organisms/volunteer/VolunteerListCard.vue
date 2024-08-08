@@ -1,48 +1,50 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="volunteers"
-    items-per-page="20"
-    :loading="loading"
-    loading-text="Chargement des bénévoles..."
-    no-data-text="Aucun bénévole trouvé"
-    :hover="volunteers.length > 0"
-    return-object
-    @click:row="openInformationDialog"
-  >
-    <template #item.firstname="{ item }">
-      {{ buildUserNameWithNickname(item) }}
-    </template>
+  <v-card>
+    <v-data-table
+      :headers="headers"
+      :items="volunteers"
+      items-per-page="20"
+      :loading="loading"
+      loading-text="Chargement des bénévoles..."
+      no-data-text="Aucun bénévole trouvé"
+      :hover="volunteers.length > 0"
+      return-object
+      @click:row="openInformationDialog"
+    >
+      <template #item.firstname="{ item }">
+        {{ buildUserNameWithNickname(item) }}
+      </template>
 
-    <template #item.teams="{ item }">
-      <div class="team-list">
-        <TeamChip
-          v-for="team of item.teams"
-          :key="team"
-          :team="team"
-          with-name
-          clickable
-          @click="propagateClickedTeam"
-        />
-      </div>
-    </template>
+      <template #item.teams="{ item }">
+        <div class="team-list">
+          <TeamChip
+            v-for="team of item.teams"
+            :key="team"
+            :team="team"
+            with-name
+            clickable
+            @click="propagateClickedTeam"
+          />
+        </div>
+      </template>
 
-    <template #item.actions="{ item }">
-      <div class="list-actions">
-        <v-btn
-          icon="mdi-calendar"
-          size="small"
-          @click="openCalendar(item.id)"
-        />
-        <v-btn
-          icon="mdi-phone"
-          size="small"
-          :href="formatPhoneLink(item.phone)"
-        />
-        <v-btn icon="mdi-email" size="small" :href="`mailto:${item.email}`" />
-      </div>
-    </template>
-  </v-data-table>
+      <template #item.actions="{ item }">
+        <div class="list-actions">
+          <v-btn
+            icon="mdi-calendar"
+            size="small"
+            @click="openCalendar(item.id)"
+          />
+          <v-btn
+            icon="mdi-phone"
+            size="small"
+            :href="formatPhoneLink(item.phone)"
+          />
+          <v-btn icon="mdi-email" size="small" :href="`mailto:${item.email}`" />
+        </div>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

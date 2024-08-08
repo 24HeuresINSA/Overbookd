@@ -40,9 +40,9 @@ export const redDarkTheme: ThemeDefinition = {
   dark: true,
   colors: {
     ...redMainColors,
-    background: "#0B0B0B",
+    background: "#272B34",
     "on-background": "#F4F4F4",
-    surface: "#2A2B30",
+    surface: "#363A45",
     "on-surface": "#F4F4F4",
     ...statusColors,
   },

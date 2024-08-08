@@ -1,6 +1,6 @@
 <template>
   <v-card class="settings">
-    <v-card-title>Événement charismatique</v-card-title>
+    <v-card-title>Nouvel événement</v-card-title>
     <v-card-text class="settings__form">
       <v-text-field
         v-model="name"

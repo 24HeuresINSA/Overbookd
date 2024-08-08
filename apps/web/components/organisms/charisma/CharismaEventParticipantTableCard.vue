@@ -1,38 +1,43 @@
 <template>
-  <v-data-table
-    :headers="tableHeaders"
-    :items="filteredPotentialParticipants"
-    :items-per-page="20"
-    :loading="loading"
-    loading-text="Chargement des bénévoles..."
-    no-data-text="Aucun bénévole"
-  >
-    <template #top>
-      <v-text-field
-        v-model="search"
-        label="Rechercher un bénévole"
-        hide-details
-      />
-    </template>
+  <v-card>
+    <v-card-title>Participants</v-card-title>
+    <v-card-text>
+      <v-data-table
+        :headers="tableHeaders"
+        :items="filteredPotentialParticipants"
+        :items-per-page="20"
+        :loading="loading"
+        loading-text="Chargement des bénévoles..."
+        no-data-text="Aucun bénévole"
+      >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Rechercher un bénévole"
+            hide-details
+          />
+        </template>
 
-    <template #item.firstname="{ item }">
-      {{ buildUserNameWithNickname(item) }}
-    </template>
+        <template #item.firstname="{ item }">
+          {{ buildUserNameWithNickname(item) }}
+        </template>
 
-    <template #item.newCharisma="{ item }">
-      {{ calculatedNewCharisma[item.id] }}
-    </template>
+        <template #item.newCharisma="{ item }">
+          {{ calculatedNewCharisma[item.id] }}
+        </template>
 
-    <template #item.hours="{ item }">
-      <v-text-field
-        v-model="item.hours"
-        type="number"
-        :rules="[isNumber, isInteger, min(0)]"
-        hide-details
-        @update:model-value="updateParticipation(item, $event)"
-      />
-    </template>
-  </v-data-table>
+        <template #item.hours="{ item }">
+          <v-text-field
+            v-model="item.hours"
+            type="number"
+            :rules="[isNumber, isInteger, min(0)]"
+            hide-details
+            @update:model-value="updateParticipation(item, $event)"
+          />
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

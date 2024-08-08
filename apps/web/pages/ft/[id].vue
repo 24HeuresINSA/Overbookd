@@ -93,34 +93,35 @@ const publishFeedback = (content: string) => {
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 350px;
+$sidebar-margin: calc($card-margin * 2);
+$sidebar-width: calc(350px + $sidebar-margin);
 
-.activity {
+.task {
   display: flex;
   overflow: auto;
   scroll-behavior: smooth;
+  gap: $card-gap;
 }
 
 .sidebar {
   position: fixed;
   width: $sidebar-width;
+  height: fit-content;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
-  min-width: calc(100vw - #{$sidebar-width} - 90px);
-  padding: 12px;
-  margin-left: $sidebar-width;
-  gap: 20px;
+  width: calc(100% - $sidebar-width - $card-gap);
+  margin-left: $sidebar-width + $card-gap;
+  gap: $card-gap;
 }
 
 #enable-assignment {
   color: whitesmoke;
   background-color: $ready-color;
-  width: calc(100% - 25px);
-  margin: 5px 10px 5px 15px;
+  width: 100%;
+  margin: 5px 0;
 }
 
 @media only screen and (max-width: $mobile-max-width) {
@@ -138,7 +139,6 @@ $sidebar-width: 350px;
   }
 
   .container {
-    overflow: visible;
     margin: unset;
     padding: unset;
   }

@@ -69,7 +69,7 @@ mealSharingStore.fetchAll();
   .meals {
     flex-grow: 3;
     padding: 5px;
-    max-height: calc(90vh - #{$header-height} - #{$footer-height});
+    max-height: calc(90vh - #{$header-height});
     display: flex;
     flex-direction: column;
     gap: 10px;

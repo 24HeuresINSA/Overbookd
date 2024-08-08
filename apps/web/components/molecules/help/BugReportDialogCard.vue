@@ -39,21 +39,21 @@
     </template>
     <template #actions>
       <v-btn
-        id="copy-email-button"
         text="Copier l'adresse mail"
         variant="elevated"
+        color="secondary"
         @click="copyEmail"
       />
       <v-btn
-        id="copy-template-button"
         text="Copier le modèle"
         variant="elevated"
+        color="secondary"
         @click="copyIssueTemplate"
       />
       <v-btn
-        id="send-email-button"
         text="Envoyer le mail"
         variant="elevated"
+        color="primary"
         :href="`mailto:${bugReportEmail}`"
         @click="copyIssueTemplate"
       />
@@ -91,14 +91,3 @@ const copyIssueTemplate = async () => {
   sendSuccessNotification("Modèle copié ✅");
 };
 </script>
-
-<style scoped lang="scss">
-#copy-email-button,
-#copy-template-button {
-  background-color: orange;
-}
-
-#send-email-button {
-  background-color: deepskyblue;
-}
-</style>

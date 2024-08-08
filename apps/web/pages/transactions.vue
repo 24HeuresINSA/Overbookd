@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title">Transactions</h1>
-  <AllTransactionsList />
+  <AllTransactionsListCard />
 </template>
 
 <script lang="ts" setup>

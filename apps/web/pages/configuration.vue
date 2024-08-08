@@ -3,9 +3,10 @@
   <v-img
     height="400"
     src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
+    class="mb-3"
   />
 
-  <v-expansion-panels>
+  <v-expansion-panels rounded="xl">
     <v-expansion-panel class="collapse">
       <v-expansion-panel-title>
         <h2>Description du formulaire d'inscription</h2>
@@ -98,7 +99,7 @@ const saveEventStartDate = async () => {
 
 <style lang="scss" scoped>
 .collapse {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .description-actions {

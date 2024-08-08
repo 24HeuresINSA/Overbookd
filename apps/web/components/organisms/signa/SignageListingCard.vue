@@ -1,72 +1,74 @@
 <template>
-  <form class="filter">
-    <v-text-field
-      v-model="searchName"
-      append-icon="mdi-hammer-screwdriver"
-      label="Nom de la signalisation"
-      autofocus
-      clearable
-      class="filter__field"
-      clear-icon="mdi-close-circle-outline"
-      counter
-    />
-
-    <v-select
-      v-model="searchType"
-      type="select"
-      label="Type de signalisation"
-      :items="signageTypeValues"
-      class="filter__field"
-      clearable
-    />
-
-    <div class="create-signa-container">
-      <v-btn
-        v-if="isCatalogWriter"
-        size="large"
-        color="success"
-        rounded
-        prepend-icon="mdi-plus"
-        text="Ajouter une signalisation"
-        @click="openCreateSignageDialog"
-      />
-    </div>
-  </form>
-
-  <v-data-table
-    :headers="tableHeaders"
-    :items="filteredSignages"
-    :loading="loading"
-    items-per-page="20"
-    loading-text="Chargement des signalisations..."
-    no-data-text="Aucune signalisation trouvée"
-  >
-    <template #item.image="{ item }">
-      <v-icon
-        v-if="item.image"
-        size="x-large"
-        @click="openSignageImageDisplayDialog(item)"
-      >
-        mdi-image
-      </v-icon>
-    </template>
-    <template #item.actions="{ item }">
-      <div class="actions">
-        <v-btn
-          icon="mdi-pencil"
-          density="comfortable"
-          @click="openUpdateSignageDialog(item)"
+  <v-card>
+    <v-card-text>
+      <div class="filters">
+        <v-text-field
+          v-model="searchName"
+          append-icon="mdi-hammer-screwdriver"
+          label="Nom de la signalisation"
+          autofocus
+          clearable
+          class="filter__field"
+          clear-icon="mdi-close-circle-outline"
+          counter
         />
-        <v-btn
-          icon="mdi-delete"
-          density="comfortable"
-          @click="openDeleteSignageDialog(item)"
+
+        <v-select
+          v-model="searchType"
+          type="select"
+          label="Type de signalisation"
+          :items="signageTypeValues"
+          class="filter__field"
+          clearable
         />
+
+        <div class="create-signa-container">
+          <v-btn
+            v-if="isCatalogWriter"
+            size="large"
+            color="primary"
+            rounded
+            prepend-icon="mdi-plus"
+            text="Ajouter une signalisation"
+            @click="openCreateSignageDialog"
+          />
+        </div>
       </div>
-    </template>
-  </v-data-table>
 
-  <div style="text-align: center"></div>
+      <v-data-table
+        :headers="tableHeaders"
+        :items="filteredSignages"
+        :loading="loading"
+        items-per-page="20"
+        loading-text="Chargement des signalisations..."
+        no-data-text="Aucune signalisation trouvée"
+      >
+        <template #item.image="{ item }">
+          <v-icon
+            v-if="item.image"
+            size="x-large"
+            @click="openSignageImageDisplayDialog(item)"
+          >
+            mdi-image
+          </v-icon>
+        </template>
+        <template #item.actions="{ item }">
+          <div class="actions">
+            <v-btn
+              icon="mdi-pencil"
+              density="comfortable"
+              @click="openUpdateSignageDialog(item)"
+            />
+            <v-btn
+              icon="mdi-delete"
+              density="comfortable"
+              @click="openDeleteSignageDialog(item)"
+            />
+          </div>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 
   <v-dialog v-model="isCreateOrUpdateSignageDialogOpen" width="600px">
     <SignageFormDialogCard
@@ -199,12 +201,10 @@ const filterSignagesByType = (
 </script>
 
 <style lang="scss" scoped>
-.filter {
-  margin: 1rem 0.5rem;
-
+.filters {
   display: flex;
   flex-direction: column;
-  gap: 2.5%;
+  gap: 10px;
   justify-content: center;
 
   .v-input {

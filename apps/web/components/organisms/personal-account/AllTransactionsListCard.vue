@@ -1,63 +1,74 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="filteredTransactions"
-    :items-per-page="200"
-    density="compact"
-    :loading="loading"
-    loading-text="Chargement des transactions..."
-    no-data-text="Aucune transaction trouvée"
-  >
-    <template #top>
-      <v-text-field v-model="search" label="Rechercher une transaction" />
-    </template>
+  <v-card>
+    <v-card-text>
+      <v-data-table
+        :headers="headers"
+        :items="filteredTransactions"
+        :items-per-page="200"
+        density="compact"
+        :loading="loading"
+        loading-text="Chargement des transactions..."
+        no-data-text="Aucune transaction trouvée"
+      >
+        <template #top>
+          <v-text-field v-model="search" label="Rechercher une transaction" />
+        </template>
 
-    <template #item.type="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
-        {{ displayableType(item.type) }}
-      </span>
-    </template>
+        <template #item.type="{ item }">
+          <span :class="{ deleted: item.isDeleted }">
+            {{ displayableType(item.type) }}
+          </span>
+        </template>
 
-    <template #item.from="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
-        {{ shouldHavePayor(item) ? formatTransactionUsername(item.payor) : "" }}
-      </span>
-    </template>
+        <template #item.from="{ item }">
+          <span :class="{ deleted: item.isDeleted }">
+            {{
+              shouldHavePayor(item) ? formatTransactionUsername(item.payor) : ""
+            }}
+          </span>
+        </template>
 
-    <template #item.to="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
-        {{ shouldHavePayee(item) ? formatTransactionUsername(item.payee) : "" }}
-      </span>
-    </template>
+        <template #item.to="{ item }">
+          <span :class="{ deleted: item.isDeleted }">
+            {{
+              shouldHavePayee(item) ? formatTransactionUsername(item.payee) : ""
+            }}
+          </span>
+        </template>
 
-    <template #item.context="{ item }">
-      <span class="transaction__context" :class="{ deleted: item.isDeleted }">
-        {{ item.context }}
-      </span>
-    </template>
+        <template #item.context="{ item }">
+          <span
+            class="transaction__context"
+            :class="{ deleted: item.isDeleted }"
+          >
+            {{ item.context }}
+          </span>
+        </template>
 
-    <template #item.date="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
-        {{ formatDateWithMinutes(item.date) }}
-      </span>
-    </template>
+        <template #item.date="{ item }">
+          <span :class="{ deleted: item.isDeleted }">
+            {{ formatDateWithMinutes(item.date) }}
+          </span>
+        </template>
 
-    <template #item.amount="{ item }">
-      <span :class="{ deleted: item.isDeleted }">
-        {{ convertToEuros(item.amount) }}
-      </span>
-    </template>
+        <template #item.amount="{ item }">
+          <span :class="{ deleted: item.isDeleted }">
+            {{ convertToEuros(item.amount) }}
+          </span>
+        </template>
 
-    <template #item.delete="{ item }">
-      <v-btn
-        v-if="!item.isDeleted"
-        icon="mdi-trash-can"
-        size="small"
-        variant="flat"
-        @click="deleteTransaction(item)"
-      />
-    </template>
-  </v-data-table>
+        <template #item.delete="{ item }">
+          <v-btn
+            v-if="!item.isDeleted"
+            icon="mdi-trash-can"
+            size="small"
+            variant="flat"
+            @click="deleteTransaction(item)"
+          />
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

@@ -1,0 +1,31 @@
+.v-card {
+  border-radius: 25px !important;
+  padding: 5px !important;
+  margin: $card-margin !important;
+}
+
+.shift {
+  height: 5px;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
+  &.theme--dark {
+    &.shift-night {
+      background-color: beige;
+    }
+  }
+
+  &-party {
+    background-color: purple;
+  }
+
+  &-night {
+    background-color: black;
+  }
+
+  &-day {
+    background-color: darksalmon;
+  }
+}
