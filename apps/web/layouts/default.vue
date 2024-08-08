@@ -28,19 +28,24 @@
 <script lang="ts" setup>
 import Header from "~/layouts/parts/Header.vue";
 import SideNav from "~/layouts/parts/SideNav.vue";
+import { useTheme } from "vuetify";
+import { pickRandomTheme } from "~/utils/theme/theme.utils";
 import {
   isContentFlipped,
   saveContentFlipped,
   saveContentUnflipped,
 } from "~/utils/easter-egg/flip-content";
 
+const theme = useTheme();
+onMounted(() => (theme.global.name.value = pickRandomTheme()));
+
 const userStore = useUserStore();
 
 const isNavFolded = ref<boolean>(true);
 
-const shouldApproveEULA = computed<boolean>(() => {
-  return userStore.loggedUser?.hasApprovedEULA === false;
-});
+const shouldApproveEULA = computed<boolean>(
+  () => userStore.loggedUser?.hasApprovedEULA === false,
+);
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());
 const flipContent = () => {

@@ -23,6 +23,10 @@
         <v-icon>mdi-account-outline</v-icon>
         Mon profil
       </a>
+      <a class="dropdown-menu__item" @click="toggleCurrentTheme">
+        <v-icon>{{ themeIcon }}</v-icon>
+        {{ themeTitle }}
+      </a>
       <a class="dropdown-menu__item logout" @click="logout">
         <v-icon>mdi-close-circle-outline</v-icon>
         Deconnexion
@@ -35,8 +39,12 @@
 import { nicknameOrFirstName } from "@overbookd/user";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
+import { useTheme } from "vuetify";
+import { pickReverseTheme } from "~/utils/theme/theme.utils";
 
 const router = useRouter();
+const theme = useTheme();
+const themeStore = useThemeStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
@@ -62,6 +70,20 @@ const logout = async () => {
   authStore.logout();
   await router.push({ path: "/login" });
   userStore.clearLoggedUser();
+};
+
+const isDarkTheme = computed<boolean>(() => themeStore.isDark);
+const themeTitle = computed<string>(() =>
+  isDarkTheme.value ? "Mode Jour" : "Mode Nuit",
+);
+const themeIcon = computed<string>(() =>
+  isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night",
+);
+const toggleCurrentTheme = () => {
+  themeStore.toggleTheme();
+
+  const currentTheme = theme.global.name.value;
+  theme.global.name.value = pickReverseTheme(currentTheme);
 };
 </script>
 
@@ -152,7 +174,8 @@ const logout = async () => {
     background-color: rgb(var(--v-theme-background));
     transition: background-color 0.1s ease;
     &:hover {
-      background-color: rgba(var(--v-theme-background), 0.6);
+      background-color: rgb(var(--v-theme-primary));
+      color: rgb(var(--v-theme-on-primary));
     }
   }
 }

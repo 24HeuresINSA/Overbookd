@@ -1,33 +1,15 @@
-import { createVuetify, type ThemeDefinition } from "vuetify";
+import { createVuetify } from "vuetify";
 import { fr } from "vuetify/locale";
-
-const classicLightTheme: ThemeDefinition = {
-  dark: false,
-  colors: {
-    primary: "#41C5E5",
-    "primary-lighten": "#81D3E7",
-    "on-primary": "#FFFFFF",
-    secondary: "#FFCB29",
-    "on-secondary": "#2A2A2A",
-    tertiary: "#ED1D45",
-    "on-tertiary": "#FFFFFF",
-    background: "#F4F4F4",
-    "on-background": "#2A2A2A",
-    "on-background-light": "#555555",
-    surface: "#FFFFFF",
-    "on-surface": "#2A2A2A",
-    success: "#79ED1D",
-    "on-success": "#2A2A2A",
-    warning: "#FFCB29",
-    "on-warning": "#2A2A2A",
-    error: "#ED1D45",
-    "on-error": "#FFFFFF",
-  },
-  variables: {
-    "high-emphasis-opacity": 0.98,
-    "medium-emphasis-opacity": 0.95,
-  },
-};
+import {
+  blueDarkTheme,
+  redDarkTheme,
+  yellowDarkTheme,
+} from "~/utils/theme/dark";
+import {
+  blueLightTheme,
+  redLightTheme,
+  yellowLightTheme,
+} from "~/utils/theme/light";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -37,8 +19,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       messages: { fr },
     },
     theme: {
-      defaultTheme: "classicLightTheme",
-      themes: { classicLightTheme },
+      defaultTheme: "blueDarkTheme",
+      themes: {
+        blueLightTheme,
+        yellowLightTheme,
+        redLightTheme,
+        blueDarkTheme,
+        yellowDarkTheme,
+        redDarkTheme,
+      },
     },
   });
 
