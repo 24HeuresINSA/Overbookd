@@ -1,5 +1,5 @@
 <template>
-  <h1>Catalogue Signa</h1>
+  <h1 class="page-title">Catalogue Signa</h1>
   <SignageListing />
 </template>
 

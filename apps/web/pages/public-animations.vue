@@ -1,4 +1,5 @@
 <template>
+  <h1 class="page-title">Animations à publier</h1>
   <v-data-table
     :headers="tableHeaders"
     :items="animations"

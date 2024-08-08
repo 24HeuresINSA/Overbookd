@@ -1,5 +1,5 @@
 <template>
-  <h1>Cotisations</h1>
+  <h1 class="page-title">Cotisations</h1>
   <ContributionsTable />
 </template>
 

@@ -1,4 +1,5 @@
 <template>
+  <h1 class="page-title">Liste des bénévoles</h1>
   <div class="volunteers-page">
     <div class="filters">
       <VolunteerListFilters

@@ -1,5 +1,5 @@
 <template>
-  <h1>Repas partagés</h1>
+  <h1 class="page-title">Repas partagés</h1>
   <div class="form-and-list">
     <OfferSharedMealFormCard class="form desktop" />
     <div class="meals">

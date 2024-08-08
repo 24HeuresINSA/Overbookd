@@ -1,4 +1,5 @@
 <template>
+  <h1 class="page-title">Gestion des CP</h1>
   <div class="sg-page">
     <SgSettingsCard
       v-model:mode="mode"

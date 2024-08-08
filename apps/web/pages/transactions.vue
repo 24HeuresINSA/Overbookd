@@ -1,5 +1,5 @@
 <template>
-  <h1>Transactions</h1>
+  <h1 class="page-title">Transactions</h1>
   <AllTransactionsList />
 </template>
 

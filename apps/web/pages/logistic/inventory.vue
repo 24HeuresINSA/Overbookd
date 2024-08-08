@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <h1>Inventaire Matos</h1>
-    <InventoryImport v-if="importing" @import-done="switchToDisplay" />
-    <InventoryListing v-else @ask-init="switchToImport" />
-  </div>
+  <h1 class="page-title">Inventaire Matos</h1>
+  <InventoryImport v-if="importing" @import-done="switchToDisplay" />
+  <InventoryListing v-else @ask-init="switchToImport" />
 </template>
 
 <script lang="ts" setup>

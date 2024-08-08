@@ -1,5 +1,5 @@
 <template>
-  <h1>Statistiques 📈</h1>
+  <h1 class="page-title">Statistiques 📈</h1>
   <div class="switch">
     <h2>FA</h2>
     <v-switch

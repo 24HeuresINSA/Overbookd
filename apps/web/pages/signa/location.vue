@@ -1,5 +1,5 @@
 <template>
-  <h1>Lieux de la Signa</h1>
+  <h1 class="page-title">Lieux de la Signa</h1>
   <v-container>
     <LocationMap
       :locations="filteredLocations"

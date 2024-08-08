@@ -1,5 +1,5 @@
 <template>
-  <h1>Participations aux événements charismatiques</h1>
+  <h1 class="page-title">Participations aux événements charismatiques</h1>
   <v-data-table
     :headers="tableHeaders"
     :items="filteredParticipations"

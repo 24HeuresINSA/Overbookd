@@ -1,5 +1,5 @@
 <template>
-  <h1>Fiches Tâches</h1>
+  <h1 class="page-title">Fiches Tâches</h1>
   <div class="task ft">
     <FtFilter v-model="filters" class="task__filtering" />
     <v-card class="task__listing">

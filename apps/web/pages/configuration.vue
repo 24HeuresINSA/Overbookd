@@ -1,5 +1,5 @@
 <template>
-  <h1>Configuration du système ⚙️</h1>
+  <h1 class="page-title">Configuration du système ⚙️</h1>
   <v-img
     height="400"
     src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"

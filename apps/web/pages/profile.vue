@@ -1,8 +1,6 @@
 <template>
-  <div class="profile">
-    <h1>Profil</h1>
-    <ProfileCard />
-  </div>
+  <h1 class="page-title">Profil</h1>
+  <ProfileCard />
 </template>
 
 <script lang="ts" setup>

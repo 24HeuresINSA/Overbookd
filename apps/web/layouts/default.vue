@@ -58,7 +58,7 @@ const unflipContent = () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $navigation-folded-width: 70px;
 $navigation-unfolded-width: 300px;
 
@@ -86,7 +86,7 @@ $navigation-unfolded-width: 300px;
       background: rgb(var(--v-theme-background));
       height: 100%;
       border-radius: 25px 0 0 0;
-      padding: 10px 20px;
+      padding: 15px 25px;
     }
 
     .flip {

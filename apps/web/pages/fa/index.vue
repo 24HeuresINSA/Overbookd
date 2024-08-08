@@ -1,5 +1,5 @@
 <template>
-  <h1>Fiches Activités</h1>
+  <h1 class="page-title">Fiches Activités</h1>
   <div class="activity fa">
     <FaFilter v-model="filters" class="activity__filtering" />
     <v-card class="activity__listing">

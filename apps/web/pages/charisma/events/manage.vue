@@ -1,4 +1,5 @@
 <template>
+  <h1 class="page-title">Événements charismatiques</h1>
   <div class="charisma-event">
     <CharismaEventSettingsCard
       v-model:name="eventName"

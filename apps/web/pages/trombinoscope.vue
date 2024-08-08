@@ -1,6 +1,6 @@
 <template>
+  <h1 class="page-title">Trombinoscope</h1>
   <div class="trombinoscope">
-    <h1>Trombinoscope</h1>
     <div v-show="volunteersBornToday.length" class="birthdays">
       <BirthdayCard
         v-for="volunteer in volunteersBornToday"

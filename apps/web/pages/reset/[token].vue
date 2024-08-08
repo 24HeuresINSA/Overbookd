@@ -5,7 +5,7 @@
     cover
   />
   <v-container class="form-container">
-    <h1>Changement du mot de passe</h1>
+    <h1 class="page-title">Changement du mot de passe</h1>
     <v-text-field
       v-model="password"
       label="Nouveau mot de passe"
@@ -93,4 +93,3 @@ const sendResetRequest = async () => {
   z-index: -1;
 }
 </style>
-~/utils/festival-event/url-params.utils
