@@ -61,6 +61,13 @@ const unflipContent = () => {
 <style lang="scss" scoped>
 $navigation-folded-width: 70px;
 $navigation-unfolded-width: 300px;
+$main-border-radius: 25px;
+$surface-background-width: calc(
+  $navigation-unfolded-width + $main-border-radius
+);
+
+$surface-color: rgb(var(--v-theme-surface));
+$background-color: rgb(var(--v-theme-background));
 
 .layout {
   display: flex;
@@ -72,6 +79,12 @@ $navigation-unfolded-width: 300px;
   flex: 1;
   display: flex;
   min-height: calc(100% - #{$header-height});
+  background: linear-gradient(
+    to right,
+    $surface-color 0px,
+    $background-color $surface-background-width,
+    $background-color $surface-background-width
+  );
 
   .main {
     display: flex;
@@ -79,14 +92,19 @@ $navigation-unfolded-width: 300px;
     flex-direction: column;
     margin-left: $navigation-unfolded-width;
     width: calc(100% - $navigation-unfolded-width);
+    height: calc(100vh - $header-height);
     transition: margin-left 0.2s;
-    background: rgb(var(--v-theme-surface));
+    background: $background-color;
+    overflow: hidden;
+
+    border-top-left-radius: $main-border-radius;
+    border-top: 1px solid $background-color;
+    border-left: 1px solid $background-color;
 
     .content {
-      background: rgb(var(--v-theme-background));
       height: 100%;
-      border-radius: 25px 0 0 0;
       padding: 15px 25px;
+      overflow-y: auto;
     }
 
     .flip {
