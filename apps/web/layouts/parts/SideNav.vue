@@ -57,7 +57,7 @@
       >
         <template #prepend>
           <v-badge
-            v-if="isFolded && badgeContent(page)"
+            v-if="badgeContent(page)"
             :content="badgeContent(page)"
             :color="badgeColor(page)"
           >
@@ -68,15 +68,6 @@
 
         <template #title>
           <span class="navigation-item__title">{{ page.title }}</span>
-        </template>
-
-        <template #append>
-          <v-badge
-            v-if="!isFolded && badgeContent(page)"
-            :content="badgeContent(page)"
-            :color="badgeColor(page)"
-            inline
-          />
         </template>
       </v-list-item>
     </v-list>
@@ -119,7 +110,7 @@
 
 <script lang="ts" setup>
 import { SlugifyService } from "@overbookd/slugify";
-import { pages, type Page } from "~/utils/pages/navigation";
+import { summaryPages, type PageInSummary } from "~/utils/pages/navigation";
 import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
 import {
   shouldFlipContent,
@@ -149,8 +140,8 @@ const updateDesktopReduction = (value: boolean) => {
   unfocusOnSearch();
 };
 
-const pagesForDevice = computed<Page[]>(() =>
-  pages.filter(({ permission, mobileSupport }) => {
+const pagesForDevice = computed<PageInSummary[]>(() =>
+  summaryPages.filter(({ permission, mobileSupport }) => {
     const isSupportedByDevice = isDesktop || mobileSupport;
     const hasAccess = userStore.can(permission);
     return isSupportedByDevice && hasAccess;
@@ -158,7 +149,7 @@ const pagesForDevice = computed<Page[]>(() =>
 );
 
 const search = ref<string | undefined>(undefined);
-const filteredPages = computed<Page[]>(() => {
+const filteredPages = computed<PageInSummary[]>(() => {
   const slugifiedSearch = SlugifyService.applyOnOptional(search.value);
   if (!slugifiedSearch?.trim()) return pagesForDevice.value;
 
@@ -175,12 +166,12 @@ const reportBug = ref<boolean>(false);
 const openReportBugDialog = () => (reportBug.value = true);
 const closeReportBugDialog = () => (reportBug.value = false);
 
-const isSelected = ({ to }: Page): boolean => {
+const isSelected = ({ to }: PageInSummary): boolean => {
   if (to === "/") return route.path === to;
   return route.path.includes(to);
 };
 
-const badgeContent = ({ to }: Page): number => {
+const badgeContent = ({ to }: PageInSummary): number => {
   switch (to) {
     case "/fa":
       return navigationBadgeStore.myRefusedActivities;
@@ -190,7 +181,7 @@ const badgeContent = ({ to }: Page): number => {
       return 0;
   }
 };
-const badgeColor = (page: Page): string => {
+const badgeColor = (page: PageInSummary): string => {
   switch (page.to) {
     case "/fa":
       return "tertiary";

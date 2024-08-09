@@ -6,7 +6,7 @@
     </template>
 
     <v-app-bar-title class="header__title">
-      <v-tooltip v-if="isDesktop" location="bottom">
+      <v-tooltip v-if="isDesktop && watermark" location="bottom">
         <template #activator="{ props }">
           <span v-bind="props" class="watermark">
             {{ watermark }}
@@ -15,6 +15,7 @@
         <p>{{ watermarkTooltipTitle }}</p>
         <p>{{ watermarkTooltipDescription }}</p>
       </v-tooltip>
+      <span v-if="!isDesktop" class="page-title">{{ pageTitle }}</span>
     </v-app-bar-title>
 
     <template #append>
@@ -27,6 +28,7 @@
 import Logo from "./Logo.vue";
 import HeaderProfile from "~/layouts/parts/HeaderProfile.vue";
 import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
+import { findPage } from "~/utils/pages/navigation";
 
 const PREPROD_TOOLTIP_TITLE =
   "Tu es sur la version de pré-production d'Overbookd.";
@@ -37,16 +39,22 @@ const CTMA_TOOLTIP_TITLE =
 const CTMA_TOOLTIP_DESCRIPTION =
   "Le site et les données sont une copie d'Overbookd de l'année précédente.";
 
-const isDesktop = checkDesktop();
-
+const route = useRoute();
 const config = useRuntimeConfig();
 const url: string = config.public.baseURL;
+
+const isDesktop = checkDesktop();
 
 const isPreProd: boolean = url.includes("preprod");
 const isCetaitMieuxAvant: boolean = url.includes("cetaitmieuxavant");
 
-const watermark = computed<string>(() =>
-  isPreProd ? "preprod" : isCetaitMieuxAvant ? "ctma" : "",
+const pageTitle = computed<string>(() => {
+  const page = findPage(route.path);
+  return page?.title || "";
+});
+
+const watermark = computed<string | undefined>(() =>
+  isPreProd ? "preprod" : isCetaitMieuxAvant ? "ctma" : undefined,
 );
 const watermarkTooltipTitle = computed<string>(() =>
   isPreProd
@@ -73,6 +81,16 @@ const updateNav = () => emit("update-nav");
     text-align: center;
     align-content: center;
     height: 100%;
+    margin-inline-start: 0;
+
+    .page-title {
+      display: none;
+      @media only screen and (max-width: $mobile-max-width) {
+        display: block;
+        font-size: 1.15rem;
+        font-weight: 500;
+      }
+    }
 
     .watermark {
       text-transform: uppercase;

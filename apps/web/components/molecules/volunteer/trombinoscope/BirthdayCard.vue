@@ -1,5 +1,5 @@
 <template>
-  <v-card class="birthday-card" color="#FFD700">
+  <v-card class="birthday-card" color="primary">
     <v-card-title class="birthday-card__heading">
       <ProfilePicture :user="volunteer" />
       <p>Joyeux anniv 🎂</p>

@@ -1,9 +1,10 @@
 import { isDesktop } from "~/utils/device/device.utils";
-import { pages } from "../utils/pages/navigation";
+import { findPage } from "../utils/pages/navigation";
 
 export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore();
-  const page = pages.find((page) => page.to.startsWith(to.path));
+
+  const page = findPage(to.path);
   if (!page?.permission) return;
 
   const isMobile = !isDesktop();

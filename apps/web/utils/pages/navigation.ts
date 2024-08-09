@@ -1,25 +1,14 @@
-import {
-  ENROLL_HARD,
-  MANAGE_CONFIG,
-  MANAGE_CONTRIBUTIONS,
-  MANAGE_PERSONAL_ACCOUNTS,
-  VIEW_VOLUNTEER,
-  HAVE_PERSONAL_ACCOUNT,
-  SHOTGUN_SHARED_MEAL,
-  READ_FA,
-  READ_GEAR_CATALOG,
-  VIEW_TROMBINOSCOPE,
-  READ_SIGNAGE_CATALOG,
-  VIEW_LOCATION,
-  READ_ANIMATION_TO_PUBLISH,
-  READ_FT,
-  VIEW_FESTIVAL_EVENTS_STATS,
-  MANAGE_CHARISMA_EVENTS,
-  READ_INVENTORY,
-} from "@overbookd/permission";
 import type { Permission } from "@overbookd/permission";
+import { VOLUNTEER_PAGES, VOLUNTEER_SUMMARY_PAGES } from "./volunteer";
+import {
+  FESTIVAL_EVENT_PAGES,
+  FESTIVAL_EVENT_SUMMARY_PAGES,
+} from "./festival-event";
+import { MANAGEMENT_SUMMARY_PAGES } from "./management";
+import { LOGISTIC_SUMMARY_PAGES } from "./logistic";
+import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
 
-export type Page = {
+export type PageInSummary = {
   icon: string;
   title: string;
   permission?: Permission;
@@ -29,344 +18,51 @@ export type Page = {
   keywords: string[];
 };
 
-export const pages: Page[] = [
-  {
-    icon: "mdi-home",
-    title: "Accueil",
-    to: "/",
-    description: "Page principale pour se rediriger vers toutes les autres",
-    mobileSupport: true,
-    keywords: [],
-  },
-  {
-    icon: "mdi-account-cash",
-    title: "Compte perso",
-    permission: HAVE_PERSONAL_ACCOUNT,
-    to: "/my-personal-account",
-    description:
-      "Page avec ton compte persos et tes transactions permettant de faire des virements",
-    mobileSupport: true,
-    keywords: [
-      "virements",
-      "cps",
-      "comptes",
-      "persos",
-      "consos",
-      "consomations",
-    ],
-  },
-  {
-    icon: "mdi-food-variant",
-    title: "Repas partagés",
-    permission: SHOTGUN_SHARED_MEAL,
-    to: "/shared-meals",
-    description: "Page pour proposer et shotgun des repas partagés",
-    mobileSupport: true,
-    keywords: [
-      "repas-partages",
-      "shotguns",
-      "comptes",
-      "persos",
-      "menus",
-      "repas-orgas",
-    ],
-  },
-  {
-    icon: "mdi-image",
-    title: "Trombinoscope",
-    permission: VIEW_TROMBINOSCOPE,
-    to: "/trombinoscope",
-    description:
-      "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
-    mobileSupport: true,
-    keywords: ["trombinoscope", "photos"],
-  },
-  {
-    icon: "mdi-chart-bubble",
-    title: "Fiches Activités",
-    permission: READ_FA,
-    to: "/fa",
-    description:
-      "Liste des FAs, les FAs permettent de décrire tout ce qui va se passer sur le festival",
-    mobileSupport: true,
-    keywords: ["fas", "fiches-activites", "animations"],
-  },
-  {
-    icon: "mdi-format-color-highlight",
-    title: "Fiches Tâches",
-    permission: READ_FT,
-    to: "/ft",
-    description:
-      "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
-    mobileSupport: true,
-    keywords: ["fts", "fiche-taches"],
-  },
-  {
-    icon: "mdi-account-group",
-    title: "Liste des bénévoles",
-    permission: VIEW_VOLUNTEER,
-    to: "/volunteers",
-    description: "Permet de voir tous les bénévoles",
-    mobileSupport: true,
-    keywords: ["benevoles", "orgas"],
-  },
-  /*{
-    icon: "mdi-clock",
-    title: "Mes dispos",
-    to: "/availabilities",
-    description:
-      "Permet de renseigner quand tu es disponible pour aider sur le festival",
-    mobileSupport: true,
-    keywords: ["dispos", "disponibilites"],
-  },
-  {
-    icon: "mdi-calendar-clock",
-    title: "Planning",
-    permission: VIEW_PLANNING,
-    to: "/planning",
-    description: "Permet d'avoir un apercu de son planning sur le festival",
-    mobileSupport: true,
-    keywords: ["planning", "calendrier", "taches", "affectation"],
-  },*/
-  {
-    icon: "mdi-account-multiple-plus",
-    title: "Admission organisateurs",
-    permission: ENROLL_HARD,
-    to: "/registrations/staff",
-    description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
-    mobileSupport: false,
-    keywords: ["arrivants", "inscriptions", "admissions", "orgas", "hards"],
-  },
-  /*{
-    icon: "mdi-account-multiple-check",
-    title: "Admission bénévoles",
-    permission: ENROLL_SOFT,
-    to: "/registrations/volunteer",
-    description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
-    mobileSupport: false,
-    keywords: ["arrivants", "inscriptions", "admissions", "benevoles", "softs"],
-  },*/
-  {
-    icon: "mdi-cash-multiple",
-    title: "Cotisations",
-    permission: MANAGE_CONTRIBUTIONS,
-    to: "/contributions",
-    description:
-      "Permet d'enregistrer les cotisations des adhérents à l'association",
-    mobileSupport: false,
-    keywords: ["cotisations", "contributions"],
-  },
-  {
-    icon: "mdi-emoticon-cool",
-    title: "Gestion du charisme",
-    permission: MANAGE_CHARISMA_EVENTS,
-    to: "/charisma/events/manage",
-    description:
-      "Permet de gérer le charisme des bénévoles via la création d'événements",
-    mobileSupport: false,
-    keywords: ["charisme", "evenements"],
-  },
-  {
-    icon: "mdi-format-list-numbered",
-    title: "Evénements charismes",
-    permission: MANAGE_CHARISMA_EVENTS,
-    to: "/charisma/events/list",
-    description:
-      "Permet de voir la liste des participations aux événements charismatiques",
-    mobileSupport: false,
-    keywords: ["charisme", "evenements"],
-  },
-  /*{
-    icon: "mdi-clock-edit",
-    title: "Charisme des dispos",
-    permission: AFFECT_VOLUNTEER,
-    to: "/charisma-periods",
-    description:
-      "Permet de définir les points de charisme des créneaux du festival",
-    mobileSupport: false,
-    keywords: ["charisme-dispos", "charisme-disponibilites"],
-  },
-  {
-    icon: "mdi-human-greeting",
-    title: "Affect Orga-Tâche",
-    permission: AFFECT_VOLUNTEER,
-    to: "/assignment/orga-task",
-    description: "Permet d'affecter des bénévoles à des tâches",
-    mobileSupport: false,
-    keywords: ["affect", "orga-tache", "affectation"],
-  },
-  {
-    icon: "mdi-human-greeting",
-    title: "Affect Tâche-Orga",
-    permission: AFFECT_VOLUNTEER,
-    to: "/assignment/task-orga",
-    description: "Permet d'affecter des tâches à des bénévoles",
-    mobileSupport: false,
-    keywords: ["affect", "tache-orga", "affectation"],
-  },
-  {
-    icon: "mdi-clock",
-    title: "Besoin orgas",
-    permission: AFFECT_VOLUNTEER,
-    to: "/orga-needs",
-    description:
-      "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
-    mobileSupport: false,
-    keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
-  },
-  {
-    icon: "mdi-clock-fast",
-    title: "Timeline",
-    permission: VIEW_TIMELINE,
-    to: "/timeline",
-    description:
-      "Permet de voir toutes les taches qui se déroulent pendant une plage horaire",
-    mobileSupport: true,
-    keywords: ["activite", "timeline"],
-  },
-  {
-    icon: "mdi-handshake",
-    title: "A l'aide",
-    permission: ASK_FOR_HELP,
-    to: "/need-help",
-    description:
-      "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
-    mobileSupport: true,
-    keywords: ["aide-ponctuelle", "disponible"],
-  },*/
-  {
-    icon: "mdi-cog",
-    title: "Config Système",
-    permission: MANAGE_CONFIG,
-    to: "/configuration",
-    description: "Permet de configurer Overbookd",
-    mobileSupport: true,
-    keywords: ["admin", "system", "configuration"],
-  },
-  {
-    icon: "mdi-format-list-bulleted",
-    title: "SG",
-    permission: MANAGE_PERSONAL_ACCOUNTS,
-    to: "/sg",
-    description:
-      "Permet de répartir les consommations des comptes perso aux adhérants",
-    mobileSupport: false,
-    keywords: [
-      "comptes-perso",
-      "consommations",
-      "consomations",
-      "placard",
-      "biere",
-    ],
-  },
-  {
-    icon: "mdi-cash-multiple",
-    title: "Transactions",
-    permission: MANAGE_PERSONAL_ACCOUNTS,
-    to: "/transactions",
-    description:
-      "Permet de visualiser les transactions effectuées sur Overbookd",
-    mobileSupport: false,
-    keywords: ["virements", "compte-perso", "transactions"],
-  },
-  {
-    icon: "mdi-bookshelf",
-    title: "Catalogue Matos",
-    permission: READ_GEAR_CATALOG,
-    to: "/logistic/catalog",
-    description:
-      "Permet de définir l'ensemble du matériel disponible sur le festival",
-    mobileSupport: false,
-    keywords: ["catalogue-matos", "catalogue-materiel"],
-  },
-  {
-    icon: "mdi-warehouse",
-    title: "Inventaire",
-    permission: READ_INVENTORY,
-    to: "/logistic/inventory",
-    description:
-      "Permet de compter l'ensemble du matériel appartenant à l'association",
-    mobileSupport: false,
-    keywords: ["inventaire", "matos", "materiel"],
-  },
-  /*{
-    icon: "mdi-chart-histogram",
-    title: "Récap Matos",
-    permission: VIEW_GEAR_DASHBOARD,
-    to: "/logistic/dashboard",
-    description:
-      "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
-    mobileSupport: false,
-    keywords: [
-      "recap-matos",
-      "dashboard",
-      "demandes-matos",
-      "demandes-materiel",
-    ],
-  },
-  {
-    icon: "mdi-cash-register",
-    title: "Fiches Achats",
-    permission: PURCHASE_GEARS,
-    to: "/logistic/purchase",
-    description: "Permet de gérer les achats de matériel",
-    mobileSupport: false,
-    keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
-  },
-  {
-    icon: "mdi-store-clock",
-    title: "Fiches Emprunts",
-    permission: BORROW_GEARS,
-    to: "/logistic/borrow",
-    description: "Permet de gérer les emprunts de matériel",
-    mobileSupport: false,
-    keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
-  },*/
-  {
-    icon: "mdi-map-marker",
-    title: "Lieux de la Signa",
-    permission: VIEW_LOCATION,
-    to: "/signa/location",
-    description:
-      "Permet de définir l'ensemble des lieux disponible sur le festival",
-    mobileSupport: false,
-    keywords: ["lieux-signaletique"],
-  },
-  {
-    icon: "mdi-bookshelf",
-    title: "Catalogue Signa",
-    permission: READ_SIGNAGE_CATALOG,
-    to: "/signa/catalog",
-    description:
-      "Permet de définir l'ensemble de la signalétique disponible sur le festival",
-    mobileSupport: false,
-    keywords: ["catalogue-signaletique"],
-  },
-  {
-    icon: "mdi-web-sync",
-    title: "Animations à publier",
-    permission: READ_ANIMATION_TO_PUBLISH,
-    to: "/public-animations",
-    description:
-      "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
-    mobileSupport: false,
-    keywords: ["animations", "communication", "publier", "publication"],
-  },
-  {
-    icon: "mdi-chart-areaspline-variant",
-    title: "Stats",
-    permission: VIEW_FESTIVAL_EVENTS_STATS,
-    to: "/stats",
-    description:
-      "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport a l'édition précédente",
-    mobileSupport: false,
-    keywords: [
-      "statistiques",
-      "fas",
-      "fiches-activites",
-      "fts",
-      "fiche-taches",
-      "animations",
-    ],
-  },
+export type HiddenPage = Pick<
+  PageInSummary,
+  "title" | "permission" | "to" | "mobileSupport"
+>;
+
+export type Page = PageInSummary | HiddenPage;
+
+const INDEX_PAGE: PageInSummary = {
+  icon: "mdi-home",
+  title: "Accueil",
+  to: "/",
+  description: "Page principale pour se rediriger vers toutes les autres",
+  mobileSupport: true,
+  keywords: ["accueil", "home"],
+};
+
+export const summaryPages: PageInSummary[] = [
+  INDEX_PAGE,
+  ...VOLUNTEER_SUMMARY_PAGES,
+  ...FESTIVAL_EVENT_SUMMARY_PAGES,
+  ...MANAGEMENT_SUMMARY_PAGES,
+  ...CURRENT_EVENT_SUMMARY_PAGES,
+  ...LOGISTIC_SUMMARY_PAGES,
 ];
+
+const allPages: Page[] = [
+  INDEX_PAGE,
+  ...VOLUNTEER_PAGES,
+  ...FESTIVAL_EVENT_PAGES,
+  ...MANAGEMENT_SUMMARY_PAGES,
+  ...CURRENT_EVENT_SUMMARY_PAGES,
+  ...LOGISTIC_SUMMARY_PAGES,
+];
+
+function removePathLastPart(path: string): string {
+  return path.replace(/\/[^/]*$/, "");
+}
+
+export function findPage(path: string): Page | undefined {
+  const pageWithExactPath = allPages.find((page) => page.to === path);
+  if (pageWithExactPath) return pageWithExactPath;
+
+  const remainingPages = allPages.filter((page) => page.to !== path);
+  const reducedPath = removePathLastPart(path);
+  return remainingPages.find(
+    (page) => removePathLastPart(page.to) === reducedPath,
+  );
+}
