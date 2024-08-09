@@ -54,6 +54,7 @@ const onClick = () => {
   gap: 6px;
   align-items: center;
   text-decoration: none;
+  margin-left: 6px;
 
   .logo {
     max-width: 200px;
@@ -63,7 +64,7 @@ const onClick = () => {
   .version {
     margin-top: 2px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: rgb(var(--v-theme-on-surface));
     @media only screen and (max-width: $mobile-max-width) {
       display: none;

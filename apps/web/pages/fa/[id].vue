@@ -90,6 +90,7 @@ $sidebar-width: calc(350px + $sidebar-margin);
   }
 
   .container {
+    width: 100%;
     margin: unset;
     padding: unset;
   }

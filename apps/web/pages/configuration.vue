@@ -3,7 +3,7 @@
   <v-img
     height="400"
     src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
-    class="mb-3"
+    class="gif"
   />
 
   <v-expansion-panels rounded="xl">
@@ -15,15 +15,16 @@
         <TipTap v-model="registerFormDescription" />
         <div class="description-actions">
           <v-btn
+            text="Remplacer par le template"
             color="secondary"
             variant="text"
             @click="replaceRegisterDescriptionByTemplate"
-          >
-            Remplacer par le template
-          </v-btn>
-          <v-btn color="primary" @click="saveRegisterFormDescription">
-            Enregistrer
-          </v-btn>
+          />
+          <v-btn
+            text="Enregistrer"
+            color="primary"
+            @click="saveRegisterFormDescription"
+          />
         </div>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -98,14 +99,24 @@ const saveEventStartDate = async () => {
 </script>
 
 <style lang="scss" scoped>
+.gif {
+  margin-bottom: 15px;
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+}
+
 .collapse {
   margin-top: 5px;
 }
 
 .description-actions {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
   margin-top: 12px;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 }
 
 .save-btn {

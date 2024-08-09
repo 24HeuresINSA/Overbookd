@@ -15,6 +15,8 @@
     text="Proposer un repas"
     class="offer-btn"
     color="primary"
+    size="large"
+    rounded
     @click="openOfferDialog"
   />
 
@@ -53,7 +55,7 @@ mealSharingStore.fetchAll();
     display: block;
     width: calc(100vw - 20px);
     position: fixed;
-    bottom: calc(#{$mobile-header-height} + 20px);
+    bottom: 20px;
     left: 10px;
     right: 10px;
   }

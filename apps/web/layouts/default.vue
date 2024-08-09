@@ -1,18 +1,18 @@
 <template>
-  <v-app class="layout">
-    <Header />
-    <div class="side-with-main">
-      <SideNav
-        v-model="isNavFolded"
-        @flip-content="flipContent"
-        @unflip-content="unflipContent"
-      />
-      <div class="main" :class="{ 'full-main': isNavFolded }">
+  <v-layout class="layout">
+    <Header @update-nav="updateNav" />
+    <SideNav
+      v-model="isNavFolded"
+      @flip-content="flipContent"
+      @unflip-content="unflipContent"
+    />
+    <v-main class="main">
+      <div class="fake-background">
         <div class="content" :class="{ flip: shouldFlipContent }">
           <slot />
         </div>
       </div>
-    </div>
+    </v-main>
 
     <v-dialog
       v-model="shouldApproveEULA"
@@ -22,7 +22,7 @@
     >
       <ApproveEULADialogCard />
     </v-dialog>
-  </v-app>
+  </v-layout>
 </template>
 
 <script lang="ts" setup>
@@ -42,6 +42,7 @@ onMounted(() => (theme.global.name.value = pickRandomTheme()));
 const userStore = useUserStore();
 
 const isNavFolded = ref<boolean>(true);
+const updateNav = () => (isNavFolded.value = !isNavFolded.value);
 
 const shouldApproveEULA = computed<boolean>(
   () => userStore.loggedUser?.hasApprovedEULA === false,
@@ -59,71 +60,49 @@ const unflipContent = () => {
 </script>
 
 <style lang="scss" scoped>
-$navigation-folded-width: 70px;
-$navigation-unfolded-width: 300px;
 $main-border-radius: 25px;
-$surface-background-width: calc(
-  $navigation-unfolded-width + $main-border-radius
-);
-
 $surface-color: rgb(var(--v-theme-surface));
 $background-color: rgb(var(--v-theme-background));
 
 .layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.side-with-main {
-  flex: 1;
+.main {
   display: flex;
-  min-height: calc(100% - #{$header-height});
-  background: linear-gradient(
-    to right,
-    $surface-color 0px,
-    $background-color $surface-background-width,
-    $background-color $surface-background-width
-  );
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
-  .main {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin-left: $navigation-unfolded-width;
-    width: calc(100% - $navigation-unfolded-width);
-    height: calc(100vh - $header-height);
-    transition: margin-left 0.2s;
+  .fake-background {
+    background: $surface-color;
+    height: 100%;
+    width: 100%;
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    padding: 15px 25px;
     background: $background-color;
-    overflow: hidden;
-
+    overflow-y: auto;
     border-top-left-radius: $main-border-radius;
     border-top: 1px solid $background-color;
     border-left: 1px solid $background-color;
 
-    .content {
-      height: 100%;
-      padding: 15px 25px;
-      overflow-y: auto;
-    }
-
-    .flip {
-      transform: rotate(180deg);
+    @media only screen and (max-width: $mobile-max-width) {
+      padding: 10px;
+      border-top-right-radius: $main-border-radius;
+      border-left: none;
     }
   }
-  .full-main {
-    margin-left: $navigation-folded-width;
-    width: calc(100% - $navigation-folded-width);
-  }
 
-  @media only screen and (max-width: $mobile-max-width) {
-    .main {
-      margin-left: 0;
-      width: 100%;
-      .content {
-        border-radius: 0;
-      }
-    }
+  .flip {
+    transform: rotate(180deg);
   }
 }
 </style>

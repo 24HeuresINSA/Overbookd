@@ -88,8 +88,12 @@ const toggleCurrentTheme = () => {
 </script>
 
 <style lang="scss" scoped>
+$header-profile-min-width: 200px;
+$header-profile-max-width: 300px;
+
 .profile {
   position: relative;
+  height: 100%;
 
   &__header {
     display: flex;
@@ -97,8 +101,8 @@ const toggleCurrentTheme = () => {
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
-    min-width: 200px;
-    max-width: 300px;
+    min-width: $header-profile-min-width;
+    max-width: $header-profile-max-width;
     height: 100%;
     cursor: pointer;
     @media only screen and (max-width: $mobile-max-width) {
@@ -119,11 +123,11 @@ const toggleCurrentTheme = () => {
     }
   }
   &__name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
   }
   &__balance {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
   }
   .extend-icon {
@@ -137,19 +141,21 @@ const toggleCurrentTheme = () => {
   }
 }
 
-.profile:hover .dropdown-menu {
-  display: flex;
-  animation: dropdown 0.3s ease forwards;
+@media only screen and (min-width: $mobile-max-width) {
+  .profile:hover .dropdown-menu {
+    display: flex;
+    animation: dropdown 0.3s ease forwards;
+  }
 }
 
 .dropdown-menu {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 100%;
-  left: 0;
   right: 0;
-  min-width: 200px;
-  padding: 6px 10px 10px 10px;
+  min-width: $header-profile-min-width;
+  max-width: $header-profile-max-width;
+  padding: 2px 10px 10px 10px;
   flex-direction: column;
   gap: 5px;
   background-color: rgb(var(--v-theme-surface));

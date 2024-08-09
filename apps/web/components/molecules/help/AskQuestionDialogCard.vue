@@ -10,18 +10,20 @@
       </p>
     </template>
     <template #actions>
-      <v-btn
-        text="Copier l'adresse mail"
-        variant="elevated"
-        color="secondary"
-        @click="copyEmail"
-      />
-      <v-btn
-        text="Envoyer un mail"
-        variant="elevated"
-        color="primary"
-        :href="`mailto:${HUMAINS_EMAIL}`"
-      />
+      <div class="actions">
+        <v-btn
+          text="Copier l'adresse mail"
+          variant="elevated"
+          color="secondary"
+          @click="copyEmail"
+        />
+        <v-btn
+          text="Envoyer un mail"
+          variant="elevated"
+          color="primary"
+          :href="`mailto:${HUMAINS_EMAIL}`"
+        />
+      </div>
     </template>
   </DialogCard>
 </template>
@@ -37,3 +39,14 @@ const copyEmail = async () => {
   sendSuccessNotification("Email copié ✅");
 };
 </script>
+
+<style lang="scss" scoped>
+.actions {
+  display: flex;
+  gap: 10px;
+
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
+}
+</style>

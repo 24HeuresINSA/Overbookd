@@ -3,6 +3,10 @@ h1.page-title {
   line-height: 1.2;
   font-weight: 600;
   margin-bottom: 10px;
+
+  @media only screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
 }
 
 .important {

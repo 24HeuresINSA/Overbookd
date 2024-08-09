@@ -54,7 +54,6 @@ const balance = computed<string>(() =>
   flex-direction: column;
   position: sticky;
   width: 50%;
-  top: $mobile-header-height;
   z-index: 5;
   justify-content: center;
   align-items: center;
@@ -67,8 +66,8 @@ const balance = computed<string>(() =>
     display: flex;
     flex-direction: column;
     text-align: center;
-    background-color: $info-primary;
-    color: white;
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-on-primary));
     border-radius: 15px;
     padding: 50px 10% 40px 10%;
 
@@ -85,16 +84,13 @@ const balance = computed<string>(() =>
     width: 100%;
     .balance {
       width: 100%;
-      border-radius: 0;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
       padding: 0;
       padding-top: 15px;
     }
     .transfer-btn {
       width: unset;
       position: fixed;
-      bottom: calc(#{$mobile-header-height} + 20px);
+      bottom: 20px;
       left: 10px;
       right: 10px;
     }

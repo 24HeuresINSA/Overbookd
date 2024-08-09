@@ -1,13 +1,15 @@
 <template>
   <v-navigation-drawer
-    v-model:rail="isFolded"
+    :model-value="isDisplayed"
+    :rail="isReducedForDesktop"
     expand-on-hover
     rail-width="70"
     width="300"
     floating
-    :mobile="false"
+    :mobile="!isDesktop"
     class="navigation"
-    @update:rail="unfocusOnSearch"
+    @update:model-value="updateMobileDisplay"
+    @update:rail="updateDesktopReduction"
   >
     <v-list density="compact" nav>
       <v-list-item
@@ -118,7 +120,7 @@
 <script lang="ts" setup>
 import { SlugifyService } from "@overbookd/slugify";
 import { pages, type Page } from "~/utils/pages/navigation";
-import { isDesktop } from "~/utils/device/device.utils";
+import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
 import {
   shouldFlipContent,
   shouldUnflipContent,
@@ -128,23 +130,32 @@ const route = useRoute();
 const userStore = useUserStore();
 const navigationBadgeStore = useNavigationBadgeStore();
 
-onMounted(() => {
-  navigationBadgeStore.fetchAll();
-});
+onMounted(() => navigationBadgeStore.fetchAll());
 
-const isFolded = defineModel<boolean>({ required: true });
-
-const pagesForDevice = computed<Page[]>(() =>
-  pages.filter(({ permission, mobileSupport }) => {
-    const isSupportedByDevice = isDesktop() || mobileSupport;
-    const hasAccess = userStore.can(permission);
-    return isSupportedByDevice && hasAccess;
-  }),
-);
+const isDesktop = checkDesktop();
 
 const searchInput = ref<HTMLInputElement | null>(null);
 const focusOnSearch = () => searchInput.value?.focus();
 const unfocusOnSearch = () => searchInput.value?.blur();
+
+const isFolded = defineModel<boolean>({ required: true });
+const isDisplayed = computed<boolean>(() => isDesktop || !isFolded.value);
+const isReducedForDesktop = computed<boolean | null>(() =>
+  isDesktop ? isFolded.value : null,
+);
+const updateMobileDisplay = (value: boolean) => (isFolded.value = !value);
+const updateDesktopReduction = (value: boolean) => {
+  isFolded.value = value;
+  unfocusOnSearch();
+};
+
+const pagesForDevice = computed<Page[]>(() =>
+  pages.filter(({ permission, mobileSupport }) => {
+    const isSupportedByDevice = isDesktop || mobileSupport;
+    const hasAccess = userStore.can(permission);
+    return isSupportedByDevice && hasAccess;
+  }),
+);
 
 const search = ref<string | undefined>(undefined);
 const filteredPages = computed<Page[]>(() => {
@@ -207,10 +218,6 @@ $navigation-item-margin-horizontal: 5px;
 $navigation-item-unfolded-margin-right: 15px;
 
 .navigation {
-  margin-top: $header-height;
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
   .v-icon {
     padding-left: 3px;
   }
@@ -273,7 +280,7 @@ $navigation-item-unfolded-margin-right: 15px;
 
 .help-items {
   position: fixed;
-  bottom: $header-height;
+  bottom: 0;
   width: 100%;
 }
 

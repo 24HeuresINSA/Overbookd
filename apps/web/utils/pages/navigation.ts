@@ -134,7 +134,7 @@ export const pages: Page[] = [
     permission: ENROLL_HARD,
     to: "/registrations/staff",
     description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
-    mobileSupport: true,
+    mobileSupport: false,
     keywords: ["arrivants", "inscriptions", "admissions", "orgas", "hards"],
   },
   /*{
@@ -240,7 +240,7 @@ export const pages: Page[] = [
     permission: MANAGE_CONFIG,
     to: "/configuration",
     description: "Permet de configurer Overbookd",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["admin", "system", "configuration"],
   },
   {
