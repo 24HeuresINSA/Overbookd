@@ -20,6 +20,7 @@
 import { Bar } from "vue-chartjs";
 import type { ChartEvent } from "chart.js";
 import type { Statistics } from "@overbookd/http";
+import { useTheme } from "vuetify";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import {
   DRAFT,
@@ -43,8 +44,11 @@ import {
   oldActivities,
   oldTasks,
 } from "~/utils/festival-event/past-year.constant";
+import { hexToRGBA } from "~/utils/color/hex-to-rgba";
 
 useHead({ title: "Statistiques des FA" });
+
+const theme = useTheme();
 
 const displayTaskStats = ref<boolean>(false);
 
@@ -103,29 +107,46 @@ const maxTotal = computed<number>(() =>
     ...sortedOldEvents.value,
   ),
 );
-const options = computed(
-  () =>
-    ({
-      responsive: true,
-      scales: {
-        x: { stacked: true, min: 0, position: "bottom" },
-        x1: { min: 0, position: "top", suggestedMax: maxTotal.value },
-        y: { stacked: true },
+const options = computed(() => {
+  const textColor = theme.global.current.value.colors["on-surface"];
+  const gridColor = hexToRGBA(textColor, 0.1);
+  return {
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        min: 0,
+        position: "bottom",
+        ticks: { color: textColor },
+        grid: { color: gridColor },
       },
-      plugins: {
-        legend: {
-          labels: { usePointStyle: true },
-          onHover: (event: ChartEvent) => {
-            (event?.native?.target as HTMLElement).style.cursor = "pointer";
-          },
-          onLeave: (event: ChartEvent) => {
-            (event?.native?.target as HTMLElement).style.cursor = "default";
-          },
+      x1: {
+        min: 0,
+        position: "top",
+        suggestedMax: maxTotal.value,
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
+      y: {
+        stacked: true,
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: { usePointStyle: true, color: textColor },
+        onHover: (event: ChartEvent) => {
+          (event?.native?.target as HTMLElement).style.cursor = "pointer";
+        },
+        onLeave: (event: ChartEvent) => {
+          (event?.native?.target as HTMLElement).style.cursor = "default";
         },
       },
-      indexAxis: "y",
-    }) as const,
-);
+    },
+    indexAxis: "y",
+  } as const;
+});
 
 const borderDatasetOptions = {
   borderRadius: 2,
