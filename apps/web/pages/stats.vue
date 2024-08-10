@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import { Bar } from "vue-chartjs";
+import type { ChartEvent } from "chart.js";
 import type { Statistics } from "@overbookd/http";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import {
@@ -114,6 +115,12 @@ const options = computed(
       plugins: {
         legend: {
           labels: { usePointStyle: true },
+          onHover: (event: ChartEvent) => {
+            (event?.native?.target as HTMLElement).style.cursor = "pointer";
+          },
+          onLeave: (event: ChartEvent) => {
+            (event?.native?.target as HTMLElement).style.cursor = "default";
+          },
         },
       },
       indexAxis: "y",
@@ -134,17 +141,17 @@ const commonDatasets = computed(() => [
     ...borderDatasetOptions,
   },
   {
-    label: RELECTURE_EN_COURS,
-    data: findByStatus(IN_REVIEW),
-    borderColor: "orange",
-    backgroundColor: "rgba(255, 165, 0, 0.6)",
-    ...borderDatasetOptions,
-  },
-  {
     label: REFUSEE,
     data: findByStatus(REFUSED),
     borderColor: "red",
     backgroundColor: "rgba(255, 0, 0, 0.6)",
+    ...borderDatasetOptions,
+  },
+  {
+    label: RELECTURE_EN_COURS,
+    data: findByStatus(IN_REVIEW),
+    borderColor: "orange",
+    backgroundColor: "rgba(255, 165, 0, 0.6)",
     ...borderDatasetOptions,
   },
   {
