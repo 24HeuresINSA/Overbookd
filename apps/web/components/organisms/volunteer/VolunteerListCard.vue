@@ -33,14 +33,18 @@
           <v-btn
             icon="mdi-calendar"
             size="small"
-            @click="openCalendar(item.id)"
+            @click.stop="openCalendar(item.id)"
           />
           <v-btn
             icon="mdi-phone"
             size="small"
-            :href="formatPhoneLink(item.phone)"
+            @click.stop="callVolunteer(item.phone)"
           />
-          <v-btn icon="mdi-email" size="small" :href="`mailto:${item.email}`" />
+          <v-btn
+            icon="mdi-email"
+            size="small"
+            @click.stop="sendMailTo(item.email)"
+          />
         </div>
       </template>
     </v-data-table>
@@ -92,10 +96,19 @@ const openInformationDialog = async (
   emit("open-dialog");
 };
 
-const openCalendar = (volunteerId: number) => {
-  window.open(`/planning/${volunteerId}`, "_blank");
-};
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const openCalendar = (volunteerId: number) => {
+  sendFailureNotification("Cette page n'est pas encore disponible");
+  //window.open(`/planning/${volunteerId}`, "_blank");
+};
+const callVolunteer = (phone: string) => {
+  window.location.href = formatPhoneLink(phone);
+};
+const sendMailTo = (email: string) => {
+  window.location.href = `mailto:${email}`;
+};
 </script>
 
 <style lang="scss" scoped>
