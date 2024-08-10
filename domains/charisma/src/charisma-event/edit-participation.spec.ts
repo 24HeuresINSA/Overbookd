@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { CharismaEvent } from "./charisma-event";
 import { InMemoryCharismaEventParticipations } from "./charisma-event-participations.inmemory";
-import { InexistentParticipation } from "./charisma-event.error";
+import {
+  InexistentParticipation,
+  InsufficientCharismaPerHour,
+  IntegerCharismaPerHour,
+} from "./charisma-event.error";
 
 const lea = { id: 1, firstname: "Lea", lastname: "Mouyno" };
 
@@ -47,16 +51,39 @@ describe("Edit Charisma Event Participation", () => {
   );
 
   describe("when the participation exists", () => {
-    const participationToEdit = {
-      slug: participationFromLea.slug,
-      eventDate: participationFromLea.eventDate,
-      participantId: lea.id,
-      charisma: 200,
-    };
-    it("should update the participation with the new Charisma", async () => {
-      const updated = await takePart.editParticipation(participationToEdit);
-      const expected = { ...participationFromLea, charisma: 200 };
-      expect(updated).toEqual(expected);
+    describe.each`
+      context          | charisma | expectedError
+      ${"negative"}    | ${-10}   | ${InsufficientCharismaPerHour}
+      ${"null"}        | ${0}     | ${InsufficientCharismaPerHour}
+      ${"not integer"} | ${1.5}   | ${IntegerCharismaPerHour}
+    `(
+      "when editing participation with $context charisma",
+      ({ charisma, expectedError }) => {
+        const participationToEdit = {
+          slug: participationFromLea.slug,
+          eventDate: participationFromLea.eventDate,
+          participantId: lea.id,
+          charisma,
+        };
+        it("should indicate that the charisma per hour is not valid", () => {
+          const apply = () => takePart.editParticipation(participationToEdit);
+          expect(apply).rejects.toThrow(expectedError);
+        });
+      },
+    );
+
+    describe("when editing participation with valid charisma", () => {
+      const participationToEdit = {
+        slug: participationFromLea.slug,
+        eventDate: participationFromLea.eventDate,
+        participantId: lea.id,
+        charisma: 200,
+      };
+      it("should update the participation with the new charisma", async () => {
+        const updated = await takePart.editParticipation(participationToEdit);
+        const expected = { ...participationFromLea, charisma: 200 };
+        expect(updated).toEqual(expected);
+      });
     });
   });
 });

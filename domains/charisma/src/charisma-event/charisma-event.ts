@@ -62,7 +62,7 @@ export class CharismaEvent {
     participants: ParticipantTakingPart[],
   ): Promise<Participation[]> {
     const slug = this.generateSlug(name);
-    this.checkCharismaPerHour(charismaPerHour);
+    this.checkCharisma(charismaPerHour);
 
     const dateString = OverDate.from(eventDate).dateString;
     await this.checkParticipants(participants, slug, dateString);
@@ -80,6 +80,8 @@ export class CharismaEvent {
   async editParticipation(
     participation: EditParticipation,
   ): Promise<Participation> {
+    this.checkCharisma(participation.charisma);
+
     const exists = await this.charismaEvents.exists(
       participation.slug,
       participation.eventDate,
@@ -96,7 +98,7 @@ export class CharismaEvent {
     return slug;
   }
 
-  private checkCharismaPerHour(charismaPerHour: number): void {
+  private checkCharisma(charismaPerHour: number): void {
     if (charismaPerHour <= 0) throw new InsufficientCharismaPerHour();
     if (!Number.isInteger(charismaPerHour)) throw new IntegerCharismaPerHour();
   }

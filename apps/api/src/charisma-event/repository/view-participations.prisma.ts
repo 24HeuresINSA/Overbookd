@@ -13,6 +13,7 @@ export class PrismaViewCharismaEventParticipations
     const participations =
       await this.prisma.charismaEventParticipation.findMany({
         select: SELECT_CHARISMA_EVENT_PARTICIPATION,
+        orderBy: { eventDate: "desc" },
       });
     return participations.map((participation) => ({
       ...participation,
