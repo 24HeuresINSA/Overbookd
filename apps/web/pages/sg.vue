@@ -118,9 +118,6 @@ const invalidInputsReasons = computed<string[]>(() => {
   if (isMode(CLOSET_MODE) && closetStickPrice.value <= 0) {
     return ["Le prix du bâton de placard ne peut pas être nul ou négatif"];
   }
-  if (totalPrice.value === 0) {
-    return ["Le prix total ne peut pas être nul"];
-  }
 
   const shouldHaveIntConsumption = isMode(CASK_MODE) || isMode(CLOSET_MODE);
   const invalidConsumers = consumersWithConsumption.value.filter(
