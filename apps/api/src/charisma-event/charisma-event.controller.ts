@@ -9,6 +9,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -29,6 +30,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 import { DateString } from "@overbookd/date";
+import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
 
 @ApiTags("charisma-events")
 @Controller("charisma-events")
@@ -91,6 +93,49 @@ export class CharismaEventController {
     { event, participants }: CreateCharismaEventParticipationsRequestDto,
   ): Promise<CharismaEventParticipationResponseDto[]> {
     return this.charismaEvent.addParticipations(event, participants);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Patch(":slug/date/:date/participant/:participantId")
+  @ApiResponse({
+    status: 201,
+    description: "List of all charisma event participations",
+    type: CharismaEventParticipationResponseDto,
+    isArray: true,
+  })
+  @ApiBody({
+    description: "Charisma event participations to edit",
+    type: EditCharismaEventParticipationRequestDto,
+  })
+  @ApiParam({
+    name: "slug",
+    description: "Charisma event slug",
+    type: String,
+  })
+  @ApiParam({
+    name: "date",
+    description: "Charisma event date",
+    type: String,
+  })
+  @ApiParam({
+    name: "participantId",
+    description: "Charisma event participant id",
+    type: Number,
+  })
+  editParticipation(
+    @Body() { charisma }: EditCharismaEventParticipationRequestDto,
+    @Param("slug") slug: string,
+    @Param("date") eventDate: DateString,
+    @Param("participantId", ParseIntPipe) participantId: number,
+  ): Promise<CharismaEventParticipationResponseDto> {
+    return this.charismaEvent.editParticipation({
+      slug,
+      eventDate,
+      participantId,
+      charisma,
+    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

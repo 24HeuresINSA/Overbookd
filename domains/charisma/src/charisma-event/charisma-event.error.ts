@@ -16,6 +16,8 @@ const SAME_PARTICIPANT_MULTIPLE_TIMES_ERROR_MESSAGE =
   "Un participant ne peut pas participer plusieurs fois à un évènement. Il n'est pas encore possible de se dédoubler";
 const ALREADY_EXISTS_ERROR_MESSAGE = "participe(nt) déjà à cet évènement";
 
+const INEXISTENT_PARTICIPATION_ERROR_MESSAGE = "La participation n'existe pas";
+
 export class InvalidName extends CharismaEventError {
   constructor() {
     super(INVALID_NAME_ERROR_MESSAGE);
@@ -54,5 +56,11 @@ export class AlreadyExists extends CharismaEventError {
       .map(({ firstname, lastname }) => `${firstname} ${lastname}`)
       .join(", ");
     super(`${formattedParticipants} ${ALREADY_EXISTS_ERROR_MESSAGE}`);
+  }
+}
+
+export class InexistentParticipation extends CharismaEventError {
+  constructor() {
+    super(INEXISTENT_PARTICIPATION_ERROR_MESSAGE);
   }
 }

@@ -1,6 +1,7 @@
 import type {
   CharismaEventDefinition,
   CharismaEventParticipation,
+  EditCharismaEventParticipation,
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
 import type { DateString } from "@overbookd/date";
@@ -30,6 +31,16 @@ export class CharismaEventRepository {
       event,
       participants,
     });
+  }
+
+  static async editParticipation(
+    participation: EditCharismaEventParticipation,
+  ) {
+    const { slug, eventDate, participantId, charisma } = participation;
+    return HttpClient.patch<CharismaEventParticipation>(
+      `${this.basePath}/${slug}/date/${eventDate}/participant/${participantId}`,
+      { charisma },
+    );
   }
 
   static async removeParticipation(

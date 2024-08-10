@@ -1,6 +1,7 @@
 export {
   CharismaEvent,
   type CreateParticipation as CreateCharismaEventParticipation,
+  type EditParticipation as EditCharismaEventParticipation,
   type Participation as CharismaEventParticipation,
   type CharismaEventParticipations,
   type CharismaEventDefinition,

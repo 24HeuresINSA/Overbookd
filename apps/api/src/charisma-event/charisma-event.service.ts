@@ -2,6 +2,7 @@ import {
   CharismaEvent,
   CharismaEventDefinition,
   CharismaEventParticipation,
+  EditCharismaEventParticipation,
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
 import { DateString } from "@overbookd/date";
@@ -47,6 +48,12 @@ export class CharismaEventService {
   ): Promise<CharismaEventParticipation[]> {
     const event = { name, charismaPerHour, eventDate: new Date(eventDate) };
     return this.charismaEvent.takePart(event, participants);
+  }
+
+  async editParticipation(
+    participation: EditCharismaEventParticipation,
+  ): Promise<CharismaEventParticipation> {
+    return this.charismaEvent.editParticipation(participation);
   }
 
   async removeParticipation(

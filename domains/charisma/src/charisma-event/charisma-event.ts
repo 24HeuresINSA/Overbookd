@@ -8,6 +8,7 @@ import {
   InvalidParticipantHours,
   SameParticipantMultipleTimes,
   AlreadyExists,
+  InexistentParticipation,
 } from "./charisma-event.error";
 import { DateString, OverDate } from "@overbookd/date";
 
@@ -28,6 +29,10 @@ export type CreateParticipation = Omit<Participation, "participant"> & {
   participantId: number;
 };
 
+export type EditParticipation = Omit<Participation, "name" | "participant"> & {
+  participantId: number;
+};
+
 export type CharismaEventDefinition = {
   name: string;
   charismaPerHour: number;
@@ -41,6 +46,12 @@ export type CharismaEventParticipations = {
     participants: ParticipantTakingPart[],
   ): Promise<User[]>;
   add(...participations: CreateParticipation[]): Promise<Participation[]>;
+  exists(
+    eventSlug: string,
+    eventDate: DateString,
+    participantId: number,
+  ): Promise<boolean>;
+  edit(participation: EditParticipation): Promise<Participation>;
 };
 
 export class CharismaEvent {
@@ -64,6 +75,19 @@ export class CharismaEvent {
       charisma: charismaPerHour * participant.hours,
     }));
     return this.charismaEvents.add(...newEvents);
+  }
+
+  async editParticipation(
+    participation: EditParticipation,
+  ): Promise<Participation> {
+    const exists = await this.charismaEvents.exists(
+      participation.slug,
+      participation.eventDate,
+      participation.participantId,
+    );
+    if (!exists) throw new InexistentParticipation();
+
+    return this.charismaEvents.edit(participation);
   }
 
   private generateSlug(name: string): string {

@@ -132,6 +132,6 @@ const closeDeleteConfirmationDialog = () => {
 <style lang="scss" scoped>
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 5px;
 }
 </style>

@@ -27,16 +27,33 @@
           {{ buildUserNameWithNickname(item.participant) }}
         </template>
 
-        <template #item.removal="{ item }">
-          <v-btn
-            icon="mdi-delete"
-            size="small"
-            density="comfortable"
-            @click="removeParticipation(item)"
-          />
+        <template #item.actions="{ item }">
+          <div class="actions">
+            <v-btn
+              icon="mdi-pencil"
+              size="small"
+              density="comfortable"
+              @click="openEditDialog(item)"
+            />
+            <v-btn
+              icon="mdi-trash-can"
+              size="small"
+              density="comfortable"
+              @click="removeParticipation(item)"
+            />
+          </div>
         </template>
       </v-data-table>
     </v-card-text>
+
+    <v-dialog v-model="isEditDialogOpen" width="600">
+      <EditCharismaEventParticipationDialogCard
+        v-if="participationToEdit"
+        :participation="participationToEdit"
+        @edit="editParticipation"
+        @close="closeEditDialog"
+      />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -57,7 +74,8 @@ const tableHeaders: TableHeaders = [
   { title: "Evénement", value: "name", sortable: true },
   { title: "Date", value: "eventDate", sortable: true },
   { title: "Participant", value: "participant" },
-  { title: "Suppression", value: "removal" },
+  { title: "Charisme", value: "charisma", sortable: true },
+  { title: "Actions", value: "actions" },
 ];
 
 const allParticipations = computed<CharismaEventParticipation[]>(
@@ -84,13 +102,33 @@ const filteredParticipations = computed<CharismaEventParticipation[]>(() => {
   return matchingSearchItems(searchableParticipations.value, search.value);
 });
 
+const participationToEdit = ref<CharismaEventParticipation | undefined>();
+const isEditDialogOpen = ref<boolean>(false);
+const openEditDialog = (participation: CharismaEventParticipation) => {
+  participationToEdit.value = participation;
+  isEditDialogOpen.value = true;
+};
+const closeEditDialog = () => (isEditDialogOpen.value = false);
+
+const editParticipation = (newCharisma: number) => {
+  if (!participationToEdit.value) return;
+  const participation = {
+    slug: participationToEdit.value.slug,
+    eventDate: participationToEdit.value.eventDate,
+    participantId: participationToEdit.value.participant.id,
+    charisma: newCharisma,
+  };
+  charismaEventStore.editParticipation(participation);
+  closeEditDialog();
+};
 const removeParticipation = (participation: CharismaEventParticipation) => {
   charismaEventStore.removeParticipation(participation);
 };
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  margin-bottom: 10px;
+.actions {
+  display: flex;
+  gap: 5px;
 }
 </style>

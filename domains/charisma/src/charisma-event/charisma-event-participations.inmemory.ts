@@ -4,6 +4,7 @@ import {
   CharismaEventParticipations,
   CreateParticipation,
   ParticipantTakingPart,
+  EditParticipation,
 } from "./charisma-event";
 import { DateString } from "@overbookd/date";
 
@@ -46,6 +47,37 @@ export class InMemoryCharismaEventParticipations
     });
     this.participations = [...this.participations, ...newEvents];
     return newEvents;
+  }
+
+  async exists(
+    eventSlug: string,
+    eventDate: DateString,
+    participantId: number,
+  ): Promise<boolean> {
+    return Promise.resolve(
+      this.participations.some(
+        (participation) =>
+          participation.slug === eventSlug &&
+          participation.eventDate === eventDate &&
+          participation.participant.id === participantId,
+      ),
+    );
+  }
+
+  async edit(participation: EditParticipation): Promise<Participation> {
+    const existing = this.participations.find(
+      (existing) =>
+        existing.slug === participation.slug &&
+        existing.eventDate === participation.eventDate &&
+        existing.participant.id === participation.participantId,
+    );
+    if (!existing) throw new Error("Participation inexistante");
+
+    const updated = { ...existing, charisma: participation.charisma };
+    this.participations = this.participations.map((participation) =>
+      participation === existing ? updated : participation,
+    );
+    return updated;
   }
 
   get all(): Participation[] {

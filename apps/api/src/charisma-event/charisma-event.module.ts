@@ -3,7 +3,7 @@ import { CharismaEventController } from "./charisma-event.controller";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import { CharismaEventService } from "./charisma-event.service";
-import { PrismaCreateCharismaEventParticipations } from "./repository/create-participations.prisma";
+import { PrismaManageCharismaEventParticipations } from "./repository/manage-participations.prisma";
 import { CharismaEvent } from "@overbookd/charisma";
 import { PrismaCharismaEventPotentialParticipants } from "./repository/potential-participants.prisma";
 import { PrismaViewCharismaEventParticipations } from "./repository/view-participations.prisma";
@@ -18,9 +18,9 @@ import { PrismaViewCharismaEventParticipations } from "./repository/view-partici
       inject: [PrismaService],
     },
     {
-      provide: PrismaCreateCharismaEventParticipations,
+      provide: PrismaManageCharismaEventParticipations,
       useFactory: (prisma: PrismaService) =>
-        new PrismaCreateCharismaEventParticipations(prisma),
+        new PrismaManageCharismaEventParticipations(prisma),
       inject: [PrismaService],
     },
     {
@@ -31,10 +31,10 @@ import { PrismaViewCharismaEventParticipations } from "./repository/view-partici
     },
     {
       provide: CharismaEvent,
-      useFactory: (participants: PrismaCreateCharismaEventParticipations) => {
+      useFactory: (participants: PrismaManageCharismaEventParticipations) => {
         return new CharismaEvent(participants);
       },
-      inject: [PrismaCreateCharismaEventParticipations],
+      inject: [PrismaManageCharismaEventParticipations],
     },
     {
       provide: CharismaEventService,

@@ -50,7 +50,6 @@ const close = () => emit("close");
   &__subtitle {
     margin: 0 16px 5px 16px;
     p {
-      color: rgba(0, 0, 0, 0.7);
       text-align: center;
     }
   }
