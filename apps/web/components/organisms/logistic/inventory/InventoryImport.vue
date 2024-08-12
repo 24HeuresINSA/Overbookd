@@ -1,6 +1,6 @@
 <template>
   <div class="inventory-update">
-    <h2>Mise a jour de l'inventaire</h2>
+    <h2>Mise à jour de l'inventaire</h2>
 
     <v-file-input
       class="file-import"
