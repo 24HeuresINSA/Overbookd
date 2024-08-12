@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "3.0.0-rc.152",
+  "version": "3.0.0-rc.153",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -29,15 +29,18 @@
     "lint": "pnpm --recursive run lint",
     "prune": "pnpm --recursive run prune",
     "preinstall": "npx only-allow pnpm",
-    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm dev:sync-version",
-    "release": "npx commit-and-tag-version && pnpm dev:sync-version",
+    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
+    "release": "npx commit-and-tag-version",
     "version:bump-dependent": "pnpm --recursive --filter '...^[origin/main]' --filter '![origin/main]' run version:patch",
     "version:major-dependency": "pnpm --recursive --filter '[origin/main]' run version:major",
     "version:minor-dependency": "pnpm --recursive --filter '[origin/main]' run version:minor",
     "version:patch-dependency": "pnpm --recursive --filter '[origin/main]' run version:patch",
-    "version:major": "git fetch -ap && pnpm run version:major-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "version:minor": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "version:patch": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate"
+    "version:major:no-sync": "git fetch -ap && pnpm run version:major-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
+    "version:major": "pnpm run version:major:no-sync && pnpm run dev:sync-version",
+    "version:minor:no-sync": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
+    "version:minor": "pnpm run version:minor:no-sync && pnpm run dev:sync-version",
+    "version:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
+    "version:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
   },
   "packageManager": "pnpm@9.6.0",
   "engines": {
