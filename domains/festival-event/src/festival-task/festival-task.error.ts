@@ -1,6 +1,5 @@
 import { Duration } from "@overbookd/period";
 import { FestivalTask } from "./festival-task.js";
-import { TeamMobilization } from "./sections/mobilizations.js";
 import { InquiryRequest } from "../common/inquiry-request.js";
 import { FestivalEventError } from "../festival-event.js";
 
@@ -35,13 +34,6 @@ export class MobilizationNotFound extends FestivalTaskError {
 export class GearAlreadyRequested extends FestivalTaskError {
   constructor(name: InquiryRequest["name"]) {
     const message = `❌ Une demande de matos existe déjà pour ${name}`;
-    super(message);
-  }
-}
-
-export class TeamAlreadyPartOfMobilization extends FestivalTaskError {
-  constructor(team: TeamMobilization["team"]) {
-    const message = `❌ L'équipe ${team} est déjà demandée sur le créneau`;
     super(message);
   }
 }

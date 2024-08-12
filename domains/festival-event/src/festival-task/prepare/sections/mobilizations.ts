@@ -8,7 +8,6 @@ import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
-  TeamAlreadyPartOfMobilization,
 } from "../../festival-task.error.js";
 import { updateItemToList } from "@overbookd/list";
 import { AddMobilization, UpdateMobilization } from "../prepare.js";
@@ -199,11 +198,15 @@ class MobilizationFactory {
     return MobilizationFactory.init(form);
   }
 
-  addTeam(team: TeamMobilization) {
-    if (this.hasTeam(team)) throw new TeamAlreadyPartOfMobilization(team.team);
+  addTeam(teamToAdd: TeamMobilization) {
+    const existingTeamIndex = this.mobilization.teams.findIndex(
+      (request) => request.team === teamToAdd.team,
+    );
+    const alreadyExists = existingTeamIndex !== -1;
 
-    const teams = [...this.mobilization.teams, team];
-
+    const teams = alreadyExists
+      ? updateItemToList(this.mobilization.teams, existingTeamIndex, teamToAdd)
+      : [...this.mobilization.teams, teamToAdd];
     return new MobilizationFactory({ ...this.mobilization, teams });
   }
 
@@ -211,10 +214,6 @@ class MobilizationFactory {
     const teams = this.mobilization.teams.filter((t) => t.team !== team);
 
     return new MobilizationFactory({ ...this.mobilization, teams });
-  }
-
-  private hasTeam({ team }: TeamMobilization) {
-    return this.mobilization.teams.some((request) => request.team === team);
   }
 
   addVolunteer(volunteer: Volunteer): MobilizationFactory {

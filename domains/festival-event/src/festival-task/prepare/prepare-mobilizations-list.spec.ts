@@ -7,7 +7,6 @@ import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
-  TeamAlreadyPartOfMobilization,
 } from "../festival-task.error.js";
 import {
   friday11hfriday18hMobilization,
@@ -486,16 +485,23 @@ describe("Prepare festival task mobilizations list", () => {
       );
     });
     describe("when team is already part of the mobilization", () => {
-      it("should indicate that team is already part of the mobilization", async () => {
-        const task = presentEscapeGame;
-        const mobilization = task.mobilizations[0];
-        const team = { team: "bénévole", count: 5 };
+      it.each`
+        taskName                          | task                 | mobilization                          | team                               | expectedTeams
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: "bénévole", count: 1 }}  | ${[{ team: "bénévole", count: 1 }]}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: "confiance", count: 5 }} | ${[{ count: 2, team: "bénévole" }, { team: "confiance", count: 5 }]}
+      `(
+        "should override team to $taskName mobilization",
+        async ({ task, mobilization, team, expectedTeams }) => {
+          const { mobilizations } = await prepare.addTeamToMobilization(
+            task.id,
+            mobilization.id,
+            team,
+          );
 
-        expect(
-          async () =>
-            await prepare.addTeamToMobilization(task.id, mobilization.id, team),
-        ).rejects.toThrow(TeamAlreadyPartOfMobilization);
-      });
+          const mergedMobilization = { ...mobilization, teams: expectedTeams };
+          expect(mobilizations).toContainEqual(mergedMobilization);
+        },
+      );
     });
   });
   describe("Remove team from existing mobilization", () => {
