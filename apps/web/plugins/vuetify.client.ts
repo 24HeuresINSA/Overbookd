@@ -29,6 +29,24 @@ export default defineNuxtPlugin((nuxtApp) => {
         redDarkTheme,
       },
     },
+    defaults: {
+      VCard: {
+        style: {
+          borderRadius: "25px",
+          margin: "5px",
+          padding: "5px",
+        },
+        VCardActions: {
+          VBtn: {
+            variant: "elevated",
+            color: "primary",
+            style: {
+              marginInlineStart: 0,
+            },
+          },
+        },
+      },
+    },
   });
 
   nuxtApp.vueApp.use(vuetify);

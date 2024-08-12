@@ -48,6 +48,7 @@
           <v-btn
             icon="mdi-delete"
             size="small"
+            density="comfortable"
             @click.stop="openRemovalDialog(item)"
           />
         </template>

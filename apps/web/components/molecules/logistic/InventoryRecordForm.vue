@@ -18,9 +18,7 @@
       <v-btn
         text="Ajouter l'entrée a l'inventaire"
         prepend-icon="mdi-checkbox-marked-circle-outline"
-        color="success"
         size="large"
-        variant="elevated"
         :disabled="isNotValidForm"
         @click="addToInventory"
       />

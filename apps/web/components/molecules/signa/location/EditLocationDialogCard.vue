@@ -8,8 +8,6 @@
     <template #actions>
       <v-btn
         text="Modifier le lieu"
-        color="primary"
-        variant="elevated"
         size="large"
         :disabled="noChange"
         @click="editLocation"

@@ -108,7 +108,6 @@
         <v-btn
           text="Changer les infos personnelles"
           color="success"
-          variant="elevated"
           size="large"
           @click="savePersonalData"
         />
@@ -116,7 +115,6 @@
           v-if="!isMe"
           text="Supprimer le bénévole"
           color="red"
-          variant="elevated"
           size="small"
           @click="deleteVolunteer"
         />

@@ -44,8 +44,6 @@
         :disabled="!canConfirmContractor"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :text="`${typeFormLabel} le prestataire`"
-        color="success"
-        variant="elevated"
         size="large"
         @click="confirmContractor"
       />

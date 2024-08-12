@@ -23,9 +23,7 @@
         text="Ajouter des instructions"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="cantInit"
-        color="primary"
         size="large"
-        variant="elevated"
         @click="init"
       />
     </template>

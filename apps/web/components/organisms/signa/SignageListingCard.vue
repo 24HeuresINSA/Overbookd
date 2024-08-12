@@ -25,11 +25,11 @@
         <div class="create-signa-container">
           <v-btn
             v-if="isCatalogWriter"
+            text="Ajouter une signalisation"
+            prepend-icon="mdi-plus"
             size="large"
             color="primary"
             rounded
-            prepend-icon="mdi-plus"
-            text="Ajouter une signalisation"
             @click="openCreateSignageDialog"
           />
         </div>

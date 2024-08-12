@@ -33,9 +33,7 @@
       <v-btn
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Sauvegarder la signalisation"
-        color="success"
         size="large"
-        variant="elevated"
         :disabled="cantCreateOrUpdateSignage"
         @click="createOrUpdateSignage"
       />

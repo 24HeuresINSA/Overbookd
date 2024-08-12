@@ -36,9 +36,7 @@
       <v-btn
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Sauvegarder"
-        color="success"
         size="large"
-        variant="elevated"
         :disabled="cantCreateOrUpdateGear"
         @click="createOrUpdateGear"
       />

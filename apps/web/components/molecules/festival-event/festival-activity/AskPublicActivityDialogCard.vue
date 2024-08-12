@@ -35,9 +35,7 @@
         text="Publier l'activité"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="!canPublishActivity"
-        color="primary"
         size="large"
-        variant="elevated"
         @click="publishActivity"
       />
     </template>

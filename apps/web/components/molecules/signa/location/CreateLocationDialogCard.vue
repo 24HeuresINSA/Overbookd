@@ -8,8 +8,6 @@
     <template #actions>
       <v-btn
         text="Ajouter le lieu"
-        color="primary"
-        variant="elevated"
         size="large"
         :disabled="!isNewLocationDefined"
         @click="createNewLocation"

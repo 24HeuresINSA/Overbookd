@@ -14,16 +14,10 @@
       acceptées.
     </v-card-text>
     <v-card-actions class="actions">
-      <v-btn
-        text="Se déconnecter"
-        color="error"
-        variant="elevated"
-        @click="logout"
-      />
+      <v-btn text="Se déconnecter" color="error" @click="logout" />
       <v-btn
         text="Approuver les CGU"
         color="success"
-        variant="elevated"
         @click="approveEndUserLicenceAgreement"
       />
     </v-card-actions>

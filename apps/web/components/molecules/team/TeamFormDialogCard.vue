@@ -38,9 +38,7 @@
     <template #actions>
       <v-btn
         :text="`${formLabel} l'équipe`"
-        variant="elevated"
         size="large"
-        color="primary"
         :disabled="!isValidForm"
         @click="createOrUpdateTeam"
       />

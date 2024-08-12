@@ -48,8 +48,6 @@
         :text="`${typeFormLabel} le besoin en électricité`"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="!canConfirmSupply"
-        variant="elevated"
-        color="success"
         @click="confirmSupply"
       />
     </template>

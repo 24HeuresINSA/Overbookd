@@ -19,8 +19,6 @@
     <v-card-actions>
       <v-btn
         text="Sauvegarder"
-        color="primary"
-        variant="elevated"
         size="large"
         class="settings__save-button"
         :disabled="cantSave"

@@ -23,9 +23,7 @@
     <template #actions>
       <v-btn
         text="Envoyer le mail"
-        variant="elevated"
         size="large"
-        color="primary"
         :disabled="isNotValid"
         @click="sendResetRequest"
       />

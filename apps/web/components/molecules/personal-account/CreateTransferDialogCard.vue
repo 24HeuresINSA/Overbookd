@@ -12,9 +12,7 @@
       <v-btn
         prepend-icon="mdi-send"
         text="Envoyer le virement"
-        color="success"
         size="large"
-        variant="elevated"
         :disabled="!isTransferValid"
         @click="sendTransfer"
       />

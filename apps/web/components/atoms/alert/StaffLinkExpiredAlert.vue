@@ -18,7 +18,7 @@
       Si tu veux t'inscrire en tant que bénévole sur le festival c'est par
       <nuxt-link to="/register">ici</nuxt-link>
     </p>
-    <v-btn class="return-btn" @click="returnToLogin">Retour</v-btn>
+    <v-btn text="Retour" class="return-btn" @click="returnToLogin" />
   </v-alert>
 </template>
 

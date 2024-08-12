@@ -42,8 +42,6 @@
         :text="`${typeFormLabel} la signalétique`"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="cantConfirmSignage"
-        color="success"
-        variant="elevated"
         @click="confirmSignage"
       />
     </template>

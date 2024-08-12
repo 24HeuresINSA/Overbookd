@@ -41,20 +41,16 @@
       <div class="actions">
         <v-btn
           text="Copier l'adresse mail"
-          variant="elevated"
           color="secondary"
           @click="copyEmail"
         />
         <v-btn
           text="Copier le modèle"
-          variant="elevated"
           color="secondary"
           @click="copyIssueTemplate"
         />
         <v-btn
           text="Envoyer le mail"
-          variant="elevated"
-          color="primary"
           :href="`mailto:${bugReportEmail}`"
           @click="copyIssueTemplate"
         />

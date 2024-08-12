@@ -24,8 +24,6 @@
       <v-btn
         text="Modifier la participation"
         size="large"
-        variant="elevated"
-        color="primary"
         rounded
         :disabled="cantEdit"
         @click="editParticipation"

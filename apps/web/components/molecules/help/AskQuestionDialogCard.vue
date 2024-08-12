@@ -13,16 +13,10 @@
       <div class="actions">
         <v-btn
           text="Copier l'adresse mail"
-          variant="elevated"
           color="secondary"
           @click="copyEmail"
         />
-        <v-btn
-          text="Envoyer un mail"
-          variant="elevated"
-          color="primary"
-          :href="`mailto:${HUMAINS_EMAIL}`"
-        />
+        <v-btn text="Envoyer un mail" :href="`mailto:${HUMAINS_EMAIL}`" />
       </div>
     </template>
   </DialogCard>

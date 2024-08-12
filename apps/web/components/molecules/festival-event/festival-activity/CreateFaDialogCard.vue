@@ -11,10 +11,8 @@
     </template>
     <template #actions>
       <v-btn
-        variant="elevated"
-        size="large"
-        color="primary"
         text="Créer la Fiche Activité"
+        size="large"
         :disabled="cantCreate"
         @click="createNewActivity"
       />

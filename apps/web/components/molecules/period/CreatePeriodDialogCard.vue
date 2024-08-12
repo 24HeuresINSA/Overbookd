@@ -16,12 +16,10 @@
 
     <template #actions>
       <v-btn
-        :disabled="!isValid"
-        color="primary"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Ajouter le créneau"
         size="large"
-        variant="elevated"
+        :disabled="!isValid"
         @click="addPeriod"
       />
     </template>

@@ -21,9 +21,7 @@
         :text="`Rejeter la ${identifier}`"
         prepend-icon="mdi-alert-octagon-outline"
         :disabled="isReasonEmpty"
-        color="primary"
         size="large"
-        variant="elevated"
         @click="reject"
       />
     </template>

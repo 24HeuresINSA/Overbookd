@@ -15,8 +15,6 @@
       <template #actions>
         <v-btn
           text="Enregistrer"
-          variant="elevated"
-          color="primary"
           size="large"
           :disabled="invalidImage"
           @click="uploadProfilePicture"

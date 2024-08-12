@@ -3,7 +3,7 @@
     :model-value="isDisplayed"
     :rail="isReducedForDesktop"
     expand-on-hover
-    rail-width="70"
+    rail-width="60"
     width="300"
     floating
     :mobile="!isDesktop"
@@ -11,7 +11,7 @@
     @update:model-value="updateMobileDisplay"
     @update:rail="updateDesktopReduction"
   >
-    <v-list density="compact" nav>
+    <v-list class="navigation__list" density="compact" nav>
       <v-list-item
         class="navigation-search"
         :class="{ 'unfolded-item': !isFolded }"
@@ -38,9 +38,9 @@
     </v-list>
 
     <v-list
-      density="compact"
-      class="navigation-pages"
+      class="navigation__list navigation-pages"
       :class="{ 'hide-scrollbar': isFolded }"
+      density="compact"
       nav
     >
       <v-list-item
@@ -72,7 +72,7 @@
       </v-list-item>
     </v-list>
 
-    <v-list density="compact" class="help-items" nav>
+    <v-list class="navigation__list help-items" density="compact" nav>
       <v-divider class="divider" />
       <v-list-item
         prepend-icon="mdi-help-circle"
@@ -199,23 +199,27 @@ watch(search, (newValue) => {
 </script>
 
 <style lang="scss" scoped>
-$text-field-height: 60px;
-$navigation-search-margin-bottom: 5px;
-$navigation-search-height: $text-field-height + $navigation-search-margin-bottom;
+$navigation-search-height: 63px;
 $navigation-item-height: 50px;
-$divider-height: 9px;
-$help-items-height: $navigation-item-height * 2 + $divider-height;
+$divider-bottom-height: 5px;
+$help-items-height: $navigation-item-height * 2 + $divider-bottom-height;
 $navigation-item-margin-horizontal: 5px;
 $navigation-item-unfolded-margin-right: 15px;
 
 .navigation {
   .v-icon {
+    padding-left: 4px;
+  }
+
+  &__list {
     padding-left: 3px;
+    padding-right: 3px;
   }
 }
 
 .navigation-search {
-  margin: 0 $navigation-item-margin-horizontal $navigation-search-margin-bottom;
+  margin: 0 $navigation-item-margin-horizontal 5px;
+  padding: 2px 8px;
   border-radius: 10px;
   background: rgb(var(--v-theme-background));
   transition: margin-right 0.3s;
@@ -230,6 +234,8 @@ $navigation-item-unfolded-margin-right: 15px;
   max-height: calc(
     100vh - $header-height - $navigation-search-height - $help-items-height
   );
+  padding-top: 2px;
+  padding-bottom: 2px;
   &::-webkit-scrollbar {
     width: 7px;
   }
@@ -276,6 +282,8 @@ $navigation-item-unfolded-margin-right: 15px;
 }
 
 .divider {
-  margin: 4px $navigation-item-margin-horizontal;
+  margin-left: $navigation-item-margin-horizontal;
+  margin-right: $navigation-item-margin-horizontal;
+  margin-bottom: 4px;
 }
 </style>

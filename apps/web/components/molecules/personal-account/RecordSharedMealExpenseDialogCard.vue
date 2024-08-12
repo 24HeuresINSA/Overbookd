@@ -29,9 +29,7 @@
     <template #actions>
       <v-btn
         text="Renseigner"
-        color="primary"
         size="large"
-        variant="elevated"
         append-icon="mdi-cash-multiple"
         @click="recordExpense"
       />

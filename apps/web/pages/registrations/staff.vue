@@ -58,8 +58,6 @@
           <v-spacer />
           <v-btn
             text=" Enrôler en tant que hard"
-            color="primary"
-            variant="elevated"
             :disabled="noStaffSelected"
             @click="enrollNewcomers"
           />

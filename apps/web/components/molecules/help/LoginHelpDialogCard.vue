@@ -12,9 +12,7 @@
       <v-btn
         :href="`mailto:${HUMAINS_EMAIL}`"
         text="Envoyer le mail"
-        variant="elevated"
         size="large"
-        color="primary"
       />
     </template>
   </DialogCard>

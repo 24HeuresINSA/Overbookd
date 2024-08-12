@@ -13,9 +13,7 @@
         text="Initialiser la demande de matos"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="cantInitInquiry"
-        color="primary"
         size="large"
-        variant="elevated"
         @click="initInquiry"
       />
     </template>

@@ -21,9 +21,7 @@
       <v-btn
         text="Commencer l'affectation"
         prepend-icon="di-format-list-checkbox"
-        color="primary"
         size="large"
-        variant="elevated"
         @click="categorize"
       />
     </template>

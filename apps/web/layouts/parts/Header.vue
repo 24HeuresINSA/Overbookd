@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="header" flat>
+  <v-app-bar class="header" height="60" flat>
     <template #prepend>
       <Logo v-if="isDesktop" />
       <v-app-bar-nav-icon v-else @click.stop="updateNav" />

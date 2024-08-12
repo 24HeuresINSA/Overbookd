@@ -39,9 +39,12 @@
           label="Début de la manif"
           hide-details
         />
-        <v-btn color="primary" class="save-btn" @click="saveEventStartDate">
-          Enregistrer
-        </v-btn>
+        <v-btn
+          text="Enregistrer"
+          color="primary"
+          class="save-btn"
+          @click="saveEventStartDate"
+        />
       </v-expansion-panel-text>
     </v-expansion-panel>
 
