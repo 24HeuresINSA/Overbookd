@@ -15,7 +15,7 @@ services:
       - certs:/etc/ssl/traefik
 
   traefik:
-    image: traefik:v3.1.1
+    image: traefik:v3.1.2
     restart: unless-stopped
     command:
       # Docker config
@@ -96,7 +96,7 @@ services:
 
   postgresql:
     container_name: overbookd_postgresql
-    image: postgres:16.3
+    image: postgres:16.4
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
