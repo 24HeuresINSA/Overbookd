@@ -27,7 +27,7 @@
       />
 
       <section class="contractors">
-        <h2>Prestataires</h2>
+        <h3>Prestataires</h3>
         <ContractorTable
           :contractors="inCharge.contractors"
           @add="addContractor"

@@ -35,6 +35,7 @@
       <v-text-field
         v-model="comment"
         label="Commentaire"
+        hide-details
         @keydown.enter="confirmContractor"
       />
     </template>
@@ -45,6 +46,7 @@
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :text="`${typeFormLabel} le prestataire`"
         size="large"
+        rounded
         @click="confirmContractor"
       />
     </template>

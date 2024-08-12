@@ -18,8 +18,9 @@
       <v-btn
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Ajouter le créneau"
-        size="large"
         :disabled="!isValid"
+        size="large"
+        rounded
         @click="addPeriod"
       />
     </template>

@@ -14,6 +14,8 @@
         text="Créer la Fiche Activité"
         size="large"
         :disabled="cantCreate"
+        :loading="loading"
+        rounded
         @click="createNewActivity"
       />
     </template>
@@ -27,22 +29,29 @@ const router = useRouter();
 const faStore = useFestivalActivityStore();
 
 const name = ref<string>("");
+const loading = ref<boolean>(false);
 
 const emit = defineEmits(["close"]);
-const close = () => emit("close");
+const close = () => {
+  emit("close");
+  loading.value = false;
+};
 
-const cantCreate = computed<boolean>(() => name.value.trim() === "");
-const selectedActivity = computed<FestivalActivity>(() => {
-  return faStore.selectedActivity;
-});
+const cantCreate = computed<boolean>(
+  () => name.value.trim() === "" || loading.value,
+);
+const selectedActivity = computed<FestivalActivity>(
+  () => faStore.selectedActivity,
+);
 const createNewActivity = async () => {
   if (cantCreate.value) return;
+  loading.value = true;
 
   const blankFa = { name: name.value };
   await faStore.create(blankFa);
 
   if (!selectedActivity.value?.id) return;
-  router.push({ path: `/fa/${selectedActivity.value.id}` });
+  await router.push({ path: `/fa/${selectedActivity.value.id}` });
   close();
 };
 </script>

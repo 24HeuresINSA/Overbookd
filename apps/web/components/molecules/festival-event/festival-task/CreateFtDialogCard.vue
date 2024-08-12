@@ -10,6 +10,8 @@
         text="Créer la Fiche Tâche"
         size="large"
         :disabled="cantCreate"
+        :loading="loading"
+        rounded
         @click="createNewTask"
       />
     </template>
@@ -29,18 +31,21 @@ type MinimalActivity = Pick<PreviewFestivalActivity, "id" | "name">;
 
 const name = ref<string>("");
 const selectedActivity = ref<MinimalActivity | null>(null);
+const loading = ref<boolean>(false);
 
 const emit = defineEmits(["close"]);
-const close = () => emit("close");
+const close = () => {
+  emit("close");
+  loading.value = false;
+};
 
 const cantCreate = computed<boolean>(
-  () => name.value.trim() === "" || !selectedActivity.value,
+  () => name.value.trim() === "" || !selectedActivity.value || loading.value,
 );
-const selectedTask = computed<FestivalTask>(() => {
-  return ftStore.selectedTask;
-});
+const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const createNewTask = async () => {
   if (cantCreate.value || !selectedActivity.value) return;
+  loading.value = true;
 
   const blankFt = {
     name: name.value,
@@ -49,7 +54,7 @@ const createNewTask = async () => {
   await ftStore.create(blankFt);
 
   if (!selectedTask.value?.id) return;
-  router.push({ path: `/ft/${selectedTask.value.id}` });
+  await router.push({ path: `/ft/${selectedTask.value.id}` });
   close();
 };
 </script>

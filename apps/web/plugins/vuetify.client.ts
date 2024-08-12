@@ -36,6 +36,11 @@ export default defineNuxtPlugin((nuxtApp) => {
           margin: "5px",
           padding: "5px",
         },
+        VCardSubtitle: {
+          style: {
+            whiteSpace: "normal",
+          },
+        },
         VCardActions: {
           VBtn: {
             variant: "elevated",

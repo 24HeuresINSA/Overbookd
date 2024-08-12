@@ -39,6 +39,7 @@
       <v-text-field
         v-model="comment"
         label="Commentaire"
+        hide-details
         @keydown.enter="confirmSupply"
       />
     </template>
@@ -48,6 +49,8 @@
         :text="`${typeFormLabel} le besoin en électricité`"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="!canConfirmSupply"
+        size="large"
+        rounded
         @click="confirmSupply"
       />
     </template>

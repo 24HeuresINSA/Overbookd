@@ -4,6 +4,7 @@
       class="card__close-btn"
       variant="flat"
       icon="mdi-close"
+      density="comfortable"
       @click="close"
     />
     <v-card-title class="card__title">
@@ -42,6 +43,7 @@ const close = () => emit("close");
     display: flex;
     justify-content: center;
     padding-bottom: 0 !important;
+    margin: 0 15px;
     h2 {
       flex: 1;
       text-align: center;
@@ -63,8 +65,8 @@ const close = () => emit("close");
   }
   &__close-btn {
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: 8px;
+    right: 8px;
   }
 }
 </style>

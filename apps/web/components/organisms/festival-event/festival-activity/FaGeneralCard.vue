@@ -3,15 +3,12 @@
     <v-card>
       <v-card-title>Général</v-card-title>
       <v-card-subtitle>
-        <p>
-          Si tu as des questions, n'hésite pas à contacter
-          <a :href="`mailto:${contact}`"> {{ contact }} </a>.
-        </p>
-        <p>
-          Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-          <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
-          en te connectant avec {{ CTMA_EMAIL }}.
-        </p>
+        Si tu as des questions, n'hésite pas à contacter
+        <a :href="`mailto:${contact}`"> {{ contact }} </a>.
+        <br />
+        Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
+        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+        en te connectant avec {{ CTMA_EMAIL }}.
       </v-card-subtitle>
 
       <v-card-text>
@@ -63,14 +60,12 @@
           @update:model-value="updateIsFlagship"
         />
 
-        <v-card class="time-window-table">
-          <v-card-title> Créneaux de l'activité </v-card-title>
-          <FaTimeWindowTable
-            :time-windows="general.timeWindows"
-            @add="addTimeWindow"
-            @remove="removeTimeWindow"
-          />
-        </v-card>
+        <h3>Créneaux de l'activité</h3>
+        <FaTimeWindowTable
+          :time-windows="general.timeWindows"
+          @add="addTimeWindow"
+          @remove="removeTimeWindow"
+        />
       </v-card-text>
     </v-card>
 

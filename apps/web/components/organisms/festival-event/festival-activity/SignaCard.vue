@@ -14,7 +14,7 @@
         @update:model-value="updateLocation"
       />
 
-      <h2>Demande de signalétique</h2>
+      <h3>Demande de signalétique</h3>
       <FaSignageTable
         :signages="signa.signages"
         @add="addSignage"

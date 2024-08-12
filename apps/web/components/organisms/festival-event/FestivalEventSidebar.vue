@@ -353,7 +353,6 @@ const cantRejectAs = (team: Team): boolean => {
     }
 
     .review-btn {
-      width: 80%;
       margin-left: auto;
       margin-right: auto;
     }

@@ -33,6 +33,7 @@
       <v-text-field
         v-model="comment"
         label="Commentaire"
+        hide-details
         @keydown.enter="confirmSignage"
       />
     </template>
@@ -42,6 +43,8 @@
         :text="`${typeFormLabel} la signalétique`"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         :disabled="cantConfirmSignage"
+        size="large"
+        rounded
         @click="confirmSignage"
       />
     </template>
