@@ -1,5 +1,0 @@
-// File to overwrite existing vuetify variables
-
-@forward 'vuetify/settings' with ($navigation-drawer-content-overflow-x: hidden,
-  $navigation-drawer-content-overflow-y: hidden,
-);

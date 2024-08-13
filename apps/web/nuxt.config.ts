@@ -58,11 +58,7 @@ export default defineNuxtConfig({
     async (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         config.plugins ||= [];
-        const vuetifyConfig = {
-          autoImport: true,
-          styles: { configFile: "assets/vuetify.scss" },
-        };
-        config.plugins.push(vuetify(vuetifyConfig));
+        config.plugins.push(vuetify());
       });
     },
   ],

@@ -1,16 +1,11 @@
-import { ONE_SECOND_IN_MS } from "@overbookd/period";
-
-const SUCCESS = "success";
-const FAILURE = "error";
-type NotificationType = typeof SUCCESS | typeof FAILURE;
-
-export type SnackNotification = {
-  message: string;
-  timeout: number;
-  type: NotificationType;
-};
-
-export const DEFAULT_SNACK_TIMEOUT = 3 * ONE_SECOND_IN_MS;
+import {
+  DEFAULT_SNACK_TIMEOUT,
+  FAILURE,
+  INFO,
+  SUCCESS,
+  type NotificationType,
+  type SnackNotification,
+} from "~/utils/notification/snack";
 
 type State = {
   queue: SnackNotification[];
@@ -54,4 +49,12 @@ export function sendFailureNotification(
 ) {
   const { pushNotification } = useSnackNotificationStore();
   pushNotification(FAILURE, message, duration);
+}
+
+export function sendInfoNotification(
+  message: string | string[],
+  duration?: number,
+) {
+  const { pushNotification } = useSnackNotificationStore();
+  pushNotification(INFO, message, duration);
 }
