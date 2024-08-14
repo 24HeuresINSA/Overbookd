@@ -41,7 +41,7 @@ import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 import { navigateTo } from "#app";
 
 const theme = useTheme();
-const themeStore = useThemeStore();
+const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
@@ -68,7 +68,7 @@ const logout = async () => {
   userStore.clearLoggedUser();
 };
 
-const isDarkTheme = computed<boolean>(() => themeStore.isDark);
+const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
 const themeTitle = computed<string>(() =>
   isDarkTheme.value ? "Mode Jour" : "Mode Nuit",
 );
@@ -76,7 +76,7 @@ const themeIcon = computed<string>(() =>
   isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night",
 );
 const toggleCurrentTheme = () => {
-  themeStore.toggleTheme();
+  layoutStore.toggleTheme();
 
   const currentTheme = theme.global.name.value;
   theme.global.name.value = pickReverseTheme(currentTheme);

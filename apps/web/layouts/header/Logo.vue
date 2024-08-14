@@ -10,26 +10,25 @@
 <script lang="ts" setup>
 import { useTheme } from "vuetify";
 import { HOME_URL } from "@overbookd/web-page";
-import { isDesktop } from "~/utils/device.utils";
 import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
 
 const theme = useTheme();
-const themeStore = useThemeStore();
+const layoutStore = useLayoutStore();
 
 const config = useRuntimeConfig();
 const versionString = computed<string>(() => `v${config.public.version}`);
 
 const counter = ref<number>(0);
 
-const isDarkTheme = computed<boolean>(() => themeStore.isDark);
+const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
 const logo = computed<string>(() => {
   if (counter.value >= FIFTY_ONE) return "Pastis.png";
   if (counter.value >= TWENTY_FOUR) return "Ricard.png";
 
-  if (isDesktop()) {
+  if (layoutStore.isDesktop) {
     return isDarkTheme.value ? "logo_desktop_white.png" : "logo_desktop.png";
   }
   return isDarkTheme.value ? "logo_mobile_white.png" : "logo_mobile.png";
