@@ -38,21 +38,19 @@ import {
   FAILURE,
   INFO,
 } from "~/utils/snack-notification";
-import { isDesktop as checkDesktop } from "~/utils/device.utils";
 
-const themeStore = useThemeStore();
-const isDarkTheme = computed<boolean>(() => themeStore.isDark);
+const layoutStore = useLayoutStore();
+const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
 
 const isShowing = ref<boolean>(false);
 const store = useSnackNotificationStore();
 const { queue } = storeToRefs(store);
 
-const isDesktop = computed<boolean>(() => checkDesktop());
 const snackLocation = computed<"bottom right" | "bottom">(() =>
-  isDesktop.value ? "bottom right" : "bottom",
+  layoutStore.isDesktop ? "bottom right" : "bottom",
 );
 const snackMinWidth = computed<number | undefined>(() =>
-  isDesktop.value ? 400 : undefined,
+  layoutStore.isDesktop ? 400 : undefined,
 );
 
 const currentSnack = computed<SnackNotification | undefined>(() =>

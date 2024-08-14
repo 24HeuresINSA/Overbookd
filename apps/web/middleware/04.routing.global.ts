@@ -1,15 +1,15 @@
-import { isDesktop } from "~/utils/device.utils";
 import { findPage } from "../utils/navigation/pages/page-list";
 import { HOME_URL } from "@overbookd/web-page";
 
 export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore();
+  const layoutStore = useLayoutStore();
+  layoutStore.initializeResizeListener();
 
   const page = findPage(to.path);
   if (!page?.permission) return;
 
-  const isMobile = !isDesktop();
-  if (isMobile && !page?.mobileSupport) {
+  if (!layoutStore.isDesktop && !page?.mobileSupport) {
     sendFailureNotification("Cette page n'est pas disponible sur mobile");
     return HOME_URL;
   }
