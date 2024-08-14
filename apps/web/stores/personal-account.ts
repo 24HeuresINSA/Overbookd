@@ -27,14 +27,14 @@ export const usePersonalAccountStore = defineStore("personal-account", {
     async removeBarrel(slug: string) {
       const res = await PersonalAccountRepository.removeBarrel(slug);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Fût retiré ✅");
+      sendSuccessNotification("Fût retiré");
       this.barrels = this.barrels.filter((barrel) => barrel.slug !== slug);
     },
 
     async createBarrel(barrel: NewBarrel) {
       const res = await PersonalAccountRepository.createBarrel(barrel);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Fût ajouté ✅");
+      sendSuccessNotification("Fût ajouté");
       const castedBarrel = castBarrelWithDate(res);
       this.barrels = [...this.barrels, castedBarrel];
     },
@@ -45,7 +45,7 @@ export const usePersonalAccountStore = defineStore("personal-account", {
         price,
       );
       if (isHttpError(res)) return;
-      sendSuccessNotification("Prix du fût ajusté ✅");
+      sendSuccessNotification("Prix du fût ajusté");
       this._updateBarrel(castBarrelWithDate(res));
     },
 
@@ -55,7 +55,7 @@ export const usePersonalAccountStore = defineStore("personal-account", {
         openedOn,
       );
       if (isHttpError(res)) return;
-      sendSuccessNotification("Date d'ouverture du fût ajustée ✅");
+      sendSuccessNotification("Date d'ouverture du fût ajustée");
       this._updateBarrel(castBarrelWithDate(res));
     },
 

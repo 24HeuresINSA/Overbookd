@@ -22,7 +22,7 @@ export const usePreferenceStore = defineStore("preference", {
       const res =
         await PreferenceRepository.updatePlanningPreference(preference);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Ta préférence a bien été mise à jour ✅");
+      sendSuccessNotification("Ta préférence a été mise à jour");
       if (!this.myPreferences) return;
       this.myPreferences.paperPlanning = res.paperPlanning;
     },
@@ -30,7 +30,7 @@ export const usePreferenceStore = defineStore("preference", {
     async addPageToFavorites(page: PageURL) {
       const res = await PreferenceRepository.addPageToFavorites(page);
       if (isHttpError(res)) return;
-      sendSuccessNotification("La page a bien été ajoutée à tes favoris ✅");
+      sendSuccessNotification("La page a été ajoutée à tes favoris");
       if (!this.myPreferences) return;
       this.myPreferences.favoritePages = res.favoritePages;
     },
@@ -38,7 +38,7 @@ export const usePreferenceStore = defineStore("preference", {
     async removePageFromFavorites(page: PageURL) {
       const res = await PreferenceRepository.removePageFromFavorites(page);
       if (isHttpError(res)) return;
-      sendSuccessNotification("La page a bien été retirée de tes favoris ✅");
+      sendSuccessNotification("La page a été retirée de tes favoris");
       if (!this.myPreferences) return;
       this.myPreferences.favoritePages = res.favoritePages;
     },

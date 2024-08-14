@@ -36,7 +36,7 @@ export const useContributionStore = defineStore("contribution", {
       const res = await ContributionRepository.payContribution(form);
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été payée avec succès 💰");
+      sendSuccessNotification("La cotisation a été payée 💰");
       this.adherentsOutToDate = this.adherentsOutToDate.filter(
         ({ id }) => id !== adherent.id,
       );
@@ -51,7 +51,7 @@ export const useContributionStore = defineStore("contribution", {
       );
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été modifiée avec succès 💰");
+      sendSuccessNotification("La cotisation a été modifiée 💰");
       this.validAdherents = this.validAdherents.map((a) =>
         a.id === adherent.id ? { ...a, amount } : a,
       );
@@ -64,7 +64,7 @@ export const useContributionStore = defineStore("contribution", {
       );
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été supprimée avec succès 💰");
+      sendSuccessNotification("La cotisation a été supprimée 💰");
       this.validAdherents = this.validAdherents.filter(
         ({ id }) => id !== adherent.id,
       );

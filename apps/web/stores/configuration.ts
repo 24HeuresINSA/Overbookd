@@ -48,9 +48,7 @@ export const useConfigurationStore = defineStore("configuration", {
     async save(config: Configuration) {
       const res = await ConfigurationRepository.save(config);
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        "La configuration a été sauvegardée avec succès ✅",
-      );
+      sendSuccessNotification("La configuration a été sauvegardée");
       this._updateConfig(res);
     },
 

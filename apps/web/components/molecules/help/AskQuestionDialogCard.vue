@@ -30,7 +30,7 @@ const close = () => emit("close");
 
 const copyEmail = async () => {
   await navigator.clipboard.writeText(HUMAINS_EMAIL);
-  sendSuccessNotification("Email copié ✅");
+  sendSuccessNotification("Email copié");
 };
 </script>
 

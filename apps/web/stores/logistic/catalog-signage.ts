@@ -31,7 +31,7 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
     async createSignage(signageForm: SignageForm) {
       const res = await CatalogSignageRepository.createSignage(signageForm);
       if (isHttpError(res)) return;
-      sendSuccessNotification("La signalétique a été créé avec succès ✅");
+      sendSuccessNotification("La signalétique a été créé");
       this.signages = [...this.signages, res];
       this.signage = res;
     },
@@ -40,16 +40,14 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
       const { id, ...signageForm } = form;
       const res = await CatalogSignageRepository.updateSignage(id, signageForm);
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        "La signalétique a été mis a jour avec succès ✅",
-      );
+      sendSuccessNotification("La signalétique a été mise à jour");
       this._updateSignage(res);
     },
 
     async deleteSignage(signage: Signage) {
       const res = await CatalogSignageRepository.deleteSignage(signage.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification("La signalétique a été supprimé avec succès ✅");
+      sendSuccessNotification("La signalétique a été supprimé");
       this.signages = this.signages.filter((s) => s.id !== signage.id);
     },
 
@@ -59,9 +57,7 @@ export const useCatalogSignageStore = defineStore("catalog-signage", {
         signageImage,
       );
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        "Image de la signalétique mise à jour avec succès ✅",
-      );
+      sendSuccessNotification("L'image de la signalétique a été mise à jour");
 
       const imageBlob =
         await CatalogSignageRepository.getSignageImage(signageId);

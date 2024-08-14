@@ -308,14 +308,14 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     async rejectBecause(rejection: ReviewRejection<"FT">) {
       const res = await repo.reject(this.selectedTask.id, rejection);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`🛑 FT rejetée par l'équipe ${rejection.team}`);
+      sendSuccessNotification(`FT rejetée par l'équipe ${rejection.team}`);
       this.selectedTask = castTaskWithDate(res);
     },
 
     async approve(approval: ReviewApproval<"FT">) {
       const res = await repo.approve(this.selectedTask.id, approval);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`✅ FT approuvée par l'équipe ${approval.team}`);
+      sendSuccessNotification(`FT approuvée par l'équipe ${approval.team}`);
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -323,7 +323,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     async enableAssignment(categorize: Categorize) {
       const res = await repo.enableAssignment(this.selectedTask.id, categorize);
       if (isHttpError(res)) return;
-      sendSuccessNotification("✅ FT prête pour affectation");
+      sendSuccessNotification("FT prête pour affectation");
       this.selectedTask = castTaskWithDate(res);
     },
 

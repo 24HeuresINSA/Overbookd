@@ -43,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
       const res = await AuthRepository.requestPasswordReset(email);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        "Un email de réinitialisation de mot de passe t'as été envoyé ✅",
+        "Un email de réinitialisation de mot de passe t'as été envoyé",
       );
     },
     async resetPassword(token: string, password: string, password2: string) {
@@ -53,7 +53,7 @@ export const useAuthStore = defineStore("auth", {
         password2,
       );
       if (isHttpError(res)) return;
-      sendSuccessNotification("Ton mot de passe a bien été réinitialisé ✅");
+      sendSuccessNotification("Ton mot de passe a été réinitialisé");
     },
   },
 });

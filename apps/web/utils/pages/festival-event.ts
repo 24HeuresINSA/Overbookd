@@ -65,7 +65,7 @@ const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
   permission: VIEW_FESTIVAL_EVENTS_STATS,
   to: STATS_URL,
   description:
-    "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport a l'édition précédente",
+    "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport à l'édition précédente",
   mobileSupport: false,
   keywords: [
     "statistiques",

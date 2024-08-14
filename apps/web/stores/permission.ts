@@ -21,21 +21,21 @@ export const usePermissionStore = defineStore("permission", {
     async createPermission(payload: CreatePermissionForm) {
       const res = await PermissionRepository.createPermission(payload);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Permission créée ✅");
+      sendSuccessNotification("Permission créée");
       this.permissions = [...this.permissions, res];
     },
 
     async updatePermission(payload: CreatePermissionForm) {
       const res = await PermissionRepository.updatePermission(payload);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Permission modifiée ✅");
+      sendSuccessNotification("Permission modifiée");
       this._updatePermission(res);
     },
 
     async removePermission(permissionId: number) {
       const res = await PermissionRepository.removePermission(permissionId);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Permission supprimée ✅");
+      sendSuccessNotification("Permission supprimée");
       this.permissions = this.permissions.filter(
         (permission) => permission.id !== permissionId,
       );
@@ -47,7 +47,7 @@ export const usePermissionStore = defineStore("permission", {
         teamCodes,
       );
       if (isHttpError(res)) return;
-      sendSuccessNotification("Équipes mises à jour ✅");
+      sendSuccessNotification("Équipes mises à jour");
       this._updatePermission(res);
     },
 

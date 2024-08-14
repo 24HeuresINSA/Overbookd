@@ -34,9 +34,7 @@ export const useCatalogStore = defineStore("catalog", {
     async createCategory(categoryForm: CategoryForm) {
       const res = await CategoryRepository.createCategory(categoryForm);
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        `La catégorie ${categoryForm.name} a été créée ✅`,
-      );
+      sendSuccessNotification(`La catégorie ${categoryForm.name} a été créée`);
       this.categories = [...this.categories, res];
       await this.fetchCategoryTree();
     },
@@ -44,9 +42,7 @@ export const useCatalogStore = defineStore("catalog", {
     async deleteCategory(category: CatalogCategory) {
       const res = await CategoryRepository.deleteCategory(category.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification(
-        `La catégorie ${category.name} a été supprimée ✅`,
-      );
+      sendSuccessNotification(`La catégorie ${category.name} a été supprimée`);
       this.categories = this.categories.filter((c) => c.id !== category.id);
       await this.fetchCategoryTree();
     },
@@ -55,7 +51,7 @@ export const useCatalogStore = defineStore("catalog", {
       const res = await CategoryRepository.updateCategory(id, categoryForm);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `La catégorie ${categoryForm.name} a été mise à jour ✅`,
+        `La catégorie ${categoryForm.name} a été mise à jour`,
       );
 
       this.categories = this.categories.map((c) => (c.id === res.id ? res : c));

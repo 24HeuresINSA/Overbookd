@@ -16,7 +16,7 @@ export const useInventoryStore = defineStore("inventory", {
     async importInventory(records: InventoryRecord[]) {
       const res = await InventoryRepository.setupInventory(records);
       if (isHttpError(res)) return;
-      sendSuccessNotification("L'inventaire a été reinitialisé ✅");
+      sendSuccessNotification("L'inventaire a été reinitialisé");
       this.groupedRecords = res;
     },
 

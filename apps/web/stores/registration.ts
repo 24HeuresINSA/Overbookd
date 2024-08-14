@@ -45,7 +45,7 @@ export const useRegistrationStore = defineStore("registration", {
       const res = await RegistrationRepository.enrollStaffs(staffs);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
+        "Les nouveaux arrivants sélectionnés ont été enrôlés en tant que hards",
       );
       this.staffs = this.staffs.filter(
         (staff) => !staffs.some(({ id }) => id === staff.id),
@@ -56,7 +56,7 @@ export const useRegistrationStore = defineStore("registration", {
       const res = await RegistrationRepository.enrollNewVolunteers(volunteers);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        "Le nouvel arrivant sélectionné a bien été enrôlé en tant que soft ✅",
+        "Le nouvel arrivant sélectionné a été enrôlé en tant que soft",
       );
       this.volunteers = this.volunteers.filter(
         (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),
@@ -78,7 +78,7 @@ export const useRegistrationStore = defineStore("registration", {
     async register(form: RegisterForm, token?: string): Promise<boolean> {
       const res = await RegistrationRepository.registerNewcomer(form, token);
       if (isHttpError(res)) return false;
-      sendSuccessNotification("Tu as bien été enregistré ✅");
+      sendSuccessNotification("Merci pour ton inscription 🎉");
       return true;
     },
 
@@ -93,7 +93,7 @@ export const useRegistrationStore = defineStore("registration", {
     async forget(membership: Membership, email: string) {
       const res = await RegistrationRepository.forgetHim(email);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Bénévole supprimé avec succès 🗑️");
+      sendSuccessNotification("Bénévole supprimé 🗑️");
       if (membership === STAFF) await this.getStaffs();
       else await this.getVolunteers();
     },

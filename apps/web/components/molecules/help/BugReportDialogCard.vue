@@ -75,7 +75,7 @@ const close = () => emit("close");
 
 const copyEmail = async () => {
   await navigator.clipboard.writeText(bugReportEmail);
-  sendSuccessNotification("Email copié ✅");
+  sendSuccessNotification("Email copié");
 };
 
 const copyIssueTemplate = async () => {
@@ -86,7 +86,7 @@ const copyIssueTemplate = async () => {
       stepsToReproduce.value,
     ),
   );
-  sendSuccessNotification("Modèle copié ✅");
+  sendSuccessNotification("Modèle copié");
 };
 </script>
 

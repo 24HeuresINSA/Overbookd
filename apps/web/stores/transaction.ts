@@ -37,7 +37,7 @@ export const useTransactionStore = defineStore("transaction", {
     async sendTransfer(transferForm: CreateTransferForm) {
       const res = await TransactionRepository.sendTransfer(transferForm);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Le virement a bien été effectué 💸");
+      sendSuccessNotification("Le virement a été effectué 💸");
 
       await this._fetchMyInformation();
     },
@@ -89,7 +89,7 @@ export const useTransactionStore = defineStore("transaction", {
     async deleteTransaction(transaction: TransactionWithSenderAndReceiver) {
       const res = await TransactionRepository.deleteTransaction(transaction.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification("La transaction a bien été supprimée 💸");
+      sendSuccessNotification("La transaction a été supprimée 💸");
 
       const transactionIndex = this.allTransactions.findIndex(
         ({ id }) => id === transaction.id,

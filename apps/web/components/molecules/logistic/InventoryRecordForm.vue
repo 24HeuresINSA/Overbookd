@@ -16,7 +16,7 @@
     </template>
     <template #actions>
       <v-btn
-        text="Ajouter l'entrée a l'inventaire"
+        text="Ajouter l'entrée à l'inventaire"
         prepend-icon="mdi-checkbox-marked-circle-outline"
         size="large"
         :disabled="isNotValidForm"

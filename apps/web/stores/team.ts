@@ -57,21 +57,21 @@ export const useTeamStore = defineStore("team", {
     async createTeam(team: Team): Promise<void> {
       const res = await TeamRepository.createTeam(team);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Equipe créée avec succès ✅");
+      sendSuccessNotification("Equipe créée");
       await this.fetchTeams();
     },
 
     async updateTeam(team: Team): Promise<void> {
       const res = await TeamRepository.updateTeam(team);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Equipe modifiée avec succès ✅");
+      sendSuccessNotification("Equipe modifiée");
       await this.fetchTeams();
     },
 
     async removeTeam({ code }: Team): Promise<void> {
       const res = await TeamRepository.deleteTeam(code);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Equipe supprimée avec succès ✅");
+      sendSuccessNotification("Equipe supprimée");
       await this.fetchTeams();
     },
   },

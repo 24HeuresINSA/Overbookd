@@ -42,7 +42,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       );
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `Les participants ont bien été ajoutés à l'événement ${event.name} ✅`,
+        `Les participants ont été ajoutés à l'événement ${event.name}`,
       );
       this.fetchPotentialParticipants();
     },
@@ -54,7 +54,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
 
       const { slug, name, eventDate, participant } = res;
       sendSuccessNotification(
-        `La participation de ${participant.firstname} à ${name} a bien été modifiée ✅`,
+        `La participation de ${participant.firstname} à ${name} a été modifiée`,
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);
@@ -75,7 +75,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       );
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `La participation de ${participant.firstname} à ${name} a bien été supprimée ✅`,
+        `La participation de ${participant.firstname} à ${name} a été supprimée`,
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);
