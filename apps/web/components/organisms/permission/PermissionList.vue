@@ -5,6 +5,8 @@
     :items-per-page="-1"
     :search="search"
     density="comfortable"
+    no-data-text="Aucune permission trouvée"
+    :mobile="isMobile"
   >
     <template #top>
       <v-text-field
@@ -50,13 +52,15 @@ import type { Permission } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 
 const permissionStore = usePermissionStore();
+const layoutStore = useLayoutStore();
 
 const headers = [
-  { title: "Nom", value: "name", width: "25%" },
-  { title: "Description", value: "description", width: "25%", sortable: false },
-  { title: "Équipes", value: "teams", width: "25%", sortable: false },
-  { title: "Actions", value: "actions", width: "25%", sortable: false },
+  { title: "Nom", value: "name", width: "25%", sortable: true },
+  { title: "Description", value: "description", width: "25%" },
+  { title: "Équipes", value: "teams", width: "25%" },
+  { title: "Actions", value: "actions", width: "25%" },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const search = ref<string>("");
 

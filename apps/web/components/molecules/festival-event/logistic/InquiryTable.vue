@@ -5,6 +5,7 @@
     :items-per-page="-1"
     density="comfortable"
     :no-data-text="noDataMessage"
+    :mobile="isMobile"
     disable-pagination
     hide-default-footer
   >
@@ -48,6 +49,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();
+const layoutStore = useLayoutStore();
 
 const props = defineProps({
   inquiries: {
@@ -93,6 +95,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     ...(props.disabled ? [] : [actionHeader]),
   ];
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const noDataMessage = computed<string>(() => {
   switch (props.owner) {

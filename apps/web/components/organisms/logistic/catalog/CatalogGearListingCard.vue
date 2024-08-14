@@ -16,6 +16,7 @@
         :items-per-page="30"
         loading-text="Chargement du matos..."
         no-data-text="Aucun matos trouvé"
+        :mobile="isMobile"
       >
         <template #item.isPonctualUsage="{ item }">
           <v-icon v-if="item.isPonctualUsage" icon="mdi-check-circle" />
@@ -89,6 +90,7 @@ import type { FilterGear } from "~/utils/logistic/filter-gear";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
 
 const isCatalogWriter = computed<boolean>(() =>
   userStore.can(WRITE_GEAR_CATALOG),
@@ -106,6 +108,7 @@ const headers = computed<TableHeaders>(() => {
     ? [...commonHeaders, actionsHeader]
     : commonHeaders;
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const filters = reactive<FilterGear>({
   name: "",

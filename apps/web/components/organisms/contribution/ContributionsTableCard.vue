@@ -7,6 +7,7 @@
       :loading="displayOutToDateCustomers ? outToDateLoading : validLoading"
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"
+      :mobile="isMobile"
     >
       <template #top>
         <div class="filters">
@@ -52,6 +53,7 @@ import {
 } from "~/utils/search/search.utils";
 
 const contributionStore = useContributionStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Prénom", value: "firstname", sortable: true },
@@ -59,6 +61,7 @@ const headers: TableHeaders = [
   { title: "Surnom", value: "nickname", sortable: true },
   { title: "Paiement", value: "amount", width: "40%", sortable: true },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const search = ref<string>("");
 

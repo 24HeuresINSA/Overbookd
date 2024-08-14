@@ -10,6 +10,7 @@
         loading-text="Chargement de l'inventaire..."
         no-data-text="Inventaire vide"
         density="comfortable"
+        :mobile="isMobile"
       >
         <template #item.name="{ item }">
           {{ item.gear.name }}
@@ -46,12 +47,14 @@ import type { InventoryGroupedRecord } from "@overbookd/http";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const inventoryStore = useInventoryStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Nom du matos", value: "name" },
-  { title: "Quantité Totale", value: "quantity" },
-  { title: "Lieu de stockage", value: "storage" },
+  { title: "Quantité Totale", value: "quantity", sortable: true },
+  { title: "Lieu de stockage", value: "storage", sortable: true },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const inventoryGroupedRecords = computed<InventoryGroupedRecord[]>(
   () => inventoryStore.groupedRecords,

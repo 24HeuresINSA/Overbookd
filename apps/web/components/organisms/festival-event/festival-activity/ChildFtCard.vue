@@ -9,6 +9,7 @@
         hide-default-footer
         no-data-text="Aucune FT associée"
         :hover="selectedActivity.tasks.length > 0"
+        :mobile="isMobile"
         @click:row="openTask"
         @auxclick:row="openTaskInNewTab"
       >
@@ -41,12 +42,14 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 
 const faStore = useFestivalActivityStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Numéro", value: "id", sortable: true },
   { title: "Nom", value: "name", sortable: true },
   { title: "Statut", value: "status", sortable: true },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,

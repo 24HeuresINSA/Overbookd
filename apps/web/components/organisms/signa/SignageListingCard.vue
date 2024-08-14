@@ -42,6 +42,7 @@
         items-per-page="20"
         loading-text="Chargement des signalisations..."
         no-data-text="Aucune signalisation trouvée"
+        :mobile="isMobile"
       >
         <template #item.image="{ item }">
           <v-icon
@@ -117,6 +118,7 @@ import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 const userStore = useUserStore();
 const catalogSignageStore = useCatalogSignageStore();
+const layoutStore = useLayoutStore();
 
 const signageTypeValues = Object.values(signageTypes);
 
@@ -132,13 +134,15 @@ const isCatalogWriter = computed<boolean>(() =>
 );
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
-    { title: "Nom", value: "name" },
-    { title: "Type", value: "type" },
-    { title: "Image", value: "image", sortable: false },
+    { title: "Nom", value: "name", sortable: true },
+    { title: "Type", value: "type", sortable: true },
+    { title: "Image", value: "image" },
   ];
-  const actionHeader = { title: "Actions", value: "actions", sortable: false };
+  const actionHeader = { title: "Actions", value: "actions" };
   return [...baseHeaders, ...(isCatalogWriter.value ? [actionHeader] : [])];
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+
 const signages = computed<SignageWithPotentialImage[]>(
   () => catalogSignageStore.signages,
 );
