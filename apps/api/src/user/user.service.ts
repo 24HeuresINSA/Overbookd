@@ -6,7 +6,6 @@ import {
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
 import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
-import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
@@ -50,6 +49,7 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
+import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
 
 @Injectable()
 export class UserService {

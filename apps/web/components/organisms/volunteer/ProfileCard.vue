@@ -206,7 +206,7 @@ const clearNickname = () => {
 };
 const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   if (paperPlanning === null) return;
-  preferenceStore.updateMyPreferences({ paperPlanning });
+  preferenceStore.updatePlanningPreference({ paperPlanning });
 };
 </script>
 

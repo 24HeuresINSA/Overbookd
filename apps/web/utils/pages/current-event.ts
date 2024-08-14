@@ -4,7 +4,7 @@ import type { PageInSummary } from "./navigation";
 //   icon: "mdi-clock",
 //   title: "Timeline",
 //   permission: VIEW_TIMELINE,
-//   to: "/timeline",
+//   to: TIMELINE_URL,
 //   description:
 //     "Permet de voir toutes les taches qui se déroulent pendant une plage horaire",
 //   mobileSupport: true,
@@ -15,7 +15,7 @@ import type { PageInSummary } from "./navigation";
 //   icon: "mdi-handshake",
 //   title: "A l'aide",
 //   permission: ASK_FOR_HELP,
-//   to: "/need-help",
+//   to: NEED_HELP_URL,
 //   description:
 //     "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
 //   mobileSupport: true,

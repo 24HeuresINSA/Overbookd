@@ -30,7 +30,8 @@
       "@overbookd/user": ["./utils/user/src"],
       "@overbookd/volunteer-availability": [
         "./domains/volunteer-availability/src"
-      ]
+      ],
+      "@overbookd/web-page": ["./constants/web-page/src"]
     }
   }
 }

@@ -22,6 +22,10 @@ type DatabaseFriend = {
   }[];
 };
 
+export type DatabaseVolunteerAssignmentStat = IProvidePeriod & {
+  festivalTask: { category: Category };
+};
+
 export type DatabaseStoredAssignableVolunteer = User &
   UserDataForCharisma &
   DatabaseFriendCount & {
@@ -29,7 +33,7 @@ export type DatabaseStoredAssignableVolunteer = User &
     note: string;
     teams: { teamCode: string }[];
     assigned: {
-      assignment: IProvidePeriod & { festivalTask: { category: Category } };
+      assignment: DatabaseVolunteerAssignmentStat;
     }[];
     festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
     friends: { requestor: DatabaseFriend }[];

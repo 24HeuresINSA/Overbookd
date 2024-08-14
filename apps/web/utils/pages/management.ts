@@ -6,12 +6,21 @@ import {
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
 import type { PageInSummary } from "./navigation";
+import {
+  CHARISMA_EVENTS_LIST_URL,
+  CHARISMA_EVENTS_MANAGE_URL,
+  CONFIGURATION_URL,
+  CONTRIBUTIONS_URL,
+  REGISTRATIONS_STAFF_URL,
+  SG_URL,
+  TRANSACTIONS_URL,
+} from "@overbookd/web-page";
 
 const CONFIGURATION_PAGE: PageInSummary = {
   icon: "mdi-cog",
   title: "Config Système",
   permission: MANAGE_CONFIG,
-  to: "/configuration",
+  to: CONFIGURATION_URL,
   description: "Permet de configurer Overbookd",
   mobileSupport: true,
   keywords: ["administration", "system", "configuration"],
@@ -21,7 +30,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   icon: "mdi-account-multiple-plus",
   title: "Admission Organisateurs",
   permission: ENROLL_HARD,
-  to: "/registrations/staff",
+  to: REGISTRATIONS_STAFF_URL,
   description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
   mobileSupport: false,
   keywords: [
@@ -37,7 +46,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
 //   icon: "mdi-account-multiple-check",
 //   title: "Admission Bénévoles",
 //   permission: ENROLL_SOFT,
-//   to: "/registrations/volunteer",
+//   to: REGISTRATIONS_VOLUNTEER_URL,
 //   description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
 //   mobileSupport: false,
 //   keywords: ["nouveaux-arrivants", "inscriptions", "admissions", "benevoles", "softs"],
@@ -47,7 +56,7 @@ const CONTRIBUTIONS_PAGE: PageInSummary = {
   icon: "mdi-cash-multiple",
   title: "Cotisations",
   permission: MANAGE_CONTRIBUTIONS,
-  to: "/contributions",
+  to: CONTRIBUTIONS_URL,
   description:
     "Permet d'enregistrer les cotisations des adhérents à l'association",
   mobileSupport: false,
@@ -58,7 +67,7 @@ const SG_PAGE: PageInSummary = {
   icon: "mdi-format-list-bulleted",
   title: "SG",
   permission: MANAGE_PERSONAL_ACCOUNTS,
-  to: "/sg",
+  to: SG_URL,
   description:
     "Permet de répartir les consommations des comptes perso aux adhérants",
   mobileSupport: false,
@@ -77,7 +86,7 @@ const TRANSACTIONS_PAGE: PageInSummary = {
   icon: "mdi-cash-multiple",
   title: "Transactions",
   permission: MANAGE_PERSONAL_ACCOUNTS,
-  to: "/transactions",
+  to: TRANSACTIONS_URL,
   description: "Permet de visualiser les transactions effectuées sur Overbookd",
   mobileSupport: false,
   keywords: ["virements", "compte-perso", "transactions"],
@@ -87,7 +96,7 @@ const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
   icon: "mdi-emoticon-cool",
   title: "Gestion du Charisme",
   permission: MANAGE_CHARISMA_EVENTS,
-  to: "/charisma/events/manage",
+  to: CHARISMA_EVENTS_MANAGE_URL,
   description:
     "Permet de gérer le charisme des bénévoles via la création d'événements",
   mobileSupport: false,
@@ -98,7 +107,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
   icon: "mdi-format-list-numbered",
   title: "Evénements Charismatiques",
   permission: MANAGE_CHARISMA_EVENTS,
-  to: "/charisma/events/list",
+  to: CHARISMA_EVENTS_LIST_URL,
   description:
     "Permet de voir la liste des participations aux événements charismatiques",
   mobileSupport: false,
@@ -109,7 +118,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   icon: "mdi-clock-edit",
 //   title: "Charisme des dispos",
 //   permission: AFFECT_VOLUNTEER,
-//   to: "/charisma-periods",
+//   to: CHARISMA_PERIODS_URL,
 //   description:
 //     "Permet de définir les points de charisme des créneaux du festival",
 //   mobileSupport: false,
@@ -120,7 +129,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   icon: "mdi-human-greeting",
 //   title: "Affect Orga-Tâche",
 //   permission: AFFECT_VOLUNTEER,
-//   to: "/assignment/orga-task",
+//   to: ASSIGNMENT_ORGA_TASK_URL,
 //   description: "Permet d'affecter des bénévoles à des tâches",
 //   mobileSupport: false,
 //   keywords: ["orga-tache", "affectation"],
@@ -130,7 +139,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   icon: "mdi-human-greeting",
 //   title: "Affect Tâche-Orga",
 //   permission: AFFECT_VOLUNTEER,
-//   to: "/assignment/task-orga",
+//   to: ASSIGNMENT_TASK_ORGA_URL,
 //   description: "Permet d'affecter des tâches à des bénévoles",
 //   mobileSupport: false,
 //   keywords: ["tache-orga", "affectation"],
@@ -140,7 +149,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   icon: "mdi-clock",
 //   title: "Besoin Orgas",
 //   permission: AFFECT_VOLUNTEER,
-//   to: "/orga-needs",
+//   to: ORGA_NEEDS_URL,
 //   description:
 //     "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
 //   mobileSupport: false,

@@ -4,11 +4,18 @@ import {
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
+import {
+  MY_PERSONAL_ACCOUNT_URL,
+  MY_PROFILE_URL,
+  SHARED_MEALS_URL,
+  TROMBINOSCOPE_URL,
+  VOLUNTEERS_URL,
+} from "@overbookd/web-page";
 import type { HiddenPage, Page, PageInSummary } from "./navigation";
 
-const PROFILE_PAGE: HiddenPage = {
+const MY_PROFILE_PAGE: HiddenPage = {
   title: "Mon Profil",
-  to: "/profile",
+  to: MY_PROFILE_URL,
   mobileSupport: true,
 };
 
@@ -16,7 +23,7 @@ const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
   title: "Mon Compte Perso",
   permission: HAVE_PERSONAL_ACCOUNT,
-  to: "/my-personal-account",
+  to: MY_PERSONAL_ACCOUNT_URL,
   description:
     "Page avec ton compte persos et tes transactions permettant de faire des virements",
   mobileSupport: true,
@@ -27,7 +34,7 @@ const SHARED_MEALS_PAGE: PageInSummary = {
   icon: "mdi-food-variant",
   title: "Repas Partagés",
   permission: SHOTGUN_SHARED_MEAL,
-  to: "/shared-meals",
+  to: SHARED_MEALS_URL,
   description: "Page pour proposer et shotgun des repas partagés",
   mobileSupport: true,
   keywords: [
@@ -44,7 +51,7 @@ const TROMBINOSCOPE_PAGE: PageInSummary = {
   icon: "mdi-image",
   title: "Trombinoscope",
   permission: VIEW_TROMBINOSCOPE,
-  to: "/trombinoscope",
+  to: TROMBINOSCOPE_URL,
   description:
     "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
   mobileSupport: true,
@@ -55,7 +62,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
   icon: "mdi-account-group",
   title: "Liste des Bénévoles",
   permission: VIEW_VOLUNTEER,
-  to: "/volunteers",
+  to: VOLUNTEERS_URL,
   description: "Permet de voir tous les bénévoles",
   mobileSupport: true,
   keywords: ["benevoles", "orgas", "liste"],
@@ -64,7 +71,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 // const AVAILABILITIES_PAGE: PageInSummary = {
 //   icon: "mdi-clock",
 //   title: "Mes dispos",
-//   to: "/availabilities",
+//   to: AVAILABILITIES_URL,
 //   description:
 //     "Permet de renseigner quand tu es disponible pour aider sur le festival",
 //   mobileSupport: true,
@@ -75,7 +82,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 //   icon: "mdi-calendar-clock",
 //   title: "Mon Planning",
 //   permission: VIEW_PLANNING,
-//   to: "/planning",
+//   to: PLANNING_URL,
 //   description: "Permet d'avoir un apercu de son planning sur le festival",
 //   mobileSupport: true,
 //   keywords: ["planning", "calendrier", "taches", "affectation"],
@@ -84,7 +91,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 // const PLANNING_PAGE: HiddenPageWithParams = {
 //   title: "Planning",
 //   permission: VIEW_PLANNING,
-//   to: "/planning/:id",
+//   to: `${PLANNING_URL}/:id`,
 //   mobileSupport: true,
 // };
 
@@ -99,6 +106,6 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
 
 export const VOLUNTEER_PAGES: Page[] = [
   ...VOLUNTEER_SUMMARY_PAGES,
-  PROFILE_PAGE,
+  MY_PROFILE_PAGE,
   // PLANNING_PAGE,
 ];

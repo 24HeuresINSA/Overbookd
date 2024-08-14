@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "2.20.52",
+  "version": "2.20.53",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -75,6 +75,7 @@
     "@overbookd/team-constants": "workspace:*",
     "@overbookd/user": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
+    "@overbookd/web-page": "workspace:*",
     "@prisma/client": "5.18.0",
     "bcrypt": "5.1.1",
     "body-parser": "1.20.2",

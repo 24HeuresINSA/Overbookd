@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Preference } from "@overbookd/http";
+import { PlanningPreference } from "@overbookd/http";
 import { IsBoolean } from "class-validator";
 
-export class PreferenceDto implements Preference {
+export class PlanningPreferenceDto implements PlanningPreference {
   @ApiProperty({
     type: "boolean",
-    description: "User preference for paper planning",
+    description: "User want to receive his planning printed on a leaflet",
     example: false,
     nullable: true,
   })

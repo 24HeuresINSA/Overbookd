@@ -5,12 +5,18 @@ import {
   VIEW_LOCATION,
 } from "@overbookd/permission";
 import type { PageInSummary } from "./navigation";
+import {
+  GEAR_CATALOG_URL,
+  INVENTORY_URL,
+  LOCATION_URL,
+  SIGNAGE_CATALOG_URL,
+} from "@overbookd/web-page";
 
 const GEAR_CATALOG_PAGE: PageInSummary = {
   icon: "mdi-bookshelf",
   title: "Catalogue Matos",
   permission: READ_GEAR_CATALOG,
-  to: "/logistic/catalog",
+  to: GEAR_CATALOG_URL,
   description:
     "Permet de définir l'ensemble du matériel disponible sur le festival",
   mobileSupport: false,
@@ -26,7 +32,7 @@ const INVENTORY_PAGE: PageInSummary = {
   icon: "mdi-warehouse",
   title: "Inventaire Matos",
   permission: READ_INVENTORY,
-  to: "/logistic/inventory",
+  to: INVENTORY_URL,
   description:
     "Permet de compter l'ensemble du matériel appartenant à l'association",
   mobileSupport: false,
@@ -37,7 +43,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   icon: "mdi-chart-histogram",
 //   title: "Récap Matos",
 //   permission: VIEW_GEAR_DASHBOARD,
-//   to: "/logistic/dashboard",
+//   to: GEAR_DASHBOARD_URL,
 //   description:
 //     "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
 //   mobileSupport: false,
@@ -48,7 +54,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   icon: "mdi-cash-register",
 //   title: "Fiches Achats",
 //   permission: PURCHASE_GEARS,
-//   to: "/logistic/purchase",
+//   to: PURCHASE_GEARS_URL,
 //   description: "Permet de gérer les achats de matériel",
 //   mobileSupport: false,
 //   keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
@@ -58,7 +64,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   icon: "mdi-store-clock",
 //   title: "Fiches Emprunts",
 //   permission: BORROW_GEARS,
-//   to: "/logistic/borrow",
+//   to: BORROW_GEARS_URL,
 //   description: "Permet de gérer les emprunts de matériel",
 //   mobileSupport: false,
 //   keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
@@ -68,7 +74,7 @@ const LOCATION_PAGE: PageInSummary = {
   icon: "mdi-map-marker",
   title: "Lieux de la Signa",
   permission: VIEW_LOCATION,
-  to: "/signa/location",
+  to: LOCATION_URL,
   description:
     "Permet de définir l'ensemble des lieux disponible sur le festival",
   mobileSupport: false,
@@ -79,7 +85,7 @@ const SIGNAGE_CATALOG_PAGE: PageInSummary = {
   icon: "mdi-bookshelf",
   title: "Catalogue Signa",
   permission: READ_SIGNAGE_CATALOG,
-  to: "/signa/catalog",
+  to: SIGNAGE_CATALOG_URL,
   description:
     "Permet de définir l'ensemble de la signalétique disponible sur le festival",
   mobileSupport: false,

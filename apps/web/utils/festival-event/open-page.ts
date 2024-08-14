@@ -1,15 +1,15 @@
+import { FA_URL, FT_URL } from "@overbookd/web-page";
+
 type FestivalEventId = { id: number };
 
-const FA_LINK = "fa";
-const FT_LINK = "ft";
-type FestivalEventLink = typeof FA_LINK | typeof FT_LINK;
+type FestivalEventLink = typeof FA_URL | typeof FT_URL;
 
 export const openActivityInNewTab = (
   _: PointerEvent,
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openInNewTab(FA_LINK, id);
+  openInNewTab(FA_URL, id);
 };
 
 export const openActivity = (
@@ -17,7 +17,7 @@ export const openActivity = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  open(event, FA_LINK, id);
+  open(event, FA_URL, id);
 };
 
 export const openTaskInNewTab = (
@@ -25,7 +25,7 @@ export const openTaskInNewTab = (
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openInNewTab(FT_LINK, id);
+  openInNewTab(FT_URL, id);
 };
 
 export const openTask = (
@@ -33,7 +33,7 @@ export const openTask = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  open(event, FT_LINK, id);
+  open(event, FT_URL, id);
 };
 
 function openInNewTab(link: FestivalEventLink, id: number) {

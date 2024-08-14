@@ -37,6 +37,7 @@ import {
   SYNC_PLANNING,
   MANAGE_CHARISMA_EVENTS,
   READ_INVENTORY,
+  SET_FAVORITE_PAGES,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -412,6 +413,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "bureau" }],
+      },
+    },
+  },
+  {
+    name: SET_FAVORITE_PAGES,
+    description: "Peut définir des pages favorites",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },

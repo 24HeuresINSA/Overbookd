@@ -87,6 +87,7 @@ model Preference {
   userId        Int      @id @map("user_id")
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   paperPlanning Boolean? @map("paper_planning")
+  favoritePages String[] @map("favorite_pages") @db.VarChar(50)
 
   @@map("preference")
 }

@@ -57,10 +57,15 @@ function removePathLastPart(path: string): string {
 }
 
 export function findPage(path: string): Page | undefined {
-  const pageWithExactPath = allPages.find((page) => page.to === path);
+  const pathWithoutFirstSlash = path.replace(/^\//, "");
+  const pageWithExactPath = allPages.find(
+    (page) => page.to === pathWithoutFirstSlash,
+  );
   if (pageWithExactPath) return pageWithExactPath;
 
-  const remainingPages = allPages.filter((page) => page.to !== path);
+  const remainingPages = allPages.filter(
+    (page) => page.to !== pathWithoutFirstSlash,
+  );
   const reducedPath = removePathLastPart(path);
   return remainingPages.find(
     (page) => removePathLastPart(page.to) === reducedPath,

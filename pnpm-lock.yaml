@@ -161,6 +161,9 @@ importers:
       '@overbookd/volunteer-availability':
         specifier: workspace:*
         version: link:../../domains/volunteer-availability
+      '@overbookd/web-page':
+        specifier: workspace:*
+        version: link:../../constants/web-page
       '@prisma/client':
         specifier: 5.18.0
         version: 5.18.0(prisma@5.18.0)
@@ -384,6 +387,9 @@ importers:
       '@overbookd/volunteer-availability':
         specifier: workspace:*
         version: link:../../domains/volunteer-availability
+      '@overbookd/web-page':
+        specifier: workspace:*
+        version: link:../../constants/web-page
       chart.js:
         specifier: 4.4.3
         version: 4.4.3
@@ -445,6 +451,8 @@ importers:
   constants/permission: {}
 
   constants/team-constants: {}
+
+  constants/web-page: {}
 
   domains/assignment:
     dependencies:
@@ -660,6 +668,9 @@ importers:
       '@overbookd/user':
         specifier: workspace:*
         version: link:../user
+      '@overbookd/web-page':
+        specifier: workspace:*
+        version: link:../../constants/web-page
 
   utils/team: {}
 

@@ -1,4 +1,9 @@
-import type { Preference } from "@overbookd/http";
+import type {
+  PagesPreference,
+  PlanningPreference,
+  Preference,
+} from "@overbookd/http";
+import type { PageURL } from "@overbookd/web-page";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class PreferenceRepository {
@@ -8,7 +13,23 @@ export class PreferenceRepository {
     return HttpClient.get<Preference>(`${this.basePath}/me`);
   }
 
-  static updateMyPreferences(preference: Preference) {
-    return HttpClient.patch<Preference>(`${this.basePath}/me`, preference);
+  static updatePlanningPreference(preference: PlanningPreference) {
+    return HttpClient.patch<PlanningPreference>(
+      `${this.basePath}/me/planning`,
+      preference,
+    );
+  }
+
+  static addPageToFavorites(page: PageURL) {
+    return HttpClient.post<PagesPreference>(
+      `${this.basePath}/me/favorite-pages`,
+      { page },
+    );
+  }
+
+  static removePageFromFavorites(page: PageURL) {
+    return HttpClient.delete<PagesPreference>(
+      `${this.basePath}/me/favorite-pages/${page}`,
+    );
   }
 }
