@@ -36,18 +36,18 @@
         </template>
 
         <template #item.actions="{ item }">
-          <div class="actions">
-            <v-btn
-              icon="mdi-pencil"
-              size="small"
-              @click="openUpdateGearDialog(item)"
-            />
-            <v-btn
-              icon="mdi-delete"
-              size="small"
-              @click="openDeleteGearDialog(item)"
-            />
-          </div>
+          <v-btn
+            icon="mdi-pencil"
+            size="small"
+            variant="flat"
+            @click="openUpdateGearDialog(item)"
+          />
+          <v-btn
+            icon="mdi-trash-can"
+            size="small"
+            variant="flat"
+            @click="openDeleteGearDialog(item)"
+          />
         </template>
       </v-data-table>
     </v-card-text>
@@ -73,7 +73,7 @@
           de faire ça.
         </template>
         <template #confirm-btn-content>
-          <v-icon left> mdi-delete </v-icon>Supprimer
+          <v-icon left> mdi-trash-can </v-icon>Supprimer
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
@@ -169,10 +169,5 @@ const deleteGear = async () => {
     font-size: 0.8rem;
     color: gray;
   }
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
 }
 </style>

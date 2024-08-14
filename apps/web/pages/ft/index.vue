@@ -46,8 +46,9 @@
 
         <template #item.removal="{ item }">
           <v-btn
-            icon="mdi-delete"
+            icon="mdi-trash-can"
             size="small"
+            variant="flat"
             @click.stop="openRemovalDialog(item)"
           />
         </template>
@@ -84,7 +85,7 @@
         Es-tu sûr de faire ça ?
       </template>
       <template #confirm-btn-content>
-        <v-icon left> mdi-delete </v-icon>Supprimer
+        <v-icon left> mdi-trash-can </v-icon>Supprimer
       </template>
     </ConfirmationDialogCard>
   </v-dialog>

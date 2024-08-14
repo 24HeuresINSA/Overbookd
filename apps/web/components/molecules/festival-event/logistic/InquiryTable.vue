@@ -26,7 +26,8 @@
     <template #item.actions="{ item }">
       <v-btn
         icon="mdi-trash-can"
-        density="comfortable"
+        size="small"
+        variant="flat"
         @click="removeInquiry(item)"
       />
     </template>

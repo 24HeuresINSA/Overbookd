@@ -9,18 +9,18 @@
       hide-default-footer
     >
       <template #item.actions="{ item }">
-        <div class="contractors__actions">
-          <v-btn
-            icon="mdi-pencil"
-            density="comfortable"
-            @click="openUpdateContractorDialog(item)"
-          />
-          <v-btn
-            icon="mdi-trash-can"
-            density="comfortable"
-            @click="removeContractor(item)"
-          />
-        </div>
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openUpdateContractorDialog(item)"
+        />
+        <v-btn
+          icon="mdi-trash-can"
+          size="small"
+          variant="flat"
+          @click="removeContractor(item)"
+        />
       </template>
     </v-data-table>
 
@@ -112,10 +112,6 @@ const removeContractor = (contractor: Contractor) => {
   &__add {
     max-width: fit-content;
     align-self: flex-end;
-  }
-  &__actions {
-    display: flex;
-    gap: 10px;
   }
 }
 </style>

@@ -71,7 +71,8 @@
           <template #item.removal="{ item }">
             <v-btn
               icon="mdi-trash-can"
-              density="comfortable"
+              size="small"
+              variant="flat"
               :disabled="disabled"
               @click="removeContact(item)"
             />

@@ -25,20 +25,20 @@
         </template>
 
         <template #item.actions="{ item }">
-          <div class="actions">
-            <v-btn
-              v-show="canManageLocations"
-              icon="mdi-circle-edit-outline"
-              size="small"
-              @click="openEditLocationDialog(item)"
-            />
-            <v-btn
-              v-show="canManageLocations"
-              icon="mdi-delete"
-              size="small"
-              @click="openDeleteLocationDialog(item)"
-            />
-          </div>
+          <v-btn
+            v-show="canManageLocations"
+            icon="mdi-circle-edit-outline"
+            size="small"
+            variant="flat"
+            @click="openEditLocationDialog(item)"
+          />
+          <v-btn
+            v-show="canManageLocations"
+            icon="mdi-trash-can"
+            size="small"
+            variant="flat"
+            @click="openDeleteLocationDialog(item)"
+          />
         </template>
       </v-data-table>
     </v-card-text>
@@ -169,10 +169,5 @@ const deleteLocation = async () => {
   right: 20px;
   bottom: 20px;
   position: fixed;
-}
-
-.actions {
-  display: flex;
-  gap: 5px;
 }
 </style>

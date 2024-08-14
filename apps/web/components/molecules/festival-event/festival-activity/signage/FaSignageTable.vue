@@ -21,18 +21,18 @@
       </template>
 
       <template #item.actions="{ item }">
-        <div class="signages__actions">
-          <v-btn
-            icon="mdi-pencil"
-            density="comfortable"
-            @click="openUpdateSignageDialog(item)"
-          />
-          <v-btn
-            icon="mdi-trash-can"
-            density="comfortable"
-            @click="removeSignage(item)"
-          />
-        </div>
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openUpdateSignageDialog(item)"
+        />
+        <v-btn
+          icon="mdi-trash-can"
+          size="small"
+          variant="flat"
+          @click="removeSignage(item)"
+        />
       </template>
     </v-data-table>
 
@@ -145,10 +145,6 @@ const signageCatalogItem = (signage: FaSignage): SignageCatalogItem | null => {
   &__add {
     max-width: fit-content;
     align-self: flex-end;
-  }
-  &__actions {
-    display: flex;
-    gap: 10px;
   }
 }
 </style>

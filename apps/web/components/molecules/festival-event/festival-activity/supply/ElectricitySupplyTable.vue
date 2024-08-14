@@ -13,18 +13,18 @@
       </template>
       <template #item.power="{ item }"> {{ item.power }} W </template>
       <template #item.actions="{ item }">
-        <div class="supplies__actions">
-          <v-btn
-            icon="mdi-pencil"
-            density="comfortable"
-            @click="openUpdateSupplyDialog(item)"
-          />
-          <v-btn
-            icon="mdi-trash-can"
-            density="comfortable"
-            @click="removeSupply(item)"
-          />
-        </div>
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openUpdateSupplyDialog(item)"
+        />
+        <v-btn
+          icon="mdi-trash-can"
+          size="small"
+          variant="flat"
+          @click="removeSupply(item)"
+        />
       </template>
     </v-data-table>
 
@@ -116,10 +116,6 @@ const removeSupply = (supply: ElectricitySupply) => emit("remove", supply);
   &__add {
     max-width: fit-content;
     align-self: flex-end;
-  }
-  &__actions {
-    display: flex;
-    gap: 10px;
   }
 }
 </style>

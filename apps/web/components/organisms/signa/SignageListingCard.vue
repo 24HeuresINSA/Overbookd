@@ -53,18 +53,18 @@
           </v-icon>
         </template>
         <template #item.actions="{ item }">
-          <div class="actions">
-            <v-btn
-              icon="mdi-pencil"
-              density="comfortable"
-              @click="openUpdateSignageDialog(item)"
-            />
-            <v-btn
-              icon="mdi-delete"
-              density="comfortable"
-              @click="openDeleteSignageDialog(item)"
-            />
-          </div>
+          <v-btn
+            icon="mdi-pencil"
+            size="small"
+            variant="flat"
+            @click="openUpdateSignageDialog(item)"
+          />
+          <v-btn
+            icon="mdi-trash-can"
+            size="small"
+            variant="flat"
+            @click="openDeleteSignageDialog(item)"
+          />
         </template>
       </v-data-table>
     </v-card-text>
@@ -102,7 +102,7 @@
         les FA déjà validées.
       </template>
       <template #confirm-btn-content>
-        <v-icon left> mdi-delete </v-icon>Supprimer
+        <v-icon left> mdi-trash-can </v-icon>Supprimer
       </template>
     </ConfirmationDialogCard>
   </v-dialog>
@@ -224,10 +224,5 @@ const filterSignagesByType = (
       margin-top: 5px;
     }
   }
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
 }
 </style>

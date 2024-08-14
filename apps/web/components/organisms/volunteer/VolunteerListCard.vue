@@ -29,23 +29,24 @@
       </template>
 
       <template #item.actions="{ item }">
-        <div class="list-actions">
-          <v-btn
-            icon="mdi-calendar"
-            size="small"
-            @click.stop="openCalendar(item.id)"
-          />
-          <v-btn
-            icon="mdi-phone"
-            size="small"
-            @click.stop="callVolunteer(item.phone)"
-          />
-          <v-btn
-            icon="mdi-email"
-            size="small"
-            @click.stop="sendMailTo(item.email)"
-          />
-        </div>
+        <v-btn
+          icon="mdi-calendar"
+          size="small"
+          variant="flat"
+          @click.stop="openCalendar(item.id)"
+        />
+        <v-btn
+          icon="mdi-phone"
+          size="small"
+          variant="flat"
+          @click.stop="callVolunteer(item.phone)"
+        />
+        <v-btn
+          icon="mdi-email"
+          size="small"
+          variant="flat"
+          @click.stop="sendMailTo(item.email)"
+        />
       </template>
     </v-data-table>
   </v-card>
@@ -112,11 +113,6 @@ const sendMailTo = (email: string) => {
 </script>
 
 <style lang="scss" scoped>
-.list-actions {
-  display: flex;
-  gap: 5px;
-}
-
 .team-list {
   display: flex;
   flex-wrap: wrap;

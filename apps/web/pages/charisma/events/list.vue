@@ -28,20 +28,18 @@
         </template>
 
         <template #item.actions="{ item }">
-          <div class="actions">
-            <v-btn
-              icon="mdi-pencil"
-              size="small"
-              density="comfortable"
-              @click="openEditDialog(item)"
-            />
-            <v-btn
-              icon="mdi-trash-can"
-              size="small"
-              density="comfortable"
-              @click="removeParticipation(item)"
-            />
-          </div>
+          <v-btn
+            icon="mdi-pencil"
+            size="small"
+            variant="flat"
+            @click="openEditDialog(item)"
+          />
+          <v-btn
+            icon="mdi-trash-can"
+            size="small"
+            variant="flat"
+            @click="removeParticipation(item)"
+          />
         </template>
       </v-data-table>
     </v-card-text>
@@ -125,10 +123,3 @@ const removeParticipation = (participation: CharismaEventParticipation) => {
   charismaEventStore.removeParticipation(participation);
 };
 </script>
-
-<style lang="scss" scoped>
-.actions {
-  display: flex;
-  gap: 5px;
-}
-</style>

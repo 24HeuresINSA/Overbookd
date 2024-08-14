@@ -14,7 +14,7 @@
           @update:model-value="adjustBarrelPrice(barrel.slug, $event)"
         />
         <v-btn
-          icon="mdi-delete"
+          icon="mdi-trash-can"
           size="small"
           color="red"
           class="barrel__action"

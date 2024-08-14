@@ -20,18 +20,18 @@
       </template>
 
       <template #item.actions="{ item }">
-        <div class="actions">
-          <v-btn
-            icon="mdi-pencil"
-            density="comfortable"
-            @click="openUpdateTeamDialog(item)"
-          />
-          <v-btn
-            icon="mdi-trash-can"
-            density="comfortable"
-            @click="openDeleteConfirmationDialog(item)"
-          />
-        </div>
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openUpdateTeamDialog(item)"
+        />
+        <v-btn
+          icon="mdi-trash-can"
+          size="small"
+          variant="flat"
+          @click="openDeleteConfirmationDialog(item)"
+        />
       </template>
 
       <template #footer.prepend>
@@ -128,10 +128,3 @@ const closeDeleteConfirmationDialog = () => {
   isDeleteConfirmationDialogOpen.value = false;
 };
 </script>
-
-<style lang="scss" scoped>
-.actions {
-  display: flex;
-  gap: 5px;
-}
-</style>

@@ -20,7 +20,8 @@
       <template #item.removal="{ item }">
         <v-btn
           icon="mdi-trash-can"
-          density="comfortable"
+          size="small"
+          variant="flat"
           @click="removeTimeWindow(item)"
         />
       </template>
