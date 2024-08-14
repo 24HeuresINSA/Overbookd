@@ -5,6 +5,7 @@
       :items="contractors"
       :items-per-page="-1"
       no-data-text="Aucun prestataire"
+      :mobile="isMobile"
       disable-pagination
       hide-default-footer
     >
@@ -49,6 +50,8 @@ import type {
 } from "@overbookd/festival-event";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
+const layoutStore = useLayoutStore();
+
 const emit = defineEmits(["add", "update", "remove"]);
 
 const props = defineProps({
@@ -74,6 +77,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionsHeader = { title: "Actions", value: "actions" };
   return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const selectedContractor = ref<Contractor | null>(null);
 

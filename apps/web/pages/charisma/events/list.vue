@@ -10,6 +10,7 @@
         density="comfortable"
         loading-text="Chargement des participations aux événements..."
         no-data-text="Aucune participation aux événements"
+        :mobile="isMobile"
       >
         <template #top>
           <v-text-field
@@ -67,6 +68,7 @@ import {
 } from "~/utils/search/search.utils";
 
 const charismaEventStore = useCharismaEventStore();
+const layoutStore = useLayoutStore();
 
 const tableHeaders: TableHeaders = [
   { title: "Evénement", value: "name", sortable: true },
@@ -75,6 +77,7 @@ const tableHeaders: TableHeaders = [
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Actions", value: "actions" },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const allParticipations = computed<CharismaEventParticipation[]>(
   () => charismaEventStore.allParticipations,

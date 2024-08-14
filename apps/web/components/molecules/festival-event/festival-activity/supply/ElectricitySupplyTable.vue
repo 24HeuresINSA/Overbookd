@@ -4,9 +4,10 @@
       :headers="headers"
       :items="supplies"
       :items-per-page="-1"
+      no-data-text="Aucun besoin en électricité"
+      :mobile="isMobile"
       disable-pagination
       hide-default-footer
-      no-data-text="Aucun besoin en électricité"
     >
       <template #item.connection="{ item }">
         {{ getConnectionLabel(item.connection) }}
@@ -55,6 +56,8 @@ import type {
 import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
+const layoutStore = useLayoutStore();
+
 const props = defineProps({
   supplies: {
     type: Array as PropType<ElectricitySupply[]>,
@@ -77,6 +80,7 @@ const headers = computed<TableHeaders>(() => {
   const actionsHeader = { title: "Actions", value: "actions" };
   return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const selectedSupply = ref<ElectricitySupply | null>(null);
 const isSupplyDialogOpen = ref<boolean>(false);

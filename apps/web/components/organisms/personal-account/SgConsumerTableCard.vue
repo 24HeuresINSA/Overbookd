@@ -11,6 +11,7 @@
         loading-text="Chargement des bénévoles..."
         no-data-text="Aucun bénévole"
         :sort-by="[{ key: 'firstname', order: 'asc' }]"
+        :mobile="isMobile"
       >
         <template #top>
           <div class="consumer-table__filters">
@@ -96,6 +97,8 @@ import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
+const layoutStore = useLayoutStore();
+
 const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {
   required: true,
 });
@@ -133,6 +136,7 @@ const headers = computed<TableHeaders>(() => {
     { title: actionTitle, value: "action", width: "30%" },
   ];
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const isMode = (value: SgMode) => props.mode === value;
 const isExpenseMode = computed<boolean>(

@@ -12,6 +12,7 @@
         loading-text="Chargement des fiches tâches..."
         no-data-text="Aucune fiche tâche trouvée"
         :hover="filteredTasks.length > 0"
+        :mobile="isMobile"
         @click:row="openTask"
         @auxclick:row="openTaskInNewTab"
       >
@@ -124,6 +125,7 @@ const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
 
 const canRemoveTask = computed<boolean>(() => userStore.can(WRITE_FT));
 const tableHeaders = computed<TableHeaders>(() => {
@@ -137,6 +139,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const removalHeader = { title: "Suppression", value: "removal" };
   return canRemoveTask.value ? [...baseHeaders, removalHeader] : baseHeaders;
 });
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
 const reviewers = computed<Team[]>(() => teamStore.ftReviewers);

@@ -10,6 +10,7 @@
         no-data-text="Aucune animation à publier"
         :hover="filteredActivities.length > 0"
         :items-per-page="20"
+        :mobile="isMobile"
         class="fa"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"
@@ -106,34 +107,19 @@ import { SlugifyService } from "@overbookd/slugify";
 useHead({ title: "Animations à publier" });
 
 const faStore = useFestivalActivityStore();
+const layoutStore = useLayoutStore();
 
 const tableHeaders: TableHeaders = [
-  {
-    title: "Statut",
-    value: "id",
-    sortable: true,
-  },
-  {
-    title: "Nom",
-    value: "name",
-    sortable: true,
-  },
-  {
-    title: "Photo",
-    value: "photoLink",
-    align: "center",
-    width: "80px",
-  },
+  { title: "Statut", value: "id", sortable: true },
+  { title: "Nom", value: "name", sortable: true },
+  { title: "Photo", value: "photoLink", align: "center", width: "80px" },
   { title: "Description", value: "description" },
   { title: "Catégories", value: "categories" },
-  {
-    title: "Anim phare",
-    value: "isFlagship",
-    align: "center",
-    width: "80px",
-  },
+  { title: "Anim phare", value: "isFlagship", align: "center", width: "80px" },
   { title: "Créneaux", value: "timeWindows" },
 ];
+
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const activities = computed<PreviewForCommunication[]>(
   () => faStore.activities.forCommunication,

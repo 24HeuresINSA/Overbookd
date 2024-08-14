@@ -9,6 +9,7 @@
         :loading="loading"
         loading-text="Chargement des bénévoles..."
         no-data-text="Aucun bénévole"
+        :mobile="isMobile"
       >
         <template #top>
           <v-text-field
@@ -53,6 +54,8 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 
+const layoutStore = useLayoutStore();
+
 const props = defineProps({
   charismaPerHour: {
     type: Number,
@@ -70,6 +73,7 @@ const tableHeaders: TableHeaders = [
   { title: "Charisme à ajouter", value: "newCharisma", sortable: true },
   { title: "Nombre d'heures participées", value: "hours", sortable: true },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const potentialParticipants = defineModel<CharismaEventParticipant[]>(
   "potentialParticipants",

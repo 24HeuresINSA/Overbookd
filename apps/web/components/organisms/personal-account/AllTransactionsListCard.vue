@@ -9,6 +9,7 @@
         :loading="loading"
         loading-text="Chargement des transactions..."
         no-data-text="Aucune transaction trouvée"
+        :mobile="isMobile"
       >
         <template #top>
           <v-text-field v-model="search" label="Rechercher une transaction" />
@@ -101,6 +102,7 @@ import {
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const transactionStore = useTransactionStore();
+const layoutStore = useLayoutStore();
 
 const transactions = computed<TransactionWithSenderAndReceiver[]>(() => {
   return transactionStore.allTransactions;
@@ -118,6 +120,7 @@ const headers: TableHeaders = [
   { title: "Montant", value: "amount", sortable: true },
   { title: "Supprimer", value: "delete" },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const formatTransactionUsername = (user?: TransactionUser) => {
   return user ? buildUserName(user) : "";

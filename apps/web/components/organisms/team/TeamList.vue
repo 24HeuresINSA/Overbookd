@@ -6,6 +6,8 @@
       :items-per-page="-1"
       :search="search"
       density="comfortable"
+      no-data-text="Aucune équipe trouvée"
+      :mobile="isMobile"
     >
       <template #top>
         <v-text-field
@@ -75,18 +77,15 @@
 import type { Team } from "@overbookd/team";
 
 const teamStore = useTeamStore();
+const layoutStore = useLayoutStore();
 
 const headers = [
-  { title: "Nom", value: "name", width: "30%" },
-  { title: "Code", value: "code", width: "25%" },
-  { title: "Rendu", value: "rendering", width: "25%", sortable: false },
-  {
-    title: "Modifier/Supprimer",
-    value: "actions",
-    width: "20%",
-    sortable: false,
-  },
+  { title: "Nom", value: "name", width: "30%", sortable: true },
+  { title: "Code", value: "code", width: "25%", sortable: true },
+  { title: "Rendu", value: "rendering", width: "25%" },
+  { title: "Modifier/Supprimer", value: "actions", width: "20%" },
 ];
+const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
 
 const search = ref<string>("");
 const selectedTeam = ref<Team | undefined>(undefined);
