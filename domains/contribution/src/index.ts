@@ -1,7 +1,6 @@
 export type { Adherent, Contribution } from "./contribution.js";
 export { MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS } from "./contribution.js";
 export { ContributionError } from "./contribution.error.js";
-export { Edition } from "./edition.js";
 
 // PAY CONTRIBUTION
 export { PayContribution } from "./pay-contribution/pay-contribution.js";

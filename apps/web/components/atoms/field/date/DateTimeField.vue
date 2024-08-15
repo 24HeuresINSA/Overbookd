@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatLocalDateTime, roundMinutes } from "@overbookd/date";
+import { formatLocalDateTime, roundMinutes } from "@overbookd/time";
 
 const date = defineModel<Date>({ required: true });
 

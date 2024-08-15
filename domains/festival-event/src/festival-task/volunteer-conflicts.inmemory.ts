@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import {
   VolunteerAvailabilities,
   VolunteerConflicts,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Edition } from "../edition.js";
+import { Edition } from "@overbookd/time";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
 import { InMemoryContributions } from "./contributions.inmemory.js";
 import { InMemoryPermissions, Member } from "./permissions.inmemory.js";

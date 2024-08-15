@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Edition } from "@overbookd/contribution";
+import { Edition } from "@overbookd/time";
 
 type PlanningIdentifier = {
   volunteerId: number;

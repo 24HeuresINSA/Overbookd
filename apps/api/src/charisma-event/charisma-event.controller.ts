@@ -29,7 +29,7 @@ import { CharismaEventParticipationResponseDto } from "./dto/participation.respo
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
 
 @ApiTags("charisma-events")

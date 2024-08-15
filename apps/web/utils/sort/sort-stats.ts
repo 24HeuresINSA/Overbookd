@@ -10,7 +10,7 @@ import type {
   VolunteerWithAssignmentStats,
   AssignmentStat,
 } from "@overbookd/http";
-import { Duration } from "@overbookd/period";
+import { Duration } from "@overbookd/time";
 import { AUCUNE } from "../assignment/task-category";
 import type { UserName } from "@overbookd/user";
 

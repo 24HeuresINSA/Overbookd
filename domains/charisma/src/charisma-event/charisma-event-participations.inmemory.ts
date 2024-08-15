@@ -6,7 +6,7 @@ import {
   ParticipantTakingPart,
   EditParticipation,
 } from "./charisma-event";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 
 export class InMemoryCharismaEventParticipations
   implements CharismaEventParticipations

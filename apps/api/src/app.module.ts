@@ -30,7 +30,7 @@ import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 import { AlertModule } from "./alert/alert.module";
 import { NotificationModule } from "./notification/notification.module";
 import { FestivalActivityModule } from "./festival-event/activity/festival-activity.module";
-import { ONE_MINUTE_IN_MS } from "@overbookd/period";
+import { ONE_MINUTE_IN_MS } from "@overbookd/time";
 import { PersonalAccountModule } from "./personal-account/personal-account.module";
 import { SharedMealModule } from "./shared-meal/shared-meal.module";
 import { LogisticModule } from "./logistic/logistic.module";

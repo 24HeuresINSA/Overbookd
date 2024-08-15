@@ -1,5 +1,5 @@
 import { Contribution } from "../contribution.js";
-import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "../edition.js";
+import { BASE_EDITION_STARTS, Edition } from "@overbookd/time";
 
 const AUGUST = 7;
 
@@ -7,6 +7,8 @@ export const EXPIRATION_DATE = {
   month: AUGUST,
   day: 31,
 };
+
+const EDITION_DURATION_IN_YEAR = 1;
 
 export class Contribute {
   static now(adherentId: number, amount: number): Contribution {
@@ -24,8 +26,10 @@ export class Contribute {
   }
 
   private static calculeExpirationDate(edition: number): Date {
-    const yearsSinceBaseEdition = edition - BASE_EDITION;
-    const year = BASE_EDITION_ENDS.getFullYear() + yearsSinceBaseEdition;
+    const editionsSinceBaseEdition = edition - Edition.on(BASE_EDITION_STARTS);
+    const baseEditionYear = BASE_EDITION_STARTS.getFullYear();
+    const currentEditionStartYear = baseEditionYear + editionsSinceBaseEdition;
+    const year = currentEditionStartYear + EDITION_DURATION_IN_YEAR;
     const { month, day } = EXPIRATION_DATE;
 
     return new Date(year, month, day);

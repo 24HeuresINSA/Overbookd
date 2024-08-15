@@ -1,5 +1,5 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { Draft } from "../festival-activity.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";

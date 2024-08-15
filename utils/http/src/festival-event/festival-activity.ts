@@ -6,7 +6,7 @@ import {
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { AddInquiryRequestForm } from "./common.js";
 
 export type PrepareInChargeForm = {

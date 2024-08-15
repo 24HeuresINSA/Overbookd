@@ -14,7 +14,7 @@ import { UserService } from "../user/user.service";
 import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
 import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
-import { ONE_HOUR_IN_MS } from "@overbookd/period";
+import { ONE_HOUR_IN_MS } from "@overbookd/time";
 import { UserAccess, UserCredentials } from "@overbookd/http";
 import { buildUserName } from "@overbookd/user";
 

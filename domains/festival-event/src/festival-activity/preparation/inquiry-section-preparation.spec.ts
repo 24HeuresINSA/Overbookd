@@ -1,4 +1,4 @@
-import { Duration, EndBeforeStart } from "@overbookd/period";
+import { Duration, EndBeforeStart } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   InquiryAlreadyExists,

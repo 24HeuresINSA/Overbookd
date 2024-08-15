@@ -1,5 +1,5 @@
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
 import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
 import { Assignment } from "../assignment.js";

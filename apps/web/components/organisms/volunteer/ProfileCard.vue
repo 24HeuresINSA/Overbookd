@@ -123,7 +123,7 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import { formatLocalDate } from "@overbookd/date";
+import { formatLocalDate } from "@overbookd/time";
 import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
 
 const userStore = useUserStore();

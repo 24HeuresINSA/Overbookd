@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 export class PeriodResponseDto implements IProvidePeriod {
   @ApiProperty()

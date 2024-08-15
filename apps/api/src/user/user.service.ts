@@ -39,7 +39,7 @@ import { ForgetMember } from "@overbookd/registration";
 import { PlanningEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";

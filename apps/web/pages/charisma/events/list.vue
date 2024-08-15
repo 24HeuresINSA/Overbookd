@@ -59,7 +59,7 @@
 import type { CharismaEventParticipation } from "@overbookd/charisma";
 import { SlugifyService } from "@overbookd/slugify";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import { formatDate } from "@overbookd/date";
+import { formatDate } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/data-table/header";
 import {
   matchingSearchItems,

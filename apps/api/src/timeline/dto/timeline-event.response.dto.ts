@@ -7,7 +7,7 @@ import {
   TimelineAssignment,
   TimelineAssignee,
 } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 class PeriodDto implements IProvidePeriod {
   @ApiProperty({ type: Date })

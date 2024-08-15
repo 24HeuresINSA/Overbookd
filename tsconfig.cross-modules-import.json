@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
     "paths": {
-      "@overbookd/date": ["./libraries/date/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-event-constants": [
         "./constants/festival-event-constants/src"
       ],
       "@overbookd/list": ["./libraries/list/src"],
-      "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./constants/permission/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],
       "@overbookd/team-constants": ["./constants/team-constants/src"],
+      "@overbookd/time": ["./libraries/time/src"],
       "@overbookd/web-page": ["./constants/web-page/src"]
     }
   }

@@ -1,4 +1,4 @@
-import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 
 type CharismaEvent = {
   charisma: number;

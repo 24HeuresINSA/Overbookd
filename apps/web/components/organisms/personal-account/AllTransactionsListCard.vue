@@ -84,7 +84,7 @@ import {
   type TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { buildUserName } from "@overbookd/user";
-import { formatDateWithMinutes } from "@overbookd/date";
+import { formatDateWithMinutes } from "@overbookd/time";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   matchingSearchItems,

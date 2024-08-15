@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { AvailabilityForm } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { IsArray, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";

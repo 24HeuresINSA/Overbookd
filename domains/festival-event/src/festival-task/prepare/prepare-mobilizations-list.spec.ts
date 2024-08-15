@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { EndBeforeStart } from "@overbookd/period";
+import { EndBeforeStart } from "@overbookd/time";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
 import { PrepareFestivalTask } from "./prepare.js";

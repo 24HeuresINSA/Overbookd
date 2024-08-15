@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 export type CharismaPeriod = IProvidePeriod & {
   name: string;

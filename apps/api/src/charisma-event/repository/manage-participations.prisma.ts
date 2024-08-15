@@ -9,7 +9,7 @@ import { PrismaService } from "../../prisma.service";
 import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 
 export class PrismaManageCharismaEventParticipations
   implements CharismaEventParticipations

@@ -1,4 +1,4 @@
-import { IProvidePeriod, TWO_HOURS_IN_MS } from "@overbookd/period";
+import { IProvidePeriod, TWO_HOURS_IN_MS } from "@overbookd/time";
 import { SHIFT_HOURS_UTC } from "./shift.constant.js";
 import {
   AvailabilityMinimumPeriodDurationError,

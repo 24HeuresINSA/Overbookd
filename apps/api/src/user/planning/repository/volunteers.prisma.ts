@@ -2,7 +2,7 @@ import { VolunteerForPlanning } from "@overbookd/http";
 import { PrismaService } from "../../../prisma.service";
 import { UserNameWithTeams, Volunteers } from "../planning.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,

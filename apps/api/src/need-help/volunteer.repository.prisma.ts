@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { HelpingVolunteers } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
 import { Injectable } from "@nestjs/common";

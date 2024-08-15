@@ -1,4 +1,4 @@
-import { Duration } from "./duration.js";
+import { Duration } from "../duration/duration.js";
 
 export type IProvidePeriod = {
   start: Date;

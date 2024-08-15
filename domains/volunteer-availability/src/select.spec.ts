@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Period } from "@overbookd/period";
-import { DateString, OverDate } from "@overbookd/date";
+import { Period, DateString, OverDate } from "@overbookd/time";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 import { Availabilities } from "./availabilities.js";
 

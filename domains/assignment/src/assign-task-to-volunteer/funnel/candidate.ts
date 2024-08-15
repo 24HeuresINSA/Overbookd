@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { HARD, VIEUX, CONFIANCE } from "../../teams.js";
 import {
   Assignment,

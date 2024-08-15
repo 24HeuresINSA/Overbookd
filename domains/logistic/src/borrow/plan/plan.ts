@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { Borrow } from "../borrow.js";
 import { BorrowNotFound } from "../borrow.error.js";
 import { GearRequest, GearRequests } from "../../gear-request.js";

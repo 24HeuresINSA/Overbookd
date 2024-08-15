@@ -1,4 +1,4 @@
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
+import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 import { Volunteer } from "../../sections/instructions.js";
 import {
   Mobilization,

@@ -16,7 +16,7 @@ import {
 } from "./enroll-newcomers.query";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
-import { ONE_DAY_IN_MS } from "@overbookd/period";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 
 export class PrismaEnrollNewcomersRepository
   implements EnrollNewcomersRepository

@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 import { AssignmentBuilder } from "./factory/assignment.builder.js";
 import {
   AssignmentSummaryFactory,

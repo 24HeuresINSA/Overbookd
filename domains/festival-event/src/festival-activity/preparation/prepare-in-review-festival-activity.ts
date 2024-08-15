@@ -7,7 +7,7 @@ import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
 import { Contractors } from "./section-aggregates/contractors.js";
 import { TimeWindows } from "./section-aggregates/time-windows.js";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivity, Reviewable } from "../festival-activity.js";
 import { isValidatedReviews } from "../../common/review.js";
 import { Reviews } from "../../common/review.js";

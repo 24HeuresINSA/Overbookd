@@ -54,7 +54,7 @@ import {
   ASSIGNMENT_STARTED,
   FORCED_UPDATE,
 } from "@overbookd/festival-event";
-import { formatDateWithMinutes } from "@overbookd/date";
+import { formatDateWithMinutes } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { TableHeaders } from "~/utils/data-table/header";
 

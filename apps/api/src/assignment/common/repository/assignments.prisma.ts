@@ -26,7 +26,7 @@ import {
 import { UserService } from "../../../user/user.service";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { HAS_AVAILABILITIES } from "./availabilities.query";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import {

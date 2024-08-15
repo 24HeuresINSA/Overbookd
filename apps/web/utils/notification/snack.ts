@@ -1,4 +1,4 @@
-import { ONE_SECOND_IN_MS } from "@overbookd/period";
+import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
 export const SUCCESS = "success";
 export const FAILURE = "error";

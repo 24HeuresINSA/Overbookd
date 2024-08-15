@@ -1,4 +1,4 @@
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 
 export type CalendarUser = {
   id: number;

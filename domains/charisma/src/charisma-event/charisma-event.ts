@@ -10,7 +10,7 @@ import {
   AlreadyExists,
   InexistentParticipation,
 } from "./charisma-event.error";
-import { DateString, OverDate } from "@overbookd/date";
+import { DateString, OverDate } from "@overbookd/time";
 
 export type Participation = {
   slug: string;

@@ -28,7 +28,7 @@ import type {
   Signage,
   TimeWindow,
 } from "@overbookd/festival-event";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import type {
   AddInquiryRequestForm,
   PublishFeedbackForm,

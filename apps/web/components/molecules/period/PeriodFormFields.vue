@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 
 const start = defineModel<Date>("start", { required: true });
 const end = defineModel<Date>("end", { required: true });

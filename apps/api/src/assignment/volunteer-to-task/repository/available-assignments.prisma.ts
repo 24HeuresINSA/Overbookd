@@ -2,7 +2,7 @@ import { AssignmentSummaryWithTask } from "@overbookd/http";
 import { AvailableAssignments } from "../volunteer-to-task.service";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { Category } from "@overbookd/festival-event-constants";
 import { countAssigneesInTeam } from "@overbookd/assignment";
 import { extendOneOfTeams } from "../../common/extend-teams";

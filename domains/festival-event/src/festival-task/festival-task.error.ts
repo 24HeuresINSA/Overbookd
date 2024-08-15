@@ -1,4 +1,4 @@
-import { Duration } from "@overbookd/period";
+import { Duration } from "@overbookd/time";
 import { FestivalTask } from "./festival-task.js";
 import { InquiryRequest } from "../common/inquiry-request.js";
 import { FestivalEventError } from "../festival-event.js";

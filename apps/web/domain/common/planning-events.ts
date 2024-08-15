@@ -1,6 +1,6 @@
 import { getColorByStatus } from "./status-color";
 import type { PlanningEvent } from "@overbookd/assignment";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 export type CalendarPlanningEvent = {

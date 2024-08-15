@@ -5,7 +5,7 @@ import type {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { PrepareFestivalActivity } from "@overbookd/festival-event";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 
 @Injectable()
 export class GeneralSectionService {

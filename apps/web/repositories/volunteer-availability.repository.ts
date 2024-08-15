@@ -1,4 +1,4 @@
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class VolunteerAvailabilityRepository {

@@ -28,7 +28,7 @@ import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
 import { BreakPeriods } from "./planning.js";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { Volunteer } from "../../volunteer.js";
 
 class InMemoryBreakPeriods implements BreakPeriods {

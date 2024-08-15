@@ -112,7 +112,7 @@ import {
 } from "~/utils/transaction/sg-mode";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
 import { FUT, PLACARD, DEPOT } from "~/utils/transaction/transaction";
-import { formatDate } from "@overbookd/date";
+import { formatDate } from "@overbookd/time";
 
 const personalAccountStore = usePersonalAccountStore();
 

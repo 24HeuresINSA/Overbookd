@@ -1,5 +1,5 @@
 import { FestivalTask } from "@overbookd/festival-event";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 export type OrgaNeedTask = {
   id: FestivalTask["id"];

@@ -14,7 +14,7 @@ import { LoginRequestDto } from "./dto/login.request.dto";
 import { UserAccessResponseDto } from "./dto/user-access.response.dto";
 import { Throttle } from "@nestjs/throttler";
 import { RefreshAccessRequestDto } from "./dto/refresh-access.request.dto";
-import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/period";
+import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/time";
 
 @ApiTags("authentication")
 @Controller()

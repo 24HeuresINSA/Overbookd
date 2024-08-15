@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { CharismaEventParticipation } from "@overbookd/charisma";
 import { User } from "@overbookd/user";
 import { UserIdentifierResponseDto } from "../../common/dto/user-identifier.response.dto";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 
 export class CharismaEventParticipationResponseDto
   implements CharismaEventParticipation

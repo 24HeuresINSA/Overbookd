@@ -13,7 +13,6 @@ describe("Enroll newcomers to a joinable team", () => {
 
   it("should enroll newcomers to the requested joinable team", () => {
     const enrolledNewcomers = enrollNewcomers.to(team);
-
     expect(
       enrolledNewcomers.every((newcomer) => newcomer.teams.includes(team)),
     ).toBe(true);
@@ -21,7 +20,6 @@ describe("Enroll newcomers to a joinable team", () => {
 
   it("should also enroll newcomers to the benevole team", () => {
     const enrolledNewcomers = enrollNewcomers.to(team);
-
     expect(
       enrolledNewcomers.every((newcomer) =>
         newcomer.teams.includes(BENEVOLE_CODE),

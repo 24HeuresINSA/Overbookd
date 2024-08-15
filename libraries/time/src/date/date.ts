@@ -1,5 +1,6 @@
-import { ONE_HOUR_IN_MS, IProvidePeriod, Period } from "@overbookd/period";
-import { formatLocalDate } from "./date.utils";
+import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
+import { IProvidePeriod, Period } from "../period/period.js";
+import { formatLocalDate } from "./date.utils.js";
 
 type January = "01";
 type February = "02";

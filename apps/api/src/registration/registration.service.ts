@@ -25,8 +25,7 @@ import {
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
-import { OverDate } from "@overbookd/date";
+import { IProvidePeriod, OverDate } from "@overbookd/time";
 import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
 import { Configurations } from "./repository/configurations.repository";
 

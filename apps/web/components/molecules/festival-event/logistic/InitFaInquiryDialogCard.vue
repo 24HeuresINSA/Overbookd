@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import type { CatalogGear, InitInquiryRequest } from "@overbookd/http";
-import { type IProvidePeriod, Period } from "@overbookd/period";
+import { type IProvidePeriod, Period } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 const faStore = useFestivalActivityStore();

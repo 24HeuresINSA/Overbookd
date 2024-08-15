@@ -1,5 +1,5 @@
 import type { Availabilities } from "@overbookd/assignment";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import { castPeriodsWithDate } from "~/utils/http/period";
 import { isHttpError } from "~/utils/http/api-fetch";
 

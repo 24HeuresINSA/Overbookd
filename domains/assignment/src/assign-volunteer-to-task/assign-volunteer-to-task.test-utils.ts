@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS, QUARTER_IN_MS, Period } from "@overbookd/period";
+import { ONE_HOUR_IN_MS, QUARTER_IN_MS, Period } from "@overbookd/time";
 import {
   VolunteerWithAssignmentDuration,
   VolunteerWithAssignments,

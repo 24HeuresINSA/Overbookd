@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/volunteer-availability",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Gestion des disponibilités des bénévoles pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -54,8 +54,7 @@
     "pnpm": "9.7.0"
   },
   "dependencies": {
-    "@overbookd/date": "workspace:*",
     "@overbookd/list": "workspace:*",
-    "@overbookd/period": "workspace:*"
+    "@overbookd/time": "workspace:*"
   }
 }

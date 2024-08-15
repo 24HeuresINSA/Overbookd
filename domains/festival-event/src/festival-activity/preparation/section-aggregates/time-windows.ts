@@ -1,4 +1,4 @@
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
+import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 import { TimeWindowAlreadyExists } from "../../festival-activity.error.js";
 import { TimeWindow } from "../../../common/time-window.js";
 import { WithAtLeastOneItem } from "@overbookd/list";

@@ -10,7 +10,7 @@ import { InitInquiryRequest, AddInquiryRequestForm } from "@overbookd/http";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { Inquiries } from "../../common/festival-activity-common.model";
 import { TeamService } from "../../../../team/team.service";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];

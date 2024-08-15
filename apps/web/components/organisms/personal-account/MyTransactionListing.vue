@@ -47,7 +47,7 @@ import {
   doIReceive,
   INITIALIZATION,
 } from "@overbookd/personal-account";
-import { formatDateWithExplicitMonthAndDay } from "@overbookd/date";
+import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
 import { nicknameOrName } from "@overbookd/user";
 
 const transactionStore = useTransactionStore();

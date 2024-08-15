@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { updateItemToList } from "@overbookd/list";
 import { Availability } from "./volunteer-availability.js";
 

@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { FormatVolunteer, Volunteer } from "../volunteer.js";
 
 export type VolunteerWithFriendFilter = Volunteer & {

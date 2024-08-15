@@ -37,12 +37,11 @@ import {
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { BreakPeriodDuringRequestDto } from "../dto/break-period-during.request.dto";
-import { Duration, Period } from "@overbookd/period";
+import { Duration, Period, Edition } from "@overbookd/time";
 import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
 import { VolunteerForPlanningResponseDto } from "../dto/volunteer-for-planning.response.dto";
 import { IcalRenderStrategy } from "./render/ical-render-strategy";
 import { SecretService } from "./secret.service";
-import { Edition } from "@overbookd/contribution";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
 import { RequestWithUserPayload } from "../../app.controller";

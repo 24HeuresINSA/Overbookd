@@ -1,7 +1,7 @@
 import { AssignmentIdentifier } from "@overbookd/assignment";
 import { AssignmentSummary, TaskCategorized } from "@overbookd/assignment";
 import { Category } from "@overbookd/festival-event-constants";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 
 export type AssignmentSummaryWithTask = AssignmentSummary &
   Omit<TaskCategorized, "id"> & {

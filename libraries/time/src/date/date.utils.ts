@@ -1,5 +1,8 @@
-import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "@overbookd/period";
-import { PARIS_TIMEZONE } from "./date";
+import {
+  ONE_DAY_IN_MS,
+  ONE_HOUR_IN_MS,
+} from "../duration/duration.constant.js";
+import { PARIS_TIMEZONE } from "./date.js";
 
 // return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: string | Date): string {

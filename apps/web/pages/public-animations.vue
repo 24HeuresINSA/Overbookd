@@ -80,9 +80,8 @@
 <script lang="ts" setup>
 import type { PreviewForCommunication } from "@overbookd/http";
 import type { TimeWindow } from "@overbookd/festival-event";
-import { Period } from "@overbookd/period";
 import type { TableHeaders } from "~/utils/data-table/header";
-import { formatDateWithMinutes } from "@overbookd/date";
+import { Period, formatDateWithMinutes } from "@overbookd/time";
 import {
   openActivity,
   openActivityInNewTab,

@@ -1,5 +1,5 @@
 import { DatabaseGear } from "./dashboard.model";
-import { Period, QUARTER_IN_MS } from "@overbookd/period";
+import { Period, QUARTER_IN_MS } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 

@@ -1,6 +1,5 @@
-import { Period } from "@overbookd/period";
 import { Volunteer } from "../volunteer.js";
-import { IProvidePeriod } from "@overbookd/period";
+import { Period, IProvidePeriod } from "@overbookd/time";
 import { Category } from "@overbookd/festival-event-constants";
 
 export type AssignableVolunteer = Volunteer & {

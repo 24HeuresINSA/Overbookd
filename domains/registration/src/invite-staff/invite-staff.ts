@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { SignJWT, jwtVerify } from "jose";
-import { ONE_SECOND_IN_MS } from "@overbookd/period";
+import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
 export type WithExpiration = {
   exp: number;

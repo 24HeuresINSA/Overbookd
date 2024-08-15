@@ -81,7 +81,7 @@ import {
   type TimeWindow,
   isDraft,
 } from "@overbookd/festival-event";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import {
   COMMUNICATION_EMAIL,

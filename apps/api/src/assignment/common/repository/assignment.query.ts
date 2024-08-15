@@ -5,7 +5,7 @@ import {
   isTeamMember,
 } from "@overbookd/assignment";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,

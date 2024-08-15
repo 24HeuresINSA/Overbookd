@@ -2,7 +2,7 @@ import { CharismaEventParticipation } from "@overbookd/charisma";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 import { ViewParticipations } from "../charisma-event.service";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 
 export class PrismaViewCharismaEventParticipations
   implements ViewParticipations

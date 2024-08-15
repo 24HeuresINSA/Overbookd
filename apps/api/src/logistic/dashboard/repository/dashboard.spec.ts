@@ -28,7 +28,7 @@ import {
   consumableGearWithOneInquiryAndOnePurchaseForGraph,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 
 describe("Summarize gear as preview", () => {
   describe.each`

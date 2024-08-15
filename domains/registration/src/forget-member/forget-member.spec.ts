@@ -1,4 +1,4 @@
-import { ONE_DAY_IN_MS } from "@overbookd/period";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ForgetMember } from "./forget-member.js";
 import {

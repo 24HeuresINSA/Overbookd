@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { PrismaService } from "../../src/prisma.service";
 import {
   TimelineAssignment,

@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivity } from "../../festival-activity.js";
 import { InquiryRequest } from "../../../common/inquiry-request.js";
 import { TimeWindow } from "../../../common/time-window.js";

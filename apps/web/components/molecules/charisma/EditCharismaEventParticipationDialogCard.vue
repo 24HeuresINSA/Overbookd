@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import type { CharismaEventParticipation } from "@overbookd/charisma";
-import { formatDate } from "@overbookd/date";
+import { formatDate } from "@overbookd/time";
 import { required, min, isNumber, isInteger } from "~/utils/rules/input.rules";
 
 const { participation } = defineProps({

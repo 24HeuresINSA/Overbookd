@@ -4,7 +4,7 @@ import {
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { PrismaService } from "../../../prisma.service";
 import {
   DatabaseStoredAssignableVolunteer,

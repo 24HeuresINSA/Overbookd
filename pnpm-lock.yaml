@@ -104,9 +104,6 @@ importers:
       '@overbookd/contribution':
         specifier: workspace:*
         version: link:../../domains/contribution
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
@@ -128,9 +125,6 @@ importers:
       '@overbookd/logistic':
         specifier: workspace:*
         version: link:../../domains/logistic
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
@@ -155,6 +149,9 @@ importers:
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../utils/user
@@ -324,9 +321,6 @@ importers:
       '@overbookd/contribution':
         specifier: workspace:*
         version: link:../../domains/contribution
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
@@ -354,9 +348,6 @@ importers:
       '@overbookd/money':
         specifier: workspace:*
         version: link:../../libraries/money
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
@@ -381,6 +372,9 @@ importers:
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../utils/user
@@ -462,24 +456,21 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
 
   domains/charisma:
     dependencies:
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../utils/user
@@ -489,42 +480,36 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
 
   domains/festival-event:
     dependencies:
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
       '@overbookd/festival-event-constants':
         specifier: workspace:*
         version: link:../../constants/festival-event-constants
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
 
   domains/logistic:
     dependencies:
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
+      '@overbookd/time':
         specifier: workspace:*
-        version: link:../../libraries/period
+        version: link:../../libraries/time
 
   domains/personal-account:
     dependencies:
@@ -540,9 +525,9 @@ importers:
 
   domains/planning:
     dependencies:
-      '@overbookd/period':
+      '@overbookd/time':
         specifier: workspace:*
-        version: link:../../libraries/period
+        version: link:../../libraries/time
 
   domains/registration:
     dependencies:
@@ -552,15 +537,18 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
+      '@overbookd/web-page':
+        specifier: workspace:*
+        version: link:../../constants/web-page
       jose:
         specifier: 5.6.3
         version: 5.6.3
@@ -576,21 +564,12 @@ importers:
 
   domains/volunteer-availability:
     dependencies:
-      '@overbookd/date':
-        specifier: workspace:*
-        version: link:../../libraries/date
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
-      '@overbookd/period':
+      '@overbookd/time':
         specifier: workspace:*
-        version: link:../../libraries/period
-
-  libraries/date:
-    dependencies:
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../period
+        version: link:../../libraries/time
 
   libraries/event: {}
 
@@ -600,9 +579,9 @@ importers:
 
   libraries/money: {}
 
-  libraries/period: {}
-
   libraries/slugify: {}
+
+  libraries/time: {}
 
   utils/alerts:
     dependencies:
@@ -653,9 +632,6 @@ importers:
       '@overbookd/logistic':
         specifier: workspace:*
         version: link:../../domains/logistic
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
       '@overbookd/personal-account':
         specifier: workspace:*
         version: link:../../domains/personal-account
@@ -665,6 +641,9 @@ importers:
       '@overbookd/signa':
         specifier: workspace:*
         version: link:../../domains/signa
+      '@overbookd/time':
+        specifier: workspace:*
+        version: link:../../libraries/time
       '@overbookd/user':
         specifier: workspace:*
         version: link:../user

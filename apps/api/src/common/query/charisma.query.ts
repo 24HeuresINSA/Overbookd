@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "./period.query";
 
 const SELECT_CHARISMA = { charisma: true };

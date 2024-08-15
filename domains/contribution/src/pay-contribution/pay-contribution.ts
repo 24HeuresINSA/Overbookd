@@ -1,7 +1,7 @@
 import { Permission } from "@overbookd/permission";
 import { Contribute } from "./contribute.js";
 import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error.js";
-import { Edition } from "../edition.js";
+import { Edition } from "@overbookd/time";
 import {
   Adherent,
   Contribution,

@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { Teams } from "@overbookd/registration";
 
 export type EnrollableStaff = {

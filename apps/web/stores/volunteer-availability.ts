@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import {
   Availabilities,
   type InitOverDate,

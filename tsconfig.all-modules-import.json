@@ -6,7 +6,6 @@
       "@overbookd/charisma": ["./domains/charisma/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./utils/configuration/src"],
-      "@overbookd/date": ["./libraries/date/src"],
       "@overbookd/domain-events": ["./utils/domain-events/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-event": ["./domains/festival-event/src"],
@@ -18,7 +17,6 @@
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/logistic": ["./domains/logistic/src"],
       "@overbookd/money": ["./libraries/money/src"],
-      "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./constants/permission/src"],
       "@overbookd/personal-account": ["./domains/personal-account/src"],
       "@overbookd/planning": ["./domains/planning/src"],
@@ -27,6 +25,7 @@
       "@overbookd/slugify": ["./libraries/slugify/src"],
       "@overbookd/team": ["./utils/team/src"],
       "@overbookd/team-constants": ["./constants/team-constants/src"],
+      "@overbookd/time": ["./libraries/time/src"],
       "@overbookd/user": ["./utils/user/src"],
       "@overbookd/volunteer-availability": [
         "./domains/volunteer-availability/src"

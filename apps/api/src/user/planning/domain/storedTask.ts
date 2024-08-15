@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { removeItemAtIndex } from "@overbookd/list";
 import { Assignment, Task, Volunteer } from "./task.model";
 

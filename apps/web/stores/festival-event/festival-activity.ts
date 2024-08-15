@@ -29,7 +29,7 @@ import type {
   PublishFeedbackForm,
   ReviewApproval,
 } from "@overbookd/http";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
 import {
   castActivityWithDate,

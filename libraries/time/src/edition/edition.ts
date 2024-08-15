@@ -1,9 +1,8 @@
-import { ONE_YEAR_IN_MS } from "@overbookd/period";
+import { ONE_YEAR_IN_MS } from "../duration/duration.constant";
 
-const BASE_EDITION_STARTS = new Date("2023-09-01");
+export const BASE_EDITION_STARTS = new Date("2023-09-01");
 
-export const BASE_EDITION = 49;
-export const BASE_EDITION_ENDS = new Date("2024-08-31");
+const BASE_EDITION = 49;
 
 export class Edition {
   static get current(): number {
@@ -20,5 +19,9 @@ export class Edition {
     const editionsAfterBaseEdition = Math.floor(durationInYears);
 
     return BASE_EDITION + editionsAfterBaseEdition;
+  }
+
+  static on(date: Date): number {
+    return Edition.findEdition(date);
   }
 }

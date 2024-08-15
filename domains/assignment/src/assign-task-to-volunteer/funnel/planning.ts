@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { Status } from "@overbookd/festival-event-constants";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 

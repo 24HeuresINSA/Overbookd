@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { Breaks } from "./break-periods.js";
 
 export class InMemoryBreakRepository implements Breaks {

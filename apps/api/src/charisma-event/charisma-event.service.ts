@@ -5,7 +5,7 @@ import {
   EditCharismaEventParticipation,
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
-import { DateString } from "@overbookd/date";
+import { DateString } from "@overbookd/time";
 import { CharismaEventPotentialParticipant } from "@overbookd/http";
 
 export type PotentialParticipants = {

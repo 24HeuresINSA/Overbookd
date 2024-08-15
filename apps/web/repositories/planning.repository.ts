@@ -1,6 +1,6 @@
 import { ICAL, PDF } from "@overbookd/http";
 import type { DuringBreakPeriods, VolunteerForPlanning } from "@overbookd/http";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class PlanningRepository {

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { GeoLocation } from "@overbookd/geo-location";
 import { PlanningTask } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { PrismaService } from "../../../prisma.service";
 import { buildUserName } from "@overbookd/user";
 import { TaskRepository } from "../domain/planning";

@@ -2,12 +2,12 @@ import { Injectable } from "@nestjs/common";
 import {
   Adherent,
   Contribution,
-  Edition,
   EditContribution,
   PayContribution,
   PayContributionForm,
   AdherentWithContribution,
 } from "@overbookd/contribution";
+import { Edition } from "@overbookd/time";
 
 @Injectable()
 export class ContributionService {

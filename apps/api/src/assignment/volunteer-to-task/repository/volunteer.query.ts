@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import {
   COUNT_FRIENDS,
   DatabaseFriendCount,

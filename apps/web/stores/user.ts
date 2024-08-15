@@ -14,7 +14,7 @@ import type {
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
 import type { Profile, User, UserPersonalData } from "@overbookd/user";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import type {
   AssignmentStat,
   Consumer,

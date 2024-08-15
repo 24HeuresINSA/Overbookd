@@ -1,6 +1,6 @@
 import { Breaks } from "@overbookd/planning";
 import { PrismaService } from "../../../prisma.service";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 
 export class PrismaBreaks implements Breaks {

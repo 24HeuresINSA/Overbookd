@@ -4,7 +4,10 @@ import {
   EndBeforeStart,
   Period,
 } from "./period";
-import { ONE_MINUTE_IN_MS, ONE_SECOND_IN_MS } from "./duration.constant";
+import {
+  ONE_MINUTE_IN_MS,
+  ONE_SECOND_IN_MS,
+} from "../duration/duration.constant";
 import {
   friday08hto09h,
   friday08hto08h15,

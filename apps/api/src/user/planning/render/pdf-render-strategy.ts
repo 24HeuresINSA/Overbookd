@@ -4,11 +4,12 @@ import htmlToPdfMake from "html-to-pdfmake";
 import { join } from "path";
 import { Content, StyleDictionary } from "pdfmake/interfaces";
 import { JSDOM } from "jsdom";
-import { IProvidePeriod } from "@overbookd/period";
 import {
+  IProvidePeriod,
+  Edition,
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
-} from "@overbookd/date";
+} from "@overbookd/time";
 import {
   AppointmentLocation,
   Assignment,
@@ -21,7 +22,6 @@ import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
 import { Introduction } from "./pdf/introduction";
 import { RenderStrategy } from "./render-strategy";
-import { Edition } from "@overbookd/contribution";
 import { updateItemToList } from "@overbookd/list";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { GeoCoordinates } from "ics";

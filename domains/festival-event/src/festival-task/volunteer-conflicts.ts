@@ -1,5 +1,5 @@
 import { Item } from "@overbookd/list";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import {
   Draft,
   FestivalTask,

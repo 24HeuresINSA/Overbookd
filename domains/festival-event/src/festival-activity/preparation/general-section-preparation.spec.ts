@@ -4,7 +4,7 @@ import {
   FestivalActivityError,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error.js";
-import { EndBeforeStart } from "@overbookd/period";
+import { EndBeforeStart } from "@overbookd/time";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   baladeEnPoney,

@@ -1,7 +1,7 @@
 import { PlanningTask } from "@overbookd/http";
 import { TaskRepository } from "./planning";
 import { JsonStoredTask } from "./storedTask";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 
 export class InMemoryTaskRepository implements TaskRepository {
   constructor(private tasks: JsonStoredTask[]) {}

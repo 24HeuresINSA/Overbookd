@@ -4,7 +4,7 @@ import {
   GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 
 export type DashboardGears = {
   getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;

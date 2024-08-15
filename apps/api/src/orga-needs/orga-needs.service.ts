@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/period";
+import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/time";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
 import {

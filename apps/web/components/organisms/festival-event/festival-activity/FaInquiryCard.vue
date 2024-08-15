@@ -116,7 +116,7 @@ import {
   isDraft,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
-import type { IProvidePeriod } from "@overbookd/period";
+import type { IProvidePeriod } from "@overbookd/time";
 
 const faStore = useFestivalActivityStore();
 

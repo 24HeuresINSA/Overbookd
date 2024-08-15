@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { Friends } from "./planning.js";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 

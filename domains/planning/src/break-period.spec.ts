@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { Period, Duration } from "@overbookd/period";
+import { Period, Duration } from "@overbookd/time";
 import { BreakPeriods } from "./break-periods.js";
 import { InMemoryBreakRepository } from "./break-repository.inmemory.js";
 

@@ -1,6 +1,6 @@
 import { Categorize } from "@overbookd/festival-event";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 

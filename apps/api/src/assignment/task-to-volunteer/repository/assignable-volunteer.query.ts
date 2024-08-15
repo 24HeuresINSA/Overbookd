@@ -1,5 +1,5 @@
 import { Category } from "@overbookd/festival-event-constants";
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { DatabaseFriendCount } from "../../common/repository/friend.query";
 import {
   SELECT_TEAMS_CODE,

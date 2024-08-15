@@ -1,5 +1,5 @@
 import { PAY_CONTRIBUTION, Permission } from "@overbookd/permission";
-import { Edition } from "../edition.js";
+import { Edition } from "@overbookd/time";
 import { IAlertAboutContribution, SettleAlert } from "./settle-alert.js";
 
 export type Permissions = {

@@ -28,8 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDate } from "@overbookd/date";
-import { type IProvidePeriod, Period } from "@overbookd/period";
+import { type IProvidePeriod, Period, formatDate } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 

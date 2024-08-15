@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PlanningTask, VolunteerForPlanning } from "@overbookd/http";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { BreakDefinition, BreakPeriods } from "@overbookd/planning";
 import { Planning } from "./domain/planning";
 import { Task } from "./domain/task.model";

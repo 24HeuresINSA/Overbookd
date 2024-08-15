@@ -2,7 +2,7 @@ import { PrismaService } from "../../../prisma.service";
 import { DashboardGears } from "../dashboard.service";
 import { SELECT_GEAR } from "./dashboard.query";
 import { DashboardGear } from "./dashboard-gear";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import {
   GearPreview,
   GearSearchOptions,

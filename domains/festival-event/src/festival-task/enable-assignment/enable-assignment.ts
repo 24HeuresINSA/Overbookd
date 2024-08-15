@@ -28,7 +28,7 @@ import {
   VolunteerWithConflicts,
 } from "../sections/mobilizations.js";
 import { Item } from "@overbookd/list";
-import { Period, Duration } from "@overbookd/period";
+import { Period, Duration } from "@overbookd/time";
 
 export type FestivalTasksForEnableAssignment = {
   findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null>;

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ONE_SECOND_IN_MS } from "@overbookd/period";
+import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import {
   type SnackNotification,
   DEFAULT_SNACK_TIMEOUT,

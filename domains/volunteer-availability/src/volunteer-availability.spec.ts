@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { Availability } from "./volunteer-availability.js";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 

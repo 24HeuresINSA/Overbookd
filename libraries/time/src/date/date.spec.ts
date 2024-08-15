@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DateString, OverDate } from "./date";
+import { DateString, OverDate } from "./date.js";
 
 const friday: DateString = "2024-05-17";
 const saturday: DateString = "2024-05-18";

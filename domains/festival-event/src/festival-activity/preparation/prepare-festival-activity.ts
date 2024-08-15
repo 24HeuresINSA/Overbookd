@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import {
   LinkInquiryDrive,

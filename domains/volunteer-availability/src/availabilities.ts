@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { Period } from "@overbookd/time";
 import { AvailabilityDate, InitOverDate } from "./date.js";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 
