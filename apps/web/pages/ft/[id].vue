@@ -43,6 +43,7 @@ import {
   isReadyToAssign,
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { FT_URL } from "@overbookd/web-page";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,7 +61,7 @@ const headTitle = computed<string>(() => {
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
   if (selectedTask.value.id !== taskIdFromUrl.value) {
-    router.push({ path: "/ft" });
+    router.push(FT_URL);
   }
 });
 

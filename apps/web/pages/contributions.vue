@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Cotisations</h1>
+  <DesktopPageTitle />
   <ContributionsTableCard />
 </template>
 

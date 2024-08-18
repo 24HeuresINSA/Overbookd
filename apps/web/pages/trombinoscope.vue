@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Trombinoscope</h1>
+  <DesktopPageTitle />
   <div class="trombinoscope">
     <div v-show="volunteersBornToday.length" class="birthdays">
       <BirthdayCard

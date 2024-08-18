@@ -53,7 +53,7 @@
               text="S'inscrire"
               color="secondary"
               elevation="2"
-              to="/register"
+              :to="REGISTER_URL"
               rounded="xl"
               class="btn btn-secondary"
             />
@@ -84,6 +84,8 @@
 </template>
 
 <script lang="ts" setup>
+import { HOME_URL, REGISTER_URL } from "@overbookd/web-page";
+
 const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
@@ -161,7 +163,7 @@ const login = async () => {
     );
   }
   await authStore.login(credentials.value);
-  if (authenticated) router.push("/");
+  if (authenticated) router.push(HOME_URL);
 };
 </script>
 

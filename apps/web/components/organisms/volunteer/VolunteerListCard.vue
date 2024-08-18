@@ -102,7 +102,7 @@ const propagateClickedTeam = (team: Team) => emit("click:team", team);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const openCalendar = (volunteerId: number) => {
   sendFailureNotification("Cette page n'est pas encore disponible");
-  //window.open(`/planning/${volunteerId}`, "_blank");
+  //window.open(`${PLANNING_URL}/${volunteerId}`, "_blank");
 };
 const callVolunteer = (phone: string) => {
   window.location.href = formatPhoneLink(phone);

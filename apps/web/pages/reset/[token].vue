@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts" setup>
+import { HOME_URL } from "@overbookd/web-page";
 import {
   required,
   password as passwordRule,
@@ -65,7 +66,7 @@ const sendResetRequest = async () => {
   if (isNotValid.value) return;
   const token = stringifyQueryParam(route.params.token);
   await authStore.resetPassword(token, password.value, password2.value);
-  await router.push({ path: "/" });
+  await router.push(HOME_URL);
 };
 </script>
 

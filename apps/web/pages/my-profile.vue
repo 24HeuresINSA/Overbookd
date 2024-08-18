@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Profil</h1>
+  <DesktopPageTitle />
   <div class="profile">
     <ProfileCard />
     <FriendsCard />

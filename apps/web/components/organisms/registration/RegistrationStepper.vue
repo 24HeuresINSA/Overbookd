@@ -248,6 +248,7 @@ import {
   type Teams,
   CVL_CODE,
 } from "@overbookd/registration";
+import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 import {
   required,
   minDate,
@@ -389,10 +390,10 @@ const register = async () => {
     email: email.value,
     password: password.value,
   });
-  router.push("/");
+  router.push(HOME_URL);
 };
 
-const returnToLogin = () => router.push("/login");
+const returnToLogin = () => router.push(LOGIN_URL);
 
 const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);

@@ -17,6 +17,7 @@ const MY_PROFILE_PAGE: HiddenPage = {
   title: "Mon Profil",
   to: MY_PROFILE_URL,
   mobileSupport: true,
+  canBeFavorite: false,
 };
 
 const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
@@ -27,7 +28,16 @@ const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   description:
     "Page avec ton compte persos et tes transactions permettant de faire des virements",
   mobileSupport: true,
-  keywords: ["virements", "cps", "comptes", "persos", "consos", "consomations"],
+  canBeFavorite: true,
+  keywords: [
+    "mon",
+    "virements",
+    "cps",
+    "comptes",
+    "persos",
+    "consos",
+    "consomations",
+  ],
 };
 
 const SHARED_MEALS_PAGE: PageInSummary = {
@@ -37,6 +47,7 @@ const SHARED_MEALS_PAGE: PageInSummary = {
   to: SHARED_MEALS_URL,
   description: "Page pour proposer et shotgun des repas partagés",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: [
     "repas-partages",
     "shotguns",
@@ -55,6 +66,7 @@ const TROMBINOSCOPE_PAGE: PageInSummary = {
   description:
     "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: ["trombinoscope", "photos"],
 };
 
@@ -65,6 +77,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
   to: VOLUNTEERS_URL,
   description: "Permet de voir tous les bénévoles",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: ["benevoles", "orgas", "liste"],
 };
 
@@ -75,6 +88,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 //   description:
 //     "Permet de renseigner quand tu es disponible pour aider sur le festival",
 //   mobileSupport: true,
+//   canBeFavorite: true,
 //   keywords: ["dispos", "disponibilites"],
 // };
 
@@ -85,6 +99,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 //   to: PLANNING_URL,
 //   description: "Permet d'avoir un apercu de son planning sur le festival",
 //   mobileSupport: true,
+//   canBeFavorite: true,
 //   keywords: ["planning", "calendrier", "taches", "affectation"],
 // };
 
@@ -93,6 +108,7 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 //   permission: VIEW_PLANNING,
 //   to: `${PLANNING_URL}/:id`,
 //   mobileSupport: true,
+//   canBeFavorite: false,
 // };
 
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [

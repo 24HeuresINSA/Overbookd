@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Transactions</h1>
+  <DesktopPageTitle />
   <AllTransactionsListCard />
 </template>
 

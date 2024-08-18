@@ -8,6 +8,7 @@ import type { PageInSummary } from "./navigation";
 //   description:
 //     "Permet de voir toutes les taches qui se déroulent pendant une plage horaire",
 //   mobileSupport: true,
+//   canBeFavorite: true,
 //   keywords: ["activite", "timeline", "actuel", "en-cours"],
 // };
 
@@ -19,6 +20,7 @@ import type { PageInSummary } from "./navigation";
 //   description:
 //     "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
 //   mobileSupport: true,
+//   canBeFavorite: true,
 //   keywords: ["aide-ponctuelle", "disponible", "besoin"],
 // };
 

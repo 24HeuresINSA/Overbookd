@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
+import { FA_URL } from "@overbookd/web-page";
 
 const route = useRoute();
 const router = useRouter();
@@ -38,7 +39,7 @@ const headTitle = computed<string>(() => {
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
   if (selectedActivity.value.id !== activityIdFromUrl.value) {
-    router.push({ path: "/fa" });
+    router.push(FA_URL);
   }
 });
 

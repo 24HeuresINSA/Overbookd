@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts" setup>
-import Header from "~/layouts/parts/Header.vue";
-import SideNav from "~/layouts/parts/SideNav.vue";
+import Header from "~/layouts/header/Header.vue";
+import SideNav from "~/layouts/side-nav/SideNav.vue";
 import { useTheme } from "vuetify";
 import { pickRandomTheme } from "~/utils/theme/theme.utils";
 import {

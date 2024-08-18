@@ -134,9 +134,7 @@ preferenceStore.fetchMyPreferences();
 
 const loggedUser = computed(() => userStore.loggedUser);
 const friendsCount = computed<number>(() => userStore.mFriends.length);
-const preferences = computed<Preference | null>(
-  () => preferenceStore.myPreferences,
-);
+const preferences = computed<Preference>(() => preferenceStore.myPreferences);
 const hasFilledPreferences = computed<boolean>(
   () =>
     preferences.value?.paperPlanning !== undefined &&

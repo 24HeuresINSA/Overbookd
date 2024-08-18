@@ -1,12 +1,12 @@
 <template>
   <v-app-bar class="header" height="60" flat>
     <template #prepend>
-      <Logo v-if="isDesktop" />
-      <v-app-bar-nav-icon v-else @click.stop="updateNav" />
+      <Logo class="desktop-only" />
+      <v-app-bar-nav-icon class="mobile-only" @click.stop="updateNav" />
     </template>
 
     <v-app-bar-title class="header__title">
-      <v-tooltip v-if="isDesktop && watermark" location="bottom">
+      <v-tooltip v-if="watermark" location="bottom" class="desktop-only">
         <template #activator="{ props }">
           <span v-bind="props" class="watermark">
             {{ watermark }}
@@ -15,7 +15,7 @@
         <p>{{ watermarkTooltipTitle }}</p>
         <p>{{ watermarkTooltipDescription }}</p>
       </v-tooltip>
-      <span v-if="!isDesktop" class="page-title">{{ pageTitle }}</span>
+      <span class="page-title mobile-only">{{ pageTitle }}</span>
     </v-app-bar-title>
 
     <template #append>
@@ -26,8 +26,7 @@
 
 <script lang="ts" setup>
 import Logo from "./Logo.vue";
-import HeaderProfile from "~/layouts/parts/HeaderProfile.vue";
-import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
+import HeaderProfile from "./HeaderProfile.vue";
 import { findPage } from "~/utils/pages/navigation";
 
 const PREPROD_TOOLTIP_TITLE =
@@ -43,15 +42,10 @@ const route = useRoute();
 const config = useRuntimeConfig();
 const url: string = config.public.baseURL;
 
-const isDesktop = checkDesktop();
-
 const isPreProd: boolean = url.includes("preprod");
 const isCetaitMieuxAvant: boolean = url.includes("cetaitmieuxavant");
 
-const pageTitle = computed<string>(() => {
-  const page = findPage(route.path);
-  return page?.title || "";
-});
+const pageTitle = computed<string>(() => findPage(route.path)?.title || "");
 
 const watermark = computed<string | undefined>(() =>
   isPreProd ? "preprod" : isCetaitMieuxAvant ? "ctma" : undefined,
@@ -102,6 +96,20 @@ const updateNav = () => emit("update-nav");
         display: none;
       }
     }
+  }
+}
+
+.desktop-only {
+  display: block;
+  @media only screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
+}
+
+.mobile-only {
+  display: none;
+  @media only screen and (max-width: $mobile-max-width) {
+    display: block;
   }
 }
 </style>

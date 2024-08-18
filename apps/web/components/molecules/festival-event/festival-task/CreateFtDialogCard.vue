@@ -23,6 +23,7 @@ import type {
   FestivalTask,
   PreviewFestivalActivity,
 } from "@overbookd/festival-event";
+import { FT_URL } from "@overbookd/web-page";
 
 const router = useRouter();
 const ftStore = useFestivalTaskStore();
@@ -54,7 +55,7 @@ const createNewTask = async () => {
   await ftStore.create(blankFt);
 
   if (!selectedTask.value?.id) return;
-  await router.push({ path: `/ft/${selectedTask.value.id}` });
+  await router.push(`${FT_URL}/${selectedTask.value.id}`);
   close();
 };
 </script>

@@ -20,6 +20,7 @@ const FA_LIST_PAGE: PageInSummary = {
   description:
     "Liste des FAs, les FAs permettent de décrire tout ce qui va se passer sur le festival",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: ["fas", "fiches-activites", "animations"],
 };
 
@@ -28,6 +29,7 @@ const FA_PAGE: HiddenPage = {
   permission: READ_FA,
   to: `${FA_URL}/:id`,
   mobileSupport: true,
+  canBeFavorite: false,
 };
 
 const FT_LIST_PAGE: PageInSummary = {
@@ -38,6 +40,7 @@ const FT_LIST_PAGE: PageInSummary = {
   description:
     "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: ["fts", "fiche-taches"],
 };
 
@@ -46,6 +49,7 @@ const FT_PAGE: HiddenPage = {
   permission: READ_FT,
   to: `${FT_URL}/:id`,
   mobileSupport: true,
+  canBeFavorite: false,
 };
 
 const ANIMATION_TO_PUBLISH_PAGE: PageInSummary = {
@@ -56,17 +60,19 @@ const ANIMATION_TO_PUBLISH_PAGE: PageInSummary = {
   description:
     "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["animations", "communication", "publier", "publication", "comcom"],
 };
 
 const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
   icon: "mdi-chart-areaspline-variant",
-  title: "Stats",
+  title: "Statistiques",
   permission: VIEW_FESTIVAL_EVENTS_STATS,
   to: STATS_URL,
   description:
     "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport à l'édition précédente",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: [
     "statistiques",
     "stats",

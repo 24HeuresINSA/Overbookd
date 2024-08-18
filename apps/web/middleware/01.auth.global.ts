@@ -2,6 +2,7 @@ import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
 import { isHttpError } from "~/utils/http/api-fetch";
 import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
+import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 
 type Token = { exp: number };
 
@@ -19,7 +20,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
-    if (!needToBeLoggedIn(to)) return "/";
+    if (!needToBeLoggedIn(to)) return HOME_URL;
     return;
   }
 
@@ -32,7 +33,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     logout();
     if (!needToBeLoggedIn(to)) return;
     abortNavigation();
-    return "/login";
+    return LOGIN_URL;
   }
 });
 

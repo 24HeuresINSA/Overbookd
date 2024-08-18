@@ -1,12 +1,15 @@
 <template>
-  <nuxt-link class="application" to="/">
-    <img class="logo" :src="`/img/logo/${logo}`" @click="onClick" />
-    <span class="version">{{ versionString }}</span>
-  </nuxt-link>
+  <div class="application">
+    <nuxt-link class="application__link" :to="HOME_URL">
+      <img class="logo" :src="`/img/logo/${logo}`" @click="onClick" />
+      <span class="version">{{ versionString }}</span>
+    </nuxt-link>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { useTheme } from "vuetify";
+import { HOME_URL } from "@overbookd/web-page";
 import { isDesktop } from "~/utils/device/device.utils";
 import { pickRandomTheme } from "~/utils/theme/theme.utils";
 
@@ -50,24 +53,26 @@ const onClick = () => {
 
 <style lang="scss" scoped>
 .application {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  text-decoration: none;
-  margin-left: 6px;
+  &__link {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    text-decoration: none;
+    margin-left: 6px;
 
-  .logo {
-    max-width: 200px;
-    max-height: 51px;
-  }
+    .logo {
+      max-width: 200px;
+      max-height: 51px;
+    }
 
-  .version {
-    margin-top: 2px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: rgb(var(--v-theme-on-surface));
-    @media only screen and (max-width: $mobile-max-width) {
-      display: none;
+    .version {
+      margin-top: 2px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: rgb(var(--v-theme-on-surface));
+      @media only screen and (max-width: $mobile-max-width) {
+        display: none;
+      }
     }
   }
 }

@@ -38,12 +38,12 @@ export const openTask = (
 
 function openInNewTab(link: FestivalEventLink, id: number) {
   const router = useRouter();
-  const taskRoute = router.resolve({ path: `/${link}/${id}` });
+  const taskRoute = router.resolve(`${link}/${id}`);
   window.open(taskRoute.href, "_blank");
 }
 
 function open(event: PointerEvent, link: FestivalEventLink, id: number) {
   if (event.ctrlKey) return openInNewTab(link, id);
   const router = useRouter();
-  router.push({ path: `/${link}/${id}` });
+  router.push(`${link}/${id}`);
 }

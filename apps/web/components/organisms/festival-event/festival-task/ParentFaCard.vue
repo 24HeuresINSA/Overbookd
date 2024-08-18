@@ -3,7 +3,7 @@
     <v-card-title>FA associée</v-card-title>
 
     <v-card-text>
-      <NuxtLink :to="`/fa/${activity.id}`" class="activity">
+      <NuxtLink :to="`${FA_URL}/${activity.id}`" class="activity">
         <v-chip-group id="status">
           <v-chip :class="activity.status.toLowerCase()">
             {{ activity.id }}
@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { type FestivalTask, MATOS } from "@overbookd/festival-event";
+import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();
 const activity = computed<FestivalTask["festivalActivity"]>(

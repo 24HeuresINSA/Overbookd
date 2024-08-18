@@ -16,17 +16,18 @@
     </p>
     <p>
       Si tu veux t'inscrire en tant que bénévole sur le festival c'est par
-      <nuxt-link to="/register">ici</nuxt-link>
+      <nuxt-link :to="REGISTER_URL">ici</nuxt-link>
     </p>
     <v-btn text="Retour" class="return-btn" @click="returnToLogin" />
   </v-alert>
 </template>
 
 <script lang="ts" setup>
+import { LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
 import { SG_EMAIL } from "~/utils/mail/mail.constant";
 
 const router = useRouter();
-const returnToLogin = () => router.push("/login");
+const returnToLogin = () => router.push(LOGIN_URL);
 </script>
 
 <style lang="scss" scoped>

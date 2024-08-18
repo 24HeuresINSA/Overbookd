@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   ParseEnumPipe,
   Patch,
+  Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -17,7 +17,7 @@ import {
   ApiUnauthorizedResponse,
   ApiResponse,
   ApiBody,
-  ApiParam,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { PreferenceService } from "./preference.service";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
@@ -98,20 +98,20 @@ export class PreferenceController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(SET_FAVORITE_PAGES)
-  @Delete("me/favorite-pages/:page")
+  @Delete("me/favorite-pages")
   @ApiResponse({
     status: 200,
     description: "Updated favorite pages",
     type: PagesPreferenceResponseDto,
   })
-  @ApiParam({
+  @ApiQuery({
     name: "page",
     description: "Page to remove from favorite",
     enum: pagesURL,
   })
   removePageFromFavorites(
     @Request() { user }: RequestWithUserPayload,
-    @Param("page", new ParseEnumPipe(pagesURL)) page: PageURL,
+    @Query("page", new ParseEnumPipe(pagesURL)) page: PageURL,
   ): Promise<PagesPreferenceResponseDto> {
     return this.preferenceService.removePageFromFavorites(user.id, page);
   }

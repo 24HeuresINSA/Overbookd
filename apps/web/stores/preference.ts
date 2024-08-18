@@ -2,15 +2,28 @@ import type { PlanningPreference, Preference } from "@overbookd/http";
 import type { PageURL } from "@overbookd/web-page";
 import { PreferenceRepository } from "~/repositories/preference.repository";
 import { isHttpError } from "~/utils/http/api-fetch";
+import type { Page } from "~/utils/pages/navigation";
 
 type State = {
-  myPreferences: Preference | null;
+  myPreferences: Preference;
 };
 
 export const usePreferenceStore = defineStore("preference", {
   state: (): State => ({
-    myPreferences: null,
+    myPreferences: {
+      paperPlanning: null,
+      favoritePages: [],
+    },
   }),
+  getters: {
+    isPageFavorite:
+      (state) =>
+      (page: Page): boolean => {
+        return state.myPreferences.favoritePages.some(
+          (favoritePage) => favoritePage === page.to,
+        );
+      },
+  },
   actions: {
     async fetchMyPreferences() {
       const res = await PreferenceRepository.getMyPreferences();
@@ -23,7 +36,6 @@ export const usePreferenceStore = defineStore("preference", {
         await PreferenceRepository.updatePlanningPreference(preference);
       if (isHttpError(res)) return;
       sendSuccessNotification("Ta préférence a été mise à jour");
-      if (!this.myPreferences) return;
       this.myPreferences.paperPlanning = res.paperPlanning;
     },
 
@@ -31,7 +43,6 @@ export const usePreferenceStore = defineStore("preference", {
       const res = await PreferenceRepository.addPageToFavorites(page);
       if (isHttpError(res)) return;
       sendSuccessNotification("La page a été ajoutée à tes favoris");
-      if (!this.myPreferences) return;
       this.myPreferences.favoritePages = res.favoritePages;
     },
 
@@ -39,7 +50,6 @@ export const usePreferenceStore = defineStore("preference", {
       const res = await PreferenceRepository.removePageFromFavorites(page);
       if (isHttpError(res)) return;
       sendSuccessNotification("La page a été retirée de tes favoris");
-      if (!this.myPreferences) return;
       this.myPreferences.favoritePages = res.favoritePages;
     },
   },

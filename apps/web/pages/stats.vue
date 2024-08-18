@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Statistiques 📈</h1>
+  <DesktopPageTitle />
   <v-card>
     <v-card-text>
       <div class="switch">

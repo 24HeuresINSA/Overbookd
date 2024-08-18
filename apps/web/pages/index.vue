@@ -1,4 +1,4 @@
 <template>
-  <h1 class="page-title">Page d'accueil</h1>
+  <DesktopPageTitle />
   <p>Work in progress...</p>
 </template>

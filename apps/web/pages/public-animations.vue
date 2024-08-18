@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Animations à publier</h1>
+  <DesktopPageTitle />
   <v-card>
     <v-data-table
       :headers="tableHeaders"

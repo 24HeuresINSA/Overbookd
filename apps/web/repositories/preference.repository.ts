@@ -21,15 +21,16 @@ export class PreferenceRepository {
   }
 
   static addPageToFavorites(page: PageURL) {
-    return HttpClient.post<PagesPreference>(
+    return HttpClient.patch<PagesPreference>(
       `${this.basePath}/me/favorite-pages`,
       { page },
     );
   }
 
   static removePageFromFavorites(page: PageURL) {
-    return HttpClient.delete<PagesPreference>(
-      `${this.basePath}/me/favorite-pages/${page}`,
-    );
+    return HttpClient.delete<PagesPreference>({
+      path: `${this.basePath}/me/favorite-pages`,
+      params: { page },
+    });
   }
 }

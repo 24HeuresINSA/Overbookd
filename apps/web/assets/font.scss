@@ -1,14 +1,3 @@
-h1.page-title {
-  font-size: 1.6rem;
-  line-height: 1.2;
-  font-weight: 600;
-  margin-bottom: 10px;
-
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
-}
-
 .important {
   color: red !important;
   font-weight: bold;

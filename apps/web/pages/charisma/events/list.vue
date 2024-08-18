@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Participations aux événements charismatiques</h1>
+  <DesktopPageTitle title="Participations aux événements charismatiques" />
   <v-card>
     <v-card-text>
       <v-data-table

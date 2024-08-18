@@ -39,7 +39,7 @@
 import { nicknameOrFirstName } from "@overbookd/user";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
-import { MY_PROFILE_URL } from "@overbookd/web-page";
+import { LOGIN_URL, MY_PROFILE_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/theme/theme.utils";
 
@@ -69,7 +69,7 @@ const balanceClassColor = computed<string>(() => {
 const openProfile = () => router.push(MY_PROFILE_URL);
 const logout = async () => {
   authStore.logout();
-  await router.push({ path: "/login" });
+  await router.push(LOGIN_URL);
   userStore.clearLoggedUser();
 };
 

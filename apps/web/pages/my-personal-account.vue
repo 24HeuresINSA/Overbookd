@@ -1,4 +1,5 @@
 <template>
+  <DesktopPageTitle />
   <div class="personal-account">
     <div class="summary">
       <div class="balance">
@@ -41,7 +42,7 @@ const balance = computed<string>(() =>
 .personal-account {
   display: flex;
   justify-content: center;
-  height: calc(100vh - #{$header-height} - 20px);
+  height: 100%;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     margin: 0 5px;

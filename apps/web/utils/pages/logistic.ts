@@ -20,6 +20,7 @@ const GEAR_CATALOG_PAGE: PageInSummary = {
   description:
     "Permet de définir l'ensemble du matériel disponible sur le festival",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: [
     "catalogue-matos",
     "catalogue-materiel",
@@ -36,6 +37,7 @@ const INVENTORY_PAGE: PageInSummary = {
   description:
     "Permet de compter l'ensemble du matériel appartenant à l'association",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["inventaire", "matos", "materiel", "logistique"],
 };
 
@@ -47,6 +49,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   description:
 //     "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["recap-matos", "dashboard", "demandes-matos", "demandes-materiel"],
 // };
 
@@ -57,6 +60,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   to: PURCHASE_GEARS_URL,
 //   description: "Permet de gérer les achats de matériel",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
 // };
 
@@ -67,6 +71,7 @@ const INVENTORY_PAGE: PageInSummary = {
 //   to: BORROW_GEARS_URL,
 //   description: "Permet de gérer les emprunts de matériel",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
 // };
 
@@ -78,6 +83,7 @@ const LOCATION_PAGE: PageInSummary = {
   description:
     "Permet de définir l'ensemble des lieux disponible sur le festival",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["lieux-signaletique", "localisation"],
 };
 
@@ -89,6 +95,7 @@ const SIGNAGE_CATALOG_PAGE: PageInSummary = {
   description:
     "Permet de définir l'ensemble de la signalétique disponible sur le festival",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: [
     "catalogue-signaletique",
     "panneau",

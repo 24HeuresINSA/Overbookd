@@ -33,6 +33,8 @@
 </template>
 
 <script lang="ts" setup>
+import { LOGIN_URL } from "@overbookd/web-page";
+
 const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -46,7 +48,7 @@ const approveEndUserLicenceAgreement = async () => {
 };
 const logout = async () => {
   authStore.logout();
-  await router.push({ path: "/login" });
+  await router.push(LOGIN_URL);
   userStore.clearLoggedUser();
 };
 </script>

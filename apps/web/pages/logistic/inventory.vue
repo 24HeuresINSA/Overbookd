@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Inventaire Matos</h1>
+  <DesktopPageTitle />
   <InventoryImport v-if="importing" @import-done="switchToDisplay" />
   <InventoryListingCard v-else @ask-init="switchToImport" />
 </template>

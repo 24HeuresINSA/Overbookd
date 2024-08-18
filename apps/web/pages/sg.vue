@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Gestion des CP</h1>
+  <DesktopPageTitle />
   <div class="sg-page">
     <SgSettingsCard
       v-model:mode="mode"

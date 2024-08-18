@@ -23,6 +23,7 @@ const CONFIGURATION_PAGE: PageInSummary = {
   to: CONFIGURATION_URL,
   description: "Permet de configurer Overbookd",
   mobileSupport: true,
+  canBeFavorite: true,
   keywords: ["administration", "system", "configuration"],
 };
 
@@ -33,6 +34,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   to: REGISTRATIONS_STAFF_URL,
   description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: [
     "nouveaux-arrivants",
     "inscriptions",
@@ -49,6 +51,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
 //   to: REGISTRATIONS_VOLUNTEER_URL,
 //   description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["nouveaux-arrivants", "inscriptions", "admissions", "benevoles", "softs"],
 // };
 
@@ -60,6 +63,7 @@ const CONTRIBUTIONS_PAGE: PageInSummary = {
   description:
     "Permet d'enregistrer les cotisations des adhérents à l'association",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["cotisations", "contributions", "cotiz"],
 };
 
@@ -71,6 +75,7 @@ const SG_PAGE: PageInSummary = {
   description:
     "Permet de répartir les consommations des comptes perso aux adhérants",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: [
     "comptes-perso",
     "consommations",
@@ -89,6 +94,7 @@ const TRANSACTIONS_PAGE: PageInSummary = {
   to: TRANSACTIONS_URL,
   description: "Permet de visualiser les transactions effectuées sur Overbookd",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["virements", "compte-perso", "transactions"],
 };
 
@@ -100,6 +106,7 @@ const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
   description:
     "Permet de gérer le charisme des bénévoles via la création d'événements",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["charisme", "evenements"],
 };
 
@@ -111,6 +118,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
   description:
     "Permet de voir la liste des participations aux événements charismatiques",
   mobileSupport: false,
+  canBeFavorite: true,
   keywords: ["charisme", "evenements", "participations"],
 };
 
@@ -122,6 +130,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   description:
 //     "Permet de définir les points de charisme des créneaux du festival",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["charisme-dispos", "charisme-disponibilites"],
 // };
 
@@ -132,6 +141,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   to: ASSIGNMENT_ORGA_TASK_URL,
 //   description: "Permet d'affecter des bénévoles à des tâches",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["orga-tache", "affectation"],
 // };
 
@@ -142,6 +152,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   to: ASSIGNMENT_TASK_ORGA_URL,
 //   description: "Permet d'affecter des tâches à des bénévoles",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["tache-orga", "affectation"],
 // };
 
@@ -153,6 +164,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
 //   description:
 //     "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
 //   mobileSupport: false,
+//   canBeFavorite: true,
 //   keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
 // };
 

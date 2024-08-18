@@ -1,5 +1,5 @@
 <template>
-  <h1 class="page-title">Catalogue Matos</h1>
+  <DesktopPageTitle />
   <CatalogGearListingCard />
 </template>
 
