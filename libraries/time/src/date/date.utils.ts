@@ -4,8 +4,10 @@ import {
 } from "../duration/duration.constant.js";
 import { PARIS_TIMEZONE } from "./date.js";
 
+type DateSeed = Date | string | number;
+
 // return format dd/mm/yyyy hh:mm
-export function formatDateWithMinutes(date: string | Date): string {
+export function formatDateWithMinutes(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     year: "numeric",
@@ -18,7 +20,7 @@ export function formatDateWithMinutes(date: string | Date): string {
 }
 
 // return format dd/mm/yyyy
-export function formatDate(date: string | Date): string {
+export function formatDate(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     year: "numeric",
@@ -29,7 +31,7 @@ export function formatDate(date: string | Date): string {
 }
 
 // return format month YYYY
-export function formatMonthWithYear(date: string | Date): string {
+export function formatMonthWithYear(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -76,7 +78,7 @@ export function roundMinutes(date: Date, round: number): Date | null {
 }
 
 // return month YYYY
-export function formatDateWithExplicitMonth(date: Date | string): string {
+export function formatDateWithExplicitMonth(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     year: "numeric",
@@ -86,7 +88,7 @@ export function formatDateWithExplicitMonth(date: Date | string): string {
 }
 
 // return dd month YYYY
-export function formatDateWithExplicitMonthAndDay(date: Date | string): string {
+export function formatDateWithExplicitMonthAndDay(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     year: "numeric",
@@ -96,14 +98,14 @@ export function formatDateWithExplicitMonthAndDay(date: Date | string): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatDateDayName(date: Date | string): string {
+export function formatDateDayName(date: DateSeed): string {
   return new Date(date).toLocaleDateString("fr-FR", {
     ...PARIS_TIMEZONE,
     weekday: "short",
   });
 }
 
-export function formatDateDayNumber(date: Date | string): string {
+export function formatDateDayNumber(date: DateSeed): string {
   return new Date(date).toLocaleDateString("fr-FR", {
     ...PARIS_TIMEZONE,
     day: "numeric",
@@ -114,7 +116,7 @@ export function computeTomorrowDate(date: Date): Date {
   return new Date(date.getTime() + ONE_DAY_IN_MS);
 }
 
-export function formatDateToHumanReadable(date: Date | string): string {
+export function formatDateToHumanReadable(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     dateStyle: "long",
@@ -123,7 +125,7 @@ export function formatDateToHumanReadable(date: Date | string): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatDateWithHoursAndMinutesOnly(date: string | Date): string {
+export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     hour: "2-digit",

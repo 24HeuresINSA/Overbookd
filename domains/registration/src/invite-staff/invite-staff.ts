@@ -1,6 +1,10 @@
 import { jwtDecode } from "jwt-decode";
 import { SignJWT, jwtVerify } from "jose";
-import { ONE_SECOND_IN_MS } from "@overbookd/time";
+import {
+  formatDateWithExplicitMonthAndDay,
+  ONE_SECOND_IN_MS,
+} from "@overbookd/time";
+import { LOGIN_URL } from "@overbookd/web-page";
 
 export type WithExpiration = {
   exp: number;
@@ -21,7 +25,7 @@ type CheckInvitation = {
 
 export class InviteStaff {
   static async byLink({ domain, secret }: LinkGeneration): Promise<URL> {
-    const baseUrl = new URL(`https://${domain}/register`);
+    const baseUrl = new URL(`https://${domain}${LOGIN_URL}`);
     const secretKey = new TextEncoder().encode(secret);
     const token = await new SignJWT()
       .setExpirationTime("30 days")
@@ -40,8 +44,7 @@ export class InviteStaff {
 
       if (InviteStaff.isPast(expirationInMs)) return LINK_EXPIRED;
 
-      const expirationDate =
-        InviteStaff.formatDateWithExplicitMonthAndDay(expirationInMs);
+      const expirationDate = formatDateWithExplicitMonthAndDay(expirationInMs);
 
       return `Le lien expire le ${expirationDate}`;
     } catch {
@@ -61,14 +64,5 @@ export class InviteStaff {
 
   private static isPast(expirationInMs: number) {
     return expirationInMs < Date.now();
-  }
-
-  private static formatDateWithExplicitMonthAndDay(date: number): string {
-    const displayOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
   }
 }

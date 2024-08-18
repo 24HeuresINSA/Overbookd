@@ -20,10 +20,7 @@
               inputmode="email"
               type="text"
               bg-color="white"
-              required
               autofocus
-              outlined
-              solo
               @keydown.enter="login"
             />
           </v-row>
@@ -33,10 +30,7 @@
               label="Mot de passe"
               type="password"
               bg-color="white"
-              required
-              outlined
               clearable
-              solo
               @keydown.enter="login"
             />
           </v-row>
@@ -53,7 +47,7 @@
               text="S'inscrire"
               color="secondary"
               elevation="2"
-              :to="REGISTER_URL"
+              :to="registerLink"
               rounded="xl"
               class="btn btn-secondary"
             />
@@ -141,10 +135,18 @@ definePageMeta({ layout: false });
 
 const config = useRuntimeConfig();
 const version = config.public.version;
-const router = useRouter();
 
+const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
-const { authenticated } = storeToRefs(authStore);
+
+const token = computed<string | undefined>(() => {
+  const tokenParam = route.query.token;
+  return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
+});
+const registerLink = computed<string>(() =>
+  token.value ? `${REGISTER_URL}?token=${token.value}` : REGISTER_URL,
+);
 
 const randomURL =
   BACKGROUNDS_URL[Math.floor(Math.random() * BACKGROUNDS_URL.length)];
@@ -163,7 +165,7 @@ const login = async () => {
     );
   }
   await authStore.login(credentials.value);
-  if (authenticated) router.push(HOME_URL);
+  if (authStore.authenticated) router.push(HOME_URL);
 };
 </script>
 
