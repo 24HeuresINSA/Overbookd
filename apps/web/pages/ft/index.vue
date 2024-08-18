@@ -61,6 +61,7 @@
     size="large"
     color="primary"
     class="btn-plus"
+    rounded="pill"
     @click="openNewTaskDialog"
   />
 

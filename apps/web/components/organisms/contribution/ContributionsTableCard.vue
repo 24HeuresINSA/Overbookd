@@ -19,8 +19,7 @@
           />
           <v-btn
             :text="toggleBtnLabbel"
-            color="primary"
-            size="large"
+            color="secondary"
             @click="toggleOutToDateCustomers"
           />
         </div>

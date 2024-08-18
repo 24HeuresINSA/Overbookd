@@ -5,7 +5,7 @@ const RED_24 = "#ED1D45";
 const SUCCESS = "#6CCF1B";
 
 export const WHITE = "#FFFFFF";
-const BLACK = "#2A2A2A";
+export const BLACK = "#2A2A2A";
 
 export const opacityVariables = {
   "high-emphasis-opacity": 0.98,

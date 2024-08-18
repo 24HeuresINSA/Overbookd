@@ -13,7 +13,7 @@
       :disabled="isAmountInvalid"
       @click="editContribution"
     />
-    <v-btn text="Supprimer" color="error" @click="removeContribution" />
+    <v-btn text="Supprimer" color="tertiary" @click="removeContribution" />
   </div>
 </template>
 

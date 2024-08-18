@@ -31,6 +31,8 @@
             v-model="item.hours"
             type="number"
             :rules="[isNumber, isInteger, min(0)]"
+            density="compact"
+            suffix="h"
             hide-details
             @update:model-value="updateParticipation(item, $event)"
           />

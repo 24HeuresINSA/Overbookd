@@ -8,6 +8,7 @@
     :disabled="disabled"
     :hide-details="hideDetails"
     :closable-chips="closableChips"
+    :prepend-icon="prependIcon"
     multiple
     clearable
     clear-on-select
@@ -51,6 +52,10 @@ const props = defineProps({
   closableChips: {
     type: Boolean,
     default: false,
+  },
+  prependIcon: {
+    type: String,
+    default: undefined,
   },
   list: {
     type: Array as PropType<Team[] | null>,

@@ -10,36 +10,49 @@
         </v-btn-toggle>
       </div>
 
-      <v-list v-if="hasErrors">
-        <v-list-item v-for="(reason, key) in errors" :key="key">
-          <v-list-item-title class="settings__input-error">
-            {{ reason }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
+      <div v-if="hasErrors" class="errors">
+        <span v-for="(reason, key) in errors" :key="key" class="errors__text">
+          {{ reason }}
+        </span>
+      </div>
 
       <div v-if="isMode(CASK_MODE)">
-        <MoneyField v-model="totalPrice" label="Prix du fût" />
-        <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
+        <MoneyField
+          v-model="totalPrice"
+          label="Prix du fût"
+          class="settings__field"
+          hide-details
+        />
         <MoneyField
           v-model="caskStickPrice"
           label="Prix du bâton"
-          class="settings__field-without-details"
+          class="settings__field"
           readonly
           hide-details
         />
+        <p class="stick-quantity">
+          Nombre total de bâtons : {{ totalConsumptions }}
+        </p>
       </div>
 
       <div v-if="isMode(CLOSET_MODE)">
-        <MoneyField v-model="closetStickPrice" label="Prix du bâton" :min="1" />
-        <p>Nombre total de bâtons : {{ totalConsumptions }}</p>
+        <MoneyField
+          v-model="closetStickPrice"
+          label="Prix du bâton"
+          class="settings__field"
+          :min="1"
+          hide-details
+        />
+        <p class="stick-quantity">
+          Nombre total de bâtons : {{ totalConsumptions }}
+        </p>
       </div>
 
       <div v-if="isMode(DEPOSIT_MODE)">
         <MoneyField
           v-model="totalConsumptions"
           label="Dépôt total"
-          class="settings__field-without-details"
+          class="settings__field"
           readonly
           hide-details
         />
@@ -48,7 +61,7 @@
         text="Enregistrer"
         :disabled="hasErrors"
         color="primary"
-        class="button"
+        class="settings__button"
         @click="saveTransactions"
       />
 
@@ -57,7 +70,7 @@
       <MoneyField
         v-model="totalPersonalAccountBalance"
         label="Solde de la caisse"
-        class="settings__field-without-details"
+        class="settings__field"
         readonly
         hide-details
       />
@@ -70,6 +83,7 @@
           variant="outlined"
           :items="barrels"
           item-title="drink"
+          class="settings__field"
           return-object
           hide-details
           @update:model-value="updateTotalPriceByBarrel"
@@ -79,7 +93,7 @@
         </p>
         <v-btn
           text="Gestion des fûts"
-          class="button mt-3"
+          class="settings__button"
           color="tertiary"
           @click="openBarrelsDialog"
         />
@@ -87,8 +101,8 @@
 
       <v-divider class="divider" />
       <v-btn
-        text="Envoyer un mail aux CP négatifs"
-        class="button"
+        text="Mail aux CP négatifs"
+        class="settings__button"
         color="secondary"
         :href="negativeBalanceMailLink"
       />
@@ -192,36 +206,41 @@ const negativeBalanceMailLink = computed<string>(() => {
     gap: 20px;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 5px;
     h2 {
       font-size: 1.3rem;
       font-weight: 500;
     }
   }
 
-  &__input-error {
+  &__field {
+    margin-top: 15px;
+  }
+
+  &__button {
+    width: 100%;
+    margin: 8px 0;
+  }
+}
+
+.errors {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 10px 0 10px;
+
+  &__text {
     text-align: center;
     color: red;
+    font-weight: 500;
     hyphens: auto;
-  }
-
-  &__field-without-details {
-    margin-bottom: 15px;
+    text-align: center;
   }
 }
 
-.divider {
-  margin: 16px 0;
-}
-
-.button {
-  width: 100%;
-}
-
-.barrel-date {
+.barrel-date,
+.stick-quantity {
   font-size: 0.9rem;
-  color: grey;
-  margin-top: 4px;
-  margin-bottom: 15px;
+  opacity: 0.8;
+  margin: 4px 0;
 }
 </style>

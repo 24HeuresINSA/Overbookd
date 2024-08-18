@@ -1,10 +1,11 @@
 import type { ThemeDefinition } from "vuetify";
-
 import {
+  BLACK,
   blueMainColors,
   opacityVariables,
   redMainColors,
   statusColors,
+  WHITE,
   yellowMainColors,
 } from "./common";
 
@@ -16,9 +17,9 @@ export const lightThemes = [
 
 const lightBackgroundColors = {
   background: "#F4F4F4",
-  "on-background": "#2A2A2A",
-  surface: "#FFFFFF",
-  "on-surface": "#2A2A2A",
+  "on-background": BLACK,
+  surface: WHITE,
+  "on-surface": BLACK,
 };
 
 export const blueLightTheme: ThemeDefinition = {

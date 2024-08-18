@@ -9,7 +9,7 @@
       <div
         v-for="reviewer of reviewerTeams"
         :key="reviewer.code"
-        class="desktop"
+        class="desktop-only"
       >
         <v-btn-toggle
           v-model="filters[reviewer.code]"
@@ -82,19 +82,14 @@ const updateReviewerParams = (
 </script>
 
 <style lang="scss" scoped>
-.desktop {
-  @media screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
-}
-
 .review-filter {
   align-items: center;
   gap: 5px;
-  height: fit-content;
+  height: fit-content !important;
 
   &__icon {
     margin-top: 5px;
+    margin-right: 5px;
   }
   &__btn {
     padding: 8px;

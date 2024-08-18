@@ -11,6 +11,11 @@ import {
   yellowLightTheme,
 } from "~/utils/theme/light";
 
+const commonFieldDefaultSettings = {
+  variant: "outlined",
+  density: "comfortable",
+};
+
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     ssr: false,
@@ -45,12 +50,15 @@ export default defineNuxtPlugin((nuxtApp) => {
           VBtn: {
             variant: "elevated",
             color: "primary",
-            style: {
-              marginInlineStart: 0,
-            },
           },
         },
       },
+      VField: { style: { borderRadius: "12px" } },
+      VTextField: commonFieldDefaultSettings,
+      VSelect: commonFieldDefaultSettings,
+      VAutocomplete: commonFieldDefaultSettings,
+      VTextarea: commonFieldDefaultSettings,
+      VBtn: { style: { borderRadius: "12px" } },
     },
   });
 

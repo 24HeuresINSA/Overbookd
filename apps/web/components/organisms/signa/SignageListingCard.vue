@@ -4,13 +4,12 @@
       <div class="filters">
         <v-text-field
           v-model="searchName"
-          append-icon="mdi-hammer-screwdriver"
           label="Nom de la signalisation"
-          autofocus
-          clearable
           class="filter__field"
           clear-icon="mdi-close-circle-outline"
-          counter
+          autofocus
+          clearable
+          hide-details
         />
 
         <v-select
@@ -20,6 +19,7 @@
           :items="signageTypeValues"
           class="filter__field"
           clearable
+          hide-details
         />
 
         <div class="create-signa-container">

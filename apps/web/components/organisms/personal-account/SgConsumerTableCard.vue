@@ -14,7 +14,13 @@
       >
         <template #top>
           <div class="consumer-table__filters">
-            <v-btn-toggle v-model="teamFilter" color="primary" tile multiple>
+            <v-btn-toggle
+              v-model="teamFilter"
+              color="primary"
+              class="team-filter"
+              tile
+              multiple
+            >
               <v-btn :value="HARD_CODE"> Hard</v-btn>
               <v-btn :value="VIEUX_CODE"> Vieux </v-btn>
             </v-btn-toggle>
@@ -31,12 +37,19 @@
         </template>
 
         <template #item.balance="{ item }">
-          <MoneyField v-model="item.balance" readonly hide-details hide-label />
+          <MoneyField
+            v-model="item.balance"
+            dense
+            readonly
+            hide-details
+            hide-label
+          />
         </template>
 
         <template #item.recap="{ item }">
           <MoneyField
             v-model="calculatedConsumption[item.id]"
+            dense
             readonly
             hide-details
             hide-label
@@ -47,8 +60,8 @@
           <v-text-field
             v-if="isExpenseMode"
             v-model="item.newConsumption"
-            label="Nombre de bâtons"
             :rules="[min(0), isInteger]"
+            density="compact"
             type="number"
             hide-details
             @update:model-value="updateNewConsumption(item, $event)"
@@ -56,7 +69,7 @@
           <MoneyField
             v-else
             v-model="item.newConsumption"
-            label="Moula"
+            dense
             hide-details
             @update:model-value="updateNewConsumption(item, $event)"
           />
@@ -106,6 +119,7 @@ const props = defineProps({
 
 const headers = computed<TableHeaders>(() => {
   const recapTitle = isMode(DEPOSIT_MODE) ? "Nouveau dépôt" : "Nouvelle conso";
+  const actionTitle = isMode(DEPOSIT_MODE) ? "Moula" : "Nombre de bâtons";
   return [
     { title: "Nom", value: "firstname", width: "30%", sortable: true },
     { title: "CP", value: "balance", width: "20%", sortable: true },
@@ -115,7 +129,7 @@ const headers = computed<TableHeaders>(() => {
       width: "20%",
       sortable: true,
     },
-    { title: "Action", value: "action", width: "30%" },
+    { title: actionTitle, value: "action", width: "30%" },
   ];
 });
 
@@ -183,6 +197,11 @@ const updateNewConsumption = (
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+  }
+
+  .team-filter {
+    display: flex;
+    gap: 5px;
   }
 }
 </style>

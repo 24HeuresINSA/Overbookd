@@ -46,14 +46,23 @@ const userStore = useUserStore();
 const personalAccountStore = usePersonalAccountStore();
 const transactionStore = useTransactionStore();
 
-personalAccountStore.fetchBarrels();
+const barrels = computed<ConfiguredBarrel[]>(
+  () => personalAccountStore.barrels,
+);
+const selectedBarrel = ref<ConfiguredBarrel | null>(null);
 
 const consumerLoading = ref<boolean>(
   userStore.personalAccountConsumers.length === 0,
 );
-userStore.fetchPersonalAccountConsumers().then(() => {
-  consumerLoading.value = false;
-  resetConsumers();
+
+onMounted(async () => {
+  await personalAccountStore.fetchBarrels();
+  selectedBarrel.value = barrels.value.at(0) ?? null;
+
+  userStore.fetchPersonalAccountConsumers().then(() => {
+    consumerLoading.value = false;
+    resetConsumers();
+  });
 });
 
 const consumers = ref<ConsumerWithConsumption[]>([]);
@@ -64,12 +73,6 @@ const resetConsumers = () => {
   }));
 };
 
-const barrels = computed<ConfiguredBarrel[]>(
-  () => personalAccountStore.barrels,
-);
-const selectedBarrel = ref<ConfiguredBarrel | null>(
-  barrels.value.at(0) ?? null,
-);
 const totalPrice = ref<number>(barrels.value.at(0)?.price ?? 0);
 const totalConsumptions = computed<number>(() => {
   return consumers.value.reduce(

@@ -11,7 +11,7 @@
         <v-text-field
           v-model="search"
           label="Chercher une équipe"
-          class="mx-4"
+          hide-details
         />
       </template>
 
@@ -38,7 +38,7 @@
         <v-btn
           text="Ajouter une équipe"
           color="primary"
-          class="mr-2"
+          class="mr-3"
           @click="openAddTeamDialog"
         />
       </template>

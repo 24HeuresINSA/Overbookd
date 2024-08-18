@@ -22,91 +22,99 @@
           @close="removeTeam"
         />
       </div>
-      <div v-if="canManageUsers" class="team-add">
-        <SearchTeams
-          v-model="newTeams"
-          label="Choix de l'équipe"
+      <div class="volunteer-form">
+        <div v-if="canManageUsers" class="team-add">
+          <SearchTeams
+            v-model="newTeams"
+            label="Equipe à ajouter"
+            prepend-icon="mdi-account-group"
+            hide-details
+            closable-chips
+            :list="assignableTeams"
+          />
+          <v-btn
+            icon="mdi-plus"
+            :disabled="hasNotNewTeamToAdd"
+            color="primary"
+            @click="addTeams"
+          />
+        </div>
+
+        <v-text-field
+          v-show="canManageUsers"
+          v-model="nickname"
+          label="Surnom"
+          prepend-icon="mdi-account"
           hide-details
-          closable-chips
-          :list="assignableTeams"
+          :readonly="!canManageUsers"
         />
-        <v-btn
-          icon="mdi-plus"
-          :disabled="hasNotNewTeamToAdd"
-          @click="addTeams"
+
+        <v-text-field
+          v-model="email"
+          label="Email"
+          inputmode="email"
+          :rules="[rules.required, rules.email, rules.insaEmail]"
+          persistent-hint
+          :readonly="!canManageUsers"
+          prepend-icon="mdi-send"
+          hide-details
+          @click:prepend="sendEmail"
         />
-      </div>
 
-      <v-text-field
-        v-show="canManageUsers"
-        v-model="nickname"
-        label="Surnom"
-        prepend-icon="mdi-account"
-        :readonly="!canManageUsers"
-      />
+        <v-text-field
+          v-model="phone"
+          label="Numéro de téléphone"
+          :readonly="!canManageUsers"
+          :rules="[rules.required, rules.mobilePhone]"
+          prepend-icon="mdi-phone"
+          hide-details
+          @click:prepend="callPhoneNumber"
+        />
 
-      <v-text-field
-        v-model="email"
-        label="Email"
-        inputmode="email"
-        :rules="[rules.required, rules.email, rules.insaEmail]"
-        persistent-hint
-        :readonly="!canManageUsers"
-        prepend-icon="mdi-send"
-        @click:prepend="sendEmail"
-      />
+        <div>
+          <h3>Commentaire</h3>
+          <p>{{ volunteer.comment ?? "Aucun commentaire" }}</p>
+        </div>
 
-      <v-text-field
-        v-model="phone"
-        label="Numéro de téléphone"
-        :readonly="!canManageUsers"
-        :rules="[rules.required, rules.mobilePhone]"
-        prepend-icon="mdi-phone"
-        @click:prepend="callPhoneNumber"
-      />
+        <v-textarea
+          v-show="canManageUsers"
+          v-model="note"
+          label="Note des humains"
+          rows="3"
+          hide-details
+        />
 
-      <div>
-        <h3>Commentaire</h3>
-        <p>{{ volunteer.comment ?? "Aucun commentaire" }}</p>
-      </div>
-
-      <v-textarea
-        v-show="canManageUsers"
-        v-model="note"
-        class="comment-input"
-        label="Note des humains"
-        rows="3"
-      />
-
-      <div class="friends">
-        <h3>Amis</h3>
-        <div class="friends__list">
-          <v-chip
-            v-for="friend in selectedVolunteerFriends"
-            :key="friend.id"
-            :closable="canManageUsers"
-            @click:close="removeFriend(friend)"
-          >
-            {{ buildUserName(friend) }}
-          </v-chip>
-          <span v-show="selectedVolunteerFriends.length === 0">
-            Aucun ami
-          </span>
+        <div class="friends">
+          <h3>Amis</h3>
+          <div class="friends__list">
+            <v-chip
+              v-for="friend in selectedVolunteerFriends"
+              :key="friend.id"
+              :closable="canManageUsers"
+              @click:close="removeFriend(friend)"
+            >
+              {{ buildUserName(friend) }}
+            </v-chip>
+            <span v-show="selectedVolunteerFriends.length === 0">
+              Aucun ami
+            </span>
+          </div>
+          <SearchFriend
+            v-show="canManageUsers"
+            v-model="newFriend"
+            title="Ajouter un ami"
+            class="friends__input"
+            hide-details
+            @update:model-value="sendFriendRequest"
+          />
         </div>
       </div>
-
-      <SearchFriend
-        v-show="canManageUsers"
-        v-model="newFriend"
-        class="friend-search"
-        @update:model-value="sendFriendRequest"
-      />
     </template>
 
     <template #actions>
       <div class="action-btns">
         <v-btn
-          text="Changer les infos personnelles"
+          text="Enregistrer les informations"
           color="success"
           size="large"
           @click="savePersonalData"
@@ -222,7 +230,6 @@ const sendFriendRequest = () => {
   userStore.addFriendToUser(volunteerId.value, newFriend.value);
   newFriend.value = null;
 };
-
 const removeFriend = (friend: User) => {
   userStore.removeFriendFromUser(volunteerId.value, friend);
 };
@@ -264,7 +271,13 @@ const callPhoneNumber = () => {
   align-items: center;
   gap: 5px;
   h2 {
-    line-height: 1;
+    font-size: 1.3em;
+    line-height: 1.1;
+  }
+  .profile-picture {
+    max-width: 160px;
+    max-height: 160px;
+    font-size: 120px;
   }
   @media only screen and (max-width: $mobile-max-width) {
     .profile-picture {
@@ -277,23 +290,28 @@ const callPhoneNumber = () => {
 
 .charisma {
   text-align: center;
-  font-size: 1.2em;
-  margin-bottom: 3px;
+  font-size: 1em;
 }
 
 .team-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
   justify-content: center;
+  gap: 5px;
+  margin-top: 5px;
 }
 
 .team-add {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 15px;
+}
+
+.volunteer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 10px;
 }
 
 .friends {
@@ -307,11 +325,9 @@ const callPhoneNumber = () => {
     gap: 10px;
     margin: 0;
   }
-}
-
-.friend-search {
-  margin-top: 10px;
-  margin-left: 10px;
+  &__input {
+    margin-top: 5px;
+  }
 }
 
 .action-btns {

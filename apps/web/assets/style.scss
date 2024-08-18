@@ -1,3 +1,15 @@
+.desktop-only {
+  @media screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
+}
+
+.mobile-only {
+  @media screen and (min-width: $mobile-max-width) {
+    display: none;
+  }
+}
+
 @mixin background-color-by-status() {
 
   &.validated,

@@ -4,23 +4,14 @@
     :items="permissions"
     :items-per-page="-1"
     :search="search"
-    class="my-4"
     density="comfortable"
   >
     <template #top>
       <v-text-field
         v-model="search"
         label="Chercher une permission"
-        class="mx-4"
+        hide-details
       />
-    </template>
-
-    <template #item.name="{ item }">
-      {{ item.name }}
-    </template>
-
-    <template #item.description="{ item }">
-      {{ item.description }}
     </template>
 
     <template #item.teams="{ item }">
@@ -45,31 +36,11 @@
         />
         <v-btn
           icon="mdi-trash-can"
-          density="comfortable"
+          size="small"
+          variant="flat"
           @click="removePermission(item)"
         />
       </div>
-    </template>
-
-    <template #footer.prepend>
-      <v-text-field
-        v-model="newPermissionName"
-        type="text"
-        placeholder="Nom"
-        class="w-1/3 px-4"
-      />
-      <v-text-field
-        v-model="newPermissionDescription"
-        type="text"
-        placeholder="Description"
-        class="w-1/3 px-4"
-      />
-      <v-btn
-        text="Ajouter une permission"
-        color="primary"
-        class="mr-2"
-        @click="addPermission"
-      />
     </template>
   </v-data-table>
 </template>
@@ -88,20 +59,10 @@ const headers = [
 ];
 
 const search = ref<string>("");
-const newPermissionName = ref<string>("");
-const newPermissionDescription = ref<string>("");
 
 const permissions = computed<Permission[]>(() => permissionStore.permissions);
 permissionStore.fetchPermissions();
 
-const addPermission = async () => {
-  await permissionStore.createPermission({
-    name: newPermissionName.value,
-    description: newPermissionDescription.value,
-  });
-  newPermissionName.value = "";
-  newPermissionDescription.value = "";
-};
 const removePermission = async (permission: Permission) => {
   await permissionStore.removePermission(permission.id);
 };
@@ -133,6 +94,6 @@ const unlinkTeamFromPermission = async (
   display: flex;
   text-align: center;
   align-items: center;
-  gap: 1rem;
+  gap: 5px;
 }
 </style>

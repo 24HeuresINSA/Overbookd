@@ -1,5 +1,5 @@
 <template>
-  <form class="filter">
+  <form class="filters">
     <v-text-field
       :model-value="name"
       label="Nom du matos"
@@ -40,9 +40,9 @@ const defectNameUpdate = (name: string) => {
 </script>
 
 <style lang="scss" scoped>
-.filter {
+.filters {
   display: flex;
-  gap: 5%;
+  gap: 15px;
   justify-content: space-evenly;
   .v-input {
     flex-grow: 1;

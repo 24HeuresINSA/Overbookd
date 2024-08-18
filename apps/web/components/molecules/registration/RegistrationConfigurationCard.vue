@@ -1,5 +1,5 @@
 <template>
-  <v-card class="registration-configuration">
+  <v-card>
     <v-card-title>Lien d'invitation</v-card-title>
     <v-card-text>
       <v-text-field
@@ -8,6 +8,7 @@
         placeholder="Pas de lien encore généré"
         :hint="expirationInviteStaffLinkDate"
         :persistent-hint="hasInviteStaffLink"
+        class="mt-1"
         readonly
       >
         <template #append>
@@ -64,9 +65,3 @@ const copyToClipBoard = async () => {
 const refreshInviteStaffLink = () =>
   registrationStore.generateInviteStaffLink();
 </script>
-
-<style lang="scss" scoped>
-.registration-configuration {
-  margin: 0 20px;
-}
-</style>

@@ -1,17 +1,19 @@
 <template>
   <v-card class="festival-event-filter">
     <v-card-title>Filtres</v-card-title>
-    <v-card-text>
+    <v-card-text class="filters-input">
       <v-text-field
         v-model="search"
         label="Recherche"
         clearable
+        hide-details
         @update:model-value="updateSearchParam"
       />
       <SearchTeam
         v-model="team"
         label="Équipe"
         clearable
+        hide-details
         @update:model-value="updateTeamParam"
       />
       <SearchUser
@@ -19,6 +21,7 @@
         :list="adherents"
         label="Bénévole"
         clearable
+        hide-details
         @update:model-value="updateAdherentParam"
       />
       <v-select
@@ -28,11 +31,14 @@
         item-value="key"
         item-title="label"
         clearable
+        hide-details
         @click:clear="clearStatus"
         @update:model-value="updateStatusParam"
       />
 
-      <slot name="additional-filters" />
+      <div>
+        <slot name="additional-filters" />
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -78,10 +84,10 @@ const isActivity = computed<boolean>(() => identifier === "FA");
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }
   | { key: FestivalTask["status"]; label: FtStatusLabel }
-  | { key: null; label: "Tous" }
+  | { key: undefined; label: "Tous" }
 )[];
 const statusWithLabels = computed<StatusLabels>(() => {
-  const noneOfThem = { key: null, label: "Tous" } as const;
+  const noneOfThem = { key: undefined, label: "Tous" } as const;
   const keyWithLabel = isActivity.value
     ? [...faStatusLabels.entries()]
     : [...ftStatusLabels.entries()];
@@ -106,5 +112,11 @@ const updateStatusParam = (status: FestivalEventStatus) => {
 <style lang="scss" scoped>
 .festival-event-filter {
   height: fit-content;
+}
+
+.filters-input {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <DesktopPageTitle />
   <v-img
-    height="400"
+    height="250"
     src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
-    class="gif"
+    class="gif desktop-only"
   />
 
   <v-expansion-panels rounded="xl">
@@ -17,7 +17,6 @@
           <v-btn
             text="Remplacer par le template"
             color="secondary"
-            variant="text"
             @click="replaceRegisterDescriptionByTemplate"
           />
           <v-btn
@@ -54,6 +53,7 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <PermissionList />
+        <CreatePermissionForm />
       </v-expansion-panel-text>
     </v-expansion-panel>
 
@@ -104,9 +104,6 @@ const saveEventStartDate = async () => {
 <style lang="scss" scoped>
 .gif {
   margin-bottom: 15px;
-  @media screen and (max-width: 600px) {
-    display: none;
-  }
 }
 
 .collapse {
@@ -117,7 +114,7 @@ const saveEventStartDate = async () => {
   display: flex;
   gap: 10px;
   margin-top: 12px;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
   }
 }

@@ -6,7 +6,7 @@
     :rules="[rules.min]"
     :readonly="readonly"
     :hide-details="hideDetails"
-    :density="dense ? 'comfortable' : 'default'"
+    :density="dense ? 'compact' : 'comfortable'"
     @update:model-value="propagateValue"
     @update:error="propagateError"
   />

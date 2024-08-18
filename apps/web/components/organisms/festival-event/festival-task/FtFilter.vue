@@ -13,32 +13,31 @@
         :list="assignableReviewers"
         label="Relecteur"
         clearable
+        hide-details
         @update:model-value="updateReviewerParam"
       />
-      <div
-        v-for="reviewer of reviewerTeams"
-        :key="reviewer.code"
-        class="desktop"
-      >
-        <v-btn-toggle
-          v-model="filters[reviewer.code]"
-          color="primary"
-          class="review-filter"
-          group
-          @update:model-value="updateReviewParams(reviewer.code, $event)"
-        >
-          <v-icon size="small" class="review-filter__icon">
-            {{ reviewer.icon }}
-          </v-icon>
-          <v-btn
-            v-for="[status, label] of reviewStatusLabels"
-            :key="status"
-            :value="status"
-            :text="label"
-            class="review-filter__btn"
-            size="x-small"
-          />
-        </v-btn-toggle>
+      <div class="review-filters desktop-only">
+        <div v-for="reviewer of reviewerTeams" :key="reviewer.code">
+          <v-btn-toggle
+            v-model="filters[reviewer.code]"
+            color="primary"
+            class="review-filter"
+            group
+            @update:model-value="updateReviewParams(reviewer.code, $event)"
+          >
+            <v-icon size="small" class="review-filter__icon">
+              {{ reviewer.icon }}
+            </v-icon>
+            <v-btn
+              v-for="[status, label] of reviewStatusLabels"
+              :key="status"
+              :value="status"
+              :text="label"
+              class="review-filter__btn"
+              size="x-small"
+            />
+          </v-btn-toggle>
+        </div>
       </div>
     </template>
   </FestivalEventFilter>
@@ -90,19 +89,18 @@ const updateReviewerParam = (reviewer?: User) => {
 </script>
 
 <style lang="scss" scoped>
-.desktop {
-  @media screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
+.review-filters {
+  margin-top: 10px;
 }
 
 .review-filter {
   align-items: center;
   gap: 5px;
-  height: fit-content;
+  height: fit-content !important;
 
   &__icon {
     margin-top: 5px;
+    margin-right: 5px;
   }
   &__btn {
     padding: 8px;

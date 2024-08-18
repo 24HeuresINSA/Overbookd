@@ -28,7 +28,7 @@
               />
               <v-btn
                 text="Inscrits dans les 30 derniers jours"
-                color="primary"
+                color="secondary"
                 :variant="last30DaysNewcomers ? 'elevated' : 'outlined'"
                 @click="toggleLast30DaysNewcomers"
               />
@@ -46,7 +46,8 @@
           <template #item.removal="{ item }">
             <v-btn
               text="Supprimer l'inscription"
-              color="primary"
+              color="tertiary"
+              size="small"
               @click="forgetHim(item.email)"
             />
           </template>

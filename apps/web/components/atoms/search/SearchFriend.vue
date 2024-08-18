@@ -8,6 +8,7 @@
     :item-title="buildUserNameWithNickname"
     :label="label"
     :disabled="disabled"
+    :hide-details="hideDetails"
     return-object
     :custom-filter="slugifiedFilter"
     no-data-text="Il ne doit pas encore être inscrit sur le site."
@@ -26,12 +27,16 @@ userStore.fetchFriends().then(() => (loading.value = false));
 
 const friend = defineModel<User | null>({ required: true });
 
-const { label, disabled } = defineProps({
+const { label, disabled, hideDetails } = defineProps({
   label: {
     type: String,
     default: "Chercher un bénévole",
   },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  hideDetails: {
     type: Boolean,
     default: false,
   },

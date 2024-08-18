@@ -51,6 +51,7 @@
     elevation="2"
     icon="mdi-plus-thick"
     size="large"
+    rounded="pill"
     @click="openNewLocationDialog"
   />
 
