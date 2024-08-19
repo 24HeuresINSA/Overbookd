@@ -317,7 +317,6 @@ const callPhoneNumber = () => {
 .friends {
   display: flex;
   flex-direction: column;
-  gap: 5px;
   &__list {
     display: flex;
     flex-wrap: wrap;
@@ -326,7 +325,7 @@ const callPhoneNumber = () => {
     margin: 0;
   }
   &__input {
-    margin-top: 5px;
+    margin-top: 15px;
   }
 }
 

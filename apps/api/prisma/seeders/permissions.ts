@@ -26,6 +26,7 @@ import {
   VIEW_TIMELINE,
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
+  VIEW_VOLUNTEER_DETAILS,
   WRITE_FA,
   WRITE_FT,
   WRITE_GEAR_CATALOG,
@@ -386,6 +387,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: VIEW_VOLUNTEER_DETAILS,
+    description: "Peut voir les détails des bénévoles",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },

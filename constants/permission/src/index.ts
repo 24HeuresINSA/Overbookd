@@ -32,6 +32,7 @@ export const ENROLL_HARD = "enroll-hard";
 export const ENROLL_SOFT = "enroll-soft";
 export const VIEW_TROMBINOSCOPE = "view-trombinoscope";
 export const VIEW_VOLUNTEER = "view-volunteer";
+export const VIEW_VOLUNTEER_DETAILS = "view-volunteer-details";
 export const SEND_MAIL_TEST = "send-mail-test";
 export const MANAGE_TEAMS = "manage-teams";
 export const MANAGE_PERMISSIONS = "manage-permissions";
@@ -81,6 +82,7 @@ const permissions = [
   ENROLL_SOFT,
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
+  VIEW_VOLUNTEER_DETAILS,
   SEND_MAIL_TEST,
   MANAGE_TEAMS,
   MANAGE_PERMISSIONS,

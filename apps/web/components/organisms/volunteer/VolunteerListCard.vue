@@ -7,7 +7,8 @@
       :loading="loading"
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"
-      :hover="volunteers.length > 0"
+      :class="{ unclickable: !canViewVolunteerDetails }"
+      :hover="volunteers.length > 0 && canViewVolunteerDetails"
       return-object
       @click:row="openInformationDialog"
     >
@@ -60,6 +61,7 @@ import {
   buildUserNameWithNickname,
 } from "@overbookd/user";
 import type { Team } from "@overbookd/team";
+import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/data-table/header";
 
 const { volunteers, loading } = defineProps({
@@ -75,26 +77,31 @@ const { volunteers, loading } = defineProps({
 
 const userStore = useUserStore();
 
-const emit = defineEmits(["open-dialog", "click:team"]);
+const emit = defineEmits(["open-details", "click:team"]);
 
-const headers: TableHeaders = [
-  {
-    title: "Prénom Nom (Surnom)",
-    key: "firstname",
-    sortable: true,
-  },
-  { title: "Equipes", value: "teams" },
-  { title: "Charisme", value: "charisma", sortable: true },
-  { title: "Actions", value: "actions" },
-];
+const canViewVolunteerDetails = computed(() =>
+  userStore.can(VIEW_VOLUNTEER_DETAILS),
+);
+const headers = computed<TableHeaders>(() => {
+  const baseHeaders = [
+    { title: "Nom", key: "firstname", sortable: true },
+    { title: "Equipes", value: "teams" },
+    { title: "Charisme", value: "charisma", sortable: true },
+  ];
+  const actionsHeader = { title: "Actions", value: "actions" };
+  return canViewVolunteerDetails.value
+    ? [...baseHeaders, actionsHeader]
+    : baseHeaders;
+});
 
 const openInformationDialog = async (
   _: MouseEvent,
   { item }: { item: UserDataWithPotentialyProfilePicture },
 ) => {
+  if (!canViewVolunteerDetails.value) return;
   const volunteer = { ...item };
   await userStore.setSelectedUser(volunteer);
-  emit("open-dialog");
+  emit("open-details");
 };
 
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
@@ -113,6 +120,10 @@ const sendMailTo = (email: string) => {
 </script>
 
 <style lang="scss" scoped>
+.unclickable :deep(.v-data-table__tr--clickable) {
+  cursor: default;
+}
+
 .team-list {
   display: flex;
   flex-wrap: wrap;

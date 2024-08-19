@@ -12,12 +12,12 @@
       <VolunteerListCard
         :volunteers="displayedVolunteers"
         :loading="loading"
-        @open-dialog="openVolunteerInfoDialog"
+        @open-details="openVolunteerInfoDialog"
         @click:team="addTeamInFilters"
       />
     </div>
 
-    <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="800">
+    <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="700">
       <VolunteerInformation
         v-if="selectedVolunteer"
         :volunteer="selectedVolunteer"
