@@ -10,6 +10,7 @@ import {
   redLightTheme,
   yellowLightTheme,
 } from "~/utils/theme/light";
+import { loginTheme } from "~/utils/theme/login";
 
 const commonFieldDefaultSettings = {
   variant: "outlined",
@@ -32,6 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         blueDarkTheme,
         yellowDarkTheme,
         redDarkTheme,
+        loginTheme,
       },
     },
     defaults: {

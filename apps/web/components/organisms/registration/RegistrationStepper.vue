@@ -1,5 +1,5 @@
 <template>
-  <v-card class="register-card">
+  <v-card class="register-card" theme="loginTheme">
     <v-img
       class="register-illustration"
       src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
@@ -225,15 +225,15 @@
         </v-stepper-window-item>
       </v-stepper-window>
     </v-stepper>
-  </v-card>
 
-  <v-dialog
-    v-model="isEULADialogOpen"
-    transition="dialog-bottom-transition"
-    fullscreen
-  >
-    <EULADialogCard @close="closeEULADialog" />
-  </v-dialog>
+    <v-dialog
+      v-model="isEULADialogOpen"
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <EULADialogCard @close="closeEULADialog" />
+    </v-dialog>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -409,6 +409,7 @@ const closeEULADialog = () => (isEULADialogOpen.value = false);
     overflow-y: auto;
     position: relative;
     z-index: 2;
+    padding: 0 !important;
   }
 
   &-illustration {

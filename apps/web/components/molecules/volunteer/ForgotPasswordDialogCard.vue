@@ -1,14 +1,14 @@
 <template>
-  <DialogCard @close="close">
+  <DialogCard theme="loginTheme" @close="close">
     <template #title>Ben alors, on oublie son mot de passe ?</template>
     <template #content>
       <v-img
         max-height="200"
         src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmp1dGthNXE3em44ZjVhdmxsZ3dyZTZuZjRsbnpkZm93cHJ0eTM0dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cO39srN2EUIRaVqaVq/giphy.gif"
       />
-      <p class="mt-3">
-        Ecris nous l'email de ton compte pour qu'on t'envoie un lien de
-        réinitialisation.
+      <p class="my-3">
+        Renseigne l'email de ton compte pour recevoir un lien de
+        réinitialisation de mot de passe.
       </p>
       <v-text-field
         v-model="email"

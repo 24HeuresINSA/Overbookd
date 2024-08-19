@@ -1,10 +1,10 @@
 <template>
-  <v-card class="card">
+  <v-card :theme="theme" class="card">
     <v-btn
       class="card__close-btn"
       variant="flat"
       icon="mdi-close"
-      density="comfortable"
+      density="compact"
       @click="close"
     />
     <v-card-title class="card__title">
@@ -26,7 +26,11 @@
 </template>
 
 <script lang="ts" setup>
-const { withoutActions } = defineProps({
+const { theme, withoutActions } = defineProps({
+  theme: {
+    type: String,
+    default: undefined,
+  },
   withoutActions: {
     type: Boolean,
     default: false,
@@ -47,6 +51,12 @@ const close = () => emit("close");
     h2 {
       flex: 1;
       text-align: center;
+      white-space: normal;
+      word-wrap: break-word;
+      word-break: break-word;
+      @media screen and (max-width: $mobile-max-width) {
+        font-size: 1.4rem;
+      }
     }
   }
   &__subtitle {

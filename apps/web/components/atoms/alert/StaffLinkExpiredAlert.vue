@@ -4,6 +4,7 @@
     prominent
     type="error"
     class="alert"
+    theme="loginTheme"
   >
     <p>
       <strong>

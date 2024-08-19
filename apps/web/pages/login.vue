@@ -1,135 +1,85 @@
 <template>
-  <div class="background-wrapper">
-    <v-img :src="randomURL" class="background" cover />
-    <div class="opacity-filter" />
-    <div class="scrollable-content">
-      <v-form>
-        <v-container class="form-container">
-          <v-row class="logo">
-            <v-img src="/img/logo/logo_home_white.png" alt="overbookd" />
-          </v-row>
-          <v-row class="version justify-center">
-            <h2>{{ version }}</h2>
-          </v-row>
-          <v-row>
+  <div class="login-page">
+    <v-img src="/img/login-background.jpg" class="background" cover />
+
+    <div class="login-card-container">
+      <v-card class="login-card" theme="loginTheme">
+        <v-card-text class="login-card__content">
+          <v-tooltip location="bottom">
+            <template #activator="{ props }">
+              <v-img
+                v-bind="props"
+                src="/img/logo/logo_home.png"
+                class="logo"
+              />
+            </template>
+            Version {{ version }}
+          </v-tooltip>
+          <h1 class="login-card__title">Bienvenue aux 24h de l'INSA 👋</h1>
+
+          <div class="login-form">
+            <label for="email" class="login-form__input-label">Email</label>
             <v-text-field
               v-model="credentials.email"
-              label="Email"
-              name="email"
               autocomplete="email"
               inputmode="email"
-              type="text"
-              bg-color="white"
+              name="email"
+              class="login-form__input"
+              placeholder="Email"
+              density="compact"
               autofocus
+              hide-details
               @keydown.enter="login"
             />
-          </v-row>
-          <v-row>
+
+            <label for="password" class="login-form__input-label">
+              Mot de passe
+            </label>
             <v-text-field
               v-model="credentials.password"
-              label="Mot de passe"
               type="password"
-              bg-color="white"
+              name="password"
+              class="login-form__input"
+              placeholder="Mot de passe"
+              density="compact"
               clearable
+              hide-details
               @keydown.enter="login"
             />
-          </v-row>
-          <v-row class="ctas">
+
+            <a
+              text="Mot de passe oublié ?"
+              class="login-form__forgot-label link"
+              @click="openForgotDialog"
+            />
+
             <v-btn
               text="Connexion"
+              rounded="lg"
+              size="large"
               color="primary"
-              elevation="2"
-              rounded="xl"
-              class="btn btn-primary"
+              class="login-form__button text-none"
+              flat
               @click="login"
             />
-            <v-btn
-              text="S'inscrire"
-              color="secondary"
-              elevation="2"
-              :to="registerLink"
-              rounded="xl"
-              class="btn btn-secondary"
-            />
-          </v-row>
-          <v-row class="ctas">
-            <v-btn
-              text="Mot de passe oublié ?"
-              class="btn btn-tertiary"
-              @click="isForgotDialogOpen = true"
-            />
-            <v-btn class="btn btn-tertiary" @click="isHelpDialogOpen = true">
-              Un problème
-              <span class="desktop">&nbsp;lors de l'inscription</span> ?
-            </v-btn>
-          </v-row>
-        </v-container>
-      </v-form>
+
+            <p class="login-form__not-registered-label">
+              Pas de compte ?
+              <a text="Inscription" class="link" @click="register" />
+            </p>
+          </div>
+        </v-card-text>
+      </v-card>
     </div>
   </div>
 
-  <v-dialog v-model="isForgotDialogOpen" max-width="800">
-    <ForgotPasswordDialogCard @close="isForgotDialogOpen = false" />
-  </v-dialog>
-
-  <v-dialog v-model="isHelpDialogOpen" max-width="800">
-    <LoginHelpDialogCard @close="isHelpDialogOpen = false" />
+  <v-dialog v-model="isForgotDialogOpen" max-width="600">
+    <ForgotPasswordDialogCard @close="closeForgotDialog" />
   </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import { HOME_URL, REGISTER_URL } from "@overbookd/web-page";
-
-const BACKGROUNDS_URL = [
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feudartificefinal.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feder.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_rosalie.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_danakil.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_directions.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_photoequipe.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fossegrandescene.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_montagescenehumas-scaled.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_resultatscoursesimg_24h_45e_benevoles_montagecrash.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_paille.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_assis.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_tireuse.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_service.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_repas.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_maquillage.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorgahaut.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_resultatscourses.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_montagescene.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_trraverseecourse.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_poney.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_43e_qgorga.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_42e_benevoles_canapedehors.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorga.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_foodtruck.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bardecouverte.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_festivaliersdanslherbe-scaled.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fondgrandescene.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_viragevelo.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_podium.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/courses_caritatives_photo.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucoucoureur.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucouvelo.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_danse.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_villageprevention.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_tiralarc.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_kavinsky.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fosse.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fuzzcall.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
-  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
-  "https://www.24heures.org/wp-content/uploads/2023/05/img_24h_48e_confettis-scaled.jpg",
-  "https://live.staticflickr.com/65535/53033340706_729e5f653d_b.jpg",
-  "https://live.staticflickr.com/65535/53033819508_78a3ef2495_b.jpg",
-  "https://live.staticflickr.com/65535/52617420469_0994528701_b.jpg",
-];
 
 definePageMeta({ layout: false });
 
@@ -147,16 +97,12 @@ const token = computed<string | undefined>(() => {
 const registerLink = computed<string>(() =>
   token.value ? `${REGISTER_URL}?token=${token.value}` : REGISTER_URL,
 );
-
-const randomURL =
-  BACKGROUNDS_URL[Math.floor(Math.random() * BACKGROUNDS_URL.length)];
+const register = () => router.push(registerLink.value);
 
 const credentials = ref({
   email: "",
   password: "",
 });
-const isForgotDialogOpen = ref<boolean>(false);
-const isHelpDialogOpen = ref<boolean>(false);
 
 const login = async () => {
   if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
@@ -167,14 +113,27 @@ const login = async () => {
   await authStore.login(credentials.value);
   if (authStore.authenticated) router.push(HOME_URL);
 };
+
+const isForgotDialogOpen = ref<boolean>(false);
+const openForgotDialog = () => (isForgotDialogOpen.value = true);
+const closeForgotDialog = () => (isForgotDialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
-.background-wrapper {
+$desktop-card-content-width: 380px;
+$mobile-card-content-width: 80%;
+
+.login-page {
   position: relative;
+  width: 100vw;
   height: 100vh;
-  width: 100%;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 2%;
+  @media screen and (max-width: $mobile-max-width) {
+    justify-content: center;
+  }
 }
 
 .background {
@@ -186,100 +145,82 @@ const login = async () => {
   z-index: 1;
 }
 
-.opacity-filter {
-  position: absolute;
-  left: 0;
-  top: 0;
+.login-card-container {
+  width: 50%;
   height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 100%;
+  }
 }
 
-.scrollable-content {
-  position: relative;
-  z-index: 3;
-  height: 100%;
-  overflow-y: auto;
-  padding: 20px;
+.login-card {
+  width: 100%;
+  max-width: 580px;
+  height: fit-content;
+  max-height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+
+  &__content {
+    width: $desktop-card-content-width;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    @media screen and (max-width: $mobile-max-width) {
+      width: $mobile-card-content-width;
+    }
+  }
+  &__title {
+    text-align: center;
+    @media screen and (max-width: $mobile-max-width) {
+      font-size: 1.4rem;
+    }
+  }
 }
 
 .logo {
-  width: 20em;
-  height: 20em;
-  align-self: center;
-}
-
-.version {
-  z-index: 20;
-  text-align: center;
-  position: relative;
-
-  h2 {
-    color: white;
+  width: 200px;
+  margin: 15px;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 160px;
+    margin: 5px;
+    margin-bottom: 10px;
   }
 }
 
-.form-container {
+.login-form {
   display: flex;
   flex-direction: column;
-  align-self: center;
-  justify-self: center;
-  margin-top: 5%;
-  width: 75%;
-  max-width: 600px;
-}
+  width: $desktop-card-content-width;
+  @media screen and (max-width: $mobile-max-width) {
+    width: $mobile-card-content-width;
+  }
 
-.ctas {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
-
-  .btn {
-    border-radius: 20px/50%;
-
-    &-primary,
-    &-secondary {
-      height: 48px;
-      width: 100%;
-    }
-
-    &-tertiary {
-      background-color: rgba(50, 50, 50, 0.7);
-      color: white;
-      height: 36px;
-      width: 60%;
-      font-size: 0.7rem;
-    }
+  &__input-label {
+    margin: 20px 0 3px;
+    font-weight: 500;
+  }
+  &__forgot-label {
+    margin: 10px 0 15px;
+    text-align: right;
+  }
+  &__not-registered-label {
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1rem;
   }
 }
 
-@media only screen and (max-width: 740px) {
-  .form-container {
-    margin-top: 15%;
-  }
-
-  .sub-form {
-    flex-direction: column;
-
-    .problem-btn {
-      margin-top: 115px;
-      position: absolute;
-    }
-  }
-
-  .desktop {
-    display: none;
-  }
-
-  .ctas {
-    .btn {
-      &-tertiary {
-        width: 90%;
-      }
-    }
-  }
+.link {
+  color: blue;
+  cursor: pointer;
 }
 </style>
