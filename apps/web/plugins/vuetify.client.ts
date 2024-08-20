@@ -56,11 +56,12 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
       },
       VField: { style: { borderRadius: "12px" } },
+      VBtn: { style: { borderRadius: "12px" } },
       VTextField: commonFieldDefaultSettings,
       VSelect: commonFieldDefaultSettings,
       VAutocomplete: commonFieldDefaultSettings,
+      VCombobox: commonFieldDefaultSettings,
       VTextarea: commonFieldDefaultSettings,
-      VBtn: { style: { borderRadius: "12px" } },
     },
   });
 

@@ -11,9 +11,9 @@
         />
 
         <v-label>Instructions globales</v-label>
-        <TipTap
+        <RichEditor
           :model-value="instructions.global ?? ''"
-          :disabled="disabled && cantForceInstruction"
+          :readonly="disabled && cantForceInstruction"
           class="mb-3"
           @update:model-value="updateGlobal"
         />
@@ -37,9 +37,9 @@
           />
 
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
-          <TipTap
+          <RichEditor
             :model-value="instructions.inCharge.instruction ?? ''"
-            :disabled="disabled && cantForceInstruction"
+            :readonly="disabled && cantForceInstruction"
             class="mb-3"
             @update:model-value="updateInChargeInstruction"
           />

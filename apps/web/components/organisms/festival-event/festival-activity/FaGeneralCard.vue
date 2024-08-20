@@ -26,9 +26,9 @@
           @update:model-value="updateToPublishOrAskPublic"
         />
 
-        <TipTap
+        <h3>Description de l'activité</h3>
+        <RichEditor
           :model-value="general.description ?? ''"
-          label="Description"
           @update:model-value="updateDescription"
         />
 

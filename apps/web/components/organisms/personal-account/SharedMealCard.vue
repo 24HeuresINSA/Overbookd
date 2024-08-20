@@ -184,7 +184,7 @@ const cancelShotgun = (guest: Shotgun) => {
 
 details {
   border: 1px solid #aaa;
-  border-radius: 12px;
+  border-radius: $field-border-radius;
   padding: 0.5em 0.5em 0;
   min-width: 100%;
   & summary {

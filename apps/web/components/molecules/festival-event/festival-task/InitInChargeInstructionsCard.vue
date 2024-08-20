@@ -15,7 +15,7 @@
       />
 
       <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
-      <TipTap v-model="instruction" class="mb-3" />
+      <RichEditor v-model="instruction" class="mb-3" />
     </template>
 
     <template #actions>
