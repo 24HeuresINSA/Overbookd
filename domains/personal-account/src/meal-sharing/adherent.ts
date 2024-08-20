@@ -20,6 +20,10 @@ export class Shotguns {
     return new Shotguns([...this.shotguns, shotgun]);
   }
 
+  remove(guest: number): Shotguns {
+    return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
+  }
+
   get all(): Shotgun[] {
     return this.shotguns;
   }

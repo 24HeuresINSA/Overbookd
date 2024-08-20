@@ -3,12 +3,23 @@ import { Shotguns } from "./adherent.js";
 import type { PastSharedMeal, AboutMeal, Expense } from "./meals.model.js";
 import { MealSharingError } from "./meal-sharing.error.js";
 
-export const PAST_MEAL_ERROR =
+export const SHOTGUN_PAST_MEAL_ERROR =
   "❌ Ce repas partagé a été cloturé, il n'est plus possible de le shotgun";
 
+export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
+  "❌ Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
+
 class PastMealError extends MealSharingError {
-  constructor() {
-    super(PAST_MEAL_ERROR);
+  private constructor(message: string) {
+    super(message);
+  }
+
+  static get shotgun(): PastMealError {
+    return new PastMealError(SHOTGUN_PAST_MEAL_ERROR);
+  }
+
+  static get cancelShotgun(): PastMealError {
+    return new PastMealError(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
   }
 }
 
@@ -36,7 +47,11 @@ export class PastSharedMealBuilder implements PastSharedMeal {
   }
 
   shotgunFor(): PastSharedMealBuilder {
-    throw new PastMealError();
+    throw PastMealError.shotgun;
+  }
+
+  cancelShotgunFor(): PastSharedMealBuilder {
+    throw PastMealError.cancelShotgun;
   }
 
   get shotguns(): Shotgun[] {

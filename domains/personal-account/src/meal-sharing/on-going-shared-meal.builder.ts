@@ -60,6 +60,16 @@ export class OnGoingSharedMealBuilder implements OnGoingSharedMeal {
     );
   }
 
+  cancelShotgunFor(guest: number): OnGoingSharedMealBuilder {
+    const shotguns = this._shotguns.remove(guest);
+    return new OnGoingSharedMealBuilder(
+      this.id,
+      this.meal,
+      this.chef,
+      shotguns,
+    );
+  }
+
   close(expense: Expense): PastSharedMealBuilder {
     return PastSharedMealBuilder.build({
       id: this.id,

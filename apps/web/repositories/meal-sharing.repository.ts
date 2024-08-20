@@ -1,5 +1,6 @@
 import type { OfferMeal } from "@overbookd/http";
 import type {
+  Adherent,
   Expense,
   PastSharedMeal,
   SharedMeal,
@@ -23,6 +24,12 @@ export class MealSharingRepository {
 
   static shotgun(mealId: SharedMeal["id"]) {
     return HttpClient.post<SharedMeal>(`${this.basePath}/${mealId}/shotgun`);
+  }
+
+  static cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
+    return HttpClient.delete<SharedMeal>(
+      `${this.basePath}/${mealId}/shotgun/${guestId}`,
+    );
   }
 
   static recordExpense(mealId: SharedMeal["id"], expense: Expense) {

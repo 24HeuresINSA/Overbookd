@@ -1,13 +1,16 @@
 <template>
   <div class="shared-meal">
     <v-card class="shared-meal">
-      <v-card-title class="meal-title">{{ shared.meal.date }}</v-card-title>
-      <v-card-text class="presentation">
-        <div class="chief">
+      <v-card-title class="meal-title">
+        <span class="meal-title__date">
+          {{ shared.meal.date }}
+        </span>
+        <div class="meal-title__chef">
           <v-icon>mdi-chef-hat</v-icon>
           <span>{{ shared.chef.name }}</span>
         </div>
-
+      </v-card-title>
+      <v-card-text class="presentation">
         <div class="menu">
           <v-textarea
             :model-value="shared.meal.menu"
@@ -19,11 +22,26 @@
           />
         </div>
 
-        <div class="shotgun">
-          <span>
-            {{ shared.shotgunCount }} {{ guests }}
-            <span v-show="hasShotgun"> (dont moi)</span>
-          </span>
+        <div class="shotguns">
+          <details>
+            <summary>
+              {{ shared.shotgunCount }} {{ guests }}
+              <span v-show="hasShotgun"> (dont moi)</span>
+            </summary>
+            <ul>
+              <li v-for="guest in shared.shotguns" :key="guest.id">
+                {{ guest.name }}
+                <v-btn
+                  v-if="iAmChef"
+                  icon="mdi-exit-run"
+                  size="x-small"
+                  variant="flat"
+                  color="tertiary"
+                  @click="cancelShotgun(guest)"
+                />
+              </li>
+            </ul>
+          </details>
           <v-btn
             color="primary"
             size="large"
@@ -58,6 +76,7 @@ import {
   OnGoingSharedMealBuilder,
   type Adherent,
   type SharedMeal,
+  type Shotgun,
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
 
@@ -99,11 +118,35 @@ const closeRecordExpenseDialog = () => {
 const shotgun = () => {
   mealSharingStore.shotgun(props.shared.id);
 };
+
+const cancelShotgun = (guest: Shotgun) => {
+  mealSharingStore.cancelShotgun(props.shared.id, guest.id);
+};
 </script>
 
 <style lang="scss" scoped>
 .meal-title {
   text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 40px;
+  &__chef {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: smaller;
+  }
+  @media only screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    align-items: start;
+    padding-right: unset;
+    &__chef {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 3px;
+    }
+  }
 }
 .presentation {
   display: flex;
@@ -113,13 +156,12 @@ const shotgun = () => {
     flex-direction: column;
     align-items: center;
     min-width: 100%;
-    .chief,
     .menu,
-    .shotgun {
+    .shotguns {
       min-width: 100%;
     }
   }
-  .chief {
+  .chef {
     flex-grow: 1;
     display: flex;
     align-items: baseline;
@@ -130,13 +172,40 @@ const shotgun = () => {
     }
   }
   .menu {
-    flex-grow: 3;
+    flex-grow: 1;
   }
-  .shotgun {
+  .shotguns {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+}
+
+details {
+  border: 1px solid #aaa;
+  border-radius: 12px;
+  padding: 0.5em 0.5em 0;
+  min-width: 100%;
+  & summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+  }
+
+  &[open] {
+    padding: 0.5em;
+    & summary {
+      border-bottom: 1px solid #aaa;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 5px;
   }
 }
 </style>

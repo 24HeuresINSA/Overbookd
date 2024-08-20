@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   UseFilters,
   HttpCode,
+  Delete,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -33,7 +34,11 @@ import {
   OnGoingSharedMealResponseDto,
   PastSharedMealResponseDto,
 } from "./dto/shared-meal.response.dto";
-import { PastSharedMeal, SharedMeal } from "@overbookd/personal-account";
+import {
+  Adherent,
+  PastSharedMeal,
+  SharedMeal,
+} from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
@@ -141,5 +146,31 @@ export class SharedMealController {
     @Body() expense: RecordExpenseRequestDto,
   ): Promise<PastSharedMeal> {
     return this.sharedMeal.recordExpense(mealId, user, expense);
+  }
+
+  @Permission(SHOTGUN_SHARED_MEAL)
+  @Delete(":mealId/shotgun/:guestId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Selected meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  @ApiParam({
+    name: "guestId",
+    type: Number,
+    required: true,
+  })
+  cancelMealShotgun(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Param("guestId", ParseIntPipe) guestId: Adherent["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.cancelShotgun(mealId, guestId, user.id);
   }
 }

@@ -26,8 +26,20 @@ export class AlreadyShotguned extends MealSharingError {
   }
 }
 
-export class RecordExpenseByChiefOnly extends MealSharingError {
+export class RecordExpenseByChefOnly extends MealSharingError {
   constructor({ chef }: SharedMeal) {
     super(`❌ Seul le.a chef.fe ${chef.name} peut renseigner une dépense`);
+  }
+}
+
+export class CancelShotgunByChefOnly extends MealSharingError {
+  constructor({ chef }: SharedMeal) {
+    super(`❌ Seul le.a chef.fe ${chef.name} peut annuler un shotgun`);
+  }
+}
+
+export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
+  constructor() {
+    super("❌ Il faut au moins un convive pour renseigner une dépense");
   }
 }

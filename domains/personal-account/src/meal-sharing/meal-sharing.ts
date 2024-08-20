@@ -9,7 +9,9 @@ import {
   ChefNotFound,
   MealNotFound,
   GuestNotFound,
-  RecordExpenseByChiefOnly,
+  RecordExpenseByChefOnly,
+  CancelShotgunByChefOnly,
+  RecordExpenseOnNoShotgunedMeal,
 } from "./meal-sharing.error.js";
 import { Expense } from "./meals.model.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder.js";
@@ -38,10 +40,16 @@ export type SharedMeals = {
   close(meal: PastSharedMeal): Promise<PastSharedMeal>;
   list(): Promise<SharedMeal[]>;
   addShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
+  cancelShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
 };
 
 export type Adherents = {
   find(id: number): Promise<Adherent | undefined>;
+};
+
+type CancelShotgun = {
+  mealId: number;
+  guestId: number;
 };
 
 export class MealSharing {
@@ -73,6 +81,18 @@ export class MealSharing {
     return this.sharedMeals.addShotgun(updatedMeal);
   }
 
+  async cancelShotgun(
+    { mealId, guestId }: CancelShotgun,
+    instigator: number,
+  ): Promise<OnGoingSharedMeal> {
+    const meal = await this.sharedMeals.find(mealId);
+    if (!meal) throw new MealNotFound(mealId);
+    if (meal.chef.id !== instigator) throw new CancelShotgunByChefOnly(meal);
+
+    const updatedMeal = meal.cancelShotgunFor(guestId);
+    return this.sharedMeals.cancelShotgun(updatedMeal);
+  }
+
   async findById(mealId: number): Promise<SharedMeal> {
     const sharedMeal = await this.sharedMeals.find(mealId);
     if (!sharedMeal) throw new MealNotFound(mealId);
@@ -92,7 +112,8 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (isPastMeal(meal)) return meal;
-    if (recorder !== meal.chef.id) throw new RecordExpenseByChiefOnly(meal);
+    if (recorder !== meal.chef.id) throw new RecordExpenseByChefOnly(meal);
+    if (meal.shotgunCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);

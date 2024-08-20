@@ -1,6 +1,7 @@
 import type { HttpStringified, OfferMeal } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import {
+  type Adherent,
   type Expense,
   type OnGoingSharedMeal,
   type PastSharedMeal,
@@ -51,6 +52,13 @@ export const useMealSharingStore = defineStore("meal-sharing", {
 
     async shotgun(mealId: SharedMeal["id"]) {
       const res = await MealSharingRepository.shotgun(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
+    async cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
+      const res = await MealSharingRepository.cancelShotgun(mealId, guestId);
       if (isHttpError(res)) return;
       const sharedMeal = castSharedMealWithDate(res);
       this._updateMealInsideMeals(sharedMeal);

@@ -41,6 +41,18 @@ export class SharedMealService {
     return formatSharedMeal(updated);
   }
 
+  async cancelShotgun(
+    mealId: SharedMeal["id"],
+    guestId: Adherent["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.cancelShotgun(
+      { mealId, guestId },
+      instigatorId,
+    );
+    return formatSharedMeal(updated);
+  }
+
   async recordExpense(
     mealId: SharedMeal["id"],
     user: JwtPayload,

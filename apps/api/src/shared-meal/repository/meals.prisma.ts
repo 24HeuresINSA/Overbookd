@@ -91,6 +91,18 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
+  async cancelShotgun(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    const remainingGuests = meal.shotguns.map(({ id }) => id);
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        shotguns: { deleteMany: { guestId: { notIn: remainingGuests } } },
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
   async close(meal: PastSharedMealBuilder): Promise<PastSharedMeal> {
     await this.prisma.sharedMeal.update({
       where: { id: meal.id },
