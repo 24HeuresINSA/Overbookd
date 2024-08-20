@@ -48,7 +48,8 @@ import { CharismaEventModule } from "./charisma-event/charisma-event.module";
     FestivalActivityModule,
     MailerModule.forRoot({
       transport: {
-        service: "gmail",
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
         auth: {
           user: process.env.GMAIL_USER,
           pass: process.env.GMAIL_PASS,

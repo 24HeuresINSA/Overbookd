@@ -71,6 +71,8 @@ services:
       JWT_SECRET: ${OVERBOOKD_JWT_SECRET}
       SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
       SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
+      SMTP_HOST: overbookd_mail_catcher
+      SMTP_PORT: 1025
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-back.tls=true"
@@ -93,6 +95,20 @@ services:
         echo "Overbookd version passed: $$OVERBOOKD_VERSION"
         echo "============================================="
         pnpm --recursive --filter '@overbookd/api' run start:dev
+
+  mail_catcher:
+    container_name: overbookd_mail_catcher
+    image: sj26/mailcatcher:v0.10.0
+    restart: unless-stopped
+    networks:
+      - overbookd_net-api
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev-overbookd-mail-catcher.tls=true"
+      - "traefik.http.routers.dev-overbookd-mail-catcher.entrypoints=websecure"
+      - "traefik.http.services.dev-overbookd-mail-catcher.loadbalancer.server.port=1080"
+      - "traefik.http.routers.dev-overbookd-mail-catcher.rule=Host(`mail.${DOMAIN}`)"
 
   postgresql:
     container_name: overbookd_postgresql
