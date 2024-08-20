@@ -113,6 +113,10 @@
       "matchDatasources": ["npm"],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchFileNames": ["apps/old-web/**"],
+      "enabled": false
     }
   ],
   "customManagers": [
@@ -122,7 +126,7 @@
       "datasourceTemplate": "npm",
       "fileMatch": [
         "^\\.gitlab/ci/.*\\.gitlab-ci.ya?ml$",
-        "^apps/(?!old-web/).*/[Dd]ockerfile$",
+        "^apps/.*/[Dd]ockerfile$",
         "^docker/[Dd]ockerfile$"
       ],
       "matchStrings": [
