@@ -165,6 +165,7 @@ $mobile-card-content-width: 80%;
   display: flex;
   justify-content: center;
   gap: 5px;
+  overflow-y: auto;
 
   &__content {
     width: $desktop-card-content-width;
@@ -173,7 +174,6 @@ $mobile-card-content-width: 80%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: auto;
     @media screen and (max-width: $mobile-max-width) {
       width: $mobile-card-content-width;
     }
