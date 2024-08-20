@@ -20,7 +20,7 @@ import {
   DRAFT,
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
-import { stringifyQueryParam } from "../../http/url-params.utils";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
 import type { LocationQuery } from "vue-router";
 

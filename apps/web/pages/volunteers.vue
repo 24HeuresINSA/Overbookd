@@ -1,11 +1,7 @@
 <template>
   <DesktopPageTitle />
   <div class="volunteers-page">
-    <VolunteerListHeader
-      v-model:search="filters.search"
-      v-model:teams="filters.teams"
-      v-model:excluded-teams="filters.excludedTeams"
-    />
+    <VolunteerListHeader v-model="filters" />
     <VolunteerListCard
       :volunteers="displayedVolunteers"
       :loading="loading"
@@ -33,51 +29,52 @@ import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
+import {
+  VolunteerFilterBuilder,
+  type VolunteerFilters,
+} from "~/utils/user/volunteer.filter";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Liste des bénévoles" });
 
+const route = useRoute();
 const userStore = useUserStore();
-
-type Filters = {
-  search: string;
-  teams: Team[];
-  excludedTeams: Team[];
-};
-
-const filters = reactive<Filters>({
-  search: "",
-  teams: [],
-  excludedTeams: [],
-});
 
 const volunteers = computed(() => userStore.volunteers);
 const loading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (loading.value = false));
 
+const filters = ref<VolunteerFilters>({});
+onMounted(
+  () => (filters.value = VolunteerFilterBuilder.getFromRouteQuery(route.query)),
+);
+
 const searchableVolunteers = computed(() => volunteers.value.map(toSearchable));
 const displayedVolunteers = computed(() => {
-  const matchTeams = keepMembersOf(filters.teams);
-  const matchExcludedTeams = excludeMembersOf(filters.excludedTeams);
-  const matchName = filterVolunteersByName(filters.search);
+  const { search, teams, excludedTeams } = filters.value;
   return searchableVolunteers.value.filter((volunteer) => {
     return (
-      matchTeams(volunteer) &&
-      matchExcludedTeams(volunteer) &&
-      matchName(volunteer)
+      keepMembersOf(teams ?? [])(volunteer) &&
+      excludeMembersOf(excludedTeams ?? [])(volunteer) &&
+      filterVolunteersByName(search)(volunteer)
     );
   });
 });
 
 const filterVolunteersByName = (
-  search: string,
+  search?: string,
 ): ((volunteer: Searchable<UserPersonalData>) => boolean) => {
-  return keepMatchingSearchCriteria(search);
+  return keepMatchingSearchCriteria(search ?? "");
 };
 
 const addTeamInFilters = (team: Team) => {
-  const teamAlreadyInFilters = filters.teams.some((t) => t.code === team.code);
-  if (teamAlreadyInFilters) return;
-  filters.teams = [...filters.teams, team];
+  const currentTeams = filters.value.teams ?? [];
+  const alreadyIn = currentTeams.some(({ code }) => code === team.code);
+  if (alreadyIn) return;
+
+  filters.value.teams = [...currentTeams, team];
+  const teamsCode = filters.value.teams.map(({ code }) => code);
+  updateQueryParams("teams", teamsCode);
 };
 
 const selectedVolunteer = computed(() => userStore.selectedUser);

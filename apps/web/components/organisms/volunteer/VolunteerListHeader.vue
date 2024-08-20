@@ -2,33 +2,36 @@
   <div class="volunteers-header">
     <div class="filters">
       <v-text-field
-        v-model="search"
+        :model-value="filters.search"
         label="Recherche"
         density="compact"
         bg-color="surface"
         class="filters__field"
         hide-details
+        @update:model-value="updateSearchParam"
       />
 
       <SearchTeams
-        v-model="teams"
+        :model-value="filters.teams ?? []"
         label="Equipe(s)"
         density="compact"
         bg-color="surface"
         class="filters__field"
         closable-chips
         hide-details
+        @update:model-value="updateTeamsParam"
       />
 
       <SearchTeams
         v-if="canFilterByExcludedTeams"
-        v-model="excludedTeams"
+        :model-value="filters.excludedTeams ?? []"
         label="Équipe(s) à exclure"
         density="compact"
         bg-color="surface"
         class="filters__field"
         closable-chips
         hide-details
+        @update:model-value="updateExcludedTeamsParam"
       />
     </div>
   </div>
@@ -37,15 +40,32 @@
 <script lang="ts" setup>
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 
 const userStore = useUserStore();
 
-const search = defineModel<string>("search", { required: true });
-const teams = defineModel<Team[]>("teams", { required: true });
-const excludedTeams = defineModel<Team[]>("excludedTeams", { required: true });
+const filters = defineModel<VolunteerFilters>({ required: true });
 
-const canFilterByExcludedTeams = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+const updateSearchParam = (search: string) => {
+  filters.value.search = search;
+  updateQueryParams("search", search);
+};
+const updateTeamsParam = (teams: Team[]) => {
+  filters.value.teams = teams;
+  const teamsCode = teams.map(({ code }) => code);
+  updateQueryParams("teams", teamsCode);
+};
+const updateExcludedTeamsParam = (excludedTeams: Team[]) => {
+  filters.value.excludedTeams = excludedTeams;
+  const excludedTeamsCode = excludedTeams.map(({ code }) => code);
+  updateQueryParams("excludedTeams", excludedTeamsCode);
+};
+
+const canFilterByExcludedTeams = computed<boolean>(
+  () =>
+    userStore.can(AFFECT_VOLUNTEER) ||
+    filters.value.excludedTeams?.length !== 0,
 );
 </script>
 
