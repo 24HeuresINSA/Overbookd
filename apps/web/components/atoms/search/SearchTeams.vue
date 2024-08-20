@@ -9,6 +9,7 @@
     :hide-details="hideDetails"
     :closable-chips="closableChips"
     :prepend-icon="prependIcon"
+    :density="density"
     multiple
     clearable
     clear-on-select
@@ -33,6 +34,7 @@
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
 import { slugifiedFilter } from "~/utils/search/search.utils";
+import type { Density } from "~/utils/vuetify/component-props";
 
 const teams = defineModel<Team[]>({ required: true });
 
@@ -56,6 +58,10 @@ const props = defineProps({
   prependIcon: {
     type: String,
     default: undefined,
+  },
+  density: {
+    type: String as PropType<Density>,
+    default: "comfortable",
   },
   list: {
     type: Array as PropType<Team[] | null>,

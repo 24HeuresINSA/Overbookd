@@ -60,7 +60,7 @@ import type { CharismaEventParticipation } from "@overbookd/charisma";
 import { SlugifyService } from "@overbookd/slugify";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { formatDate } from "@overbookd/time";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   matchingSearchItems,
   type Searchable,

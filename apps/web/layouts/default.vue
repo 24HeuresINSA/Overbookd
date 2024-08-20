@@ -29,7 +29,7 @@
 import Header from "~/layouts/header/Header.vue";
 import SideNav from "~/layouts/side-nav/SideNav.vue";
 import { useTheme } from "vuetify";
-import { pickRandomTheme } from "~/utils/theme/theme.utils";
+import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 import {
   isContentFlipped,
   saveContentFlipped,
@@ -37,7 +37,7 @@ import {
 } from "~/utils/easter-egg/flip-content";
 
 const theme = useTheme();
-onMounted(() => (theme.global.name.value = pickRandomTheme()));
+onMounted(() => (theme.global.name.value = pickDefaultTheme()));
 
 const userStore = useUserStore();
 

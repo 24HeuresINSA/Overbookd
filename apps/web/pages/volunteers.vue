@@ -1,21 +1,17 @@
 <template>
   <DesktopPageTitle />
   <div class="volunteers-page">
-    <div class="filters">
-      <VolunteerListFilters
-        v-model:search="filters.search"
-        v-model:teams="filters.teams"
-        v-model:excluded-teams="filters.excludedTeams"
-      />
-    </div>
-    <div class="table-container">
-      <VolunteerListCard
-        :volunteers="displayedVolunteers"
-        :loading="loading"
-        @open-details="openVolunteerInfoDialog"
-        @click:team="addTeamInFilters"
-      />
-    </div>
+    <VolunteerListHeader
+      v-model:search="filters.search"
+      v-model:teams="filters.teams"
+      v-model:excluded-teams="filters.excludedTeams"
+    />
+    <VolunteerListCard
+      :volunteers="displayedVolunteers"
+      :loading="loading"
+      @open-details="openVolunteerInfoDialog"
+      @click:team="addTeamInFilters"
+    />
 
     <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="700">
       <VolunteerInformation
@@ -95,27 +91,7 @@ const closeVolunteerInfoDialog = () => {
 <style lang="scss" scoped>
 .volunteers-page {
   display: flex;
-  gap: $card-gap;
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-    margin-left: 0;
-  }
-}
-
-.filters {
-  display: flex;
   flex-direction: column;
-  gap: 1em;
-  width: 20%;
-  @media screen and (max-width: $mobile-max-width) {
-    width: 100%;
-  }
-}
-
-.table-container {
-  width: 80%;
-  @media screen and (max-width: $mobile-max-width) {
-    width: 100%;
-  }
+  gap: 5px;
 }
 </style>

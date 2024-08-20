@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import type { InventoryGroupedRecord } from "@overbookd/http";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const inventoryStore = useInventoryStore();
 

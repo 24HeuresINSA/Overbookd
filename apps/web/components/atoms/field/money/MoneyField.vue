@@ -6,7 +6,7 @@
     :rules="[rules.min]"
     :readonly="readonly"
     :hide-details="hideDetails"
-    :density="dense ? 'compact' : 'comfortable'"
+    :density="density"
     @update:model-value="propagateValue"
     @update:error="propagateError"
   />
@@ -16,6 +16,7 @@
 import { Money } from "@overbookd/money";
 import { min as minRule } from "~/utils/rules/input.rules";
 import { endByNumber, endByNumberSeparation } from "~/utils/rules/money.utils";
+import type { Density } from "~/utils/vuetify/component-props";
 
 const emit = defineEmits(["update:model-value", "error"]);
 
@@ -42,9 +43,9 @@ const { label, min, readonly, hideDetails } = defineProps({
     type: Boolean,
     default: false,
   },
-  dense: {
-    type: Boolean,
-    default: false,
+  density: {
+    type: String as PropType<Density>,
+    default: "comfortable",
   },
 });
 

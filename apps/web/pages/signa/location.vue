@@ -100,7 +100,7 @@ import {
   type Searchable,
   matchingSearchItems,
 } from "~/utils/search/search.utils";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 useHead({ title: "Lieux de la signa" });
 

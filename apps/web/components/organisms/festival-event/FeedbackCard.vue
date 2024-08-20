@@ -56,7 +56,7 @@ import {
 } from "@overbookd/festival-event";
 import { formatDateWithMinutes } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 type FestivalEvent = FestivalActivity | FestivalTask;
 const props = defineProps({

@@ -37,7 +37,7 @@ import {
   type FtStatusLabel,
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 
 const faStore = useFestivalActivityStore();

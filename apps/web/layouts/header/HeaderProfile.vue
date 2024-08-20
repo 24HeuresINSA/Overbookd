@@ -41,7 +41,7 @@ import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
 import { LOGIN_URL, MY_PROFILE_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
-import { pickReverseTheme } from "~/utils/theme/theme.utils";
+import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const router = useRouter();
 const theme = useTheme();

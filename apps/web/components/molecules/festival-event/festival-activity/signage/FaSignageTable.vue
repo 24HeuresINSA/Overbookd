@@ -13,9 +13,9 @@
           :model-value="signageCatalogItem(item)"
           :type="item.type"
           :readonly="cantLinkCatalogItem"
+          density="compact"
           hide-label
           hide-details
-          dense
           @update:model-value="linkCatalogItem(item.id, $event?.id)"
         />
       </template>
@@ -64,7 +64,7 @@ import {
   APPROVED,
 } from "@overbookd/festival-event";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const faStore = useFestivalActivityStore();
 

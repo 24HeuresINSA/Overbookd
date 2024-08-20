@@ -11,7 +11,7 @@
 import { useTheme } from "vuetify";
 import { HOME_URL } from "@overbookd/web-page";
 import { isDesktop } from "~/utils/device/device.utils";
-import { pickRandomTheme } from "~/utils/theme/theme.utils";
+import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;

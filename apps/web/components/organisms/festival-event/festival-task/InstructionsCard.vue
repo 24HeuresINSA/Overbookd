@@ -107,7 +107,7 @@ import type { SignaLocation } from "@overbookd/signa";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import type { InitInChargeForm } from "@overbookd/http";
 import { FORCE_WRITE_FT } from "@overbookd/permission";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const ftStore = useFestivalTaskStore();

@@ -44,7 +44,7 @@ import {
   drives,
   type TimeWindow,
 } from "@overbookd/festival-event";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();

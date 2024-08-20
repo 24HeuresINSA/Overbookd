@@ -47,7 +47,7 @@ import type {
   Contractor,
   PrepareContractorCreation,
 } from "@overbookd/festival-event";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const emit = defineEmits(["add", "update", "remove"]);
 

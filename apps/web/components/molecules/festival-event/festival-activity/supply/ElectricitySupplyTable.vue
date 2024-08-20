@@ -53,7 +53,7 @@ import type {
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
 import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const props = defineProps({
   supplies: {

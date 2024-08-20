@@ -44,7 +44,7 @@
 <script lang="ts" setup>
 import { type IProvidePeriod, formatDateWithMinutes } from "@overbookd/time";
 import type { TimeWindow } from "@overbookd/festival-event";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const props = defineProps({
   timeWindows: {

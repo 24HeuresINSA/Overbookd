@@ -39,7 +39,7 @@
         <template #item.balance="{ item }">
           <MoneyField
             v-model="item.balance"
-            dense
+            density="compact"
             readonly
             hide-details
             hide-label
@@ -49,7 +49,7 @@
         <template #item.recap="{ item }">
           <MoneyField
             v-model="calculatedConsumption[item.id]"
-            dense
+            density="compact"
             readonly
             hide-details
             hide-label
@@ -69,7 +69,7 @@
           <MoneyField
             v-else
             v-model="item.newConsumption"
-            dense
+            density="compact"
             hide-details
             @update:model-value="updateNewConsumption(item, $event)"
           />
@@ -93,7 +93,7 @@ import {
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/search-user";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {
   required: true,

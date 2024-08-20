@@ -23,6 +23,10 @@ export function pickRandomTheme(currentTheme?: string): string {
   return pickableThemes.at(index) ?? "";
 }
 
+export function pickDefaultTheme(): string {
+  return isDarkTheme() ? darkThemes[0] : lightThemes[0];
+}
+
 export function pickReverseTheme(theme: string): string {
   const isDark = theme.includes("Dark");
   if (isDark) return theme.replace("Dark", "Light");

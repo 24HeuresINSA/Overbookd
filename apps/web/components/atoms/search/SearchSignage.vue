@@ -9,7 +9,7 @@
     :label="hideLabel ? '' : label"
     :hide-details="hideDetails"
     :readonly="readonly"
-    :density="dense ? 'comfortable' : 'default'"
+    :density="density"
     no-data-text="Aucune signalétique correspondante"
     :custom-filter="slugifiedFilter"
     return-object
@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import type { SignageType, Signage } from "@overbookd/signa";
 import { slugifiedFilter } from "~/utils/search/search.utils";
+import type { Density } from "~/utils/vuetify/component-props";
 
 const catalogSignageStore = useCatalogSignageStore();
 
@@ -51,9 +52,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  dense: {
-    type: Boolean,
-    default: false,
+  density: {
+    type: String as PropType<Density>,
+    default: "comfortable",
   },
 });
 

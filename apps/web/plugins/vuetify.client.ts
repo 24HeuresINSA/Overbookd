@@ -4,13 +4,13 @@ import {
   blueDarkTheme,
   redDarkTheme,
   yellowDarkTheme,
-} from "~/utils/theme/dark";
+} from "~/utils/vuetify/theme/dark";
 import {
   blueLightTheme,
   redLightTheme,
   yellowLightTheme,
-} from "~/utils/theme/light";
-import { loginTheme } from "~/utils/theme/login";
+} from "~/utils/vuetify/theme/light";
+import { loginTheme } from "~/utils/vuetify/theme/login";
 
 const commonFieldDefaultSettings = {
   variant: "outlined",

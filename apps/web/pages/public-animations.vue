@@ -80,7 +80,7 @@
 <script lang="ts" setup>
 import type { PreviewForCommunication } from "@overbookd/http";
 import type { TimeWindow } from "@overbookd/festival-event";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { Period, formatDateWithMinutes } from "@overbookd/time";
 import {
   openActivity,

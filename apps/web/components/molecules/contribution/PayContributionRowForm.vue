@@ -3,9 +3,9 @@
     <MoneyField
       v-model="amount"
       :min="MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS"
+      density="compact"
       hide-label
       hide-details
-      dense
     />
     <v-btn
       text="Valider le paiement"

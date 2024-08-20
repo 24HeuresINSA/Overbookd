@@ -2,7 +2,7 @@ import {
   isDarkTheme,
   saveDarkTheme,
   saveLightTheme,
-} from "~/utils/theme/theme.utils";
+} from "~/utils/vuetify/theme/theme.utils";
 
 type State = {
   isDark: boolean;

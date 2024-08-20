@@ -45,7 +45,7 @@
 <script lang="ts" setup>
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CharismaEventParticipant } from "~/utils/charisma/charisma-event";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/search-user";
 import {

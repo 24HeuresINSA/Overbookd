@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { type Signage, type SignageType, signageTypes } from "@overbookd/signa";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";

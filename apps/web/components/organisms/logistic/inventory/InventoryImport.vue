@@ -88,7 +88,7 @@ import { removeItemAtIndex } from "@overbookd/list";
 // import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
 // import { InventoryImport } from "~/domain/inventory/inventory-import";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,

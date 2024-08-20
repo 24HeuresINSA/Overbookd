@@ -108,7 +108,7 @@ import {
   type ActivityReviewsFilter,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import type { TableHeaders } from "~/utils/data-table/header";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { Searchable } from "~/utils/search/search.utils";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
