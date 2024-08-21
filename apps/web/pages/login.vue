@@ -55,7 +55,6 @@
 
             <v-btn
               text="Connexion"
-              rounded="lg"
               size="large"
               color="primary"
               class="login-form__button text-none"
@@ -130,10 +129,8 @@ $mobile-card-content-width: 80%;
   overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 2%;
-  @media screen and (max-width: $mobile-max-width) {
-    justify-content: center;
-  }
 }
 
 .background {
@@ -146,13 +143,13 @@ $mobile-card-content-width: 80%;
 }
 
 .login-card-container {
-  width: 50%;
+  width: 100%;
+  max-width: 1440px;
   height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   @media screen and (max-width: $mobile-max-width) {
-    width: 100%;
+    justify-content: center;
   }
 }
 
