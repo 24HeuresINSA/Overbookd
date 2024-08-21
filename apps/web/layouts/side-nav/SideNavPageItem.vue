@@ -28,8 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HOME_URL } from "@overbookd/web-page";
-import type { PageInSummary } from "~/utils/pages/navigation";
+import { findPage, type PageInSummary } from "~/utils/pages/navigation";
 
 const route = useRoute();
 
@@ -45,8 +44,8 @@ const { page, isFolded } = defineProps({
 });
 
 const isSelected = ({ to }: PageInSummary): boolean => {
-  if (to === HOME_URL) return route.path === to;
-  return route.path.includes(to);
+  const currentPage = findPage(route.path);
+  return currentPage?.to === to;
 };
 </script>
 

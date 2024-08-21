@@ -102,7 +102,10 @@ import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
-import type { Searchable } from "~/utils/search/search.utils";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { buildUserName } from "@overbookd/user";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
@@ -195,10 +198,8 @@ const filterTaskByStatus =
     return statusSearched ? status === statusSearched : true;
   };
 const filterTaskByNameAndId =
-  (search?: string) =>
-  ({ searchable }: Searchable<PreviewFestivalTask>) => {
-    const slugifiedSearch = SlugifyService.apply(search ?? "");
-    return searchable.includes(slugifiedSearch);
+  (search?: string) => (task: Searchable<PreviewFestivalTask>) => {
+    return keepMatchingSearchCriteria(search ?? "")(task);
   };
 const filterTaskByReviews =
   (reviews: TaskReviewsFilter) => (task: Searchable<PreviewFestivalTask>) => {

@@ -8,7 +8,7 @@ import type { HiddenPage, Page, PageInSummary } from "./navigation";
 import {
   FA_URL,
   FT_URL,
-  PUBLIC_ANIMATIONS_URL,
+  FA_TO_PUBLISH_URL,
   STATS_URL,
 } from "@overbookd/web-page";
 
@@ -52,16 +52,23 @@ const FT_PAGE: HiddenPage = {
   canBeFavorite: false,
 };
 
-const ANIMATION_TO_PUBLISH_PAGE: PageInSummary = {
+const FA_TO_PUBLISH_PAGE: PageInSummary = {
   icon: "mdi-web-sync",
   title: "Animations à Publier",
   permission: READ_ANIMATION_TO_PUBLISH,
-  to: PUBLIC_ANIMATIONS_URL,
+  to: FA_TO_PUBLISH_URL,
   description:
     "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
   mobileSupport: false,
   canBeFavorite: true,
-  keywords: ["animations", "communication", "publier", "publication", "comcom"],
+  keywords: [
+    "animations",
+    "communication",
+    "publier",
+    "publication",
+    "comcom",
+    "fa",
+  ],
 };
 
 const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
@@ -87,7 +94,7 @@ const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
 export const FESTIVAL_EVENT_SUMMARY_PAGES: PageInSummary[] = [
   FA_LIST_PAGE,
   FT_LIST_PAGE,
-  ANIMATION_TO_PUBLISH_PAGE,
+  FA_TO_PUBLISH_PAGE,
   FESTIVAL_EVENTS_STATS_PAGE,
 ];
 

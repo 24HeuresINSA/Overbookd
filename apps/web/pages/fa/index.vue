@@ -109,7 +109,10 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import type { Searchable } from "~/utils/search/search.utils";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   openActivity,
@@ -205,10 +208,8 @@ const filterActivityByStatus =
     return statusSearched ? status === statusSearched : true;
   };
 const filterActivityByNameAndId =
-  (search?: string) =>
-  ({ searchable }: Searchable<PreviewFestivalActivity>) => {
-    const slugifiedSearch = SlugifyService.apply(search ?? "");
-    return searchable.includes(slugifiedSearch);
+  (search?: string) => (activity: Searchable<PreviewFestivalActivity>) => {
+    return keepMatchingSearchCriteria(search ?? "")(activity);
   };
 const filterActivityByReviews =
   (reviews: ActivityReviewsFilter) =>

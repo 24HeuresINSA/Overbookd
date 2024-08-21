@@ -66,6 +66,12 @@ export function findPage(path: string): Page | undefined {
 
   const remainingPages = allPages.filter((page) => page.to !== path);
   const reducedPath = removePathLastPart(path);
+
+  const pageWithSameReducedStart = remainingPages.find(
+    (page) => page.to === reducedPath,
+  );
+  if (pageWithSameReducedStart) return pageWithSameReducedStart;
+
   return remainingPages.find(
     (page) => removePathLastPart(page.to) === reducedPath,
   );
