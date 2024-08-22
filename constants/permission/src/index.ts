@@ -30,7 +30,6 @@ export const DOWNLOAD_PLANNING = "download-planning";
 export const SYNC_PLANNING = "sync-planning";
 export const ENROLL_HARD = "enroll-hard";
 export const ENROLL_SOFT = "enroll-soft";
-export const VIEW_TROMBINOSCOPE = "view-trombinoscope";
 export const VIEW_VOLUNTEER = "view-volunteer";
 export const VIEW_VOLUNTEER_DETAILS = "view-volunteer-details";
 export const SEND_MAIL_TEST = "send-mail-test";
@@ -80,7 +79,6 @@ const permissions = [
   SYNC_PLANNING,
   ENROLL_HARD,
   ENROLL_SOFT,
-  VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   VIEW_VOLUNTEER_DETAILS,
   SEND_MAIL_TEST,

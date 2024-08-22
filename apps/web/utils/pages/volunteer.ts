@@ -1,14 +1,12 @@
 import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
-  VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import {
   MY_PERSONAL_ACCOUNT_URL,
   MY_PROFILE_URL,
   SHARED_MEALS_URL,
-  TROMBINOSCOPE_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
 import type { HiddenPage, Page, PageInSummary } from "./navigation";
@@ -58,18 +56,6 @@ const SHARED_MEALS_PAGE: PageInSummary = {
   ],
 };
 
-const TROMBINOSCOPE_PAGE: PageInSummary = {
-  icon: "mdi-image",
-  title: "Trombinoscope",
-  permission: VIEW_TROMBINOSCOPE,
-  to: TROMBINOSCOPE_URL,
-  description:
-    "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
-  mobileSupport: true,
-  canBeFavorite: true,
-  keywords: ["trombinoscope", "photos"],
-};
-
 const VOLUNTEERS_PAGE: PageInSummary = {
   icon: "mdi-account-group",
   title: "Liste des Bénévoles",
@@ -114,7 +100,6 @@ const VOLUNTEERS_PAGE: PageInSummary = {
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
-  TROMBINOSCOPE_PAGE,
   VOLUNTEERS_PAGE,
   // AVAILABILITIES_PAGE,
   // MY_PLANNING_PAGE,

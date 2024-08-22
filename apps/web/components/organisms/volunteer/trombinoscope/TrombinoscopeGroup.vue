@@ -1,5 +1,5 @@
 <template>
-  <div class="group">
+  <div v-show="volunteers.length > 0" class="group">
     <h2 class="heading">{{ heading }}</h2>
     <div class="volunteers">
       <div v-for="volunteer in volunteers" :key="volunteer.id">
@@ -8,6 +8,8 @@
             <TrombinoscopeCard
               :volunteer="volunteer"
               class="trombinoscope-card"
+              @click:team="propagateClickedTeam"
+              @click:volunteer="propagateClickedVolunteer"
             />
           </v-lazy>
         </v-sheet>
@@ -17,6 +19,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Team } from "@overbookd/team";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const { volunteers, heading } = defineProps({
@@ -29,6 +32,12 @@ const { volunteers, heading } = defineProps({
     type: String,
   },
 });
+
+const emit = defineEmits(["click:team", "click:volunteer"]);
+const propagateClickedTeam = (team: Team) => emit("click:team", team);
+const propagateClickedVolunteer = (
+  volunteer: UserDataWithPotentialyProfilePicture,
+) => emit("click:volunteer", volunteer);
 </script>
 
 <style lang="scss" scoped>
@@ -39,7 +48,7 @@ const { volunteers, heading } = defineProps({
 
 .volunteers {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 350px));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 320px));
   gap: 15px;
   align-items: stretch;
   justify-content: center;

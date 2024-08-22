@@ -8,6 +8,7 @@
         bg-color="surface"
         class="filters__field"
         hide-details
+        clearable
         @update:model-value="updateSearchParam"
       />
 
@@ -34,6 +35,27 @@
         @update:model-value="updateExcludedTeamsParam"
       />
     </div>
+    <div class="icons-action">
+      <v-btn-toggle
+        v-model="isTrombinoscopeDisplayed"
+        color="primary"
+        size="small"
+        class="display-mode desktop-only"
+      >
+        <v-btn
+          :value="true"
+          icon="mdi-view-grid"
+          :rounded="false"
+          class="display-mode__btn"
+        />
+        <v-btn
+          :value="false"
+          icon="mdi-view-list"
+          :rounded="false"
+          class="display-mode__btn"
+        />
+      </v-btn-toggle>
+    </div>
   </div>
 </template>
 
@@ -45,9 +67,12 @@ import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 
 const userStore = useUserStore();
 
-const filters = defineModel<VolunteerFilters>({ required: true });
+const filters = defineModel<VolunteerFilters>("filters", { required: true });
+const isTrombinoscopeDisplayed = defineModel<boolean>("trombinoscope", {
+  required: true,
+});
 
-const updateSearchParam = (search: string) => {
+const updateSearchParam = (search?: string) => {
   filters.value.search = search;
   updateQueryParams("search", search);
 };
@@ -95,5 +120,10 @@ const canFilterByExcludedTeams = computed<boolean>(
       width: 100%;
     }
   }
+}
+
+.display-mode {
+  height: 40px !important;
+  border: 1px solid rgba(var(--v-border-color), 0.3);
 }
 </style>

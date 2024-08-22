@@ -1,12 +1,25 @@
 <template>
   <DesktopPageTitle />
   <div class="volunteers-page">
-    <VolunteerListHeader v-model="filters" />
-    <VolunteerListCard
-      :volunteers="displayedVolunteers"
+    <VolunteerListHeader
+      v-model:filters="filters"
+      v-model:trombinoscope="isTrombinoscopeDisplayed"
+    />
+
+    <Trombinoscope
+      v-if="isTrombinoscopeDisplayed"
+      :volunteers="filteredVolunteers"
       :loading="loading"
-      @open-details="openVolunteerInfoDialog"
       @click:team="addTeamInFilters"
+      @click:volunteer="openVolunteerInfoDialog"
+    />
+
+    <VolunteerListCard
+      v-else
+      :volunteers="filteredVolunteers"
+      :loading="loading"
+      @click:team="addTeamInFilters"
+      @click:volunteer="openVolunteerInfoDialog"
     />
 
     <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="700">
@@ -22,7 +35,7 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import type { UserPersonalData } from "@overbookd/user";
+import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import { keepMembersOf, excludeMembersOf } from "~/utils/search/search-team";
 import { toSearchable } from "~/utils/search/search-user";
 import {
@@ -34,38 +47,41 @@ import {
   type VolunteerFilters,
 } from "~/utils/user/volunteer.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 useHead({ title: "Liste des bénévoles" });
 
 const route = useRoute();
 const userStore = useUserStore();
 
-const volunteers = computed(() => userStore.volunteers);
+const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
+  () => userStore.volunteers,
+);
 const loading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (loading.value = false));
+
+const isTrombinoscopeDisplayed = ref<boolean>(true);
 
 const filters = ref<VolunteerFilters>({});
 onMounted(
   () => (filters.value = VolunteerFilterBuilder.getFromRouteQuery(route.query)),
 );
 
-const searchableVolunteers = computed(() => volunteers.value.map(toSearchable));
-const displayedVolunteers = computed(() => {
-  const { search, teams, excludedTeams } = filters.value;
-  return searchableVolunteers.value.filter((volunteer) => {
-    return (
-      keepMembersOf(teams ?? [])(volunteer) &&
-      excludeMembersOf(excludedTeams ?? [])(volunteer) &&
-      filterVolunteersByName(search)(volunteer)
-    );
-  });
-});
-
-const filterVolunteersByName = (
-  search?: string,
-): ((volunteer: Searchable<UserPersonalData>) => boolean) => {
-  return keepMatchingSearchCriteria(search ?? "");
-};
+const searchableVolunteers = computed<
+  Searchable<UserDataWithPotentialyProfilePicture>[]
+>(() => volunteers.value.map(toSearchable));
+const filteredVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(
+  () => {
+    const { search, teams, excludedTeams } = filters.value;
+    return searchableVolunteers.value.filter((volunteer) => {
+      return (
+        keepMembersOf(teams ?? [])(volunteer) &&
+        excludeMembersOf(excludedTeams ?? [])(volunteer) &&
+        keepMatchingSearchCriteria(search ?? "")(volunteer)
+      );
+    });
+  },
+);
 
 const addTeamInFilters = (team: Team) => {
   const currentTeams = filters.value.teams ?? [];
@@ -79,7 +95,13 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const openVolunteerInfoDialog = () => (isVolunteerInfoDialogOpen.value = true);
+const openVolunteerInfoDialog = async (
+  volunteer: UserDataWithPotentialyProfilePicture,
+) => {
+  if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
+  await userStore.setSelectedUser(volunteer);
+  isVolunteerInfoDialogOpen.value = true;
+};
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
 };

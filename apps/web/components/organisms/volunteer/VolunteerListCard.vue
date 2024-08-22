@@ -10,7 +10,7 @@
       :class="{ unclickable: !canViewVolunteerDetails }"
       :hover="volunteers.length > 0 && canViewVolunteerDetails"
       return-object
-      @click:row="openInformationDialog"
+      @click:row="propagateClickedVolunteer"
     >
       <template #item.firstname="{ item }">
         {{ buildUserNameWithNickname(item) }}
@@ -77,8 +77,6 @@ const { volunteers, loading } = defineProps({
 
 const userStore = useUserStore();
 
-const emit = defineEmits(["open-details", "click:team"]);
-
 const canViewVolunteerDetails = computed(() =>
   userStore.can(VIEW_VOLUNTEER_DETAILS),
 );
@@ -94,16 +92,11 @@ const headers = computed<TableHeaders>(() => {
     : baseHeaders;
 });
 
-const openInformationDialog = async (
+const emit = defineEmits(["click:volunteer", "click:team"]);
+const propagateClickedVolunteer = (
   _: MouseEvent,
   { item }: { item: UserDataWithPotentialyProfilePicture },
-) => {
-  if (!canViewVolunteerDetails.value) return;
-  const volunteer = { ...item };
-  await userStore.setSelectedUser(volunteer);
-  emit("open-details");
-};
-
+) => emit("click:volunteer", { ...item });
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

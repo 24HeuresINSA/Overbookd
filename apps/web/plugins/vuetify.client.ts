@@ -16,6 +16,7 @@ const commonFieldDefaultSettings = {
   variant: "outlined",
   density: "comfortable",
 };
+const commonBorderRadiusStyle = { borderRadius: "12px" };
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -55,8 +56,9 @@ export default defineNuxtPlugin((nuxtApp) => {
           },
         },
       },
-      VField: { style: { borderRadius: "12px" } },
-      VBtn: { style: { borderRadius: "12px" } },
+      VField: { style: commonBorderRadiusStyle },
+      VBtn: { style: commonBorderRadiusStyle },
+      VBtnToggle: { style: commonBorderRadiusStyle },
       VTextField: commonFieldDefaultSettings,
       VSelect: commonFieldDefaultSettings,
       VAutocomplete: commonFieldDefaultSettings,

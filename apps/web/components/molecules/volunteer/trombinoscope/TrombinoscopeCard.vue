@@ -1,12 +1,22 @@
 <template>
-  <v-card class="profilePictureCard">
+  <v-card
+    class="profile-picture-card"
+    :ripple="canViewVolunteerDetails"
+    @click="propagateClickedVolunteer"
+  >
     <v-card-title class="name-with-picture">
       <ProfilePicture :user="volunteer" />
       <span class="name">{{ buildUserNameWithNickname(volunteer) }}</span>
     </v-card-title>
     <v-card-subtitle opacity="1">
       <div class="teams">
-        <TeamChip v-for="team of volunteer.teams" :key="team" :team="team" />
+        <TeamChip
+          v-for="team of volunteer.teams"
+          :key="team"
+          :team="team"
+          clickable
+          @click="propagateClickedTeam"
+        />
       </div>
     </v-card-subtitle>
   </v-card>
@@ -14,6 +24,8 @@
 
 <script lang="ts" setup>
 import { buildUserNameWithNickname } from "@overbookd/user";
+import type { Team } from "@overbookd/team";
+import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const { volunteer } = defineProps({
@@ -22,6 +34,15 @@ const { volunteer } = defineProps({
     required: true,
   },
 });
+
+const userStore = useUserStore();
+const canViewVolunteerDetails = computed(() =>
+  userStore.can(VIEW_VOLUNTEER_DETAILS),
+);
+
+const emit = defineEmits(["click:team", "click:volunteer"]);
+const propagateClickedTeam = (team: Team) => emit("click:team", team);
+const propagateClickedVolunteer = () => emit("click:volunteer", volunteer);
 </script>
 
 <style lang="scss" scoped>
@@ -32,12 +53,12 @@ const { volunteer } = defineProps({
 
 .teams {
   display: flex;
-  gap: 5px;
+  gap: 3px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.profilePictureCard {
+.profile-picture-card {
   display: flex;
   flex-direction: column;
   .name-with-picture {

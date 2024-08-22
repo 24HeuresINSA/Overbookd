@@ -24,7 +24,6 @@ import {
   VIEW_LOCATION,
   VIEW_PLANNING,
   VIEW_TIMELINE,
-  VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   VIEW_VOLUNTEER_DETAILS,
   WRITE_FA,
@@ -369,15 +368,6 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "sg" }, { teamCode: "humain" }],
-      },
-    },
-  },
-  {
-    name: VIEW_TROMBINOSCOPE,
-    description: "Peut voir le trombinoscope",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "benevole" }],
       },
     },
   },

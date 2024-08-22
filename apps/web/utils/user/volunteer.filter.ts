@@ -16,7 +16,6 @@ export class VolunteerFilterBuilder {
     const search = this.extractQueryParamsValue(query, "search");
     const teams = this.extractQueryParamsValue(query, "teams");
     const excludedTeams = this.extractQueryParamsValue(query, "excludedTeams");
-    console.log({ ...search, ...teams, ...excludedTeams });
     return { ...search, ...teams, ...excludedTeams };
   }
 
@@ -33,7 +32,6 @@ export class VolunteerFilterBuilder {
       case "teams": {
         const codes = stringifyArrayQueryParam(params.teams);
         const teams = this.toTeams(codes);
-        console.log("teams", teams);
         return teams.length > 0 ? { teams } : {};
       }
       case "excludedTeams": {
