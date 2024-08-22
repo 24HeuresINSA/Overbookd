@@ -44,7 +44,6 @@ import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 definePageMeta({ layout: false });
 
 const route = useRoute();
-const router = useRouter();
 const authStore = useAuthStore();
 
 const password = ref<string>("");
@@ -66,7 +65,7 @@ const sendResetRequest = async () => {
   if (isNotValid.value) return;
   const token = stringifyQueryParam(route.params.token);
   await authStore.resetPassword(token, password.value, password2.value);
-  await router.push(HOME_URL);
+  await navigateTo(HOME_URL);
 };
 </script>
 

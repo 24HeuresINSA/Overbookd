@@ -86,7 +86,6 @@ const config = useRuntimeConfig();
 const version = config.public.version;
 
 const route = useRoute();
-const router = useRouter();
 const authStore = useAuthStore();
 
 const token = computed<string | undefined>(() => {
@@ -96,7 +95,7 @@ const token = computed<string | undefined>(() => {
 const registerLink = computed<string>(() =>
   token.value ? `${REGISTER_URL}?token=${token.value}` : REGISTER_URL,
 );
-const register = () => router.push(registerLink.value);
+const register = () => navigateTo(registerLink.value);
 
 const credentials = ref({
   email: "",
@@ -110,7 +109,7 @@ const login = async () => {
     );
   }
   await authStore.login(credentials.value);
-  if (authStore.authenticated) router.push(HOME_URL);
+  if (authStore.authenticated) navigateTo(HOME_URL);
 };
 
 const isForgotDialogOpen = ref<boolean>(false);

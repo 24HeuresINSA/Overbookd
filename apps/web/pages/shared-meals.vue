@@ -55,7 +55,7 @@ mealSharingStore.fetchAll();
     display: block;
     width: calc(100vw - 20px);
     position: fixed;
-    bottom: 20px;
+    bottom: calc($bottom-nav-height + 20px);
     left: 10px;
     right: 10px;
   }

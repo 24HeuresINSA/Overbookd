@@ -18,9 +18,10 @@ const MY_PROFILE_PAGE: HiddenPage = {
   canBeFavorite: false,
 };
 
-const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
+export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
   title: "Mon Compte Perso",
+  shortTitle: "CP",
   permission: HAVE_PERSONAL_ACCOUNT,
   to: MY_PERSONAL_ACCOUNT_URL,
   description:
@@ -38,9 +39,10 @@ const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   ],
 };
 
-const SHARED_MEALS_PAGE: PageInSummary = {
+export const SHARED_MEALS_PAGE: PageInSummary = {
   icon: "mdi-food-variant",
   title: "Repas Partagés",
+  shortTitle: "Repas",
   permission: SHOTGUN_SHARED_MEAL,
   to: SHARED_MEALS_URL,
   description: "Page pour proposer et shotgun des repas partagés",
@@ -56,9 +58,10 @@ const SHARED_MEALS_PAGE: PageInSummary = {
   ],
 };
 
-const VOLUNTEERS_PAGE: PageInSummary = {
+export const VOLUNTEERS_PAGE: PageInSummary = {
   icon: "mdi-account-group",
   title: "Liste des Bénévoles",
+  shortTitle: "Bénévoles",
   permission: VIEW_VOLUNTEER,
   to: VOLUNTEERS_URL,
   description: "Permet de voir tous les bénévoles",

@@ -25,7 +25,6 @@ import type {
 } from "@overbookd/festival-event";
 import { FT_URL } from "@overbookd/web-page";
 
-const router = useRouter();
 const ftStore = useFestivalTaskStore();
 
 type MinimalActivity = Pick<PreviewFestivalActivity, "id" | "name">;
@@ -55,7 +54,7 @@ const createNewTask = async () => {
   await ftStore.create(blankFt);
 
   if (!selectedTask.value?.id) return;
-  await router.push(`${FT_URL}/${selectedTask.value.id}`);
+  await navigateTo(`${FT_URL}/${selectedTask.value.id}`);
   close();
 };
 </script>

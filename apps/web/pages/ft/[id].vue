@@ -46,7 +46,6 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { FT_URL } from "@overbookd/web-page";
 
 const route = useRoute();
-const router = useRouter();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
 
@@ -61,7 +60,7 @@ const headTitle = computed<string>(() => {
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
   if (selectedTask.value.id !== taskIdFromUrl.value) {
-    router.push(FT_URL);
+    navigateTo(FT_URL);
   }
 });
 
@@ -95,7 +94,7 @@ const publishFeedback = (content: string) => {
 
 <style lang="scss" scoped>
 $sidebar-margin: calc($card-margin * 2);
-$sidebar-width: calc(350px + $sidebar-margin);
+$side-nav-width: calc(350px + $sidebar-margin);
 
 .task {
   display: flex;
@@ -106,15 +105,15 @@ $sidebar-width: calc(350px + $sidebar-margin);
 
 .sidebar {
   position: fixed;
-  width: $sidebar-width;
+  width: $side-nav-width;
   height: fit-content;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  width: calc(100% - $sidebar-width - $card-gap);
-  margin-left: $sidebar-width + $card-gap;
+  width: calc(100% - $side-nav-width - $card-gap);
+  margin-left: $side-nav-width + $card-gap;
   gap: $card-gap;
 }
 

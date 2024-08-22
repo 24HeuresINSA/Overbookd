@@ -1,8 +1,7 @@
 <template>
   <v-app-bar class="header" height="60" flat>
     <template #prepend>
-      <Logo class="desktop-only" />
-      <v-app-bar-nav-icon class="mobile-only" @click.stop="updateNav" />
+      <Logo />
     </template>
 
     <v-app-bar-title class="header__title">
@@ -64,9 +63,6 @@ const watermarkTooltipDescription = computed<string>(() =>
       ? CTMA_TOOLTIP_DESCRIPTION
       : "",
 );
-
-const emit = defineEmits(["update-nav"]);
-const updateNav = () => emit("update-nav");
 </script>
 
 <style lang="scss" scoped>
@@ -96,20 +92,6 @@ const updateNav = () => emit("update-nav");
         display: none;
       }
     }
-  }
-}
-
-.desktop-only {
-  display: block;
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
-}
-
-.mobile-only {
-  display: none;
-  @media only screen and (max-width: $mobile-max-width) {
-    display: block;
   }
 }
 </style>

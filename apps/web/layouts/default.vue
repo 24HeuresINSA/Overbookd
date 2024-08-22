@@ -1,8 +1,7 @@
 <template>
   <v-layout class="layout">
-    <Header @update-nav="updateNav" />
-    <SideNav
-      v-model="isNavFolded"
+    <Header />
+    <DesktopSideNav
       @flip-content="flipContent"
       @unflip-content="unflipContent"
     />
@@ -13,6 +12,7 @@
         </div>
       </div>
     </v-main>
+    <MobileBottomNav />
 
     <v-dialog
       v-model="shouldApproveEULA"
@@ -27,7 +27,8 @@
 
 <script lang="ts" setup>
 import Header from "~/layouts/header/Header.vue";
-import SideNav from "~/layouts/side-nav/SideNav.vue";
+import DesktopSideNav from "~/layouts/navigation/DesktopSideNav.vue";
+import MobileBottomNav from "~/layouts/navigation/MobileBottomNav.vue";
 import { useTheme } from "vuetify";
 import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 import {
@@ -40,9 +41,6 @@ const theme = useTheme();
 onMounted(() => (theme.global.name.value = pickDefaultTheme()));
 
 const userStore = useUserStore();
-
-const isNavFolded = ref<boolean>(true);
-const updateNav = () => (isNavFolded.value = !isNavFolded.value);
 
 const shouldApproveEULA = computed<boolean>(
   () => userStore.loggedUser?.hasApprovedEULA === false,
@@ -60,7 +58,6 @@ const unflipContent = () => {
 </script>
 
 <style lang="scss" scoped>
-$main-border-radius: 25px;
 $surface-color: rgb(var(--v-theme-surface));
 $background-color: rgb(var(--v-theme-background));
 
@@ -68,6 +65,9 @@ $background-color: rgb(var(--v-theme-background));
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  @media only screen and (max-width: $mobile-max-width) {
+    background: $background-color;
+  }
 }
 
 .main {
@@ -77,6 +77,9 @@ $background-color: rgb(var(--v-theme-background));
   width: 100%;
   height: 100%;
   overflow: hidden;
+  @media only screen and (max-width: $mobile-max-width) {
+    padding-bottom: $bottom-nav-height;
+  }
 
   .fake-background {
     background: $surface-color;
@@ -90,13 +93,13 @@ $background-color: rgb(var(--v-theme-background));
     padding: 15px 25px;
     background: $background-color;
     overflow-y: auto;
-    border-top-left-radius: $main-border-radius;
+    border-top-left-radius: $main-page-border-radius;
     border-top: 1px solid $background-color;
     border-left: 1px solid $background-color;
 
     @media only screen and (max-width: $mobile-max-width) {
       padding: 10px;
-      border-top-right-radius: $main-border-radius;
+      border-top-right-radius: $main-page-border-radius;
       border-left: none;
     }
   }

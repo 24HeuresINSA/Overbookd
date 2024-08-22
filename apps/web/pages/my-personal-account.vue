@@ -91,7 +91,7 @@ const balance = computed<string>(() =>
     .transfer-btn {
       width: unset;
       position: fixed;
-      bottom: 20px;
+      bottom: calc($bottom-nav-height + 20px);
       left: 10px;
       right: 10px;
     }

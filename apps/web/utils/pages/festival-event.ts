@@ -12,9 +12,10 @@ import {
   STATS_URL,
 } from "@overbookd/web-page";
 
-const FA_LIST_PAGE: PageInSummary = {
+export const FA_LIST_PAGE: PageInSummary = {
   icon: "mdi-chart-bubble",
   title: "Fiches Activités",
+  shortTitle: "FA",
   permission: READ_FA,
   to: FA_URL,
   description:

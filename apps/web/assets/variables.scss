@@ -6,11 +6,13 @@
 $mobile-max-width: 960px;
 
 $header-height: 60px;
-$sidebar-width: 70px;
+$side-nav-width: 70px;
+$bottom-nav-height: 60px;
 
 $card-gap: 15px;
 $card-margin: 5px;
 
+$main-page-border-radius: 25px;
 $field-border-radius: 12px; // Default in Vuetify plugin
 
 $warning-primary: rgb(251, 140, 0);

@@ -19,7 +19,7 @@
     </div>
 
     <div class="dropdown-menu">
-      <a class="dropdown-menu__item" @click="openProfile">
+      <a class="dropdown-menu__item" @click="navigateTo(MY_PROFILE_URL)">
         <v-icon>mdi-account-outline</v-icon>
         Mon profil
       </a>
@@ -43,7 +43,6 @@ import { LOGIN_URL, MY_PROFILE_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 
-const router = useRouter();
 const theme = useTheme();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
@@ -66,10 +65,9 @@ const balanceClassColor = computed<string>(() => {
   return "";
 });
 
-const openProfile = () => router.push(MY_PROFILE_URL);
 const logout = async () => {
   authStore.logout();
-  await router.push(LOGIN_URL);
+  await navigateTo(LOGIN_URL);
   userStore.clearLoggedUser();
 };
 

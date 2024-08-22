@@ -26,7 +26,6 @@
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 
-const router = useRouter();
 const faStore = useFestivalActivityStore();
 
 const name = ref<string>("");
@@ -52,7 +51,7 @@ const createNewActivity = async () => {
   await faStore.create(blankFa);
 
   if (!selectedActivity.value?.id) return;
-  await router.push(`${FA_URL}/${selectedActivity.value.id}`);
+  await navigateTo(`${FA_URL}/${selectedActivity.value.id}`);
   close();
 };
 </script>

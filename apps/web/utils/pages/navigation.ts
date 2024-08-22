@@ -12,6 +12,7 @@ import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
 export type PageInSummary = {
   icon: string;
   title: string;
+  shortTitle?: string;
   permission?: Permission;
   to: string;
   description: string;

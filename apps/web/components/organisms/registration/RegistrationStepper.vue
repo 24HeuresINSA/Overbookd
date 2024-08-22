@@ -48,7 +48,11 @@
           </p>
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
-            <v-btn text="Annuler" variant="text" @click="returnToLogin" />
+            <v-btn
+              text="Annuler"
+              variant="text"
+              @click="navigateTo(LOGIN_URL)"
+            />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -262,7 +266,6 @@ import {
 } from "~/utils/rules/input.rules";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
-const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 const registrationStore = useRegistrationStore();
@@ -390,10 +393,8 @@ const register = async () => {
     email: email.value,
     password: password.value,
   });
-  router.push(HOME_URL);
+  navigateTo(HOME_URL);
 };
-
-const returnToLogin = () => router.push(LOGIN_URL);
 
 const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);

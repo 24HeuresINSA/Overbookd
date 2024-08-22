@@ -23,7 +23,6 @@ import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 
 const route = useRoute();
-const router = useRouter();
 const faStore = useFestivalActivityStore();
 
 const selectedActivity = computed<FestivalActivity>(
@@ -39,7 +38,7 @@ const headTitle = computed<string>(() => {
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
   if (selectedActivity.value.id !== activityIdFromUrl.value) {
-    router.push(FA_URL);
+    navigateTo(FA_URL);
   }
 });
 
@@ -53,7 +52,7 @@ const publishFeedback = (content: string) => {
 
 <style lang="scss" scoped>
 $sidebar-margin: calc($card-margin * 2);
-$sidebar-width: calc(350px + $sidebar-margin);
+$side-nav-width: calc(350px + $sidebar-margin);
 
 .activity {
   display: flex;
@@ -64,15 +63,15 @@ $sidebar-width: calc(350px + $sidebar-margin);
 
 .sidebar {
   position: fixed;
-  width: $sidebar-width;
+  width: $side-nav-width;
   height: fit-content;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  width: calc(100% - $sidebar-width - $card-gap);
-  margin-left: $sidebar-width + $card-gap;
+  width: calc(100% - $side-nav-width - $card-gap);
+  margin-left: $side-nav-width + $card-gap;
   gap: $card-gap;
 }
 

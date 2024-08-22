@@ -63,6 +63,9 @@ const onClick = () => {
     .logo {
       max-width: 200px;
       max-height: 51px;
+      @media only screen and (max-width: $mobile-max-width) {
+        max-height: 46px;
+      }
     }
 
     .version {

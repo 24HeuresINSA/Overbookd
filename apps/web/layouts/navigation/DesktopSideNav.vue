@@ -1,14 +1,14 @@
 <template>
   <v-navigation-drawer
-    :model-value="isDisplayed"
-    :rail="isReducedForDesktop"
+    v-model:rail="isFolded"
+    :model-value="isDesktop()"
     expand-on-hover
     rail-width="60"
     width="300"
     floating
-    :mobile="!isDesktop"
-    @update:model-value="updateMobileDisplay"
-    @update:rail="updateDesktopReduction"
+    :mobile="false"
+    class="desktop-only"
+    @update:rail="unfocusOnSearch"
   >
     <SideNavSearchField
       v-model:search-input="searchInput"
@@ -36,33 +36,20 @@
 import SideNavSearchField from "./SideNavSearchField.vue";
 import SideNavPageList from "./SideNavPageList.vue";
 import SideNavHelpItemList from "./SideNavHelpItemList.vue";
-import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
 import {
   shouldFlipContent,
   shouldUnflipContent,
 } from "~/utils/easter-egg/flip-content";
+import { isDesktop } from "~/utils/device/device.utils";
 
 const navigationBadgeStore = useNavigationBadgeStore();
-
 onMounted(() => navigationBadgeStore.fetchAll());
 
-const isDesktop = checkDesktop();
+const isFolded = ref<boolean>(true);
+const searchValue = ref<string | undefined>(undefined);
 
 const searchInput = ref<HTMLInputElement | null>(null);
 const unfocusOnSearch = () => searchInput.value?.blur();
-
-const isFolded = defineModel<boolean>({ required: true });
-const isDisplayed = computed<boolean>(() => isDesktop || !isFolded.value);
-const isReducedForDesktop = computed<boolean | null>(() =>
-  isDesktop ? isFolded.value : null,
-);
-const updateMobileDisplay = (value: boolean) => (isFolded.value = !value);
-const updateDesktopReduction = (value: boolean) => {
-  isFolded.value = value;
-  unfocusOnSearch();
-};
-
-const searchValue = ref<string | undefined>(undefined);
 
 const emit = defineEmits(["flip-content", "unflip-content"]);
 watch(searchValue, (newValue) => {

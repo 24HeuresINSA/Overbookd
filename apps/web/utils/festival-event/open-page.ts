@@ -44,6 +44,5 @@ function openInNewTab(link: FestivalEventLink, id: number) {
 
 function open(event: PointerEvent, link: FestivalEventLink, id: number) {
   if (event.ctrlKey) return openInNewTab(link, id);
-  const router = useRouter();
-  router.push(`${link}/${id}`);
+  navigateTo(`${link}/${id}`);
 }

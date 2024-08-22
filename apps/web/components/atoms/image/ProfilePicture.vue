@@ -52,22 +52,16 @@ watch(
     border-radius: 50%;
     object-fit: cover;
     &.small {
-      height: 50px;
-      width: 50px;
-      @media only screen and (max-width: $mobile-max-width) {
-        height: 40px;
-        width: 40px;
-      }
+      height: 45px;
+      width: 45px;
     }
   }
 
   &__icon {
     font-size: 150px;
+    opacity: 0.9;
     &.small {
       font-size: 50px;
-      @media only screen and (max-width: $mobile-max-width) {
-        font-size: 40px;
-      }
     }
   }
 }

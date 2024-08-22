@@ -7,7 +7,7 @@
     />
 
     <Trombinoscope
-      v-if="isTrombinoscopeDisplayed"
+      v-show="isTrombinoscopeDisplayed"
       :volunteers="filteredVolunteers"
       :loading="loading"
       @click:team="addTeamInFilters"
@@ -15,7 +15,7 @@
     />
 
     <VolunteerListCard
-      v-else
+      v-show="!isTrombinoscopeDisplayed"
       :volunteers="filteredVolunteers"
       :loading="loading"
       @click:team="addTeamInFilters"
@@ -95,11 +95,11 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const openVolunteerInfoDialog = async (
+const openVolunteerInfoDialog = (
   volunteer: UserDataWithPotentialyProfilePicture,
 ) => {
   if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
-  await userStore.setSelectedUser(volunteer);
+  userStore.setSelectedUser(volunteer);
   isVolunteerInfoDialogOpen.value = true;
 };
 const closeVolunteerInfoDialog = () => {

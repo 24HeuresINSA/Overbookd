@@ -22,16 +22,15 @@ type QueryParam = string | string[] | number | undefined;
 
 export function updateQueryParams(key: string, value: QueryParam) {
   const route = useRoute();
-  const router = useRouter();
-
   const currentQuery = route.query;
   const path = route.path;
+
   const isEmpty = Array.isArray(value) ? value.length === 0 : !value;
   if (isEmpty) {
     const { [key]: remove, ...remainingQuery } = currentQuery;
-    router.push({ path, query: remainingQuery });
+    navigateTo({ path, query: remainingQuery });
     return;
   }
   const query = { ...currentQuery, [key]: value };
-  router.push({ path, query });
+  navigateTo({ path, query });
 }
