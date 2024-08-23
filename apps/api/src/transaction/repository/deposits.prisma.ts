@@ -5,7 +5,7 @@ import {
   DepositTransactionForm,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_TRANSACTION_USER } from "./transaction.query";
+import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 
 export class PrismaDeposits implements Deposits {
   constructor(private readonly prisma: PrismaService) {}
@@ -23,7 +23,7 @@ export class PrismaDeposits implements Deposits {
         amount: true,
         context: true,
         type: true,
-        payee: { select: SELECT_TRANSACTION_USER },
+        payee: { select: SELECT_USER_IDENTIFIER },
         createdAt: true,
       },
     });

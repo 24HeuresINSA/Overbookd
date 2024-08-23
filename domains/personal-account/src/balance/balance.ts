@@ -2,7 +2,7 @@ type Transaction = {
   amount: number;
 };
 
-type TransactionsForBalance = {
+export type TransactionsForBalance = {
   transactionsFrom: Transaction[];
   transactionsTo: Transaction[];
 };

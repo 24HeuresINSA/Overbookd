@@ -10,12 +10,14 @@ import {
   CategoryScale,
   LinearScale,
   Filler,
+  TimeScale,
 } from "chart.js";
 
 export default defineNuxtPlugin(() => {
   Chart.register(
     CategoryScale,
     LinearScale,
+    TimeScale,
     BarElement,
     PointElement,
     LineElement,
