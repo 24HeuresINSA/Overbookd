@@ -18,20 +18,20 @@ import { FestivalTaskError } from "../../../festival-task/festival-task.error.js
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
-    super("❌ La section Demande de matos a déjà été initialisée");
+    super("La section Demande de matos a déjà été initialisée");
   }
 }
 
 export class NotYetInitialized extends FestivalActivityError {
   constructor() {
-    super("❌ La section Demande de matos n'a pas encore été initialisée.");
+    super("La section Demande de matos n'a pas encore été initialisée.");
   }
 }
 
 export class CantRemoveLastTimeWindow extends FestivalActivityError {
   constructor() {
     super(
-      "❌ Il s'agit du dernier créneau matos. Il n'est pas possible de le supprimer",
+      "Il s'agit du dernier créneau matos. Il n'est pas possible de le supprimer",
     );
   }
 }
@@ -39,7 +39,7 @@ export class CantRemoveLastTimeWindow extends FestivalActivityError {
 export class CantRemoveLastRequest extends FestivalActivityError {
   constructor() {
     super(
-      "❌ Il s'agit de la dernière demande de matos. Il n'est pas possible de la supprimer",
+      "Il s'agit de la dernière demande de matos. Il n'est pas possible de la supprimer",
     );
   }
 }

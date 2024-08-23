@@ -4,16 +4,12 @@ import type { PastSharedMeal, AboutMeal, Expense } from "./meals.model.js";
 import { MealSharingError } from "./meal-sharing.error.js";
 
 export const SHOTGUN_PAST_MEAL_ERROR =
-  "❌ Ce repas partagé a été cloturé, il n'est plus possible de le shotgun";
+  "Ce repas partagé a été cloturé, il n'est plus possible de le shotgun";
 
 export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
-  "❌ Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
+  "Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
 
 class PastMealError extends MealSharingError {
-  private constructor(message: string) {
-    super(message);
-  }
-
   static get shotgun(): PastMealError {
     return new PastMealError(SHOTGUN_PAST_MEAL_ERROR);
   }

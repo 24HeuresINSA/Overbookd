@@ -37,7 +37,7 @@ import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 export class AssignCatalogItemInDraftActivity extends FestivalActivityError {
   constructor() {
     super(
-      "❌ Il n'est pas possible d'attribuer une signalétique du catalogue à une demande de signalétique dans une FA en brouillon",
+      "Il n'est pas possible d'attribuer une signalétique du catalogue à une demande de signalétique dans une FA en brouillon",
     );
   }
 }

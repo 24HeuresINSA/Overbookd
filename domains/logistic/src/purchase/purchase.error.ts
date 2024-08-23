@@ -5,7 +5,7 @@ class PurchaseError extends LogisticError {}
 
 export class PurchaseNotFound extends PurchaseError {
   constructor(id: Purchase["id"]) {
-    const message = `❌ La fiche achat #${id} n'a pas été trouvée`;
+    const message = `La fiche achat #${id} n'a pas été trouvée`;
     super(message);
   }
 }

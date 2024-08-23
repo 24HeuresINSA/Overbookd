@@ -6,7 +6,7 @@ export class NotAskingToReview<
   T extends FestivalEventIdentifier,
 > extends FestivalEventError {
   constructor(eventId: number, team: Reviewer<T>, identifier: T) {
-    const message = `❌ La ${identifier} #${eventId} n'est pas à valider par l'équipe ${team}`;
+    const message = `La ${identifier} #${eventId} n'est pas à valider par l'équipe ${team}`;
     super(message);
   }
 }
@@ -22,7 +22,7 @@ export class CantAskForReview extends FestivalEventError {
 export class ShouldAssignDrive extends FestivalEventError {
   constructor(identifier: FestivalEventIdentifier = FA) {
     super(
-      `❌ Il faut attribuer des lieux de retrait aux demandes de matos avant de valider la ${identifier}`,
+      `Il faut attribuer des lieux de retrait aux demandes de matos avant de valider la ${identifier}`,
     );
   }
 }
@@ -31,7 +31,7 @@ export class AlreadyApproved<
   T extends FestivalEventIdentifier,
 > extends FestivalEventError {
   constructor(eventId: number, team: Reviewer<T>, identifier: T) {
-    const message = `❌ La ${identifier} #${eventId} est validée par l'équipe ${team}`;
+    const message = `La ${identifier} #${eventId} est validée par l'équipe ${team}`;
     super(message);
   }
 }
@@ -44,7 +44,7 @@ export class AlreadyApprovedBy<
     const noun = plural ? "les équipes" : "l'équipe";
     const reviewerListing = reviewers.join(" et ");
     super(
-      `❌ La ${identifier} a déjà été validée par ${noun} ${reviewerListing}.`,
+      `La ${identifier} a déjà été validée par ${noun} ${reviewerListing}.`,
     );
   }
 }

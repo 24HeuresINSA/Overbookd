@@ -21,7 +21,7 @@ export class InquirySectionService {
   ): Promise<FestivalTask> {
     const gear = await this.inquiries.find(slug);
     if (!gear) {
-      throw new NotFoundException("❌ Le matos recherché n'existe pas");
+      throw new NotFoundException("Le matos recherché n'existe pas");
     }
     const inquiry = { ...gear, quantity };
     return this.prepare.addInquiry(id, inquiry);
@@ -40,7 +40,7 @@ export class InquirySectionService {
   ): Promise<FestivalTask> {
     const inquiry = await this.inquiries.find(link.slug);
     if (!inquiry) {
-      throw new NotFoundException("❌ Le matos recherché n'existe pas");
+      throw new NotFoundException("Le matos recherché n'existe pas");
     }
 
     return this.prepare.assignInquiryToDrive(id, link);

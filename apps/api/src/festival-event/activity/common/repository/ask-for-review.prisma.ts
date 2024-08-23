@@ -35,7 +35,7 @@ export class PrismaAskForReview
     });
     const { festivalActivity } = FestivalActivityBuilder.fromDatabase(updated);
     if (isDraft(festivalActivity)) {
-      throw new FestivalActivityError("❌ La FA n'est pas encore en relecture");
+      throw new FestivalActivityError("La FA n'est pas encore en relecture");
     }
     return festivalActivity;
   }

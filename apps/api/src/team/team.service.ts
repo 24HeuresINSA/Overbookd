@@ -109,7 +109,7 @@ export class TeamService {
 
   static checkMembership(user: JwtUtil, team: string) {
     if (!user.isMemberOf(team)) {
-      const notMember = `❌ Tu n'es pas membre de l'équipe ${team}`;
+      const notMember = `Tu n'es pas membre de l'équipe ${team}`;
       throw new ForbiddenException(notMember);
     }
   }

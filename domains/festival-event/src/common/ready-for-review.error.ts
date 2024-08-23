@@ -6,7 +6,7 @@ export const CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE =
 
 export class ReadyForReviewError extends FestivalEventError {
   constructor(errors: string[], identifier: FestivalEventIdentifier = "FA") {
-    const cantMoveToInReview = `❌ La ${identifier} ${CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE}`;
+    const cantMoveToInReview = `La ${identifier} ${CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE}`;
     const errorList = errors.map((error) => `- ${error}`).join("\n");
     const message = `${cantMoveToInReview}\n${errorList}`;
     super(message);

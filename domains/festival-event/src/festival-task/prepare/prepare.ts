@@ -91,8 +91,7 @@ type PublishFeedback = {
 
 class PrepareFestivalTaskError extends FestivalTaskError {
   constructor(errors: string[]) {
-    const message = errors.map((error) => `❌ ${error}`).join("\n");
-    super(message);
+    super(errors.join("\n"));
   }
 }
 

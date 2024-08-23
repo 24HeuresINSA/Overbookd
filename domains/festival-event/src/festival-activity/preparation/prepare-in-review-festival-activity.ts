@@ -64,14 +64,14 @@ import { AlreadyApprovedBy } from "../../common/review.error.js";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {
-    const baseError = "❌ Il n'est pas possible de rendre publique cette FA";
+    const baseError = "Il n'est pas possible de rendre publique cette FA";
     super([baseError, ...missingParts].join("\n"));
   }
 }
 
 class NeedAtLeastOneTimeWindow extends FestivalActivityError {
   constructor() {
-    super("❌ Il faut garder au moins un créneau.");
+    super("Il faut garder au moins un créneau.");
   }
 }
 

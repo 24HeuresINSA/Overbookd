@@ -3,7 +3,7 @@ import { SHIFT_HOURS } from "./shift.constant.js";
 export const AVAILABILITY_ERROR_MESSAGES = {
   PERIOD_TIMELINE: "start should be before end",
   START_HOUR: "start should be a pair hour",
-  MINIMUM_PERIOD_DURATION: "❌ La disponibilité doit durer au moins 2 heures",
+  MINIMUM_PERIOD_DURATION: "La disponibilité doit durer au moins 2 heures",
   PERIODS_JOINT: "periods should overlap or follow to be added",
   ODD_HOUR: buildOddHourError(),
 };
@@ -45,7 +45,7 @@ function buildOddHourError() {
   const endShift = displayHour(SHIFT_HOURS.NIGHT);
   const shift = `${startShift}-${endShift}`;
 
-  return `❌ Il n'est pas possible de sélectionner des heures impaires en dehors du shift de la soirée (${shift})`;
+  return `Il n'est pas possible de sélectionner des heures impaires en dehors du shift de la soirée (${shift})`;
 }
 
 function displayHour(hour: number) {

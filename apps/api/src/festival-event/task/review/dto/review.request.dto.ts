@@ -8,7 +8,7 @@ const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
 export class RejectRequestDto implements ReviewRejection<"FT"> {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
-    message: () => `❌ Seuls ${reviewers.join(", ")} peuvent rejeter une FT`,
+    message: () => `Seuls ${reviewers.join(", ")} peuvent rejeter une FT`,
   })
   team: Reviewer<"FT">;
 
@@ -23,7 +23,7 @@ export class RejectRequestDto implements ReviewRejection<"FT"> {
 export class ApproveRequestDto implements ReviewApproval<"FT"> {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
-    message: () => `❌ Seuls ${reviewers.join(", ")} peuvent approuver une FT`,
+    message: () => `Seuls ${reviewers.join(", ")} peuvent approuver une FT`,
   })
   team: Reviewer<"FT">;
 }

@@ -33,7 +33,7 @@ export class PrismaAskForReview implements AskForReviewTasks {
     });
     const { festivalTask } = FestivalTaskBuilder.fromDatabase(updated);
     if (!isInReview(festivalTask)) {
-      throw new FestivalTaskError("❌ La FT n'est pas encore en relecture");
+      throw new FestivalTaskError("La FT n'est pas encore en relecture");
     }
     return festivalTask;
   }

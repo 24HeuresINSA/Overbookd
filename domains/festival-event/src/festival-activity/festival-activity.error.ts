@@ -1,32 +1,32 @@
 import { FestivalEventError } from "../festival-event.js";
 
 function buildFestivalActivityNotFoundErrorMessage(id: number) {
-  return `❌ La fiche activité #${id} n'a pas été trouvée`;
+  return `La fiche activité #${id} n'a pas été trouvée`;
 }
 
 const FREE_PASS_MUST_BE_POSITIVE_ERROR_MESSAGE =
-  "❌ Le nombre de laissez passer doit être supérieur ou égale à 0";
+  "Le nombre de laissez passer doit être supérieur ou égale à 0";
 
 const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
-  "❌ Une créneau existe déjà à ces heures";
+  "Une créneau existe déjà à ces heures";
 
 const CONTRACTOR_NOT_FOUND_ERROR_MESSAGE =
-  "❌ Ce prestataire n'existe pas dans la fiche activité";
+  "Ce prestataire n'existe pas dans la fiche activité";
 
 const SIGNAGE_NOT_FOUND_ERROR_MESSAGE =
-  "❌ Cette signalétique n'existe pas dans la fiche activité";
+  "Cette signalétique n'existe pas dans la fiche activité";
 
 const SIGNAGE_ALREADY_EXISTS_ERROR_MESSAGE =
-  "❌ Une signalétique similaire existe déjà dans la fiche activité";
+  "Une signalétique similaire existe déjà dans la fiche activité";
 
 const ELECTRICITY_SUPPLY_NOT_FOUND_ERROR_MESSAGE =
-  "❌ Cette demande d'elec n'existe pas dans la fiche activité";
+  "Cette demande d'elec n'existe pas dans la fiche activité";
 
 const ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE =
-  "❌ Une demande d'elec similaire existe déjà dans la fiche activité";
+  "Une demande d'elec similaire existe déjà dans la fiche activité";
 
 const INQUIRY_ALREADY_EXISTS_ERROR_MESSAGE =
-  "❌ Une demande de matos existe déjà pour";
+  "Une demande de matos existe déjà pour";
 
 export class FestivalActivityError extends FestivalEventError {}
 

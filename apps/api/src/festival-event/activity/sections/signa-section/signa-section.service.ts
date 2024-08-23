@@ -69,7 +69,7 @@ export class SignaSectionService {
     const catalogItem = await this.catalogSignages.find(catalogItemId);
     if (!catalogItem) {
       throw new NotFoundException(
-        "❌ La signalétique n'existe pas dans le catalogue",
+        "La signalétique n'existe pas dans le catalogue",
       );
     }
 

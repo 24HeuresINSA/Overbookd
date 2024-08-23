@@ -31,7 +31,7 @@ export class InquirySectionService {
   ) {
     const inquiry = await this.inquiries.find(inquiryInitializer.request.slug);
     if (!inquiry) {
-      throw new NotFoundException("❌ Le matos demandé n'existe pas");
+      throw new NotFoundException("Le matos demandé n'existe pas");
     }
 
     const request = { ...inquiryInitializer.request, ...inquiry };
@@ -80,7 +80,7 @@ export class InquirySectionService {
   ): Promise<FestivalActivity> {
     const inquiry = await this.inquiries.find(slug);
     if (!inquiry) {
-      throw new NotFoundException("❌ Le matos recherché n'existe pas");
+      throw new NotFoundException("Le matos recherché n'existe pas");
     }
 
     TeamService.checkMembership(user, inquiry.owner);
