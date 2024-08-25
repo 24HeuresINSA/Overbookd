@@ -1,17 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  Adherents,
-  MealSharing,
-  SharedMeals,
-  SOIR,
-  MIDI,
-} from "./meal-sharing.js";
+import { Adherents, MealSharing, SOIR, MIDI } from "./meal-sharing.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
   AlreadyShotguned,
-  CancelShotgunByChefOnly,
-  RecordExpenseByChefOnly,
+  MealNotFound,
+  OnlyChefCan,
   RecordExpenseOnNoShotgunedMeal,
+  RecordExpenseOnPastMeal,
 } from "./meal-sharing.error.js";
 import { PastSharedMeal } from "./meals.model.js";
 import { Meal } from "./meal.js";
@@ -19,6 +14,7 @@ import { InMemorySharedMeals } from "./shared-meals.inmemory.js";
 import { InMemoryAdherents } from "./adherents.inmemory.js";
 import {
   CANCEL_SHOTGUN_PAST_MEAL_ERROR,
+  PastSharedMealBuilder,
   SHOTGUN_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
 
@@ -45,6 +41,7 @@ const rizCantonnais = OnGoingSharedMealBuilder.build({
   chef: julie,
   shotguns,
 });
+
 const lonelyMeal = OnGoingSharedMealBuilder.build({
   id: 2,
   meal,
@@ -52,8 +49,16 @@ const lonelyMeal = OnGoingSharedMealBuilder.build({
   shotguns: [],
 });
 
+const closedMeal = PastSharedMealBuilder.build({
+  id: 3,
+  meal,
+  chef: julie,
+  shotguns,
+  expense: { amount: 1000, date: new Date() },
+});
+
 describe("Meal Sharing", () => {
-  let sharedMeals: SharedMeals;
+  let sharedMeals: InMemorySharedMeals;
   let adherents: Adherents;
   let mealSharing: MealSharing;
   describe("Offer a meal", () => {
@@ -162,7 +167,7 @@ describe("Meal Sharing", () => {
         expect(
           async () =>
             await mealSharing.cancelShotgun(cancelShotgun, instigator),
-        ).rejects.toThrow(CancelShotgunByChefOnly);
+        ).rejects.toThrow(OnlyChefCan.cancelShotgunFor(rizCantonnais));
       });
     });
     describe("when the chef try to cancel a shotgun", () => {
@@ -194,7 +199,11 @@ describe("Meal Sharing", () => {
     const expense = { amount: 1000, date: new Date("2023-10-12 12:00") };
     let pastSharedMeal: PastSharedMeal;
     beforeEach(async () => {
-      sharedMeals = new InMemorySharedMeals([rizCantonnais, lonelyMeal]);
+      sharedMeals = new InMemorySharedMeals([
+        rizCantonnais,
+        lonelyMeal,
+        closedMeal,
+      ]);
       adherents = new InMemoryAdherents([...adherentListing]);
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
@@ -203,36 +212,38 @@ describe("Meal Sharing", () => {
         expect(
           async () =>
             await mealSharing.recordExpense(rizCantonnais.id, lea.id, expense),
-        ).rejects.toThrow(RecordExpenseByChefOnly);
+        ).rejects.toThrow(OnlyChefCan.recordExpenseFor(rizCantonnais));
       });
     });
     describe("when chef record expense", () => {
-      beforeEach(async () => {
-        pastSharedMeal = await mealSharing.recordExpense(
-          rizCantonnais.id,
-          julie.id,
-          expense,
-        );
-      });
-      it("should record amount and date of the expense", async () => {
-        expect(pastSharedMeal.expense.amount).toBe(1000);
-      });
-      it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
-        expect(async () => {
-          await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
-        }).rejects.toThrow(SHOTGUN_PAST_MEAL_ERROR);
-      });
-      it("should indicate shared meal is past for chef trying to cancel shotgun", async () => {
-        expect(async () => {
-          const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
-          await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
-        }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
-      });
-      it("should count how many shotguns were before the expense", () => {
-        expect(pastSharedMeal.inTimeShotguns).toBe(2);
-      });
-      it("should count how many shotguns were done", () => {
-        expect(pastSharedMeal.shotgunCount).toBe(3);
+      describe("on an ongoing meal", () => {
+        beforeEach(async () => {
+          pastSharedMeal = await mealSharing.recordExpense(
+            rizCantonnais.id,
+            julie.id,
+            expense,
+          );
+        });
+        it("should record amount and date of the expense", async () => {
+          expect(pastSharedMeal.expense.amount).toBe(1000);
+        });
+        it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
+          expect(async () => {
+            await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
+          }).rejects.toThrow(SHOTGUN_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to cancel shotgun", async () => {
+          expect(async () => {
+            const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
+            await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
+          }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
+        });
+        it("should count how many shotguns were before the expense", () => {
+          expect(pastSharedMeal.inTimeShotguns).toBe(2);
+        });
+        it("should count how many shotguns were done", () => {
+          expect(pastSharedMeal.shotgunCount).toBe(3);
+        });
       });
       describe("when no one shotgun for the meal", () => {
         it("should indicate we can not record expense", () => {
@@ -245,6 +256,46 @@ describe("Meal Sharing", () => {
               ),
           ).rejects.toThrow(RecordExpenseOnNoShotgunedMeal);
         });
+      });
+      describe("when meal is already closed", () => {
+        it("should indicate that meal is already closed", async () => {
+          expect(
+            async () =>
+              await mealSharing.recordExpense(
+                closedMeal.id,
+                closedMeal.chef.id,
+                expense,
+              ),
+          ).rejects.toThrow(RecordExpenseOnPastMeal);
+        });
+      });
+    });
+  });
+  describe("Cancel a meal", () => {
+    beforeEach(() => {
+      sharedMeals = new InMemorySharedMeals([rizCantonnais]);
+      adherents = new InMemoryAdherents([...adherentListing]);
+      mealSharing = new MealSharing(sharedMeals, adherents);
+    });
+    describe("when a meal is canceled by its chef", () => {
+      beforeEach(async () => {
+        await mealSharing.cancelMeal(rizCantonnais.id, rizCantonnais.chef.id);
+      });
+      it("should remove meal from the available ones", () => {
+        expect(sharedMeals.all).not.toContainEqual(rizCantonnais);
+      });
+      it("should not be possible to shotgun it afterwards", async () => {
+        expect(
+          async () => await mealSharing.shotgun(rizCantonnais.id, shogosse.id),
+        ).rejects.toThrow(MealNotFound);
+      });
+    });
+    describe("when someone else is trying to cancel a meal", () => {
+      it("should indicate that only chef can cancel a meal", async () => {
+        expect(
+          async () =>
+            await mealSharing.cancelMeal(rizCantonnais.id, shogosse.id),
+        ).rejects.toThrow(OnlyChefCan.cancel(rizCantonnais));
       });
     });
   });

@@ -31,6 +31,10 @@ export class InMemorySharedMeals implements SharedMeals {
     return Promise.resolve(sharedMeal);
   }
 
+  async cancel(mealId: SharedMeal["id"]): Promise<void> {
+    this.sharedMeals = this.sharedMeals.filter(({ id }) => id !== mealId);
+  }
+
   close(meal: PastSharedMeal): Promise<PastSharedMeal> {
     return this.save(PastSharedMealBuilder.build(meal));
   }
@@ -54,5 +58,9 @@ export class InMemorySharedMeals implements SharedMeals {
 
     this.sharedMeals = updateItemToList(this.sharedMeals, mealIndex, meal);
     return Promise.resolve(meal);
+  }
+
+  all(): SharedMealBuilder[] {
+    return this.sharedMeals;
   }
 }

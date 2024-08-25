@@ -1,3 +1,4 @@
+import { Adherent } from "./adherent.js";
 import { SharedMeal } from "./meals.model.js";
 
 export class MealSharingError extends Error {}
@@ -26,20 +27,32 @@ export class AlreadyShotguned extends MealSharingError {
   }
 }
 
-export class RecordExpenseByChefOnly extends MealSharingError {
-  constructor({ chef }: SharedMeal) {
-    super(`Seul le.a chef.fe ${chef.name} peut renseigner une dépense`);
+export class OnlyChefCan extends MealSharingError {
+  private constructor(chef: Adherent, action: string) {
+    super(`Seul le.a chef.fe ${chef.name} peut ${action}`);
   }
-}
 
-export class CancelShotgunByChefOnly extends MealSharingError {
-  constructor({ chef }: SharedMeal) {
-    super(`Seul le.a chef.fe ${chef.name} peut annuler un shotgun`);
+  static cancelShotgunFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "annuler un shotgun");
+  }
+
+  static recordExpenseFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "renseigner une dépense");
+  }
+
+  static cancel({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "annuler un repas");
   }
 }
 
 export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
   constructor() {
     super("Il faut au moins un convive pour renseigner une dépense");
+  }
+}
+
+export class RecordExpenseOnPastMeal extends MealSharingError {
+  constructor() {
+    super("Le repas a déjà une dépense renseignée");
   }
 }

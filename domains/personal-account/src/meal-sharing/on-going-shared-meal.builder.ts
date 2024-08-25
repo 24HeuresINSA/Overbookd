@@ -1,7 +1,7 @@
-import { Expense, AboutMeal, OnGoingSharedMeal } from "./meals.model.js";
+import { Expense, OnGoingSharedMeal } from "./meals.model.js";
 import { Meal } from "./meal.js";
-import { MealDate } from "./meal-sharing.js";
-import { Adherent, Shotgun, Shotguns } from "./adherent.js";
+import { MealDate, SharedMealBuilder } from "./meal-sharing.js";
+import { Adherent, Shotguns } from "./adherent.js";
 import { PastSharedMealBuilder } from "./past-shared-meal.builder.js";
 import { AlreadyShotguned } from "./meal-sharing.error.js";
 
@@ -14,14 +14,10 @@ type InitSharedMeal = {
 
 type BuildOnGoingSharedMeal = Omit<OnGoingSharedMeal, "shotgunCount">;
 
-export class OnGoingSharedMealBuilder implements OnGoingSharedMeal {
-  private constructor(
-    readonly id: number,
-    readonly meal: AboutMeal,
-    readonly chef: Adherent,
-    private readonly _shotguns: Shotguns,
-  ) {}
-
+export class OnGoingSharedMealBuilder
+  extends SharedMealBuilder
+  implements OnGoingSharedMeal
+{
   static init(initializer: InitSharedMeal): OnGoingSharedMealBuilder {
     const { id, menu, date, chef } = initializer;
     const meal = Meal.init(menu, date);
@@ -34,14 +30,6 @@ export class OnGoingSharedMealBuilder implements OnGoingSharedMeal {
     const { id, meal, chef, shotguns: shotgunList } = builder;
     const shotguns = Shotguns.build(shotgunList);
     return new OnGoingSharedMealBuilder(id, meal, chef, shotguns);
-  }
-
-  get shotguns(): Shotgun[] {
-    return this._shotguns.all;
-  }
-
-  get shotgunCount(): number {
-    return this._shotguns.all.length;
   }
 
   hasShotgun(id: Adherent["id"]): boolean {
@@ -60,7 +48,7 @@ export class OnGoingSharedMealBuilder implements OnGoingSharedMeal {
     );
   }
 
-  cancelShotgunFor(guest: number): OnGoingSharedMealBuilder {
+  cancelShotgunFor(guest: Adherent["id"]): OnGoingSharedMealBuilder {
     const shotguns = this._shotguns.remove(guest);
     return new OnGoingSharedMealBuilder(
       this.id,
@@ -78,5 +66,9 @@ export class OnGoingSharedMealBuilder implements OnGoingSharedMeal {
       shotguns: this.shotguns,
       expense,
     });
+  }
+
+  isChef(adherent: Adherent["id"]) {
+    return adherent === this.chef.id;
   }
 }

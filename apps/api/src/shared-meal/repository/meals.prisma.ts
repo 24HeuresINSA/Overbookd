@@ -119,6 +119,13 @@ export class PrismaMeals implements SharedMeals {
     });
     return meals.map(buildSharedMeal);
   }
+
+  async cancel(mealId: SharedMeal["id"]): Promise<void> {
+    await this.prisma.sharedMeal.delete({
+      select: { id: true },
+      where: { id: mealId },
+    });
+  }
 }
 
 type DatabaseAdherent = {
