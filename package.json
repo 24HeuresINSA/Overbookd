@@ -44,7 +44,7 @@
   },
   "packageManager": "pnpm@9.9.0",
   "engines": {
-    "node": "20.16.0",
+    "node": "20.17.0",
     "pnpm": "9.9.0"
   },
   "devDependencies": {
