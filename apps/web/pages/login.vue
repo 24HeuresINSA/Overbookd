@@ -1,6 +1,6 @@
 <template>
   <div class="login-page">
-    <v-img src="/img/login-background.jpg" class="background" cover />
+    <v-img :src="image" class="background" cover />
 
     <div class="login-card-container">
       <v-card class="login-card" theme="loginTheme">
@@ -78,7 +78,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { HOME_URL, REGISTER_URL } from "@overbookd/web-page";
+import { pickRandomBackground } from "~/domain/login/login";
 
 definePageMeta({ layout: false });
 
@@ -101,6 +103,13 @@ const credentials = ref({
   email: "",
   password: "",
 });
+
+const image = ref(pickRandomBackground());
+
+setInterval(
+  () => (image.value = pickRandomBackground(image.value)),
+  10 * ONE_SECOND_IN_MS,
+);
 
 const login = async () => {
   if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
