@@ -71,6 +71,13 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       this._updateMealInsideMeals(sharedMeal);
     },
 
+    async cancelMeal(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.cancelMeal(mealId);
+      if (isHttpError(res)) return;
+      this.meals = this.meals.filter((meal) => meal.id !== mealId);
+      sendInfoNotification("Le repas a été annulé");
+    },
+
     _updateMealInsideMeals(sharedMeal: SharedMeal) {
       const mealIndex = this.meals.findIndex(({ id }) => id === sharedMeal.id);
       if (mealIndex === -1) return;

@@ -173,4 +173,22 @@ export class SharedMealController {
   ): Promise<OnGoingSharedMealResponseDto> {
     return this.sharedMeal.cancelShotgun(mealId, guestId, user.id);
   }
+
+  @Permission(SHOTGUN_SHARED_MEAL)
+  @Delete(":mealId")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  cancelMeal(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.sharedMeal.cancelMeal(mealId, user.id);
+  }
 }

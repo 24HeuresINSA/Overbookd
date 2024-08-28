@@ -38,4 +38,8 @@ export class MealSharingRepository {
       expense,
     );
   }
+
+  static cancelMeal(mealId: SharedMeal["id"]) {
+    return HttpClient.delete<void>(`${this.basePath}/${mealId}`);
+  }
 }

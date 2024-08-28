@@ -784,7 +784,7 @@ model Shotgun {
   guestId Int        @map("guest_id")
   guest   User       @relation("guest", fields: [guestId], references: [id])
   mealId  Int        @map("meal_id")
-  meal    SharedMeal @relation(fields: [mealId], references: [id])
+  meal    SharedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
   date    DateTime
 
   @@id([guestId, mealId])

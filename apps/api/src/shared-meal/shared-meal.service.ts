@@ -66,6 +66,13 @@ export class SharedMealService {
     this.eventStore.publish({ data: pastMeal, type: SHARED_MEAL_CLOSED });
     return formatSharedMeal(pastMeal);
   }
+
+  async cancelMeal(
+    mealId: SharedMeal["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<void> {
+    await this.mealSharing.cancelMeal(mealId, instigatorId);
+  }
 }
 
 function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {

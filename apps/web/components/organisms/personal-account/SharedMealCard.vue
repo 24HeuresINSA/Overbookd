@@ -43,6 +43,14 @@
             </ul>
           </details>
           <v-btn
+            v-if="iAmChef"
+            color="tertiary"
+            size="large"
+            text="Annuler le repas"
+            append-icon="mdi-cancel"
+            @click="cancelMeal"
+          />
+          <v-btn
             color="primary"
             size="large"
             text="Shotgun"
@@ -121,6 +129,10 @@ const shotgun = () => {
 
 const cancelShotgun = (guest: Shotgun) => {
   mealSharingStore.cancelShotgun(props.shared.id, guest.id);
+};
+
+const cancelMeal = () => {
+  mealSharingStore.cancelMeal(props.shared.id);
 };
 </script>
 
