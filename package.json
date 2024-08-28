@@ -42,10 +42,10 @@
     "version:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
   },
-  "packageManager": "pnpm@9.7.1",
+  "packageManager": "pnpm@9.9.0",
   "engines": {
     "node": "20.16.0",
-    "pnpm": "9.7.1"
+    "pnpm": "9.9.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
