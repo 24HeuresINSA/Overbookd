@@ -60,7 +60,7 @@
     "@overbookd/user": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
     "@overbookd/web-page": "workspace:*",
-    "chart.js": "4.4.3",
+    "chart.js": "4.4.4",
     "csv-parse": "5.5.6",
     "jwt-decode": "4.0.0",
     "pinia": "2.2.2",
@@ -69,17 +69,17 @@
     "vite-plugin-vuetify": "2.0.4",
     "vue-chartjs": "5.3.1",
     "vue-html-secure": "1.0.10",
-    "vuetify": "3.7.0"
+    "vuetify": "3.7.1"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "0.5.0",
-    "@pinia/nuxt": "0.5.3",
+    "@nuxt/eslint-config": "0.5.4",
+    "@pinia/nuxt": "0.5.4",
     "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.27.0",
-    "nuxt": "3.12.4",
+    "nuxt": "3.13.0",
     "vue": "3.4.38",
     "vue-router": "4.4.3",
-    "vue-tsc": "2.0.29"
+    "vue-tsc": "2.1.2"
   },
   "engines": {
     "node": "20.17.0",

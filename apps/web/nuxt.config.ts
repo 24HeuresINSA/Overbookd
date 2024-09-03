@@ -14,6 +14,10 @@ export default defineNuxtConfig({
     strict: true,
     typeCheck: true,
   },
+  sourcemap: {
+    server: false,
+    client: true,
+  },
   app: {
     head: {
       title: "Overbookd",
