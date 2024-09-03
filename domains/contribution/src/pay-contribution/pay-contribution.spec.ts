@@ -6,7 +6,7 @@ import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE,
 } from "./pay-contribution.error.js";
-import { ONE_YEAR_IN_MS } from "@overbookd/time";
+import { Edition, ONE_YEAR_IN_MS } from "@overbookd/time";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
 import { Contribution } from "../contribution.js";
 import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
@@ -50,7 +50,7 @@ const contributions: Contribution[] = [
   {
     adherentId: noel.id,
     amount: 100,
-    edition: 49,
+    edition: Edition.current,
     paymentDate: new Date(2023, 9, 12),
     expirationDate: new Date(2024, 7, 31),
   },
