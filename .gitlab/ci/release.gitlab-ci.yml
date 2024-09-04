@@ -7,7 +7,7 @@ overbookd/release:
   interruptible: true
   image: node:20.17.0-alpine
   rules:
-    #    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
   variables:
     GIT_AUTHOR_NAME: 24-bot
