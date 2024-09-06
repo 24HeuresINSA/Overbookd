@@ -1,15 +1,14 @@
 import { FA_URL, FT_URL } from "@overbookd/web-page";
+import { openPage, openPageInNewTab } from "../pages/router.utils";
 
 type FestivalEventId = { id: number };
-
-type FestivalEventLink = typeof FA_URL | typeof FT_URL;
 
 export const openActivityInNewTab = (
   _: PointerEvent,
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openInNewTab(FA_URL, id);
+  openPageInNewTab(FA_URL, id);
 };
 
 export const openActivity = (
@@ -17,7 +16,7 @@ export const openActivity = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  open(event, FA_URL, id);
+  openPage(event, FA_URL, id);
 };
 
 export const openTaskInNewTab = (
@@ -25,7 +24,7 @@ export const openTaskInNewTab = (
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openInNewTab(FT_URL, id);
+  openPageInNewTab(FT_URL, id);
 };
 
 export const openTask = (
@@ -33,16 +32,5 @@ export const openTask = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  open(event, FT_URL, id);
+  openPage(event, FT_URL, id);
 };
-
-function openInNewTab(link: FestivalEventLink, id: number) {
-  const router = useRouter();
-  const taskRoute = router.resolve(`${link}/${id}`);
-  window.open(taskRoute.href, "_blank");
-}
-
-function open(event: PointerEvent, link: FestivalEventLink, id: number) {
-  if (event.ctrlKey) return openInNewTab(link, id);
-  navigateTo(`${link}/${id}`);
-}

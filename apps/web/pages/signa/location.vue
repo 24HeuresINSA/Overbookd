@@ -167,8 +167,11 @@ const deleteLocation = async () => {
 
 <style lang="scss" scoped>
 .btn-plus {
+  position: fixed;
   right: 20px;
   bottom: 20px;
-  position: fixed;
+  @media screen and (max-width: $mobile-max-width) {
+    bottom: calc($bottom-nav-height + 20px);
+  }
 }
 </style>

@@ -263,11 +263,11 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
 }
 
 .btn-plus {
-  right: 20px;
-  bottom: 45px;
   position: fixed;
+  right: 20px;
+  bottom: 20px;
   @media screen and (max-width: $mobile-max-width) {
-    bottom: 70px;
+    bottom: calc($bottom-nav-height + 20px);
   }
 }
 
