@@ -1,3 +1,22 @@
+## [3.1.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.0.0...v3.1.0) (2024-09-06)
+
+
+### Features
+
+* **purchase:** add purchase sheets [#2135](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2135) ([1b8a3ed](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1b8a3ed8983b9f9bc0d91b4e37fdbed6375cefb2))
+
+
+### Bug Fixes
+
+* **api:** remove balance from user table [#2054](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2054) ([3c6f044](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c6f044fa82e4b54c39b2c6370306e7027ffd7d0))
+* **ci:** remove interruptible option in release ci [#2149](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2149) ([15bdfb4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/15bdfb4e382d08e4e64a7e15dbf4ac3e5d3cfce9))
+
+
+### Pre-Features
+
+* **logistic:** add borrow & puchase stores [#1975](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1975) ([a02f52f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a02f52f62b0a23b5a31c2458e61df67a27e7ecd1))
+* **purchase:** add page with list [#2134](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2134) ([bb4ce5d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bb4ce5dbbc216bbc4d0a00ae0ead46505e1c29ee))
+
 ## [3.0.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.36.13...v3.0.0) (2024-09-04)
 
 
