@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     :model-value="dateStringified"
-    :label="label"
+    :label="noLabel ? undefined : label"
     type="datetime-local"
     :hide-details="hideDetails"
     :error-messages="errorMessages"
@@ -20,6 +20,10 @@ const { label, disabled, hideDetails, step, errorMessages } = defineProps({
   label: {
     type: String,
     default: "Date",
+  },
+  noLabel: {
+    type: Boolean,
+    default: false,
   },
   disabled: {
     type: Boolean,
