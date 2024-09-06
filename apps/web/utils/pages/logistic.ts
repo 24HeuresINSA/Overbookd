@@ -1,4 +1,5 @@
 import {
+  BORROW_GEARS,
   PURCHASE_GEARS,
   READ_GEAR_CATALOG,
   READ_INVENTORY,
@@ -7,6 +8,7 @@ import {
 } from "@overbookd/permission";
 import type { Page, HiddenPage, PageInSummary } from "./navigation";
 import {
+  BORROW_GEARS_URL,
   GEAR_CATALOG_URL,
   INVENTORY_URL,
   LOCATION_URL,
@@ -74,16 +76,16 @@ const PURCHASE_GEARS_PAGE: HiddenPage = {
   canBeFavorite: false,
 };
 
-// const BORROW_GEARS_PAGE: PageInSummary = {
-//   icon: "mdi-store-clock",
-//   title: "Fiches Emprunt",
-//   permission: BORROW_GEARS,
-//   to: BORROW_GEARS_URL,
-//   description: "Permet de gérer les emprunts de matériel",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
-// };
+const BORROW_GEARS_LIST_PAGE: PageInSummary = {
+  icon: "mdi-store-clock",
+  title: "Fiches Emprunt",
+  permission: BORROW_GEARS,
+  to: BORROW_GEARS_URL,
+  description: "Permet de gérer les emprunts de matériel",
+  mobileSupport: false,
+  canBeFavorite: true,
+  keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
+};
 
 const LOCATION_PAGE: PageInSummary = {
   icon: "mdi-map-marker",
@@ -120,7 +122,7 @@ export const LOGISTIC_SUMMARY_PAGES: PageInSummary[] = [
   INVENTORY_PAGE,
   // GEAR_DASHBOARD_PAGE,
   PURCHASE_GEARS_LIST_PAGE,
-  // BORROW_GEARS_PAGE,
+  BORROW_GEARS_LIST_PAGE,
   LOCATION_PAGE,
   SIGNAGE_CATALOG_PAGE,
 ];

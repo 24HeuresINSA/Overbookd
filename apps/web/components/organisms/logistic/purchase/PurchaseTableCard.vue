@@ -52,11 +52,8 @@ const removePurchase = async (purchase: Purchase) => {
   await purchaseStore.remove(purchase.id);
 };
 
-const openPurchaseInNewTab = (
-  _: PointerEvent,
-  { item }: { item: Purchase },
-) => {
-  const { id } = { ...item };
+const openPurchaseInNewTab = (_: PointerEvent, target: { item: Purchase }) => {
+  const { id } = { ...target.item };
   openPageInNewTab(PURCHASE_GEARS_URL, id);
 };
 const openPurchase = (event: PointerEvent, target: { item: Purchase }) => {
