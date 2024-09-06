@@ -5,7 +5,7 @@ import {
   READ_SIGNAGE_CATALOG,
   VIEW_LOCATION,
 } from "@overbookd/permission";
-import type { PageInSummary } from "./navigation";
+import type { Page, HiddenPage, PageInSummary } from "./navigation";
 import {
   GEAR_CATALOG_URL,
   INVENTORY_URL,
@@ -55,9 +55,9 @@ const INVENTORY_PAGE: PageInSummary = {
 //   keywords: ["recap-matos", "dashboard", "demandes-matos", "demandes-materiel"],
 // };
 
-const PURCHASE_GEARS_PAGE: PageInSummary = {
+const PURCHASE_GEARS_LIST_PAGE: PageInSummary = {
   icon: "mdi-cash-register",
-  title: "Fiches Achats",
+  title: "Fiches Achat",
   permission: PURCHASE_GEARS,
   to: PURCHASE_GEARS_URL,
   description: "Permet de gérer les achats de matériel",
@@ -66,9 +66,17 @@ const PURCHASE_GEARS_PAGE: PageInSummary = {
   keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
 };
 
+const PURCHASE_GEARS_PAGE: HiddenPage = {
+  title: "Fiche Achat",
+  permission: PURCHASE_GEARS,
+  to: `${PURCHASE_GEARS_URL}/:id`,
+  mobileSupport: false,
+  canBeFavorite: false,
+};
+
 // const BORROW_GEARS_PAGE: PageInSummary = {
 //   icon: "mdi-store-clock",
-//   title: "Fiches Emprunts",
+//   title: "Fiches Emprunt",
 //   permission: BORROW_GEARS,
 //   to: BORROW_GEARS_URL,
 //   description: "Permet de gérer les emprunts de matériel",
@@ -111,8 +119,13 @@ export const LOGISTIC_SUMMARY_PAGES: PageInSummary[] = [
   GEAR_CATALOG_PAGE,
   INVENTORY_PAGE,
   // GEAR_DASHBOARD_PAGE,
-  PURCHASE_GEARS_PAGE,
+  PURCHASE_GEARS_LIST_PAGE,
   // BORROW_GEARS_PAGE,
   LOCATION_PAGE,
   SIGNAGE_CATALOG_PAGE,
+];
+
+export const LOGISTIC_PAGES: Page[] = [
+  ...LOGISTIC_SUMMARY_PAGES,
+  PURCHASE_GEARS_PAGE,
 ];

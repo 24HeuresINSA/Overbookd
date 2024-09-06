@@ -84,6 +84,8 @@ const SG_PAGE: PageInSummary = {
     "biere",
     "fut",
     "depot",
+    "sg",
+    "secretaire-generale",
   ],
 };
 

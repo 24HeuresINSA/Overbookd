@@ -100,7 +100,7 @@ const close = () => emit("close");
   gap: 10px;
   align-items: center;
   &__action {
-    margin-bottom: 10px;
+    margin-bottom: 22px;
   }
 }
 

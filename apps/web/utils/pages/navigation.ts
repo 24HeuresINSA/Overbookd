@@ -6,7 +6,7 @@ import {
   FESTIVAL_EVENT_SUMMARY_PAGES,
 } from "./festival-event";
 import { MANAGEMENT_SUMMARY_PAGES } from "./management";
-import { LOGISTIC_SUMMARY_PAGES } from "./logistic";
+import { LOGISTIC_PAGES, LOGISTIC_SUMMARY_PAGES } from "./logistic";
 import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
 
 export type PageInSummary = {
@@ -54,11 +54,11 @@ const allPages: Page[] = [
   ...FESTIVAL_EVENT_PAGES,
   ...MANAGEMENT_SUMMARY_PAGES,
   ...CURRENT_EVENT_SUMMARY_PAGES,
-  ...LOGISTIC_SUMMARY_PAGES,
+  ...LOGISTIC_PAGES,
 ];
 
 function removePathLastPart(path: string): string {
-  return path.replace(/\/[^/]*$/, "");
+  return path.replace(/\/[^/]*$/, "/");
 }
 
 export function findPage(path: string): Page | undefined {
@@ -67,11 +67,6 @@ export function findPage(path: string): Page | undefined {
 
   const remainingPages = allPages.filter((page) => page.to !== path);
   const reducedPath = removePathLastPart(path);
-
-  const pageWithSameReducedStart = remainingPages.find(
-    (page) => page.to === reducedPath,
-  );
-  if (pageWithSameReducedStart) return pageWithSameReducedStart;
 
   return remainingPages.find(
     (page) => removePathLastPart(page.to) === reducedPath,
