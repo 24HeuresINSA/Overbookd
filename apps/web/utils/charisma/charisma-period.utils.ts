@@ -1,21 +1,5 @@
 import { Period } from "@overbookd/time";
-import type { HttpStringified, SavedCharismaPeriod } from "@overbookd/http";
-
-export function castCharismaPeriodsWithDate(
-  charismaPeriods: HttpStringified<SavedCharismaPeriod[]>,
-): SavedCharismaPeriod[] {
-  return charismaPeriods.map(castCharismaPeriodWithDate);
-}
-
-export function castCharismaPeriodWithDate(
-  charismaPeriod: HttpStringified<SavedCharismaPeriod>,
-): SavedCharismaPeriod {
-  return {
-    ...charismaPeriod,
-    start: new Date(charismaPeriod.start),
-    end: new Date(charismaPeriod.end),
-  };
-}
+import type { SavedCharismaPeriod } from "@overbookd/http";
 
 // TODO: should need more test with period have parts of it in several charismaPeriod
 export function getPeriodCharisma(
