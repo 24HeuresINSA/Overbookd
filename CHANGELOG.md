@@ -1,3 +1,26 @@
+## [3.2.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.1.0...v3.2.0) (2024-09-10)
+
+
+### Features
+
+* **borrow:** add details page [#2133](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2133) ([f9a24cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f9a24cf820b0a8f1417c92add35314dba4677cff))
+* **charisma-period:** add page without calendar [#2152](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2152) ([0f6c686](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0f6c6860b34e889eaca4308822fe73b397c48bcb))
+* **logistic:** add logistic dashboard [#2137](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2137) ([f1fc41c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f1fc41cd8e7678f2673f7a43f0e5332f31530026))
+
+
+### Bug Fixes
+
+* **cgu:** card style & use common dialog component [#2151](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2151) ([badafe8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/badafe84300ad085ad977c72b248a37e343cc401))
+
+
+### Pre-Features
+
+* **borrow:** add page with list [#2132](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2132) ([e09a218](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e09a2188ddd53658ce0082ae49fc86d568c3d2c8))
+* **ft:** add mobilization forms [#2068](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2068) ([61d7f90](https://gitlab.com/24-heures-insa/overbookd-mono/commit/61d7f90a56cc0939e5fbc50ead11cfb3ba562600))
+* **log-dashboard:** add gear details graph [#2136](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2136) ([37e073e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/37e073eb2766fef2d45819d6e985c689607a4412))
+* **web:** add charisma-period & need-help stores [#1976](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1976) ([f1304df](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f1304dfd07188d89604588bcd6ef20fb9cf91b46))
+* **web:** add timeline & orga-need repositories [#1953](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1953) ([551ea83](https://gitlab.com/24-heures-insa/overbookd-mono/commit/551ea83973ce349ed7eb5d0d8d3302fc82b23622))
+
 ## [3.1.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.0.0...v3.1.0) (2024-09-06)
 
 
