@@ -45,6 +45,7 @@ export const usePurchaseStore = defineStore("purchase", {
     async remove(id: Purchase["id"]) {
       const res = await PurchaseRepository.remove(id);
       if (isHttpError(res)) return;
+      sendSuccessNotification("Fiche achat supprimée");
       this.selected = defaultPurchase;
       this.fetchAll();
     },
@@ -55,6 +56,7 @@ export const usePurchaseStore = defineStore("purchase", {
         form,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("Matos ajouté");
       this.selected = castWithDate(res);
     },
 
@@ -64,6 +66,7 @@ export const usePurchaseStore = defineStore("purchase", {
         slug,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("Matos supprimé");
       this.selected = castWithDate(res);
     },
   },

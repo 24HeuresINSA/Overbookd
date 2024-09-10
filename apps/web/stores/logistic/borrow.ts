@@ -45,6 +45,7 @@ export const useBorrowStore = defineStore("borrow", {
     async remove(id: Borrow["id"]) {
       const res = await BorrowRepository.remove(id);
       if (isHttpError(res)) return;
+      sendSuccessNotification("Fiche emprunt supprimée");
       this.selected = defaultBorrow;
       this.fetchAll();
     },
@@ -52,6 +53,7 @@ export const useBorrowStore = defineStore("borrow", {
     async addGearRequest(form: AddGearRequestForm) {
       const res = await BorrowRepository.addGearRequest(this.selected.id, form);
       if (isHttpError(res)) return;
+      sendSuccessNotification("Matos ajouté");
       this.selected = castWithDate(res);
     },
 
@@ -61,6 +63,7 @@ export const useBorrowStore = defineStore("borrow", {
         slug,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("Matos supprimé");
       this.selected = castWithDate(res);
     },
   },

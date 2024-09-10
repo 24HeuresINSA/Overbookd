@@ -89,6 +89,14 @@ const BORROW_GEARS_LIST_PAGE: PageInSummary = {
   keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
 };
 
+const BORROW_GEARS_PAGE: HiddenPage = {
+  title: "Fiche Emprunt",
+  permission: BORROW_GEARS,
+  to: `${BORROW_GEARS_URL}/:id`,
+  mobileSupport: false,
+  canBeFavorite: false,
+};
+
 const LOCATION_PAGE: PageInSummary = {
   icon: "mdi-map-marker",
   title: "Lieux de la Signa",
@@ -132,4 +140,5 @@ export const LOGISTIC_SUMMARY_PAGES: PageInSummary[] = [
 export const LOGISTIC_PAGES: Page[] = [
   ...LOGISTIC_SUMMARY_PAGES,
   PURCHASE_GEARS_PAGE,
+  BORROW_GEARS_PAGE,
 ];
