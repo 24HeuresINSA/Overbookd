@@ -16,7 +16,7 @@
       <p><slot name="subtitle" /></p>
     </div>
 
-    <v-card-text class="card__content">
+    <v-card-text class="card__content" :class="{ 'mb-3': withoutActions }">
       <slot name="content" />
     </v-card-text>
 

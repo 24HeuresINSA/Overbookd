@@ -5,6 +5,7 @@
         v-model:name="filters.name"
         v-model:category="filters.category"
         v-model:team="filters.team"
+        @update:options="searchGears"
       />
       <v-data-table
         :headers="headers"
@@ -119,20 +120,10 @@ catalogGearStore.fetchGears({}).then(() => (loading.value = false));
 
 const selectedGear = ref<CatalogGear | undefined>();
 
-const buildSearchOptions = (): GearSearchOptions => {
-  const name = filters.name ? { name: filters.name } : {};
-  const category = filters.category ? { category: filters.category.path } : {};
-  const team = filters.team ? { owner: filters.team.code } : {};
-  return { ...name, ...category, ...team };
-};
-const searchGears = async () => {
-  const searchOptions = buildSearchOptions();
+const searchGears = async (options: GearSearchOptions) => {
   loading.value = true;
-  catalogGearStore
-    .fetchGears(searchOptions)
-    .then(() => (loading.value = false));
+  catalogGearStore.fetchGears(options).then(() => (loading.value = false));
 };
-watch(filters, searchGears, { deep: true });
 
 const isUpdateGearDialogOpen = ref<boolean>(false);
 const openUpdateGearDialog = (gear: CatalogGear) => {

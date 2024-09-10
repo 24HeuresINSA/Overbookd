@@ -73,7 +73,7 @@ const options = computed(
   () =>
     ({
       responsive: true,
-      maintainAspectRatio: false,
+      aspectRatio: 3,
       plugins: {
         legend: {
           onHover: (event: ChartEvent) => {

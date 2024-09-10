@@ -20,23 +20,34 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogCategory } from "@overbookd/http";
+import type { CatalogCategory, GearSearchOptions } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 
-const name = defineModel<string>("name", { required: true });
+const emit = defineEmits(["update:name", "update:options"]);
+
+const name = defineModel<string | undefined>("name", { required: true });
 const category = defineModel<CatalogCategory | undefined>("category", {
   required: true,
 });
 const team = defineModel<Team | undefined>("team", { required: true });
 
-const emit = defineEmits(["update:name"]);
-const updateName = (value: string) => emit("update:name", value);
+const updateName = (value: string | null) => emit("update:name", value ?? "");
 
 const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
 const defectNameUpdate = (name: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => updateName(name), 800);
 };
+
+const searchOptions = computed<GearSearchOptions>(() => {
+  const validName = name.value?.trim() ? { name: name.value } : {};
+  const validCategory = category.value ? { category: category.value.path } : {};
+  const validTeam = team.value ? { owner: team.value.code } : {};
+  return { ...validName, ...validCategory, ...validTeam };
+});
+watch(searchOptions, () => emit("update:options", searchOptions.value), {
+  deep: true,
+});
 </script>
 
 <style lang="scss" scoped>
