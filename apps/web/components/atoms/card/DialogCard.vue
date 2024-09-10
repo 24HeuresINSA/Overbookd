@@ -1,6 +1,7 @@
 <template>
   <v-card :theme="theme" class="card">
     <v-btn
+      v-show="!noClosable"
       class="card__close-btn"
       variant="flat"
       icon="mdi-close"
@@ -26,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-const { theme, withoutActions } = defineProps({
+const { theme, withoutActions, noClosable } = defineProps({
   theme: {
     type: String,
     default: undefined,
@@ -35,10 +36,17 @@ const { theme, withoutActions } = defineProps({
     type: Boolean,
     default: false,
   },
+  noClosable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["close"]);
-const close = () => emit("close");
+const close = () => {
+  if (noClosable) return;
+  emit("close");
+};
 </script>
 
 <style lang="scss" scoped>

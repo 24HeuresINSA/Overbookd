@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card rounded="0" class="mx-0 my-0 px-0 py-0">
     <v-toolbar>
       <v-btn icon="mdi-close" @click="close" />
       <v-toolbar-title>Conditions Générales d'Utilisation</v-toolbar-title>

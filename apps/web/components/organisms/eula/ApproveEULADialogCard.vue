@@ -1,9 +1,7 @@
 <template>
-  <v-card>
-    <v-card-title class="title">
-      Conditions Générales d'Utilisation
-    </v-card-title>
-    <v-card-text>
+  <DialogCard no-closable>
+    <template #title> Conditions Générales d'Utilisation </template>
+    <template #content>
       Salut, si tu vois ce message, c'est que les CGU d'Overbookd ont été mises
       à jour ! Pour continuer à utiliser ton site préféré, tu dois les accepter.
       <br />
@@ -12,16 +10,18 @@
       <br />
       Approuver les CGU signifie que tu reconnais les avoir lues, comprises et
       acceptées.
-    </v-card-text>
-    <v-card-actions class="actions">
-      <v-btn text="Se déconnecter" color="error" @click="logout" />
-      <v-btn
-        text="Approuver les CGU"
-        color="success"
-        @click="approveEndUserLicenceAgreement"
-      />
-    </v-card-actions>
-  </v-card>
+    </template>
+    <template #actions>
+      <div class="actions">
+        <v-btn text="Se déconnecter" color="error" @click="logout" />
+        <v-btn
+          text="Approuver les CGU"
+          color="success"
+          @click="approveEndUserLicenceAgreement"
+        />
+      </div>
+    </template>
+  </DialogCard>
 
   <v-dialog
     v-model="isEULADialogOpen"
@@ -53,10 +53,6 @@ const logout = async () => {
 </script>
 
 <style lang="scss" scoped>
-.title {
-  text-align: center;
-}
-
 .eula-link {
   color: blue;
   cursor: pointer;
@@ -68,12 +64,8 @@ const logout = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 3%;
-  .v-btn {
-    flex-grow: 1;
-  }
+  gap: 10px;
   @media only screen and (max-width: $mobile-max-width) {
-    gap: 5px;
     flex-direction: column-reverse;
   }
 }
