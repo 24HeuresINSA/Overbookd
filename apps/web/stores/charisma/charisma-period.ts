@@ -8,18 +8,18 @@ import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {
-  charismaPeriods: SavedCharismaPeriod[];
+  all: SavedCharismaPeriod[];
 };
 
 export const useCharismaPeriodStore = defineStore("charisma-period", {
   state: (): State => ({
-    charismaPeriods: [],
+    all: [],
   }),
   actions: {
     async fetchCharismaPeriods() {
       const res = await CharismaPeriodRepository.getCharismaPeriods();
       if (isHttpError(res)) return;
-      this.charismaPeriods = res.map(castCharismaPeriodWithDate);
+      this.all = res.map(castCharismaPeriodWithDate);
     },
 
     async addCharismaPeriod(charismaPeriod: CharismaPeriod) {
@@ -29,7 +29,7 @@ export const useCharismaPeriodStore = defineStore("charisma-period", {
       sendSuccessNotification("Période ajoutée");
 
       const newPeriod = castCharismaPeriodWithDate(res);
-      this.charismaPeriods = [...this.charismaPeriods, newPeriod];
+      this.all = [...this.all, newPeriod];
     },
 
     async updateCharismaPeriod(charismaPeriod: SavedCharismaPeriod) {
@@ -42,19 +42,15 @@ export const useCharismaPeriodStore = defineStore("charisma-period", {
       sendSuccessNotification("Période modifiée");
 
       const updatedPeriod = castCharismaPeriodWithDate(res);
-      const index = this.charismaPeriods.findIndex((cp) => cp.id === id);
-      this.charismaPeriods = updateItemToList(
-        this.charismaPeriods,
-        index,
-        updatedPeriod,
-      );
+      const index = this.all.findIndex((cp) => cp.id === id);
+      this.all = updateItemToList(this.all, index, updatedPeriod);
     },
 
     async deleteCharismaPeriod({ id }: SavedCharismaPeriod) {
       const res = await CharismaPeriodRepository.deleteCharismaPeriod(id);
       if (isHttpError(res)) return;
       sendSuccessNotification("Période supprimée");
-      this.charismaPeriods = this.charismaPeriods.filter((cp) => cp.id !== id);
+      this.all = this.all.filter((cp) => cp.id !== id);
     },
   },
 });

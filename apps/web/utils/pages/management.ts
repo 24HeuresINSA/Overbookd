@@ -1,4 +1,5 @@
 import {
+  AFFECT_VOLUNTEER,
   ENROLL_HARD,
   MANAGE_CHARISMA_EVENTS,
   MANAGE_CONFIG,
@@ -9,6 +10,7 @@ import type { PageInSummary } from "./navigation";
 import {
   CHARISMA_EVENTS_LIST_URL,
   CHARISMA_EVENTS_MANAGE_URL,
+  CHARISMA_PERIODS_URL,
   CONFIGURATION_URL,
   CONTRIBUTIONS_URL,
   REGISTRATIONS_STAFF_URL,
@@ -124,17 +126,17 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
   keywords: ["charisme", "evenements", "participations"],
 };
 
-// const CHARISMA_PERIODS_PAGE: Page = {
-//   icon: "mdi-clock-edit",
-//   title: "Charisme des dispos",
-//   permission: AFFECT_VOLUNTEER,
-//   to: CHARISMA_PERIODS_URL,
-//   description:
-//     "Permet de définir les points de charisme des créneaux du festival",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   keywords: ["charisme-dispos", "charisme-disponibilites"],
-// };
+const CHARISMA_PERIODS_PAGE: PageInSummary = {
+  icon: "mdi-clock-edit",
+  title: "Charisme des dispos",
+  permission: AFFECT_VOLUNTEER,
+  to: CHARISMA_PERIODS_URL,
+  description:
+    "Permet de définir les points de charisme des créneaux du festival",
+  mobileSupport: false,
+  canBeFavorite: true,
+  keywords: ["charisme-dispos", "charisme-disponibilites"],
+};
 
 // const ASSIGNMENT_ORGA_TASK_PAGE: Page = {
 //   icon: "mdi-human-greeting",
@@ -179,7 +181,7 @@ export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   TRANSACTIONS_PAGE,
   CHARISMA_EVENTS_MANAGE_PAGE,
   CHARISMA_EVENTS_LIST_PAGE,
-  // CHARISMA_PERIODS_PAGE,
+  CHARISMA_PERIODS_PAGE,
   // ASSIGNMENT_ORGA_TASK_PAGE,
   // ASSIGNMENT_TASK_ORGA_PAGE,
   // ORGA_NEEDS_PAGE,
