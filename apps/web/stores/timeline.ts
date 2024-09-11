@@ -60,10 +60,10 @@ export const useTimelineStore = defineStore("timeline", {
       if (isHttpError(res)) return;
       this.events = res.map(castTimelineEventWithDate);
     },
-    updatePeriod({ start, end }: IProvidePeriod) {
+    async updatePeriod({ start, end }: IProvidePeriod) {
       this.start = start;
       this.end = end;
-      this.fetchEvents();
+      await this.fetchEvents();
     },
     updateSearch(search: string | null) {
       this.search = search ?? "";
@@ -71,9 +71,10 @@ export const useTimelineStore = defineStore("timeline", {
     updateTeams(teams: Team[]) {
       this.teams = teams;
     },
-    resetToDefaultPeriod() {
-      const period = defaultPeriod();
-      this.updatePeriod(period);
+    async resetToDefaultPeriod() {
+      this.start = defaultPeriod().start;
+      this.end = defaultPeriod().end;
+      await this.fetchEvents();
     },
   },
 });
