@@ -1,6 +1,7 @@
 import {
   type IProvidePeriod,
   ONE_HOUR_IN_MS,
+  Period,
   QUARTER_IN_MS,
 } from "@overbookd/time";
 import { SlugifyService } from "@overbookd/slugify";
@@ -28,8 +29,8 @@ export const useNeedHelpStore = defineStore("need-help", {
     teams: [],
   }),
   getters: {
-    period(state): IProvidePeriod {
-      return { start: state.start, end: state.end };
+    period(state): Period {
+      return Period.init({ start: state.start, end: state.end });
     },
     filteredVolunteers(state): HelpingVolunteer[] {
       return state.volunteers.filter(
