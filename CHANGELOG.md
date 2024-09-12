@@ -1,3 +1,20 @@
+## [3.3.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.2.0...v3.3.0) (2024-09-12)
+
+
+### Features
+
+* **timeline:** add page [#2153](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2153) ([6e64331](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e64331ef6066725ca87a438dd0265bc901a7f23))
+
+
+### Bug Fixes
+
+* **web:** trombinoscope display & clean components props [#2156](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2156) ([8a2c2be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8a2c2be4242d3beb1775ccc18b1d84e444549762))
+
+
+### Pre-Features
+
+* **web:** add timeline & orga-need stores [#1978](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1978) ([c007ffe](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c007ffe0eab5ad31f7c8b852e16ffae96214aef8))
+
 ## [3.2.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.1.0...v3.2.0) (2024-09-10)
 
 
