@@ -6,7 +6,7 @@
           v-if="loggedUser"
           :user="loggedUser"
           class="profile__picture"
-          small
+          size="small"
         />
         <div class="profile__information">
           <span class="profile__name">{{ myName }}</span>

@@ -5,7 +5,7 @@
     @click="propagateClickedVolunteer"
   >
     <v-card-title class="name-with-picture">
-      <ProfilePicture :user="volunteer" />
+      <ProfilePicture size="large" :user="volunteer" />
       <span class="name">{{ buildUserNameWithNickname(volunteer) }}</span>
     </v-card-title>
     <v-card-subtitle opacity="1">

@@ -1,7 +1,7 @@
 <template>
   <v-card class="birthday-card" color="primary">
     <v-card-title class="birthday-card__heading">
-      <ProfilePicture :user="volunteer" />
+      <ProfilePicture size="large" :user="volunteer" />
       <p>Joyeux anniv 🎂</p>
       <p class="name">{{ buildUserNameWithNickname(volunteer) }}</p>
     </v-card-title>

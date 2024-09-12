@@ -4,7 +4,11 @@
     <v-card>
       <v-card-text v-if="loggedUser" class="user-card__content">
         <div class="picture">
-          <ProfilePicture :user="loggedUser" class="profile-picture" />
+          <ProfilePicture
+            size="large"
+            :user="loggedUser"
+            class="profile-picture"
+          />
           <v-btn
             :text="`📸 ${loggedUser.profilePicture ? 'Changer' : 'Ajouter'}`"
             color="primary"

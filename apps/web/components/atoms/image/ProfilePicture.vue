@@ -2,10 +2,10 @@
   <img
     v-if="hasProfilePictureBlob"
     class="profile-picture__photo"
-    :class="{ small }"
+    :class="size"
     :src="user.profilePictureBlob"
   />
-  <v-icon v-else class="profile-picture__icon" :class="{ small }">
+  <v-icon v-else class="profile-picture__icon" :class="size">
     mdi-account-circle
   </v-icon>
 </template>
@@ -13,17 +13,23 @@
 <script lang="ts" setup>
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
+const userStore = useUserStore();
+
+const SMALL = "small";
+const MEDIUM = "medium";
+const LARGE = "large";
+type Size = typeof SMALL | typeof MEDIUM | typeof LARGE;
+
 const props = defineProps({
   user: {
     type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,
   },
-  small: {
-    type: Boolean,
-    default: false,
+  size: {
+    type: String as PropType<Size>,
+    default: "medium",
   },
 });
-const userStore = useUserStore();
 
 const hasProfilePicture = computed<boolean>(
   () => props.user.profilePicture !== null,
@@ -47,21 +53,32 @@ watch(
 <style lang="scss" scoped>
 .profile-picture {
   &__photo {
-    height: 150px;
-    width: 150px;
     border-radius: 50%;
     object-fit: cover;
     &.small {
       height: 45px;
       width: 45px;
     }
+    &.medium {
+      height: 80px;
+      width: 80px;
+    }
+    &.large {
+      height: 150px;
+      width: 150px;
+    }
   }
 
   &__icon {
-    font-size: 150px;
-    opacity: 0.9;
+    opacity: 0.8;
     &.small {
       font-size: 50px;
+    }
+    &.medium {
+      font-size: 100px;
+    }
+    &.large {
+      font-size: 150px;
     }
   }
 }

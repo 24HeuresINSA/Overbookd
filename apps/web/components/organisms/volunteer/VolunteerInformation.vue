@@ -2,7 +2,11 @@
   <DialogCard :without-actions="!canManageUsers" @close="close">
     <template #title>
       <div class="card-title">
-        <ProfilePicture :user="volunteer" class="profile-picture" />
+        <ProfilePicture
+          size="large"
+          :user="volunteer"
+          class="profile-picture"
+        />
         <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
       </div>
     </template>

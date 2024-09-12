@@ -1,4 +1,3 @@
 <template>
-  <DesktopPageTitle />
-  <p>Work in progress...</p>
+  <ProfileHomeCard />
 </template>
