@@ -209,7 +209,7 @@ export const useUserStore = defineStore("user", {
       if (this.selectedUser?.id === this.loggedUser?.id) this.fetchUser();
     },
 
-    async updateMyProfile(profile: Profile) {
+    async updateMyProfile(profile: Partial<Profile>) {
       const res = await UserRepository.updateMyProfile(profile);
       if (isHttpError(res)) return;
       sendSuccessNotification("Profil mis à jour ! 🎉");

@@ -1,15 +1,20 @@
 <template>
-  <div class="comment-field">
-    <p class="comment-field__prepend-text">
-      Dis nous en commentaire si tu as des contraintes physiques, de la
-      motivation à revendre pour nous aider un maximum ou encore un préféré
-      parmi les responsables bénévoles 😏
-    </p>
+  <div>
+    <div class="comment-title">
+      <span>Commentaire</span>
+      <v-tooltip location="top">
+        <template #activator="{ props }">
+          <v-icon v-bind="props" color="primary">mdi-information</v-icon>
+        </template>
+        Dis nous en commentaire si tu as des contraintes physiques, de la
+        motivation à revendre pour nous aider un maximum ou encore un préféré
+        parmi les responsables bénévoles 😏
+      </v-tooltip>
+    </div>
     <v-textarea
       v-model="comment"
-      class="comment-field__input"
-      label="Commentaire"
-      hint="Exemple: Je ne peux pas porter de charges lourdes mais j'adore m'occuper des animations pour enfants. La musique c'est pas trop mon délire donc je suis chaud de faire plein de trucs pour m'éviter les concerts."
+      rows="4"
+      hint="Exemple: Je ne peux pas porter de charges lourdes mais j'adore m'occuper des animations pour enfants."
       persistent-hint
     />
   </div>
@@ -20,12 +25,9 @@ const comment = defineModel<string | null | undefined>({ required: true });
 </script>
 
 <style lang="scss" scoped>
-.comment-field {
-  &__prepend-text {
-    color: rgb(115, 115, 115);
-  }
-  &__input {
-    margin-top: 5px;
-  }
+.comment-title {
+  display: flex;
+  gap: 2px;
+  align-items: center;
 }
 </style>

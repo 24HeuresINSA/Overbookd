@@ -1,5 +1,13 @@
 <template>
   <v-card class="profile">
+    <v-btn
+      class="profile__edit"
+      icon="mdi-pencil"
+      variant="text"
+      rounded="pill"
+      @click="editProfile"
+    />
+
     <v-card-title class="profile__title">
       <ProfilePicture
         v-if="loggedUser"
@@ -9,6 +17,7 @@
       <h2>{{ name }}</h2>
       <p class="title__full-name">{{ fullName }}</p>
     </v-card-title>
+
     <v-card-text class="profile__data">
       <div class="stats-container">
         <div class="stats">
@@ -41,6 +50,10 @@
         </div>
       </div>
     </v-card-text>
+
+    <v-dialog v-model="isEditProfileDialogOpen" max-width="800px">
+      <EditProfileDialogCard @close="closeEditProfileDialog" />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -69,15 +82,24 @@ const tasksCount = computed<number>(() =>
 const phone = computed<string>(() =>
   loggedUser.value ? formatUserPhone(loggedUser.value.phone) : "",
 );
+
+const isEditProfileDialogOpen = ref<boolean>(false);
+const editProfile = () => (isEditProfileDialogOpen.value = true);
+const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
 .profile {
-  min-width: 225px;
+  min-width: 250px;
   width: 25%;
   @media only screen and (max-width: $mobile-max-width) {
     min-width: unset;
     width: 100%;
+  }
+  &__edit {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
   &__title {
     display: flex;
