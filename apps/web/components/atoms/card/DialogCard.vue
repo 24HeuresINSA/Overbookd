@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-const { theme, withoutActions, noClosable } = defineProps({
+const { noClosable } = defineProps({
   theme: {
     type: String,
     default: undefined,

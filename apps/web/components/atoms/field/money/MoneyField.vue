@@ -22,7 +22,7 @@ const emit = defineEmits(["update:model-value", "error"]);
 
 const euros = defineModel<number>({ required: true });
 
-const { label, min, readonly, hideDetails } = defineProps({
+const { min } = defineProps({
   label: {
     type: String,
     default: "Montant",

@@ -22,7 +22,7 @@
 import type { Team } from "@overbookd/team";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
-const { volunteers, heading } = defineProps({
+defineProps({
   volunteers: {
     required: true,
     type: Array as PropType<UserDataWithPotentialyProfilePicture[]>,

@@ -45,7 +45,7 @@ import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 
-const { disabled } = defineProps({
+defineProps({
   disabled: {
     type: Boolean,
     default: false,

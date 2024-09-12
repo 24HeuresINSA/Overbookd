@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-const { confirmColor, abortColor } = defineProps({
+defineProps({
   confirmColor: {
     type: String,
     default: "success",

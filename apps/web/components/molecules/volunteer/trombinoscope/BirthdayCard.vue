@@ -12,7 +12,7 @@
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
-const { volunteer } = defineProps({
+defineProps({
   volunteer: {
     type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,

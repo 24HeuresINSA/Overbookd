@@ -45,7 +45,10 @@ import {
 const mealSharingStore = useMealSharingStore();
 
 const { closable } = defineProps({
-  closable: { type: Boolean, default: false },
+  closable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["close"]);

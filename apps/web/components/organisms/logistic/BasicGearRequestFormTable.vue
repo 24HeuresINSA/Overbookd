@@ -41,7 +41,7 @@ import type { CatalogGear } from "@overbookd/http";
 import type { GearRequest } from "@overbookd/logistic";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
-const _ = defineProps({
+defineProps({
   gears: {
     type: Array as PropType<GearRequest[]>,
     required: true,

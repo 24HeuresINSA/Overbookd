@@ -32,7 +32,7 @@ const category = defineModel<CatalogCategory | undefined>({
   required: true,
 });
 
-const { label, hideDetails } = defineProps({
+defineProps({
   label: {
     type: String,
     default: "Chercher une catégorie",

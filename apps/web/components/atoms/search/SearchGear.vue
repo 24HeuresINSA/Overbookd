@@ -28,7 +28,7 @@ const catalogGearStore = useCatalogGearStore();
 
 const gear = defineModel<CatalogGear>({ required: false });
 
-const { label, hideDetails, disabled, ponctualUsage, owner } = defineProps({
+const { ponctualUsage, owner } = defineProps({
   label: {
     type: String,
     default: "Chercher du matos",

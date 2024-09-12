@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-const { isFolded } = defineProps({
+defineProps({
   isFolded: {
     type: Boolean,
     required: true,

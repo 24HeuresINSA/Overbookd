@@ -14,7 +14,7 @@ import { formatLocalDate } from "@overbookd/time";
 
 const date = defineModel<Date>({ required: true });
 
-const { label, disabled, hideDetails } = defineProps({
+defineProps({
   label: {
     type: String,
     default: "Date",

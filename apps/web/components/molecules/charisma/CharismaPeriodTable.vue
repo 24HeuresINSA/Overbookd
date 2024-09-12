@@ -40,7 +40,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const charismaPeriodStore = useCharismaPeriodStore();
 
-const _ = defineProps({
+defineProps({
   loading: {
     type: Boolean,
     default: false,

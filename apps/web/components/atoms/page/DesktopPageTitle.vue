@@ -22,7 +22,7 @@ import { findPage, type Page, HOME_PAGE } from "~/utils/pages/navigation";
 const route = useRoute();
 const preferenceStore = usePreferenceStore();
 
-const { title } = defineProps({
+const props = defineProps({
   title: {
     type: String,
     default: undefined,
@@ -30,7 +30,9 @@ const { title } = defineProps({
 });
 
 const currentPage = computed<Page>(() => findPage(route.path) || HOME_PAGE);
-const pageTitle = computed<string>(() => title || currentPage.value.title);
+const pageTitle = computed<string>(
+  () => props.title || currentPage.value.title,
+);
 const canBeFavorite = computed<boolean>(() => currentPage.value.canBeFavorite);
 const isFavorite = computed<boolean>(() =>
   preferenceStore.isPageFavorite(currentPage.value),

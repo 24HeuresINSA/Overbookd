@@ -27,7 +27,7 @@ userStore.fetchFriends().then(() => (loading.value = false));
 
 const friend = defineModel<User | null>({ required: true });
 
-const { label, disabled, hideDetails } = defineProps({
+defineProps({
   label: {
     type: String,
     default: "Chercher un bénévole",

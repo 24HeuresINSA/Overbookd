@@ -64,7 +64,7 @@ import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
-const { volunteers, loading } = defineProps({
+defineProps({
   volunteers: {
     type: Array as PropType<UserPersonalData[]>,
     required: true,

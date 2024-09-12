@@ -44,7 +44,7 @@ import type { CatalogGear } from "@overbookd/http";
 
 const ftStore = useFestivalTaskStore();
 
-const { disabled } = defineProps({
+defineProps({
   disabled: {
     type: Boolean,
     default: false,

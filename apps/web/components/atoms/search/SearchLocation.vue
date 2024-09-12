@@ -22,7 +22,7 @@ const locationStore = useLocationStore();
 type MinimalLocation = Pick<SignaLocation, "id" | "name">;
 const location = defineModel<MinimalLocation | null>({ required: true });
 
-const { label, disabled, clearable } = defineProps({
+defineProps({
   label: {
     type: String,
     default: "Chercher un lieu",

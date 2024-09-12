@@ -32,7 +32,7 @@ import { findPage, type PageInSummary } from "~/utils/pages/navigation";
 
 const route = useRoute();
 
-const { page, isFolded } = defineProps({
+defineProps({
   page: {
     type: Object as PropType<PageInSummary>,
     required: true,

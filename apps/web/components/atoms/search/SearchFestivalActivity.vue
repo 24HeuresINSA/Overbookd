@@ -28,7 +28,7 @@ faStore.fetchAllActivities().then(() => (loading.value = false));
 
 const activity = defineModel<MinimalActivity | null>({ required: true });
 
-const { label, disabled } = defineProps({
+defineProps({
   label: {
     type: String,
     default: "Chercher une FA",

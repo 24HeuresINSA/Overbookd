@@ -114,7 +114,7 @@ import { sumQuantities } from "~/utils/logistic/quantity";
 
 type GearDetailsWithName = GearDetails & { name: string };
 
-const { gearDetails } = defineProps({
+defineProps({
   gearDetails: {
     type: Object as PropType<GearDetailsWithName>,
     required: true,
