@@ -19,7 +19,7 @@
     "postinstall": "nuxi prepare",
     "build": "nuxi build",
     "build:ci": "CI=1 pnpm run build",
-    "dev": "nuxi dev",
+    "dev": "nuxi dev --https --host 0.0.0.0",
     "dev:host": "nuxi --hostname '0'",
     "generate": "nuxi generate",
     "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\"",

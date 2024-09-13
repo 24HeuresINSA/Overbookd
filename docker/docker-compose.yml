@@ -33,6 +33,10 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       # Enable Dashboard
       - "--api.dashboard=true"
+      # Debug
+      - "--log.level=DEBUG"
+      # Disable https backend validation
+      - "--serversTransport.insecureSkipVerify=true"
     ports:
       - 80:80
       - 443:443
@@ -159,6 +163,7 @@ services:
       - "traefik.http.routers.dev-front.entrypoints=websecure"
       - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
       - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.services.dev-front.loadbalancer.server.scheme=https"
       - "traefik.http.routers.dev-front.tls=true"
     command:
       - /bin/sh
