@@ -1,3 +1,22 @@
+## [3.4.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.3.0...v3.4.0) (2024-09-16)
+
+
+### Features
+
+* **orga-need:** add page & HttpParam class [#2154](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2154) ([4ef75dd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4ef75dd99d60001a25fe43ee57bce1f9a37f8c1d))
+* **security:** add security dashboard [#2032](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2032) ([8e66e50](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8e66e50eec7ab9cfeb42ee9b8c921c8be5f74bec))
+
+
+### Bug Fixes
+
+* **home:** update profile from home page [#2158](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2158) ([e0510dc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e0510dc8155dbbedc8232489879b159356140b4d))
+* **perf:** add hot reload [#2160](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2160) ([fef517d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fef517d962060c04ef4d64bb30780caefd20ed2b))
+
+
+### Pre-Features
+
+* **home:** create home profile card [#2141](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2141) ([2269db0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2269db009671873f0504c6bba5c6bb07a583e2fe))
+
 ## [3.3.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.2.0...v3.3.0) (2024-09-12)
 
 
