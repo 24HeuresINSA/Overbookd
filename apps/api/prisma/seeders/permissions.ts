@@ -38,6 +38,7 @@ import {
   MANAGE_CHARISMA_EVENTS,
   READ_INVENTORY,
   SET_FAVORITE_PAGES,
+  VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -422,6 +423,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: VIEW_SECURITY_DASHBOARD,
+    description: "Peut voir le récapitulatif sécurité",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "secu" }],
       },
     },
   },

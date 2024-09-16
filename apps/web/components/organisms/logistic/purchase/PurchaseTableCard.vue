@@ -34,7 +34,10 @@ import { formatDateToHumanReadable } from "@overbookd/time";
 import type { Purchase } from "@overbookd/logistic";
 import { PURCHASE_GEARS_URL } from "@overbookd/web-page";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { openPage, openPageInNewTab } from "~/utils/pages/router.utils";
+import {
+  openPageWithId,
+  openPageWithIdInNewTab,
+} from "~/utils/pages/router.utils";
 
 const purchaseStore = usePurchaseStore();
 
@@ -54,10 +57,10 @@ const removePurchase = async (purchase: Purchase) => {
 
 const openPurchaseInNewTab = (_: PointerEvent, target: { item: Purchase }) => {
   const { id } = { ...target.item };
-  openPageInNewTab(PURCHASE_GEARS_URL, id);
+  openPageWithIdInNewTab(PURCHASE_GEARS_URL, id);
 };
 const openPurchase = (event: PointerEvent, target: { item: Purchase }) => {
   const { id } = { ...target.item };
-  openPage(event, PURCHASE_GEARS_URL, id);
+  openPageWithId(event, PURCHASE_GEARS_URL, id);
 };
 </script>

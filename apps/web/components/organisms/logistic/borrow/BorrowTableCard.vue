@@ -36,7 +36,10 @@
 import type { Borrow } from "@overbookd/logistic";
 import { BORROW_GEARS_URL } from "@overbookd/web-page";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { openPage, openPageInNewTab } from "~/utils/pages/router.utils";
+import {
+  openPageWithId,
+  openPageWithIdInNewTab,
+} from "~/utils/pages/router.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
 
 const borrowStore = useBorrowStore();
@@ -58,12 +61,12 @@ const removeBorrow = async (borrow: Borrow) => {
 
 const openBorrowInNewTab = (_: PointerEvent, target: { item: Borrow }) => {
   const { id } = { ...target.item };
-  openPageInNewTab(BORROW_GEARS_URL, id);
+  openPageWithIdInNewTab(BORROW_GEARS_URL, id);
 };
 
 const openBorrow = (event: PointerEvent, target: { item: Borrow }) => {
   const { id } = { ...target.item };
-  openPage(event, BORROW_GEARS_URL, id);
+  openPageWithId(event, BORROW_GEARS_URL, id);
 };
 </script>
 

@@ -70,7 +70,7 @@ import { buildUserName } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
-import { openPageInNewTab } from "~/utils/pages/router.utils";
+import { openPageWithIdInNewTab } from "~/utils/pages/router.utils";
 
 const headers: TableHeaders = [
   { title: "Bénévole", value: "firstname", sortable: true },
@@ -100,7 +100,7 @@ const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
 const openFtInNewTab = () => {
-  openPageInNewTab(FT_URL, props.task.id);
+  openPageWithIdInNewTab(FT_URL, props.task.id);
 };
 </script>
 

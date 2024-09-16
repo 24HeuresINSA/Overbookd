@@ -13,6 +13,7 @@ export const PLANNING_URL = "/planning";
 export const FA_URL = "/fa";
 export const FT_URL = "/ft";
 export const FA_TO_PUBLISH_URL = "/fa/to-publish";
+export const SECURITY_DASHBOARD_URL = "/fa/dashboard/security";
 export const STATS_URL = "/stats";
 
 export const GEAR_CATALOG_URL = "/logistic/catalog";
@@ -49,6 +50,7 @@ export const pagesURL = [
   FA_URL,
   FT_URL,
   FA_TO_PUBLISH_URL,
+  SECURITY_DASHBOARD_URL,
   STATS_URL,
   GEAR_CATALOG_URL,
   INVENTORY_URL,

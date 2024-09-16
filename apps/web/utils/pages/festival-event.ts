@@ -3,6 +3,7 @@ import {
   READ_FA,
   READ_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
+  VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
 import type { HiddenPage, Page, PageInSummary } from "./navigation";
 import {
@@ -10,6 +11,7 @@ import {
   FT_URL,
   FA_TO_PUBLISH_URL,
   STATS_URL,
+  SECURITY_DASHBOARD_URL,
 } from "@overbookd/web-page";
 
 export const FA_LIST_PAGE: PageInSummary = {
@@ -72,6 +74,14 @@ const FA_TO_PUBLISH_PAGE: PageInSummary = {
   ],
 };
 
+const SECURITY_DASHBOARD_PAGE: HiddenPage = {
+  title: "Récapitulatif Sécurité",
+  permission: VIEW_SECURITY_DASHBOARD,
+  to: SECURITY_DASHBOARD_URL,
+  mobileSupport: false,
+  canBeFavorite: false,
+};
+
 const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
   icon: "mdi-chart-areaspline-variant",
   title: "Statistiques",
@@ -103,4 +113,5 @@ export const FESTIVAL_EVENT_PAGES: Page[] = [
   ...FESTIVAL_EVENT_SUMMARY_PAGES,
   FA_PAGE,
   FT_PAGE,
+  SECURITY_DASHBOARD_PAGE,
 ];

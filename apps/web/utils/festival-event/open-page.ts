@@ -1,5 +1,5 @@
 import { FA_URL, FT_URL } from "@overbookd/web-page";
-import { openPage, openPageInNewTab } from "../pages/router.utils";
+import { openPageWithId, openPageWithIdInNewTab } from "../pages/router.utils";
 
 type FestivalEventId = { id: number };
 
@@ -8,7 +8,7 @@ export const openActivityInNewTab = (
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openPageInNewTab(FA_URL, id);
+  openPageWithIdInNewTab(FA_URL, id);
 };
 
 export const openActivity = (
@@ -16,7 +16,7 @@ export const openActivity = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  openPage(event, FA_URL, id);
+  openPageWithId(event, FA_URL, id);
 };
 
 export const openTaskInNewTab = (
@@ -24,7 +24,7 @@ export const openTaskInNewTab = (
   { item }: { item: FestivalEventId },
 ) => {
   const { id } = { ...item };
-  openPageInNewTab(FT_URL, id);
+  openPageWithIdInNewTab(FT_URL, id);
 };
 
 export const openTask = (
@@ -32,5 +32,5 @@ export const openTask = (
   target: { item: FestivalEventId },
 ) => {
   const { id } = { ...target.item };
-  openPage(event, FT_URL, id);
+  openPageWithId(event, FT_URL, id);
 };

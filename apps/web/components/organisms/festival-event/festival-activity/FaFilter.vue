@@ -31,6 +31,15 @@
           />
         </v-btn-toggle>
       </div>
+
+      <v-btn
+        v-if="canViewSecurityDashboard"
+        prepend-icon="mdi-security"
+        color="primary"
+        text="Récapitulatif Sécurité"
+        class="desktop-only security"
+        @click="openSecurityDashboard"
+      />
     </template>
   </FestivalEventFilter>
 </template>
@@ -51,8 +60,11 @@ import type { ActivityFilters } from "~/utils/festival-event/festival-activity/f
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
+import { SECURITY_DASHBOARD_URL } from "@overbookd/web-page";
+import { VIEW_SECURITY_DASHBOARD } from "@overbookd/permission";
 
 const teamStore = useTeamStore();
+const userStore = useUserStore();
 
 const filters = defineModel<ActivityFilters>({ required: true });
 
@@ -79,6 +91,13 @@ const updateReviewerParams = (
 ) => {
   updateQueryParams(reviewer, review);
 };
+
+const canViewSecurityDashboard = computed<boolean>(() => {
+  return userStore.can(VIEW_SECURITY_DASHBOARD);
+});
+const openSecurityDashboard = () => {
+  navigateTo(SECURITY_DASHBOARD_URL);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -94,5 +113,9 @@ const updateReviewerParams = (
   &__btn {
     padding: 8px;
   }
+}
+.security {
+  margin-top: 10px;
+  width: 100%;
 }
 </style>

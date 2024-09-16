@@ -66,7 +66,7 @@ import type {
   TimelineTask,
 } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
-import { openPageInNewTab } from "~/utils/pages/router.utils";
+import { openPageWithIdInNewTab } from "~/utils/pages/router.utils";
 
 const timelineStore = useTimelineStore();
 timelineStore.fetchEvents();
@@ -147,7 +147,7 @@ const computeMobilizationLeftMargin = (
 };
 
 const openFtInNewTab = (ftId: number) => {
-  openPageInNewTab(FT_URL, ftId);
+  openPageWithIdInNewTab(FT_URL, ftId);
 };
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);

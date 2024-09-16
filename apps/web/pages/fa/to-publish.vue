@@ -114,7 +114,7 @@ const tableHeaders: TableHeaders = [
     sortable: true,
   },
   {
-    title: "Name",
+    title: "Nom",
     value: "name",
     sortable: true,
   },
