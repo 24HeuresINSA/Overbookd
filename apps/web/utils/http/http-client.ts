@@ -1,10 +1,11 @@
 import { JSON } from "@overbookd/http";
 import type { RequestGeneral, RequestHeader, HttpResponse } from "./api-fetch";
 import { apiFetch } from "./api-fetch";
+import { HttpParams, type Params } from "./http-param";
 
 type Endpoint = {
   path: string;
-  params?: object;
+  params?: Params;
 };
 
 const DEFAULT_HEADER: RequestHeader = {
@@ -84,10 +85,10 @@ export class HttpClient {
 
     const config = useRuntimeConfig();
     const url = new URL(`${config.public.baseURL}/${path}`);
-    if (!params) return url;
 
-    const entries = Object.entries(params);
-    url.search = new URLSearchParams(entries).toString();
+    if (!params) return url;
+    const urlParams = HttpParams.generate(params);
+    url.search = urlParams.toString();
     return url;
   }
 

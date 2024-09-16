@@ -9,6 +9,7 @@ import {
   LineController,
   CategoryScale,
   LinearScale,
+  Filler,
 } from "chart.js";
 
 export default defineNuxtPlugin(() => {
@@ -22,5 +23,6 @@ export default defineNuxtPlugin(() => {
     Title,
     Tooltip,
     Legend,
+    Filler,
   );
 });

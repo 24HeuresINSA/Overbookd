@@ -13,6 +13,7 @@ import {
   CHARISMA_PERIODS_URL,
   CONFIGURATION_URL,
   CONTRIBUTIONS_URL,
+  ORGA_NEED_URL,
   REGISTRATIONS_STAFF_URL,
   SG_URL,
   TRANSACTIONS_URL,
@@ -160,17 +161,17 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
 //   keywords: ["tache-orga", "affectation"],
 // };
 
-// const ORGA_NEEDS_PAGE: Page = {
-//   icon: "mdi-clock",
-//   title: "Besoin Orgas",
-//   permission: AFFECT_VOLUNTEER,
-//   to: ORGA_NEEDS_URL,
-//   description:
-//     "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
-// };
+const ORGA_NEED_PAGE: PageInSummary = {
+  icon: "mdi-clock",
+  title: "Besoin Orgas",
+  permission: AFFECT_VOLUNTEER,
+  to: ORGA_NEED_URL,
+  description:
+    "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
+  mobileSupport: false,
+  canBeFavorite: true,
+  keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
+};
 
 export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CONFIGURATION_PAGE,
@@ -184,5 +185,5 @@ export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CHARISMA_PERIODS_PAGE,
   // ASSIGNMENT_ORGA_TASK_PAGE,
   // ASSIGNMENT_TASK_ORGA_PAGE,
-  // ORGA_NEEDS_PAGE,
+  ORGA_NEED_PAGE,
 ];

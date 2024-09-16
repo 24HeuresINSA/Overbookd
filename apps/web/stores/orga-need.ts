@@ -3,6 +3,7 @@ import type {
   OrgaNeedDetails,
   OrgaNeedRequest,
 } from "@overbookd/http";
+import type { IProvidePeriod } from "@overbookd/time";
 import { isHttpError } from "~/utils/http/api-fetch";
 import { castPeriodWithDate } from "~/utils/http/period";
 
@@ -15,8 +16,9 @@ export const useOrgaNeedStore = defineStore("orga-need", {
     stats: [],
   }),
   actions: {
-    async fetchStats(periodAndTeams: OrgaNeedRequest) {
-      const res = await OrgaNeedRepository.fetchStats(periodAndTeams);
+    async fetchStats(period: IProvidePeriod, teams: string[]) {
+      const params: OrgaNeedRequest = { ...period, teams };
+      const res = await OrgaNeedRepository.fetchStats(params);
       if (isHttpError(res)) return;
       this.stats = castStatsWithDate(res);
     },

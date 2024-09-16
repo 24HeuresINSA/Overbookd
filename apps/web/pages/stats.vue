@@ -110,6 +110,11 @@ const maxTotal = computed<number>(() =>
 const options = computed(() => {
   const textColor = theme.global.current.value.colors["on-surface"];
   const gridColor = hexToRGBA(textColor, 0.1);
+  const scaleColors = {
+    ticks: { color: textColor },
+    grid: { color: gridColor },
+  };
+
   return {
     responsive: true,
     scales: {
@@ -117,20 +122,17 @@ const options = computed(() => {
         stacked: true,
         min: 0,
         position: "bottom",
-        ticks: { color: textColor },
-        grid: { color: gridColor },
+        ...scaleColors,
       },
       x1: {
         min: 0,
         position: "top",
         suggestedMax: maxTotal.value,
-        ticks: { color: textColor },
-        grid: { color: gridColor },
+        ...scaleColors,
       },
       y: {
         stacked: true,
-        ticks: { color: textColor },
-        grid: { color: gridColor },
+        ...scaleColors,
       },
     },
     plugins: {

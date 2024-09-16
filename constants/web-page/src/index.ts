@@ -35,7 +35,7 @@ export const CHARISMA_EVENTS_LIST_URL = "/charisma/events/list";
 export const CHARISMA_PERIODS_URL = "/charisma/periods";
 export const ASSIGNMENT_ORGA_TASK_URL = "/assignment/orga-task";
 export const ASSIGNMENT_TASK_ORGA_URL = "/assignment/task-orga";
-export const ORGA_NEEDS_URL = "/orga-needs";
+export const ORGA_NEED_URL = "/orga-need";
 
 export const TIMELINE_URL = "/timeline";
 export const NEED_HELP_URL = "/need-help";
@@ -70,7 +70,7 @@ export const pagesURL = [
   CHARISMA_PERIODS_URL,
   ASSIGNMENT_ORGA_TASK_URL,
   ASSIGNMENT_TASK_ORGA_URL,
-  ORGA_NEEDS_URL,
+  ORGA_NEED_URL,
   TIMELINE_URL,
   NEED_HELP_URL,
 ] as const;
