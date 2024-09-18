@@ -42,6 +42,7 @@ import { Money } from "@overbookd/money";
 import { LOGIN_URL, MY_PROFILE_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
+import { navigateTo } from "#app";
 
 const theme = useTheme();
 const themeStore = useThemeStore();

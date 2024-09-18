@@ -1,0 +1,182 @@
+<template>
+  <v-card v-if="haveBalance" class="personal-account">
+    <v-card-title class="personal-account__title">
+      <v-icon>mdi-account-cash</v-icon>
+      <span>Compte perso</span>
+    </v-card-title>
+
+    <v-card-text class="personal-account__content">
+      <h2 class="personal-account__balance" :class="balanceClassColor">
+        {{ displayedBalance }}
+      </h2>
+      <v-list
+        v-if="transactions.length > 0"
+        max-height="300"
+        class="personal-account__transactions"
+      >
+        <v-list-item
+          v-for="transaction in transactions"
+          :key="`${transaction.type}-
+            ${transaction.amount}-
+            ${transaction.date.getTime()}`"
+          class="transaction"
+          slim
+        >
+          <template #prepend>
+            <div
+              class="transaction__prepend-icon"
+              :class="`${getTransactionClassColor(transaction)}-background`"
+            >
+              <v-icon :class="getTransactionClassColor(transaction)">
+                {{ getTransactionIcon(transaction.type) }}
+              </v-icon>
+            </div>
+          </template>
+          <template #title>
+            <span class="transaction__title">
+              {{ transaction.context }}{{ getTransferMessage(transaction) }}
+            </span>
+          </template>
+          <template #subtitle>
+            <span class="transaction__subtitle">
+              {{ formatDateWithExplicitMonthAndDay(transaction.date) }}
+            </span>
+          </template>
+          <template #append>
+            <span :class="getTransactionClassColor(transaction)">
+              {{ formatAmount(transaction) }}
+            </span>
+          </template>
+        </v-list-item>
+      </v-list>
+      <span v-else class="no-transaction-label">
+        Ton CP est vide 😱<br />
+        Pense à recharger ton compte pour consommer au local !
+      </span>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script lang="ts" setup>
+import { Money } from "@overbookd/money";
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import type { MyTransaction } from "@overbookd/personal-account";
+import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
+import {
+  getTransactionIcon,
+  formatAmount,
+  getTransferMessage,
+  isDebit,
+} from "~/utils/transaction/transaction.utils";
+
+const userStore = useUserStore();
+const transactionStore = useTransactionStore();
+
+transactionStore.fetchMyTransactions();
+
+const loggedUser = computed(() => userStore.loggedUser);
+
+const haveBalance = computed<boolean>(() =>
+  userStore.can(HAVE_PERSONAL_ACCOUNT),
+);
+const myBalance = computed(() => loggedUser.value?.balance ?? 0);
+const displayedBalance = computed<string>(() =>
+  haveBalance.value ? Money.cents(myBalance.value).toString() : "",
+);
+const balanceClassColor = computed<string>(() => {
+  if (myBalance.value < 0) return "negative";
+  if (myBalance.value > 0) return "positive";
+  return "";
+});
+
+const getTransactionClassColor = (transaction: MyTransaction): string => {
+  return isDebit(transaction) ? "negative" : "positive";
+};
+
+const transactions = computed<MyTransaction[]>(
+  () => transactionStore.myTransactions,
+);
+</script>
+
+<style lang="scss" scoped>
+@import "./home-dashboard.scss";
+
+.personal-account {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: rgb(var(--v-theme-secondary));
+    padding-bottom: 0;
+  }
+  &__content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0;
+  }
+  &__balance {
+    display: flex;
+    font-size: 1.8rem;
+    justify-content: center;
+    font-weight: 500;
+    margin: 5px 0;
+  }
+  &__transactions {
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--v-theme-secondary)) rgb(var(--v-theme-surface));
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: rgb(var(--v-theme-secondary));
+    }
+  }
+}
+
+.transaction {
+  padding-inline: 10px !important;
+  &__prepend-icon {
+    border-radius: 5px;
+    padding: 7px;
+    background-color: rgba(var(--v-theme-secondary), 0.4);
+    .v-icon {
+      font-size: 1.4rem;
+    }
+  }
+  &__title {
+    font-size: 0.9rem;
+  }
+  &__subtitle {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+}
+
+.no-transaction-label {
+  font-size: 0.9rem;
+  margin: 5px 10px;
+  opacity: 0.7;
+  text-align: center;
+}
+
+:deep(.v-list-item__spacer) {
+  width: 8px !important;
+}
+
+.positive {
+  color: rgb(var(--v-theme-success));
+}
+.positive-background {
+  background-color: rgba(var(--v-theme-success), 0.1);
+}
+.negative {
+  color: rgb(var(--v-theme-error));
+}
+.negative-background {
+  background-color: rgba(var(--v-theme-error), 0.1);
+}
+</style>

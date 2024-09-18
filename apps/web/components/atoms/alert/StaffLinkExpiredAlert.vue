@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import { LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
 import { SG_EMAIL } from "~/utils/mail/mail.constant";
+import { navigateTo } from "#app";
 </script>
 
 <style lang="scss" scoped>

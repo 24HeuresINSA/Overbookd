@@ -1,7 +1,7 @@
 <template>
   <v-card class="profile">
     <v-btn
-      class="profile__edit"
+      class="profile__edit-icon"
       icon="mdi-pencil"
       variant="text"
       rounded="pill"
@@ -22,15 +22,21 @@
       <div class="stats-container">
         <div class="stats">
           <span class="stats__value">{{ charisma }}</span>
-          <span class="stats__label">Charisme</span>
+          <span class="stats__label">
+            Charisme{{ additionalPlural(charisma) }}
+          </span>
         </div>
         <div class="stats">
           <span class="stats__value">{{ friendsCount }}</span>
-          <span class="stats__label">Amis</span>
+          <span class="stats__label">
+            Ami{{ additionalPlural(friendsCount) }}
+          </span>
         </div>
         <div class="stats">
           <span class="stats__value">{{ tasksCount }}</span>
-          <span class="stats__label">Tâches</span>
+          <span class="stats__label">
+            Tâche{{ additionalPlural(tasksCount) }}
+          </span>
         </div>
       </div>
       <div class="personal-info-container">
@@ -83,23 +89,24 @@ const phone = computed<string>(() =>
   loggedUser.value ? formatUserPhone(loggedUser.value.phone) : "",
 );
 
+const additionalPlural = (count: number) => {
+  return count > 1 ? "s" : "";
+};
+
 const isEditProfileDialogOpen = ref<boolean>(false);
 const editProfile = () => (isEditProfileDialogOpen.value = true);
 const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
+@import "./home-dashboard.scss";
+
 .profile {
-  min-width: 250px;
-  width: 25%;
-  @media only screen and (max-width: $mobile-max-width) {
-    min-width: unset;
-    width: 100%;
-  }
-  &__edit {
+  &__edit-icon {
     position: absolute;
     top: 0;
     right: 0;
+    opacity: 0.8;
   }
   &__title {
     display: flex;

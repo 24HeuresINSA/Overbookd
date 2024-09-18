@@ -265,6 +265,7 @@ import {
   maxLength,
 } from "~/utils/rules/input.rules";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
+import { navigateTo } from "#app";
 
 const route = useRoute();
 const authStore = useAuthStore();

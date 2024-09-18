@@ -35,20 +35,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Money } from "@overbookd/money";
-import {
-  BARREL,
-  DEPOSIT,
-  PROVISIONS,
-  TRANSFER,
-  SHARED_MEAL,
-  type MyTransaction,
-  type TransactionType,
-  doIReceive,
-  INITIALIZATION,
-} from "@overbookd/personal-account";
+import type { MyTransaction } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
-import { nicknameOrName } from "@overbookd/user";
+import {
+  isCredit,
+  isDebit,
+  getTransactionIcon,
+  formatAmount,
+  getTransferMessage,
+} from "~/utils/transaction/transaction.utils";
 
 const transactionStore = useTransactionStore();
 transactionStore.fetchMyTransactions();
@@ -56,55 +51,6 @@ transactionStore.fetchMyTransactions();
 const transactions = computed<MyTransaction[]>(
   () => transactionStore.myTransactions,
 );
-
-const isCredit = (transaction: MyTransaction) => {
-  switch (transaction.type) {
-    case BARREL:
-    case PROVISIONS:
-      return false;
-    case DEPOSIT:
-      return true;
-    case TRANSFER:
-    case SHARED_MEAL:
-    case INITIALIZATION:
-      return doIReceive(transaction);
-  }
-};
-const isDebit = (transaction: MyTransaction) => !isCredit(transaction);
-const getTransactionIcon = (type: TransactionType) => {
-  switch (type) {
-    case BARREL:
-      return "mdi-glass-mug-variant";
-    case DEPOSIT:
-      return "mdi-transfer";
-    case PROVISIONS:
-      return "mdi-food";
-    case TRANSFER:
-      return "mdi-swap-vertical";
-    case SHARED_MEAL:
-      return "mdi-food-variant";
-    case INITIALIZATION:
-      return "mdi-restart";
-  }
-};
-const formatAmount = (transaction: MyTransaction) => {
-  const symbol = isDebit(transaction) ? "-" : "";
-  return `${symbol}${Money.cents(transaction.amount).toString()}`;
-};
-const getTransferMessage = (transaction: MyTransaction) => {
-  switch (transaction.type) {
-    case BARREL:
-    case PROVISIONS:
-    case DEPOSIT:
-    case INITIALIZATION:
-      return "";
-    case TRANSFER:
-    case SHARED_MEAL:
-      return doIReceive(transaction)
-        ? `(de ${nicknameOrName(transaction.from)})`
-        : `(vers ${nicknameOrName(transaction.to)})`;
-  }
-};
 </script>
 
 <style lang="scss" scoped>

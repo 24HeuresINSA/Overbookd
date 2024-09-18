@@ -1,0 +1,10 @@
+.v-card {
+  min-width: 280px;
+  width: 25%;
+  height: fit-content;
+
+  @media only screen and (max-width: $mobile-max-width) {
+    min-width: unset;
+    width: calc(100% - calc($card-margin * 2));
+  }
+}

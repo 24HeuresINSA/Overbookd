@@ -41,6 +41,7 @@ export const TIMELINE_URL = "/timeline";
 export const NEED_HELP_URL = "/need-help";
 
 export const pagesURL = [
+  HOME_URL,
   MY_PROFILE_URL,
   MY_PERSONAL_ACCOUNT_URL,
   SHARED_MEALS_URL,

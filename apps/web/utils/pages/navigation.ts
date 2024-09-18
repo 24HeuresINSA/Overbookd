@@ -33,9 +33,9 @@ export const HOME_PAGE: PageInSummary = {
   icon: "mdi-home",
   title: "Accueil",
   to: HOME_URL,
-  description: "Page principale pour se rediriger vers toutes les autres",
+  description: "Page d'accueil",
   mobileSupport: true,
-  canBeFavorite: false,
+  canBeFavorite: true,
   keywords: ["accueil", "home"],
 };
 

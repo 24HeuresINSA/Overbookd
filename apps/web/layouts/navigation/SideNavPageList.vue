@@ -85,13 +85,14 @@ $help-items-height: $navigation-item-height * 2 + $divider-bottom-height;
   );
   padding-top: 2px;
   padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--v-theme-primary)) rgb(var(--v-theme-surface));
 
   &::-webkit-scrollbar {
     width: 7px;
   }
-
   &::-webkit-scrollbar-thumb {
-    border-radius: 8px;
+    border-radius: 7px;
     background: rgb(var(--v-theme-primary));
   }
 }
