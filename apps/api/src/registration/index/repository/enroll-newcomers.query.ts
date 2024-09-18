@@ -1,8 +1,9 @@
-import { VOLUNTEER } from "@overbookd/registration";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { Membership, STAFF, VOLUNTEER } from "@overbookd/registration";
+import { BENEVOLE_CODE, HARD_CODE } from "@overbookd/team-constants";
 import { SELECT_USER_TEAMS } from "../../../user/user.query";
-import { IProvidePeriod } from "@overbookd/time";
+import { Edition, IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export const SELECT_STAFF = {
   id: true,
@@ -23,17 +24,34 @@ export const SELECT_VOLUNTEER = {
   note: true,
 };
 
-export const NOT_VOLUNTEER_YET = {
+const IS_NOT_HARD = {
+  teams: { none: { team: { code: HARD_CODE } } },
+};
+
+function buildHasMembershipApplicationCondition(membership: Membership) {
+  const edition = Edition.current;
+  return {
+    membershipApplications: {
+      some: { membership, edition },
+    },
+  };
+}
+
+export const IS_ENROLLABLE_STAFF = {
+  ...IS_NOT_DELETED,
+  ...IS_NOT_HARD,
+  ...buildHasMembershipApplicationCondition(STAFF),
+};
+
+const IS_NOT_VOLUNTEER = {
   teams: { none: { team: { code: BENEVOLE_CODE } } },
 };
 
 export const IS_ENROLLABLE_VOLUNTEER = {
-  isDeleted: false,
-  OR: [
-    { registrationMembership: null },
-    { registrationMembership: VOLUNTEER } as const,
-  ],
-  ...NOT_VOLUNTEER_YET,
+  ...IS_NOT_DELETED,
+  ...IS_NOT_VOLUNTEER,
+  ...IS_NOT_HARD,
+  ...buildHasMembershipApplicationCondition(VOLUNTEER),
 };
 
 export type DatabaseEnrollableStaff = {

@@ -1,5 +1,4 @@
 import {
-  STAFF,
   EnrolledNewcomer,
   Teams,
   isJoinableTeams,
@@ -10,9 +9,9 @@ import {
   DatabaseEnrollableStaff as DatabaseEnrollableStaff,
   DatabaseTeamCode,
   SELECT_STAFF,
-  NOT_VOLUNTEER_YET,
   DatabaseEnrollableVolunteer,
   IS_ENROLLABLE_VOLUNTEER,
+  IS_ENROLLABLE_STAFF,
 } from "./enroll-newcomers.query";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
@@ -42,11 +41,7 @@ export class PrismaEnrollNewcomersRepository
   async findEnrollableStaffs(): Promise<EnrollableStaff[]> {
     const staffs = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        registrationMembership: STAFF,
-        ...NOT_VOLUNTEER_YET,
-      },
+      where: IS_ENROLLABLE_STAFF,
       select: SELECT_STAFF,
     });
     return staffs.map(formatToEnrollableStaff);
@@ -56,9 +51,7 @@ export class PrismaEnrollNewcomersRepository
     const thirtyDaysAgo = new Date(Date.now() - 30 * ONE_DAY_IN_MS);
     return this.prisma.user.count({
       where: {
-        isDeleted: false,
-        registrationMembership: STAFF,
-        ...NOT_VOLUNTEER_YET,
+        ...IS_ENROLLABLE_STAFF,
         createdAt: { gte: thirtyDaysAgo },
       },
     });
