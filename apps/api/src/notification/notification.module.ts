@@ -6,7 +6,7 @@ import { PrismaService } from "../prisma.service";
 import { PrismaModule } from "../prisma.module";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { RegistrationModule } from "../registration/registration.module";
+import { RegistrationModule } from "../registration/index/registration.module";
 import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../authentication/jwt-constants";

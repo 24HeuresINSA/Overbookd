@@ -74,7 +74,7 @@ export class SharedMealController {
   }
 
   @Permission(SHOTGUN_SHARED_MEAL)
-  @Get("")
+  @Get()
   @ApiResponse({
     status: 200,
     description: "Meals available",

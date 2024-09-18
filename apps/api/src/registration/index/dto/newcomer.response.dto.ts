@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
 import { Teams } from "@overbookd/registration";
-import { PeriodResponseDto } from "../../common/dto/period.response.dto";
+import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 
 export class EnrollableStaffResponseDto implements EnrollableStaff {
   @ApiProperty({

@@ -4,7 +4,7 @@ import {
   NotificationRepository,
   Notifyee,
 } from "@overbookd/registration";
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import { SELECT_NOTIFYEE } from "./notification.query";
 import { HAS_PERMISSION } from "./notification.query";
 

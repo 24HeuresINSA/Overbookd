@@ -14,9 +14,9 @@ import {
   isStaffRegistered,
   isVolunteerRegistered,
 } from "@overbookd/registration";
-import { jwtConstants } from "../authentication/jwt-constants";
+import { jwtConstants } from "../../authentication/jwt-constants";
 import { InviteStaff } from "@overbookd/registration";
-import { DomainEventService } from "../domain-event/domain-event.service";
+import { DomainEventService } from "../../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 import { isString } from "class-validator";
 import {
@@ -26,7 +26,7 @@ import {
 } from "@overbookd/domain-events";
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod, OverDate } from "@overbookd/time";
-import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+import { VolunteerAvailabilityService } from "../../volunteer-availability/volunteer-availability.service";
 import { Configurations } from "./repository/configurations.repository";
 
 type Repositories = {

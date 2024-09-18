@@ -1,8 +1,8 @@
 import { VOLUNTEER } from "@overbookd/registration";
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
-import { SELECT_USER_TEAMS } from "../../user/user.query";
+import { SELECT_USER_TEAMS } from "../../../user/user.query";
 import { IProvidePeriod } from "@overbookd/time";
-import { SELECT_PERIOD } from "../../common/query/period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 
 export const SELECT_STAFF = {
   id: true,

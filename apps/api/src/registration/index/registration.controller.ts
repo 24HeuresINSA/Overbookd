@@ -25,9 +25,9 @@ import {
   ForgetMemberErrorFilter,
   RegistrationErrorFilter,
 } from "./registration-error.filter";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import {
   EnrollableStaffResponseDto,
   EnrollableVolunteerResponseDto,
@@ -53,7 +53,7 @@ export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
   @Post()
-  @UseFilters(new RegistrationErrorFilter())
+  @UseFilters(RegistrationErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -185,7 +185,7 @@ export class RegistrationController {
   }
 
   @Post("forget")
-  @UseFilters(new ForgetMemberErrorFilter())
+  @UseFilters(ForgetMemberErrorFilter)
   @ApiBody({
     description: "Forget a member",
     type: ForgetRequestDto,
@@ -200,7 +200,7 @@ export class RegistrationController {
   }
 
   @Delete("forget/:email")
-  @UseFilters(new ForgetMemberErrorFilter())
+  @UseFilters(ForgetMemberErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

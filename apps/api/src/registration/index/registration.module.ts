@@ -2,18 +2,18 @@ import { Module } from "@nestjs/common";
 import { RegistrationController } from "./registration.controller";
 import { RegistrationService } from "./registration.service";
 import { RegisterNewcomer } from "@overbookd/registration";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../../prisma.service";
 import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
-import { PrismaModule } from "../prisma.module";
-import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
-import { DomainEventModule } from "../domain-event/domain-event.module";
-import { DomainEventService } from "../domain-event/domain-event.service";
+import { PrismaModule } from "../../prisma.module";
+import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
+import { DomainEventModule } from "../../domain-event/domain-event.module";
+import { DomainEventService } from "../../domain-event/domain-event.service";
 import { PrismaEnrollNewcomersRepository } from "./repository/enroll-newcomers-repository.prisma";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
 import { PrismaNotificationRepository } from "./repository/notification-repository.prisma";
-import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer-availability.module";
-import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+import { VolunteerAvailabilityModule } from "../../volunteer-availability/volunteer-availability.module";
+import { VolunteerAvailabilityService } from "../../volunteer-availability/volunteer-availability.service";
 import { PrismaConfigurations } from "./repository/configuration-repository.prisma";
 
 @Module({

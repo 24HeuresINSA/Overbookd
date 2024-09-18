@@ -69,3 +69,11 @@ export {
   RegisterForm,
   RegistrationError,
 } from "./register-form/register-form.js";
+
+// Apply for
+export type { Candidate, Candidates } from "./apply-for/apply-for.js";
+export { ApplyFor } from "./apply-for/apply-for.js";
+export {
+  MembershipApplicationError,
+  AlreadyCandidate,
+} from "./apply-for/candidature.error.js";

@@ -7,7 +7,7 @@ import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { TeamService } from "../team/team.service";
-import { RegistrationModule } from "../registration/registration.module";
+import { RegistrationModule } from "../registration/index/registration.module";
 import { PrismaModule } from "../prisma.module";
 import { PreferenceController } from "./preference/preference.controller";
 import { PrismaPreferences } from "./preference/repository/preferences.prisma";

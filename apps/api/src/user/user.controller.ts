@@ -54,7 +54,7 @@ import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
-import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
+import { ForgetMemberErrorFilter } from "../registration/index/registration-error.filter";
 import { UserIdentifierResponseDto } from "../common/dto/user-identifier.response.dto";
 import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
 import { PlanningEventResponseDto } from "../assignment/common/dto/planning-event.response.dto";

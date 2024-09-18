@@ -22,7 +22,7 @@ import { VolunteerAvailabilityModule } from "./volunteer-availability/volunteer-
 import { ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuardCustom } from "./throttler-custom.guard";
-import { RegistrationModule } from "./registration/registration.module";
+import { RegistrationModule } from "./registration/index/registration.module";
 import { PrismaModule } from "./prisma.module";
 import { MailModule } from "./mail/mail.module";
 import { ContributionModule } from "./contribution/contribution.module";
@@ -37,6 +37,7 @@ import { LogisticModule } from "./logistic/logistic.module";
 import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
 import { CharismaEventModule } from "./charisma-event/charisma-event.module";
+import { MembershipApplicationModule } from "./registration/membership-application/membership-application.module";
 
 @Module({
   imports: [
@@ -78,10 +79,10 @@ import { CharismaEventModule } from "./charisma-event/charisma-event.module";
     TimelineModule,
     NeedHelpModule,
     RegistrationModule,
+    MembershipApplicationModule,
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: ONE_MINUTE_IN_MS, limit: 500 }],
     }),
-    RegistrationModule,
     PrismaModule,
     MailModule,
     ContributionModule,

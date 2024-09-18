@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { STAFF } from "../newcomer.js";
 import { InMemoryCandidates } from "./candidates.inmemory.js";
 import { Candidate, ApplyFor } from "./apply-for.js";
 import { Edition } from "@overbookd/time";
+import { AlreadyCandidate } from "./candidature.error.js";
 
 const lea = { email: "lea.mouyno@gmail.com" };
 const leaCandidate: Candidate = {
@@ -35,23 +36,17 @@ describe("Apply for staff membership", () => {
     });
 
     describe("and the candidate already applied for the current edition", () => {
-      let candidates: InMemoryCandidates;
-      beforeEach(async () => {
-        candidates = new InMemoryCandidates([leaCandidate]);
-        const applyFor = new ApplyFor(candidates);
-        await applyFor.staff(lea);
-      });
-
-      it("should should be listed as staff candidate", () => {
-        expect(candidates.staff).toContainEqual(leaCandidate);
-      });
-      it("should only have one application", () => {
-        expect(candidates.staff).toEqual([leaCandidate]);
+      const candidates = new InMemoryCandidates([leaCandidate]);
+      const applyFor = new ApplyFor(candidates);
+      it("indicate that the candidate already applied fot this edition", () => {
+        expect(async () => applyFor.staff(lea)).rejects.toThrowError(
+          AlreadyCandidate,
+        );
       });
     });
 
     describe("and the candidate already applied for a previous edition", () => {
-      it("should should be listed as staff candidate", async () => {
+      it("should be listed as staff candidate", async () => {
         const expectedCandidate = {
           ...noelCandidate,
           edition: Edition.current,

@@ -5,7 +5,7 @@ import {
   isJoinableTeams,
 } from "@overbookd/registration";
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import {
   DatabaseEnrollableStaff as DatabaseEnrollableStaff,
   DatabaseTeamCode,

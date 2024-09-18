@@ -1,5 +1,6 @@
 import { Edition } from "@overbookd/time";
 import { STAFF } from "../newcomer.js";
+import { AlreadyCandidate } from "./candidature.error.js";
 
 type Volunteer = { email: string };
 export type Candidate = Volunteer & {
@@ -18,7 +19,7 @@ export class ApplyFor {
   async staff({ email }: Volunteer): Promise<void> {
     const edition = Edition.current;
     const isCandidate = await this.candidates.isCandidate(email, edition);
-    if (isCandidate) return;
+    if (isCandidate) throw new AlreadyCandidate(STAFF);
 
     return this.candidates.add({ email, membership: STAFF, edition });
   }

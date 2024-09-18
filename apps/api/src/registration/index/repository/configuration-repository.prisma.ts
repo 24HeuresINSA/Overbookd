@@ -1,4 +1,4 @@
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import { Configurations } from "./configurations.repository";
 
 const INVITE_STAFF_LINK = "inviteStaffLink";
