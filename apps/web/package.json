@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
-    "@nuxtjs/leaflet": "1.2.2",
+    "@nuxtjs/leaflet": "1.2.3",
     "@overbookd/alerts": "workspace:*",
     "@overbookd/assignment": "workspace:*",
     "@overbookd/charisma": "workspace:*",
@@ -65,19 +65,19 @@
     "jwt-decode": "4.0.0",
     "pinia": "2.2.2",
     "quill": "2.0.2",
-    "sass": "1.78.0",
+    "sass": "1.79.2",
     "vite-plugin-vuetify": "2.0.4",
     "vue-chartjs": "5.3.1",
     "vue-html-secure": "1.0.10",
-    "vuetify": "3.7.1"
+    "vuetify": "3.7.2"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "0.5.7",
     "@pinia/nuxt": "0.5.4",
     "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.28.0",
-    "nuxt": "3.13.1",
-    "vue": "3.5.5",
+    "nuxt": "3.13.2",
+    "vue": "3.5.7",
     "vue-router": "4.4.5",
     "vue-tsc": "2.1.6"
   },
