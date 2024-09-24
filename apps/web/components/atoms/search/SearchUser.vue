@@ -21,7 +21,7 @@ import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
-userStore.fetchUsers();
+userStore.fetchVolunteers();
 
 const user = defineModel<User>({ required: false });
 
@@ -48,5 +48,5 @@ const props = defineProps({
   },
 });
 
-const userList = computed<User[]>(() => props.list ?? userStore.users);
+const userList = computed<User[]>(() => props.list ?? userStore.volunteers);
 </script>

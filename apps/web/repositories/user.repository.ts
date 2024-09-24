@@ -29,10 +29,6 @@ export class UserRepository {
     return HttpClient.post(`${this.basePath}/me/approve-eula`);
   }
 
-  static getAllUsers() {
-    return HttpClient.get<UserPersonalData[]>(this.basePath);
-  }
-
   static getVolunteers() {
     return HttpClient.get<UserPersonalData[]>(`${this.basePath}/volunteers`);
   }

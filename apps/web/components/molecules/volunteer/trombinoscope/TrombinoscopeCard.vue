@@ -28,7 +28,7 @@ import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
-const { volunteer } = defineProps({
+const props = defineProps({
   volunteer: {
     type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,
@@ -42,13 +42,16 @@ const canViewVolunteerDetails = computed(() =>
 
 const emit = defineEmits(["click:team", "click:volunteer"]);
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
-const propagateClickedVolunteer = () => emit("click:volunteer", volunteer);
+const propagateClickedVolunteer = () => {
+  emit("click:volunteer", props.volunteer);
+};
 </script>
 
 <style lang="scss" scoped>
 .name {
   font-size: 1.1rem;
   text-wrap: pretty;
+  text-align: center;
 }
 
 .teams {

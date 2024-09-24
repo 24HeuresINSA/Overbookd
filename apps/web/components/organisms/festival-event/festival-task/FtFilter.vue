@@ -73,7 +73,7 @@ const reviewStatusLabels = [...reviewStatusLabel.entries()];
 
 const isHumainMember = computed<boolean>(() => userStore.isMemberOf(humain));
 const assignableReviewers = computed<User[]>(() =>
-  userStore.users.filter(({ teams }) => teams.includes(humain)),
+  userStore.volunteers.filter(({ teams }) => teams.includes(humain)),
 );
 
 const updateReviewParams = (

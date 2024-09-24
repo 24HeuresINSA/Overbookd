@@ -38,13 +38,11 @@ const hasProfilePictureBlob = computed<boolean>(
   () => props.user.profilePictureBlob !== undefined,
 );
 
-const fetchProfilePictureBlob = () => userStore.setProfilePicture(props.user);
-
 watch(
   () => props.user.profilePictureBlob,
   () => {
     if (!hasProfilePicture.value || hasProfilePictureBlob.value) return;
-    fetchProfilePictureBlob();
+    userStore.setProfilePicture(props.user);
   },
   { immediate: true },
 );

@@ -82,26 +82,6 @@ export class UserController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: "Get all users",
-    type: UserPersonalDataResponseDto,
-    isArray: true,
-  })
-  getUsers(): Promise<UserPersonalData[]> {
-    return this.userService.getAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
-  @ApiUnauthorizedResponse({
-    description: "User dont have the right to access this route",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
   @Get("/volunteers")
   @ApiResponse({
     status: 200,

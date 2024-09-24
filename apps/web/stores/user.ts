@@ -24,7 +24,6 @@ import { jwtDecode } from "jwt-decode";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
-  users: UserDataWithPotentialyProfilePicture[];
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
   selectedUserAssignments: PlanningEvent[];
@@ -44,7 +43,6 @@ type Token = { teams: string[]; permissions: Permission[] };
 export const useUserStore = defineStore("user", {
   state: (): State => ({
     loggedUser: undefined,
-    users: [],
     selectedUser: undefined,
     selectedUserFriends: [],
     selectedUserAssignments: [],
@@ -114,12 +112,6 @@ export const useUserStore = defineStore("user", {
 
     clearLoggedUser() {
       this.loggedUser = undefined;
-    },
-
-    async fetchUsers() {
-      const res = await UserRepository.getAllUsers();
-      if (isHttpError(res)) return;
-      this.users = res.map(castUserPersonalDataWithDate);
     },
 
     async fetchVolunteers() {
@@ -205,7 +197,7 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification("Profil mis à jour ! 🎉");
 
       const updated = castUserPersonalDataWithDate(res);
-      this._updateUserInformationInLists(updated);
+      this._updateVolunteerFromList(updated);
       if (this.selectedUser?.id === this.loggedUser?.id) this.fetchUser();
     },
 
@@ -219,7 +211,7 @@ export const useUserStore = defineStore("user", {
         ...castMyUserInformationWithDate(res),
       };
       this.loggedUser = updated;
-      this._updateUserInformationInLists(updated);
+      this._updateVolunteerFromList(updated);
     },
 
     async deleteUser(userId: number) {
@@ -227,7 +219,6 @@ export const useUserStore = defineStore("user", {
       if (isHttpError(res)) return;
       sendSuccessNotification("Utilisateur supprimé ! 🎉");
 
-      this.users = this.users.filter((u) => u.id !== userId);
       this.volunteers = this.volunteers.filter((v) => v.id !== userId);
     },
 
@@ -238,7 +229,7 @@ export const useUserStore = defineStore("user", {
 
       if (this.selectedUser?.id !== userId) return;
       this.selectedUser = { ...this.selectedUser, teams: res };
-      this._updateUserInformationInLists(this.selectedUser);
+      this._updateVolunteerFromList(this.selectedUser);
       if (userId === this.loggedUser?.id) this.fetchMyInformation();
     },
 
@@ -251,7 +242,7 @@ export const useUserStore = defineStore("user", {
       this.selectedUser.teams = this.selectedUser.teams.filter(
         (t) => t !== team,
       );
-      this._updateUserInformationInLists(this.selectedUser);
+      this._updateVolunteerFromList(this.selectedUser);
       if (userId === this.loggedUser?.id) this.fetchMyInformation();
     },
 
@@ -268,7 +259,7 @@ export const useUserStore = defineStore("user", {
       this.loggedUser = castMyUserInformationWithDate(res);
     },
 
-    getProfilePicture(
+    _getProfilePicture(
       user:
         | MyUserInformationWithPotentialyProfilePicture
         | UserDataWithPotentialyProfilePicture,
@@ -281,31 +272,30 @@ export const useUserStore = defineStore("user", {
 
     async setMyProfilePicture() {
       if (!this.loggedUser) return;
-      const profilePictureBlob = await this.getProfilePicture(this.loggedUser);
+      const profilePictureBlob = await this._getProfilePicture(this.loggedUser);
       if (profilePictureBlob instanceof Error) return;
 
       this.loggedUser = { ...this.loggedUser, profilePictureBlob };
+      this._updateVolunteerFromList(this.loggedUser);
     },
 
     async setSelectedUserProfilePicture() {
       if (!this.selectedUser) return;
-      const profilePictureBlob = await this.getProfilePicture(
+      const profilePictureBlob = await this._getProfilePicture(
         this.selectedUser,
       );
       if (profilePictureBlob instanceof Error) return;
 
-      this.selectedUser = {
-        ...this.selectedUser,
-        profilePictureBlob,
-      };
+      this.selectedUser = { ...this.selectedUser, profilePictureBlob };
+      this._updateVolunteerFromList(this.selectedUser);
     },
 
     async setProfilePicture(user: UserPersonalData) {
-      const profilePictureBlob = await this.getProfilePicture(user);
+      const profilePictureBlob = await this._getProfilePicture(user);
       if (profilePictureBlob instanceof Error) return;
 
       const updated = { ...user, profilePictureBlob };
-      this._updateUserInformationInLists(updated);
+      this._updateVolunteerFromList(updated);
     },
 
     async getVolunteerTasks(volunteerId: number) {
@@ -356,10 +346,9 @@ export const useUserStore = defineStore("user", {
       );
     },
 
-    _updateUserInformationInLists(user: UserPersonalData) {
-      this.users = this.users.map((u) => (u.id === user.id ? user : u));
+    _updateVolunteerFromList(volunteer: UserDataWithPotentialyProfilePicture) {
       this.volunteers = this.volunteers.map((v) =>
-        v.id === user.id ? user : v,
+        v.id === volunteer.id ? reactive(volunteer) : v,
       );
     },
   },

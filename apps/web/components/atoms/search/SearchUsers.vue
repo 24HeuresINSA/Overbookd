@@ -24,7 +24,7 @@ import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const userStore = useUserStore();
-userStore.fetchUsers();
+userStore.fetchVolunteers();
 
 const users = defineModel<User[]>({ default: [] });
 
@@ -55,7 +55,7 @@ const emit = defineEmits(["add", "remove"]);
 
 const lastUsers = ref<User[]>(users.value);
 
-const userList = computed<User[]>(() => props.list ?? userStore.users);
+const userList = computed<User[]>(() => props.list ?? userStore.volunteers);
 
 const propagateChange = (selectedUsers: User[]) => {
   const addedUsers = selectedUsers.filter(

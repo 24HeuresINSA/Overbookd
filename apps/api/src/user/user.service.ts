@@ -122,20 +122,6 @@ export class UserService {
     });
   }
 
-  async getAll(): Promise<UserPersonalData[]> {
-    const [users, charismaPeriods] = await Promise.all([
-      this.prisma.user.findMany({
-        where: IS_NOT_DELETED,
-        select: SELECT_USER_PERSONAL_DATA,
-        orderBy: { id: "asc" },
-      }),
-      this.selectCharismaPeriods(),
-    ]);
-    return users.map((user) =>
-      UserService.formatToPersonalData(user, charismaPeriods),
-    );
-  }
-
   async getVolunteers(): Promise<UserPersonalData[]> {
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
