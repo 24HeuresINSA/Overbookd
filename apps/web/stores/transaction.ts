@@ -9,7 +9,7 @@ import type {
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   myTransactions: MyTransaction[];

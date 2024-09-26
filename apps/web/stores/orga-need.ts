@@ -4,7 +4,8 @@ import type {
   OrgaNeedRequest,
 } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { OrgaNeedRepository } from "~/repositories/orga-need.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {

@@ -1,7 +1,8 @@
 import type { BreakPeriods } from "@overbookd/assignment";
 import type { IProvidePeriod } from "@overbookd/time";
 import { castPeriodsWithDate } from "~/utils/http/period";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { PlanningRepository } from "../planning.repository";
 
 export class BreakPeriodsRepository implements BreakPeriods {
   async for(volunteer: number): Promise<IProvidePeriod[]> {

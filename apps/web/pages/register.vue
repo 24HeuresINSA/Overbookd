@@ -6,21 +6,24 @@
       cover
     />
     <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
-    <RegistrationStepper v-else class="stepper" />
+    <RegistrationStepper
+      v-else
+      class="stepper"
+      @registered="loginAndApplyForMembership"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import { loginAndApplyForMembership } from "~/utils/login/login.utils";
 
 definePageMeta({ layout: false });
 
 const route = useRoute();
 
-const token = computed<string | undefined>(() => {
-  const tokenParam = route.query.token;
-  return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
-});
+const token = computed<string>(() => stringifyQueryParam(route.query.token));
 
 const isInvitationExpired = computed<boolean>(() => {
   if (!token.value) return false;

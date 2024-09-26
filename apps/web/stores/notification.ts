@@ -1,5 +1,5 @@
 import { NotificationRepository } from "~/repositories/notification.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   hasNotifications: boolean;

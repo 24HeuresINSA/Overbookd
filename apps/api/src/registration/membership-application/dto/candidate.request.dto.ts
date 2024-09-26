@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { StaffApplication } from "@overbookd/http";
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
-export class CandidateRequestDto {
+export class CandidateRequestDto implements StaffApplication {
   @ApiProperty({
     description: "Candidate's email",
     example: "candidate@24h.me",

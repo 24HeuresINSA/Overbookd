@@ -1,5 +1,7 @@
 import { ENROLL_HARD, READ_FA, type Permission } from "@overbookd/permission";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
+import { RegistrationRepository } from "~/repositories/registration/registration.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   myRefusedActivities: number;

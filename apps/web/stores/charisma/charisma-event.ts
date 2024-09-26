@@ -7,7 +7,8 @@ import type {
 import type { CharismaEventPotentialParticipant } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import type { User } from "@overbookd/user";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { CharismaEventRepository } from "~/repositories/charisma/charisma-event.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   allParticipations: CharismaEventParticipation[];

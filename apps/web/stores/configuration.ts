@@ -1,7 +1,8 @@
 import type { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { ConfigurationRepository } from "~/repositories/configuration.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   configurations: Configuration[];

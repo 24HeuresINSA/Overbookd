@@ -10,8 +10,9 @@ export type RequestGeneral = {
   method: Method;
 };
 
+type AcceptedType = typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
 export type RequestHeader = {
-  acceptedType: typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
+  acceptedType: AcceptedType;
 };
 
 export type ApiResponse = object | string | number | void;
@@ -33,52 +34,66 @@ export async function apiFetch<T extends ApiResponse>(
   { acceptedType }: RequestHeader,
   body?: object,
 ): Promise<HttpResponse<T>> {
+  const requestOptions = createRequestOptions(method, acceptedType, body);
+  const res = await fetch(url.toString(), requestOptions); // nosemgrep
+  if (!res.ok) return handleFetchError(res);
+  return handleFetchResponse<T>(res, acceptedType);
+}
+
+function createRequestOptions(
+  method: string,
+  acceptedType: AcceptedType,
+  body?: object,
+): RequestInit {
   const isFormData = body instanceof FormData;
+  const contentType = isFormData ? undefined : JSON_TYPE;
+  const headers = createHeaders(acceptedType, contentType);
+  const formattedBody = formatRequestBody(body);
+  return { method, headers, body: formattedBody };
+}
+
+function createHeaders(
+  acceptedType: AcceptedType,
+  contentType?: typeof JSON_TYPE,
+): HeadersInit {
+  const contentTypeObject: EmptyOr<{ "Content-Type": string }> = contentType
+    ? { "Content-Type": contentType }
+    : {};
 
   const accessToken = useCookie("accessToken").value;
-  const contentType: EmptyOr<{ "Content-Type": string }> = isFormData
-    ? {}
-    : { "Content-Type": JSON_TYPE };
   const authorization: EmptyOr<{ Authorization: string }> = accessToken
     ? { Authorization: `Bearer ${accessToken}` }
     : {};
   const accept = { Accept: acceptedType };
-  const headers = { ...contentType, ...authorization, ...accept };
 
-  const formattedBody = isFormData ? body : JSON.stringify(body);
+  return { ...contentTypeObject, ...authorization, ...accept };
+}
 
-  const requestOptions: RequestInit = {
-    method,
-    headers,
-    body: body ? formattedBody : undefined,
-  };
+function formatRequestBody(body?: object): string | FormData | undefined {
+  if (!body) return undefined;
+  const isFormData = body instanceof FormData;
+  return isFormData ? body : JSON.stringify(body);
+}
 
-  const res = await fetch(url.toString(), requestOptions); // nosemgrep
+async function handleFetchError(res: Response): Promise<Error> {
+  const error = await res.json();
+  const message = error.message || res.statusText;
+  sendFailureNotification(message);
+  return new Error(message);
+}
 
-  if (!res.ok) {
-    const error = await res.json();
-    const message = error.message || res.statusText;
-    sendFailureNotification(message);
-    return new Error(message);
-  }
-
+async function handleFetchResponse<T extends ApiResponse>(
+  res: Response,
+  acceptedType: AcceptedType,
+): Promise<HttpResponse<T>> {
   if (res.status === 204) return undefined as Success<T>;
-
   if (acceptedType === JSON_TYPE) {
     const jsonResponse: T = await res.json();
     return jsonResponse as Success<T>;
   }
-
   if (acceptedType === PDF || acceptedType === CSV || acceptedType === ICAL) {
     const textResponse: string = await res.text();
     return textResponse as Success<T>;
   }
-
   return undefined as Success<T>;
-}
-
-export function isHttpError<T extends ApiResponse>(
-  res: HttpResponse<T>,
-): res is Error {
-  return res instanceof Error;
 }

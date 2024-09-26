@@ -4,7 +4,8 @@ import type {
   SavedCharismaPeriod,
 } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { CharismaPeriodRepository } from "~/repositories/charisma/charisma-period.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {

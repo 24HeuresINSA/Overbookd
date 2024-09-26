@@ -6,7 +6,7 @@ import type {
   HttpStringified,
 } from "@overbookd/http";
 import { LogisticDashboardRepository } from "~/repositories/logistic/logistic-dashboard.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 type State = {

@@ -2,7 +2,7 @@ import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import type { Statistics } from "@overbookd/http";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
 import { FestivalTaskRepository } from "~/repositories/festival-event/festival-task.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   activityStats: Statistics<FestivalActivity>[];

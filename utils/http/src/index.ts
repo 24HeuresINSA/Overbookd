@@ -86,7 +86,11 @@ export type {
 
 export { JSON, CSV, ICAL, PDF } from "./mime.js";
 export type { AvailabilityForm } from "./volunteer-availability.js";
-export type { EnrollableStaff, EnrollableVolunteer } from "./registration.js";
+export type {
+  EnrollableStaff,
+  EnrollableVolunteer,
+  StaffApplication,
+} from "./registration.js";
 export type { EditAmountForm } from "./contribution.js";
 export type {
   Preference,

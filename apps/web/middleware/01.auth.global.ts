@@ -1,8 +1,9 @@
 import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
 import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
+import { AuthRepository } from "~/repositories/auth.repository";
 
 type Token = { exp: number };
 
@@ -20,8 +21,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
     authenticated.value = true;
-    if (!needToBeLoggedIn(to)) return HOME_URL;
-    return;
+    if (needToBeLoggedIn(to)) return;
+    return { path: HOME_URL, query: to.query };
   }
 
   const res = await AuthRepository.refresh(refreshToken.value);

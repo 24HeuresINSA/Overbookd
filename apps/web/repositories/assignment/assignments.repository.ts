@@ -9,7 +9,7 @@ import type {
   HttpStringified,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { HttpClient } from "~/utils/http/http-client";
 import { castPeriodWithDate } from "~/utils/http/period";
 

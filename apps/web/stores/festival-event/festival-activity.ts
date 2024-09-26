@@ -37,7 +37,7 @@ import {
   castPreviewForSecurityWithDate,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 const repo = FestivalActivityRepository;
 

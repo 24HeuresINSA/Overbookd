@@ -252,7 +252,7 @@ import {
   type Teams,
   CVL_CODE,
 } from "@overbookd/registration";
-import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
+import { LOGIN_URL } from "@overbookd/web-page";
 import {
   required,
   minDate,
@@ -266,9 +266,9 @@ import {
 } from "~/utils/rules/input.rules";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { navigateTo } from "#app";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 const route = useRoute();
-const authStore = useAuthStore();
 const registrationStore = useRegistrationStore();
 const configurationStore = useConfigurationStore();
 
@@ -297,11 +297,7 @@ const rules = {
   password: passwordRule,
 };
 
-const token = computed<string | undefined>(() => {
-  const tokenParam = route.query.token;
-  return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
-});
-
+const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const isVolunteerRegistration = computed<boolean>(() => !token.value);
 
 const cleanComment = computed<string | undefined>(
@@ -387,14 +383,11 @@ const nicknameAction = (form: RegisterForm) => {
   return form.fillNickname(cleanNickname.value);
 };
 
+const emit = defineEmits(["registered"]);
 const register = async () => {
   const res = await registrationStore.register(registerForm.value, token.value);
   if (!res) return;
-  await authStore.login({
-    email: email.value,
-    password: password.value,
-  });
-  navigateTo(HOME_URL);
+  emit("registered", { email: email.value, password: password.value });
 };
 
 const isEULADialogOpen = ref<boolean>(false);

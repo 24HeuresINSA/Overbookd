@@ -5,7 +5,8 @@ import type {
   PlanBorrowForm,
 } from "@overbookd/logistic";
 import type { AddGearRequestForm, HttpStringified } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { BorrowRepository } from "~/repositories/logistic/borrow.repository";
 
 type State = {
   all: Borrow[];

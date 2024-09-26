@@ -10,7 +10,8 @@ import type { HelpingVolunteer, HttpStringified } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
 import { toSearchable } from "~/utils/search/search-user";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { NeedHelpRepository } from "~/repositories/need-help.repository";
 
 type State = {
   volunteers: HelpingVolunteer[];

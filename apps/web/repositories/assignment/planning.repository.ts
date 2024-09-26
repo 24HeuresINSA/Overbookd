@@ -1,7 +1,7 @@
 import type { Planning, PlanningEvent } from "@overbookd/assignment";
 import type { HttpStringified } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/period";
 
 export class AssignmentPlanningRepository implements Planning {

@@ -18,3 +18,8 @@ export type EnrollableVolunteer = EnrollableStaff & {
   birthdate: Date;
   note?: string;
 };
+
+export type StaffApplication = {
+  email: string;
+  token: string;
+};

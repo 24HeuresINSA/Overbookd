@@ -1,7 +1,7 @@
 import type { PlanningPreference, Preference } from "@overbookd/http";
 import type { PageURL } from "@overbookd/web-page";
 import { PreferenceRepository } from "~/repositories/preference.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import type { Page } from "~/utils/pages/navigation";
 
 type State = {

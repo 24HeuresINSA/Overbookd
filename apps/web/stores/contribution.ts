@@ -5,7 +5,7 @@ import type {
 } from "@overbookd/contribution";
 import type { HttpStringified } from "@overbookd/http";
 import { ContributionRepository } from "~/repositories/contribution.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   adherentsOutToDate: Adherent[];

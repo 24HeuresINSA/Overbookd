@@ -14,7 +14,8 @@ import type {
 } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { castPeriodWithDate } from "~/utils/http/period";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { TimelineRepository } from "~/repositories/timeline.repository";
 
 type WithName = {
   name: string;

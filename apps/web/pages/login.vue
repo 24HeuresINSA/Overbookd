@@ -79,8 +79,10 @@
 
 <script lang="ts" setup>
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
-import { HOME_URL, REGISTER_URL } from "@overbookd/web-page";
+import { REGISTER_URL } from "@overbookd/web-page";
 import { pickRandomBackground } from "~/domain/login/login";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import { loginAndApplyForMembership } from "~/utils/login/login.utils";
 
 definePageMeta({ layout: false });
 
@@ -88,16 +90,12 @@ const config = useRuntimeConfig();
 const version = config.public.version;
 
 const route = useRoute();
-const authStore = useAuthStore();
 
-const token = computed<string | undefined>(() => {
-  const tokenParam = route.query.token;
-  return Array.isArray(tokenParam) ? undefined : (tokenParam ?? undefined);
-});
-const registerLink = computed<string>(() =>
-  token.value ? `${REGISTER_URL}?token=${token.value}` : REGISTER_URL,
-);
-const register = () => navigateTo(registerLink.value);
+const token = computed<string>(() => stringifyQueryParam(route.query.token));
+const register = () => {
+  const query = token.value ? { token: token.value } : {};
+  navigateTo({ path: REGISTER_URL, query });
+};
 
 const credentials = ref({
   email: "",
@@ -117,8 +115,7 @@ const login = async () => {
       "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
     );
   }
-  await authStore.login(credentials.value);
-  if (authStore.authenticated) navigateTo(HOME_URL);
+  loginAndApplyForMembership(credentials.value, token.value);
 };
 
 const isForgotDialogOpen = ref<boolean>(false);

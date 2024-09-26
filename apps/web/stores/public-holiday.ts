@@ -1,3 +1,5 @@
+import { FrenchGovPublicHolidayRepository } from "~/repositories/french-gov-public-holiday.repository";
+
 export type PublicHoliday = {
   date: Date;
   name: string;

@@ -1,5 +1,6 @@
 import type { UserCredentials } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { AuthRepository } from "~/repositories/auth.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({

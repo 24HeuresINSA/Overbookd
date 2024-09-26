@@ -18,7 +18,6 @@ import {
 import { MembershipApplicationService } from "./membership-application.service";
 import { MembershipApplicationErrorFilter } from "./membership-application-error.filter";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { CandidateRequestDto } from "./dto/candidate.request.dto";
 
 @ApiBearerAuth()
@@ -35,7 +34,7 @@ export class MembershipApplicationController {
     private readonly applicationService: MembershipApplicationService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Post()
   @HttpCode(204)

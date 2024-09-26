@@ -1,8 +1,8 @@
 import { updateItemToList } from "@overbookd/list";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
 import type { InventoryGroupedRecord } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
 
 type State = {
   groupedRecords: InventoryGroupedRecord[];

@@ -5,7 +5,7 @@ import type {
   CategorySearchOptions,
 } from "@overbookd/http";
 import { CategoryRepository } from "~/repositories/logistic/catalog.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   categories: CatalogCategory[];

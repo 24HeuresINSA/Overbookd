@@ -7,7 +7,7 @@ import type {
   NewBarrel,
 } from "@overbookd/personal-account";
 import { PersonalAccountRepository } from "~/repositories/personal-account.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   barrels: ConfiguredBarrel[];

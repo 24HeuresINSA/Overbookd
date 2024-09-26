@@ -1,7 +1,7 @@
 import type { CreatePermissionForm, Permission } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import { PermissionRepository } from "~/repositories/permission.repository";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   permissions: Permission[];

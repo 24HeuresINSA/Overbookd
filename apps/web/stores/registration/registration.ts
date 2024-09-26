@@ -6,9 +6,9 @@ import type {
 } from "@overbookd/http";
 import type { Credentials } from "@overbookd/registration";
 import { updateItemToList } from "@overbookd/list";
-import { RegistrationRepository } from "~/repositories/registration.repository";
 import { castPeriodsWithDate } from "~/utils/http/period";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { RegistrationRepository } from "~/repositories/registration/registration.repository";
 
 type State = {
   staffs: EnrollableStaff[];

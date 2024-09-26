@@ -4,7 +4,8 @@ import {
 } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { isHttpError } from "~/utils/http/http-error.utils";
+import { TeamRepository } from "~/repositories/team.repository";
 
 type State = {
   teams: Team[];

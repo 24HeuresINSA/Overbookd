@@ -5,7 +5,8 @@ import type {
   PlanPurchaseForm,
   Purchase,
 } from "@overbookd/logistic";
-import { isHttpError } from "~/utils/http/api-fetch";
+import { PurchaseRepository } from "~/repositories/logistic/purchase.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   all: Purchase[];
