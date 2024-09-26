@@ -25,7 +25,6 @@
 import SideNavPageItem from "./SideNavPageItem.vue";
 import { PageFilter } from "~/utils/pages/page.filter";
 import { summaryPages, type PageInSummary } from "~/utils/pages/navigation";
-import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
 import { FA_URL, REGISTRATIONS_STAFF_URL } from "@overbookd/web-page";
 
 const navigationBadgeStore = useNavigationBadgeStore();
@@ -40,8 +39,6 @@ const props = defineProps({
     default: "",
   },
 });
-
-const isDesktop = checkDesktop();
 
 const pagesWithBadge = computed<PageInSummary[]>(() => {
   const { myRefusedActivities, recentStaffNewcomers } = navigationBadgeStore;
@@ -61,14 +58,12 @@ const filteredPages = computed<PageInSummary[]>(() =>
   PageFilter.from(pagesWithBadge.value).matching(props.search),
 );
 
-const favoritePages = computed<PageInSummary[]>(() => {
-  if (!isDesktop) return [];
-  return PageFilter.from(filteredPages.value).favorites;
-});
-const nonFavoritePages = computed<PageInSummary[]>(() => {
-  const filter = PageFilter.from(filteredPages.value);
-  return isDesktop ? filter.nonFavorites : filter.withMobileSupport;
-});
+const favoritePages = computed<PageInSummary[]>(
+  () => PageFilter.from(filteredPages.value).favorites,
+);
+const nonFavoritePages = computed<PageInSummary[]>(
+  () => PageFilter.from(filteredPages.value).nonFavorites,
+);
 </script>
 
 <style lang="scss" scoped>

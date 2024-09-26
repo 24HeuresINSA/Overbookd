@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import type { PageInSummary } from "./navigation";
+import { HOME_PAGE, type PageInSummary } from "./navigation";
 
 export class PageFilter {
   private readonly preferenceStore = usePreferenceStore();
@@ -24,12 +24,14 @@ export class PageFilter {
   }
 
   get favorites(): PageInSummary[] {
-    return this.pages.filter(this.preferenceStore.isPageFavorite);
+    const favorites = this.pages.filter(this.preferenceStore.isPageFavorite);
+    return [HOME_PAGE, ...favorites];
   }
 
   get nonFavorites(): PageInSummary[] {
     return this.pages.filter(
-      (page) => !this.preferenceStore.isPageFavorite(page),
+      (page) =>
+        !this.preferenceStore.isPageFavorite(page) && page.to !== HOME_PAGE.to,
     );
   }
 

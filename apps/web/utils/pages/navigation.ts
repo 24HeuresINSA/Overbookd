@@ -35,7 +35,7 @@ export const HOME_PAGE: PageInSummary = {
   to: HOME_URL,
   description: "Page d'accueil",
   mobileSupport: true,
-  canBeFavorite: true,
+  canBeFavorite: false,
   keywords: ["accueil", "home"],
 };
 
