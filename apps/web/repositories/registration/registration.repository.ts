@@ -49,7 +49,11 @@ export class RegistrationRepository {
 
   static registerNewcomer(form: RegisterForm, token?: string) {
     const newcomer = form.complete();
-    return HttpClient.post<void>(`${this.basePath}`, { token, newcomer });
+    const body = { token, newcomer };
+    const serverErrorMessage =
+      "Oups, l'inscription a échoué... Rééssaie de créer ton compte.";
+    const options = { serverErrorMessage };
+    return HttpClient.post<void>(this.basePath, body, options);
   }
 
   static forgetMe(credentials: Credentials, token: string) {

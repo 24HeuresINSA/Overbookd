@@ -11,8 +11,9 @@ export type RequestGeneral = {
 };
 
 type AcceptedType = typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
-export type RequestHeader = {
+export type RequestOptions = {
   acceptedType: AcceptedType;
+  serverErrorMessage: string;
 };
 
 export type ApiResponse = object | string | number | void;
@@ -31,12 +32,12 @@ type EmptyOr<T extends Record<string, unknown>> = T | Record<never, unknown>;
 
 export async function apiFetch<T extends ApiResponse>(
   { url, method }: RequestGeneral,
-  { acceptedType }: RequestHeader,
+  { acceptedType, serverErrorMessage }: RequestOptions,
   body?: object,
 ): Promise<HttpResponse<T>> {
   const requestOptions = createRequestOptions(method, acceptedType, body);
   const res = await fetch(url.toString(), requestOptions); // nosemgrep
-  if (!res.ok) return handleFetchError(res);
+  if (!res.ok) return handleFetchError(res, serverErrorMessage);
   return handleFetchResponse<T>(res, acceptedType);
 }
 
@@ -75,9 +76,15 @@ function formatRequestBody(body?: object): string | FormData | undefined {
   return isFormData ? body : JSON.stringify(body);
 }
 
-async function handleFetchError(res: Response): Promise<Error> {
+async function handleFetchError(
+  res: Response,
+  serverErrorMessage: string,
+): Promise<Error> {
   const error = await res.json();
-  const message = error.message || res.statusText;
+  const isServerError = res.status >= 500 && res.status < 600;
+  const message = isServerError
+    ? serverErrorMessage
+    : error.message || res.statusText;
   sendFailureNotification(message);
   return new Error(message);
 }

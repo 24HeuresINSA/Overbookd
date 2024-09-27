@@ -5,7 +5,11 @@ export class MembershipApplicationRepository {
   private static readonly basePath = "registrations/membership-applications";
 
   static applyAsStaff(candidate: StaffApplication) {
-    return HttpClient.post<void>(`${this.basePath}/staff`, candidate);
+    const options = {
+      serverErrorMessage:
+        "Oups, ta demande de candidature a échoué... Rééssaie de te connecter avec le lien fourni par le.a SG",
+    };
+    return HttpClient.post<void>(`${this.basePath}/staff`, candidate, options);
   }
 
   static rejectForStaff(candidateId: number) {

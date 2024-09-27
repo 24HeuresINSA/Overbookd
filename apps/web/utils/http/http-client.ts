@@ -1,5 +1,5 @@
 import { JSON } from "@overbookd/http";
-import type { RequestGeneral, RequestHeader, HttpResponse } from "./api-fetch";
+import type { RequestGeneral, RequestOptions, HttpResponse } from "./api-fetch";
 import { apiFetch } from "./api-fetch";
 import { HttpParams, type Params } from "./http-param";
 
@@ -8,8 +8,11 @@ type Endpoint = {
   params?: Params;
 };
 
-const DEFAULT_HEADER: RequestHeader = {
+const DEFAULT_SERVER_ERROR_MESSAGE =
+  "Oups, une erreur s'est produite.. Réessaie et contacte un admin si le problème persiste.";
+const DEFAULT_OPTIONS: RequestOptions = {
   acceptedType: JSON,
+  serverErrorMessage: DEFAULT_SERVER_ERROR_MESSAGE,
 };
 
 export class HttpClient {
@@ -17,66 +20,66 @@ export class HttpClient {
 
   static get<T extends object | string | number>(
     url: Endpoint | string,
-    header?: Partial<RequestHeader>,
+    options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
       url: this.buildURL(url),
       method: "GET",
     };
-    const requestHeader = { ...DEFAULT_HEADER, ...header };
+    const requestOptions = { ...DEFAULT_OPTIONS, ...options };
 
-    return apiFetch<T>(general, requestHeader);
+    return apiFetch<T>(general, requestOptions);
   }
 
   static post<T extends object | string | void>(
     url: Endpoint | string,
     body?: object,
-    header?: Partial<RequestHeader>,
+    options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
       url: this.buildURL(url),
       method: "POST",
     };
-    const requestHeader = { ...DEFAULT_HEADER, ...header };
-    return apiFetch<T>(general, requestHeader, body);
+    const requestOptions = { ...DEFAULT_OPTIONS, ...options };
+    return apiFetch<T>(general, requestOptions, body);
   }
 
   static put<T extends object | void>(
     url: Endpoint | string,
     body: object,
-    header?: Partial<RequestHeader>,
+    options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
       url: this.buildURL(url),
       method: "PUT",
     };
-    const requestHeader = { ...DEFAULT_HEADER, ...header };
-    return apiFetch<T>(general, requestHeader, body);
+    const requestOptions = { ...DEFAULT_OPTIONS, ...options };
+    return apiFetch<T>(general, requestOptions, body);
   }
 
   static patch<T extends object | void>(
     url: Endpoint | string,
     body: object,
-    header?: Partial<RequestHeader>,
+    options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
       url: this.buildURL(url),
       method: "PATCH",
     };
-    const requestHeader = { ...DEFAULT_HEADER, ...header };
-    return apiFetch<T>(general, requestHeader, body);
+    const requestOptions = { ...DEFAULT_OPTIONS, ...options };
+    return apiFetch<T>(general, requestOptions, body);
   }
 
   static delete<T extends object | void = void>(
     url: Endpoint | string,
-    header?: Partial<RequestHeader>,
+    options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
     const general: RequestGeneral = {
       url: this.buildURL(url),
       method: "DELETE",
     };
-    const requestHeader = { ...DEFAULT_HEADER, ...header };
-    return apiFetch<T>(general, requestHeader);
+    const requestOptions = { ...DEFAULT_OPTIONS, ...options };
+    return apiFetch<T>(general, requestOptions);
   }
 
   private static buildURL(endpoint: Endpoint | string): URL {
