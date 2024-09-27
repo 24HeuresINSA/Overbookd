@@ -1,3 +1,28 @@
+## [3.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.4.0...v3.5.0) (2024-09-27)
+
+
+### Features
+
+* **home:** add personal account card [#2159](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2159) ([dfd5861](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dfd5861c076741140dec18e07a2962828fe9f053))
+* **registration:** send request to ask membership application [#2162](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2162) ([e3295d5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e3295d55d95b70f296f58031f194cdfce8de7f80))
+
+
+### Bug Fixes
+
+* **api:** internal server error filter. [#2170](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2170) ([caf2bbf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/caf2bbf534016df2169f383eff598a3e7813e560))
+* **api:** remove custom internal server error filter. [#2170](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2170) ([9936c6c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9936c6ca1e5cbc6c87f936c332fc92a3c6f389d3))
+* **home:** add welcome message [#2168](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2168) ([633a738](https://gitlab.com/24-heures-insa/overbookd-mono/commit/633a738e6319f3ddedb0675260b029e1f42860b4))
+* **membership-application:** display candidates with application [#2163](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2163) ([22d913d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/22d913dd0263d4d6845e158c81b80bf39df914f0))
+* **membership-application:** reject staff application instead of removing user [#2164](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2164) ([b62e6a2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b62e6a2815b63de810f75aa8d8ef6efa2f791d69))
+* **planning:** add paper planning choice on home page [#2157](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2157) ([55a9570](https://gitlab.com/24-heures-insa/overbookd-mono/commit/55a95706db6b731d724aab0e1b2724ca9248f00c))
+* **trombinoscope:** image display on first load [#2166](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2166) ([60ecc1e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/60ecc1ed6bbc52c50d404c5b83649ac887d9c0ab))
+* **web:** add custom messages for server error [#2171](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2171) ([41229f7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/41229f7b051bdb92275b6de1f63cffa7fbf4794c))
+
+
+### Pre-Features
+
+* **candidature:** add api module [#2161](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2161) ([ce9009b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ce9009b7e1e78d3c3f6e9c119a58206e7e2bd83d))
+
 ## [3.4.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.3.0...v3.4.0) (2024-09-16)
 
 
