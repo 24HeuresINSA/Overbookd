@@ -2,12 +2,13 @@
   <DesktopPageTitle :title="titleMessage" />
   <div class="home">
     <ProfileHomeCard />
-    <PersonalAccountHomeCard />
+    <PersonalAccountHomeCard v-if="hasPersonalAccount" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 
 const userStore = useUserStore();
 
@@ -53,6 +54,10 @@ const titleMessage = computed<string>(() => {
   const randomIndex = Math.floor(Math.random() * possibleMessages.length);
   return possibleMessages.at(randomIndex) ?? defaultMessage;
 });
+
+const hasPersonalAccount = computed<boolean>(() =>
+  userStore.can(HAVE_PERSONAL_ACCOUNT),
+);
 </script>
 
 <style lang="scss" scoped>

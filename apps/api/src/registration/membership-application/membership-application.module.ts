@@ -4,7 +4,8 @@ import { MembershipApplicationService } from "./membership-application.service";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaCandidates } from "./repository/candidates.prisma";
 import { PrismaService } from "../../prisma.service";
-import { ApplyFor } from "@overbookd/registration";
+import { ApplyFor, RejectMembershipApplication } from "@overbookd/registration";
+import { PrismaUsers } from "./repository/users.prisma";
 
 @Module({
   controllers: [MembershipApplicationController],
@@ -15,15 +16,29 @@ import { ApplyFor } from "@overbookd/registration";
       inject: [PrismaService],
     },
     {
+      provide: PrismaUsers,
+      useFactory: (prisma: PrismaService) => new PrismaUsers(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: ApplyFor,
       useFactory: (candidates: PrismaCandidates) => new ApplyFor(candidates),
       inject: [PrismaCandidates],
     },
     {
+      provide: RejectMembershipApplication,
+      useFactory: (candidates: PrismaCandidates) =>
+        new RejectMembershipApplication(candidates),
+      inject: [PrismaCandidates],
+    },
+    {
       provide: MembershipApplicationService,
-      useFactory: (applyFor: ApplyFor) =>
-        new MembershipApplicationService(applyFor),
-      inject: [ApplyFor],
+      useFactory: (
+        applyFor: ApplyFor,
+        reject: RejectMembershipApplication,
+        users: PrismaUsers,
+      ) => new MembershipApplicationService(applyFor, reject, users),
+      inject: [ApplyFor, RejectMembershipApplication, PrismaUsers],
     },
   ],
   imports: [PrismaModule],

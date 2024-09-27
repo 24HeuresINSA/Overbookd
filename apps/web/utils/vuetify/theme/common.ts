@@ -44,9 +44,9 @@ export const yellowMainColors = {
   primary: YELLOW_24,
   "primary-lighten": "#FFDD76",
   "on-primary": BLACK,
-  secondary: BLUE_24,
+  secondary: RED_24,
   "on-secondary": WHITE,
-  tertiary: RED_24,
+  tertiary: BLUE_24,
   "on-tertiary": WHITE,
 };
 
@@ -54,8 +54,8 @@ export const redMainColors = {
   primary: RED_24,
   "primary-lighten": "#EA627D",
   "on-primary": WHITE,
-  secondary: YELLOW_24,
+  secondary: BLUE_24,
   "on-secondary": BLACK,
-  tertiary: BLUE_24,
+  tertiary: YELLOW_24,
   "on-tertiary": WHITE,
 };

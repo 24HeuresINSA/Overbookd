@@ -130,6 +130,7 @@ model MembershipApplication {
   userId     Int        @map("user_id")
   edition    Int
   membership Membership
+  isRejected Boolean    @default(false) @map("is_rejected")
 
   @@id([userId, edition, membership])
   @@map("membership_application")

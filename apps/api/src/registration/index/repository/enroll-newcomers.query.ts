@@ -32,7 +32,7 @@ function buildHasMembershipApplicationCondition(membership: Membership) {
   const edition = Edition.current;
   return {
     membershipApplications: {
-      some: { membership, edition },
+      some: { membership, edition, isRejected: false },
     },
   };
 }

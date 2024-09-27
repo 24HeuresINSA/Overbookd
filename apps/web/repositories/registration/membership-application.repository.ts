@@ -5,6 +5,10 @@ export class MembershipApplicationRepository {
   private static readonly basePath = "registrations/membership-applications";
 
   static applyAsStaff(candidate: StaffApplication) {
-    return HttpClient.post<void>(this.basePath, candidate);
+    return HttpClient.post<void>(`${this.basePath}/staff`, candidate);
+  }
+
+  static rejectForStaff(candidateId: number) {
+    return HttpClient.delete<void>(`${this.basePath}/staff/${candidateId}`);
   }
 }

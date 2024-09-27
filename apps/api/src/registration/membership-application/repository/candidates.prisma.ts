@@ -5,23 +5,53 @@ export class PrismaCandidates implements Candidates {
   constructor(private readonly prisma: PrismaService) {}
 
   async isCandidate(email: string, edition: number): Promise<boolean> {
-    const candidate = await this.prisma.membershipApplication.findFirst({
+    const application = await this.prisma.membershipApplication.findFirst({
       where: {
         user: { email },
         edition,
         membership: STAFF,
+        isRejected: false,
       },
     });
-    return candidate !== null;
+    return application !== null;
   }
 
-  async add({ email, edition, membership }: Candidate): Promise<void> {
+  async hasRejectedApplication(
+    email: string,
+    edition: number,
+  ): Promise<boolean> {
+    const rejectedApplication =
+      await this.prisma.membershipApplication.findFirst({
+        where: {
+          user: { email },
+          edition,
+          membership: STAFF,
+          isRejected: true,
+        },
+      });
+    return rejectedApplication !== null;
+  }
+
+  async add({
+    email,
+    edition,
+    membership,
+    isRejected,
+  }: Candidate): Promise<void> {
     await this.prisma.membershipApplication.create({
       data: {
         user: { connect: { email } },
         edition,
         membership,
+        isRejected,
       },
+    });
+  }
+
+  async reject(email: string, edition: number): Promise<void> {
+    await this.prisma.membershipApplication.updateMany({
+      where: { user: { email }, edition },
+      data: { isRejected: true },
     });
   }
 }

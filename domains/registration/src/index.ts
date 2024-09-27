@@ -70,10 +70,14 @@ export {
   RegistrationError,
 } from "./register-form/register-form.js";
 
-// Apply for
-export type { Candidate, Candidates } from "./apply-for/apply-for.js";
-export { ApplyFor } from "./apply-for/apply-for.js";
+// Membership Application
+export type {
+  Candidate,
+  Candidates,
+} from "./membership-application/candidates.js";
+export { ApplyFor } from "./membership-application/apply-for.js";
 export {
   MembershipApplicationError,
   AlreadyCandidate,
-} from "./apply-for/candidature.error.js";
+} from "./membership-application/candidature.error.js";
+export { RejectMembershipApplication } from "./membership-application/reject.js";

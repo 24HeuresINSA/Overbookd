@@ -45,10 +45,10 @@
 
           <template #item.removal="{ item }">
             <v-btn
-              text="Supprimer l'inscription"
+              text="Rejeter la candidature"
               color="tertiary"
               size="small"
-              @click="forgetHim(item.email)"
+              @click="rejectApplication(item.id)"
             />
           </template>
         </v-data-table>
@@ -67,7 +67,6 @@
 </template>
 
 <script lang="ts" setup>
-import { STAFF } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { ONE_DAY_IN_MS, formatLocalDate } from "@overbookd/time";
 import type { EnrollableStaff } from "@overbookd/http";
@@ -78,6 +77,7 @@ type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;
 useHead({ title: "Admissions organisateur" });
 
 const registrationStore = useRegistrationStore();
+const membershipApplicationStore = useMembershipApplicationStore();
 
 const headers = [
   { title: "Prénom", value: "firstname", sortable: true },
@@ -136,8 +136,8 @@ const enrollNewcomers = () => {
 const toggleLast30DaysNewcomers = () => {
   last30DaysNewcomers.value = !last30DaysNewcomers.value;
 };
-const forgetHim = (email: string) => {
-  registrationStore.forget(STAFF, email);
+const rejectApplication = (candidateId: number) => {
+  membershipApplicationStore.rejectForStaff(candidateId);
 };
 </script>
 

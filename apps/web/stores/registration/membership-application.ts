@@ -12,6 +12,13 @@ export const useMembershipApplicationStore = defineStore(
         if (isHttpError(res)) return;
         sendSuccessNotification("Ta demande pour devenir orga a été envoyée");
       },
+
+      async rejectForStaff(candidateId: number) {
+        const res =
+          await MembershipApplicationRepository.rejectForStaff(candidateId);
+        if (isHttpError(res)) return;
+        sendSuccessNotification("La candidature a été retirée");
+      },
     },
   },
 );

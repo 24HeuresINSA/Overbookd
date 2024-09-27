@@ -1,23 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { Edition } from "@overbookd/time";
 import { STAFF } from "../newcomer.js";
 import { InMemoryCandidates } from "./candidates.inmemory.js";
-import { Candidate, ApplyFor } from "./apply-for.js";
-import { Edition } from "@overbookd/time";
-import { AlreadyCandidate } from "./candidature.error.js";
-
-const lea = { email: "lea.mouyno@gmail.com" };
-const leaCandidate: Candidate = {
-  ...lea,
-  membership: STAFF,
-  edition: Edition.current,
-};
-const noel = { email: "noel.ertsemud@gmail.com" };
-const previousEdition = Edition.current - 1;
-const noelCandidate: Candidate = {
-  ...noel,
-  membership: STAFF,
-  edition: previousEdition,
-};
+import { ApplyFor } from "./apply-for.js";
+import { AlreadyRejected, AlreadyCandidate } from "./candidature.error.js";
+import {
+  rejectedOlopCandidate,
+  lea,
+  leaCandidate,
+  noel,
+  noelCandidate,
+  olop,
+} from "./candidate.test-utils.js";
 
 describe("Apply for staff membership", () => {
   describe("when someone is applying for staff membership", () => {
@@ -31,6 +25,7 @@ describe("Apply for staff membership", () => {
           ...candidate,
           membership: STAFF,
           edition: Edition.current,
+          isRejected: false,
         });
       });
     });
@@ -55,6 +50,16 @@ describe("Apply for staff membership", () => {
         const applyFor = new ApplyFor(candidates);
         await applyFor.staff(noel);
         expect(candidates.staff).toContainEqual(expectedCandidate);
+      });
+    });
+
+    describe("and the application for the current edition is rejected", () => {
+      const candidates = new InMemoryCandidates([rejectedOlopCandidate]);
+      const applyFor = new ApplyFor(candidates);
+      it("should indicate that the candidate has already a rejected application", () => {
+        expect(async () => applyFor.staff(olop)).rejects.toThrowError(
+          AlreadyRejected,
+        );
       });
     });
   });
