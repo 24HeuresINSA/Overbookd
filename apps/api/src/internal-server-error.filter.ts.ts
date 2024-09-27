@@ -14,7 +14,7 @@ export class InternalServerErrorFilter extends BaseExceptionFilter {
     }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const { method, url } = ctx.getResponse<Request>();
+    const { method, url } = ctx.getRequest<Request>();
     const statusCode = 500;
 
     RouteLogger.logRouteContext({ statusCode, method, url });
