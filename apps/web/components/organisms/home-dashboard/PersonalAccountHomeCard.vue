@@ -1,5 +1,10 @@
 <template>
-  <v-card v-if="haveBalance" class="personal-account">
+  <v-card
+    v-if="haveBalance"
+    :to="MY_PERSONAL_ACCOUNT_URL"
+    class="home-card personal-account"
+    link
+  >
     <v-card-title class="personal-account__title">
       <v-icon>mdi-account-cash</v-icon>
       <span>Compte perso</span>
@@ -62,6 +67,7 @@ import { Money } from "@overbookd/money";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import type { MyTransaction } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
+import { MY_PERSONAL_ACCOUNT_URL } from "@overbookd/web-page";
 import {
   getTransactionIcon,
   formatAmount,

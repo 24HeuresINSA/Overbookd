@@ -1,5 +1,5 @@
 <template>
-  <v-card class="profile">
+  <v-card class="home-card profile">
     <v-btn
       class="profile__edit-icon"
       icon="mdi-pencil"
@@ -48,6 +48,19 @@
           <v-icon class="personal-info__icon">mdi-phone</v-icon>
           <span class="personal-info__label">{{ phone }}</span>
         </div>
+        <div v-if="wantsPaperPlanning" class="personal-info">
+          <v-icon class="personal-info__icon">mdi-notebook-check</v-icon>
+          <span class="personal-info__label">
+            Mon planning sera <strong>imprimé</strong>
+          </span>
+        </div>
+        <div v-else class="personal-info">
+          <v-icon class="personal-info__icon">mdi-cellphone</v-icon>
+          <span class="personal-info__label">
+            Mon planning sera <strong>uniquement</strong> disponible sur
+            téléphone
+          </span>
+        </div>
         <div class="personal-info">
           <v-icon class="personal-info__icon">mdi-comment-text</v-icon>
           <span class="personal-info__label">
@@ -69,6 +82,7 @@ import { formatUserPhone } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 userStore.fetchMyFriends();
+const preferenceStore = usePreferenceStore();
 
 const loggedUser = computed(() => userStore.loggedUser);
 
@@ -92,6 +106,10 @@ const phone = computed<string>(() =>
 const additionalPlural = (count: number) => {
   return count > 1 ? "s" : "";
 };
+
+const wantsPaperPlanning = computed<boolean>(
+  () => preferenceStore.myPreferences.paperPlanning ?? false,
+);
 
 const isEditProfileDialogOpen = ref<boolean>(false);
 const editProfile = () => (isEditProfileDialogOpen.value = true);

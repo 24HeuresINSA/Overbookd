@@ -51,6 +51,7 @@ const close = () => {
 
 <style lang="scss" scoped>
 .card {
+  width: 100%;
   &__title {
     display: flex;
     justify-content: center;

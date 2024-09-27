@@ -1,6 +1,6 @@
 <template>
   <DialogCard @close="close">
-    <template #title> Modifier mon profil </template>
+    <template #title>Modifier mon profil</template>
     <template #content>
       <v-form v-model="isFormValid" class="profile-form">
         <div class="profile-row">
@@ -40,6 +40,21 @@
             général.e pour changer ton email 🙏
           </v-tooltip>
         </div>
+        <div class="planning-preference">
+          <v-btn-toggle
+            :model-value="preferences?.paperPlanning"
+            color="primary"
+            group
+            :mandatory="hasFilledPreferences"
+            @update:model-value="updatePaperPlanningPreference"
+          >
+            <v-btn :value="true"> <strong>OUI</strong> </v-btn>
+            <v-btn :value="false"> <strong>NON</strong> </v-btn>
+          </v-btn-toggle>
+          <p class="planning-preference__label">
+            Je souhaite avoir une version imprimée de mon planning
+          </p>
+        </div>
         <CommentField v-model="comment" />
       </v-form>
     </template>
@@ -58,6 +73,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Preference } from "@overbookd/http";
 import { formatLocalDate } from "@overbookd/time";
 import {
   required,
@@ -67,6 +83,7 @@ import {
 } from "~/utils/rules/input.rules";
 
 const userStore = useUserStore();
+const preferenceStore = usePreferenceStore();
 
 const loggedUser = computed(() => userStore.loggedUser);
 
@@ -78,6 +95,12 @@ const birthday = ref<string>(
 );
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phone = ref<string>(loggedUser.value?.phone ?? "");
+const preferences = computed<Preference>(() => preferenceStore.myPreferences);
+const hasFilledPreferences = computed<boolean>(
+  () =>
+    preferences.value?.paperPlanning !== undefined &&
+    preferences.value?.paperPlanning !== null,
+);
 const comment = ref<string | null | undefined>(loggedUser.value?.comment);
 
 const minDateRule = minDate(new Date("1950-01-01"));
@@ -88,6 +111,11 @@ const close = () => emit("close");
 
 const isFormValid = ref<boolean>(false);
 const loading = ref<boolean>(false);
+
+const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
+  if (paperPlanning === null) return;
+  preferenceStore.updatePlanningPreference({ paperPlanning });
+};
 
 const save = async () => {
   if (!isFormValid.value) return;
@@ -123,6 +151,22 @@ const save = async () => {
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     gap: 5px;
+  }
+}
+.planning-preference {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  &__label {
+    margin: 0 10px;
+  }
+  .v-btn-group {
+    flex-shrink: 0;
+    display: flex;
+    gap: 5px;
+    .v-btn {
+      background-color: rgba(var(--v-theme-primary), 0.2);
+    }
   }
 }
 </style>
