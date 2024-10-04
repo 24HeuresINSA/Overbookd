@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
+      "@overbookd/access-manager": ["./domains/access-manager/src"],
       "@overbookd/alerts": ["./utils/alerts/src"],
       "@overbookd/assignment": ["./domains/assignment/src"],
       "@overbookd/charisma": ["./domains/charisma/src"],

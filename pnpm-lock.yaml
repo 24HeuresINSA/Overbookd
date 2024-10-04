@@ -448,6 +448,18 @@ importers:
 
   constants/web-page: {}
 
+  domains/access-manager:
+    dependencies:
+      '@overbookd/event':
+        specifier: workspace:*
+        version: link:../../libraries/event
+      '@overbookd/list':
+        specifier: workspace:*
+        version: link:../../libraries/list
+      '@overbookd/permission':
+        specifier: workspace:*
+        version: link:../../constants/permission
+
   domains/assignment:
     dependencies:
       '@overbookd/festival-event-constants':

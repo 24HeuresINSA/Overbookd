@@ -1,5 +1,5 @@
 export function updateItemToList<T>(
-  list: T[],
+  list: T[] | readonly T[],
   index: number,
   newValue: T,
 ): T[] {
