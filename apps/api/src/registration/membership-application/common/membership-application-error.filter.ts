@@ -1,7 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
 import { MembershipApplicationError } from "@overbookd/registration";
 import { Response, Request } from "express";
-import { RouteLogger } from "../../route-logger";
+import { RouteLogger } from "../../../route-logger";
 
 @Catch(MembershipApplicationError)
 export class MembershipApplicationErrorFilter implements ExceptionFilter {

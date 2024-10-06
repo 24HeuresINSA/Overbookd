@@ -24,7 +24,7 @@ import {
   VOLUNTEER_ENROLLED,
 } from "@overbookd/domain-events";
 import {
-  EnrolledNewcomer,
+  EnrolledCandidate,
   StaffRegistered,
   VolunteerRegistered,
 } from "@overbookd/registration";
@@ -63,7 +63,7 @@ export class DomainEventService {
     return this.listen(VOLUNTEER_REGISTERED).pipe(map(({ data }) => data));
   }
 
-  get volunteersEnrolled(): Observable<EnrolledNewcomer> {
+  get volunteersEnrolled(): Observable<EnrolledCandidate> {
     return this.listen(VOLUNTEER_ENROLLED).pipe(map(({ data }) => data));
   }
 

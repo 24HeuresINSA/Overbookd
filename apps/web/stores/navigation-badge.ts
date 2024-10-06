@@ -1,6 +1,6 @@
 import { ENROLL_HARD, READ_FA, type Permission } from "@overbookd/permission";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
-import { RegistrationRepository } from "~/repositories/registration/registration.repository";
+import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
@@ -28,7 +28,8 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
 
     async fetchRecentStaffNewcomers() {
       if (!this._hasPermission(ENROLL_HARD)) return;
-      const res = await RegistrationRepository.getRecentStaffNewcomersCount();
+      const res =
+        await MembershipApplicationRepository.getRecentStaffNewcomersCount();
       if (isHttpError(res)) return;
       this.recentStaffNewcomers = res;
     },

@@ -25,12 +25,12 @@ export { RegisterNewcomer } from "./register-newcomer.js";
 // Enroll
 export type { JoinableTeam } from "./enroll/joinable-team.js";
 export { joinableTeams } from "./enroll/joinable-team.js";
-export type { EnrollNewcomersForm } from "./enroll/enroll-newcomers-form.model.js";
-export { EnrollNewcomers } from "./enroll/enroll-newcomers.js";
+export type { EnrollCandidatesForm } from "./enroll/enroll-candidates-form.model.js";
+export { EnrollCandidates } from "./enroll/enroll-candidates.js";
 export type {
-  NewcomerToEnroll,
-  EnrolledNewcomer,
-} from "./enroll/enroll-newcomers.js";
+  CandidateToEnroll,
+  EnrolledCandidate,
+} from "./enroll/enroll-candidates.js";
 
 // Forget Member
 export type {

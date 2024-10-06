@@ -1,5 +1,5 @@
 import { Candidate, Candidates, STAFF } from "@overbookd/registration";
-import { PrismaService } from "../../../prisma.service";
+import { PrismaService } from "../../../../prisma.service";
 
 export class PrismaCandidates implements Candidates {
   constructor(private readonly prisma: PrismaService) {}

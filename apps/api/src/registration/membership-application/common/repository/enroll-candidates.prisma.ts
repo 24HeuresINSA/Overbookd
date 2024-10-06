@@ -1,28 +1,25 @@
 import {
-  EnrolledNewcomer,
+  EnrolledCandidate,
   Teams,
   isJoinableTeams,
 } from "@overbookd/registration";
-import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
-import { PrismaService } from "../../../prisma.service";
+import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
+import { EnrollCandidatesRepository } from "./enroll-candidates";
+import { PrismaService } from "../../../../prisma.service";
 import {
-  DatabaseEnrollableStaff as DatabaseEnrollableStaff,
-  DatabaseTeamCode,
-  SELECT_STAFF,
+  DatabaseEnrollableStaff,
   DatabaseEnrollableVolunteer,
-  IS_ENROLLABLE_VOLUNTEER,
+  DatabaseTeamCode,
   IS_ENROLLABLE_STAFF,
-} from "./enroll-newcomers.query";
-import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
-import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
-import { ONE_DAY_IN_MS } from "@overbookd/time";
+  IS_ENROLLABLE_VOLUNTEER,
+  SELECT_STAFF,
+  SELECT_VOLUNTEER,
+} from "./enroll-candidates.query";
 
-export class PrismaEnrollNewcomersRepository
-  implements EnrollNewcomersRepository
-{
+export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async enroll(newcomers: EnrolledNewcomer[]) {
+  async enroll(newcomers: EnrolledCandidate[]) {
     const allRequests = newcomers.map(({ id, teams }) =>
       this.prisma.user.update({
         where: { id },
@@ -38,7 +35,7 @@ export class PrismaEnrollNewcomersRepository
     await this.prisma.$transaction(allRequests);
   }
 
-  async findEnrollableStaffs(): Promise<EnrollableStaff[]> {
+  async findStaffCandidates(): Promise<StaffCandidate[]> {
     const staffs = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: IS_ENROLLABLE_STAFF,
@@ -47,17 +44,11 @@ export class PrismaEnrollNewcomersRepository
     return staffs.map(formatToEnrollableStaff);
   }
 
-  countRecentStaffNewcomers(): Promise<number> {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * ONE_DAY_IN_MS);
-    return this.prisma.user.count({
-      where: {
-        ...IS_ENROLLABLE_STAFF,
-        createdAt: { gte: thirtyDaysAgo },
-      },
-    });
+  countStaffCandidates(): Promise<number> {
+    return this.prisma.user.count({ where: IS_ENROLLABLE_STAFF });
   }
 
-  async findEnrollableVolunteers(): Promise<EnrollableVolunteer[]> {
+  async findVolunteerCandidates(): Promise<VolunteerCandidate[]> {
     const volunteers = await this.prisma.user.findMany({
       orderBy: { id: "desc" },
       where: IS_ENROLLABLE_VOLUNTEER,
@@ -66,9 +57,9 @@ export class PrismaEnrollNewcomersRepository
     return volunteers.map(formatToEnrollableVolunteer);
   }
 
-  async findEnrollableVolunteer(
+  async findVolunteerCandidate(
     volunteerId: number,
-  ): Promise<EnrollableVolunteer | null> {
+  ): Promise<VolunteerCandidate | null> {
     const volunteer = await this.prisma.user.findFirst({
       where: { id: volunteerId, ...IS_ENROLLABLE_VOLUNTEER },
       select: SELECT_VOLUNTEER,
@@ -80,12 +71,13 @@ export class PrismaEnrollNewcomersRepository
 
 function formatToEnrollableVolunteer(
   volunteer: DatabaseEnrollableVolunteer,
-): EnrollableVolunteer {
+): VolunteerCandidate {
   return {
     ...formatToEnrollableStaff(volunteer),
     charisma: volunteer.charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
+    registeredAt: volunteer.createdAt,
     comment: volunteer.comment === null ? undefined : volunteer.comment,
     birthdate: volunteer.birthdate,
     note: volunteer.note === null ? undefined : volunteer.note,
@@ -94,14 +86,13 @@ function formatToEnrollableVolunteer(
 
 function formatToEnrollableStaff(
   staff: DatabaseEnrollableStaff,
-): EnrollableStaff {
+): StaffCandidate {
   const teams = formatTeamsToJoinableTeams(staff.teams);
   return {
     id: staff.id,
     firstname: staff.firstname,
     lastname: staff.lastname,
     email: staff.email,
-    registeredAt: staff.createdAt,
     teams,
   };
 }

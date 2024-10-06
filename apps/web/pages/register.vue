@@ -9,7 +9,7 @@
     <RegistrationStepper
       v-else
       class="stepper"
-      @registered="loginAndApplyForMembership"
+      @registered="loginAndApplyForMembership($event, token)"
     />
   </div>
 </template>

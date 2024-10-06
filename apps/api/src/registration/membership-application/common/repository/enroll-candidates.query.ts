@@ -1,16 +1,15 @@
 import { Membership, STAFF, VOLUNTEER } from "@overbookd/registration";
 import { BENEVOLE_CODE, HARD_CODE } from "@overbookd/team-constants";
-import { SELECT_USER_TEAMS } from "../../../user/user.query";
 import { Edition, IProvidePeriod } from "@overbookd/time";
-import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_PERIOD } from "../../../../common/query/period.query";
+import { SELECT_USER_TEAMS } from "../../../../user/user.query";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export const SELECT_STAFF = {
   id: true,
   firstname: true,
   lastname: true,
   email: true,
-  createdAt: true,
   ...SELECT_USER_TEAMS,
 };
 
@@ -19,6 +18,7 @@ export const SELECT_VOLUNTEER = {
   charisma: true,
   availabilities: { select: SELECT_PERIOD },
   phone: true,
+  createdAt: true,
   birthdate: true,
   comment: true,
   note: true,
@@ -59,7 +59,6 @@ export type DatabaseEnrollableStaff = {
   firstname: string;
   lastname: string;
   email: string;
-  createdAt: Date;
   teams: DatabaseTeamCode[];
 };
 
@@ -69,6 +68,7 @@ export type DatabaseEnrollableVolunteer = DatabaseEnrollableStaff & {
   phone: string;
   comment: string | null;
   birthdate: Date;
+  createdAt: Date;
   note: string | null;
 };
 

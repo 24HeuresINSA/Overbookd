@@ -1,5 +1,5 @@
-import { PrismaService } from "../../../prisma.service";
-import { Users } from "../membership-application.service";
+import { PrismaService } from "../../../../prisma.service";
+import { Users } from "./users";
 
 export class PrismaUsers implements Users {
   constructor(private readonly prisma: PrismaService) {}

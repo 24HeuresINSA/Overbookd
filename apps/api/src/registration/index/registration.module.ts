@@ -8,13 +8,11 @@ import { PrismaModule } from "../../prisma.module";
 import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
-import { PrismaEnrollNewcomersRepository } from "./repository/enroll-newcomers-repository.prisma";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
 import { PrismaNotificationRepository } from "./repository/notification-repository.prisma";
 import { VolunteerAvailabilityModule } from "../../volunteer-availability/volunteer-availability.module";
 import { VolunteerAvailabilityService } from "../../volunteer-availability/volunteer-availability.service";
-import { PrismaConfigurations } from "./repository/configuration-repository.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -23,17 +21,6 @@ import { PrismaConfigurations } from "./repository/configuration-repository.pris
       provide: PrismaNewcomerRepository,
       useFactory: (prisma: PrismaService) =>
         new PrismaNewcomerRepository(prisma, new HashingUtilsService()),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaEnrollNewcomersRepository,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaEnrollNewcomersRepository(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaConfigurations,
-      useFactory: (prisma: PrismaService) => new PrismaConfigurations(prisma),
       inject: [PrismaService],
     },
     {
@@ -65,21 +52,13 @@ import { PrismaConfigurations } from "./repository/configuration-repository.pris
     {
       provide: RegistrationService,
       useFactory: (
-        newcomers: PrismaEnrollNewcomersRepository,
-        configurations: PrismaConfigurations,
         register: RegisterNewcomer,
         event: DomainEventService,
         forget: ForgetMember,
         availability: VolunteerAvailabilityService,
       ) =>
-        new RegistrationService(
-          { newcomers, configurations },
-          { register, forget },
-          { event, availability },
-        ),
+        new RegistrationService({ register, forget }, { event, availability }),
       inject: [
-        PrismaEnrollNewcomersRepository,
-        PrismaConfigurations,
         RegisterNewcomer,
         DomainEventService,
         ForgetMember,

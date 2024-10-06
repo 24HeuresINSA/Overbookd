@@ -1,5 +1,5 @@
 import type { Event } from "@overbookd/event";
-import { EnrolledNewcomer } from "@overbookd/registration";
+import { EnrolledCandidate } from "@overbookd/registration";
 import { StaffRegistered, VolunteerRegistered } from "@overbookd/registration";
 
 export const STAFF_REGISTERED = "staff-registered";
@@ -16,5 +16,5 @@ export type VolunteerRegisteredEvent = Event<
 >;
 export type VolunteerEnrolledEvent = Event<
   typeof VOLUNTEER_ENROLLED,
-  EnrolledNewcomer
+  EnrolledCandidate
 >;

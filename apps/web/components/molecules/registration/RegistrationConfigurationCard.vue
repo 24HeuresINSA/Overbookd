@@ -44,12 +44,12 @@
 <script lang="ts" setup>
 import { InviteStaff } from "@overbookd/registration";
 
-const registrationStore = useRegistrationStore();
+const membershipApplicationStore = useMembershipApplicationStore();
 
-registrationStore.fetchInviteStaffLink();
+membershipApplicationStore.fetchInviteStaffLink();
 
 const inviteStaffLink = computed<URL | undefined>(
-  () => registrationStore.inviteStaffLink,
+  () => membershipApplicationStore.inviteStaffLink,
 );
 const hasInviteStaffLink = computed<boolean>(() => !!inviteStaffLink.value);
 const expirationInviteStaffLinkDate = computed<string>(() => {
@@ -63,5 +63,5 @@ const copyToClipBoard = async () => {
   sendSuccessNotification("Lien copié");
 };
 const refreshInviteStaffLink = () =>
-  registrationStore.generateInviteStaffLink();
+  membershipApplicationStore.generateInviteStaffLink();
 </script>
