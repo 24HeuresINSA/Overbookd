@@ -1,3 +1,15 @@
+## [3.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.5.0...v3.6.0) (2024-10-07)
+
+
+### Features
+
+* **access-manager:** grant permission to team. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([a0ea527](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a0ea527da8b256a92b78e64a06d7cdae860a2c90))
+
+
+### Bug Fixes
+
+* **registration:** membership applications for staff & rename newcomer to... ([5f4cc46](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5f4cc463ea66ce4c46a4c43e27e5f1d835d577d6))
+
 ## [3.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.4.0...v3.5.0) (2024-09-27)
 
 
