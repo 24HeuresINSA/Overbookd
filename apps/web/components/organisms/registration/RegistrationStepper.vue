@@ -249,7 +249,7 @@ import {
   STRASBOURG_CODE,
   TECKOS_CODE,
   TENDRESTIVAL_CODE,
-  type Teams,
+  type RegistrationTeams,
   CVL_CODE,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
@@ -282,7 +282,7 @@ const birthday = ref<string>("2000-01-01");
 const email = ref<string>("");
 const phone = ref<string>("");
 const comment = ref<string>("");
-const teams = ref<Teams>([]);
+const teams = ref<RegistrationTeams>([]);
 const password = ref<string>("");
 const repeatPassword = ref<string>("");
 const hasApprovedEULA = ref<boolean>(false);

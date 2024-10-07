@@ -3,7 +3,7 @@ import {
   Membership,
   NewcomerRegistered,
   NewcomerRepository,
-  TeamCode,
+  RegistrationTeamCode,
 } from "@overbookd/registration";
 import { PrismaService } from "../../../prisma.service";
 import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
@@ -29,7 +29,7 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     const { mobilePhone, password, ...similarProperties } = fulfilledForm;
     const teams = {
       createMany: {
-        data: fulfilledForm.teams.map((team: TeamCode) => ({
+        data: fulfilledForm.teams.map((team: RegistrationTeamCode) => ({
           teamCode: team,
         })),
       },

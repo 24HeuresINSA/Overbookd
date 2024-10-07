@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { FulfilledRegistration, Teams } from "@overbookd/registration";
+import {
+  FulfilledRegistration,
+  RegistrationTeams,
+} from "@overbookd/registration";
 import { Type } from "class-transformer";
 import {
   IsArray,
@@ -53,7 +56,7 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @ApiProperty({ isArray: true, type: String, example: '["karna", "teckos"]' })
   @IsArray()
   @Type(() => String)
-  teams: Teams;
+  teams: RegistrationTeams;
 
   @ApiProperty({ example: true })
   @IsDefined()

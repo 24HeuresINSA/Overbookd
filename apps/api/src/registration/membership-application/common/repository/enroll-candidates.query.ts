@@ -59,7 +59,7 @@ export type DatabaseEnrollableStaff = {
   firstname: string;
   lastname: string;
   email: string;
-  teams: DatabaseTeamCode[];
+  teams: { team: { code: string } }[];
 };
 
 export type DatabaseEnrollableVolunteer = DatabaseEnrollableStaff & {
@@ -71,5 +71,3 @@ export type DatabaseEnrollableVolunteer = DatabaseEnrollableStaff & {
   createdAt: Date;
   note: string | null;
 };
-
-export type DatabaseTeamCode = { team: { code: string } };

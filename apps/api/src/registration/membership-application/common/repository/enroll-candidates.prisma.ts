@@ -1,15 +1,10 @@
-import {
-  EnrolledCandidate,
-  Teams,
-  isJoinableTeams,
-} from "@overbookd/registration";
+import { EnrolledCandidate } from "@overbookd/registration";
 import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "./enroll-candidates";
 import { PrismaService } from "../../../../prisma.service";
 import {
   DatabaseEnrollableStaff,
   DatabaseEnrollableVolunteer,
-  DatabaseTeamCode,
   IS_ENROLLABLE_STAFF,
   IS_ENROLLABLE_VOLUNTEER,
   SELECT_STAFF,
@@ -26,7 +21,7 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
         data: {
           teams: {
             createMany: {
-              data: teams.map((team) => ({ teamCode: team })),
+              data: teams.map((teamCode) => ({ teamCode })),
             },
           },
         },
@@ -87,17 +82,8 @@ function formatToEnrollableVolunteer(
 function formatToEnrollableStaff(
   staff: DatabaseEnrollableStaff,
 ): StaffCandidate {
-  const teams = formatTeamsToJoinableTeams(staff.teams);
   return {
-    id: staff.id,
-    firstname: staff.firstname,
-    lastname: staff.lastname,
-    email: staff.email,
-    teams,
+    ...staff,
+    teams: staff.teams.map(({ team }) => team.code),
   };
-}
-
-function formatTeamsToJoinableTeams(teams: DatabaseTeamCode[]): Teams {
-  const joinableTeams = teams.map(({ team }) => team.code);
-  return isJoinableTeams(joinableTeams) ? joinableTeams : [];
 }

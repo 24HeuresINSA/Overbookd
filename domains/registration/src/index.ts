@@ -52,8 +52,8 @@ export { InviteStaff, LINK_EXPIRED } from "./invite-staff/invite-staff.js";
 // Register Form
 export type {
   FulfilledRegistration,
-  TeamCode,
-  Teams,
+  TeamCode as RegistrationTeamCode,
+  Teams as RegistrationTeams,
 } from "./register-form/fulfilled-registration.js";
 export {
   BDE_CODE,
