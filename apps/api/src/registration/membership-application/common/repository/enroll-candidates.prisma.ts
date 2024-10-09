@@ -20,9 +20,11 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
         where: { id },
         data: {
           teams: {
-            createMany: {
-              data: teams.map((teamCode) => ({ teamCode })),
-            },
+            upsert: teams.map((team) => ({
+              where: { userId_teamCode: { userId: id, teamCode: team } },
+              create: { teamCode: team },
+              update: {},
+            })),
           },
         },
       }),

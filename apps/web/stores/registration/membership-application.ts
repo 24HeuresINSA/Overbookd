@@ -64,7 +64,9 @@ export const useMembershipApplicationStore = defineStore(
       },
 
       async enrollStaffs(staffs: StaffCandidate[]) {
-        const res = await MembershipApplicationRepository.enrollStaffs(staffs);
+        const minimalStaffs = staffs.map(({ id }) => ({ id }));
+        const res =
+          await MembershipApplicationRepository.enrollStaffs(minimalStaffs);
         if (isHttpError(res)) return;
         sendSuccessNotification(
           "Les nouveaux arrivants sélectionnés ont été enrôlés en tant que hards",
