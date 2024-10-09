@@ -1,3 +1,12 @@
+## [3.6.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.6.0...v3.6.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* **registration:** display all candidate's teams in staff registration page [#2175](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2175) ([edfa645](https://gitlab.com/24-heures-insa/overbookd-mono/commit/edfa645dabb64a12ab3b78c6b7c3edb91d72abe7))
+* **registration:** enroll even if team to add is already added [#2177](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2177) ([0d30c55](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0d30c551cb722c0242e7bee62b716370031849b7))
+* **security:** throw error if JWT is not dezfined in production environment [#2176](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2176) ([5074b6d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5074b6db09f4e7f33cb74667febc7324511781cf))
+
 ## [3.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.5.0...v3.6.0) (2024-10-07)
 
 
