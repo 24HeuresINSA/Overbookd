@@ -25,8 +25,12 @@ export class MembershipApplicationRepository {
     return HttpClient.get<StaffCandidate[]>(`${this.basePath}/staffs`);
   }
 
-  static getRecentStaffNewcomersCount() {
+  static getStaffCandidatesCount() {
     return HttpClient.get<number>(`${this.basePath}/staffs/unenrolled/count`);
+  }
+
+  static getRejectedStaffCandidates() {
+    return HttpClient.get<StaffCandidate[]>(`${this.basePath}/staffs/rejected`);
   }
 
   static enrollStaffs(candidates: CandidateToEnroll[]) {

@@ -3,10 +3,11 @@ import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "./enroll-candidates";
 import { PrismaService } from "../../../../prisma.service";
 import {
-  DatabaseEnrollableStaff,
+  DatabaseStaffCandidate,
   DatabaseEnrollableVolunteer,
   IS_ENROLLABLE_STAFF,
   IS_ENROLLABLE_VOLUNTEER,
+  IS_REJECTED_STAFF,
   SELECT_STAFF,
   SELECT_VOLUNTEER,
 } from "./enroll-candidates.query";
@@ -33,16 +34,25 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   }
 
   async findStaffCandidates(): Promise<StaffCandidate[]> {
-    const staffs = await this.prisma.user.findMany({
+    const candidates = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: IS_ENROLLABLE_STAFF,
       select: SELECT_STAFF,
     });
-    return staffs.map(formatToEnrollableStaff);
+    return candidates.map(formatToStaffCandidate);
   }
 
   countStaffCandidates(): Promise<number> {
     return this.prisma.user.count({ where: IS_ENROLLABLE_STAFF });
+  }
+
+  async findRejectedStaffCandidates(): Promise<StaffCandidate[]> {
+    const rejectedCandidates = await this.prisma.user.findMany({
+      orderBy: { id: "asc" },
+      where: IS_REJECTED_STAFF,
+      select: SELECT_STAFF,
+    });
+    return rejectedCandidates.map(formatToStaffCandidate);
   }
 
   async findVolunteerCandidates(): Promise<VolunteerCandidate[]> {
@@ -70,7 +80,7 @@ function formatToEnrollableVolunteer(
   volunteer: DatabaseEnrollableVolunteer,
 ): VolunteerCandidate {
   return {
-    ...formatToEnrollableStaff(volunteer),
+    ...formatToStaffCandidate(volunteer),
     charisma: volunteer.charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
@@ -81,9 +91,7 @@ function formatToEnrollableVolunteer(
   };
 }
 
-function formatToEnrollableStaff(
-  staff: DatabaseEnrollableStaff,
-): StaffCandidate {
+function formatToStaffCandidate(staff: DatabaseStaffCandidate): StaffCandidate {
   return {
     ...staff,
     teams: staff.teams.map(({ team }) => team.code),

@@ -37,10 +37,27 @@ function buildHasMembershipApplicationCondition(membership: Membership) {
   };
 }
 
+function buildHasRejectedMembershipApplicationCondition(
+  membership: Membership,
+) {
+  const edition = Edition.current;
+  return {
+    membershipApplications: {
+      some: { membership, edition, isRejected: true },
+    },
+  };
+}
+
 export const IS_ENROLLABLE_STAFF = {
   ...IS_NOT_DELETED,
   ...IS_NOT_HARD,
   ...buildHasMembershipApplicationCondition(STAFF),
+};
+
+export const IS_REJECTED_STAFF = {
+  ...IS_NOT_DELETED,
+  ...IS_NOT_HARD,
+  ...buildHasRejectedMembershipApplicationCondition(STAFF),
 };
 
 const IS_NOT_VOLUNTEER = {
@@ -54,7 +71,7 @@ export const IS_ENROLLABLE_VOLUNTEER = {
   ...buildHasMembershipApplicationCondition(VOLUNTEER),
 };
 
-export type DatabaseEnrollableStaff = {
+export type DatabaseStaffCandidate = {
   id: number;
   firstname: string;
   lastname: string;
@@ -62,7 +79,7 @@ export type DatabaseEnrollableStaff = {
   teams: { team: { code: string } }[];
 };
 
-export type DatabaseEnrollableVolunteer = DatabaseEnrollableStaff & {
+export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
   availabilities: IProvidePeriod[];
   charisma: number;
   phone: string;

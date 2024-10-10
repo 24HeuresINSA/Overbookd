@@ -29,7 +29,7 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
     async fetchRecentStaffNewcomers() {
       if (!this._hasPermission(ENROLL_HARD)) return;
       const res =
-        await MembershipApplicationRepository.getRecentStaffNewcomersCount();
+        await MembershipApplicationRepository.getStaffCandidatesCount();
       if (isHttpError(res)) return;
       this.recentStaffNewcomers = res;
     },

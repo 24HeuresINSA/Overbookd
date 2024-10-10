@@ -4,36 +4,45 @@
     <RegistrationConfigurationCard class="registration-configuration" />
 
     <v-card>
-      <v-card-title>Nouveaux arrivants</v-card-title>
+      <v-card-title>Candidats</v-card-title>
       <v-card-text>
         <v-data-table
-          v-model="selectedStaffs"
+          v-model="selectedCandidates"
           :headers="headers"
-          :items="filteredNewcomers"
+          :items="filteredCandidates"
           :items-per-page="30"
           :loading="loading"
-          loading-text="Chargement des nouveaux arrivants..."
-          no-data-text="Aucun nouvel arrivant"
+          loading-text="Chargement des candidats..."
+          :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
           show-select
           return-object
         >
           <template #top>
-            <v-text-field
-              v-model="searchNewcomer"
-              label="Rechercher un nouvel arrivant"
-              class="search-filter"
-              clearable
-              hide-details
-              @click:clear="searchNewcomer = ''"
-            />
+            <div class="filters">
+              <v-text-field
+                v-model="searchedCandidate"
+                label="Rechercher un candidat"
+                class="search-filter"
+                clearable
+                hide-details
+                @click:clear="searchedCandidate = ''"
+              />
+              <v-btn
+                text="Candidats rejetés"
+                color="secondary"
+                :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
+                @click="toggleRejectedCandidates"
+              />
+            </div>
           </template>
 
           <template #item.teams="{ item }">
             <TeamChip v-for="team of item.teams" :key="team" :team="team" />
           </template>
 
-          <template #item.removal="{ item }">
+          <template #item.action="{ item }">
             <v-btn
+              v-show="!displayRejectedCandidates"
               text="Rejeter la candidature"
               color="tertiary"
               size="small"
@@ -46,6 +55,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
+          v-if="!displayRejectedCandidates"
           text=" Enrôler en tant que hard"
           :disabled="noStaffSelected"
           size="large"
@@ -73,37 +83,60 @@ const headers = [
   { title: "Nom", value: "lastname", sortable: true },
   { title: "Email", value: "email", sortable: true },
   { title: "Équipes", value: "teams" },
-  { title: "Suppression", value: "removal" },
+  { title: "Action", value: "action" },
 ];
 
-const searchNewcomer = ref<string>("");
-const selectedStaffs = ref<StaffCandidate[]>([]);
+const searchedCandidate = ref<string>("");
+const selectedCandidates = ref<StaffCandidate[]>([]);
 
-const staffs = computed<StaffCandidate[]>(
+const cadidates = computed<StaffCandidate[]>(
   () => membershipApplicationStore.staffs,
 );
-const loading = ref<boolean>(staffs.value.length === 0);
+const loading = ref<boolean>(cadidates.value.length === 0);
 membershipApplicationStore
   .fetchStaffCandidates()
   .then(() => (loading.value = false));
 
-const noStaffSelected = computed<boolean>(
-  () => selectedStaffs.value.length === 0,
+const displayRejectedCandidates = ref<boolean>(false);
+const rejectedCandidates = computed<StaffCandidate[]>(
+  () => membershipApplicationStore.rejectedStaffs,
+);
+const searchableRejectedCandidates = computed<Searchable<StaffCandidate>[]>(
+  () => rejectedCandidates.value.map(toSearchable),
 );
 
-const searchableNewcomers = computed<Searchable<StaffCandidate>[]>(() =>
-  staffs.value.map(toSearchable),
+const noStaffSelected = computed<boolean>(
+  () => selectedCandidates.value.length === 0,
 );
-const filteredNewcomers = computed<StaffCandidate[]>(() =>
-  matchingSearchItems(searchableNewcomers.value, searchNewcomer.value),
+
+const searchableCandidates = computed<Searchable<StaffCandidate>[]>(() =>
+  cadidates.value.map(toSearchable),
+);
+const filteredCandidates = computed<StaffCandidate[]>(() =>
+  displayRejectedCandidates.value
+    ? matchingSearchItems(
+        searchableRejectedCandidates.value,
+        searchedCandidate.value,
+      )
+    : matchingSearchItems(searchableCandidates.value, searchedCandidate.value),
 );
 
 const enrollNewcomers = () => {
-  membershipApplicationStore.enrollStaffs(selectedStaffs.value);
-  selectedStaffs.value = [];
+  membershipApplicationStore.enrollStaffs(selectedCandidates.value);
+  selectedCandidates.value = [];
 };
 const rejectApplication = (candidateId: number) => {
   membershipApplicationStore.rejectForStaff(candidateId);
+};
+
+const toggleRejectedCandidates = () => {
+  displayRejectedCandidates.value = !displayRejectedCandidates.value;
+  if (!displayRejectedCandidates.value) return;
+
+  loading.value = rejectedCandidates.value.length === 0;
+  membershipApplicationStore
+    .fetchRejectedStaffCandidates()
+    .then(() => (loading.value = false));
 };
 </script>
 
@@ -112,6 +145,12 @@ const rejectApplication = (candidateId: number) => {
   display: flex;
   flex-direction: column;
   gap: $card-gap;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .registration-configuration {

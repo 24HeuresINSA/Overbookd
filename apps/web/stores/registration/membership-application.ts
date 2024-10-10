@@ -11,6 +11,7 @@ import { castPeriodsWithDate } from "~/utils/http/period";
 
 type State = {
   staffs: StaffCandidate[];
+  rejectedStaffs: StaffCandidate[];
   volunteers: VolunteerCandidate[];
   inviteStaffLink?: URL;
 };
@@ -20,6 +21,7 @@ export const useMembershipApplicationStore = defineStore(
   {
     state: (): State => ({
       staffs: [],
+      rejectedStaffs: [],
       volunteers: [],
       inviteStaffLink: undefined,
     }),
@@ -47,6 +49,13 @@ export const useMembershipApplicationStore = defineStore(
         const res = await MembershipApplicationRepository.getStaffCandidates();
         if (isHttpError(res)) return;
         this.staffs = res;
+      },
+
+      async fetchRejectedStaffCandidates() {
+        const res =
+          await MembershipApplicationRepository.getRejectedStaffCandidates();
+        if (isHttpError(res)) return;
+        this.rejectedStaffs = res;
       },
 
       async fetchVolunteerCandidates() {

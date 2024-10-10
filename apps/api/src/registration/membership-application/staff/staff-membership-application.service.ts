@@ -69,6 +69,10 @@ export class StaffMembershipApplicationService {
     return this.repositories.enrollCandidates.countStaffCandidates();
   }
 
+  getRejectedCandidates(): Promise<StaffCandidate[]> {
+    return this.repositories.enrollCandidates.findRejectedStaffCandidates();
+  }
+
   async enroll(candidates: CandidateToEnroll[]): Promise<void> {
     const newcomersToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
     await this.repositories.enrollCandidates.enroll(newcomersToEnroll);

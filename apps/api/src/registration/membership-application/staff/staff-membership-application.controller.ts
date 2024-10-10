@@ -90,6 +90,20 @@ export class StaffMembershipApplicationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
+  @Get("rejected")
+  @ApiResponse({
+    status: 200,
+    description: "Get all rejected staffs",
+    type: StaffCandidateResponseDto,
+    isArray: true,
+  })
+  getRejectedCandidates(): Promise<StaffCandidate[]> {
+    return this.applicationService.getRejectedCandidates();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
   @Post("enroll")
   @HttpCode(204)
   @ApiResponse({
