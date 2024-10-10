@@ -1,16 +1,16 @@
 export type CalendarEvent = {
   start: Date;
   end: Date;
-  name: string;
+  title: string;
   link?: string;
   category?: string;
   color?: string;
-  timed: true;
+  allDay: false;
 };
 
 export type DailyEvent = {
   start: Date;
-  name: string;
+  title: string;
   color?: string;
-  timed: false;
+  allDay: true;
 };

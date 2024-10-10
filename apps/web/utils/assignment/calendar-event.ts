@@ -4,7 +4,7 @@ import type { CalendarEvent, DailyEvent } from "../calendar/event";
 export function isDailyEvent(
   event: AssignmentIdentifier | DailyEvent,
 ): event is DailyEvent {
-  return (event as DailyEvent).timed === false;
+  return (event as DailyEvent).allDay === true;
 }
 
 export type CalendarEventWithIdentifier = CalendarEvent & {

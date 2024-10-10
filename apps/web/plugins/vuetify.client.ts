@@ -1,4 +1,5 @@
 import { createVuetify } from "vuetify";
+import { VCalendar } from "vuetify/labs/components";
 import { fr } from "vuetify/locale";
 import {
   blueDarkTheme,
@@ -20,6 +21,7 @@ const commonFieldBorderRadiusStyle = { borderRadius: "12px" };
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
+    components: { VCalendar },
     ssr: false,
     locale: {
       locale: "fr",

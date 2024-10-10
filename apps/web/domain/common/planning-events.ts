@@ -30,5 +30,5 @@ export function convertToCalendarBreak({
   start,
   end,
 }: IProvidePeriod): CalendarEvent {
-  return { start, end, name: PAUSE, color: "black", timed: true };
+  return { start, end, title: PAUSE, color: "black", allDay: false };
 }
