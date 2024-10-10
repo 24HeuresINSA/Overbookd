@@ -46,7 +46,7 @@
       --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION
       --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod
       --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION
-      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:${CI_COMMIT_SHORT_SHA}${CI_COMMIT_TAG}
       --build-arg BASE_URL=$BASE_URL
       --build-arg API_VERSION=$VERSION
       --build-arg WEB_VERSION=$VERSION
@@ -60,7 +60,7 @@
       ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod_${VERSION}
   after_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:${CI_COMMIT_SHORT_SHA}${CI_COMMIT_TAG}
   artifacts:
     paths:
       - ${APP_NAME}.tar
