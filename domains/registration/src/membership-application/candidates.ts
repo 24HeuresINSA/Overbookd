@@ -12,4 +12,5 @@ export type Candidates = {
   hasRejectedApplication(email: string, edition: number): Promise<boolean>;
   add(candidate: Candidate): Promise<void>;
   reject(email: string, edition: number): Promise<void>;
+  cancelRejection(email: string, edition: number): Promise<void>;
 };

@@ -42,7 +42,23 @@ export const useMembershipApplicationStore = defineStore(
         this.staffs = this.staffs.filter(({ id }) => id !== candidateId);
 
         const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchRecentStaffNewcomers();
+        navigationBadgeStore.fetchRecentStaffCandidates();
+      },
+
+      async cancelRejectionForStaff(candidateId: number) {
+        const res =
+          await MembershipApplicationRepository.cancelRejectionForStaff(
+            candidateId,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification("Le rejet de la candidature a été annulé");
+
+        this.rejectedStaffs = this.rejectedStaffs.filter(
+          ({ id }) => id !== candidateId,
+        );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchRecentStaffCandidates();
       },
 
       async fetchStaffCandidates() {
@@ -85,7 +101,7 @@ export const useMembershipApplicationStore = defineStore(
         );
 
         const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchRecentStaffNewcomers();
+        navigationBadgeStore.fetchRecentStaffCandidates();
       },
 
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {

@@ -13,4 +13,15 @@ export class RejectMembershipApplication {
 
     return this.candidates.reject(email, edition);
   }
+
+  async unapplyOne({ email }: Volunteer): Promise<void> {
+    const edition = Edition.current;
+    const isCandidate = await this.candidates.hasRejectedApplication(
+      email,
+      edition,
+    );
+    if (!isCandidate) throw new NotCandidate(STAFF);
+
+    return this.candidates.cancelRejection(email, edition);
+  }
 }

@@ -39,6 +39,14 @@ export class InMemoryCandidates implements Candidates {
     );
   }
 
+  async cancelRejection(email: string, edition: number): Promise<void> {
+    this.candidates = this.candidates.map((candidate) =>
+      candidate.email === email && candidate.edition == edition
+        ? { ...candidate, isRejected: false }
+        : candidate,
+    );
+  }
+
   get staff(): Candidate[] {
     return this.candidates.filter(
       (candidate) => candidate.membership === STAFF,

@@ -21,6 +21,12 @@ export class MembershipApplicationRepository {
     return HttpClient.delete<void>(`${this.basePath}/staffs/${candidateId}`);
   }
 
+  static cancelRejectionForStaff(candidateId: number) {
+    return HttpClient.post<void>(
+      `${this.basePath}/staffs/${candidateId}/cancel-rejection`,
+    );
+  }
+
   static getStaffCandidates() {
     return HttpClient.get<StaffCandidate[]>(`${this.basePath}/staffs`);
   }

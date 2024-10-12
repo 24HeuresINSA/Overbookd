@@ -54,4 +54,11 @@ export class PrismaCandidates implements Candidates {
       data: { isRejected: true },
     });
   }
+
+  async cancelRejection(email: string, edition: number): Promise<void> {
+    await this.prisma.membershipApplication.updateMany({
+      where: { user: { email }, edition },
+      data: { isRejected: false },
+    });
+  }
 }

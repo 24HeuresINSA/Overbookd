@@ -140,6 +140,25 @@ export class StaffMembershipApplicationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
+  @Post(":candidateId/cancel-rejection")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Cancel staff application rejection",
+  })
+  @ApiParam({
+    name: "candidateId",
+    type: Number,
+  })
+  cancelStaffApplicationRejection(
+    @Param("candidateId", ParseIntPipe) candidateId: number,
+  ): Promise<void> {
+    return this.applicationService.cancelStaffApplicationRejection(candidateId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
   @Get("invitation-link")
   getStaffInvitationLink(): Promise<URL | undefined> {
     return this.applicationService.getStaffInvitationLink();

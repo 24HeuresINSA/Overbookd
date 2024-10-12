@@ -48,6 +48,11 @@ export class StaffMembershipApplicationService {
     return this.useCases.reject.applyOne({ email });
   }
 
+  async cancelStaffApplicationRejection(candidateId: number): Promise<void> {
+    const email = await this.repositories.users.findEmailById(candidateId);
+    return this.useCases.reject.unapplyOne({ email });
+  }
+
   async getStaffInvitationLink(): Promise<URL | undefined> {
     const link = await this.repositories.configurations.getInviteStaffLink();
     return link ? new URL(link) : undefined;

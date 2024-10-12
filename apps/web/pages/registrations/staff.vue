@@ -48,6 +48,13 @@
               size="small"
               @click="rejectApplication(item.id)"
             />
+            <v-btn
+              v-show="displayRejectedCandidates"
+              text="Annuler le rejet"
+              color="tertiary"
+              size="small"
+              @click="cancelApplicationRejection(item.id)"
+            />
           </template>
         </v-data-table>
       </v-card-text>
@@ -129,9 +136,16 @@ const rejectApplication = (candidateId: number) => {
   membershipApplicationStore.rejectForStaff(candidateId);
 };
 
+const cancelApplicationRejection = (candidateId: number) => {
+  membershipApplicationStore.cancelRejectionForStaff(candidateId);
+};
+
 const toggleRejectedCandidates = () => {
   displayRejectedCandidates.value = !displayRejectedCandidates.value;
-  if (!displayRejectedCandidates.value) return;
+  if (!displayRejectedCandidates.value) {
+    membershipApplicationStore.fetchStaffCandidates();
+    return;
+  }
 
   loading.value = rejectedCandidates.value.length === 0;
   membershipApplicationStore

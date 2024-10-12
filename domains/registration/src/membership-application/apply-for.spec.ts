@@ -30,17 +30,17 @@ describe("Apply for staff membership", () => {
       });
     });
 
-    describe("and the candidate already applied for the current edition", () => {
+    describe("and the candidate has already applied for the current edition", () => {
       const candidates = new InMemoryCandidates([leaCandidate]);
       const applyFor = new ApplyFor(candidates);
-      it("indicate that the candidate already applied fot this edition", () => {
+      it("should indicate that the candidate has already applied fot this edition", () => {
         expect(async () => applyFor.staff(lea)).rejects.toThrowError(
           AlreadyCandidate,
         );
       });
     });
 
-    describe("and the candidate already applied for a previous edition", () => {
+    describe("and the candidate has already applied for a previous edition", () => {
       it("should be listed as staff candidate", async () => {
         const expectedCandidate = {
           ...noelCandidate,

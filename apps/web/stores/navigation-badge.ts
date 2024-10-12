@@ -16,7 +16,7 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
   actions: {
     async fetchAll() {
       await this.fetchMyRefusedActivities();
-      await this.fetchRecentStaffNewcomers();
+      await this.fetchRecentStaffCandidates();
     },
 
     async fetchMyRefusedActivities() {
@@ -26,7 +26,7 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
       this.myRefusedActivities = res;
     },
 
-    async fetchRecentStaffNewcomers() {
+    async fetchRecentStaffCandidates() {
       if (!this._hasPermission(ENROLL_HARD)) return;
       const res =
         await MembershipApplicationRepository.getStaffCandidatesCount();
