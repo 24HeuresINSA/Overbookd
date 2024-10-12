@@ -36,11 +36,11 @@ export class AssignmentsRepository implements Assignments {
     );
   }
 
-  static async findOne(
+  static async findOne<T extends Assignment>(
     { taskId, mobilizationId, assignmentId }: AssignmentIdentifier,
     withDetails: boolean = false,
   ) {
-    return HttpClient.get<Assignment>({
+    return HttpClient.get<T>({
       path: `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}`,
       params: { withDetails },
     });

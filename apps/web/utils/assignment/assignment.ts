@@ -2,13 +2,13 @@ import type { Assignment, AssignmentIdentifier } from "@overbookd/assignment";
 import type { HttpStringified } from "@overbookd/http";
 import { castPeriodWithDate } from "../http/period";
 
-export function castAssignmentWithDate(
-  assignment: HttpStringified<Assignment | Assignment<{ withDetails: true }>>,
-): Assignment | Assignment<{ withDetails: true }> {
+export function castAssignmentWithDate<T extends Assignment>(
+  assignment: HttpStringified<T>,
+): T {
   return {
     ...assignment,
     ...castPeriodWithDate(assignment),
-  };
+  } as T;
 }
 
 export type UnassignForm = {

@@ -1,5 +1,5 @@
 import type {
-  AssignableVolunteers,
+  AssignableVolunteer,
   AssignmentIdentifier,
   MissingAssignmentTask,
   TaskWithAssignmentsSummary,
@@ -27,7 +27,7 @@ export class TaskToVolunteerRepository {
     mobilizationId,
     assignmentId,
   }: AssignmentIdentifier) {
-    return HttpClient.get<AssignableVolunteers[]>(
+    return HttpClient.get<AssignableVolunteer[]>(
       `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}/assignable-volunteers`,
     );
   }
