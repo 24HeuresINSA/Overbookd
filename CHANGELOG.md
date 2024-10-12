@@ -1,3 +1,24 @@
+## [3.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.6.1...v3.7.0) (2024-10-12)
+
+
+### Features
+
+* **registration:** add rejected candidates display option [#2174](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2174) ([dab3ae8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dab3ae8006406750d4b6b18d32729dd10b8da3f8))
+* **registration:** add the possibility to cancel a staff membership aplication rejection [#2180](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2180) ([2f05296](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2f0529610ab149c5b334a4d50c81282627fb4732))
+
+
+### Pre-Features
+
+* **assignment:** add friends repository in web [#1954](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1954) ([b685a9e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b685a9e766fef8d831e2c99f11236887fb53ef14))
+* **assignment:** migrate taskToVolunteer & volunteerToTask stores [#1974](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1974) ([0fe3c2b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0fe3c2b68ae27a6915aa533ff6afcb4c333b2d24))
+* **availabilities:** add page without calendar [#2182](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2182) ([a423664](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a423664fc239b94251104e0b9c744ff667b1d535))
+* **planning:** add store & fix repo [#1981](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1981) ([3c3f43f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c3f43feaeb148c17b6625387788960ff4205e41))
+
+
+### CI/CD
+
+* **docker:** fix concurent docker scan ([a97286b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a97286b72598bc247dc2df35e6fd4d9a8fd0424f))
+
 ## [3.6.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.6.0...v3.6.1) (2024-10-09)
 
 
