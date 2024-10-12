@@ -36,21 +36,21 @@ export class PlanningRepository {
   }
 
   static getMyPdf() {
-    return HttpClient.get(`${this.basePath}`, { acceptedType: PDF });
+    return HttpClient.get<string>(`${this.basePath}`, { acceptedType: PDF });
   }
 
   static getMyIcal() {
-    return HttpClient.get(`${this.basePath}`, { acceptedType: ICAL });
+    return HttpClient.get<string>(`${this.basePath}`, { acceptedType: ICAL });
   }
 
   static getVolunteerPdf(volunteerId: number) {
-    return HttpClient.get(`${this.basePath}/${volunteerId}`, {
+    return HttpClient.get<string>(`${this.basePath}/${volunteerId}`, {
       acceptedType: PDF,
     });
   }
 
   static getVolunteerIcal(volunteerId: number) {
-    return HttpClient.get(`${this.basePath}/${volunteerId}`, {
+    return HttpClient.get<string>(`${this.basePath}/${volunteerId}`, {
       acceptedType: ICAL,
     });
   }
