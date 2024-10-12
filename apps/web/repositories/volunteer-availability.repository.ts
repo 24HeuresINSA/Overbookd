@@ -12,19 +12,17 @@ export class VolunteerAvailabilityRepository {
     userId: number,
     availabilities: IProvidePeriod[],
   ) {
-    return HttpClient.post<IProvidePeriod[]>(
-      `${this.basePath}/${userId}`,
+    return HttpClient.post<IProvidePeriod[]>(`${this.basePath}/${userId}`, {
       availabilities,
-    );
+    });
   }
 
   static async overrideVolunteerAvailabilities(
     userId: number,
     availabilities: IProvidePeriod[],
   ) {
-    return HttpClient.patch<IProvidePeriod[]>(
-      `${this.basePath}/${userId}`,
+    return HttpClient.patch<IProvidePeriod[]>(`${this.basePath}/${userId}`, {
       availabilities,
-    );
+    });
   }
 }

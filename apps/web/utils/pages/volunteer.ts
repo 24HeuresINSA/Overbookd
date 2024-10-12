@@ -4,6 +4,7 @@ import {
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import {
+  AVAILABILITIES_URL,
   MY_PERSONAL_ACCOUNT_URL,
   MY_PROFILE_URL,
   SHARED_MEALS_URL,
@@ -70,16 +71,16 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
   keywords: ["benevoles", "orgas", "liste"],
 };
 
-// const AVAILABILITIES_PAGE: PageInSummary = {
-//   icon: "mdi-clock",
-//   title: "Mes dispos",
-//   to: AVAILABILITIES_URL,
-//   description:
-//     "Permet de renseigner quand tu es disponible pour aider sur le festival",
-//   mobileSupport: true,
-//   canBeFavorite: true,
-//   keywords: ["dispos", "disponibilites"],
-// };
+const AVAILABILITIES_PAGE: PageInSummary = {
+  icon: "mdi-clock",
+  title: "Mes dispos",
+  to: AVAILABILITIES_URL,
+  description:
+    "Permet de renseigner quand tu es disponible pour aider sur le festival",
+  mobileSupport: true,
+  canBeFavorite: true,
+  keywords: ["dispos", "disponibilites"],
+};
 
 // const MY_PLANNING_PAGE: PageInSummary = {
 //   icon: "mdi-calendar-clock",
@@ -104,7 +105,7 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
   VOLUNTEERS_PAGE,
-  // AVAILABILITIES_PAGE,
+  AVAILABILITIES_PAGE,
   // MY_PLANNING_PAGE,
 ];
 

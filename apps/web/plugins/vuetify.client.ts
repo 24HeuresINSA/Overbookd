@@ -56,6 +56,11 @@ export default defineNuxtPlugin((nuxtApp) => {
           },
         },
       },
+      VStepper: {
+        style: commonFieldBorderRadiusStyle,
+        VStepperHeader: { style: commonFieldBorderRadiusStyle },
+      },
+      VAlert: { style: commonFieldBorderRadiusStyle },
       VField: { style: commonFieldBorderRadiusStyle },
       VBtn: { style: commonFieldBorderRadiusStyle },
       VBtnToggle: { style: commonFieldBorderRadiusStyle },
