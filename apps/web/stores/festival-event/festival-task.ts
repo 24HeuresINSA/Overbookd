@@ -197,6 +197,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilization,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("La mobilisation a été ajoutée");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -210,6 +211,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilization,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("La mobilisation a été mise à jour");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -219,6 +221,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         mobilizationId,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("La mobilisation a été supprimée");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -233,6 +236,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         form,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("Le bénévole a été ajouté à la mobilisation");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -246,6 +250,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         volunteerId,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("Le bénévole a été retiré de la mobilisation");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -259,6 +264,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         team,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("L'équipe a été ajoutée à la mobilisation");
       this.selectedTask = castTaskWithDate(res);
     },
 
@@ -272,6 +278,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
         team,
       );
       if (isHttpError(res)) return;
+      sendSuccessNotification("L'équipe a été retirée de la mobilisation");
       this.selectedTask = castTaskWithDate(res);
     },
 
