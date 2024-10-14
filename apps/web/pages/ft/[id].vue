@@ -19,6 +19,10 @@
         id="instructions"
         :disabled="isValidatedOrReadyToAssign"
       />
+      <MobilizationCard
+        id="mobilization"
+        :disabled="isValidatedOrReadyToAssign"
+      />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedTask"
