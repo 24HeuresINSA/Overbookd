@@ -1,16 +1,15 @@
 <template>
   <v-tooltip location="top" :disabled="!hasErrors">
     <template #activator="{ props }">
-      <NuxtLink :to="`${PLANNING_URL}/${volunteer.id}`">
-        <v-chip
-          v-bind="props"
-          :class="volunteerStatus"
-          :closable="!disabled"
-          @click:close="removeVolunteer"
-        >
-          {{ buildUserNameWithNickname(volunteer) }}
-        </v-chip>
-      </NuxtLink>
+      <v-chip
+        v-bind="props"
+        :class="volunteerStatus"
+        :closable="!disabled"
+        :to="`${PLANNING_URL}/${volunteer.id}`"
+        @click:close="removeVolunteer"
+      >
+        {{ buildUserNameWithNickname(volunteer) }}
+      </v-chip>
     </template>
     <v-list-item v-for="(message, i) in errorMessages" :key="i">
       {{ message }}
