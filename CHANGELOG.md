@@ -1,3 +1,15 @@
+## [3.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.7.0...v3.8.0) (2024-10-15)
+
+
+### Features
+
+* **need-help:** add page without calendar [#2183](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2183) ([57891ee](https://gitlab.com/24-heures-insa/overbookd-mono/commit/57891ee16ff50959021adbbfb559d5453ab9662f))
+
+
+### Bug Fixes
+
+* **web:** removing profile page and components [#2181](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2181) ([63354c8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/63354c86c5649b5dfe7faa36a2dfae24662b5972))
+
 ## [3.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.6.1...v3.7.0) (2024-10-12)
 
 
