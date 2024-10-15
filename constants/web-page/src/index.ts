@@ -3,7 +3,6 @@ export const HOME_URL = "/";
 export const LOGIN_URL = "/login";
 export const REGISTER_URL = "/register";
 
-export const MY_PROFILE_URL = "/my-profile";
 export const MY_PERSONAL_ACCOUNT_URL = "/my-personal-account";
 export const SHARED_MEALS_URL = "/shared-meals";
 export const VOLUNTEERS_URL = "/volunteers";
@@ -42,7 +41,6 @@ export const NEED_HELP_URL = "/need-help";
 
 export const pagesURL = [
   HOME_URL,
-  MY_PROFILE_URL,
   MY_PERSONAL_ACCOUNT_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,

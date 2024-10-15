@@ -6,18 +6,10 @@ import {
 import {
   AVAILABILITIES_URL,
   MY_PERSONAL_ACCOUNT_URL,
-  MY_PROFILE_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
-import type { HiddenPage, Page, PageInSummary } from "./navigation";
-
-const MY_PROFILE_PAGE: HiddenPage = {
-  title: "Mon Profil",
-  to: MY_PROFILE_URL,
-  mobileSupport: true,
-  canBeFavorite: false,
-};
+import type { Page, PageInSummary } from "./navigation";
 
 export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
@@ -111,6 +103,5 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
 
 export const VOLUNTEER_PAGES: Page[] = [
   ...VOLUNTEER_SUMMARY_PAGES,
-  MY_PROFILE_PAGE,
   // PLANNING_PAGE,
 ];

@@ -19,10 +19,6 @@
     </div>
 
     <div class="dropdown-menu">
-      <a class="dropdown-menu__item" @click="navigateTo(MY_PROFILE_URL)">
-        <v-icon>mdi-account-outline</v-icon>
-        Mon profil
-      </a>
       <a class="dropdown-menu__item" @click="toggleCurrentTheme">
         <v-icon>{{ themeIcon }}</v-icon>
         {{ themeTitle }}
@@ -39,7 +35,7 @@
 import { nicknameOrFirstName } from "@overbookd/user";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
-import { LOGIN_URL, MY_PROFILE_URL } from "@overbookd/web-page";
+import { LOGIN_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 import { navigateTo } from "#app";
