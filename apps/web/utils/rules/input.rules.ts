@@ -65,8 +65,10 @@ export function isMobilePhoneNumber(value: string | null) {
   return (value && mobilePhoneNumberPattern.test(value)) || message;
 }
 
-const passwordPattern = new RegExp(
-  "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*=+_{}[]()|.]).{12,}$",
+export const passwordPattern = new RegExp(
+  // prettier-ignore
+  // eslint-disable-next-line no-useless-escape
+  "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*+=_.,;:?{}()\/\|\\\-]).{12,}$",
 );
 
 export function password(value: string | null) {
