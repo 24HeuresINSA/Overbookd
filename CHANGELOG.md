@@ -1,3 +1,10 @@
+## [3.8.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.8.0...v3.8.1) (2024-10-16)
+
+
+### Bug Fixes
+
+* **registration:** special characters in regex for password [#2186](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2186) ([f561d00](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f561d0014e6e7aedff282cb379616f01a355ecb3))
+
 ## [3.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.7.0...v3.8.0) (2024-10-15)
 
 
