@@ -79,7 +79,7 @@ export class StaffMembershipApplicationService {
   }
 
   async enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    const newcomersToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
-    await this.repositories.enrollCandidates.enroll(newcomersToEnroll);
+    const candidatesToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
+    await this.repositories.enrollCandidates.enroll(candidatesToEnroll);
   }
 }

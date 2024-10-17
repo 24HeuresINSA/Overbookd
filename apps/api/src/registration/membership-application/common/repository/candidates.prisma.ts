@@ -1,4 +1,4 @@
-import { Candidate, Candidates, STAFF } from "@overbookd/registration";
+import { Candidate, Candidates } from "@overbookd/registration";
 import { PrismaService } from "../../../../prisma.service";
 
 export class PrismaCandidates implements Candidates {
@@ -9,7 +9,6 @@ export class PrismaCandidates implements Candidates {
       where: {
         user: { email },
         edition,
-        membership: STAFF,
         isRejected: false,
       },
     });
@@ -25,7 +24,6 @@ export class PrismaCandidates implements Candidates {
         where: {
           user: { email },
           edition,
-          membership: STAFF,
           isRejected: true,
         },
       });

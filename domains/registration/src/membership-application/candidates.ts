@@ -1,8 +1,8 @@
-import { STAFF } from "../newcomer.js";
+import { STAFF, VOLUNTEER } from "../newcomer.js";
 
 export type Volunteer = { email: string };
 export type Candidate = Volunteer & {
-  membership: typeof STAFF;
+  membership: typeof STAFF | typeof VOLUNTEER;
   edition: number;
   isRejected: boolean;
 };

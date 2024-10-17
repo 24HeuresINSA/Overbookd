@@ -92,12 +92,12 @@ export const useUserStore = defineStore("user", {
     },
 
     async fetchUser() {
-      await this.fetchMyInformation();
+      await this.fetchMyInformations();
       if (!this.loggedUser) return;
       await this.setMyProfilePicture();
     },
 
-    async fetchMyInformation() {
+    async fetchMyInformations() {
       const res = await UserRepository.getMyUser();
       if (isHttpError(res)) return;
       this.loggedUser = {
@@ -234,7 +234,7 @@ export const useUserStore = defineStore("user", {
       if (this.selectedUser?.id !== userId) return;
       this.selectedUser = { ...this.selectedUser, teams: res };
       this._updateVolunteerFromList(this.selectedUser);
-      if (userId === this.loggedUser?.id) this.fetchMyInformation();
+      if (userId === this.loggedUser?.id) this.fetchMyInformations();
     },
 
     async removeTeamFromUser(userId: number, team: string) {
@@ -247,7 +247,7 @@ export const useUserStore = defineStore("user", {
         (t) => t !== team,
       );
       this._updateVolunteerFromList(this.selectedUser);
-      if (userId === this.loggedUser?.id) this.fetchMyInformation();
+      if (userId === this.loggedUser?.id) this.fetchMyInformations();
     },
 
     async findUserById(id: number) {

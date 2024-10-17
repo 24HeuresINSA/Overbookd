@@ -9,7 +9,7 @@ import { HttpClient } from "~/utils/http/http-client";
 export class MembershipApplicationRepository {
   private static readonly basePath = "registrations/membership-applications";
 
-  static applyAsStaff(candidate: StaffApplication) {
+  static submitStaffApplication(candidate: StaffApplication) {
     const options = {
       serverErrorMessage:
         "Oups, ta demande de candidature a échoué... Rééssaie de te connecter avec le lien fourni par le.a SG",
@@ -17,11 +17,11 @@ export class MembershipApplicationRepository {
     return HttpClient.post<void>(`${this.basePath}/staffs`, candidate, options);
   }
 
-  static rejectForStaff(candidateId: number) {
+  static rejectStaffCandidate(candidateId: number) {
     return HttpClient.delete<void>(`${this.basePath}/staffs/${candidateId}`);
   }
 
-  static cancelRejectionForStaff(candidateId: number) {
+  static cancelStaffCandidateRejection(candidateId: number) {
     return HttpClient.post<void>(
       `${this.basePath}/staffs/${candidateId}/cancel-rejection`,
     );
@@ -32,33 +32,55 @@ export class MembershipApplicationRepository {
   }
 
   static getStaffCandidatesCount() {
-    return HttpClient.get<number>(`${this.basePath}/staffs/unenrolled/count`);
+    return HttpClient.get<number>(`${this.basePath}/staffs/candidates/count`);
   }
 
   static getRejectedStaffCandidates() {
     return HttpClient.get<StaffCandidate[]>(`${this.basePath}/staffs/rejected`);
   }
 
-  static enrollStaffs(candidates: CandidateToEnroll[]) {
+  static enrollNewStaffs(candidates: CandidateToEnroll[]) {
     return HttpClient.post<void>(`${this.basePath}/staffs/enroll`, {
       candidates,
     });
+  }
+
+  static submitVolunteerApplication(email: string) {
+    return HttpClient.post<void>(`${this.basePath}/volunteers/apply/${email}`);
   }
 
   static getVolunteerCandidates() {
     return HttpClient.get<VolunteerCandidate[]>(`${this.basePath}/volunteers`);
   }
 
-  static getVolunteer(volunteerId: VolunteerCandidate["id"]) {
-    return HttpClient.get<VolunteerCandidate>(
-      `${this.basePath}/volunteers/${volunteerId}`,
+  static getVolunteerCandidatesCount() {
+    return HttpClient.get<number>(
+      `${this.basePath}/volunteers/candidates/count`,
     );
   }
 
-  static enrollNewVolunteers(newcomers: CandidateToEnroll[]) {
+  static getRejectedVolunteerCandidates() {
+    return HttpClient.get<VolunteerCandidate[]>(
+      `${this.basePath}/volunteers/rejected`,
+    );
+  }
+
+  static enrollNewVolunteers(candidates: CandidateToEnroll[]) {
     return HttpClient.post<void>(`${this.basePath}/volunteers/enroll`, {
-      newcomers,
+      candidates,
     });
+  }
+
+  static rejectVolunteerCandidate(candidateId: number) {
+    return HttpClient.delete<void>(
+      `${this.basePath}/volunteers/${candidateId}`,
+    );
+  }
+
+  static cancelVolunteerCandidateRejection(candidateId: number) {
+    return HttpClient.post<void>(
+      `${this.basePath}/volunteers/${candidateId}/cancel-rejection`,
+    );
   }
 
   static generateStaffLink() {

@@ -11,6 +11,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (!token || !email) return;
 
   const membershipApplicationStore = useMembershipApplicationStore();
-  membershipApplicationStore.applyAsStaff({ email, token });
+  membershipApplicationStore.submitStaffApplication({ email, token });
   return to.path;
 });

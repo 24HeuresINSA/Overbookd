@@ -1,4 +1,5 @@
 import type { Credentials } from "@overbookd/registration";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 import { HOME_URL } from "@overbookd/web-page";
 
 export async function loginAndApplyForMembership(
@@ -10,10 +11,15 @@ export async function loginAndApplyForMembership(
   if (!authStore.authenticated) return;
   navigateTo(HOME_URL);
 
-  if (!token) return;
   const membershipApplicationStore = useMembershipApplicationStore();
-  membershipApplicationStore.applyAsStaff({
-    email: credentials.email,
-    token,
-  });
+  if (token) {
+    membershipApplicationStore.submitStaffApplication({
+      email: credentials.email,
+      token,
+    });
+  }
+  const userStore = useUserStore();
+  await userStore.fetchMyInformations();
+  if (userStore.isMemberOf(BENEVOLE_CODE)) return;
+  membershipApplicationStore.submitVolunteerApplication(credentials.email);
 }

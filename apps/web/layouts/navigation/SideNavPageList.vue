@@ -25,7 +25,11 @@
 import SideNavPageItem from "./SideNavPageItem.vue";
 import { PageFilter } from "~/utils/pages/page.filter";
 import { summaryPages, type PageInSummary } from "~/utils/pages/navigation";
-import { FA_URL, REGISTRATIONS_STAFF_URL } from "@overbookd/web-page";
+import {
+  FA_URL,
+  REGISTRATIONS_STAFF_URL,
+  REGISTRATIONS_VOLUNTEER_URL,
+} from "@overbookd/web-page";
 
 const navigationBadgeStore = useNavigationBadgeStore();
 
@@ -41,13 +45,16 @@ const props = defineProps({
 });
 
 const pagesWithBadge = computed<PageInSummary[]>(() => {
-  const { myRefusedActivities, recentStaffNewcomers } = navigationBadgeStore;
+  const { myRefusedActivities, staffCandidates, volunteerCandidates } =
+    navigationBadgeStore;
   return summaryPages.map((page) => {
     switch (page.to) {
       case FA_URL:
         return { ...page, badgeValue: myRefusedActivities };
       case REGISTRATIONS_STAFF_URL:
-        return { ...page, badgeValue: recentStaffNewcomers };
+        return { ...page, badgeValue: staffCandidates };
+      case REGISTRATIONS_VOLUNTEER_URL:
+        return { ...page, badgeValue: volunteerCandidates };
       default:
         return page;
     }

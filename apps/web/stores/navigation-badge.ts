@@ -1,22 +1,30 @@
-import { ENROLL_HARD, READ_FA, type Permission } from "@overbookd/permission";
+import {
+  ENROLL_HARD,
+  ENROLL_SOFT,
+  READ_FA,
+  type Permission,
+} from "@overbookd/permission";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
 import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   myRefusedActivities: number;
-  recentStaffNewcomers: number;
+  staffCandidates: number;
+  volunteerCandidates: number;
 };
 
 export const useNavigationBadgeStore = defineStore("navigation-badge", {
   state: (): State => ({
     myRefusedActivities: 0,
-    recentStaffNewcomers: 0,
+    staffCandidates: 0,
+    volunteerCandidates: 0,
   }),
   actions: {
     async fetchAll() {
       await this.fetchMyRefusedActivities();
-      await this.fetchRecentStaffCandidates();
+      await this.fetchStaffCandidates();
+      await this.fetchVolunteerCandidates();
     },
 
     async fetchMyRefusedActivities() {
@@ -26,12 +34,20 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
       this.myRefusedActivities = res;
     },
 
-    async fetchRecentStaffCandidates() {
+    async fetchStaffCandidates() {
       if (!this._hasPermission(ENROLL_HARD)) return;
       const res =
         await MembershipApplicationRepository.getStaffCandidatesCount();
       if (isHttpError(res)) return;
-      this.recentStaffNewcomers = res;
+      this.staffCandidates = res;
+    },
+
+    async fetchVolunteerCandidates() {
+      if (!this._hasPermission(ENROLL_SOFT)) return;
+      const res =
+        await MembershipApplicationRepository.getVolunteerCandidatesCount();
+      if (isHttpError(res)) return;
+      this.volunteerCandidates = res;
     },
 
     _hasPermission(permission: Permission) {

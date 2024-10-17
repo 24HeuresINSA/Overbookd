@@ -15,9 +15,9 @@ export class AlreadyCandidate extends MembershipApplicationError {
 }
 
 export class NotCandidate extends MembershipApplicationError {
-  constructor(readonly membership: Membership) {
+  constructor() {
     super(
-      `Le bénévole n'a pas candidaté pour cette édition pour être ${readableMembership(membership)}`,
+      "Le bénévole n'a pas candidaté pour cette édition",
     );
   }
 }

@@ -1,4 +1,4 @@
-import { STAFF } from "../newcomer.js";
+import { STAFF, VOLUNTEER } from "../newcomer.js";
 import { Candidates, Candidate } from "./candidates.js";
 
 export class InMemoryCandidates implements Candidates {
@@ -17,7 +17,6 @@ export class InMemoryCandidates implements Candidates {
     email: string,
     edition: number,
   ): Promise<boolean> {
-    console.log(this.candidates);
     return this.candidates.some(
       (candidate) =>
         candidate.email === email &&
@@ -50,6 +49,12 @@ export class InMemoryCandidates implements Candidates {
   get staff(): Candidate[] {
     return this.candidates.filter(
       (candidate) => candidate.membership === STAFF,
+    );
+  }
+
+  get volunteers(): Candidate[] {
+    return this.candidates.filter(
+      (candidate) => candidate.membership === VOLUNTEER,
     );
   }
 }

@@ -10,9 +10,10 @@ import { updateItemToList } from "@overbookd/list";
 import { castPeriodsWithDate } from "~/utils/http/period";
 
 type State = {
-  staffs: StaffCandidate[];
-  rejectedStaffs: StaffCandidate[];
-  volunteers: VolunteerCandidate[];
+  staffCandidates: StaffCandidate[];
+  rejectedStaffCandidates: StaffCandidate[];
+  volunteerCandidates: VolunteerCandidate[];
+  rejectedVolunteerCandidates: VolunteerCandidate[];
   inviteStaffLink?: URL;
 };
 
@@ -20,88 +21,141 @@ export const useMembershipApplicationStore = defineStore(
   "membership-application",
   {
     state: (): State => ({
-      staffs: [],
-      rejectedStaffs: [],
-      volunteers: [],
+      staffCandidates: [],
+      rejectedStaffCandidates: [],
+      volunteerCandidates: [],
+      rejectedVolunteerCandidates: [],
       inviteStaffLink: undefined,
     }),
     actions: {
-      async applyAsStaff(candidate: StaffApplication) {
+      async submitStaffApplication(candidate: StaffApplication) {
         const res =
-          await MembershipApplicationRepository.applyAsStaff(candidate);
+          await MembershipApplicationRepository.submitStaffApplication(
+            candidate,
+          );
         if (isHttpError(res)) return;
         sendSuccessNotification("Ta demande pour devenir orga a été envoyée");
       },
 
-      async rejectForStaff(candidateId: number) {
+      async rejectStaffCandidate(candidateId: number) {
         const res =
-          await MembershipApplicationRepository.rejectForStaff(candidateId);
+          await MembershipApplicationRepository.rejectStaffCandidate(
+            candidateId,
+          );
         if (isHttpError(res)) return;
         sendSuccessNotification("La candidature a été rejetée");
 
-        this.staffs = this.staffs.filter(({ id }) => id !== candidateId);
+        this.staffCandidates = this.staffCandidates.filter(
+          ({ id }) => id !== candidateId,
+        );
 
         const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchRecentStaffCandidates();
+        navigationBadgeStore.fetchStaffCandidates();
       },
 
-      async cancelRejectionForStaff(candidateId: number) {
+      async cancelStaffCandidateRejection(candidateId: number) {
         const res =
-          await MembershipApplicationRepository.cancelRejectionForStaff(
+          await MembershipApplicationRepository.cancelStaffCandidateRejection(
             candidateId,
           );
         if (isHttpError(res)) return;
         sendSuccessNotification("Le rejet de la candidature a été annulé");
 
-        this.rejectedStaffs = this.rejectedStaffs.filter(
+        this.rejectedStaffCandidates = this.rejectedStaffCandidates.filter(
           ({ id }) => id !== candidateId,
         );
 
         const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchRecentStaffCandidates();
+        navigationBadgeStore.fetchStaffCandidates();
       },
 
       async fetchStaffCandidates() {
         const res = await MembershipApplicationRepository.getStaffCandidates();
         if (isHttpError(res)) return;
-        this.staffs = res;
+        this.staffCandidates = res;
       },
 
       async fetchRejectedStaffCandidates() {
         const res =
           await MembershipApplicationRepository.getRejectedStaffCandidates();
         if (isHttpError(res)) return;
-        this.rejectedStaffs = res;
+        this.rejectedStaffCandidates = res;
+      },
+
+      async submitVolunteerApplication(email: string) {
+        const res =
+          await MembershipApplicationRepository.submitVolunteerApplication(
+            email,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification(
+          "Ta demande pour devenir bénévole a été envoyée",
+        );
+      },
+
+      async rejectVolunteerCandidate(candidateId: VolunteerCandidate["id"]) {
+        const res =
+          await MembershipApplicationRepository.rejectVolunteerCandidate(
+            candidateId,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification("La candidature a été rejetée");
+
+        this.volunteerCandidates = this.volunteerCandidates.filter(
+          ({ id }) => id !== candidateId,
+        );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchVolunteerCandidates();
+      },
+
+      async cancelVolunteerCandidateRejection(
+        candidateId: VolunteerCandidate["id"],
+      ) {
+        const res =
+          await MembershipApplicationRepository.cancelVolunteerCandidateRejection(
+            candidateId,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification("Le rejet de la candidature a été annulé");
+
+        this.rejectedVolunteerCandidates =
+          this.rejectedVolunteerCandidates.filter(
+            ({ id }) => id !== candidateId,
+          );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchVolunteerCandidates();
       },
 
       async fetchVolunteerCandidates() {
         const res =
           await MembershipApplicationRepository.getVolunteerCandidates();
         if (isHttpError(res)) return;
-        this.volunteers = res.map(castVolunteerWithDate);
+        this.volunteerCandidates = res.map(castVolunteerWithDate);
       },
 
-      async fetchVolunteerCandidate(volunteerId: VolunteerCandidate["id"]) {
+      async fetchRejectedVolunteerCandidates() {
         const res =
-          await MembershipApplicationRepository.getVolunteer(volunteerId);
+          await MembershipApplicationRepository.getRejectedVolunteerCandidates();
         if (isHttpError(res)) return;
-        this._updateVolunteer(castVolunteerWithDate(res));
+        this.rejectedVolunteerCandidates = res.map(castVolunteerWithDate);
       },
 
-      async enrollStaffs(staffs: StaffCandidate[]) {
+      async enrollNewStaffs(staffs: StaffCandidate[]) {
         const minimalStaffs = staffs.map(({ id }) => ({ id }));
         const res =
-          await MembershipApplicationRepository.enrollStaffs(minimalStaffs);
+          await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les nouveaux arrivants sélectionnés ont été enrôlés en tant que hards",
+          "Les candidat sélectionnés ont été enrôlés en tant que hards",
         );
-        this.staffs = this.staffs.filter(
+        this.staffCandidates = this.staffCandidates.filter(
           (staff) => !staffs.some(({ id }) => id === staff.id),
         );
 
         const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchRecentStaffCandidates();
+        navigationBadgeStore.fetchStaffCandidates();
       },
 
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {
@@ -109,11 +163,14 @@ export const useMembershipApplicationStore = defineStore(
           await MembershipApplicationRepository.enrollNewVolunteers(volunteers);
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Le nouvel arrivant sélectionné a été enrôlé en tant que soft",
+          "Le candidat sélectionné a été enrôlé en tant que soft",
         );
-        this.volunteers = this.volunteers.filter(
+        this.volunteerCandidates = this.volunteerCandidates.filter(
           (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),
         );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchVolunteerCandidates();
       },
 
       async fetchInviteStaffLink() {
@@ -129,12 +186,12 @@ export const useMembershipApplicationStore = defineStore(
       },
 
       _updateVolunteer(volunteer: VolunteerCandidate) {
-        const volunteerIndex = this.volunteers.findIndex(
+        const volunteerIndex = this.volunteerCandidates.findIndex(
           ({ id }) => id === volunteer.id,
         );
         if (volunteerIndex === -1) return;
-        this.volunteers = updateItemToList(
-          this.volunteers,
+        this.volunteerCandidates = updateItemToList(
+          this.volunteerCandidates,
           volunteerIndex,
           volunteer,
         );
