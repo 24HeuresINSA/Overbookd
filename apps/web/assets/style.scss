@@ -10,6 +10,14 @@
   }
 }
 
+.clickable {
+  cursor: pointer !important;
+}
+
+.unclickable {
+  cursor: default !important;
+}
+
 @mixin background-color-by-status() {
 
   &.validated,

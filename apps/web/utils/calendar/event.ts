@@ -3,7 +3,6 @@ export type CalendarEvent = {
   end: Date;
   name: string;
   link?: string;
-  category?: string;
   color?: string;
   timed: true;
 };
