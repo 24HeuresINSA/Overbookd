@@ -71,7 +71,7 @@
 
       <v-stepper-window v-show="step == 2" direction="vertical">
         <v-stepper-window-item :value="2">
-          <v-form class="data dense personal-data">
+          <v-form class="data personal-data">
             <v-text-field
               v-model="firstname"
               label="Prénom*"
@@ -183,7 +183,6 @@
               persistent-hint
               :rules="[rules.password]"
             />
-
             <v-text-field
               v-model="repeatPassword"
               type="password"
@@ -439,10 +438,7 @@ const closeEULADialog = () => (isEULADialogOpen.value = false);
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  &.dense {
-    gap: 0px;
-  }
+  margin-top: 5px;
 }
 
 .eula-link {
