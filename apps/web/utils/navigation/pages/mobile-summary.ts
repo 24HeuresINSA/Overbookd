@@ -1,5 +1,5 @@
 import { FA_LIST_PAGE } from "./festival-event";
-import { HOME_PAGE } from "./navigation";
+import { HOME_PAGE } from "./page-list";
 import {
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,

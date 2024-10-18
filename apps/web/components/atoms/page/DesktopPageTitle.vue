@@ -17,7 +17,11 @@
 
 <script lang="ts" setup>
 import { isPageURL } from "@overbookd/web-page";
-import { findPage, type Page, HOME_PAGE } from "~/utils/pages/navigation";
+import {
+  findPage,
+  type Page,
+  HOME_PAGE,
+} from "~/utils/navigation/pages/page-list";
 
 const route = useRoute();
 const preferenceStore = usePreferenceStore();

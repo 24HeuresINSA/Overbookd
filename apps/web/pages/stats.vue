@@ -44,7 +44,7 @@ import {
   oldActivities,
   oldTasks,
 } from "~/utils/festival-event/past-year.constant";
-import { hexToRGBA } from "~/utils/color/hex-to-rgba";
+import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 
 useHead({ title: "Statistiques des FA" });
 

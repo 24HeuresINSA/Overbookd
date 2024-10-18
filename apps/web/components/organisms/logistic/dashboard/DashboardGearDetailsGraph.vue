@@ -10,7 +10,7 @@ import {
   type ChartData,
   type Dataset,
   tooltipLabel,
-} from "~/utils/graph/graph";
+} from "~/utils/chartjs-graph";
 import {
   isConsumable,
   listStockAndInquiriesSources,

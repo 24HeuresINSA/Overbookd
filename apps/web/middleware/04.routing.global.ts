@@ -1,5 +1,5 @@
-import { isDesktop } from "~/utils/device/device.utils";
-import { findPage } from "../utils/pages/navigation";
+import { isDesktop } from "~/utils/device.utils";
+import { findPage } from "../utils/navigation/pages/page-list";
 import { HOME_URL } from "@overbookd/web-page";
 
 export default defineNuxtRouteMiddleware((to) => {

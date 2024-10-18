@@ -2,13 +2,13 @@ import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
 import type { PlanningEvent, PlanningTask } from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import {
   castConsumerWithDate,
   castMyUserInformationWithDate,
   castUserPersonalDataWithDate,
-} from "~/utils/http/user";
-import { castVolunteerPlanningTasksWithDate } from "~/utils/http/volunteer-planning";
+} from "~/utils/http/cast-date/user.utils";
+import { castVolunteerPlanningTasksWithDate } from "~/utils/http/cast-date/volunteer-planning.utils";
 import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,

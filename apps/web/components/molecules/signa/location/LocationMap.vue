@@ -43,7 +43,7 @@ import { type SignaLocation, filterLocation } from "@overbookd/signa";
 import {
   type MapConfiguration,
   defaultMapConfiguration,
-} from "~/utils/location/map";
+} from "~/utils/map.config";
 
 const props = defineProps({
   locations: {

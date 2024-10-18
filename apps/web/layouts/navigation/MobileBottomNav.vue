@@ -23,8 +23,11 @@
 </template>
 
 <script lang="ts" setup>
-import { MOBILE_SUMMARY } from "~/utils/pages/mobile-summary";
-import { findPage, type PageInSummary } from "~/utils/pages/navigation";
+import { MOBILE_SUMMARY } from "~/utils/navigation/pages/mobile-summary";
+import {
+  findPage,
+  type PageInSummary,
+} from "~/utils/navigation/pages/page-list";
 import { navigateTo } from "#app";
 
 const route = useRoute();

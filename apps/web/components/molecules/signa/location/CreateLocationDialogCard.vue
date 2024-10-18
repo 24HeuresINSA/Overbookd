@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { Point } from "@overbookd/geo-location";
-import { defaultMapConfiguration } from "~/utils/location/map";
+import { defaultMapConfiguration } from "~/utils/map.config";
 
 const locationStore = useLocationStore();
 

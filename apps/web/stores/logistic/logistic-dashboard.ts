@@ -7,7 +7,7 @@ import type {
 } from "@overbookd/http";
 import { LogisticDashboardRepository } from "~/repositories/logistic/logistic-dashboard.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 
 type State = {
   previews: GearPreview[];

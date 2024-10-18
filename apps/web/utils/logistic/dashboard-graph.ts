@@ -1,5 +1,5 @@
 import type { ConsumableGearDetails, GearDetails } from "@overbookd/http";
-import type { Tooltip } from "../graph/graph";
+import type { Tooltip } from "../chartjs-graph";
 import { sumQuantities } from "./quantity";
 
 export function listStockAndInquiriesSources(allDetails: GearDetails[]) {

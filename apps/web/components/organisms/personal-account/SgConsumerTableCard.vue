@@ -92,7 +92,7 @@ import {
 } from "~/utils/transaction/sg-mode";
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
-import { toSearchable } from "~/utils/search/search-user";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {

@@ -8,8 +8,11 @@ import { SlugifyService } from "@overbookd/slugify";
 import type { UserName } from "@overbookd/user";
 import type { HelpingVolunteer, HttpStringified } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
-import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
-import { toSearchable } from "~/utils/search/search-user";
+import {
+  castPeriodWithDate,
+  castPeriodsWithDate,
+} from "~/utils/http/cast-date/period.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { NeedHelpRepository } from "~/repositories/need-help.repository";
 

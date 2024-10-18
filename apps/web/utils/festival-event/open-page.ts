@@ -1,5 +1,8 @@
 import { FA_URL, FT_URL } from "@overbookd/web-page";
-import { openPageWithId, openPageWithIdInNewTab } from "../pages/router.utils";
+import {
+  openPageWithId,
+  openPageWithIdInNewTab,
+} from "../navigation/router.utils";
 
 type FestivalEventId = { id: number };
 

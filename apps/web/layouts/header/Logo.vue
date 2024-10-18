@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import { useTheme } from "vuetify";
 import { HOME_URL } from "@overbookd/web-page";
-import { isDesktop } from "~/utils/device/device.utils";
+import { isDesktop } from "~/utils/device.utils";
 import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const TWENTY_FOUR = 24;

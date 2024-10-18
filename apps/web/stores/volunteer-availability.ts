@@ -5,7 +5,7 @@ import {
 } from "@overbookd/volunteer-availability";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { castPeriodsWithDate } from "~/utils/http/period";
+import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
 
 const repo = VolunteerAvailabilityRepository;
 

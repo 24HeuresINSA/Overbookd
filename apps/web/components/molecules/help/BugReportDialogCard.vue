@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BugReport } from "~/utils/bug-report/bug-report.constant";
+import { BugReport } from "~/utils/bug-report.constant";
 
 const expectedBehaviour = ref<string>("");
 const actualBehaviour = ref<string>("");

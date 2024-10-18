@@ -11,7 +11,7 @@ import type {
 } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { HttpClient } from "~/utils/http/http-client";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 
 export class AssignmentsRepository implements Assignments {
   private static readonly basePath = "assignments";

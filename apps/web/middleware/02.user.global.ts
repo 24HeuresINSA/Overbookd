@@ -1,4 +1,4 @@
-import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
+import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (!needToBeLoggedIn(to)) return;

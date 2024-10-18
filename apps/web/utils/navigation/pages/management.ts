@@ -6,7 +6,7 @@ import {
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
-import type { PageInSummary } from "./navigation";
+import type { PageInSummary } from "./page-list";
 import {
   CHARISMA_EVENTS_LIST_URL,
   CHARISMA_EVENTS_MANAGE_URL,

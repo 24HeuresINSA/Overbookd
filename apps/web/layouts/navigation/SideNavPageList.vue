@@ -23,8 +23,11 @@
 
 <script lang="ts" setup>
 import SideNavPageItem from "./SideNavPageItem.vue";
-import { PageFilter } from "~/utils/pages/page.filter";
-import { summaryPages, type PageInSummary } from "~/utils/pages/navigation";
+import { PageFilter } from "~/utils/navigation/page.filter";
+import {
+  summaryPages,
+  type PageInSummary,
+} from "~/utils/navigation/pages/page-list";
 import { FA_URL, REGISTRATIONS_STAFF_URL } from "@overbookd/web-page";
 
 const navigationBadgeStore = useNavigationBadgeStore();

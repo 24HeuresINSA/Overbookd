@@ -5,10 +5,10 @@
 <script lang="ts" setup>
 import { Line } from "vue-chartjs";
 import type { OrgaNeedDetails } from "@overbookd/http";
-import type { ChartData, Dataset } from "~/utils/graph/graph";
+import type { ChartData, Dataset } from "~/utils/chartjs-graph";
 import type { ActiveElement, ChartEvent } from "chart.js";
 import { useTheme } from "vuetify";
-import { hexToRGBA } from "~/utils/color/hex-to-rgba";
+import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 
 const orgaNeedStore = useOrgaNeedStore();
 const theme = useTheme();

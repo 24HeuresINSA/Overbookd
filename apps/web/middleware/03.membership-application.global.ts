@@ -1,4 +1,4 @@
-import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
+import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 export default defineNuxtRouteMiddleware(async (to) => {

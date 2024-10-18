@@ -1,6 +1,6 @@
 import type { BreakPeriods } from "@overbookd/assignment";
 import type { IProvidePeriod } from "@overbookd/time";
-import { castPeriodsWithDate } from "~/utils/http/period";
+import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { PlanningRepository } from "../planning.repository";
 

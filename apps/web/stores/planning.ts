@@ -6,7 +6,7 @@ import {
 import { Duration, Edition } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 import { PlanningRepository } from "~/repositories/planning.repository";
-import { downloadPlanning } from "~/utils/file/planning";
+import { downloadPlanning } from "~/utils/file/download-planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 export type HasAssignment = {

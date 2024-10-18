@@ -58,7 +58,7 @@
 
 <script lang="ts" setup>
 import type { IProvidePeriod } from "@overbookd/time";
-import { marginPercent, widthPercent } from "~/utils/timeline/placement";
+import { marginPercent, widthPercent } from "~/utils/timeline-placement.utils";
 import type {
   TimelineAssignment,
   TimelineEvent,
@@ -66,7 +66,7 @@ import type {
   TimelineTask,
 } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
-import { openPageWithIdInNewTab } from "~/utils/pages/router.utils";
+import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
 const timelineStore = useTimelineStore();
 timelineStore.fetchEvents();

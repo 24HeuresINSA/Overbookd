@@ -13,7 +13,7 @@ import type {
   TimelineTask,
 } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { TimelineRepository } from "~/repositories/timeline.repository";
 

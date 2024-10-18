@@ -1,7 +1,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { jwtDecode } from "jwt-decode";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { needToBeLoggedIn } from "~/utils/pages/unauthenticated";
+import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
 import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 import { AuthRepository } from "~/repositories/auth.repository";
 

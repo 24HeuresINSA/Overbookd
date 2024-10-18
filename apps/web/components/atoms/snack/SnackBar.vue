@@ -37,8 +37,8 @@ import {
   SUCCESS,
   FAILURE,
   INFO,
-} from "~/utils/notification/snack";
-import { isDesktop as checkDesktop } from "~/utils/device/device.utils";
+} from "~/utils/snack-notification";
+import { isDesktop as checkDesktop } from "~/utils/device.utils";
 
 const themeStore = useThemeStore();
 const isDarkTheme = computed<boolean>(() => themeStore.isDark);

@@ -5,7 +5,7 @@ import {
   SUCCESS,
   type NotificationType,
   type SnackNotification,
-} from "~/utils/notification/snack";
+} from "~/utils/snack-notification";
 
 type State = {
   queue: SnackNotification[];

@@ -10,7 +10,7 @@ import type {
 import { TaskToVolunteerRepository } from "~/repositories/assignment/task-to-volunteer.repository";
 import type { HttpStringified } from "@overbookd/http";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
-import { castPeriodWithDate } from "~/utils/http/period";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import type { IProvidePeriod } from "@overbookd/time";
 import { AvailabilitiesRepository } from "~/repositories/assignment/availabilities.repository";
 import {

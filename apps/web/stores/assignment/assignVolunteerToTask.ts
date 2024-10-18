@@ -20,7 +20,10 @@ import {
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { castPeriodWithDate, castPeriodsWithDate } from "~/utils/http/period";
+import {
+  castPeriodWithDate,
+  castPeriodsWithDate,
+} from "~/utils/http/cast-date/period.utils";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];

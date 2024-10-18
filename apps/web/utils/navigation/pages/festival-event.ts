@@ -5,7 +5,7 @@ import {
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
-import type { HiddenPage, Page, PageInSummary } from "./navigation";
+import type { HiddenPage, Page, PageInSummary } from "./page-list";
 import {
   FA_URL,
   FT_URL,

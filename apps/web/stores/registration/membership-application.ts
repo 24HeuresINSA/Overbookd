@@ -7,7 +7,7 @@ import type {
   StaffApplication,
 } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { castPeriodsWithDate } from "~/utils/http/period";
+import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
 
 type State = {
   staffs: StaffCandidate[];

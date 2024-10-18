@@ -45,7 +45,7 @@ import type {
   AdherentWithContribution,
 } from "@overbookd/contribution";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { toSearchable } from "~/utils/search/search-user";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import {
   type Searchable,
   matchingSearchItems,

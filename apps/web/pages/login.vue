@@ -82,7 +82,7 @@ import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
 import { pickRandomBackground } from "~/domain/login/login";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login/login.utils";
+import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 definePageMeta({ layout: false });
 

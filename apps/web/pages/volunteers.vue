@@ -36,8 +36,11 @@
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
-import { keepMembersOf, excludeMembersOf } from "~/utils/search/search-team";
-import { toSearchable } from "~/utils/search/search-user";
+import {
+  keepMembersOf,
+  excludeMembersOf,
+} from "~/utils/search/search-team.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import {
   keepMatchingSearchCriteria,
   type Searchable,

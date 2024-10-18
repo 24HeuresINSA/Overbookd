@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 import Logo from "./Logo.vue";
 import HeaderProfile from "./HeaderProfile.vue";
-import { findPage } from "~/utils/pages/navigation";
+import { findPage } from "~/utils/navigation/pages/page-list";
 
 const PREPROD_TOOLTIP_TITLE =
   "Tu es sur la version de pré-production d'Overbookd.";

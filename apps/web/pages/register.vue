@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login/login.utils";
+import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 definePageMeta({ layout: false });
 

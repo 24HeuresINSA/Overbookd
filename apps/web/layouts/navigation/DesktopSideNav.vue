@@ -40,7 +40,7 @@ import {
   shouldFlipContent,
   shouldUnflipContent,
 } from "~/utils/easter-egg/flip-content";
-import { isDesktop } from "~/utils/device/device.utils";
+import { isDesktop } from "~/utils/device.utils";
 
 const navigationBadgeStore = useNavigationBadgeStore();
 onMounted(() => navigationBadgeStore.fetchAll());

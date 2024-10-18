@@ -39,7 +39,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   openPageWithId,
   openPageWithIdInNewTab,
-} from "~/utils/pages/router.utils";
+} from "~/utils/navigation/router.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
 
 const borrowStore = useBorrowStore();

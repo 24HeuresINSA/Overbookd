@@ -63,7 +63,7 @@ import {
   LocationFactory,
 } from "@overbookd/geo-location";
 import { isPointLocation } from "@overbookd/signa";
-import { defaultMapConfiguration } from "~/utils/location/map";
+import { defaultMapConfiguration } from "~/utils/map.config";
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {

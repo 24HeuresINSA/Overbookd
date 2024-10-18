@@ -79,7 +79,7 @@ import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
-import { toSearchable } from "~/utils/search/search-user";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 
 useHead({ title: "Admissions organisateur" });
 
