@@ -78,8 +78,8 @@ export class StaffMembershipApplicationService {
     return this.repositories.enrollCandidates.findRejectedStaffCandidates();
   }
 
-  async enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    const newcomersToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
-    await this.repositories.enrollCandidates.enroll(newcomersToEnroll);
+  enroll(candidates: CandidateToEnroll[]): Promise<void> {
+    const candidatesToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
+    return this.repositories.enrollCandidates.enroll(candidatesToEnroll);
   }
 }

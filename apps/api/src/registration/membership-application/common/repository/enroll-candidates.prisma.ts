@@ -10,7 +10,13 @@ import {
   IS_REJECTED_STAFF,
   SELECT_STAFF,
   SELECT_VOLUNTEER,
+  IS_REJECTED_VOLUNTEER,
 } from "./enroll-candidates.query";
+import {
+  MinimalCharismaPeriod,
+  SELECT_CHARISMA_PERIOD,
+} from "../../../../common/query/charisma.query";
+import { Charisma } from "@overbookd/charisma";
 
 export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -56,32 +62,54 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   }
 
   async findVolunteerCandidates(): Promise<VolunteerCandidate[]> {
-    const volunteers = await this.prisma.user.findMany({
-      orderBy: { id: "desc" },
-      where: IS_ENROLLABLE_VOLUNTEER,
-      select: SELECT_VOLUNTEER,
-    });
-    return volunteers.map(formatToEnrollableVolunteer);
+    const [volunteers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        orderBy: { id: "asc" },
+        where: IS_ENROLLABLE_VOLUNTEER,
+        select: SELECT_VOLUNTEER,
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return volunteers.map((volunteer) =>
+      formatToEnrollableVolunteer(volunteer, charismaPeriods),
+    );
   }
 
-  async findVolunteerCandidate(
-    volunteerId: number,
-  ): Promise<VolunteerCandidate | null> {
-    const volunteer = await this.prisma.user.findFirst({
-      where: { id: volunteerId, ...IS_ENROLLABLE_VOLUNTEER },
-      select: SELECT_VOLUNTEER,
+  countVolunteerCandidates(): Promise<number> {
+    return this.prisma.user.count({ where: IS_ENROLLABLE_VOLUNTEER });
+  }
+
+  async findRejectedVolunteerCandidates(): Promise<VolunteerCandidate[]> {
+    const [rejectedVolunteers, charismaPeriods] = await Promise.all([
+      this.prisma.user.findMany({
+        orderBy: { id: "asc" },
+        where: IS_REJECTED_VOLUNTEER,
+        select: SELECT_VOLUNTEER,
+      }),
+      this.selectCharismaPeriods(),
+    ]);
+    return rejectedVolunteers.map((volunteer) =>
+      formatToEnrollableVolunteer(volunteer, charismaPeriods),
+    );
+  }
+
+  private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
+    return this.prisma.charismaPeriod.findMany({
+      select: SELECT_CHARISMA_PERIOD,
     });
-    if (!volunteer) return null;
-    return formatToEnrollableVolunteer(volunteer);
   }
 }
 
 function formatToEnrollableVolunteer(
   volunteer: DatabaseEnrollableVolunteer,
+  charismaPeriods: MinimalCharismaPeriod[],
 ): VolunteerCandidate {
+  const charisma = Charisma.init()
+    .addAvailabilities(volunteer.availabilities, charismaPeriods)
+    .calculate();
   return {
     ...formatToStaffCandidate(volunteer),
-    charisma: volunteer.charisma,
+    charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
     registeredAt: volunteer.createdAt,

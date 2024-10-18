@@ -1,3 +1,4 @@
+import { BE_AFFECTED } from "@overbookd/permission";
 import type { Credentials } from "@overbookd/registration";
 import { HOME_URL } from "@overbookd/web-page";
 
@@ -10,10 +11,15 @@ export async function loginAndApplyForMembership(
   if (!authStore.authenticated) return;
   navigateTo(HOME_URL);
 
-  if (!token) return;
   const membershipApplicationStore = useMembershipApplicationStore();
-  membershipApplicationStore.applyAsStaff({
-    email: credentials.email,
-    token,
-  });
+  if (token) {
+    membershipApplicationStore.submitStaffApplication({
+      email: credentials.email,
+      token,
+    });
+    return;
+  }
+  const userStore = useUserStore();
+  if (userStore.can(BE_AFFECTED)) return;
+  membershipApplicationStore.submitVolunteerApplication(credentials.email);
 }

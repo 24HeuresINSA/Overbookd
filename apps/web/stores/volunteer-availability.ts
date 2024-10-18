@@ -46,7 +46,7 @@ export const useVolunteerAvailabilityStore = defineStore(
         this._initAvailabilities(castPeriodsWithDate(res));
 
         const userStore = useUserStore();
-        userStore.fetchMyInformation();
+        userStore.fetchMyInformations();
       },
 
       async overrideVolunteerAvailabilities(

@@ -15,7 +15,6 @@ export const SELECT_STAFF = {
 
 export const SELECT_VOLUNTEER = {
   ...SELECT_STAFF,
-  charisma: true,
   availabilities: { select: SELECT_PERIOD },
   phone: true,
   createdAt: true,
@@ -67,8 +66,14 @@ const IS_NOT_VOLUNTEER = {
 export const IS_ENROLLABLE_VOLUNTEER = {
   ...IS_NOT_DELETED,
   ...IS_NOT_VOLUNTEER,
-  ...IS_NOT_HARD,
   ...buildHasMembershipApplicationCondition(VOLUNTEER),
+};
+
+export const IS_REJECTED_VOLUNTEER = {
+  ...IS_NOT_DELETED,
+  ...IS_NOT_VOLUNTEER,
+  ...IS_NOT_HARD,
+  ...buildHasRejectedMembershipApplicationCondition(VOLUNTEER),
 };
 
 export type DatabaseStaffCandidate = {
@@ -81,7 +86,6 @@ export type DatabaseStaffCandidate = {
 
 export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
   availabilities: IProvidePeriod[];
-  charisma: number;
   phone: string;
   comment: string | null;
   birthdate: Date;

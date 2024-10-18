@@ -22,13 +22,17 @@
 </template>
 
 <script lang="ts" setup>
-import SideNavPageItem from "./SideNavPageItem.vue";
-import { PageFilter } from "~/utils/navigation/page.filter";
 import {
   summaryPages,
   type PageInSummary,
 } from "~/utils/navigation/pages/page-list";
-import { FA_URL, REGISTRATIONS_STAFF_URL } from "@overbookd/web-page";
+import SideNavPageItem from "./SideNavPageItem.vue";
+import {
+  FA_URL,
+  REGISTRATIONS_STAFF_URL,
+  REGISTRATIONS_VOLUNTEER_URL,
+} from "@overbookd/web-page";
+import { PageFilter } from "~/utils/navigation/page.filter";
 
 const navigationBadgeStore = useNavigationBadgeStore();
 
@@ -44,13 +48,16 @@ const props = defineProps({
 });
 
 const pagesWithBadge = computed<PageInSummary[]>(() => {
-  const { myRefusedActivities, recentStaffNewcomers } = navigationBadgeStore;
+  const { myRefusedActivities, staffCandidates, volunteerCandidates } =
+    navigationBadgeStore;
   return summaryPages.map((page) => {
     switch (page.to) {
       case FA_URL:
         return { ...page, badgeValue: myRefusedActivities };
       case REGISTRATIONS_STAFF_URL:
-        return { ...page, badgeValue: recentStaffNewcomers };
+        return { ...page, badgeValue: staffCandidates };
+      case REGISTRATIONS_VOLUNTEER_URL:
+        return { ...page, badgeValue: volunteerCandidates };
       default:
         return page;
     }

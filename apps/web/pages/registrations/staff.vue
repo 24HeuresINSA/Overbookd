@@ -46,14 +46,14 @@
               text="Rejeter la candidature"
               color="tertiary"
               size="small"
-              @click="rejectApplication(item.id)"
+              @click="rejectCandidate(item.id)"
             />
             <v-btn
               v-show="displayRejectedCandidates"
               text="Annuler le rejet"
               color="tertiary"
               size="small"
-              @click="cancelApplicationRejection(item.id)"
+              @click="cancelCandidateRejection(item.id)"
             />
           </template>
         </v-data-table>
@@ -63,10 +63,10 @@
         <v-spacer />
         <v-btn
           v-if="!displayRejectedCandidates"
-          text=" Enrôler en tant que hard"
+          text="Enrôler en tant que hard"
           :disabled="noStaffSelected"
           size="large"
-          @click="enrollNewcomers"
+          @click="enrollCandidates"
         />
       </v-card-actions>
     </v-card>
@@ -97,60 +97,60 @@ const searchedCandidate = ref<string>("");
 const selectedCandidates = ref<StaffCandidate[]>([]);
 
 const cadidates = computed<StaffCandidate[]>(
-  () => membershipApplicationStore.staffs,
+  () => membershipApplicationStore.staffCandidates,
 );
 const loading = ref<boolean>(cadidates.value.length === 0);
 membershipApplicationStore
   .fetchStaffCandidates()
   .then(() => (loading.value = false));
+const searchableEnrollableCandidates = computed<Searchable<StaffCandidate>[]>(
+  () => cadidates.value.map(toSearchable),
+);
 
 const displayRejectedCandidates = ref<boolean>(false);
 const rejectedCandidates = computed<StaffCandidate[]>(
-  () => membershipApplicationStore.rejectedStaffs,
+  () => membershipApplicationStore.rejectedStaffCandidates,
 );
 const searchableRejectedCandidates = computed<Searchable<StaffCandidate>[]>(
   () => rejectedCandidates.value.map(toSearchable),
 );
 
-const noStaffSelected = computed<boolean>(
-  () => selectedCandidates.value.length === 0,
-);
-
-const searchableCandidates = computed<Searchable<StaffCandidate>[]>(() =>
-  cadidates.value.map(toSearchable),
-);
-const filteredCandidates = computed<StaffCandidate[]>(() =>
-  displayRejectedCandidates.value
-    ? matchingSearchItems(
-        searchableRejectedCandidates.value,
-        searchedCandidate.value,
-      )
-    : matchingSearchItems(searchableCandidates.value, searchedCandidate.value),
-);
-
-const enrollNewcomers = () => {
-  membershipApplicationStore.enrollStaffs(selectedCandidates.value);
-  selectedCandidates.value = [];
-};
-const rejectApplication = (candidateId: number) => {
-  membershipApplicationStore.rejectForStaff(candidateId);
-};
-
-const cancelApplicationRejection = (candidateId: number) => {
-  membershipApplicationStore.cancelRejectionForStaff(candidateId);
-};
+const filteredCandidates = computed<StaffCandidate[]>(() => {
+  const searchableCandidates = displayRejectedCandidates.value
+    ? searchableRejectedCandidates.value
+    : searchableEnrollableCandidates.value;
+  return matchingSearchItems(searchableCandidates, searchedCandidate.value);
+});
 
 const toggleRejectedCandidates = () => {
   displayRejectedCandidates.value = !displayRejectedCandidates.value;
   if (!displayRejectedCandidates.value) {
-    membershipApplicationStore.fetchStaffCandidates();
+    loading.value = cadidates.value.length === 0;
+    membershipApplicationStore.fetchStaffCandidates().then(() => {
+      loading.value = false;
+    });
     return;
   }
-
+  selectedCandidates.value = [];
   loading.value = rejectedCandidates.value.length === 0;
   membershipApplicationStore
     .fetchRejectedStaffCandidates()
     .then(() => (loading.value = false));
+};
+
+const noStaffSelected = computed<boolean>(
+  () => selectedCandidates.value.length === 0,
+);
+
+const enrollCandidates = () => {
+  membershipApplicationStore.enrollNewStaffs(selectedCandidates.value);
+  selectedCandidates.value = [];
+};
+const rejectCandidate = (candidateId: number) => {
+  membershipApplicationStore.rejectStaffCandidate(candidateId);
+};
+const cancelCandidateRejection = (candidateId: number) => {
+  membershipApplicationStore.cancelStaffCandidateRejection(candidateId);
 };
 </script>
 

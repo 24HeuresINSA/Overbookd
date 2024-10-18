@@ -29,7 +29,7 @@ import { ENROLL_HARD } from "@overbookd/permission";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
-import { CandidateRequestDto } from "../common/dto/candidate.request.dto";
+import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/staffs")
@@ -51,13 +51,13 @@ export class StaffMembershipApplicationController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Staff application",
+    description: "Staff application submitted",
   })
   @ApiBody({
-    type: CandidateRequestDto,
+    type: StaffCandidateRequestDto,
     description: "Candidate",
   })
-  applyFor(@Body() { email, token }: CandidateRequestDto): Promise<void> {
+  applyFor(@Body() { email, token }: StaffCandidateRequestDto): Promise<void> {
     return this.applicationService.applyFor(email, token);
   }
 
@@ -67,7 +67,7 @@ export class StaffMembershipApplicationController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: "Get all staffs",
+    description: "Get all staff candidates",
     type: StaffCandidateResponseDto,
     isArray: true,
   })
@@ -78,10 +78,10 @@ export class StaffMembershipApplicationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
-  @Get("unenrolled/count")
+  @Get("candidates/count")
   @ApiResponse({
     status: 200,
-    description: "Get the count of unenrolled staffs",
+    description: "Get the staff candidates count",
   })
   countCandidates(): Promise<number> {
     return this.applicationService.countCandidates();
@@ -93,7 +93,7 @@ export class StaffMembershipApplicationController {
   @Get("rejected")
   @ApiResponse({
     status: 200,
-    description: "Get all rejected staffs",
+    description: "Get all rejected staff candidates",
     type: StaffCandidateResponseDto,
     isArray: true,
   })
@@ -108,10 +108,10 @@ export class StaffMembershipApplicationController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Staff enrolled to a team",
+    description: "Staff candidates enrolled",
   })
   @ApiBody({
-    description: "Staffs to enroll to a team",
+    description: "Staffs candidates to enroll",
     type: EnrollCandidatesRequestDto,
   })
   enroll(@Body() { candidates }: EnrollCandidatesRequestDto): Promise<void> {
@@ -125,7 +125,7 @@ export class StaffMembershipApplicationController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Reject staff application",
+    description: "Staff application rejected",
   })
   @ApiParam({
     name: "candidateId",
@@ -144,7 +144,7 @@ export class StaffMembershipApplicationController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Cancel staff application rejection",
+    description: "Staff application rejection canceled",
   })
   @ApiParam({
     name: "candidateId",

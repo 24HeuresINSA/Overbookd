@@ -116,7 +116,7 @@ export const useTransactionStore = defineStore("transaction", {
     async _fetchMyInformation() {
       await this.fetchMyTransactions();
       const userStore = useUserStore();
-      userStore.fetchMyInformation();
+      userStore.fetchMyInformations();
     },
   },
 });

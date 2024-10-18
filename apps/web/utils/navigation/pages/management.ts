@@ -1,6 +1,7 @@
 import {
   AFFECT_VOLUNTEER,
   ENROLL_HARD,
+  ENROLL_SOFT,
   MANAGE_CHARISMA_EVENTS,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -15,6 +16,7 @@ import {
   CONTRIBUTIONS_URL,
   ORGA_NEED_URL,
   REGISTRATIONS_STAFF_URL,
+  REGISTRATIONS_VOLUNTEER_URL,
   SG_URL,
   TRANSACTIONS_URL,
 } from "@overbookd/web-page";
@@ -47,16 +49,22 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   ],
 };
 
-// const REGISTRATIONS_SOFT_PAGE: Page = {
-//   icon: "mdi-account-multiple-check",
-//   title: "Admission Bénévoles",
-//   permission: ENROLL_SOFT,
-//   to: REGISTRATIONS_VOLUNTEER_URL,
-//   description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   keywords: ["nouveaux-arrivants", "inscriptions", "admissions", "benevoles", "softs"],
-// };
+const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
+  icon: "mdi-account-multiple-check",
+  title: "Admission Bénévoles",
+  permission: ENROLL_SOFT,
+  to: REGISTRATIONS_VOLUNTEER_URL,
+  description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
+  mobileSupport: false,
+  canBeFavorite: true,
+  keywords: [
+    "nouveaux-arrivants",
+    "inscriptions",
+    "admissions",
+    "benevoles",
+    "softs",
+  ],
+};
 
 const CONTRIBUTIONS_PAGE: PageInSummary = {
   icon: "mdi-cash-multiple",
@@ -176,7 +184,7 @@ const ORGA_NEED_PAGE: PageInSummary = {
 export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CONFIGURATION_PAGE,
   REGISTRATIONS_HARD_PAGE,
-  // REGISTRATIONS_SOFT_PAGE,
+  REGISTRATIONS_SOFT_PAGE,
   CONTRIBUTIONS_PAGE,
   SG_PAGE,
   TRANSACTIONS_PAGE,
