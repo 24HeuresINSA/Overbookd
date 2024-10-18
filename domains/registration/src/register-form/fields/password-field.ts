@@ -1,11 +1,15 @@
 import { Field } from "./field.js";
 import { Rule } from "./rule.js";
 
+// prettier-ignore
+// eslint-disable-next-line no-useless-escape
+export const SPECIAL_CHARS_REGEX_PATERN = "[!@#$%^&*+=_.,;:?{}()\/\|\\\-]";
+
 export class PasswordField implements Field<string> {
   private readonly minusculePattern = new RegExp("[a-z]");
   private readonly majusculePattern = new RegExp("[A-Z]");
   private readonly numberPattern = new RegExp("[0-9]");
-  private readonly specialCharPattern = new RegExp("[!@#$%^&*=+_{}[]()|.]");
+  private readonly specialCharPattern = new RegExp(SPECIAL_CHARS_REGEX_PATERN);
   private readonly minPasswordLength = 12;
 
   private readonly containsMinuscule: Rule<string> = {

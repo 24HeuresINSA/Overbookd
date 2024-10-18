@@ -69,6 +69,7 @@ export {
   RegisterForm,
   RegistrationError,
 } from "./register-form/register-form.js";
+export { SPECIAL_CHARS_REGEX_PATERN } from "./register-form/fields/password-field.js";
 
 // Membership Application
 export type {

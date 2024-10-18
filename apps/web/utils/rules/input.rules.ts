@@ -1,3 +1,5 @@
+import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
+
 export function isNumber(value: string | null): boolean | string {
   const message = "La valeur doit être un nombre";
   return (value != undefined && !isNaN(parseInt(value, 10))) || message;
@@ -65,10 +67,9 @@ export function isMobilePhoneNumber(value: string | null) {
   return (value && mobilePhoneNumberPattern.test(value)) || message;
 }
 
+// eslint-disable-next-line security/detect-non-literal-regexp
 export const passwordPattern = new RegExp(
-  // prettier-ignore
-  // eslint-disable-next-line no-useless-escape
-  "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*+=_.,;:?{}()\/\|\\\-]).{12,}$",
+  `^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*${SPECIAL_CHARS_REGEX_PATERN}).{12,}`,
 );
 
 export function password(value: string | null) {
