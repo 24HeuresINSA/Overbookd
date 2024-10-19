@@ -2,7 +2,7 @@
   <v-card
     class="calendar-event"
     :class="{ unclickable: !event.link }"
-    :color="event.color"
+    :color="event.color || 'primary'"
     :style="{
       top: `${eventTopPositionInPixels}px`,
       height: `${eventHeightInPixels}px`,
@@ -32,7 +32,7 @@ const props = defineProps({
     type: Object as PropType<CalendarEvent>,
     required: true,
   },
-  currentDay: {
+  displayedDay: {
     type: Date,
     required: true,
   },
@@ -45,9 +45,9 @@ const props = defineProps({
 const PIXELS_PER_MINUTE = 0.75;
 
 const displayedEventPeriod = computed<Period>(() => {
-  const currentDayStart = new Date(props.currentDay);
+  const currentDayStart = new Date(props.displayedDay);
   currentDayStart.setHours(0, 0, 0, 0);
-  const currentDayEnd = new Date(props.currentDay);
+  const currentDayEnd = new Date(props.displayedDay);
   currentDayEnd.setHours(23, 59, 59, 999);
 
   const validStart =

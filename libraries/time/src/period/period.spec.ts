@@ -30,6 +30,8 @@ import {
   friday08hto09h30,
   friday08h30to09h,
   friday08h15to09h,
+  thursday20hToFriday04h,
+  saturday02hTo04h,
 } from "./period.test-utils";
 
 describe("Create a period", () => {
@@ -162,4 +164,19 @@ describe("Remove period from another", () => {
       });
     },
   );
+});
+
+describe("Period is in day", () => {
+  const friday = new Date("2024-05-17");
+  describe.each`
+    description                                                 | period                              | expectedResult
+    ${"start and end are in the same day"}                      | ${friday08hto09h}                   | ${true}
+    ${"start is in the day and the end is in the next day"}     | ${friday23h59m50toSaturday00h00m02} | ${true}
+    ${"start is in the previous day and the end is in the day"} | ${thursday20hToFriday04h}           | ${true}
+    ${"start and end are in different days"}                    | ${saturday02hTo04h}                 | ${false}
+  `("when $description", ({ period, expectedResult }) => {
+    it(`should return ${expectedResult}`, () => {
+      expect(period.isInDay(friday)).toBe(expectedResult);
+    });
+  });
 });

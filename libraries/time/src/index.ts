@@ -14,6 +14,7 @@ export {
   isDateString,
   isHour,
 } from "./date/date.js";
+export * from "./date/format-date.utils.js";
 export * from "./date/date.utils.js";
 
 export { Edition, BASE_EDITION_STARTS } from "./edition/edition.js";

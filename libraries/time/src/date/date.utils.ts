@@ -1,65 +1,4 @@
-import {
-  ONE_DAY_IN_MS,
-  ONE_HOUR_IN_MS,
-} from "../duration/duration.constant.js";
-import { PARIS_TIMEZONE } from "./date.js";
-
-type DateSeed = Date | string | number;
-
-// return format dd/mm/yyyy hh:mm
-export function formatDateWithMinutes(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
-// return format dd/mm/yyyy
-export function formatDate(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
-// return format month YYYY
-export function formatMonthWithYear(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
-// return format yyyy-mm-ddThh:mm
-export function formatLocalDateTime(date: Date): string {
-  const year = date.getFullYear();
-  const month = getTwoDigitsNumber(date.getMonth() + 1);
-  const day = getTwoDigitsNumber(date.getDate());
-  const hours = getTwoDigitsNumber(date.getHours());
-  const minutes = getTwoDigitsNumber(date.getMinutes());
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
-
-// return format yyyy-mm-dd
-export function formatLocalDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = getTwoDigitsNumber(date.getMonth() + 1);
-  const day = getTwoDigitsNumber(date.getDate());
-  return `${year}-${month}-${day}`;
-}
-
-function getTwoDigitsNumber(number: number): string {
-  return number < 10 ? "0" + number : number.toString();
-}
+import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "../duration/duration.constant";
 
 export function getHourDiff(start: Date, end: Date): number {
   const diff = end.getTime() - start.getTime();
@@ -77,61 +16,20 @@ export function roundMinutes(date: Date, round: number): Date | null {
   return date;
 }
 
-// return month YYYY
-export function formatDateWithExplicitMonth(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "long",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
-// return dd month YYYY
-export function formatDateWithExplicitMonthAndDay(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
-export function formatDateDayName(date: DateSeed): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    ...PARIS_TIMEZONE,
-    weekday: "short",
-  });
-}
-
-export function formatDateDayNumber(date: DateSeed): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    ...PARIS_TIMEZONE,
-    day: "numeric",
-  });
-}
-
 export function computeTomorrowDate(date: Date): Date {
   return new Date(date.getTime() + ONE_DAY_IN_MS);
 }
 
-export function formatDateToHumanReadable(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    dateStyle: "long",
-    timeStyle: "short",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
+export function getMonday(date: Date): Date {
+  const newDate = new Date(date);
+  const currentDay = newDate.getDay();
 
-export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  const isSunday = currentDay === 0;
+  const baseOffset = isSunday ? -6 : 1;
+  const daysToMonday = baseOffset - currentDay;
+
+  newDate.setDate(newDate.getDate() + daysToMonday);
+  return newDate;
 }
 
 export function isSameDay(date1: Date, date2: Date): boolean {
@@ -140,6 +38,12 @@ export function isSameDay(date1: Date, date2: Date): boolean {
     date1.getMonth() === date2.getMonth() &&
     date1.getFullYear() === date2.getFullYear()
   );
+}
+
+export function isSameWeek(date1: Date, date2: Date): boolean {
+  const weekStart1 = getMonday(date1);
+  const weekStart2 = getMonday(date2);
+  return isSameDay(weekStart1, weekStart2);
 }
 
 export function displayForCalendar(date: Date): string {

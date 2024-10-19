@@ -1,56 +1,60 @@
 <template>
-  <div class="daily-calendar">
-    <DailyCalendarHeader v-model="currentDay" />
+  <div class="calendar-with-manager">
+    <CalendarManager v-model="displayedDay" :mode="mode" />
+    <div class="calendar">
+      <DailyCalendarHeader :displayed-day="displayedDay" />
 
-    <div class="calendar-time">
-      <div v-for="hour in HOURS_IN_DAY" :key="hour" class="calendar-time__hour">
-        <p class="hour-indicator">{{ formatDateNumberValue(hour) }}:00</p>
+      <div class="calendar-time">
+        <div
+          v-for="hour in HOURS_IN_DAY"
+          :key="hour"
+          class="calendar-time__hour"
+        >
+          <p class="hour-indicator">{{ formatDateNumberValue(hour) }}:00</p>
+        </div>
       </div>
-    </div>
 
-    <div class="calendar-content">
-      <div
-        v-for="hour in HOURS_IN_DAY"
-        :key="hour"
-        class="calendar-content__hour"
-      />
-
-      <CalendarEvent
-        v-for="event in events"
-        v-show="isEventInDay(event)"
-        :key="event.name"
-        :event="event"
-        :current-day="currentDay"
-        :overlapping-events="getOverlappingEvents(event)"
-      />
+      <div class="calendar-content">
+        <div
+          v-for="hour in HOURS_IN_DAY"
+          :key="hour"
+          class="calendar-content__hour"
+        />
+        <CalendarEvent
+          v-for="event in events"
+          v-show="isEventInDisplayedDay(event)"
+          :key="event.name"
+          :event="event"
+          :displayed-day="displayedDay"
+          :overlapping-events="getOverlappingEvents(event, events)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Period, HOURS_IN_DAY } from "@overbookd/time";
-import { formatDateNumberValue } from "~/utils/calendar/calendar.utils";
+import { HOURS_IN_DAY, Period } from "@overbookd/time";
+import {
+  DAY_MODE,
+  formatDateNumberValue,
+  getOverlappingEvents,
+  type CalendarMode,
+} from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-const props = defineProps({
+defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     default: () => [],
   },
 });
 
-const currentDay = ref<Date>(new Date());
+const displayedDay = ref<Date>(new Date());
+const mode = ref<CalendarMode>(DAY_MODE);
 
-const isEventInDay = (event: CalendarEvent) => {
-  const startDate = currentDay.value.toDateString();
-  const isSameStartDay = event.start.toDateString() === startDate;
-  const isInEndDay = event.end.toDateString() === startDate;
-  return isSameStartDay || isInEndDay;
-};
-
-const getOverlappingEvents = (event: CalendarEvent) => {
-  const eventPeriod = Period.init(event);
-  return props.events.filter((e) => Period.init(e).isOverlapping(eventPeriod));
+const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
+  return Period.init(event).isInDay(displayedDay.value);
 };
 </script>
 
@@ -58,8 +62,15 @@ const getOverlappingEvents = (event: CalendarEvent) => {
 @import "./calendar.scss";
 
 $hour-height: 45px;
+$calendar-content-height: $hour-height * 24;
 
-.daily-calendar {
+.calendar-with-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.calendar {
   width: 100%;
   min-width: 300px;
   display: grid;
@@ -72,7 +83,7 @@ $hour-height: 45px;
 }
 
 .calendar-time {
-  height: $hour-height * 24;
+  height: $calendar-content-height;
   width: 60px;
   grid-row: 2;
   grid-column: 1;
@@ -113,7 +124,7 @@ $hour-height: 45px;
 
 .calendar-content {
   position: relative;
-  height: $hour-height * 24;
+  height: $calendar-content-height;
   grid-row: 2;
   grid-column: 2;
   border-bottom-right-radius: $calendar-radius;

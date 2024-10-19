@@ -164,6 +164,13 @@ export class Period {
     });
   }
 
+  isInDay(day: Date): boolean {
+    const startDate = day.toDateString();
+    const isSameStartDay = this.start.toDateString() === startDate;
+    const isInEndDay = this.end.toDateString() === startDate;
+    return isSameStartDay || isInEndDay;
+  }
+
   toString(): string {
     const start = this.formatDate(this.start);
     const end = this.formatDate(this.end);

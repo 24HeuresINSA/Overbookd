@@ -1,85 +1,62 @@
 <template>
-  <header class="header">
-    <v-btn
-      icon="mdi-chevron-left"
-      variant="plain"
-      size="x-large"
-      density="comfortable"
-      rounded="pill"
-      @click="moveToPreviousDay"
-    />
-    <div class="header__day" :class="{ today }">
-      <p class="header__day-name">{{ displayableDay.name }}</p>
-      <p class="header__day-number">{{ displayableDay.number }}</p>
-    </div>
-    <v-btn
-      icon="mdi-chevron-right"
-      variant="plain"
-      size="x-large"
-      density="comfortable"
-      rounded="pill"
-      @click="moveToNextDay"
-    />
+  <header class="header-day" :class="{ today: isToday }">
+    <p class="header-day__name">{{ displayableDay.name }}</p>
+    <p class="header-day__number">{{ displayableDay.number }}</p>
   </header>
 </template>
 
 <script lang="ts" setup>
-import { ONE_DAY_IN_MS } from "@overbookd/time";
-import { isToday, type CalendarDay } from "~/utils/calendar/calendar.utils";
+import { isSameDay } from "@overbookd/time";
+import type { CalendarDay } from "~/utils/calendar/calendar.utils";
 
-const currentDay = defineModel<Date>({ required: true });
+const props = defineProps({
+  displayedDay: {
+    type: Date,
+    required: true,
+  },
+});
 
 const displayableDay = computed<CalendarDay>(() => {
-  const name = currentDay.value
+  const name = props.displayedDay
     .toLocaleDateString("fr-FR", { weekday: "long" })
     .toUpperCase();
-  const number = currentDay.value.getDate();
+  const number = props.displayedDay.getDate();
   return { name, number };
 });
 
-const moveToPreviousDay = () => {
-  currentDay.value = new Date(currentDay.value.getTime() - ONE_DAY_IN_MS);
-};
-const moveToNextDay = () => {
-  currentDay.value = new Date(currentDay.value.getTime() + ONE_DAY_IN_MS);
-};
-
-const today = computed<boolean>(() => isToday(currentDay.value));
+const isToday = computed<boolean>(() => {
+  const today = new Date();
+  return isSameDay(props.displayedDay, today);
+});
 </script>
 
 <style lang="scss" scoped>
 @import "./calendar.scss";
 
-.header {
+.header-day {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   grid-row: 1;
   grid-column: 2;
   border-top-right-radius: $calendar-radius;
   border-left: 1px solid rgb(var(--v-theme-on-surface));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px;
 
-  &__day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 10px;
-
-    &-name {
-      font-size: 1.2rem;
-    }
-    &-number {
-      font-size: 2rem;
-      font-weight: 700;
-      line-height: 1.1;
-    }
+  &__name {
+    font-size: 1.2rem;
   }
-
-  .today {
-    color: rgb(var(--v-theme-primary));
+  &__number {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
   }
+}
+
+.today {
+  color: rgb(var(--v-theme-primary));
 }
 </style>
