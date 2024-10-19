@@ -1,3 +1,26 @@
+## [3.9.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.8.1...v3.9.0) (2024-10-19)
+
+
+### Features
+
+* **membership-application:** add volunteer application and enrollement page [#2173](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2173) ([cbb4a51](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cbb4a51f98cc5cf788810f493aafba13b68d165c))
+
+
+### Bug Fixes
+
+* **display:** improve register and reset password pages display [#2187](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2187) ([0a0e559](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0a0e559bdd1feffc3371bd396c3d55a0a796f807))
+* **registration:** add more special caracteres for the password [#2190](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2190) ([733e45a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/733e45a66c02c79b8e1b835489df06c081a39b25))
+
+
+### Pre-Features
+
+* **calendar:** create template of daily calendar [#2184](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2184) ([2698f2c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2698f2ce5a73c82e010abc6f8a7dcfd86898024f))
+
+
+### Refactor
+
+* **web:** sort utils [#2116](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2116) ([b8cdb6e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b8cdb6e1365526c4d85e95fd6ec8b61291f416a5))
+
 ## [3.8.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.8.0...v3.8.1) (2024-10-16)
 
 
