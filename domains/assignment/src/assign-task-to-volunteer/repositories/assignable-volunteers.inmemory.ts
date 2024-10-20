@@ -9,6 +9,7 @@ export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}
 
   on(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     assignmentIdentifier: AssignmentIdentifier,
     { oneOfTheTeams }: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {

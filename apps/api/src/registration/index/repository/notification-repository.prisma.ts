@@ -12,7 +12,7 @@ export class PrismaNotificationRepository implements NotificationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async add(
-    event: StaffRegistered,
+    _event: StaffRegistered,
     clause: FilterNotifyees,
   ): Promise<Notifyee[]> {
     const notifyees = await this.findNotifyees(clause);

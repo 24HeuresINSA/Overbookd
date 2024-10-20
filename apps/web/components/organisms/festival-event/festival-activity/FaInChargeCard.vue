@@ -4,8 +4,7 @@
     <v-card-subtitle>
       <p>
         N'hésite pas si tu as des questions à contacter
-        <a :href="`mailto:${HUMAINS_EMAIL}`">{{ HUMAINS_EMAIL }}</a
-        >.
+        <a :href="`mailto:${HUMAINS_EMAIL}`">{{ HUMAINS_EMAIL }}</a>.
       </p>
       <p>
         Tu peux aussi t'aider en allant voir les FA de l'année dernière sur

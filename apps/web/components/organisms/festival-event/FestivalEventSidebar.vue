@@ -5,7 +5,7 @@
 
     <v-card-text>
       <div id="status">
-        <span id="dot" :class="status"></span>
+        <span id="dot" :class="status" />
         <h3>{{ statusLabel }}</h3>
       </div>
 

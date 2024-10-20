@@ -8,7 +8,7 @@ export class InMemoryFriends implements Friends {
   ) {}
 
   availableDuringWith(
-    period: Period,
+    _period: Period,
     volunteer: AssignableVolunteer["id"],
   ): Promise<AssignableVolunteer[]> {
     return Promise.resolve(this.friends.get(volunteer) ?? []);

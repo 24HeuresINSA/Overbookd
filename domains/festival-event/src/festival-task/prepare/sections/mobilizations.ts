@@ -33,17 +33,17 @@ class SplitablePeriod {
   }
 }
 
-const defaultOptions = {
+const _defaultOptions = {
   withConflicts: false,
   withAssignments: false,
 } as const;
 
 export class Mobilizations {
   private constructor(
-    private readonly mobilizations: Mobilization<typeof defaultOptions>[],
+    private readonly mobilizations: Mobilization<typeof _defaultOptions>[],
   ) {}
 
-  static build(mobilizations: Mobilization<typeof defaultOptions>[]) {
+  static build(mobilizations: Mobilization<typeof _defaultOptions>[]) {
     return new Mobilizations(mobilizations);
   }
 
@@ -139,7 +139,7 @@ export class Mobilizations {
 
   private retrieveMobilization(
     id: Mobilization["id"],
-  ): ListItem<Mobilization<typeof defaultOptions>> {
+  ): ListItem<Mobilization<typeof _defaultOptions>> {
     const index = this.mobilizations.findIndex(
       ({ id: currentId }) => currentId === id,
     );
@@ -148,20 +148,21 @@ export class Mobilizations {
     return { index, value };
   }
 
-  private has(mobilization: Mobilization<typeof defaultOptions>) {
+  private has(mobilization: Mobilization<typeof _defaultOptions>) {
     return this.mobilizations.some(({ id }) => id === mobilization.id);
   }
 
-  get json(): Mobilization<typeof defaultOptions>[] {
+  get json(): Mobilization<typeof _defaultOptions>[] {
     return [...this.mobilizations];
   }
 }
 class MobilizationFactory {
   private constructor(
-    private readonly mobilization: Mobilization<typeof defaultOptions>,
+    private readonly mobilization: Mobilization<typeof _defaultOptions>,
   ) {}
 
   static init(form: AddMobilization): MobilizationFactory {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { durationSplitInHour, teams, volunteers, ...period } = form;
     this.checkPeriod(durationSplitInHour, period);
     const id = this.generateId(period);
@@ -169,7 +170,7 @@ class MobilizationFactory {
     return new MobilizationFactory({ ...form, id });
   }
 
-  static build(mobilization: Mobilization<typeof defaultOptions>) {
+  static build(mobilization: Mobilization<typeof _defaultOptions>) {
     return new MobilizationFactory(mobilization);
   }
 
@@ -239,7 +240,7 @@ class MobilizationFactory {
     return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
   }
 
-  get json(): Mobilization<typeof defaultOptions> {
+  get json(): Mobilization<typeof _defaultOptions> {
     return this.mobilization;
   }
 }

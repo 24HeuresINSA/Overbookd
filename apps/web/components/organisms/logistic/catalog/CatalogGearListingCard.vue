@@ -31,8 +31,7 @@
               item.category?.name
             }}</span>
             <span class="category-details__path">
-              {{ item.category?.path }}</span
-            >
+              {{ item.category?.path }}</span>
           </div>
         </template>
 

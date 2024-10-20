@@ -20,7 +20,7 @@ export const useRegistrationStore = defineStore("registration", {
       );
     },
 
-    async forget(membership: Membership, email: string) {
+    async forget(_membership: Membership, email: string) {
       const res = await RegistrationRepository.forgetHim(email);
       if (isHttpError(res)) return;
       sendSuccessNotification("Bénévole supprimé 🗑️");

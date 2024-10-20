@@ -28,9 +28,11 @@
             <nuxt-link :to="`${FT_URL}/${task.id}`">
               FT #{{ task.id }} - {{ task.name }}
             </nuxt-link>
-            <v-chip color="tertiary" size="x-small" class="ml-1">{{
-              task.count
-            }}</v-chip>
+            <v-chip color="tertiary" size="x-small" class="ml-1">
+              {{
+                task.count
+              }}
+            </v-chip>
           </li>
         </ul>
         <p v-else>Aucune demande</p>

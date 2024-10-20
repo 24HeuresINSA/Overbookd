@@ -116,6 +116,7 @@ export class MobilizationBuilder<T extends WithConflicts> {
   }
 
   get form(): AddMobilization {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...form } = this.mobilization;
     return form;
   }

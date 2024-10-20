@@ -27,6 +27,7 @@ export function updateQueryParams(key: string, value: QueryParam) {
 
   const isEmpty = Array.isArray(value) ? value.length === 0 : !value;
   if (isEmpty) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [key]: remove, ...remainingQuery } = currentQuery;
     navigateTo({ path, query: remainingQuery });
     return;

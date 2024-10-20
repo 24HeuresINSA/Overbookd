@@ -6,7 +6,7 @@ import { Duration } from "@overbookd/time";
 @Injectable()
 export class ThrottlerGuardCustom extends ThrottlerGuard {
   protected throwThrottlingException(
-    context: ExecutionContext,
+    _context: ExecutionContext,
     { ttl }: ThrottlerLimitDetail,
   ): Promise<void> {
     const ttlInSeconds = Duration.ms(ttl).inSeconds;

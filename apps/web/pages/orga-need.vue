@@ -76,7 +76,7 @@ const fetchStats = async () => {
   const period = { start: start.value, end: end.value };
   try {
     Period.init(period);
-  } catch (error) {
+  } catch (_error) {
     sendFailureNotification("La plage horaire est invalide");
     return;
   }

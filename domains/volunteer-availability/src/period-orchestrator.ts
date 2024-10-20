@@ -38,6 +38,7 @@ export class PeriodOrchestrator {
         try {
           Availability.fromPeriod(period);
           return false;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           return true;
         }

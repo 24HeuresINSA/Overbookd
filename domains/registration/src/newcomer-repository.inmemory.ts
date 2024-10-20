@@ -30,6 +30,7 @@ export class InMemoryNewcomerRepository implements NewcomerRepository {
     fulfilledForm: FulfilledRegistration,
     membership: T,
   ): Promise<NewcomerRegistered<T>> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...registreePersonalData } = fulfilledForm;
     const registree = {
       ...registreePersonalData,

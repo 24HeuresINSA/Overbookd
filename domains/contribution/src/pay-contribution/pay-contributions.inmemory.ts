@@ -14,9 +14,12 @@ export class InMemoryPayContributions implements PayContributions {
   ) {}
 
   private get adherents(): Adherent[] {
-    return this.members
-      .filter((member) => member.permissions.includes(PAY_CONTRIBUTION))
-      .map(({ permissions, ...adherent }) => adherent);
+    return (
+      this.members
+        .filter((member) => member.permissions.includes(PAY_CONTRIBUTION))
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map(({ permissions, ...adherent }) => adherent)
+    );
   }
 
   pay(contribution: Contribution): Promise<Contribution> {
