@@ -23,7 +23,7 @@
     "dev:host": "nuxi --hostname '0'",
     "generate": "nuxi generate",
     "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\"",
-    "lint": "eslint --ext \".ts,.vue\" --ignore-path .gitignore . --fix",
+    "lint": "eslint . --fix",
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
@@ -72,9 +72,7 @@
     "vuetify": "3.7.2"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "0.5.7",
     "@pinia/nuxt": "0.5.5",
-    "eslint-plugin-nuxt": "4.0.0",
     "eslint-plugin-vue": "9.29.0",
     "nuxt": "3.13.2",
     "vue": "3.5.12",
