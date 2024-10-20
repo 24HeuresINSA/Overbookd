@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { Bar } from "vue-chartjs";
-import type { ChartEvent } from "chart.js";
+import type { ChartData, ChartOptions, ChartEvent } from "chart.js";
 import type { Statistics } from "@overbookd/http";
 import { useTheme } from "vuetify";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
@@ -107,7 +107,7 @@ const maxTotal = computed<number>(() =>
     ...sortedOldEvents.value,
   ),
 );
-const options = computed(() => {
+const options = computed<ChartOptions<"bar">>(() => {
   const textColor = theme.global.current.value.colors["on-surface"];
   const gridColor = hexToRGBA(textColor, 0.1);
   const scaleColors = {
@@ -215,7 +215,7 @@ const datasets = computed(() => {
   return [...commonDatasets.value, pastYearDataset.value];
 });
 
-const data = computed(() => ({
+const data = computed<ChartData<"bar">>(() => ({
   labels: labels.value,
   datasets: datasets.value,
 }));

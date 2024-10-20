@@ -71,6 +71,7 @@
             v-model="item.newConsumption"
             density="compact"
             hide-details
+            hide-label
             @update:model-value="updateNewConsumption(item, $event)"
           />
         </template>

@@ -46,7 +46,6 @@ import {
 } from "~/utils/transaction/transaction.utils";
 
 const transactionStore = useTransactionStore();
-transactionStore.fetchMyTransactions();
 
 const transactions = computed<MyTransaction[]>(
   () => transactionStore.myTransactions,
@@ -58,13 +57,11 @@ const transactions = computed<MyTransaction[]>(
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 15px;
   margin-bottom: 70px;
 
   @media screen and (min-width: $mobile-max-width) {
     overflow-y: auto;
     margin-bottom: 0;
-    width: 50%;
   }
 }
 

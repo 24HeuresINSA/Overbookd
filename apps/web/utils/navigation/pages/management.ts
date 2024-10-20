@@ -88,6 +88,8 @@ const SG_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   keywords: [
+    "sg",
+    "secretaire-generale",
     "comptes-perso",
     "consommations",
     "consomations",

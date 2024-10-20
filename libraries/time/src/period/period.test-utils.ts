@@ -92,3 +92,32 @@ export const saturday02hTo04h = Period.init({
   start: new Date("2024-05-18T02:00+02:00"),
   end: new Date("2024-05-18T04:00+02:00"),
 });
+export const monday10hto14h = Period.init({
+  start: new Date("2024-05-20T10:00:00+02:00"),
+  end: new Date("2024-05-20T14:00:00+02:00"),
+});
+export const monday10hto12h = Period.init({
+  start: new Date("2024-05-20T10:00:00+02:00"),
+  end: new Date("2024-05-20T12:00:00+02:00"),
+});
+export const monday12hto14h = Period.init({
+  start: new Date("2024-05-20T12:00:00+02:00"),
+  end: new Date("2024-05-20T14:00:00+02:00"),
+});
+
+export const tuesday15h30to15h33 = Period.init({
+  start: new Date("2024-05-21T15:30:00+02:00"),
+  end: new Date("2024-05-21T15:33:00+02:00"),
+});
+export const tuesday15h30to15h31 = Period.init({
+  start: new Date("2024-05-21T15:30:00+02:00"),
+  end: new Date("2024-05-21T15:31:00+02:00"),
+});
+export const tuesday15h31to15h32 = Period.init({
+  start: new Date("2024-05-21T15:31:00+02:00"),
+  end: new Date("2024-05-21T15:32:00+02:00"),
+});
+export const tuesday15h32to15h33 = Period.init({
+  start: new Date("2024-05-21T15:32:00+02:00"),
+  end: new Date("2024-05-21T15:33:00+02:00"),
+});

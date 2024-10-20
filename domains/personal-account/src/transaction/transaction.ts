@@ -95,3 +95,15 @@ export function doIReceive<T extends ReceiveOrSendTransaction>(
 ): transfer is Receive<T> {
   return "from" in transfer;
 }
+
+export function isCredit(transaction: MyTransaction): boolean {
+  switch (transaction.type) {
+    case DEPOSIT:
+      return true;
+    case BARREL:
+    case PROVISIONS:
+      return false;
+    default:
+      return doIReceive(transaction);
+  }
+}

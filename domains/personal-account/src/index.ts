@@ -30,6 +30,7 @@ export {
   INITIALIZATION,
   ONE_EURO_IN_CENTS,
   doIReceive,
+  isCredit,
   transactionTypes,
 } from "./transaction/transaction.js";
 export { Transfer } from "./transaction/transfer/transfer.js";
@@ -109,4 +110,4 @@ export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder.j
 export { OnGoingSharedMealBuilder } from "./meal-sharing/on-going-shared-meal.builder.js";
 
 // BALANCE
-export { Balance } from "./balance/balance.js";
+export { Balance, type TransactionsForBalance } from "./balance/balance.js";

@@ -32,6 +32,13 @@ import {
   friday08h15to09h,
   thursday20hToFriday04h,
   saturday02hTo04h,
+  monday10hto12h,
+  monday10hto14h,
+  monday12hto14h,
+  tuesday15h30to15h31,
+  tuesday15h30to15h33,
+  tuesday15h31to15h32,
+  tuesday15h32to15h33,
 } from "./period.test-utils";
 
 describe("Create a period", () => {
@@ -104,6 +111,24 @@ describe("Split period with interval", () => {
     ({ period, intervalInMs, readableInterval, expectedPeriods }) => {
       it(`should split period with a ${readableInterval} interval`, () => {
         const periods = period.splitWithIntervalInMs(intervalInMs);
+        expect(periods).toEqual(expectedPeriods);
+      });
+    },
+  );
+});
+
+describe("Split period into parts", () => {
+  describe.each`
+    readablePeriod              | period                 | parts | expectedPeriods
+    ${"friday 08:00 to 09:00"}  | ${friday08hto09h}      | ${0}  | ${[friday08hto09h]}
+    ${"friday 08:00 to 09:00"}  | ${friday08hto09h}      | ${4}  | ${[friday08hto08h15, friday08h15to08h30, friday08h30to08h45, friday08h45To09h]}
+    ${"monday 10:00 to 14:00"}  | ${monday10hto14h}      | ${2}  | ${[monday10hto12h, monday12hto14h]}
+    ${"tuesday 15:30 to 15:33"} | ${tuesday15h30to15h33} | ${3}  | ${[tuesday15h30to15h31, tuesday15h31to15h32, tuesday15h32to15h33]}
+  `(
+    "when spliting $readablePeriod into $parts parts",
+    ({ period, parts, expectedPeriods }) => {
+      it(`should split period into ${parts} parts`, () => {
+        const periods = period.splitInto(parts);
         expect(periods).toEqual(expectedPeriods);
       });
     },

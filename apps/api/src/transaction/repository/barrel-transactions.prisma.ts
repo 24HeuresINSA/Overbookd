@@ -5,10 +5,8 @@ import {
   BarrelTransactions,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
-import {
-  SELECT_BASE_TRANSACTION,
-  SELECT_TRANSACTION_USER,
-} from "./transaction.query";
+import { SELECT_BASE_TRANSACTION } from "./transaction.query";
+import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 
 export class PrismaBarrelTransactions implements BarrelTransactions {
   constructor(private readonly prisma: PrismaService) {}
@@ -28,7 +26,7 @@ export class PrismaBarrelTransactions implements BarrelTransactions {
           },
           select: {
             ...SELECT_BASE_TRANSACTION,
-            payee: { select: SELECT_TRANSACTION_USER },
+            payee: { select: SELECT_USER_IDENTIFIER },
           },
         }),
       ),

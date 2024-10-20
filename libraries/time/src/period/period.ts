@@ -104,6 +104,23 @@ export class Period {
     );
   }
 
+  splitInto(parts: number): Period[] {
+    if (parts <= 0) return [this];
+
+    const totalDuration = this.end.getTime() - this.start.getTime();
+    const partDuration = Math.floor(totalDuration / parts);
+
+    return Array.from({ length: parts }, (_, index) => {
+      const start = new Date(this.start.getTime() + index * partDuration);
+
+      const isLastPart = index === parts - 1;
+      const calculatedEnd = new Date(start.getTime() + partDuration);
+      const end = isLastPart ? this.end : calculatedEnd;
+
+      return Period.init({ start, end });
+    });
+  }
+
   substract(otherPeriod: IProvidePeriod): Period[] {
     const pastPeriod = Period.init({
       start: this.start,

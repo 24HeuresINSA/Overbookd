@@ -8,22 +8,16 @@ import {
   INITIALIZATION,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_TRANSACTION_USER } from "./transaction.query";
+import { SELECT_COMPLETE_TRANSACTION } from "./transaction.query";
+import { IS_NOT_DELETED } from "../../common/query/not-deleted.query";
 
 export class PrismaTransactions {
   constructor(private readonly prisma: PrismaService) {}
 
   async getMine(myId: number): Promise<MyTransaction[]> {
     const transactions = await this.prisma.transaction.findMany({
-      where: { isDeleted: false, OR: [{ from: myId }, { to: myId }] },
-      select: {
-        type: true,
-        amount: true,
-        context: true,
-        createdAt: true,
-        payee: { select: SELECT_TRANSACTION_USER },
-        payor: { select: SELECT_TRANSACTION_USER },
-      },
+      where: { ...IS_NOT_DELETED, OR: [{ from: myId }, { to: myId }] },
+      select: SELECT_COMPLETE_TRANSACTION,
       orderBy: { createdAt: "desc" },
     });
 
