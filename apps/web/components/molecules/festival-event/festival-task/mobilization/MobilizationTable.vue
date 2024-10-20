@@ -141,7 +141,7 @@ import type { AddMobilizationForm } from "@overbookd/http";
 import {
   type SortablePeriodHeader,
   periodsSorts,
-} from "~/utils/sort/sort-period";
+} from "~/utils/sort/sort-period.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const ftStore = useFestivalTaskStore();
