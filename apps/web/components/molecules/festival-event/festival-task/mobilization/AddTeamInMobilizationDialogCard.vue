@@ -31,7 +31,7 @@ const props = defineProps({
 });
 
 const team = ref<Team | undefined>();
-const count = ref<number>(1);
+const count = ref<string>("1");
 
 const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
 
@@ -40,13 +40,13 @@ const emit = defineEmits(["add", "close"]);
 const close = () => {
   emit("close");
   team.value = undefined;
-  count.value = 1;
+  count.value = "1";
 };
 const addTeam = () => {
-  if (!team.value || count.value < 1 || !props.mobilization) return;
+  if (!team.value || +count.value < 1 || !props.mobilization) return;
   const newTeam: TeamMobilization = {
     team: team.value.code,
-    count: count.value,
+    count: +count.value,
   };
   emit("add", props.mobilization, newTeam);
   close();
