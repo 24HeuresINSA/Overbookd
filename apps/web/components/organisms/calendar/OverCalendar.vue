@@ -1,7 +1,8 @@
 <template>
   <div class="calendar-with-manager">
-    <CalendarManager v-model:displayed-day="displayedDay" v-model:mode="mode" />
+    <CalendarManager v-model="displayedDay" :mode="mode" />
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
+      <div class="empty-case" />
       <header class="calendar-header">
         <DailyCalendarHeader v-show="isDayMode" :displayed-day="displayedDay" />
         <WeeklyCalendarHeader
@@ -51,22 +52,26 @@ import { HOURS_IN_DAY } from "@overbookd/time";
 import {
   DAY_MODE,
   formatDateNumberValue,
+  WEEK_MODE,
   type CalendarMode,
 } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();
 
-defineProps({
+const props = defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     default: () => [],
   },
+  mode: {
+    type: String as PropType<CalendarMode>,
+    default: isDesktop() ? WEEK_MODE : DAY_MODE,
+  },
 });
 
-const displayedDay = ref<Date>(new Date());
-const mode = ref<CalendarMode>(DAY_MODE);
-const isDayMode = computed<boolean>(() => mode.value === DAY_MODE);
+const displayedDay = defineModel<Date>({ default: new Date() });
+const isDayMode = computed<boolean>(() => props.mode === DAY_MODE);
 
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
@@ -101,12 +106,20 @@ $calendar-content-height: $hour-height * 24;
   min-width: $first-column-width + $calendar-day-min-width + 2px;
 }
 
+.empty-case {
+  grid-row: 1;
+  grid-column: 1;
+  border-bottom: 1px solid rgb(var(--v-theme-on-surface));
+  border-right: 1px solid rgb(var(--v-theme-on-surface));
+  height: 100%;
+}
+
 .calendar-header {
   width: 100%;
   grid-row: 1;
   grid-column: 2;
   border-top-right-radius: $calendar-radius;
-  border-left: 1px solid rgb(var(--v-theme-on-surface));
+  border-bottom: 1px solid rgb(var(--v-theme-on-surface));
 }
 
 .calendar-time {
@@ -115,7 +128,7 @@ $calendar-content-height: $hour-height * 24;
   grid-row: 2;
   grid-column: 1;
   border-bottom-left-radius: $calendar-radius;
-  border-top: 1px solid rgb(var(--v-theme-on-surface));
+  border-right: 1px solid rgb(var(--v-theme-on-surface));
 
   &__hour {
     height: $hour-height;
@@ -135,7 +148,6 @@ $calendar-content-height: $hour-height * 24;
     &:first-child::after {
       content: none;
     }
-
     .hour-indicator {
       position: relative;
       font-size: 0.8rem;
@@ -155,8 +167,6 @@ $calendar-content-height: $hour-height * 24;
   grid-row: 2;
   grid-column: 2;
   border-bottom-right-radius: $calendar-radius;
-  border-top: 1px solid rgb(var(--v-theme-on-surface));
-  border-left: 1px solid rgb(var(--v-theme-on-surface));
 
   &__hour {
     height: $hour-height;

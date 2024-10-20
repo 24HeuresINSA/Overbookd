@@ -36,7 +36,16 @@
           />
         </div>
 
-        <h3>Créneaux des demandes</h3>
+        <div class="time-windows-title">
+          <h3>Créneaux des demandes</h3>
+          <v-btn
+            icon="mdi-calendar-blank"
+            color="secondary"
+            rounded="pill"
+            density="comfortable"
+            @click="openCalendar"
+          />
+        </div>
         <FaTimeWindowTable
           :time-windows="inquiry.timeWindows"
           :disabled="shouldInitInquiry"
@@ -163,6 +172,9 @@ const removeInquiry = (inquiry: InquiryRequest) => {
   faStore.removeInquiryRequest(inquiry.slug);
 };
 
+const emit = defineEmits(["open:calendar"]);
+const openCalendar = () => emit("open:calendar");
+
 const shouldHideDrive = computed<boolean>(() => {
   return isDraft(selectedActivity.value);
 });
@@ -215,5 +227,11 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
       margin-left: 0;
     }
   }
+}
+
+.time-windows-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 </style>

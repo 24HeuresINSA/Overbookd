@@ -47,11 +47,17 @@ import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 
 const configurationStore = useConfigurationStore();
 
-const displayedDay = defineModel<Date>("displayedDay", { required: true });
+const props = defineProps({
+  mode: {
+    type: String as PropType<CalendarMode>,
+    required: true,
+  },
+});
+
+const displayedDay = defineModel<Date>({ required: true });
 const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 
-const mode = defineModel<CalendarMode>("mode", { required: true });
-const isDayMode = computed<boolean>(() => mode.value === DAY_MODE);
+const isDayMode = computed<boolean>(() => props.mode === DAY_MODE);
 
 const periodIndicator = computed<string>(() => {
   const month = displayedDay.value.toLocaleDateString("fr-FR", {

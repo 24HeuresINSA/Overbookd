@@ -2,7 +2,7 @@ import { getMonday, ONE_DAY_IN_MS, Period } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
 
 export const DAY_MODE = "day";
-const WEEK_MODE = "week";
+export const WEEK_MODE = "week";
 export type CalendarMode = typeof DAY_MODE | typeof WEEK_MODE;
 
 export type CalendarDay = {

@@ -2,12 +2,12 @@
   <div class="activity fa">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container fa">
-      <FaGeneralCard id="general" />
+      <FaGeneralCard id="general" @open:calendar="openCalendar" />
       <FaInChargeCard id="in-charge" />
       <SignaCard id="signa" />
       <SecurityCard id="security" />
       <SupplyCard id="supply" />
-      <FaInquiryCard id="inquiry" />
+      <FaInquiryCard id="inquiry" @open:calendar="openCalendar" />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedActivity"
@@ -15,15 +15,26 @@
       />
       <ChildFtCard id="ft" />
     </article>
+
+    <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
+      <DialogCard without-actions @close="closeCalendar">
+        <template #title> Créneaux de l'activité </template>
+        <template #content>
+          <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
+        </template>
+      </DialogCard>
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
+import type { CalendarEvent } from "~/utils/calendar/event";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();
+const configurationStore = useConfigurationStore();
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
@@ -48,6 +59,32 @@ watch(name, () => (document.title = headTitle.value));
 const publishFeedback = (content: string) => {
   faStore.publishFeedback({ content });
 };
+
+const isCalendarDialogOpen = ref<boolean>(false);
+const openCalendar = () => (isCalendarDialogOpen.value = true);
+const closeCalendar = () => (isCalendarDialogOpen.value = false);
+
+const allTimeWindows = computed<CalendarEvent[]>(() => {
+  const inquiryEvents: CalendarEvent[] =
+    selectedActivity.value.inquiry.timeWindows.map(({ start, end }) => ({
+      start,
+      end,
+      name: "Matos",
+      color: "secondary",
+    }));
+  const generalEvents: CalendarEvent[] =
+    selectedActivity.value.general.timeWindows.map(({ start, end }) => ({
+      start,
+      end,
+      name: "Animation",
+      color: "primary",
+    }));
+  return [...inquiryEvents, ...generalEvents];
+});
+
+const calendarMarker = ref<Date>(
+  allTimeWindows.value.at(0)?.start ?? configurationStore.eventStartDate,
+);
 </script>
 
 <style lang="scss" scoped>

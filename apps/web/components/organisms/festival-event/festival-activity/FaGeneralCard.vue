@@ -60,7 +60,16 @@
           @update:model-value="updateIsFlagship"
         />
 
-        <h3>Créneaux de l'activité</h3>
+        <div class="time-windows-title">
+          <h3>Créneaux de l'activité</h3>
+          <v-btn
+            icon="mdi-calendar-blank"
+            color="secondary"
+            rounded="pill"
+            density="comfortable"
+            @click="openCalendar"
+          />
+        </div>
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow"
@@ -106,6 +115,9 @@ const contact = computed<string>(() =>
   isPublic.value ? COMMUNICATION_EMAIL : HUMAINS_EMAIL,
 );
 
+const emit = defineEmits(["open:calendar"]);
+const openCalendar = () => emit("open:calendar");
+
 const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
 const updateName = (name: string) => {
   if (delay.value) clearInterval(delay.value);
@@ -148,8 +160,9 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
 </script>
 
 <style lang="scss" scoped>
-.time-window-table {
-  margin: 15px 0 30px 0;
-  padding: 5px;
+.time-windows-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 </style>

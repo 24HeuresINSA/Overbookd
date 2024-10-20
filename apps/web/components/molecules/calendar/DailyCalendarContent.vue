@@ -35,3 +35,9 @@ const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
   return Period.init(event).isInDay(props.displayedDay);
 };
 </script>
+
+<style lang="scss" scoped>
+.daily-content {
+  position: relative;
+}
+</style>
