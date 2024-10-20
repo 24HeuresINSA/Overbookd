@@ -98,7 +98,7 @@ export class TeamService {
       await this.prisma.userTeam.delete({
         where: { userId_teamCode: { userId, teamCode: team } },
       });
-    } catch (e) {
+    } catch (_error) {
       this.logger.warn(`Try to remove ${team} unexisting team`);
     }
   }

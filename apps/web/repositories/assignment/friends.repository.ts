@@ -4,7 +4,7 @@ import { useAssignTaskToVolunteerStore } from "~/stores/assignment/assignTaskToV
 
 export class FriendsRepository implements Friends {
   async availableDuringWith(
-    period: IProvidePeriod,
+    _period: IProvidePeriod,
     volunteer: number,
   ): Promise<AssignableVolunteer[]> {
     const assignTaskToVolunteer = useAssignTaskToVolunteerStore();

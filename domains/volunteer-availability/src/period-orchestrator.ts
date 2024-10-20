@@ -38,7 +38,7 @@ export class PeriodOrchestrator {
         try {
           Availability.fromPeriod(period);
           return false;
-        } catch (e) {
+        } catch (_error) {
           return true;
         }
       })

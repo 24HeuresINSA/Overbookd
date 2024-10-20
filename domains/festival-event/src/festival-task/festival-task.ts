@@ -65,7 +65,7 @@ export type Draft = DraftWithConflicts | DraftWithoutConflicts;
 
 type AssignmentsOptions = Pick<MobilizationOptions, "withAssignments">;
 
-const defaultAssignmentsOption = {
+const _defaultAssignmentsOption = {
   withAssignments: false,
 } as const;
 
@@ -116,7 +116,7 @@ type BaseReadyToAssign = BaseReviewable &
 
 type GenerateConflictUnion<
   T extends BaseInReview | BaseRefused | BaseValidated | BaseReadyToAssign,
-  Options extends AssignmentsOptions = typeof defaultAssignmentsOption,
+  Options extends AssignmentsOptions = typeof _defaultAssignmentsOption,
 > =
   | (T & MobilizationsWithConflicts<Options>)
   | (T & MobilizationsWithoutConflicts<Options>);

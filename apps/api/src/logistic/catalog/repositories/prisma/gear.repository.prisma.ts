@@ -100,6 +100,7 @@ export class PrismaGearRepository implements GearRepository {
   }
 
   private buildUpsertData(gear: Omit<CatalogGear, "id">) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { category, owner, ...baseGear } = gear;
     const categoryLink = category
       ? { category: { connect: { id: category.id } } }

@@ -1,3 +1,3 @@
 export const FA = "FA";
-const FT = "FT";
-export type FestivalEventIdentifier = typeof FA | typeof FT;
+const _FT = "FT";
+export type FestivalEventIdentifier = typeof FA | typeof _FT;

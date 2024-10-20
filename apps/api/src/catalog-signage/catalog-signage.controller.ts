@@ -120,7 +120,7 @@ export class CatalogSignageController {
     FileInterceptor("file", {
       storage: diskStorage({
         destination: join(process.cwd(), "public"),
-        filename: (req, file, cb) => {
+        filename: (_req, file, cb) => {
           const uuid = randomUUID();
           const filenameFragments = file.originalname.split(".");
           const extension = filenameFragments.at(-1) ?? "jpg";

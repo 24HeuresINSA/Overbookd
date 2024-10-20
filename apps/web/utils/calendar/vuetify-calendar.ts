@@ -4,7 +4,7 @@ export type VuetifyCalendar = {
   next: () => void;
 };
 
-const DAY = "day";
-const WEEK = "week";
+const _DAY = "day";
+const _WEEK = "week";
 
-export type VuetifyCalendarType = typeof DAY | typeof WEEK;
+export type VuetifyCalendarType = typeof _DAY | typeof _WEEK;

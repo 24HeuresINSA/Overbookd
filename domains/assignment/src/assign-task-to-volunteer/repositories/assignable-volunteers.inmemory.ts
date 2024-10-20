@@ -9,7 +9,7 @@ export class InMemoryAssignableVolunteers implements AssignableVolunteers {
   constructor(private volunteers: StoredAssignableVolunteer[]) {}
 
   on(
-    assignmentIdentifier: AssignmentIdentifier,
+    _assignmentIdentifier: AssignmentIdentifier,
     { oneOfTheTeams }: AssignmentSpecification,
   ): Promise<StoredAssignableVolunteer[]> {
     return Promise.resolve(

@@ -40,7 +40,7 @@ const cantInitBorrow = computed<boolean>(() => {
 
   try {
     Period.init({ start: availableOn.value, end: unavailableOn.value });
-  } catch (error) {
+  } catch (_error) {
     return true;
   }
   return false;

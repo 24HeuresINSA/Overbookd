@@ -38,7 +38,7 @@ export type MobilizationOptions = {
   withAssignments: boolean;
 };
 
-const defaultMobilizationOptions = {
+const _defaultMobilizationOptions = {
   withConflicts: true,
   withAssignments: false,
 } as const;
@@ -67,7 +67,7 @@ type BaseMobilization<Options extends MobilizationOptions> = TimeWindow & {
 export type Assignment = TimeWindow & { assignees: Volunteer[] };
 
 export type Mobilization<
-  Options extends MobilizationOptions = typeof defaultMobilizationOptions,
+  Options extends MobilizationOptions = typeof _defaultMobilizationOptions,
 > = Options["withAssignments"] extends true
   ? BaseMobilization<Options> & {
       assignments: Assignment[];
@@ -89,7 +89,7 @@ export type AtLeastOneTeam<Options extends MobilizationOptions> = Omit<
 };
 
 export type ReviewableMobilization<
-  Options extends MobilizationOptions = typeof defaultMobilizationOptions,
+  Options extends MobilizationOptions = typeof _defaultMobilizationOptions,
 > = AtLeastOneTeam<Options> | AtLeastOneVolunteer<Options>;
 
 export type FestivalTaskLink = {

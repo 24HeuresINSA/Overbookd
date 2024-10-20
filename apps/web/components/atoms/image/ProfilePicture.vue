@@ -15,10 +15,10 @@ import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-inf
 
 const userStore = useUserStore();
 
-const SMALL = "small";
-const MEDIUM = "medium";
-const LARGE = "large";
-type Size = typeof SMALL | typeof MEDIUM | typeof LARGE;
+const _SMALL = "small";
+const _MEDIUM = "medium";
+const _LARGE = "large";
+type Size = typeof _SMALL | typeof _MEDIUM | typeof _LARGE;
 
 const props = defineProps({
   user: {

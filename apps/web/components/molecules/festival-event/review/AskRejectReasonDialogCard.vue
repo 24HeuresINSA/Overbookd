@@ -3,8 +3,7 @@
     <template #title> Rejeter une {{ eventIdentifier }} </template>
     <template #subtitle>
       Tu es sur le point de rejeter la {{ identifier }}
-      <strong>{{ name }}</strong
-      >. Pourquoi tu veux faire ça ?
+      <strong>{{ name }}</strong>. Pourquoi tu veux faire ça ?
     </template>
     <template #content>
       <v-textarea

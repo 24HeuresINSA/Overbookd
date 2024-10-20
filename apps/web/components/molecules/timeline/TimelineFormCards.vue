@@ -74,7 +74,7 @@ const teams = computed<Team[]>({
 const updateTimelineFilter = async () => {
   try {
     Period.init(period.value);
-  } catch (error) {
+  } catch (_error) {
     sendFailureNotification("La plage horaire est invalide");
     return;
   }

@@ -60,14 +60,14 @@ export type AssignmentWithDetails = BaseAssignment & {
   assignees: AssigneeForDetails[];
 };
 
-const defaultAssignmentOption = { withDetails: false };
+const _defaultAssignmentOption = { withDetails: false };
 
 type AssignmentOption = {
   withDetails: boolean;
 };
 
 export type Assignment<
-  Option extends AssignmentOption = typeof defaultAssignmentOption,
+  Option extends AssignmentOption = typeof _defaultAssignmentOption,
 > = Option["withDetails"] extends true
   ? AssignmentWithDetails
   : AssignmentWithoutDetails;
