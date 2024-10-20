@@ -185,6 +185,8 @@ services:
       context: ../.devcontainer
       dockerfile: Dockerfile
 
+    hostname: overbookd-dev
+
     volumes:
       # Forwards the local Docker socket to the container.
       - /var/run/docker.sock:/var/run/docker-host.sock
