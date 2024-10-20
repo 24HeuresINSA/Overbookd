@@ -55,6 +55,8 @@ import {
 } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
+const publicHolidayStore = usePublicHolidayStore();
+
 defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
@@ -65,6 +67,10 @@ defineProps({
 const displayedDay = ref<Date>(new Date());
 const mode = ref<CalendarMode>(DAY_MODE);
 const isDayMode = computed<boolean>(() => mode.value === DAY_MODE);
+
+if (publicHolidayStore.all.length === 0) {
+  publicHolidayStore.fetchAll();
+}
 </script>
 
 <style lang="scss" scoped>
