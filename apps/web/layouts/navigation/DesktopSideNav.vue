@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     v-model:rail="isFolded"
-    :model-value="isDesktop()"
+    :model-value="isDesktop"
     expand-on-hover
     rail-width="60"
     width="300"
@@ -40,10 +40,13 @@ import {
   shouldFlipContent,
   shouldUnflipContent,
 } from "~/utils/easter-egg/flip-content";
-import { isDesktop } from "~/utils/device.utils";
 
 const navigationBadgeStore = useNavigationBadgeStore();
+const layoutStore = useLayoutStore();
+
 onMounted(() => navigationBadgeStore.fetchAll());
+
+const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 
 const isFolded = ref<boolean>(true);
 const searchValue = ref<string | undefined>(undefined);
