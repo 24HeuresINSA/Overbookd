@@ -48,6 +48,8 @@
     "pnpm": "9.12.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.13.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "13.2.1",
@@ -65,6 +67,7 @@
     "ts-prune": "0.10.3",
     "tsup": "8.3.0",
     "typescript": "5.6.3",
+    "typescript-eslint": "^8.10.0",
     "vitest": "2.1.3"
   }
 }
