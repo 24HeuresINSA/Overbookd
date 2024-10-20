@@ -228,7 +228,6 @@ const removeVolunteer = (
   ftStore.removeVolunteerFromMobilization(mobilization.id, volunteerId);
 };
 const addTeam = (mobilization: Mobilization, team: TeamMobilization) => {
-  console.log(mobilization, team);
   ftStore.addTeamToMobilization(mobilization.id, team);
   closeAddTeamDialog();
 };
