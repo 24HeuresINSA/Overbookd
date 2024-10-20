@@ -21,7 +21,7 @@
         size="x-large"
         density="compact"
         rounded="pill"
-        @click="moveToPreviousDay"
+        @click="moveToPreviousWeekOrDay"
       />
       <v-btn
         icon="mdi-chevron-right"
@@ -29,7 +29,7 @@
         size="x-large"
         density="compact"
         rounded="pill"
-        @click="moveToNextDay"
+        @click="moveToNextWeekOrDay"
       />
     </div>
     <h3 class="period-indicator">{{ periodIndicator }}</h3>
@@ -37,19 +37,21 @@
 </template>
 
 <script lang="ts" setup>
-import { isSameDay, isSameWeek, ONE_DAY_IN_MS } from "@overbookd/time";
+import {
+  isSameDay,
+  isSameWeek,
+  ONE_DAY_IN_MS,
+  ONE_WEEK_IN_MS,
+} from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 
 const configurationStore = useConfigurationStore();
 
-const props = defineProps({
-  mode: {
-    type: String as PropType<CalendarMode>,
-    required: true,
-  },
-});
+const displayedDay = defineModel<Date>("displayedDay", { required: true });
+const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 
-const displayedDay = defineModel<Date>({ required: true });
+const mode = defineModel<CalendarMode>("mode", { required: true });
+const isDayMode = computed<boolean>(() => mode.value === DAY_MODE);
 
 const periodIndicator = computed<string>(() => {
   const month = displayedDay.value.toLocaleDateString("fr-FR", {
@@ -58,8 +60,6 @@ const periodIndicator = computed<string>(() => {
   const year = displayedDay.value.getFullYear();
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
-const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
-const isDayMode = computed<boolean>(() => props.mode === DAY_MODE);
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
   const today = new Date();
@@ -80,18 +80,22 @@ const moveToEventStartDay = () => {
   displayedDay.value = eventStartDate.value;
 };
 
-const moveToPreviousDay = () => {
-  displayedDay.value = new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS);
+const moveToPreviousWeekOrDay = () => {
+  displayedDay.value = isDayMode.value
+    ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
+    : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
 };
-const moveToNextDay = () => {
-  displayedDay.value = new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS);
+const moveToNextWeekOrDay = () => {
+  displayedDay.value = isDayMode.value
+    ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
+    : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
 };
 </script>
 
 <style lang="scss" scoped>
 .calendar-manager {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
   .full-buttons {
     display: flex;

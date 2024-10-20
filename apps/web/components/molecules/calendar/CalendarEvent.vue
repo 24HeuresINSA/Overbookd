@@ -111,9 +111,6 @@ const eventTimePeriodText = computed<string>(() => {
 
 <style lang="scss" scoped>
 .calendar-event {
-  position: absolute;
-  left: 5px;
-  right: 5px;
   margin: 0 !important;
   border-radius: 6px !important;
   padding: 8px 10px !important;

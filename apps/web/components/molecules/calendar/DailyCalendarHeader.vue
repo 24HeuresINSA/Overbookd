@@ -21,7 +21,7 @@ const displayableDay = computed<CalendarDay>(() => {
     .toLocaleDateString("fr-FR", { weekday: "long" })
     .toUpperCase();
   const number = props.displayedDay.getDate();
-  return { name, number };
+  return { name, number, date: props.displayedDay };
 });
 
 const isToday = computed<boolean>(() => {
@@ -31,21 +31,17 @@ const isToday = computed<boolean>(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "./calendar.scss";
+@import "~/assets/calendar.scss";
 
 .header-day {
   width: 100%;
-  grid-row: 1;
-  grid-column: 2;
-  border-top-right-radius: $calendar-radius;
-  border-left: 1px solid rgb(var(--v-theme-on-surface));
+  min-width: $calendar-day-min-width;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
   padding: 10px;
-
   &__name {
     font-size: 1.2rem;
   }

@@ -1,8 +1,14 @@
 <template>
   <div class="calendar-with-manager">
-    <CalendarManager v-model="displayedDay" :mode="mode" />
-    <div class="calendar">
-      <DailyCalendarHeader :displayed-day="displayedDay" />
+    <CalendarManager v-model:displayed-day="displayedDay" v-model:mode="mode" />
+    <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
+      <header class="calendar-header">
+        <DailyCalendarHeader v-show="isDayMode" :displayed-day="displayedDay" />
+        <WeeklyCalendarHeader
+          v-show="!isDayMode"
+          :displayed-day="displayedDay"
+        />
+      </header>
 
       <div class="calendar-time">
         <div
@@ -14,19 +20,26 @@
         </div>
       </div>
 
-      <div class="calendar-content">
+      <div class="calendar-content-rows">
         <div
           v-for="hour in HOURS_IN_DAY"
           :key="hour"
-          class="calendar-content__hour"
+          class="calendar-content-rows__hour"
         />
-        <CalendarEvent
-          v-for="event in events"
-          v-show="isEventInDisplayedDay(event)"
-          :key="event.name"
-          :event="event"
+      </div>
+
+      <div class="calendar-content">
+        <DailyCalendarContent
+          v-show="isDayMode"
+          :events="events"
           :displayed-day="displayedDay"
-          :overlapping-events="getOverlappingEvents(event, events)"
+          :overlapping-events="events"
+        />
+        <WeeklyCalendarContent
+          v-show="!isDayMode"
+          :events="events"
+          :displayed-day="displayedDay"
+          :overlapping-events="events"
         />
       </div>
     </div>
@@ -34,11 +47,10 @@
 </template>
 
 <script lang="ts" setup>
-import { HOURS_IN_DAY, Period } from "@overbookd/time";
+import { HOURS_IN_DAY } from "@overbookd/time";
 import {
   DAY_MODE,
   formatDateNumberValue,
-  getOverlappingEvents,
   type CalendarMode,
 } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
@@ -52,16 +64,14 @@ defineProps({
 
 const displayedDay = ref<Date>(new Date());
 const mode = ref<CalendarMode>(DAY_MODE);
-
-const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
-  return Period.init(event).isInDay(displayedDay.value);
-};
+const isDayMode = computed<boolean>(() => mode.value === DAY_MODE);
 </script>
 
 <style lang="scss" scoped>
-@import "./calendar.scss";
+@import "~/assets/calendar.scss";
 
 $hour-height: 45px;
+$first-column-width: 60px;
 $calendar-content-height: $hour-height * 24;
 
 .calendar-with-manager {
@@ -72,14 +82,25 @@ $calendar-content-height: $hour-height * 24;
 
 .calendar {
   width: 100%;
-  min-width: 300px;
+  min-width: $calendar-day-min-width * 7 + $first-column-width + 2px;
   display: grid;
-  grid-template-columns: 60px 1fr;
+  grid-template-columns: $first-column-width 1fr;
   align-items: center;
   background-color: rgb(var(--v-theme-surface));
   border: 1px solid rgb(var(--v-theme-on-surface));
   border-radius: $calendar-radius;
   padding-bottom: 1px;
+}
+.daily-calendar {
+  min-width: $first-column-width + $calendar-day-min-width + 2px;
+}
+
+.calendar-header {
+  width: 100%;
+  grid-row: 1;
+  grid-column: 2;
+  border-top-right-radius: $calendar-radius;
+  border-left: 1px solid rgb(var(--v-theme-on-surface));
 }
 
 .calendar-time {
@@ -122,7 +143,7 @@ $calendar-content-height: $hour-height * 24;
   }
 }
 
-.calendar-content {
+.calendar-content-rows {
   position: relative;
   height: $calendar-content-height;
   grid-row: 2;
@@ -138,5 +159,12 @@ $calendar-content-height: $hour-height * 24;
       border-top: none;
     }
   }
+}
+
+.calendar-content {
+  width: 100%;
+  height: 100%;
+  grid-row: 2;
+  grid-column: 2;
 }
 </style>
