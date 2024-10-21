@@ -1,3 +1,20 @@
+## [3.10.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.9.0...v3.10.0) (2024-10-21)
+
+### Features
+
+* **calendar:** add weekly calendar [#2188](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2188) ([d97e806](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d97e806d6ed1b564d06de554e8567741f0fd8409))
+* **personal-account:** add balance graph [#2144](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2144) ([44f1b25](https://gitlab.com/24-heures-insa/overbookd-mono/commit/44f1b25aaec7347e82e209ebcacc3ab2efbc7941))
+
+### Bug Fixes
+
+* **devcontainer:** :adhesive_bandage: update post create command to avoid failing ([8da77cd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8da77cd3e44afdfefd838ec4bda8f34b7929202b))
+* **fa:** add calendar [#2179](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2179) ([fbff618](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fbff61857e9028422bdfd50250434ec2ac7bf4e9))
+
+### Pre-Features
+
+* **calendar:** add manager buttons like Google Calendar [#2192](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2192) ([3e36786](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3e36786e47b5c8829c2898e436c5107ad4f31eab))
+* **calendar:** display public holidays [#2193](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2193) ([724bf41](https://gitlab.com/24-heures-insa/overbookd-mono/commit/724bf4158ca0f5c2b45af059929a859549a192ca))
+
 ## [3.9.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.8.1...v3.9.0) (2024-10-19)
 
 
