@@ -53,10 +53,20 @@ const transactions = computed<MyTransaction[]>(() =>
 </script>
 
 <style lang="scss" scoped>
+$title-height: calc(1rem + 10px);
+$content-padding: calc(15px + 15px);
+
 .transactions {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
+
+  @media screen and (min-width: $mobile-max-width) {
+    height: calc(
+      100vh - #{$header-height} - #{$title-height} - #{$content-padding} - 15px
+    );
+    overflow-y: auto;
+  }
 }
 
 .transaction {
