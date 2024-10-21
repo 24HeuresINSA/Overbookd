@@ -80,3 +80,9 @@ const errorMessages = computed<string[]>(() => {
   ];
 });
 </script>
+
+<style scoped>
+.v-chip {
+  margin: 2px;
+}
+</style>

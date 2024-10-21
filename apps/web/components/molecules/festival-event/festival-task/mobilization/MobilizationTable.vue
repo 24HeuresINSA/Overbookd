@@ -22,7 +22,7 @@
       </template>
 
       <template #item.volunteers="{ item }">
-        <v-chip-group column class="mobilizations__volunteers">
+        <div class="mobilizations__volunteers">
           <VolunteerWithConflictsChip
             v-for="volunteer in item.volunteers"
             :key="`${item.id}-${volunteer.id}`"
@@ -38,11 +38,11 @@
             :disabled="disabled"
             @click="openAddVolunteerDialog(item)"
           />
-        </v-chip-group>
+        </div>
       </template>
 
       <template #item.teams="{ item }">
-        <v-chip-group class="mobilizations__teams">
+        <div class="mobilizations__teams">
           <TeamChip
             v-for="team in item.teams"
             :key="`${item.id}-${team.team}`"
@@ -61,7 +61,7 @@
             :disabled="disabled"
             @click="openAddTeamDialog(item)"
           />
-        </v-chip-group>
+        </div>
       </template>
 
       <template #item.actions="{ item }">
@@ -261,8 +261,9 @@ const sortMobilizations = (
   &__teams,
   &__volunteers {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
   }
   &__actions {
     display: flex;

@@ -14,7 +14,7 @@
       />
 
       <h3>Ajouter un bénévole</h3>
-      <v-chip-group v-show="volunteers.length > 0" class="chip-group">
+      <div v-show="volunteers.length > 0" class="chip-group">
         <v-chip
           v-for="volunteer in volunteers"
           :key="volunteer.id"
@@ -24,7 +24,7 @@
         >
           {{ buildUserNameWithNickname(volunteer) }}
         </v-chip>
-      </v-chip-group>
+      </div>
       <SearchUser
         :model-value="volunteerToAdd"
         :list="addableVolunteers"
@@ -34,7 +34,7 @@
       />
 
       <h3>Ajouter des bénévoles d'une équipe</h3>
-      <v-chip-group v-show="teams.length > 0" class="chip-group">
+      <div v-show="teams.length > 0" class="chip-group">
         <TeamChip
           v-for="team in teams"
           :key="team.team"
@@ -45,7 +45,7 @@
           closable
           @close="removeTeam(team)"
         />
-      </v-chip-group>
+      </div>
       <div class="team-form">
         <v-text-field
           v-model="teamQuantity"
@@ -192,6 +192,7 @@ const addMobilization = () => {
 
 .chip-group {
   margin-bottom: 5px;
+  margin-top: 2px;
 }
 
 h3 {

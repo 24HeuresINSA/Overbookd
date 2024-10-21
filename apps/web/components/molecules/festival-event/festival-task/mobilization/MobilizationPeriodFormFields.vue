@@ -7,7 +7,7 @@
       :model-value="durationSplitInHour || 0"
       min="0"
       max="4"
-      step="0.5"
+      step="1"
       thumb-label="always"
       show-ticks="always"
       :color="durationSplitInHour ? 'primary' : 'grey'"
