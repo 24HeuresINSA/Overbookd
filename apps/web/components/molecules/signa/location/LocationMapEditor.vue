@@ -146,7 +146,7 @@ const reset = (newAction: Action) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .instructions {
   font-weight: bold;
   margin-bottom: 5px;

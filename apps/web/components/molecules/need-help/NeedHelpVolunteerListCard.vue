@@ -56,7 +56,7 @@ const openCalendarInNewTab = (volunteerId: number) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .volunteer-list-card {
   height: fit-content;
   width: 100%;

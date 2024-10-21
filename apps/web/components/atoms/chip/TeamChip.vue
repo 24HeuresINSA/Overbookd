@@ -79,7 +79,7 @@ const sendEvent = () => emit("click", teamMetadata.value);
 const sendCloseEvent = () => emit("close", team);
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .v-chip {
   margin: 2px;
   cursor: default;

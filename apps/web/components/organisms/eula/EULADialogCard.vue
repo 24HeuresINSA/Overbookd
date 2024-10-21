@@ -258,7 +258,7 @@ const emit = defineEmits(["close"]);
 const close = () => emit("close");
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 h2 {
   margin-top: 30px;
   margin-bottom: 10px;

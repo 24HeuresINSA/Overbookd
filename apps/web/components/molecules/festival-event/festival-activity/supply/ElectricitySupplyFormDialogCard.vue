@@ -157,7 +157,7 @@ const confirmSupply = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .supply-img {
   width: 100%;
   max-width: 350px;

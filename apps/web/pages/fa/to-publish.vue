@@ -67,12 +67,7 @@
           >
             mdi-check-circle
           </v-icon>
-          <v-icon
-            v-else
-            color="red"
-            size="large"
-            title="Animation non phare"
-          >
+          <v-icon v-else color="red" size="large" title="Animation non phare">
             mdi-close-circle
           </v-icon>
         </template>
@@ -168,7 +163,7 @@ const openPhotoLinkInNewTab = (photoLink: string) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .chips {
   display: flex;
   flex-wrap: wrap;

@@ -159,7 +159,7 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .time-windows-title {
   display: flex;
   gap: 10px;

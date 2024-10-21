@@ -70,7 +70,7 @@ const openBorrow = (event: PointerEvent, target: { item: Borrow }) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .borrow-list {
   cursor: pointer;
 }

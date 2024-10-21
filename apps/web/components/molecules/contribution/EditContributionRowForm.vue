@@ -47,7 +47,7 @@ const removeContribution = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .payment-form {
   display: flex;
   align-items: center;

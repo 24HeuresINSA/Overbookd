@@ -64,7 +64,7 @@ const showLocation = (location: SignaLocation) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .map-container {
   position: relative;
   z-index: 1;

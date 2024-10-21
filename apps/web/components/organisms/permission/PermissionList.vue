@@ -89,7 +89,7 @@ const unlinkTeamFromPermission = async (
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .actions {
   display: flex;
   text-align: center;
