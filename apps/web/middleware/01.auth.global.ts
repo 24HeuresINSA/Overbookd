@@ -8,8 +8,7 @@ import { AuthRepository } from "~/repositories/auth.repository";
 type Token = { exp: number };
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { authenticated } = storeToRefs(useAuthStore());
-  const { authenticate, logout } = useAuthStore();
+  const authStore = useAuthStore();
 
   const accessToken = useCookie("accessToken");
   const refreshToken = useCookie("refreshToken");
@@ -20,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const decodedToken: Token = jwtDecode(accessToken.value);
   if (isAccessTokenValid(decodedToken)) {
-    authenticated.value = true;
+    authStore.authenticated = true;
     if (needToBeLoggedIn(to)) return;
     return { path: HOME_URL, query: to.query };
   }
@@ -28,10 +27,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const res = await AuthRepository.refresh(refreshToken.value);
   if (isHttpError(res)) return handleUnauthenticatedRedirect();
 
-  authenticate(res.accessToken, res.refreshToken);
+  authStore.authenticate(res.accessToken, res.refreshToken);
 
   function handleUnauthenticatedRedirect() {
-    logout();
+    authStore.logout();
     if (!needToBeLoggedIn(to)) return;
     abortNavigation();
     return LOGIN_URL;

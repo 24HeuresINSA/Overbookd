@@ -1,4 +1,5 @@
 import type { UserCredentials } from "@overbookd/http";
+import { ONE_WEEK_IN_SECONDS } from "@overbookd/time";
 import { AuthRepository } from "~/repositories/auth.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
@@ -7,9 +8,8 @@ export const useAuthStore = defineStore("auth", {
     authenticated: false,
   }),
   actions: {
-    async login(form: UserCredentials) {
-      const res = await AuthRepository.login(form);
-
+    async login(credentials: UserCredentials) {
+      const res = await AuthRepository.login(credentials);
       if (isHttpError(res)) return;
       this.authenticate(res.accessToken, res.refreshToken);
     },
@@ -33,8 +33,12 @@ export const useAuthStore = defineStore("auth", {
     },
 
     authenticate(newAccessToken: string, newRefreshToken: string) {
-      const accessToken = useCookie("accessToken");
-      const refreshToken = useCookie("refreshToken");
+      const accessToken = useCookie("accessToken", {
+        maxAge: ONE_WEEK_IN_SECONDS,
+      });
+      const refreshToken = useCookie("refreshToken", {
+        maxAge: ONE_WEEK_IN_SECONDS,
+      });
       accessToken.value = newAccessToken;
       refreshToken.value = newRefreshToken;
 

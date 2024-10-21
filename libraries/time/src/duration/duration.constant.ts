@@ -12,3 +12,6 @@ export const ONE_DAY_IN_MS = ONE_HOUR_IN_MS * 24;
 export const ONE_YEAR_IN_MS = ONE_DAY_IN_MS * 365;
 export const THIRTY_SECONDS_IN_MS = 30 * ONE_SECOND_IN_MS;
 export const ONE_WEEK_IN_MS = ONE_DAY_IN_MS * DAYS_IN_WEEK;
+
+export const ONE_DAY_IN_SECONDS = ONE_DAY_IN_MS / ONE_SECOND_IN_MS;
+export const ONE_WEEK_IN_SECONDS = 7 * ONE_DAY_IN_SECONDS;
