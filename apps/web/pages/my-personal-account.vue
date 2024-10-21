@@ -8,10 +8,6 @@
       <MyTransactionListing />
     </div>
   </div>
-
-  <v-dialog v-model="isTransferDialogOpen" max-width="600px">
-    <CreateTransferDialogCard @close="isTransferDialogOpen = false" />
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -19,8 +15,6 @@ useHead({ title: "Mon compte perso" });
 
 const transactionStore = useTransactionStore();
 transactionStore.fetchMyTransactions();
-
-const isTransferDialogOpen = ref<boolean>(false);
 </script>
 
 <style lang="scss" scoped>
@@ -34,11 +28,14 @@ $card-width-minus-gap: calc($card-gap / 2);
     flex-direction: column;
   }
 
-  &__left {
-    width: calc(40% - $card-width-minus-gap);
-  }
-  &__right {
-    width: calc(60% - $card-width-minus-gap);
+  @media screen and (min-width: $mobile-max-width) {
+    &__left {
+      width: calc(40% - $card-width-minus-gap);
+    }
+
+    &__right {
+      width: calc(60% - $card-width-minus-gap);
+    }
   }
 }
 </style>

@@ -10,6 +10,16 @@
           {{ displayableBalance }}
         </span>
       </v-card-text>
+      <v-card-action class="balance-cards__actions">
+        <v-btn
+          text="Faire un virement"
+          size="x-large"
+          class="transfer-btn"
+          color="primary"
+          rounded
+          @click="isTransferDialogOpen = true"
+        />
+      </v-card-action>
     </v-card>
 
     <v-card>
@@ -19,6 +29,10 @@
       </v-card-text>
     </v-card>
   </div>
+
+  <v-dialog v-model="isTransferDialogOpen" max-width="600px">
+    <CreateTransferDialogCard @close="isTransferDialogOpen = false" />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -32,6 +46,8 @@ import { getBorderColorForAmount } from "~/utils/transaction/border-color.graph"
 
 const userStore = useUserStore();
 const transactionStore = useTransactionStore();
+
+const isTransferDialogOpen = ref<boolean>(false);
 
 const balance = computed<number>(() => userStore.loggedUser?.balance ?? 0);
 const displayableBalance = computed<string>(() =>
@@ -91,12 +107,22 @@ const data = computed<ChartData<"line">>(() => {
   display: flex;
   flex-direction: column;
   gap: $card-gap;
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .balance {
   font-size: 2.8rem;
   font-weight: 600;
   line-height: 1.2;
+}
+
+.transfer-btn {
+  width: min(90%, 650px);
+  margin: 15px auto;
 }
 
 .negative {

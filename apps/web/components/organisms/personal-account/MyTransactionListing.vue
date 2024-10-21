@@ -47,8 +47,8 @@ import {
 
 const transactionStore = useTransactionStore();
 
-const transactions = computed<MyTransaction[]>(
-  () => transactionStore.myTransactions,
+const transactions = computed<MyTransaction[]>(() =>
+  transactionStore.myTransactions.toReversed(),
 );
 </script>
 
@@ -57,12 +57,6 @@ const transactions = computed<MyTransaction[]>(
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: 70px;
-
-  @media screen and (min-width: $mobile-max-width) {
-    overflow-y: auto;
-    margin-bottom: 0;
-  }
 }
 
 .transaction {
