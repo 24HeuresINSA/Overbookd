@@ -1,11 +1,6 @@
 <template>
   <v-card class="confirmation">
-    <v-btn
-      class="close-btn"
-      variant="flat"
-      icon="mdi-close"
-      @click="close"
-    />
+    <v-btn class="close-btn" variant="flat" icon="mdi-close" @click="close" />
     <v-card-title class="confirmation__title">
       <h2>
         <slot name="title">Confirmation</slot>

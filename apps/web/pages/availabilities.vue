@@ -13,12 +13,7 @@
       </v-card-text>
     </v-card>
 
-    <v-alert
-      icon="mdi-alert"
-      title="Attention !"
-      color="tertiary"
-      closable
-    >
+    <v-alert icon="mdi-alert" title="Attention !" color="tertiary" closable>
       <template #text>
         Les disponibilités doivent durer au moins 2 heures consécutives.
         <br />
