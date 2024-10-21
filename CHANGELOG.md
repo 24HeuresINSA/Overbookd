@@ -1,3 +1,9 @@
+## [3.10.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.0...v3.10.1) (2024-10-21)
+
+### Bug Fixes
+
+* **web:** bring back transfer button [#2195](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2195) ([3c9a77a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c9a77aeadbb305472220ff0f5150caa1447d35d))
+
 ## [3.10.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.9.0...v3.10.0) (2024-10-21)
 
 ### Features
