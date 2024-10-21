@@ -44,7 +44,7 @@ const focusOnSearch = () => searchInput.value?.focus();
 </script>
 
 <style lang="scss" scoped>
-@import "./side-nav-list.scss";
+@use "./side-nav-list.scss" as *;
 
 .navigation-search {
   margin: 0 $navigation-item-margin-horizontal 5px;

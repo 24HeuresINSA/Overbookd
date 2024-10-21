@@ -117,7 +117,7 @@ const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
-@import "./home-dashboard.scss";
+@use "./home-dashboard.scss" as *;
 
 .profile {
   &__edit-icon {

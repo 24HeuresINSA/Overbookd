@@ -35,7 +35,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 .weekly-content {
   width: 100%;

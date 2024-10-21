@@ -80,7 +80,7 @@ const nonFavoritePages = computed<PageInSummary[]>(
 </script>
 
 <style lang="scss" scoped>
-@import "./side-nav-list.scss";
+@use "./side-nav-list.scss" as *;
 
 $navigation-search-height: 63px;
 $navigation-item-height: 50px;
