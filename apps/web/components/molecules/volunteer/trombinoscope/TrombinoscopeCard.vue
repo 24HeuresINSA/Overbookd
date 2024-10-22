@@ -50,7 +50,7 @@ const propagateClickedVolunteer = () => {
 <style lang="scss" scoped>
 .name {
   font-size: 1.1rem;
-  text-wrap: pretty;
+  text-wrap: wrap;
   text-align: center;
 }
 

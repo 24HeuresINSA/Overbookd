@@ -30,7 +30,7 @@ defineProps({
     align-items: center;
     p {
       font-size: 1.1rem;
-      text-wrap: pretty;
+      text-wrap: wrap;
       margin: 0;
     }
   }

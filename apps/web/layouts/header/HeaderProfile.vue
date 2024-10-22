@@ -121,6 +121,8 @@ $header-profile-max-width: 300px;
   &__name {
     font-size: 1rem;
     font-weight: 600;
+    word-break: break-word;
+    line-height: 1rem;
   }
   &__balance {
     font-size: 0.85rem;
