@@ -1,7 +1,7 @@
 import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware((to) => {
   if (!needToBeLoggedIn(to)) return;
 
   const userStore = useUserStore();

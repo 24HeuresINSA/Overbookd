@@ -8,5 +8,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
   await userStore.fetchUser();
 
   const preferenceStore = usePreferenceStore();
-  preferenceStore.fetchMyPreferences();
+  await preferenceStore.fetchMyPreferences();
 });
