@@ -228,7 +228,7 @@ export class FestivalTaskQueryBuilder {
     return {
       upsert: mobilizations.map((mobilization) => ({
         where: { ftId_id: { ftId: festivalTaskId, id: mobilization.id } },
-        update: databaseMobilisationForUpdate(mobilization),
+        update: databaseMobilisationForUpdate(festivalTaskId, mobilization),
         create: databaseMobilizationForCreation(mobilization),
       })),
       deleteMany: {
@@ -332,6 +332,7 @@ function keyEventToHistory(
 }
 
 function databaseMobilisationForUpdate(
+  festivalTaskId: FestivalTask["id"],
   mobilization: Item<FestivalTaskWithoutConflicts["mobilizations"]>,
 ) {
   return {
@@ -349,15 +350,21 @@ function databaseMobilisationForUpdate(
       },
     },
     teams: {
-      createMany: {
-        data: mobilization.teams.map(({ count, team }) => ({
-          count,
-          teamCode: team,
-        })),
-        skipDuplicates: true,
-      },
+      upsert: mobilization.teams.map(({ count, team }) => ({
+        where: {
+          teamCode_mobilizationId_mobilizationftId: {
+            teamCode: team,
+            mobilizationId: mobilization.id,
+            mobilizationftId: festivalTaskId,
+          },
+        },
+        create: { count, teamCode: team },
+        update: { count },
+      })),
       deleteMany: {
-        teamCode: { notIn: mobilization.teams.map(({ team }) => team) },
+        teamCode: {
+          notIn: mobilization.teams.map(({ team }) => team),
+        },
       },
     },
   };

@@ -216,13 +216,14 @@ const filterTaskByReviews =
   };
 const filterTaskByReviewer =
   (adherentSearched?: User) => (task: PreviewFestivalTask) => {
+    if (!adherentSearched) return true;
     if (isDraftPreview(task)) return false;
     return adherentSearched ? task.reviewer.id === adherentSearched.id : true;
   };
+
 const filteredTasks = computed<PreviewFestivalTask[]>(() => {
   const { team, status, search, adherent, reviewer, ...reviews } =
     filters.value;
-
   return searchableTasks.value.filter((task) => {
     return (
       filterTaskByTeam(team)(task) &&

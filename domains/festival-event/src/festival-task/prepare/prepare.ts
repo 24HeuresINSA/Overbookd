@@ -122,7 +122,7 @@ export class PrepareFestivalTask {
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non gere");
+      throw new FestivalTaskError("Cas non géré");
     }
     if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
@@ -199,7 +199,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non gere");
+      throw new FestivalTaskError("Cas non géré");
     }
     if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
@@ -219,7 +219,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non gere");
+      throw new FestivalTaskError("Cas non géré");
     }
     if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
@@ -239,7 +239,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non gere");
+      throw new FestivalTaskError("Cas non géré");
     }
     if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
@@ -404,7 +404,7 @@ export class PrepareFestivalTask {
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non gere");
+      throw new FestivalTaskError("Cas non géré");
     }
     if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
