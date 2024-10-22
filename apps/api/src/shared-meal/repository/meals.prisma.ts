@@ -11,7 +11,7 @@ import { OnGoingSharedMealBuilder } from "@overbookd/personal-account";
 import { PastSharedMealBuilder } from "@overbookd/personal-account";
 import { numberGenerator } from "@overbookd/list";
 import { PrismaService } from "../../prisma.service";
-import { nicknameOrName } from "@overbookd/user";
+import { buildUserNameWithNickname } from "@overbookd/user";
 
 const SELECT_ADHERENT = {
   id: true,
@@ -158,12 +158,12 @@ function buildSharedMeal(saved: DatabaseSharedMeal) {
 
 function convertToBuilder(saved: DatabaseSharedMeal) {
   const { amount, payedAt } = saved;
-  const name = nicknameOrName(saved.chef);
+  const name = buildUserNameWithNickname(saved.chef);
   const chef = { id: saved.chef.id, name };
   const meal = { menu: saved.menu, date: saved.date };
   const shotguns = saved.shotguns.map((shotgun) => ({
     id: shotgun.guest.id,
-    name: nicknameOrName(shotgun.guest),
+    name: buildUserNameWithNickname(shotgun.guest),
     date: shotgun.date,
   }));
 
