@@ -7,6 +7,7 @@
       :items-per-page="20"
       loading-text="Chargement des bénévoles disponibles..."
       no-data-text="Aucun bénévole disponible pour t'aider 😭"
+      :mobile="isMobile"
       :hover="volunteers.length > 0"
     >
       <template #item.volunteer="{ item }">
@@ -37,12 +38,14 @@ import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const needHelpStore = useNeedHelpStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Bénévole", value: "volunteer" },
   { title: "Equipes", value: "teams" },
   { title: "Téléphone", value: "phone" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const volunteers = computed<HelpingVolunteer[]>(
   () => needHelpStore.filteredVolunteers,

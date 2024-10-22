@@ -85,7 +85,7 @@ const headers = [
   { title: "Rendu", value: "rendering", width: "25%" },
   { title: "Modifier/Supprimer", value: "actions", width: "20%" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const search = ref<string>("");
 const selectedTeam = ref<Team | undefined>(undefined);

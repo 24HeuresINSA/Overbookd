@@ -143,7 +143,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     ? [...baseHeaders, removalHeader]
     : baseHeaders;
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const activities = computed<PreviewFestivalActivity[]>(
   () => faStore.activities.forAll,

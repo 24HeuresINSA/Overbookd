@@ -10,6 +10,7 @@
         loading-text="Chargement des fiches activités..."
         :hover="filteredActivities.length > 0"
         :items-per-page="20"
+        :mobile="isMobile"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"
       >
@@ -58,6 +59,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 useHead({ title: "Récapitulatif Sécurité" });
 
 const faStore = useFestivalActivityStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Numéro", value: "id", sortable: true },
@@ -79,6 +81,7 @@ const headers: TableHeaders = [
   { title: "Dispositif de sécurité", value: "specialNeeds" },
   { title: "Laissez-passer", value: "freePass", sortable: true },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 type PreviewForSecurityWithGlobalTimeWindow = PreviewForSecurity &
   IProvidePeriod;

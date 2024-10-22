@@ -52,12 +52,12 @@ import { HOURS_IN_DAY } from "@overbookd/time";
 import {
   DAY_MODE,
   formatDateNumberValue,
-  WEEK_MODE,
   type CalendarMode,
 } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();
+const layoutStore = useLayoutStore();
 
 const props = defineProps({
   events: {
@@ -65,13 +65,15 @@ const props = defineProps({
     default: () => [],
   },
   mode: {
-    type: String as PropType<CalendarMode>,
-    default: isDesktop() ? WEEK_MODE : DAY_MODE,
+    type: String as PropType<CalendarMode | undefined>,
+    default: undefined,
   },
 });
 
 const displayedDay = defineModel<Date>({ default: new Date() });
-const isDayMode = computed<boolean>(() => props.mode === DAY_MODE);
+const isDayMode = computed<boolean>(() =>
+  props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
+);
 
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();

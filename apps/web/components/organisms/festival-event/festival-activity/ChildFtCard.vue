@@ -49,7 +49,7 @@ const headers: TableHeaders = [
   { title: "Nom", value: "name", sortable: true },
   { title: "Statut", value: "status", sortable: true },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,

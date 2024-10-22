@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const page = findPage(to.path);
   if (!page?.permission) return;
 
-  if (!layoutStore.isDesktop && !page?.mobileSupport) {
+  if (layoutStore.isMobile && !page?.mobileSupport) {
     sendFailureNotification("Cette page n'est pas disponible sur mobile");
     return HOME_URL;
   }

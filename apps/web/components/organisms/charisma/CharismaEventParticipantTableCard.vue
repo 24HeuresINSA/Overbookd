@@ -73,7 +73,7 @@ const tableHeaders: TableHeaders = [
   { title: "Charisme à ajouter", value: "newCharisma", sortable: true },
   { title: "Nombre d'heures participées", value: "hours", sortable: true },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const potentialParticipants = defineModel<CharismaEventParticipant[]>(
   "potentialParticipants",

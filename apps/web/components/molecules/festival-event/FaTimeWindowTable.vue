@@ -68,7 +68,7 @@ const headers = computed<TableHeaders>(() => {
   const removalHeader = { title: "Suppression", value: "removal" };
   return props.disabled ? baseHeaders : [...baseHeaders, removalHeader];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const emit = defineEmits(["add", "remove"]);
 const addTimeWindow = (period: IProvidePeriod) => emit("add", period);

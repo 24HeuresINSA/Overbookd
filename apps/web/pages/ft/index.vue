@@ -139,7 +139,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const removalHeader = { title: "Suppression", value: "removal" };
   return canRemoveTask.value ? [...baseHeaders, removalHeader] : baseHeaders;
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
 const reviewers = computed<Team[]>(() => teamStore.ftReviewers);

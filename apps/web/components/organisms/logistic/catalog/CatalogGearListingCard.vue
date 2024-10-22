@@ -107,7 +107,7 @@ const headers = computed<TableHeaders>(() => {
     ? [...commonHeaders, actionsHeader]
     : commonHeaders;
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const filters = reactive<FilterGear>({
   name: "",

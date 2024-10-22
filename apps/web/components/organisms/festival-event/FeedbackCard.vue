@@ -75,7 +75,7 @@ const headers: TableHeaders = [
   { title: "Auteur", value: "by", width: "20%" },
   { title: "Commentaire", value: "description" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const newFeedbackContent = ref<string>("");
 

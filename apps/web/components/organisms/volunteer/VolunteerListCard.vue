@@ -94,7 +94,7 @@ const headers = computed<TableHeaders>(() => {
     : baseHeaders;
 });
 
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const emit = defineEmits(["click:volunteer", "click:team"]);
 const propagateClickedVolunteer = (

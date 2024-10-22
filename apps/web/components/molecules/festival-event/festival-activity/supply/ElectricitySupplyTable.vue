@@ -80,7 +80,7 @@ const headers = computed<TableHeaders>(() => {
   const actionsHeader = { title: "Actions", value: "actions" };
   return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedSupply = ref<ElectricitySupply | null>(null);
 const isSupplyDialogOpen = ref<boolean>(false);

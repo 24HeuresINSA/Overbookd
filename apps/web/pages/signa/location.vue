@@ -117,7 +117,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionHeader = { title: "Actions", value: "actions" };
   return canManageLocations.value ? [nameHeader, actionHeader] : [nameHeader];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const locations = computed<SignaLocation[]>(() => locationStore.all);
 const loading = ref<boolean>(locations.value.length === 0);

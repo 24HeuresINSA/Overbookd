@@ -60,7 +60,7 @@ const headers = [
   { title: "Équipes", value: "teams", width: "25%" },
   { title: "Actions", value: "actions", width: "25%" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const search = ref<string>("");
 

@@ -95,7 +95,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     ...(props.disabled ? [] : [actionHeader]),
   ];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const noDataMessage = computed<string>(() => {
   switch (props.owner) {

@@ -136,7 +136,7 @@ const headers = computed<TableHeaders>(() => {
     { title: actionTitle, value: "action", width: "30%" },
   ];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const isMode = (value: SgMode) => props.mode === value;
 const isExpenseMode = computed<boolean>(

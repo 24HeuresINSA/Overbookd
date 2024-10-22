@@ -21,6 +21,7 @@
       :items="gears"
       :items-per-page="-1"
       :no-data-text="noDataText"
+      :mobile="isMobile"
       disable-pagination
       hide-default-footer
     >
@@ -41,6 +42,8 @@ import type { CatalogGear } from "@overbookd/http";
 import type { GearRequest } from "@overbookd/logistic";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
+const layoutStore = useLayoutStore();
+
 defineProps({
   gears: {
     type: Array as PropType<GearRequest[]>,
@@ -55,12 +58,9 @@ defineProps({
 const headers: TableHeaders = [
   { title: "Quantité", value: "quantity", sortable: true },
   { title: "Nom", value: "name", sortable: true },
-  {
-    title: "Supprimer",
-    value: "remove",
-    align: "center",
-  },
+  { title: "Supprimer", value: "remove", align: "center" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const emit = defineEmits(["add", "remove"]);
 

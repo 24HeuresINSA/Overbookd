@@ -120,7 +120,7 @@ const headers: TableHeaders = [
   { title: "Montant", value: "amount", sortable: true },
   { title: "Supprimer", value: "delete" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const formatTransactionUsername = (user?: TransactionUser) => {
   return user ? buildUserName(user) : "";

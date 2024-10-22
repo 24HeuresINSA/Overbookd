@@ -77,7 +77,7 @@ const tableHeaders: TableHeaders = [
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Actions", value: "actions" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const allParticipations = computed<CharismaEventParticipation[]>(
   () => charismaEventStore.allParticipations,

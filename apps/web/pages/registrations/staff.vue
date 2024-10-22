@@ -94,7 +94,7 @@ const headers = [
   { title: "Équipes", value: "teams" },
   { title: "Action", value: "action" },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const searchedCandidate = ref<string>("");
 const selectedCandidates = ref<StaffCandidate[]>([]);

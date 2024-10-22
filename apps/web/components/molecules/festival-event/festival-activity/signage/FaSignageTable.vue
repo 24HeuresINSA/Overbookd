@@ -93,7 +93,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionsHeader = { title: "Actions", value: "actions" };
   return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedSignage = ref<FaSignage | null>(null);
 

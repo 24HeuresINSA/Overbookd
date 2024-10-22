@@ -61,7 +61,7 @@ const headers: TableHeaders = [
   { title: "Surnom", value: "nickname", sortable: true },
   { title: "Paiement", value: "amount", width: "40%", sortable: true },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const search = ref<string>("");
 

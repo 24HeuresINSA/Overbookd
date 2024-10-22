@@ -119,7 +119,7 @@ const tableHeaders: TableHeaders = [
   { title: "Créneaux", value: "timeWindows" },
 ];
 
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const activities = computed<PreviewForCommunication[]>(
   () => faStore.activities.forCommunication,

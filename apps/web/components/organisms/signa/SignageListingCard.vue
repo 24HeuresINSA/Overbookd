@@ -141,7 +141,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionHeader = { title: "Actions", value: "actions" };
   return [...baseHeaders, ...(isCatalogWriter.value ? [actionHeader] : [])];
 });
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const signages = computed<SignageWithPotentialImage[]>(
   () => catalogSignageStore.signages,

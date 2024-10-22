@@ -16,10 +16,19 @@ export const useLayoutStore = defineStore("layout", {
     isDarkTheme: isDarkTheme(),
     isDesktop: window.innerWidth >= MAX_MOBILE_WIDTH,
   }),
+  getters: {
+    isMobile(): boolean {
+      return !this.isDesktop;
+    },
+  },
   actions: {
     async toggleTheme() {
       this.isDarkTheme = !this.isDarkTheme;
-      this.isDarkTheme ? saveDarkTheme() : saveLightTheme();
+      if (this.isDarkTheme) {
+        saveDarkTheme();
+        return;
+      }
+      saveLightTheme();
     },
 
     initializeResizeListener() {

@@ -54,7 +54,7 @@ const headers: TableHeaders = [
   { title: "Quantité Totale", value: "quantity", sortable: true },
   { title: "Lieu de stockage", value: "storage", sortable: true },
 ];
-const isMobile = computed<boolean>(() => !layoutStore.isDesktop);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const inventoryGroupedRecords = computed<InventoryGroupedRecord[]>(
   () => inventoryStore.groupedRecords,
