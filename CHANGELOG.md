@@ -1,3 +1,11 @@
+## [3.10.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.1...v3.10.2) (2024-10-22)
+
+### Bug Fixes
+
+* **favorite-pages:** outlined star even if page is favorite [#2467](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2467) ([6d808e3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d808e3215e083dea569b7f006f1e405304e1261))
+* **logout:** prevent cookies from being deleted when you close the browser [#2197](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2197) ([1e3de71](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e3de7164db88edf1daed4ebe8cc95a01cc92dac))
+* **web:** make transactions scrollable [#2195](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2195) ([8701e8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8701e8e398c6b1c12a3546bc99a68d8e48912c75))
+
 ## [3.10.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.0...v3.10.1) (2024-10-21)
 
 ### Bug Fixes
