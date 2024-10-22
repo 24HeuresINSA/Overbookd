@@ -39,7 +39,7 @@
           </template>
           <template #title>
             <span class="transaction__title">
-              {{ transaction.context }}{{ getTransferMessage(transaction) }}
+              {{ transaction.context }} {{ getTransferMessage(transaction) }}
             </span>
           </template>
           <template #subtitle>

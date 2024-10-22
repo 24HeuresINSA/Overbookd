@@ -11,7 +11,10 @@
       :page="page"
       :is-folded="isFolded"
     />
-    <v-divider v-show="favoritePages.length > 0" class="divider" />
+    <v-divider
+      v-show="favoritePages.length > 0 && nonFavoritePages.length > 0"
+      class="divider"
+    />
     <SideNavPageItem
       v-for="page in nonFavoritePages"
       :key="page.to"

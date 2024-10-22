@@ -130,6 +130,9 @@ const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    word-break: break-word;
+    text-wrap: wrap;
   }
   &__data {
     display: flex;
