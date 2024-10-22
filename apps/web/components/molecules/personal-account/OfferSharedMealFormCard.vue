@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="offer-shared-meal">
     <v-btn
       v-if="closable"
       icon="mdi-close"
@@ -77,6 +77,10 @@ const offer = async () => {
 </script>
 
 <style lang="scss" scoped>
+.offer-shared-meal {
+  min-width: 33%;
+}
+
 h2 {
   text-wrap: nowrap;
 }
