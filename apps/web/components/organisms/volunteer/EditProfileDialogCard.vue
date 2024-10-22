@@ -7,12 +7,21 @@
           <v-text-field
             v-model="firstname"
             label="Prénom*"
-            :rules="[required]"
+            :rules="[required, maxLength(30)]"
           />
-          <v-text-field v-model="lastname" label="Nom*" :rules="[required]" />
+          <v-text-field
+            v-model="lastname"
+            label="Nom*"
+            :rules="[required, maxLength(30)]"
+          />
         </div>
         <div class="profile-row">
-          <v-text-field v-model="nickname" label="Surnom" clearable />
+          <v-text-field
+            v-model="nickname"
+            label="Surnom"
+            :rules="[maxLength(30)]"
+            clearable
+          />
           <v-text-field
             v-model="birthday"
             label="Date de naissance*"
@@ -80,6 +89,7 @@ import {
   isMobilePhoneNumber,
   minDate,
   maxDate,
+  maxLength,
 } from "~/utils/rules/input.rules";
 
 const userStore = useUserStore();
