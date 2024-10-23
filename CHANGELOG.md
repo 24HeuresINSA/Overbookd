@@ -1,3 +1,16 @@
+## [3.10.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.2...v3.10.3) (2024-10-23)
+
+### Bug Fixes
+
+* **configuration:** delete uid and gid from .env after reconnecting to devcontainer [#2201](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2201) ([26b327a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/26b327a7a81d8bd46d9dd3f78e80dc3fce04d270))
+* **scss:** remove deprecation warnings [#2167](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2167) ([16b80a5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/16b80a5ef1acc62259d66796681b36bd352b30fd))
+* **web:** display fullnames in shared meals [#2200](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2200) ([3310d4a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3310d4aba69de0463e9f5316f4f45fde1c581d7f))
+* **web:** fix text wrap in header, trombi and profile card [#2199](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2199) ([251a656](https://gitlab.com/24-heures-insa/overbookd-mono/commit/251a6563a3719d28a3d28991d98948bffbd17168))
+
+### Pre-Features
+
+* **ft:** add mobilization card [#2069](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2069) ([0615b8b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0615b8b3c70de80f00f739097ffbeeffcf9fc34b))
+
 ## [3.10.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.1...v3.10.2) (2024-10-22)
 
 ### Bug Fixes
