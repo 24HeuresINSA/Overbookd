@@ -1,3 +1,9 @@
+## [3.11.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.3...v3.11.0) (2024-10-23)
+
+### Features
+
+* **volunteer:** add export CSV [#2202](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2202) ([e7ac077](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e7ac0771af52bdc94302da1c8a2c5b8b976343c4))
+
 ## [3.10.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.2...v3.10.3) (2024-10-23)
 
 ### Bug Fixes
