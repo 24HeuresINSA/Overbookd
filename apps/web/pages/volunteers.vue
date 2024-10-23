@@ -55,6 +55,7 @@ import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-inf
 import { download } from "~/utils/file/download.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -120,18 +121,23 @@ const exportCSV = async () => {
   const csvHeader =
     "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
 
+  const sanitizeField = (field?: string | null): string => {
+    return field?.replace(/;/g, "") ?? "";
+  };
+
   const csvContent = filteredVolunteers.value.map((volunteer) => {
+    const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
     return [
-      volunteer.firstname,
-      volunteer.lastname,
-      volunteer.nickname,
-      volunteer.charisma,
-      volunteer.teams?.join(", ") ?? "",
-      volunteer.email,
-      formatDate(volunteer.birthdate),
-      formatUserPhone(volunteer.phone),
-      volunteer.comment?.replace(lineReturnRegex, " ") ?? "",
-      volunteer.note?.replace(lineReturnRegex, " ") ?? "",
+      sanitizeField(volunteer.firstname),
+      sanitizeField(volunteer.lastname),
+      sanitizeField(volunteer.nickname),
+      sanitizeField(volunteer.charisma.toString()),
+      sanitizeField(teams.join(", ")),
+      sanitizeField(volunteer.email),
+      sanitizeField(formatDate(volunteer.birthdate)),
+      sanitizeField(formatUserPhone(volunteer.phone)),
+      sanitizeField(volunteer.comment?.replace(lineReturnRegex, " ")),
+      sanitizeField(volunteer.note?.replace(lineReturnRegex, " ")),
     ].join(";");
   });
 
