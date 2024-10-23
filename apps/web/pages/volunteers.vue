@@ -4,6 +4,7 @@
     <VolunteerListHeader
       v-model:filters="filters"
       v-model:trombinoscope="isTrombinoscopeDisplayed"
+      @export-csv="exportCSV"
     />
 
     <Trombinoscope
@@ -51,6 +52,10 @@ import {
 } from "~/utils/user/volunteer.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import { download } from "~/utils/file/download.utils";
+import { formatDate } from "@overbookd/time";
+import { formatUserPhone } from "~/utils/user/user.utils";
+import { BENEVOLE_CODE } from "@overbookd/team-constants";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -73,6 +78,7 @@ onMounted(
 const searchableVolunteers = computed<
   Searchable<UserDataWithPotentialyProfilePicture>[]
 >(() => volunteers.value.map(toSearchable));
+
 const filteredVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(
   () => {
     const { search, teams, excludedTeams } = filters.value;
@@ -107,6 +113,39 @@ const openVolunteerInfoDialog = (
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
+};
+
+const exportCSV = async () => {
+  // Parse data into a CSV string to be passed to the download function
+  const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
+  const csvHeader =
+    "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
+
+  const sanitizeField = (field?: string | null): string => {
+    return field?.replace(/;/g, "") ?? "";
+  };
+
+  const csvContent = filteredVolunteers.value.map((volunteer) => {
+    const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
+    return [
+      sanitizeField(volunteer.firstname),
+      sanitizeField(volunteer.lastname),
+      sanitizeField(volunteer.nickname),
+      sanitizeField(volunteer.charisma.toString()),
+      sanitizeField(teams.join(", ")),
+      sanitizeField(volunteer.email),
+      sanitizeField(formatDate(volunteer.birthdate)),
+      sanitizeField(formatUserPhone(volunteer.phone)),
+      sanitizeField(volunteer.comment?.replace(lineReturnRegex, " ")),
+      sanitizeField(volunteer.note?.replace(lineReturnRegex, " ")),
+    ].join(";");
+  });
+
+  const csv = [csvHeader, ...csvContent].join("\n");
+  const regex = new RegExp(/undefined/i, "g");
+
+  const parsedCSV = csv.replace(regex, "");
+  download("benevoles.csv", parsedCSV);
 };
 </script>
 

@@ -11,7 +11,6 @@
         clearable
         @update:model-value="updateSearchParam"
       />
-
       <SearchTeams
         :model-value="filters.teams ?? []"
         label="Equipe(s)"
@@ -22,7 +21,6 @@
         hide-details
         @update:model-value="updateTeamsParam"
       />
-
       <SearchTeams
         v-if="canFilterByExcludedTeams"
         :model-value="filters.excludedTeams ?? []"
@@ -35,32 +33,32 @@
         @update:model-value="updateExcludedTeamsParam"
       />
     </div>
-    <div class="icons-action">
+
+    <div class="icons-action desktop-only">
+      <v-btn
+        v-if="canManageUsers"
+        icon="mdi-export"
+        variant="flat"
+        size="large"
+        density="comfortable"
+        class="icons-action__export"
+        @click="exportCSV"
+      />
       <v-btn-toggle
         v-model="isTrombinoscopeDisplayed"
         color="primary"
         size="small"
-        class="display-mode desktop-only"
+        class="icons-action__display-mode"
       >
-        <v-btn
-          :value="true"
-          icon="mdi-view-grid"
-          :rounded="false"
-          class="display-mode__btn"
-        />
-        <v-btn
-          :value="false"
-          icon="mdi-view-list"
-          :rounded="false"
-          class="display-mode__btn"
-        />
+        <v-btn :value="true" icon="mdi-view-grid" :rounded="false" />
+        <v-btn :value="false" icon="mdi-view-list" :rounded="false" />
       </v-btn-toggle>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
@@ -92,6 +90,14 @@ const canFilterByExcludedTeams = computed<boolean>(
     userStore.can(AFFECT_VOLUNTEER) ||
     filters.value.excludedTeams?.length !== 0,
 );
+
+const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+
+const emit = defineEmits(["export-csv"]);
+const exportCSV = () => {
+  if (!canManageUsers.value) return;
+  emit("export-csv");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -122,8 +128,17 @@ const canFilterByExcludedTeams = computed<boolean>(
   }
 }
 
-.display-mode {
-  height: 40px !important;
-  border: 1px solid rgba(var(--v-border-color), 0.3);
+.icons-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  &__export {
+    height: 42px !important;
+    border: 1px solid rgba(var(--v-border-color), 0.3);
+  }
+  &__display-mode {
+    height: 42px !important;
+    border: 1px solid rgba(var(--v-border-color), 0.3);
+  }
 }
 </style>

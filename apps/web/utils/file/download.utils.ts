@@ -1,15 +1,17 @@
 export function download(filename: string, text: string) {
-  // We use the 'a' HTML element to incorporate file generation into
-  // the browser rather than server-side
+  const BOM = "\uFEFF";
+  const textWithBOM = BOM + text;
+
+  const blob = new Blob([textWithBOM], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
   const element = document.createElement("a");
-  element.setAttribute(
-    "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(text),
-  );
+  element.href = url;
   element.setAttribute("download", filename);
 
-  element.style.display = "none";
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
+
+  URL.revokeObjectURL(url);
 }
