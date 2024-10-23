@@ -110,7 +110,7 @@ const closeVolunteerInfoDialog = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .volunteers-page {
   display: flex;
   flex-direction: column;

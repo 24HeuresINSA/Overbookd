@@ -106,7 +106,7 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
 );
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .filters {
   display: flex;
   align-items: center;

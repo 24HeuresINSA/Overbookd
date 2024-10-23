@@ -49,7 +49,7 @@ export default pluginTs.config(
         "error",
         {
           singleline: {
-            max: 3,
+            max: 10,
           },
           multiline: {
             max: 1,

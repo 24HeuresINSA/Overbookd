@@ -40,7 +40,7 @@ const openReportBugDialog = () => emit("report-bug");
 </script>
 
 <style lang="scss" scoped>
-@import "./side-nav-list.scss";
+@use "./side-nav-list.scss" as *;
 
 .help-items {
   position: fixed;

@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "~/assets/variables.scss" as *;
+
 .desktop-only {
   @media screen and (max-width: $mobile-max-width) {
     display: none !important;
@@ -147,8 +150,8 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-also-requested-by-ft-color,
-              $amount: 5%);
+          background-color: color.adjust($color: $conflict-also-requested-by-ft-color,
+              $lightness: -5%);
         }
       }
 
@@ -161,8 +164,8 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-not-available-for-ft-color,
-              $amount: 5%);
+          background-color: color.adjust($color: $conflict-not-available-for-ft-color,
+              $lightness: -5%);
         }
       }
 
@@ -175,8 +178,8 @@
         }
 
         &.v-chip--clickable:hover {
-          background-color: darken($color: $conflict-already-assigned,
-              $amount: 5%);
+          background-color: color.adjust($color: $conflict-already-assigned,
+              $lightness: -5%);
         }
       }
     }

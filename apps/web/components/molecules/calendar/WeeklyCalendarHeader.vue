@@ -20,7 +20,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 .header-days {
   display: grid;

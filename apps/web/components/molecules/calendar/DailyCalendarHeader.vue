@@ -51,7 +51,7 @@ const isToday = computed<boolean>(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 .header-day {
   width: 100%;

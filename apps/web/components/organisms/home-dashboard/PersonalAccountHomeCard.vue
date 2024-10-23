@@ -105,7 +105,7 @@ const transactions = computed<MyTransaction[]>(
 </script>
 
 <style lang="scss" scoped>
-@import "./home-dashboard.scss";
+@use "./home-dashboard.scss" as *;
 
 .personal-account {
   &__title {

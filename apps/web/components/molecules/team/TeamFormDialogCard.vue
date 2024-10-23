@@ -109,7 +109,7 @@ const createOrUpdateTeam = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .form {
   display: flex;
   flex-direction: column;

@@ -53,7 +53,7 @@ const isSelected = ({ to }: PageInSummary): boolean => {
 </script>
 
 <style lang="scss" scoped>
-@import "./side-nav-list.scss";
+@use "./side-nav-list.scss" as *;
 
 .navigation-item {
   &__selected {

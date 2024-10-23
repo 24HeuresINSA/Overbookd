@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     server: false,
     client: true,
   },
+  compatibilityDate: "2024-04-03",
   app: {
     head: {
       title: "Overbookd",
@@ -48,7 +49,8 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: "@import '~/assets/variables.scss';",
+          additionalData: "@use '~/assets/variables.scss' as *;",
+          silenceDeprecations: ["legacy-js-api"],
         },
       },
     },

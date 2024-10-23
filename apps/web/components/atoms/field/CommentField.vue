@@ -24,7 +24,7 @@
 const comment = defineModel<string | null | undefined>({ required: true });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .comment-title {
   display: flex;
   gap: 2px;

@@ -109,7 +109,7 @@ const updateStatusParam = (status: FestivalEventStatus) => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .festival-event-filter {
   height: fit-content;
 }

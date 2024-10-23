@@ -64,7 +64,7 @@ const emit = defineEmits(["ask-init"]);
 const askForInit = () => emit("ask-init");
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .card-content {
   padding-bottom: 0;
 }

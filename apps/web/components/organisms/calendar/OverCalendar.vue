@@ -79,7 +79,7 @@ if (publicHolidayStore.all.length === 0) {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 $hour-height: 45px;
 $first-column-width: 60px;

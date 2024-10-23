@@ -36,7 +36,7 @@ const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .daily-content {
   position: relative;
 }

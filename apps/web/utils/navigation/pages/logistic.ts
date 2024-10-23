@@ -106,7 +106,7 @@ const LOCATION_PAGE: PageInSummary = {
     "Permet de définir l'ensemble des lieux disponible sur le festival",
   mobileSupport: false,
   canBeFavorite: true,
-  keywords: ["lieux-signaletique", "localisation"],
+  keywords: ["lieux-signaletique", "localisation", "carte", "plan"],
 };
 
 const SIGNAGE_CATALOG_PAGE: PageInSummary = {
