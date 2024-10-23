@@ -41,14 +41,14 @@
         variant="flat"
         size="large"
         density="comfortable"
-        class="icons-action__export"
+        class="icons-action__button"
         @click="exportCSV"
       />
       <v-btn-toggle
         v-model="isTrombinoscopeDisplayed"
         color="primary"
         size="small"
-        class="icons-action__display-mode"
+        class="icons-action__button"
       >
         <v-btn :value="true" icon="mdi-view-grid" :rounded="false" />
         <v-btn :value="false" icon="mdi-view-list" :rounded="false" />
@@ -132,11 +132,7 @@ const exportCSV = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  &__export {
-    height: 42px !important;
-    border: 1px solid rgba(var(--v-border-color), 0.3);
-  }
-  &__display-mode {
+  &__button {
     height: 42px !important;
     border: 1px solid rgba(var(--v-border-color), 0.3);
   }
