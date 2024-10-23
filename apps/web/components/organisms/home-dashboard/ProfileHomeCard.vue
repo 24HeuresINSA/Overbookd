@@ -19,6 +19,9 @@
     </v-card-title>
 
     <v-card-text class="profile__data">
+      <div class="teams">
+        <TeamChip v-for="team of teams" :key="team" :team="team" with-name />
+      </div>
       <div class="stats-container">
         <div class="stats">
           <span class="stats__value">{{ charisma }}</span>
@@ -92,6 +95,9 @@ const name = computed<string>(() =>
 const fullName = computed<string>(() =>
   loggedUser.value ? buildUserName(loggedUser.value) : "",
 );
+const teams = computed<string[]>(() =>
+  loggedUser.value ? loggedUser.value.teams : [],
+);
 const charisma = computed<number>(() =>
   loggedUser.value ? loggedUser.value.charisma : 0,
 );
@@ -146,6 +152,13 @@ const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
   font-size: 1rem;
 }
 
+.teams {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .stats-container {
   display: flex;
   justify-content: space-around;
@@ -184,6 +197,7 @@ const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
     }
     &__label {
       font-size: 0.9rem;
+      word-break: break-word;
     }
   }
 }
