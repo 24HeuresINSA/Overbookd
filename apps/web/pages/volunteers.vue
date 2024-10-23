@@ -4,6 +4,7 @@
     <VolunteerListHeader
       v-model:filters="filters"
       v-model:trombinoscope="isTrombinoscopeDisplayed"
+      @export-csv="exportCSV"
     />
 
     <Trombinoscope
@@ -51,6 +52,9 @@ import {
 } from "~/utils/user/volunteer.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import { download } from "~/utils/file/download.utils";
+import { formatDate } from "@overbookd/time";
+import { formatUserPhone } from "~/utils/user/user.utils";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -73,6 +77,7 @@ onMounted(
 const searchableVolunteers = computed<
   Searchable<UserDataWithPotentialyProfilePicture>[]
 >(() => volunteers.value.map(toSearchable));
+
 const filteredVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(
   () => {
     const { search, teams, excludedTeams } = filters.value;
@@ -107,6 +112,34 @@ const openVolunteerInfoDialog = (
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
+};
+
+const exportCSV = async () => {
+  // Parse data into a CSV string to be passed to the download function
+  const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
+  const csvHeader =
+    "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
+
+  const csvContent = filteredVolunteers.value.map((volunteer) => {
+    return [
+      volunteer.firstname,
+      volunteer.lastname,
+      volunteer.nickname,
+      volunteer.charisma,
+      volunteer.teams?.join(", ") ?? "",
+      volunteer.email,
+      formatDate(volunteer.birthdate),
+      formatUserPhone(volunteer.phone),
+      volunteer.comment?.replace(lineReturnRegex, " ") ?? "",
+      volunteer.note?.replace(lineReturnRegex, " ") ?? "",
+    ].join(";");
+  });
+
+  const csv = [csvHeader, ...csvContent].join("\n");
+  const regex = new RegExp(/undefined/i, "g");
+
+  const parsedCSV = csv.replace(regex, "");
+  download("benevoles.csv", parsedCSV);
 };
 </script>
 
