@@ -95,9 +95,7 @@ const name = computed<string>(() =>
 const fullName = computed<string>(() =>
   loggedUser.value ? buildUserName(loggedUser.value) : "",
 );
-const teams = computed<string[]>(() =>
-  loggedUser.value ? loggedUser.value.teams : [],
-);
+const teams = computed<string[]>(() => loggedUser.value?.teams ?? []);
 const charisma = computed<number>(() =>
   loggedUser.value ? loggedUser.value.charisma : 0,
 );

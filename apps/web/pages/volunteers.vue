@@ -122,9 +122,10 @@ const exportCSV = async () => {
     "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
 
   const sanitizeField = (field?: string | null): string => {
-    return field?.includes(";")
-      ? `"${field.replaceAll('"', '""')}"`
-      : (field ?? "");
+    if (!field) return "";
+
+    const includesSemicolon = field.includes(";");
+    return includesSemicolon ? `"${field.replaceAll('"', '""')}"` : field;
   };
 
   const csvContent = filteredVolunteers.value.map((volunteer) => {
