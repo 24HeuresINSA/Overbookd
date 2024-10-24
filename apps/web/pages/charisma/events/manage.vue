@@ -74,5 +74,12 @@ const addParticipations = async () => {
   &__participant-table {
     width: 80%;
   }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    &__settings,
+    &__participant-table {
+      width: calc(100% - $card-margin * 2);
+    }
+  }
 }
 </style>

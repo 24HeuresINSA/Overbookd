@@ -62,7 +62,7 @@ const FA_TO_PUBLISH_PAGE: PageInSummary = {
   to: FA_TO_PUBLISH_URL,
   description:
     "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
-  mobileSupport: false,
+  mobileSupport: true,
   canBeFavorite: true,
   keywords: [
     "animations",

@@ -43,21 +43,18 @@ import {
   ONE_DAY_IN_MS,
   ONE_WEEK_IN_MS,
 } from "@overbookd/time";
-import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 
 const configurationStore = useConfigurationStore();
 
 const props = defineProps({
-  mode: {
-    type: String as PropType<CalendarMode>,
-    required: true,
+  dayMode: {
+    type: Boolean,
+    default: false,
   },
 });
 
 const displayedDay = defineModel<Date>({ required: true });
 const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
-
-const isDayMode = computed<boolean>(() => props.mode === DAY_MODE);
 
 const periodIndicator = computed<string>(() => {
   const month = displayedDay.value.toLocaleDateString("fr-FR", {
@@ -69,12 +66,12 @@ const periodIndicator = computed<string>(() => {
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
   const today = new Date();
-  return isDayMode.value
+  return props.dayMode
     ? isSameDay(displayedDay.value, today)
     : isSameWeek(displayedDay.value, today);
 });
 const isEventStartWeekOrDay = computed<boolean>(() => {
-  return isDayMode.value
+  return props.dayMode
     ? isSameDay(displayedDay.value, eventStartDate.value)
     : isSameWeek(displayedDay.value, eventStartDate.value);
 });
@@ -87,12 +84,12 @@ const moveToEventStartDay = () => {
 };
 
 const moveToPreviousWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
+  displayedDay.value = props.dayMode
     ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
     : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
 };
 const moveToNextWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
+  displayedDay.value = props.dayMode
     ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
     : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-with-manager">
-    <CalendarManager v-model="displayedDay" :mode="mode" />
+    <CalendarManager v-model="displayedDay" :day-mode="isDayMode" />
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
