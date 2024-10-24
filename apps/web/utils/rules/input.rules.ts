@@ -28,7 +28,7 @@ export function minLength(minLength: number) {
 export function maxLength(maxLength: number) {
   return function (value: unknown[] | null) {
     const message = `Pas plus de ${maxLength}`;
-    return (value && value.length <= maxLength) || message;
+    return (value && value.length <= maxLength) || !value || message;
   };
 }
 

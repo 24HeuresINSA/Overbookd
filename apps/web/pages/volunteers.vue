@@ -122,30 +122,32 @@ const exportCSV = async () => {
     "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
 
   const sanitizeField = (field?: string | null): string => {
-    return field?.replace(/;/g, "") ?? "";
+    if (!field) return "";
+
+    const includesSemicolon = field.includes(";");
+    return includesSemicolon ? `"${field.replaceAll('"', '""')}"` : field;
   };
 
   const csvContent = filteredVolunteers.value.map((volunteer) => {
     const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
     return [
-      sanitizeField(volunteer.firstname),
-      sanitizeField(volunteer.lastname),
-      sanitizeField(volunteer.nickname),
-      sanitizeField(volunteer.charisma.toString()),
-      sanitizeField(teams.join(", ")),
-      sanitizeField(volunteer.email),
-      sanitizeField(formatDate(volunteer.birthdate)),
-      sanitizeField(formatUserPhone(volunteer.phone)),
-      sanitizeField(volunteer.comment?.replace(lineReturnRegex, " ")),
-      sanitizeField(volunteer.note?.replace(lineReturnRegex, " ")),
-    ].join(";");
+      volunteer.firstname,
+      volunteer.lastname,
+      volunteer.nickname,
+      volunteer.charisma.toString(),
+      teams.join(", "),
+      volunteer.email,
+      formatDate(volunteer.birthdate),
+      formatUserPhone(volunteer.phone),
+      volunteer.comment?.replace(lineReturnRegex, " "),
+      volunteer.note?.replace(lineReturnRegex, " "),
+    ]
+      .map(sanitizeField)
+      .join(";");
   });
 
   const csv = [csvHeader, ...csvContent].join("\n");
-  const regex = new RegExp(/undefined/i, "g");
-
-  const parsedCSV = csv.replace(regex, "");
-  download("benevoles.csv", parsedCSV);
+  download("benevoles.csv", csv);
 };
 </script>
 
