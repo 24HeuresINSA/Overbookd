@@ -1,3 +1,9 @@
+## [3.11.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.0...v3.11.1) (2024-10-24)
+
+### Bug Fixes
+
+* **web:** add teams to profile card [#2203](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2203) ([03bfdb9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03bfdb974f0521f0465011b558b3b546f81353c9))
+
 ## [3.11.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.10.3...v3.11.0) (2024-10-23)
 
 ### Features
