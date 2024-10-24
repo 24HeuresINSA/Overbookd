@@ -3,11 +3,19 @@ import { STAFF, VOLUNTEER } from "../newcomer.js";
 import { Candidate } from "./candidates.js";
 
 export const lea = { email: "lea.mouyno@gmail.com" };
-export const leaCandidate: Candidate = {
+export const leaStaffCandidate: Candidate = {
   ...lea,
   membership: STAFF,
   edition: Edition.current,
   isRejected: false,
+  candidatedAt: new Date(),
+};
+export const leaVolunteerCandidate: Candidate = {
+  ...lea,
+  membership: VOLUNTEER,
+  edition: Edition.current,
+  isRejected: false,
+  candidatedAt: new Date(),
 };
 
 export const noel = { email: "noel.ertsemud@gmail.com" };
@@ -17,22 +25,33 @@ export const noelCandidate: Candidate = {
   membership: STAFF,
   edition: previousEdition,
   isRejected: false,
+  candidatedAt: new Date(),
 };
 
 export const olop = { email: "olop@gmail.com" };
-export const rejectedOlopCandidate: Candidate = {
+export const rejectedOlopStaffCandidate: Candidate = {
   ...olop,
   membership: STAFF,
   edition: Edition.current,
   isRejected: true,
+  candidatedAt: new Date(),
 };
 
-const oel = { email: "eol.anyuom@gmail.com" };
+export const rejectedOlopVolunteerCandidate: Candidate = {
+  ...olop,
+  membership: VOLUNTEER,
+  edition: Edition.current,
+  isRejected: true,
+  candidatedAt: new Date(),
+};
+
+export const oel = { email: "eol.anyuom@gmail.com" };
 export const oelCandidate: Candidate = {
   ...oel,
   membership: VOLUNTEER,
   edition: Edition.current,
   isRejected: false,
+  candidatedAt: new Date(),
 };
 
 export const cul = { email: "cul.nehgahrednav@gmail.com" };
@@ -41,12 +60,14 @@ export const culCandidate: Candidate = {
   membership: VOLUNTEER,
   edition: previousEdition,
   isRejected: false,
+  candidatedAt: new Date(),
 };
 
-const dnamra = { email: "dnamra.tenurb@gmail.com" };
+export const dnamra = { email: "dnamra.tenurb@gmail.com" };
 export const rejectedDnamraCandidate: Candidate = {
   ...dnamra,
   membership: VOLUNTEER,
   edition: Edition.current,
   isRejected: true,
+  candidatedAt: new Date(),
 };

@@ -1,4 +1,4 @@
-import { EnrolledCandidate } from "@overbookd/registration";
+import { EnrolledCandidate, STAFF, VOLUNTEER } from "@overbookd/registration";
 import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "./enroll-candidates";
 import { PrismaService } from "../../../../prisma.service";
@@ -17,6 +17,7 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../../../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
+import { Edition } from "@overbookd/time";
 
 export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -43,7 +44,19 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
     const candidates = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: IS_ENROLLABLE_STAFF,
-      select: SELECT_STAFF,
+      select: {
+        ...SELECT_STAFF,
+        membershipApplications: {
+          select: {
+            candidatedAt: true,
+          },
+          where: {
+            membership: STAFF,
+            edition: Edition.current,
+            isRejected: false,
+          },
+        },
+      },
     });
     return candidates.map(formatToStaffCandidate);
   }
@@ -56,7 +69,19 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
     const rejectedCandidates = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: IS_REJECTED_STAFF,
-      select: SELECT_STAFF,
+      select: {
+        ...SELECT_STAFF,
+        membershipApplications: {
+          select: {
+            candidatedAt: true,
+          },
+          where: {
+            membership: STAFF,
+            edition: Edition.current,
+            isRejected: true,
+          },
+        },
+      },
     });
     return rejectedCandidates.map(formatToStaffCandidate);
   }
@@ -66,7 +91,19 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
       this.prisma.user.findMany({
         orderBy: { id: "asc" },
         where: IS_ENROLLABLE_VOLUNTEER,
-        select: SELECT_VOLUNTEER,
+        select: {
+          ...SELECT_VOLUNTEER,
+          membershipApplications: {
+            select: {
+              candidatedAt: true,
+            },
+            where: {
+              membership: VOLUNTEER,
+              edition: Edition.current,
+              isRejected: false,
+            },
+          },
+        },
       }),
       this.selectCharismaPeriods(),
     ]);
@@ -84,7 +121,19 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
       this.prisma.user.findMany({
         orderBy: { id: "asc" },
         where: IS_REJECTED_VOLUNTEER,
-        select: SELECT_VOLUNTEER,
+        select: {
+          ...SELECT_VOLUNTEER,
+          membershipApplications: {
+            select: {
+              candidatedAt: true,
+            },
+            where: {
+              membership: VOLUNTEER,
+              edition: Edition.current,
+              isRejected: true,
+            },
+          },
+        },
       }),
       this.selectCharismaPeriods(),
     ]);
@@ -112,7 +161,6 @@ function formatToEnrollableVolunteer(
     charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
-    registeredAt: volunteer.createdAt,
     comment: volunteer.comment === null ? undefined : volunteer.comment,
     birthdate: volunteer.birthdate,
     note: volunteer.note === null ? undefined : volunteer.note,
@@ -123,5 +171,6 @@ function formatToStaffCandidate(staff: DatabaseStaffCandidate): StaffCandidate {
   return {
     ...staff,
     teams: staff.teams.map(({ team }) => team.code),
+    candidatedAt: staff.membershipApplications[0]?.candidatedAt,
   };
 }

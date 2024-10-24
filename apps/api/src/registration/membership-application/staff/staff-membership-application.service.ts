@@ -5,6 +5,7 @@ import {
   InviteStaff,
   CandidateToEnroll,
   RejectMembershipApplication,
+  STAFF,
 } from "@overbookd/registration";
 import { jwtConstants } from "../../../authentication/jwt-constants";
 import { Users } from "../common/repository/users";
@@ -45,12 +46,12 @@ export class StaffMembershipApplicationService {
 
   async rejectStaffApplication(candidateId: number): Promise<void> {
     const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.applyOne({ email });
+    return this.useCases.reject.applyOne({ email }, STAFF);
   }
 
   async cancelStaffApplicationRejection(candidateId: number): Promise<void> {
     const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.unapplyOne({ email });
+    return this.useCases.reject.unapplyOne({ email }, STAFF);
   }
 
   async getStaffInvitationLink(): Promise<URL | undefined> {

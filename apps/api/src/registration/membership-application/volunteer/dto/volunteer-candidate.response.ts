@@ -31,6 +31,12 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
 
   @ApiProperty({
     required: true,
+    type: Date,
+  })
+  candidatedAt: Date;
+
+  @ApiProperty({
+    required: true,
     example: [TECKOS_CODE],
   })
   teams: RegistrationTeams;
@@ -46,12 +52,6 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
     type: String,
   })
   mobilePhone: string;
-
-  @ApiProperty({
-    required: true,
-    type: Date,
-  })
-  registeredAt: Date;
 
   @ApiProperty({
     required: true,

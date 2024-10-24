@@ -29,6 +29,12 @@ export class StaffCandidateResponseDto implements StaffCandidate {
 
   @ApiProperty({
     required: true,
+    type: Date,
+  })
+  candidatedAt: Date;
+
+  @ApiProperty({
+    required: true,
     example: [TECKOS_CODE],
   })
   teams: RegistrationTeams;

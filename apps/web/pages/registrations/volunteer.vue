@@ -33,8 +33,8 @@
           </div>
         </template>
 
-        <template #item.registeredAt="{ item }">
-          {{ formatDate(item.registeredAt) }}
+        <template #item.candidatedAt="{ item }">
+          {{ formatDate(item.candidatedAt) }}
         </template>
 
         <template #item.teams="{ item }">
@@ -87,7 +87,7 @@ useHead({ title: "Admissions bénévoles" });
 const membershipApplicationStore = useMembershipApplicationStore();
 
 const headers = [
-  { title: "Inscription", value: "registeredAt", sortable: true },
+  { title: "Date de canidature", value: "candidatedAt", sortable: true },
   { title: "Prénom", value: "firstname", sortable: true },
   { title: "Nom", value: "lastname", sortable: true },
   { title: "Charisme", value: "charisma", sortable: true },

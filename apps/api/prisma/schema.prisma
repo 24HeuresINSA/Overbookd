@@ -126,11 +126,12 @@ model UserTeam {
 }
 
 model MembershipApplication {
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int        @map("user_id")
-  edition    Int
-  membership Membership
-  isRejected Boolean    @default(false) @map("is_rejected")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int        @map("user_id")
+  edition      Int
+  membership   Membership
+  isRejected   Boolean    @default(false) @map("is_rejected")
+  candidatedAt DateTime   @default(now()) @map("candidated_at")
 
   @@id([userId, edition, membership])
   @@map("membership_application")

@@ -1,26 +1,37 @@
 import { Edition } from "@overbookd/time";
-import { Candidates, Volunteer } from "./candidates.js";
-import { NotCandidate } from "./candidature.error.js";
+import { Candidates, Email } from "./candidates.js";
+import { AlreadyRejected, NotRejected } from "./candidature.error.js";
+import { Membership } from "../newcomer.js";
 
 export class RejectMembershipApplication {
   constructor(private readonly candidates: Candidates) {}
 
-  async applyOne({ email }: Volunteer): Promise<void> {
+  async applyOne({ email }: Email, membership: Membership): Promise<void> {
     const edition = Edition.current;
-    const isCandidate = await this.candidates.isCandidate(email, edition);
-    if (!isCandidate) throw new NotCandidate();
 
-    return this.candidates.reject(email, edition);
-  }
-
-  async unapplyOne({ email }: Volunteer): Promise<void> {
-    const edition = Edition.current;
-    const isCandidate = await this.candidates.hasRejectedApplication(
+    const isRejected = await this.candidates.isRejected(
       email,
       edition,
+      membership,
     );
-    if (!isCandidate) throw new NotCandidate();
+    if (isRejected) throw new AlreadyRejected(membership);
 
-    return this.candidates.cancelRejection(email, edition);
+    return this.candidates.reject(email, edition, membership);
+  }
+
+  async unapplyOne(
+    { email }: Email,
+    membership: Membership,
+  ): Promise<void> {
+    const edition = Edition.current;
+
+    const isRejected = await this.candidates.isRejected(
+      email,
+      edition,
+      membership,
+    );
+    if (!isRejected) throw new NotRejected(membership);
+
+    return this.candidates.cancelRejection(email, edition, membership);
   }
 }
