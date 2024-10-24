@@ -3,11 +3,11 @@ import { Edition } from "@overbookd/time";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
 import { InMemoryCandidates } from "./candidates.inmemory.js";
 import { ApplyFor } from "./apply-for.js";
-import { AlreadyRejected, AlreadyCandidate } from "./candidature.error.js";
+import { AlreadyCandidate, Rejected } from "./candidature.error.js";
 import {
-  rejectedOlopCandidate,
+  rejectedOlopStaffCandidate,
   lea,
-  leaCandidate,
+  leaStaffCandidate,
   noel,
   noelCandidate,
   olop,
@@ -15,32 +15,35 @@ import {
   culCandidate,
   cul,
   rejectedDnamraCandidate,
+  oel,
+  dnamra,
 } from "./candidate.test-utils.js";
 
 describe("Apply for staff membership", () => {
   describe("when someone is applying for staff membership", () => {
     describe("and the candidate did NOT apply yet", () => {
       it("should be listed as staff candidate", async () => {
-        const candidate = { email: "candidate@gmail.com" };
+        const candidateEmail = { email: "candidate@gmail.com" };
         const expectedCandidate = {
-          ...candidate,
+          ...candidateEmail,
           membership: STAFF,
           edition: Edition.current,
           isRejected: false,
+          candidatedAt: expect.any(Date),
         };
         const candidates = new InMemoryCandidates([]);
         const applyFor = new ApplyFor(candidates);
-        await applyFor.staff(candidate);
-        expect(candidates.staff).toContainEqual(expectedCandidate);
+        await applyFor.staff(candidateEmail);
+        expect(candidates.staffs).toContainEqual(expectedCandidate);
       });
     });
 
     describe("and the candidate has already applied for the current edition", () => {
       it("should indicate that the candidate has already applied fot this edition", () => {
-        const candidates = new InMemoryCandidates([leaCandidate]);
+        const candidates = new InMemoryCandidates([leaStaffCandidate]);
         const applyFor = new ApplyFor(candidates);
         expect(async () => applyFor.staff(lea)).rejects.toThrowError(
-          AlreadyCandidate,
+          new AlreadyCandidate(STAFF),
         );
       });
     });
@@ -50,21 +53,53 @@ describe("Apply for staff membership", () => {
         const expectedCandidate = {
           ...noelCandidate,
           edition: Edition.current,
+          candidatedAt: expect.any(Date),
         };
         const candidates = new InMemoryCandidates([noelCandidate]);
         const applyFor = new ApplyFor(candidates);
         await applyFor.staff(noel);
-        expect(candidates.staff).toContainEqual(expectedCandidate);
+        expect(candidates.staffs).toContainEqual(expectedCandidate);
       });
     });
 
     describe("and the application for the current edition is rejected", () => {
       it("should indicate that the candidate has already a rejected application", () => {
-        const candidates = new InMemoryCandidates([rejectedOlopCandidate]);
+        const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
         const applyFor = new ApplyFor(candidates);
         expect(async () => applyFor.staff(olop)).rejects.toThrowError(
-          AlreadyRejected,
+          new Rejected(STAFF),
         );
+      });
+    });
+
+    describe("and the candidated has already applied for a volunteer membership for the current edition", () => {
+      it("should be listed as a staff candidate", async () => {
+        const expectedCandidate = {
+          ...oelCandidate,
+          membership: STAFF,
+          edition: Edition.current,
+          candidatedAt: expect.any(Date),
+        };
+        const candidates = new InMemoryCandidates([oelCandidate]);
+        const applyFor = new ApplyFor(candidates);
+        await applyFor.staff(oel);
+        expect(candidates.staffs).toContainEqual(expectedCandidate);
+      });
+    });
+
+    describe("and the candidated is already rejected for volunteer membership for for the current edition", () => {
+      it("should be listed as a staff candidate", async () => {
+        const expectedCandidate = {
+          ...rejectedDnamraCandidate,
+          membership: STAFF,
+          edition: Edition.current,
+          isRejected: false,
+          candidatedAt: expect.any(Date),
+        };
+        const candidates = new InMemoryCandidates([rejectedDnamraCandidate]);
+        const applyFor = new ApplyFor(candidates);
+        await applyFor.staff(dnamra);
+        expect(candidates.staffs).toContainEqual(expectedCandidate);
       });
     });
   });
@@ -74,16 +109,17 @@ describe("Apply for volunteer membership", () => {
   describe("when someone is applying for volunteer membership", () => {
     describe("and the candidate did NOT apply yet", () => {
       it("should be listed as volunteer candidate", async () => {
-        const candidate = { email: "candidate@gmail.com" };
+        const candidateEmail = { email: "candidate@gmail.com" };
         const expectedCandidate = {
-          ...candidate,
+          ...candidateEmail,
           membership: VOLUNTEER,
           edition: Edition.current,
           isRejected: false,
+          candidatedAt: expect.any(Date),
         };
         const candidates = new InMemoryCandidates([]);
         const applyFor = new ApplyFor(candidates);
-        await applyFor.volunteer(candidate);
+        await applyFor.volunteer(candidateEmail);
         expect(candidates.volunteers).toContainEqual(expectedCandidate);
       });
     });
@@ -94,7 +130,7 @@ describe("Apply for volunteer membership", () => {
         const applyFor = new ApplyFor(candidates);
         expect(async () =>
           applyFor.volunteer(oelCandidate),
-        ).rejects.toThrowError(AlreadyCandidate);
+        ).rejects.toThrowError(new AlreadyCandidate(VOLUNTEER));
       });
     });
 
@@ -103,6 +139,7 @@ describe("Apply for volunteer membership", () => {
         const expectedCandidate = {
           ...culCandidate,
           edition: Edition.current,
+          candidatedAt: expect.any(Date),
         };
         const candidates = new InMemoryCandidates([oelCandidate]);
         const applyFor = new ApplyFor(candidates);
@@ -117,7 +154,38 @@ describe("Apply for volunteer membership", () => {
         const applyFor = new ApplyFor(candidates);
         expect(async () =>
           applyFor.volunteer(rejectedDnamraCandidate),
-        ).rejects.toThrowError(AlreadyRejected);
+        ).rejects.toThrowError(new Rejected(VOLUNTEER));
+      });
+    });
+
+    describe("and the candidated has already applied for a staff membership for the current edition", () => {
+      it("should be listed as a volunteer candidate", async () => {
+        const expectedCandidate = {
+          ...noelCandidate,
+          membership: VOLUNTEER,
+          edition: Edition.current,
+          candidatedAt: expect.any(Date),
+        };
+        const candidates = new InMemoryCandidates([noelCandidate]);
+        const applyFor = new ApplyFor(candidates);
+        await applyFor.volunteer(noel);
+        expect(candidates.volunteers).toContainEqual(expectedCandidate);
+      });
+    });
+
+    describe("and the candidated is already rejected for staff membership for the current edition", () => {
+      it("should be listed as a volunteer candidate", async () => {
+        const expectedCandidate = {
+          ...rejectedOlopStaffCandidate,
+          membership: VOLUNTEER,
+          edition: Edition.current,
+          candidatedAt: expect.any(Date),
+          isRejected: false,
+        };
+        const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
+        const applyFor = new ApplyFor(candidates);
+        await applyFor.volunteer(olop);
+        expect(candidates.volunteers).toContainEqual(expectedCandidate);
       });
     });
   });

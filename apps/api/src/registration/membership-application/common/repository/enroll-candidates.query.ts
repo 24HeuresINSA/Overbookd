@@ -17,7 +17,6 @@ export const SELECT_VOLUNTEER = {
   ...SELECT_STAFF,
   availabilities: { select: SELECT_PERIOD },
   phone: true,
-  createdAt: true,
   birthdate: true,
   comment: true,
   note: true,
@@ -72,7 +71,6 @@ export const IS_ENROLLABLE_VOLUNTEER = {
 export const IS_REJECTED_VOLUNTEER = {
   ...IS_NOT_DELETED,
   ...IS_NOT_VOLUNTEER,
-  ...IS_NOT_HARD,
   ...buildHasRejectedMembershipApplicationCondition(VOLUNTEER),
 };
 
@@ -82,6 +80,7 @@ export type DatabaseStaffCandidate = {
   lastname: string;
   email: string;
   teams: { team: { code: string } }[];
+  membershipApplications: { candidatedAt: Date }[];
 };
 
 export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
@@ -89,6 +88,5 @@ export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
   phone: string;
   comment: string | null;
   birthdate: Date;
-  createdAt: Date;
   note: string | null;
 };
