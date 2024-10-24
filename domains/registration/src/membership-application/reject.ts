@@ -19,10 +19,7 @@ export class RejectMembershipApplication {
     return this.candidates.reject(email, edition, membership);
   }
 
-  async unapplyOne(
-    { email }: Email,
-    membership: Membership,
-  ): Promise<void> {
+  async unapplyOne({ email }: Email, membership: Membership): Promise<void> {
     const edition = Edition.current;
 
     const isRejected = await this.candidates.isRejected(
