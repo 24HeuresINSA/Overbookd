@@ -110,7 +110,9 @@ $side-nav-width: calc(350px + $sidebar-margin);
 .sidebar {
   position: fixed;
   width: $side-nav-width;
-  height: fit-content;
+  max-height: calc(
+    100vh - $header-height - 2 * $desktop-content-vertical-padding - 10px
+  );
 }
 
 .container {

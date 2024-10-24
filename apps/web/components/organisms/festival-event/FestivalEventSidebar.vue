@@ -3,7 +3,7 @@
     <v-card-title id="title">{{ titleWithId }}</v-card-title>
     <v-card-subtitle id="name">{{ name }}</v-card-subtitle>
 
-    <v-card-text>
+    <v-card-text class="sidebar__text">
       <div id="status">
         <span id="dot" :class="status" />
         <h3>{{ statusLabel }}</h3>
@@ -246,6 +246,10 @@ const cantRejectAs = (team: Team): boolean => {
   display: flex;
   flex-direction: column;
   width: 350px;
+
+  &__text {
+    overflow-y: auto;
+  }
 
   #title {
     font-size: 1.6rem;

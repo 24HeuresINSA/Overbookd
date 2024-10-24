@@ -90,7 +90,8 @@ $background-color: rgb(var(--v-theme-background));
   .content {
     width: 100%;
     height: 100%;
-    padding: 15px 25px;
+    padding: $desktop-content-vertical-padding
+      $desktop-content-horizontal-padding;
     background: $background-color;
     overflow-y: auto;
     border-top-left-radius: $main-page-border-radius;
@@ -98,7 +99,7 @@ $background-color: rgb(var(--v-theme-background));
     border-left: 1px solid $background-color;
 
     @media only screen and (max-width: $mobile-max-width) {
-      padding: 10px;
+      padding: $mobile-content-padding;
       border-top-right-radius: $main-page-border-radius;
       border-left: none;
     }
