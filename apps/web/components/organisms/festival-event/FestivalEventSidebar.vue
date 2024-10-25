@@ -3,7 +3,7 @@
     <v-card-title id="title">{{ titleWithId }}</v-card-title>
     <v-card-subtitle id="name">{{ name }}</v-card-subtitle>
 
-    <v-card-text>
+    <v-card-text class="sidebar__text">
       <div id="status">
         <span id="dot" :class="status" />
         <h3>{{ statusLabel }}</h3>
@@ -18,36 +18,34 @@
         </div>
       </div>
 
-      <div id="scrollable-content">
+      <v-btn
+        id="ask-for-review"
+        class="review-btn"
+        text="Demande de relecture"
+        :disabled="!canAskForReview"
+        @click="askForReview"
+      />
+
+      <div v-for="team in myReviewers" :key="team.code" class="team-review">
         <v-btn
-          id="ask-for-review"
-          class="review-btn"
-          text="Demande de relecture"
-          :disabled="!canAskForReview"
-          @click="askForReview"
+          :text="`Approuver pour ${team.name}`"
+          class="approve review-btn"
+          :disabled="cantApproveAs(team)"
+          size="small"
+          @click="approve(team)"
         />
-
-        <div v-for="team in myReviewers" :key="team.code" class="team-review">
-          <v-btn
-            :text="`Approuver pour ${team.name}`"
-            class="approve review-btn"
-            :disabled="cantApproveAs(team)"
-            size="small"
-            @click="approve(team)"
-          />
-          <v-btn
-            :text="`Rejeter pour ${team.name}`"
-            class="reject review-btn"
-            :disabled="cantRejectAs(team)"
-            size="small"
-            @click="openRejectDialog(team)"
-          />
-        </div>
-
-        <slot name="additional-actions" />
-
-        <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+        <v-btn
+          :text="`Rejeter pour ${team.name}`"
+          class="reject review-btn"
+          :disabled="cantRejectAs(team)"
+          size="small"
+          @click="openRejectDialog(team)"
+        />
       </div>
+
+      <slot name="additional-actions" />
+
+      <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
     </v-card-text>
 
     <v-dialog v-model="isRejectDialogOpen" max-width="600">
@@ -247,6 +245,10 @@ const cantRejectAs = (team: Team): boolean => {
   flex-direction: column;
   width: 350px;
 
+  &__text {
+    overflow-y: auto;
+  }
+
   #title {
     font-size: 1.6rem;
     font-weight: bold;
@@ -306,11 +308,6 @@ const cantRejectAs = (team: Team): boolean => {
     visibility: visible;
   }
 
-  #scrollable-content {
-    width: 100%;
-    overflow-y: auto;
-  }
-
   #ask-for-review {
     background-color: $submitted-color;
     margin-bottom: 5px;
@@ -344,7 +341,6 @@ const cantRejectAs = (team: Team): boolean => {
     overflow: visible;
     padding: unset;
 
-    #scrollable-content,
     .team-review {
       display: flex;
       flex-direction: column;

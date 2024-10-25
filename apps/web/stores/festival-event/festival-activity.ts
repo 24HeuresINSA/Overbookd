@@ -329,7 +329,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     async approve(reviewer: ReviewApproval<"FA">) {
       const res = await repo.approve(this.selectedActivity.id, reviewer);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FA approuvée par l'équipe ${reviewer}`);
+      sendSuccessNotification(`FA approuvée par l'équipe ${reviewer.team}`);
       this.selectedActivity = castActivityWithDate(res);
     },
 
