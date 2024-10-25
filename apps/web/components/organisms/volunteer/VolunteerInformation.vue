@@ -48,9 +48,11 @@
           v-show="canManageUsers"
           v-model="nickname"
           label="Surnom"
+          :rules="[rules.maxLength(30)]"
           prepend-icon="mdi-account"
-          hide-details
           :readonly="!canManageUsers"
+          hide-details
+          clearable
         />
 
         <v-text-field
@@ -58,9 +60,9 @@
           label="Email"
           inputmode="email"
           :rules="[rules.required, rules.email, rules.insaEmail]"
-          persistent-hint
           :readonly="!canManageUsers"
           prepend-icon="mdi-send"
+          persistent-hint
           hide-details
           @click:prepend="sendEmail"
         />
@@ -149,6 +151,7 @@ import {
   isInsaEmail,
   isMobilePhoneNumber,
   isNumber,
+  maxLength,
   required,
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
@@ -179,6 +182,7 @@ const rules = {
   insaEmail: isInsaEmail,
   mobilePhone: isMobilePhoneNumber,
   number: isNumber,
+  maxLength,
 };
 
 const selectedVolunteerFriends = computed<User[]>(
