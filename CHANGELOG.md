@@ -1,3 +1,11 @@
+## [3.11.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.1...v3.11.2) (2024-10-25)
+
+### Bug Fixes
+
+* **layout:** reactive desktop mode toggle & mobile data-table if necessary [#2115](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2115) ([b6bdfc0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b6bdfc0f4056d795c316b7b1be59344f864b665d))
+* **membership-application:** enable simultaneous applications and add the candidature date [#2189](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2189) ([d81f53a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d81f53a3e64d4237fa9f36fd572e989633f8daf7))
+* **period:** add an error when periods have no duration [#2212](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2212) ([be33fef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/be33fef2f250f2b4714342fe3018f2e8618403ab))
+
 ## [3.11.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.0...v3.11.1) (2024-10-24)
 
 ### Bug Fixes
