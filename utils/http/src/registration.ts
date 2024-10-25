@@ -5,13 +5,13 @@ export type StaffCandidate = {
   firstname: string;
   lastname: string;
   email: string;
+  candidatedAt: Date;
   teams: string[];
 };
 
 export type VolunteerCandidate = StaffCandidate & {
   charisma: number;
   mobilePhone: string;
-  registeredAt: Date;
   availabilities: IProvidePeriod[];
   comment?: string;
   birthdate: Date;

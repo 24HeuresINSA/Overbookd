@@ -72,14 +72,14 @@ export const useMembershipApplicationStore = defineStore(
       async fetchStaffCandidates() {
         const res = await MembershipApplicationRepository.getStaffCandidates();
         if (isHttpError(res)) return;
-        this.staffCandidates = res;
+        this.staffCandidates = res.map(castStaffCandidateWithDate);
       },
 
       async fetchRejectedStaffCandidates() {
         const res =
           await MembershipApplicationRepository.getRejectedStaffCandidates();
         if (isHttpError(res)) return;
-        this.rejectedStaffCandidates = res;
+        this.rejectedStaffCandidates = res.map(castStaffCandidateWithDate);
       },
 
       async submitVolunteerApplication(email: string) {
@@ -132,14 +132,16 @@ export const useMembershipApplicationStore = defineStore(
         const res =
           await MembershipApplicationRepository.getVolunteerCandidates();
         if (isHttpError(res)) return;
-        this.volunteerCandidates = res.map(castVolunteerWithDate);
+        this.volunteerCandidates = res.map(castVolunteerCandidateWithDate);
       },
 
       async fetchRejectedVolunteerCandidates() {
         const res =
           await MembershipApplicationRepository.getRejectedVolunteerCandidates();
         if (isHttpError(res)) return;
-        this.rejectedVolunteerCandidates = res.map(castVolunteerWithDate);
+        this.rejectedVolunteerCandidates = res.map(
+          castVolunteerCandidateWithDate,
+        );
       },
 
       async enrollNewStaffs(staffs: StaffCandidate[]) {
@@ -200,12 +202,21 @@ export const useMembershipApplicationStore = defineStore(
   },
 );
 
-function castVolunteerWithDate(
+function castStaffCandidateWithDate(
+  staff: HttpStringified<StaffCandidate>,
+): StaffCandidate {
+  return {
+    ...staff,
+    candidatedAt: new Date(staff.candidatedAt),
+  };
+}
+
+function castVolunteerCandidateWithDate(
   volunteer: HttpStringified<VolunteerCandidate>,
 ): VolunteerCandidate {
   return {
     ...volunteer,
-    registeredAt: new Date(volunteer.registeredAt),
+    candidatedAt: new Date(volunteer.candidatedAt),
     birthdate: new Date(volunteer.birthdate),
     availabilities: castPeriodsWithDate(volunteer.availabilities),
   };

@@ -37,6 +37,10 @@
             </div>
           </template>
 
+          <template #item.candidatedAt="{ item }">
+            {{ formatDate(item.candidatedAt) }}
+          </template>
+
           <template #item.teams="{ item }">
             <TeamChip v-for="team of item.teams" :key="team" :team="team" />
           </template>
@@ -76,6 +80,7 @@
 
 <script lang="ts" setup>
 import type { StaffCandidate } from "@overbookd/http";
+import { formatDate } from "@overbookd/time";
 import {
   matchingSearchItems,
   type Searchable,
@@ -88,9 +93,10 @@ const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 
 const headers = [
+  { title: "Date de candidature", value: "candidatedAt", sortable: true },
   { title: "Prénom", value: "firstname", sortable: true },
   { title: "Nom", value: "lastname", sortable: true },
-  { title: "Email", value: "email", sortable: true },
+  { title: "Email", value: "email" },
   { title: "Équipes", value: "teams" },
   { title: "Action", value: "action" },
 ];

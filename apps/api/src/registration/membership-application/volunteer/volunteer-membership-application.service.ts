@@ -4,6 +4,7 @@ import {
   CandidateToEnroll,
   EnrollCandidates,
   RejectMembershipApplication,
+  VOLUNTEER,
 } from "@overbookd/registration";
 import { Users } from "../common/repository/users";
 import { VolunteerCandidate } from "@overbookd/http";
@@ -33,14 +34,14 @@ export class VolunteerMembershipApplicationService {
 
   async rejectVolunteerApplication(candidateId: number): Promise<void> {
     const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.applyOne({ email });
+    return this.useCases.reject.applyOne({ email }, VOLUNTEER);
   }
 
   async cancelVolunteerApplicationRejection(
     candidateId: number,
   ): Promise<void> {
     const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.unapplyOne({ email });
+    return this.useCases.reject.unapplyOne({ email }, VOLUNTEER);
   }
 
   getCandidates(): Promise<VolunteerCandidate[]> {
