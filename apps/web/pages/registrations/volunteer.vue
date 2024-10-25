@@ -92,6 +92,7 @@ const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
   { title: "Prénom", value: "firstname", sortable: true },
   { title: "Nom", value: "lastname", sortable: true },
+  { title: "Email", value: "email" },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams" },
   { title: "Action", value: "action" },

@@ -171,6 +171,6 @@ function formatToStaffCandidate(staff: DatabaseStaffCandidate): StaffCandidate {
   return {
     ...staff,
     teams: staff.teams.map(({ team }) => team.code),
-    candidatedAt: staff.membershipApplications[0]?.candidatedAt,
+    candidatedAt: staff.membershipApplications.at(0).candidatedAt,
   };
 }
