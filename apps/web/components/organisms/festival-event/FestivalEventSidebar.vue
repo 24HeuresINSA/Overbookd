@@ -18,36 +18,34 @@
         </div>
       </div>
 
-      <div id="scrollable-content">
+      <v-btn
+        id="ask-for-review"
+        class="review-btn"
+        text="Demande de relecture"
+        :disabled="!canAskForReview"
+        @click="askForReview"
+      />
+
+      <div v-for="team in myReviewers" :key="team.code" class="team-review">
         <v-btn
-          id="ask-for-review"
-          class="review-btn"
-          text="Demande de relecture"
-          :disabled="!canAskForReview"
-          @click="askForReview"
+          :text="`Approuver pour ${team.name}`"
+          class="approve review-btn"
+          :disabled="cantApproveAs(team)"
+          size="small"
+          @click="approve(team)"
         />
-
-        <div v-for="team in myReviewers" :key="team.code" class="team-review">
-          <v-btn
-            :text="`Approuver pour ${team.name}`"
-            class="approve review-btn"
-            :disabled="cantApproveAs(team)"
-            size="small"
-            @click="approve(team)"
-          />
-          <v-btn
-            :text="`Rejeter pour ${team.name}`"
-            class="reject review-btn"
-            :disabled="cantRejectAs(team)"
-            size="small"
-            @click="openRejectDialog(team)"
-          />
-        </div>
-
-        <slot name="additional-actions" />
-
-        <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+        <v-btn
+          :text="`Rejeter pour ${team.name}`"
+          class="reject review-btn"
+          :disabled="cantRejectAs(team)"
+          size="small"
+          @click="openRejectDialog(team)"
+        />
       </div>
+
+      <slot name="additional-actions" />
+
+      <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
     </v-card-text>
 
     <v-dialog v-model="isRejectDialogOpen" max-width="600">
@@ -310,11 +308,6 @@ const cantRejectAs = (team: Team): boolean => {
     visibility: visible;
   }
 
-  #scrollable-content {
-    width: 100%;
-    overflow-y: auto;
-  }
-
   #ask-for-review {
     background-color: $submitted-color;
     margin-bottom: 5px;
@@ -348,7 +341,6 @@ const cantRejectAs = (team: Team): boolean => {
     overflow: visible;
     padding: unset;
 
-    #scrollable-content,
     .team-review {
       display: flex;
       flex-direction: column;
