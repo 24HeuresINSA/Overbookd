@@ -34,13 +34,11 @@
           v-show="isDayMode"
           :events="events"
           :displayed-day="displayedDay"
-          :overlapping-events="events"
         />
         <WeeklyCalendarContent
           v-show="!isDayMode"
           :events="events"
           :displayed-day="displayedDay"
-          :overlapping-events="events"
         />
       </div>
     </div>

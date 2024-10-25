@@ -92,6 +92,10 @@ export const saturday02hTo04h = Period.init({
   start: new Date("2024-05-18T02:00+02:00"),
   end: new Date("2024-05-18T04:00+02:00"),
 });
+export const thursday02hToSunday02h = Period.init({
+  start: new Date("2024-05-16T02:00+02:00"),
+  end: new Date("2024-05-19T02:00+02:00"),
+});
 export const monday10hto14h = Period.init({
   start: new Date("2024-05-20T10:00:00+02:00"),
   end: new Date("2024-05-20T14:00:00+02:00"),

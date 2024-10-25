@@ -25,10 +25,6 @@ const props = defineProps({
     type: Date,
     required: true,
   },
-  overlappingEvents: {
-    type: Array as PropType<CalendarEvent[]>,
-    required: true,
-  },
 });
 
 const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
