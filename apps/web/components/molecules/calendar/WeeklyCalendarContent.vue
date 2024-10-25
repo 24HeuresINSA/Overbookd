@@ -5,11 +5,7 @@
       :key="day.date.toISOString()"
       class="weekly-content__day"
     >
-      <DailyCalendarContent
-        :events="events"
-        :displayed-day="day.date"
-        :overlapping-events="overlappingEvents"
-      />
+      <DailyCalendarContent :events="events" :displayed-day="day.date" />
     </div>
   </div>
 </template>
@@ -25,10 +21,6 @@ defineProps({
   },
   displayedDay: {
     type: Date,
-    required: true,
-  },
-  overlappingEvents: {
-    type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
 });
