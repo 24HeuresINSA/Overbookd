@@ -7,6 +7,7 @@ export type IProvidePeriod = {
 
 export const END_BEFORE_START_ERROR_MESSAGE =
   "La date de fin doit être après la date de début";
+export const NO_DURATION_ERROR_MESSAGE = "La période doit avoir une durée";
 
 export class EndBeforeStart extends Error {
   constructor() {
@@ -14,7 +15,9 @@ export class EndBeforeStart extends Error {
   }
 }
 
-type ErrorMessage = typeof END_BEFORE_START_ERROR_MESSAGE;
+type ErrorMessage =
+  | typeof END_BEFORE_START_ERROR_MESSAGE
+  | typeof NO_DURATION_ERROR_MESSAGE;
 
 export class Period {
   start: Date;
@@ -43,7 +46,9 @@ export class Period {
   static errors(period: IProvidePeriod): ErrorMessage[] {
     return Period.isEndBeforeStart(period)
       ? [END_BEFORE_START_ERROR_MESSAGE]
-      : [];
+      : Period.init(period).hasDuration
+        ? []
+        : [NO_DURATION_ERROR_MESSAGE];
   }
 
   private static isEndBeforeStart({ start, end }: IProvidePeriod): boolean {
