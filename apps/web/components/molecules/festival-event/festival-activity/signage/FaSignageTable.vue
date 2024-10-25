@@ -4,9 +4,10 @@
       :headers="tableHeaders"
       :items="signages"
       :items-per-page="-1"
+      no-data-text="Aucune demande de signalétique"
+      :mobile="isMobile"
       disable-pagination
       hide-default-footer
-      no-data-text="Aucune demande de signalétique"
     >
       <template #item.catalogItem="{ item }">
         <SearchSignage
@@ -67,6 +68,7 @@ import type { Signage as CatalogSignage } from "@overbookd/signa";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const faStore = useFestivalActivityStore();
+const layoutStore = useLayoutStore();
 
 const props = defineProps({
   signages: {
@@ -91,6 +93,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionsHeader = { title: "Actions", value: "actions" };
   return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
 });
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedSignage = ref<FaSignage | null>(null);
 

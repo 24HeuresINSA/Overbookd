@@ -6,6 +6,7 @@
       :items-per-page="-1"
       :custom-sort="sortMobilizations"
       no-data-text="Aucune mobilisation"
+      :mobile="isMobile"
       disable-pagination
       hide-default-footer
     >
@@ -145,6 +146,7 @@ import {
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const ftStore = useFestivalTaskStore();
+const layoutStore = useLayoutStore();
 
 defineProps({
   disabled: {
@@ -161,6 +163,7 @@ const headers: TableHeaders = [
   { title: "Equipes requises", value: "teams" },
   { title: "Actions", value: "actions" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedMobilization = ref<Mobilization | undefined>();
 

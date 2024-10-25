@@ -4,10 +4,11 @@
       :headers="headers"
       :items="timeWindows"
       :items-per-page="-1"
-      hide-default-footer
       density="comfortable"
       :sort-by="[{ key: 'start' }]"
       no-data-text="Aucun créneau"
+      :mobile="isMobile"
+      hide-default-footer
     >
       <template #item.start="{ item }">
         {{ formatDateWithMinutes(item.start) }}
@@ -46,6 +47,8 @@ import { type IProvidePeriod, formatDateWithMinutes } from "@overbookd/time";
 import type { TimeWindow } from "@overbookd/festival-event";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
+const layoutStore = useLayoutStore();
+
 const props = defineProps({
   timeWindows: {
     type: Array as PropType<TimeWindow[]>,
@@ -65,6 +68,7 @@ const headers = computed<TableHeaders>(() => {
   const removalHeader = { title: "Suppression", value: "removal" };
   return props.disabled ? baseHeaders : [...baseHeaders, removalHeader];
 });
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const emit = defineEmits(["add", "remove"]);
 const addTimeWindow = (period: IProvidePeriod) => emit("add", period);

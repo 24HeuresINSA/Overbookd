@@ -6,9 +6,10 @@
         :headers="headers"
         :items="keyEvents"
         :items-per-page="-1"
+        no-data-text="Aucun commentaire"
+        :mobile="isMobile"
         hide-default-footer
         disable-pagination
-        no-data-text="Aucun commentaire"
       >
         <template #item.action="{ item }">
           <span class="action__emoji">{{ getActionEmoji(item.action) }}</span>
@@ -66,12 +67,15 @@ const props = defineProps({
   },
 });
 
+const layoutStore = useLayoutStore();
+
 const headers: TableHeaders = [
   { title: "", value: "action", width: "15px" },
   { title: "Date", value: "at", width: "15%", sortable: true },
   { title: "Auteur", value: "by", width: "20%" },
   { title: "Commentaire", value: "description" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const newFeedbackContent = ref<string>("");
 

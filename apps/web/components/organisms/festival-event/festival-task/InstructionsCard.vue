@@ -61,6 +61,7 @@
           :items="instructions.contacts"
           :items-per-page="-1"
           no-data-text="Aucun contact"
+          :mobile="isMobile"
           hide-default-footer
           hide-details
         >
@@ -112,6 +113,7 @@ import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/f
 
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
 
 const props = defineProps({
   disabled: {
@@ -128,6 +130,7 @@ const contactHeaders = computed<TableHeaders>(() => {
   const removalHeader = { title: "Suppression", value: "removal" };
   return props.disabled ? baseHeaders : [...baseHeaders, removalHeader];
 });
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const selectedTask = computed<FestivalTaskWithConflicts>(
   () => ftStore.selectedTask,

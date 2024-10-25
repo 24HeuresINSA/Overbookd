@@ -14,6 +14,7 @@
           :loading="loading"
           loading-text="Chargement des candidats..."
           :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
+          :mobile="isMobile"
           show-select
           return-object
         >
@@ -84,6 +85,7 @@ import { toSearchable } from "~/utils/search/searchable-user.utils";
 useHead({ title: "Admissions organisateur" });
 
 const membershipApplicationStore = useMembershipApplicationStore();
+const layoutStore = useLayoutStore();
 
 const headers = [
   { title: "Prénom", value: "firstname", sortable: true },
@@ -92,6 +94,7 @@ const headers = [
   { title: "Équipes", value: "teams" },
   { title: "Action", value: "action" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const searchedCandidate = ref<string>("");
 const selectedCandidates = ref<StaffCandidate[]>([]);

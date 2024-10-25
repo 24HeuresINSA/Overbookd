@@ -12,6 +12,7 @@
         loading-text="Chargement des fiches activités..."
         no-data-text="Aucune fiche activité trouvée"
         :hover="filteredActivities.length > 0"
+        :mobile="isMobile"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"
       >
@@ -126,6 +127,7 @@ const route = useRoute();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
 
 const canRemoveActivity = computed<boolean>(() => userStore.can(WRITE_FA));
 const tableHeaders = computed<TableHeaders>(() => {
@@ -141,6 +143,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     ? [...baseHeaders, removalHeader]
     : baseHeaders;
 });
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const activities = computed<PreviewFestivalActivity[]>(
   () => faStore.activities.forAll,

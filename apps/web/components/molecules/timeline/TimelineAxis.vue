@@ -17,7 +17,7 @@
 import { Period, formatDateWithHoursAndMinutesOnly } from "@overbookd/time";
 
 const timelineStore = useTimelineStore();
-const themeStore = useThemeStore();
+const layoutStore = useLayoutStore();
 
 const NB_MARKERS = 9;
 
@@ -33,7 +33,7 @@ const markers = computed<string[]>(() => {
   });
 });
 
-const isDarkTheme = computed<boolean>(() => themeStore.isDark);
+const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
 
 const isOdd = (num: number): boolean => num % 2 === 1;
 </script>

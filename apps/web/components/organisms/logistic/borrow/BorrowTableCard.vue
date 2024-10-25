@@ -9,6 +9,7 @@
         loading-text="Chargement des fiches emprunts..."
         no-data-text="Aucune fiche emprunt"
         :hover="borrows.length > 0"
+        :mobile="isMobile"
         @click:row="openBorrow"
         @auxclick:row="openBorrowInNewTab"
       >
@@ -43,6 +44,7 @@ import {
 import { formatDateToHumanReadable } from "@overbookd/time";
 
 const borrowStore = useBorrowStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Nom", value: "lender", sortable: true },
@@ -50,6 +52,7 @@ const headers: TableHeaders = [
   { title: "Date de retour", value: "unavailableOn", sortable: true },
   { title: "Supprimer", value: "remove", align: "center" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const borrows = computed(() => borrowStore.all);
 const loading = ref<boolean>(borrows.value.length === 0);

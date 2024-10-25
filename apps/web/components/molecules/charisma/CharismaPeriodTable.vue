@@ -8,6 +8,7 @@
     loading-text="Chargement des créneaux..."
     :sort-by="[{ key: 'start' }]"
     density="compact"
+    :mobile="isMobile"
     hide-default-footer
   >
     <template #item.start="{ item }">
@@ -39,6 +40,7 @@ import { formatDateWithMinutes } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const charismaPeriodStore = useCharismaPeriodStore();
+const layoutStore = useLayoutStore();
 
 defineProps({
   loading: {
@@ -55,6 +57,7 @@ const headers: TableHeaders = [
   { title: "Charisme/h", value: "charisma", sortable: true },
   { title: "Actions", value: "actions" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const charismaPeriods = computed<SavedCharismaPeriod[]>(
   () => charismaPeriodStore.all,

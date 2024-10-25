@@ -15,6 +15,7 @@
         :loading="loading"
         loading-text="Chargement des lieux..."
         no-data-text="Aucun lieu trouvé"
+        :mobile="isMobile"
       >
         <template #top>
           <v-text-field
@@ -106,6 +107,7 @@ useHead({ title: "Lieux de la signa" });
 
 const userStore = useUserStore();
 const locationStore = useLocationStore();
+const layoutStore = useLayoutStore();
 
 const canManageLocations = computed<boolean>(() =>
   userStore.can(MANAGE_LOCATION),
@@ -115,6 +117,7 @@ const tableHeaders = computed<TableHeaders>(() => {
   const actionHeader = { title: "Actions", value: "actions" };
   return canManageLocations.value ? [nameHeader, actionHeader] : [nameHeader];
 });
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const locations = computed<SignaLocation[]>(() => locationStore.all);
 const loading = ref<boolean>(locations.value.length === 0);

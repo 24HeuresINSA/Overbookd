@@ -9,6 +9,7 @@
       no-data-text="Aucun bénévole trouvé"
       :class="{ unclickable: !canViewVolunteerDetails }"
       :hover="volunteers.length > 0 && canViewVolunteerDetails"
+      :mobile="isMobile"
       return-object
       @click:row="propagateClickedVolunteer"
     >
@@ -76,6 +77,7 @@ defineProps({
 });
 
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
 
 const canViewVolunteerDetails = computed(() =>
   userStore.can(VIEW_VOLUNTEER_DETAILS),
@@ -91,6 +93,8 @@ const headers = computed<TableHeaders>(() => {
     ? [...baseHeaders, actionsHeader]
     : baseHeaders;
 });
+
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const emit = defineEmits(["click:volunteer", "click:team"]);
 const propagateClickedVolunteer = (

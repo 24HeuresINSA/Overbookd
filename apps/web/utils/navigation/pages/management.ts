@@ -108,7 +108,7 @@ const TRANSACTIONS_PAGE: PageInSummary = {
   permission: MANAGE_PERSONAL_ACCOUNTS,
   to: TRANSACTIONS_URL,
   description: "Permet de visualiser les transactions effectuées sur Overbookd",
-  mobileSupport: false,
+  mobileSupport: true,
   canBeFavorite: true,
   keywords: ["virements", "compte-perso", "transactions"],
 };
@@ -120,7 +120,7 @@ const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
   to: CHARISMA_EVENTS_MANAGE_URL,
   description:
     "Permet de gérer le charisme des bénévoles via la création d'événements",
-  mobileSupport: false,
+  mobileSupport: true,
   canBeFavorite: true,
   keywords: ["charisme", "evenements"],
 };
@@ -132,7 +132,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
   to: CHARISMA_EVENTS_LIST_URL,
   description:
     "Permet de voir la liste des participations aux événements charismatiques",
-  mobileSupport: false,
+  mobileSupport: true,
   canBeFavorite: true,
   keywords: ["charisme", "evenements", "participations"],
 };
@@ -144,7 +144,7 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
   to: CHARISMA_PERIODS_URL,
   description:
     "Permet de définir les points de charisme des créneaux du festival",
-  mobileSupport: false,
+  mobileSupport: true,
   canBeFavorite: true,
   keywords: ["charisme-dispos", "charisme-disponibilites"],
 };

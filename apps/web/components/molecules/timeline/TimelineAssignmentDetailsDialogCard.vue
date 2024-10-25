@@ -20,6 +20,7 @@
         :items="assignment.assignees"
         :items-per-page="-1"
         no-data-text="Aucun bénévole affecté sur ce créneau"
+        :mobile="isMobile"
         disable-pagination
         hide-default-footer
       >
@@ -72,12 +73,15 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
+const layoutStore = useLayoutStore();
+
 const headers: TableHeaders = [
   { title: "Bénévole", value: "firstname", sortable: true },
   { title: "Equipes", value: "teams" },
   { title: "Affecté en tant que", value: "as" },
   { title: "Téléphone", value: "phone" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const props = defineProps({
   task: {

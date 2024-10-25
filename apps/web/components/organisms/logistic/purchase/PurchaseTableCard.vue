@@ -9,6 +9,7 @@
         loading-text="Chargement des fiches achat..."
         no-data-text="Aucune fiche achat"
         :hover="purchases.length > 0"
+        :mobile="isMobile"
         @click:row="openPurchase"
         @auxclick:row="openPurchaseInNewTab"
       >
@@ -40,12 +41,14 @@ import {
 } from "~/utils/navigation/router.utils";
 
 const purchaseStore = usePurchaseStore();
+const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
   { title: "Nom", value: "seller", sortable: true },
   { title: "Date de disponibilité", value: "availableOn", sortable: true },
   { title: "Supprimer", value: "remove", align: "center" },
 ];
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const purchases = computed<Purchase[]>(() => purchaseStore.all);
 const loading = ref<boolean>(purchases.value.length === 0);
