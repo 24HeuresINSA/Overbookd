@@ -40,6 +40,7 @@ import {
   tuesday15h30to15h33,
   tuesday15h31to15h32,
   tuesday15h32to15h33,
+  thursday02hToSunday02h,
 } from "./period.test-utils";
 
 describe("Create a period", () => {
@@ -213,6 +214,7 @@ describe("Period is in day", () => {
     ${"start is in the day and the end is in the next day"}     | ${friday23h59m50toSaturday00h00m02} | ${true}
     ${"start is in the previous day and the end is in the day"} | ${thursday20hToFriday04h}           | ${true}
     ${"start and end are in different days"}                    | ${saturday02hTo04h}                 | ${false}
+    ${"start and end overlap the day"}                          | ${thursday02hToSunday02h}           | ${true}
   `("when $description", ({ period, expectedResult }) => {
     it(`should return ${expectedResult}`, () => {
       expect(period.isInDay(friday)).toBe(expectedResult);

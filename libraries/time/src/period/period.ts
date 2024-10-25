@@ -187,10 +187,19 @@ export class Period {
   }
 
   isInDay(day: Date): boolean {
-    const startDate = day.toDateString();
-    const isSameStartDay = this.start.toDateString() === startDate;
-    const isInEndDay = this.end.toDateString() === startDate;
-    return isSameStartDay || isInEndDay;
+    const startOfStartDay = day.setHours(0, 0, 0, 0);
+    const endOfEndDay = day.setHours(23, 59, 59, 999);
+
+    const periodStart = this.start.getTime();
+    const periodEnd = this.end.getTime();
+
+    const isStartInDay =
+      periodStart >= startOfStartDay && periodStart <= endOfEndDay;
+    const isEndInDay = periodEnd >= startOfStartDay && periodEnd <= endOfEndDay;
+    const isDayBetweenPeriod =
+      periodStart <= startOfStartDay && periodEnd >= endOfEndDay;
+
+    return isStartInDay || isEndInDay || isDayBetweenPeriod;
   }
 
   toString(): string {
