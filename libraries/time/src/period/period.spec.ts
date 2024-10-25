@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   END_BEFORE_START_ERROR_MESSAGE,
   EndBeforeStart,
+  NO_DURATION_ERROR_MESSAGE,
   Period,
 } from "./period";
 import {
@@ -85,7 +86,7 @@ describe("Check period validity", () => {
     });
   });
 
-  describe("when start is after to end", () => {
+  describe("when start is after end", () => {
     const period = {
       start: new Date("2023-05-17T09:00+02:00"),
       end: new Date("2023-05-17T08:00+02:00"),
@@ -97,6 +98,19 @@ describe("Check period validity", () => {
 
     it("should indicate that end should be after start", () => {
       expect(Period.errors(period)).toEqual([END_BEFORE_START_ERROR_MESSAGE]);
+    });
+  });
+
+  describe("when start is equal to end", () => {
+    const date = new Date("2023-05-17T08:00+02:00");
+    const period = { start: date, end: date };
+
+    it("should be invalid", () => {
+      expect(Period.isValid(period)).toBe(false);
+    });
+
+    it("should indicate that period should have a duration", () => {
+      expect(Period.errors(period)).toEqual([NO_DURATION_ERROR_MESSAGE]);
     });
   });
 });
