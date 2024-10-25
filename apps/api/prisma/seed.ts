@@ -75,7 +75,7 @@ async function main() {
         email,
         firstname: user,
         lastname: user,
-        nickname: "",
+        nickname: null,
         birthdate: new Date(1990, 1, 1),
         phone: "0612345678",
         password: hashPassword,

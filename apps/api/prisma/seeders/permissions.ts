@@ -39,6 +39,8 @@ import {
   READ_INVENTORY,
   SET_FAVORITE_PAGES,
   VIEW_SECURITY_DASHBOARD,
+  SHOTGUN_SHARED_MEAL,
+  OFFER_SHARED_MEAL,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -405,6 +407,24 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: OFFER_SHARED_MEAL,
+    description: "Peut proposer un repas partagé",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: SHOTGUN_SHARED_MEAL,
+    description: "Peut shotgun un repas partagé",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
