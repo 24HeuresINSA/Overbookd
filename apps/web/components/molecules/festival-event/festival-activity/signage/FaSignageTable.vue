@@ -96,14 +96,14 @@ const tableHeaders = computed<TableHeaders>(() => {
     { title: "Taille", value: "size" },
     { title: "Commentaire", value: "comment" },
   ];
-  const referenceHeader = isDraftActivity.value
-    ? {}
-    : { title: "Référence", value: "catalogItem" };
-  const actionsHeader = props.disabled
-    ? {}
-    : { title: "Actions", value: "actions" };
+  const referenceHeader = !isDraftActivity.value
+    ? [{ title: "Référence", value: "catalogItem" }]
+    : [];
+  const actionsHeader = !props.disabled
+    ? [{ title: "Actions", value: "actions" }]
+    : [];
 
-  return [...baseHeaders, referenceHeader, actionsHeader];
+  return [...baseHeaders, ...referenceHeader, ...actionsHeader];
 });
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
