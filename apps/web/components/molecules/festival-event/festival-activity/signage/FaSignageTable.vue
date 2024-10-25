@@ -84,9 +84,6 @@ const props = defineProps({
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
-const isDraftActivity = computed<boolean>(() =>
-  isDraft(selectedActivity.value),
-);
 
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
@@ -96,7 +93,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     { title: "Taille", value: "size" },
     { title: "Commentaire", value: "comment" },
   ];
-  const referenceHeader = !isDraftActivity.value
+  const referenceHeader = !isDraft(selectedActivity.value)
     ? [{ title: "Référence", value: "catalogItem" }]
     : [];
   const actionsHeader = !props.disabled
@@ -129,7 +126,7 @@ const updateSignage = (signage: FaSignage) => emit("update", signage);
 const removeSignage = (signage: FaSignage) => emit("remove", signage);
 
 const cantLinkCatalogItem = computed<boolean>(() => {
-  if (isDraftActivity.value) return true;
+  if (isDraft(selectedActivity.value)) return true;
   const isSignaMember = useUserStore().isMemberOf(signa);
   const isAlreadyApproved = selectedActivity.value.reviews.signa === APPROVED;
   return !isSignaMember || isAlreadyApproved;
