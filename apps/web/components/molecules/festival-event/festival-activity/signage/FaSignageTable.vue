@@ -81,6 +81,10 @@ const props = defineProps({
   },
 });
 
+const selectedActivity = computed<FestivalActivity>(
+  () => faStore.selectedActivity,
+);
+
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Quantité", value: "quantity", sortable: true },
@@ -88,10 +92,15 @@ const tableHeaders = computed<TableHeaders>(() => {
     { title: "Texte à écrire", value: "text" },
     { title: "Taille", value: "size" },
     { title: "Commentaire", value: "comment" },
-    { title: "Référence", value: "catalogItem" },
   ];
-  const actionsHeader = { title: "Actions", value: "actions" };
-  return props.disabled ? baseHeaders : [...baseHeaders, actionsHeader];
+  const referenceHeader = !isDraft(selectedActivity.value)
+    ? [{ title: "Référence", value: "catalogItem" }]
+    : [];
+  const actionsHeader = !props.disabled
+    ? [{ title: "Actions", value: "actions" }]
+    : [];
+
+  return [...baseHeaders, ...referenceHeader, ...actionsHeader];
 });
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
@@ -116,9 +125,6 @@ const addSignage = (signage: FaSignage) => emit("add", signage);
 const updateSignage = (signage: FaSignage) => emit("update", signage);
 const removeSignage = (signage: FaSignage) => emit("remove", signage);
 
-const selectedActivity = computed<FestivalActivity>(
-  () => faStore.selectedActivity,
-);
 const cantLinkCatalogItem = computed<boolean>(() => {
   if (isDraft(selectedActivity.value)) return true;
   const isSignaMember = useUserStore().isMemberOf(signa);
