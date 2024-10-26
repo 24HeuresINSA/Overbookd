@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="calendar-event"
-    :class="{ unclickable: !event.link }"
+    :class="{ unclickable: !event.link, hovered: isHovered }"
     :color="event.color || 'primary'"
     :style="{
       top: `${eventTopPositionInPixels}px`,
@@ -10,7 +10,8 @@
       width: `${eventWidthInPercentage}%`,
     }"
     :href="event.link"
-    :hover="event.link !== undefined"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
     <p class="calendar-event__hour">{{ eventTimePeriodText }}</p>
@@ -41,6 +42,17 @@ const props = defineProps({
     required: true,
   },
 });
+
+const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
+const isHovered = computed<boolean>(
+  () => hoveredEventId.value === props.event.id,
+);
+const handleMouseEnter = () => (hoveredEventId.value = props.event.id);
+const handleMouseLeave = () => {
+  if (isHovered.value) {
+    hoveredEventId.value = undefined;
+  }
+};
 
 const PIXELS_PER_MINUTE = 0.75;
 
@@ -135,5 +147,8 @@ const eventTimePeriodText = computed<string>(() => {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+.hovered {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
 }
 </style>
