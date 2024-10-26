@@ -1,7 +1,10 @@
 <template>
   <v-card
     class="calendar-event"
-    :class="{ unclickable: !event.link, hovered: isHovered }"
+    :class="{
+      unclickable: !event.link,
+      'not-hovered': !isHovered && hoveredEventId,
+    }"
     :color="event.color || 'primary'"
     :style="{
       top: `${eventTopPositionInPixels + 1}px`,
@@ -148,7 +151,7 @@ const eventTimePeriodText = computed<string>(() => {
     white-space: nowrap;
   }
 }
-.hovered {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+.not-hovered {
+  opacity: 0.6;
 }
 </style>
