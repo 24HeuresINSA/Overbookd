@@ -4,10 +4,10 @@
     :class="{ unclickable: !event.link, hovered: isHovered }"
     :color="event.color || 'primary'"
     :style="{
-      top: `${eventTopPositionInPixels}px`,
-      height: `${eventHeightInPixels}px`,
-      left: `${eventLeftInPercentage}%`,
-      width: `${eventWidthInPercentage}%`,
+      top: `${eventTopPositionInPixels + 1}px`,
+      left: `${eventLeftInPercentage + 1}%`,
+      height: `${eventHeightInPixels - 2}px`,
+      width: `${eventWidthInPercentage - 2}%`,
     }"
     :href="event.link"
     @mouseenter="handleMouseEnter"

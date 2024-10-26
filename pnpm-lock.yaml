@@ -409,7 +409,7 @@ importers:
         specifier: 3.5.0
         version: 3.5.0
       nanoid:
-        specifier: ^5.0.7
+        specifier: 5.0.7
         version: 5.0.7
       pinia:
         specifier: 2.2.4
