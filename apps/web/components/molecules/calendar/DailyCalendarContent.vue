@@ -3,7 +3,8 @@
     <CalendarEvent
       v-for="event in events"
       v-show="isEventInDisplayedDay(event)"
-      :key="event.name"
+      :key="event.id"
+      v-model:hovered-event-id="hoveredEventId"
       :event="event"
       :displayed-day="displayedDay"
       :overlapping-events="getOverlappingEvents(event, events)"
@@ -30,6 +31,8 @@ const props = defineProps({
 const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
   return Period.init(event).isInDay(props.displayedDay);
 };
+
+const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
 </script>
 
 <style scoped>

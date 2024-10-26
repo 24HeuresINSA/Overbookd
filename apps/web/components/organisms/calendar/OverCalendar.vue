@@ -31,12 +31,14 @@
 
       <div class="calendar-content">
         <DailyCalendarContent
-          v-show="isDayMode"
+          v-if="isDayMode"
+          v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
         />
         <WeeklyCalendarContent
-          v-show="!isDayMode"
+          v-else
+          v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
         />
@@ -76,6 +78,8 @@ const isDayMode = computed<boolean>(() =>
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
 }
+
+const hoveredEventId = ref<string | undefined>();
 </script>
 
 <style lang="scss" scoped>

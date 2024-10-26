@@ -5,7 +5,11 @@
       :key="day.date.toISOString()"
       class="weekly-content__day"
     >
-      <DailyCalendarContent :events="events" :displayed-day="day.date" />
+      <DailyCalendarContent
+        v-model:hovered-event-id="hoveredEventId"
+        :events="events"
+        :displayed-day="day.date"
+      />
     </div>
   </div>
 </template>
@@ -24,6 +28,8 @@ defineProps({
     required: true,
   },
 });
+
+const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
 </script>
 
 <style lang="scss" scoped>

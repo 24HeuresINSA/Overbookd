@@ -30,7 +30,10 @@
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
-import type { CalendarEvent } from "~/utils/calendar/event";
+import {
+  CreateCalendarEvent,
+  type CalendarEvent,
+} from "~/utils/calendar/event";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();
@@ -65,21 +68,19 @@ const openCalendar = () => (isCalendarDialogOpen.value = true);
 const closeCalendar = () => (isCalendarDialogOpen.value = false);
 
 const allTimeWindows = computed<CalendarEvent[]>(() => {
-  const inquiryEvents: CalendarEvent[] =
-    selectedActivity.value.inquiry.timeWindows.map(({ start, end }) => ({
-      start,
-      end,
-      name: "Matos",
-      color: "secondary",
-    }));
-  const generalEvents: CalendarEvent[] =
-    selectedActivity.value.general.timeWindows.map(({ start, end }) => ({
-      start,
-      end,
-      name: "Animation",
-      color: "primary",
-    }));
-  return [...inquiryEvents, ...generalEvents];
+  const generalTimeWindows = selectedActivity.value.general.timeWindows;
+  const generalEvents = generalTimeWindows.map(({ start, end }) => {
+    const event = { start, end, name: "Animation", color: "primary" };
+    return CreateCalendarEvent.init(event);
+  });
+
+  const inquiryTimeWindows = selectedActivity.value.inquiry.timeWindows;
+  const inquiryEvents = inquiryTimeWindows.map(({ start, end }) => {
+    const event = { start, end, name: "Matos", color: "secondary" };
+    return CreateCalendarEvent.init(event);
+  });
+
+  return [...generalEvents, ...inquiryEvents];
 });
 
 const calendarMarker = ref<Date>(

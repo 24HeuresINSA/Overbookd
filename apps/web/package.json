@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/web",
-  "version": "3.2.18",
+  "version": "3.2.19",
   "description": "Application web pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -65,6 +65,7 @@
     "csv-parse": "5.5.6",
     "jwt-decode": "4.0.0",
     "luxon": "3.5.0",
+    "nanoid": "5.0.7",
     "pinia": "2.2.4",
     "quill": "2.0.2",
     "sass": "1.80.2",
