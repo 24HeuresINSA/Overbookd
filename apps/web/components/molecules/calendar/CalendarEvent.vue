@@ -58,9 +58,7 @@ const isHovered = computed<boolean>(
 );
 const handleMouseEnter = () => (hoveredEventId.value = props.event.id);
 const handleMouseLeave = () => {
-  if (isHovered.value) {
-    hoveredEventId.value = undefined;
-  }
+  if (isHovered.value) hoveredEventId.value = undefined;
 };
 
 const emit = defineEmits(["click"]);
