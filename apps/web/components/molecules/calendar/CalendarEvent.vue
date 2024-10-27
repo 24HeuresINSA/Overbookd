@@ -152,6 +152,6 @@ const eventTimePeriodText = computed<string>(() => {
   }
 }
 .not-hovered {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 </style>
