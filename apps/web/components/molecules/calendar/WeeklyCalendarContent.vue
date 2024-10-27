@@ -35,9 +35,8 @@ defineProps({
 });
 
 const emit = defineEmits(["event-click"]);
-const propagateEventClick = (event: CalendarEvent) => {
+const propagateEventClick = (event: CalendarEvent) =>
   emit("event-click", event);
-};
 </script>
 
 <style lang="scss" scoped>
