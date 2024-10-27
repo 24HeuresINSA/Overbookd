@@ -45,6 +45,7 @@ import {
   LinkInquiryDrive,
   LinkSignageCatalogItem,
   PrepareSecurityUpdate,
+  PrepareInquiryRequestRemoving,
 } from "./prepare-festival-activity.model.js";
 import {
   FestivalActivityError,
@@ -531,9 +532,10 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     }
   }
 
-  removeInquiry(slug: InquiryRequest["slug"]): Reviewable {
+  removeInquiry(request: PrepareInquiryRequestRemoving): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy(request.owner);
     const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
-      slug,
+      request.slug,
     ).inquiry;
 
     if (this.hasNoRequestRemaining(inquiry)) {

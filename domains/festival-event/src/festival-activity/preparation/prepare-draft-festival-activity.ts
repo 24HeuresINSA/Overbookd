@@ -1,7 +1,6 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/time";
 import { Draft } from "../festival-activity.js";
-import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";
 import { Contractor } from "../sections/in-charge.js";
@@ -19,6 +18,7 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
   PrepareSecurityUpdate,
+  PrepareInquiryRequestRemoving,
 } from "./prepare-festival-activity.model.js";
 import { TimeWindows } from "./section-aggregates/time-windows.js";
 import { Contractors } from "./section-aggregates/contractors.js";
@@ -227,9 +227,9 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inquiry };
   }
 
-  removeInquiry(slug: InquiryRequest["slug"]): Draft {
+  removeInquiry(form: PrepareInquiryRequestRemoving): Draft {
     const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
-      slug,
+      form.slug,
     ).inquiry;
 
     return { ...this.activity, inquiry };

@@ -67,11 +67,15 @@ export class InquirySectionService {
     return this.prepare.addInquiryRequest(faId, request);
   }
 
-  removeInquiryRequest(
+  async removeInquiryRequest(
     faId: FestivalActivity["id"],
     slug: InquiryRequest["slug"],
   ) {
-    return this.prepare.removeInquiryRequest(faId, slug);
+    const inquiry = await this.inquiries.find(slug);
+    return this.prepare.removeInquiryRequest(faId, {
+      slug,
+      owner: inquiry.owner,
+    });
   }
 
   async linkInquiryRequestToDrive(
