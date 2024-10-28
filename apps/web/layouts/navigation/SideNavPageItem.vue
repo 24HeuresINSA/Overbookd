@@ -28,9 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type PageInSummary,
-} from "~/utils/navigation/pages/desktop-summary";
+import { type PageInSummary } from "~/utils/navigation/pages/desktop-summary";
 import { findPage } from "~/utils/navigation/find-page.utils";
 
 const route = useRoute();

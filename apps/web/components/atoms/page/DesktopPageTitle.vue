@@ -17,10 +17,7 @@
 
 <script lang="ts" setup>
 import { isPageURL } from "@overbookd/web-page";
-import {
-  type Page,
-  HOME_PAGE,
-} from "~/utils/navigation/pages/desktop-summary";
+import { type Page, HOME_PAGE } from "~/utils/navigation/pages/desktop-summary";
 import { findPage } from "~/utils/navigation/find-page.utils";
 
 const route = useRoute();
