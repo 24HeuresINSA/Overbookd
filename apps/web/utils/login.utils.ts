@@ -11,6 +11,9 @@ export async function loginAndApplyForMembership(
   if (!authStore.authenticated) return;
   navigateTo(HOME_URL);
 
+  const audio = new Audio("audio/jaune.m4a");
+  audio.play();
+
   const membershipApplicationStore = useMembershipApplicationStore();
   if (token) {
     membershipApplicationStore.submitStaffApplication({

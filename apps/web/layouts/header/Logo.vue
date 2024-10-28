@@ -34,11 +34,9 @@ const logo = computed<string>(() => {
   return isDarkTheme.value ? "logo_mobile_white.png" : "logo_mobile.png";
 });
 
-const track = "audio/jaune.m4a";
-
 watch(counter, (newCounter) => {
   if (newCounter !== TWENTY_FOUR) return;
-  const audio = new Audio(track);
+  const audio = new Audio("audio/jaune.m4a");
   audio.play();
 });
 
