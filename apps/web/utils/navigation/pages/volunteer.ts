@@ -93,7 +93,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
 // const PLANNING_PAGE: HiddenPageWithParams = {
 //   title: "Planning",
 //   permission: VIEW_PLANNING,
-//   to: `${PLANNING_URL}/:id`,
+//   to: PLANNING_URL,
 //   mobileSupport: true,
 //   canBeFavorite: false,
 //   hasParam: true,
