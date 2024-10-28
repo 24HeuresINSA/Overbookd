@@ -9,6 +9,8 @@
         v-model:hovered-event-id="hoveredEventId"
         :events="events"
         :displayed-day="day.date"
+        :clickable-events="clickableEvents"
+        @event-click="propagateEventClick"
       />
     </div>
   </div>
@@ -27,9 +29,18 @@ defineProps({
     type: Date,
     required: true,
   },
+  clickableEvents: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
+
+const emit = defineEmits(["event-click"]);
+const propagateEventClick = (event: CalendarEvent) => {
+  emit("event-click", event);
+};
 </script>
 
 <style lang="scss" scoped>

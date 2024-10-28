@@ -21,7 +21,12 @@
 
     <v-card>
       <v-card-text>
-        <OverCalendar v-model="calendarDisplayedDay" :events="calendarEvents" />
+        <OverCalendar
+          v-model="calendarDisplayedDay"
+          :events="calendarEvents"
+          clickable-events
+          @event-click="openEditDialog"
+        />
       </v-card-text>
     </v-card>
   </div>
@@ -93,6 +98,7 @@ const maxCharisma = computed<number>(() =>
 const calendarEvents = computed<CalendarEvent[]>(() =>
   charismaPeriods.value.map((cp) =>
     CreateCalendarEvent.init({
+      ...cp,
       start: cp.start,
       end: cp.end,
       name: cp.charisma.toString(),

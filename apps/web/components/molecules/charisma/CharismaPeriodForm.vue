@@ -3,16 +3,23 @@
     <template #title> {{ formLabel }} un créneau </template>
 
     <template #content>
-      <v-text-field v-model="name" label="Nom" :rules="[required]" />
-      <v-text-field v-model="description" label="Description" />
-      <DateTimeField v-model="start" label="Début" :step="60" />
-      <DateTimeField v-model="end" label="Fin" :step="60" />
-      <v-text-field
-        v-model="charisma"
-        type="number"
-        label="Charisme par heure"
-        :rules="[isNumber, min(0)]"
-      />
+      <div class="form">
+        <v-text-field v-model="name" label="Nom" :rules="[required]" />
+        <v-text-field v-model="description" label="Description" />
+        <DateTimeField v-model="start" label="Début" :step="60" />
+        <DateTimeField
+          v-model="end"
+          label="Fin"
+          :error-messages="periodErrors"
+          :step="60"
+        />
+        <v-text-field
+          v-model="charisma"
+          type="number"
+          label="Charisme par heure"
+          :rules="[isNumber, min(0)]"
+        />
+      </div>
     </template>
 
     <template #actions>
@@ -61,25 +68,21 @@ const charismaPeriods = computed<SavedCharismaPeriod[]>(
   () => charismaPeriodStore.all,
 );
 
-const period = computed<Period>(() =>
-  Period.init({ start: start.value, end: end.value }),
+const periodErrors = computed<string[]>(() =>
+  Period.errors({ start: start.value, end: end.value }),
 );
 const hasOverlap = computed<boolean>(() =>
   charismaPeriods.value.some((cp) => {
     if (isEditForm.value && cp.id === props.charismaPeriod?.id) return false;
-    return period.value.isOverlapping(Period.init(cp));
+    const period = Period.init({ start: start.value, end: end.value });
+    return period.isOverlapping(Period.init(cp));
   }),
 );
 const cantSaveCharismaPeriod = computed<boolean>(() => {
   const hasName = !!name.value.trim();
   const hasCharisma = !!charisma.value.trim() && +charisma.value >= 0;
-  if (!hasName || !hasCharisma) return true;
-
-  try {
-    period.value;
-  } catch {
-    return true;
-  }
+  const isPeriodValid = Period.isValid({ start: start.value, end: end.value });
+  if (!hasName || !hasCharisma || !isPeriodValid) return true;
   return hasOverlap.value;
 });
 
@@ -114,3 +117,11 @@ const confirmCharismaPeriod = () => {
   return addCharismaPeriod();
 };
 </script>
+
+<style scoped>
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>
