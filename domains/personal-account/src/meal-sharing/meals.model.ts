@@ -11,6 +11,7 @@ export type OnGoingSharedMeal = {
   id: number;
   meal: AboutMeal;
   chef: Adherent;
+  areShotgunsOpen: boolean;
   shotgunCount: number;
   shotguns: Shotgun[];
 };

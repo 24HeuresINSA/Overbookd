@@ -23,13 +23,19 @@ export class OnGoingSharedMealBuilder
     const meal = Meal.init(menu, date);
     const firstShotgun = { ...chef, date: new Date() };
     const shotguns = Shotguns.init().add(firstShotgun);
-    return new OnGoingSharedMealBuilder(id, meal, chef, shotguns);
+    return new OnGoingSharedMealBuilder(id, meal, chef, true, shotguns);
   }
 
   static build(builder: BuildOnGoingSharedMeal): OnGoingSharedMealBuilder {
-    const { id, meal, chef, shotguns: shotgunList } = builder;
+    const { id, meal, chef, areShotgunsOpen, shotguns: shotgunList } = builder;
     const shotguns = Shotguns.build(shotgunList);
-    return new OnGoingSharedMealBuilder(id, meal, chef, shotguns);
+    return new OnGoingSharedMealBuilder(
+      id,
+      meal,
+      chef,
+      areShotgunsOpen,
+      shotguns,
+    );
   }
 
   hasShotgun(id: Adherent["id"]): boolean {
@@ -44,6 +50,7 @@ export class OnGoingSharedMealBuilder
       this.id,
       this.meal,
       this.chef,
+      this.areShotgunsOpen,
       shotguns,
     );
   }
@@ -54,6 +61,7 @@ export class OnGoingSharedMealBuilder
       this.id,
       this.meal,
       this.chef,
+      this.areShotgunsOpen,
       shotguns,
     );
   }
@@ -63,12 +71,33 @@ export class OnGoingSharedMealBuilder
       id: this.id,
       meal: this.meal,
       chef: this.chef,
+      areShotgunsOpen: false,
       shotguns: this.shotguns,
       expense,
     });
   }
 
-  isChef(adherent: Adherent["id"]) {
+  closeShotguns(): OnGoingSharedMealBuilder {
+    return OnGoingSharedMealBuilder.build({
+      id: this.id,
+      meal: this.meal,
+      chef: this.chef,
+      areShotgunsOpen: false,
+      shotguns: this.shotguns,
+    });
+  }
+
+  openShotguns(): OnGoingSharedMealBuilder {
+    return OnGoingSharedMealBuilder.build({
+      id: this.id,
+      meal: this.meal,
+      chef: this.chef,
+      areShotgunsOpen: true,
+      shotguns: this.shotguns,
+    });
+  }
+
+  isChef(adherent: Adherent["id"]): boolean {
     return adherent === this.chef.id;
   }
 }

@@ -7,13 +7,18 @@ import {
   OnlyChefCan,
   RecordExpenseOnNoShotgunedMeal,
   RecordExpenseOnPastMeal,
+  ShotgunsAlreadyClosed,
+  ShotgunsAlreadyOpened,
+  ShotgunsClosed,
 } from "./meal-sharing.error.js";
-import { PastSharedMeal } from "./meals.model.js";
+import { OnGoingSharedMeal, PastSharedMeal } from "./meals.model.js";
 import { Meal } from "./meal.js";
 import { InMemorySharedMeals } from "./shared-meals.inmemory.js";
 import { InMemoryAdherents } from "./adherents.inmemory.js";
 import {
   CANCEL_SHOTGUN_PAST_MEAL_ERROR,
+  CLOSE_SHOTGUNS_PAST_MEAL_ERROR,
+  OPEN_SHOTGUNS_PAST_MEAL_ERROR,
   PastSharedMealBuilder,
   SHOTGUN_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
@@ -39,6 +44,7 @@ const rizCantonnais = OnGoingSharedMealBuilder.build({
   id: 1,
   meal,
   chef: julie,
+  areShotgunsOpen: true,
   shotguns,
 });
 
@@ -46,6 +52,7 @@ const lonelyMeal = OnGoingSharedMealBuilder.build({
   id: 2,
   meal,
   chef: julie,
+  areShotgunsOpen: true,
   shotguns: [],
 });
 
@@ -53,6 +60,7 @@ const closedMeal = PastSharedMealBuilder.build({
   id: 3,
   meal,
   chef: julie,
+  areShotgunsOpen: true,
   shotguns,
   expense: { amount: 1000, date: new Date() },
 });
@@ -238,6 +246,22 @@ describe("Meal Sharing", () => {
             await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
         });
+        it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
+          expect(async () => {
+            await mealSharing.closeShotguns(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(CLOSE_SHOTGUNS_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to open the shotguns", async () => {
+          expect(async () => {
+            await mealSharing.openShotguns(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
+        });
         it("should count how many shotguns were before the expense", () => {
           expect(pastSharedMeal.inTimeShotguns).toBe(2);
         });
@@ -296,6 +320,89 @@ describe("Meal Sharing", () => {
           async () =>
             await mealSharing.cancelMeal(rizCantonnais.id, shogosse.id),
         ).rejects.toThrow(OnlyChefCan.cancel(rizCantonnais));
+      });
+    });
+  });
+  describe("Close the shotguns", () => {
+    beforeEach(() => {
+      sharedMeals = new InMemorySharedMeals([rizCantonnais]);
+      adherents = new InMemoryAdherents([...adherentListing]);
+      mealSharing = new MealSharing(sharedMeals, adherents);
+    });
+    describe("when adherent other than chef try to close the shotguns", () => {
+      it("should indicate that only chef can close the shotguns", () => {
+        expect(
+          async () => await mealSharing.closeShotguns(rizCantonnais.id, lea.id),
+        ).rejects.toThrow(OnlyChefCan.closeShotguns(rizCantonnais));
+      });
+    });
+    describe("when adherent other than chef try to open the shotguns", () => {
+      it("should indicate that only chef can open the shotguns", () => {
+        expect(
+          async () => await mealSharing.openShotguns(rizCantonnais.id, lea.id),
+        ).rejects.toThrow(OnlyChefCan.openShotguns(rizCantonnais));
+      });
+    });
+    describe("when chef closes the shotguns", () => {
+      let sharedMeal: OnGoingSharedMeal;
+      beforeEach(async () => {
+        sharedMeal = await mealSharing.closeShotguns(
+          rizCantonnais.id,
+          rizCantonnais.chef.id,
+        );
+      });
+      describe("on a meal with shotguns opened", () => {
+        it("should close the shotguns", async () => {
+          expect(sharedMeal.areShotgunsOpen).toBe(false);
+        });
+        it("should indicate shotguns are closed for new adherent trying to shotgun", async () => {
+          expect(async () => {
+            await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
+          }).rejects.toThrow(ShotgunsClosed);
+        });
+        describe("when chef opens the shotguns again", () => {
+          beforeEach(async () => {
+            sharedMeal = await mealSharing.openShotguns(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          });
+          it("should open the shotguns", () => {
+            expect(sharedMeal.areShotgunsOpen).toBe(true);
+          });
+          it("should be possible for lea to shotgun", async () => {
+            const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
+            expect(meal.shotgunCount).toBe(4);
+            expect(meal.shotguns).toContainEqual({
+              ...lea,
+              date: expect.any(Date),
+            });
+          });
+        });
+      });
+      describe("on a meal with shotguns closed", () => {
+        it("should indicate that the shotguns are already closed", () => {
+          expect(
+            async () =>
+              await mealSharing.closeShotguns(
+                rizCantonnais.id,
+                rizCantonnais.chef.id,
+              ),
+          ).rejects.toThrow(ShotgunsAlreadyClosed);
+        });
+      });
+    });
+    describe("when chef opens the shotguns", () => {
+      describe("on a meal with shotguns opened", () => {
+        it("should indicate that the shotguns are already opened", () => {
+          expect(
+            async () =>
+              await mealSharing.openShotguns(
+                rizCantonnais.id,
+                rizCantonnais.chef.id,
+              ),
+          ).rejects.toThrow(ShotgunsAlreadyOpened);
+        });
       });
     });
   });

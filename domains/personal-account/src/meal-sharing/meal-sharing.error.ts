@@ -43,6 +43,14 @@ export class OnlyChefCan extends MealSharingError {
   static cancel({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "annuler un repas");
   }
+
+  static closeShotguns({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "fermer les shotguns");
+  }
+
+  static openShotguns({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "ouvrir les shotguns");
+  }
 }
 
 export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
@@ -54,5 +62,23 @@ export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
 export class RecordExpenseOnPastMeal extends MealSharingError {
   constructor() {
     super("Le repas a déjà une dépense renseignée");
+  }
+}
+
+export class ShotgunsClosed extends MealSharingError {
+  constructor() {
+    super("Il n'est pas possible de shotgun lorsque ceux ci sont fermés");
+  }
+}
+
+export class ShotgunsAlreadyClosed extends MealSharingError {
+  constructor() {
+    super("Les shotguns sont déjà fermés");
+  }
+}
+
+export class ShotgunsAlreadyOpened extends MealSharingError {
+  constructor() {
+    super("Les shotguns sont déjà ouverts");
   }
 }
