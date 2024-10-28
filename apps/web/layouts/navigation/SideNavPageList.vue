@@ -28,7 +28,7 @@
 import {
   summaryPages,
   type PageInSummary,
-} from "~/utils/navigation/pages/page-list";
+} from "~/utils/navigation/pages/desktop-summary";
 import SideNavPageItem from "./SideNavPageItem.vue";
 import {
   FA_URL,

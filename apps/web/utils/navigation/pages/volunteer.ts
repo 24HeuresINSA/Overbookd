@@ -9,7 +9,7 @@ import {
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
-import type { Page, PageInSummary } from "./page-list";
+import type { Page, PageInSummary } from "./desktop-summary";
 
 export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
@@ -21,6 +21,7 @@ export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
     "Page avec ton compte persos et tes transactions permettant de faire des virements",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "mon",
     "virements",
@@ -41,6 +42,7 @@ export const SHARED_MEALS_PAGE: PageInSummary = {
   description: "Page pour proposer et shotgun des repas partagés",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "repas-partages",
     "shotguns",
@@ -60,6 +62,7 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
   description: "Permet de voir tous les bénévoles",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["benevoles", "orgas", "liste"],
 };
 
@@ -71,6 +74,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
     "Permet de renseigner quand tu es disponible pour aider sur le festival",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["dispos", "disponibilites"],
 };
 
@@ -82,15 +86,17 @@ const AVAILABILITIES_PAGE: PageInSummary = {
 //   description: "Permet d'avoir un apercu de son planning sur le festival",
 //   mobileSupport: true,
 //   canBeFavorite: true,
+//   hasParam: false,
 //   keywords: ["planning", "calendrier", "taches", "affectation"],
 // };
 
 // const PLANNING_PAGE: HiddenPageWithParams = {
 //   title: "Planning",
 //   permission: VIEW_PLANNING,
-//   to: `${PLANNING_URL}/:id`,
+//   to: PLANNING_URL,
 //   mobileSupport: true,
 //   canBeFavorite: false,
+//   hasParam: true,
 // };
 
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
