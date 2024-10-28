@@ -1,6 +1,7 @@
 import { BE_AFFECTED } from "@overbookd/permission";
 import type { Credentials } from "@overbookd/registration";
 import { HOME_URL } from "@overbookd/web-page";
+import { playJauneAudio } from "./easter-egg/jaune-audio";
 
 export async function loginAndApplyForMembership(
   credentials: Credentials,
@@ -10,6 +11,8 @@ export async function loginAndApplyForMembership(
   await authStore.login(credentials);
   if (!authStore.authenticated) return;
   navigateTo(HOME_URL);
+
+  playJauneAudio();
 
   const membershipApplicationStore = useMembershipApplicationStore();
   if (token) {

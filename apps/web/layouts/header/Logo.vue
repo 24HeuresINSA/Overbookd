@@ -11,6 +11,7 @@
 import { useTheme } from "vuetify";
 import { HOME_URL } from "@overbookd/web-page";
 import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
+import { playJauneAudio } from "~/utils/easter-egg/jaune-audio";
 
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;
@@ -34,12 +35,9 @@ const logo = computed<string>(() => {
   return isDarkTheme.value ? "logo_mobile_white.png" : "logo_mobile.png";
 });
 
-const track = "audio/jaune.m4a";
-
 watch(counter, (newCounter) => {
   if (newCounter !== TWENTY_FOUR) return;
-  const audio = new Audio(track);
-  audio.play();
+  playJauneAudio();
 });
 
 const onClick = () => {
