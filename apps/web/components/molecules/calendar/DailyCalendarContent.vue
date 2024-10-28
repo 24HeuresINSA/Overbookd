@@ -1,6 +1,6 @@
 <template>
   <div class="daily-content">
-    <div v-for="event in events">
+    <div v-for="event in events" :key="event.id">
       <CalendarEvent
         v-if="isEventInDisplayedDay(event)"
         :key="event.id"
