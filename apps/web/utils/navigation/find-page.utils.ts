@@ -1,7 +1,7 @@
 import { type Page, allPages } from "./pages/desktop-summary";
 
 function removePathLastPart(path: string): string {
-  return path.replace(/\/[^/]*$/, "/");
+  return path.replace(/\/[^/]*$/, "");
 }
 
 export function findPage(path: string): Page | undefined {
