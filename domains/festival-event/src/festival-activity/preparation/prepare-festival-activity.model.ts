@@ -96,6 +96,11 @@ type WithInquiryOwner = {
 export type PrepareInquiryRequestCreation = BaseInquiryRequest &
   WithInquiryOwner;
 
+export type PrepareInquiryRequestRemoving = {
+  slug: string;
+  owner: InquiryOwner;
+};
+
 export type LinkInquiryDrive = AssignDrive & WithInquiryOwner;
 
 export type LinkSignageCatalogItem = {

@@ -10,6 +10,7 @@ import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
+  PrepareInquiryRequestRemoving,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSignageCreation,
@@ -18,7 +19,6 @@ import {
 } from "./prepare-festival-activity.model.js";
 import { FestivalActivity } from "../festival-activity.js";
 import { PreviewFestivalActivity } from "../festival-activity.js";
-import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";
 import { Contractor } from "../sections/in-charge.js";
@@ -56,7 +56,7 @@ export type Prepare<T extends FestivalActivity> = {
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
   addInquiry(inquiry: PrepareInquiryRequestCreation): T;
   initInquiry(initializer: InitInquiry): T;
-  removeInquiry(slug: InquiryRequest["slug"]): T;
+  removeInquiry(inquiry: PrepareInquiryRequestRemoving): T;
   assignInquiryToDrive(link: LinkInquiryDrive): T;
 };
 
@@ -319,12 +319,12 @@ export class PrepareFestivalActivity {
 
   async removeInquiryRequest(
     faId: FestivalActivity["id"],
-    slug: InquiryRequest["slug"],
+    inquiry: PrepareInquiryRequestRemoving,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = prepare.removeInquiry(slug);
+    const updatedFA = prepare.removeInquiry(inquiry);
     return this.festivalActivities.save(updatedFA);
   }
 

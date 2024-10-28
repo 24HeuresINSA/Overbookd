@@ -42,11 +42,14 @@ import { WithInquiries } from "../sections/inquiry.js";
 import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 import {
   cinqGuirlandeLED,
+  deuxMarteaux,
   friday12hToFriday14h,
   quatreHeras,
+  quinzeVaubans,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
   troisTables,
+  uneMultiprise3Prises,
 } from "../festival-activity.fake.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 
@@ -357,21 +360,21 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove an inquiry request", () => {
     describe.each`
-      activityName               | activityId       | requestName                               | request                              | group
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"gears"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${escapeGame.inquiry.barriers[0]}    | ${"barriers"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"electricity"}
-      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"gears"}
-      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"electricity"}
+      activityName               | activityId       | requestName                               | request                              | owner          | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"matos"}     | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${escapeGame.inquiry.barriers[0]}    | ${"barrieres"} | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"elec"}      | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"matos"}     | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"elec"}      | ${"electricity"}
     `(
       "when removing $requestName from $activityName",
       ({ activityId, request, group }) => {
         it(`should remove it form ${group} requests`, async () => {
           const { inquiry } =
-            await prepareFestivalActivity.removeInquiryRequest(
-              activityId,
-              request.slug,
-            );
+            await prepareFestivalActivity.removeInquiryRequest(activityId, {
+              slug: request.slug,
+              owner: request.owner,
+            });
 
           expect(inquiry[group as keyof WithInquiries]).not.toContainEqual(
             request,
@@ -387,7 +390,7 @@ describe("Inquiry section of festival activity preparation", () => {
           async () =>
             await prepareFestivalActivity.removeInquiryRequest(
               baladeEnPoney.id,
-              requestSlug,
+              { slug: requestSlug, owner: barrieres },
             ),
         ).rejects.toThrow(CantRemoveLastRequest);
       });
@@ -447,7 +450,7 @@ describe("Inquiry section of festival activity preparation", () => {
     "when $activityName is already approved by $approvedBy",
     ({ activityId, gearsAvailable, barriersAvailable, elecAvailable }) => {
       describe("when trying to add a time window", () => {
-        it("should indicate that time window inquiry section is lock", async () => {
+        it("should indicate that time window inquiry section is locked", async () => {
           expect(
             async () =>
               await prepareFestivalActivity.addTimeWindowInInquiry(
@@ -458,7 +461,7 @@ describe("Inquiry section of festival activity preparation", () => {
         });
       });
       describe("when trying to remove a time window", () => {
-        it("should indicate that time window inquiry section is lock", async () => {
+        it("should indicate that time window inquiry section is locked", async () => {
           expect(
             async () =>
               await prepareFestivalActivity.removeTimeWindowFromInquiry(
@@ -468,8 +471,8 @@ describe("Inquiry section of festival activity preparation", () => {
           ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
         });
       });
-      describe("when trying to add it first request with time window", () => {
-        it("should indicate that inquiry section is lock", async () => {
+      describe("when trying to add the first request with time window", () => {
+        it("should indicate that inquiry section is already initialized", async () => {
           expect(
             async () =>
               await prepareFestivalActivity.initInquiry(activityId, {
@@ -489,11 +492,33 @@ describe("Inquiry section of festival activity preparation", () => {
             expect(inquiry.gears).toContainEqual(troisTables);
           });
         } else {
-          it("should indicate that gears inquiry requests section is lock", async () => {
+          it("should indicate that gears inquiry requests section is locked", async () => {
             expect(
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activityId, {
                   ...troisTables,
+                  owner: matos,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+      describe("when trying to remove a gear inquiry request", () => {
+        if (gearsAvailable) {
+          it("should remove it from the current requests", async () => {
+            const { inquiry } =
+              await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                slug: deuxMarteaux.slug,
+                owner: matos,
+              });
+            expect(inquiry.gears).not.toContainEqual(deuxMarteaux);
+          });
+        } else {
+          it("should indicate that gears inquiry requests section is locked", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                  slug: deuxMarteaux.slug,
                   owner: matos,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -510,11 +535,33 @@ describe("Inquiry section of festival activity preparation", () => {
             expect(inquiry.barriers).toContainEqual(quatreHeras);
           });
         } else {
-          it("should indicate that barriers inquiry requests section is lock", async () => {
+          it("should indicate that barriers inquiry requests section is locked", async () => {
             expect(
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activityId, {
                   ...quatreHeras,
+                  owner: barrieres,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+      describe("when trying to remove a barrier inquiry request", () => {
+        if (barriersAvailable) {
+          it("should remove it from the current requests", async () => {
+            const { inquiry } =
+              await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                slug: quinzeVaubans.slug,
+                owner: barrieres,
+              });
+            expect(inquiry.barriers).not.toContainEqual(quinzeVaubans);
+          });
+        } else {
+          it("should indicate that barriers inquiry requests section is locked", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                  slug: quinzeVaubans.slug,
                   owner: barrieres,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -536,6 +583,30 @@ describe("Inquiry section of festival activity preparation", () => {
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activityId, {
                   ...cinqGuirlandeLED,
+                  owner: elec,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+      describe("when trying to remove an electricity inquiry request", () => {
+        if (elecAvailable) {
+          it("should remove it from the current requests", async () => {
+            const { inquiry } =
+              await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                slug: uneMultiprise3Prises.slug,
+                owner: elec,
+              });
+            expect(inquiry.electricity).not.toContainEqual(
+              uneMultiprise3Prises,
+            );
+          });
+        } else {
+          it("should indicate that electricty inquiry requests section is locked", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.removeInquiryRequest(activityId, {
+                  slug: uneMultiprise3Prises.slug,
                   owner: elec,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

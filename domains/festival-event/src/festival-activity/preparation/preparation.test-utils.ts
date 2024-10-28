@@ -59,7 +59,7 @@ export const escapeGame = factory
     timeWindows: [friday11hToFriday15h],
     gears: [deuxMarteaux],
     electricity: [unePriseMurale],
-    barriers: [{ ...quinzeVaubans, quantity: 15 }],
+    barriers: [quinzeVaubans],
   })
   .withSupply({ electricity: [lumiere, enceinte] })
   .build();
