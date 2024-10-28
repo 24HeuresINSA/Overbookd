@@ -1,3 +1,18 @@
+## [3.11.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.2...v3.11.3) (2024-10-28)
+
+### Bug Fixes
+
+* **calendar:** add hover effect on events [#2219](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2219) ([fbd9520](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fbd95204ce7a10450322390a846f98dbd218eaff))
+* **calendar:** display intermediate days for a multi-day event [#2204](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2204) ([44e7072](https://gitlab.com/24-heures-insa/overbookd-mono/commit/44e7072ebca4d7bbdd5af23b0628de02f7346343))
+* **charisma-periods:** add calendar [#2221](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2221) ([05a8c07](https://gitlab.com/24-heures-insa/overbookd-mono/commit/05a8c072466a636999b0f1ae9527acdced30d2f8))
+* **fa:** hide reference if activity is draft [#2205](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2205) ([2fe8cf8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2fe8cf8de89929a91fcede793f153bbff3d51581))
+* **festival-activity:** block inquiry removing if owner has already validated [#2206](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2206) ([6ed5344](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6ed5344a6c5b694bde66b0d22a7ae7734aa0bdfb))
+* **festival-activity:** hide inquiry reset button when activity is draft [#2210](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2210) ([4f81b7d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4f81b7de716e68c711faa49fde82e8f381b677af))
+* **login:** play JAUNE audio when connected [#2224](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2224) ([382915e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/382915eefb8a735da1e75c4315e9ae3403c10048))
+* **web:** add a max length to the nickname field [#2218](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2218) ([241db0e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/241db0e037ef2f9edf9bdf996f8677d9230d116a))
+* **web:** check the permission of the right page [#2222](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2222) ([dd660cd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dd660cd36deb5594376d592f44709d3974925804))
+* **web:** fix approval notification and make sidebar scrollable [#2208](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2208) ([82e42ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/82e42ea735961ed60d1ff08f87a201659f132ec4))
+
 ## [3.11.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.1...v3.11.2) (2024-10-25)
 
 ### Bug Fixes
