@@ -152,7 +152,10 @@ const isInitInquiryDialogOpen = ref<boolean>(false);
 const openInitInquiryDialog = () => (isInitInquiryDialogOpen.value = true);
 const closeInitInquiryDialog = () => (isInitInquiryDialogOpen.value = false);
 
-const canClearInquiry = computed<boolean>(() => hasInquiry.value);
+const canClearInquiry = computed<boolean>(() => {
+  if (isDraft(selectedActivity.value)) return false;
+  return hasInquiry.value;
+});
 const clearInquiry = () => faStore.clearInquiry();
 
 const cantAddInquiry = computed<boolean>(() => {
