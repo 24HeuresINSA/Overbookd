@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { MOBILE_SUMMARY } from "~/utils/navigation/pages/mobile-summary";
-import { type PageInSummary } from "~/utils/navigation/pages/desktop-summary";
+import type { PageInSummary } from "~/utils/navigation/pages/desktop-summary";
 import { findPage } from "~/utils/navigation/find-page.utils";
 import { navigateTo } from "#app";
 
