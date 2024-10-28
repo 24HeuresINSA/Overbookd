@@ -602,7 +602,7 @@ describe("Inquiry section of festival activity preparation", () => {
             );
           });
         } else {
-          it("should indicate that electricty inquiry requests section is lock", async () => {
+          it("should indicate that electricty inquiry requests section is locked", async () => {
             expect(
               async () =>
                 await prepareFestivalActivity.removeInquiryRequest(activityId, {
