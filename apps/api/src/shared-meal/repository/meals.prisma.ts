@@ -27,6 +27,7 @@ const SELECT_SHARED_MEAL = {
   chef: { select: SELECT_ADHERENT },
   amount: true,
   payedAt: true,
+  areShotgunsOpen: true,
   shotguns: { select: SELECT_SHOTGUN },
 };
 
@@ -112,6 +113,28 @@ export class PrismaMeals implements SharedMeals {
     return meal;
   }
 
+  async closeShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        areShotgunsOpen: false,
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
+  async openShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        areShotgunsOpen: true,
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
   async list(): Promise<SharedMeal[]> {
     const meals = await this.prisma.sharedMeal.findMany({
       select: SELECT_SHARED_MEAL,
@@ -142,6 +165,7 @@ type DatabaseSharedMeal = {
   chef: DatabaseAdherent;
   amount?: number;
   payedAt?: Date;
+  areShotgunsOpen: boolean;
   shotguns: {
     date: Date;
     guest: DatabaseAdherent;
@@ -161,13 +185,14 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
   const name = buildUserNameWithNickname(saved.chef);
   const chef = { id: saved.chef.id, name };
   const meal = { menu: saved.menu, date: saved.date };
+  const areShotgunsOpen = saved.areShotgunsOpen;
   const shotguns = saved.shotguns.map((shotgun) => ({
     id: shotgun.guest.id,
     name: buildUserNameWithNickname(shotgun.guest),
     date: shotgun.date,
   }));
 
-  const baseBuilder = { id: saved.id, meal, chef, shotguns };
+  const baseBuilder = { id: saved.id, meal, chef, areShotgunsOpen, shotguns };
 
   if (!amount || !payedAt) return baseBuilder;
 
