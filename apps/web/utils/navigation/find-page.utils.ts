@@ -11,7 +11,5 @@ export function findPage(path: string): Page | undefined {
   const pagesWithParam = allPages.filter((page) => page.hasParam);
   const reducedPath = removePathLastPart(path);
 
-  return pagesWithParam.find(
-    (page) => removePathLastPart(page.to) === reducedPath,
-  );
+  return pagesWithParam.find((page) => page.to === reducedPath);
 }
