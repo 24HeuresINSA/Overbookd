@@ -59,7 +59,7 @@
     "@overbookd/team-constants": "workspace:*",
     "@overbookd/time": "workspace:*",
     "@overbookd/web-page": "workspace:*",
-    "jose": "5.9.4",
+    "jose": "5.9.6",
     "jwt-decode": "4.0.0"
   }
 }
