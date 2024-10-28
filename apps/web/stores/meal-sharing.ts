@@ -78,6 +78,20 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       sendInfoNotification("Le repas a été annulé");
     },
 
+    async closeShotguns(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.closeShotguns(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
+    async openShotguns(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.openShotguns(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
     _updateMealInsideMeals(sharedMeal: SharedMeal) {
       const mealIndex = this.meals.findIndex(({ id }) => id === sharedMeal.id);
       if (mealIndex === -1) return;
