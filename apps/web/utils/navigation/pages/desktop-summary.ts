@@ -50,7 +50,7 @@ export const summaryPages: PageInSummary[] = [
   ...LOGISTIC_SUMMARY_PAGES,
 ];
 
-const allPages: Page[] = [
+export const allPages: Page[] = [
   HOME_PAGE,
   ...VOLUNTEER_PAGES,
   ...FESTIVAL_EVENT_PAGES,
@@ -58,19 +58,3 @@ const allPages: Page[] = [
   ...CURRENT_EVENT_SUMMARY_PAGES,
   ...LOGISTIC_PAGES,
 ];
-
-function removePathLastPart(path: string): string {
-  return path.replace(/\/[^/]*$/, "/");
-}
-
-export function findPage(path: string): Page | undefined {
-  const pageWithExactPath = allPages.find((page) => page.to === path);
-  if (pageWithExactPath) return pageWithExactPath;
-
-  const pagesWithParam = allPages.filter((page) => page.hasParam);
-  const reducedPath = removePathLastPart(path);
-
-  return pagesWithParam.find(
-    (page) => removePathLastPart(page.to) === reducedPath,
-  );
-}

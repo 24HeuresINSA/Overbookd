@@ -9,7 +9,7 @@ import {
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
-import type { Page, PageInSummary } from "./page-list";
+import type { Page, PageInSummary } from "./desktop-summary";
 
 export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",

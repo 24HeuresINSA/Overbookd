@@ -1,4 +1,4 @@
-import { findPage } from "../utils/navigation/pages/page-list";
+import { findPage } from "~/utils/navigation/find-page.utils";
 import { HOME_URL } from "@overbookd/web-page";
 
 export default defineNuxtRouteMiddleware((to) => {
