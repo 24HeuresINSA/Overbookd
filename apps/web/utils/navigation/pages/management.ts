@@ -29,6 +29,7 @@ const CONFIGURATION_PAGE: PageInSummary = {
   description: "Permet de configurer Overbookd",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["administration", "system", "configuration"],
 };
 
@@ -40,6 +41,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "nouveaux-arrivants",
     "inscriptions",
@@ -57,6 +59,7 @@ const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
   description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "nouveaux-arrivants",
     "inscriptions",
@@ -75,6 +78,7 @@ const CONTRIBUTIONS_PAGE: PageInSummary = {
     "Permet d'enregistrer les cotisations des adhérents à l'association",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["cotisations", "contributions", "cotiz"],
 };
 
@@ -87,6 +91,7 @@ const SG_PAGE: PageInSummary = {
     "Permet de répartir les consommations des comptes perso aux adhérants",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "sg",
     "secretaire-generale",
@@ -110,6 +115,7 @@ const TRANSACTIONS_PAGE: PageInSummary = {
   description: "Permet de visualiser les transactions effectuées sur Overbookd",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["virements", "compte-perso", "transactions"],
 };
 
@@ -122,6 +128,7 @@ const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
     "Permet de gérer le charisme des bénévoles via la création d'événements",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["charisme", "evenements"],
 };
 
@@ -134,6 +141,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
     "Permet de voir la liste des participations aux événements charismatiques",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["charisme", "evenements", "participations"],
 };
 
@@ -146,6 +154,7 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
     "Permet de définir les points de charisme des créneaux du festival",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["charisme-dispos", "charisme-disponibilites"],
 };
 
@@ -157,6 +166,7 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
 //   description: "Permet d'affecter des bénévoles à des tâches",
 //   mobileSupport: false,
 //   canBeFavorite: true,
+//   hasParam: false,
 //   keywords: ["orga-tache", "affectation"],
 // };
 
@@ -168,6 +178,7 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
 //   description: "Permet d'affecter des tâches à des bénévoles",
 //   mobileSupport: false,
 //   canBeFavorite: true,
+//   hasParam: false,
 //   keywords: ["tache-orga", "affectation"],
 // };
 
@@ -180,6 +191,7 @@ const ORGA_NEED_PAGE: PageInSummary = {
     "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
 };
 

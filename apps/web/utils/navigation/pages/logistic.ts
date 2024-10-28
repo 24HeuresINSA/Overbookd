@@ -27,6 +27,7 @@ const GEAR_CATALOG_PAGE: PageInSummary = {
     "Permet de définir l'ensemble du matériel disponible sur le festival",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "catalogue-matos",
     "catalogue-materiel",
@@ -44,6 +45,7 @@ const INVENTORY_PAGE: PageInSummary = {
     "Permet de compter l'ensemble du matériel appartenant à l'association",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["inventaire", "matos", "materiel", "logistique"],
 };
 
@@ -56,6 +58,7 @@ const GEAR_DASHBOARD_PAGE: PageInSummary = {
     "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["recap-matos", "dashboard", "demandes-matos", "demandes-materiel"],
 };
 
@@ -67,15 +70,17 @@ const PURCHASE_GEARS_LIST_PAGE: PageInSummary = {
   description: "Permet de gérer les achats de matériel",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
 };
 
 const PURCHASE_GEARS_PAGE: HiddenPage = {
   title: "Fiche Achat",
   permission: PURCHASE_GEARS,
-  to: `${PURCHASE_GEARS_URL}/:id`,
+  to: PURCHASE_GEARS_URL,
   mobileSupport: false,
   canBeFavorite: false,
+  hasParam: true,
 };
 
 const BORROW_GEARS_LIST_PAGE: PageInSummary = {
@@ -86,15 +91,17 @@ const BORROW_GEARS_LIST_PAGE: PageInSummary = {
   description: "Permet de gérer les emprunts de matériel",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
 };
 
 const BORROW_GEARS_PAGE: HiddenPage = {
   title: "Fiche Emprunt",
   permission: BORROW_GEARS,
-  to: `${BORROW_GEARS_URL}/:id`,
+  to: BORROW_GEARS_URL,
   mobileSupport: false,
   canBeFavorite: false,
+  hasParam: true,
 };
 
 const LOCATION_PAGE: PageInSummary = {
@@ -106,6 +113,7 @@ const LOCATION_PAGE: PageInSummary = {
     "Permet de définir l'ensemble des lieux disponible sur le festival",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["lieux-signaletique", "localisation", "carte", "plan"],
 };
 
@@ -118,6 +126,7 @@ const SIGNAGE_CATALOG_PAGE: PageInSummary = {
     "Permet de définir l'ensemble de la signalétique disponible sur le festival",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "catalogue-signaletique",
     "panneau",

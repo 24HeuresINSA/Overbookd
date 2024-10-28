@@ -24,15 +24,17 @@ export const FA_LIST_PAGE: PageInSummary = {
     "Liste des FAs, les FAs permettent de décrire tout ce qui va se passer sur le festival",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["fas", "fiches-activites", "animations"],
 };
 
 const FA_PAGE: HiddenPage = {
   title: "Fiche Activité",
   permission: READ_FA,
-  to: `${FA_URL}/:id`,
+  to: FA_URL,
   mobileSupport: true,
   canBeFavorite: false,
+  hasParam: true,
 };
 
 const FT_LIST_PAGE: PageInSummary = {
@@ -44,15 +46,17 @@ const FT_LIST_PAGE: PageInSummary = {
     "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["fts", "fiche-taches"],
 };
 
 const FT_PAGE: HiddenPage = {
   title: "Fiche Tâche",
   permission: READ_FT,
-  to: `${FT_URL}/:id`,
+  to: FT_URL,
   mobileSupport: true,
   canBeFavorite: false,
+  hasParam: true,
 };
 
 const FA_TO_PUBLISH_PAGE: PageInSummary = {
@@ -64,6 +68,7 @@ const FA_TO_PUBLISH_PAGE: PageInSummary = {
     "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "animations",
     "communication",
@@ -80,6 +85,7 @@ const SECURITY_DASHBOARD_PAGE: HiddenPage = {
   to: SECURITY_DASHBOARD_URL,
   mobileSupport: false,
   canBeFavorite: false,
+  hasParam: false,
 };
 
 const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
@@ -91,6 +97,7 @@ const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
     "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport à l'édition précédente",
   mobileSupport: false,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "statistiques",
     "stats",

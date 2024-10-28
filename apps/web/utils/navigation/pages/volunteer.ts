@@ -21,6 +21,7 @@ export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
     "Page avec ton compte persos et tes transactions permettant de faire des virements",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "mon",
     "virements",
@@ -41,6 +42,7 @@ export const SHARED_MEALS_PAGE: PageInSummary = {
   description: "Page pour proposer et shotgun des repas partagés",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: [
     "repas-partages",
     "shotguns",
@@ -60,6 +62,7 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
   description: "Permet de voir tous les bénévoles",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["benevoles", "orgas", "liste"],
 };
 
@@ -71,6 +74,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
     "Permet de renseigner quand tu es disponible pour aider sur le festival",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["dispos", "disponibilites"],
 };
 
@@ -82,6 +86,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
 //   description: "Permet d'avoir un apercu de son planning sur le festival",
 //   mobileSupport: true,
 //   canBeFavorite: true,
+//   hasParam: false,
 //   keywords: ["planning", "calendrier", "taches", "affectation"],
 // };
 
@@ -91,6 +96,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
 //   to: `${PLANNING_URL}/:id`,
 //   mobileSupport: true,
 //   canBeFavorite: false,
+//   hasParam: true,
 // };
 
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [

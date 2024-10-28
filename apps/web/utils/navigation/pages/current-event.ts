@@ -11,6 +11,7 @@ const TIMELINE_PAGE: PageInSummary = {
     "Permet de voir toutes les taches qui se déroulent pendant une plage horaire",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["activite", "timeline", "actuel", "en-cours"],
 };
 
@@ -23,6 +24,7 @@ const NEED_HELP_PAGE: PageInSummary = {
     "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
   mobileSupport: true,
   canBeFavorite: true,
+  hasParam: false,
   keywords: ["aide-ponctuelle", "disponible", "besoin d'aide", "a l'aide"],
 };
 

@@ -20,11 +20,12 @@ export type PageInSummary = {
   canBeFavorite: boolean;
   keywords: string[];
   badgeValue?: number;
+  hasParam: boolean;
 };
 
 export type HiddenPage = Pick<
   PageInSummary,
-  "title" | "permission" | "to" | "mobileSupport"
+  "title" | "permission" | "to" | "mobileSupport" | "hasParam"
 > & { canBeFavorite: false };
 
 export type Page = PageInSummary | HiddenPage;
@@ -36,6 +37,7 @@ export const HOME_PAGE: PageInSummary = {
   description: "Page d'accueil",
   mobileSupport: true,
   canBeFavorite: false,
+  hasParam: false,
   keywords: ["accueil", "home"],
 };
 
@@ -65,10 +67,10 @@ export function findPage(path: string): Page | undefined {
   const pageWithExactPath = allPages.find((page) => page.to === path);
   if (pageWithExactPath) return pageWithExactPath;
 
-  const remainingPages = allPages.filter((page) => page.to !== path);
+  const pagesWithParam = allPages.filter((page) => page.hasParam);
   const reducedPath = removePathLastPart(path);
 
-  return remainingPages.find(
+  return pagesWithParam.find(
     (page) => removePathLastPart(page.to) === reducedPath,
   );
 }
