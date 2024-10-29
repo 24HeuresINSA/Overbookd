@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="table-container">
     <v-card-text>
       <GearFilter
         v-model:name="filters.name"
@@ -32,7 +32,8 @@
               item.category?.name
             }}</span>
             <span class="category-details__path">
-              {{ item.category?.path }}</span>
+              {{ item.category?.path }}
+            </span>
           </div>
         </template>
 
@@ -153,6 +154,10 @@ const deleteGear = async () => {
 </script>
 
 <style lang="scss" scoped>
+.table-container {
+  flex: 1;
+}
+
 .category-details {
   display: flex;
   flex-direction: column;

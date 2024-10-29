@@ -1,4 +1,5 @@
 import { createVuetify } from "vuetify";
+import { VTreeview } from "vuetify/labs/components";
 import { fr } from "vuetify/locale";
 import {
   blueDarkTheme,
@@ -70,6 +71,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       VCombobox: commonFieldDefaultSettings,
       VTextarea: commonFieldDefaultSettings,
       VFileInput: commonFieldDefaultSettings,
+    },
+    components: {
+      VTreeview,
     },
   });
 
