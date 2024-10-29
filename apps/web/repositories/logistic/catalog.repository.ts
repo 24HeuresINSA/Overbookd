@@ -57,7 +57,7 @@ export class CategoryRepository {
     );
   }
 
-  static deleteCategory(categoryId: number) {
+  static removeCategory(categoryId: number) {
     return HttpClient.delete(`${this.basePath}/${categoryId}`);
   }
 

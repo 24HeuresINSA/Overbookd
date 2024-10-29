@@ -119,7 +119,7 @@ const openCategoryRemovalConfirmationDialog = async (
 };
 const removeCategory = async () => {
   if (!selectedCategory.value) return;
-  await catalogStore.deleteCategory(selectedCategory.value);
+  await catalogStore.removeCategory(selectedCategory.value);
   closeCategoryRemovalConfirmationDialog();
 };
 const closeCategoryRemovalConfirmationDialog = () => {
