@@ -169,7 +169,7 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     const cancelShotgun = { mealId: rizCantonnais.id, guestId: shogosse.id };
-    describe("when one of the guest try to cancel it shotgun", () => {
+    describe("when one of the guests tries to cancel their shotgun", () => {
       it("should indicate only chef can unshotgun", async () => {
         const instigator = shogosse.id;
         expect(
@@ -178,7 +178,7 @@ describe("Meal Sharing", () => {
         ).rejects.toThrow(OnlyChefCan.cancelShotgunFor(rizCantonnais));
       });
     });
-    describe("when the chef try to cancel a shotgun", () => {
+    describe("when the chef tries to cancel a shotgun", () => {
       it("should remove the guest from the list", async () => {
         const instigator = rizCantonnais.chef.id;
         const meal = await mealSharing.cancelShotgun(cancelShotgun, instigator);
@@ -215,7 +215,7 @@ describe("Meal Sharing", () => {
       adherents = new InMemoryAdherents([...adherentListing]);
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
-    describe("when adherent other than chef try to record expense", () => {
+    describe("when adherent other than chef tries to record expense", () => {
       it("should indicate that only chef can record expense", () => {
         expect(
           async () =>
@@ -329,14 +329,14 @@ describe("Meal Sharing", () => {
       adherents = new InMemoryAdherents([...adherentListing]);
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
-    describe("when adherent other than chef try to close the shotguns", () => {
+    describe("when adherent other than chef tries to close the shotguns", () => {
       it("should indicate that only chef can close the shotguns", () => {
         expect(
           async () => await mealSharing.closeShotguns(rizCantonnais.id, lea.id),
         ).rejects.toThrow(OnlyChefCan.closeShotguns(rizCantonnais));
       });
     });
-    describe("when adherent other than chef try to open the shotguns", () => {
+    describe("when adherent other than chef tries to open the shotguns", () => {
       it("should indicate that only chef can open the shotguns", () => {
         expect(
           async () => await mealSharing.openShotguns(rizCantonnais.id, lea.id),
