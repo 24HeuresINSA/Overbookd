@@ -5,7 +5,7 @@
       <v-card-text>
         <CharismaPeriodTable
           :loading="loading"
-          @update="openEditDialog"
+          @update="openEditDialogByTable"
           @delete="deleteCharismaPeriod"
         />
       </v-card-text>
@@ -25,7 +25,7 @@
           v-model="calendarDisplayedDay"
           :events="calendarEvents"
           clickable-events
-          @event-click="openEditDialog"
+          @event-click="openEditDialogByCalendar"
         />
       </v-card-text>
     </v-card>
@@ -70,7 +70,14 @@ const isUpdateDialogOpen = ref<boolean>(false);
 const openAddDialog = () => (isAddDialogOpen.value = true);
 const closeAddDialog = () => (isAddDialogOpen.value = false);
 
-const openEditDialog = (charismaPeriod: SavedCharismaPeriod) => {
+const openEditDialogByTable = (charismaPeriod: SavedCharismaPeriod) => {
+  selectedCharismaPeriod.value = charismaPeriod;
+  isUpdateDialogOpen.value = true;
+};
+const openEditDialogByCalendar = (calendarEvent: CalendarEvent) => {
+  const charismaPeriod = charismaPeriods.value.find(
+    (cp) => cp.start === calendarEvent.start && cp.end === calendarEvent.end,
+  );
   selectedCharismaPeriod.value = charismaPeriod;
   isUpdateDialogOpen.value = true;
 };
@@ -98,7 +105,6 @@ const maxCharisma = computed<number>(() =>
 const calendarEvents = computed<CalendarEvent[]>(() =>
   charismaPeriods.value.map((cp) =>
     CreateCalendarEvent.init({
-      ...cp,
       start: cp.start,
       end: cp.end,
       name: cp.charisma.toString(),
