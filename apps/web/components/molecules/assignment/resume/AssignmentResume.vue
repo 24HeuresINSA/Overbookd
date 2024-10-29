@@ -24,10 +24,10 @@
     </div>
     <div class="has-friends-assigned">
       <v-tooltip location="top">
-        <template #activator="{ props }">
+        <template #activator="activator">
           <v-icon
             v-if="assignment.hasFriendsAssigned"
-            v-bind="props"
+            v-bind="activator.props"
             icon="mdi-account-check"
             size="small"
             color="green"
@@ -45,7 +45,7 @@ import type { AssignmentSummaryWithTask } from "@overbookd/http";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
-const { assignment } = defineProps({
+const props = defineProps({
   assignment: {
     type: Object as PropType<AssignmentSummaryWithTask>,
     required: true,
@@ -57,9 +57,9 @@ const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
     const assignments = assignVolunteerToTaskStore.assignments.find(
       ({ assignmentId, mobilizationId, taskId }) => {
         return (
-          assignmentId === assignment.assignmentId &&
-          mobilizationId === assignment.mobilizationId &&
-          taskId === assignment.taskId
+          assignmentId === props.assignment.assignmentId &&
+          mobilizationId === props.assignment.mobilizationId &&
+          taskId === props.assignment.taskId
         );
       },
     );
@@ -78,8 +78,8 @@ const emit = defineEmits(["selected-team"]);
 const selectTeam = (teamCode: string) => emit("selected-team", teamCode);
 
 const teamSelectShortcut = () => {
-  if (assignment.teams.length !== 1) return;
-  const team = assignment.teams.at(0)?.team;
+  if (props.assignment.teams.length !== 1) return;
+  const team = props.assignment.teams.at(0)?.team;
   if (!team) return;
   selectTeam(team);
 };
