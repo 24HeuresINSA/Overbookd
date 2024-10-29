@@ -9,7 +9,7 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
-                  !volunteer.hasAtLeastOneFriend
+                    !volunteer.hasAtLeastOneFriend
                 "
                 v-bind="activator.props"
                 icon="mdi-account-alert"
@@ -24,7 +24,7 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
-                  volunteer.hasFriendAssigned
+                    volunteer.hasFriendAssigned
                 "
                 v-bind="activator.props"
                 icon="mdi-account-check"
@@ -39,7 +39,7 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
-                  volunteer.assignableFriendsIds.length > 0
+                    volunteer.assignableFriendsIds.length > 0
                 "
                 v-bind="activator.props"
                 icon="mdi-account-group"
@@ -75,7 +75,7 @@
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
-                  volunteer.isRequestedOnSamePeriod
+                    volunteer.isRequestedOnSamePeriod
                 "
                 v-bind="activator.props"
                 icon="mdi-alert"
