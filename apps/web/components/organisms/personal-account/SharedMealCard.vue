@@ -48,7 +48,7 @@
             size="large"
             text="Annuler le repas"
             append-icon="mdi-cancel"
-            @click="cancelMeal"
+            @click="openCancelConfirmationDialog"
           />
           <v-btn
             color="primary"
@@ -85,6 +85,20 @@
         :shared="shared"
         @close="closeRecordExpenseDialog"
       />
+    </v-dialog>
+
+    <v-dialog v-model="isCancelConfirmationDialogOpen" width="600px">
+      <ConfirmationDialogCard
+        confirm-color="error"
+        @close="closeCancelConfirmationDialog"
+        @confirm="cancelMeal"
+      >
+        <template #title> Annuler le repas partagé </template>
+        <template #statement>
+          Tu es sur le point d'annuler le repas du
+          <strong>{{ shared.meal.date }}</strong>
+        </template>
+      </ConfirmationDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -128,12 +142,15 @@ const areShotgunsOpen = computed<boolean>(() => builder.value.areShotgunsOpen);
 const areShotgunsClose = computed<boolean>(() => !areShotgunsOpen.value);
 
 const isRecordExpenseDialogOpen = ref<boolean>(false);
-const openRecordExpenseDialog = () => {
-  isRecordExpenseDialogOpen.value = true;
-};
-const closeRecordExpenseDialog = () => {
-  isRecordExpenseDialogOpen.value = false;
-};
+const openRecordExpenseDialog = () => (isRecordExpenseDialogOpen.value = true);
+const closeRecordExpenseDialog = () =>
+  (isRecordExpenseDialogOpen.value = false);
+
+const isCancelConfirmationDialogOpen = ref<boolean>(false);
+const openCancelConfirmationDialog = () =>
+  (isCancelConfirmationDialogOpen.value = true);
+const closeCancelConfirmationDialog = () =>
+  (isCancelConfirmationDialogOpen.value = false);
 
 const shotgun = () => {
   mealSharingStore.shotgun(props.shared.id);
