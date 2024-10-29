@@ -35,12 +35,16 @@
           v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
+          :clickable-events="clickableEvents"
+          @event-click="propagateEventClick"
         />
         <WeeklyCalendarContent
           v-else
           v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
+          :clickable-events="clickableEvents"
+          @event-click="propagateEventClick"
         />
       </div>
     </div>
@@ -68,6 +72,10 @@ const props = defineProps({
     type: String as PropType<CalendarMode | undefined>,
     default: undefined,
   },
+  clickableEvents: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const displayedDay = defineModel<Date>({ default: new Date() });
@@ -80,6 +88,11 @@ if (publicHolidayStore.all.length === 0) {
 }
 
 const hoveredEventId = ref<string | undefined>();
+
+const emit = defineEmits(["event-click"]);
+const propagateEventClick = (event: CalendarEvent) => {
+  emit("event-click", event);
+};
 </script>
 
 <style lang="scss" scoped>
