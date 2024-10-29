@@ -787,7 +787,7 @@ model SharedMeal {
   amount  Int?
   payedAt DateTime? @map("payed_at")
 
-  areShotgunsOpen Boolean   @default(true)
+  areShotgunsOpen Boolean   @default(true) @map("are_shotguns_open")
   shotguns        Shotgun[]
 
   @@map("shared_meal")

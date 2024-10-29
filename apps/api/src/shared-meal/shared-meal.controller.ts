@@ -193,7 +193,7 @@ export class SharedMealController {
   }
 
   @Permission(OFFER_SHARED_MEAL)
-  @Post(":mealId/closeShotguns")
+  @Post(":mealId/close-shotguns")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -213,7 +213,7 @@ export class SharedMealController {
   }
 
   @Permission(OFFER_SHARED_MEAL)
-  @Post(":mealId/openShotguns")
+  @Post(":mealId/open-shotguns")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

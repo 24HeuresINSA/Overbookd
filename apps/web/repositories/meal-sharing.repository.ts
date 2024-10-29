@@ -45,13 +45,13 @@ export class MealSharingRepository {
 
   static closeShotguns(mealId: SharedMeal["id"]) {
     return HttpClient.post<SharedMeal>(
-      `${this.basePath}/${mealId}/closeShotguns`,
+      `${this.basePath}/${mealId}/close-shotguns`,
     );
   }
 
   static openShotguns(mealId: SharedMeal["id"]) {
     return HttpClient.post<SharedMeal>(
-      `${this.basePath}/${mealId}/openShotguns`,
+      `${this.basePath}/${mealId}/open-shotguns`,
     );
   }
 }

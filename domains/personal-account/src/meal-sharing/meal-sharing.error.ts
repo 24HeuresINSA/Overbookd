@@ -67,7 +67,7 @@ export class RecordExpenseOnPastMeal extends MealSharingError {
 
 export class ShotgunsClosed extends MealSharingError {
   constructor() {
-    super("Il n'est pas possible de shotgun lorsque ceux ci sont fermés");
+    super("Il n'est pas possible de shotgun lorsque ceux-ci sont fermés");
   }
 }
 
