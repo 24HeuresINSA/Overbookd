@@ -1,17 +1,15 @@
 <template>
   <div class="daily-content">
-    <div v-for="event in events" :key="event.id">
-      <CalendarEvent
-        v-if="isEventInDisplayedDay(event)"
-        :key="event.id"
-        v-model:hovered-event-id="hoveredEventId"
-        :event="event"
-        :displayed-day="displayedDay"
-        :overlapping-events="getOverlappingEvents(event, events)"
-        :clickable="clickableEvents"
-        @click="propagateEventClick"
-      />
-    </div>
+    <CalendarEvent
+      v-for="event in eventsInDisplayedDay"
+      :key="event.id"
+      v-model:hovered-event-id="hoveredEventId"
+      :event="event"
+      :displayed-day="displayedDay"
+      :overlapping-events="getOverlappingEvents(event, events)"
+      :clickable="clickableEvents"
+      @click="propagateEventClick"
+    />
   </div>
 </template>
 
@@ -35,9 +33,11 @@ const props = defineProps({
   },
 });
 
-const isEventInDisplayedDay = (event: CalendarEvent): boolean => {
-  return Period.init(event).isInDay(props.displayedDay);
-};
+const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
+  return props.events.filter((event) =>
+    Period.init(event).isInDay(props.displayedDay),
+  );
+});
 
 const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
 

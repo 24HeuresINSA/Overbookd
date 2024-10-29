@@ -3,7 +3,7 @@
     <template #title> {{ formLabel }} un créneau </template>
 
     <template #content>
-      <div class="form">
+      <form>
         <v-text-field v-model="name" label="Nom" :rules="[required]" />
         <v-text-field v-model="description" label="Description" />
         <DateTimeField v-model="start" label="Début" :step="60" />
@@ -19,7 +19,7 @@
           label="Charisme par heure"
           :rules="[isNumber, min(0)]"
         />
-      </div>
+      </form>
     </template>
 
     <template #actions>
@@ -119,7 +119,7 @@ const confirmCharismaPeriod = () => {
 </script>
 
 <style scoped>
-.form {
+form {
   display: flex;
   flex-direction: column;
   gap: 10px;
