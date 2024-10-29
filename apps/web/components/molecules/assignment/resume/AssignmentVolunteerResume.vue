@@ -5,13 +5,13 @@
         <span class="info-row__title">{{ formattedUserInformations }}</span>
         <div class="info-row__icons">
           <v-tooltip location="top">
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
                   !volunteer.hasAtLeastOneFriend
                 "
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-account-alert"
                 size="small"
                 color="red"
@@ -20,13 +20,13 @@
             N'a aucun ami
           </v-tooltip>
           <v-tooltip top>
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
                   volunteer.hasFriendAssigned
                 "
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-account-check"
                 size="small"
                 color="green"
@@ -35,13 +35,13 @@
             Ami déjà assigné sur le créneau
           </v-tooltip>
           <v-tooltip location="top">
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
                   volunteer.assignableFriendsIds.length > 0
                 "
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-account-group"
                 size="small"
               />
@@ -49,10 +49,10 @@
             Amis disponibles sur le même créneau
           </v-tooltip>
           <v-tooltip location="top" max-width="20rem">
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="volunteer.note"
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-note"
                 size="small"
               />
@@ -60,10 +60,10 @@
             {{ volunteer.note }}
           </v-tooltip>
           <v-tooltip location="top" max-width="20rem">
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="volunteer.comment"
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-comment"
                 size="small"
               />
@@ -71,13 +71,13 @@
             {{ volunteer.comment }}
           </v-tooltip>
           <v-tooltip top>
-            <template #activator="{ props }">
+            <template #activator="activator">
               <v-icon
                 v-if="
                   isAssignableVolunteer(volunteer) &&
                   volunteer.isRequestedOnSamePeriod
                 "
-                v-bind="props"
+                v-bind="activator.props"
                 icon="mdi-alert"
                 size="small"
                 color="orange"
@@ -103,6 +103,7 @@
 <script lang="ts" setup>
 import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import { Duration } from "@overbookd/time";
+import { buildUserName } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
 import {
   type AssignmentVolunteer,
@@ -114,7 +115,7 @@ import { sortTeamsForAssignment } from "~/utils/sort/sort-teams.utils";
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 const route = useRoute();
 
-const { volunteer } = defineProps({
+const props = defineProps({
   volunteer: {
     type: Object as PropType<AssignmentVolunteer>,
     required: true,
@@ -122,10 +123,10 @@ const { volunteer } = defineProps({
 });
 
 const sortedVolunteerTeams = computed<string[]>(() =>
-  sortTeamsForAssignment(volunteer.teams),
+  sortTeamsForAssignment(props.volunteer.teams),
 );
 const formattedUserInformations = computed<string>(
-  () => `${volunteer.firstname} ${volunteer.lastname} | ${volunteer.charisma}`,
+  () => `${buildUserName(props.volunteer)} | ${props.volunteer.charisma}`,
 );
 const selectedTask = computed<TaskWithAssignmentsSummary | null>(
   () => assignTaskToVolunteerStore.selectedTask,
@@ -137,15 +138,15 @@ const category = computed<string>(() => {
   return selectedTask.value?.category ?? "indéterminé";
 });
 const assignmentStats = computed<string>(() => {
-  const duration = Duration.ms(volunteer.assignmentDuration);
-  const displayedTotalDuration = isAssignableVolunteer(volunteer)
-    ? ` • total: ${Duration.ms(volunteer.totalAssignmentDuration).toString()}`
+  const duration = Duration.ms(props.volunteer.assignmentDuration).toString();
+  const displayedTotalDuration = isAssignableVolunteer(props.volunteer)
+    ? ` • total: ${duration}`
     : "";
-  return `${category.value.toLowerCase()}: ${duration.toString()}${displayedTotalDuration}`;
+  return `${category.value.toLowerCase()}: ${duration}${displayedTotalDuration}`;
 });
 
 const openPlanning = (): void => {
-  window.open(`${PLANNING_URL}/${volunteer.id}`, "_blank");
+  window.open(`${PLANNING_URL}/${props.volunteer.id}`, "_blank");
 };
 </script>
 
