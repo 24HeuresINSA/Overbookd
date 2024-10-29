@@ -53,10 +53,20 @@
           <v-btn
             color="primary"
             size="large"
-            text="Shotgun"
+            :text="areShotgunsOpen ? 'Shotgun' : 'Les shotguns sont fermés'"
             append-icon="mdi-account-multiple-plus"
-            :disabled="hasShotgun"
+            :disabled="hasShotgun || areShotgunsClose"
             @click="shotgun"
+          />
+          <v-btn
+            v-if="iAmChef"
+            color="tertiary"
+            size="large"
+            :text="
+              areShotgunsOpen ? 'Fermer les shotguns' : 'Ouvrir les shotguns'
+            "
+            :append-icon="areShotgunsOpen ? 'mdi-door-closed' : 'mdi-door-open'"
+            @click="toggleShotguns"
           />
           <v-btn
             v-if="iAmChef"
@@ -114,6 +124,8 @@ const builder = computed<OnGoingSharedMealBuilder>(() =>
 const hasShotgun = computed<boolean>(() =>
   builder.value.hasShotgun(me.value.id),
 );
+const areShotgunsOpen = computed<boolean>(() => builder.value.areShotgunsOpen);
+const areShotgunsClose = computed<boolean>(() => !areShotgunsOpen.value);
 
 const isRecordExpenseDialogOpen = ref<boolean>(false);
 const openRecordExpenseDialog = () => {
@@ -133,6 +145,12 @@ const cancelShotgun = (guest: Shotgun) => {
 
 const cancelMeal = () => {
   mealSharingStore.cancelMeal(props.shared.id);
+};
+
+const toggleShotguns = () => {
+  areShotgunsOpen.value
+    ? mealSharingStore.closeShotguns(props.shared.id)
+    : mealSharingStore.openShotguns(props.shared.id);
 };
 </script>
 

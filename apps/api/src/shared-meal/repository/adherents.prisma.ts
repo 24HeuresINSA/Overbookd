@@ -1,5 +1,5 @@
 import { Adherent, MealsAdherents } from "@overbookd/personal-account";
-import { nicknameOrName } from "@overbookd/user";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import { PrismaService } from "../../prisma.service";
 
 const SELECT_ADHERENT = { firstname: true, lastname: true, nickname: true };
@@ -14,7 +14,7 @@ export class PrismaAdherents implements MealsAdherents {
     });
     if (!adherent) return undefined;
 
-    const name = nicknameOrName(adherent);
+    const name = buildUserNameWithNickname(adherent);
     return { id, name };
   }
 }

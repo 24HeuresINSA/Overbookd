@@ -51,6 +51,14 @@ export class InMemorySharedMeals implements SharedMeals {
     return this.save(OnGoingSharedMealBuilder.build(meal));
   }
 
+  closeShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    return this.save(OnGoingSharedMealBuilder.build(meal));
+  }
+
+  openShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    return this.save(OnGoingSharedMealBuilder.build(meal));
+  }
+
   private save<T extends SharedMealBuilder>(meal: T): Promise<T> {
     const mealIndex = this.sharedMeals.findIndex(({ id }) => id === meal.id);
     const sharedMeal = this.sharedMeals.at(mealIndex);

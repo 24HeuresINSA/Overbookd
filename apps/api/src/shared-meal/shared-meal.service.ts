@@ -73,6 +73,22 @@ export class SharedMealService {
   ): Promise<void> {
     await this.mealSharing.cancelMeal(mealId, instigatorId);
   }
+
+  async closeShotguns(
+    mealId: SharedMeal["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.closeShotguns(mealId, instigatorId);
+    return formatSharedMeal(updated);
+  }
+
+  async openShotguns(
+    mealId: SharedMeal["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.openShotguns(mealId, instigatorId);
+    return formatSharedMeal(updated);
+  }
 }
 
 function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
@@ -80,6 +96,7 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
     id: meal.id,
     chef: meal.chef,
     meal: meal.meal,
+    areShotgunsOpen: meal.areShotgunsOpen,
     shotgunCount: meal.shotgunCount,
     shotguns: meal.shotguns,
   };
@@ -90,6 +107,7 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
     id: meal.id,
     chef: meal.chef,
     meal: meal.meal,
+    areShotgunsOpen: meal.areShotgunsOpen,
     shotgunCount: meal.shotgunCount,
     shotguns: meal.shotguns,
   };

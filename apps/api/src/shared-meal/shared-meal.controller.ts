@@ -191,4 +191,44 @@ export class SharedMealController {
   ): Promise<void> {
     return this.sharedMeal.cancelMeal(mealId, user.id);
   }
+
+  @Permission(OFFER_SHARED_MEAL)
+  @Post(":mealId/close-shotguns")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Updated meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  closeShotguns(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.closeShotguns(mealId, user.id);
+  }
+
+  @Permission(OFFER_SHARED_MEAL)
+  @Post(":mealId/open-shotguns")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Updated meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  openShotguns(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.openShotguns(mealId, user.id);
+  }
 }

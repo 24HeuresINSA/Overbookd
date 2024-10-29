@@ -13,6 +13,12 @@ export const SHOTGUN_PAST_MEAL_ERROR =
 export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
 
+export const CLOSE_SHOTGUNS_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de fermer les shotguns";
+
+export const OPEN_SHOTGUNS_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible d'ouvrir les shotguns";
+
 class PastMealError extends MealSharingError {
   static get shotgun(): PastMealError {
     return new PastMealError(SHOTGUN_PAST_MEAL_ERROR);
@@ -21,6 +27,14 @@ class PastMealError extends MealSharingError {
   static get cancelShotgun(): PastMealError {
     return new PastMealError(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
   }
+
+  static get closeShotguns(): PastMealError {
+    return new PastMealError(CLOSE_SHOTGUNS_PAST_MEAL_ERROR);
+  }
+
+  static get openShotguns(): PastMealError {
+    return new PastMealError(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
+  }
 }
 
 type BuildPastSharedMeal = {
@@ -28,6 +42,7 @@ type BuildPastSharedMeal = {
   meal: AboutMeal;
   chef: Adherent;
   expense: Expense;
+  areShotgunsOpen: boolean;
   shotguns: Shotgun[];
 };
 
@@ -39,16 +54,31 @@ export class PastSharedMealBuilder
     id: number,
     meal: AboutMeal,
     chef: Adherent,
+    areShotgunsOpen: boolean,
     _shotguns: Shotguns,
     readonly expense: Expense,
   ) {
-    super(id, meal, chef, _shotguns);
+    super(id, meal, chef, areShotgunsOpen, _shotguns);
   }
 
   static build(builder: BuildPastSharedMeal): PastSharedMealBuilder {
-    const { id, meal, chef, shotguns: shotgunList, expense } = builder;
+    const {
+      id,
+      meal,
+      chef,
+      areShotgunsOpen,
+      shotguns: shotgunList,
+      expense,
+    } = builder;
     const shotguns = Shotguns.build(shotgunList);
-    return new PastSharedMealBuilder(id, meal, chef, shotguns, expense);
+    return new PastSharedMealBuilder(
+      id,
+      meal,
+      chef,
+      areShotgunsOpen,
+      shotguns,
+      expense,
+    );
   }
 
   shotgunFor(): PastSharedMealBuilder {
@@ -61,6 +91,14 @@ export class PastSharedMealBuilder
 
   close(): PastSharedMeal {
     throw new RecordExpenseOnPastMeal();
+  }
+
+  closeShotguns(): PastSharedMealBuilder {
+    throw PastMealError.closeShotguns;
+  }
+
+  openShotguns(): PastSharedMealBuilder {
+    throw PastMealError.openShotguns;
   }
 
   get inTimeShotguns(): number {

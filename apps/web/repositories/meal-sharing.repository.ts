@@ -42,4 +42,16 @@ export class MealSharingRepository {
   static cancelMeal(mealId: SharedMeal["id"]) {
     return HttpClient.delete<void>(`${this.basePath}/${mealId}`);
   }
+
+  static closeShotguns(mealId: SharedMeal["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/close-shotguns`,
+    );
+  }
+
+  static openShotguns(mealId: SharedMeal["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/open-shotguns`,
+    );
+  }
 }
