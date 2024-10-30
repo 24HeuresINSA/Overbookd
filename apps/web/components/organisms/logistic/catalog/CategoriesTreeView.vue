@@ -14,7 +14,7 @@
             icon="mdi-pencil"
             size="small"
             variant="flat"
-            @click="openCategoryFormDialog(item)"
+            @click="openEditCategoryFormDialog(item)"
           />
           <v-btn
             v-show="isCatalogWriter"
@@ -33,14 +33,14 @@
         size="large"
         text="Ajouter une catégorie"
         prepend-icon="mdi-plus"
-        @click="openCategoryFormDialog(undefined)"
+        @click="openNewCategoryFormDialog"
       />
     </v-card-actions>
   </v-card>
 
   <v-dialog v-model="isCategoryFormDialogOpen" width="500px">
     <CategoryFormDialog
-      :category="selectedCategoryDetails"
+      :category="selectedCategory"
       @add="addCategory"
       @update="updateCategory"
       @close="closeCategoryFormDialog"
@@ -63,11 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import type {
-  CategoryForm,
-  CatalogCategoryTree,
-  CatalogCategory,
-} from "@overbookd/http";
+import type { CategoryForm, CatalogCategoryTree } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 const catalogStore = useCatalogStore();
@@ -82,28 +78,25 @@ const isCatalogWriter = computed<boolean>(() =>
   userStore.can(WRITE_GEAR_CATALOG),
 );
 
-const isCategoryFormDialogOpen = ref<boolean>(false);
-const selectedCategoryDetails = ref<CatalogCategory | undefined>();
-const openCategoryFormDialog = async (category?: CatalogCategoryTree) => {
-  if (!category) {
-    selectedCategoryDetails.value = undefined;
-    isCategoryFormDialogOpen.value = true;
-    return;
-  }
+const selectedCategory = ref<CatalogCategoryTree | undefined>();
 
-  selectedCategoryDetails.value = await catalogStore.getCategory(category.id);
+const isCategoryFormDialogOpen = ref<boolean>(false);
+const openNewCategoryFormDialog = () => {
+  selectedCategory.value = undefined;
+  isCategoryFormDialogOpen.value = true;
+};
+const openEditCategoryFormDialog = (category: CatalogCategoryTree) => {
+  selectedCategory.value = category;
   isCategoryFormDialogOpen.value = true;
 };
 const addCategory = async (category: CategoryForm) => {
   await catalogStore.addCategory(category);
 };
-const updateCategory = async ({
-  id,
-  category,
-}: {
+const updateCategory = async (update: {
   id: number;
   category: CategoryForm;
 }) => {
+  const { id, category } = update;
   await catalogStore.updateCategory(id, category);
 };
 const closeCategoryFormDialog = () => {
@@ -111,7 +104,6 @@ const closeCategoryFormDialog = () => {
 };
 
 const isCategoryRemovalConfirmationDialogOpen = ref<boolean>(false);
-const selectedCategory = ref<CatalogCategoryTree | undefined>();
 const openCategoryRemovalConfirmationDialog = (
   category: CatalogCategoryTree,
 ) => {

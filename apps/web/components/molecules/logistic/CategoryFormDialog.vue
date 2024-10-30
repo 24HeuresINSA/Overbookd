@@ -32,7 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogCategory, CategoryForm } from "@overbookd/http";
+import type {
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategoryForm,
+} from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { minLength, required } from "~/utils/rules/input.rules";
 
@@ -43,7 +47,7 @@ const emit = defineEmits(["add", "update", "close"]);
 
 const props = defineProps({
   category: {
-    type: Object as PropType<CatalogCategory | undefined>,
+    type: Object as PropType<CatalogCategoryTree | undefined>,
     default: () => undefined,
   },
 });

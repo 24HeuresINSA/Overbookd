@@ -22,6 +22,7 @@ export type CatalogCategoryIdentifier = {
 
 export type CatalogCategoryTree = CatalogCategoryIdentifier & {
   owner?: CategoryOwner;
+  parent?: number;
   subCategories?: CatalogCategoryTree[];
 };
 
