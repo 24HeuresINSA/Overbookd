@@ -28,8 +28,8 @@ import type { CatalogCategory } from "@overbookd/http";
 
 const catalogStore = useCatalogStore();
 
-const category = defineModel<CatalogCategory | undefined>({
-  required: true,
+const category = defineModel<CatalogCategory>({
+  required: false,
 });
 
 defineProps({

@@ -31,16 +31,16 @@ export const useCatalogStore = defineStore("catalog", {
       this.categoryTree = res;
     },
 
-    async createCategory(categoryForm: CategoryForm) {
-      const res = await CategoryRepository.createCategory(categoryForm);
+    async addCategory(categoryForm: CategoryForm) {
+      const res = await CategoryRepository.addCategory(categoryForm);
       if (isHttpError(res)) return;
       sendSuccessNotification(`La catégorie ${categoryForm.name} a été créée`);
       this.categories = [...this.categories, res];
       await this.fetchCategoryTree();
     },
 
-    async deleteCategory(category: CatalogCategory) {
-      const res = await CategoryRepository.deleteCategory(category.id);
+    async removeCategory(category: CatalogCategoryTree) {
+      const res = await CategoryRepository.removeCategory(category.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(`La catégorie ${category.name} a été supprimée`);
       this.categories = this.categories.filter((c) => c.id !== category.id);

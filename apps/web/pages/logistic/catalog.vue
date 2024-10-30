@@ -1,8 +1,18 @@
 <template>
   <DesktopPageTitle />
-  <CatalogGearListingCard />
+  <div class="catalog-container">
+    <CatalogGearListingCard calss="gear-table" />
+    <CategoriesTreeView class="category-tree" />
+  </div>
 </template>
 
 <script lang="ts" setup>
 useHead({ title: "Catalogue Matos" });
 </script>
+
+<style lang="scss" scoped>
+.catalog-container {
+  display: flex;
+  gap: $card-gap;
+}
+</style>
