@@ -44,7 +44,7 @@ const emit = defineEmits(["create", "update", "close"]);
 const props = defineProps({
   category: {
     type: Object as PropType<CategoryForm>,
-    default: () => null,
+    default: () => undefined,
   },
 });
 

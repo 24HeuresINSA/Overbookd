@@ -81,13 +81,13 @@ const isCatalogWriter = computed<boolean>(() =>
 const isCategoryFormDialogOpen = ref<boolean>(false);
 
 const selectedCategory = ref<CatalogCategoryTree | undefined>();
-const categoryForm = ref<CategoryForm | null>();
+const categoryForm = ref<CategoryForm | undefined>();
 const openCategoryFormDialog = async (category?: CatalogCategoryTree) => {
   selectedCategory.value = undefined;
   categoryForm.value = undefined;
 
   if (!category) {
-    categoryForm.value = null;
+    categoryForm.value = undefined;
     isCategoryFormDialogOpen.value = true;
     return;
   }
