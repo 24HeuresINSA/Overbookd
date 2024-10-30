@@ -86,7 +86,7 @@ const propagateNext = () => emit("next");
 <style lang="scss" scoped>
 .calendar-manager {
   display: flex;
-  gap: 5px;
+  gap: $card-margin;
   align-items: center;
   flex-wrap: wrap;
   justify-content: left;
