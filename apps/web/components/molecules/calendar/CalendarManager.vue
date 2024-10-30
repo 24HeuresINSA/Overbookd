@@ -86,9 +86,13 @@ const propagateNext = () => emit("next");
 <style lang="scss" scoped>
 .calendar-manager {
   display: flex;
-  gap: 15px;
+  gap: 5px;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: left;
+  @media (max-width: $mobile-max-width) {
+    justify-content: center;
+  }
   .full-buttons {
     display: flex;
     gap: 10px;
@@ -99,7 +103,6 @@ const propagateNext = () => emit("next");
   .period-indicator {
     font-size: 1.5rem;
     font-weight: normal;
-    margin-top: 2px;
   }
 }
 </style>
