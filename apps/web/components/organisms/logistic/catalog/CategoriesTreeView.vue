@@ -92,11 +92,8 @@ const openEditCategoryFormDialog = (category: CatalogCategoryTree) => {
 const addCategory = async (category: CategoryForm) => {
   await catalogStore.addCategory(category);
 };
-const updateCategory = async (update: {
-  id: number;
-  category: CategoryForm;
-}) => {
-  const { id, category } = update;
+type UpdateCategory = { id: number; category: CategoryForm };
+const updateCategory = async ({ id, category }: UpdateCategory) => {
   await catalogStore.updateCategory(id, category);
 };
 const closeCategoryFormDialog = () => {
