@@ -10,7 +10,7 @@
 useHead({ title: "Catalogue Matos" });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .catalog-container {
   display: flex;
   gap: $card-gap;
