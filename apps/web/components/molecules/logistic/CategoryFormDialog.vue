@@ -90,8 +90,8 @@ const confirmCategory = () => {
     parent: parent.value?.id,
   };
 
-  if (isUpdate.value) emit("update", category);
-  else emit("create", category);
+  const event = isUpdate.value ? "update" : "create";
+  emit(event, category);
   close();
   clearCategory();
 };

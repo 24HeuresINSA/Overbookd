@@ -39,7 +39,7 @@ export const useCatalogStore = defineStore("catalog", {
       await this.fetchCategoryTree();
     },
 
-    async removeCategory(category: CatalogCategory) {
+    async removeCategory(category: CatalogCategoryTree) {
       const res = await CategoryRepository.removeCategory(category.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(`La catégorie ${category.name} a été supprimée`);
