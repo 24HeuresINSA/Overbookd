@@ -14,14 +14,14 @@
         @click="moveToEventStartDay"
       />
     </div>
-    <div class="arrow-buttons">
+    <div class="arrow-buttons desktop-only">
       <v-btn
         icon="mdi-chevron-left"
         variant="plain"
         size="x-large"
         density="compact"
         rounded="pill"
-        @click="moveToPreviousWeekOrDay"
+        @click="propagatePrevious"
       />
       <v-btn
         icon="mdi-chevron-right"
@@ -29,7 +29,7 @@
         size="x-large"
         density="compact"
         rounded="pill"
-        @click="moveToNextWeekOrDay"
+        @click="propagateNext"
       />
     </div>
     <h3 class="period-indicator">{{ periodIndicator }}</h3>
@@ -37,12 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  isSameDay,
-  isSameWeek,
-  ONE_DAY_IN_MS,
-  ONE_WEEK_IN_MS,
-} from "@overbookd/time";
+import { isSameDay, isSameWeek } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 
@@ -83,16 +78,9 @@ const moveToEventStartDay = () => {
   displayedDay.value = eventStartDate.value;
 };
 
-const moveToPreviousWeekOrDay = () => {
-  displayedDay.value = props.dayMode
-    ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
-};
-const moveToNextWeekOrDay = () => {
-  displayedDay.value = props.dayMode
-    ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
-};
+const emit = defineEmits(["previous", "next"]);
+const propagatePrevious = () => emit("previous");
+const propagateNext = () => emit("next");
 </script>
 
 <style lang="scss" scoped>
@@ -100,6 +88,7 @@ const moveToNextWeekOrDay = () => {
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap;
   .full-buttons {
     display: flex;
     gap: 10px;
