@@ -1,3 +1,22 @@
+## [3.12.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.3...v3.12.0) (2024-10-30)
+
+### Features
+
+* **logistic-catalog:** add category tree [#2004](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2004) ([fad5029](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fad5029f14010a8515aec6ca27aadaa101c5b79b))
+* **shared-meals:** add possibility to close shotguns [#2216](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2216) ([a352636](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a35263658f75cbf91bb193ecf8a72ce6e1e01082))
+
+### Bug Fixes
+
+* **calendar:** fit calendar to mobile mode [#2194](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2194) ([a018303](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a018303d08e698102ba98eb68314059e71cf86f8))
+* **charisma-period:** open editing dialog by calendar [#2223](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2223) ([b2b72f4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b2b72f4b63205f39e2cefe4bc65a9fbdb257c80a))
+* **web:** add a confirmation dialog to cancel a shared meal [#2238](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2238) ([a077f43](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a077f4300353058e97a82f6ad5cab2fdb36ae130))
+
+### Pre-Features
+
+* **assignment:** add AssignmentDetailsDialogCard [#2235](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2235) ([9f14d53](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f14d53f82fa540660d9c9f0bc46e0ffce057e5f))
+* **assignment:** add AssignmentVolunteerList & AssignmentVolunteerResume components [#2226](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2226) ([aebaf1c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aebaf1c62fd61db2f650495cef2b7b1cccc21f17))
+* **assignment:** add TaskAssignmentList & AssignmentResume components [#2228](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2228) ([9cd02d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9cd02d068b4d95d266573342947e2e001ec17d0e))
+
 ## [3.11.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.2...v3.11.3) (2024-10-28)
 
 ### Bug Fixes
