@@ -1,6 +1,17 @@
 <template>
-  <div class="calendar-with-manager">
-    <CalendarManager v-model="displayedDay" :day-mode="isDayMode" />
+  <div
+    v-touch="{
+      left: moveToNextWeekOrDay,
+      right: moveToPreviousWeekOrDay,
+    }"
+    class="calendar-with-manager"
+  >
+    <CalendarManager
+      v-model="displayedDay"
+      :day-mode="isDayMode"
+      @previous="moveToPreviousWeekOrDay"
+      @next="moveToNextWeekOrDay"
+    />
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
@@ -52,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HOURS_IN_DAY } from "@overbookd/time";
+import { HOURS_IN_DAY, ONE_DAY_IN_MS, ONE_WEEK_IN_MS } from "@overbookd/time";
 import {
   DAY_MODE,
   formatDateNumberValue,
@@ -82,6 +93,17 @@ const displayedDay = defineModel<Date>({ default: new Date() });
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
 );
+
+const moveToPreviousWeekOrDay = () => {
+  displayedDay.value = isDayMode.value
+    ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
+    : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
+};
+const moveToNextWeekOrDay = () => {
+  displayedDay.value = isDayMode.value
+    ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
+    : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
+};
 
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
