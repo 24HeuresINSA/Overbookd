@@ -40,8 +40,8 @@
 
   <v-dialog v-model="isCategoryFormDialogOpen" width="500px">
     <CategoryFormDialog
-      :category="categoryForm"
-      @create="createCategory"
+      :category="selectedCategoryDetails"
+      @add="addCategory"
       @update="updateCategory"
       @close="closeCategoryFormDialog"
     />
@@ -53,7 +53,7 @@
       @confirm="removeCategory"
       @close="closeCategoryRemovalConfirmationDialog"
     >
-      <template #Title> Supprimer une catégorie </template>
+      <template #title> Supprimer une catégorie </template>
       <template #statement>
         Tu es sur le point de supprimer la catégorie
         <strong>{{ selectedCategory?.name }}</strong>
@@ -63,7 +63,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { CategoryForm, CatalogCategoryTree } from "@overbookd/http";
+import type {
+  CategoryForm,
+  CatalogCategoryTree,
+  CatalogCategory,
+} from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 const catalogStore = useCatalogStore();
@@ -79,40 +83,35 @@ const isCatalogWriter = computed<boolean>(() =>
 );
 
 const isCategoryFormDialogOpen = ref<boolean>(false);
-
-const selectedCategory = ref<CatalogCategoryTree | undefined>();
-const categoryForm = ref<CategoryForm | undefined>();
+const selectedCategoryDetails = ref<CatalogCategory | undefined>();
 const openCategoryFormDialog = async (category?: CatalogCategoryTree) => {
-  selectedCategory.value = undefined;
-  categoryForm.value = undefined;
-
   if (!category) {
-    categoryForm.value = undefined;
+    selectedCategoryDetails.value = undefined;
     isCategoryFormDialogOpen.value = true;
     return;
   }
 
-  const catalogCategory = await catalogStore.getCategory(category.id);
-  categoryForm.value = {
-    name: catalogCategory ? catalogCategory.name : "",
-    owner: catalogCategory ? catalogCategory.owner?.code : undefined,
-    parent: catalogCategory ? catalogCategory.parent : undefined,
-  };
+  selectedCategoryDetails.value = await catalogStore.getCategory(category.id);
   isCategoryFormDialogOpen.value = true;
 };
-
-const createCategory = async (category: CategoryForm) => {
-  await catalogStore.createCategory(category);
+const addCategory = async (category: CategoryForm) => {
+  await catalogStore.addCategory(category);
 };
-const updateCategory = async (category: CategoryForm) => {
-  if (!selectedCategory.value) return;
-  await catalogStore.updateCategory(selectedCategory.value.id, category);
+const updateCategory = async ({
+  id,
+  category,
+}: {
+  id: number;
+  category: CategoryForm;
+}) => {
+  await catalogStore.updateCategory(id, category);
 };
 const closeCategoryFormDialog = () => {
   isCategoryFormDialogOpen.value = false;
 };
 
 const isCategoryRemovalConfirmationDialogOpen = ref<boolean>(false);
+const selectedCategory = ref<CatalogCategoryTree | undefined>();
 const openCategoryRemovalConfirmationDialog = (
   category: CatalogCategoryTree,
 ) => {

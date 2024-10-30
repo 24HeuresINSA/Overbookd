@@ -31,8 +31,8 @@ export const useCatalogStore = defineStore("catalog", {
       this.categoryTree = res;
     },
 
-    async createCategory(categoryForm: CategoryForm) {
-      const res = await CategoryRepository.createCategory(categoryForm);
+    async addCategory(categoryForm: CategoryForm) {
+      const res = await CategoryRepository.addCategory(categoryForm);
       if (isHttpError(res)) return;
       sendSuccessNotification(`La catégorie ${categoryForm.name} a été créée`);
       this.categories = [...this.categories, res];

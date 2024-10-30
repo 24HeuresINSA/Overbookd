@@ -39,11 +39,11 @@ import { minLength, required } from "~/utils/rules/input.rules";
 const teamStore = useTeamStore();
 const catalogStore = useCatalogStore();
 
-const emit = defineEmits(["create", "update", "close"]);
+const emit = defineEmits(["add", "update", "close"]);
 
 const props = defineProps({
   category: {
-    type: Object as PropType<CategoryForm>,
+    type: Object as PropType<CatalogCategory | undefined>,
     default: () => undefined,
   },
 });
@@ -52,11 +52,10 @@ const name = ref<string>("");
 const owner = ref<Team | undefined>();
 const parent = ref<CatalogCategory | undefined>();
 
-const rules = { nameMinLength: minLength(3), required: required };
+const rules = { nameMinLength: minLength(3), required };
 
-const isUpdate = computed<boolean>(() => props.category !== null);
 const typeFormLabel = computed<string>(() =>
-  isUpdate.value ? "Modifier" : "Ajouter",
+  props.category ? "Modifier" : "Ajouter",
 );
 
 const clearCategory = () => {
@@ -70,7 +69,7 @@ const setCategory = async () => {
 
   name.value = props.category.name;
   owner.value = props.category.owner
-    ? await teamStore.getTeamByCode(props.category.owner)
+    ? await teamStore.getTeamByCode(props.category.owner.code)
     : undefined;
   parent.value = props.category.parent
     ? await catalogStore.getCategory(props.category.parent)
@@ -78,7 +77,12 @@ const setCategory = async () => {
 };
 watch(() => props.category, setCategory, { immediate: true });
 
-const canConfirmCategory = computed<boolean>(() => name.value.trim() !== "");
+const canConfirmCategory = computed<boolean>(() => {
+  return (
+    rules.nameMinLength(name.value.trim()) === true &&
+    rules.required(name.value.trim()) === true
+  );
+});
 
 const close = () => emit("close");
 const confirmCategory = () => {
@@ -90,8 +94,8 @@ const confirmCategory = () => {
     parent: parent.value?.id,
   };
 
-  const event = isUpdate.value ? "update" : "create";
-  emit(event, category);
+  if (props.category) emit("update", { id: props.category.id, category });
+  else emit("add", category);
   close();
   clearCategory();
 };

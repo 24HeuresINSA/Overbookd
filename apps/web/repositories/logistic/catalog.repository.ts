@@ -46,7 +46,7 @@ export class CategoryRepository {
     return HttpClient.get<CatalogCategoryTree[]>(`${this.basePath}/tree`);
   }
 
-  static createCategory(categoryForm: CategoryForm) {
+  static addCategory(categoryForm: CategoryForm) {
     return HttpClient.post<CatalogCategory>(this.basePath, categoryForm);
   }
 
