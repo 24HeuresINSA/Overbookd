@@ -13,6 +13,6 @@ useHead({ title: "Catalogue Matos" });
 <style scoped>
 .catalog-container {
   display: flex;
-  gap: 1rem;
+  gap: $card-gap;
 }
 </style>
