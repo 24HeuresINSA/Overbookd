@@ -4,87 +4,45 @@
       <div class="info-row">
         <span class="info-row__title">{{ formattedUserInformations }}</span>
         <div class="info-row__icons">
-          <v-tooltip location="top">
-            <template #activator="activator">
-              <v-icon
-                v-if="
-                  isAssignableVolunteer(volunteer) &&
-                    !volunteer.hasAtLeastOneFriend
-                "
-                v-bind="activator.props"
-                icon="mdi-account-alert"
-                size="small"
-                color="red"
-              />
-            </template>
-            N'a aucun ami
-          </v-tooltip>
-          <v-tooltip top>
-            <template #activator="activator">
-              <v-icon
-                v-if="
-                  isAssignableVolunteer(volunteer) &&
-                    volunteer.hasFriendAssigned
-                "
-                v-bind="activator.props"
-                icon="mdi-account-check"
-                size="small"
-                color="green"
-              />
-            </template>
-            Ami déjà assigné sur le créneau
-          </v-tooltip>
-          <v-tooltip location="top">
-            <template #activator="activator">
-              <v-icon
-                v-if="
-                  isAssignableVolunteer(volunteer) &&
-                    volunteer.assignableFriendsIds.length > 0
-                "
-                v-bind="activator.props"
-                icon="mdi-account-group"
-                size="small"
-              />
-            </template>
-            Amis disponibles sur le même créneau
-          </v-tooltip>
-          <v-tooltip location="top" max-width="20rem">
-            <template #activator="activator">
-              <v-icon
-                v-if="volunteer.note"
-                v-bind="activator.props"
-                icon="mdi-note"
-                size="small"
-              />
-            </template>
-            {{ volunteer.note }}
-          </v-tooltip>
-          <v-tooltip location="top" max-width="20rem">
-            <template #activator="activator">
-              <v-icon
-                v-if="volunteer.comment"
-                v-bind="activator.props"
-                icon="mdi-comment"
-                size="small"
-              />
-            </template>
-            {{ volunteer.comment }}
-          </v-tooltip>
-          <v-tooltip top>
-            <template #activator="activator">
-              <v-icon
-                v-if="
-                  isAssignableVolunteer(volunteer) &&
-                    volunteer.isRequestedOnSamePeriod
-                "
-                v-bind="activator.props"
-                icon="mdi-alert"
-                size="small"
-                color="orange"
-              />
-            </template>
-            Ce bénévole est demandé sur ce créneau dans une FT non terminée
-          </v-tooltip>
+          <v-icon
+            v-if="shouldShowNoFriendIcon"
+            v-tooltip:top="'N\'a aucun ami'"
+            icon="mdi-account-alert"
+            size="small"
+            color="red"
+          />
+          <v-icon
+            v-if="shouldShowFriendAssignedIcon"
+            v-tooltip:top="'Ami déjà assigné sur le créneau'"
+            icon="mdi-account-check"
+            size="small"
+            color="green"
+          />
+          <v-icon
+            v-if="shouldShowAvailableFriendsIcon"
+            v-tooltip:top="'Amis disponibles sur le même créneau'"
+            icon="mdi-account-group"
+            size="small"
+          />
+          <v-icon
+            v-if="volunteer.note"
+            v-tooltip:top="volunteer.note"
+            icon="mdi-note"
+            size="small"
+          />
+          <v-icon
+            v-if="volunteer.comment"
+            v-tooltip:top="volunteer.comment"
+            icon="mdi-comment"
+            size="small"
+          />
+          <v-icon
+            v-if="shouldShowRequestedOnDraftTaskIcon"
+            v-tooltip:top="'Demandé sur une FT non terminée'"
+            icon="mdi-alert"
+            size="small"
+            color="orange"
+          />
         </div>
       </div>
       <div>
@@ -144,6 +102,26 @@ const assignmentStats = computed<string>(() => {
     : "";
   return `${category.value.toLowerCase()}: ${duration}${displayedTotalDuration}`;
 });
+
+const shouldShowNoFriendIcon = computed<boolean>(
+  () =>
+    isAssignableVolunteer(props.volunteer) &&
+    !props.volunteer.hasAtLeastOneFriend,
+);
+const shouldShowFriendAssignedIcon = computed<boolean>(
+  () =>
+    isAssignableVolunteer(props.volunteer) && props.volunteer.hasFriendAssigned,
+);
+const shouldShowAvailableFriendsIcon = computed<boolean>(
+  () =>
+    isAssignableVolunteer(props.volunteer) &&
+    props.volunteer.assignableFriendsIds.length > 0,
+);
+const shouldShowRequestedOnDraftTaskIcon = computed<boolean>(
+  () =>
+    isAssignableVolunteer(props.volunteer) &&
+    props.volunteer.isRequestedOnSamePeriod,
+);
 
 const openPlanning = (): void => {
   window.open(`${PLANNING_URL}/${props.volunteer.id}`, "_blank");

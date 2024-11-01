@@ -4,7 +4,7 @@
       <span>Commentaire</span>
       <v-tooltip location="top">
         <template #activator="{ props }">
-          <v-icon v-bind="props" color="primary">mdi-information</v-icon>
+          <v-icon v-bind="props" icon="mdi-information" color="primary" />
         </template>
         Dis nous en commentaire si tu as des contraintes physiques, de la
         motivation à revendre pour nous aider un maximum ou encore un préféré

@@ -46,7 +46,7 @@
         </p>
       </div>
       <div class="sort__category" @click="updateSort">
-        <v-tooltip location="top">
+        <v-tooltip location="top" text="Trier par tâche">
           <template #activator="activator">
             <v-icon v-if="!sort" v-bind="activator.props" icon="mdi-sort" />
             <v-icon
@@ -60,7 +60,6 @@
               icon="mdi-sort-descending"
             />
           </template>
-          Trier par tache
         </v-tooltip>
       </div>
     </div>

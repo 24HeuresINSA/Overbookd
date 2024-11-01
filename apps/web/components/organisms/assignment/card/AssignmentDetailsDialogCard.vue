@@ -57,17 +57,12 @@
           >
             <template #item.firstname="{ item }">
               {{ buildUserName(item) }}
-              <v-tooltip location="top">
-                <template #activator="activator">
-                  <v-icon
-                    v-if="item?.note"
-                    v-bind="activator.props"
-                    icon="mdi-note"
-                    size="small"
-                  />
-                </template>
-                {{ item?.note }}
-              </v-tooltip>
+              <v-icon
+                v-if="item?.note"
+                v-tooltip:top="item?.note"
+                icon="mdi-note"
+                size="small"
+              />
               <v-tooltip location="top">
                 <template #activator="activator">
                   <v-icon

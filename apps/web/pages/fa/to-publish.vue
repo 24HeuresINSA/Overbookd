@@ -32,19 +32,15 @@
         </template>
 
         <template #item.photoLink="{ item }">
-          <v-tooltip v-if="item.photoLink" location="top">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-camera"
-                size="large"
-                variant="flat"
-                density="comfortable"
-                @click.stop="openPhotoLinkInNewTab(item.photoLink)"
-              />
-            </template>
-            {{ item.photoLink }}
-          </v-tooltip>
+          <v-btn
+            v-if="item.photoLink"
+            v-tooltip:top="item.photoLink"
+            icon="mdi-camera"
+            size="large"
+            variant="flat"
+            density="comfortable"
+            @click.stop="openPhotoLinkInNewTab(item.photoLink)"
+          />
         </template>
 
         <template #item.description="{ item }">

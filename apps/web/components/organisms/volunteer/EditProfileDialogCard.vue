@@ -35,19 +35,14 @@
             label="Téléphone portable*"
             :rules="[required, isMobilePhoneNumber]"
           />
-
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-text-field
-                v-bind="props"
-                :model-value="email"
-                label="Email*"
-                readonly
-              />
-            </template>
-            Tu dois passer par les responsables bénévoles ou le.a secrétaire
-            général.e pour changer ton email 🙏
-          </v-tooltip>
+          <v-text-field
+            v-tooltip:bottom="
+              'Tu dois passer par les responsables bénévoles ou le.a secrétaire général.e pour changer ton email 🙏'
+            "
+            :model-value="email"
+            label="Email*"
+            readonly
+          />
         </div>
         <div class="planning-preference">
           <v-btn-toggle
