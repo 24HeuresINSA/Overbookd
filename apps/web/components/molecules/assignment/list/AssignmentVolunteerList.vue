@@ -18,13 +18,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { AssignableVolunteer } from "@overbookd/assignment";
+import type { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
 defineProps({
   volunteers: {
-    type: Array as PropType<AssignableVolunteer[]>,
+    type: Array as PropType<AssignmentVolunteer[]>,
     required: true,
   },
 });
@@ -34,7 +34,7 @@ const isSelected = (id: number): boolean => {
 };
 
 const emit = defineEmits(["select-volunteer"]);
-const selectVolunteer = (volunteer: AssignableVolunteer): void => {
+const selectVolunteer = (volunteer: AssignmentVolunteer): void => {
   if (!volunteer) return;
   emit("select-volunteer", volunteer);
 };
