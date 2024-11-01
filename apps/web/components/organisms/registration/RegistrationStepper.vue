@@ -200,18 +200,13 @@
             <template #label>
               <div>
                 Je reconnais avoir lu et compris les
-                <v-tooltip location="bottom">
-                  <template #activator="{ props }">
-                    <span
-                      v-bind="props"
-                      class="eula-link"
-                      @click.stop="openEULADialog"
-                    >
-                      CGU
-                    </span>
-                  </template>
-                  Lire les Conditions Générales d'Utilisation
-                </v-tooltip>
+                <span
+                  v-tooltip:top="'Lire les Conditions Générales d\'Utilisation'"
+                  class="eula-link"
+                  @click.stop="openEULADialog"
+                >
+                  CGU
+                </span>
                 et je les accepte.
               </div>
             </template>

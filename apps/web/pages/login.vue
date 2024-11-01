@@ -5,16 +5,11 @@
     <div class="login-card-container">
       <v-card class="login-card" theme="loginTheme">
         <v-card-text class="login-card__content">
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-img
-                v-bind="props"
-                src="/img/logo/logo_home.png"
-                class="logo"
-              />
-            </template>
-            Version {{ version }}
-          </v-tooltip>
+          <v-img
+            v-tooltip:bottom="`Version ${version}`"
+            src="/img/logo/logo_home.png"
+            class="logo"
+          />
           <h1 class="login-card__title">Bienvenue aux 24h de l'INSA 👋</h1>
 
           <div class="login-form">

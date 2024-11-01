@@ -23,18 +23,13 @@
       </div>
     </div>
     <div class="has-friends-assigned">
-      <v-tooltip location="top">
-        <template #activator="activator">
-          <v-icon
-            v-if="assignment.hasFriendsAssigned"
-            v-bind="activator.props"
-            icon="mdi-account-check"
-            size="small"
-            color="green"
-          />
-        </template>
-        Ami(s) déjà assigné(s) sur le créneau
-      </v-tooltip>
+      <v-icon
+        v-if="assignment.hasFriendsAssigned"
+        v-tooltip:top="'Ami(s) déjà assigné(s) sur le créneau'"
+        icon="mdi-account-check"
+        size="small"
+        color="green"
+      />
     </div>
     <v-divider />
   </div>

@@ -12,29 +12,20 @@
         readonly
       >
         <template #append>
-          <v-tooltip text="Copier le lien" location="top">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-content-copy"
-                variant="flat"
-                density="comfortable"
-                @click="copyToClipBoard"
-              />
-            </template>
-          </v-tooltip>
-
-          <v-tooltip text="Régénérer le lien" location="top">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-refresh"
-                variant="flat"
-                density="comfortable"
-                @click="refreshInviteStaffLink"
-              />
-            </template>
-          </v-tooltip>
+          <v-btn
+            v-tooltip:top="'Copier le lien'"
+            icon="mdi-content-copy"
+            variant="flat"
+            density="comfortable"
+            @click="copyToClipBoard"
+          />
+          <v-btn
+            v-tooltip:top="'Régénérer le lien'"
+            icon="mdi-refresh"
+            variant="flat"
+            density="comfortable"
+            @click="refreshInviteStaffLink"
+          />
         </template>
       </v-text-field>
     </v-card-text>

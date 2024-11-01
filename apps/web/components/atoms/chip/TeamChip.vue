@@ -16,9 +16,7 @@
     <span v-if="withName" class="name">
       {{ teamText }}
     </span>
-    <v-tooltip location="top" activator="parent">
-      {{ teamText }}
-    </v-tooltip>
+    <v-tooltip location="top" activator="parent" :text="teamText" />
   </v-chip>
 </template>
 
