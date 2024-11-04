@@ -74,7 +74,7 @@ const headers = computed<TableHeaders>(() => {
     { title: "Type de raccordement", value: "connection", sortable: true },
     { title: "Appareil", value: "device", sortable: true },
     { title: "Puissance par appareil", value: "power", sortable: true },
-    { title: "Nombre", value: "count", sortable: true },
+    { title: "Nombre d'Appareils", value: "count", sortable: true },
     { title: "Commentaire", value: "comment" },
   ];
   const actionsHeader = { title: "Actions", value: "actions" };

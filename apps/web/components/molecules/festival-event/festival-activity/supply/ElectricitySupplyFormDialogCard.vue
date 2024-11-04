@@ -31,7 +31,7 @@
       <v-text-field
         :model-value="count"
         type="number"
-        label="Nombre *"
+        label="Nombre d'Appareils *"
         :rules="[rules.number, rules.min, rules.required]"
         @update:model-value="updateCount"
         @keydown.enter="confirmSupply"
