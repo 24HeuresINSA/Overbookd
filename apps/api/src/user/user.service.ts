@@ -147,7 +147,7 @@ export class UserService {
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const [consumers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
-        where: hasPermission(HAVE_PERSONAL_ACCOUNT),
+        where: { ...IS_NOT_DELETED, ...hasPermission(HAVE_PERSONAL_ACCOUNT) },
         select: {
           ...SELECT_USER_PERSONAL_DATA,
           ...SELECT_TRANSACTIONS_FOR_BALANCE,
@@ -223,7 +223,7 @@ export class UserService {
   private async softDeleteUser(id: number): Promise<void> {
     await this.prisma.user.update({
       where: { id },
-      data: { isDeleted: true },
+      data: { isDeleted: true, teams: [] },
     });
   }
 
