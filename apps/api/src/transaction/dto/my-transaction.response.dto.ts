@@ -23,7 +23,8 @@ export class MyDepositTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: DEPOSIT,
+    type: String,
+    enum: [DEPOSIT],
     example: DEPOSIT,
   })
   type: typeof DEPOSIT;
@@ -35,7 +36,8 @@ export class MyBarrelTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: BARREL,
+    type: String,
+    enum: [BARREL],
     example: BARREL,
   })
   type: typeof BARREL;
@@ -47,7 +49,8 @@ export class MyProvisionsTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: PROVISIONS,
+    type: String,
+    enum: [PROVISIONS],
     example: PROVISIONS,
   })
   type: typeof PROVISIONS;
@@ -59,7 +62,8 @@ export class TransferIReceiveTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: TRANSFER,
+    type: String,
+    enum: [TRANSFER],
     example: TRANSFER,
   })
   type: typeof TRANSFER;
@@ -77,7 +81,8 @@ export class TransferISendTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: TRANSFER,
+    type: String,
+    enum: [TRANSFER],
     example: TRANSFER,
   })
   type: typeof TRANSFER;
@@ -95,7 +100,8 @@ export class MyPositiveInitializationTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: INITIALIZATION,
+    type: String,
+    enum: [INITIALIZATION],
     example: INITIALIZATION,
   })
   type: typeof INITIALIZATION;
@@ -113,7 +119,8 @@ export class MyNegativeInitializationTransactionResponseDto
 {
   @ApiProperty({
     description: "Transaction type",
-    type: INITIALIZATION,
+    type: String,
+    enum: [INITIALIZATION],
     example: INITIALIZATION,
   })
   type: typeof INITIALIZATION;
