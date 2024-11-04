@@ -20,7 +20,7 @@
       "enableNonRootDocker": "true",
       "moby": "true"
     },
-    "ghcr.io/devcontainers/features/node:1": {
+    "ghcr.io/devcontainers/features/node:1.6.1": {
       "nodeGypDependencies": true,
       "version": "20"
     }
