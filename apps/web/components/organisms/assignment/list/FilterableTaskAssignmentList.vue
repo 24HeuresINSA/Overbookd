@@ -1,0 +1,185 @@
+<template>
+  <v-card class="filterable-assignment-list">
+    <v-card-text class="filterable-assignment-list__text">
+      <TaskFilters
+        :list-length="filteredAssignments.length"
+        class="filters"
+        @change:search="searchedTaskName = $event"
+        @change:required-teams="searchedRequiredTeams = $event"
+        @change:in-charge-team="searchedInChargeTeam = $event"
+        @change:category="searchedCategory = $event"
+        @change:has-assigned-friends="hasAssignedFriends = $event"
+      />
+      <v-divider />
+      <TaskAssignmentList
+        v-if="shouldShowAssignmentList"
+        :assignments="filteredAssignments"
+        class="assignment-list"
+      />
+      <div v-else class="error-message">
+        <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
+        <p v-else>
+          Aucun créneau disponible pour {{ selectedVolunteer.firstname }}
+        </p>
+      </div>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script lang="ts" setup>
+import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import type { AssignmentSummaryWithTask } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
+import type { Team } from "@overbookd/team";
+import type { DisplayableCategory } from "~/utils/assignment/task-category";
+import {
+  TaskPriorities,
+  type TaskPriority,
+} from "~/utils/assignment/task-priority";
+import type { Searchable } from "~/utils/search/search.utils";
+
+const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
+
+const searchedTaskName = ref<string>("");
+const searchedRequiredTeams = ref<Team[]>([]);
+const searchedInChargeTeam = ref<Team | null>(null);
+const searchedCategory = ref<DisplayableCategory | TaskPriority | null>(null);
+const hasAssignedFriends = ref<boolean>(false);
+
+const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() => {
+  return searchableAssignments.value.filter((assignment) => {
+    isMatchingFilter(assignment);
+  });
+});
+const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
+  () => {
+    return assignVolunteerToTaskStore.assignments.map((assignment) => ({
+      ...assignment,
+      searchable: SlugifyService.apply(
+        `${assignment.taskId} ${assignment.name}`,
+      ),
+    }));
+  },
+);
+
+const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
+  () => assignVolunteerToTaskStore.selectedVolunteer,
+);
+const shouldShowAssignmentList = computed<boolean>(() => {
+  return !!selectedVolunteer && filteredAssignments.value.length > 0;
+});
+
+const isMatchingFilter = (
+  assignment: Searchable<AssignmentSummaryWithTask>,
+): boolean => {
+  return (
+    filterByTaskName(searchedTaskName.value)(assignment) &&
+    filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
+    filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
+    filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
+    filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
+  );
+};
+
+const filterByTaskName = (
+  searchedTaskName: string,
+): ((assignment: Searchable<AssignmentSummaryWithTask>) => boolean) => {
+  const slugifiedSearch = SlugifyService.apply(searchedTaskName);
+  return ({ searchable }) => searchable.includes(slugifiedSearch);
+};
+const filterByRequiredTeams = (
+  searchedTeams: Team[],
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  return searchedTeams.length > 0
+    ? (assignment) =>
+        searchedTeams.every((searchedTeam) =>
+          assignment.teams.some(({ team }) => searchedTeam.code === team),
+        )
+    : () => true;
+};
+const filterByInChargeTeam = (
+  searchedInChargeTeam: Team | null,
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  return (assignment) => {
+    return !searchedInChargeTeam?.code
+      ? true
+      : searchedInChargeTeam?.code === assignment.inChargeTeam;
+  };
+};
+const filterByCategoryOrPriority = (
+  searchedCategory: DisplayableCategory | TaskPriority | null,
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  if (!searchedCategory) return () => true;
+  if (isTaskPriority(searchedCategory)) {
+    return filterByPriority(searchedCategory);
+  }
+  return filterByCategory(searchedCategory);
+};
+const isTaskPriority = (
+  category: TaskPriority | DisplayableCategory,
+): category is TaskPriority => {
+  return Object.values(TaskPriorities).includes(category);
+};
+const filterByPriority = (
+  searchedPriority: TaskPriority,
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  const hasPriority = searchedPriority === TaskPriorities.PRIORITAIRE;
+  return ({ topPriority }) => topPriority === hasPriority;
+};
+const filterByCategory = (
+  searchedCategory: DisplayableCategory,
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  return (assignment) => assignment.category === searchedCategory;
+};
+const filterByHasAssignedFriends = (
+  hasAssignedFriends: boolean,
+): ((assignment: AssignmentSummaryWithTask) => boolean) => {
+  return ({ hasFriendsAssigned }) => !hasAssignedFriends || hasFriendsAssigned;
+};
+</script>
+
+<style lang="scss" scoped>
+$filters-height: 275px;
+$column-margins: 30px;
+$layout-padding: 20px;
+
+.filterable-assignment-list {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__text {
+    padding: 0;
+  }
+}
+
+.filters {
+  height: $filters-height;
+}
+
+.assignment-list {
+  padding: 0 5px;
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
+      #{$column-margins}
+  );
+}
+
+.error-message {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: calc(
+    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
+      #{$column-margins}
+  );
+  margin: 0 5%;
+
+  p {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    opacity: 0.6;
+  }
+}
+</style>
