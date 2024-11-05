@@ -58,15 +58,27 @@
         </template>
 
         <template #item.action="{ item }">
-          <v-text-field
-            v-if="isExpenseMode"
-            v-model="item.newConsumption"
-            :rules="[min(0), isInteger]"
-            density="compact"
-            type="number"
-            hide-details
-            @update:model-value="updateNewConsumption(item, $event)"
-          />
+          <div v-if="isExpenseMode" class="expense-fields-inline">
+            <v-text-field
+              v-model="item.newConsumption"
+              :rules="[min(0), isInteger]"
+              density="compact"
+              type="number"
+              hide-details
+              @update:model-value="updateNewConsumption(item, $event)"
+            />
+            <v-btn
+              text="+1"
+              color="primary"
+              @click="addToConsumption(item, 1)"
+            />
+            <v-btn
+              text="+5"
+              color="primary"
+              @click="addToConsumption(item, 5)"
+            />
+          </div>
+
           <MoneyField
             v-else
             v-model="item.newConsumption"
@@ -192,6 +204,12 @@ const updateNewConsumption = (
   const numberValue = Number(value);
   consumerFromModel.newConsumption = numberValue >= 0 ? numberValue : 0;
 };
+
+const addToConsumption = (consumer: ConsumerWithConsumption, value: number) => {
+  const consumerFromModel = consumers.value.find((c) => c.id === consumer.id);
+  if (!consumerFromModel) return;
+  consumerFromModel.newConsumption += value;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -207,6 +225,16 @@ const updateNewConsumption = (
   .team-filter {
     display: flex;
     gap: 5px;
+  }
+}
+
+.expense-fields-inline {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.8em;
+
+  .v-btn {
+    border-radius: 10em !important;
   }
 }
 </style>
