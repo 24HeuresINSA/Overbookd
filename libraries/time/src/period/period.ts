@@ -195,7 +195,10 @@ export class Period {
 
     const isStartInDay =
       periodStart >= startOfStartDay && periodStart <= endOfEndDay;
-    const isEndInDay = periodEnd >= startOfStartDay && periodEnd <= endOfEndDay;
+    const isEndInDay =
+      periodEnd >= startOfStartDay &&
+      periodEnd <= endOfEndDay &&
+      new Date(this.end).setHours(0, 0, 0, 0) !== periodEnd;
     const isDayBetweenPeriod =
       periodStart <= startOfStartDay && periodEnd >= endOfEndDay;
 
