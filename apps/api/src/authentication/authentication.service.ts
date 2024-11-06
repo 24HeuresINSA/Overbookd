@@ -21,6 +21,11 @@ import { buildUserName } from "@overbookd/user";
 type UserEmail = { email: string };
 export type RefreshAccessRequest = { refreshToken: string };
 
+const DELETED_ACCOUNT_ERROR = new HttpException(
+  "Il y a une erreur avec ton compte, envoie un mail à overbookd@24heures.org",
+  423,
+);
+
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -38,12 +43,7 @@ export class AuthenticationService {
       ? await this.isSamePassword(user.password, password)
       : false;
 
-    if (isDeleted && isSamePassword) {
-      throw new HttpException(
-        "Il y a une erreur avec ton compte, envoie un mail à overbookd@24heures.org",
-        423,
-      );
-    }
+    if (isDeleted && isSamePassword) throw DELETED_ACCOUNT_ERROR;
 
     if (!user || !isSamePassword) {
       throw new UnauthorizedException("Email ou mot de passe invalide");
@@ -98,11 +98,11 @@ export class AuthenticationService {
   }
 
   async forgot({ email }: UserEmail): Promise<void> {
-    const user = await this.prisma.user.findFirst({
-      where: { email, isDeleted: false },
-    });
-
+    const user = await this.prisma.user.findFirst({ where: { email } });
     if (!user) return;
+
+    const isDeleted = await this.userService.isDeleted(email);
+    if (isDeleted) throw DELETED_ACCOUNT_ERROR;
 
     const resetToken = randomBytes(20).toString("hex");
     const expirationDate = new Date(Date.now() + ONE_HOUR_IN_MS);
@@ -130,7 +130,7 @@ export class AuthenticationService {
     password2,
   }: ResetPasswordRequestDto): Promise<void> {
     if (!timingSafeEqual(Buffer.from(password), Buffer.from(password2))) {
-      throw new BadRequestException("The passwords are not the same");
+      throw new BadRequestException("Les mot de passes ne sont pas identiques");
     }
 
     const user = await this.prisma.user.findFirst({
@@ -143,7 +143,7 @@ export class AuthenticationService {
     });
 
     if (!user) {
-      throw new UnauthorizedException("Token is invalid or expired");
+      throw new UnauthorizedException("Le token est invalide ou expiré");
     }
 
     await this.prisma.user.update({
