@@ -70,11 +70,17 @@
             <v-btn
               text="+1"
               color="primary"
+              density="comfortable"
+              rounded="l"
+              variant="outlined"
               @click="addToConsumption(item, 1)"
             />
             <v-btn
               text="+5"
               color="primary"
+              density="comfortable"
+              rounded="l"
+              variant="outlined"
               @click="addToConsumption(item, 5)"
             />
           </div>
@@ -232,9 +238,6 @@ const addToConsumption = (consumer: ConsumerWithConsumption, value: number) => {
   display: flex;
   flex-direction: row;
   column-gap: 0.8em;
-
-  .v-btn {
-    border-radius: 10em !important;
-  }
+  align-items: center;
 }
 </style>
