@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import {
   JwtPayload,
   JwtUtil,
@@ -32,10 +36,10 @@ import { Category } from "@overbookd/festival-event-constants";
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
+  MANAGE_ADMINS,
   MANAGE_USERS,
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
-import { ForgetMember } from "@overbookd/registration";
 import { PlanningEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
@@ -53,10 +57,7 @@ import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prisma: PrismaService,
-    private forgetMember: ForgetMember,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getById(
     id: number,
@@ -204,14 +205,14 @@ export class UserService {
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: number, author: JwtUtil): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: { email: true },
     });
     if (!user) return;
 
-    return this.softDeleteUser(id);
+    return this.softDeleteUser(id, author);
   }
 
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
@@ -220,11 +221,19 @@ export class UserService {
     });
   }
 
-  private async softDeleteUser(id: number): Promise<void> {
-    await this.prisma.user.update({
-      where: { id },
-      data: { isDeleted: true, teams: [] },
-    });
+  private async softDeleteUser(id: number, author: JwtUtil): Promise<void> {
+    const teams = await this.getUserTeams(id);
+    if (!this.canManageAdmins(teams, author)) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
+    Promise.all([
+      this.prisma.user.updateMany({ where: { id }, data: { isDeleted: true } }),
+      this.prisma.userTeam.deleteMany({ where: { userId: id } }),
+    ]);
+  }
+
+  private canManageAdmins(teams: string[], author: JwtUtil) {
+    return !teams.includes("admin") || author.can(MANAGE_ADMINS);
   }
 
   async getVolunteerAssignmentStats(

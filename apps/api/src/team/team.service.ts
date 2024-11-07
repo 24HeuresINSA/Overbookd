@@ -68,7 +68,7 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<string[]> {
     await this.checkUserExistence(userId);
-    if (!this.canManageTeams(teams, author)) {
+    if (!this.canManageAdmins(teams, author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
 
@@ -90,7 +90,7 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<void> {
     await this.checkUserExistence(userId);
-    if (!this.canManageTeams([team], author)) {
+    if (!this.canManageAdmins([team], author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
 
@@ -127,7 +127,7 @@ export class TeamService {
     if (!user) throw new NotFoundException("Utilisateur inconnu");
   }
 
-  private canManageTeams(teams: string[], author: JwtUtil) {
+  private canManageAdmins(teams: string[], author: JwtUtil) {
     return !teams.includes("admin") || author.can(MANAGE_ADMINS);
   }
 }
