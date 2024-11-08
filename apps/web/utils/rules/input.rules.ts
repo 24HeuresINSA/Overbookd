@@ -67,6 +67,7 @@ export function isMobilePhoneNumber(value: string | null) {
   return (value && mobilePhoneNumberPattern.test(value)) || message;
 }
 
+// nosemgrep
 // eslint-disable-next-line security/detect-non-literal-regexp
 export const passwordPattern = new RegExp(
   `^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*${SPECIAL_CHARS_REGEX_PATERN}).{12,}`,
