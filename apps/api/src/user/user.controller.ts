@@ -268,8 +268,11 @@ export class UserController {
     status: 204,
     description: "Delete a user by id",
   })
-  deleteUser(@Param("id", ParseIntPipe) userId: number): Promise<void> {
-    return this.userService.deleteUser(userId);
+  deleteUser(
+    @Param("id", ParseIntPipe) userId: number,
+    @RequestDecorator() req: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.userService.deleteUser(userId, new JwtUtil(req.user));
   }
 
   @UseGuards(JwtAuthGuard)

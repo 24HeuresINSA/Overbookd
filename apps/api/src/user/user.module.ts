@@ -1,12 +1,10 @@
 import { Module } from "@nestjs/common";
 import { BreakPeriods } from "@overbookd/planning";
-import { ForgetMember } from "@overbookd/registration";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "../utils/file.service";
 import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
-import { TeamService } from "../team/team.service";
 import { RegistrationModule } from "../registration/index/registration.module";
 import { PrismaModule } from "../prisma.module";
 import { PreferenceController } from "./preference/preference.controller";
@@ -16,6 +14,7 @@ import { PrismaBreaks } from "./planning/repository/breaks.prisma";
 import { PrismaVolunteers } from "./planning/repository/volunteers.prisma";
 import { PlanningModule } from "./planning/planning.module";
 import { PlanningController } from "./planning/planning.controller";
+import { TeamService } from "../team/team.service";
 
 @Module({
   imports: [PlanningModule, RegistrationModule, PrismaModule],
@@ -49,9 +48,8 @@ import { PlanningController } from "./planning/planning.controller";
     },
     {
       provide: UserService,
-      useFactory: (prisma: PrismaService, forgetMember: ForgetMember) =>
-        new UserService(prisma, forgetMember),
-      inject: [PrismaService, ForgetMember],
+      useFactory: (prisma: PrismaService) => new UserService(prisma),
+      inject: [PrismaService],
     },
     FileService,
     ProfilePictureService,
