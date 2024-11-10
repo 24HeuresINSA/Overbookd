@@ -236,7 +236,6 @@ const addToConsumption = (consumer: ConsumerWithConsumption, value: number) => {
 
 .expense-fields-inline {
   display: flex;
-  flex-direction: row;
   column-gap: 0.8em;
   align-items: center;
 }
