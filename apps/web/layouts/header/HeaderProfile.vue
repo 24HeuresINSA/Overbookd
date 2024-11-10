@@ -23,11 +23,22 @@
         <v-icon>{{ themeIcon }}</v-icon>
         {{ themeTitle }}
       </a>
+      <a class="dropdown-menu__item" @click="displayEULA">
+        <v-icon>mdi-book-open-variant-outline</v-icon>
+        Voir les CGU
+      </a>
       <a class="dropdown-menu__item logout" @click="logout">
         <v-icon>mdi-close-circle-outline</v-icon>
         Deconnexion
       </a>
     </div>
+    <v-dialog
+      v-model="isEULADialogOpen"
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <EULADialogCard @close="closeEULA" />
+    </v-dialog>
   </div>
 </template>
 
@@ -81,6 +92,10 @@ const toggleCurrentTheme = () => {
   const currentTheme = theme.global.name.value;
   theme.global.name.value = pickReverseTheme(currentTheme);
 };
+
+const isEULADialogOpen = ref<boolean>(false);
+const displayEULA = () => (isEULADialogOpen.value = true);
+const closeEULA = () => (isEULADialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
