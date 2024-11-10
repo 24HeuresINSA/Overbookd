@@ -1,11 +1,11 @@
 <template>
   <v-card rounded="0" class="mx-0 my-0 px-0 py-0">
-    <v-toolbar>
+    <v-toolbar color="background">
       <v-btn icon="mdi-close" @click="close" />
       <v-toolbar-title>Conditions Générales d'Utilisation</v-toolbar-title>
     </v-toolbar>
-    <v-card-subtitle>En vigueur au 29/07/2024</v-card-subtitle>
     <v-card-text>
+      <p class="subtitle">En vigueur au 29/07/2024</p>
       <p>
         Les présentes conditions générales d'utilisation (dites «
         <strong>CGU</strong> ») ont pour objet l'encadrement juridique des
@@ -262,6 +262,11 @@ const close = () => emit("close");
 h2 {
   margin-top: 30px;
   margin-bottom: 10px;
+}
+
+.subtitle {
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
 p {
