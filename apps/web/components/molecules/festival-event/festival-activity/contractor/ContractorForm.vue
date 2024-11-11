@@ -2,42 +2,44 @@
   <DialogCard @close="close">
     <template #title> {{ typeFormLabel }} un prestataire </template>
     <template #content>
-      <v-text-field
-        v-model="firstname"
-        label="Prénom *"
-        :rules="[rules.required]"
-        @keydown.enter="confirmContractor"
-      />
-      <v-text-field
-        v-model="lastname"
-        label="Nom *"
-        :rules="[rules.required]"
-        @keydown.enter="confirmContractor"
-      />
-      <v-text-field
-        v-model="phone"
-        label="Téléphone *"
-        :rules="[rules.required, rules.phone]"
-        @keydown.enter="confirmContractor"
-      />
-      <v-text-field
-        v-model="email"
-        label="Email"
-        inputmode="email"
-        :rules="[rules.email]"
-        @keydown.enter="confirmContractor"
-      />
-      <v-text-field
-        v-model="company"
-        label="Société"
-        @keydown.enter="confirmContractor"
-      />
-      <v-text-field
-        v-model="comment"
-        label="Commentaire"
-        hide-details
-        @keydown.enter="confirmContractor"
-      />
+      <form>
+        <v-text-field
+          v-model="firstname"
+          label="Prénom *"
+          :rules="[rules.required]"
+          @keydown.enter="confirmContractor"
+        />
+        <v-text-field
+          v-model="lastname"
+          label="Nom *"
+          :rules="[rules.required]"
+          @keydown.enter="confirmContractor"
+        />
+        <v-text-field
+          v-model="phone"
+          label="Téléphone *"
+          :rules="[rules.required, rules.phone]"
+          @keydown.enter="confirmContractor"
+        />
+        <v-text-field
+          v-model="email"
+          label="Email"
+          inputmode="email"
+          :rules="[rules.email]"
+          @keydown.enter="confirmContractor"
+        />
+        <v-text-field
+          v-model="company"
+          label="Société"
+          @keydown.enter="confirmContractor"
+        />
+        <v-text-field
+          v-model="comment"
+          label="Commentaire"
+          hide-details
+          @keydown.enter="confirmContractor"
+        />
+      </form>
     </template>
 
     <template #actions>
@@ -111,7 +113,7 @@ watch(() => props.contractor, setContractor, { immediate: true });
 const canConfirmContractor = computed<boolean>(() => {
   const hasFirstname = firstname.value.trim() !== "";
   const hasLastname = lastname.value.trim() !== "";
-  const hasPhone = phone.value.trim() !== "";
+  const hasPhone = rules.phone(phone.value) === true;
   return hasFirstname && hasLastname && hasPhone;
 });
 const close = () => emit("close");
@@ -139,3 +141,11 @@ const confirmContractor = () => {
   clearContractor();
 };
 </script>
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+</style>
