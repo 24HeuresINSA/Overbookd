@@ -1,3 +1,5 @@
+import { OverDate } from "../date/date.js";
+import { ONE_DAY_IN_MS } from "../duration/duration.constant.js";
 import { Duration } from "../duration/duration.js";
 
 export type IProvidePeriod = {
@@ -187,20 +189,17 @@ export class Period {
   }
 
   isInDay(day: Date): boolean {
-    const startOfStartDay = day.setHours(0, 0, 0, 0);
-    const endOfEndDay = day.setHours(23, 59, 59, 999);
+    const startOfStartDay = OverDate.getStartOfDay(day).date.getTime();
+    const endOfEndDay = startOfStartDay + ONE_DAY_IN_MS;
 
     const periodStart = this.start.getTime();
     const periodEnd = this.end.getTime();
 
     const isStartInDay =
-      periodStart >= startOfStartDay && periodStart <= endOfEndDay;
-    const isEndInDay =
-      periodEnd >= startOfStartDay &&
-      periodEnd <= endOfEndDay &&
-      new Date(this.end).setHours(0, 0, 0, 0) !== periodEnd;
+      periodStart >= startOfStartDay && periodStart < endOfEndDay;
+    const isEndInDay = periodEnd > startOfStartDay && periodEnd <= endOfEndDay;
     const isDayBetweenPeriod =
-      periodStart <= startOfStartDay && periodEnd >= endOfEndDay;
+      periodStart < startOfStartDay && periodEnd > endOfEndDay;
 
     return isStartInDay || isEndInDay || isDayBetweenPeriod;
   }

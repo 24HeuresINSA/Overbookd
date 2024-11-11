@@ -1,4 +1,5 @@
 import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "../duration/duration.constant";
+import { OverDate } from "./date";
 
 export function getHourDiff(start: Date, end: Date): number {
   const diff = end.getTime() - start.getTime();
@@ -21,7 +22,7 @@ export function computeTomorrowDate(date: Date): Date {
 }
 
 export function getMonday(date: Date): Date {
-  const newDate = new Date(date);
+  const newDate = new Date(`${OverDate.from(date).dateString}T00:00`);
   const currentDay = newDate.getDay();
 
   const isSunday = currentDay === 0;
@@ -29,7 +30,12 @@ export function getMonday(date: Date): Date {
   const daysToMonday = baseOffset - currentDay;
 
   newDate.setDate(newDate.getDate() + daysToMonday);
-  return newDate;
+
+  const fixedDate = OverDate.fromLocal(newDate).date;
+  fixedDate.setHours(date.getHours());
+  fixedDate.setMinutes(date.getMinutes());
+
+  return fixedDate;
 }
 
 export function isSameDay(date1: Date, date2: Date): boolean {

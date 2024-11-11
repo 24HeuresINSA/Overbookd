@@ -1,3 +1,4 @@
+import { formatDateNumberValue } from "@overbookd/time";
 import { SHIFT_HOURS } from "./shift.constant.js";
 
 export const AVAILABILITY_ERROR_MESSAGES = {
@@ -49,5 +50,5 @@ function buildOddHourError() {
 }
 
 function displayHour(hour: number) {
-  return `${hour.toString().padStart(2, "0")}h00`;
+  return `${formatDateNumberValue(hour)}h00`;
 }

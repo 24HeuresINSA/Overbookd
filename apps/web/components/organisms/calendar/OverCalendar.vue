@@ -63,12 +63,13 @@
 </template>
 
 <script lang="ts" setup>
-import { HOURS_IN_DAY, ONE_DAY_IN_MS, ONE_WEEK_IN_MS } from "@overbookd/time";
 import {
-  DAY_MODE,
   formatDateNumberValue,
-  type CalendarMode,
-} from "~/utils/calendar/calendar.utils";
+  HOURS_IN_DAY,
+  ONE_DAY_IN_MS,
+  ONE_WEEK_IN_MS,
+} from "@overbookd/time";
+import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();

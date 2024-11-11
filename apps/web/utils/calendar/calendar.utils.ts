@@ -11,10 +11,6 @@ export type CalendarDay = {
   date: Date;
 };
 
-export function formatDateNumberValue(value: number): string {
-  return value.toString().padStart(2, "0");
-}
-
 export function getOverlappingEvents(
   event: CalendarEvent,
   allEvents: CalendarEvent[],

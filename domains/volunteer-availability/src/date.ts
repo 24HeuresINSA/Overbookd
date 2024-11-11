@@ -1,17 +1,13 @@
 import {
-  DateString,
+  InitOverDate,
   Hour,
   OverDate,
   ONE_HOUR_IN_MS,
   Period,
+  formatDateNumberValue,
 } from "@overbookd/time";
 import { SHIFT_HOURS } from "./shift.constant.js";
 import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
-
-export type InitOverDate = {
-  date: DateString;
-  hour: Hour;
-};
 
 export class AvailabilityDate extends OverDate {
   static init({ date, hour }: InitOverDate) {
@@ -21,8 +17,12 @@ export class AvailabilityDate extends OverDate {
     if (isOdd && happenOutsideNightShift)
       throw new AvailabilityDateOddHourError();
 
-    const hours = hour.toString().padStart(2, "0");
-    const dateString = `${date}T${hours}:00+02:00`;
+    const hours = formatDateNumberValue(hour);
+    const datetime = `${date}T${hours}:00`;
+
+    const offset = OverDate.getParisTimeZoneOffset(new Date(datetime));
+
+    const dateString = `${datetime}+0${offset}:00`;
     return new AvailabilityDate(new Date(dateString), hour);
   }
 

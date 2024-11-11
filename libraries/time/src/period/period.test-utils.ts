@@ -88,6 +88,14 @@ export const thursday20hToFriday04h = Period.init({
   start: new Date("2024-05-16T20:00+02:00"),
   end: new Date("2024-05-17T04:00+02:00"),
 });
+export const thursday22hToFriday00h = Period.init({
+  start: new Date("2024-05-16T22:00+02:00"),
+  end: new Date("2024-05-17T00:00+02:00"),
+});
+export const saturday00hToSaturday02h = Period.init({
+  start: new Date("2024-05-18T00:00+02:00"),
+  end: new Date("2024-05-18T02:00+02:00"),
+});
 export const saturday02hTo04h = Period.init({
   start: new Date("2024-05-18T02:00+02:00"),
   end: new Date("2024-05-18T04:00+02:00"),

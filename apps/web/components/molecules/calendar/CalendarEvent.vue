@@ -24,12 +24,15 @@
 
 <script lang="ts" setup>
 import {
+  formatDateHour,
+  formatDateMinute,
+  formatDateNumberValue,
   MINUTES_IN_DAY,
-  MINUTES_IN_HOUR,
+  ONE_DAY_IN_MS,
   ONE_MINUTE_IN_MS,
+  OverDate,
   Period,
 } from "@overbookd/time";
-import { formatDateNumberValue } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -69,14 +72,19 @@ const propagateClick = () => {
 
 const PIXELS_PER_MINUTE = 0.75;
 
+const currentDayStart = computed<Date>(
+  () => OverDate.getStartOfDay(props.displayedDay).date,
+);
+
 const displayedEventPeriod = computed<Period>(() => {
-  const currentDayStart = new Date(props.displayedDay);
-  currentDayStart.setHours(0, 0, 0, 0);
-  const currentDayEnd = new Date(props.displayedDay);
-  currentDayEnd.setHours(23, 59, 59, 999);
+  const currentDayEnd = new Date(
+    currentDayStart.value.getTime() + ONE_DAY_IN_MS,
+  );
 
   const validStart =
-    props.event.start < currentDayStart ? currentDayStart : props.event.start;
+    props.event.start < currentDayStart.value
+      ? currentDayStart.value
+      : props.event.start;
   const validEnd =
     props.event.end > currentDayEnd ? currentDayEnd : props.event.end;
 
@@ -86,12 +94,12 @@ const displayedEventPeriod = computed<Period>(() => {
   return Period.init({ start, end });
 });
 
-const eventStartTotalMinutes = computed<number>(() => {
-  return (
-    displayedEventPeriod.value.start.getHours() * MINUTES_IN_HOUR +
-    displayedEventPeriod.value.start.getMinutes()
-  );
-});
+const eventStartTotalMinutes = computed<number>(
+  () =>
+    (displayedEventPeriod.value.start.getTime() -
+      currentDayStart.value.getTime()) /
+    ONE_MINUTE_IN_MS,
+);
 const eventTopPositionInPixels = computed<number>(() => {
   return eventStartTotalMinutes.value * PIXELS_PER_MINUTE;
 });
@@ -124,13 +132,17 @@ const eventTimePeriodText = computed<string>(() => {
   const start = props.event.start;
   const end = props.event.end;
 
-  const formattedStartMinutes = start.getMinutes()
-    ? formatDateNumberValue(start.getMinutes())
+  const startMinutes = +formatDateMinute(start);
+  const endMinutes = +formatDateMinute(end);
+
+  const formattedStartMinutes = startMinutes
+    ? formatDateNumberValue(startMinutes)
     : "";
-  const formattedEndMinutes = end.getMinutes()
-    ? formatDateNumberValue(end.getMinutes())
+  const formattedEndMinutes = endMinutes
+    ? formatDateNumberValue(endMinutes)
     : "";
-  return `${start.getHours()}h${formattedStartMinutes} - ${end.getHours()}h${formattedEndMinutes}`;
+
+  return `${+formatDateHour(start)}h${formattedStartMinutes} - ${+formatDateHour(end)}h${formattedEndMinutes}`;
 });
 </script>
 

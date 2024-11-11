@@ -1,5 +1,5 @@
-import { Period } from "@overbookd/time";
-import { AvailabilityDate, InitOverDate } from "./date.js";
+import { InitOverDate, Period } from "@overbookd/time";
+import { AvailabilityDate } from "./date.js";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 
 const MINIMIM_PERIOD_DURATION_HOURS = 2;
