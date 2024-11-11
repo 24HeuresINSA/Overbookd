@@ -59,24 +59,13 @@ const FT_PAGE: HiddenPage = {
   hasParam: true,
 };
 
-const FA_TO_PUBLISH_PAGE: PageInSummary = {
-  icon: "mdi-web-sync",
+const FA_TO_PUBLISH_PAGE: HiddenPage = {
   title: "Animations à Publier",
   permission: READ_ANIMATION_TO_PUBLISH,
   to: FA_TO_PUBLISH_URL,
-  description:
-    "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
   mobileSupport: true,
-  canBeFavorite: true,
+  canBeFavorite: false,
   hasParam: false,
-  keywords: [
-    "animations",
-    "communication",
-    "publier",
-    "publication",
-    "comcom",
-    "fa",
-  ],
 };
 
 const SECURITY_DASHBOARD_PAGE: HiddenPage = {
@@ -112,7 +101,6 @@ const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
 export const FESTIVAL_EVENT_SUMMARY_PAGES: PageInSummary[] = [
   FA_LIST_PAGE,
   FT_LIST_PAGE,
-  FA_TO_PUBLISH_PAGE,
   FESTIVAL_EVENTS_STATS_PAGE,
 ];
 
@@ -121,4 +109,5 @@ export const FESTIVAL_EVENT_PAGES: Page[] = [
   FA_PAGE,
   FT_PAGE,
   SECURITY_DASHBOARD_PAGE,
+  FA_TO_PUBLISH_PAGE,
 ];
