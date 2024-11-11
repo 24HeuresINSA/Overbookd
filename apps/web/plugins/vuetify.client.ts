@@ -39,6 +39,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     },
     defaults: {
+      VDataTable: {
+        itemsPerPage: 25,
+        noDataText: "Aucune donnée",
+        loadingText: "Chargement des données ...",
+      },
       VCard: {
         style: {
           borderRadius: "25px",

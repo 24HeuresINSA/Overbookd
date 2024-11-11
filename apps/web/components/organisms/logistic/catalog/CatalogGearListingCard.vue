@@ -13,7 +13,6 @@
         :name="filters.name"
         :category="filters.category"
         :loading="loading"
-        :items-per-page="30"
         loading-text="Chargement du matos..."
         no-data-text="Aucun matos trouvé"
         :mobile="isMobile"

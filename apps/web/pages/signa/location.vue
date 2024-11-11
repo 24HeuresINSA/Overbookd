@@ -11,7 +11,6 @@
       <v-data-table
         :headers="tableHeaders"
         :items="filteredLocations"
-        :items-per-page="20"
         :loading="loading"
         loading-text="Chargement des lieux..."
         no-data-text="Aucun lieu trouvé"

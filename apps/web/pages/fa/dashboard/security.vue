@@ -9,7 +9,6 @@
         :loading="loading"
         loading-text="Chargement des fiches activités..."
         :hover="filteredActivities.length > 0"
-        :items-per-page="20"
         :mobile="isMobile"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"

@@ -6,7 +6,6 @@
         :headers="headers"
         :items="inventoryGroupedRecords"
         :loading="loading"
-        :items-per-page="40"
         loading-text="Chargement de l'inventaire..."
         no-data-text="Inventaire vide"
         density="comfortable"

@@ -7,7 +7,6 @@
       item-value="slug"
       :loading="loading"
       loading-text="Chargement du matos..."
-      :items-per-page="20"
       no-data-text="Aucun matos"
       show-expand
       @update:expanded="expandOnIconClick"

@@ -10,7 +10,6 @@
           v-model="selectedCandidates"
           :headers="headers"
           :items="filteredCandidates"
-          :items-per-page="30"
           :loading="loading"
           loading-text="Chargement des candidats..."
           :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"

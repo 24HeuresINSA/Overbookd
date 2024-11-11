@@ -9,7 +9,6 @@
         loading-text="Chargement des animations à publier..."
         no-data-text="Aucune animation à publier"
         :hover="filteredActivities.length > 0"
-        :items-per-page="20"
         :mobile="isMobile"
         class="fa"
         @click:row="openActivity"

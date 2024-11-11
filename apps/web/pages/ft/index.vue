@@ -6,7 +6,6 @@
       <v-data-table
         :headers="tableHeaders"
         :items="filteredTasks"
-        :items-per-page="20"
         class="task__table"
         :loading="loading"
         loading-text="Chargement des fiches tâches..."
