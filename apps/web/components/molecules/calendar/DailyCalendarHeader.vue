@@ -82,7 +82,7 @@ const isToday = computed<boolean>(() => {
     background-color: rgb(var(--v-theme-error));
     color: rgb(var(--v-theme-on-error));
     span {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 500;
       padding-left: 10px;
     }
