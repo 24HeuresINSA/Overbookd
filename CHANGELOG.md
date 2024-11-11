@@ -1,3 +1,20 @@
+## [3.12.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.0...v3.12.1) (2024-11-11)
+
+### Bug Fixes
+
+* **calendar:** prevent the period from showing on the next day when it ends at midnight [#2225](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2225) ([043a9d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/043a9d0ad1e945633259d58b2dc926b50c75f75a))
+* **personal-account:** unselect deleted users and delete all teams to a soft deleted user [#2241](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2241) ([2ba4a94](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2ba4a94cff912ce25b0e93c75b4ac5dd9dc6bbd1))
+* **registration:** add nosemgrep comment for password pattern regex [#2247](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2247) ([5eef304](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5eef304117efd0e74c7a7994c9e9c60fd9d910bc))
+* **reset-password:** return error if account is deleted [#2245](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2245) ([2604ee6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2604ee6ab44cdea4a38eac3e15779ad20c522161))
+* **SG:** add +1 and +5 buttons to the right of the field to add sticks [#2003](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2003) ([8b154b3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b154b3a43ffca0635f4ad9d55762504bb58c500))
+* **web:** add button to display EULA [#2250](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2250) ([5d155dc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5d155dc9c3de70b1d9b268c97499e4b4e9484949))
+* **web:** Changement des labels pour le nombre d'appareils des besoin de electricité [#2211](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2211) ([23861ac](https://gitlab.com/24-heures-insa/overbookd-mono/commit/23861ac5c98ded67dc061c975f6b48515b7ec21d))
+* **web:** Sort user's teams alphabetically [#2249](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2249) ([7d08765](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d08765f50b2b0e692d33545adb35842350128a1))
+
+### Pre-Features
+
+* **assignment:** add filterable volunteer list [#2227](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2227) ([c56c8c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c56c8c4525367ca92722aaca0323d78697d7ce73))
+
 ## [3.12.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.11.3...v3.12.0) (2024-10-30)
 
 ### Features
