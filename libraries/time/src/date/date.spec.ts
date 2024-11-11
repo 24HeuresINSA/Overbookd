@@ -3,36 +3,97 @@ import { DateString, OverDate } from "./date.js";
 
 const friday: DateString = "2024-05-17";
 const saturday: DateString = "2024-05-18";
+const fridayWinterTime: DateString = "2024-12-06";
 const friday10h = new Date(`${friday}T10:00+02:00`);
 const friday12h = new Date(`${friday}T12:00+02:00`);
 const saturdayDate = new Date(saturday);
 
 describe("Over Date [Paris based date]", () => {
   describe.each`
-    date      | hour  | expectedUTCHour
-    ${friday} | ${10} | ${8}
-    ${friday} | ${0}  | ${22}
-    ${friday} | ${3}  | ${1}
-    ${friday} | ${19} | ${17}
-  `("when select hour $hour for $date", ({ date, hour, expectedUTCHour }) => {
-    it("should generate a date according to Paris timezone", () => {
-      const availabilityDate = OverDate.init({ date, hour });
-      expect(availabilityDate.date.getUTCHours()).toBe(expectedUTCHour);
+    date                | hour  | minute | expectedUTCHour | expectedUTCMinute
+    ${friday}           | ${10} | ${0}   | ${8}            | ${0}
+    ${friday}           | ${0}  | ${15}  | ${22}           | ${15}
+    ${friday}           | ${3}  | ${30}  | ${1}            | ${30}
+    ${friday}           | ${19} | ${45}  | ${17}           | ${45}
+    ${fridayWinterTime} | ${20} | ${25}  | ${19}           | ${25}
+  `(
+    "when select hour $hour and minute $minute for $date",
+    ({ date, hour, expectedUTCHour, minute, expectedUTCMinute }) => {
+      it("should generate a date according to Paris timezone", () => {
+        const availabilityDate = OverDate.init({ date, hour, minute });
+        expect(availabilityDate.date.getUTCHours()).toBe(expectedUTCHour);
+        expect(availabilityDate.date.getUTCMinutes()).toBe(expectedUTCMinute);
+      });
+    },
+  );
+  describe("Get Paris timezone offset", () => {
+    describe.each`
+      date                     | expectedOffset
+      ${`${friday}`}           | ${2}
+      ${`${fridayWinterTime}`} | ${1}
+    `("when querying for $date", ({ date, expectedOffset }) => {
+      it(`should give the offset +${expectedOffset}`, () => {
+        const offset = OverDate.getParisTimeZoneOffset(new Date(date));
+        expect(offset).toBe(expectedOffset);
+      });
     });
   });
   describe("Generate from date", () => {
     describe.each`
-      date                       | expectedHour | expectedDate
-      ${`${friday}T11:00+01:00`} | ${12}        | ${`${friday}T12:00+02:00`}
-      ${`${friday}T11:00-11:00`} | ${0}         | ${`${saturday}T00:00+02:00`}
-      ${`${friday}T11:00+07:00`} | ${6}         | ${`${friday}T06:00+02:00`}
-    `("when generating from $date", ({ date, expectedHour, expectedDate }) => {
-      it(`should generate date at ${expectedHour}h`, () => {
-        const availabilityDate = OverDate.from(new Date(date));
-        expect(availabilityDate.hour).toBe(expectedHour);
-        expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
-      });
-    });
+      date                                 | expectedHour | expectedMinute | expectedDate
+      ${`${friday}T11:11+01:00`}           | ${12}        | ${11}          | ${`${friday}T12:11+02:00`}
+      ${`${friday}T11:00-11:00`}           | ${0}         | ${0}           | ${`${saturday}T00:00+02:00`}
+      ${`${friday}T11:15+07:00`}           | ${6}         | ${15}          | ${`${friday}T06:15+02:00`}
+      ${`${fridayWinterTime}T11:15+07:00`} | ${5}         | ${15}          | ${`${fridayWinterTime}T05:15+01:00`}
+    `(
+      "when generating from $date",
+      ({ date, expectedHour, expectedMinute, expectedDate }) => {
+        it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
+          const availabilityDate = OverDate.from(new Date(date));
+          expect(availabilityDate.hour).toBe(expectedHour);
+          expect(availabilityDate.minute).toBe(expectedMinute);
+          expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
+        });
+      },
+    );
+  });
+  describe("Turn local date to same datetime with Paris timezone", () => {
+    describe.each`
+      date                           | expectedHour | expectedMinute | expectedDate
+      ${`${friday}T11:00`}           | ${11}        | ${0}           | ${`${friday}T11:00+02:00`}
+      ${`${friday}T00:15`}           | ${0}         | ${15}          | ${`${friday}T00:15+02:00`}
+      ${`${friday}T22:30`}           | ${22}        | ${30}          | ${`${friday}T22:30+02:00`}
+      ${`${fridayWinterTime}T22:30`} | ${22}        | ${30}          | ${`${fridayWinterTime}T22:30+01:00`}
+    `(
+      "when generating from $date",
+      ({ date, expectedHour, expectedMinute, expectedDate }) => {
+        it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
+          const availabilityDate = OverDate.fromLocal(new Date(date));
+          expect(availabilityDate.hour).toBe(expectedHour);
+          expect(availabilityDate.minute).toBe(expectedMinute);
+          expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
+        });
+      },
+    );
+  });
+  describe("Get start of day", () => {
+    describe.each`
+      date                                 | expectedHour | expectedMinute | expectedDate
+      ${`${friday}T11:11+02:00`}           | ${0}         | ${0}           | ${`${friday}T00:00+02:00`}
+      ${`${saturday}T00:15+03:00`}         | ${0}         | ${0}           | ${`${friday}T00:00+02:00`}
+      ${`${friday}T17:45-11:00`}           | ${0}         | ${0}           | ${`${saturday}T00:00+02:00`}
+      ${`${fridayWinterTime}T12:30+01:00`} | ${0}         | ${0}           | ${`${fridayWinterTime}T00:00+01:00`}
+    `(
+      "when generating from $date",
+      ({ date, expectedHour, expectedMinute, expectedDate }) => {
+        it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
+          const availabilityDate = OverDate.getStartOfDay(new Date(date));
+          expect(availabilityDate.hour).toBe(expectedHour);
+          expect(availabilityDate.minute).toBe(expectedMinute);
+          expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
+        });
+      },
+    );
   });
   describe("Detect period inclusion", () => {
     describe.each`
@@ -52,18 +113,18 @@ describe("Over Date [Paris based date]", () => {
   });
   describe("Generate associated period", () => {
     describe.each`
-      date      | hour  | start                      | end
-      ${friday} | ${10} | ${`${friday}T10:00+02:00`} | ${`${friday}T11:00+02:00`}
-      ${friday} | ${6}  | ${`${friday}T06:00+02:00`} | ${`${friday}T07:00+02:00`}
-      ${friday} | ${19} | ${`${friday}T19:00+02:00`} | ${`${friday}T20:00+02:00`}
+      date      | hour  | minute | start                      | end
+      ${friday} | ${10} | ${0}   | ${`${friday}T10:00+02:00`} | ${`${friday}T11:00+02:00`}
+      ${friday} | ${6}  | ${0}   | ${`${friday}T06:00+02:00`} | ${`${friday}T07:00+02:00`}
+      ${friday} | ${19} | ${30}  | ${`${friday}T19:30+02:00`} | ${`${friday}T20:30+02:00`}
     `(
-      "when asking associated period for $date $hour h",
-      ({ date, hour, start, end }) => {
+      "when asking associated period for $date $hour h $minute m",
+      ({ date, hour, minute, start, end }) => {
         it(`should generate period to ${end}`, () => {
           const expectedStart = new Date(start);
           const expectedEnd = new Date(end);
 
-          const availabilityDate = OverDate.init({ date, hour });
+          const availabilityDate = OverDate.init({ date, hour, minute });
           const period = availabilityDate.period;
 
           expect(period.start).toStrictEqual(expectedStart);

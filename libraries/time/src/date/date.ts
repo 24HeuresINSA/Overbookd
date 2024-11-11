@@ -1,6 +1,6 @@
 import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
 import { IProvidePeriod, Period } from "../period/period.js";
-import { formatLocalDate } from "./format-date.utils.js";
+import { formatDateNumberValue, formatLocalDate } from "./format-date.utils.js";
 
 type January = "01";
 type February = "02";
@@ -75,43 +75,111 @@ type Enumerate<
   : Enumerate<N, [...Acc, Acc["length"]]>;
 
 export type Hour = Enumerate<24>;
+export type Minute = Enumerate<60>;
 
 export const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
   timeZone: "Europe/Paris",
 };
 
-const DISPLAY_HOUR: Intl.DateTimeFormatOptions = {
+export const DISPLAY_DATE_TIME: Intl.DateTimeFormatOptions = {
+  ...PARIS_TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+};
+
+export const DISPLAY_DATE: Intl.DateTimeFormatOptions = {
+  ...PARIS_TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+};
+
+export const DISPLAY_HOUR: Intl.DateTimeFormatOptions = {
   ...PARIS_TIMEZONE,
   hour: "2-digit",
   minute: "2-digit",
+};
+
+export type InitOverDate = {
+  date: DateString;
+  hour: Hour;
+  minute?: Minute;
 };
 
 export class OverDate {
   protected constructor(
     protected readonly _date: Date,
     protected readonly _hour: Hour,
+    protected readonly _minute: Minute = 0,
   ) {}
 
-  static init({ date, hour }: { date: DateString; hour: Hour }): OverDate {
-    const hours = hour.toString().padStart(2, "0");
-    const dateString = `${date}T${hours}:00+02:00`;
-    return new OverDate(new Date(dateString), hour);
+  static init({ date, hour, minute = 0 }: InitOverDate): OverDate {
+    const hours = formatDateNumberValue(hour);
+    const minutes = formatDateNumberValue(minute);
+    const datetime = `${date}T${hours}:${minutes}`;
+
+    const offset = OverDate.getParisTimeZoneOffset(new Date(datetime));
+
+    const dateString = `${datetime}+0${offset}:00`;
+    return new OverDate(new Date(dateString), hour, minute);
+  }
+
+  static getParisTimeZoneOffset(date: Date): number {
+    const parisTime = new Intl.DateTimeFormat("fr", {
+      ...PARIS_TIMEZONE,
+      timeZoneName: "short",
+    })
+      .formatToParts(date)
+      .find((value) => value.type === "timeZoneName")?.value;
+
+    const offset = parisTime?.match(/UTC[+-](\d)/);
+
+    if (!offset) throw new Error();
+
+    return +offset[1];
   }
 
   static from(international: Date): OverDate {
-    const [hourWithPad] = Intl.DateTimeFormat("fr", DISPLAY_HOUR)
+    const [hourWithPad, minuteWithPad] = Intl.DateTimeFormat("fr", DISPLAY_HOUR)
       .format(international)
       .split(":");
     const hour = +hourWithPad;
+    const minute = +minuteWithPad;
 
-    const [day, month, year] = Intl.DateTimeFormat("fr", PARIS_TIMEZONE)
+    const [day, month, year] = Intl.DateTimeFormat("fr", DISPLAY_DATE)
       .format(international)
       .split("/");
     const date = `${year}-${month}-${day}`;
 
-    if (!isDateString(date) || !isHour(hour)) throw new Error();
+    if (!isDateString(date) || !isHour(hour) || !isMinute(minute))
+      throw new Error();
 
-    return OverDate.init({ date, hour });
+    return OverDate.init({ date, hour, minute });
+  }
+
+  static fromLocal(local: Date): OverDate {
+    const year = local.getFullYear();
+    const month = formatDateNumberValue(local.getMonth() + 1);
+    const day = formatDateNumberValue(local.getDate());
+    const date = `${year}-${month}-${day}`;
+
+    const hour = local.getHours();
+    const minute = local.getMinutes();
+
+    if (!isDateString(date) || !isHour(hour) || !isMinute(minute))
+      throw new Error();
+
+    return OverDate.init({ date, hour, minute });
+  }
+
+  static getStartOfDay(day: Date): OverDate {
+    return OverDate.init({
+      date: OverDate.from(day).dateString,
+      hour: 0,
+    });
   }
 
   get date(): Date {
@@ -126,6 +194,10 @@ export class OverDate {
 
   get hour(): Hour {
     return this._hour;
+  }
+
+  get minute(): Minute {
+    return this._minute;
   }
 
   get period(): Period {
@@ -150,4 +222,8 @@ export function isDateString(dateString: string): dateString is DateString {
 
 export function isHour(hour: number): hour is Hour {
   return hour >= 0 && hour < 24;
+}
+
+export function isMinute(minute: number): minute is Minute {
+  return minute >= 0 && minute < 60;
 }

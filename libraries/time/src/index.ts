@@ -10,9 +10,12 @@ export {
 export {
   type DateString,
   type Hour,
+  type Minute,
+  type InitOverDate,
   OverDate,
   isDateString,
   isHour,
+  isMinute,
 } from "./date/date.js";
 export * from "./date/format-date.utils.js";
 export * from "./date/date.utils.js";

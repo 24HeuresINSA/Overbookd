@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatLocalDate } from "@overbookd/time";
+import { OverDate, formatLocalDate } from "@overbookd/time";
 
 const date = defineModel<Date>({ required: true });
 
@@ -32,7 +32,7 @@ defineProps({
 const dateStringified = ref<string>("");
 const stringifyDate = (date?: Date | string): string => {
   if (!date) return "";
-  return formatLocalDate(new Date(date));
+  return formatLocalDate(date);
 };
 
 watch(
@@ -43,6 +43,7 @@ watch(
 
 const emit = defineEmits(["update:model-value"]);
 const updateDate = (date: string) => {
-  emit("update:model-value", new Date(date));
+  const fixedDate = OverDate.fromLocal(new Date(`${date}T00:00`)).date;
+  emit("update:model-value", fixedDate);
 };
 </script>
