@@ -39,20 +39,22 @@
       </div>
 
       <div class="calendar-content">
-        <DailyCalendarContent
-          v-if="isDayMode"
-          :events="events"
-          :displayed-day="displayedDay"
-          :clickable-events="clickableEvents"
-          @event-click="propagateEventClick"
-        />
-        <WeeklyCalendarContent
-          v-else
-          :events="events"
-          :displayed-day="displayedDay"
-          :clickable-events="clickableEvents"
-          @event-click="propagateEventClick"
-        />
+        <slot name="content">
+          <DailyCalendarContent
+            v-if="isDayMode"
+            :events="events"
+            :displayed-day="displayedDay"
+            :clickable-events="clickableEvents"
+            @event-click="propagateEventClick"
+          />
+          <WeeklyCalendarContent
+            v-else
+            :events="events"
+            :displayed-day="displayedDay"
+            :clickable-events="clickableEvents"
+            @event-click="propagateEventClick"
+          />
+        </slot>
       </div>
     </div>
   </div>
@@ -120,8 +122,9 @@ if (publicHolidayStore.all.length === 0) {
 }
 
 const emit = defineEmits(["event-click"]);
-const propagateEventClick = (event: CalendarEvent) =>
+const propagateEventClick = (event: CalendarEvent) => {
   emit("event-click", event);
+};
 </script>
 
 <style lang="scss" scoped>
