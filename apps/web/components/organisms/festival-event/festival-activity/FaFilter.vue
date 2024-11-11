@@ -35,10 +35,19 @@
       <v-btn
         v-if="canViewSecurityDashboard"
         prepend-icon="mdi-security"
-        color="primary"
+        color="tertiary"
         text="Récapitulatif Sécurité"
-        class="desktop-only security"
+        class="desktop-only page-button"
         @click="openSecurityDashboard"
+      />
+
+      <v-btn
+        v-if="canViewAnimationsToPublish"
+        prepend-icon="mdi-web-sync"
+        color="secondary"
+        text="Animations à publier"
+        class="desktop-only page-button"
+        @click="openAnimationsToPublish"
       />
     </template>
   </FestivalEventFilter>
@@ -60,8 +69,11 @@ import type { ActivityFilters } from "~/utils/festival-event/festival-activity/f
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
-import { SECURITY_DASHBOARD_URL } from "@overbookd/web-page";
-import { VIEW_SECURITY_DASHBOARD } from "@overbookd/permission";
+import { FA_TO_PUBLISH_URL, SECURITY_DASHBOARD_URL } from "@overbookd/web-page";
+import {
+  READ_ANIMATION_TO_PUBLISH,
+  VIEW_SECURITY_DASHBOARD,
+} from "@overbookd/permission";
 
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -98,6 +110,13 @@ const canViewSecurityDashboard = computed<boolean>(() => {
 const openSecurityDashboard = () => {
   navigateTo(SECURITY_DASHBOARD_URL);
 };
+
+const canViewAnimationsToPublish = computed<boolean>(() => {
+  return userStore.can(READ_ANIMATION_TO_PUBLISH);
+});
+const openAnimationsToPublish = () => {
+  navigateTo(FA_TO_PUBLISH_URL);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -114,7 +133,7 @@ const openSecurityDashboard = () => {
     padding: 8px;
   }
 }
-.security {
+.page-button {
   margin-top: 10px;
   width: 100%;
 }
