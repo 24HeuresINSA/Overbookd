@@ -3,7 +3,6 @@
     <v-data-table
       :headers="headers"
       :items="volunteers"
-      items-per-page="20"
       :loading="loading"
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"

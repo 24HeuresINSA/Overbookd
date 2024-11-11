@@ -4,7 +4,6 @@
       :headers="headers"
       :items="volunteers"
       :loading="loading"
-      :items-per-page="20"
       loading-text="Chargement des bénévoles disponibles..."
       no-data-text="Aucun bénévole disponible pour t'aider 😭"
       :mobile="isMobile"

@@ -5,7 +5,6 @@
       <v-data-table
         :headers="tableHeaders"
         :items="filteredPotentialParticipants"
-        :items-per-page="20"
         :loading="loading"
         loading-text="Chargement des bénévoles..."
         no-data-text="Aucun bénévole"

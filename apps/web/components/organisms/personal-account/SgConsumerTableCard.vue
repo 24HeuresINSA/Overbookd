@@ -6,7 +6,6 @@
         :items="filteredConsumers"
         class="consumer-table"
         density="comfortable"
-        items-per-page="20"
         :loading="loading"
         loading-text="Chargement des bénévoles..."
         no-data-text="Aucun bénévole"

@@ -3,7 +3,6 @@
     <v-data-table
       :headers="headers"
       :items="filteredAdherents"
-      :items-per-page="20"
       :loading="displayOutToDateCustomers ? outToDateLoading : validLoading"
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"

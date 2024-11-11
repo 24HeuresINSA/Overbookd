@@ -39,7 +39,6 @@
         :headers="tableHeaders"
         :items="filteredSignages"
         :loading="loading"
-        items-per-page="20"
         loading-text="Chargement des signalisations..."
         no-data-text="Aucune signalisation trouvée"
         :mobile="isMobile"

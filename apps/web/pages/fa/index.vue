@@ -6,7 +6,6 @@
       <v-data-table
         :headers="tableHeaders"
         :items="filteredActivities"
-        :items-per-page="20"
         class="activity__table"
         :loading="loading"
         loading-text="Chargement des fiches activités..."

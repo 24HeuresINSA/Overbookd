@@ -4,7 +4,6 @@
       <v-data-table
         :headers="headers"
         :items="borrows"
-        :items-per-page="20"
         :loading="loading"
         loading-text="Chargement des fiches emprunts..."
         no-data-text="Aucune fiche emprunt"

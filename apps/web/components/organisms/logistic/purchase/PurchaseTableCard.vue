@@ -4,7 +4,6 @@
       <v-data-table
         :headers="headers"
         :items="purchases"
-        :items-per-page="20"
         :loading="loading"
         loading-text="Chargement des fiches achat..."
         no-data-text="Aucune fiche achat"
