@@ -1,5 +1,21 @@
 <template>
-  <OverCalendar :events="calendarEvents" @event-click="click" />
+  <OverCalendar @event-click="click">
+    <template #manager>
+      <AvailabilititesCalendarManager
+        v-model="displayedDay"
+        :disable-previous="disablePrevious"
+        :disable-next="disableNext"
+        @previous="propagatePrevious"
+        @next="propagateNext
+      />
+    </template>
+    <template #content>
+      <AvailabilitiesMultiDayCalendarContent
+        :events="calendarEvents"
+        :displayed-day="displayedDays"
+      />
+    </template>
+  </OverCalendar>
 </template>
 
 <script lang="ts" setup>
@@ -13,6 +29,19 @@ import {
 import { isPartyShift } from "~/utils/shift";
 
 const charismaPeriodStore = useCharismaPeriodStore();
+
+defineProps({
+  disablePrevious: {
+    type: Boolean,
+    default: false,
+  },
+  disableNext: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const displayedDays = defineModel<Date[]>({ required: true });
 
 const globalPeriod = Period.init({
   start: CalendarEventPeriods.prePreManif.period.start,
@@ -47,4 +76,8 @@ const calendarEvents: CalendarEvent[] = globalPeriod
 const click = (event: CalendarEvent) => {
   console.log("click", event);
 };
+
+const emit = defineEmits(["previous", "next"]);
+const propagatePrevious = () => emit("previous");
+const propagateNext = () => emit("next");
 </script>
