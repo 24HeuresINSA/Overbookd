@@ -6,12 +6,14 @@
     }"
     class="calendar-with-manager"
   >
-    <CalendarManager
-      v-model="displayedDay"
-      :day-mode="isDayMode"
-      @previous="moveToPreviousWeekOrDay"
-      @next="moveToNextWeekOrDay"
-    />
+    <slot name="manager">
+      <CalendarManager
+        v-model="displayedDay"
+        :day-mode="isDayMode"
+        @previous="moveToPreviousWeekOrDay"
+        @next="moveToNextWeekOrDay"
+      />
+    </slot>
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
@@ -33,7 +35,7 @@
         <div
           v-for="hour in HOURS_IN_DAY"
           :key="hour"
-          class="calendar-content-rows__hour"
+          class="calendar-content-rows__hour-separator"
           :class="getShiftDelimiterClass(hour)"
         />
       </div>
@@ -217,7 +219,7 @@ $calendar-content-height: $hour-height * 24;
   grid-column: 2;
   border-bottom-right-radius: $calendar-radius;
 
-  &__hour {
+  &__hour-separator {
     height: $hour-height;
     border-top: 1px solid rgba(var(--v-theme-on-surface), 0.2);
     &:first-child {
