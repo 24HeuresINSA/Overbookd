@@ -25,7 +25,13 @@
           :disabled="hasAvailabilityError"
           @click="saveAvailabilities"
         />
-        <AvailabilitiesPickCalendar />
+        <AvailabilitiesPickCalendar
+          v-model="displayedDays"
+          :disable-previous="shouldDisablePrevious"
+          :disable-next="shouldDisableNext"
+          @previous="moveToPreviousStep"
+          @next="moveToNextStep"
+        />
         <v-btn
           text="Valider"
           color="success"
@@ -56,6 +62,7 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 const userStore = useUserStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 
+const displayedDays = ref<Date[]>([new Date()]);
 const step = ref<number>(1);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
@@ -66,14 +73,8 @@ const hasAvailabilityError = computed<boolean>(() => {
   return availabilitiyStore.availabilities.errors.length > 0;
 });
 
-const shouldDisableNextOn = (periodCount: number) => {
-  const isLastPeriod = calendarSteps.value.length === periodCount;
-  return isLastPeriod;
-};
-const shouldDisablePreviousOn = (periodCount: number) => {
-  const isFirstPeriod = periodCount === 1;
-  return isFirstPeriod;
-};
+const shouldDisableNext = computed<boolean>(() => false);
+const shouldDisablePrevious = computed<boolean>(() => false);
 
 const incrementStep = () => step.value++;
 const decrementStep = () => step.value--;
