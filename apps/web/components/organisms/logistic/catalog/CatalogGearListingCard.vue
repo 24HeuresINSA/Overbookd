@@ -1,12 +1,22 @@
 <template>
-  <v-card class="table-container">
+  <v-card>
     <v-card-text>
-      <GearFilter
-        v-model:name="filters.name"
-        v-model:category="filters.category"
-        v-model:team="filters.team"
-        @update:options="searchGears"
-      />
+      <div class="filters">
+        <GearFilter
+          v-model:name="filters.name"
+          v-model:category="filters.category"
+          v-model:team="filters.team"
+          @update:options="searchGears"
+        />
+        <v-btn
+          v-if="isCatalogWriter"
+          text="Exporter"
+          prepend-icon="mdi-export"
+          color="secondary"
+          class="desktop-only"
+          @click="exportCatalogCSV"
+        />
+      </div>
       <v-data-table
         :headers="headers"
         :items="gears"
@@ -86,6 +96,11 @@ import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
+import { download } from "~/utils/file/download.utils";
+import {
+  sanitizeFieldForCSV,
+  booleanToReadableString,
+} from "~/utils/file/csv.utils";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
@@ -144,17 +159,42 @@ const openDeleteGearDialog = (gear: CatalogGear) => {
 const closeDeleteGearDialog = () => {
   isDeleteGearDialogOpen.value = false;
 };
-
 const deleteGear = async () => {
   if (!selectedGear.value) return;
   await catalogGearStore.deleteGear(selectedGear.value);
   closeDeleteGearDialog();
 };
+
+const exportCatalogCSV = async () => {
+  if (!isCatalogWriter.value) return;
+
+  const csvHeader = "Référence;Catégorie;Nom;Consommable;Appoint";
+  const csvContent = gears.value.map((gear) => {
+    const category = gear.category
+      ? `${gear.category.name} (${gear.category.path})`
+      : "";
+    return [
+      gear.code ?? "",
+      category,
+      gear.name,
+      booleanToReadableString(gear.isConsumable),
+      booleanToReadableString(gear.isPonctualUsage),
+    ]
+      .map(sanitizeFieldForCSV)
+      .join(";");
+  });
+
+  const csv = [csvHeader, ...csvContent].join("\n");
+  download("catalogue.csv", csv);
+};
 </script>
 
 <style lang="scss" scoped>
-.table-container {
-  flex: 1;
+.filters {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 
 .category-details {
