@@ -12,31 +12,20 @@
 
     <v-stepper-window
       v-for="({ period }, index) in calendarSteps"
-      v-show="step === index + 1"
       :key="`${period.start}-${period.end}`"
     >
       <v-stepper-window-item
         :id="`calendar-part-${index + 1}`"
         :value="index + 1"
       >
-        <v-btn
-          text="Valider"
-          color="success"
-          :disabled="hasAvailabilityError"
-          @click="saveAvailabilities"
-        />
         <AvailabilitiesPickCalendar
           v-model="displayedDays"
           :disable-previous="shouldDisablePrevious"
           :disable-next="shouldDisableNext"
+          :cant-validate="hasAvailabilityError"
           @previous="moveToPreviousStep"
           @next="moveToNextStep"
-        />
-        <v-btn
-          text="Valider"
-          color="success"
-          :disabled="hasAvailabilityError"
-          @click="saveAvailabilities"
+          @validate="saveAvailabilities"
         />
       </v-stepper-window-item>
     </v-stepper-window>
@@ -76,8 +65,8 @@ const hasAvailabilityError = computed<boolean>(() => {
 const shouldDisableNext = computed<boolean>(() => false);
 const shouldDisablePrevious = computed<boolean>(() => false);
 
-const incrementStep = () => step.value++;
-const decrementStep = () => step.value--;
+const moveToPreviousStep = () => step.value--;
+const moveToNextStep = () => step.value++;
 
 const saveAvailabilities = async () => {
   await availabilitiyStore.updateVolunteerAvailabilities(

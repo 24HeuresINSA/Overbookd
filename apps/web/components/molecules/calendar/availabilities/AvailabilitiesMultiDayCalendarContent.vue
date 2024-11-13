@@ -7,7 +7,7 @@
     >
       <AvailabilititesDailyCalendarContent
         :events="events"
-        :displayed-day="day.date"
+        :displayed-day="day"
         @event-click="propagateEventClick"
       />
     </div>

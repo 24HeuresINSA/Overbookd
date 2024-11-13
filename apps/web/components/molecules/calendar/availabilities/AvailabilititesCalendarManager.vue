@@ -1,5 +1,11 @@
 <template>
   <div class="calendar-manager">
+    <v-btn
+      text="Valider les disponibilités"
+      color="success"
+      :disabled="cantValidate"
+      @click="propagateValidation"
+    />
     <div class="arrow-buttons desktop-only">
       <v-btn
         icon="mdi-chevron-left"
@@ -26,6 +32,10 @@
 
 <script lang="ts" setup>
 const props = defineProps({
+  displayedDay: {
+    type: Date,
+    required: true,
+  },
   disablePrevious: {
     type: Boolean,
     default: false,
@@ -34,24 +44,29 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  cantValidate: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const displayedDay = defineModel<Date>({ required: true });
-
 const periodIndicator = computed<string>(() => {
-  const month = displayedDay.value.toLocaleDateString("fr-FR", {
+  const month = props.displayedDay.toLocaleDateString("fr-FR", {
     month: "long",
   });
-  const year = displayedDay.value.getFullYear();
+  const year = props.displayedDay.getFullYear();
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
 
-const emit = defineEmits(["previous", "next"]);
+const emit = defineEmits(["previous", "next", "validate"]);
 const propagatePrevious = () => {
   if (!props.disablePrevious) emit("previous");
 };
 const propagateNext = () => {
   if (!props.disableNext) emit("next");
+};
+const propagateValidation = () => {
+  if (!props.cantValidate) emit("validate");
 };
 </script>
 
