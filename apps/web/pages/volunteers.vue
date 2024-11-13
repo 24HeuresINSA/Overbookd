@@ -53,6 +53,7 @@ import {
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { download } from "~/utils/file/download.utils";
+import { sanitizeFieldForCSV } from "~/utils/file/csv.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
@@ -120,14 +121,7 @@ const exportCSV = async () => {
   const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
   const csvHeader =
     "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
-
-  const sanitizeField = (field?: string | null): string => {
-    if (!field) return "";
-
-    const includesSemicolon = field.includes(";");
-    return includesSemicolon ? `"${field.replaceAll('"', '""')}"` : field;
-  };
-
+    
   const csvContent = filteredVolunteers.value.map((volunteer) => {
     const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
     return [
@@ -142,7 +136,7 @@ const exportCSV = async () => {
       volunteer.comment?.replace(lineReturnRegex, " "),
       volunteer.note?.replace(lineReturnRegex, " "),
     ]
-      .map(sanitizeField)
+      .map(sanitizeFieldForCSV)
       .join(";");
   });
 

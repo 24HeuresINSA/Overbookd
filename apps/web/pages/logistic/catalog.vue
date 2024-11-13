@@ -2,7 +2,7 @@
   <DesktopPageTitle />
   <div class="catalog-container">
     <CatalogGearListingCard calss="gear-table" />
-    <CategoriesTreeView class="category-tree" />
+    <CategoriesTreeView class=" category-tree desktop-only" />
   </div>
 </template>
 
@@ -14,5 +14,8 @@ useHead({ title: "Catalogue Matos" });
 .catalog-container {
   display: flex;
   gap: $card-gap;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 </style>
