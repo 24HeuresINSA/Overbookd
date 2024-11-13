@@ -1,5 +1,5 @@
 <template>
-  <v-card class="table-container">
+  <v-card>
     <v-card-text>
       <div class="filters">
         <GearFilter
@@ -168,11 +168,14 @@ const deleteGear = async () => {
 const exportCatalogCSV = async () => {
   if (!isCatalogWriter.value) return;
 
-  const csvHeader = "Ref;Catégorie;Nom;Consommable;Appoint";
+  const csvHeader = "Référence;Catégorie;Nom;Consommable;Appoint";
   const csvContent = gears.value.map((gear) => {
+    const category = gear.category
+      ? `${gear.category.name} (${gear.category.path})`
+      : "";
     return [
       gear.code ?? "",
-      gear.category?.name ?? "",
+      category,
       gear.name,
       booleanToReadableString(gear.isConsumable),
       booleanToReadableString(gear.isPonctualUsage),
@@ -187,11 +190,8 @@ const exportCatalogCSV = async () => {
 </script>
 
 <style lang="scss" scoped>
-.table-container {
-  flex: 1;
-}
-
 .filters {
+  width: 100%;
   display: flex;
   gap: 15px;
   align-items: center;

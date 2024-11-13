@@ -61,6 +61,9 @@ watch(searchOptions, () => emit("update:options", searchOptions.value), {
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     gap: 5px;
+    .v-input {
+      width: 100%;
+    }
   }
 }
 </style>
