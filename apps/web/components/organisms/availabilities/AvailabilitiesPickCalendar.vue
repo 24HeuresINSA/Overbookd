@@ -1,18 +1,20 @@
 <template>
-  <OverCalendar @event-click="click">
+  <OverCalendar v-if="displayedDays.length > 0" @event-click="click">
     <template #manager>
       <AvailabilititesCalendarManager
-        v-model="displayedDay"
+        :displayed-day="displayedDays[0]"
         :disable-previous="disablePrevious"
         :disable-next="disableNext"
+        :cant-validate="cantValidate"
         @previous="propagatePrevious"
-        @next="propagateNext
+        @next="propagateNext"
+        @validate="propagateValidation"
       />
     </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
         :events="calendarEvents"
-        :displayed-day="displayedDays"
+        :displayed-days="displayedDays"
       />
     </template>
   </OverCalendar>
@@ -36,6 +38,10 @@ defineProps({
     default: false,
   },
   disableNext: {
+    type: Boolean,
+    default: false,
+  },
+  cantValidate: {
     type: Boolean,
     default: false,
   },
@@ -77,7 +83,8 @@ const click = (event: CalendarEvent) => {
   console.log("click", event);
 };
 
-const emit = defineEmits(["previous", "next"]);
+const emit = defineEmits(["previous", "next", "validate"]);
 const propagatePrevious = () => emit("previous");
 const propagateNext = () => emit("next");
+const propagateValidation = () => emit("validate");
 </script>
