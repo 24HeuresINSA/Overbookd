@@ -18,6 +18,7 @@ const commonFieldDefaultSettings = {
   density: "comfortable",
 };
 const commonFieldBorderRadiusStyle = { borderRadius: "12px" };
+const CARD_RADIUS = "25px";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -46,7 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
       VCard: {
         style: {
-          borderRadius: "25px",
+          borderRadius: CARD_RADIUS,
           margin: "5px",
           padding: "5px",
         },
@@ -66,7 +67,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         style: commonFieldBorderRadiusStyle,
         VStepperHeader: { style: commonFieldBorderRadiusStyle },
       },
-      VAlert: { style: commonFieldBorderRadiusStyle },
+      VAlert: {
+        style: {
+          borderRadius: CARD_RADIUS,
+          margin: "5px",
+          padding: "15px",
+        },
+      },
       VField: { style: commonFieldBorderRadiusStyle },
       VBtn: { style: commonFieldBorderRadiusStyle },
       VBtnToggle: { style: commonFieldBorderRadiusStyle },
