@@ -33,5 +33,10 @@ export function convertToCalendarBreak({
   start,
   end,
 }: IProvidePeriod): CalendarEvent {
-  return CalendarEventBuilder.build({ start, end, name: PAUSE, color: "black" });
+  return CalendarEventBuilder.build({
+    start,
+    end,
+    name: PAUSE,
+    color: "black",
+  });
 }
