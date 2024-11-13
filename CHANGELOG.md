@@ -1,3 +1,14 @@
+## [3.12.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.1...v3.12.2) (2024-11-13)
+
+### Bug Fixes
+
+* **FA:** :bug: fix contractor form validation when phone number si not valid [#2209](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2209) ([ffc3bc3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ffc3bc33557ff1649eeb6c699180a243d6190224))
+* **web:** Default datatable items per page = 25 [#2255](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2255) ([90e2960](https://gitlab.com/24-heures-insa/overbookd-mono/commit/90e2960ebb254d4ce68f1a7318a0c6388bfe9ecd))
+
+### Refactor
+
+* **web:** Delete the Animation to publish page to make a button in the FA page instead [#2252](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2252) ([a7dbdab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a7dbdab71fa01c790c1c67174df9823f1b33177c))
+
 ## [3.12.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.0...v3.12.1) (2024-11-11)
 
 ### Bug Fixes
