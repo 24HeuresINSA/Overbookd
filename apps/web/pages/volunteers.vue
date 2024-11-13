@@ -121,7 +121,7 @@ const exportCSV = async () => {
   const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
   const csvHeader =
     "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
-    
+
   const csvContent = filteredVolunteers.value.map((volunteer) => {
     const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
     return [

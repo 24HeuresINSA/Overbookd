@@ -14,7 +14,8 @@
           prepend-icon="mdi-export"
           color="secondary"
           class="desktop-only"
-          @click="exportCatalogCSV" />
+          @click="exportCatalogCSV"
+        />
       </div>
       <v-data-table
         :headers="headers"
@@ -96,7 +97,10 @@ import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { download } from "~/utils/file/download.utils";
-import { sanitizeFieldForCSV, booleanToReadableString } from "~/utils/file/csv.utils";
+import {
+  sanitizeFieldForCSV,
+  booleanToReadableString,
+} from "~/utils/file/csv.utils";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
@@ -163,7 +167,7 @@ const deleteGear = async () => {
 
 const exportCatalogCSV = async () => {
   if (!isCatalogWriter.value) return;
-  
+
   const csvHeader = "Ref;Catégorie;Nom;Consommable;Appoint";
   const csvContent = gears.value.map((gear) => {
     return [

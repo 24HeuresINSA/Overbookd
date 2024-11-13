@@ -2,7 +2,7 @@
   <DesktopPageTitle />
   <div class="catalog-container">
     <CatalogGearListingCard calss="gear-table" />
-    <CategoriesTreeView class=" category-tree desktop-only" />
+    <CategoriesTreeView class="category-tree desktop-only" />
   </div>
 </template>
 
