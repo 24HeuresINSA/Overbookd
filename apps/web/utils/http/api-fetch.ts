@@ -61,7 +61,7 @@ function createHeaders(
     ? { "Content-Type": contentType }
     : {};
 
-  const { accessToken } = useAuthStore();
+  const accessToken = useCookie(ACCESS_TOKEN).value;
   const authorization: EmptyOr<{ Authorization: string }> = accessToken
     ? { Authorization: `Bearer ${accessToken}` }
     : {};

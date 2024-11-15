@@ -66,10 +66,9 @@ export const useUserStore = defineStore("user", {
       (permission?: Permission): boolean => {
         if (!permission) return true;
 
-        const { accessToken } = useAuthStore();
-
-        if (!accessToken) return false;
-        const decodedToken: Token = jwtDecode(accessToken);
+        const accessToken = useCookie(ACCESS_TOKEN);
+        if (!accessToken.value) return false;
+        const decodedToken: Token = jwtDecode(accessToken.value);
 
         const isAdmin = decodedToken.teams.includes("admin");
         const hasPermission = decodedToken.permissions.includes(permission);

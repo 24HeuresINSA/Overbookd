@@ -3,21 +3,17 @@ import { ONE_WEEK_IN_SECONDS } from "@overbookd/time";
 import { AuthRepository } from "~/repositories/auth.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
-const ACCESS_TOKEN = "accessToken";
-const REFRESH_TOKEN = "refreshToken";
+export const ACCESS_TOKEN = "accessToken";
+export const REFRESH_TOKEN = "refreshToken";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     authenticated: false,
   }),
   getters: {
-    accessToken(): string | null {
+    accessToken(): string {
       const accessToken = useCookie(ACCESS_TOKEN);
-      return accessToken.value ?? null;
-    },
-    refreshToken(): string | null {
-      const refreshToken = useCookie(REFRESH_TOKEN);
-      return refreshToken.value ?? null;
+      return accessToken.value ?? "";
     },
   },
   actions: {
