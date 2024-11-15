@@ -3,14 +3,21 @@ import { ONE_WEEK_IN_SECONDS } from "@overbookd/time";
 import { AuthRepository } from "~/repositories/auth.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
+const ACCESS_TOKEN = "accessToken";
+const REFRESH_TOKEN = "refreshToken";
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     authenticated: false,
   }),
   getters: {
-    accessToken(): string {
-      const accessToken = useCookie("accessToken");
-      return accessToken.value ?? "";
+    accessToken(): string | null {
+      const accessToken = useCookie(ACCESS_TOKEN);
+      return accessToken.value ?? null;
+    },
+    refreshToken(): string | null {
+      const refreshToken = useCookie(REFRESH_TOKEN);
+      return refreshToken.value ?? null;
     },
   },
   actions: {
@@ -21,8 +28,8 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
-      const accessToken = useCookie("accessToken");
-      const refreshToken = useCookie("refreshToken");
+      const accessToken = useCookie(ACCESS_TOKEN);
+      const refreshToken = useCookie(REFRESH_TOKEN);
       accessToken.value = null;
       refreshToken.value = null;
 
@@ -30,7 +37,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async refreshTokens() {
-      const refreshToken = useCookie("refreshToken");
+      const refreshToken = useCookie(REFRESH_TOKEN);
       if (!refreshToken.value) return;
       const res = await AuthRepository.refresh(refreshToken.value);
 
@@ -39,10 +46,10 @@ export const useAuthStore = defineStore("auth", {
     },
 
     authenticate(newAccessToken: string, newRefreshToken: string) {
-      const accessToken = useCookie("accessToken", {
+      const accessToken = useCookie(ACCESS_TOKEN, {
         maxAge: ONE_WEEK_IN_SECONDS,
       });
-      const refreshToken = useCookie("refreshToken", {
+      const refreshToken = useCookie(REFRESH_TOKEN, {
         maxAge: ONE_WEEK_IN_SECONDS,
       });
       accessToken.value = newAccessToken;

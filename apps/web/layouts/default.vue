@@ -45,7 +45,7 @@ const config = useRuntimeConfig();
 const liveNotificationEndpoint = computed<string>(() => {
   const path = `${config.public.baseURL}/notifications/live`;
   const liveEndpoint = new URL(path);
-  liveEndpoint.searchParams.append("token", auth.accessToken);
+  liveEndpoint.searchParams.append("token", auth.accessToken ?? "");
   return liveEndpoint.href;
 });
 

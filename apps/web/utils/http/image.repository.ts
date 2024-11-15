@@ -3,7 +3,7 @@ export class ImageRepository {
     const config = useRuntimeConfig();
     const fullUrl = `${config.public.baseURL}/${url}`;
 
-    const accessToken = useCookie("accessToken").value;
+    const { accessToken } = useAuthStore();
     const requestOptions: RequestInit = {
       method: "GET",
       headers: { Authorization: `Bearer ${accessToken}` },
