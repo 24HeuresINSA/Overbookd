@@ -27,8 +27,8 @@
 
 <script lang="ts" setup>
 import { PERMISSION_GRANTED } from "@overbookd/access-manager";
-import { addEventListener } from "@overbookd/domain-events";
 import { useTheme } from "vuetify";
+import { useLiveNotification } from "~/composable/useLiveNotification";
 import Header from "~/layouts/header/Header.vue";
 import DesktopSideNav from "~/layouts/navigation/DesktopSideNav.vue";
 import MobileBottomNav from "~/layouts/navigation/MobileBottomNav.vue";
@@ -40,28 +40,16 @@ import {
 import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const theme = useTheme();
-const auth = useAuthStore();
-const config = useRuntimeConfig();
-const liveNotificationEndpoint = computed<string>(() => {
-  const path = `${config.public.baseURL}/notifications/live`;
-  const liveEndpoint = new URL(path);
-  liveEndpoint.searchParams.append("token", auth.accessToken ?? "");
-  return liveEndpoint.href;
-});
-
-const notificationSource = ref<EventSource | undefined>(undefined);
+const { mine } = useLiveNotification();
+const { refreshTokens } = useAuthStore();
 
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
-  const source = new EventSource(liveNotificationEndpoint.value);
-  notificationSource.value = source;
-  addEventListener(source, PERMISSION_GRANTED, (notification) =>
-    console.log(notification),
-  );
+  mine.listen(PERMISSION_GRANTED, () => refreshTokens());
 });
 
 onUnmounted(() => {
-  notificationSource.value?.close();
+  mine.stopListening();
 });
 
 const userStore = useUserStore();
