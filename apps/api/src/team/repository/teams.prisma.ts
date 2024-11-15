@@ -1,6 +1,5 @@
-import { Teams } from "@overbookd/access-manager";
+import type { Teams, Team } from "@overbookd/access-manager";
 import { isPermission } from "@overbookd/permission";
-import { Team } from "../../../../../domains/access-manager/src/grant-permission/grant-permission";
 import { PrismaService } from "../../prisma.service";
 
 const SELECT_TEAM = {
