@@ -54,7 +54,7 @@ export class NotificationService implements OnApplicationBootstrap {
     const { permissions, teams } = this.jwt.verify<JwtPayload>(token);
 
     return merge(
-      ...this.myPermissionBasedNotifictations(permissions),
+      ...this.myPermissionBasedNotifications(permissions),
       this.myAccessManagmentNotifications(teams),
     );
   }
@@ -65,7 +65,7 @@ export class NotificationService implements OnApplicationBootstrap {
     );
   }
 
-  private myPermissionBasedNotifictations(
+  private myPermissionBasedNotifications(
     permissions: Permission[],
   ): Observable<DomainEvent>[] {
     const permissionBasedNotifications: PermissionBasedNotification[] = [
