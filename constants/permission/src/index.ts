@@ -47,7 +47,7 @@ export const MANAGE_CHARISMA_EVENTS = "manage-charisma-events";
 export const SET_FAVORITE_PAGES = "set-favorite-pages";
 export const VIEW_SECURITY_DASHBOARD = "view-security-dashboard";
 
-const permissions = [
+export const permissions = [
   HAVE_PERSONAL_ACCOUNT,
   AFFECT_TEAM,
   BE_AFFECTED,

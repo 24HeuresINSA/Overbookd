@@ -1,16 +1,21 @@
 import {
   ForbiddenException,
-  Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { GrantPermission } from "@overbookd/access-manager";
+import {
+  MANAGE_ADMINS,
+  Permission,
+  VALIDATE_FA,
+  VALIDATE_FT,
+} from "@overbookd/permission";
+import { SlugifyService } from "@overbookd/slugify";
+import { Team } from "@overbookd/team";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
-import { SlugifyService } from "@overbookd/slugify";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
-import { Team } from "@overbookd/team";
 import { SELECT_TEAMS_CODE } from "../common/query/user.query";
 
 export type UpdateTeamForm = {
@@ -19,13 +24,13 @@ export type UpdateTeamForm = {
   icon?: string;
 };
 
-@Injectable()
 export class TeamService {
   private readonly logger = new Logger(TeamService.name);
 
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
+    private readonly grantPermission: GrantPermission,
   ) {}
 
   async findAll(): Promise<Team[]> {
@@ -101,6 +106,14 @@ export class TeamService {
     } catch (_error) {
       this.logger.warn(`Try to remove ${team} unexisting team`);
     }
+  }
+
+  grant(permission: Permission) {
+    return {
+      to: (code: string) => {
+        return this.grantPermission.apply({ to: code, permission });
+      },
+    };
   }
 
   static buildIsMemberOfCondition(teamCodes: string[]) {
