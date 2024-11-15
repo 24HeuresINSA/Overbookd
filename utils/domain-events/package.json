@@ -46,6 +46,7 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "dependencies": {
+    "@overbookd/access-manager": "workspace:*",
     "@overbookd/event": "workspace:*",
     "@overbookd/festival-event": "workspace:*",
     "@overbookd/personal-account": "workspace:*",

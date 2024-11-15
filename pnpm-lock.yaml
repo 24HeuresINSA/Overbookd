@@ -626,6 +626,9 @@ importers:
 
   utils/domain-events:
     dependencies:
+      '@overbookd/access-manager':
+        specifier: workspace:*
+        version: link:../../domains/access-manager
       '@overbookd/event':
         specifier: workspace:*
         version: link:../../libraries/event
