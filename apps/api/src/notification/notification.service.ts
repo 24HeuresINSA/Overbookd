@@ -1,13 +1,14 @@
 import { Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { Observable, merge } from "rxjs";
+import { Observable, filter, merge } from "rxjs";
 import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
 import { STAFF_REGISTERED, DomainEvent } from "@overbookd/domain-events";
+import { PERMISSION_GRANTED } from "@overbookd/access-manager";
 
-type AvailableNotification = {
+type PermissionBasedNotification = {
   source: Observable<DomainEvent>;
   permission: Permission;
 };
@@ -50,26 +51,38 @@ export class NotificationService implements OnApplicationBootstrap {
   }
 
   inLive(token: string): Observable<DomainEvent> {
-    const { permissions } = this.jwt.verify<JwtPayload>(token);
+    const { permissions, teams } = this.jwt.verify<JwtPayload>(token);
 
-    const myNotifications = this.filterMyNotifications(permissions);
-    return merge(...myNotifications);
+    return merge(
+      ...this.myPermissionBasedNotifictations(permissions),
+      this.myAccessManagmentNotifications(teams),
+    );
   }
 
-  private filterMyNotifications(
+  private myAccessManagmentNotifications(teams: string[]) {
+    return this.permissionGranted.pipe(
+      filter(({ data: { to } }) => teams.includes(to)),
+    );
+  }
+
+  private myPermissionBasedNotifictations(
     permissions: Permission[],
   ): Observable<DomainEvent>[] {
-    const availableNotifications: AvailableNotification[] = [
+    const permissionBasedNotifications: PermissionBasedNotification[] = [
       this.staffRegistered,
     ];
 
-    return availableNotifications
+    return permissionBasedNotifications
       .filter(({ permission }) => permissions.includes(permission))
       .map(({ source }) => source);
   }
 
-  private get staffRegistered(): AvailableNotification {
+  private get staffRegistered(): PermissionBasedNotification {
     const staffRegistered = this.eventStore.listen(STAFF_REGISTERED);
     return { source: staffRegistered, permission: ENROLL_HARD };
+  }
+
+  private get permissionGranted() {
+    return this.eventStore.listen(PERMISSION_GRANTED);
   }
 }

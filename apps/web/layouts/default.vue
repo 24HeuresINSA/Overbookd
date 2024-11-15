@@ -26,19 +26,43 @@
 </template>
 
 <script lang="ts" setup>
+import { PERMISSION_GRANTED } from "@overbookd/access-manager";
+import { addEventListener } from "@overbookd/domain-events";
+import { useTheme } from "vuetify";
 import Header from "~/layouts/header/Header.vue";
 import DesktopSideNav from "~/layouts/navigation/DesktopSideNav.vue";
 import MobileBottomNav from "~/layouts/navigation/MobileBottomNav.vue";
-import { useTheme } from "vuetify";
-import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 import {
   isContentFlipped,
   saveContentFlipped,
   saveContentUnflipped,
 } from "~/utils/easter-egg/flip-content";
+import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const theme = useTheme();
-onMounted(() => (theme.global.name.value = pickDefaultTheme()));
+const auth = useAuthStore();
+const config = useRuntimeConfig();
+const liveNotificationEndpoint = computed<string>(() => {
+  const path = `${config.public.baseURL}/notifications/live`;
+  const liveEndpoint = new URL(path);
+  liveEndpoint.searchParams.append("token", auth.accessToken);
+  return liveEndpoint.href;
+});
+
+const notificationSource = ref<EventSource | undefined>(undefined);
+
+onMounted(() => {
+  theme.global.name.value = pickDefaultTheme();
+  const source = new EventSource(liveNotificationEndpoint.value);
+  notificationSource.value = source;
+  addEventListener(source, PERMISSION_GRANTED, (notification) =>
+    console.log(notification),
+  );
+});
+
+onUnmounted(() => {
+  notificationSource.value?.close();
+});
 
 const userStore = useUserStore();
 

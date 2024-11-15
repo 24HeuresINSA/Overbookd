@@ -7,6 +7,12 @@ export const useAuthStore = defineStore("auth", {
   state: () => ({
     authenticated: false,
   }),
+  getters: {
+    accessToken(): string {
+      const accessToken = useCookie("accessToken");
+      return accessToken.value ?? "";
+    },
+  },
   actions: {
     async login(credentials: UserCredentials) {
       const res = await AuthRepository.login(credentials);

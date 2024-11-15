@@ -318,6 +318,9 @@ importers:
       '@nuxtjs/leaflet':
         specifier: 1.2.4
         version: 1.2.4(typescript@5.6.3)
+      '@overbookd/access-manager':
+        specifier: workspace:*
+        version: link:../../domains/access-manager
       '@overbookd/alerts':
         specifier: workspace:*
         version: link:../../utils/alerts
