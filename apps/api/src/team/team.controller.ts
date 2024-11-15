@@ -10,20 +10,20 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
-import { TeamResponseDto } from "./dto/team.response";
-import { TeamService } from "./team.service";
 import {
   MANAGE_PERMISSIONS,
   MANAGE_TEAMS,
   READ_FA,
   READ_FT,
 } from "@overbookd/permission";
-import { UpdateTeamRequestDto } from "./dto/update-team.request";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
+import { TeamResponseDto } from "./dto/team.response";
+import { UpdateTeamRequestDto } from "./dto/update-team.request";
+import { TeamService } from "./team.service";
 
 @ApiTags("teams")
 @Controller("teams")

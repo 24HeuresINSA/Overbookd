@@ -1,5 +1,5 @@
 export { GrantPermission } from "./grant-permission/grant-permission";
 export type {
-  Teams,
   PermissionGranted,
+  Teams,
 } from "./grant-permission/grant-permission";
