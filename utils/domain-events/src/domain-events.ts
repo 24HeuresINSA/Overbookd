@@ -1,5 +1,7 @@
 import { Observable, filter } from "rxjs";
 
+import type { PermissionGranted as PermissionGrantedEvent } from "@overbookd/access-manager";
+
 import type {
   FestivalActivityCreatedEvent,
   FestivalActivityApprovedEvent,
@@ -31,7 +33,8 @@ export type DomainEvent =
   | FestivalTaskReadyToReviewEvent
   | FestivalTaskRejectedEvent
   | FestivalTaskApprovedEvent
-  | SharedMealClosedEvent;
+  | SharedMealClosedEvent
+  | PermissionGrantedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,

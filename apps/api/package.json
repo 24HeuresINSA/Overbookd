@@ -51,6 +51,7 @@
     "@nestjs/platform-express": "10.4.7",
     "@nestjs/swagger": "8.0.5",
     "@nestjs/throttler": "6.2.1",
+    "@overbookd/access-manager": "workspace:*",
     "@overbookd/alerts": "workspace:*",
     "@overbookd/assignment": "workspace:*",
     "@overbookd/configuration": "workspace:*",
