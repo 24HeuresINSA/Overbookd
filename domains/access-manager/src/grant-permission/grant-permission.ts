@@ -1,6 +1,6 @@
 import type { Event } from "@overbookd/event";
 import type { Permission } from "@overbookd/permission";
-import { TeamNotFound } from "../access-manager.error";
+import { AccessManagerError } from "../access-manager.error";
 
 export type Team = {
   code: string;
@@ -18,6 +18,12 @@ export type Teams = {
 };
 
 export const PERMISSION_GRANTED = "permission-granted" as const;
+
+export class TeamNotFound extends AccessManagerError {
+  constructor(code: string) {
+    super(`L'équipe ${code} est introuvable`);
+  }
+}
 
 export type PermissionGranted = Event<typeof PERMISSION_GRANTED, Grant>;
 

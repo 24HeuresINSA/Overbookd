@@ -1,13 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { TeamNotFound } from "../access-manager.error";
 import { InMemoryEvents } from "./events.inmemory";
-import { JoinTeam, Member, Team, TEAM_JOINED } from "./join-team";
+import {
+  JoinTeams,
+  Member,
+  SomeTeamsNotFound,
+  Team,
+  TEAM_JOINED,
+} from "./join-teams";
 import { InMemoryMemberships } from "./memberships.inmemory";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
 
-let joinTeam: JoinTeam;
+let joinTeams: JoinTeams;
 let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
 const initialMembership = (): Map<Team, Member[]> =>
@@ -19,60 +24,69 @@ const initialMembership = (): Map<Team, Member[]> =>
     ["conducteur FEN", []],
   ]);
 
-describe("Join team", () => {
+describe("Join teams", () => {
   beforeEach(() => {
     events = new InMemoryEvents();
     memberships = new InMemoryMemberships(initialMembership());
-    joinTeam = new JoinTeam(memberships, events);
+    joinTeams = new JoinTeams(memberships, events);
   });
   describe.each([
-    { userName: shogosse.name, userId: shogosse.id, team: "confiance" },
-    { userName: shogosse.name, userId: shogosse.id, team: "conducteur" },
-    { userName: noel.name, userId: noel.id, team: "conducteur FEN" },
+    { userName: shogosse.name, userId: shogosse.id, teams: ["confiance"] },
+    { userName: shogosse.name, userId: shogosse.id, teams: ["conducteur"] },
+    {
+      userName: shogosse.name,
+      userId: shogosse.id,
+      teams: ["confiance", "conducteur"],
+    },
+    { userName: noel.name, userId: noel.id, teams: ["conducteur FEN"] },
   ])(
-    "when user $userName is not member of the team $team yet",
-    ({ userId, userName, team }) => {
+    "when user $userName is not member of the teams $team yet",
+    ({ userId, userName, teams }) => {
       const member = { id: userId, name: userName };
-      const joiningTeam = { member, team };
+      const joiningTeam = { member, teams };
       it("should apply without issue", async () => {
-        expect(joinTeam.apply(joiningTeam)).resolves.ok;
+        expect(joinTeams.apply(joiningTeam)).resolves.ok;
       });
       it("should publish a team joined event", async () => {
         const expectedEvent = { type: TEAM_JOINED, data: joiningTeam };
 
-        await joinTeam.apply(joiningTeam);
+        await joinTeams.apply(joiningTeam);
 
         expect(events.all).toHaveLength(1);
         expect(events.all).toContainEqual(expectedEvent);
       });
       it("should become member of the team", async () => {
-        await joinTeam.apply(joiningTeam);
-
-        expect(memberships.membersOf(team)).toContainEqual(member);
+        await joinTeams.apply(joiningTeam);
+        teams.every((team) =>
+          expect(memberships.membersOf(team)).toContainEqual(member),
+        );
       });
     },
   );
   describe("when user is already member of the team", () => {
-    const joiningTeam = { member: shogosse, team: "soft" };
+    const joiningTeam = { member: shogosse, teams: ["soft"] };
     it("should apply without issue", async () => {
-      expect(joinTeam.apply(joiningTeam)).resolves.ok;
+      expect(joinTeams.apply(joiningTeam)).resolves.ok;
     });
     it("should not publish a team joined event", async () => {
-      await joinTeam.apply(joiningTeam);
+      await joinTeams.apply(joiningTeam);
 
       expect(events.all).toHaveLength(0);
     });
     it("should stay member of the team", async () => {
-      await joinTeam.apply(joiningTeam);
+      await joinTeams.apply(joiningTeam);
 
-      expect(memberships.membersOf(joiningTeam.team)).toContainEqual(shogosse);
+      expect(memberships.membersOf("soft")).toContainEqual(shogosse);
     });
   });
   describe("when the team does not exist", () => {
     it("should indicate that the team does not exist", async () => {
-      const joiningTeam = { member: shogosse, team: "unknown" };
-      await expect(joinTeam.apply(joiningTeam)).rejects.toThrowError(
-        new TeamNotFound(joiningTeam.team),
+      const joiningTeams = {
+        member: shogosse,
+        teams: ["unknown", "not existing", "confiance"],
+      };
+      await expect(joinTeams.apply(joiningTeams)).rejects.toThrowError(
+        new SomeTeamsNotFound(joiningTeams.teams),
       );
     });
   });

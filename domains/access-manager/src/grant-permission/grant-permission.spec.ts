@@ -1,12 +1,12 @@
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import { beforeEach, describe, expect, it } from "vitest";
-import { TeamNotFound } from "../access-manager.error";
 import { InMemoryEvents } from "./events.inmemory";
 import {
   Grant,
   GrantPermission,
   PERMISSION_GRANTED,
   Team,
+  TeamNotFound,
 } from "./grant-permission";
 import { InMemoryTeams } from "./teams.inmemory";
 
