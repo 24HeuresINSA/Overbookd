@@ -73,24 +73,6 @@ export class TeamService {
     await this.prisma.team.delete({ where: { code } });
   }
 
-  async addTeamsToUser(
-    userId: number,
-    teams: string[],
-    author: JwtUtil,
-  ): Promise<string[]> {
-    await this.checkUserExistence(userId);
-    if (!this.canManageAdmins(teams, author)) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
-
-    const existingTeams = await this.fetchExistingTeams(teams);
-    await this.prisma.userTeam.createMany({
-      data: existingTeams.map((team) => ({ userId, teamCode: team })),
-    });
-
-    return this.listTeamsFor(userId);
-  }
-
   as(me: JwtUtil) {
     return {
       user: (userId: number) => ({
