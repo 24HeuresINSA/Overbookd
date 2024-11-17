@@ -338,16 +338,13 @@ export class UserController {
     type: String,
     isArray: true,
   })
-  async addTeamsToUser(
+  async joinTeams(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() teams: string[],
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<string[]> {
-    return this.teamService.addTeamsToUser(
-      userId,
-      teams,
-      new JwtUtil(req.user),
-    );
+    const me = new JwtUtil(req.user);
+    return this.teamService.as(me).user(userId).joins(teams);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

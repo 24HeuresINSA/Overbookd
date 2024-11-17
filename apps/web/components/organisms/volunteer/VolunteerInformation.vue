@@ -222,7 +222,6 @@ const addTeams = async () => {
   await userStore.addTeamsToUser(volunteerId.value, teams);
   await updateVolunteerInformations();
   newTeams.value = [];
-  authStore.refreshTokens();
 };
 
 const removeTeam = async (team: string) => {

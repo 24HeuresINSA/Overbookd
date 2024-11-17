@@ -1,4 +1,4 @@
-import type { Teams, GrantPermissionTeam } from "@overbookd/access-manager";
+import type { Teams, Team } from "@overbookd/access-manager";
 import { isPermission } from "@overbookd/permission";
 import { PrismaService } from "../../prisma.service";
 
@@ -10,7 +10,7 @@ const SELECT_TEAM = {
 export class PrismaTeams implements Teams {
   constructor(private prisma: PrismaService) {}
 
-  async find(code: GrantPermissionTeam["code"]): Promise<GrantPermissionTeam | undefined> {
+  async find(code: Team["code"]): Promise<Team | undefined> {
     const team = await this.prisma.team.findUnique({
       where: { code },
       select: SELECT_TEAM,
@@ -20,7 +20,7 @@ export class PrismaTeams implements Teams {
     return { ...team, permissions };
   }
 
-  async save(team: GrantPermissionTeam): Promise<GrantPermissionTeam> {
+  async save(team: Team): Promise<Team> {
     const permissionTeamTuples = team.permissions.map((permission) => ({
       permissionName: permission,
       teamCode: team.code,

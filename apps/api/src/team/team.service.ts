@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { GrantPermission } from "@overbookd/access-manager";
+import { GrantPermission, JoinTeams } from "@overbookd/access-manager";
 import {
   MANAGE_ADMINS,
   Permission,
@@ -17,7 +17,10 @@ import { Team } from "@overbookd/team";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { SELECT_TEAMS_CODE } from "../common/query/user.query";
+import {
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../common/query/user.query";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -33,6 +36,7 @@ export class TeamService {
     private prisma: PrismaService,
     private userService: UserService,
     private readonly grantPermission: GrantPermission,
+    private readonly joinTeams: JoinTeams,
   ) {}
 
   async findAll(): Promise<Team[]> {
@@ -84,6 +88,35 @@ export class TeamService {
       data: existingTeams.map((team) => ({ userId, teamCode: team })),
     });
 
+    return this.listTeamsFor(userId);
+  }
+
+  as(me: JwtUtil) {
+    return {
+      user: (userId: number) => ({
+        joins: async (teams: string[]) => {
+          const member = await this.generateMember(userId);
+          const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
+          await this.joinTeams.apply({ member, teams, teamManager });
+          return this.listTeamsFor(userId);
+        },
+      }),
+    };
+  }
+
+  private async generateMember(userId: number) {
+    const member = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: SELECT_USER_IDENTIFIER,
+    });
+    if (member === null) throw new NotFoundException("Utilisateur inconnu");
+
+    const nickname = member.nickname ? ` (${member.nickname}) ` : " ";
+    const name = `${member.firstname}${nickname}${member.lastname}`;
+    return { id: member.id, name };
+  }
+
+  private async listTeamsFor(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: SELECT_TEAMS_CODE,

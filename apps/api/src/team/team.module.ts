@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GrantPermission } from "@overbookd/access-manager";
+import { GrantPermission, JoinTeams } from "@overbookd/access-manager";
 import { AccessManagerModule } from "../access-manager/access-manager.module";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { MailModule } from "../mail/mail.module";
@@ -26,8 +26,9 @@ import { TeamService } from "./team.service";
         prisma: PrismaService,
         user: UserService,
         grantPermission: GrantPermission,
-      ) => new TeamService(prisma, user, grantPermission),
-      inject: [PrismaService, UserService, GrantPermission],
+        joinTeams: JoinTeams,
+      ) => new TeamService(prisma, user, grantPermission, joinTeams),
+      inject: [PrismaService, UserService, GrantPermission, JoinTeams],
     },
   ],
 })

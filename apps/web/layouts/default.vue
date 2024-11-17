@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PERMISSION_GRANTED } from "@overbookd/access-manager";
+import { PERMISSION_GRANTED, TEAMS_JOINED } from "@overbookd/access-manager";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
 import Header from "~/layouts/header/Header.vue";
@@ -46,6 +46,7 @@ const { refreshTokens } = useAuthStore();
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
   mine.listen(PERMISSION_GRANTED, () => refreshTokens());
+  mine.listen(TEAMS_JOINED, () => refreshTokens());
 });
 
 onUnmounted(() => {
