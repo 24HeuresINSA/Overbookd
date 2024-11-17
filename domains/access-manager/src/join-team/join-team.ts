@@ -18,9 +18,7 @@ export type Events = {
 export type Memberships = {
   exists(team: Team): Promise<boolean>;
 
-  is(member: Member["id"]): {
-    memberOf(team: Team): Promise<boolean>;
-  };
+  is(member: Member["id"]): { memberOf(team: Team): Promise<boolean> };
 
   join(team: Team): { as: (member: Member) => Promise<void> };
 };
