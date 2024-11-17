@@ -6,12 +6,21 @@ export type Member = { id: number; name: string };
 export type Team = string;
 
 export const TEAMS_JOINED = "teams-joined" as const;
+export const ADMIN = "admin" as const;
 
 type JoiningTeams = { member: Member; teams: Team[] };
+type TeamManager = { canManageAdmins: boolean };
+type JoiningTeamsRequest = JoiningTeams & { teamManager: TeamManager };
 
 export class SomeTeamsNotFound extends AccessManagerError {
   constructor(teams: string[]) {
     super(`Certaines des équipes parmis ${teams.join(", ")} sont introuvables`);
+  }
+}
+
+export class AdminAssignmentError extends AccessManagerError {
+  constructor() {
+    super("Tu ne peux pas gérer l'équipe admin");
   }
 }
 
@@ -35,7 +44,10 @@ export class JoinTeams {
     private readonly events: Events,
   ) {}
 
-  async apply({ member, teams }: JoiningTeams): Promise<void> {
+  async apply(request: JoiningTeamsRequest): Promise<void> {
+    const { member, teams, teamManager } = request;
+    this.checkAdminArrival(teams, teamManager);
+
     const allTeamsExist = await this.memberships.all(teams).exist();
     if (!allTeamsExist) throw new SomeTeamsNotFound(teams);
 
@@ -46,5 +58,11 @@ export class JoinTeams {
 
     await this.memberships.join(teams).as(member);
     this.events.publish({ type: TEAMS_JOINED, data: { member, teams } });
+  }
+
+  private checkAdminArrival(teams: Team[], teamManager: TeamManager) {
+    if (!teams.includes(ADMIN)) return;
+    if (teamManager.canManageAdmins) return;
+    throw new AdminAssignmentError();
   }
 }
