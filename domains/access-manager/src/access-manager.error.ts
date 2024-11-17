@@ -1,4 +1,4 @@
-export class AccessManagerError extends Error {}
+class AccessManagerError extends Error {}
 
 export class TeamNotFound extends AccessManagerError {
   constructor(code: string) {
