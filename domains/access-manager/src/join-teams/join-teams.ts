@@ -5,7 +5,7 @@ export type Member = { id: number; name: string };
 
 export type Team = string;
 
-export const TEAM_JOINED = "team-joined" as const;
+export const TEAMS_JOINED = "teams-joined" as const;
 
 type JoiningTeams = { member: Member; teams: Team[] };
 
@@ -15,7 +15,7 @@ export class SomeTeamsNotFound extends AccessManagerError {
   }
 }
 
-export type TeamsJoined = Event<typeof TEAM_JOINED, JoiningTeams>;
+export type TeamsJoined = Event<typeof TEAMS_JOINED, JoiningTeams>;
 
 export type Events = {
   publish(event: TeamsJoined): void;
@@ -45,6 +45,6 @@ export class JoinTeams {
     if (isAlreadyMember) return;
 
     await this.memberships.join(teams).as(member);
-    this.events.publish({ type: TEAM_JOINED, data: { member, teams } });
+    this.events.publish({ type: TEAMS_JOINED, data: { member, teams } });
   }
 }

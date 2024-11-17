@@ -5,7 +5,7 @@ import {
   Member,
   SomeTeamsNotFound,
   Team,
-  TEAM_JOINED,
+  TEAMS_JOINED,
 } from "./join-teams";
 import { InMemoryMemberships } from "./memberships.inmemory";
 
@@ -40,47 +40,47 @@ describe("Join teams", () => {
     },
     { userName: noel.name, userId: noel.id, teams: ["conducteur FEN"] },
   ])(
-    "when user $userName is not member of the teams $team yet",
+    "when user $userName is not member of the teams $teams yet",
     ({ userId, userName, teams }) => {
       const member = { id: userId, name: userName };
-      const joiningTeam = { member, teams };
+      const joiningTeams = { member, teams };
       it("should apply without issue", async () => {
-        expect(joinTeams.apply(joiningTeam)).resolves.ok;
+        expect(joinTeams.apply(joiningTeams)).resolves.ok;
       });
-      it("should publish a team joined event", async () => {
-        const expectedEvent = { type: TEAM_JOINED, data: joiningTeam };
+      it("should publish a teams joined event", async () => {
+        const expectedEvent = { type: TEAMS_JOINED, data: joiningTeams };
 
-        await joinTeams.apply(joiningTeam);
+        await joinTeams.apply(joiningTeams);
 
         expect(events.all).toHaveLength(1);
         expect(events.all).toContainEqual(expectedEvent);
       });
-      it("should become member of the team", async () => {
-        await joinTeams.apply(joiningTeam);
+      it("should become member of the teams", async () => {
+        await joinTeams.apply(joiningTeams);
         teams.every((team) =>
           expect(memberships.membersOf(team)).toContainEqual(member),
         );
       });
     },
   );
-  describe("when user is already member of the team", () => {
-    const joiningTeam = { member: shogosse, teams: ["soft"] };
+  describe("when user is already member of all the teams", () => {
+    const joiningTeams = { member: shogosse, teams: ["soft"] };
     it("should apply without issue", async () => {
-      expect(joinTeams.apply(joiningTeam)).resolves.ok;
+      expect(joinTeams.apply(joiningTeams)).resolves.ok;
     });
-    it("should not publish a team joined event", async () => {
-      await joinTeams.apply(joiningTeam);
+    it("should not publish a teams joined event", async () => {
+      await joinTeams.apply(joiningTeams);
 
       expect(events.all).toHaveLength(0);
     });
-    it("should stay member of the team", async () => {
-      await joinTeams.apply(joiningTeam);
+    it("should stay member of the teams", async () => {
+      await joinTeams.apply(joiningTeams);
 
       expect(memberships.membersOf("soft")).toContainEqual(shogosse);
     });
   });
-  describe("when the team does not exist", () => {
-    it("should indicate that the team does not exist", async () => {
+  describe("when some of the teams do not exist", () => {
+    it("should indicate that some of the teams do not exist", async () => {
       const joiningTeams = {
         member: shogosse,
         teams: ["unknown", "not existing", "confiance"],
