@@ -54,7 +54,7 @@ describe("Join team", () => {
         expect(events.all).toHaveLength(1);
         expect(events.all).toContainEqual(expectedEvent);
       });
-      it("should be member of the team", async () => {
+      it("should become member of the team", async () => {
         await joinTeam.apply(joiningTeam);
 
         expect(users.membersOf(team)).toContainEqual(member);
@@ -70,6 +70,11 @@ describe("Join team", () => {
       await joinTeam.apply(joiningTeam);
 
       expect(events.all).toHaveLength(0);
+    });
+    it("should stay member of the team", async () => {
+      await joinTeam.apply(joiningTeam);
+
+      expect(users.membersOf(joiningTeam.team)).toContainEqual(shogosse);
     });
   });
   describe("when the team does not exist", () => {
