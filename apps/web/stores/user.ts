@@ -66,7 +66,7 @@ export const useUserStore = defineStore("user", {
       (permission?: Permission): boolean => {
         if (!permission) return true;
 
-        const accessToken = useCookie("accessToken");
+        const accessToken = useCookie(ACCESS_TOKEN);
         if (!accessToken.value) return false;
         const decodedToken: Token = jwtDecode(accessToken.value);
 

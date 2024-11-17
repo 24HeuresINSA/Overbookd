@@ -10,8 +10,8 @@ type Token = { exp: number };
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore();
 
-  const accessToken = useCookie("accessToken");
-  const refreshToken = useCookie("refreshToken");
+  const accessToken = useCookie(ACCESS_TOKEN);
+  const refreshToken = useCookie(REFRESH_TOKEN);
 
   if (!accessToken.value || !refreshToken.value) {
     return handleUnauthenticatedRedirect();

@@ -26,19 +26,31 @@
 </template>
 
 <script lang="ts" setup>
+import { PERMISSION_GRANTED } from "@overbookd/access-manager";
+import { useTheme } from "vuetify";
+import { useLiveNotification } from "~/composable/useLiveNotification";
 import Header from "~/layouts/header/Header.vue";
 import DesktopSideNav from "~/layouts/navigation/DesktopSideNav.vue";
 import MobileBottomNav from "~/layouts/navigation/MobileBottomNav.vue";
-import { useTheme } from "vuetify";
-import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 import {
   isContentFlipped,
   saveContentFlipped,
   saveContentUnflipped,
 } from "~/utils/easter-egg/flip-content";
+import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const theme = useTheme();
-onMounted(() => (theme.global.name.value = pickDefaultTheme()));
+const { mine } = useLiveNotification();
+const { refreshTokens } = useAuthStore();
+
+onMounted(() => {
+  theme.global.name.value = pickDefaultTheme();
+  mine.listen(PERMISSION_GRANTED, () => refreshTokens());
+});
+
+onUnmounted(() => {
+  mine.stopListening();
+});
 
 const userStore = useUserStore();
 
