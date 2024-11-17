@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { TeamNotFound } from "../access-manager.error";
-import { Team, Member, JoinTeam, TEAM_JOINED } from "./joint-team";
 import { InMemoryEvents } from "./events.inmemory";
-import { InMemoryUsers } from "./users.inmemory";
+import { JoinTeam, Member, Team, TEAM_JOINED } from "./join-team";
 import { InMemoryTeams } from "./teams.inmemory";
+import { InMemoryUsers } from "./users.inmemory";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Estremud" };

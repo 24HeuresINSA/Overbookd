@@ -1,4 +1,4 @@
-import { Events, TeamJoined } from "./joint-team";
+import { Events, TeamJoined } from "./join-team";
 
 export class InMemoryEvents implements Events {
   constructor(private events: TeamJoined[] = []) { }

@@ -1,4 +1,4 @@
-import { Teams, Team } from "./joint-team";
+import { Teams, Team } from "./join-team";
 
 export class InMemoryTeams implements Teams {
   constructor(private teams: Team[] = []) { }

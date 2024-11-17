@@ -1,5 +1,5 @@
-import type { Permission } from "@overbookd/permission";
 import type { Event } from "@overbookd/event";
+import type { Permission } from "@overbookd/permission";
 import { TeamNotFound } from "../access-manager.error";
 
 export type Team = {

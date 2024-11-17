@@ -1,14 +1,14 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
-import { InMemoryTeams } from "./teams.inmemory";
-import {
-  Team,
-  GrantPermission,
-  Grant,
-  PERMISSION_GRANTED,
-} from "./grant-permission";
-import { InMemoryEvents } from "./events.inmemory";
+import { beforeEach, describe, expect, it } from "vitest";
 import { TeamNotFound } from "../access-manager.error";
+import { InMemoryEvents } from "./events.inmemory";
+import {
+  Grant,
+  GrantPermission,
+  PERMISSION_GRANTED,
+  Team,
+} from "./grant-permission";
+import { InMemoryTeams } from "./teams.inmemory";
 
 const hard: Team = { code: "hard", permissions: [READ_FA] };
 let teams: InMemoryTeams;

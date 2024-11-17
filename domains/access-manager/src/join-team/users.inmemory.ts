@@ -1,4 +1,4 @@
-import { Users, Team, Member } from "./joint-team";
+import { Users, Team, Member } from "./join-team";
 
 export class InMemoryUsers implements Users {
   constructor(private membership: Map<Team, Member[]> = new Map()) { }
