@@ -6,7 +6,7 @@ import { InMemoryTeams } from "./teams.inmemory";
 import { InMemoryUsers } from "./users.inmemory";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
-const noel = { id: 2, name: "Noel Estremud" };
+const noel = { id: 2, name: "Noel Ertsemud" };
 
 let joinTeam: JoinTeam;
 let events: InMemoryEvents;
