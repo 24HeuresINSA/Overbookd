@@ -5,5 +5,12 @@ export {
 export type {
   PermissionGranted,
   Teams,
-  Team,
+  Team as GrantPermissionTeam,
 } from "./grant-permission/grant-permission";
+export { JoinTeams, TEAMS_JOINED } from "./join-teams/join-teams";
+export type {
+  Memberships,
+  TeamsJoined,
+  Member,
+  Team as JoinTeamsTeam,
+} from "./join-teams/join-teams";
