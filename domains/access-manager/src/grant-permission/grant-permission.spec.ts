@@ -5,10 +5,10 @@ import {
   Team,
   GrantPermission,
   Grant,
-  TeamNotFound,
   PERMISSION_GRANTED,
 } from "./grant-permission";
 import { InMemoryEvents } from "./events.inmemory";
+import { TeamNotFound } from "../access-manager.error";
 
 const hard: Team = { code: "hard", permissions: [READ_FA] };
 let teams: InMemoryTeams;
