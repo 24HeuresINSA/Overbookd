@@ -22,7 +22,7 @@ export type Events = {
 };
 
 export type Memberships = {
-  all(teams: Team[]): { exist: Promise<boolean> };
+  all(teams: Team[]): { exist: () => Promise<boolean> };
 
   is(member: Member["id"]): { memberOf(teams: Team[]): Promise<boolean> };
 
@@ -36,7 +36,7 @@ export class JoinTeams {
   ) {}
 
   async apply({ member, teams }: JoiningTeams): Promise<void> {
-    const allTeamsExist = await this.memberships.all(teams).exist;
+    const allTeamsExist = await this.memberships.all(teams).exist();
     if (!allTeamsExist) throw new SomeTeamsNotFound(teams);
 
     const isAlreadyMember = await this.memberships

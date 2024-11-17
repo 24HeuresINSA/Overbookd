@@ -3,9 +3,11 @@ import { Member, Memberships, Team } from "./join-teams";
 export class InMemoryMemberships implements Memberships {
   constructor(private membership: Map<Team, Member[]>) {}
 
-  all(teams: Team[]): { exist: Promise<boolean> } {
+  all(teams: Team[]): { exist: () => Promise<boolean> } {
     return {
-      exist: Promise.resolve(teams.every((team) => this.membership.has(team))),
+      exist: async () => {
+        return teams.every((team) => this.membership.has(team));
+      },
     };
   }
 
