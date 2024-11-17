@@ -2,37 +2,28 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { TeamNotFound } from "../access-manager.error";
 import { InMemoryEvents } from "./events.inmemory";
 import { JoinTeam, Member, Team, TEAM_JOINED } from "./join-team";
-import { InMemoryTeams } from "./teams.inmemory";
-import { InMemoryUsers } from "./users.inmemory";
+import { InMemoryMemberships } from "./memberships.inmemory";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
 
 let joinTeam: JoinTeam;
 let events: InMemoryEvents;
-let users: InMemoryUsers;
-let teams: InMemoryTeams;
-const initMembership = (): Map<Team, Member[]> =>
+let memberships: InMemoryMemberships;
+const initialMembership = (): Map<Team, Member[]> =>
   new Map([
     ["soft", [shogosse]],
     ["hard", [noel]],
+    ["confiance", []],
     ["conducteur", [noel]],
+    ["conducteur FEN", []],
   ]);
-
-const existingTeams = [
-  "soft",
-  "hard",
-  "confiance",
-  "conducteur",
-  "conducteur FEN",
-];
 
 describe("Join team", () => {
   beforeEach(() => {
     events = new InMemoryEvents();
-    users = new InMemoryUsers(initMembership());
-    teams = new InMemoryTeams(existingTeams);
-    joinTeam = new JoinTeam(users, teams, events);
+    memberships = new InMemoryMemberships(initialMembership());
+    joinTeam = new JoinTeam(memberships, events);
   });
   describe.each([
     { userName: shogosse.name, userId: shogosse.id, team: "confiance" },
@@ -57,7 +48,7 @@ describe("Join team", () => {
       it("should become member of the team", async () => {
         await joinTeam.apply(joiningTeam);
 
-        expect(users.membersOf(team)).toContainEqual(member);
+        expect(memberships.membersOf(team)).toContainEqual(member);
       });
     },
   );
@@ -74,7 +65,7 @@ describe("Join team", () => {
     it("should stay member of the team", async () => {
       await joinTeam.apply(joiningTeam);
 
-      expect(users.membersOf(joiningTeam.team)).toContainEqual(shogosse);
+      expect(memberships.membersOf(joiningTeam.team)).toContainEqual(shogosse);
     });
   });
   describe("when the team does not exist", () => {
