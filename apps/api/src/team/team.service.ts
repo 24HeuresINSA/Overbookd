@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -24,6 +25,7 @@ export type UpdateTeamForm = {
   icon?: string;
 };
 
+@Injectable()
 export class TeamService {
   private readonly logger = new Logger(TeamService.name);
 

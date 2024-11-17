@@ -15,9 +15,15 @@ import { PrismaVolunteers } from "./planning/repository/volunteers.prisma";
 import { PlanningModule } from "./planning/planning.module";
 import { PlanningController } from "./planning/planning.controller";
 import { TeamService } from "../team/team.service";
+import { AccessManagerModule } from "../access-manager/access-manager.module";
 
 @Module({
-  imports: [PlanningModule, RegistrationModule, PrismaModule],
+  imports: [
+    PlanningModule,
+    RegistrationModule,
+    PrismaModule,
+    AccessManagerModule,
+  ],
   controllers: [UserController, PreferenceController, PlanningController],
   providers: [
     {
