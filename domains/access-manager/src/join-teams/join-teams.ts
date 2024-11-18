@@ -51,10 +51,8 @@ export class JoinTeams {
     const allTeamsExist = await this.memberships.all(teams).exist();
     if (!allTeamsExist) throw new SomeTeamsNotFound(teams);
 
-    const isAlreadyMember = await this.memberships
-      .is(member.id)
-      .memberOf(teams);
-    if (isAlreadyMember) return;
+    const isMember = await this.memberships.is(member.id).memberOf(teams);
+    if (isMember) return;
 
     await this.memberships.join(teams).as(member);
     this.events.publish({ type: TEAMS_JOINED, data: { member, teams } });
