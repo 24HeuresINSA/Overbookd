@@ -6,7 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
 import { STAFF_REGISTERED, DomainEvent } from "@overbookd/domain-events";
-import { PERMISSION_GRANTED } from "@overbookd/access-manager";
+import { PERMISSION_GRANTED, TEAMS_JOINED } from "@overbookd/access-manager";
 
 type PermissionBasedNotification = {
   source: Observable<DomainEvent>;
@@ -21,6 +21,8 @@ export type NotificationRepository = {
 export type Notifications = {
   hasNotifications: boolean;
 };
+
+type Identifiers = { teams: string[]; id: number };
 
 export class NotificationService implements OnApplicationBootstrap {
   constructor(
@@ -51,18 +53,24 @@ export class NotificationService implements OnApplicationBootstrap {
   }
 
   inLive(token: string): Observable<DomainEvent> {
-    const { permissions, teams } = this.jwt.verify<JwtPayload>(token);
+    const { permissions, teams, id } = this.jwt.verify<JwtPayload>(token);
 
     return merge(
       ...this.myPermissionBasedNotifications(permissions),
-      this.myAccessManagmentNotifications(teams),
+      ...this.myAccessManagmentNotifications({ teams, id }),
     );
   }
 
-  private myAccessManagmentNotifications(teams: string[]) {
-    return this.permissionGranted.pipe(
-      filter(({ data: { to } }) => teams.includes(to)),
-    );
+  private myAccessManagmentNotifications(
+    identifiers: Identifiers,
+  ): Observable<DomainEvent>[] {
+    const { teams, id } = identifiers;
+    return [
+      this.permissionGranted.pipe(
+        filter(({ data: { to } }) => teams.includes(to)),
+      ),
+      this.teamsJoined.pipe(filter(({ data: { member } }) => member.id === id)),
+    ];
   }
 
   private myPermissionBasedNotifications(
@@ -84,5 +92,9 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private get permissionGranted() {
     return this.eventStore.listen(PERMISSION_GRANTED);
+  }
+
+  private get teamsJoined() {
+    return this.eventStore.listen(TEAMS_JOINED);
   }
 }

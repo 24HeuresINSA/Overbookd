@@ -1,10 +1,11 @@
 import {
   ForbiddenException,
+  Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { GrantPermission } from "@overbookd/access-manager";
+import { GrantPermission, JoinTeams } from "@overbookd/access-manager";
 import {
   MANAGE_ADMINS,
   Permission,
@@ -16,7 +17,10 @@ import { Team } from "@overbookd/team";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { SELECT_TEAMS_CODE } from "../common/query/user.query";
+import {
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../common/query/user.query";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -24,6 +28,7 @@ export type UpdateTeamForm = {
   icon?: string;
 };
 
+@Injectable()
 export class TeamService {
   private readonly logger = new Logger(TeamService.name);
 
@@ -31,6 +36,7 @@ export class TeamService {
     private prisma: PrismaService,
     private userService: UserService,
     private readonly grantPermission: GrantPermission,
+    private readonly joinTeams: JoinTeams,
   ) {}
 
   async findAll(): Promise<Team[]> {
@@ -67,21 +73,32 @@ export class TeamService {
     await this.prisma.team.delete({ where: { code } });
   }
 
-  async addTeamsToUser(
-    userId: number,
-    teams: string[],
-    author: JwtUtil,
-  ): Promise<string[]> {
-    await this.checkUserExistence(userId);
-    if (!this.canManageAdmins(teams, author)) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
+  as(me: JwtUtil) {
+    return {
+      user: (userId: number) => ({
+        joins: async (teams: string[]) => {
+          const member = await this.generateMember(userId);
+          const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
+          await this.joinTeams.apply({ member, teams, teamManager });
+          return this.listTeamsFor(userId);
+        },
+      }),
+    };
+  }
 
-    const existingTeams = await this.fetchExistingTeams(teams);
-    await this.prisma.userTeam.createMany({
-      data: existingTeams.map((team) => ({ userId, teamCode: team })),
+  private async generateMember(userId: number) {
+    const member = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: SELECT_USER_IDENTIFIER,
     });
+    if (member === null) throw new NotFoundException("Utilisateur inconnu");
 
+    const nickname = member.nickname ? ` (${member.nickname}) ` : " ";
+    const name = `${member.firstname}${nickname}${member.lastname}`;
+    return { id: member.id, name };
+  }
+
+  private async listTeamsFor(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: SELECT_TEAMS_CODE,

@@ -7,3 +7,6 @@ export type {
   Teams,
   Team,
 } from "./grant-permission/grant-permission";
+
+export { JoinTeams, TEAMS_JOINED } from "./join-teams/join-teams";
+export type { Memberships, TeamsJoined, Member } from "./join-teams/join-teams";

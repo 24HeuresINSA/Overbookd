@@ -1,14 +1,16 @@
 import { Observable, filter } from "rxjs";
 
-import type { PermissionGranted as PermissionGrantedEvent } from "@overbookd/access-manager";
+import type {
+  PermissionGranted as PermissionGrantedEvent,
+  TeamsJoined as TeamsJoinedEvent,
+} from "@overbookd/access-manager";
 
 import type {
-  FestivalActivityCreatedEvent,
   FestivalActivityApprovedEvent,
+  FestivalActivityCreatedEvent,
   FestivalActivityReadyToReviewEvent,
   FestivalActivityRejectedEvent,
 } from "./festival-activity.js";
-import type { SharedMealClosedEvent } from "./shared-meal.js";
 import {
   FestivalTaskApprovedEvent,
   FestivalTaskCreatedEvent,
@@ -20,6 +22,7 @@ import {
   VolunteerEnrolledEvent,
   VolunteerRegisteredEvent,
 } from "./registration.js";
+import type { SharedMealClosedEvent } from "./shared-meal.js";
 
 export type DomainEvent =
   | StaffRegisteredEvent
@@ -34,7 +37,8 @@ export type DomainEvent =
   | FestivalTaskRejectedEvent
   | FestivalTaskApprovedEvent
   | SharedMealClosedEvent
-  | PermissionGrantedEvent;
+  | PermissionGrantedEvent
+  | TeamsJoinedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,
