@@ -1,5 +1,6 @@
 import { Event } from "@overbookd/event";
 import { AccessManagerError } from "../access-manager.error";
+import { ADMIN } from "../admin.constant";
 
 export class AdminUnassignmentError extends AccessManagerError {
   constructor() {
@@ -25,8 +26,6 @@ export type Memberships = {
 
   is(member: Member["id"]): { memberOf(team: Team): Promise<boolean> };
 };
-
-export const ADMIN = "admin" as const;
 
 export class LeaveTeam {
   constructor(

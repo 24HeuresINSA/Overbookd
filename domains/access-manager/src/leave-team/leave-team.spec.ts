@@ -1,14 +1,13 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { Event } from "@overbookd/event";
-import {
-  Team,
-  Member,
-  LeaveTeam,
-  ADMIN,
-  TEAM_LEFT,
-  AdminUnassignmentError,
-} from "./leave-team";
+import { beforeEach, describe, expect, it } from "vitest";
+import { ADMIN } from "../admin.constant";
 import { InMemoryEvents } from "./events.inmemory";
+import {
+  AdminUnassignmentError,
+  LeaveTeam,
+  Member,
+  Team,
+  TEAM_LEFT,
+} from "./leave-team";
 import { InMemoryMemberships } from "./memberships.inmemory";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };

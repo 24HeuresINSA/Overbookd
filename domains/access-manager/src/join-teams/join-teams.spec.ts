@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { ADMIN } from "../admin.constant";
 import { InMemoryEvents } from "./events.inmemory";
 import {
-  ADMIN,
   AdminAssignmentError,
   JoinTeams,
   Member,

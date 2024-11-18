@@ -1,12 +1,12 @@
 import { Event } from "@overbookd/event";
 import { AccessManagerError } from "../access-manager.error";
+import { ADMIN } from "../admin.constant";
 
 export type Member = { id: number; name: string };
 
 export type Team = string;
 
 export const TEAMS_JOINED = "teams-joined" as const;
-export const ADMIN = "admin" as const;
 
 type JoiningTeams = { member: Member; teams: Team[] };
 type TeamManager = { canManageAdmins: boolean };
