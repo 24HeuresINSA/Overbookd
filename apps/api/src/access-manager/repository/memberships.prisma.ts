@@ -7,11 +7,10 @@ export class PrismaMemberships implements Memberships {
   all(teams: string[]): { exist: () => Promise<boolean> } {
     return {
       exist: async () => {
-        const existingTeams = await this.prisma.team.findMany({
+        const existingTeams = await this.prisma.team.count({
           where: { code: { in: teams } },
-          select: { code: true },
         });
-        return existingTeams.length === teams.length;
+        return existingTeams === teams.length;
       },
     };
   }
@@ -19,11 +18,10 @@ export class PrismaMemberships implements Memberships {
   is(member: Member["id"]): { memberOf(teams: string[]): Promise<boolean> } {
     return {
       memberOf: async (teams: string[]) => {
-        const memberOf = await this.prisma.userTeam.findMany({
+        const memberOfTeams = await this.prisma.userTeam.count({
           where: { userId: member, teamCode: { in: teams } },
-          select: { teamCode: true },
         });
-        return memberOf.length === teams.length;
+        return memberOfTeams === teams.length;
       },
     };
   }
