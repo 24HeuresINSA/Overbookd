@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "3.12.3-rc.5",
+  "version": "3.12.3-rc.6",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -67,7 +67,7 @@
     "ts-prune": "0.10.3",
     "tsup": "8.3.5",
     "typescript": "5.6.3",
-    "typescript-eslint": "8.14.0",
+    "typescript-eslint": "8.15.0",
     "vitest": "2.1.5"
   }
 }
