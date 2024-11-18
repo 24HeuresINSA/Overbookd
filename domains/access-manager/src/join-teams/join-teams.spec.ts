@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { ADMIN } from "../admin.constant";
 import { InMemoryEvents } from "./events.inmemory";
 import {
-  ADMIN,
   AdminAssignmentError,
   JoinTeams,
   Member,
@@ -10,7 +10,6 @@ import {
   TEAMS_JOINED,
 } from "./join-teams";
 import { InMemoryMemberships } from "./memberships.inmemory";
-import { a } from "vitest/dist/chunks/suite.B2jumIFP";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
@@ -103,11 +102,11 @@ describe("Join teams", () => {
       );
     });
   });
-  describe("when user is joining admin teams", () => {
+  describe("when user is joining admin team", () => {
     const joiningTeams = { member: shogosse, teams: [ADMIN] };
     describe("when team manager can not manage admins", () => {
       const request = { ...joiningTeams, teamManager: standardUser };
-      it("should inidicate that user cannot manage admins", async () => {
+      it("should inidicate that team manager cannot manage admins", async () => {
         await expect(joinTeams.apply(request)).rejects.toThrowError(
           AdminAssignmentError,
         );
