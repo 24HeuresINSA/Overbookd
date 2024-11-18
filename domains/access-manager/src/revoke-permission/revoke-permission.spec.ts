@@ -1,22 +1,20 @@
-import { Event } from "@overbookd/event";
 import {
   AFFECT_TEAM,
   Permission,
   READ_FA,
   READ_GEAR_CATALOG,
-  READ_INVENTORY,
   WRITE_FA,
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
 } from "@overbookd/permission";
 import { beforeEach, describe, expect, it } from "vitest";
+import { InMemoryEvents } from "./events.inmemory";
 import {
-  Team,
-  RevokePermission,
   PERMISSION_REVOKED,
+  RevokePermission,
+  Team,
 } from "./revoke-permission";
 import { InMemoryTeams } from "./teams.inmemory";
-import { InMemoryEvents } from "./events.inmemory";
 
 let teams: InMemoryTeams;
 let events: InMemoryEvents;
