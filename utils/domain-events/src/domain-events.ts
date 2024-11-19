@@ -2,6 +2,8 @@ import { Observable, filter } from "rxjs";
 
 import type {
   PermissionGranted as PermissionGrantedEvent,
+  PermissionRevoked as PermissionRevokedEvent,
+  TeamLeft as TeamLeftEvent,
   TeamsJoined as TeamsJoinedEvent,
 } from "@overbookd/access-manager";
 
@@ -38,7 +40,9 @@ export type DomainEvent =
   | FestivalTaskApprovedEvent
   | SharedMealClosedEvent
   | PermissionGrantedEvent
-  | TeamsJoinedEvent;
+  | PermissionRevokedEvent
+  | TeamsJoinedEvent
+  | TeamLeftEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,

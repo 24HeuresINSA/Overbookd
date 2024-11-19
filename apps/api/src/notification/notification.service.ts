@@ -1,12 +1,17 @@
 import { Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { DomainEventService } from "../domain-event/domain-event.service";
-import { Observable, filter, merge } from "rxjs";
-import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import {
+  PERMISSION_GRANTED,
+  PERMISSION_REVOKED,
+  TEAM_LEFT,
+  TEAMS_JOINED,
+} from "@overbookd/access-manager";
+import { DomainEvent, STAFF_REGISTERED } from "@overbookd/domain-events";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
-import { STAFF_REGISTERED, DomainEvent } from "@overbookd/domain-events";
-import { PERMISSION_GRANTED, TEAMS_JOINED } from "@overbookd/access-manager";
+import { RegisterNewcomer } from "@overbookd/registration";
+import { filter, merge, Observable } from "rxjs";
+import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { DomainEventService } from "../domain-event/domain-event.service";
 
 type PermissionBasedNotification = {
   source: Observable<DomainEvent>;
@@ -69,7 +74,11 @@ export class NotificationService implements OnApplicationBootstrap {
       this.permissionGranted.pipe(
         filter(({ data: { to } }) => teams.includes(to)),
       ),
+      this.permissionRevoked.pipe(
+        filter(({ data: { from } }) => teams.includes(from)),
+      ),
       this.teamsJoined.pipe(filter(({ data: { member } }) => member.id === id)),
+      this.teamLeft.pipe(filter(({ data: { member } }) => member.id === id)),
     ];
   }
 
@@ -94,7 +103,15 @@ export class NotificationService implements OnApplicationBootstrap {
     return this.eventStore.listen(PERMISSION_GRANTED);
   }
 
+  private get permissionRevoked() {
+    return this.eventStore.listen(PERMISSION_REVOKED);
+  }
+
   private get teamsJoined() {
     return this.eventStore.listen(TEAMS_JOINED);
+  }
+
+  private get teamLeft() {
+    return this.eventStore.listen(TEAM_LEFT);
   }
 }

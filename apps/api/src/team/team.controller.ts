@@ -15,6 +15,7 @@ import {
   MANAGE_TEAMS,
   READ_FA,
   READ_FT,
+  type Permission as AvailablePermission,
 } from "@overbookd/permission";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -138,5 +139,21 @@ export class TeamController {
     @Body() { permission }: GrantPermissionRequestDto,
   ): Promise<void> {
     await this.teamService.grant(permission).to(team);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERMISSIONS)
+  @Delete(":code/permissions/:permission")
+  @ApiBearerAuth()
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Revoke a permission to the team",
+  })
+  async RevokePermissionToTeam(
+    @Param("code") team: string,
+    @Param("permission") permission: AvailablePermission,
+  ): Promise<void> {
+    await this.teamService.revoke(permission).from(team);
   }
 }
