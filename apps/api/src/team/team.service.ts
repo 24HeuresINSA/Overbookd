@@ -5,7 +5,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { GrantPermission, JoinTeams } from "@overbookd/access-manager";
+import {
+  GrantPermission,
+  JoinTeams,
+  LeaveTeam,
+  RevokePermission,
+} from "@overbookd/access-manager";
 import {
   MANAGE_ADMINS,
   Permission,
@@ -36,7 +41,9 @@ export class TeamService {
     private prisma: PrismaService,
     private userService: UserService,
     private readonly grantPermission: GrantPermission,
+    private readonly revokePermission: RevokePermission,
     private readonly joinTeams: JoinTeams,
+    private readonly leaveTeam: LeaveTeam,
   ) {}
 
   async findAll(): Promise<Team[]> {
@@ -81,6 +88,11 @@ export class TeamService {
           const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
           await this.joinTeams.apply({ member, teams, teamManager });
           return this.listTeamsFor(userId);
+        },
+        leave: async (team: string) => {
+          const member = await this.generateMember(userId);
+          const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
+          return this.leaveTeam.apply({ member, team, teamManager });
         },
       }),
     };
@@ -129,6 +141,14 @@ export class TeamService {
     return {
       to: (code: string) => {
         return this.grantPermission.apply({ to: code, permission });
+      },
+    };
+  }
+
+  revoke(permission: Permission) {
+    return {
+      from: (code: string) => {
+        return this.revokePermission.apply({ from: code, permission });
       },
     };
   }

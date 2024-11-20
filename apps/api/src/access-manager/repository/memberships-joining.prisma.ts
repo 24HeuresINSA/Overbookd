@@ -1,10 +1,10 @@
-import { Member, Memberships } from "@overbookd/access-manager";
+import { MemberJoining, MembershipsJoining } from "@overbookd/access-manager";
 import { PrismaService } from "../../prisma.service";
 
-export class PrismaMemberships implements Memberships {
+export class PrismaMembershipsJoining implements MembershipsJoining {
   constructor(private prisma: PrismaService) {}
 
-  all(teams: string[]): { exist: () => Promise<boolean> } {
+  all(teams: string[]) {
     return {
       exist: async () => {
         const existingTeams = await this.prisma.team.count({
@@ -15,7 +15,7 @@ export class PrismaMemberships implements Memberships {
     };
   }
 
-  is(member: Member["id"]): { memberOf(teams: string[]): Promise<boolean> } {
+  is(member: MemberJoining["id"]) {
     return {
       memberOf: async (teams: string[]) => {
         const memberOfTeams = await this.prisma.userTeam.count({
@@ -26,9 +26,9 @@ export class PrismaMemberships implements Memberships {
     };
   }
 
-  join(teams: string[]): { as: (member: Member) => Promise<void> } {
+  join(teams: string[]) {
     return {
-      as: async (member: Member) => {
+      as: async (member: MemberJoining) => {
         await this.prisma.userTeam.createMany({
           data: teams.map((teamCode) => ({ userId: member.id, teamCode })),
           skipDuplicates: true,

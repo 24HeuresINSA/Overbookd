@@ -159,7 +159,6 @@ import { formatPhoneLink } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
-const authStore = useAuthStore();
 
 const props = defineProps({
   volunteer: {
@@ -227,7 +226,6 @@ const addTeams = async () => {
 const removeTeam = async (team: string) => {
   await userStore.removeTeamFromUser(volunteerId.value, team);
   await updateVolunteerInformations();
-  authStore.refreshTokens();
 };
 
 const sendFriendRequest = () => {

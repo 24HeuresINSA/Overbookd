@@ -356,15 +356,12 @@ export class UserController {
     status: 204,
     description: "Remove a team from a user",
   })
-  async removeTeamFromUser(
+  async leaveTeam(
     @Param("userId", ParseIntPipe) userId: number,
-    @Param("teamCode") teamCode: string,
+    @Param("teamCode") team: string,
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<void> {
-    return this.teamService.removeTeamFromUser(
-      userId,
-      teamCode,
-      new JwtUtil(req.user),
-    );
+    const me = new JwtUtil(req.user);
+    return this.teamService.as(me).user(userId).leave(team);
   }
 }
