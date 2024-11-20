@@ -122,7 +122,7 @@ export class PermissionController {
   @Post(":permission/teams")
   @ApiBearerAuth()
   @ApiBody({
-    description: "Permission to grant to the team",
+    description: "team to grant the permission to",
     type: GrantPermissionRequestDto,
   })
   @HttpCode(204)
@@ -144,7 +144,7 @@ export class PermissionController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: "Revoke a permission to the team",
+    description: "Revoke permission to the team",
   })
   async RevokePermissionToTeam(
     @Param("permission") permission: AvailablePermission,
