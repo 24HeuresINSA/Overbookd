@@ -1,3 +1,23 @@
+## [3.13.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.2...v3.13.0) (2024-11-20)
+
+### Features
+
+* **access-manager:** leave team. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([347c4a8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/347c4a86952da09ac2249b3a6c2d6394a8eee9a8))
+* **access-manager:** refresh token when receive permission revoked or team left. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([1fac423](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1fac42351b082c60ae7f82a59c64bad6979397ad))
+* **access-manager:** refresh tokens when teams joined. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([345586c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/345586cbe11e0d00cb377ea5c13ffa9cb1f700f0))
+* **access-manager:** revoke permission. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([1fb9970](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1fb997020be394a31d47d24c54edc126db76049a))
+* **access-manager:** user join team. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([dc9841b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dc9841b0656782930ce02964bc3db64d3ed6008c))
+* **logistic:** add catalog export to CSV [#2264](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2264) ([498538d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/498538d60a420c4cadd447f47234b632f10af3e2))
+
+### Bug Fixes
+
+* **access-manager:** use revoke and grant dedicated endpoint. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([bab1172](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bab11728fabd5f2c6814e9782a1aa506b69adc7d))
+
+### Pre-Features
+
+* **access-manager:** expose grant permission endpoint. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([8b73724](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b7372478ca92bfd371fe7ed82bff2322093d9e9))
+* **access-manager:** receive live notification on access granted. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([a54737f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a54737fcc8020d566067e5a4809a5536b685a71d))
+
 ## [3.12.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.1...v3.12.2) (2024-11-13)
 
 ### Bug Fixes
