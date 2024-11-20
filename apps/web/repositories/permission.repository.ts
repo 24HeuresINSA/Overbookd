@@ -23,10 +23,15 @@ export class PermissionRepository {
     return HttpClient.delete(`${this.basePath}/${permissionId}`);
   }
 
-  static linkTeamsToPermission(permissionId: number, teamCodes: string[]) {
-    return HttpClient.post<Permission>(
-      `${this.basePath}/link/${permissionId}`,
-      { teamCodes },
+  static revoke(permission: string, code: string) {
+    return HttpClient.delete<void>(
+      `${this.basePath}/${permission}/teams/${code}`,
     );
+  }
+
+  static grant(permission: string, team: string) {
+    return HttpClient.post<void>(`${this.basePath}/${permission}/teams`, {
+      team,
+    });
   }
 }

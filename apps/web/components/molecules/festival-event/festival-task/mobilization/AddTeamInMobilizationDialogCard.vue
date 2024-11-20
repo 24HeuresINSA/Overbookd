@@ -8,7 +8,7 @@
         label="Nombre de bénévoles"
         :rules="[isNumber, min(1)]"
       />
-      <SearchTeam v-model="team" :list="mobilizableTeams" hide-details />
+      <SearchTeam v-model:team="team" :list="mobilizableTeams" hide-details />
     </template>
     <template #confirm-btn-content>
       <v-icon left> mdi-plus-circle-outline </v-icon>Ajouter

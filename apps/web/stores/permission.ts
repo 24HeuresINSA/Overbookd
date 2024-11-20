@@ -41,14 +41,39 @@ export const usePermissionStore = defineStore("permission", {
       );
     },
 
-    async linkTeamsToPermission(permissionId: number, teamCodes: string[]) {
-      const res = await PermissionRepository.linkTeamsToPermission(
-        permissionId,
-        teamCodes,
-      );
+    async revoke(permission: string, teamCode: string) {
+      const res = await PermissionRepository.revoke(permission, teamCode);
       if (isHttpError(res)) return;
-      sendSuccessNotification("Équipes mises à jour");
-      this._updatePermission(res);
+      sendSuccessNotification("Permission retirée");
+      this._updateTeamInPermission(permission, teamCode, filterOut);
+    },
+
+    async grant(permission: string, teamCode: string) {
+      const res = await PermissionRepository.grant(permission, teamCode);
+      if (isHttpError(res)) return;
+      sendSuccessNotification("Permission accordée");
+      this._updateTeamInPermission(permission, teamCode, addWithoutDuplication);
+    },
+
+    _updateTeamInPermission(
+      permissionName: string,
+      teamCode: string,
+      update: (teams: string[], team: string) => string[],
+    ) {
+      const index = this.permissions.findIndex(
+        ({ name }) => name === permissionName,
+      );
+      const permission = this.permissions.at(index);
+      const permissionNotFound = permission === undefined || index === -1;
+      if (permissionNotFound) return;
+
+      const teams = update(permission.teams, teamCode);
+      const updatedPermission = { ...permission, teams };
+      this.permissions = updateItemToList(
+        this.permissions,
+        index,
+        updatedPermission,
+      );
     },
 
     _updatePermission(permission: Permission) {
@@ -58,3 +83,11 @@ export const usePermissionStore = defineStore("permission", {
     },
   },
 });
+
+function filterOut(teams: string[], team: string): string[] {
+  return teams.filter((code) => code !== team);
+}
+
+function addWithoutDuplication(teams: string[], team: string): string[] {
+  return [...new Set([...teams, team])];
+}

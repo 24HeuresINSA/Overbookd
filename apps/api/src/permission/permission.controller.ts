@@ -20,14 +20,18 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import {
+  Permission as AvailablePermission,
+  MANAGE_PERMISSIONS,
+} from "@overbookd/permission";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionLinkRequestDto } from "./dto/permission-link.request.dto";
+import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
-import { MANAGE_PERMISSIONS } from "@overbookd/permission";
+import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
 
 @ApiTags("permissions")
 @Controller("permissions")
@@ -135,5 +139,41 @@ export class PermissionController {
     @Body() payload: PermissionLinkRequestDto,
   ): Promise<PermissionResponseDto> {
     return this.permissionService.linkPermissionToTeam(id, payload.teamCodes);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERMISSIONS)
+  @Post(":permission/teams")
+  @ApiBearerAuth()
+  @ApiBody({
+    description: "Permission to grant to the team",
+    type: GrantPermissionRequestDto,
+  })
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Grant a permission to the team",
+  })
+  async grantPermissionToTeam(
+    @Param("permission") permission: AvailablePermission,
+    @Body() { team }: GrantPermissionRequestDto,
+  ): Promise<void> {
+    await this.permissionService.grant(permission).to(team);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERMISSIONS)
+  @Delete(":permission/teams/:code")
+  @ApiBearerAuth()
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Revoke a permission to the team",
+  })
+  async RevokePermissionToTeam(
+    @Param("permission") permission: AvailablePermission,
+    @Param("code") team: string,
+  ): Promise<void> {
+    await this.permissionService.revoke(permission).from(team);
   }
 }

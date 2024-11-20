@@ -3,6 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { GrantPermission, RevokePermission } from "@overbookd/access-manager";
+import { Permission } from "@overbookd/permission";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma.service";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
@@ -28,7 +30,11 @@ const SELECT_PERMISSION_TEAM = {
 
 @Injectable()
 export class PermissionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly grantPermission: GrantPermission,
+    private readonly revokePermission: RevokePermission,
+  ) {}
 
   async permission(params: {
     skip?: number;
@@ -104,6 +110,22 @@ export class PermissionService {
     await this.forcePermissionTeams(permission.name, teamCodes);
 
     return { ...permission, teams: teamCodes };
+  }
+
+  grant(permission: Permission) {
+    return {
+      to: (code: string) => {
+        return this.grantPermission.apply({ to: code, permission });
+      },
+    };
+  }
+
+  revoke(permission: Permission) {
+    return {
+      from: (code: string) => {
+        return this.revokePermission.apply({ from: code, permission });
+      },
+    };
   }
 
   private async permissionExists(

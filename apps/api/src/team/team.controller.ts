@@ -10,18 +10,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import {
-  MANAGE_PERMISSIONS,
-  MANAGE_TEAMS,
-  READ_FA,
-  READ_FT,
-  type Permission as AvailablePermission,
-} from "@overbookd/permission";
+import { MANAGE_TEAMS, READ_FA, READ_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
-import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { UpdateTeamRequestDto } from "./dto/update-team.request";
 import { TeamService } from "./team.service";
@@ -119,41 +112,5 @@ export class TeamController {
   })
   async deleteTeam(@Param("code") code: string): Promise<void> {
     return this.teamService.deleteTeam(code);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERMISSIONS)
-  @Post(":code/permissions")
-  @ApiBearerAuth()
-  @ApiBody({
-    description: "Permission to grant to the team",
-    type: GrantPermissionRequestDto,
-  })
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Grant a permission to the team",
-  })
-  async grantPermissionToTeam(
-    @Param("code") team: string,
-    @Body() { permission }: GrantPermissionRequestDto,
-  ): Promise<void> {
-    await this.teamService.grant(permission).to(team);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERMISSIONS)
-  @Delete(":code/permissions/:permission")
-  @ApiBearerAuth()
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Revoke a permission to the team",
-  })
-  async RevokePermissionToTeam(
-    @Param("code") team: string,
-    @Param("permission") permission: AvailablePermission,
-  ): Promise<void> {
-    await this.teamService.revoke(permission).from(team);
   }
 }

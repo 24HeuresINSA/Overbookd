@@ -10,11 +10,11 @@
         @update:model-value="updateSearchParam"
       />
       <SearchTeam
-        v-model="team"
+        v-model:team="team"
         label="Équipe"
         clearable
         hide-details
-        @update:model-value="updateTeamParam"
+        @update:team="updateTeamParam"
       />
       <SearchUser
         v-model="adherent"

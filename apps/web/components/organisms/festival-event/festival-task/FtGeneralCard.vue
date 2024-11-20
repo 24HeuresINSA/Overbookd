@@ -27,10 +27,10 @@
         @update:model-value="updateAdministrator"
       />
       <SearchTeam
-        :model-value="inChargeTeam"
+        :team="inChargeTeam"
         label="Équipe"
         :disabled="disabled"
-        @update:model-value="updateTeam"
+        @update:team="updateTeam"
       />
     </v-card-text>
   </v-card>

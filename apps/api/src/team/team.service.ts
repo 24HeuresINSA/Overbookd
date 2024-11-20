@@ -5,18 +5,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import {
-  GrantPermission,
-  JoinTeams,
-  LeaveTeam,
-  RevokePermission,
-} from "@overbookd/access-manager";
-import {
-  MANAGE_ADMINS,
-  Permission,
-  VALIDATE_FA,
-  VALIDATE_FT,
-} from "@overbookd/permission";
+import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
+import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
 import { PrismaService } from "../../src/prisma.service";
@@ -40,8 +30,6 @@ export class TeamService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
-    private readonly grantPermission: GrantPermission,
-    private readonly revokePermission: RevokePermission,
     private readonly joinTeams: JoinTeams,
     private readonly leaveTeam: LeaveTeam,
   ) {}
@@ -135,22 +123,6 @@ export class TeamService {
     } catch (_error) {
       this.logger.warn(`Try to remove ${team} unexisting team`);
     }
-  }
-
-  grant(permission: Permission) {
-    return {
-      to: (code: string) => {
-        return this.grantPermission.apply({ to: code, permission });
-      },
-    };
-  }
-
-  revoke(permission: Permission) {
-    return {
-      from: (code: string) => {
-        return this.revokePermission.apply({ from: code, permission });
-      },
-    };
   }
 
   static buildIsMemberOfCondition(teamCodes: string[]) {

@@ -1,10 +1,5 @@
 import { Module } from "@nestjs/common";
-import {
-  GrantPermission,
-  JoinTeams,
-  LeaveTeam,
-  RevokePermission,
-} from "@overbookd/access-manager";
+import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
 import { AccessManagerModule } from "../access-manager/access-manager.module";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { MailModule } from "../mail/mail.module";
@@ -30,26 +25,10 @@ import { TeamService } from "./team.service";
       useFactory: (
         prisma: PrismaService,
         user: UserService,
-        grantPermission: GrantPermission,
-        revokePermission: RevokePermission,
         joinTeams: JoinTeams,
         leaveTeam: LeaveTeam,
-      ) =>
-        new TeamService(
-          prisma,
-          user,
-          grantPermission,
-          revokePermission,
-          joinTeams,
-          leaveTeam,
-        ),
-      inject: [
-        PrismaService,
-        UserService,
-        GrantPermission,
-        JoinTeams,
-        LeaveTeam,
-      ],
+      ) => new TeamService(prisma, user, joinTeams, leaveTeam),
+      inject: [PrismaService, UserService, JoinTeams, LeaveTeam],
     },
   ],
 })
