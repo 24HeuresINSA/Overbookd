@@ -14,7 +14,7 @@
           :rules="[rules.nameMinLength, rules.required]"
           @keydown.enter="confirmCategory"
         />
-        <SearchTeam v-model="owner" label="Choisis l'équipe responsable" />
+        <SearchTeam v-model:team="owner" label="Choisis l'équipe responsable" />
         <SearchCategory v-model="parent" label="Choisis un parent" />
       </form>
     </template>

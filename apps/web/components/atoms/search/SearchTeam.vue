@@ -23,7 +23,7 @@
 import type { Team } from "@overbookd/team";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
-const team = defineModel<Team>({ required: false });
+const team = defineModel<Team>("team", { required: false });
 
 const props = defineProps({
   label: {

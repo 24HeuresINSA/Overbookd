@@ -11,7 +11,7 @@
     />
     <SearchCategory v-model="category" label="Catégorie" hide-details />
     <SearchTeam
-      v-model="team"
+      v-model:team="team"
       label="Equipe responsable"
       hide-details
       clearable

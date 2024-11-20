@@ -20,9 +20,9 @@
         @update:model-value="updateAdherent"
       />
       <SearchTeam
-        v-model="inChargeTeam"
+        v-model:team="inChargeTeam"
         label="Équipe"
-        @update:model-value="updateTeam"
+        @update:team="updateTeam"
       />
 
       <section class="contractors">

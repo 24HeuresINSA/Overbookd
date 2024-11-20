@@ -56,12 +56,12 @@
           hide-details
         />
         <SearchTeam
-          v-model="teamToAdd"
+          v-model:team="teamToAdd"
           :list="mobilizableTeams"
           label="Équipe à ajouter"
           class="team-form__field"
           hide-details
-          @update:model-value="addTeam"
+          @update:team="addTeam"
         />
       </div>
     </template>

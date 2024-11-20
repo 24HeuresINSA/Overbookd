@@ -24,7 +24,7 @@
         with-name
         closable
         show-hidden
-        @close="unlinkTeamFromPermission(item, team)"
+        @close="revokePermission(item, team)"
       />
     </template>
 
@@ -34,7 +34,7 @@
           label="Lier une équipe"
           hide-details
           clearable
-          @update:model-value="linkTeamToPermission(item, $event)"
+          @update:team="grantPermission(item, $event.code)"
         />
         <v-btn
           icon="mdi-trash-can"
@@ -49,7 +49,6 @@
 
 <script lang="ts" setup>
 import type { Permission } from "@overbookd/http";
-import type { Team } from "@overbookd/team";
 
 const permissionStore = usePermissionStore();
 const layoutStore = useLayoutStore();
@@ -71,25 +70,12 @@ const removePermission = async (permission: Permission) => {
   await permissionStore.removePermission(permission.id);
 };
 
-const linkTeamToPermission = async (permission: Permission, team: Team) => {
-  const alreadyHasTeam = permission.teams.find(
-    (teamCode) => teamCode === team.code,
-  );
-  if (alreadyHasTeam) {
-    return sendFailureNotification(
-      "Cette équipe est déjà liée à cette permission",
-    );
-  }
-  const teamCodes = [...permission.teams, team.code];
-  await permissionStore.linkTeamsToPermission(permission.id, teamCodes);
+const revokePermission = async (permission: Permission, teamCode: string) => {
+  await permissionStore.revoke(permission.name, teamCode);
 };
 
-const unlinkTeamFromPermission = async (
-  permission: Permission,
-  teamCode: string,
-) => {
-  const teamCodes = permission.teams.filter((code) => code !== teamCode);
-  await permissionStore.linkTeamsToPermission(permission.id, teamCodes);
+const grantPermission = async (permission: Permission, teamCode: string) => {
+  await permissionStore.grant(permission.name, teamCode);
 };
 </script>
 
