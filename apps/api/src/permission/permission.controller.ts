@@ -27,7 +27,6 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { PermissionLinkRequestDto } from "./dto/permission-link.request.dto";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
@@ -116,29 +115,6 @@ export class PermissionController {
   })
   async deletePermission(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.permissionService.deletePermission(id);
-  }
-
-  @Permission(MANAGE_PERMISSIONS)
-  @Post("link/:id")
-  @ApiResponse({
-    status: 201,
-    description: "Link a permission with different teams",
-    type: PermissionResponseDto,
-  })
-  @ApiParam({
-    name: "id",
-    description: "Permission id",
-    type: Number,
-  })
-  @ApiBody({
-    description: "Teams to link to the permission",
-    type: PermissionLinkRequestDto,
-  })
-  async updatePermissionTeams(
-    @Param("id", ParseIntPipe) id: number,
-    @Body() payload: PermissionLinkRequestDto,
-  ): Promise<PermissionResponseDto> {
-    return this.permissionService.linkPermissionToTeam(id, payload.teamCodes);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
