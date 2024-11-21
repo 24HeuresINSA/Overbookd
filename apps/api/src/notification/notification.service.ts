@@ -8,7 +8,7 @@ import {
 } from "@overbookd/access-manager";
 import { DomainEvent, STAFF_REGISTERED } from "@overbookd/domain-events";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
-import { RegisterNewcomer } from "@overbookd/registration";
+import { CANDIDATE_ENROLLED, RegisterNewcomer } from "@overbookd/registration";
 import { filter, merge, Observable } from "rxjs";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
@@ -79,6 +79,9 @@ export class NotificationService implements OnApplicationBootstrap {
       ),
       this.teamsJoined.pipe(filter(({ data: { member } }) => member.id === id)),
       this.teamLeft.pipe(filter(({ data: { member } }) => member.id === id)),
+      this.enrolled.pipe(
+        filter(({ data: { candidate } }) => candidate.id === id),
+      ),
     ];
   }
 
@@ -113,5 +116,9 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private get teamLeft() {
     return this.eventStore.listen(TEAM_LEFT);
+  }
+
+  private get enrolled() {
+    return this.eventStore.listen(CANDIDATE_ENROLLED);
   }
 }

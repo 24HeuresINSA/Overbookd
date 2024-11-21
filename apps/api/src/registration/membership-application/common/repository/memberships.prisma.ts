@@ -1,13 +1,13 @@
 import {
   CandidateToEnroll,
   JoinableTeam,
-  Memberships,
   JoinedTeam,
+  Memberships,
 } from "@overbookd/registration";
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
-import { PrismaService } from "../../../../prisma.service";
-import { toStandAloneUser } from "../../../../user/to-stand-alone-user";
+import { toStandAloneUser } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../../../common/query/user.query";
+import { PrismaService } from "../../../../prisma.service";
 
 export class PrismaMemberships implements Memberships {
   constructor(private readonly prisma: PrismaService) {}

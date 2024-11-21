@@ -1,13 +1,14 @@
-import { isHttpError } from "~/utils/http/http-error.utils";
-import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import type {
-  StaffCandidate,
-  VolunteerCandidate,
   HttpStringified,
   StaffApplication,
+  StaffCandidate,
+  VolunteerCandidate,
 } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
+import { toStandAloneUser } from "@overbookd/user";
+import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   staffCandidates: StaffCandidate[];
@@ -145,7 +146,7 @@ export const useMembershipApplicationStore = defineStore(
       },
 
       async enrollNewStaffs(staffs: StaffCandidate[]) {
-        const minimalStaffs = staffs.map(({ id }) => ({ id }));
+        const minimalStaffs = staffs.map(toStandAloneUser);
         const res =
           await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
         if (isHttpError(res)) return;
@@ -161,8 +162,11 @@ export const useMembershipApplicationStore = defineStore(
       },
 
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {
+        const minimalVolunteers = volunteers.map(toStandAloneUser);
         const res =
-          await MembershipApplicationRepository.enrollNewVolunteers(volunteers);
+          await MembershipApplicationRepository.enrollNewVolunteers(
+            minimalVolunteers,
+          );
         if (isHttpError(res)) return;
         sendSuccessNotification(
           "Les candidats sélectionnés a été enrôlé en tant que soft",
