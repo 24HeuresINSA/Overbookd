@@ -31,10 +31,5 @@ export { SHARED_MEAL_CLOSED } from "./shared-meal.js";
 export type {
   StaffRegisteredEvent,
   VolunteerRegisteredEvent,
-  VolunteerEnrolledEvent,
 } from "./registration.js";
-export {
-  STAFF_REGISTERED,
-  VOLUNTEER_REGISTERED,
-  VOLUNTEER_ENROLLED,
-} from "./registration.js";
+export { STAFF_REGISTERED, VOLUNTEER_REGISTERED } from "./registration.js";

@@ -1,4 +1,4 @@
-import { EnrolledCandidate, STAFF, VOLUNTEER } from "@overbookd/registration";
+import { STAFF, VOLUNTEER } from "@overbookd/registration";
 import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "./enroll-candidates";
 import { PrismaService } from "../../../../prisma.service";
@@ -21,24 +21,6 @@ import { Edition } from "@overbookd/time";
 
 export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   constructor(private readonly prisma: PrismaService) {}
-
-  async enroll(newcomers: EnrolledCandidate[]) {
-    const allRequests = newcomers.map(({ id, teams }) =>
-      this.prisma.user.update({
-        where: { id },
-        data: {
-          teams: {
-            upsert: teams.map((team) => ({
-              where: { userId_teamCode: { userId: id, teamCode: team } },
-              create: { teamCode: team },
-              update: {},
-            })),
-          },
-        },
-      }),
-    );
-    await this.prisma.$transaction(allRequests);
-  }
 
   async findStaffCandidates(): Promise<StaffCandidate[]> {
     const candidates = await this.prisma.user.findMany({

@@ -7,6 +7,7 @@ import type {
   TeamsJoined as TeamsJoinedEvent,
 } from "@overbookd/access-manager";
 
+import { CandidateEnrolled as CandidateEnrolledEvent } from "@overbookd/registration";
 import type {
   FestivalActivityApprovedEvent,
   FestivalActivityCreatedEvent,
@@ -21,7 +22,6 @@ import {
 } from "./festival-task.js";
 import {
   StaffRegisteredEvent,
-  VolunteerEnrolledEvent,
   VolunteerRegisteredEvent,
 } from "./registration.js";
 import type { SharedMealClosedEvent } from "./shared-meal.js";
@@ -29,7 +29,7 @@ import type { SharedMealClosedEvent } from "./shared-meal.js";
 export type DomainEvent =
   | StaffRegisteredEvent
   | VolunteerRegisteredEvent
-  | VolunteerEnrolledEvent
+  | CandidateEnrolledEvent
   | FestivalActivityCreatedEvent
   | FestivalActivityReadyToReviewEvent
   | FestivalActivityApprovedEvent

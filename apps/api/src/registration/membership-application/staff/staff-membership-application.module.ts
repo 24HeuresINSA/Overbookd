@@ -1,5 +1,9 @@
 import { Module } from "@nestjs/common";
-import { ApplyFor, RejectMembershipApplication } from "@overbookd/registration";
+import {
+  ApplyFor,
+  EnrollCandidates,
+  RejectMembershipApplication,
+} from "@overbookd/registration";
 import { StaffMembershipApplicationController } from "./staff-membership-application.controller";
 import { PrismaModule } from "../../../prisma.module";
 import { PrismaService } from "../../../prisma.service";
@@ -8,6 +12,9 @@ import { PrismaUsers } from "../common/repository/users.prisma";
 import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 import { PrismaConfigurations } from "./repository/configurations.prisma";
 import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
+import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
+import { PrismaMemberships } from "../common/repository/memberships.prisma";
 
 @Module({
   controllers: [StaffMembershipApplicationController],
@@ -44,6 +51,19 @@ import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.p
       inject: [PrismaCandidates],
     },
     {
+      provide: PrismaMemberships,
+      useFactory: (prisma: PrismaService) => new PrismaMemberships(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: EnrollCandidates,
+      useFactory: (
+        memberships: PrismaMemberships,
+        events: DomainEventService,
+      ) => new EnrollCandidates(memberships, events),
+      inject: [PrismaMemberships, DomainEventService],
+    },
+    {
       provide: StaffMembershipApplicationService,
       useFactory: (
         applyFor: ApplyFor,
@@ -51,10 +71,11 @@ import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.p
         users: PrismaUsers,
         configurations: PrismaConfigurations,
         enrollCandidates: PrismaEnrollCandidates,
+        enroll: EnrollCandidates,
       ) =>
         new StaffMembershipApplicationService(
-          { applyFor, reject },
-          { users, configurations, enrollCandidates },
+          { applyFor, reject, enroll },
+          { users, configurations, enroll: enrollCandidates },
         ),
       inject: [
         ApplyFor,
@@ -62,9 +83,10 @@ import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.p
         PrismaUsers,
         PrismaConfigurations,
         PrismaEnrollCandidates,
+        EnrollCandidates,
       ],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class StaffMembershipApplicationModule {}

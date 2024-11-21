@@ -16,6 +16,7 @@ import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
+import { toStandAloneUser } from "../user/to-stand-alone-user";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -93,9 +94,7 @@ export class TeamService {
     });
     if (member === null) throw new NotFoundException("Utilisateur inconnu");
 
-    const nickname = member.nickname ? ` (${member.nickname}) ` : " ";
-    const name = `${member.firstname}${nickname}${member.lastname}`;
-    return { id: member.id, name };
+    return toStandAloneUser(member);
   }
 
   private async listTeamsFor(userId: number) {

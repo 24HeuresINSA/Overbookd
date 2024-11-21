@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import {
   ApplyFor,
+  type CandidateToEnroll,
   EnrollCandidates,
   InviteStaff,
-  CandidateToEnroll,
   RejectMembershipApplication,
   STAFF,
 } from "@overbookd/registration";
@@ -17,12 +17,13 @@ import { HARD_CODE } from "@overbookd/team-constants";
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
   reject: Readonly<RejectMembershipApplication>;
+  enroll: Readonly<EnrollCandidates>;
 };
 
 type Repositories = {
   users: Readonly<Users>;
   configurations: Readonly<Configurations>;
-  enrollCandidates: Readonly<EnrollCandidatesRepository>;
+  enroll: Readonly<EnrollCandidatesRepository>;
 };
 
 @Injectable()
@@ -68,19 +69,19 @@ export class StaffMembershipApplicationService {
   }
 
   getCandidates(): Promise<StaffCandidate[]> {
-    return this.repositories.enrollCandidates.findStaffCandidates();
+    return this.repositories.enroll.findStaffCandidates();
   }
 
   countCandidates(): Promise<number> {
-    return this.repositories.enrollCandidates.countStaffCandidates();
+    return this.repositories.enroll.countStaffCandidates();
   }
 
   getRejectedCandidates(): Promise<StaffCandidate[]> {
-    return this.repositories.enrollCandidates.findRejectedStaffCandidates();
+    return this.repositories.enroll.findRejectedStaffCandidates();
   }
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    const candidatesToEnroll = EnrollCandidates.with(candidates).to(HARD_CODE);
-    return this.repositories.enrollCandidates.enroll(candidatesToEnroll);
+    const enrolling = { candidates, team: HARD_CODE } as const;
+    return this.useCases.enroll.apply(enrolling);
   }
 }

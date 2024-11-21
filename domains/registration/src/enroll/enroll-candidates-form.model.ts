@@ -1,7 +1,7 @@
 import { JoinableTeam } from "./joinable-team.js";
-import { CandidateToEnroll } from "./enroll-candidates.js";
+import { Candidate } from "./enroll-candidates";
 
 export type EnrollCandidatesForm = {
-  candidates: CandidateToEnroll[];
+  candidates: Candidate[];
   team: JoinableTeam;
 };
