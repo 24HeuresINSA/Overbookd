@@ -1,6 +1,11 @@
 <template>
   <DesktopPageTitle />
-  <div class="activity fa">
+  <div class="quick-filters">
+    <nuxt-link :to="`/fa?adherent=${me?.id}`">
+      <v-btn variant="outlined" color="primary"> Mes FAs </v-btn>
+    </nuxt-link>
+  </div>
+  <main class="activity fa">
     <FaFilter v-model="filters" class="activity__filtering" />
     <v-card class="activity__listing">
       <v-data-table
@@ -54,7 +59,7 @@
         </template>
       </v-data-table>
     </v-card>
-  </div>
+  </main>
 
   <v-btn
     icon="mdi-plus-thick"
@@ -128,6 +133,8 @@ const teamStore = useTeamStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
+const me = computed<User | undefined>(() => userStore.loggedUser);
+
 const canRemoveActivity = computed<boolean>(() => userStore.can(WRITE_FA));
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
@@ -183,9 +190,12 @@ const getReviewerStatus = (
 };
 
 const filters = ref<ActivityFilters>({});
-onMounted(
-  () => (filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query)),
-);
+const updateFilters = () => {
+  filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query);
+};
+onMounted(updateFilters);
+
+watch(() => route.query, updateFilters, { immediate: true });
 
 const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
   () =>
@@ -244,6 +254,12 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
 </script>
 
 <style lang="scss" scoped>
+.quick-filters {
+  padding: 0px 10px;
+  display: flex;
+  gap: 5px 10px;
+  flex-wrap: wrap;
+}
 .activity {
   display: flex;
   gap: $card-gap;
