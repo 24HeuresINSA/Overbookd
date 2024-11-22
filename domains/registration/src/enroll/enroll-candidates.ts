@@ -95,7 +95,7 @@ export class EnrollCandidates {
 export class AlreadyEnrolledError extends Error {
   constructor(candidates: Candidate[]) {
     const names = candidates.map(({ name }) => name).join(" and ");
-    const message = `${names} is/are already enrolled`;
+    const message = `${names} est/sont déjà enrollés`;
     super(message);
   }
 }
