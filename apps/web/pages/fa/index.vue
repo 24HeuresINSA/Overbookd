@@ -193,8 +193,6 @@ const filters = ref<ActivityFilters>({});
 const updateFilters = () => {
   filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query);
 };
-onMounted(updateFilters);
-
 watch(() => route.query, updateFilters, { immediate: true });
 
 const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
