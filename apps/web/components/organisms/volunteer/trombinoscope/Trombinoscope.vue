@@ -54,6 +54,7 @@ import {
   SOFT_CODE,
   VIEUX_CODE,
 } from "@overbookd/team-constants";
+import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 
 const props = defineProps({
@@ -98,7 +99,7 @@ const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
 const volunteersBornToday = computed<UserDataWithPotentialyProfilePicture[]>(
   () =>
     props.volunteers.filter((volunteer) => {
-      const today = new Date();
+      const today = OverDate.getStartOfDay(new Date()).date;
       const birthdate = new Date(volunteer.birthdate);
       return (
         birthdate.getDate() === today.getDate() &&
