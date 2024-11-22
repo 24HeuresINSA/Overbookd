@@ -8,6 +8,9 @@ import {
 class CandidateToEnrollDto implements CandidateToEnroll {
   @ApiProperty({ required: true })
   id: number;
+
+  @ApiProperty({ required: true })
+  name: string;
 }
 
 export class EnrollCandidatesRequestDto

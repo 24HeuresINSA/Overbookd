@@ -32,6 +32,7 @@ import {
   TEAMS_JOINED,
   TEAM_LEFT,
 } from "@overbookd/access-manager";
+import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
 import Header from "~/layouts/header/Header.vue";
@@ -54,6 +55,7 @@ onMounted(() => {
   mine.listen(PERMISSION_REVOKED, () => refreshTokens());
   mine.listen(TEAMS_JOINED, () => refreshTokens());
   mine.listen(TEAM_LEFT, () => refreshTokens());
+  mine.listen(CANDIDATE_ENROLLED, () => refreshTokens());
 });
 
 onUnmounted(() => {

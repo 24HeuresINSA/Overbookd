@@ -1,4 +1,4 @@
-import type { UserName } from "./user.js";
+import type { User, UserName } from "./user.js";
 
 export function buildUserName(user: UserName): string {
   return `${user.firstname} ${user.lastname}`;
@@ -14,7 +14,11 @@ export function nicknameOrFirstName({ nickname, firstname }: UserName): string {
 }
 
 export function buildUserNameWithNickname(user: UserName): string {
-  const { nickname, ...name } = user;
-  const displayedNickname = nickname ? ` (${nickname})` : "";
-  return `${buildUserName(name)}${displayedNickname}`;
+  const nickname = user.nickname ? ` (${user.nickname}) ` : " ";
+  return `${user.firstname}${nickname}${user.lastname}`;
+}
+
+export function toStandAloneUser(user: User) {
+  const name = buildUserNameWithNickname(user);
+  return { id: user.id, name };
 }

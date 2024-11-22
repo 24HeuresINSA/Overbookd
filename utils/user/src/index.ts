@@ -11,4 +11,5 @@ export {
   nicknameOrFirstName,
   nicknameOrName,
   buildUserNameWithNickname,
+  toStandAloneUser,
 } from "./user.utils.js";

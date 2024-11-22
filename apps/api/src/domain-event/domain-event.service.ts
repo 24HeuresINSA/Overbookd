@@ -1,34 +1,35 @@
-import { Observable, ReplaySubject, map } from "rxjs";
 import {
-  filterEvents,
-  type DomainEvent,
-  FESTIVAL_ACTIVITY_CREATED,
-  FESTIVAL_ACTIVITY_APPROVED,
-  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
-  FESTIVAL_ACTIVITY_REJECTED,
   Approved,
   Created,
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_CREATED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_CREATED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+  FestivalTaskApproved,
+  FestivalTaskCreated,
+  FestivalTaskReadyToReview,
+  FestivalTaskRejected,
   ReadyToReview,
   Rejected,
   SHARED_MEAL_CLOSED,
-  FestivalTaskCreated,
-  FESTIVAL_TASK_CREATED,
-  FESTIVAL_TASK_READY_TO_REVIEW,
-  FestivalTaskReadyToReview,
-  FestivalTaskRejected,
-  FESTIVAL_TASK_REJECTED,
-  FestivalTaskApproved,
-  FESTIVAL_TASK_APPROVED,
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
-  VOLUNTEER_ENROLLED,
+  filterEvents,
+  type DomainEvent,
 } from "@overbookd/domain-events";
+import { PastSharedMeal } from "@overbookd/personal-account";
 import {
-  EnrolledCandidate,
+  CANDIDATE_ENROLLED,
+  CandidateEnrolled,
   StaffRegistered,
   VolunteerRegistered,
 } from "@overbookd/registration";
-import { PastSharedMeal } from "@overbookd/personal-account";
+import { SOFT_CODE } from "@overbookd/team-constants";
+import { Observable, ReplaySubject, filter, map } from "rxjs";
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
@@ -63,8 +64,10 @@ export class DomainEventService {
     return this.listen(VOLUNTEER_REGISTERED).pipe(map(({ data }) => data));
   }
 
-  get volunteersEnrolled(): Observable<EnrolledCandidate> {
-    return this.listen(VOLUNTEER_ENROLLED).pipe(map(({ data }) => data));
+  get volunteersEnrolled(): Observable<CandidateEnrolled> {
+    return this.listen(CANDIDATE_ENROLLED).pipe(
+      filter(({ data }) => data.team === SOFT_CODE),
+    );
   }
 
   get createdFestivalActivity(): Observable<Created> {

@@ -9,6 +9,7 @@ import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
+import { toStandAloneUser } from "@overbookd/user";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
@@ -93,9 +94,7 @@ export class TeamService {
     });
     if (member === null) throw new NotFoundException("Utilisateur inconnu");
 
-    const nickname = member.nickname ? ` (${member.nickname}) ` : " ";
-    const name = `${member.firstname}${nickname}${member.lastname}`;
-    return { id: member.id, name };
+    return toStandAloneUser(member);
   }
 
   private async listTeamsFor(userId: number) {

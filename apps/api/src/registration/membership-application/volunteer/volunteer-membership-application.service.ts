@@ -14,6 +14,7 @@ import { SOFT_CODE } from "@overbookd/team-constants";
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
   reject: Readonly<RejectMembershipApplication>;
+  enroll: Readonly<EnrollCandidates>;
 };
 
 type Repositories = {
@@ -57,7 +58,6 @@ export class VolunteerMembershipApplicationService {
   }
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    const candidatesToEnroll = EnrollCandidates.with(candidates).to(SOFT_CODE);
-    return this.repositories.enrollCandidates.enroll(candidatesToEnroll);
+    return this.useCases.enroll.apply({ candidates, team: SOFT_CODE });
   }
 }
