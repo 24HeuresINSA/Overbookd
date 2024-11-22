@@ -95,24 +95,6 @@ export function formatDateDayNumber(date: DateSeed): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-export function formatDateHour(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    hour: "numeric",
-  };
-  return new Intl.DateTimeFormat("en-GB", displayOptions).format(
-    new Date(date),
-  );
-}
-
-export function formatDateMinute(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    minute: "numeric",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
-}
-
 export function formatDateToHumanReadable(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,

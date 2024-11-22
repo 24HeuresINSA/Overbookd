@@ -24,8 +24,6 @@
 
 <script lang="ts" setup>
 import {
-  formatDateHour,
-  formatDateMinute,
   formatDateNumberValue,
   MINUTES_IN_DAY,
   ONE_DAY_IN_MS,
@@ -129,20 +127,15 @@ const eventLeftInPercentage = computed<number>(() => {
 });
 
 const eventTimePeriodText = computed<string>(() => {
-  const start = props.event.start;
-  const end = props.event.end;
+  const start = OverDate.from(props.event.start);
+  const end = OverDate.from(props.event.end);
 
-  const startMinutes = +formatDateMinute(start);
-  const endMinutes = +formatDateMinute(end);
+  const formattedStartMinutes =
+    start.minute !== 0 ? formatDateNumberValue(start.minute) : "";
+  const formattedEndMinutes =
+    end.minute !== 0 ? formatDateNumberValue(end.minute) : "";
 
-  const formattedStartMinutes = startMinutes
-    ? formatDateNumberValue(startMinutes)
-    : "";
-  const formattedEndMinutes = endMinutes
-    ? formatDateNumberValue(endMinutes)
-    : "";
-
-  return `${+formatDateHour(start)}h${formattedStartMinutes} - ${+formatDateHour(end)}h${formattedEndMinutes}`;
+  return `${start.hour}h${formattedStartMinutes} - ${end.hour}h${formattedEndMinutes}`;
 });
 </script>
 

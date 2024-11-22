@@ -20,6 +20,7 @@ import {
   formatDateDayFullName,
   formatDateDayNumber,
   isSameDay,
+  OverDate,
 } from "@overbookd/time";
 import type { CalendarDay } from "~/utils/calendar/calendar.utils";
 import type { DailyEvent } from "~/utils/calendar/event";
@@ -47,7 +48,7 @@ const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
 });
 
 const isToday = computed<boolean>(() => {
-  const today = new Date();
+  const today = OverDate.getStartOfDay(new Date()).date;
   return isSameDay(props.displayedDay, today);
 });
 </script>
