@@ -62,7 +62,6 @@ const hasPersonalAccount = computed<boolean>(() =>
 const hasPersonalFA = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
-
 </script>
 
 <style lang="scss" scoped>
