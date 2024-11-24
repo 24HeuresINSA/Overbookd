@@ -15,7 +15,11 @@
 <script lang="ts" setup>
 import { Money } from "@overbookd/money";
 import { min as minRule } from "~/utils/rules/input.rules";
-import { endByNumber, endByNumberSeparation } from "~/utils/rules/money.utils";
+import {
+  endByNumber,
+  endByNumberSeparation,
+  hasOneZeroAfterSeparator,
+} from "~/utils/rules/money.utils";
 import type { Density } from "~/utils/vuetify/component-props";
 
 const emit = defineEmits(["update:model-value", "error"]);
@@ -61,7 +65,7 @@ watch(euros, (value) => {
 
 const propagateValue = (euros: string) => {
   const formatted = euros.replace(",", ".");
-  if (endByNumberSeparation(euros)) {
+  if (endByNumberSeparation(euros) || hasOneZeroAfterSeparator(euros)) {
     displayedEuros.value = formatted;
     return;
   }
