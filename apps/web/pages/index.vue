@@ -3,6 +3,7 @@
   <div class="home">
     <ProfileHomeCard />
     <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+    <PersonalFAHomeCard v-if="hasPersonalFA" />
   </div>
 </template>
 
@@ -57,6 +58,11 @@ const titleMessage = computed<string>(() => {
 const hasPersonalAccount = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
+
+const hasPersonalFA = computed<boolean>(() =>
+  userStore.can(HAVE_PERSONAL_ACCOUNT),
+);
+
 </script>
 
 <style lang="scss" scoped>
