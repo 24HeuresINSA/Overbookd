@@ -77,7 +77,7 @@ type Enumerate<
 export type Hour = Enumerate<24>;
 export type Minute = Enumerate<60>;
 
-export type Offset = "01" | "02";
+type Offset = "01" | "02";
 
 export const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
   timeZone: "Europe/Paris",
@@ -274,7 +274,7 @@ export function isDateString(dateString: string): dateString is DateString {
   return dateString.split("-").length === DATE_TEMPORAL_PARTS;
 }
 
-export function isMonthlyDate(monthlyDate: {
+function isMonthlyDate(monthlyDate: {
   month: string;
   day: string;
 }): monthlyDate is MonthlyDate<Month> {
@@ -301,7 +301,7 @@ export function isMinute(minute: number): minute is Minute {
   return minute >= 0 && minute < 60;
 }
 
-export function isOffset(offset: string): offset is Offset {
+function isOffset(offset: string): offset is Offset {
   return offset === "01" || offset === "02";
 }
 
