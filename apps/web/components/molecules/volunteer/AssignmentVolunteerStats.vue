@@ -6,7 +6,10 @@
       </span>
     </div>
     <span class="stat">•</span>
-    <span :v-tooltip:bottom="`total: ${displayedTotalDuration}`" class="stat__category">Total</span>
+    <span
+      :v-tooltip:bottom="`total: ${displayedTotalDuration}`"
+      class="stat__category"
+    >Total</span>
   </div>
 </template>
 

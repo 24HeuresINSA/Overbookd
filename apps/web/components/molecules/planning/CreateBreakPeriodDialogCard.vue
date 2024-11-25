@@ -1,8 +1,6 @@
 <template>
   <DialogCard @close="close">
-    <template #title>
-      Ajouter un temps de pause au bénévole
-    </template>
+    <template #title> Ajouter un temps de pause au bénévole </template>
 
     <template #subtitle>
       Les temps de pause permettent de ne pas affecter le bénévole à un créneau
@@ -24,13 +22,13 @@
     </template>
 
     <template #actions>
-      <v-btn 
-        text="Ajouter la pause" 
-        :disabled="!canCreateBreakPeriod" 
-        prepend-icon="mdi-checkbox-marked-circle-outline" 
-        color="primary" 
-        size="large" 
-        @click="createBreakPeriod" 
+      <v-btn
+        text="Ajouter la pause"
+        :disabled="!canCreateBreakPeriod"
+        prepend-icon="mdi-checkbox-marked-circle-outline"
+        color="primary"
+        size="large"
+        @click="createBreakPeriod"
       />
     </template>
   </DialogCard>
@@ -45,15 +43,18 @@ const props = defineProps({
     type: Date,
     required: true,
   },
-})
+});
 
 const duration = ref<Duration>(Duration.hours(2));
-const castInDuration = (hours: number) => (duration.value = Duration.hours(hours));
+const castInDuration = (hours: number) =>
+  (duration.value = Duration.hours(hours));
 
 const emit = defineEmits(["close", "create"]);
 const close = () => emit("close");
 
-const canCreateBreakPeriod = computed<boolean>(() => duration.value.inHours >= 1);
+const canCreateBreakPeriod = computed<boolean>(
+  () => duration.value.inHours >= 1,
+);
 const createBreakPeriod = () => {
   if (!canCreateBreakPeriod.value) return;
   const during = { start: props.start, duration: duration.value };
