@@ -9,7 +9,7 @@
 
     <template #content>
       <form>
-        <DateTimeField :date="start" disabled hide-details />
+        <DateTimeField :model-value="start" disabled hide-details />
         <v-text-field
           :model-value="duration.inHours"
           type="number"
@@ -46,8 +46,9 @@ const props = defineProps({
 });
 
 const duration = ref<Duration>(Duration.hours(2));
-const castInDuration = (hours: number) =>
-  (duration.value = Duration.hours(hours));
+const castInDuration = (hours: string) => {
+  duration.value = Duration.hours(+hours);
+}
 
 const emit = defineEmits(["close", "create"]);
 const close = () => emit("close");

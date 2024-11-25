@@ -9,7 +9,9 @@
     <span
       :v-tooltip:bottom="`total: ${displayedTotalDuration}`"
       class="stat__category"
-    >Total</span>
+    >
+      Total
+    </span>
   </div>
 </template>
 
