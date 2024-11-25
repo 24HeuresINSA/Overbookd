@@ -25,7 +25,7 @@ import {
   taskCategoryEmojiMap,
   taskCategoryEmojis,
 } from "~/utils/assignment/task-category";
-import { DisplayableAssignmentStat } from "~/utils/user/user-information";
+import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
 const props = defineProps({
   stats: {
