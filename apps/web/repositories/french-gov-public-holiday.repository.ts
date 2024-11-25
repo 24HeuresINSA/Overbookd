@@ -1,4 +1,4 @@
-import { isDateString } from "@overbookd/time";
+import { isDateString, OverDate, type DateString } from "@overbookd/time";
 
 type FrenchGouvPublicHoliday = {
   [date: string]: string;
@@ -14,6 +14,9 @@ export class FrenchGovPublicHolidayRepository {
 
     return Object.entries(data)
       .filter(([date]) => isDateString(date))
-      .map(([date, name]) => ({ date: new Date(date), name }));
+      .map(([date, name]) => ({
+        date: OverDate.init({ date: date as DateString, hour: 0 }).date,
+        name,
+      }));
   }
 }

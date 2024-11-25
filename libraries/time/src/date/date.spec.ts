@@ -1,12 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { DateString, OverDate } from "./date.js";
+import { DateString, Hour, Minute, OverDate } from "./date.js";
 
 const friday: DateString = "2024-05-17";
 const saturday: DateString = "2024-05-18";
+const monday: DateString = "2024-05-13";
 const fridayWinterTime: DateString = "2024-12-06";
+const mondayWinterTime: DateString = "2024-12-02";
 const friday10h = new Date(`${friday}T10:00+02:00`);
 const friday12h = new Date(`${friday}T12:00+02:00`);
 const saturdayDate = new Date(saturday);
+
+type TestHelper = {
+  date: string;
+  expectedHour: Hour;
+  expectedMinute: Minute;
+  expectedDate: string;
+};
 
 describe("Over Date [Paris based date]", () => {
   describe.each`
@@ -26,18 +35,6 @@ describe("Over Date [Paris based date]", () => {
       });
     },
   );
-  describe("Get Paris timezone offset", () => {
-    describe.each`
-      date                     | expectedOffset
-      ${`${friday}`}           | ${2}
-      ${`${fridayWinterTime}`} | ${1}
-    `("when querying for $date", ({ date, expectedOffset }) => {
-      it(`should give the offset +${expectedOffset}`, () => {
-        const offset = OverDate.getParisTimeZoneOffset(new Date(date));
-        expect(offset).toBe(expectedOffset);
-      });
-    });
-  });
   describe("Generate from date", () => {
     describe.each`
       date                                 | expectedHour | expectedMinute | expectedDate
@@ -50,6 +47,26 @@ describe("Over Date [Paris based date]", () => {
       ({ date, expectedHour, expectedMinute, expectedDate }) => {
         it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
           const availabilityDate = OverDate.from(new Date(date));
+          expect(availabilityDate.hour).toBe(expectedHour);
+          expect(availabilityDate.minute).toBe(expectedMinute);
+          expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
+        });
+      },
+    );
+  });
+  describe("Generate from date string", () => {
+    describe.each<TestHelper>([
+      {
+        date: `${friday}T10:11:00.000Z`,
+        expectedHour: 12,
+        expectedMinute: 11,
+        expectedDate: `${friday}T12:11+02:00`,
+      },
+    ])(
+      "when generating from $date",
+      ({ date, expectedHour, expectedMinute, expectedDate }) => {
+        it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
+          const availabilityDate = OverDate.from(date);
           expect(availabilityDate.hour).toBe(expectedHour);
           expect(availabilityDate.minute).toBe(expectedMinute);
           expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
@@ -145,5 +162,52 @@ describe("Over Date [Paris based date]", () => {
         expect(availabilityDate.dateString).toBe(expected);
       });
     });
+  });
+  describe("Get monday", () => {
+    describe.each`
+      date                                 | expected
+      ${`${friday}T11:11+02:00`}           | ${`${monday}T00:00+02:00`}
+      ${`${saturday}T00:15+03:00`}         | ${`${monday}T00:00+02:00`}
+      ${`${fridayWinterTime}T12:30+01:00`} | ${`${mondayWinterTime}T00:00+01:00`}
+    `("when asking monday for $date", ({ date, expected }) => {
+      it(`should return ${expected}`, () => {
+        const availabilityDate = OverDate.from(date);
+        expect(availabilityDate.getMonday().date).toStrictEqual(
+          new Date(expected),
+        );
+      });
+    });
+  });
+  describe("Compare dates", () => {
+    describe.each`
+      date1                                | date2                        | expected
+      ${`${friday}T11:11+02:00`}           | ${`${friday}T19:00+02:00`}   | ${true}
+      ${`${friday}T11:00+02:00`}           | ${`${saturday}T00:00+02:00`} | ${false}
+      ${`${fridayWinterTime}T11:15+07:00`} | ${`${friday}T19:00+02:00`}   | ${false}
+    `(
+      "when checking if $date1 and $date2 are the same day",
+      ({ date1, date2, expected }) => {
+        it(`should return ${expected}`, () => {
+          const overdate1 = OverDate.from(date1);
+          const overdate2 = OverDate.from(date2);
+          expect(OverDate.isSameDay(overdate1, overdate2)).toBe(expected);
+        });
+      },
+    );
+    describe.each`
+      date1                                | date2                        | expected
+      ${`${friday}T11:11+02:00`}           | ${`${friday}T19:00+02:00`}   | ${true}
+      ${`${friday}T11:00+02:00`}           | ${`${saturday}T00:00+02:00`} | ${true}
+      ${`${fridayWinterTime}T11:15+07:00`} | ${`${friday}T19:00+02:00`}   | ${false}
+    `(
+      "when checking if $date1 and $date2 are the same week",
+      ({ date1, date2, expected }) => {
+        it(`should return ${expected}`, () => {
+          const overdate1 = OverDate.from(date1);
+          const overdate2 = OverDate.from(date2);
+          expect(OverDate.isSameWeek(overdate1, overdate2)).toBe(expected);
+        });
+      },
+    );
   });
 });

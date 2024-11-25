@@ -97,15 +97,16 @@ const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
 );
 
 const volunteersBornToday = computed<UserDataWithPotentialyProfilePicture[]>(
-  () =>
-    props.volunteers.filter((volunteer) => {
-      const today = OverDate.getStartOfDay(new Date()).date;
-      const birthdate = new Date(volunteer.birthdate);
+  () => {
+    const today = OverDate.today();
+    return props.volunteers.filter((volunteer) => {
+      const birthdate = OverDate.from(volunteer.birthdate);
       return (
-        birthdate.getDate() === today.getDate() &&
-        birthdate.getMonth() === today.getMonth()
+        birthdate.monthlyDate.month === today.monthlyDate.month &&
+        birthdate.monthlyDate.day === today.monthlyDate.day
       );
-    }),
+    });
+  },
 );
 
 const emit = defineEmits(["click:team", "click:volunteer"]);

@@ -1,7 +1,7 @@
 import {
   DISPLAY_DATE,
   DISPLAY_DATE_TIME,
-  DISPLAY_HOUR,
+  DISPLAY_TIME,
   PARIS_TIMEZONE,
 } from "./date.js";
 
@@ -30,10 +30,8 @@ export function formatMonthWithYear(date: DateSeed): string {
 
 // return format yyyy-mm-ddThh:mm
 export function formatLocalDateTime(date: DateSeed): string {
-  const [day, month, year, hours, minutes] = new Intl.DateTimeFormat(
-    "fr",
-    DISPLAY_DATE_TIME,
-  )
+  const dateTime = new Intl.DateTimeFormat("fr", DISPLAY_DATE_TIME);
+  const [day, month, year, hours, minutes] = dateTime
     .formatToParts(new Date(date))
     .filter((part) => part.type !== "literal")
     .map((part) => part.value);
@@ -105,7 +103,7 @@ export function formatDateToHumanReadable(date: DateSeed): string {
 }
 
 export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
-  return new Intl.DateTimeFormat("fr", DISPLAY_HOUR).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", DISPLAY_TIME).format(new Date(date));
 }
 
 export function formatDateNumberValue(value: number): string {
