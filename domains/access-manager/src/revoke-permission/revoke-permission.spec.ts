@@ -66,7 +66,10 @@ describe("Revoke permission", () => {
   );
   describe("when a team does not have the permission", () => {
     const permission = WRITE_FA;
-    const revokingPermission = { permission, from: BENEVOLE_FESTIVAL_CODE } as const;
+    const revokingPermission = {
+      permission,
+      from: BENEVOLE_FESTIVAL_CODE,
+    } as const;
     it("should apply without issue", async () => {
       expect(revokePermission.apply(revokingPermission)).resolves.ok;
     });

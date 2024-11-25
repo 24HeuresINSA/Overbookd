@@ -88,7 +88,9 @@ describe("Join teams", () => {
     it("should stay member of the teams", async () => {
       await joinTeams.apply(request);
 
-      expect(memberships.membersOf("benevole-festival")).toContainEqual(shogosse);
+      expect(memberships.membersOf("benevole-festival")).toContainEqual(
+        shogosse,
+      );
     });
   });
   describe("when some of the teams do not exist", () => {

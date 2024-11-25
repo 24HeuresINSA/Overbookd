@@ -56,7 +56,8 @@ const REGISTRATIONS_FESTIVAL_VOLUNTEER_PAGE: PageInSummary = {
   title: "Admission Bénévoles",
   permission: ENROLL_FESTIVAL_VOLUNTEER,
   to: REGISTRATIONS_VOLUNTEER_URL,
-  description: "Permet d'enrôler les nouveaux arrivants en tant que bénévole festival",
+  description:
+    "Permet d'enrôler les nouveaux arrivants en tant que bénévole festival",
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,

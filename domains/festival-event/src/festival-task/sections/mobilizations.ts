@@ -31,7 +31,10 @@ export const requirableTeams = [
   teckos,
   montage,
 ] as const;
-export const requirableTeamsExtended = [...requirableTeams, benevoleFestival] as const;
+export const requirableTeamsExtended = [
+  ...requirableTeams,
+  benevoleFestival,
+] as const;
 
 export type MobilizationOptions = {
   withConflicts: boolean;

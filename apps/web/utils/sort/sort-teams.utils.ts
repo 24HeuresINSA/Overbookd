@@ -9,8 +9,12 @@ export function sortTeamsForAssignment(teams: string[]): string[] {
     sortedTeams = moveAtFirstIndex(sortedTeams, confianceIndex);
   }
 
-  const festivalVolunteerIndex = getTeamIndex(sortedTeams, BENEVOLE_FESTIVAL_CODE);
-  if (festivalVolunteerIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, festivalVolunteerIndex);
+  const festivalVolunteerIndex = getTeamIndex(
+    sortedTeams,
+    BENEVOLE_FESTIVAL_CODE,
+  );
+  if (festivalVolunteerIndex !== -1)
+    sortedTeams = moveAtFirstIndex(sortedTeams, festivalVolunteerIndex);
 
   const hardIndex = getTeamIndex(sortedTeams, HARD_CODE);
   if (hardIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, hardIndex);

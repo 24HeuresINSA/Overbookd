@@ -58,6 +58,9 @@ export class VolunteerMembershipApplicationService {
   }
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    return this.useCases.enroll.apply({ candidates, team: BENEVOLE_FESTIVAL_CODE });
+    return this.useCases.enroll.apply({
+      candidates,
+      team: BENEVOLE_FESTIVAL_CODE,
+    });
   }
 }

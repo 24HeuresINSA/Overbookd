@@ -1,4 +1,8 @@
-import { ENROLL_HARD, ENROLL_FESTIVAL_VOLUNTEER, Permission } from "@overbookd/permission";
+import {
+  ENROLL_HARD,
+  ENROLL_FESTIVAL_VOLUNTEER,
+  Permission,
+} from "@overbookd/permission";
 import {
   StaffRegistered,
   Membership,

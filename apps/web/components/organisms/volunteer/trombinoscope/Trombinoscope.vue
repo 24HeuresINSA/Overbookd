@@ -92,7 +92,9 @@ const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   }),
 );
 const eventVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
-  props.volunteers.filter((volunteer) => volunteer.teams.includes(BENEVOLE_FESTIVAL_CODE)),
+  props.volunteers.filter((volunteer) =>
+    volunteer.teams.includes(BENEVOLE_FESTIVAL_CODE),
+  ),
 );
 const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {

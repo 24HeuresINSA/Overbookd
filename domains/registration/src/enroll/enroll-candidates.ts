@@ -1,5 +1,9 @@
 import { Event } from "@overbookd/event";
-import { BENEVOLE_CODE, HARD_CODE, BENEVOLE_FESTIVAL_CODE } from "@overbookd/team-constants";
+import {
+  BENEVOLE_CODE,
+  HARD_CODE,
+  BENEVOLE_FESTIVAL_CODE,
+} from "@overbookd/team-constants";
 import { JoinableTeam } from "./joinable-team";
 
 export const CANDIDATE_ENROLLED = "candidate-enrolled" as const;

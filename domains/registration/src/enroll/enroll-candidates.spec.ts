@@ -1,4 +1,8 @@
-import { BENEVOLE_CODE, BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team-constants";
+import {
+  BENEVOLE_CODE,
+  BENEVOLE_FESTIVAL_CODE,
+  HARD_CODE,
+} from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   AlreadyEnrolledError,

@@ -37,7 +37,11 @@ describe("Leave team", () => {
     leaveTeam = new LeaveTeam(memberships, events);
   });
   describe.each([
-    { userName: shogosse.name, userId: shogosse.id, team: BENEVOLE_FESTIVAL_CODE },
+    {
+      userName: shogosse.name,
+      userId: shogosse.id,
+      team: BENEVOLE_FESTIVAL_CODE,
+    },
     { userName: noel.name, userId: noel.id, team: HARD_CODE },
     { userName: noel.name, userId: noel.id, team: "conducteur" },
   ])(
