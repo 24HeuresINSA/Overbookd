@@ -1,5 +1,5 @@
 import { moveAtFirstIndex } from "@overbookd/list";
-import { BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team";
+import { BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team-constants";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter((team) => team !== "admin" && team !== "orga");
