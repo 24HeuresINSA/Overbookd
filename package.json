@@ -42,10 +42,10 @@
     "version:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
   },
-  "packageManager": "pnpm@9.13.2",
+  "packageManager": "pnpm@9.14.2",
   "engines": {
     "node": "22.11.0",
-    "pnpm": "9.13.2"
+    "pnpm": "9.14.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
