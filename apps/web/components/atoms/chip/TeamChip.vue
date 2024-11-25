@@ -25,37 +25,36 @@ import { BENEVOLE_CODE, SOFT_CODE } from "@overbookd/team-constants";
 import type { Team } from "@overbookd/team";
 import { SEE_SOFT_TEAM } from "@overbookd/permission";
 
-const props =
-  defineProps({
-    team: {
-      type: String,
-      required: true,
-    },
-    size: {
-      type: String,
-      default: "small",
-    },
-    withName: {
-      type: Boolean,
-      default: false,
-    },
-    showHidden: {
-      type: Boolean,
-      default: false,
-    },
-    closable: {
-      type: Boolean,
-      default: false,
-    },
-    clickable: {
-      type: Boolean,
-      default: false,
-    },
-    prefix: {
-      type: String,
-      default: null,
-    },
-  });
+const props = defineProps({
+  team: {
+    type: String,
+    required: true,
+  },
+  size: {
+    type: String,
+    default: "small",
+  },
+  withName: {
+    type: Boolean,
+    default: false,
+  },
+  showHidden: {
+    type: Boolean,
+    default: false,
+  },
+  closable: {
+    type: Boolean,
+    default: false,
+  },
+  clickable: {
+    type: Boolean,
+    default: false,
+  },
+  prefix: {
+    type: String,
+    default: null,
+  },
+});
 
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -63,12 +62,11 @@ const userStore = useUserStore();
 const teamMetadata = computed<Team | undefined>(() =>
   teamStore.getTeamByCode(props.team),
 );
-const canSeeSoftTeam = computed<boolean>(() =>
-  userStore.can(SEE_SOFT_TEAM),
-);
+const canSeeSoftTeam = computed<boolean>(() => userStore.can(SEE_SOFT_TEAM));
 const showTeam = computed<boolean>(() => {
   const isSoftTeamHidden = props.team === SOFT_CODE && !canSeeSoftTeam.value;
-  const isBenevoleTeamHidden = props.team === BENEVOLE_CODE && !props.showHidden;
+  const isBenevoleTeamHidden =
+    props.team === BENEVOLE_CODE && !props.showHidden;
   return !isSoftTeamHidden && !isBenevoleTeamHidden;
 });
 
