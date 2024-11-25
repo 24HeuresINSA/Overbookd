@@ -3,6 +3,14 @@
     <template #title>Modifier mon profil</template>
     <template #content>
       <v-form v-model="isFormValid" class="profile-form">
+        <v-file-input
+          v-model="profilePicture"
+          :rules="[isImage, isSupportedImageFile, isImageSizeWithinLimit]"
+          label="Photo de profil"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg, image/gif"
+          show-size
+        />
         <div class="profile-row">
           <v-text-field
             v-model="firstname"
@@ -36,7 +44,7 @@
             :rules="[required, isMobilePhoneNumber]"
           />
           <v-text-field
-            v-tooltip:bottom="
+            v-tooltip:top="
               'Tu dois passer par les responsables bénévoles ou le.a secrétaire général.e pour changer ton email 🙏'
             "
             :model-value="email"
@@ -82,6 +90,9 @@ import { formatLocalDate } from "@overbookd/time";
 import {
   required,
   isMobilePhoneNumber,
+  isImage,
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
   minDate,
   maxDate,
   maxLength,
@@ -91,6 +102,8 @@ const userStore = useUserStore();
 const preferenceStore = usePreferenceStore();
 
 const loggedUser = computed(() => userStore.loggedUser);
+
+const profilePicture = ref<File | undefined>();
 
 const firstname = ref<string>(loggedUser.value?.firstname ?? "");
 const lastname = ref<string>(loggedUser.value?.lastname ?? "");
@@ -135,6 +148,18 @@ const save = async () => {
     comment: comment.value ? comment.value : null,
   };
   await userStore.updateMyProfile(newProfileData);
+
+  if (profilePicture.value !== undefined) {
+    const profilePictureForm = new FormData();
+    profilePictureForm.append(
+      "file",
+      profilePicture.value,
+      profilePicture.value.name,
+    );
+    await userStore.addProfilePicture(profilePictureForm);
+    userStore.setMyProfilePicture();
+  }
+
   loading.value = false;
   close();
 };
