@@ -64,7 +64,7 @@
       <v-spacer />
       <v-btn
         v-if="!displayRejectedCandidates"
-        text="Enrôler en tant que soft"
+        text="Enrôler en tant que bénévole festival"
         :disabled="noVolunteerSelected"
         size="large"
         @click="enrollCandidates"

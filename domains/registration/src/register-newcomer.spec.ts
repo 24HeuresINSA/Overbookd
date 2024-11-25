@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   ENROLL_HARD,
-  ENROLL_SOFT,
+  ENROLL_FESTIVAL_VOLUNTEER,
   READ_FA,
   READ_FT,
 } from "@overbookd/permission";
@@ -22,7 +22,7 @@ const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },
   { id: 101, permissions: [READ_FA] },
   { id: 102, permissions: [READ_FA, READ_FT, ENROLL_HARD] },
-  { id: 103, permissions: [READ_FA, READ_FT, ENROLL_SOFT] },
+  { id: 103, permissions: [READ_FA, READ_FT, ENROLL_FESTIVAL_VOLUNTEER] },
 ];
 
 const email = "test@example.com";

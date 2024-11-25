@@ -1,7 +1,7 @@
 import {
   AFFECT_VOLUNTEER,
   ENROLL_HARD,
-  ENROLL_SOFT,
+  ENROLL_FESTIVAL_VOLUNTEER,
   MANAGE_CHARISMA_EVENTS,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -51,12 +51,12 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   ],
 };
 
-const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
+const REGISTRATIONS_FESTIVAL_VOLUNTEER_PAGE: PageInSummary = {
   icon: "mdi-account-multiple-check",
   title: "Admission Bénévoles",
-  permission: ENROLL_SOFT,
+  permission: ENROLL_FESTIVAL_VOLUNTEER,
   to: REGISTRATIONS_VOLUNTEER_URL,
-  description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
+  description: "Permet d'enrôler les nouveaux arrivants en tant que bénévole festival",
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
@@ -66,6 +66,7 @@ const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
     "admissions",
     "benevoles",
     "softs",
+    "festival",
   ],
 };
 
@@ -198,7 +199,7 @@ const ORGA_NEED_PAGE: PageInSummary = {
 export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CONFIGURATION_PAGE,
   REGISTRATIONS_HARD_PAGE,
-  REGISTRATIONS_SOFT_PAGE,
+  REGISTRATIONS_FESTIVAL_VOLUNTEER_PAGE,
   CONTRIBUTIONS_PAGE,
   SG_PAGE,
   TRANSACTIONS_PAGE,

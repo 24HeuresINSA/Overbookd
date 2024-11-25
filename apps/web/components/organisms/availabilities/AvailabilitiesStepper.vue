@@ -53,14 +53,14 @@ import {
   type CalendarStep,
 } from "~/utils/availabilities/calendar-event-periods";
 
-const SOFT_CALENDAR_STEPS: CalendarStep[] = [
+const FESTIVAL_VOLUNTEER_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.preManif,
   CalendarEventPeriods.manif,
   CalendarEventPeriods.postManif,
 ];
 const HARD_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.prePreManif,
-  ...SOFT_CALENDAR_STEPS,
+  ...FESTIVAL_VOLUNTEER_CALENDAR_STEPS,
 ];
 
 const userStore = useUserStore();
@@ -70,7 +70,7 @@ const step = ref<number>(1);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes("hard");
-  return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
+  return isHard ? HARD_CALENDAR_STEPS : FESTIVAL_VOLUNTEER_CALENDAR_STEPS;
 });
 // const hasAvailabilityError = computed<boolean>(() => {
 //   return availabilitiyStore.availabilities.errors.length > 0;

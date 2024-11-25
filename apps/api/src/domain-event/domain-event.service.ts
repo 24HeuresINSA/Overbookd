@@ -36,12 +36,12 @@ import {
   EventOf,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
-import { SOFT_CODE } from "@overbookd/team-constants";
+import { BENEVOLE_FESTIVAL_CODE } from "@overbookd/team-constants";
 import { Observable, ReplaySubject, filter } from "rxjs";
 
 type FestivalVolunteerEnrolled = CandidateEnrolled & {
   data: {
-    team: typeof SOFT_CODE;
+    team: typeof BENEVOLE_FESTIVAL_CODE;
   };
 };
 
@@ -142,5 +142,5 @@ export class DomainEventService {
 function isEnrollingFestivalVolunteer(
   candidate: CandidateEnrolled,
 ): candidate is FestivalVolunteerEnrolled {
-  return candidate.data.team === SOFT_CODE;
+  return candidate.data.team === BENEVOLE_FESTIVAL_CODE;
 }

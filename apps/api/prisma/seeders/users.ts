@@ -1,7 +1,7 @@
 export const userTeamTuples: string[][] = [
   ["hard", "benevole,hard"],
-  ["soft", "benevole,soft"],
-  ["confiance", "benevole,soft,confiance"],
+  ["benevole-festival", "benevole,benevole-festival"],
+  ["confiance", "benevole,benevole-festival,confiance"],
   ["vieux", "benevole,vieux"],
   ["admin", "benevole,hard,admin"],
   ["bureau", "benevole,hard,bureau"],

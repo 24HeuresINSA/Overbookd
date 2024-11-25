@@ -1,4 +1,5 @@
 import { Team } from "@overbookd/team";
+import { BENEVOLE_CODE, BENEVOLE_FESTIVAL_CODE, HARD_CODE, ORGA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 
 export const teams: Team[] = [
   {
@@ -117,7 +118,7 @@ export const teams: Team[] = [
   },
   {
     name: "Hard",
-    code: "hard",
+    code: HARD_CODE,
     color: "#969600",
     icon: "mdi-account-hard-hat",
   },
@@ -159,7 +160,7 @@ export const teams: Team[] = [
   },
   {
     name: "Orga",
-    code: "orga",
+    code: ORGA_CODE,
     color: "#e62727",
     icon: "mdi-account-hard-hat",
   },
@@ -200,8 +201,8 @@ export const teams: Team[] = [
     icon: "mdi-sign-direction",
   },
   {
-    name: "Soft",
-    code: "soft",
+    name: "Bénévole festival",
+    code: BENEVOLE_FESTIVAL_CODE,
     color: "#2a9d8f",
     icon: "mdi-account-heart",
   },
@@ -231,7 +232,7 @@ export const teams: Team[] = [
   },
   {
     name: "Vieux",
-    code: "vieux",
+    code: VIEUX_CODE,
     color: "#B5C2CB",
     icon: "mdi-human-cane",
   },
@@ -249,7 +250,7 @@ export const teams: Team[] = [
   },
   {
     name: "Bénévole",
-    code: "benevole",
+    code: BENEVOLE_CODE,
     color: "#09A1C4",
     icon: "mdi-account",
   },

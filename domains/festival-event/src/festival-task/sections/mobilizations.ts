@@ -12,7 +12,7 @@ const bde = "bde";
 const karna = "karna";
 const kfet = "kfet";
 const strasbourg = "strasbourg";
-const soft = "soft";
+const benevoleFestival = "benevole-festival";
 const cvl = "cvl";
 const teckos = "teckos";
 const montage = "team-montage";
@@ -31,7 +31,7 @@ export const requirableTeams = [
   teckos,
   montage,
 ] as const;
-export const requirableTeamsExtended = [...requirableTeams, soft] as const;
+export const requirableTeamsExtended = [...requirableTeams, benevoleFestival] as const;
 
 export type MobilizationOptions = {
   withConflicts: boolean;

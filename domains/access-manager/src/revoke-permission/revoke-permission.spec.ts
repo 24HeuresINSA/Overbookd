@@ -7,6 +7,7 @@ import {
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
 } from "@overbookd/permission";
+import { HARD_CODE, BENEVOLE_FESTIVAL_CODE } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryEvents } from "./events.inmemory";
 import {
@@ -21,8 +22,8 @@ let events: InMemoryEvents;
 let revokePermission: RevokePermission;
 const initialTeamPermissions = (): Map<Team, Permission[]> =>
   new Map([
-    ["hard", [WRITE_FA, READ_FA, READ_GEAR_CATALOG, WRITE_GEAR_CATALOG]],
-    ["soft", [READ_FA]],
+    [HARD_CODE, [WRITE_FA, READ_FA, READ_GEAR_CATALOG, WRITE_GEAR_CATALOG]],
+    [BENEVOLE_FESTIVAL_CODE, [READ_FA]],
     ["matos", [WRITE_INVENTORY, WRITE_GEAR_CATALOG, AFFECT_TEAM]],
   ]);
 
@@ -37,7 +38,7 @@ describe("Revoke permission", () => {
   describe.each<TestHelper>([
     { permission: WRITE_FA, team: "hard" },
     { permission: WRITE_GEAR_CATALOG, team: "hard" },
-    { permission: READ_FA, team: "soft" },
+    { permission: READ_FA, team: BENEVOLE_FESTIVAL_CODE },
     { permission: AFFECT_TEAM, team: "matos" },
   ])(
     "when team $team had the permission $permission",
@@ -65,7 +66,7 @@ describe("Revoke permission", () => {
   );
   describe("when a team does not have the permission", () => {
     const permission = WRITE_FA;
-    const revokingPermission = { permission, from: "soft" } as const;
+    const revokingPermission = { permission, from: BENEVOLE_FESTIVAL_CODE } as const;
     it("should apply without issue", async () => {
       expect(revokePermission.apply(revokingPermission)).resolves.ok;
     });

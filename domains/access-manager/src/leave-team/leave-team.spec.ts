@@ -9,6 +9,7 @@ import {
   TEAM_LEFT,
 } from "./leave-team";
 import { InMemoryMemberships } from "./memberships.inmemory";
+import { BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team-constants";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
@@ -21,11 +22,11 @@ let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
 const initialMembership = (): Map<Team, Member[]> =>
   new Map([
-    ["soft", [shogosse]],
+    [BENEVOLE_FESTIVAL_CODE, [shogosse]],
     ["confiance", []],
     ["conducteur", [noel]],
     ["conducteur FEN", []],
-    ["hard", [noel]],
+    [HARD_CODE, [noel]],
     [ADMIN, [noel]],
   ]);
 
@@ -36,8 +37,8 @@ describe("Leave team", () => {
     leaveTeam = new LeaveTeam(memberships, events);
   });
   describe.each([
-    { userName: shogosse.name, userId: shogosse.id, team: "soft" },
-    { userName: noel.name, userId: noel.id, team: "hard" },
+    { userName: shogosse.name, userId: shogosse.id, team: BENEVOLE_FESTIVAL_CODE },
+    { userName: noel.name, userId: noel.id, team: HARD_CODE },
     { userName: noel.name, userId: noel.id, team: "conducteur" },
   ])(
     "when user $username is member of the team $team",

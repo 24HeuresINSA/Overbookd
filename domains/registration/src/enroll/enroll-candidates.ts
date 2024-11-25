@@ -1,5 +1,5 @@
 import { Event } from "@overbookd/event";
-import { BENEVOLE_CODE, HARD_CODE, SOFT_CODE } from "@overbookd/team-constants";
+import { BENEVOLE_CODE, HARD_CODE, BENEVOLE_FESTIVAL_CODE } from "@overbookd/team-constants";
 import { JoinableTeam } from "./joinable-team";
 
 export const CANDIDATE_ENROLLED = "candidate-enrolled" as const;
@@ -71,7 +71,7 @@ export class EnrollCandidates {
   private async checkEnrolledInOtherTeam(enrolling: EnrollingCandidates) {
     const { team, candidates } = enrolling;
 
-    const otherTeam = team === HARD_CODE ? SOFT_CODE : HARD_CODE;
+    const otherTeam = team === HARD_CODE ? BENEVOLE_FESTIVAL_CODE : HARD_CODE;
 
     const enrolledInOtherTeam = await this.memberships
       .enrolledIn(otherTeam)

@@ -25,7 +25,7 @@ import {
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
-import { ENROLL_SOFT } from "@overbookd/permission";
+import { ENROLL_FESTIVAL_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerCandidate } from "@overbookd/http";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
@@ -62,7 +62,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Get()
   @ApiResponse({
     status: 200,
@@ -76,7 +76,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Get("candidates/count")
   @ApiResponse({
     status: 200,
@@ -88,7 +88,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Get("rejected")
   @ApiResponse({
     status: 200,
@@ -102,7 +102,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Post("enroll")
   @HttpCode(204)
   @ApiResponse({
@@ -120,7 +120,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Delete(":candidateId")
   @HttpCode(204)
   @ApiResponse({
@@ -139,7 +139,7 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @Permission(ENROLL_FESTIVAL_VOLUNTEER)
   @Post(":candidateId/cancel-rejection")
   @HttpCode(204)
   @ApiResponse({

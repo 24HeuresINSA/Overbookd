@@ -41,6 +41,7 @@ import {
   VIEW_SECURITY_DASHBOARD,
   SHOTGUN_SHARED_MEAL,
   OFFER_SHARED_MEAL,
+  ENROLL_FESTIVAL_VOLUNTEER,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -367,10 +368,19 @@ export const permissions = [
   },
   {
     name: ENROLL_HARD,
-    description: "Peut enrôler des nouveaux",
+    description: "Peut enrôler des nouveaux membres du staff",
     teams: {
       createMany: {
-        data: [{ teamCode: "sg" }, { teamCode: "humain" }],
+        data: [{ teamCode: "sg" }],
+      },
+    },
+  },
+  {
+    name: ENROLL_FESTIVAL_VOLUNTEER,
+    description: "Peut enrôler des nouveaux bénévoles du festival",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "humain" }],
       },
     },
   },

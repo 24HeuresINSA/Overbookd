@@ -9,7 +9,7 @@ import {
 import { Users } from "../common/repository/users";
 import { VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
-import { SOFT_CODE } from "@overbookd/team-constants";
+import { BENEVOLE_FESTIVAL_CODE } from "@overbookd/team-constants";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -58,6 +58,6 @@ export class VolunteerMembershipApplicationService {
   }
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    return this.useCases.enroll.apply({ candidates, team: SOFT_CODE });
+    return this.useCases.enroll.apply({ candidates, team: BENEVOLE_FESTIVAL_CODE });
   }
 }

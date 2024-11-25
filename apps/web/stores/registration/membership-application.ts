@@ -169,7 +169,7 @@ export const useMembershipApplicationStore = defineStore(
           );
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les candidats sélectionnés a été enrôlé en tant que soft",
+          "Les candidats sélectionnés a été enrôlé en tant que bénévole festival",
         );
         this.volunteerCandidates = this.volunteerCandidates.filter(
           (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),

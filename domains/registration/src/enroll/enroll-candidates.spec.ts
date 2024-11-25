@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { BENEVOLE_CODE, BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   AlreadyEnrolledError,
@@ -33,9 +33,9 @@ describe("Enroll candidates to a joinable team", () => {
       candidates: [shogosse, noel, antony],
       names: `${shogosse.name}, ${noel.name} and ${antony.name}`,
     },
-    { team: "soft", candidates: [samuel], names: samuel.name },
+    { team: BENEVOLE_FESTIVAL_CODE, candidates: [samuel], names: samuel.name },
     {
-      team: "soft",
+      team: BENEVOLE_FESTIVAL_CODE,
       candidates: [samuel, valerie],
       names: `${samuel.name} and ${valerie.name}`,
     },
@@ -62,19 +62,19 @@ describe("Enroll candidates to a joinable team", () => {
       );
     });
   });
-  describe("when enrolling some candidates as hard and then some as soft", () => {
+  describe("when enrolling some candidates as hard and then some as festival volunteer", () => {
     it("should list all candidates as benevole", async () => {
       const hardCandidates = [shogosse, noel];
-      const softCandidates = [samuel, valerie];
+      const festivalVolunteerCandidates = [samuel, valerie];
       await enrollCandidates.apply({
         candidates: hardCandidates,
-        team: "hard",
+        team: HARD_CODE,
       });
       await enrollCandidates.apply({
-        candidates: softCandidates,
-        team: "soft",
+        candidates: festivalVolunteerCandidates,
+        team: BENEVOLE_FESTIVAL_CODE,
       });
-      const allCandidates = [...hardCandidates, ...softCandidates];
+      const allCandidates = [...hardCandidates, ...festivalVolunteerCandidates];
       allCandidates.every((candidate) =>
         expect(memberships.membersOf(BENEVOLE_CODE).includes(candidate)).toBe(
           true,
@@ -84,12 +84,12 @@ describe("Enroll candidates to a joinable team", () => {
   });
   describe.each<EnrollingCandidates & { alreadyEnrolled: Candidate[] }>([
     {
-      team: "soft",
+      team: BENEVOLE_FESTIVAL_CODE,
       candidates: [valerie, shogosse],
       alreadyEnrolled: [shogosse],
     },
     {
-      team: "hard",
+      team: HARD_CODE,
       candidates: [noel, antony, samuel, valerie],
       alreadyEnrolled: [samuel, valerie],
     },
@@ -99,8 +99,8 @@ describe("Enroll candidates to a joinable team", () => {
       beforeEach(() => {
         memberships = new InMemoryMemberships(
           new Map([
-            ["hard", [shogosse]],
-            ["soft", [samuel, valerie]],
+            [HARD_CODE, [shogosse]],
+            [BENEVOLE_FESTIVAL_CODE, [samuel, valerie]],
             [BENEVOLE_CODE, [shogosse, samuel, valerie]],
           ]),
         );
@@ -117,8 +117,8 @@ describe("Enroll candidates to a joinable team", () => {
     beforeEach(() => {
       memberships = new InMemoryMemberships(
         new Map([
-          ["hard", [shogosse]],
-          ["soft", [samuel, valerie]],
+          [HARD_CODE, [shogosse]],
+          [BENEVOLE_FESTIVAL_CODE, [samuel, valerie]],
           [BENEVOLE_CODE, [shogosse, samuel, valerie]],
         ]),
       );

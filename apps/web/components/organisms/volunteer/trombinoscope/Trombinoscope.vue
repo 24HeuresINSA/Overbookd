@@ -52,7 +52,7 @@ import {
   BUREAU_CODE,
   HARD_CODE,
   ORGA_CODE,
-  SOFT_CODE,
+  BENEVOLE_FESTIVAL_CODE,
   VIEUX_CODE,
 } from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
@@ -92,7 +92,7 @@ const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   }),
 );
 const eventVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
-  props.volunteers.filter((volunteer) => volunteer.teams.includes(SOFT_CODE)),
+  props.volunteers.filter((volunteer) => volunteer.teams.includes(BENEVOLE_FESTIVAL_CODE)),
 );
 const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {

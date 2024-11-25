@@ -10,6 +10,7 @@ import {
   TEAMS_JOINED,
 } from "./join-teams";
 import { InMemoryMemberships } from "./memberships.inmemory";
+import { BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team-constants";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
@@ -22,8 +23,8 @@ let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
 const initialMembership = (): Map<Team, Member[]> =>
   new Map([
-    ["soft", [shogosse]],
-    ["hard", [noel]],
+    [BENEVOLE_FESTIVAL_CODE, [shogosse]],
+    [HARD_CODE, [noel]],
     ["confiance", []],
     ["conducteur", [noel]],
     ["conducteur FEN", []],
@@ -73,7 +74,7 @@ describe("Join teams", () => {
   describe("when user is already member of all the teams", () => {
     const request = {
       member: shogosse,
-      teams: ["soft"],
+      teams: ["benevole-festival"],
       teamManager: standardUser,
     };
     it("should apply without issue", async () => {
@@ -87,7 +88,7 @@ describe("Join teams", () => {
     it("should stay member of the teams", async () => {
       await joinTeams.apply(request);
 
-      expect(memberships.membersOf("soft")).toContainEqual(shogosse);
+      expect(memberships.membersOf("benevole-festival")).toContainEqual(shogosse);
     });
   });
   describe("when some of the teams do not exist", () => {

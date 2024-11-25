@@ -1,6 +1,6 @@
 import {
   ENROLL_HARD,
-  ENROLL_SOFT,
+  ENROLL_FESTIVAL_VOLUNTEER,
   READ_FA,
   type Permission,
 } from "@overbookd/permission";
@@ -43,7 +43,7 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
     },
 
     async fetchVolunteerCandidates() {
-      if (!this._hasPermission(ENROLL_SOFT)) return;
+      if (!this._hasPermission(ENROLL_FESTIVAL_VOLUNTEER)) return;
       const res =
         await MembershipApplicationRepository.getVolunteerCandidatesCount();
       if (isHttpError(res)) return;

@@ -1,4 +1,5 @@
 import { moveAtFirstIndex } from "@overbookd/list";
+import { BENEVOLE_FESTIVAL_CODE, HARD_CODE } from "@overbookd/team";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter((team) => team !== "admin" && team !== "orga");
@@ -8,10 +9,10 @@ export function sortTeamsForAssignment(teams: string[]): string[] {
     sortedTeams = moveAtFirstIndex(sortedTeams, confianceIndex);
   }
 
-  const softIndex = getTeamIndex(sortedTeams, "soft");
-  if (softIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, softIndex);
+  const festivalVolunteerIndex = getTeamIndex(sortedTeams, BENEVOLE_FESTIVAL_CODE);
+  if (festivalVolunteerIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, festivalVolunteerIndex);
 
-  const hardIndex = getTeamIndex(sortedTeams, "hard");
+  const hardIndex = getTeamIndex(sortedTeams, HARD_CODE);
   if (hardIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, hardIndex);
 
   return sortedTeams;

@@ -29,7 +29,7 @@ export const VIEW_PLANNING = "view-planning";
 export const DOWNLOAD_PLANNING = "download-planning";
 export const SYNC_PLANNING = "sync-planning";
 export const ENROLL_HARD = "enroll-hard";
-export const ENROLL_SOFT = "enroll-soft";
+export const ENROLL_FESTIVAL_VOLUNTEER = "enroll-festival-volunteer";
 export const VIEW_VOLUNTEER = "view-volunteer";
 export const VIEW_VOLUNTEER_DETAILS = "view-volunteer-details";
 export const SEND_MAIL_TEST = "send-mail-test";
@@ -79,7 +79,7 @@ export const permissions = [
   DOWNLOAD_PLANNING,
   SYNC_PLANNING,
   ENROLL_HARD,
-  ENROLL_SOFT,
+  ENROLL_FESTIVAL_VOLUNTEER,
   VIEW_VOLUNTEER,
   VIEW_VOLUNTEER_DETAILS,
   SEND_MAIL_TEST,
