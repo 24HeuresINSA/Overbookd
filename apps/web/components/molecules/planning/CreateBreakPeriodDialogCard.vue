@@ -48,7 +48,7 @@ const props = defineProps({
 const duration = ref<Duration>(Duration.hours(2));
 const castInDuration = (hours: string) => {
   duration.value = Duration.hours(+hours);
-}
+};
 
 const emit = defineEmits(["close", "create"]);
 const close = () => emit("close");
