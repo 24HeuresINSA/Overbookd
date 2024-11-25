@@ -21,10 +21,11 @@
 </template>
 
 <script lang="ts" setup>
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { BENEVOLE_CODE, SOFT_CODE } from "@overbookd/team-constants";
 import type { Team } from "@overbookd/team";
+import { SEE_SOFT_TEAM } from "@overbookd/permission";
 
-const { team, size, withName, showHidden, closable, clickable, prefix } =
+const props =
   defineProps({
     team: {
       type: String,
@@ -57,24 +58,33 @@ const { team, size, withName, showHidden, closable, clickable, prefix } =
   });
 
 const teamStore = useTeamStore();
+const userStore = useUserStore();
 
 const teamMetadata = computed<Team | undefined>(() =>
-  teamStore.getTeamByCode(team),
+  teamStore.getTeamByCode(props.team),
 );
-const showTeam = computed<boolean>(() => showHidden || team !== BENEVOLE_CODE);
+const canSeeSoftTeam = computed<boolean>(() =>
+  userStore.can(SEE_SOFT_TEAM),
+);
+const showTeam = computed<boolean>(() => {
+  const isSoftTeamHidden = props.team === SOFT_CODE && !canSeeSoftTeam.value;
+  const isBenevoleTeamHidden = props.team === BENEVOLE_CODE && !props.showHidden;
+  return !isSoftTeamHidden && !isBenevoleTeamHidden;
+});
+
 const teamText = computed<string>(() => {
-  const chipPrefix = prefix ? `${prefix} ` : "";
+  const chipPrefix = props.prefix ? `${props.prefix} ` : "";
   return `${chipPrefix}${teamMetadata.value?.name}`;
 });
 const color = computed<string>(() => teamMetadata.value?.color ?? "grey");
 const classes = computed(() => ({
-  clickable: clickable,
-  flip: team === "bde",
+  clickable: props.clickable,
+  flip: props.team === "bde",
 }));
 
 const emit = defineEmits(["click", "close"]);
 const sendEvent = () => emit("click", teamMetadata.value);
-const sendCloseEvent = () => emit("close", team);
+const sendCloseEvent = () => emit("close", props.team);
 </script>
 
 <style scoped>

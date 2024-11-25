@@ -46,6 +46,7 @@ export const BORROW_GEARS = "borrow-gears";
 export const MANAGE_CHARISMA_EVENTS = "manage-charisma-events";
 export const SET_FAVORITE_PAGES = "set-favorite-pages";
 export const VIEW_SECURITY_DASHBOARD = "view-security-dashboard";
+export const SEE_SOFT_TEAM = "see-soft-team";
 
 export const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -96,6 +97,7 @@ export const permissions = [
   MANAGE_CHARISMA_EVENTS,
   SET_FAVORITE_PAGES,
   VIEW_SECURITY_DASHBOARD,
+  SEE_SOFT_TEAM,
 ] as const;
 
 export type Permission = (typeof permissions)[number];

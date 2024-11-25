@@ -41,6 +41,7 @@ import {
   VIEW_SECURITY_DASHBOARD,
   SHOTGUN_SHARED_MEAL,
   OFFER_SHARED_MEAL,
+  SEE_SOFT_TEAM,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -452,6 +453,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "secu" }],
+      },
+    },
+  },
+  {
+    name: SEE_SOFT_TEAM,
+    description: "Peut voir l'équipe soft",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
