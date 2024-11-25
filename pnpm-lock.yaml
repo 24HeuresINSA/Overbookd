@@ -477,6 +477,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
+      '@overbookd/team-constants':
+        specifier: workspace:*
+        version: link:../../constants/team-constants
 
   domains/assignment:
     dependencies:
