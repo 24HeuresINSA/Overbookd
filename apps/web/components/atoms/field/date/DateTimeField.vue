@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts" setup>
-import { OverDate, formatLocalDateTime, roundMinutes } from "@overbookd/time";
+import { OverDate } from "@overbookd/time";
 
-const date = defineModel<Date>({ required: true });
+const date = defineModel<OverDate>({ required: true });
 
 const { step } = defineProps({
   label: {
@@ -44,22 +44,18 @@ const { step } = defineProps({
 });
 
 const dateStringified = ref<string>("");
-const stringifyDate = (date?: Date | string): string => {
-  if (!date) return "";
-  return formatLocalDateTime(date);
-};
 
 watch(
   () => date.value,
-  () => (dateStringified.value = stringifyDate(date.value)),
+  () => (dateStringified.value = date.value.dateTimeString),
   { immediate: true },
 );
 
 const emit = defineEmits(["update:model-value", "enter"]);
 const updateDate = (date: string) => {
-  const fixedDate = OverDate.fromLocal(new Date(date)).date;
-  const roundedMinutes = roundMinutes(fixedDate, step);
-  emit("update:model-value", roundedMinutes);
+  const overdate = OverDate.fromLocal(date);
+  overdate.roundMinutes(step);
+  emit("update:model-value", overdate);
 };
 const enterKeyDown = () => emit("enter");
 </script>

@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import type { OnGoingSharedMeal } from "@overbookd/personal-account";
+import { OverDate } from "@overbookd/time";
 
 const mealSharingStore = useMealSharingStore();
 
@@ -49,7 +50,7 @@ const props = defineProps({
   },
 });
 
-const date = ref<Date>(new Date());
+const date = ref<Date>(OverDate.today().date);
 const amount = ref<number>(0);
 
 const emit = defineEmits(["close"]);

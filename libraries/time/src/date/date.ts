@@ -172,20 +172,24 @@ export class OverDate {
     return new OverDate({ year: +year, monthlyDate, hour, minute, offset });
   }
 
-  static fromLocal(local: Date): OverDate {
-    const year = local.getFullYear();
-    const month = formatDateNumberValue(local.getMonth() + 1);
-    const day = formatDateNumberValue(local.getDate());
+  static fromLocal(local: string): OverDate;
+  static fromLocal(local: Date): OverDate;
+  static fromLocal(local: Date | string): OverDate {
+    const localDate = new Date(local);
+
+    const year = localDate.getFullYear();
+    const month = formatDateNumberValue(localDate.getMonth() + 1);
+    const day = formatDateNumberValue(localDate.getDate());
 
     const monthlyDate = { month, day };
 
-    const hour = local.getHours();
-    const minute = local.getMinutes();
+    const hour = localDate.getHours();
+    const minute = localDate.getMinutes();
 
     if (!isMonthlyDate(monthlyDate) || !isHour(hour) || !isMinute(minute))
       throw new Error();
 
-    const offset = extractOffset(local);
+    const offset = extractOffset(localDate);
 
     return new OverDate({ year, monthlyDate, hour, minute, offset });
   }
@@ -211,6 +215,11 @@ export class OverDate {
   get dateString(): DateString {
     const { month, day } = this.definition.monthlyDate;
     return `${this.definition.year}-${month}-${day}` as DateString;
+  }
+
+  get dateTimeString(): string {
+    const { month, day } = this.definition.monthlyDate;
+    return `${this.definition.year}-${month}-${day}T${this.hour}:${this.minute}`;
   }
 
   get year(): Year {
@@ -262,6 +271,15 @@ export class OverDate {
 
   static isSameWeek(date1: OverDate, date2: OverDate): boolean {
     return OverDate.isSameDay(date1.getMonday(), date2.getMonday());
+  }
+
+  roundMinutes(round: number) {
+    if (this.minute % round === 0) return;
+
+    const roundedMinutes = Math.round(this.minute / round) * round;
+    if (!isMinute(roundedMinutes)) throw new Error();
+
+    this.definition.minute = roundedMinutes;
   }
 }
 

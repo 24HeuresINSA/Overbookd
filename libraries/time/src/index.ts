@@ -14,6 +14,6 @@ export {
   isMinute,
 } from "./date/date";
 export * from "./date/format-date.utils";
-export * from "./date/date.utils";
+export type { WithOverDate } from "./date/with-overdate";
 
 export { Edition, BASE_EDITION_STARTS } from "./edition/edition";
