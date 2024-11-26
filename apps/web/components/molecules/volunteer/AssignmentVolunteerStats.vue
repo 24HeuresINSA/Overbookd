@@ -1,16 +1,13 @@
 <template>
   <div class="volunteer-stats">
     <div v-for="stat in sortedStats" :key="stat.category" class="stat">
-      <span
-        v-tooltip:bottom="getStatCategoryName(stat.category)"
-        class="stat__category"
-      >
+      <span v-tooltip:bottom="getStatCategoryName(stat.category)">
         {{ getDisplayedStat(stat) }}
       </span>
     </div>
-    <span class="stat">•</span>
-    <span v-tooltip:bottom="'Total'" class="stat__category">
-      total: {{ displayedTotalDuration }}
+    <span class="dot">•</span>
+    <span v-tooltip:bottom="'Total'">
+      Total: {{ displayedTotalDuration }}
     </span>
   </div>
 </template>
@@ -71,18 +68,16 @@ const getDisplayedStat = (stat: DisplayableAssignmentStat): string => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .volunteer-stats {
   display: flex;
   flex-wrap: wrap;
 }
 
-.stat {
+.stat,
+.dot {
   display: flex;
   align-items: center;
   margin-right: 10px;
-  &__category {
-    text-transform: capitalize;
-  }
 }
 </style>
