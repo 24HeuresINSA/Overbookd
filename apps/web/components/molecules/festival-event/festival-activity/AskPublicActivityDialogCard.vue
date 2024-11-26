@@ -78,14 +78,18 @@ const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
 const canPublishActivity = computed<boolean>(() => {
-  const isTimeWindowValid = Period.isValid(period.value);
+  const isTimeWindowValid =
+    !mustHaveAtLeastOneTimeWindow.value || Period.isValid(period.value);
   const isPhotoLinkValid =
     photoLink.value !== null && photoLink.value.trim() !== "";
   const hasAtLeastOneCategory = hasAtLeastOneItem(categories.value);
   return isTimeWindowValid && isPhotoLinkValid && hasAtLeastOneCategory;
 });
+
 const publishActivity = async () => {
-  if (!hasAtLeastOneItem(general.value.timeWindows)) {
+  if (!canPublishActivity.value) return;
+
+  if (mustHaveAtLeastOneTimeWindow.value) {
     await faStore.addGeneralTimeWindow(period.value);
   }
   await faStore.updateGeneral({
