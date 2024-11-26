@@ -54,6 +54,14 @@ const updateQuantity = (value: string) => emit("update:quantity", +value);
   align-items: center;
   gap: 1em;
   margin-bottom: 0;
+
+  &__quantity {
+    width: 30%;
+  }
+  &__search {
+    width: 70%;
+  }
+
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     align-items: center;
