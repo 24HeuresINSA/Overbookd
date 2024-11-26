@@ -16,7 +16,7 @@
     </div>
     <TrombinoscopeGroup
       heading="Conseil d'administration 🧑‍💼"
-      :volunteers="orgas"
+      :volunteers="caMembers"
       @click:team="propagateClickedTeam"
       @click:volunteer="propagateClickedVolunteer"
     />
@@ -49,6 +49,7 @@
 <script lang="ts" setup>
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import {
+  BUREAU_CODE,
   HARD_CODE,
   ORGA_CODE,
   SOFT_CODE,
@@ -75,14 +76,19 @@ const allVolunteersDisplayed = computed<boolean>(() => {
   return hasVolunteers && noFilters;
 });
 
-const orgas = computed<UserDataWithPotentialyProfilePicture[]>(() =>
-  props.volunteers.filter((volunteer) => volunteer.teams.includes(ORGA_CODE)),
+const caMembers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+  props.volunteers.filter((volunteer) => {
+    const isOrga = volunteer.teams.includes(ORGA_CODE);
+    const isBureau = volunteer.teams.includes(BUREAU_CODE);
+    return isOrga || isBureau;
+  }),
 );
 const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
     const isNotOrga = !volunteer.teams.includes(ORGA_CODE);
+    const isNotBureau = !volunteer.teams.includes(BUREAU_CODE);
     const isHard = volunteer.teams.includes(HARD_CODE);
-    return isNotOrga && isHard;
+    return isNotOrga && isNotBureau && isHard;
   }),
 );
 const eventVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
