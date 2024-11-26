@@ -1,3 +1,18 @@
+## [3.14.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.14.0...v3.14.1) (2024-11-26)
+
+### Bug Fixes
+
+* **fa:** allow flagship sort [#2278](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2278) ([f901204](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f901204ef505127478a2dcce7a2b03693f7f4504))
+* **orga-need:** make chart responsive [#2274](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2274) ([8e5015f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8e5015f745154c4e94b511f07d3a85fcdc8461e4))
+* **trombinoscope:** display bureau members in CA section [#2275](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2275) ([43329bf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/43329bf1491beab48f7d94464d140692aa4e10f0))
+* **volunteer-list:** force selection of a mode to display the list [#2242](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2242) ([9c01bbf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9c01bbfe4c0dc97e27b93569d20685b0346f49c3))
+* **web:** fix publish activity dialog is time window valid condition [#2272](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2272) ([f097093](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f0970937481c7cbe8ad5a0a969220b9b94a39c42))
+* **web:** set width for inquiry and signage search fields in tables [#2207](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2207) ([a282728](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a2827285a435803c06ca2bf7f93b7e60fbec4119))
+
+### Pre-Features
+
+* **assignment:** add AssignmentVolunteerStats & CreateBreakPeriodDialogCard components [#2259](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2259) ([f05e07c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f05e07c1262d07adb6b27b54b86852dcd88aee57))
+
 ## [3.14.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.13.0...v3.14.0) (2024-11-26)
 
 ### Features
