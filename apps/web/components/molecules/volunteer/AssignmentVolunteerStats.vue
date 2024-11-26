@@ -1,16 +1,16 @@
 <template>
   <div class="volunteer-stats">
     <div v-for="stat in sortedStats" :key="stat.category" class="stat">
-      <span :v-tooltip:bottom="getDisplayedStat(stat)" class="stat__category">
-        {{ getStatCategoryName(stat.category) }}
+      <span
+        v-tooltip:bottom="getStatCategoryName(stat.category)"
+        class="stat__category"
+      >
+        {{ getDisplayedStat(stat) }}
       </span>
     </div>
     <span class="stat">•</span>
-    <span
-      :v-tooltip:bottom="`total: ${displayedTotalDuration}`"
-      class="stat__category"
-    >
-      Total
+    <span v-tooltip:bottom="'Total'" class="stat__category">
+      total: {{ displayedTotalDuration }}
     </span>
   </div>
 </template>
@@ -59,7 +59,7 @@ const getStatCategoryEmoji = (category: DisplayableCategory | null): string => {
   return taskCategoryEmojiMap.get(category) ?? taskCategoryEmojis.AUCUNE;
 };
 const getStatCategoryName = (category: DisplayableCategory | null): string => {
-  return category?.toLowerCase() ?? "indeterminé";
+  return capitalizeFirstLetter(category?.toLowerCase() ?? "indeterminé");
 };
 const getDisplayedDuration = (duration: number): string => {
   return Duration.ms(duration).toString();

@@ -9,7 +9,7 @@
 
     <template #content>
       <form>
-        <DateTimeField :model-value="start" disabled hide-details />
+        <DateTimeField :model-value="start" disabled />
         <v-text-field
           :model-value="duration.inHours"
           type="number"
@@ -64,9 +64,12 @@ const createBreakPeriod = () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 form {
   display: flex;
   gap: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 </style>
