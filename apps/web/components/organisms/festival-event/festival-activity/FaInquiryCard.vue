@@ -69,8 +69,8 @@
           />
         </v-form>
 
-        <v-card class="inquiry-table">
-          <v-card-title>Matos</v-card-title>
+        <div class="inquiry-table">
+          <h2 class="inquiry-table__title">Matos</h2>
           <InquiryTable
             :inquiries="inquiry.gears"
             :time-windows="inquiry.timeWindows"
@@ -79,10 +79,12 @@
             @link-drive="linkDrive"
             @remove="removeInquiry"
           />
-        </v-card>
+        </div>
 
-        <v-card class="inquiry-table">
-          <v-card-title>Elec</v-card-title>
+        <v-divider thickness="2" />
+
+        <div class="inquiry-table">
+          <h2 class="inquiry-table__title">Elec</h2>
           <InquiryTable
             :inquiries="inquiry.electricity"
             :time-windows="inquiry.timeWindows"
@@ -91,10 +93,12 @@
             @link-drive="linkDrive"
             @remove="removeInquiry"
           />
-        </v-card>
+        </div>
 
-        <v-card class="inquiry-table">
-          <v-card-title>Barrières</v-card-title>
+        <v-divider thickness="2" />
+
+        <div class="inquiry-table">
+          <h2 class="inquiry-table__title">Barrières</h2>
           <InquiryTable
             :inquiries="inquiry.barriers"
             :time-windows="inquiry.timeWindows"
@@ -103,7 +107,7 @@
             @link-drive="linkDrive"
             @remove="removeInquiry"
           />
-        </v-card>
+        </div>
       </v-card-text>
     </v-card>
 

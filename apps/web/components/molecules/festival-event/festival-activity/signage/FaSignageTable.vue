@@ -4,6 +4,7 @@
       :headers="tableHeaders"
       :items="signages"
       :items-per-page="-1"
+      density="comfortable"
       no-data-text="Aucune demande de signalétique"
       :mobile="isMobile"
       disable-pagination
@@ -94,7 +95,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     { title: "Commentaire", value: "comment" },
   ];
   const referenceHeader = !isDraft(selectedActivity.value)
-    ? [{ title: "Référence", value: "catalogItem" }]
+    ? [{ title: "Référence", value: "catalogItem", width: "22%" }]
     : [];
   const actionsHeader = !props.disabled
     ? [{ title: "Actions", value: "actions" }]

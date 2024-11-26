@@ -13,7 +13,6 @@
     no-data-text="Aucune signalétique correspondante"
     :custom-filter="slugifiedFilter"
     return-object
-    chips
   />
 </template>
 

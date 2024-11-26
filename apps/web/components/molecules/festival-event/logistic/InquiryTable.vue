@@ -19,6 +19,7 @@
         v-else
         :model-value="gearDrive(item)"
         :items="drives"
+        density="compact"
         hide-details
         @update:model-value="(drive) => linkDrive(item.slug, drive)"
       />
@@ -83,6 +84,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     title: "Lieu de retrait",
     value: "drive",
     sortable: true,
+    width: "35%",
   };
   const actionHeader = {
     title: "Actions",
