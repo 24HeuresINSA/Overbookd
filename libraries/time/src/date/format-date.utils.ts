@@ -1,29 +1,22 @@
-import { PARIS_TIMEZONE } from "./date.js";
+import {
+  DISPLAY_DATE,
+  DISPLAY_DATE_TIME,
+  DISPLAY_TIME,
+  PARIS_TIMEZONE,
+} from "./date.js";
 
 type DateSeed = Date | string | number;
 
 // return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", DISPLAY_DATE_TIME).format(
+    new Date(date),
+  );
 }
 
 // return format dd/mm/yyyy
 export function formatDate(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", DISPLAY_DATE).format(new Date(date));
 }
 
 // return format month YYYY
@@ -35,25 +28,23 @@ export function formatMonthWithYear(date: DateSeed): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
-function getTwoDigitsNumber(number: number): string {
-  return number < 10 ? "0" + number : number.toString();
-}
-
 // return format yyyy-mm-ddThh:mm
-export function formatLocalDateTime(date: Date): string {
-  const year = date.getFullYear();
-  const month = getTwoDigitsNumber(date.getMonth() + 1);
-  const day = getTwoDigitsNumber(date.getDate());
-  const hours = getTwoDigitsNumber(date.getHours());
-  const minutes = getTwoDigitsNumber(date.getMinutes());
+export function formatLocalDateTime(date: DateSeed): string {
+  const dateTime = new Intl.DateTimeFormat("fr", DISPLAY_DATE_TIME);
+  const [day, month, year, hours, minutes] = dateTime
+    .formatToParts(new Date(date))
+    .filter((part) => part.type !== "literal")
+    .map((part) => part.value);
+
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
 // return format yyyy-mm-dd
-export function formatLocalDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = getTwoDigitsNumber(date.getMonth() + 1);
-  const day = getTwoDigitsNumber(date.getDate());
+export function formatLocalDate(date: DateSeed): string {
+  const [day, month, year] = new Intl.DateTimeFormat("fr", DISPLAY_DATE)
+    .format(new Date(date))
+    .split("/");
+
   return `${year}-${month}-${day}`;
 }
 
@@ -79,17 +70,27 @@ export function formatDateWithExplicitMonthAndDay(date: DateSeed): string {
 }
 
 export function formatDateDayName(date: DateSeed): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
+  const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     weekday: "short",
-  });
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
+
+export function formatDateDayFullName(date: DateSeed): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
+    weekday: "long",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
 export function formatDateDayNumber(date: DateSeed): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
+  const displayOptions: Intl.DateTimeFormatOptions = {
     ...PARIS_TIMEZONE,
     day: "numeric",
-  });
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
 export function formatDateToHumanReadable(date: DateSeed): string {
@@ -102,10 +103,9 @@ export function formatDateToHumanReadable(date: DateSeed): string {
 }
 
 export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
-  const displayOptions: Intl.DateTimeFormatOptions = {
-    ...PARIS_TIMEZONE,
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", DISPLAY_TIME).format(new Date(date));
+}
+
+export function formatDateNumberValue(value: number): string {
+  return value.toString().padStart(2, "0");
 }

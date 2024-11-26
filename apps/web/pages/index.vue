@@ -9,6 +9,7 @@
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { OverDate } from "@overbookd/time";
 
 const userStore = useUserStore();
 
@@ -19,15 +20,13 @@ const displayedName = computed<string>(() =>
 const isBirthdayToday = computed<boolean>(() => {
   if (!userStore.loggedUser) return false;
 
-  const today = new Date();
-  const birthday = new Date(userStore.loggedUser.birthdate);
+  const today = OverDate.today();
+  const birthday = OverDate.from(userStore.loggedUser.birthdate);
 
-  const todaysDay = today.getDate();
-  const todaysMonth = today.getMonth();
-  const birthdaysDay = birthday.getDate();
-  const birthdaysMonth = birthday.getMonth();
-
-  return todaysDay === birthdaysDay && todaysMonth === birthdaysMonth;
+  return (
+    today.monthlyDate.month === birthday.monthlyDate.month &&
+    today.monthlyDate.day === birthday.monthlyDate.day
+  );
 });
 
 const titleMessage = computed<string>(() => {

@@ -1,4 +1,4 @@
-import { getMonday, ONE_DAY_IN_MS, Period } from "@overbookd/time";
+import { ONE_DAY_IN_MS, OverDate, Period } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
 
 export const DAY_MODE = "day";
@@ -11,10 +11,6 @@ export type CalendarDay = {
   date: Date;
 };
 
-export function formatDateNumberValue(value: number): string {
-  return value.toString().padStart(2, "0");
-}
-
 export function getOverlappingEvents(
   event: CalendarEvent,
   allEvents: CalendarEvent[],
@@ -24,14 +20,15 @@ export function getOverlappingEvents(
 }
 
 export function getWeekDays(date: Date): CalendarDay[] {
-  const monday = getMonday(date);
-  const weekDates = Array.from(
-    { length: 7 },
-    (_, i) => new Date(monday.getTime() + i * ONE_DAY_IN_MS),
+  const monday = OverDate.from(date).getMonday().date;
+  const weekDates = Array.from({ length: 7 }, (_, i) =>
+    OverDate.from(new Date(monday.getTime() + i * ONE_DAY_IN_MS)),
   );
-  return weekDates.map((date) => ({
-    name: date.toLocaleDateString("fr-FR", { weekday: "long" }).toUpperCase(),
-    number: date.getDate(),
-    date,
+  return weekDates.map((overdate) => ({
+    name: overdate.date
+      .toLocaleDateString("fr-FR", { weekday: "long" })
+      .toUpperCase(),
+    number: Number(overdate.monthlyDate.day),
+    date: overdate.date,
   }));
 }

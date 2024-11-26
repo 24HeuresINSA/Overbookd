@@ -1,3 +1,4 @@
+import { formatDateNumberValue } from "../date/format-date.utils.js";
 import {
   ONE_HOUR_IN_MS,
   ONE_MINUTE_IN_MS,
@@ -41,7 +42,7 @@ export class Duration {
       (this.milliseconds % ONE_HOUR_IN_MS) / ONE_MINUTE_IN_MS,
     );
     const formattedHours = hours.toString();
-    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedMinutes = formatDateNumberValue(minutes);
     return `${formattedHours}h${formattedMinutes}`;
   }
 }

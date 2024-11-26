@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { isSameDay, isSameWeek } from "@overbookd/time";
+import { OverDate } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 
@@ -60,15 +60,18 @@ const periodIndicator = computed<string>(() => {
 });
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
-  const today = new Date();
+  const today = OverDate.today();
+  const day = OverDate.from(displayedDay.value);
   return props.dayMode
-    ? isSameDay(displayedDay.value, today)
-    : isSameWeek(displayedDay.value, today);
+    ? OverDate.isSameDay(day, today)
+    : OverDate.isSameWeek(day, today);
 });
 const isEventStartWeekOrDay = computed<boolean>(() => {
+  const day = OverDate.from(displayedDay.value);
+  const eventStartOverDay = OverDate.from(configurationStore.eventStartDate);
   return props.dayMode
-    ? isSameDay(displayedDay.value, eventStartDate.value)
-    : isSameWeek(displayedDay.value, eventStartDate.value);
+    ? OverDate.isSameDay(day, eventStartOverDay)
+    : OverDate.isSameWeek(day, eventStartOverDay);
 });
 
 const moveToToday = () => {

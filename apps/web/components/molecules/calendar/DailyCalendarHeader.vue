@@ -16,7 +16,11 @@
 </template>
 
 <script lang="ts" setup>
-import { isSameDay } from "@overbookd/time";
+import {
+  formatDateDayFullName,
+  formatDateDayNumber,
+  OverDate,
+} from "@overbookd/time";
 import type { CalendarDay } from "~/utils/calendar/calendar.utils";
 import type { DailyEvent } from "~/utils/calendar/event";
 
@@ -30,23 +34,24 @@ const props = defineProps({
 });
 
 const displayableDay = computed<CalendarDay>(() => {
-  const name = props.displayedDay
-    .toLocaleDateString("fr-FR", { weekday: "long" })
-    .toUpperCase();
-  const number = props.displayedDay.getDate();
+  const name = formatDateDayFullName(props.displayedDay).toUpperCase();
+  const number = +formatDateDayNumber(props.displayedDay);
   return { name, number, date: props.displayedDay };
 });
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
-  const events = publicHolidayStore.calendarEvents.filter((event) =>
-    isSameDay(event.start, props.displayedDay),
-  );
+  const displayedDay = OverDate.from(props.displayedDay);
+  const events = publicHolidayStore.calendarEvents.filter((event) => {
+    const eventDay = OverDate.from(event.start);
+    return OverDate.isSameDay(eventDay, displayedDay);
+  });
   return events.at(0);
 });
 
 const isToday = computed<boolean>(() => {
-  const today = new Date();
-  return isSameDay(props.displayedDay, today);
+  const today = OverDate.today();
+  const displayedDay = OverDate.from(props.displayedDay);
+  return OverDate.isSameDay(displayedDay, today);
 });
 </script>
 

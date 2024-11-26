@@ -1,6 +1,6 @@
 import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
 import { IProvidePeriod, Period } from "../period/period.js";
-import { formatLocalDate } from "./format-date.utils.js";
+import { formatDateNumberValue } from "./format-date.utils.js";
 
 type January = "01";
 type February = "02";
@@ -75,57 +75,158 @@ type Enumerate<
   : Enumerate<N, [...Acc, Acc["length"]]>;
 
 export type Hour = Enumerate<24>;
+export type Minute = Enumerate<60>;
+
+type Offset = "01" | "02";
 
 export const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
   timeZone: "Europe/Paris",
 };
 
-const DISPLAY_HOUR: Intl.DateTimeFormatOptions = {
+const DISPLAY_TIMEZONE: Intl.DateTimeFormatOptions = {
+  ...PARIS_TIMEZONE,
+  timeZoneName: "short",
+};
+
+export const DISPLAY_DATE: Intl.DateTimeFormatOptions = {
+  ...PARIS_TIMEZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+};
+
+export const DISPLAY_TIME: Intl.DateTimeFormatOptions = {
   ...PARIS_TIMEZONE,
   hour: "2-digit",
   minute: "2-digit",
 };
 
-export class OverDate {
-  protected constructor(
-    protected readonly _date: Date,
-    protected readonly _hour: Hour,
-  ) {}
+export const DISPLAY_DATE_TIME: Intl.DateTimeFormatOptions = {
+  ...DISPLAY_DATE,
+  ...DISPLAY_TIME,
+};
 
-  static init({ date, hour }: { date: DateString; hour: Hour }): OverDate {
-    const hours = hour.toString().padStart(2, "0");
-    const dateString = `${date}T${hours}:00+02:00`;
-    return new OverDate(new Date(dateString), hour);
+export type InitOverDate = {
+  date: DateString;
+  hour: Hour;
+  minute?: Minute;
+};
+
+type MonthlyDate<M extends Month> = { month: M; day: Day<M> };
+
+type OverDateDefinition = {
+  year: Year;
+  monthlyDate: MonthlyDate<Month>;
+  hour: Hour;
+  minute: Minute;
+  offset: Offset;
+};
+
+export class OverDate {
+  protected constructor(protected readonly definition: OverDateDefinition) {}
+
+  static init(init: InitOverDate): OverDate {
+    const definition = OverDate.defineFrom(init);
+    return new OverDate(definition);
   }
 
-  static from(international: Date): OverDate {
-    const [hourWithPad] = Intl.DateTimeFormat("fr", DISPLAY_HOUR)
-      .format(international)
+  protected static defineFrom(init: InitOverDate): OverDateDefinition {
+    const { date, hour, minute = 0 } = init;
+    const [year, month, day] = date.split("-");
+
+    const monthlyDate = { month, day };
+
+    if (!isMonthlyDate(monthlyDate)) throw new Error();
+
+    const hours = formatDateNumberValue(hour);
+    const minutes = formatDateNumberValue(minute);
+    const datetime = `${date}T${hours}:${minutes}`;
+
+    const offset = extractOffset(new Date(datetime));
+
+    return { year: +year, monthlyDate, minute, hour, offset };
+  }
+
+  static from(international: string): OverDate;
+  static from(international: Date): OverDate;
+  static from(international: Date | string): OverDate {
+    const internationalDate = new Date(international);
+
+    const [hourWithPad, minuteWithPad] = Intl.DateTimeFormat("fr", DISPLAY_TIME)
+      .format(internationalDate)
       .split(":");
     const hour = +hourWithPad;
+    const minute = +minuteWithPad;
 
-    const [day, month, year] = Intl.DateTimeFormat("fr", PARIS_TIMEZONE)
-      .format(international)
+    const [day, month, year] = Intl.DateTimeFormat("fr", DISPLAY_DATE)
+      .format(internationalDate)
       .split("/");
-    const date = `${year}-${month}-${day}`;
 
-    if (!isDateString(date) || !isHour(hour)) throw new Error();
+    const monthlyDate = { month, day };
 
-    return OverDate.init({ date, hour });
+    if (!isMonthlyDate(monthlyDate) || !isHour(hour) || !isMinute(minute))
+      throw new Error();
+
+    const offset = extractOffset(internationalDate);
+
+    return new OverDate({ year: +year, monthlyDate, hour, minute, offset });
+  }
+
+  static fromLocal(local: Date): OverDate {
+    const year = local.getFullYear();
+    const month = formatDateNumberValue(local.getMonth() + 1);
+    const day = formatDateNumberValue(local.getDate());
+
+    const monthlyDate = { month, day };
+
+    const hour = local.getHours();
+    const minute = local.getMinutes();
+
+    if (!isMonthlyDate(monthlyDate) || !isHour(hour) || !isMinute(minute))
+      throw new Error();
+
+    const offset = extractOffset(local);
+
+    return new OverDate({ year, monthlyDate, hour, minute, offset });
+  }
+
+  static today(): OverDate {
+    return OverDate.fromLocal(new Date());
+  }
+
+  static getStartOfDay(day: Date): OverDate {
+    return OverDate.init({
+      date: OverDate.from(day).dateString,
+      hour: 0,
+    });
   }
 
   get date(): Date {
-    return this._date;
+    const { month, day } = this.definition.monthlyDate;
+    const date = `${this.definition.year}-${month}-${day}`;
+    const time = `${formatDateNumberValue(this.hour)}:${formatDateNumberValue(this.minute)}`;
+    return new Date(`${date}T${time}+${this.definition.offset}:00`);
   }
 
   get dateString(): DateString {
-    const date = formatLocalDate(this._date);
-    if (!isDateString(date)) throw new Error("Date invalide");
-    return date;
+    const { month, day } = this.definition.monthlyDate;
+    return `${this.definition.year}-${month}-${day}` as DateString;
+  }
+
+  get year(): Year {
+    return this.definition.year;
+  }
+
+  get monthlyDate(): MonthlyDate<Month> {
+    return this.definition.monthlyDate;
   }
 
   get hour(): Hour {
-    return this._hour;
+    return this.definition.hour;
+  }
+
+  get minute(): Minute {
+    return this.definition.minute;
   }
 
   get period(): Period {
@@ -136,6 +237,31 @@ export class OverDate {
 
   isIncludedBy(periods: IProvidePeriod[]): boolean {
     return periods.some((period) => Period.init(period).isIncluding(this.date));
+  }
+
+  getMonday(): OverDate {
+    const newDate = new Date(`${this.dateString}T00:00`);
+    const currentDay = newDate.getDay();
+
+    const isSunday = currentDay === 0;
+    const baseOffset = isSunday ? -6 : 1;
+    const daysToMonday = baseOffset - currentDay;
+
+    newDate.setDate(newDate.getDate() + daysToMonday);
+
+    return OverDate.fromLocal(newDate);
+  }
+
+  static isSameDay(date1: OverDate, date2: OverDate): boolean {
+    return (
+      date1.year === date2.year &&
+      date1.monthlyDate.month === date2.monthlyDate.month &&
+      date1.monthlyDate.day === date2.monthlyDate.day
+    );
+  }
+
+  static isSameWeek(date1: OverDate, date2: OverDate): boolean {
+    return OverDate.isSameDay(date1.getMonday(), date2.getMonday());
   }
 }
 
@@ -148,6 +274,47 @@ export function isDateString(dateString: string): dateString is DateString {
   return dateString.split("-").length === DATE_TEMPORAL_PARTS;
 }
 
+function isMonthlyDate(monthlyDate: {
+  month: string;
+  day: string;
+}): monthlyDate is MonthlyDate<Month> {
+  return (
+    isMonth(monthlyDate.month) && isDayOf(monthlyDate.month, monthlyDate.day)
+  );
+}
+
+function isMonth(month: string): month is Month {
+  return month.length === 2 && +month > 0 && +month <= 12;
+}
+
+function isDayOf<M extends Month>(month: M, day: string): day is Day<M> {
+  const maxDayOfTheMonth =
+    month === "02" ? 28 : ["04", "06", "09", "11"].includes(month) ? 30 : 31;
+  return day.length === 2 && +day > 0 && +month <= maxDayOfTheMonth;
+}
+
 export function isHour(hour: number): hour is Hour {
   return hour >= 0 && hour < 24;
+}
+
+export function isMinute(minute: number): minute is Minute {
+  return minute >= 0 && minute < 60;
+}
+
+function isOffset(offset: string): offset is Offset {
+  return offset === "01" || offset === "02";
+}
+
+function extractOffset(date: Date): Offset {
+  const parisTime = new Intl.DateTimeFormat("fr", DISPLAY_TIMEZONE)
+    .formatToParts(date)
+    .find((value) => value.type === "timeZoneName")?.value;
+
+  const offsetSearched = parisTime?.match(/UTC[+-](\d)/);
+
+  const offset = (offsetSearched?.at(1) ?? "").padStart(2, "0");
+
+  if (!isOffset(offset)) throw new Error(offset);
+
+  return offset;
 }
