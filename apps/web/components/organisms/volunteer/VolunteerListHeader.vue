@@ -49,6 +49,7 @@
         color="primary"
         size="small"
         class="icons-action__button"
+        mandatory
       >
         <v-btn :value="true" icon="mdi-view-grid" :rounded="false" />
         <v-btn :value="false" icon="mdi-view-list" :rounded="false" />
