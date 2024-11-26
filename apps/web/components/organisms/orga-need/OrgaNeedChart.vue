@@ -1,5 +1,5 @@
 <template>
-  <Line :data="courbs" :options="options" />
+  <Line :data="courbs" :options="options" class="vuetify-card chart" />
 </template>
 
 <script lang="ts" setup>
@@ -135,3 +135,9 @@ const options = computed(() => {
   } as const;
 });
 </script>
+
+<style scoped>
+.chart {
+  padding: 15px;
+}
+</style>

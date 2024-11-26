@@ -30,11 +30,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card>
-      <v-card-text>
-        <OrgaNeedChart @select:details="selectDetails" />
-      </v-card-text>
-    </v-card>
+    <OrgaNeedChart @select:details="selectDetails" />
   </div>
 
   <v-dialog v-model="isDetailsOpen" max-width="1000px">
