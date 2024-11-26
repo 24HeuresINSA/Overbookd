@@ -1,3 +1,17 @@
+## [3.14.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.13.0...v3.14.0) (2024-11-26)
+
+### Features
+
+* **ft:** :egg: add FT 420 [#2270](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2270) ([2b941c7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2b941c7b92003cc874c694e18db75ef720bd6679))
+
+### Bug Fixes
+
+* **festival-activity:** add my festival activity shortcut. [#2102](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2102) ([5bcfa1e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5bcfa1e6bfffb6beb8384c80a14514f5a40293e1))
+* **money:** doesn't format the field value if there's just a 0 after the separator [#2266](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2266) ([726ee1e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/726ee1e2425037d75813ae429f3f67ea6d1f1938))
+* **registration:** emit enrolled event when enrolling candidates. [#2155](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2155) ([c4823a9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c4823a90c75180c8d5e9de84e8f37df6c07bc375))
+* **user:** :bug: allow profile picture picture update [#2246](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2246) ([dce6cdf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dce6cdfa97adffb669130c7a9280620833576f84))
+* **web:** fix timezones in date/datetime inputs and calendar [#2244](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2244) ([1ead9ae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ead9aedff8988ab8aecceeed12f6f85e6f149da))
+
 ## [3.13.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.12.2...v3.13.0) (2024-11-20)
 
 ### Features
