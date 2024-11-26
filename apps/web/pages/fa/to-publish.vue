@@ -110,7 +110,13 @@ const tableHeaders: TableHeaders = [
   { title: "Photo", value: "photoLink", align: "center", width: "80px" },
   { title: "Description", value: "description" },
   { title: "Catégories", value: "categories" },
-  { title: "Anim phare", value: "isFlagship", align: "center", width: "80px" },
+  {
+    title: "Anim phare",
+    value: "isFlagship",
+    align: "center",
+    width: "80px",
+    sortable: true,
+  },
   { title: "Créneaux", value: "timeWindows" },
 ];
 
