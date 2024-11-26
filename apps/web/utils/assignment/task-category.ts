@@ -16,7 +16,7 @@ export type DisplayableCategory = Category | typeof AUCUNE;
 
 export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
 
-export const TaskCategoryEmojis: Record<
+export const taskCategoryEmojis: Record<
   DisplayableCategory,
   TaskCategoryEmoji
 > = {
@@ -28,12 +28,12 @@ export const TaskCategoryEmojis: Record<
   AUCUNE: "🤷‍♂️",
 };
 
-export const TaskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
+export const taskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
   new Map([
-    [STATIQUE, TaskCategoryEmojis.STATIQUE],
-    [BAR, TaskCategoryEmojis.BAR],
-    [MANUTENTION, TaskCategoryEmojis.MANUTENTION],
-    [FUN, TaskCategoryEmojis.FUN],
-    [RELOU, TaskCategoryEmojis.RELOU],
-    ["AUCUNE", TaskCategoryEmojis.AUCUNE],
+    [STATIQUE, taskCategoryEmojis.STATIQUE],
+    [BAR, taskCategoryEmojis.BAR],
+    [MANUTENTION, taskCategoryEmojis.MANUTENTION],
+    [FUN, taskCategoryEmojis.FUN],
+    [RELOU, taskCategoryEmojis.RELOU],
+    ["AUCUNE", taskCategoryEmojis.AUCUNE],
   ]);
