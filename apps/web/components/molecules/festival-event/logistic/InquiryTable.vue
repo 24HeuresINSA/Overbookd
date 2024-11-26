@@ -3,7 +3,7 @@
     :headers="tableHeaders"
     :items="inquiries"
     :items-per-page="-1"
-    density="comfortable"
+    density="compact"
     :no-data-text="noDataMessage"
     :mobile="isMobile"
     disable-pagination

@@ -81,7 +81,7 @@
           />
         </div>
 
-        <v-divider thickness="2" />
+        <v-divider thickness="4" />
 
         <div class="inquiry-table">
           <h2 class="inquiry-table__title">Elec</h2>
@@ -95,7 +95,7 @@
           />
         </div>
 
-        <v-divider thickness="2" />
+        <v-divider thickness="4" />
 
         <div class="inquiry-table">
           <h2 class="inquiry-table__title">Barrières</h2>

@@ -4,7 +4,7 @@
       :headers="tableHeaders"
       :items="signages"
       :items-per-page="-1"
-      density="comfortable"
+      density="compact"
       no-data-text="Aucune demande de signalétique"
       :mobile="isMobile"
       disable-pagination
