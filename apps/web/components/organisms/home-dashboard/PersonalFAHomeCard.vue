@@ -13,7 +13,13 @@
       >
         <v-list-item-content>
           <v-list-item-title class="activity-name">
-            <strong>N° {{ item.id }} - {{ item.name }}</strong>
+            <strong>N° {{ item.id }} - {{ item.name }}
+              <v-icon
+                class="status-dot"
+                :class="getStatusColor(item.status)"
+                :title="item.status"
+              >mdi-circle</v-icon>
+            </strong>
           </v-list-item-title>
           <div class="team-items">
             <TeamChip v-if="item.team" :team="item.team" with-name />
@@ -23,14 +29,22 @@
           </div>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item v-if="searchableActivities.length > maxActivities">
+        <v-list-item-content>
+          <span class="limit-message">
+            Affichage limité à {{ maxActivities }} activités. <br />
+            Va sur tes FAs pour voir le reste !
+          </span>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-card>
 </template>
 
 <script lang="ts" setup>
+
 import type { PreviewFestivalActivity } from "@overbookd/festival-event";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
-
 import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
@@ -63,16 +77,35 @@ const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
     })),
 );
 
+const maxActivities = 10; // Définir le nombre maximal d'activités
+
 const myActivities = computed<PreviewFestivalActivity[]>(() => {
-  // Filtrer les activités par l'adherent spécifique
-  return searchableActivities.value.filter((activity) => {
-    return activity.adherent.id === currentAdherent.value?.id;
-  });
+  const statusOrder = ["REFUSED", "IN_REVIEW", "DRAFT", "VALIDATED"];
+  const filteredActivities = searchableActivities.value
+    .filter((activity) => activity.adherent.id === currentAdherent.value?.id)
+    .sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status));
+  return filteredActivities.slice(0, maxActivities);
 });
+type Status = "VALIDATED" | "REFUSED" | "IN_REVIEW" |"DRAFT" ;
+
+const statusColors: Record<Status, string> = {
+  VALIDATED: "green",
+  REFUSED: "red",
+  DRAFT: "grey",
+  IN_REVIEW: "orange",
+};
+
+function getStatusColor(status: string | undefined | null): string {
+  if (!status || !(status in statusColors)) {
+    return "grey";
+  }
+  return statusColors[status as Status];
+}
 
 const haveBalance = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
+
 </script>
 
 <style lang="scss" scoped>
@@ -124,4 +157,27 @@ const haveBalance = computed<boolean>(() =>
   font-style: italic;
   color: gray;
 }
+.status-dot {
+  font-size: 20px; // Réduit la taille de l'icône
+  &.green {
+    color: #4caf50;
+  }
+  &.red {
+    color: #f44336;
+  }
+  &.grey {
+    color: #9e9e9e;
+  }
+  &.orange {
+    color: #ff9800;
+  }
+}
+
+.limit-message {
+  font-style: italic;
+  font-size: small;
+  color: var(--v-theme-secondary);
+  text-align: center;
+}
+
 </style>
