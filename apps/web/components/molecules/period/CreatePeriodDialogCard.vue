@@ -28,20 +28,27 @@
 </template>
 
 <script lang="ts" setup>
-import { type IProvidePeriod, Period, formatDate } from "@overbookd/time";
+import {
+  type IProvidePeriod,
+  ONE_HOUR_IN_MS,
+  Period,
+  formatDate,
+} from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 
 const start = ref<Date>(configurationStore.eventStartDate);
-const end = ref<Date>(configurationStore.eventStartDate);
-
-const displayedEventDate = computed<string>(
-  () => `vendredi ${formatDate(configurationStore.eventStartDate)}`,
+const end = ref<Date>(
+  new Date(configurationStore.eventStartDate.getTime() + ONE_HOUR_IN_MS),
 );
 const period = computed<IProvidePeriod>(() => ({
   start: start.value,
   end: end.value,
 }));
+
+const displayedEventDate = computed<string>(
+  () => `vendredi ${formatDate(configurationStore.eventStartDate)}`,
+);
 const isValid = computed<boolean>(() => Period.isValid(period.value));
 
 const emit = defineEmits(["add", "close"]);
@@ -52,6 +59,8 @@ const addPeriod = () => {
   close();
 
   start.value = configurationStore.eventStartDate;
-  end.value = configurationStore.eventStartDate;
+  end.value = new Date(
+    configurationStore.eventStartDate.getTime() + ONE_HOUR_IN_MS,
+  );
 };
 </script>
