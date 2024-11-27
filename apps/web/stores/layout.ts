@@ -4,7 +4,7 @@ import {
   saveLightTheme,
 } from "~/utils/vuetify/theme/theme.utils";
 
-export const MOBILE_MAX_WIDTH = 760;
+const MOBILE_MAX_WIDTH = 760;
 
 type State = {
   isDarkTheme: boolean;
@@ -14,7 +14,7 @@ type State = {
 export const useLayoutStore = defineStore("layout", {
   state: (): State => ({
     isDarkTheme: isDarkTheme(),
-    isDesktop: window.innerWidth >= MOBILE_MAX_WIDTH,
+    isDesktop: window.innerWidth > MOBILE_MAX_WIDTH,
   }),
   getters: {
     isMobile(): boolean {
@@ -36,7 +36,7 @@ export const useLayoutStore = defineStore("layout", {
     },
 
     _updateIsDesktop() {
-      this.isDesktop = window.innerWidth >= MOBILE_MAX_WIDTH;
+      this.isDesktop = window.innerWidth > MOBILE_MAX_WIDTH;
     },
   },
 });
