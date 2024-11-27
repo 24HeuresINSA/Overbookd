@@ -96,7 +96,7 @@ const calendarSteps = computed<CalendarStep[]>(() => {
 </script>
 
 <style lang="scss" scoped>
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: $mobile-max-width) {
   @for $index from 1 through 5 {
     #calendar-part-#{$index} {
       padding: 5px 0 16px 0;
