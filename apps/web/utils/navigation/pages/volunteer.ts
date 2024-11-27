@@ -75,7 +75,7 @@ const AVAILABILITIES_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["dispos", "disponibilites"],
+  keywords: ["mes dispos", "disponibilites"],
 };
 
 // const MY_PLANNING_PAGE: PageInSummary = {
