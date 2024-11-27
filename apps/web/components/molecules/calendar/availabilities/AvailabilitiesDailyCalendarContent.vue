@@ -1,6 +1,6 @@
 <template>
   <div class="daily-content">
-    <AvailabilititesCalendarEvent
+    <AvailabilitiesCalendarEvent
       v-for="event in eventsInDisplayedDay"
       :key="event.id"
       :event="event"
