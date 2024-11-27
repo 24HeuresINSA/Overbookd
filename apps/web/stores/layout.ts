@@ -4,7 +4,7 @@ import {
   saveLightTheme,
 } from "~/utils/vuetify/theme/theme.utils";
 
-const MOBILE_MAX_WIDTH = 960;
+export const MOBILE_MAX_WIDTH = 760;
 
 type State = {
   isDarkTheme: boolean;
