@@ -45,14 +45,16 @@
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { type IProvidePeriod, Period } from "@overbookd/time";
+import { type IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 import { hasAtLeastOneItem } from "@overbookd/list";
 
 const faStore = useFestivalActivityStore();
 const configurationStore = useConfigurationStore();
 
 const start = ref<Date>(configurationStore.eventStartDate);
-const end = ref<Date>(configurationStore.eventStartDate);
+const end = ref<Date>(
+  new Date(configurationStore.eventStartDate.getTime() + ONE_HOUR_IN_MS),
+);
 const period = computed<IProvidePeriod>(() => ({
   start: start.value,
   end: end.value,
