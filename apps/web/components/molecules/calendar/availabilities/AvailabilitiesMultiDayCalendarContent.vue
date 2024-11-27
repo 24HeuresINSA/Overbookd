@@ -5,7 +5,7 @@
       :key="day.toISOString()"
       class="multiday-content__day"
     >
-      <AvailabilititesDailyCalendarContent
+      <AvailabilitiesDailyCalendarContent
         :events="events"
         :displayed-day="day"
         @event-click="propagateEventClick"
