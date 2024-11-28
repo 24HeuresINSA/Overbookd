@@ -101,7 +101,7 @@ export class InMemoryGearRepository implements GearRepository {
   }
 
   private isMatchingSearch(
-    { category, name, owner, ponctualUsage }: GearSearchOptions,
+    { category, search: name, owner, ponctualUsage }: GearSearchOptions,
     gear: CatalogGear,
   ): boolean {
     const slug = SlugifyService.applyOnOptional(name);

@@ -1,7 +1,7 @@
 import { CatalogCategoryIdentifier, CategoryOwner } from "./catalog.js";
 
 export type GearSearchOptions = {
-  name?: string;
+  search?: string;
   category?: string;
   owner?: string;
   ponctualUsage?: boolean;

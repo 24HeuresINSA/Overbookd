@@ -1,12 +1,6 @@
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-
-const SELECT_BASE_GEAR = {
-  id: true,
-  name: true,
-  isConsumable: true,
-  slug: true,
-};
+import { SELECT_GEAR } from "../../common/dto/gear.query";
 
 const SELECT_INVENTORY = {
   inventoryRecords: {
@@ -86,8 +80,8 @@ const SELECT_PURCHASES = {
   },
 };
 
-export const SELECT_GEAR = {
-  ...SELECT_BASE_GEAR,
+export const SELECT_DASHBOARD_GEAR = {
+  ...SELECT_GEAR,
   ...SELECT_INVENTORY,
   ...SELECT_ACTIVITY_GEAR_INQUIRIES,
   ...SELECT_TASK_GEAR_INQUIRIES,

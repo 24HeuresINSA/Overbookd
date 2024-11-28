@@ -10,7 +10,7 @@ export class GearSearchRequestDto implements GearSearchOptions {
   })
   @IsOptional()
   @IsString()
-  name?: string;
+  search?: string;
 
   @ApiProperty({
     required: false,

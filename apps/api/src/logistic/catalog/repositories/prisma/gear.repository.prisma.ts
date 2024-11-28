@@ -4,24 +4,8 @@ import { PrismaService } from "../../../../prisma.service";
 import { GearRepository } from "../catalog-repositories";
 import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
-import { GearQueryBuilder } from "../../../common/repositories/gear.query";
-
-type DatabaseGear = {
-  id: number;
-  name: string;
-  slug: string;
-  category: {
-    owner: {
-      name: string;
-      code: string;
-    };
-    id: number;
-    name: string;
-    path: string;
-  };
-  isPonctualUsage: boolean;
-  isConsumable: boolean;
-};
+import { GearFilter } from "../../../common/gear.filter";
+import { DatabaseGear, SELECT_GEAR } from "../../../common/dto/gear.query";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
   const baseGear = {
@@ -49,38 +33,14 @@ export function convertGearToApiContract(gear: DatabaseGear) {
 
 @Injectable()
 export class PrismaGearRepository implements GearRepository {
-  private readonly SELECT_GEAR = {
-    id: true,
-    name: true,
-    isPonctualUsage: true,
-    isConsumable: true,
-    slug: true,
-    category: {
-      select: {
-        id: true,
-        name: true,
-        path: true,
-        owner: {
-          select: {
-            name: true,
-            code: true,
-          },
-        },
-      },
-    },
-  };
-
   constructor(private readonly prismaService: PrismaService) {}
 
   async getGear(id: number): Promise<CatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
-      select: this.SELECT_GEAR,
+      select: SELECT_GEAR,
       where: { id },
     });
-    if (!gear) {
-      return undefined;
-    }
-    return convertGearToApiContract(gear);
+    return gear ? convertGearToApiContract(gear) : undefined;
   }
 
   async addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear> {
@@ -88,7 +48,7 @@ export class PrismaGearRepository implements GearRepository {
       const data = this.buildUpsertData(gear);
       const newGear = await this.prismaService.catalogGear.create({
         data,
-        select: this.SELECT_GEAR,
+        select: SELECT_GEAR,
       });
       return convertGearToApiContract(newGear);
     } catch (e) {
@@ -113,7 +73,7 @@ export class PrismaGearRepository implements GearRepository {
     const { id, category, ...data } = gear;
     const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },
-      select: this.SELECT_GEAR,
+      select: SELECT_GEAR,
       where: { id },
     });
     return convertGearToApiContract(updatedGear);
@@ -124,12 +84,10 @@ export class PrismaGearRepository implements GearRepository {
   }
 
   async searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
-    const where = GearQueryBuilder.find(options);
-    return (
-      await this.prismaService.catalogGear.findMany({
-        select: this.SELECT_GEAR,
-        where,
-      })
-    ).map(convertGearToApiContract);
+    const gears = await this.prismaService.catalogGear.findMany({
+      select: SELECT_GEAR,
+    });
+    const filteredGears = GearFilter.apply(gears, options);
+    return filteredGears.map(convertGearToApiContract);
   }
 }

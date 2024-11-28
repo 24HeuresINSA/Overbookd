@@ -5,7 +5,7 @@ import {
   GearPurchase,
 } from "@overbookd/http";
 import {
-  DatabaseGear,
+  DatabaseDashboardGear,
   DatabaseActivityInquiry,
   InventoryRecord,
   DatabaseTaskInquiry,
@@ -139,7 +139,7 @@ const databasePurchaseFromFriday08h: DatabasePurchase = {
   },
 };
 
-export const gearWithNoInquiry: DatabaseGear = {
+export const gearWithNoInquiry: DatabaseDashboardGear = {
   id: 1,
   name: "gear with no inquiry",
   slug: "gear-with-no-inquiry",
@@ -150,7 +150,7 @@ export const gearWithNoInquiry: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithOneInquiry: DatabaseGear = {
+export const gearWithOneInquiry: DatabaseDashboardGear = {
   id: 2,
   name: "gear with one inquiry",
   slug: "gear-with-one-inquiry",
@@ -161,7 +161,7 @@ export const gearWithOneInquiry: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithTwoInquiries: DatabaseGear = {
+export const gearWithTwoInquiries: DatabaseDashboardGear = {
   id: 3,
   name: "gear with two inquiries",
   slug: "gear-with-two-inquiries",
@@ -172,7 +172,7 @@ export const gearWithTwoInquiries: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
+export const gearWithOneInquiryWithTwoTimeWindows: DatabaseDashboardGear = {
   id: 4,
   name: "gear with one inquiry with two time windows",
   slug: "gear-with-one-inquiry-with-two-time-windows",
@@ -183,7 +183,7 @@ export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
+export const gearWithOneInquiryAndOneInventoryRecord: DatabaseDashboardGear = {
   id: 5,
   name: "gear with one inquiry and one inventory record",
   slug: "gear-with-one-inquiry-and-one-inventory-record",
@@ -194,7 +194,7 @@ export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
+export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseDashboardGear = {
   id: 6,
   name: "gear with one inquiry and one inventory record",
   slug: "gear-with-one-inquiry-and-one-inventory-record",
@@ -208,7 +208,7 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const consumableGearWithOneInquiry: DatabaseGear = {
+export const consumableGearWithOneInquiry: DatabaseDashboardGear = {
   id: 7,
   name: "consumable gear with one inquiry",
   slug: "consumable-gear-with-one-inquiry",
@@ -219,7 +219,7 @@ export const consumableGearWithOneInquiry: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseGear =
+export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseDashboardGear =
   {
     id: 8,
     name: "consumable gear with two inquiries and one inventory record",
@@ -231,7 +231,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseGear =
     borrows: [],
     purchases: [],
   };
-export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: DatabaseGear =
+export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: DatabaseDashboardGear =
   {
     id: 9,
     name: "consumable gear with one inquiry with two same activity time windows",
@@ -245,7 +245,7 @@ export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: Databas
     borrows: [],
     purchases: [],
   };
-export const gearWithOneInventoryRecord: DatabaseGear = {
+export const gearWithOneInventoryRecord: DatabaseDashboardGear = {
   id: 10,
   name: "gear with one inventory record",
   slug: "gear-with-one-inventory-record",
@@ -256,7 +256,7 @@ export const gearWithOneInventoryRecord: DatabaseGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithOneInventoryRecordAndOneBorrow: DatabaseGear = {
+export const gearWithOneInventoryRecordAndOneBorrow: DatabaseDashboardGear = {
   id: 11,
   name: "gear with one inventory record and one borrow",
   slug: "gear-with-one-inventory-record-and-one-borrow",
@@ -267,7 +267,7 @@ export const gearWithOneInventoryRecordAndOneBorrow: DatabaseGear = {
   borrows: [databaseBorrowFromFriday08hto09h],
   purchases: [],
 };
-export const gearWithOneInquiryAndOneBorrow: DatabaseGear = {
+export const gearWithOneInquiryAndOneBorrow: DatabaseDashboardGear = {
   id: 12,
   name: "gear with one inquiry and one borrow",
   slug: "gear-with-one-inquiry-and-one-borrow",
@@ -278,7 +278,7 @@ export const gearWithOneInquiryAndOneBorrow: DatabaseGear = {
   borrows: [databaseBorrowFromFriday08hto09h],
   purchases: [],
 };
-export const consumableGearWithOneInquiryAndOneBorrow: DatabaseGear = {
+export const consumableGearWithOneInquiryAndOneBorrow: DatabaseDashboardGear = {
   id: 13,
   name: "consumable gear with one inquiry and one borrow",
   slug: "consumable-gear-with-one-inquiry-and-one-borrow",
@@ -289,7 +289,7 @@ export const consumableGearWithOneInquiryAndOneBorrow: DatabaseGear = {
   borrows: [databaseBorrowFromFriday08hto09h],
   purchases: [],
 };
-export const gearWithOneInventoryRecordAndOnePurchase: DatabaseGear = {
+export const gearWithOneInventoryRecordAndOnePurchase: DatabaseDashboardGear = {
   id: 14,
   name: "gear with one inventory record and one purchase",
   slug: "gear-with-one-inventory-record-and-one-purchase",
@@ -300,7 +300,7 @@ export const gearWithOneInventoryRecordAndOnePurchase: DatabaseGear = {
   borrows: [],
   purchases: [databasePurchaseFromFriday08h],
 };
-export const gearWithOneInquiryAndOnePurchase: DatabaseGear = {
+export const gearWithOneInquiryAndOnePurchase: DatabaseDashboardGear = {
   id: 15,
   name: "gear with one inquiry and one purchase",
   slug: "gear-with-one-inquiry-and-one-purchase",
@@ -311,17 +311,18 @@ export const gearWithOneInquiryAndOnePurchase: DatabaseGear = {
   borrows: [],
   purchases: [databasePurchaseFromFriday08h],
 };
-export const consumableGearWithOneInquiryAndOnePurchase: DatabaseGear = {
-  id: 16,
-  name: "consumable gear with one inquiry and one purchase",
-  slug: "consumable-gear-with-one-inquiry-and-one-purchase",
-  isConsumable: true,
-  festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
-  festivalTaskInquiries: [],
-  inventoryRecords: [],
-  borrows: [],
-  purchases: [databasePurchaseFromFriday08h],
-};
+export const consumableGearWithOneInquiryAndOnePurchase: DatabaseDashboardGear =
+  {
+    id: 16,
+    name: "consumable gear with one inquiry and one purchase",
+    slug: "consumable-gear-with-one-inquiry-and-one-purchase",
+    isConsumable: true,
+    festivalActivityInquiries: [activityInquiryFromFriday09hto10h],
+    festivalTaskInquiries: [],
+    inventoryRecords: [],
+    borrows: [],
+    purchases: [databasePurchaseFromFriday08h],
+  };
 
 const emptyGearDetails = {
   stock: 0,
