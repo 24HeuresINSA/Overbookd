@@ -24,6 +24,8 @@ import {
 } from "@overbookd/personal-account";
 import { PrismaTransactions } from "./repository/transactions.prisma";
 import { DomainEventService } from "../domain-event/domain-event.service";
+import { NewExternalEventConsumption } from "@overbookd/personal-account";
+import { CreateExternalEventTransactions } from "@overbookd/personal-account";
 
 export type Barrels = {
   findBySlug: (slug: string) => Promise<ConfiguredBarrel>;
@@ -36,8 +38,9 @@ type Repositories = {
 
 type UseCases = {
   deposit: Readonly<Deposit>;
-  barrelTransactions: Readonly<CreateBarrelTransactions>;
-  provisionsTransactions: Readonly<CreateProvisionsTransactions>;
+  barrel: Readonly<CreateBarrelTransactions>;
+  provisions: Readonly<CreateProvisionsTransactions>;
+  externalEvent: Readonly<CreateExternalEventTransactions>;
 };
 
 @Injectable()
@@ -83,14 +86,20 @@ export class TransactionService implements OnApplicationBootstrap {
     transactions: CreateBarrelTransaction[],
   ): Promise<void> {
     const barrel = await this.repositories.barrels.findBySlug(barrelSlug);
-    await this.useCases.barrelTransactions.apply(barrel, transactions);
+    await this.useCases.barrel.apply(barrel, transactions);
   }
 
   async addProvisionsTransactions(
     stickPrice: number,
     transactions: CreateProvisionsTransaction[],
   ): Promise<void> {
-    await this.useCases.provisionsTransactions.apply(stickPrice, transactions);
+    await this.useCases.provisions.apply(stickPrice, transactions);
+  }
+
+  async addExternalEventTransactions(
+    consumptions: NewExternalEventConsumption[],
+  ): Promise<void> {
+    await this.useCases.externalEvent.applyMultiple(consumptions);
   }
 
   async deleteTransaction(id: number): Promise<void> {

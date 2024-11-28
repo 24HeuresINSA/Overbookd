@@ -42,6 +42,7 @@ import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
 import {
   MyBarrelTransactionResponseDto,
   MyDepositTransactionResponseDto,
+  MyExternalEventTransactionResponseDto,
   MyNegativeInitializationTransactionResponseDto,
   MyPositiveInitializationTransactionResponseDto,
   MyProvisionsTransactionResponseDto,
@@ -52,6 +53,7 @@ import { TransactionErrorFilter } from "./transaction-error.filter";
 import { CreateDepositRequestDto } from "./dto/create-deposit.request.dto";
 import { CreateBarrelTransactionsRequestDto } from "./dto/create-barrel-transactions.request.dto";
 import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-transactions.request.dto";
+import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto copy";
 
 @ApiBearerAuth()
 @UseFilters(TransactionErrorFilter)
@@ -88,6 +90,7 @@ export class TransactionController {
     MyDepositTransactionResponseDto,
     MyBarrelTransactionResponseDto,
     MyProvisionsTransactionResponseDto,
+    MyExternalEventTransactionResponseDto,
     TransferIReceiveTransactionResponseDto,
     TransferISendTransactionResponseDto,
     MyPositiveInitializationTransactionResponseDto,
@@ -101,6 +104,7 @@ export class TransactionController {
         { $ref: getSchemaPath(MyDepositTransactionResponseDto) },
         { $ref: getSchemaPath(MyBarrelTransactionResponseDto) },
         { $ref: getSchemaPath(MyProvisionsTransactionResponseDto) },
+        { $ref: getSchemaPath(MyExternalEventTransactionResponseDto) },
         { $ref: getSchemaPath(TransferIReceiveTransactionResponseDto) },
         { $ref: getSchemaPath(TransferISendTransactionResponseDto) },
         { $ref: getSchemaPath(MyPositiveInitializationTransactionResponseDto) },
@@ -191,6 +195,26 @@ export class TransactionController {
       stickPrice,
       transactions,
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Post("external-event")
+  @HttpCode(204)
+  @ApiBody({
+    description: "External event transactions to create",
+    type: CreateExternalEventTransactionsRequestDto,
+    isArray: true,
+  })
+  @ApiResponse({
+    description: "Created external events transactions",
+    status: 204,
+  })
+  addExternalEventTransactions(
+    @Body()
+    consumptions: CreateExternalEventTransactionsRequestDto[],
+  ): Promise<void> {
+    return this.transactionService.addExternalEventTransactions(consumptions);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

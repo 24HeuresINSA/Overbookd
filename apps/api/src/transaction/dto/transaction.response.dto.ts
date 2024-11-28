@@ -1,6 +1,7 @@
-import { TransactionType } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  transactionTypes,
+  TransactionType,
   TransactionUser,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
@@ -14,7 +15,7 @@ export class TransactionResponseDto
   @ApiProperty()
   id: number;
 
-  @ApiProperty({ enum: TransactionType })
+  @ApiProperty({ enum: transactionTypes })
   type: TransactionType;
 
   @ApiProperty({
