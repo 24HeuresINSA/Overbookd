@@ -77,6 +77,7 @@ import { Money } from "@overbookd/money";
 import {
   BARREL,
   DEPOSIT,
+  EXTERNAL_EVENT,
   INITIALIZATION,
   PROVISIONS,
   SHARED_MEAL,
@@ -98,7 +99,8 @@ import {
   PLACARD,
   INITIALISATION,
   REPAS_PARTAGE,
-} from "~/utils/transaction/transaction";
+  EVENEMENT,
+} from "~/utils/transaction/transaction.constants";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const transactionStore = useTransactionStore();
@@ -157,7 +159,12 @@ const convertToEuros = (amount: number): string => {
 const shouldHavePayor = ({
   type,
 }: TransactionWithSenderAndReceiver): boolean => {
-  return type === TRANSFER || type === BARREL || type === PROVISIONS;
+  return (
+    type === TRANSFER ||
+    type === BARREL ||
+    type === PROVISIONS ||
+    type === EXTERNAL_EVENT
+  );
 };
 const shouldHavePayee = ({
   type,
@@ -179,6 +186,8 @@ const displayableType = (type: string): string => {
       return REPAS_PARTAGE;
     case INITIALIZATION:
       return INITIALISATION;
+    case EXTERNAL_EVENT:
+      return EVENEMENT;
     default:
       return type;
   }

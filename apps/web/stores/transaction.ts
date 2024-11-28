@@ -6,6 +6,7 @@ import type {
   CreateProvisionsTransaction,
   CreateTransferForm,
   MyTransaction,
+  NewExternalEventConsumption,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
@@ -78,6 +79,24 @@ export const useTransactionStore = defineStore("transaction", {
       if (isHttpError(res)) return;
       sendSuccessNotification(
         "Les transactions placard ont été enregistrées 💸",
+      );
+
+      const isMine = transactions.some(
+        ({ consumer }) => consumer === this._getLoggedUserId(),
+      );
+      if (isMine) await this._fetchMyInformation();
+    },
+
+    async createExternalEventTransactions(
+      transactions: NewExternalEventConsumption[],
+    ) {
+      const res =
+        await TransactionRepository.createExternalEventTransactions(
+          transactions,
+        );
+      if (isHttpError(res)) return;
+      sendSuccessNotification(
+        "Les transactions d'événements extérieurs ont été enregistrées 💸",
       );
 
       const isMine = transactions.some(
