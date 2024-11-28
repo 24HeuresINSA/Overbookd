@@ -31,7 +31,10 @@ export class DashboardGear {
     });
   }
 
-  private static periodDetails(gear: DatabaseDashboardGear, period: IProvidePeriod) {
+  private static periodDetails(
+    gear: DatabaseDashboardGear,
+    period: IProvidePeriod,
+  ) {
     if (!gear.isConsumable) {
       return DashboardGear.gearPeriodDetails(gear, period);
     }
