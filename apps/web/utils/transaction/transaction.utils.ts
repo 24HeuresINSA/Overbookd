@@ -4,27 +4,15 @@ import {
   BARREL,
   PROVISIONS,
   DEPOSIT,
+  EXTERNAL_EVENT,
   TRANSFER,
   SHARED_MEAL,
   INITIALIZATION,
   doIReceive,
   type TransactionType,
+  isCredit,
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
-
-export function isCredit(transaction: MyTransaction): boolean {
-  switch (transaction.type) {
-    case BARREL:
-    case PROVISIONS:
-      return false;
-    case DEPOSIT:
-      return true;
-    case TRANSFER:
-    case SHARED_MEAL:
-    case INITIALIZATION:
-      return doIReceive(transaction);
-  }
-}
 
 export function isDebit(transaction: MyTransaction): boolean {
   return !isCredit(transaction);
@@ -44,6 +32,8 @@ export function getTransactionIcon(type: TransactionType): string {
       return "mdi-food-variant";
     case INITIALIZATION:
       return "mdi-restart";
+    case EXTERNAL_EVENT:
+      return "mdi-party-popper";
   }
 }
 
@@ -58,6 +48,7 @@ export function getTransferMessage(transaction: MyTransaction): string {
     case PROVISIONS:
     case DEPOSIT:
     case INITIALIZATION:
+    case EXTERNAL_EVENT:
       return "";
     case TRANSFER:
     case SHARED_MEAL:

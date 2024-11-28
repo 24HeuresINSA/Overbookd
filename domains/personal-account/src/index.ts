@@ -16,6 +16,7 @@ export type {
   MyDepositTransaction,
   MyBarrelTransaction,
   MyProvisionsTransaction,
+  MyExternalEventTransaction,
   MyNegativeInitializationTransaction,
   MyPositiveInitializationTransaction,
   TransactionUser,
@@ -24,6 +25,7 @@ export type {
 export {
   BARREL,
   DEPOSIT,
+  EXTERNAL_EVENT,
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
