@@ -57,6 +57,13 @@ export {
   Deposit,
 } from "./transaction/deposit/deposit.js";
 export {
+  type ExternalEventTransaction,
+  type ExternalEventTransactions,
+  type ExternalEventTransactionForm,
+  type NewExternalEventConsumption,
+  CreateExternalEventTransactions,
+} from "./transaction/external-event/create-external-event-transactions.js";
+export {
   type BarrelTransaction,
   type BarrelTransactionForm,
   type BarrelTransactions,
