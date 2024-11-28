@@ -35,10 +35,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { MyTransaction } from "@overbookd/personal-account";
+import { type MyTransaction, isCredit } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
 import {
-  isCredit,
   isDebit,
   getTransactionIcon,
   formatAmount,

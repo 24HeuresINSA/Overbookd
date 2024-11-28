@@ -16,6 +16,7 @@ export type {
   MyDepositTransaction,
   MyBarrelTransaction,
   MyProvisionsTransaction,
+  MyExternalEventTransaction,
   MyNegativeInitializationTransaction,
   MyPositiveInitializationTransaction,
   TransactionUser,
@@ -24,6 +25,7 @@ export type {
 export {
   BARREL,
   DEPOSIT,
+  EXTERNAL_EVENT,
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
@@ -56,6 +58,13 @@ export {
   type DepositTransactionForm,
   Deposit,
 } from "./transaction/deposit/deposit.js";
+export {
+  type ExternalEventTransaction,
+  type ExternalEventTransactions,
+  type ExternalEventTransactionForm,
+  type NewExternalEventConsumption,
+  CreateExternalEventTransactions,
+} from "./transaction/external-event/create-external-event-transactions.js";
 export {
   type BarrelTransaction,
   type BarrelTransactionForm,
