@@ -18,6 +18,7 @@ enum TransactionType {
   BARREL
   PROVISIONS
   SHARED_MEAL
+  EXTERNAL_EVENT
 
   @@map("transaction_type")
 }
