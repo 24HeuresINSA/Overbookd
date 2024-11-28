@@ -145,7 +145,7 @@
               multiple
               label="Équipes"
               :items="comingFromTeams"
-              item-text="name"
+              item-title="name"
               item-value="code"
               clearable
               hint="Tu nous rejoins à plusieurs ?"

@@ -2,15 +2,15 @@
   <v-card class="settings">
     <v-card-text>
       <div class="settings__mode-choice">
-        <h2>Mode</h2>
-        <v-btn-toggle v-model="mode" tile color="primary">
-          <v-btn :value="CASK_MODE" size="small"> {{ FUT }} </v-btn>
-          <v-btn :value="CLOSET_MODE" size="small"> {{ PLACARD }} </v-btn>
-          <v-btn :value="DEPOSIT_MODE" size="small"> {{ DEPOT }} </v-btn>
-          <v-btn :value="EXTERNAL_EVENT_MODE" size="small">
-            {{ EVENEMENT }}
-          </v-btn>
-        </v-btn-toggle>
+        <v-select
+          v-model="mode"
+          :items="modeOptions"
+          item-title="text"
+          item-value="value"
+          label="Mode"
+          density="comfortable"
+          hide-details
+        />
       </div>
 
       <div v-if="hasErrors" class="errors">
@@ -173,6 +173,13 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const modeOptions = [
+  { text: FUT, value: CASK_MODE },
+  { text: PLACARD, value: CLOSET_MODE },
+  { text: DEPOT, value: DEPOSIT_MODE },
+  { text: EVENEMENT, value: EXTERNAL_EVENT_MODE },
+];
 
 const totalPersonalAccountBalance = computed<number>(() => {
   return props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0);

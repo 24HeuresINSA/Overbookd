@@ -194,7 +194,7 @@ const saveTransactions = async () => {
       const transactions = consumersWithConsumption.value.map(
         ({ id, newConsumption }) => ({
           consumer: id,
-          consumption: newConsumption,
+          amount: newConsumption,
           context: externalEventContext.value,
         }),
       );
