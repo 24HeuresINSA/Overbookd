@@ -101,18 +101,18 @@ export class InMemoryGearRepository implements GearRepository {
   }
 
   private isMatchingSearch(
-    { category, search: name, owner, ponctualUsage }: GearSearchOptions,
+    { category, search, owner, ponctualUsage }: GearSearchOptions,
     gear: CatalogGear,
   ): boolean {
-    const slug = SlugifyService.applyOnOptional(name);
+    const slug = SlugifyService.applyOnOptional(search);
     const categorySlug = SlugifyService.applyOnOptional(category);
     const ownerSlug = SlugifyService.applyOnOptional(owner);
 
-    const search = new GearSearchBuilder(gear)
+    const gearSearch = new GearSearchBuilder(gear)
       .addCategoryCondition(categorySlug)
       .addSlugCondition(slug)
       .addOwnerCondition(ownerSlug)
       .addPonctualUsageCondition(ponctualUsage);
-    return search.match;
+    return gearSearch.match;
   }
 }
