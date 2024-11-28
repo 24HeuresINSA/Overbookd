@@ -4,15 +4,15 @@ import {
   TransactionError,
 } from "../transaction.error";
 
-class DepositError extends TransactionError {}
+class ExternalEventError extends TransactionError {}
 
-export class InsufficientAmount extends DepositError {
+export class InsufficientAmount extends ExternalEventError {
   constructor() {
     super(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
   }
 }
 
-export class AtLeastOneInsufficientAmount extends DepositError {
+export class AtLeastOneInsufficientAmount extends ExternalEventError {
   constructor() {
     super(AT_LEAST_ONE_INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
   }

@@ -4,6 +4,7 @@ export const PROVISIONS = "PROVISIONS";
 export const TRANSFER = "TRANSFER";
 export const SHARED_MEAL = "SHARED_MEAL";
 export const INITIALIZATION = "INITIALIZATION";
+export const EXTERNAL_EVENT = "EXTERNAL_EVENT";
 
 export const ONE_EURO_IN_CENTS = 100;
 
@@ -47,6 +48,10 @@ export type MyProvisionsTransaction = BaseTransaction & {
   type: typeof PROVISIONS;
 };
 
+export type MyExternalEventTransaction = BaseTransaction & {
+  type: typeof EXTERNAL_EVENT;
+};
+
 export type TransferIReceiveTransaction = Receive<typeof TRANSFER>;
 
 export type TransferISendTransaction = Send<typeof TRANSFER>;
@@ -65,6 +70,7 @@ export type MyTransaction =
   | MyDepositTransaction
   | MyBarrelTransaction
   | MyProvisionsTransaction
+  | MyExternalEventTransaction
   | TransferIReceiveTransaction
   | TransferISendTransaction
   | SharedMealIOfferTransaction
@@ -80,6 +86,7 @@ export const transactionTypes: TransactionType[] = [
   PROVISIONS,
   TRANSFER,
   SHARED_MEAL,
+  EXTERNAL_EVENT,
 ];
 
 export type TransactionWithSenderAndReceiver = BaseTransaction & {
@@ -102,6 +109,7 @@ export function isCredit(transaction: MyTransaction): boolean {
       return true;
     case BARREL:
     case PROVISIONS:
+    case EXTERNAL_EVENT:
       return false;
     default:
       return doIReceive(transaction);
