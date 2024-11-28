@@ -2,27 +2,25 @@
   <v-autocomplete
     v-model="gear"
     :items="gears"
-    item-title="name"
+    :item-title="buildGearNameWithCode"
     item-value="id"
     clearable
     :label="label"
     return-object
     :hide-details="hideDetails"
     :disabled="disabled"
+    :custom-filter="slugifiedFilter"
     no-data-text="Aucun matos correspondant"
   >
     <template #item="{ props, item }">
-      <v-list-item
-        v-bind="props"
-        :title="item.raw.name"
-        :subtitle="item.raw.category?.path || ''"
-      />
+      <v-list-item v-bind="props" :subtitle="item.raw.category?.path || ''" />
     </template>
   </v-autocomplete>
 </template>
 
 <script lang="ts" setup>
 import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
+import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const catalogGearStore = useCatalogGearStore();
 
@@ -60,6 +58,10 @@ const buildSearchOptions = (): GearSearchOptions => {
 const fetchGears = async () => {
   const searchOptions = buildSearchOptions();
   await catalogGearStore.fetchGears(searchOptions);
+};
+const buildGearNameWithCode = (gear: CatalogGear): string => {
+  const code = gear.code ? ` (${gear.code})` : "";
+  return `${gear.name}${code}`;
 };
 
 const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);

@@ -48,7 +48,8 @@ const gear = ref<CatalogGear | undefined>(undefined);
 
 const isNotValidForm = computed<boolean>(() => !gear.value);
 const gearHelpMessage = computed<string>(
-  () => `${props.inventoryError.record.gear} a été cherché précédemment`,
+  () =>
+    `${props.inventoryError.record.gear} (${props.inventoryError.record.code}) a été cherché précédemment`,
 );
 
 const emit = defineEmits(["close", "add-to-inventory"]);

@@ -21,6 +21,9 @@
           :items="displayableInventoryImportErrors"
           :loading="loading"
         >
+          <template #item.code="{ item }">
+            {{ item.record.code }}
+          </template>
           <template #item.gear="{ item }">
             {{ item.record.gear }}
           </template>
@@ -55,6 +58,9 @@
         loading-text="Chargement de l'inventaire..."
         no-data-text="Inventaire vide"
       >
+        <template #item.code="{ item }">
+          {{ item.gear.code }}
+        </template>
         <template #item.gear="{ item }">
           {{ item.gear.name }}
         </template>
@@ -76,7 +82,7 @@
         :inventory-error="
           selectedImportError as DisplayableManualInventoryRecordError
         "
-        @close-dialog="stopEditMode"
+        @close="stopEditMode"
         @add-to-inventory="addToInventory"
       />
     </v-dialog>
@@ -85,30 +91,32 @@
 
 <script lang="ts" setup>
 import { removeItemAtIndex } from "@overbookd/list";
-// import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
+import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-// import { InventoryImport } from "~/domain/inventory/inventory-import";
+import { InventoryImport } from "~/domain/inventory/inventory-import";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
 import type { CatalogGear } from "@overbookd/http";
-// import type { Gears } from "~/domain/inventory/gears";
+import type { Gears } from "~/domain/inventory/gears";
 
 const catalogGearStore = useCatalogGearStore();
 const inventoryStore = useInventoryStore();
 
 const recordsHeaders: TableHeaders = [
+  { title: "Référence", value: "code" },
   { title: "Matos", value: "gear" },
   { title: "Quantité", value: "quantity" },
   { title: "Lieu de stockage", value: "storage" },
 ];
 const errorsHeaders: TableHeaders = [
+  { title: "Référence", value: "code" },
   { title: "Matos", value: "gear" },
-  { title: "Quantite", value: "quantity" },
+  { title: "Quantité", value: "quantity" },
   { title: "Lieu de stockage", value: "storage" },
-  { title: "Erreur detectee", value: "message" },
+  { title: "Erreur detectée", value: "message" },
   { title: "Action", value: "action" },
 ];
 
@@ -122,7 +130,7 @@ const selectedImportError = ref<
 const selectedImportErrorIndex = ref<number>(-1);
 const isUpdateImportErrorDialogOpen = ref<boolean>(false);
 
-// const gearRepository = computed<Gears>(() => catalogGearStore.gearRepository);
+const gearRepository = computed<Gears>(() => catalogGearStore.gearRepository);
 
 const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
 
@@ -153,14 +161,13 @@ const extractInventoryRecords = async (importFile: File | File[] | null) => {
     return;
   }
   loading.value = true;
-  // FIXME
-  // const importContainer = new CSVInventoryImportContainer(
-  //   importFile,
-  //   gearRepository.value,
-  // );
-  // const { records, errors } = await InventoryImport.toRecords(importContainer);
-  // inventoryImportErrors.value = errors;
-  // inventoryRecords.value = records;
+  const importContainer = new CSVInventoryImportContainer(
+    file,
+    gearRepository.value,
+  );
+  const { records, errors } = await InventoryImport.toRecords(importContainer);
+  inventoryImportErrors.value = errors;
+  inventoryRecords.value = records;
   loading.value = false;
 };
 

@@ -4,6 +4,7 @@ import { InventoryRecord } from "./inventory-record";
 
 export class ManualInventoryRecord {
   constructor(
+    public readonly code: string,
     public readonly gear: string,
     public readonly quantity: number,
     public readonly storage: string,
@@ -17,13 +18,13 @@ export class ManualInventoryRecord {
   }
 
   private findGear(): Promise<CatalogGear | undefined> {
-    return this.gearRepository.find(this.gear);
+    return this.gearRepository.find(this.code);
   }
 }
 
 export class ManualInventoryRecordError extends Error {
   constructor(public readonly record: ManualInventoryRecord) {
-    super(`Gear ${record.gear} doesn't exist`);
+    super(`Gear ${record.gear} (${record.code}) doesn't exist`);
   }
 }
 

@@ -24,6 +24,7 @@ describe("Inventory Fill Form", () => {
           const gears = [marteau, perceuse, scieCirculaire];
           const gearRepository = new InMemoryGears(gears);
           const manualRecord = new ManualInventoryRecord(
+            (gear as CatalogGear).code ?? "",
             (gear as CatalogGear).name,
             quantity as number,
             storage as string,
@@ -44,12 +45,14 @@ describe("Inventory Fill Form", () => {
     );
   });
   describe("When using a manual record with unexisting gear", () => {
+    const inexistingGearCode = "BR_OU_420";
     const inexistingGearName = scieCirculaire.name.slice(1, 5);
     let manualRecord: ManualInventoryRecord;
     beforeAll(async () => {
       const gears = [marteau, perceuse, scieCirculaire];
       const gearRepository = new InMemoryGears(gears);
       manualRecord = new ManualInventoryRecord(
+        inexistingGearCode,
         inexistingGearName,
         12,
         "Cave du E",
@@ -59,7 +62,9 @@ describe("Inventory Fill Form", () => {
     it("should inform user gear is not found", async () => {
       await expect(
         async () => await manualRecord.toInventoryRecord(),
-      ).rejects.toThrow(`Gear ${inexistingGearName} doesn't exist`);
+      ).rejects.toThrow(
+        `Gear ${inexistingGearName} (${inexistingGearCode}) doesn't exist`,
+      );
     });
     it("should be able to retrieve manual inventory record", async () => {
       await expect(
@@ -73,6 +78,7 @@ describe("Inventory Fill Form", () => {
     const quantity = 12;
     const storage = "local";
     const manualRecord = new ManualInventoryRecord(
+      "",
       "test",
       quantity,
       storage,
