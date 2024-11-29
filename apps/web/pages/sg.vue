@@ -157,9 +157,9 @@ const createDeposits = (): Promise<void> => {
   return transactionStore.createDeposits(transactions);
 };
 
-const createBarrelTransactions = (): Promise<void> => {
+const createBarrelTransactions = async (): Promise<void> => {
   const barrelSlug = selectedBarrel.value?.slug;
-  if (!barrelSlug) return Promise.resolve();
+  if (!barrelSlug) return;
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
@@ -182,8 +182,8 @@ const createProvisionsTransactions = (): Promise<void> => {
   );
 };
 
-const createExternalEventTransactions = (): Promise<void> => {
-  if (!externalEventContext.value.trim()) return Promise.resolve();
+const createExternalEventTransactions = async (): Promise<void> => {
+  if (!externalEventContext.value.trim()) return;
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
