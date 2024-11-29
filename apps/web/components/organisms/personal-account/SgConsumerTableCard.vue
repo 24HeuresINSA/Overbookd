@@ -48,7 +48,7 @@
 
         <template #item.recap="{ item }">
           <MoneyField
-            v-model="calculatedConsumption[item.id]"
+            v-model="computedFinalAmounts[item.id]"
             density="compact"
             readonly
             hide-details
@@ -59,12 +59,12 @@
         <template #item.action="{ item }">
           <div v-if="isExpenseMode" class="expense-fields-inline">
             <v-text-field
-              v-model="item.newConsumption"
+              v-model="item.amount"
               :rules="[min(0), isInteger]"
               density="compact"
               type="number"
               hide-details
-              @update:model-value="updateNewConsumption(item, $event)"
+              @update:model-value="updateAmount(item, $event)"
             />
             <v-btn
               text="+1"
@@ -90,11 +90,11 @@
 
           <MoneyField
             v-else
-            v-model="item.newConsumption"
+            v-model="item.amount"
             density="compact"
             hide-details
             hide-label
-            @update:model-value="updateNewConsumption(item, $event)"
+            @update:model-value="updateAmount(item, $event)"
           />
         </template>
       </v-data-table>
@@ -106,7 +106,7 @@
 import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { matchingSearchItems } from "~/utils/search/search.utils";
-import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
+import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
   type SgMode,
   CASK_MODE,
@@ -121,7 +121,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();
 
-const consumers = defineModel<ConsumerWithConsumption[]>("consumers", {
+const consumers = defineModel<ConsumerWithAmount[]>("consumers", {
   required: true,
 });
 const props = defineProps({
@@ -169,7 +169,7 @@ const isExpenseMode = computed<boolean>(
 );
 
 const existsOnlyOneConsumer = computed<boolean>(() => {
-  return consumers.value.filter((c) => c.newConsumption > 0).length === 1;
+  return consumers.value.filter((c) => c.amount > 0).length === 1;
 });
 const calculateSpentAmount = (consumption: number) => {
   if (isMode(CASK_MODE)) {
@@ -181,45 +181,42 @@ const calculateSpentAmount = (consumption: number) => {
   if (isMode(CLOSET_MODE)) return props.closetStickPrice * consumption;
   return consumption;
 };
-const calculatedConsumption = computed<Record<number, number>>(() => {
+const computedFinalAmounts = computed<Record<number, number>>(() => {
   const result: Record<number, number> = {};
   consumers.value.forEach((consumer) => {
-    result[consumer.id] = calculateSpentAmount(consumer.newConsumption);
+    result[consumer.id] = calculateSpentAmount(consumer.amount);
   });
   return result;
 });
 
 const searchConsumer = ref<string>("");
-const searchableConsumers = computed<Searchable<ConsumerWithConsumption>[]>(
-  () => consumers.value.map(toSearchable),
+const searchableConsumers = computed<Searchable<ConsumerWithAmount>[]>(() =>
+  consumers.value.map(toSearchable),
 );
 
 const teamFilter = ref<string[]>([HARD_CODE, VIEUX_CODE]);
 const matchingTeamFilter = (consumerTeams: string[]) => {
   return teamFilter.value.some((team) => consumerTeams.includes(team));
 };
-const filteredConsumers = computed<ConsumerWithConsumption[]>(() => {
+const filteredConsumers = computed<ConsumerWithAmount[]>(() => {
   const filteredByTeam = searchableConsumers.value.filter((consumer) =>
     matchingTeamFilter(consumer.teams),
   );
   return matchingSearchItems(filteredByTeam, searchConsumer.value);
 });
 
-const updateNewConsumption = (
-  consumer: ConsumerWithConsumption,
-  value: string | number,
-) => {
+const updateAmount = (consumer: ConsumerWithAmount, value: string | number) => {
   if (typeof value == "string" && !isNumber(value)) return;
   const consumerFromModel = consumers.value.find((c) => c.id === consumer.id);
   if (!consumerFromModel) return;
   const numberValue = Number(value);
-  consumerFromModel.newConsumption = numberValue >= 0 ? numberValue : 0;
+  consumerFromModel.amount = numberValue >= 0 ? numberValue : 0;
 };
 
-const addToConsumption = (consumer: ConsumerWithConsumption, value: number) => {
+const addToConsumption = (consumer: ConsumerWithAmount, value: number) => {
   const consumerFromModel = consumers.value.find((c) => c.id === consumer.id);
   if (!consumerFromModel) return;
-  consumerFromModel.newConsumption += value;
+  consumerFromModel.amount += value;
 };
 </script>
 
