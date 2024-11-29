@@ -182,10 +182,13 @@ const calculateSpentAmount = (consumption: number) => {
   return consumption;
 };
 const computedFinalAmounts = computed<Record<number, number>>(() =>
-  consumers.value.reduce((result, consumer) => {
-    result[consumer.id] = calculateSpentAmount(consumer.amount);
-    return result;
-  }, {}),
+  consumers.value.reduce(
+    (result, consumer) => {
+      result[consumer.id] = calculateSpentAmount(consumer.amount);
+      return result;
+    },
+    {} as Record<number, number>,
+  ),
 );
 
 const searchConsumer = ref<string>("");
