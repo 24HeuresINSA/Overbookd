@@ -60,10 +60,10 @@
         />
       </div>
 
-      <div v-if="isMode(DEPOSIT_MODE)">
+      <div v-if="isMode(DEPOSIT_MODE) || isMode(EXTERNAL_EVENT_MODE)">
         <MoneyField
           v-model="totalConsumptions"
-          label="Dépôt total"
+          label="Montant total"
           class="settings__field"
           readonly
           hide-details
@@ -184,12 +184,9 @@ const modeOptions = [
 const totalPersonalAccountBalance = computed<number>(() => {
   return props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0);
 });
-const totalConsumptions = computed<number>(() => {
-  return props.consumers.reduce(
-    (acc, consumer) => acc + consumer.newConsumption,
-    0,
-  );
-});
+const totalConsumptions = computed<number>(() =>
+  props.consumers.reduce((acc, consumer) => acc + consumer.newConsumption, 0),
+);
 
 const barrels = computed<ConfiguredBarrel[]>(
   () => personalAccountStore.barrels,
