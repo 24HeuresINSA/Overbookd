@@ -159,11 +159,8 @@ const convertToEuros = (amount: number): string => {
 const shouldHavePayor = ({
   type,
 }: TransactionWithSenderAndReceiver): boolean => {
-  return (
-    type === TRANSFER ||
-    type === BARREL ||
-    type === PROVISIONS ||
-    type === EXTERNAL_EVENT
+  return [TRANSFER, BARREL, PROVISIONS, EXTERNAL_EVENT].some(
+    (payorTransaction) => payorTransaction === type,
   );
 };
 const shouldHavePayee = ({

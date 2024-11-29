@@ -150,58 +150,63 @@ const invalidInputsReasons = computed<string[]>(() => {
   return [];
 });
 
+const createDeposits = async () => {
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
+  );
+  await transactionStore.createDeposits(transactions);
+};
+
+const createBarrelTransactions = async () => {
+  const barrelSlug = selectedBarrel.value?.slug;
+  if (!barrelSlug) return;
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      consumption: newConsumption,
+    }),
+  );
+  await transactionStore.createBarrelTransactions(barrelSlug, transactions);
+};
+
+const createProvisionsTransactions = async () => {
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      consumption: newConsumption,
+    }),
+  );
+  await transactionStore.createProvisionsTransactions(
+    closetStickPrice.value,
+    transactions,
+  );
+};
+
+const createExternalEventTransactions = async () => {
+  if (!externalEventContext.value.trim()) return;
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      amount: newConsumption,
+      context: externalEventContext.value,
+    }),
+  );
+  await transactionStore.createExternalEventTransactions(transactions);
+};
+
 const saveTransactions = async () => {
   if (invalidInputsReasons.value.length > 0) {
     sendFailureNotification(invalidInputsReasons.value);
     return;
   }
 
-  switch (transactionType.value) {
-    case DEPOSIT: {
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
-      );
-      await transactionStore.createDeposits(transactions);
-      break;
-    }
-    case BARREL: {
-      const barrelSlug = selectedBarrel.value?.slug;
-      if (!barrelSlug) return;
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({
-          consumer: id,
-          consumption: newConsumption,
-        }),
-      );
-      await transactionStore.createBarrelTransactions(barrelSlug, transactions);
-      break;
-    }
-    case PROVISIONS: {
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({
-          consumer: id,
-          consumption: newConsumption,
-        }),
-      );
-      await transactionStore.createProvisionsTransactions(
-        closetStickPrice.value,
-        transactions,
-      );
-      break;
-    }
-    case EXTERNAL_EVENT: {
-      if (!externalEventContext.value.trim()) return;
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({
-          consumer: id,
-          amount: newConsumption,
-          context: externalEventContext.value,
-        }),
-      );
-      await transactionStore.createExternalEventTransactions(transactions);
-      break;
-    }
-  }
+  const transactionHandlers: Record<string, () => Promise<void>> = {
+    [DEPOSIT]: createDeposits,
+    [BARREL]: createBarrelTransactions,
+    [PROVISIONS]: createProvisionsTransactions,
+    [EXTERNAL_EVENT]: createExternalEventTransactions,
+  };
+  await transactionHandlers[transactionType.value];
 
   await userStore.fetchPersonalAccountConsumers();
   resetConsumers();
