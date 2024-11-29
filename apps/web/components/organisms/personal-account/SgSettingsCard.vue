@@ -25,6 +25,7 @@
           label="Prix du fût"
           class="settings__field"
           hide-details
+          readonly
         />
         <MoneyField
           v-model="caskStickPrice"
