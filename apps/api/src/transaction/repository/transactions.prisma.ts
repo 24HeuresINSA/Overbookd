@@ -6,6 +6,7 @@ import {
   TRANSFER,
   MyTransaction,
   INITIALIZATION,
+  EXTERNAL_EVENT,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_COMPLETE_TRANSACTION } from "./transaction.query";
@@ -30,6 +31,7 @@ export class PrismaTransactions {
           return { type, amount, context, date, to: payee };
         case BARREL:
         case PROVISIONS:
+        case EXTERNAL_EVENT:
           return { type, amount, context, date, from: payor };
         case TRANSFER:
           if (payor && this.isPayor(payor.id, myId)) {
