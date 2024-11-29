@@ -150,14 +150,14 @@ const invalidInputsReasons = computed<string[]>(() => {
   return [];
 });
 
-const createDeposits = async () => {
+const createDeposits = () => {
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
   );
-  await transactionStore.createDeposits(transactions);
+  return transactionStore.createDeposits(transactions);
 };
 
-const createBarrelTransactions = async () => {
+const createBarrelTransactions = () => {
   const barrelSlug = selectedBarrel.value?.slug;
   if (!barrelSlug) return;
   const transactions = consumersWithConsumption.value.map(
@@ -166,23 +166,23 @@ const createBarrelTransactions = async () => {
       consumption: newConsumption,
     }),
   );
-  await transactionStore.createBarrelTransactions(barrelSlug, transactions);
+  return transactionStore.createBarrelTransactions(barrelSlug, transactions);
 };
 
-const createProvisionsTransactions = async () => {
+const createProvisionsTransactions = () => {
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
       consumption: newConsumption,
     }),
   );
-  await transactionStore.createProvisionsTransactions(
+  return transactionStore.createProvisionsTransactions(
     closetStickPrice.value,
     transactions,
   );
 };
 
-const createExternalEventTransactions = async () => {
+const createExternalEventTransactions = () => {
   if (!externalEventContext.value.trim()) return;
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
@@ -191,7 +191,7 @@ const createExternalEventTransactions = async () => {
       context: externalEventContext.value,
     }),
   );
-  await transactionStore.createExternalEventTransactions(transactions);
+  return transactionStore.createExternalEventTransactions(transactions);
 };
 
 const saveTransactions = async () => {
