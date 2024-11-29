@@ -345,7 +345,7 @@ describe("Catalog", () => {
       }) => {
         it(`should retrieve ${expectedGears.length} gears`, async () => {
           const gears = await catalog.search({
-            name: searchName,
+            search: searchName,
             category: searchCategory,
             owner: searchOwner,
             ponctualUsage: searchPonctualUsage,
