@@ -72,6 +72,8 @@
               density="comfortable"
               rounded="l"
               variant="outlined"
+              min-width="0"
+              class="increase-button"
               @click="addToConsumption(item, 1)"
             />
             <v-btn
@@ -80,6 +82,8 @@
               density="comfortable"
               rounded="l"
               variant="outlined"
+              min-width="0"
+              class="increase-button"
               @click="addToConsumption(item, 5)"
             />
           </div>
@@ -108,6 +112,7 @@ import {
   CASK_MODE,
   CLOSET_MODE,
   DEPOSIT_MODE,
+  EXTERNAL_EVENT_MODE,
 } from "~/utils/transaction/sg-mode";
 import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
@@ -140,7 +145,10 @@ const props = defineProps({
 
 const headers = computed<TableHeaders>(() => {
   const recapTitle = isMode(DEPOSIT_MODE) ? "Nouveau dépôt" : "Nouvelle conso";
-  const actionTitle = isMode(DEPOSIT_MODE) ? "Moula" : "Nombre de bâtons";
+  const actionTitle =
+    isMode(DEPOSIT_MODE) || isMode(EXTERNAL_EVENT_MODE)
+      ? "Moula"
+      : "Nombre de bâtons";
   return [
     { title: "Nom", value: "firstname", width: "30%", sortable: true },
     { title: "CP", value: "balance", width: "20%", sortable: true },
@@ -183,9 +191,7 @@ const calculatedConsumption = computed<Record<number, number>>(() => {
 
 const searchConsumer = ref<string>("");
 const searchableConsumers = computed<Searchable<ConsumerWithConsumption>[]>(
-  () => {
-    return consumers.value.map(toSearchable);
-  },
+  () => consumers.value.map(toSearchable),
 );
 
 const teamFilter = ref<string[]>([HARD_CODE, VIEUX_CODE]);
@@ -237,5 +243,13 @@ const addToConsumption = (consumer: ConsumerWithConsumption, value: number) => {
   display: flex;
   column-gap: 0.8em;
   align-items: center;
+}
+
+.v-text-field {
+  min-width: 60px;
+}
+
+.increase-button {
+  padding: 0 10px !important;
 }
 </style>
