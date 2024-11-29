@@ -181,13 +181,12 @@ const calculateSpentAmount = (consumption: number) => {
   if (isMode(CLOSET_MODE)) return props.closetStickPrice * consumption;
   return consumption;
 };
-const computedFinalAmounts = computed<Record<number, number>>(() => {
-  const result: Record<number, number> = {};
-  consumers.value.forEach((consumer) => {
+const computedFinalAmounts = computed<Record<number, number>>(() =>
+  consumers.value.reduce((result, consumer) => {
     result[consumer.id] = calculateSpentAmount(consumer.amount);
-  });
-  return result;
-});
+    return result;
+  }, {}),
+);
 
 const searchConsumer = ref<string>("");
 const searchableConsumers = computed<Searchable<ConsumerWithAmount>[]>(() =>

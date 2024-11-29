@@ -177,9 +177,9 @@ const modeOptions = [
   { text: EVENEMENT, value: EXTERNAL_EVENT_MODE },
 ];
 
-const totalPersonalAccountBalance = computed<number>(() => {
-  return props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0);
-});
+const totalPersonalAccountBalance = computed<number>(() =>
+  props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0),
+);
 const totalAmount = computed<number>(() =>
   props.consumers.reduce((acc, consumer) => acc + consumer.amount, 0),
 );
