@@ -78,12 +78,9 @@ const resetConsumers = () => {
 };
 
 const totalPrice = ref<number>(barrels.value.at(0)?.price ?? 0);
-const totalConsumptions = computed<number>(() => {
-  return consumers.value.reduce(
-    (acc, consumer) => acc + consumer.newConsumption,
-    0,
-  );
-});
+const totalConsumptions = computed<number>(() =>
+  consumers.value.reduce((acc, consumer) => acc + consumer.newConsumption, 0),
+);
 
 const closetStickPrice = ref<number>(60);
 const caskStickPrice = computed<number>(() => {
@@ -206,7 +203,7 @@ const saveTransactions = async () => {
     [PROVISIONS]: createProvisionsTransactions,
     [EXTERNAL_EVENT]: createExternalEventTransactions,
   };
-  await transactionHandlers[transactionType.value];
+  await transactionHandlers[transactionType.value]();
 
   await userStore.fetchPersonalAccountConsumers();
   resetConsumers();
