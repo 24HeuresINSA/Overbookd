@@ -118,6 +118,7 @@ import type { Searchable } from "~/utils/search/search.utils";
 import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
+import type { ConfiguredBarrel } from "@overbookd/personal-account";
 
 const layoutStore = useLayoutStore();
 
@@ -137,8 +138,8 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  totalPrice: {
-    type: Number,
+  selectedBarrel: {
+    type: Object as PropType<ConfiguredBarrel | null>,
     required: true,
   },
   loading: {
@@ -179,7 +180,7 @@ const calculateSpentAmount = (consumption: number) => {
   if (isMode(CASK_MODE)) {
     const hasConsumption = consumption > 0;
     return hasConsumption && existsOnlyOneConsumer.value
-      ? props.totalPrice
+      ? (props.selectedBarrel?.price ?? 0)
       : props.caskStickPrice * consumption;
   }
   if (isMode(CLOSET_MODE)) return props.closetStickPrice * consumption;

@@ -18,7 +18,7 @@
       :mode="mode"
       :cask-stick-price="caskStickPrice"
       :closet-stick-price="closetStickPrice"
-      :total-price="totalPrice"
+      :selected-barrel="selectedBarrel"
       :loading="consumerLoading"
       class="sg-page__consumer-table"
     />
@@ -63,6 +63,7 @@ const consumerLoading = ref<boolean>(
 onMounted(async () => {
   await personalAccountStore.fetchBarrels();
   selectedBarrel.value = barrels.value.at(0) ?? null;
+  totalPrice.value = selectedBarrel.value?.price ?? 0;
 
   userStore.fetchPersonalAccountConsumers().then(() => {
     consumerLoading.value = false;
@@ -79,13 +80,13 @@ const resetConsumers = () => {
 };
 
 const totalPrice = ref<number>(barrels.value.at(0)?.price ?? 0);
-const totalAmount = computed<number>(() =>
+const totalConsumersAmount = computed<number>(() =>
   consumers.value.reduce((acc, consumer) => acc + consumer.amount, 0),
 );
 
 const closetStickPrice = ref<number>(60);
 const caskStickPrice = computed<number>(() =>
-  computeUnitPrice(totalPrice.value, totalAmount.value),
+  computeUnitPrice(totalPrice.value, totalConsumersAmount.value),
 );
 
 const mode = ref<SgMode>(CASK_MODE);
