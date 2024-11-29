@@ -321,7 +321,7 @@ describe("Catalog", () => {
       gearRepository.gears = GEARS;
     });
     describe.each`
-      searchName   | searchCategory  | searchOwner  | searchPonctualUsage | expectedGears
+      search       | searchCategory  | searchOwner  | searchPonctualUsage | expectedGears
       ${"TAblIer"} | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
       ${"TAblI"}   | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
       ${"TAbl"}    | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER, SIMILAR_GEARS[5]]}
@@ -334,10 +334,11 @@ describe("Catalog", () => {
       ${"tab"}     | ${"Brico"}      | ${"maT"}     | ${undefined}        | ${[]}
       ${undefined} | ${undefined}    | ${undefined} | ${undefined}        | ${SIMILAR_GEARS}
       ${undefined} | ${undefined}    | ${undefined} | ${true}             | ${[PERCEUSE, TABLIER, PONCEUSE]}
+      ${"Br_ou"}   | ${undefined}    | ${undefined} | ${undefined}        | ${[PERCEUSE, PONCEUSE]}
     `(
-      'When looking for "$searchName" in $searchCategory category with $searchOwner owner with ponctual usage: $searchPonctualUsage',
+      'When looking for "$search" in $searchCategory category with $searchOwner owner with ponctual usage: $searchPonctualUsage',
       ({
-        searchName,
+        search,
         searchCategory,
         searchOwner,
         searchPonctualUsage,
@@ -345,7 +346,7 @@ describe("Catalog", () => {
       }) => {
         it(`should retrieve ${expectedGears.length} gears`, async () => {
           const gears = await catalog.search({
-            search: searchName,
+            search,
             category: searchCategory,
             owner: searchOwner,
             ponctualUsage: searchPonctualUsage,

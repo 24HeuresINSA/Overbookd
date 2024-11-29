@@ -26,8 +26,10 @@ class GearSearchBuilder {
   }
 
   addSlugCondition(slugSearch?: string) {
+    const slugifiedCode = SlugifyService.apply(this.gear.code ?? "");
     this.slugCondition = slugSearch
-      ? this.gear.slug.includes(slugSearch)
+      ? this.gear.slug.includes(slugSearch) ||
+        slugifiedCode.includes(slugSearch)
       : true;
     return this;
   }
