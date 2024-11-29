@@ -3,7 +3,7 @@
     <v-card-text>
       <div class="filters">
         <GearFilter
-          v-model:name="filters.name"
+          v-model:search="filters.search"
           v-model:category="filters.category"
           v-model:team="filters.team"
           @update:options="searchGears"
@@ -20,7 +20,7 @@
       <v-data-table
         :headers="headers"
         :items="gears"
-        :name="filters.name"
+        :name="filters.search"
         :category="filters.category"
         :loading="loading"
         loading-text="Chargement du matos..."
@@ -125,7 +125,7 @@ const headers = computed<TableHeaders>(() => {
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const filters = reactive<FilterGear>({
-  name: "",
+  search: "",
   category: undefined,
   team: undefined,
 });

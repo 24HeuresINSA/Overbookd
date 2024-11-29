@@ -4,7 +4,7 @@
   <v-card>
     <v-card-text>
       <GearFilter
-        v-model:name="filters.name"
+        v-model:search="filters.search"
         v-model:team="filters.team"
         v-model:category="filters.category"
         @update:options="searchGears"
@@ -41,7 +41,7 @@ const dashboardStore = useLogisticDashboardStore();
 const configurationStore = useConfigurationStore();
 
 const filters = ref<FilterGear>({
-  name: "",
+  search: "",
   category: undefined,
   team: undefined,
 });

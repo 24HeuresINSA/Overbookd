@@ -5,7 +5,12 @@ import {
   GearRepository,
 } from "./repositories/catalog-repositories";
 import { SlugifyService } from "@overbookd/slugify";
-import { CatalogCategory, CatalogGear, CatalogGearForm } from "@overbookd/http";
+import {
+  CatalogCategory,
+  CatalogGear,
+  CatalogGearForm,
+  GearSearchOptions,
+} from "@overbookd/http";
 
 type GearUpdateForm = CatalogGearForm & {
   id: number;
@@ -16,13 +21,6 @@ export class GearNotFoundException extends NotFoundException {
     super(`Gear #${id} doesn't exist`);
   }
 }
-
-type GearSearchRequest = {
-  name?: string;
-  category?: string;
-  owner?: string;
-  ponctualUsage?: boolean;
-};
 
 @Injectable()
 export class CatalogService {
@@ -75,7 +73,7 @@ export class CatalogService {
     return this.gearRepository.removeGear(id);
   }
 
-  async search(searchOptions: GearSearchRequest): Promise<CatalogGear[]> {
+  async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
     return this.gearRepository.searchGear(searchOptions);
   }
 

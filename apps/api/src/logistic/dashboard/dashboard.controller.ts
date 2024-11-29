@@ -40,10 +40,10 @@ export class DashboardController {
     type: GearPreviewResponseDto,
   })
   @ApiQuery({
-    name: "name",
+    name: "search",
     required: false,
     type: String,
-    description: "Get gears that match the name",
+    description: "Get gears that match the name or the reference code",
   })
   @ApiQuery({
     name: "category",

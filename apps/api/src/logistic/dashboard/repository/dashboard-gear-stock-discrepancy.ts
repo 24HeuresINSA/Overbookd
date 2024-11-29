@@ -1,4 +1,4 @@
-import { DatabaseGear } from "./dashboard.model";
+import { DatabaseDashboardGear } from "./dashboard.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
@@ -6,7 +6,7 @@ import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 export class DashboardGearStockDiscrepancy {
   private constructor() {}
 
-  static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
+  static computeMinStockDiscrepancyOn(gear: DatabaseDashboardGear): number {
     const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
@@ -39,7 +39,7 @@ export class DashboardGearStockDiscrepancy {
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     timeWindow: Period,
   ): number {
     const period = Period.init(timeWindow);
@@ -55,7 +55,7 @@ export class DashboardGearStockDiscrepancy {
   }
 
   private static computeStockDiscrepancyByDateOn(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     date: Date,
   ) {
     const stock = DashboardGearStock.findStockByDate(gear, date);

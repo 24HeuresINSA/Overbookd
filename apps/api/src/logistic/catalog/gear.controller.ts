@@ -51,10 +51,10 @@ export class GearController {
     type: CatalogGearResponseDto,
   })
   @ApiQuery({
-    name: "name",
+    name: "search",
     required: false,
     type: String,
-    description: "Get gears that match the name",
+    description: "Get gears that match the name or the reference code",
   })
   @ApiQuery({
     name: "category",
@@ -68,10 +68,8 @@ export class GearController {
     type: String,
     description: "Get gears that are owned by team that match name",
   })
-  search(
-    @Query() { name, category, owner, ponctualUsage }: GearSearchRequestDto,
-  ): Promise<CatalogGear[]> {
-    return this.catalogService.search({ name, category, owner, ponctualUsage });
+  search(@Query() searchOptions: GearSearchRequestDto): Promise<CatalogGear[]> {
+    return this.catalogService.search(searchOptions);
   }
 
   @Get(":id")

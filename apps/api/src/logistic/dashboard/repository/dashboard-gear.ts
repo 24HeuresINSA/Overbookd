@@ -1,5 +1,5 @@
 import { GearDetails, GearPreview } from "@overbookd/http";
-import { DatabaseGear } from "./dashboard.model";
+import { DatabaseDashboardGear } from "./dashboard.model";
 import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
@@ -8,7 +8,7 @@ import { DashboardGearStockDiscrepancy } from "./dashboard-gear-stock-discrepanc
 export class DashboardGear {
   private constructor() {}
 
-  public static generatePreview(gear: DatabaseGear): GearPreview {
+  public static generatePreview(gear: DatabaseDashboardGear): GearPreview {
     const stockDiscrepancy =
       DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear);
     return {
@@ -21,7 +21,7 @@ export class DashboardGear {
   }
 
   public static generateDetails(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     period: Period,
   ): GearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
@@ -31,7 +31,10 @@ export class DashboardGear {
     });
   }
 
-  private static periodDetails(gear: DatabaseGear, period: IProvidePeriod) {
+  private static periodDetails(
+    gear: DatabaseDashboardGear,
+    period: IProvidePeriod,
+  ) {
     if (!gear.isConsumable) {
       return DashboardGear.gearPeriodDetails(gear, period);
     }
@@ -39,7 +42,7 @@ export class DashboardGear {
   }
 
   private static consumablePeriodDetails(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     { start, end }: IProvidePeriod,
   ) {
     const { inquiry, activities, tasks } =
@@ -62,7 +65,7 @@ export class DashboardGear {
   }
 
   private static gearPeriodDetails(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     { end, start }: IProvidePeriod,
   ) {
     const { inquiry, tasks, activities } =

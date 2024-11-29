@@ -10,6 +10,7 @@
         clearable
         outlined
         counter
+        hide-details
         :rules="[rules.nameMinLength]"
       />
       <v-switch

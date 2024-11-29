@@ -70,7 +70,7 @@ type WithDatabasePurchases = {
   purchases: DatabasePurchase[];
 };
 
-export type DatabaseGear = BaseDatabaseGear &
+export type DatabaseDashboardGear = BaseDatabaseGear &
   WithDatabaseInventory &
   WithDatabaseInquiries &
   WithDatabaseBorrows &

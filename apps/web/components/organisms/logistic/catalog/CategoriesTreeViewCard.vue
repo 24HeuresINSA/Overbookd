@@ -27,9 +27,8 @@
           </template>
         </v-treeview>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="isCatalogWriter">
         <v-btn
-          v-show="isCatalogWriter"
           color="primary"
           size="large"
           text="Ajouter une catégorie"

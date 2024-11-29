@@ -1,7 +1,7 @@
 import { GearDetails } from "@overbookd/http";
 import {
   DatabaseActivityInquiry,
-  DatabaseGear,
+  DatabaseDashboardGear,
   DatabaseTaskInquiry,
 } from "./dashboard.model";
 import { Period } from "@overbookd/time";
@@ -10,7 +10,7 @@ import { sumQuantity } from "./sum-quantity";
 export class DashboardGearInquiry {
   private constructor() {}
 
-  static computeGearInquiries(gear: DatabaseGear, date: Date) {
+  static computeGearInquiries(gear: DatabaseDashboardGear, date: Date) {
     const activities = DashboardGearInquiry.findActivitiesUsingGearAt(
       gear.festivalActivityInquiries,
       date,
@@ -26,7 +26,7 @@ export class DashboardGearInquiry {
     return { inquiry, tasks, activities };
   }
 
-  static computeConsumableInquiries(gear: DatabaseGear, date: Date) {
+  static computeConsumableInquiries(gear: DatabaseDashboardGear, date: Date) {
     const activities = DashboardGearInquiry.findActivitiesTakingConsumableAt(
       gear.festivalActivityInquiries,
       date,
@@ -122,7 +122,7 @@ export class DashboardGearInquiry {
   }
 
   static computeConsumedQuantityByDateOn(
-    gear: DatabaseGear,
+    gear: DatabaseDashboardGear,
     date: Date,
   ): number {
     const faInquiries = gear.festivalActivityInquiries.flatMap(
