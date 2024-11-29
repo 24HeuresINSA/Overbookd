@@ -53,7 +53,7 @@ import { TransactionErrorFilter } from "./transaction-error.filter";
 import { CreateDepositRequestDto } from "./dto/create-deposit.request.dto";
 import { CreateBarrelTransactionsRequestDto } from "./dto/create-barrel-transactions.request.dto";
 import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-transactions.request.dto";
-import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto copy";
+import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto";
 
 @ApiBearerAuth()
 @UseFilters(TransactionErrorFilter)
