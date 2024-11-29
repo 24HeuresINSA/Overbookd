@@ -83,13 +83,9 @@ const totalAmount = computed<number>(() =>
 );
 
 const closetStickPrice = ref<number>(60);
-const caskStickPrice = computed<number>(() => {
-  const existsOnlyOneConsumer =
-    consumers.value.filter((c) => c.amount > 0).length === 1;
-  return existsOnlyOneConsumer
-    ? totalPrice.value
-    : computeUnitPrice(totalPrice.value, totalAmount.value);
-});
+const caskStickPrice = computed<number>(() =>
+  computeUnitPrice(totalPrice.value, totalAmount.value),
+);
 
 const mode = ref<SgMode>(CASK_MODE);
 watch(
