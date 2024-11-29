@@ -150,16 +150,16 @@ const invalidInputsReasons = computed<string[]>(() => {
   return [];
 });
 
-const createDeposits = () => {
+const createDeposits = (): Promise<void> => {
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
   );
   return transactionStore.createDeposits(transactions);
 };
 
-const createBarrelTransactions = () => {
+const createBarrelTransactions = (): Promise<void> => {
   const barrelSlug = selectedBarrel.value?.slug;
-  if (!barrelSlug) return;
+  if (!barrelSlug) return Promise.resolve();
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
@@ -169,7 +169,7 @@ const createBarrelTransactions = () => {
   return transactionStore.createBarrelTransactions(barrelSlug, transactions);
 };
 
-const createProvisionsTransactions = () => {
+const createProvisionsTransactions = (): Promise<void> => {
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
@@ -182,8 +182,8 @@ const createProvisionsTransactions = () => {
   );
 };
 
-const createExternalEventTransactions = () => {
-  if (!externalEventContext.value.trim()) return;
+const createExternalEventTransactions = (): Promise<void> => {
+  if (!externalEventContext.value.trim()) return Promise.resolve();
   const transactions = consumersWithConsumption.value.map(
     ({ id, newConsumption }) => ({
       consumer: id,
