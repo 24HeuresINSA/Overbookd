@@ -13,9 +13,11 @@ import {
   MyPositiveInitializationTransaction,
   INITIALIZATION,
   MyNegativeInitializationTransaction,
+  EXTERNAL_EVENT,
 } from "@overbookd/personal-account";
 import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 import { BaseTransactionResponseDto } from "./base-transaction.response.dto";
+import { MyExternalEventTransaction } from "@overbookd/personal-account";
 
 export class MyDepositTransactionResponseDto
   extends BaseTransactionResponseDto
@@ -54,6 +56,19 @@ export class MyProvisionsTransactionResponseDto
     example: PROVISIONS,
   })
   type: typeof PROVISIONS;
+}
+
+export class MyExternalEventTransactionResponseDto
+  extends BaseTransactionResponseDto
+  implements MyExternalEventTransaction
+{
+  @ApiProperty({
+    description: "Transaction type",
+    type: String,
+    enum: [EXTERNAL_EVENT],
+    example: EXTERNAL_EVENT,
+  })
+  type: typeof EXTERNAL_EVENT;
 }
 
 export class TransferIReceiveTransactionResponseDto

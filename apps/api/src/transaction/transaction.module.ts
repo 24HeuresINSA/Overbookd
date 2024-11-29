@@ -19,6 +19,8 @@ import { PrismaDeposits } from "./repository/deposits.prisma";
 import { PrismaBarrels } from "./repository/barrels.prisma";
 import { PrismaBarrelTransactions } from "./repository/barrel-transactions.prisma";
 import { PrismaProvisionsTransactions } from "./repository/provisions-transactions.prisma";
+import { PrismaExternalEventTransactions } from "./repository/external-event-transactions.prisma";
+import { CreateExternalEventTransactions } from "@overbookd/personal-account";
 
 @Module({
   controllers: [TransactionController],
@@ -68,19 +70,33 @@ import { PrismaProvisionsTransactions } from "./repository/provisions-transactio
       inject: [PrismaProvisionsTransactions],
     },
     {
+      provide: PrismaExternalEventTransactions,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaExternalEventTransactions(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: CreateExternalEventTransactions,
+      useFactory: (
+        externalEventTransactions: PrismaExternalEventTransactions,
+      ) => new CreateExternalEventTransactions(externalEventTransactions),
+      inject: [PrismaExternalEventTransactions],
+    },
+    {
       provide: TransactionService,
       useFactory: (
         transactions: PrismaTransactions,
         barrels: PrismaBarrels,
         deposit: Deposit,
-        barrelTransactions: CreateBarrelTransactions,
-        provisionsTransactions: CreateProvisionsTransactions,
+        barrel: CreateBarrelTransactions,
+        provisions: CreateProvisionsTransactions,
+        externalEvent: CreateExternalEventTransactions,
         prisma: PrismaService,
         eventStore: DomainEventService,
       ) =>
         new TransactionService(
           { transactions, barrels },
-          { deposit, barrelTransactions, provisionsTransactions },
+          { deposit, barrel, provisions, externalEvent },
           prisma,
           eventStore,
         ),
@@ -90,6 +106,7 @@ import { PrismaProvisionsTransactions } from "./repository/provisions-transactio
         Deposit,
         CreateBarrelTransactions,
         CreateProvisionsTransactions,
+        CreateExternalEventTransactions,
         PrismaService,
         DomainEventService,
       ],
