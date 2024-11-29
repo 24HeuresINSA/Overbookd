@@ -3,6 +3,7 @@ import type {
   CreateTransferForm,
   MyTransaction,
   TransactionWithSenderAndReceiver,
+  NewExternalEventConsumption,
 } from "@overbookd/personal-account";
 import type {
   CreateBarrelTransactionsForm,
@@ -33,6 +34,15 @@ export class TransactionRepository {
     transactions: CreateProvisionsTransactionsForm,
   ) {
     return HttpClient.post<void>(`${this.basePath}/provisions`, transactions);
+  }
+
+  static createExternalEventTransactions(
+    transactions: NewExternalEventConsumption[],
+  ) {
+    return HttpClient.post<void>(
+      `${this.basePath}/external-event`,
+      transactions,
+    );
   }
 
   static deleteTransaction(transactionId: number) {

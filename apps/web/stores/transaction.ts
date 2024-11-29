@@ -6,6 +6,7 @@ import type {
   CreateProvisionsTransaction,
   CreateTransferForm,
   MyTransaction,
+  NewExternalEventConsumption,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
 import { TransactionRepository } from "~/repositories/transaction.repository";
@@ -62,10 +63,7 @@ export const useTransactionStore = defineStore("transaction", {
       if (isHttpError(res)) return;
       sendSuccessNotification("Les transactions fût ont été enregistrées 💸");
 
-      const isMine = transactions.some(
-        ({ consumer }) => consumer === this._getLoggedUserId(),
-      );
-      if (isMine) await this._fetchMyInformation();
+      await this._fetchMyInformationIfIConsumed(transactions);
     },
 
     async createProvisionsTransactions(
@@ -80,10 +78,20 @@ export const useTransactionStore = defineStore("transaction", {
         "Les transactions placard ont été enregistrées 💸",
       );
 
-      const isMine = transactions.some(
-        ({ consumer }) => consumer === this._getLoggedUserId(),
-      );
-      if (isMine) await this._fetchMyInformation();
+      await this._fetchMyInformationIfIConsumed(transactions);
+    },
+
+    async createExternalEventTransactions(
+      transactions: NewExternalEventConsumption[],
+    ) {
+      const res =
+        await TransactionRepository.createExternalEventTransactions(
+          transactions,
+        );
+      if (isHttpError(res)) return;
+      sendSuccessNotification("Les transactions ont été enregistrées 💸");
+
+      await this._fetchMyInformationIfIConsumed(transactions);
     },
 
     async deleteTransaction(transaction: TransactionWithSenderAndReceiver) {
@@ -105,6 +113,13 @@ export const useTransactionStore = defineStore("transaction", {
       const myId = this._getLoggedUserId();
       const isMine =
         transaction.payee?.id === myId || transaction.payor?.id === myId;
+      if (isMine) await this._fetchMyInformation();
+    },
+
+    async _fetchMyInformationIfIConsumed(transactions: { consumer: number }[]) {
+      const isMine = transactions.some(
+        ({ consumer }) => consumer === this._getLoggedUserId(),
+      );
       if (isMine) await this._fetchMyInformation();
     },
 

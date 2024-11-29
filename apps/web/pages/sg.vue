@@ -7,6 +7,7 @@
       v-model:selected-barrel="selectedBarrel"
       v-model:closet-stick-price="closetStickPrice"
       v-model:cask-stick-price="caskStickPrice"
+      v-model:external-event-context="externalEventContext"
       :consumers="consumers"
       :errors="invalidInputsReasons"
       class="sg-page__settings"
@@ -28,6 +29,7 @@ import {
   BARREL,
   PROVISIONS,
   DEPOSIT,
+  EXTERNAL_EVENT,
   type ConfiguredBarrel,
 } from "@overbookd/personal-account";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
@@ -38,6 +40,7 @@ import {
   CASK_MODE,
   CLOSET_MODE,
   DEPOSIT_MODE,
+  EXTERNAL_EVENT_MODE,
 } from "~/utils/transaction/sg-mode";
 
 useHead({ title: "SG" });
@@ -50,6 +53,7 @@ const barrels = computed<ConfiguredBarrel[]>(
   () => personalAccountStore.barrels,
 );
 const selectedBarrel = ref<ConfiguredBarrel | null>(null);
+const externalEventContext = ref<string>("");
 
 const consumerLoading = ref<boolean>(
   userStore.personalAccountConsumers.length === 0,
@@ -101,6 +105,7 @@ const isMode = (value: SgMode) => mode.value === value;
 const transactionType = computed<string>(() => {
   if (isMode(CASK_MODE)) return BARREL;
   if (isMode(CLOSET_MODE)) return PROVISIONS;
+  if (isMode(EXTERNAL_EVENT_MODE)) return EXTERNAL_EVENT;
   return DEPOSIT;
 });
 
@@ -120,6 +125,9 @@ const invalidInputsReasons = computed<string[]>(() => {
   }
   if (isMode(CLOSET_MODE) && closetStickPrice.value <= 0) {
     return ["Le prix du bâton de placard ne peut pas être nul ou négatif"];
+  }
+  if (isMode(EXTERNAL_EVENT_MODE) && !externalEventContext.value.trim()) {
+    return ["Aucun contexte n'est renseigné"];
   }
 
   const shouldHaveIntConsumption = isMode(CASK_MODE) || isMode(CLOSET_MODE);
@@ -142,46 +150,63 @@ const invalidInputsReasons = computed<string[]>(() => {
   return [];
 });
 
+const createDeposits = (): Promise<void> => {
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
+  );
+  return transactionStore.createDeposits(transactions);
+};
+
+const createBarrelTransactions = async (): Promise<void> => {
+  const barrelSlug = selectedBarrel.value?.slug;
+  if (!barrelSlug) return;
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      consumption: newConsumption,
+    }),
+  );
+  return transactionStore.createBarrelTransactions(barrelSlug, transactions);
+};
+
+const createProvisionsTransactions = (): Promise<void> => {
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      consumption: newConsumption,
+    }),
+  );
+  return transactionStore.createProvisionsTransactions(
+    closetStickPrice.value,
+    transactions,
+  );
+};
+
+const createExternalEventTransactions = async (): Promise<void> => {
+  if (!externalEventContext.value.trim()) return;
+  const transactions = consumersWithConsumption.value.map(
+    ({ id, newConsumption }) => ({
+      consumer: id,
+      amount: newConsumption,
+      context: externalEventContext.value,
+    }),
+  );
+  return transactionStore.createExternalEventTransactions(transactions);
+};
+
 const saveTransactions = async () => {
   if (invalidInputsReasons.value.length > 0) {
     sendFailureNotification(invalidInputsReasons.value);
     return;
   }
 
-  switch (transactionType.value) {
-    case DEPOSIT: {
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
-      );
-      await transactionStore.createDeposits(transactions);
-      break;
-    }
-    case BARREL: {
-      const barrelSlug = selectedBarrel.value?.slug;
-      if (!barrelSlug) return;
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({
-          consumer: id,
-          consumption: newConsumption,
-        }),
-      );
-      await transactionStore.createBarrelTransactions(barrelSlug, transactions);
-      break;
-    }
-    case PROVISIONS: {
-      const transactions = consumersWithConsumption.value.map(
-        ({ id, newConsumption }) => ({
-          consumer: id,
-          consumption: newConsumption,
-        }),
-      );
-      await transactionStore.createProvisionsTransactions(
-        closetStickPrice.value,
-        transactions,
-      );
-      break;
-    }
-  }
+  const transactionHandlers: Record<string, () => Promise<void>> = {
+    [DEPOSIT]: createDeposits,
+    [BARREL]: createBarrelTransactions,
+    [PROVISIONS]: createProvisionsTransactions,
+    [EXTERNAL_EVENT]: createExternalEventTransactions,
+  };
+  await transactionHandlers[transactionType.value];
 
   await userStore.fetchPersonalAccountConsumers();
   resetConsumers();

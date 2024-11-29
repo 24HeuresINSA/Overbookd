@@ -2,12 +2,15 @@
   <v-card class="settings">
     <v-card-text>
       <div class="settings__mode-choice">
-        <h2>Mode</h2>
-        <v-btn-toggle v-model="mode" tile color="primary">
-          <v-btn :value="CASK_MODE" size="small"> {{ FUT }} </v-btn>
-          <v-btn :value="CLOSET_MODE" size="small"> {{ PLACARD }} </v-btn>
-          <v-btn :value="DEPOSIT_MODE" size="small"> {{ DEPOT }} </v-btn>
-        </v-btn-toggle>
+        <v-select
+          v-model="mode"
+          :items="modeOptions"
+          item-title="text"
+          item-value="value"
+          label="Mode"
+          density="comfortable"
+          hide-details
+        />
       </div>
 
       <div v-if="hasErrors" class="errors">
@@ -46,6 +49,15 @@
         <p class="stick-quantity">
           Nombre total de bâtons : {{ totalConsumptions }}
         </p>
+      </div>
+
+      <div v-if="isMode(EXTERNAL_EVENT_MODE)">
+        <v-text-field
+          v-model="externalEventContext"
+          label="Contexte de l'événement"
+          class="settings__field"
+          hide-details
+        />
       </div>
 
       <div v-if="isMode(DEPOSIT_MODE)">
@@ -122,10 +134,16 @@ import {
   CASK_MODE,
   CLOSET_MODE,
   DEPOSIT_MODE,
+  EXTERNAL_EVENT_MODE,
   type SgMode,
 } from "~/utils/transaction/sg-mode";
 import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
-import { FUT, PLACARD, DEPOT } from "~/utils/transaction/transaction";
+import {
+  FUT,
+  PLACARD,
+  DEPOT,
+  EVENEMENT,
+} from "~/utils/transaction/transaction.constants";
 import { formatDate } from "@overbookd/time";
 
 const personalAccountStore = usePersonalAccountStore();
@@ -141,6 +159,9 @@ const closetStickPrice = defineModel<number>("closetStickPrice", {
 const selectedBarrel = defineModel<ConfiguredBarrel | null>("selectedBarrel", {
   required: true,
 });
+const externalEventContext = defineModel<string>("externalEventContext", {
+  required: true,
+});
 
 const props = defineProps({
   consumers: {
@@ -152,6 +173,13 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const modeOptions = [
+  { text: FUT, value: CASK_MODE },
+  { text: PLACARD, value: CLOSET_MODE },
+  { text: DEPOT, value: DEPOSIT_MODE },
+  { text: EVENEMENT, value: EXTERNAL_EVENT_MODE },
+];
 
 const totalPersonalAccountBalance = computed<number>(() => {
   return props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0);

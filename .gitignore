@@ -55,3 +55,6 @@ dist
 
 .pnpm-store
 **/.output
+
+*.sql
+*.db
