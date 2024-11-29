@@ -18,6 +18,7 @@
       :mode="mode"
       :cask-stick-price="caskStickPrice"
       :closet-stick-price="closetStickPrice"
+      :selected-barrel="selectedBarrel"
       :loading="consumerLoading"
       class="sg-page__consumer-table"
     />
@@ -34,7 +35,7 @@ import {
 } from "@overbookd/personal-account";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { isInteger } from "~/utils/rules/input.rules";
-import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
+import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
   type SgMode,
   CASK_MODE,
@@ -62,6 +63,7 @@ const consumerLoading = ref<boolean>(
 onMounted(async () => {
   await personalAccountStore.fetchBarrels();
   selectedBarrel.value = barrels.value.at(0) ?? null;
+  totalPrice.value = selectedBarrel.value?.price ?? 0;
 
   userStore.fetchPersonalAccountConsumers().then(() => {
     consumerLoading.value = false;
@@ -69,27 +71,23 @@ onMounted(async () => {
   });
 });
 
-const consumers = ref<ConsumerWithConsumption[]>([]);
+const consumers = ref<ConsumerWithAmount[]>([]);
 const resetConsumers = () => {
   consumers.value = userStore.personalAccountConsumers.map((consumer) => ({
     ...consumer,
-    newConsumption: 0,
+    amount: 0,
   }));
 };
 
 const totalPrice = ref<number>(barrels.value.at(0)?.price ?? 0);
-const totalConsumptions = computed<number>(() =>
-  consumers.value.reduce((acc, consumer) => acc + consumer.newConsumption, 0),
+const totalConsumersAmount = computed<number>(() =>
+  consumers.value.reduce((acc, consumer) => acc + consumer.amount, 0),
 );
 
 const closetStickPrice = ref<number>(60);
-const caskStickPrice = computed<number>(() => {
-  const existsOnlyOneConsumer =
-    consumers.value.filter((c) => c.newConsumption > 0).length === 1;
-  return existsOnlyOneConsumer
-    ? totalPrice.value
-    : computeUnitPrice(totalPrice.value, totalConsumptions.value);
-});
+const caskStickPrice = computed<number>(() =>
+  computeUnitPrice(totalPrice.value, totalConsumersAmount.value),
+);
 
 const mode = ref<SgMode>(CASK_MODE);
 watch(
@@ -106,11 +104,11 @@ const transactionType = computed<string>(() => {
   return DEPOSIT;
 });
 
-const consumersWithConsumption = computed(() => {
-  return consumers.value.filter((consumer) => consumer.newConsumption);
+const consumersWithAmount = computed(() => {
+  return consumers.value.filter((consumer) => consumer.amount);
 });
 const invalidInputsReasons = computed<string[]>(() => {
-  if (consumersWithConsumption.value.length === 0) {
+  if (consumersWithAmount.value.length === 0) {
     return [
       isMode(DEPOSIT_MODE)
         ? "Pas de nouveau dépôt"
@@ -127,52 +125,48 @@ const invalidInputsReasons = computed<string[]>(() => {
     return ["Aucun contexte n'est renseigné"];
   }
 
-  const shouldHaveIntConsumption = isMode(CASK_MODE) || isMode(CLOSET_MODE);
-  const invalidConsumers = consumersWithConsumption.value.filter(
-    ({ newConsumption }) =>
-      shouldHaveIntConsumption && !isInteger(newConsumption.toString()),
+  const shouldHaveIntAmount = isMode(CASK_MODE) || isMode(CLOSET_MODE);
+  const invalidConsumers = consumersWithAmount.value.filter(
+    ({ amount }) => shouldHaveIntAmount && !isInteger(amount.toString()),
   );
-  if (shouldHaveIntConsumption && invalidConsumers.length > 0) {
+  if (shouldHaveIntAmount && invalidConsumers.length > 0) {
     return invalidConsumers.map(
       (consumer) => `Champs non valide pour: ${consumer.lastname}`,
     );
   }
 
-  const hasNegativeConsumption = consumersWithConsumption.value.some(
-    (consumer) => consumer.newConsumption < 0,
+  const hasNegativeAmount = consumersWithAmount.value.some(
+    (consumer) => consumer.amount < 0,
   );
-  if (hasNegativeConsumption) {
+  if (hasNegativeAmount) {
     return ["Les consommations doivent être positives"];
   }
   return [];
 });
 
 const createDeposits = (): Promise<void> => {
-  const transactions = consumersWithConsumption.value.map(
-    ({ id, newConsumption }) => ({ depositor: id, amount: newConsumption }),
-  );
+  const transactions = consumersWithAmount.value.map(({ id, amount }) => ({
+    depositor: id,
+    amount,
+  }));
   return transactionStore.createDeposits(transactions);
 };
 
 const createBarrelTransactions = async (): Promise<void> => {
   const barrelSlug = selectedBarrel.value?.slug;
   if (!barrelSlug) return;
-  const transactions = consumersWithConsumption.value.map(
-    ({ id, newConsumption }) => ({
-      consumer: id,
-      consumption: newConsumption,
-    }),
-  );
+  const transactions = consumersWithAmount.value.map(({ id, amount }) => ({
+    consumer: id,
+    consumption: amount,
+  }));
   return transactionStore.createBarrelTransactions(barrelSlug, transactions);
 };
 
 const createProvisionsTransactions = (): Promise<void> => {
-  const transactions = consumersWithConsumption.value.map(
-    ({ id, newConsumption }) => ({
-      consumer: id,
-      consumption: newConsumption,
-    }),
-  );
+  const transactions = consumersWithAmount.value.map(({ id, amount }) => ({
+    consumer: id,
+    consumption: amount,
+  }));
   return transactionStore.createProvisionsTransactions(
     closetStickPrice.value,
     transactions,
@@ -181,13 +175,12 @@ const createProvisionsTransactions = (): Promise<void> => {
 
 const createExternalEventTransactions = async (): Promise<void> => {
   if (!externalEventContext.value.trim()) return;
-  const transactions = consumersWithConsumption.value.map(
-    ({ id, newConsumption }) => ({
-      consumer: id,
-      amount: newConsumption,
-      context: externalEventContext.value,
-    }),
-  );
+  const transactions = consumersWithAmount.value.map(({ id, amount }) => ({
+    consumer: id,
+    amount: amount,
+    context: externalEventContext.value,
+  }));
+  externalEventContext.value = "";
   return transactionStore.createExternalEventTransactions(transactions);
 };
 
@@ -220,6 +213,13 @@ const saveTransactions = async () => {
   }
   &__consumer-table {
     width: 70%;
+  }
+  @media only screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    &__settings,
+    &__consumer-table {
+      width: calc(100% - $card-margin * 2);
+    }
   }
 }
 </style>

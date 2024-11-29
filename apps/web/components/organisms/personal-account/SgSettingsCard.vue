@@ -25,6 +25,7 @@
           label="Prix du fût"
           class="settings__field"
           hide-details
+          readonly
         />
         <MoneyField
           v-model="caskStickPrice"
@@ -33,9 +34,7 @@
           readonly
           hide-details
         />
-        <p class="stick-quantity">
-          Nombre total de bâtons : {{ totalConsumptions }}
-        </p>
+        <p class="stick-quantity">Nombre total de bâtons : {{ totalAmount }}</p>
       </div>
 
       <div v-if="isMode(CLOSET_MODE)">
@@ -46,9 +45,7 @@
           :min="1"
           hide-details
         />
-        <p class="stick-quantity">
-          Nombre total de bâtons : {{ totalConsumptions }}
-        </p>
+        <p class="stick-quantity">Nombre total de bâtons : {{ totalAmount }}</p>
       </div>
 
       <div v-if="isMode(EXTERNAL_EVENT_MODE)">
@@ -60,10 +57,10 @@
         />
       </div>
 
-      <div v-if="isMode(DEPOSIT_MODE)">
+      <div v-if="isMode(DEPOSIT_MODE) || isMode(EXTERNAL_EVENT_MODE)">
         <MoneyField
-          v-model="totalConsumptions"
-          label="Dépôt total"
+          v-model="totalAmount"
+          label="Montant total"
           class="settings__field"
           readonly
           hide-details
@@ -137,7 +134,7 @@ import {
   EXTERNAL_EVENT_MODE,
   type SgMode,
 } from "~/utils/transaction/sg-mode";
-import type { ConsumerWithConsumption } from "~/utils/transaction/consumer";
+import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
   FUT,
   PLACARD,
@@ -165,7 +162,7 @@ const externalEventContext = defineModel<string>("externalEventContext", {
 
 const props = defineProps({
   consumers: {
-    type: Array as PropType<ConsumerWithConsumption[]>,
+    type: Array as PropType<ConsumerWithAmount[]>,
     default: () => [],
   },
   errors: {
@@ -181,15 +178,12 @@ const modeOptions = [
   { text: EVENEMENT, value: EXTERNAL_EVENT_MODE },
 ];
 
-const totalPersonalAccountBalance = computed<number>(() => {
-  return props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0);
-});
-const totalConsumptions = computed<number>(() => {
-  return props.consumers.reduce(
-    (acc, consumer) => acc + consumer.newConsumption,
-    0,
-  );
-});
+const totalPersonalAccountBalance = computed<number>(() =>
+  props.consumers.reduce((acc, consumer) => acc + consumer.balance, 0),
+);
+const totalAmount = computed<number>(() =>
+  props.consumers.reduce((acc, consumer) => acc + consumer.amount, 0),
+);
 
 const barrels = computed<ConfiguredBarrel[]>(
   () => personalAccountStore.barrels,

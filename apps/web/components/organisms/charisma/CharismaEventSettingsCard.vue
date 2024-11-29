@@ -74,7 +74,7 @@ const save = () => emit("save");
   }
 
   &__save-button {
-    width: calc(100% - 10px);
+    width: calc(100% - $card-margin * 2);
     margin: 0 5px;
   }
 }
