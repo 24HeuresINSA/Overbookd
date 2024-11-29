@@ -18,6 +18,7 @@
       :mode="mode"
       :cask-stick-price="caskStickPrice"
       :closet-stick-price="closetStickPrice"
+      :total-price="totalPrice"
       :loading="consumerLoading"
       class="sg-page__consumer-table"
     />

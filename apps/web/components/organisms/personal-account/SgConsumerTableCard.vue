@@ -137,6 +137,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
@@ -175,7 +179,7 @@ const calculateSpentAmount = (consumption: number) => {
   if (isMode(CASK_MODE)) {
     const hasConsumption = consumption > 0;
     return hasConsumption && existsOnlyOneConsumer.value
-      ? props.caskStickPrice
+      ? props.totalPrice
       : props.caskStickPrice * consumption;
   }
   if (isMode(CLOSET_MODE)) return props.closetStickPrice * consumption;
