@@ -1,3 +1,23 @@
+## [3.15.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.14.1...v3.15.0) (2024-11-29)
+
+### Features
+
+* **sg:** add event transactions [#623](https://gitlab.com/24-heures-insa/overbookd-mono/issues/623) ([ac4c550](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ac4c55082b051161839c3944ce5cd081e0225941))
+
+### Bug Fixes
+
+* **logistic:** enable gear filtering by reference [#2271](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2271) ([a07e700](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a07e700e53145e8041d6cb11c400ba42e720ba7c))
+* **mobile:** reduce mobile max width [#2281](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2281) ([1c2b0c3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c2b0c32cfa5eca029ccef8de6a9e08d3eced36a))
+* **sg:** display external event transactions in user transactions [#623](https://gitlab.com/24-heures-insa/overbookd-mono/issues/623) ([2a87b05](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2a87b0581c27fab8fe2ff418a98185036168a8da))
+* **sg:** display total amount of consumptions in external event mode [#2286](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2286) ([334eb72](https://gitlab.com/24-heures-insa/overbookd-mono/commit/334eb7251b66275a95c3cd9c1db4a93a6f110b02))
+* **sg:** send transaction requests [#623](https://gitlab.com/24-heures-insa/overbookd-mono/issues/623) ([2b2ba08](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2b2ba08c1b1542697950a5123836b31d84104a54))
+* **web:** add default duration when creating fa period [#2283](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2283) ([8626672](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86266724afe527ff0f1532ac1eb9ccee7012df57))
+
+### Pre-Features
+
+* **sg:** add external event transactions in api [#623](https://gitlab.com/24-heures-insa/overbookd-mono/issues/623) ([8ba4df7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8ba4df72c4124842fed32e66dd6d08fdd27ae7e1))
+* **sg:** add external event transactions in domain [#623](https://gitlab.com/24-heures-insa/overbookd-mono/issues/623) ([ea30ad5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ea30ad53f0e9ecf61f7517ae1586e47ae095af9c))
+
 ## [3.14.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.14.0...v3.14.1) (2024-11-26)
 
 ### Bug Fixes
