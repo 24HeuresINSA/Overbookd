@@ -1,4 +1,8 @@
-import { type DomainEvent, addEventListener } from "@overbookd/domain-events";
+import {
+  type DomainEvent,
+  type HandleEvent,
+  addEventListener,
+} from "@overbookd/domain-events";
 
 export function useLiveNotification() {
   const mine = buildMineContext();
@@ -19,9 +23,7 @@ function buildMineContext() {
   return {
     listen<T extends DomainEvent["type"]>(
       type: T,
-      handler: (
-        event: MessageEvent<unknown> & Extract<DomainEvent, { type: T }>,
-      ) => void,
+      handler: HandleEvent<T>,
     ): void {
       addEventListener(source, type, handler);
     },

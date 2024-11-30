@@ -32,6 +32,10 @@ import {
   TEAMS_JOINED,
   TEAM_LEFT,
 } from "@overbookd/access-manager";
+import {
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
@@ -48,6 +52,7 @@ import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 const theme = useTheme();
 const { mine } = useLiveNotification();
 const { refreshTokens } = useAuthStore();
+const { fetchMyRefusedActivities } = useNavigationBadgeStore();
 
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
@@ -56,6 +61,10 @@ onMounted(() => {
   mine.listen(TEAMS_JOINED, () => refreshTokens());
   mine.listen(TEAM_LEFT, () => refreshTokens());
   mine.listen(CANDIDATE_ENROLLED, () => refreshTokens());
+  mine.listen(FESTIVAL_ACTIVITY_REJECTED, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, () =>
+    fetchMyRefusedActivities(),
+  );
 });
 
 onUnmounted(() => {

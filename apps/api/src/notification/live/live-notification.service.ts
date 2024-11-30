@@ -24,6 +24,7 @@ export class LiveNotificationService {
     return merge(
       ...this.myPermissionBasedNotifications(permissions),
       ...this.myAccessManagmentNotifications({ teams, id }),
+      ...this.myFestivalActivityNotifications(id),
     );
   }
 
@@ -46,6 +47,23 @@ export class LiveNotificationService {
       ),
       this.eventStore.candidateEnrolled.pipe(
         filter(({ data: { candidate } }) => candidate.id === id),
+      ),
+    ];
+  }
+
+  private myFestivalActivityNotifications(
+    userId: number,
+  ): Observable<DomainEvent>[] {
+    return [
+      this.eventStore.festivalActivityRejected.pipe(
+        filter(({ data: { festivalActivity } }) => {
+          return festivalActivity.inCharge.adherent.id === userId;
+        }),
+      ),
+      this.eventStore.festivalActivityReadyToReview.pipe(
+        filter(({ data: { festivalActivity } }) => {
+          return festivalActivity.inCharge.adherent.id === userId;
+        }),
       ),
     ];
   }

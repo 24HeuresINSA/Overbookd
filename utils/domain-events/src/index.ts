@@ -1,4 +1,4 @@
-export type { DomainEvent } from "./domain-events.js";
+export type { DomainEvent, EventOf, HandleEvent } from "./domain-events.js";
 export { filterEvents, addEventListener } from "./domain-events.js";
 export type {
   FestivalActivityApproved,
