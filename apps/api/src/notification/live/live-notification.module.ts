@@ -17,10 +17,7 @@ import { LiveNotificationService } from "./live-notification.service";
   ],
   imports: [
     DomainEventModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: "24h" },
-    }),
+    JwtModule.register({ secret: jwtConstants.secret }),
   ],
   exports: [LiveNotificationService],
 })
