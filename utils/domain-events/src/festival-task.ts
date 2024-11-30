@@ -12,21 +12,21 @@ export const FESTIVAL_TASK_READY_TO_REVIEW = "festival-task-ready-to-review";
 export const FESTIVAL_TASK_REJECTED = "festival-task-rejected";
 export const FESTIVAL_TASK_APPROVED = "festival-task-approved";
 
-export type Created = {
+type Created = {
   festivalTask: Draft;
   by: Adherent["id"];
   at: Date;
   id: Draft["id"];
 };
 
-export type ReadyToReview = {
+type ReadyToReview = {
   festivalTask: InReview;
   by: Adherent["id"];
   at: Date;
   id: InReview["id"];
 };
 
-export type Rejected = {
+type Rejected = {
   festivalTask: Refused;
   by: Adherent["id"];
   at: Date;
@@ -34,38 +34,32 @@ export type Rejected = {
   reason: string;
 };
 
-export type Approved = {
+type Approved = {
   festivalTask: Reviewable;
   by: Adherent["id"];
   at: Date;
   id: Reviewable["id"];
 };
 
-export type FestivalTaskCreatedEvent = Event<
-  typeof FESTIVAL_TASK_CREATED,
-  Created
->;
+export type FestivalTaskCreated = Event<typeof FESTIVAL_TASK_CREATED, Created>;
 
-export type FestivalTaskReadyToReviewEvent = Event<
+export type FestivalTaskReadyToReview = Event<
   typeof FESTIVAL_TASK_READY_TO_REVIEW,
   ReadyToReview
 >;
 
-export type FestivalTaskRejectedEvent = Event<
+export type FestivalTaskRejected = Event<
   typeof FESTIVAL_TASK_REJECTED,
   Rejected
 >;
 
-export type FestivalTaskApprovedEvent = Event<
+export type FestivalTaskApproved = Event<
   typeof FESTIVAL_TASK_APPROVED,
   Approved
 >;
 
 export class FestivalTask {
-  static created(
-    festivalTask: Draft,
-    by: Adherent["id"],
-  ): FestivalTaskCreatedEvent {
+  static created(festivalTask: Draft, by: Adherent["id"]): FestivalTaskCreated {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id };
     return { type: FESTIVAL_TASK_CREATED, data };
@@ -74,7 +68,7 @@ export class FestivalTask {
   static readyToReview(
     festivalTask: InReview,
     by: Adherent["id"],
-  ): FestivalTaskReadyToReviewEvent {
+  ): FestivalTaskReadyToReview {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id };
     return { type: FESTIVAL_TASK_READY_TO_REVIEW, data };
@@ -84,7 +78,7 @@ export class FestivalTask {
     festivalTask: Refused,
     by: Adherent["id"],
     reason: string,
-  ): FestivalTaskRejectedEvent {
+  ): FestivalTaskRejected {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id, reason };
     return { type: FESTIVAL_TASK_REJECTED, data };
@@ -93,7 +87,7 @@ export class FestivalTask {
   static approved(
     festivalTask: Reviewable,
     by: Adherent["id"],
-  ): FestivalTaskApprovedEvent {
+  ): FestivalTaskApproved {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id };
     return { type: FESTIVAL_TASK_APPROVED, data };

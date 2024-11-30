@@ -1,6 +1,14 @@
 import {
-  Approved,
-  Created,
+  PERMISSION_GRANTED,
+  PERMISSION_REVOKED,
+  PermissionGranted,
+  PermissionRevoked,
+  TEAM_LEFT,
+  TeamLeft,
+  TEAMS_JOINED,
+  TeamsJoined,
+} from "@overbookd/access-manager";
+import {
   FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_CREATED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
@@ -13,23 +21,28 @@ import {
   FestivalTaskCreated,
   FestivalTaskReadyToReview,
   FestivalTaskRejected,
-  ReadyToReview,
-  Rejected,
   SHARED_MEAL_CLOSED,
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
   filterEvents,
+  type FestivalActivityCreated,
+  type FestivalActivityReadyToReview,
   type DomainEvent,
+  FestivalActivityApproved,
+  FestivalActivityRejected,
+  StaffRegisteredEvent,
+  VolunteerRegisteredEvent,
+  SharedMealClosed,
 } from "@overbookd/domain-events";
-import { PastSharedMeal } from "@overbookd/personal-account";
-import {
-  CANDIDATE_ENROLLED,
-  CandidateEnrolled,
-  StaffRegistered,
-  VolunteerRegistered,
-} from "@overbookd/registration";
+import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
 import { SOFT_CODE } from "@overbookd/team-constants";
-import { Observable, ReplaySubject, filter, map } from "rxjs";
+import { Observable, ReplaySubject, filter } from "rxjs";
+
+type FestivalVolunteerEnrolled = CandidateEnrolled & {
+  data: {
+    team: typeof SOFT_CODE;
+  };
+};
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
@@ -56,61 +69,79 @@ export class DomainEventService {
     this.$events.next(event);
   }
 
-  get staffsRegistered(): Observable<StaffRegistered> {
-    return this.listen(STAFF_REGISTERED).pipe(map(({ data }) => data));
+  get staffsRegistered(): Observable<StaffRegisteredEvent> {
+    return this.listen(STAFF_REGISTERED);
   }
 
-  get volunteersRegistered(): Observable<VolunteerRegistered> {
-    return this.listen(VOLUNTEER_REGISTERED).pipe(map(({ data }) => data));
+  get volunteersRegistered(): Observable<VolunteerRegisteredEvent> {
+    return this.listen(VOLUNTEER_REGISTERED);
   }
 
-  get volunteersEnrolled(): Observable<CandidateEnrolled> {
+  get candidateEnrolled(): Observable<CandidateEnrolled> {
+    return this.listen(CANDIDATE_ENROLLED);
+  }
+
+  get volunteersEnrolled(): Observable<FestivalVolunteerEnrolled> {
     return this.listen(CANDIDATE_ENROLLED).pipe(
-      filter(({ data }) => data.team === SOFT_CODE),
+      filter(isEnrollingFestivalVolunteer),
     );
   }
 
-  get createdFestivalActivity(): Observable<Created> {
-    return this.listen(FESTIVAL_ACTIVITY_CREATED).pipe(map(({ data }) => data));
+  get festivalActivityCreated(): Observable<FestivalActivityCreated> {
+    return this.listen(FESTIVAL_ACTIVITY_CREATED);
   }
 
-  get readyToReviewFestivalActivity(): Observable<ReadyToReview> {
-    return this.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW).pipe(
-      map(({ data }) => data),
-    );
+  get festivalActivityReadyToReview(): Observable<FestivalActivityReadyToReview> {
+    return this.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW);
   }
 
-  get approvedFestivalActivity(): Observable<Approved> {
-    return this.listen(FESTIVAL_ACTIVITY_APPROVED).pipe(
-      map(({ data }) => data),
-    );
+  get festivalActivityApproved(): Observable<FestivalActivityApproved> {
+    return this.listen(FESTIVAL_ACTIVITY_APPROVED);
   }
 
-  get rejectedFestivalActivity(): Observable<Rejected> {
-    return this.listen(FESTIVAL_ACTIVITY_REJECTED).pipe(
-      map(({ data }) => data),
-    );
+  get festivalActivityRejected(): Observable<FestivalActivityRejected> {
+    return this.listen(FESTIVAL_ACTIVITY_REJECTED);
   }
 
-  get createdFestivalTask(): Observable<FestivalTaskCreated> {
-    return this.listen(FESTIVAL_TASK_CREATED).pipe(map(({ data }) => data));
+  get festivalTaskCreated(): Observable<FestivalTaskCreated> {
+    return this.listen(FESTIVAL_TASK_CREATED);
   }
 
-  get readyToReviewFestivalTask(): Observable<FestivalTaskReadyToReview> {
-    return this.listen(FESTIVAL_TASK_READY_TO_REVIEW).pipe(
-      map(({ data }) => data),
-    );
+  get festivalTaskReadyToReview(): Observable<FestivalTaskReadyToReview> {
+    return this.listen(FESTIVAL_TASK_READY_TO_REVIEW);
   }
 
-  get rejectedFestivalTask(): Observable<FestivalTaskRejected> {
-    return this.listen(FESTIVAL_TASK_REJECTED).pipe(map(({ data }) => data));
+  get festivalTaskRejected(): Observable<FestivalTaskRejected> {
+    return this.listen(FESTIVAL_TASK_REJECTED);
   }
 
-  get approvedFestivalTask(): Observable<FestivalTaskApproved> {
-    return this.listen(FESTIVAL_TASK_APPROVED).pipe(map(({ data }) => data));
+  get festivalTaskApproved(): Observable<FestivalTaskApproved> {
+    return this.listen(FESTIVAL_TASK_APPROVED);
   }
 
-  get closedSharedMeal(): Observable<PastSharedMeal> {
-    return this.listen(SHARED_MEAL_CLOSED).pipe(map(({ data }) => data));
+  get closedSharedMeal(): Observable<SharedMealClosed> {
+    return this.listen(SHARED_MEAL_CLOSED);
   }
+
+  get permissionGranted(): Observable<PermissionGranted> {
+    return this.listen(PERMISSION_GRANTED);
+  }
+
+  get permissionRevoked(): Observable<PermissionRevoked> {
+    return this.listen(PERMISSION_REVOKED);
+  }
+
+  get teamsJoined(): Observable<TeamsJoined> {
+    return this.listen(TEAMS_JOINED);
+  }
+
+  get teamLeft(): Observable<TeamLeft> {
+    return this.listen(TEAM_LEFT);
+  }
+}
+
+function isEnrollingFestivalVolunteer(
+  candidate: CandidateEnrolled,
+): candidate is FestivalVolunteerEnrolled {
+  return candidate.data.team === SOFT_CODE;
 }

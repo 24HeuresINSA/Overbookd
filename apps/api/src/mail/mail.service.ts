@@ -13,7 +13,10 @@ import {
   PreviewFestivalTask,
   REJECTED,
 } from "@overbookd/festival-event";
-import { Rejected, FestivalTaskRejected } from "@overbookd/domain-events";
+import {
+  FestivalTaskRejected,
+  FestivalActivityRejected,
+} from "@overbookd/domain-events";
 import { nicknameOrName, Profile } from "@overbookd/user";
 import { Membership } from "@overbookd/registration";
 
@@ -46,7 +49,7 @@ type ActivityRejected = {
     name: PreviewFestivalActivity["name"];
   };
   rejector: Member;
-  reason: Rejected["reason"];
+  reason: FestivalActivityRejected["data"]["reason"];
 };
 
 type TaskRejected = {
@@ -56,7 +59,7 @@ type TaskRejected = {
     name: PreviewFestivalTask["name"];
   };
   rejector: Member;
-  reason: FestivalTaskRejected["reason"];
+  reason: FestivalTaskRejected["data"]["reason"];
 };
 
 type ActivityValidated = {
@@ -81,47 +84,51 @@ export class MailService implements OnApplicationBootstrap {
   private logger = new Logger("MailService");
 
   onApplicationBootstrap() {
-    this.eventStore.staffsRegistered.subscribe((event) => {
+    this.eventStore.staffsRegistered.subscribe(({ data: event }) => {
       this.logger.log("Send welcome-staff mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
 
-    this.eventStore.volunteersRegistered.subscribe((event) => {
+    this.eventStore.volunteersRegistered.subscribe(({ data: event }) => {
       this.logger.log("Send welcome-volunteer mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
 
-    this.eventStore.volunteersEnrolled.subscribe(async ({ data }) => {
-      this.logger.log("Send volunteer-enrolled mail");
-      this.logger.debug(JSON.stringify(data));
-      const volunteer = await this.members.byId(data.candidate.id);
-      this.enrollVolunteer(volunteer);
-    });
+    this.eventStore.volunteersEnrolled.subscribe(
+      async ({ data: enrolling }) => {
+        this.logger.log("Send volunteer-enrolled mail");
+        this.logger.debug(JSON.stringify(enrolling));
+        const volunteer = await this.members.byId(enrolling.candidate.id);
+        this.enrollVolunteer(volunteer);
+      },
+    );
 
-    this.eventStore.rejectedFestivalActivity.subscribe(async (event) => {
-      const { id, general, inCharge, reviews } = event.festivalActivity;
+    this.eventStore.festivalActivityRejected.subscribe(
+      async ({ data: rejected }) => {
+        const { id, general, inCharge, reviews } = rejected.festivalActivity;
 
-      const rejectionCount = Object.values(reviews).filter(
-        (review) => review === REJECTED,
-      ).length;
-      const hasAlreadySentEmail = rejectionCount > 1;
-      if (hasAlreadySentEmail) return;
+        const rejectionCount = Object.values(reviews).filter(
+          (review) => review === REJECTED,
+        ).length;
+        const hasAlreadySentEmail = rejectionCount > 1;
+        if (hasAlreadySentEmail) return;
 
-      this.logger.log("Send festival-activity-rejected mail");
-      const activity = { id, name: general.name };
-      const reason = event.reason;
+        this.logger.log("Send festival-activity-rejected mail");
+        const activity = { id, name: general.name };
+        const reason = rejected.reason;
 
-      const [rejector, { email }] = await Promise.all([
-        this.members.byId(event.by),
-        this.members.byId(inCharge.adherent.id),
-      ]);
+        const [rejector, { email }] = await Promise.all([
+          this.members.byId(rejected.by),
+          this.members.byId(inCharge.adherent.id),
+        ]);
 
-      this.festivalActivityRejected({ email, reason, rejector, activity });
-    });
+        this.festivalActivityRejected({ email, reason, rejector, activity });
+      },
+    );
 
-    this.eventStore.rejectedFestivalTask.subscribe(async (event) => {
+    this.eventStore.festivalTaskRejected.subscribe(async ({ data: event }) => {
       const { id, general, reviews } = event.festivalTask;
 
       const rejectionCount = Object.values(reviews).filter(
@@ -142,19 +149,21 @@ export class MailService implements OnApplicationBootstrap {
       this.festivalTaskRejected({ email, reason, rejector, task });
     });
 
-    this.eventStore.approvedFestivalActivity.subscribe(async (event) => {
-      const { reviews, inCharge, general, id } = event.festivalActivity;
-      const stillInReviewCount = Object.values(reviews).filter(
-        (review) => review !== NOT_ASKING_TO_REVIEW && review !== APPROVED,
-      ).length;
-      if (stillInReviewCount > 0) return;
+    this.eventStore.festivalActivityApproved.subscribe(
+      async ({ data: { festivalActivity } }) => {
+        const { reviews, inCharge, general, id } = festivalActivity;
+        const stillInReviewCount = Object.values(reviews).filter(
+          (review) => review !== NOT_ASKING_TO_REVIEW && review !== APPROVED,
+        ).length;
+        if (stillInReviewCount > 0) return;
 
-      this.logger.log("Send festival-activity-validated mail");
-      const { email } = await this.members.byId(inCharge.adherent.id);
-      const activity = { name: general.name, id };
+        this.logger.log("Send festival-activity-validated mail");
+        const { email } = await this.members.byId(inCharge.adherent.id);
+        const activity = { name: general.name, id };
 
-      this.festivalActivityValidated({ email, activity });
-    });
+        this.festivalActivityValidated({ email, activity });
+      },
+    );
   }
 
   async mailTest({ email, username }: MailTestRequestDto): Promise<void> {
@@ -163,9 +172,7 @@ export class MailService implements OnApplicationBootstrap {
         to: email,
         subject: "Mail de test de l'API Overbookd",
         template: "mail-test",
-        context: {
-          username: username,
-        },
+        context: { username },
       });
 
       if (mail) {

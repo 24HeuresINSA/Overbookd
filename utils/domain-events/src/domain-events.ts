@@ -9,36 +9,36 @@ import type {
 
 import { CandidateEnrolled as CandidateEnrolledEvent } from "@overbookd/registration";
 import type {
-  FestivalActivityApprovedEvent,
-  FestivalActivityCreatedEvent,
-  FestivalActivityReadyToReviewEvent,
-  FestivalActivityRejectedEvent,
+  FestivalActivityApproved,
+  FestivalActivityCreated,
+  FestivalActivityReadyToReview,
+  FestivalActivityRejected,
 } from "./festival-activity.js";
 import {
-  FestivalTaskApprovedEvent,
-  FestivalTaskCreatedEvent,
-  FestivalTaskReadyToReviewEvent,
-  FestivalTaskRejectedEvent,
+  FestivalTaskApproved,
+  FestivalTaskCreated,
+  FestivalTaskReadyToReview,
+  FestivalTaskRejected,
 } from "./festival-task.js";
 import {
   StaffRegisteredEvent,
   VolunteerRegisteredEvent,
 } from "./registration.js";
-import type { SharedMealClosedEvent } from "./shared-meal.js";
+import type { SharedMealClosed } from "./shared-meal.js";
 
 export type DomainEvent =
   | StaffRegisteredEvent
   | VolunteerRegisteredEvent
   | CandidateEnrolledEvent
-  | FestivalActivityCreatedEvent
-  | FestivalActivityReadyToReviewEvent
-  | FestivalActivityApprovedEvent
-  | FestivalActivityRejectedEvent
-  | FestivalTaskCreatedEvent
-  | FestivalTaskReadyToReviewEvent
-  | FestivalTaskRejectedEvent
-  | FestivalTaskApprovedEvent
-  | SharedMealClosedEvent
+  | FestivalActivityCreated
+  | FestivalActivityReadyToReview
+  | FestivalActivityApproved
+  | FestivalActivityRejected
+  | FestivalTaskCreated
+  | FestivalTaskReadyToReview
+  | FestivalTaskRejected
+  | FestivalTaskApproved
+  | SharedMealClosed
   | PermissionGrantedEvent
   | PermissionRevokedEvent
   | TeamsJoinedEvent
