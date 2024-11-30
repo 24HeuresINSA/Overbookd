@@ -44,24 +44,31 @@ export type DomainEvent =
   | TeamsJoinedEvent
   | TeamLeftEvent;
 
+export type EventOf<T extends DomainEvent["type"]> = Extract<
+  DomainEvent,
+  { type: T }
+>;
+
+type DomainEventMessage<T extends DomainEvent["type"]> = MessageEvent<unknown> &
+  EventOf<T>;
+
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,
   $domainEvent: Observable<DomainEvent>,
-): Observable<Extract<DomainEvent, { type: T }>> {
+): Observable<EventOf<T>> {
   return $domainEvent.pipe(
-    filter(
-      (event): event is Extract<DomainEvent, { type: T }> =>
-        event.type === type,
-    ),
+    filter((event): event is EventOf<T> => event.type === type),
   );
 }
+
+export type HandleEvent<T extends DomainEvent["type"]> = (
+  event: DomainEventMessage<T>,
+) => void;
 
 export function addEventListener<T extends DomainEvent["type"]>(
   eventSource: EventSource,
   type: T,
-  handler: (
-    event: MessageEvent<unknown> & Extract<DomainEvent, { type: T }>,
-  ) => void,
+  handler: HandleEvent<T>,
 ) {
   eventSource.addEventListener(
     type,

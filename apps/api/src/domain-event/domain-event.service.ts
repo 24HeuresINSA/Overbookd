@@ -33,6 +33,7 @@ import {
   StaffRegisteredEvent,
   VolunteerRegisteredEvent,
   SharedMealClosed,
+  EventOf,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
 import { SOFT_CODE } from "@overbookd/team-constants";
@@ -59,9 +60,7 @@ export class DomainEventService {
     return new DomainEventService([]);
   }
 
-  listen<T extends DomainEvent["type"]>(
-    domain: T,
-  ): Observable<Extract<DomainEvent, { type: T }>> {
+  listen<T extends DomainEvent["type"]>(domain: T): Observable<EventOf<T>> {
     return filterEvents(domain, this.$events);
   }
 
