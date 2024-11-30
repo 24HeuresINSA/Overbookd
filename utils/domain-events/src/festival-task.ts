@@ -12,21 +12,21 @@ export const FESTIVAL_TASK_READY_TO_REVIEW = "festival-task-ready-to-review";
 export const FESTIVAL_TASK_REJECTED = "festival-task-rejected";
 export const FESTIVAL_TASK_APPROVED = "festival-task-approved";
 
-export type Created = {
+type Created = {
   festivalTask: Draft;
   by: Adherent["id"];
   at: Date;
   id: Draft["id"];
 };
 
-export type ReadyToReview = {
+type ReadyToReview = {
   festivalTask: InReview;
   by: Adherent["id"];
   at: Date;
   id: InReview["id"];
 };
 
-export type Rejected = {
+type Rejected = {
   festivalTask: Refused;
   by: Adherent["id"];
   at: Date;
@@ -34,7 +34,7 @@ export type Rejected = {
   reason: string;
 };
 
-export type Approved = {
+type Approved = {
   festivalTask: Reviewable;
   by: Adherent["id"];
   at: Date;
