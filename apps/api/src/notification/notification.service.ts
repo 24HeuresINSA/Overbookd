@@ -1,14 +1,8 @@
 import { Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import {
-  PERMISSION_GRANTED,
-  PERMISSION_REVOKED,
-  TEAM_LEFT,
-  TEAMS_JOINED,
-} from "@overbookd/access-manager";
-import { DomainEvent, STAFF_REGISTERED } from "@overbookd/domain-events";
+import { DomainEvent } from "@overbookd/domain-events";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
-import { CANDIDATE_ENROLLED, RegisterNewcomer } from "@overbookd/registration";
+import { RegisterNewcomer } from "@overbookd/registration";
 import { filter, merge, Observable } from "rxjs";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
@@ -40,7 +34,7 @@ export class NotificationService implements OnApplicationBootstrap {
   private logger = new Logger("NotificationService");
 
   onApplicationBootstrap() {
-    this.eventStore.staffsRegistered.subscribe(async (event) => {
+    this.eventStore.staffsRegistered.subscribe(async ({ data: event }) => {
       this.logger.debug(JSON.stringify(event));
       const users = await this.register.notifyNewStaffAwaits(event);
       const notifyees = users.map(({ id }) => id);
@@ -71,15 +65,19 @@ export class NotificationService implements OnApplicationBootstrap {
   ): Observable<DomainEvent>[] {
     const { teams, id } = identifiers;
     return [
-      this.permissionGranted.pipe(
+      this.eventStore.permissionGranted.pipe(
         filter(({ data: { to } }) => teams.includes(to)),
       ),
-      this.permissionRevoked.pipe(
+      this.eventStore.permissionRevoked.pipe(
         filter(({ data: { from } }) => teams.includes(from)),
       ),
-      this.teamsJoined.pipe(filter(({ data: { member } }) => member.id === id)),
-      this.teamLeft.pipe(filter(({ data: { member } }) => member.id === id)),
-      this.enrolled.pipe(
+      this.eventStore.teamsJoined.pipe(
+        filter(({ data: { member } }) => member.id === id),
+      ),
+      this.eventStore.teamLeft.pipe(
+        filter(({ data: { member } }) => member.id === id),
+      ),
+      this.eventStore.candidateEnrolled.pipe(
         filter(({ data: { candidate } }) => candidate.id === id),
       ),
     ];
@@ -98,27 +96,7 @@ export class NotificationService implements OnApplicationBootstrap {
   }
 
   private get staffRegistered(): PermissionBasedNotification {
-    const staffRegistered = this.eventStore.listen(STAFF_REGISTERED);
+    const staffRegistered = this.eventStore.staffsRegistered;
     return { source: staffRegistered, permission: ENROLL_HARD };
-  }
-
-  private get permissionGranted() {
-    return this.eventStore.listen(PERMISSION_GRANTED);
-  }
-
-  private get permissionRevoked() {
-    return this.eventStore.listen(PERMISSION_REVOKED);
-  }
-
-  private get teamsJoined() {
-    return this.eventStore.listen(TEAMS_JOINED);
-  }
-
-  private get teamLeft() {
-    return this.eventStore.listen(TEAM_LEFT);
-  }
-
-  private get enrolled() {
-    return this.eventStore.listen(CANDIDATE_ENROLLED);
   }
 }

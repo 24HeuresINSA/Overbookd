@@ -1,11 +1,11 @@
 export type { DomainEvent } from "./domain-events.js";
 export { filterEvents, addEventListener } from "./domain-events.js";
 export type {
-  Approved,
-  Rejected,
-  ReadyToReview,
-  Created,
-} from "./festival-activity.js";
+  FestivalActivityApproved,
+  FestivalActivityRejected,
+  FestivalActivityCreated,
+  FestivalActivityReadyToReview,
+} from "./festival-activity";
 export {
   FestivalActivity,
   FESTIVAL_ACTIVITY_CREATED,
@@ -14,10 +14,10 @@ export {
   FESTIVAL_ACTIVITY_REJECTED,
 } from "./festival-activity.js";
 export type {
-  Created as FestivalTaskCreated,
-  ReadyToReview as FestivalTaskReadyToReview,
-  Rejected as FestivalTaskRejected,
-  Approved as FestivalTaskApproved,
+  FestivalTaskCreated,
+  FestivalTaskReadyToReview,
+  FestivalTaskRejected,
+  FestivalTaskApproved,
 } from "./festival-task.js";
 export {
   FestivalTask,
@@ -26,7 +26,7 @@ export {
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_APPROVED,
 } from "./festival-task.js";
-export type { SharedMealClosedEvent } from "./shared-meal.js";
+export type { SharedMealClosed } from "./shared-meal.js";
 export { SHARED_MEAL_CLOSED } from "./shared-meal.js";
 export type {
   StaffRegisteredEvent,
