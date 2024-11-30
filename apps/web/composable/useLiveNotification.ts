@@ -8,7 +8,7 @@ export function useLiveNotification() {
 function generateEndpoint() {
   const { accessToken } = useAuthStore();
   const config = useRuntimeConfig();
-  const path = `${config.public.baseURL}/notifications/live`;
+  const path = `${config.public.baseURL}/live-notifications/mine`;
   const liveEndpoint = new URL(path);
   liveEndpoint.searchParams.append("token", accessToken ?? "");
   return liveEndpoint.href;
