@@ -1,5 +1,5 @@
 <template>
-  <FestivalEventFilter
+  <FestivalEventFilterCard
     v-model:search="filters.search"
     v-model:team="filters.team"
     v-model:adherent="filters.adherent"
@@ -40,7 +40,7 @@
         </div>
       </div>
     </template>
-  </FestivalEventFilter>
+  </FestivalEventFilterCard>
 </template>
 
 <script lang="ts" setup>
@@ -53,14 +53,26 @@ import {
 } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
-import type { TaskFilters } from "~/utils/festival-event/festival-task/festival-task.filter";
+import {
+  TaskFilterBuilder,
+  type TaskFilters,
+} from "~/utils/festival-event/festival-task/festival-task.filter";
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 
+const route = useRoute();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 
 const filters = defineModel<TaskFilters>({ required: true });
+const updateFilters = () => {
+  filters.value = TaskFilterBuilder.getFromRouteQuery(route.query);
+};
+onMounted(async () => {
+  if (userStore.adherents.length === 0) await userStore.fetchAdherents();
+  updateFilters();
+});
+watch(() => route.query, updateFilters);
 
 const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
 type ReviewerTeam = Team & { code: Reviewer<"FT"> };

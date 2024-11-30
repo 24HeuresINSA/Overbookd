@@ -64,7 +64,6 @@ import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 const userStore = useUserStore();
 
-userStore.fetchAdherents();
 const adherents = computed<User[]>(() => userStore.adherents);
 
 const search = defineModel<string>("search", { required: false });
