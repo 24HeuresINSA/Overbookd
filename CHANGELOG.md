@@ -1,3 +1,14 @@
+## [3.16.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.15.0...v3.16.0) (2024-11-30)
+
+### Features
+
+* **festival-activity:** update refusal count on events. [#2289](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2289) ([f66032f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f66032f100e39d124cd569b67e08a15a4473a8d0))
+
+### Bug Fixes
+
+* **festival-event:** fill adherent filter when refreshing page [#2287](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2287) ([66947c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/66947c4e810b68ed47b1056997349e8d1fbddf8a))
+* **profile:** profile update [#2288](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2288) ([32464ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/32464ea73280ecf7ae726ba6e97c6cdce8e43e2d))
+
 ## [3.15.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.14.1...v3.15.0) (2024-11-29)
 
 ### Features
