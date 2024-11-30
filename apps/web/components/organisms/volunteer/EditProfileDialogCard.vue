@@ -2,15 +2,15 @@
   <DialogCard @close="close">
     <template #title>Modifier mon profil</template>
     <template #content>
+      <v-file-input
+        v-model="profilePicture"
+        :rules="[isImage, isSupportedImageFile, isImageSizeWithinLimit]"
+        label="Photo de profil"
+        prepend-icon="mdi-camera"
+        accept="image/png, image/jpeg, image/gif"
+        show-size
+      />
       <v-form v-model="isFormValid" class="profile-form">
-        <v-file-input
-          v-model="profilePicture"
-          :rules="[isImage, isSupportedImageFile, isImageSizeWithinLimit]"
-          label="Photo de profil"
-          prepend-icon="mdi-camera"
-          accept="image/png, image/jpeg, image/gif"
-          show-size
-        />
         <div class="profile-row">
           <v-text-field
             v-model="firstname"
