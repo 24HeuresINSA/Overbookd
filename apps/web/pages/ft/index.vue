@@ -114,13 +114,11 @@ import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 import {
   type TaskFilters,
   type TaskReviewsFilter,
-  TaskFilterBuilder,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 useHead({ title: "Fiches Tâches" });
 
-const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -174,9 +172,6 @@ const getReviewerStatus = (task: PreviewFestivalTask, reviewer: Team) => {
 };
 
 const filters = ref<TaskFilters>({});
-onMounted(
-  () => (filters.value = TaskFilterBuilder.getFromRouteQuery(route.query)),
-);
 
 const searchableTasks = computed<Searchable<PreviewFestivalTask>[]>(() =>
   tasks.value.map((ft) => ({

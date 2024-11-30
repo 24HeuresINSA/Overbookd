@@ -108,7 +108,6 @@ import type {
 import { SlugifyService } from "@overbookd/slugify";
 import { type User, buildUserName } from "@overbookd/user";
 import {
-  ActivityFilterBuilder,
   type ActivityFilters,
   type ActivityReviewsFilter,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
@@ -127,7 +126,6 @@ import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 
 useHead({ title: "Fiches Activités" });
 
-const route = useRoute();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
@@ -190,10 +188,6 @@ const getReviewerStatus = (
 };
 
 const filters = ref<ActivityFilters>({});
-const updateFilters = () => {
-  filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query);
-};
-watch(() => route.query, updateFilters, { immediate: true });
 
 const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
   () =>

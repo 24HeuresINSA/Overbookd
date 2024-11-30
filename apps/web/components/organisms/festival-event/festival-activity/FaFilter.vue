@@ -1,5 +1,5 @@
 <template>
-  <FestivalEventFilter
+  <FestivalEventFilterCard
     v-model:search="filters.search"
     v-model:team="filters.team"
     v-model:adherent="filters.adherent"
@@ -50,7 +50,7 @@
         @click="openAnimationsToPublish"
       />
     </template>
-  </FestivalEventFilter>
+  </FestivalEventFilterCard>
 </template>
 
 <script lang="ts" setup>
@@ -65,7 +65,10 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-event";
-import type { ActivityFilters } from "~/utils/festival-event/festival-activity/festival-activity.filter";
+import {
+  ActivityFilterBuilder,
+  type ActivityFilters,
+} from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
@@ -75,10 +78,19 @@ import {
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
 
+const route = useRoute();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 
 const filters = defineModel<ActivityFilters>({ required: true });
+const updateFilters = () => {
+  filters.value = ActivityFilterBuilder.getFromRouteQuery(route.query);
+};
+onMounted(async () => {
+  if (userStore.adherents.length === 0) await userStore.fetchAdherents();
+  updateFilters();
+});
+watch(() => route.query, updateFilters);
 
 const reviewers: Reviewer<"FA">[] = [
   humain,
