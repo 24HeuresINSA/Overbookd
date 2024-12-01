@@ -30,7 +30,7 @@ export class LiveNotificationService {
 
   festivalActivities(): Observable<DomainEvent> {
     return merge(
-      this.eventStore.festivalTaskCreated,
+      this.eventStore.festivalActivityCreated,
       this.eventStore.festivalActivityReadyToReview,
       this.eventStore.festivalActivityRejected,
       this.eventStore.festivalActivityApproved,
