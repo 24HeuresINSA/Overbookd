@@ -28,6 +28,15 @@ export class LiveNotificationService {
     );
   }
 
+  festivalActivities(): Observable<DomainEvent> {
+    return merge(
+      this.eventStore.festivalActivityCreated,
+      this.eventStore.festivalActivityReadyToReview,
+      this.eventStore.festivalActivityRejected,
+      this.eventStore.festivalActivityApproved,
+    );
+  }
+
   private myAccessManagmentNotifications(
     identifiers: Identifiers,
   ): Observable<DomainEvent>[] {

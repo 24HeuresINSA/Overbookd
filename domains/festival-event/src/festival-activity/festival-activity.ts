@@ -98,17 +98,17 @@ type PreviewReviewableBase = PreviewBase & {
   team: Reviewable["inCharge"]["team"];
 };
 
-type InReviewPreview = PreviewReviewableBase & {
+export type InReviewPreview = PreviewReviewableBase & {
   status: InReview["status"];
   reviews: InReviewReviews<"FA">;
 };
 
-type ValidatedPreview = PreviewReviewableBase & {
+export type ValidatedPreview = PreviewReviewableBase & {
   status: Validated["status"];
   reviews: ValidatedReviews<"FA">;
 };
 
-type RefusedPreview = PreviewReviewableBase & {
+export type RefusedPreview = PreviewReviewableBase & {
   status: Refused["status"];
   reviews: RefusedReviews<"FA">;
 };

@@ -123,6 +123,13 @@ import {
   openActivityInNewTab,
 } from "~/utils/festival-event/open-page";
 import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
+import { useLiveNotification } from "~/composable/useLiveNotification";
+import {
+  FESTIVAL_ACTIVITY_CREATED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 
 useHead({ title: "Fiches Activités" });
 
@@ -154,9 +161,7 @@ const activities = computed<PreviewFestivalActivity[]>(
 );
 const reviewers = computed<Team[]>(() => teamStore.faReviewers);
 
-teamStore.fetchFaReviewers();
 const loading = ref<boolean>(activities.value.length === 0);
-faStore.fetchAllActivities().then(() => (loading.value = false));
 
 const isNewActivityDialogOpen = ref<boolean>(false);
 const openNewActivityDialog = () => (isNewActivityDialogOpen.value = true);
@@ -242,6 +247,31 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
       filterActivityByReviews(reviews)(activity)
     );
   });
+});
+
+const { festivalActivities } = useLiveNotification();
+const { fetchAllActivities, addActivityToPreviews, updatePreviousPreview } =
+  faStore;
+
+onMounted(() => {
+  teamStore.fetchFaReviewers();
+  fetchAllActivities().then(() => (loading.value = false));
+  festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
+    addActivityToPreviews(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
+});
+
+onUnmounted(() => {
+  festivalActivities.stopListening();
 });
 </script>
 

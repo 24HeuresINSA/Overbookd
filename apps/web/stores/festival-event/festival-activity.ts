@@ -18,6 +18,9 @@ import {
   type InquiryRequest,
   type AssignDrive,
   defaultDraft,
+  type Draft,
+  previewOf,
+  type Reviewable,
 } from "@overbookd/festival-event";
 import type {
   PrepareInChargeForm,
@@ -38,6 +41,7 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import { updateItemToList } from "@overbookd/list";
 
 const repo = FestivalActivityRepository;
 
@@ -69,6 +73,23 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       const res = await repo.getAll();
       if (isHttpError(res)) return;
       this.activities.forAll = res;
+    },
+
+    addActivityToPreviews(activity: Draft) {
+      const preview = previewOf(activity);
+      this.activities.forAll = [...this.activities.forAll, preview];
+    },
+
+    updatePreviousPreview(activity: Reviewable) {
+      const preview = previewOf(activity);
+      const index = this.activities.forAll.findIndex(
+        ({ id }) => id === activity.id,
+      );
+      this.activities.forAll = updateItemToList(
+        this.activities.forAll,
+        index,
+        preview,
+      );
     },
 
     async fetchSecurityPreviews() {
