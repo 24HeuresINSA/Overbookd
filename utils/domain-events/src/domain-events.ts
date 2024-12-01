@@ -70,8 +70,10 @@ export function addEventListener<T extends DomainEvent["type"]>(
   type: T,
   handler: HandleEvent<T>,
 ) {
-  eventSource.addEventListener(
-    type,
-    handler as EventListenerOrEventListenerObject,
-  );
+  const parseAndHandle = ((event: EventOf<T> & MessageEvent<string>) => {
+    const data: EventOf<T> = JSON.parse(event.data);
+    handler({ ...event, data });
+  }) as EventListenerOrEventListenerObject;
+
+  eventSource.addEventListener(type, parseAndHandle);
 }

@@ -97,6 +97,7 @@ export type {
   FestivalTaskChild,
 } from "./festival-activity/festival-activity.js";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error.js";
+export { previewOf } from "./festival-activity/preview-of";
 
 export type { Contractor } from "./festival-activity/sections/in-charge.js";
 

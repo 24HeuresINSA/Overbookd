@@ -250,23 +250,24 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
 });
 
 const { festivalActivities } = useLiveNotification();
-const { fetchAllActivities } = faStore;
+const { fetchAllActivities, addActivityToPreviews, updatePreviousPreview } =
+  faStore;
 
 onMounted(() => {
   teamStore.fetchFaReviewers();
   fetchAllActivities().then(() => (loading.value = false));
-  festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, () =>
-    fetchAllActivities(),
-  );
-  festivalActivities.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, () =>
-    fetchAllActivities(),
-  );
-  festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, () =>
-    fetchAllActivities(),
-  );
-  festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, () =>
-    fetchAllActivities(),
-  );
+  festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
+    addActivityToPreviews(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
+  festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    updatePreviousPreview(data.festivalActivity);
+  });
 });
 
 onUnmounted(() => {
