@@ -23,4 +23,9 @@ export class LiveNotificationController {
   mine(@Query() { token }: { token: string }): Observable<DomainEvent> {
     return this.live.mine(token);
   }
+
+  @Sse("festival-activities")
+  festivalActivities(): Observable<DomainEvent> {
+    return this.live.festivalActivities();
+  }
 }
