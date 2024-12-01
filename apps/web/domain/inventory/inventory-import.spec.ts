@@ -22,30 +22,35 @@ class FakeInventoryImportContainer extends InventoryImportContainer {
 }
 
 const perceuseInLocal: InventoryImportRaw = {
+  code: "BR_OU_002",
   gear: "Perceuse",
   quantity: 2,
   storage: "Local",
 };
 
 const perceuseInConteneurH: InventoryImportRaw = {
+  code: "BR_OU_002",
   gear: "Perceuse",
   quantity: 3,
   storage: "Conteneur H",
 };
 
 const marteauInLocal: InventoryImportRaw = {
+  code: "BR_OU_001",
   gear: "Marteau",
   quantity: 5,
   storage: "Local",
 };
 
 const marteauInCaveE: InventoryImportRaw = {
+  code: "BR_OU_001",
   gear: "Marteau",
   quantity: 3,
   storage: "Cave du E",
 };
 
 const scieCirculaireInLocal: InventoryImportRaw = {
+  code: "BR_OU_003",
   gear: "Scie Circulaire",
   quantity: 1,
   storage: "Local",
@@ -101,9 +106,14 @@ describe("Inventory import", () => {
     const importContainer = new FakeInventoryImportContainer(
       [
         perceuseInLocal,
-        { gear: "Matos inconnu", quantity: 15, storage: "Local" },
+        { code: "", gear: "Matos inconnu", quantity: 15, storage: "Local" },
         marteauInLocal,
-        { gear: "Martascie", quantity: 3, storage: "Cave du E" },
+        {
+          code: "BR_OU_004",
+          gear: "Martascie",
+          quantity: 3,
+          storage: "Cave du E",
+        },
         scieCirculaireInLocal,
       ],
       gearRepository,

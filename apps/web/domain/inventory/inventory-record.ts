@@ -45,7 +45,8 @@ export class InventoryRecord implements Record {
     currentRecord: InventoryRecord,
   ): (value: InventoryRecord) => boolean {
     return (record) =>
-      record.gear.slug === currentRecord.gear.slug &&
+      (record.gear.code === currentRecord.gear.code ||
+        record.gear.slug === currentRecord.gear.slug) &&
       record.storage === currentRecord.storage;
   }
 }

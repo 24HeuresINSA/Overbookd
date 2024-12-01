@@ -6,6 +6,7 @@ import {
 } from "./manual-inventory-record";
 
 export type InventoryImportRaw = {
+  code: string;
   gear: string;
   quantity: number;
   storage: string;
@@ -18,8 +19,14 @@ export abstract class InventoryImportContainer {
     raws: InventoryImportRaw[],
   ): ManualInventoryRecord[] {
     return raws.map(
-      ({ gear, quantity, storage }) =>
-        new ManualInventoryRecord(gear, quantity, storage, this.gearRepository),
+      ({ code, gear, quantity, storage }) =>
+        new ManualInventoryRecord(
+          code,
+          gear,
+          quantity,
+          storage,
+          this.gearRepository,
+        ),
     );
   }
 }

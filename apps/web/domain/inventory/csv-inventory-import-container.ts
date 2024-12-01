@@ -4,18 +4,22 @@ import {
   type InventoryImportRaw,
 } from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
-import { type Options, parse } from "csv-parse/sync";
+import { type Options, parse } from "csv-parse/browser/esm/sync";
+import { SlugifyService } from "@overbookd/slugify";
 
 export class CSVInventoryImportContainer extends InventoryImportContainer {
   private static readonly headerTranslation: Record<
     string,
     keyof InventoryImportRaw
   > = {
+    code: "code",
+    reference: "code",
     matos: "gear",
     materiel: "gear",
+    nom: "gear",
     stockage: "storage",
     lieu: "storage",
-    "lieu de stockage": "storage",
+    "lieu-de-stockage": "storage",
     quantite: "quantity",
     nombre: "quantity",
   };
@@ -33,7 +37,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       trim: true,
       skip_empty_lines: true,
       skip_records_with_empty_values: true,
-      delimiter: ",",
+      delimiter: ";",
       columns: this.convertFileHeaderToRecordKeys,
       cast: this.castNumbersWhenPossible,
     };
@@ -51,7 +55,9 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
   ): (keyof InventoryImportRaw)[] {
     return header.map((column) => {
       const transalte =
-        CSVInventoryImportContainer.headerTranslation[column.toLowerCase()];
+        CSVInventoryImportContainer.headerTranslation[
+          SlugifyService.apply(column)
+        ];
       if (!transalte) console.error(`Don't know column ${column}`);
       return transalte;
     });
