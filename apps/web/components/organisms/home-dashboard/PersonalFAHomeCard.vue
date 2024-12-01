@@ -16,10 +16,7 @@
           <v-list-item-title class="activity-name">
             <strong>
               N° {{ item.id }} - {{ item.name }}
-              <v-icon
-                class="status-dot"
-                :class="getStatusColor(item.status)"
-              >
+              <v-icon class="status-dot" :class="getStatusColor(item.status)">
                 mdi-circle
               </v-icon>
             </strong>
@@ -134,7 +131,6 @@ function getHoverMessage(status: string | undefined): string {
       return "Statut inconnu.";
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
