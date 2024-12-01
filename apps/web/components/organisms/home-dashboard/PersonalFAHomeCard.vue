@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="haveBalance" :to="FA_URL" class="home-card personal-fa" link>
+  <v-card v-if="haveFA" :to="FA_URL" class="home-card personal-fa" link>
     <v-card-title class="personal-fa__title">
       <v-icon>mdi-list-box-outline</v-icon>
       <h2>Mes FAs</h2>
@@ -10,15 +10,18 @@
         :key="item.id"
         :to="`/fa/${item.id}`"
         :href="'#' + item.id"
+        class="hoverable-fa"
       >
         <v-list-item-content>
           <v-list-item-title class="activity-name">
-            <strong>N° {{ item.id }} - {{ item.name }}
+            <strong>
+              N° {{ item.id }} - {{ item.name }}
               <v-icon
                 class="status-dot"
                 :class="getStatusColor(item.status)"
-                :title="item.status"
-              >mdi-circle</v-icon>
+              >
+                mdi-circle
+              </v-icon>
             </strong>
           </v-list-item-title>
           <div class="team-items">
@@ -28,12 +31,23 @@
             </div>
           </div>
         </v-list-item-content>
+        <!-- Nouveau conteneur pour le hover -->
+        <div class="hover-detail">
+          <span>
+            {{ getHoverMessage(item.status) }}
+          </span>
+        </div>
       </v-list-item>
       <v-list-item v-if="searchableActivities.length > maxActivities">
         <v-list-item-content>
           <span class="limit-message">
             Affichage limité à {{ maxActivities }} activités. <br />
-            Va sur tes FAs pour voir le reste !
+            <v-btn
+              color="secondary"
+              rounded="pill"
+              density="comfortable"
+              @click="`/fa?adherent=${currentAdherent?.id}`"
+            />
           </span>
         </v-list-item-content>
       </v-list-item>
@@ -42,9 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-
 import type { PreviewFestivalActivity } from "@overbookd/festival-event";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
@@ -77,16 +89,18 @@ const searchableActivities = computed<Searchable<PreviewFestivalActivity>[]>(
     })),
 );
 
-const maxActivities = 10; // Définir le nombre maximal d'activités
+const maxActivities = 6;
 
 const myActivities = computed<PreviewFestivalActivity[]>(() => {
   const statusOrder = ["REFUSED", "IN_REVIEW", "DRAFT", "VALIDATED"];
   const filteredActivities = searchableActivities.value
     .filter((activity) => activity.adherent.id === currentAdherent.value?.id)
-    .sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status));
+    .sort(
+      (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),
+    );
   return filteredActivities.slice(0, maxActivities);
 });
-type Status = "VALIDATED" | "REFUSED" | "IN_REVIEW" |"DRAFT" ;
+type Status = "VALIDATED" | "REFUSED" | "IN_REVIEW" | "DRAFT";
 
 const statusColors: Record<Status, string> = {
   VALIDATED: "green",
@@ -102,9 +116,24 @@ function getStatusColor(status: string | undefined | null): string {
   return statusColors[status as Status];
 }
 
-const haveBalance = computed<boolean>(() =>
-  userStore.can(HAVE_PERSONAL_ACCOUNT),
-);
+const haveFA = computed<boolean>(() => {
+  return myActivities.value.length > 0;
+});
+
+function getHoverMessage(status: string | undefined): string {
+  switch (status) {
+    case "VALIDATED":
+      return "Cette FA a été validée.";
+    case "REFUSED":
+      return "Cette FA a été refusée !";
+    case "DRAFT":
+      return "Cette FA est en brouillon.";
+    case "IN_REVIEW":
+      return "Cette FA est en cours de relecture.";
+    default:
+      return "Statut inconnu.";
+  }
+}
 
 </script>
 
@@ -180,4 +209,28 @@ const haveBalance = computed<boolean>(() =>
   text-align: center;
 }
 
+.hoverable-fa {
+  position: relative;
+
+  .hover-detail {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 10;
+    top: 100%; /* Position en dessous de l'élément */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.85rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &:hover .hover-detail {
+    visibility: visible;
+  }
+}
 </style>

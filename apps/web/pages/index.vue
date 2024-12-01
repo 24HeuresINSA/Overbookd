@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
-import { HAVE_PERSONAL_ACCOUNT, READ_FA } from "@overbookd/permission";
+import { HAVE_PERSONAL_ACCOUNT, WRITE_FA  } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 
 const userStore = useUserStore();
@@ -60,7 +60,7 @@ const hasPersonalAccount = computed<boolean>(() =>
 );
 
 const hasPersonalFA = computed<boolean>(() =>
-  userStore.can(READ_FA),
+  userStore.can(WRITE_FA),
 );
 </script>
 
