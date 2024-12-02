@@ -2,7 +2,7 @@
   <v-card v-if="haveFA" :to="FA_URL" class="home-card personal-fa" link>
     <v-card-title class="personal-fa__title">
       <v-icon>mdi-list-box-outline</v-icon>
-      <h2>Mes FAs</h2>
+      <span>Mes FAs</span>
     </v-card-title>
     <v-list density="comfortable">
       <v-list-item
@@ -10,7 +10,6 @@
         :key="item.id"
         :to="`/fa/${item.id}`"
         :href="'#' + item.id"
-        class="hoverable-fa"
       >
         <v-list-item-content>
           <v-list-item-title class="activity-name">
@@ -18,6 +17,9 @@
               N° {{ item.id }} - {{ item.name }}
               <v-icon class="status-dot" :class="getStatusColor(item.status)">
                 mdi-circle
+                <span class="hover-detail">
+                  {{ getHoverMessage(item.status) }}
+                </span>
               </v-icon>
             </strong>
           </v-list-item-title>
@@ -28,24 +30,14 @@
             </div>
           </div>
         </v-list-item-content>
-        <!-- Nouveau conteneur pour le hover -->
-        <div class="hover-detail">
-          <span>
-            {{ getHoverMessage(item.status) }}
-          </span>
-        </div>
       </v-list-item>
       <v-list-item v-if="searchableActivities.length > maxActivities">
         <v-list-item-content>
-          <span class="limit-message">
-            Affichage limité à {{ maxActivities }} activités. <br />
-            <v-btn
-              color="secondary"
-              rounded="pill"
-              density="comfortable"
-              @click="`/fa?adherent=${currentAdherent?.id}`"
-            />
-          </span>
+          <nuxt-link :to="`/fa?adherent=${currentAdherent?.id}`">
+            <v-btn color="secondary" rounded="pill" density="comfortable">
+              Mes FAs
+            </v-btn>
+          </nuxt-link>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -182,8 +174,10 @@ function getHoverMessage(status: string | undefined): string {
   font-style: italic;
   color: gray;
 }
+
 .status-dot {
-  font-size: 20px; // Réduit la taille de l'icône
+  font-size: 20px;
+  position: relative;
   &.green {
     color: #4caf50;
   }
@@ -196,17 +190,6 @@ function getHoverMessage(status: string | undefined): string {
   &.orange {
     color: #ff9800;
   }
-}
-
-.limit-message {
-  font-style: italic;
-  font-size: small;
-  color: var(--v-theme-secondary);
-  text-align: center;
-}
-
-.hoverable-fa {
-  position: relative;
 
   .hover-detail {
     visibility: hidden;
@@ -217,7 +200,7 @@ function getHoverMessage(status: string | undefined): string {
     padding: 5px;
     position: absolute;
     z-index: 10;
-    top: 100%; /* Position en dessous de l'élément */
+    top: 120%;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
@@ -225,7 +208,7 @@ function getHoverMessage(status: string | undefined): string {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
 
-  &:hover .hover-detail {
+  .status-dot:hover .hover-detail {
     visibility: visible;
   }
 }
