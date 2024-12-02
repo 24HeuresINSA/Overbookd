@@ -1,12 +1,13 @@
 <template>
   <div class="rich-editor">
-    <div id="editor" />
+    <div :id="editorId" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
+import { nanoid } from "nanoid";
 
 Quill.register({});
 
@@ -32,10 +33,14 @@ const options: QuillOptions = {
   },
 };
 
+const editorId = `editor-${nanoid()}`;
 const quill = ref<Quill | undefined>();
 
 onMounted(() => {
-  quill.value = new Quill("#editor", options);
+  const editorElement = document.getElementById(editorId);
+  if (!editorElement) return;
+
+  quill.value = new Quill(editorElement, options);
   quill.value.root.innerHTML = content.value ?? "";
   quill.value.on("text-change", () => {
     content.value = quill.value?.root.innerHTML ?? "";
