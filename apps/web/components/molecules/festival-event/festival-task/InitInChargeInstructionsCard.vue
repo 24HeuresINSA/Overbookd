@@ -15,7 +15,11 @@
       />
 
       <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
-      <RichEditor v-model="instruction" class="mb-3" />
+      <RichEditor
+        v-model="instruction"
+        scope="in-charge-instruction-init"
+        class="mb-3"
+      />
     </template>
 
     <template #actions>

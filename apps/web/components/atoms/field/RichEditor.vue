@@ -1,6 +1,6 @@
 <template>
   <div class="rich-editor">
-    <div id="editor" />
+    <div :id="id" />
   </div>
 </template>
 
@@ -10,7 +10,11 @@ import "quill/dist/quill.snow.css";
 
 Quill.register({});
 
-const { readonly } = defineProps({
+const props = defineProps({
+  scope: {
+    type: String,
+    required: true,
+  },
   readonly: {
     type: Boolean,
     default: false,
@@ -18,10 +22,11 @@ const { readonly } = defineProps({
 });
 
 const content = defineModel<string>({ required: false });
+const id = computed<string>(() => `editor-${props.scope}`);
 
 const options: QuillOptions = {
   theme: "snow",
-  readOnly: readonly,
+  readOnly: props.readonly,
   modules: {
     toolbar: [
       [{ header: 1 }, { header: 2 }],
@@ -35,7 +40,7 @@ const options: QuillOptions = {
 const quill = ref<Quill | undefined>();
 
 onMounted(() => {
-  quill.value = new Quill("#editor", options);
+  quill.value = new Quill(`#${id.value}`, options);
   quill.value.root.innerHTML = content.value ?? "";
   quill.value.on("text-change", () => {
     content.value = quill.value?.root.innerHTML ?? "";

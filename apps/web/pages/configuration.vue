@@ -12,7 +12,10 @@
         <h2>Description du formulaire d'inscription</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <RichEditor v-model="registerFormDescription" />
+        <RichEditor
+          v-model="registerFormDescription"
+          scope="registration-description"
+        />
         <div class="description-actions">
           <v-btn
             text="Remplacer par le template"
