@@ -1,3 +1,14 @@
+## [3.17.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.16.0...v3.17.0) (2024-12-02)
+
+### Features
+
+* **festival-activities:** update list when status change. [#2290](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2290) ([4535948](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4535948a8b0ea1e48136b1d6bcf1cd6ba916ff6e))
+
+### Bug Fixes
+
+* **rich-editor:** generate unique id to avoid bugs [#2256](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2256) ([8b165a9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b165a91c6293cce997638a377cd946cd6849ba8))
+* **web:** fix inventory csv parse and use code instead of slug to find gears [#2263](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2263) ([03887b9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03887b9da8d2820ea060d8aa6e6b4694766c311b))
+
 ## [3.16.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.15.0...v3.16.0) (2024-11-30)
 
 ### Features
