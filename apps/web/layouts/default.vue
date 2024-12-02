@@ -33,6 +33,7 @@ import {
   TEAM_LEFT,
 } from "@overbookd/access-manager";
 import {
+  FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
 } from "@overbookd/domain-events";
@@ -65,6 +66,7 @@ onMounted(() => {
   mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, () =>
     fetchMyRefusedActivities(),
   );
+  mine.listen(FESTIVAL_ACTIVITY_APPROVED, () => fetchMyRefusedActivities());
 });
 
 onUnmounted(() => {
