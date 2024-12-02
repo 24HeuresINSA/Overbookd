@@ -12,6 +12,7 @@
 
         <v-label>Instructions globales</v-label>
         <RichEditor
+          id="editor-global-instruction"
           :model-value="instructions.global ?? ''"
           :readonly="disabled && cantForceInstruction"
           class="mb-3"
@@ -38,6 +39,7 @@
 
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
           <RichEditor
+            id="editor-in-charge-instruction"
             :model-value="instructions.inCharge.instruction ?? ''"
             :readonly="disabled && cantForceInstruction"
             class="mb-3"
