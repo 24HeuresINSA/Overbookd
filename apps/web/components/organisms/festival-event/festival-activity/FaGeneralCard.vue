@@ -28,6 +28,7 @@
 
         <h3>Description de l'activité</h3>
         <RichEditor
+          id="editor-description"
           :model-value="general.description ?? ''"
           @update:model-value="updateDescription"
         />

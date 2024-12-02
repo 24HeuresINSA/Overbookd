@@ -13,7 +13,7 @@ Quill.register({});
 const props = defineProps({
   id: {
     type: String,
-    default: "editor",
+    required: true,
   },
   readonly: {
     type: Boolean,
