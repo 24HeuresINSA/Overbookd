@@ -79,8 +79,8 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       const exists = this.activities.forAll.some(
         ({ id }) => activity.id === id,
       );
-      const preview = previewOf(activity);
       if (exists) return;
+      const preview = previewOf(activity);
       this.activities.forAll = [...this.activities.forAll, preview];
     },
 
