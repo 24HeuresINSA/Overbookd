@@ -1,3 +1,9 @@
+## [3.17.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.1...v3.17.2) (2024-12-03)
+
+### Bug Fixes
+
+* **festival-activities:** blink effect on deleted activities. [#2296](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2296) ([5efd2cb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5efd2cbc75bc1aa17b353afda8c5ca8e8d4b5cbf))
+
 ## [3.17.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.0...v3.17.1) (2024-12-03)
 
 ### Bug Fixes
