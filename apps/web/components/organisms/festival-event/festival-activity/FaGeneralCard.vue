@@ -139,6 +139,10 @@ const updatePhotoLink = (photoLink: string) => {
   );
 };
 const updateCategories = (categories: string[]) => {
+  const isValid = categories.every((category) =>
+    activityCategories.includes(category),
+  );
+  if (!isValid) return;
   return faStore.updateGeneral({ categories });
 };
 const updateIsFlagship = (isFlagship: boolean | null) => {
