@@ -37,7 +37,7 @@ import {
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
 import { SOFT_CODE } from "@overbookd/team-constants";
-import { Observable, ReplaySubject, filter } from "rxjs";
+import { Observable, Subject, filter } from "rxjs";
 
 type FestivalVolunteerEnrolled = CandidateEnrolled & {
   data: {
@@ -46,7 +46,7 @@ type FestivalVolunteerEnrolled = CandidateEnrolled & {
 };
 
 export class DomainEventService {
-  private readonly $events = new ReplaySubject<DomainEvent>();
+  private readonly $events = new Subject<DomainEvent>();
 
   private constructor(events: DomainEvent[]) {
     events.forEach((event) => this.$events.next(event));
