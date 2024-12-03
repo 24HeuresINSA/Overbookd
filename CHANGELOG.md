@@ -1,3 +1,9 @@
+## [3.17.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.2...v3.17.3) (2024-12-03)
+
+### Bug Fixes
+
+* **fa:** forbidden the selection of an unexisting activty category in the web [#2297](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2297) ([a24a4a9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a24a4a9a0f12993aebe2b475d3fa758a600947aa))
+
 ## [3.17.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.1...v3.17.2) (2024-12-03)
 
 ### Bug Fixes
