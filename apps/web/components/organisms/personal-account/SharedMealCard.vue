@@ -72,7 +72,7 @@
             v-if="iAmChef"
             color="secondary"
             size="large"
-            text="Renseigner une dépense"
+            text="Clore le repas"
             append-icon="mdi-cash-multiple"
             @click="openRecordExpenseDialog"
           />
