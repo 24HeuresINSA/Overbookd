@@ -1,3 +1,10 @@
+## [3.17.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.0...v3.17.1) (2024-12-03)
+
+### Bug Fixes
+
+* **fa:** do not display FAs that are already displayed in the list [#2293](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2293) ([c333a32](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c333a32eb676407b616e5954a4f6c0fda924d58b))
+* update refused activities on approval. [#2291](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2291) ([c670ce8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c670ce89a393926c3d905ec6547182a5ca0c3eb5))
+
 ## [3.17.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.16.0...v3.17.0) (2024-12-02)
 
 ### Features
