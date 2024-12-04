@@ -6,7 +6,7 @@
       activité a besoin d'eau, renseigne le débit dont tu as besoin et comment
       l'évacuer.<br />
       Pour plus de renseignement, vois avec la Log Elec via
-      <a :href="`mailto:${LOGISTIQUE_EMAIL}`"> {{ LOGISTIQUE_EMAIL }} </a>.
+      <a :href="`mailto:${LOG_ELEC_EMAIL}`"> {{ LOG_ELEC_EMAIL }} </a>.
     </v-card-subtitle>
     <v-card-text>
       <ElectricitySupplyTable
@@ -30,7 +30,7 @@ import type {
   ElectricitySupply,
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
-import { LOGISTIQUE_EMAIL } from "~/utils/mail/mail.constant";
+import { LOG_ELEC_EMAIL } from "~/utils/mail/mail.constant";
 
 const faStore = useFestivalActivityStore();
 
