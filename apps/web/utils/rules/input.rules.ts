@@ -60,7 +60,7 @@ export function isInsaEmail(value: string | null) {
   return (value && insaEmailPattern.test(value)) || "Pas d'adresse insa 🙏";
 }
 
-const mobilePhoneNumberPattern = new RegExp("0[6-7]{1}[0-9]{8}$");
+const mobilePhoneNumberPattern = new RegExp("^0[4|6|7]{1}[0-9]{8}$");
 
 export function isMobilePhoneNumber(value: string | null) {
   const message = "Numéro de téléphone non valable";
