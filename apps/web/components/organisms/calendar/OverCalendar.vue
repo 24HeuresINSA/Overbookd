@@ -37,6 +37,7 @@
           v-for="hour in HOURS_IN_DAY"
           :key="hour"
           class="calendar-content-rows__hour"
+          :class="getShiftDelimiterClass(hour)"
         />
       </div>
 
@@ -71,6 +72,7 @@ import {
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
+import { SHIFT_HOURS } from "~/utils/shift";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();
@@ -94,6 +96,18 @@ const displayedDay = defineModel<Date>({ default: new Date() });
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
 );
+
+const shiftDelimiterMap = new Map<number, string>([
+  [SHIFT_HOURS.DAY, "day-start"],
+  [SHIFT_HOURS.DAY - 1, "day-end"],
+  [SHIFT_HOURS.PARTY, "party-start"],
+  [SHIFT_HOURS.PARTY - 1, "party-end"],
+  [SHIFT_HOURS.NIGHT, "night-start"],
+  [SHIFT_HOURS.NIGHT - 1, "night-end"],
+]);
+const getShiftDelimiterClass = (hour: number): string => {
+  return shiftDelimiterMap.get(hour) || "";
+};
 
 const moveToPreviousWeekOrDay = () => {
   displayedDay.value = isDayMode.value
@@ -214,6 +228,25 @@ $calendar-content-height: $hour-height * 24;
     &:first-child {
       border-top: none;
     }
+  }
+
+  .day-start {
+    border-top: 2px solid rgba(var(--v-theme-secondary), 0.8);
+  }
+  .night-start {
+    border-top: 2px solid rgba(var(--v-theme-primary), 0.8);
+  }
+  .party-start {
+    border-top: 2px solid rgba(var(--v-theme-tertiary), 0.8);
+  }
+  .day-end {
+    border-bottom: 2px solid rgba(var(--v-theme-secondary), 0.8);
+  }
+  .night-end {
+    border-bottom: 2px solid rgba(var(--v-theme-primary), 0.8);
+  }
+  .party-end {
+    border-bottom: 2px solid rgba(var(--v-theme-tertiary), 0.8);
   }
 }
 
