@@ -3,12 +3,13 @@
   <div class="home">
     <ProfileHomeCard />
     <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+    <PersonalFaHomeCard v-if="hasPersonalFA" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { HAVE_PERSONAL_ACCOUNT, WRITE_FA } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 
 const userStore = useUserStore();
@@ -57,6 +58,7 @@ const titleMessage = computed<string>(() => {
 const hasPersonalAccount = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
+const hasPersonalFA = computed<boolean>(() => userStore.can(WRITE_FA));
 </script>
 
 <style lang="scss" scoped>

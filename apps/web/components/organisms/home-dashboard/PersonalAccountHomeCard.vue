@@ -1,16 +1,11 @@
 <template>
-  <v-card
-    v-if="haveBalance"
-    :to="MY_PERSONAL_ACCOUNT_URL"
-    class="home-card personal-account"
-    link
-  >
-    <v-card-title class="personal-account__title">
+  <v-card :to="MY_PERSONAL_ACCOUNT_URL" class="home-card personal-account" link>
+    <v-card-title class="home-card__title">
       <v-icon>mdi-account-cash</v-icon>
       <span>Compte perso</span>
     </v-card-title>
 
-    <v-card-text class="personal-account__content">
+    <v-card-text class="home-card__content">
       <h2 class="personal-account__balance" :class="balanceClassColor">
         {{ displayedBalance }}
       </h2>
@@ -54,7 +49,7 @@
           </template>
         </v-list-item>
       </v-list>
-      <span v-else class="no-transaction-label">
+      <span v-else class="no-content-label">
         Ton CP est vide 😱<br />
         Pense à recharger ton compte pour consommer au local !
       </span>
@@ -64,7 +59,6 @@
 
 <script lang="ts" setup>
 import { Money } from "@overbookd/money";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import type { MyTransaction } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
 import { MY_PERSONAL_ACCOUNT_URL } from "@overbookd/web-page";
@@ -75,6 +69,9 @@ import {
   isDebit,
 } from "~/utils/transaction/transaction.utils";
 
+const POSITIVE = "positive";
+const NEGATIVE = "negative";
+
 const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 
@@ -82,21 +79,18 @@ transactionStore.fetchMyTransactions();
 
 const loggedUser = computed(() => userStore.loggedUser);
 
-const haveBalance = computed<boolean>(() =>
-  userStore.can(HAVE_PERSONAL_ACCOUNT),
-);
 const myBalance = computed(() => loggedUser.value?.balance ?? 0);
 const displayedBalance = computed<string>(() =>
-  haveBalance.value ? Money.cents(myBalance.value).toString() : "",
+  Money.cents(myBalance.value).toString(),
 );
 const balanceClassColor = computed<string>(() => {
-  if (myBalance.value < 0) return "negative";
-  if (myBalance.value > 0) return "positive";
+  if (myBalance.value < 0) return NEGATIVE;
+  if (myBalance.value > 0) return POSITIVE;
   return "";
 });
 
 const getTransactionClassColor = (transaction: MyTransaction): string => {
-  return isDebit(transaction) ? "negative" : "positive";
+  return isDebit(transaction) ? NEGATIVE : POSITIVE;
 };
 
 const transactions = computed<MyTransaction[]>(
@@ -108,20 +102,6 @@ const transactions = computed<MyTransaction[]>(
 @use "./home-dashboard.scss" as *;
 
 .personal-account {
-  &__title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
-    color: rgb(var(--v-theme-secondary));
-    padding-bottom: 0;
-  }
-  &__content {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 0;
-  }
   &__balance {
     display: flex;
     font-size: 1.8rem;
@@ -160,13 +140,6 @@ const transactions = computed<MyTransaction[]>(
     font-size: 0.75rem;
     opacity: 0.8;
   }
-}
-
-.no-transaction-label {
-  font-size: 0.9rem;
-  margin: 5px 10px;
-  opacity: 0.7;
-  text-align: center;
 }
 
 :deep(.v-list-item__spacer) {

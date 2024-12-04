@@ -25,6 +25,14 @@ export class InMemoryPrepareFestivalActivityRepository
     return Promise.resolve(this.festivalActivities.map(generatePreview));
   }
 
+  findByAdherentId(adherentId: number): Promise<PreviewFestivalActivity[]> {
+    return Promise.resolve(
+      this.festivalActivities
+        .filter((activity) => activity.inCharge.adherent.id === adherentId)
+        .map(generatePreview),
+    );
+  }
+
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,

@@ -45,6 +45,10 @@ export class FestivalActivityRepository {
     return HttpClient.get<PreviewFestivalActivity[]>(this.basePath);
   }
 
+  static getMine() {
+    return HttpClient.get<PreviewFestivalActivity[]>(`${this.basePath}/mine`);
+  }
+
   static getSecurityPreviews() {
     return HttpClient.get<PreviewForSecurity[]>(
       `${this.basePath}/for-security`,

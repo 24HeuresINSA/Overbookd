@@ -30,6 +30,7 @@ import { isDraft } from "../../festival-event.js";
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
+  findByAdherentId(adherentId: number): Promise<PreviewFestivalActivity[]>;
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(activity: FestivalActivity): Promise<FestivalActivity>;
 };
@@ -77,6 +78,10 @@ export class PrepareFestivalActivity {
 
   findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivities.findAll();
+  }
+
+  findByAdherentId(adherentId: number): Promise<PreviewFestivalActivity[]> {
+    return this.festivalActivities.findByAdherentId(adherentId);
   }
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {

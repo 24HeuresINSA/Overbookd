@@ -89,6 +89,28 @@ export class FestivalActivityPreviewController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
+  @Get("mine")
+  @ApiResponse({
+    status: 200,
+    description: "All festival activities",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedPreviewFestivalActivityResponseDto) },
+      ],
+    },
+    isArray: true,
+  })
+  findMine(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<PreviewFestivalActivity[]> {
+    return this.previewService.findMine(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
   @Get("for-security")
   @ApiResponse({
     status: 200,
