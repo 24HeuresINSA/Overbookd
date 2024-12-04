@@ -6,26 +6,26 @@
         <v-text-field
           v-model="firstname"
           label="Prénom *"
-          :rules="[rules.required]"
+          :rules="[required]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
           v-model="lastname"
           label="Nom *"
-          :rules="[rules.required]"
+          :rules="[required]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
           v-model="phone"
           label="Téléphone *"
-          :rules="[rules.required, rules.phone]"
+          :rules="[required, isPhoneNumber]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
           v-model="email"
           label="Email"
           inputmode="email"
-          :rules="[rules.email]"
+          :rules="[isEmail]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
@@ -57,11 +57,7 @@
 
 <script lang="ts" setup>
 import type { Contractor } from "@overbookd/festival-event";
-import {
-  isEmail,
-  isMobilePhoneNumber,
-  required,
-} from "~/utils/rules/input.rules";
+import { isEmail, isPhoneNumber, required } from "~/utils/rules/input.rules";
 
 const emit = defineEmits(["add", "update", "close"]);
 
@@ -83,12 +79,6 @@ const isUpdate = computed<boolean>(() => props.contractor !== null);
 const typeFormLabel = computed<string>(() =>
   isUpdate.value ? "Modifier" : "Ajouter",
 );
-
-const rules = {
-  required: required,
-  email: isEmail,
-  phone: isMobilePhoneNumber,
-};
 
 const clearContractor = () => {
   firstname.value = "";
@@ -113,7 +103,7 @@ watch(() => props.contractor, setContractor, { immediate: true });
 const canConfirmContractor = computed<boolean>(() => {
   const hasFirstname = firstname.value.trim() !== "";
   const hasLastname = lastname.value.trim() !== "";
-  const hasPhone = rules.phone(phone.value) === true;
+  const hasPhone = isPhoneNumber(phone.value) === true;
   return hasFirstname && hasLastname && hasPhone;
 });
 const close = () => emit("close");

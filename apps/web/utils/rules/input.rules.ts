@@ -60,11 +60,16 @@ export function isInsaEmail(value: string | null) {
   return (value && insaEmailPattern.test(value)) || "Pas d'adresse insa 🙏";
 }
 
-const mobilePhoneNumberPattern = new RegExp("0[6-7]{1}[0-9]{8}$");
-
+const mobilePhoneNumberPattern = new RegExp("^0[6|7]{1}[0-9]{8}$");
 export function isMobilePhoneNumber(value: string | null) {
   const message = "Numéro de téléphone non valable";
   return (value && mobilePhoneNumberPattern.test(value)) || message;
+}
+
+const phoneNumberPattern = new RegExp("^0[1-7]{1}[0-9]{8}$");
+export function isPhoneNumber(value: string | null) {
+  const message = "Numéro de téléphone non valable";
+  return (value && phoneNumberPattern.test(value)) || message;
 }
 
 // nosemgrep
