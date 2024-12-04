@@ -5,12 +5,12 @@
     class="home-card personal-account"
     link
   >
-    <v-card-title class="personal-account__title">
+    <v-card-title class="home-card__title">
       <v-icon>mdi-account-cash</v-icon>
       <span>Compte perso</span>
     </v-card-title>
 
-    <v-card-text class="personal-account__content">
+    <v-card-text class="home-card__content">
       <h2 class="personal-account__balance" :class="balanceClassColor">
         {{ displayedBalance }}
       </h2>
@@ -54,7 +54,7 @@
           </template>
         </v-list-item>
       </v-list>
-      <span v-else class="no-transaction-label">
+      <span v-else class="no-content-label">
         Ton CP est vide 😱<br />
         Pense à recharger ton compte pour consommer au local !
       </span>
@@ -108,20 +108,6 @@ const transactions = computed<MyTransaction[]>(
 @use "./home-dashboard.scss" as *;
 
 .personal-account {
-  &__title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
-    color: rgb(var(--v-theme-secondary));
-    padding-bottom: 0;
-  }
-  &__content {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 0;
-  }
   &__balance {
     display: flex;
     font-size: 1.8rem;
@@ -162,12 +148,7 @@ const transactions = computed<MyTransaction[]>(
   }
 }
 
-.no-transaction-label {
-  font-size: 0.9rem;
-  margin: 5px 10px;
-  opacity: 0.7;
-  text-align: center;
-}
+
 
 :deep(.v-list-item__spacer) {
   width: 8px !important;

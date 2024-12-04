@@ -1,8 +1,8 @@
 <template>
   <DesktopPageTitle />
   <div class="quick-filters">
-    <nuxt-link :to="`/fa?adherent=${me?.id}`">
-      <v-btn variant="outlined" color="primary"> Mes FAs </v-btn>
+    <nuxt-link :to="`${FA_URL}?adherent=${me?.id}`">
+      <v-btn text="Mes FAs" variant="outlined" color="primary" />
     </nuxt-link>
   </div>
   <main class="activity fa">
@@ -130,6 +130,7 @@ import {
   FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_REJECTED,
 } from "@overbookd/domain-events";
+import { FA_URL } from "@overbookd/web-page";
 
 useHead({ title: "Fiches Activités" });
 

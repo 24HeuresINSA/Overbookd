@@ -13,6 +13,11 @@ $desktop-content-vertical-padding: 15px;
 $desktop-content-horizontal-padding: 25px;
 $mobile-content-padding: 10px;
 
+$blue-24h: rgb(67, 197, 228);
+$red-24h: rgb(238, 31, 68);
+$yellow-24h: rgb(255, 203, 42);
+$dark-24h: rgb(35, 31, 32);
+
 $warning-primary: rgb(251, 140, 0);
 $warning-secondary: rgb(251, 140, 0, 0.1);
 
@@ -21,7 +26,7 @@ $info-secondary: rgb(33, 150, 243, 0.1);
 
 $draft-color: grey;
 $submitted-color: orange;
-$refused-color: red;
+$refused-color: rgb(209, 0, 0);
 $validated-color: green;
 $ready-color: rgb(103, 58, 183);
 
@@ -33,10 +38,5 @@ $calendar-category-column-min-width: 300px;
 $calendar-available-background-color: rgba(95, 219, 72, 0.4);
 
 $list-selected-item-background-color: rgba(130, 130, 130, 0.3);
-
-$blue-24h: rgb(67, 197, 228);
-$red-24h: rgb(238, 31, 68);
-$yellow-24h: rgb(255, 203, 42);
-$dark-24h: rgb(35, 31, 32);
 
 $white: rgba(255, 255, 255);
