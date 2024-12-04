@@ -72,7 +72,7 @@ import {
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
-import { SHIFT_HOURS } from "~/utils/shift";
+import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();
@@ -98,12 +98,12 @@ const isDayMode = computed<boolean>(() =>
 );
 
 const shiftDelimiterMap = new Map<number, string>([
-  [SHIFT_HOURS.DAY, "day-start"],
-  [SHIFT_HOURS.DAY - 1, "day-end"],
-  [SHIFT_HOURS.PARTY, "party-start"],
-  [SHIFT_HOURS.PARTY - 1, "party-end"],
-  [SHIFT_HOURS.NIGHT, "night-start"],
-  [SHIFT_HOURS.NIGHT - 1, "night-end"],
+  [SHIFT_HOURS.DAY + 1, "day-start"],
+  [SHIFT_HOURS.DAY, "day-end"],
+  [SHIFT_HOURS.PARTY + 1, "party-start"],
+  [SHIFT_HOURS.PARTY, "party-end"],
+  [SHIFT_HOURS.NIGHT + 1, "night-start"],
+  [SHIFT_HOURS.NIGHT, "night-end"],
 ]);
 const getShiftDelimiterClass = (hour: number): string => {
   return shiftDelimiterMap.get(hour) || "";
