@@ -48,6 +48,7 @@ const repo = FestivalActivityRepository;
 type State = {
   activities: {
     forAll: PreviewFestivalActivity[];
+    mine: PreviewFestivalActivity[];
     forSecurity: PreviewForSecurity[];
     forCommunication: PreviewForCommunication[];
     forLogistic: { csv: string };
@@ -61,6 +62,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
   state: (): State => ({
     activities: {
       forAll: [],
+      mine: [],
       forSecurity: [],
       forCommunication: [],
       forLogistic: { csv: "" },
@@ -73,6 +75,12 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       const res = await repo.getAll();
       if (isHttpError(res)) return;
       this.activities.forAll = res;
+    },
+
+    async fetchMyActivities() {
+      const res = await repo.getMine();
+      if (isHttpError(res)) return;
+      this.activities.mine = res;
     },
 
     addActivityToPreviews(activity: Draft) {

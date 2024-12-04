@@ -28,6 +28,19 @@ export class PrismaPrepareFestivalActivities
     );
   }
 
+  async findByAdherentId(
+    adherentId: number,
+  ): Promise<PreviewFestivalActivity[]> {
+    const activities = await this.prisma.festivalActivity.findMany({
+      where: { ...IS_NOT_DELETED, adherentId },
+      select: SELECT_FESTIVAL_ACTIVITY,
+      orderBy: { id: "asc" },
+    });
+    return activities.map(
+      (activity) => FestivalActivityBuilder.fromDatabase(activity).preview,
+    );
+  }
+
   async findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     const activity = await this.prisma.festivalActivity.findUnique({
       where: buildFestivalActivityCondition(id),

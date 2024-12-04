@@ -21,6 +21,10 @@ export class FestivalActivityPreviewService {
     return this.prepare.findAll();
   }
 
+  findMine(userId: number): Promise<PreviewForAll[]> {
+    return this.prepare.findByAdherentId(userId);
+  }
+
   findForSecurity(): Promise<PreviewForSecurity[]> {
     return this.previews.forSecurity();
   }

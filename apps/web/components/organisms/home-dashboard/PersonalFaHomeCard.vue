@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="canWriteFA" :to="FA_URL" class="home-card fa" link>
+  <v-card :to="FA_URL" class="home-card fa" link>
     <v-card-title class="home-card__title">
       <v-icon>mdi-list-box-outline</v-icon>
       <span>Mes FAs</span>
@@ -12,34 +12,30 @@
           :key="item.id"
           :to="`${FA_URL}/${item.id}`"
         >
-          <v-list-item-content>
-            <v-list-item-title class="activity-name">
-              <strong>
-                N° {{ item.id }} - {{ item.name }}
-                <v-icon class="status-dot" :class="item.status.toLowerCase()">
-                  mdi-circle
-                </v-icon>
-              </strong>
-            </v-list-item-title>
-            <div class="team-items">
-              <TeamChip v-if="item.team" :team="item.team" with-name />
-              <div v-else class="no-team">
-                <span>Aucune équipe associée</span>
-              </div>
+          <v-list-item-title class="activity-name">
+            <strong>
+              N° {{ item.id }} - {{ item.name }}
+              <v-icon class="status-dot" :class="item.status.toLowerCase()">
+                mdi-circle
+              </v-icon>
+            </strong>
+          </v-list-item-title>
+          <div class="team-items">
+            <TeamChip v-if="item.team" :team="item.team" with-name />
+            <div v-else class="no-team">
+              <span>Aucune équipe associée</span>
             </div>
-          </v-list-item-content>
+          </div>
         </v-list-item>
         <v-list-item v-if="myActivities.length > MAX_ACTIVITIES">
-          <v-list-item-content>
-            <nuxt-link :to="`${FA_URL}?adherent=${currentAdherent?.id}`">
-              <v-btn
-                text="Voir mes FAs"
-                color="secondary"
-                rounded="pill"
-                density="comfortable"
-              />
-            </nuxt-link>
-          </v-list-item-content>
+          <nuxt-link :to="`${FA_URL}?adherent=${currentAdherent?.id}`">
+            <v-btn
+              text="Voir mes FAs"
+              color="secondary"
+              rounded="pill"
+              density="comfortable"
+            />
+          </nuxt-link>
         </v-list-item>
       </v-list>
       <span v-else class="no-content-label">
@@ -58,27 +54,20 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { WRITE_FA } from "@overbookd/permission";
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
 
 const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
 
-const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
-
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
 
-faStore.fetchAllActivities();
-
-const activities = computed<PreviewFestivalActivity[]>(
-  () => faStore.activities.forAll,
-);
+faStore.fetchMyActivities();
 
 const MAX_ACTIVITIES = 6;
 
 const myActivities = computed<PreviewFestivalActivity[]>(() => {
-  return activities.value.filter(
+  return faStore.activities.mine.filter(
     (activity) => activity.adherent.id === currentAdherent.value?.id,
   );
 });
