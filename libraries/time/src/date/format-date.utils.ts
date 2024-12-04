@@ -104,6 +104,7 @@ export function formatDateToHumanReadable(date: DateSeed): string {
 
 export function formatDateDayToHumanReadable(date: DateSeed): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
+    ...PARIS_TIMEZONE,
     month: "long",
     day: "numeric",
     weekday: "long",
