@@ -17,13 +17,14 @@ import {
   ShotgunsClosed,
 } from "./meal-sharing.error.js";
 import { Expense } from "./meals.model.js";
+import { DateString } from "@overbookd/time";
 
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";
 
 export type Moment = typeof SOIR | typeof MIDI;
 
-export type MealDate = { day: Date; moment: Moment };
+export type MealDate = { day: DateString; moment: Moment };
 
 export type SharedMealCreation = {
   chef: Adherent;
