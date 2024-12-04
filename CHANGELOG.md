@@ -1,3 +1,17 @@
+## [3.18.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.3...v3.18.0) (2024-12-04)
+
+### Features
+
+* **fa:** Add list of your own FA on the Home Page [#2261](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2261) ([7d46c71](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d46c715e3d42f459f86c1f5a97cdf8422adea90))
+
+### Bug Fixes
+
+* **calendar:** add shift delimiter [#2298](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2298) ([0455139](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0455139470801f6203d1b36cee1b6087aa10d910))
+* **fa:** add log elec's email [#2302](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2302) ([ee11571](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ee11571712438b41a4c386f7435a6528dc0ef3ae))
+* **fa:** allow 04 in contractor phone number [#2300](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2300) ([ce1cae0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ce1cae0cee1404874ac28af0b55d209347256c6a))
+* **shared-meal:** Change the text from  "renseigner une dépense" to "Clore le repas". [#2265](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2265) ([c454ff1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c454ff10b688e408b01021cfaa3497c9735ab532))
+* **shared-meal:** use DateString instead of JS Date to create a shared meal [#2301](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2301) ([3f788d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3f788d042d51e81c28882d7a61d9eca9701dddca))
+
 ## [3.17.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.2...v3.17.3) (2024-12-03)
 
 ### Bug Fixes
