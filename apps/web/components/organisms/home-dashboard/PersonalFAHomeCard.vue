@@ -11,7 +11,6 @@
           v-for="item in myDisplayedActivities"
           :key="item.id"
           :to="`${FA_URL}/${item.id}`"
-          :href="'#' + item.id"
         >
           <v-list-item-content>
             <v-list-item-title class="activity-name">
