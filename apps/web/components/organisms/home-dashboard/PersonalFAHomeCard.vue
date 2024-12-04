@@ -6,7 +6,7 @@
     </v-card-title>
 
     <v-card-text class="home-card__content">
-      <v-list v-if="myActivities.length>0" density="comfortable">
+      <v-list v-if="myActivities.length > 0" density="comfortable">
         <v-list-item
           v-for="item in myDisplayedActivities"
           :key="item.id"

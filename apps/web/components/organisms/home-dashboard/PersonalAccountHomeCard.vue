@@ -148,8 +148,6 @@ const transactions = computed<MyTransaction[]>(
   }
 }
 
-
-
 :deep(.v-list-item__spacer) {
   width: 8px !important;
 }
