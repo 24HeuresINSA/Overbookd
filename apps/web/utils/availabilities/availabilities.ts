@@ -4,7 +4,7 @@ import {
   OverDate,
   isHour,
 } from "@overbookd/time";
-import { isPartyShift } from "~/utils/shift.utils";
+import { isPartyShift } from "../shift.utils";
 
 export const ALL_HOURS: Hour[] = Array.from(
   { length: 24 },
