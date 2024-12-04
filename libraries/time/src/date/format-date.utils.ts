@@ -102,6 +102,15 @@ export function formatDateToHumanReadable(date: DateSeed): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
+export function formatDateDayToHumanReadable(date: DateSeed): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
+
 export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
   return new Intl.DateTimeFormat("fr", DISPLAY_TIME).format(new Date(date));
 }
