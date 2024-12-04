@@ -1,5 +1,6 @@
 import { AboutMeal } from "./meals.model.js";
 import { MealDate } from "./meal-sharing.js";
+import { OverDate } from "@overbookd/time";
 
 export class Meal implements AboutMeal {
   private constructor(
@@ -13,7 +14,8 @@ export class Meal implements AboutMeal {
   }
 
   private static buildDate({ day, moment }: MealDate) {
-    return `${this.formatDay(day)} ${moment.toLowerCase()}`;
+    const formattedDay = this.formatDay(OverDate.from(day).date);
+    return `${formattedDay} ${moment.toLowerCase()}`;
   }
 
   private static formatDay(day: Date): string {

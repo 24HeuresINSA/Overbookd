@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts" setup>
+import { OverDate } from "@overbookd/time";
 import {
   MIDI,
   SOIR,
@@ -61,7 +62,7 @@ const menu = ref<string>("");
 const moments: Moment[] = [MIDI, SOIR];
 const date = computed<MealDate>(() => ({
   moment: moment.value,
-  day: day.value,
+  day: OverDate.from(day.value).dateString,
 }));
 
 const offer = async () => {

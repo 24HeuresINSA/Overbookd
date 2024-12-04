@@ -31,7 +31,7 @@ const tatouin = { id: 5, name: "Tatouin Phejo" };
 const adherentListing = [julie, lea, noel, shogosse, tatouin];
 
 const meal = Meal.init("Riz cantonnais", {
-  day: new Date("2023-10-12"),
+  day: "2023-10-12",
   moment: "MIDI",
 });
 const shotguns = [
@@ -76,10 +76,10 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     describe.each`
-      menu                   | expectedChef | day                       | moment  | expectedDate
-      ${"Pates pesto"}       | ${julie}     | ${new Date("2023-10-13")} | ${SOIR} | ${"vendredi 13 octobre soir"}
-      ${"Dahl de lentilles"} | ${lea}       | ${new Date("2023-10-14")} | ${MIDI} | ${"samedi 14 octobre midi"}
-      ${"Curry de legumes"}  | ${lea}       | ${new Date("2023-10-15")} | ${SOIR} | ${"dimanche 15 octobre soir"}
+      menu                   | expectedChef | day             | moment  | expectedDate
+      ${"Pates pesto"}       | ${julie}     | ${"2023-10-13"} | ${SOIR} | ${"vendredi 13 octobre soir"}
+      ${"Dahl de lentilles"} | ${lea}       | ${"2023-10-14"} | ${MIDI} | ${"samedi 14 octobre midi"}
+      ${"Curry de legumes"}  | ${lea}       | ${"2023-10-15"} | ${SOIR} | ${"dimanche 15 octobre soir"}
     `(
       "when offering a meal for $menu, on $expectedDate",
       async ({ menu, day, moment, expectedDate, expectedChef }) => {
