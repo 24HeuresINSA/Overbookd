@@ -277,6 +277,7 @@ class ReviewableBuilder
       name: this.activity.general.name,
       adherent: this.activity.inCharge.adherent,
       team: this.activity.inCharge.team,
+      supply: this.activity.supply,
     };
     const { reviews } = this.activity;
 
@@ -317,6 +318,7 @@ export class DraftBuilder
       status: this.activity.status,
       adherent: this.activity.inCharge.adherent,
       team: this.activity.inCharge.team,
+      supply: this.activity.supply,
     };
   }
 

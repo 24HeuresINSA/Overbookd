@@ -17,6 +17,7 @@ import {
 import { getFactory } from "./festival-activity.factory";
 import { lea, noel } from "./festival-activity.fake";
 import { previewOf } from "./preview-of";
+import { Supply } from "./sections/supply";
 
 const festivalActivityFactory = getFactory();
 
@@ -25,6 +26,11 @@ type TestHelper<Preview extends PreviewReviewable> = {
   adherent: Preview["adherent"];
   team: Preview["team"];
   reviews: Preview["reviews"];
+};
+
+const supply: Supply = {
+  electricity: [],
+  water: null,
 };
 
 describe("Transform a festival activity to its preview", () => {
@@ -43,6 +49,7 @@ describe("Transform a festival activity to its preview", () => {
         status: DRAFT,
         adherent,
         team,
+        supply,
       };
       expect(previewOf(draft)).toStrictEqual(expected);
     });
@@ -93,6 +100,7 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          supply,
         };
         expect(previewOf(inReview)).toStrictEqual(expected);
       });
@@ -144,6 +152,7 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          supply,
         };
         expect(previewOf(validated)).toStrictEqual(expected);
       });
@@ -195,6 +204,7 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          supply,
         };
         expect(previewOf(refused)).toStrictEqual(expected);
       });

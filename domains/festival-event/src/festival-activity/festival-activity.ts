@@ -92,6 +92,7 @@ type PreviewBase = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];
   adherent: FestivalActivity["inCharge"]["adherent"];
+  supply: FestivalActivity["supply"];
 };
 
 type PreviewReviewableBase = PreviewBase & {

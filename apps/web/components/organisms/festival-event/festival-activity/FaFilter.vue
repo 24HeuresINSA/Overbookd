@@ -32,6 +32,18 @@
         </v-btn-toggle>
       </div>
 
+      <v-switch
+        v-if="hasLogElecTeam"
+        v-model="filters.needSupply"
+        prepend-icon="mdi-flash"
+        color="primary"
+        label="Besoin en eau/elec"
+        class="page-button"
+        density="compact"
+        hide-details
+        @update:model-value="updateNeedSupply($event)"
+      />
+
       <v-btn
         v-if="canViewSecurityDashboard"
         prepend-icon="mdi-security"
@@ -128,6 +140,13 @@ const canViewAnimationsToPublish = computed<boolean>(() => {
 });
 const openAnimationsToPublish = () => {
   navigateTo(FA_TO_PUBLISH_URL);
+};
+
+const hasLogElecTeam = computed<boolean>(() => {
+  return userStore.isMemberOf("elec");
+});
+const updateNeedSupply = (needSupply: boolean | null) => {
+  updateQueryParams("needSupply", !!needSupply);
 };
 </script>
 

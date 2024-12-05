@@ -39,6 +39,7 @@ export type ActivityFilters = ActivityReviewsFilter & {
   team?: Team;
   adherent?: User;
   status?: FestivalActivity["status"];
+  needSupply?: boolean;
 };
 
 export class ActivityFilterBuilder {
@@ -57,6 +58,7 @@ export class ActivityFilterBuilder {
       query,
       communication,
     );
+    const needSupply = this.extractQueryParamsValue(query, "needSupply");
 
     return {
       ...search,
@@ -70,6 +72,7 @@ export class ActivityFilterBuilder {
       ...signaReview,
       ...secuReview,
       ...communicationReview,
+      ...needSupply,
     };
   }
 
@@ -135,6 +138,10 @@ export class ActivityFilterBuilder {
         const review = stringifyQueryParam(params.elec);
         const elec = findReviewStatus(review);
         return elec ? { elec } : {};
+      }
+      case "needSupply": {
+        const needSupply = params.needSupply !== undefined;
+        return { needSupply };
       }
     }
   }

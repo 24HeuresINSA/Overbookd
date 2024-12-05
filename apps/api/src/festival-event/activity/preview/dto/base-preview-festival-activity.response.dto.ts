@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Adherent, PreviewReviewable } from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
+import { SupplyResponseDto } from "../../common/dto/reviewable/reviewable-supply.response.dto";
+import { Supply } from "../../common/dto/draft/draft-supply.response.dto";
 
 type ReviewablePreviewBase = Pick<
   PreviewReviewable,
@@ -31,4 +33,10 @@ export class ReviewablePreviewBaseResponseDto implements ReviewablePreviewBase {
     type: String,
   })
   team: string;
+
+  @ApiProperty({
+    description: "The festival activity supply",
+    type: SupplyResponseDto,
+  })
+  supply: Supply;
 }

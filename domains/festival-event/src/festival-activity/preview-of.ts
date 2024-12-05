@@ -45,6 +45,7 @@ function draftPreviewOf(draft: Draft): PreviewDraft {
     status: draft.status,
     adherent: draft.inCharge.adherent,
     team: draft.inCharge.team,
+    supply: draft.supply,
   };
 }
 
@@ -55,6 +56,7 @@ function inReviewPreviewOf(inReview: InReview): InReviewPreview {
     status: inReview.status,
     adherent: inReview.inCharge.adherent,
     team: inReview.inCharge.team,
+    supply: inReview.supply,
     reviews: inReview.reviews,
   };
 }
@@ -66,6 +68,7 @@ function validatedPreviewOf(validated: Validated): ValidatedPreview {
     status: validated.status,
     adherent: validated.inCharge.adherent,
     team: validated.inCharge.team,
+    supply: validated.supply,
     reviews: validated.reviews,
   };
 }
@@ -77,6 +80,7 @@ function refusedPreviewOf(refused: Refused): RefusedPreview {
     status: refused.status,
     adherent: refused.inCharge.adherent,
     team: refused.inCharge.team,
+    supply: refused.supply,
     reviews: refused.reviews,
   };
 }

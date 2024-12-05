@@ -236,8 +236,16 @@ const filterActivityByReviews =
         getPreviewReviewStatus(activity, reviewer) === status,
     );
   };
+const filterActivityBySupplyNeed =
+  (needSupply?: boolean) => (activity: Searchable<PreviewFestivalActivity>) => {
+    if (!needSupply) return true;
+
+    const supply = activity.supply;
+    return (supply.electricity.length || 0) > 0 || supply.water;
+  };
 const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
-  const { team, status, search, adherent, ...reviews } = filters.value;
+  const { team, status, search, adherent, needSupply, ...reviews } =
+    filters.value;
 
   return searchableActivities.value.filter((activity) => {
     return (
@@ -245,7 +253,8 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
       filterActivityByAdherent(adherent)(activity) &&
       filterActivityByStatus(status)(activity) &&
       filterActivityByNameAndId(search)(activity) &&
-      filterActivityByReviews(reviews)(activity)
+      filterActivityByReviews(reviews)(activity) &&
+      filterActivityBySupplyNeed(needSupply)(activity)
     );
   });
 });
