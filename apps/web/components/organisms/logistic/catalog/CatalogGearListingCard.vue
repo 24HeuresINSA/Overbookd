@@ -10,6 +10,14 @@
         />
         <v-btn
           v-if="isCatalogWriter"
+          text="Ajouter"
+          prepend-icon="mdi-plus"
+          color="primary"
+          class="add-button"
+          @click="openCreateGearDialog"
+        />
+        <v-btn
+          v-if="isCatalogWriter"
           text="Exporter"
           prepend-icon="mdi-export"
           color="secondary"
@@ -63,10 +71,10 @@
       </v-data-table>
     </v-card-text>
 
-    <v-dialog v-model="isUpdateGearDialogOpen" width="600px">
+    <v-dialog v-model="isUpsertGearDialogOpen" width="600px">
       <CatalogGearFormDialogCard
         :gear="selectedGear"
-        @close="closeUpdateGearDialog"
+        @close="closeUpsertGearDialog"
       />
     </v-dialog>
 
@@ -101,6 +109,7 @@ import {
   sanitizeFieldForCSV,
   booleanToReadableString,
 } from "~/utils/file/csv.utils";
+import { formatLocalDate } from "@overbookd/time";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
@@ -142,13 +151,14 @@ const searchGears = async (options: GearSearchOptions) => {
   catalogGearStore.fetchGears(options).then(() => (loading.value = false));
 };
 
-const isUpdateGearDialogOpen = ref<boolean>(false);
+const isUpsertGearDialogOpen = ref<boolean>(false);
+const openCreateGearDialog = () => (isUpsertGearDialogOpen.value = true);
 const openUpdateGearDialog = (gear: CatalogGear) => {
   selectedGear.value = gear;
-  isUpdateGearDialogOpen.value = true;
+  isUpsertGearDialogOpen.value = true;
 };
-const closeUpdateGearDialog = () => {
-  isUpdateGearDialogOpen.value = false;
+const closeUpsertGearDialog = () => {
+  isUpsertGearDialogOpen.value = false;
 };
 
 const isDeleteGearDialogOpen = ref<boolean>(false);
@@ -185,7 +195,8 @@ const exportCatalogCSV = async () => {
   });
 
   const csv = [csvHeader, ...csvContent].join("\n");
-  download("catalogue.csv", csv);
+  const today = formatLocalDate(new Date());
+  download(`catalogue_${today}.csv`, csv);
 };
 </script>
 
@@ -195,6 +206,13 @@ const exportCatalogCSV = async () => {
   display: flex;
   gap: 15px;
   align-items: center;
+  @media (max-width: $mobile-max-width) {
+    flex-direction: column-reverse;
+    gap: 10px;
+    .add-button {
+      width: 100%;
+    }
+  }
 }
 
 .category-details {
