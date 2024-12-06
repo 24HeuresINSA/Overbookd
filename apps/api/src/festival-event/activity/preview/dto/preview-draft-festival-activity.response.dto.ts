@@ -2,10 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Adherent, PreviewDraft } from "@overbookd/festival-event";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
-import {
-  Supply,
-  SupplyDto,
-} from "../../common/dto/draft/draft-supply.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
   @ApiProperty({
@@ -40,8 +36,8 @@ export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
   team: string | null;
 
   @ApiProperty({
-    description: "The festival activity supply",
-    type: SupplyDto,
+    description: "The festival activity supply need",
+    type: Boolean,
   })
-  supply: Supply;
+  needSupply: boolean;
 }

@@ -89,6 +89,7 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
+import { LOG_ELEC_CODE } from "@overbookd/team-constants";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -143,7 +144,7 @@ const openAnimationsToPublish = () => {
 };
 
 const hasLogElecTeam = computed<boolean>(() => {
-  return userStore.isMemberOf("elec");
+  return userStore.isMemberOf(LOG_ELEC_CODE);
 });
 const updateNeedSupply = (needSupply: boolean | null) => {
   updateQueryParams("needSupply", !!needSupply);

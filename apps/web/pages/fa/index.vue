@@ -238,10 +238,7 @@ const filterActivityByReviews =
   };
 const filterActivityBySupplyNeed =
   (needSupply?: boolean) => (activity: Searchable<PreviewFestivalActivity>) => {
-    if (!needSupply) return true;
-
-    const supply = activity.supply;
-    return (supply.electricity.length || 0) > 0 || supply.water;
+    return !needSupply || activity.needSupply;
   };
 const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
   const { team, status, search, adherent, needSupply, ...reviews } =
