@@ -32,6 +32,18 @@
         </v-btn-toggle>
       </div>
 
+      <v-switch
+        v-if="hasLogElecTeam"
+        v-model="filters.needSupply"
+        prepend-icon="mdi-flash"
+        color="primary"
+        label="Besoin en eau/elec"
+        class="page-button"
+        density="compact"
+        hide-details
+        @update:model-value="updateNeedSupply"
+      />
+
       <v-btn
         v-if="canViewSecurityDashboard"
         prepend-icon="mdi-security"
@@ -77,6 +89,7 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
+import { LOG_ELEC_CODE } from "@overbookd/team-constants";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -128,6 +141,13 @@ const canViewAnimationsToPublish = computed<boolean>(() => {
 });
 const openAnimationsToPublish = () => {
   navigateTo(FA_TO_PUBLISH_URL);
+};
+
+const hasLogElecTeam = computed<boolean>(() => {
+  return userStore.isMemberOf(LOG_ELEC_CODE);
+});
+const updateNeedSupply = (needSupply: boolean | null) => {
+  updateQueryParams("needSupply", !!needSupply);
 };
 </script>
 

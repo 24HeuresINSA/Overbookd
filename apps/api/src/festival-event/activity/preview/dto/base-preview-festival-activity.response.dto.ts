@@ -31,4 +31,10 @@ export class ReviewablePreviewBaseResponseDto implements ReviewablePreviewBase {
     type: String,
   })
   team: string;
+
+  @ApiProperty({
+    description: "The festival activity supply need",
+    type: Boolean,
+  })
+  needSupply: boolean;
 }

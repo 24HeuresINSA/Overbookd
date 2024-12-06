@@ -15,7 +15,7 @@ import {
   ValidatedPreview,
 } from "./festival-activity";
 import { getFactory } from "./festival-activity.factory";
-import { lea, noel } from "./festival-activity.fake";
+import { faker, lea, lumiere, noel } from "./festival-activity.fake";
 import { previewOf } from "./preview-of";
 
 const festivalActivityFactory = getFactory();
@@ -25,6 +25,7 @@ type TestHelper<Preview extends PreviewReviewable> = {
   adherent: Preview["adherent"];
   team: Preview["team"];
   reviews: Preview["reviews"];
+  needSupply: boolean;
 };
 
 describe("Transform a festival activity to its preview", () => {
@@ -43,6 +44,7 @@ describe("Transform a festival activity to its preview", () => {
         status: DRAFT,
         adherent,
         team,
+        needSupply: false,
       };
       expect(previewOf(draft)).toStrictEqual(expected);
     });
@@ -61,6 +63,7 @@ describe("Transform a festival activity to its preview", () => {
         signa: REVIEWING,
         secu: REVIEWING,
       },
+      needSupply: false,
     },
     {
       name: "Escape game",
@@ -75,10 +78,11 @@ describe("Transform a festival activity to its preview", () => {
         signa: APPROVED,
         secu: REVIEWING,
       },
+      needSupply: false,
     },
   ])(
     "when the festival activity is in review",
-    ({ name, adherent, team, reviews }) => {
+    ({ name, adherent, team, reviews, needSupply }) => {
       it("should return a review preview", () => {
         const inReview = festivalActivityFactory
           .inReview(name)
@@ -93,6 +97,7 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          needSupply,
         };
         expect(previewOf(inReview)).toStrictEqual(expected);
       });
@@ -112,6 +117,7 @@ describe("Transform a festival activity to its preview", () => {
         signa: APPROVED,
         secu: APPROVED,
       },
+      needSupply: false,
     },
     {
       name: "Escape game",
@@ -126,10 +132,11 @@ describe("Transform a festival activity to its preview", () => {
         signa: APPROVED,
         secu: APPROVED,
       },
+      needSupply: false,
     },
   ])(
     "when the festival activity is validated",
-    ({ name, adherent, team, reviews }) => {
+    ({ name, adherent, team, reviews, needSupply }) => {
       it("should return a validated preview", () => {
         const validated = festivalActivityFactory
           .validated(name)
@@ -144,6 +151,7 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          needSupply,
         };
         expect(previewOf(validated)).toStrictEqual(expected);
       });
@@ -163,6 +171,7 @@ describe("Transform a festival activity to its preview", () => {
         signa: REJECTED,
         secu: REVIEWING,
       },
+      needSupply: false,
     },
     {
       name: "Escape game",
@@ -177,10 +186,11 @@ describe("Transform a festival activity to its preview", () => {
         signa: APPROVED,
         secu: REJECTED,
       },
+      needSupply: false,
     },
   ])(
     "when the festival activity is refused",
-    ({ name, adherent, team, reviews }) => {
+    ({ name, adherent, team, reviews, needSupply }) => {
       it("should return a refused preview", () => {
         const refused = festivalActivityFactory
           .refused(name)
@@ -195,8 +205,63 @@ describe("Transform a festival activity to its preview", () => {
           adherent,
           team,
           reviews,
+          needSupply,
         };
         expect(previewOf(refused)).toStrictEqual(expected);
+      });
+    },
+  );
+  describe.each([
+    {
+      name: "VGC Tournament",
+      adherent: lea,
+      team: null,
+      electricity: [],
+      water: "beaucoup",
+      needSupply: true,
+    },
+    {
+      name: "Escape game",
+      adherent: noel,
+      team: "plaizirs",
+      electricity: [lumiere],
+      water: null,
+      needSupply: true,
+    },
+    {
+      name: "LoL Tournament",
+      adherent: faker,
+      team: null,
+      electricity: [lumiere],
+      water: "une fontaine",
+      needSupply: true,
+    },
+    {
+      name: "Balade en poney",
+      adherent: noel,
+      team: null,
+      electricity: [],
+      water: null,
+      needSupply: false,
+    },
+  ])(
+    "when the festival activity needs supply",
+    ({ name, adherent, team, electricity, water, needSupply }) => {
+      it("should return say so in the preview", () => {
+        const draft = festivalActivityFactory
+          .draft(name)
+          .withInCharge({ adherent, team })
+          .withSupply({ electricity, water })
+          .build();
+        const expected: PreviewDraft = {
+          id: draft.id,
+          name,
+          status: DRAFT,
+          adherent,
+          team,
+          needSupply,
+        };
+        expect(previewOf(draft)).toStrictEqual(expected);
       });
     },
   );

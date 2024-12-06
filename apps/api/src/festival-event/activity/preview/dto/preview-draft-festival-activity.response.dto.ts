@@ -34,4 +34,10 @@ export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
     type: String,
   })
   team: string | null;
+
+  @ApiProperty({
+    description: "The festival activity supply need",
+    type: Boolean,
+  })
+  needSupply: boolean;
 }

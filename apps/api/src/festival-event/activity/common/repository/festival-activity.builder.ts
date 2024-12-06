@@ -272,11 +272,13 @@ class ReviewableBuilder
   }
 
   get preview(): PreviewReviewable {
+    const supply = this.activity.supply;
     const base = {
       id: this.activity.id,
       name: this.activity.general.name,
       adherent: this.activity.inCharge.adherent,
       team: this.activity.inCharge.team,
+      needSupply: supply.electricity.length > 0 || !!supply.water,
     };
     const { reviews } = this.activity;
 
@@ -311,12 +313,14 @@ export class DraftBuilder
   }
 
   get preview() {
+    const supply = this.activity.supply;
     return {
       id: this.activity.id,
       name: this.activity.general.name,
       status: this.activity.status,
       adherent: this.activity.inCharge.adherent,
       team: this.activity.inCharge.team,
+      needSupply: supply.electricity.length > 0 || !!supply.water,
     };
   }
 

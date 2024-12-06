@@ -18,7 +18,7 @@ export function nonEmptyString(value: string): string | undefined {
   return value ? value : undefined;
 }
 
-type QueryParam = string | string[] | number | undefined;
+type QueryParam = string | string[] | number | boolean | undefined;
 
 export function updateQueryParams(key: string, value: QueryParam) {
   const route = useRoute();
@@ -26,12 +26,15 @@ export function updateQueryParams(key: string, value: QueryParam) {
   const path = route.path;
 
   const isEmpty = Array.isArray(value) ? value.length === 0 : !value;
-  if (isEmpty) {
+  if (isEmpty || value === false) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [key]: remove, ...remainingQuery } = currentQuery;
     navigateTo({ path, query: remainingQuery });
     return;
   }
-  const query = { ...currentQuery, [key]: value };
+  const query = {
+    ...currentQuery,
+    [key]: value === true ? null : value,
+  };
   navigateTo({ path, query });
 }
