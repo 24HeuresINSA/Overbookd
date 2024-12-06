@@ -41,7 +41,7 @@
         class="page-button"
         density="compact"
         hide-details
-        @update:model-value="updateNeedSupply($event)"
+        @update:model-value="updateNeedSupply"
       />
 
       <v-btn
