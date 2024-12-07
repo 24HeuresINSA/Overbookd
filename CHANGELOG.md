@@ -1,3 +1,9 @@
+## [3.19.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.18.0...v3.19.0) (2024-12-07)
+
+### Features
+
+* **web:** add fa need supply filter [#2294](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2294) ([2789853](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2789853a11dc7eeb1896593e0974a6312aede1df))
+
 ## [3.18.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.17.3...v3.18.0) (2024-12-04)
 
 ### Features
