@@ -42,7 +42,7 @@ import {
 
 type DatabaseReview = {
   team: Reviewer<"FA">;
-  status: ReviewStatus;
+  status: ReviewStatus<"FA">;
 };
 
 type DatabaseGeneral = Omit<FestivalActivity["general"], "timeWindows"> & {
@@ -224,7 +224,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   private static findReviewStatusByTeam(
     reviews: DatabaseReview[],
     reviewer: Reviewer<"FA">,
-  ): ReviewStatus {
+  ): ReviewStatus<"FA"> {
     const review = reviews.find((review) => review.team === reviewer);
     return review?.status ?? NOT_ASKING_TO_REVIEW;
   }

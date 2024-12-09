@@ -124,7 +124,7 @@ const reviewStatusLabels = [...reviewStatusLabel.entries()];
 
 const updateReviewerParams = (
   reviewer: Reviewer<"FA">,
-  review?: ReviewStatus,
+  review?: ReviewStatus<"FA">,
 ) => {
   updateQueryParams(reviewer, review);
 };

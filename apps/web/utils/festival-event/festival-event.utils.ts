@@ -9,12 +9,14 @@ import {
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
+  WILL_NOT_REVIEW,
   secu,
   signa,
   type FestivalActivity,
   type FestivalTask,
   type Reviewer,
   type ReviewStatus,
+  type FestivalEventIdentifier,
 } from "@overbookd/festival-event";
 import {
   DRAFT,
@@ -29,7 +31,10 @@ const APPROUVEE = "Approuvée";
 
 export type ReviewLabel = typeof A_RELIRE | typeof APPROUVEE | typeof REJETEE;
 
-export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
+export const reviewStatusLabel = new Map<
+  ReviewStatus<"FA"> | ReviewStatus<"FT">,
+  ReviewLabel
+>([
   [REVIEWING, A_RELIRE],
   [REJECTED, REJETEE],
   [APPROVED, APPROUVEE],
@@ -38,7 +43,7 @@ export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
 export function hasReviewerAlreadyDoneHisTaskReview(
   task: FestivalTask,
   reviewer: Reviewer<"FT">,
-  status: ReviewStatus,
+  status: ReviewStatus<"FT">,
 ) {
   if (isDraft(task)) return true;
   switch (reviewer) {
@@ -56,7 +61,7 @@ export function hasReviewerAlreadyDoneHisTaskReview(
 export function hasReviewerAlreadyDoneHisActivityReview(
   activity: FestivalActivity,
   reviewer: Reviewer<"FA">,
-  status: ReviewStatus,
+  status: ReviewStatus<"FA">,
 ) {
   if (isDraft(activity)) return true;
   switch (reviewer) {
@@ -94,7 +99,9 @@ export function isFestivalActivityStatus(
   );
 }
 
-export function findReviewStatus(status: string): ReviewStatus | undefined {
+export function findReviewStatus<T extends FestivalEventIdentifier>(
+  status: string,
+): ReviewStatus<T> | undefined {
   if (!status) return undefined;
   switch (status) {
     case REJECTED:
@@ -104,6 +111,7 @@ export function findReviewStatus(status: string): ReviewStatus | undefined {
     case REVIEWING:
       return REVIEWING;
     case NOT_ASKING_TO_REVIEW:
+    case WILL_NOT_REVIEW:
     default:
       return NOT_ASKING_TO_REVIEW;
   }

@@ -762,6 +762,7 @@ enum FestivalTaskReviewer {
 enum FestivalTaskReviewStatus {
   REVIEWING
   NOT_ASKING_TO_REVIEW
+  WILL_NOT_REVIEW
   REJECTED
   APPROVED
 
