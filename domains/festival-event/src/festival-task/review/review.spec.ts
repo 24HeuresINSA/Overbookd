@@ -40,10 +40,7 @@ import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
 import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";
-import {
-  AlreadyIgnoredFestivalTask,
-  CannotIgnoreFestivalTask,
-} from "../festival-task.error.js";
+import { CannotIgnoreFestivalTask } from "../festival-task.error.js";
 
 const factory = getFactory();
 
@@ -287,6 +284,7 @@ describe("Ignore festival task", () => {
       leadPressConference,
       rejectedByElec,
       approvedByHumainAndMatos,
+      withoutSupplyRequestAndAllApprovedExceptMatos,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
     const conflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -315,10 +313,12 @@ describe("Ignore festival task", () => {
     },
   );
   describe("when ignoring a task that does not require a review from elec", () => {
-    it("should indicate that only elec can ingore festival task review", async () => {
-      await expect(
-        review.ignore(uninstallPreventionVillage.id, elec),
-      ).rejects.toThrow(AlreadyIgnoredFestivalTask);
+    it("should not update elec review status", async () => {
+      const { reviews } = await review.ignore(
+        withoutSupplyRequestAndAllApprovedExceptMatos.id,
+        elec,
+      );
+      expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
     });
   });
   describe.each`
