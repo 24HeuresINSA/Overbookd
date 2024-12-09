@@ -13,7 +13,6 @@
 
 <script lang="ts" setup>
 import type {
-  FestivalEventIdentifier,
   PreviewFestivalActivity,
   PreviewFestivalTask,
   Reviewer,
@@ -26,37 +25,32 @@ import { isDraftPreview as isTaskDraftPreview } from "~/utils/festival-event/fes
 const teamStore = useTeamStore();
 
 const props = defineProps({
-  type: {
-    type: String as PropType<FestivalEventIdentifier>,
-    required: true,
-  },
-  festivalEvent: {
+  preview: {
     type: Object as PropType<PreviewFestivalActivity | PreviewFestivalTask>,
     required: true,
   },
 });
 
+const isActivity = computed<boolean>(() => "adherent" in props.preview);
+
 const reviewers = computed<Team[]>(() =>
-  props.type === "FA" ? teamStore.faReviewers : teamStore.ftReviewers,
+  isActivity.value ? teamStore.faReviewers : teamStore.ftReviewers,
 );
 
 onMounted(() => {
   if (reviewers.value.length > 0) return;
-  if (props.type === "FA") return teamStore.fetchFaReviewers();
+  if (isActivity.value) return teamStore.fetchFaReviewers();
   teamStore.fetchFtReviewers();
 });
 
 const getReviewerStatus = (reviewer: Team): string => {
-  if (props.type === "FA") {
+  if (isActivity.value) {
     return getActivityReviewerStatus(
-      props.festivalEvent as PreviewFestivalActivity,
+      props.preview as PreviewFestivalActivity,
       reviewer,
     );
   }
-  return getTaskReviewerStatus(
-    props.festivalEvent as PreviewFestivalTask,
-    reviewer,
-  );
+  return getTaskReviewerStatus(props.preview as PreviewFestivalTask, reviewer);
 };
 
 const getActivityReviewerStatus = (

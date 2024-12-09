@@ -29,7 +29,7 @@
         </template>
 
         <template #item.reviews="{ item }">
-          <FestivalEventReviewerChips type="FA" :festival-event="item" />
+          <FestivalEventReviewerChips :preview="item" />
         </template>
 
         <template #item.adherent="{ item }">

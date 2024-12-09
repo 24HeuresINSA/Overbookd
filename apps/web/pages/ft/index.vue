@@ -24,7 +24,7 @@
         </template>
 
         <template #item.reviews="{ item }">
-          <FestivalEventReviewerChips type="FT" :festival-event="item" />
+          <FestivalEventReviewerChips :preview="item" />
         </template>
 
         <template #item.team="{ item }">

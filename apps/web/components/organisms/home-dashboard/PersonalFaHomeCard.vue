@@ -18,7 +18,7 @@
               mdi-circle
             </v-icon>
           </v-list-item-title>
-          <FestivalEventReviewerChips type="FA" :festival-event="item" />
+          <FestivalEventReviewerChips :preview="item" />
         </v-list-item>
         <v-list-item v-if="myActivities.length > MAX_ACTIVITIES">
           <nuxt-link :to="`${FA_URL}?adherent=${currentAdherent?.id}`">
