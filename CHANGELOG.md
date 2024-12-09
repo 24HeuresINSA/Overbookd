@@ -1,3 +1,12 @@
+## [3.19.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.1...v3.19.2) (2024-12-09)
+
+### Bug Fixes
+
+* **festival-event:** all selection in status filter [#2310](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2310) ([b93a24d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b93a24d823d4433b6fcd45667e5bcd6d304d8f9e))
+* **festival-event:** allows line breaks in comments and refusals [#2318](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2318) ([be9039d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/be9039dab711239ac8c4d462282646574aa719d1))
+* **login:** add button loader in login and register pages [#2313](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2313) ([9192eee](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9192eee9cceb1a992d23c3fd8761b22677fb0f8b))
+* **transactions:** display payor and payee for shared meal transactions [#2253](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2253) ([46ab20a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/46ab20a0390f6a723c976a0de012b0bedcd5987e))
+
 ## [3.19.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.0...v3.19.1) (2024-12-09)
 
 ### Bug Fixes
