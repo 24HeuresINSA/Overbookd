@@ -216,6 +216,7 @@
               text="M'inscrire"
               color="primary"
               :disabled="isFormInvalid"
+              :loading="loading"
               @click="register"
             />
             <v-btn text="Revenir" variant="text" @click="step = 3" />
@@ -261,6 +262,7 @@ import {
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
@@ -377,11 +379,18 @@ const nicknameAction = (form: RegisterForm) => {
   return form.fillNickname(cleanNickname.value);
 };
 
-const emit = defineEmits(["registered"]);
+const loading = ref<boolean>(false);
 const register = async () => {
+  loading.value = true;
   const res = await registrationStore.register(registerForm.value, token.value);
-  if (!res) return;
-  emit("registered", { email: email.value, password: password.value });
+  if (!res) {
+    loading.value = false;
+    return;
+  }
+
+  const credentials = { email: email.value, password: password.value };
+  await loginAndApplyForMembership(credentials, token.value);
+  loading.value = false;
 };
 
 const isEULADialogOpen = ref<boolean>(false);
