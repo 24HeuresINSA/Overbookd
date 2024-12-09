@@ -12,6 +12,12 @@ export class FestivalTaskNotFound extends FestivalTaskError {
   }
 }
 
+export class CannotIgnoreFestivalTask extends FestivalTaskError {
+  constructor() {
+    super("Seul.e le.a log elec peut ignorer une fiche tâche");
+  }
+}
+
 export class SplitDurationIsNotPeriodDivider extends FestivalTaskError {
   constructor(duration: Duration) {
     const message = `La période n'est pas divisible en ${duration.inHours} heures`;
