@@ -1,3 +1,10 @@
+## [3.19.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.0...v3.19.1) (2024-12-09)
+
+### Bug Fixes
+
+* **catalog:** add button to add an item [#2305](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2305) ([21a327b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/21a327b62bf35849eaf539f0766acf7bb0c046c0))
+* **fa:** add reviewers on home page [#2311](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2311) ([b03d823](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b03d82347422b13ed9f145739ee2f4b1daa91bfa))
+
 ## [3.19.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.18.0...v3.19.0) (2024-12-07)
 
 ### Features
