@@ -6,18 +6,13 @@
       cover
     />
     <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
-    <RegistrationStepper
-      v-else
-      class="stepper"
-      @registered="loginAndApplyForMembership($event, token)"
-    />
+    <RegistrationStepper v-else class="stepper" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 definePageMeta({ layout: false });
 

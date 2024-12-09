@@ -53,6 +53,7 @@
               size="large"
               color="primary"
               class="login-form__button text-none"
+              :loading="loading"
               flat
               @click="login"
             />
@@ -96,7 +97,7 @@ const credentials = ref({
   email: "",
   password: "",
 });
-
+const loading = ref<boolean>(false);
 const image = ref(pickRandomBackground());
 
 setInterval(
@@ -110,7 +111,9 @@ const login = async () => {
       "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
     );
   }
-  loginAndApplyForMembership(credentials.value, token.value);
+  loading.value = true;
+  await loginAndApplyForMembership(credentials.value, token.value);
+  loading.value = false;
 };
 
 const isForgotDialogOpen = ref<boolean>(false);
