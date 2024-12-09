@@ -24,6 +24,7 @@ import {
   ValidatedWithoutConflicts,
 } from "../volunteer-conflicts.js";
 import {
+  AlreadyIgnoredFestivalTask,
   CannotIgnoreFestivalTask,
   FestivalTaskNotFound,
 } from "../festival-task.error.js";
@@ -32,7 +33,6 @@ import {
   NotAskingToReview,
   ShouldAssignDrive,
 } from "../../common/review.error.js";
-import { ELEC } from "../../festival-activity/sections/inquiry.js";
 
 export type FestivalTasksForReview = {
   findById(
@@ -85,8 +85,13 @@ class Ignore {
     task: T,
     team: Reviewer<"FT">,
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
-    if (team !== ELEC) throw new CannotIgnoreFestivalTask();
-    const reviews = { ...task.reviews, [ELEC]: WILL_NOT_REVIEW } as const;
+    if (team !== elec) throw new CannotIgnoreFestivalTask();
+    // eslint-disable-next-line security/detect-object-injection
+    if (task.reviews[elec] === NOT_ASKING_TO_REVIEW) {
+      throw new AlreadyIgnoredFestivalTask(task.id, elec);
+    }
+
+    const reviews = { ...task.reviews, [elec]: WILL_NOT_REVIEW } as const;
 
     if (hasAllApproved(reviews)) {
       return { ...task, reviews, status: VALIDATED };

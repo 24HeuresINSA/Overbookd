@@ -2,6 +2,7 @@ import { Duration } from "@overbookd/time";
 import { FestivalTask } from "./festival-task.js";
 import { InquiryRequest } from "../common/inquiry-request.js";
 import { FestivalEventError } from "../festival-event.js";
+import { Reviewer } from "../common/review.js";
 
 export class FestivalTaskError extends FestivalEventError {}
 
@@ -15,6 +16,13 @@ export class FestivalTaskNotFound extends FestivalTaskError {
 export class CannotIgnoreFestivalTask extends FestivalTaskError {
   constructor() {
     super("Seul.e le.a log elec peut ignorer une fiche tâche");
+  }
+}
+
+export class AlreadyIgnoredFestivalTask extends FestivalTaskError {
+  constructor(ftId: FestivalTask["id"], team: Reviewer<"FT">) {
+    const message = `La fiche tâche #${ftId} est déjà ignorée pour ${team}`;
+    super(message);
   }
 }
 
