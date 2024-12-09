@@ -252,7 +252,7 @@ describe("Reject festival task", () => {
     });
   });
   describe("when rejecting a task with no supply request as elec member", () => {
-    it("should define the elec reviewer as NOT_ASKING_TO_REVIEW", async () => {
+    it("should indicate elec is not asking to review it", async () => {
       expect(
         async () =>
           await review.reject(uninstallPreventionVillage.id, {
@@ -294,7 +294,7 @@ describe("Ignore festival task", () => {
   `(
     "when ignoring $taskName as elec reviewer with current review status $reviewerStatus",
     ({ task, expectedTaskStatus }) => {
-      it("should define the elec reviewer as NOT_ASKING_TO_REVIEW", async () => {
+      it("should define the elec review as NOT_ASKING_TO_REVIEW", async () => {
         const { reviews } = await review.ignore(task.id, elec);
         expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
       });
