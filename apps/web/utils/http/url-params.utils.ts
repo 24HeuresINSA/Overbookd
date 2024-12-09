@@ -18,7 +18,7 @@ export function nonEmptyString(value: string): string | undefined {
   return value ? value : undefined;
 }
 
-type QueryParam = string | string[] | number | boolean | undefined;
+type QueryParam = string | string[] | number | boolean | null | undefined;
 
 export function updateQueryParams(key: string, value: QueryParam) {
   const route = useRoute();

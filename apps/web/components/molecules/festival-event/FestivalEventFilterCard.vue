@@ -30,7 +30,6 @@
         :items="statusWithLabels"
         item-value="key"
         item-title="label"
-        clearable
         hide-details
         @click:clear="clearStatus"
         @update:model-value="updateStatusParam"
@@ -83,10 +82,10 @@ const isActivity = computed<boolean>(() => identifier === "FA");
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }
   | { key: FestivalTask["status"]; label: FtStatusLabel }
-  | { key: undefined; label: "Tous" }
+  | { key: null; label: "Tous" }
 )[];
 const statusWithLabels = computed<StatusLabels>(() => {
-  const noneOfThem = { key: undefined, label: "Tous" } as const;
+  const noneOfThem = { key: null, label: "Tous" } as const;
   const keyWithLabel = isActivity.value
     ? [...faStatusLabels.entries()]
     : [...ftStatusLabels.entries()];
@@ -103,7 +102,7 @@ const updateTeamParam = (team?: Team) => {
 const updateAdherentParam = (adherent?: User) => {
   updateQueryParams("adherent", adherent?.id);
 };
-const updateStatusParam = (status: FestivalEventStatus) => {
+const updateStatusParam = (status: FestivalEventStatus | null) => {
   updateQueryParams("status", status);
 };
 </script>
