@@ -20,6 +20,9 @@
         <template #item.at="{ item }">
           {{ formatDateWithMinutes(item.at) }}
         </template>
+        <template #item.description="{ item }">
+          <span class="feedback-text">{{ item.description }}</span>
+        </template>
       </v-data-table>
 
       <v-textarea
@@ -28,7 +31,7 @@
         rows="5"
         variant="outlined"
         hide-details
-        @keydown.enter="publishFeedback"
+        @keydown.enter="handleEnterKeyDown"
       />
       <v-btn
         text="Ajouter un commentaire"
@@ -104,6 +107,12 @@ const publishFeedback = () => {
   newFeedbackContent.value = "";
 };
 
+const handleEnterKeyDown = (event: KeyboardEvent) => {
+  if (event.shiftKey) return;
+  event.preventDefault();
+  publishFeedback();
+};
+
 const getActionEmoji = (action: KeyEvent["action"]) => {
   switch (action) {
     case CREATED:
@@ -140,5 +149,9 @@ const getActionEmoji = (action: KeyEvent["action"]) => {
     max-width: fit-content;
     align-self: flex-end;
   }
+}
+
+.feedback-text {
+  white-space: pre-wrap;
 }
 </style>

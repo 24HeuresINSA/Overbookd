@@ -3,7 +3,7 @@
     <template #title> Rejeter une {{ eventIdentifier }} </template>
     <template #subtitle>
       Tu es sur le point de rejeter la {{ identifier }}
-      <strong>{{ name }}</strong>. Pourquoi tu veux faire ça ?
+      <strong> {{ name }} </strong>. Pourquoi tu veux faire ça ?
     </template>
     <template #content>
       <v-textarea
@@ -12,7 +12,7 @@
         rows="3"
         outlined
         hide-details
-        @keydown.enter="reject"
+        @keydown.enter="handleEnterKeyDown"
       />
     </template>
     <template #actions>
@@ -56,12 +56,17 @@ const name = computed<string>(() =>
 
 const emit = defineEmits(["reject", "close"]);
 const close = () => emit("close");
-const reject = (event: Event) => {
-  if (isReasonEmpty.value) return;
-  event.preventDefault();
 
+const reject = () => {
+  if (isReasonEmpty.value) return;
   emit("reject", reason.value);
   reason.value = "";
   close();
+};
+
+const handleEnterKeyDown = (event: KeyboardEvent) => {
+  if (event.shiftKey) return;
+  event.preventDefault();
+  reject();
 };
 </script>
