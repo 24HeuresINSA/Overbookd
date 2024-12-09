@@ -29,16 +29,7 @@
         </template>
 
         <template #item.reviews="{ item }">
-          <v-chip-group id="reviewers" column>
-            <v-chip
-              v-for="reviewer of reviewers"
-              :key="reviewer.code"
-              :class="getReviewerStatus(item, reviewer)"
-              size="small"
-            >
-              <v-icon size="small"> {{ reviewer.icon }} </v-icon>
-            </v-chip>
-          </v-chip-group>
+          <FestivalEventReviewerChips :preview="item" />
         </template>
 
         <template #item.adherent="{ item }">
@@ -103,7 +94,6 @@ import { WRITE_FA } from "@overbookd/permission";
 import type {
   FestivalActivity,
   PreviewFestivalActivity,
-  Reviewer,
 } from "@overbookd/festival-event";
 import { SlugifyService } from "@overbookd/slugify";
 import { type User, buildUserName } from "@overbookd/user";
@@ -122,7 +112,6 @@ import {
   openActivity,
   openActivityInNewTab,
 } from "~/utils/festival-event/open-page";
-import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 import { useLiveNotification } from "~/composable/useLiveNotification";
 import {
   FESTIVAL_ACTIVITY_CREATED,
@@ -160,7 +149,6 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const activities = computed<PreviewFestivalActivity[]>(
   () => faStore.activities.forAll,
 );
-const reviewers = computed<Team[]>(() => teamStore.faReviewers);
 
 const loading = ref<boolean>(activities.value.length === 0);
 
@@ -181,16 +169,6 @@ const closeRemovalDialog = () => {
 const removeActivity = () => {
   if (!activityToRemove.value) return;
   faStore.remove(activityToRemove.value.id);
-};
-
-const getReviewerStatus = (
-  activity: PreviewFestivalActivity,
-  reviewer: Team,
-): string => {
-  if (isDraftPreview(activity)) return "";
-  const reviewerCode = reviewer.code as Reviewer<"FA">;
-  const status = activity.reviews[`${reviewerCode}`];
-  return (findReviewStatus(status) ?? "").toLowerCase();
 };
 
 const filters = ref<ActivityFilters>({});
