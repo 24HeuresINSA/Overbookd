@@ -1,8 +1,6 @@
 import {
   FestivalActivity,
-  FestivalEventIdentifier,
   InquiryRequestAssigned,
-  Reviewer,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
@@ -16,15 +14,6 @@ export type PrepareInChargeForm = {
 
 export type PrepareSignaForm = {
   locationId: number | null;
-};
-
-export type ReviewRejection<T extends FestivalEventIdentifier> = {
-  team: Reviewer<T>;
-  reason: string;
-};
-
-export type ReviewApproval<T extends FestivalEventIdentifier> = {
-  team: Reviewer<T>;
 };
 
 export type InitInquiryRequest = {

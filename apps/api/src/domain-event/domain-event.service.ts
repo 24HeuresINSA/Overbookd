@@ -34,6 +34,8 @@ import {
   VolunteerRegisteredEvent,
   SharedMealClosed,
   EventOf,
+  FestivalTaskIgnored,
+  FESTIVAL_TASK_IGNORED,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
 import { SOFT_CODE } from "@overbookd/team-constants";
@@ -116,6 +118,10 @@ export class DomainEventService {
 
   get festivalTaskApproved(): Observable<FestivalTaskApproved> {
     return this.listen(FESTIVAL_TASK_APPROVED);
+  }
+
+  get festivalTaskIgnored(): Observable<FestivalTaskIgnored> {
+    return this.listen(FESTIVAL_TASK_IGNORED);
   }
 
   get closedSharedMeal(): Observable<SharedMealClosed> {

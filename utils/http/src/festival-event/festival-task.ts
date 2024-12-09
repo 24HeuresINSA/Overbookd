@@ -10,6 +10,7 @@ import {
   FestivalTaskWithConflicts,
   FestivalTaskDraft,
   FestivalTaskReviewable,
+  Reviewer,
 } from "@overbookd/festival-event";
 
 export type FestivalTaskCreationForm = {
@@ -55,3 +56,7 @@ export type Reviewable = Extract<
   FestivalTaskWithConflicts,
   FestivalTaskReviewable
 >;
+
+export type ReviewIgnoreTask = {
+  team: Reviewer<"FT">;
+};

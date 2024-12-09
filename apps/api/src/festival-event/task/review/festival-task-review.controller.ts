@@ -41,7 +41,11 @@ import {
 } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
-import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
+import {
+  ApproveRequestDto,
+  IgnoreTaskRequestDto,
+  RejectRequestDto,
+} from "./dto/review.request.dto";
 import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
 
 @ApiBearerAuth()
@@ -130,12 +134,12 @@ export class FestivalTaskReviewController {
     required: true,
   })
   reject(
-    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
     @Body() reject: RejectRequestDto,
   ): Promise<FestivalTaskRefused> {
     const jwt = new JwtUtil(user);
-    return this.reviewService.reject(faId, jwt, reject);
+    return this.reviewService.reject(ftId, jwt, reject);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -164,12 +168,46 @@ export class FestivalTaskReviewController {
     required: true,
   })
   approve(
-    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
     @Body() approve: ApproveRequestDto,
   ): Promise<FestivalTask> {
     const jwt = new JwtUtil(user);
-    return this.reviewService.approve(faId, jwt, approve);
+    return this.reviewService.approve(ftId, jwt, approve);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FT)
+  @Post(":ftId/ignore")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Festival task ignore",
+    type: IgnoreTaskRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  ignore(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() ignore: IgnoreTaskRequestDto,
+  ): Promise<FestivalTask> {
+    const jwt = new JwtUtil(user);
+    return this.reviewService.ignore(ftId, jwt, ignore);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -192,11 +230,11 @@ export class FestivalTaskReviewController {
     required: true,
   })
   enableAssignments(
-    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
     @Body() categorize: CategorizeTaskRequestDto,
   ): Promise<FestivalTaskReadyToAssign> {
     const jwt = new JwtUtil(user);
-    return this.reviewService.enableAssignment(faId, jwt, categorize);
+    return this.reviewService.enableAssignment(ftId, jwt, categorize);
   }
 }
