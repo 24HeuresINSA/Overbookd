@@ -9,6 +9,7 @@ import {
   NOT_ASKING_TO_REVIEW,
   Rejection,
   Reviewer,
+  WILL_NOT_REVIEW,
   elec,
   humain,
   matos,
@@ -85,7 +86,7 @@ class Ignore {
     team: Reviewer<"FT">,
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
     if (team !== ELEC) throw new CannotIgnoreFestivalTask();
-    const reviews = { ...task.reviews, [ELEC]: NOT_ASKING_TO_REVIEW } as const;
+    const reviews = { ...task.reviews, [ELEC]: WILL_NOT_REVIEW } as const;
 
     if (hasAllApproved(reviews)) {
       return { ...task, reviews, status: VALIDATED };
@@ -104,8 +105,9 @@ class Ignore {
 function hasAllApproved(
   reviews: ReviewableWithoutConflicts["reviews"],
 ): reviews is Validated["reviews"] {
-  return Object.values(reviews).every(
-    (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
+  const validReviews = [APPROVED, NOT_ASKING_TO_REVIEW, WILL_NOT_REVIEW];
+  return Object.values(reviews).every((review) =>
+    validReviews.includes(review),
   );
 }
 
