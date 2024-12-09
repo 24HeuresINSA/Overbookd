@@ -60,7 +60,7 @@ function isHttpDraft(
 export function getActivityReviewStatus(
   festivalActivity: FestivalActivity,
   reviewer: string,
-): ReviewStatus {
+): ReviewStatus<"FA"> {
   if (isDraft(festivalActivity)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
     case humain:
@@ -85,7 +85,7 @@ export function getActivityReviewStatus(
 export function getPreviewReviewStatus(
   preview: PreviewFestivalActivity,
   reviewer: string,
-): ReviewStatus {
+): ReviewStatus<"FA"> {
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {

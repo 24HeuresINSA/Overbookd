@@ -34,40 +34,69 @@ export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
   : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;
 
-export type ReviewingStatus =
+type FestivalActivityReviewingStatus =
+  | typeof REVIEWING
+  | typeof NOT_ASKING_TO_REVIEW
+  | typeof APPROVED;
+
+type FestivalTaskReviewingStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
   | typeof WILL_NOT_REVIEW
   | typeof APPROVED;
 
-export type ApprovalReviewStatus =
+export type ReviewingStatus<T extends FestivalEventIdentifier> = T extends "FA"
+  ? FestivalActivityReviewingStatus
+  : FestivalTaskReviewingStatus;
+
+type FestivalActivityApprovalReviewStatus =
+  | typeof APPROVED
+  | typeof NOT_ASKING_TO_REVIEW;
+
+type FestivalTaskApprovalReviewStatus =
   | typeof APPROVED
   | typeof NOT_ASKING_TO_REVIEW
   | typeof WILL_NOT_REVIEW;
 
-export type RejectionReviewStatus =
+export type ApprovalReviewStatus<T extends FestivalEventIdentifier> =
+  T extends "FA"
+    ? FestivalActivityApprovalReviewStatus
+    : FestivalTaskApprovalReviewStatus;
+
+type FestivalActivityRejectionReviewStatus =
+  | typeof REVIEWING
+  | typeof NOT_ASKING_TO_REVIEW
+  | typeof APPROVED
+  | typeof REJECTED;
+
+type FestivalTaskRejectionReviewStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
   | typeof WILL_NOT_REVIEW
   | typeof APPROVED
   | typeof REJECTED;
 
-export type ReviewStatus =
-  | RejectionReviewStatus
-  | ApprovalReviewStatus
-  | ReviewingStatus;
+export type RejectionReviewStatus<T extends FestivalEventIdentifier> =
+  T extends "FA"
+    ? FestivalActivityRejectionReviewStatus
+    : FestivalTaskRejectionReviewStatus;
+
+export type ReviewStatus<T extends FestivalEventIdentifier> =
+  | ReviewingStatus<T>
+  | ApprovalReviewStatus<T>
+  | RejectionReviewStatus<T>;
 
 export type InReviewReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
-  ReviewingStatus
+  ReviewingStatus<T>
 >;
 export type ValidatedReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
-  ApprovalReviewStatus
+  ApprovalReviewStatus<T>
 >;
 export type RefusedReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
-  RejectionReviewStatus
+  RejectionReviewStatus<T>
 >;
 
 export type Rejection<T extends FestivalEventIdentifier> = {

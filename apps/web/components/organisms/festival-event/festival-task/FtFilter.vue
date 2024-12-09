@@ -90,7 +90,7 @@ const assignableReviewers = computed<User[]>(() =>
 
 const updateReviewParams = (
   reviewer: Reviewer<"FT">,
-  review?: ReviewStatus,
+  review?: ReviewStatus<"FT">,
 ) => {
   updateQueryParams(reviewer, review);
 };

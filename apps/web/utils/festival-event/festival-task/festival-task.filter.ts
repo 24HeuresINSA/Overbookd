@@ -19,9 +19,9 @@ import type { LocationQuery } from "vue-router";
 import { findReviewStatus } from "../festival-event.utils";
 
 export type TaskReviewsFilter = {
-  humain?: ReviewStatus;
-  matos?: ReviewStatus;
-  elec?: ReviewStatus;
+  humain?: ReviewStatus<"FT">;
+  matos?: ReviewStatus<"FT">;
+  elec?: ReviewStatus<"FT">;
 };
 
 export type TaskFilters = TaskReviewsFilter & {
@@ -92,17 +92,17 @@ export class TaskFilterBuilder {
       }
       case "humain": {
         const review = stringifyQueryParam(params.humain);
-        const humain = findReviewStatus(review);
+        const humain = findReviewStatus<"FT">(review);
         return humain ? { humain } : {};
       }
       case "matos": {
         const review = stringifyQueryParam(params.matos);
-        const matos = findReviewStatus(review);
+        const matos = findReviewStatus<"FT">(review);
         return matos ? { matos } : {};
       }
       case "elec": {
         const review = stringifyQueryParam(params.elec);
-        const elec = findReviewStatus(review);
+        const elec = findReviewStatus<"FT">(review);
         return elec ? { elec } : {};
       }
     }

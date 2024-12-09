@@ -31,7 +31,7 @@ export function castTaskWithDate(
 export function getTaskReviewStatus(
   festivalTask: FestivalTask,
   reviewer: string,
-): ReviewStatus {
+): ReviewStatus<"FT"> {
   if (isDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
     case humain:
@@ -54,7 +54,7 @@ function isHttpDraft(
 export function getPreviewReviewStatus(
   preview: PreviewFestivalTask,
   reviewer: string,
-): ReviewStatus {
+): ReviewStatus<"FT"> {
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {

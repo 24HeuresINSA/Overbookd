@@ -57,6 +57,7 @@ export type {
 export {
   REVIEWING,
   NOT_ASKING_TO_REVIEW,
+  WILL_NOT_REVIEW,
   humain,
   communication,
   signa,
