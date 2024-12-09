@@ -40,7 +40,10 @@ import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
 import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";
-import { CannotIgnoreFestivalTask } from "../festival-task.error.js";
+import {
+  AlreadyIgnoredFestivalTask,
+  CannotIgnoreFestivalTask,
+} from "../festival-task.error.js";
 
 const factory = getFactory();
 
@@ -291,14 +294,13 @@ describe("Ignore festival task", () => {
     review = new Review(festivalTasks, translator);
   });
   describe.each`
-    taskName                                               | task                                      | reviewerStatus          | expectedTaskStatus
-    ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}            | ${IN_REVIEW}
-    ${uninstallPreventionVillage.general.name}             | ${uninstallPreventionVillage}             | ${NOT_ASKING_TO_REVIEW} | ${IN_REVIEW}
-    ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}             | ${REFUSED}
-    ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}             | ${REFUSED}
-    ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}             | ${VALIDATED}
-    ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}             | ${IN_REVIEW}
-    ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}            | ${VALIDATED}
+    taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
+    ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
+    ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
+    ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
+    ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
+    ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
+    ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
   `(
     "when ignoring $taskName as elec reviewer with current review status $reviewerStatus",
     ({ task, expectedTaskStatus }) => {
@@ -312,6 +314,13 @@ describe("Ignore festival task", () => {
       });
     },
   );
+  describe("when ignoring a task that does not require a review from elec", () => {
+    it("should indicate that only elec can ingore festival task review", async () => {
+      await expect(
+        review.ignore(uninstallPreventionVillage.id, elec),
+      ).rejects.toThrow(AlreadyIgnoredFestivalTask);
+    });
+  });
   describe.each`
     reviewer  | taskName                            | task
     ${humain} | ${guardJustDance.general.name}      | ${guardJustDance}
