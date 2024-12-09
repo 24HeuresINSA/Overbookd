@@ -41,6 +41,13 @@
           size="small"
           @click="openRejectDialog(team)"
         />
+        <v-btn
+          v-if="canIgnore(team)"
+          :text="`Ignorer pour ${team.name}`"
+          class="ignore review-btn"
+          size="small"
+          @click="ignore(team)"
+        />
       </div>
 
       <slot name="additional-actions" />
@@ -71,8 +78,15 @@ import {
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   type Reviewer,
+  elec,
+  WILL_NOT_REVIEW,
+  type ReviewStatus,
 } from "@overbookd/festival-event";
-import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
+import type {
+  ReviewApproval,
+  ReviewIgnoreTask,
+  ReviewRejection,
+} from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import {
   type FtStatusLabel,
@@ -147,7 +161,7 @@ const myTaskReviewers = computed<Team[]>(() => {
   return reviewers.value.filter(({ code }) => {
     if (!isTaskReviewer(code)) return false;
     const isReviewer = userStore.isMemberOf(code);
-    const shouldReview = task.reviews[`${code}`] !== NOT_ASKING_TO_REVIEW;
+    const shouldReview = isNotConcerned(task.reviews[`${code}`]);
     return isReviewer && shouldReview;
   });
 });
@@ -207,6 +221,11 @@ const approve = (team: Team) => {
     ? faStore.approve(form as ReviewApproval<"FA">)
     : ftStore.approve(form as ReviewApproval<"FT">);
 };
+const ignore = (team: Team) => {
+  if (isActivity.value) return;
+  const form = { team: team.code };
+  ftStore.ignore(form as ReviewIgnoreTask);
+};
 
 const cantApproveAs = (team: Team): boolean => {
   const isAlreadyApprovedBy = isActivity.value
@@ -238,6 +257,16 @@ const cantRejectAs = (team: Team): boolean => {
 
   const isTeamMember = userStore.isMemberOf(team.code);
   return isAlreadyRejectedBy || !isTeamMember;
+};
+const canIgnore = (team: Team): boolean => {
+  if (isActivity.value || team.code !== elec || isDraft(selectedTask.value)) {
+    return false;
+  }
+  return isNotConcerned(selectedTask.value.reviews[`${elec}`]);
+};
+
+const isNotConcerned = (review: ReviewStatus<"FT">): boolean => {
+  return review !== NOT_ASKING_TO_REVIEW && review !== WILL_NOT_REVIEW;
 };
 </script>
 
@@ -321,7 +350,8 @@ const cantRejectAs = (team: Team): boolean => {
 
   .team-review {
     .reject,
-    .approve {
+    .approve,
+    .ignore {
       color: whitesmoke;
       font-weight: bolder;
       margin-bottom: 5px;
@@ -332,6 +362,9 @@ const cantRejectAs = (team: Team): boolean => {
     .approve {
       background-color: $validated-color;
       margin-top: 5px;
+    }
+    .ignore {
+      background-color: $draft-color;
     }
   }
 }
