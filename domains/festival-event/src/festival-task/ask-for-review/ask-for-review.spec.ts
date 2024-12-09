@@ -29,7 +29,7 @@ import {
   matos,
 } from "../../common/review.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
-import { AskForReview } from "./ask-for-review.js";
+import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { InMemoryReviewers } from "./reviewers.inmemory.js";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
@@ -229,7 +229,3 @@ describe("Festival Task - ask for review", () => {
     );
   });
 });
-
-function isReviewer(team: string): team is Reviewer<"FT"> {
-  return [elec, humain, matos].includes(team);
-}

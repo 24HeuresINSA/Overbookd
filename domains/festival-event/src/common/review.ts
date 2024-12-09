@@ -4,6 +4,7 @@ import { Adherent } from "./adherent.js";
 
 export const REVIEWING = "REVIEWING";
 export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
+export const WILL_NOT_REVIEW = "WILL_NOT_REVIEW";
 
 export const communication = "communication";
 export const humain = "humain";
@@ -36,15 +37,18 @@ export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
 export type ReviewingStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
+  | typeof WILL_NOT_REVIEW
   | typeof APPROVED;
 
 export type ApprovalReviewStatus =
   | typeof APPROVED
-  | typeof NOT_ASKING_TO_REVIEW;
+  | typeof NOT_ASKING_TO_REVIEW
+  | typeof WILL_NOT_REVIEW;
 
 export type RejectionReviewStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
+  | typeof WILL_NOT_REVIEW
   | typeof APPROVED
   | typeof REJECTED;
 
