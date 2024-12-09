@@ -24,16 +24,7 @@
         </template>
 
         <template #item.reviews="{ item }">
-          <v-chip-group id="reviewers" column>
-            <v-chip
-              v-for="reviewer of reviewers"
-              :key="reviewer.code"
-              :class="getReviewerStatus(item, reviewer)"
-              size="small"
-            >
-              <v-icon size="small"> {{ reviewer.icon }} </v-icon>
-            </v-chip>
-          </v-chip-group>
+          <FestivalEventReviewerChips type="FT" :festival-event="item" />
         </template>
 
         <template #item.team="{ item }">
@@ -96,7 +87,6 @@
 import type {
   PreviewFestivalTask,
   FestivalTask,
-  Reviewer,
 } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
@@ -109,7 +99,6 @@ import {
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { buildUserName } from "@overbookd/user";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
-import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 import {
   type TaskFilters,
@@ -139,7 +128,6 @@ const tableHeaders = computed<TableHeaders>(() => {
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
-const reviewers = computed<Team[]>(() => teamStore.ftReviewers);
 
 teamStore.fetchFtReviewers();
 const loading = ref<boolean>(tasks.value.length === 0);
@@ -162,13 +150,6 @@ const closeRemovalDialog = () => {
 const removeTask = () => {
   if (!taskToRemove.value) return;
   ftStore.remove(taskToRemove.value.id);
-};
-
-const getReviewerStatus = (task: PreviewFestivalTask, reviewer: Team) => {
-  if (isDraftPreview(task)) return "";
-  const reviewerCode = reviewer.code as Reviewer<"FT">;
-  const status = task.reviews[`${reviewerCode}`];
-  return (findReviewStatus(status) ?? "").toLowerCase();
 };
 
 const filters = ref<TaskFilters>({});

@@ -12,20 +12,13 @@
           :key="item.id"
           :to="`${FA_URL}/${item.id}`"
         >
-          <v-list-item-title class="activity-name">
-            <strong>
-              N° {{ item.id }} - {{ item.name }}
-              <v-icon class="status-dot" :class="item.status.toLowerCase()">
-                mdi-circle
-              </v-icon>
-            </strong>
+          <v-list-item-title class="activity-title">
+            <strong> N° {{ item.id }} - {{ item.name }} </strong>
+            <v-icon class="status-dot" :class="item.status.toLowerCase()">
+              mdi-circle
+            </v-icon>
           </v-list-item-title>
-          <div class="team-items">
-            <TeamChip v-if="item.team" :team="item.team" with-name />
-            <div v-else class="no-team">
-              <span>Aucune équipe associée</span>
-            </div>
-          </div>
+          <FestivalEventReviewerChips type="FA" :festival-event="item" />
         </v-list-item>
         <v-list-item v-if="myActivities.length > MAX_ACTIVITIES">
           <nuxt-link :to="`${FA_URL}?adherent=${currentAdherent?.id}`">
@@ -40,7 +33,7 @@
       </v-list>
       <span v-else class="no-content-label">
         Tu n'as aucune FA 🤔<br />
-        T'es sûr de servir à quelque chose ?
+        Hop hop hop, au boulot !
       </span>
     </v-card-text>
   </v-card>
@@ -85,12 +78,9 @@ const myDisplayedActivities = computed<PreviewFestivalActivity[]>(() => {
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
 
-.team-items {
+.activity-title {
   display: flex;
-  gap: 10px;
-}
-.no-team {
-  font-style: italic;
-  color: gray;
+  gap: 4px;
+  align-items: center;
 }
 </style>

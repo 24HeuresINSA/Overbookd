@@ -1,14 +1,10 @@
 import {
-  APPROVED,
   barrieres,
   communication,
   elec,
   type FestivalActivity,
   humain,
   matos,
-  NOT_ASKING_TO_REVIEW,
-  REJECTED,
-  REVIEWING,
   type ReviewStatus,
   secu,
   signa,
@@ -23,6 +19,7 @@ import type { User } from "@overbookd/user";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
 import type { LocationQuery } from "vue-router";
+import { findReviewStatus } from "../festival-event.utils";
 
 export type ActivityReviewsFilter = {
   humain?: ReviewStatus;
@@ -144,22 +141,6 @@ export class ActivityFilterBuilder {
         return { needSupply };
       }
     }
-  }
-}
-
-export function findReviewStatus(status: string): ReviewStatus | undefined {
-  if (!status) return undefined;
-
-  switch (status) {
-    case REJECTED:
-      return REJECTED;
-    case APPROVED:
-      return APPROVED;
-    case REVIEWING:
-      return REVIEWING;
-    case NOT_ASKING_TO_REVIEW:
-    default:
-      return NOT_ASKING_TO_REVIEW;
   }
 }
 
