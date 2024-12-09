@@ -24,7 +24,6 @@ import {
   ValidatedWithoutConflicts,
 } from "../volunteer-conflicts.js";
 import {
-  AlreadyIgnoredFestivalTask,
   CannotIgnoreFestivalTask,
   FestivalTaskNotFound,
 } from "../festival-task.error.js";
@@ -87,9 +86,7 @@ class Ignore {
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
     if (team !== elec) throw new CannotIgnoreFestivalTask();
     // eslint-disable-next-line security/detect-object-injection
-    if (task.reviews[elec] === NOT_ASKING_TO_REVIEW) {
-      throw new AlreadyIgnoredFestivalTask(task.id, elec);
-    }
+    if (task.reviews[elec] === NOT_ASKING_TO_REVIEW) return task;
 
     const reviews = { ...task.reviews, [elec]: WILL_NOT_REVIEW } as const;
 
