@@ -13,6 +13,7 @@ import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import {
   PublishFeedbackForm,
   ReviewApproval,
+  ReviewIgnoreTask,
   ReviewRejection,
 } from "@overbookd/http";
 import {
@@ -98,6 +99,22 @@ export class FestivalTaskReviewService {
     const task = await this.useCases.review.approve(ftId, withApprover);
 
     const event = FestivalTaskEvents.approved(task, reviewer.id);
+    this.eventStore.publish(event);
+
+    return task;
+  }
+
+  async ignore(
+    ftId: FestivalTask["id"],
+    user: JwtUtil,
+    { team }: ReviewIgnoreTask,
+  ): Promise<FestivalTask> {
+    TeamService.checkMembership(user, team);
+
+    const reviewer = await this.repositories.adherents.findOne(user.id);
+    const task = await this.useCases.review.ignore(ftId, team);
+
+    const event = FestivalTaskEvents.ignored(task, reviewer.id);
     this.eventStore.publish(event);
 
     return task;

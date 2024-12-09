@@ -262,7 +262,11 @@ export const permissions = [
     description: "Peut valider les FT",
     teams: {
       createMany: {
-        data: [{ teamCode: "humain" }, { teamCode: "matos" }],
+        data: [
+          { teamCode: "humain" },
+          { teamCode: "matos" },
+          { teamCode: "elec" },
+        ],
       },
     },
   },

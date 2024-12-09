@@ -12,6 +12,7 @@ import type {
   ReviewRejection,
   ReviewApproval,
   InitInChargeForm,
+  ReviewIgnoreTask,
 } from "@overbookd/http";
 import type {
   PreviewFestivalTask,
@@ -288,6 +289,16 @@ export class FestivalTaskRepository {
     return HttpClient.post<FestivalTaskWithConflicts>(
       `${this.basePath}/${ftId}/approve`,
       approval,
+    );
+  }
+
+  static ignore(
+    ftId: FestivalTaskWithConflicts["id"],
+    ignore: ReviewIgnoreTask,
+  ) {
+    return HttpClient.post<FestivalTaskWithConflicts>(
+      `${this.basePath}/${ftId}/ignore`,
+      ignore,
     );
   }
 

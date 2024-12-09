@@ -6,8 +6,6 @@ export type {
 export type {
   PrepareInChargeForm,
   PrepareSignaForm,
-  ReviewRejection,
-  ReviewApproval,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
   PreviewForSecurity,
@@ -15,7 +13,11 @@ export type {
   LogisticInquiry,
   PreviewForLogistic,
 } from "./festival-event/festival-activity.js";
-export type { Statistics } from "./festival-event/festival-event.js";
+export type {
+  Statistics,
+  ReviewRejection,
+  ReviewApproval,
+} from "./festival-event/festival-event.js";
 export type {
   FestivalTaskCreationForm,
   UpdateGeneralForm,
@@ -27,6 +29,7 @@ export type {
   AddVolunteerToMobilizationForm,
   Draft as DraftWithConflicts,
   Reviewable as ReviewableWithConflicts,
+  ReviewIgnoreTask,
 } from "./festival-event/festival-task.js";
 
 // PERSONAL ACCOUNT
