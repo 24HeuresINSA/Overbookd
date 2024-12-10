@@ -189,7 +189,8 @@ const filterTaskByReviews =
 
     if (isDraftPreview(task)) return false;
     return reviewersWithStatus.every(
-      ([reviewer, status]) => getPreviewReviewerStatus(task, reviewer) === status,
+      ([reviewer, status]) =>
+        getPreviewReviewerStatus(task, reviewer) === status,
     );
   };
 const filterTaskByReviewer =
