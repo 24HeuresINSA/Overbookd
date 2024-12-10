@@ -6,7 +6,7 @@ import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
 export class GearSearchRequestDto implements GearSearchOptions {
   @ApiProperty({
     required: false,
-    description: "Gear name",
+    description: "Gear name or reference",
   })
   @IsOptional()
   @IsString()

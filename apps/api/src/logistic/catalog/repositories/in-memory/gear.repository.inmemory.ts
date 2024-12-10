@@ -6,57 +6,7 @@ import { GearRepository } from "../catalog-repositories";
 import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-
-class GearSearchBuilder {
-  private ownerCondition = true;
-  private slugCondition = true;
-  private categoryContion = true;
-  private ponctualUsageContion = true;
-  private gear: CatalogGear;
-
-  constructor(gear: CatalogGear) {
-    this.gear = gear;
-  }
-
-  addOwnerCondition(ownerSearch?: string) {
-    this.ownerCondition = ownerSearch
-      ? this.gear.owner?.code?.includes(ownerSearch)
-      : true;
-    return this;
-  }
-
-  addSlugCondition(slugSearch?: string) {
-    const slugifiedCode = SlugifyService.apply(this.gear.code ?? "");
-    this.slugCondition = slugSearch
-      ? this.gear.slug.includes(slugSearch) ||
-        slugifiedCode.includes(slugSearch)
-      : true;
-    return this;
-  }
-
-  addCategoryCondition(categorySearch?: string) {
-    this.categoryContion = categorySearch
-      ? this.gear.category?.path?.includes(categorySearch)
-      : true;
-    return this;
-  }
-
-  addPonctualUsageCondition(ponctualUsage?: boolean) {
-    this.ponctualUsageContion = ponctualUsage
-      ? this.gear.isPonctualUsage === ponctualUsage
-      : true;
-    return this;
-  }
-
-  get match(): boolean {
-    return (
-      this.ownerCondition &&
-      this.slugCondition &&
-      this.categoryContion &&
-      this.ponctualUsageContion
-    );
-  }
-}
+import { GearSearchBuilder } from "../../../common/gear-search.builder";
 
 @Injectable()
 export class InMemoryGearRepository implements GearRepository {
@@ -96,9 +46,9 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve();
   }
 
-  searchGear(search: GearSearchOptions): Promise<CatalogGear[]> {
+  searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
     return Promise.resolve(
-      this.gears.filter((gear) => this.isMatchingSearch(search, gear)),
+      this.gears.filter((gear) => this.isMatchingSearch(options, gear)),
     );
   }
 

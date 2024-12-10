@@ -1,5 +1,6 @@
 import type {
   InventoryGroupedRecord,
+  InventoryRecordSearchOptions,
   InventoryRecord as Record,
 } from "@overbookd/http";
 import type { InventoryRecord } from "~/domain/inventory/inventory-record";
@@ -13,11 +14,18 @@ export class InventoryRepository {
     return HttpClient.post<InventoryGroupedRecord[]>(this.basePath, records);
   }
 
-  static getGroupedRecords() {
-    return HttpClient.get<InventoryGroupedRecord[]>(this.basePath);
+  static getGroupedRecords(searchOptions: InventoryRecordSearchOptions) {
+    return HttpClient.get<InventoryGroupedRecord[]>({
+      path: this.basePath,
+      params: searchOptions,
+    });
   }
 
   static getRecords(gearId: number) {
     return HttpClient.get<Record[]>(`${this.basePath}/${gearId}`);
+  }
+
+  static getStorages() {
+    return HttpClient.get<string[]>(`${this.basePath}/storages`);
   }
 }

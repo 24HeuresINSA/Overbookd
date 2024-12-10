@@ -1,8 +1,8 @@
 import { Inject } from "@nestjs/common";
-import { SlugifyService } from "@overbookd/slugify";
 import {
   InventoryGroupedRecord,
   InventoryRecord,
+  InventoryRecordSearchOptions,
   LiteInventoryRecord,
 } from "@overbookd/http";
 
@@ -10,14 +10,13 @@ export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
   return { quantity: record.quantity, storage: record.storage };
 }
 
-export type GroupedRecordSearch = {
-  name?: string;
-};
-
 export type InventoryRepository = {
-  searchGroupedRecords(gearSlug?: string): Promise<InventoryGroupedRecord[]>;
+  searchGroupedRecords(
+    searchOptions: InventoryRecordSearchOptions,
+  ): Promise<InventoryGroupedRecord[]>;
   resetRecords(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]>;
   getRecords(gearId: number): Promise<InventoryRecord[]>;
+  getStorages(): Promise<string[]>;
 };
 
 export class InventoryService {
@@ -30,12 +29,17 @@ export class InventoryService {
     return this.inventoryRepository.resetRecords(records);
   }
 
-  search({ name }: GroupedRecordSearch): Promise<InventoryGroupedRecord[]> {
-    const gearSlug = SlugifyService.applyOnOptional(name);
-    return this.inventoryRepository.searchGroupedRecords(gearSlug);
+  search(
+    searchOptions: InventoryRecordSearchOptions,
+  ): Promise<InventoryGroupedRecord[]> {
+    return this.inventoryRepository.searchGroupedRecords(searchOptions);
   }
 
   getDetails(gearId: number): Promise<InventoryRecord[]> {
     return this.inventoryRepository.getRecords(gearId);
+  }
+
+  getStorages(): Promise<string[]> {
+    return this.inventoryRepository.getStorages();
   }
 }
