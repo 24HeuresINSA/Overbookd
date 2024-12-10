@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts" setup>
-import type {
-  PreviewFestivalActivity,
-  PreviewFestivalTask,
-  Reviewer,
+import {
+  NOT_ASKING_TO_REVIEW,
+  type PreviewFestivalActivity,
+  type PreviewFestivalTask,
+  type Reviewer,
 } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { isDraftPreview as isActivityDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { findReviewStatus } from "~/utils/festival-event/festival-event.utils";
 import { isDraftPreview as isTaskDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
 
 const teamStore = useTeamStore();
@@ -57,18 +57,19 @@ const getActivityReviewerStatus = (
   activity: PreviewFestivalActivity,
   reviewer: Team,
 ): string => {
-  if (isActivityDraftPreview(activity)) return "";
+  if (isActivityDraftPreview(activity))
+    return NOT_ASKING_TO_REVIEW.toLowerCase();
   const reviewerCode = reviewer.code as Reviewer<"FA">;
   const status = activity.reviews[`${reviewerCode}`];
-  return (findReviewStatus(status) ?? "").toLowerCase();
+  return status.toLowerCase();
 };
 const getTaskReviewerStatus = (
   task: PreviewFestivalTask,
   reviewer: Team,
 ): string => {
-  if (isTaskDraftPreview(task)) return "";
+  if (isTaskDraftPreview(task)) return NOT_ASKING_TO_REVIEW.toLowerCase();
   const reviewerCode = reviewer.code as Reviewer<"FT">;
   const status = task.reviews[`${reviewerCode}`];
-  return (findReviewStatus(status) ?? "").toLowerCase();
+  return status.toLowerCase();
 };
 </script>

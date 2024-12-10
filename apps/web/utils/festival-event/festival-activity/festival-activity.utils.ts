@@ -1,9 +1,13 @@
 import {
+  APPROVED,
   type Draft,
   type FestivalActivity,
   NOT_ASKING_TO_REVIEW,
   type PreviewFestivalActivity,
+  REJECTED,
+  REVIEWING,
   type ReviewStatus,
+  type Reviewer,
   barrieres,
   communication,
   elec,
@@ -57,7 +61,7 @@ function isHttpDraft(
   return festivalActivity.status === DRAFT;
 }
 
-export function getActivityReviewStatus(
+export function getActivityReviewerStatus(
   festivalActivity: FestivalActivity,
   reviewer: string,
 ): ReviewStatus<"FA"> {
@@ -105,5 +109,48 @@ export function getPreviewReviewStatus(
       return preview.reviews.communication;
     default:
       return NOT_ASKING_TO_REVIEW;
+  }
+}
+
+export function findActivityReviewerStatusByString(
+  status: string,
+): ReviewStatus<"FA"> | undefined {
+  if (!status) return undefined;
+
+  switch (status) {
+    case REJECTED:
+      return REJECTED;
+    case APPROVED:
+      return APPROVED;
+    case REVIEWING:
+      return REVIEWING;
+    case NOT_ASKING_TO_REVIEW:
+      return NOT_ASKING_TO_REVIEW;
+  }
+}
+
+export function hasReviewerAlreadyDoneHisActivityReview(
+  activity: FestivalActivity,
+  reviewer: Reviewer<"FA">,
+  status: ReviewStatus<"FA">,
+) {
+  if (isDraft(activity)) return true;
+  switch (reviewer) {
+    case humain:
+      return activity.reviews.humain === status;
+    case matos:
+      return activity.reviews.matos === status;
+    case elec:
+      return activity.reviews.elec === status;
+    case signa:
+      return activity.reviews.signa === status;
+    case secu:
+      return activity.reviews.secu === status;
+    case barrieres:
+      return activity.reviews.barrieres === status;
+    case communication:
+      return activity.reviews.communication === status;
+    default:
+      return false;
   }
 }
