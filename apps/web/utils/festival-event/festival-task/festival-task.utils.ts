@@ -9,6 +9,11 @@ import {
   isDraft,
   extractApprovers,
   isRefused,
+  REJECTED,
+  APPROVED,
+  REVIEWING,
+  WILL_NOT_REVIEW,
+  type Reviewer,
 } from "@overbookd/festival-event";
 import type {
   DraftWithConflicts as Draft,
@@ -28,7 +33,7 @@ export function castTaskWithDate(
   return CastReviewable.withDate(task);
 }
 
-export function getTaskReviewStatus(
+export function getTaskReviewerStatus(
   festivalTask: FestivalTask,
   reviewer: string,
 ): ReviewStatus<"FT"> {
@@ -51,7 +56,7 @@ function isHttpDraft(
   return task.status === DRAFT;
 }
 
-export function getPreviewReviewStatus(
+export function getPreviewReviewerStatus(
   preview: PreviewFestivalTask,
   reviewer: string,
 ): ReviewStatus<"FT"> {
@@ -74,4 +79,41 @@ export function shouldResetTaskApprovals(task: FestivalTask): boolean {
   const isTaskRefused = isRefused(task);
   const hasApprovals = extractApprovers(task).length > 0;
   return isTaskRefused && hasApprovals;
+}
+
+export function findTaskReviewerStatusByString(
+  status: string,
+): ReviewStatus<"FT"> | undefined {
+  if (!status) return undefined;
+
+  switch (status) {
+    case REJECTED:
+      return REJECTED;
+    case APPROVED:
+      return APPROVED;
+    case REVIEWING:
+      return REVIEWING;
+    case NOT_ASKING_TO_REVIEW:
+      return NOT_ASKING_TO_REVIEW;
+    case WILL_NOT_REVIEW:
+      return WILL_NOT_REVIEW;
+  }
+}
+
+export function hasReviewerAlreadyDoneHisTaskReview(
+  task: FestivalTask,
+  reviewer: Reviewer<"FT">,
+  status: ReviewStatus<"FT">,
+) {
+  if (isDraft(task)) return true;
+  switch (reviewer) {
+    case humain:
+      return task.reviews.humain === status;
+    case matos:
+      return task.reviews.matos === status;
+    case elec:
+      return task.reviews.elec === status;
+    default:
+      return false;
+  }
 }

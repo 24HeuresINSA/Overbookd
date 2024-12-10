@@ -16,7 +16,7 @@ import type { User } from "@overbookd/user";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
 import type { LocationQuery } from "vue-router";
-import { findReviewStatus } from "../festival-event.utils";
+import { findTaskReviewerStatusByString } from "./festival-task.utils";
 
 export type TaskReviewsFilter = {
   humain?: ReviewStatus<"FT">;
@@ -92,17 +92,17 @@ export class TaskFilterBuilder {
       }
       case "humain": {
         const review = stringifyQueryParam(params.humain);
-        const humain = findReviewStatus<"FT">(review);
+        const humain = findTaskReviewerStatusByString(review);
         return humain ? { humain } : {};
       }
       case "matos": {
         const review = stringifyQueryParam(params.matos);
-        const matos = findReviewStatus<"FT">(review);
+        const matos = findTaskReviewerStatusByString(review);
         return matos ? { matos } : {};
       }
       case "elec": {
         const review = stringifyQueryParam(params.elec);
-        const elec = findReviewStatus<"FT">(review);
+        const elec = findTaskReviewerStatusByString(review);
         return elec ? { elec } : {};
       }
     }

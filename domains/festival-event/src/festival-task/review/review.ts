@@ -85,7 +85,7 @@ class Ignore {
     team: Reviewer<"FT">,
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
     if (team !== elec) throw new CannotIgnoreFestivalTask();
-    if (task.reviews[`${elec}`] === NOT_ASKING_TO_REVIEW) return task;
+    if (task.reviews.elec === NOT_ASKING_TO_REVIEW) return task;
 
     const reviews = { ...task.reviews, [elec]: WILL_NOT_REVIEW } as const;
 
