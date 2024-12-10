@@ -1,4 +1,8 @@
-import { CatalogGear } from "./gear.js";
+import { CatalogGear, GearSearchOptions } from "./gear.js";
+
+export type InventoryRecordSearchOptions = GearSearchOptions & {
+  storage?: string;
+};
 
 export type InventoryRecord = {
   gear: CatalogGear;

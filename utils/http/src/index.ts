@@ -51,6 +51,7 @@ export type {
   Inquiry as GearDetailsInquiry,
 } from "./logistic/dashboard.js";
 export type {
+  InventoryRecordSearchOptions,
   InventoryGroupedRecord,
   InventoryRecord,
   LiteInventoryRecord,

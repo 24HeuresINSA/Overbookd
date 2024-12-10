@@ -3,18 +3,13 @@ import { convertGearToApiContract } from "../../catalog/repositories/prisma/gear
 import { InventoryRepository } from "../inventory.service";
 import { PrismaService } from "../../../prisma.service";
 import {
-  CatalogGear,
   InventoryGroupedRecord,
   InventoryRecord,
-  LiteInventoryRecord,
+  InventoryRecordSearchOptions,
 } from "@overbookd/http";
-
-type AggregatedInventoryRecord = {
-  gearId: number;
-  _sum: {
-    quantity: number;
-  };
-};
+import { SlugifyService } from "@overbookd/slugify";
+import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder.filter";
+import { GroupInventoryRecord } from "../inventory-grouped-record";
 
 @Injectable()
 export class PrismaInventoryRepository implements InventoryRepository {
@@ -51,6 +46,10 @@ export class PrismaInventoryRepository implements InventoryRepository {
     },
   };
 
+  private readonly SELECT_STORAGE = {
+    storage: true,
+  };
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async getRecords(gearId: number): Promise<InventoryRecord[]> {
@@ -68,14 +67,40 @@ export class PrismaInventoryRepository implements InventoryRepository {
   }
 
   async searchGroupedRecords(
-    gearSlug?: string,
+    options: InventoryRecordSearchOptions = {},
   ): Promise<InventoryGroupedRecord[]> {
-    const aggregatedRecords = await this.aggregateRecords(gearSlug);
-    return Promise.all(
-      aggregatedRecords.map((aggregation) =>
-        this.convertToGroupedRecord(aggregation),
-      ),
-    );
+    const databaseRecords = await this.prismaService.inventoryRecord.findMany({
+      select: this.SELECT_RECORD,
+    });
+    const records = databaseRecords.map((record) => {
+      const gear = convertGearToApiContract(record.gear);
+      return { ...record, gear };
+    });
+    return records
+      .filter((record) => this.isMatchingSearch(options, record))
+      .reduce((groupedRecords, record) => {
+        const groupedRecord = GroupInventoryRecord.fromInventoryRecord(record);
+        const similarRecordIndex = groupedRecords.findIndex(
+          GroupInventoryRecord.isSimilar(groupedRecord),
+        );
+        if (similarRecordIndex === -1)
+          return [...groupedRecords, groupedRecord];
+        const existingRecord = groupedRecords.at(similarRecordIndex);
+        const mergedRecord = groupedRecord.add(existingRecord);
+        return [
+          ...groupedRecords.slice(0, similarRecordIndex),
+          mergedRecord,
+          ...groupedRecords.slice(similarRecordIndex + 1),
+        ];
+      }, []);
+  }
+
+  async getStorages(): Promise<string[]> {
+    const storages = await this.prismaService.inventoryRecord.findMany({
+      distinct: ["storage"],
+      select: this.SELECT_STORAGE,
+    });
+    return storages.map((storage) => storage.storage);
   }
 
   async resetRecords(
@@ -86,14 +111,6 @@ export class PrismaInventoryRepository implements InventoryRepository {
       this.insertRecords(records),
     ]);
     return this.searchGroupedRecords();
-  }
-
-  private async findGear(gearId: number): Promise<CatalogGear> {
-    const gear = await this.prismaService.catalogGear.findUnique({
-      select: this.SELECT_GEAR,
-      where: { id: gearId },
-    });
-    return convertGearToApiContract(gear);
   }
 
   private deleteAllRecords() {
@@ -111,36 +128,27 @@ export class PrismaInventoryRepository implements InventoryRepository {
     });
   }
 
-  private async getLiteRecords(gearId: number): Promise<LiteInventoryRecord[]> {
-    return this.prismaService.inventoryRecord.findMany({
-      select: this.SELECT_LITE_RECORD,
-      where: { gearId },
-    });
-  }
+  private isMatchingSearch(
+    {
+      category,
+      search,
+      owner,
+      ponctualUsage,
+      storage,
+    }: InventoryRecordSearchOptions,
+    record: InventoryRecord,
+  ): boolean {
+    const slug = SlugifyService.applyOnOptional(search);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
+    const storageSlug = SlugifyService.applyOnOptional(storage);
 
-  private aggregateRecords(gearSlug?: string) {
-    const where = this.buildSearchCondition(gearSlug);
-    return this.prismaService.inventoryRecord.groupBy({
-      by: ["gearId"],
-      _sum: {
-        quantity: true,
-      },
-      where,
-    });
-  }
-
-  private async convertToGroupedRecord(
-    aggregation: AggregatedInventoryRecord,
-  ): Promise<InventoryGroupedRecord> {
-    const [gear, records] = await Promise.all([
-      this.findGear(aggregation.gearId),
-      this.getLiteRecords(aggregation.gearId),
-    ]);
-    const { quantity } = aggregation._sum;
-    return { gear, quantity, records };
-  }
-
-  private buildSearchCondition(gearSlug: string) {
-    return gearSlug ? { gear: { slug: { contains: gearSlug } } } : {};
+    const gearSearch = new InventoryRecordSearchBuilder(record)
+      .addCategoryCondition(categorySlug)
+      .addSlugCondition(slug)
+      .addOwnerCondition(ownerSlug)
+      .addPonctualUsageCondition(ponctualUsage)
+      .addStorageCondition(storageSlug);
+    return gearSearch.match;
   }
 }

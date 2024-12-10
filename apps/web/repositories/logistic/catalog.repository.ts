@@ -12,7 +12,7 @@ import { HttpClient } from "~/utils/http/http-client";
 export class GearsRepository {
   private static readonly basePath = "logistic/gears";
 
-  static searchGears(searchOptions?: GearSearchOptions) {
+  static searchGears(searchOptions: GearSearchOptions) {
     return HttpClient.get<CatalogGear[]>({
       path: this.basePath,
       params: searchOptions,

@@ -1,16 +1,21 @@
 import { updateItemToList } from "@overbookd/list";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-import type { InventoryGroupedRecord } from "@overbookd/http";
+import type {
+  InventoryGroupedRecord,
+  InventoryRecordSearchOptions,
+} from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
 
 type State = {
   groupedRecords: InventoryGroupedRecord[];
+  storages: string[];
 };
 
 export const useInventoryStore = defineStore("inventory", {
   state: (): State => ({
     groupedRecords: [],
+    storages: [],
   }),
   actions: {
     async importInventory(records: InventoryRecord[]) {
@@ -20,8 +25,12 @@ export const useInventoryStore = defineStore("inventory", {
       this.groupedRecords = res;
     },
 
-    async fetchGroupedRecords() {
-      const res = await InventoryRepository.getGroupedRecords();
+    async fetchGroupedRecords(
+      inventoryRecordSearchOptions: InventoryRecordSearchOptions,
+    ) {
+      const res = await InventoryRepository.getGroupedRecords(
+        inventoryRecordSearchOptions,
+      );
       if (isHttpError(res)) return;
       this.groupedRecords = res;
     },
@@ -34,6 +43,12 @@ export const useInventoryStore = defineStore("inventory", {
           new InventoryRecord(gear, quantity, storage),
       );
       this._updateGearRecords(records, gearId);
+    },
+
+    async fetchStorages(): Promise<void> {
+      const res = await InventoryRepository.getStorages();
+      if (isHttpError(res)) return;
+      this.storages = res;
     },
 
     _updateGearRecords(records: InventoryRecord[], gearId: number) {
