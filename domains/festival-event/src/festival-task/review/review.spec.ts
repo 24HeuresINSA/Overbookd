@@ -325,14 +325,11 @@ describe("Ignore festival task", () => {
     reviewer  | taskName                            | task
     ${humain} | ${guardJustDance.general.name}      | ${guardJustDance}
     ${matos}  | ${flashMobOnJustDance.general.name} | ${flashMobOnJustDance}
-  `(
-    "when ignoring a task that does not require a review from $reviewer team",
-    ({ reviewer, task }) => {
-      it(`should indicate that only elec can ingore festival task review`, async () => {
-        await expect(review.ignore(task.id, reviewer)).rejects.toThrow(
-          CannotIgnoreFestivalTask,
-        );
-      });
-    },
-  );
+  `("when ignoring a task as $reviewer member", ({ reviewer, task }) => {
+    it(`should indicate that only elec can ingore festival task review`, async () => {
+      await expect(review.ignore(task.id, reviewer)).rejects.toThrow(
+        CannotIgnoreFestivalTask,
+      );
+    });
+  });
 });
