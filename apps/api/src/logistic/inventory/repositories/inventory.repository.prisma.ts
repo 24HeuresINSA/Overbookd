@@ -8,7 +8,7 @@ import {
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder.filter";
+import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder";
 import { GroupInventoryRecord } from "../inventory-grouped-record";
 
 @Injectable()

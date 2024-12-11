@@ -6,7 +6,7 @@ import {
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder.filter";
+import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder";
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];
