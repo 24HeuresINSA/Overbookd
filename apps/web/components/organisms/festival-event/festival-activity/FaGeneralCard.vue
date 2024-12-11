@@ -119,7 +119,7 @@ const contact = computed<string>(() =>
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const updateName = (name: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => faStore.updateGeneral({ name }), 800);

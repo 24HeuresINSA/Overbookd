@@ -3,7 +3,7 @@
     <v-card-title>Filtres</v-card-title>
     <v-card-text class="filters-input">
       <v-text-field
-        v-model="search"
+        :model-value="search"
         label="Recherche"
         clearable
         hide-details
@@ -93,8 +93,13 @@ const statusWithLabels = computed<StatusLabels>(() => {
 });
 const clearStatus = () => (status.value = undefined);
 
-const updateSearchParam = (search: string) => {
-  updateQueryParams("search", search);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
+const updateSearchParam = (newSearch: string) => {
+  if (delay.value) clearInterval(delay.value);
+  delay.value = setTimeout(() => {
+    search.value = newSearch;
+    updateQueryParams("search", newSearch);
+  }, 200);
 };
 const updateTeamParam = (team?: Team) => {
   updateQueryParams("team", team?.code);
