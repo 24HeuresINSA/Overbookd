@@ -53,7 +53,9 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV=production
 
-RUN npm install -g pnpm@9.15.0
+RUN npm install -g pnpm@9.15.0 \
+  && apk update \
+  && apk add --no-cache openssl
 
 USER node
 
