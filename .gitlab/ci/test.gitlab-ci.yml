@@ -45,8 +45,6 @@ overbookd/api_e2e_test:
         - apps/api/**/*
         - pnpm-lock.yaml
     - when: never
-  before_script:
-    - apk add --no-cache openssl
   script:
     - pnpm i
     - pnpm --filter "${PNPM_WORKSPACE}^..." run build
