@@ -162,7 +162,7 @@ export class FestivalTaskQueryBuilder {
 
   private static upsertReviews(task: FestivalTaskReviewable) {
     const reviews = Object.entries(task.reviews)
-      .filter((entry): entry is [Reviewer<"FT">, ReviewingStatus] => true)
+      .filter((entry): entry is [Reviewer<"FT">, ReviewingStatus<"FT">] => true)
       .map(([team, status]) => ({ team, status }));
 
     return {

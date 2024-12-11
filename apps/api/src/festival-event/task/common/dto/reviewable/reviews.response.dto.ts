@@ -21,7 +21,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
     example: REVIEWING,
     description: "Humain reviewing status",
   })
-  humain: ReviewingStatus;
+  humain: ReviewingStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -29,7 +29,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
     example: REVIEWING,
     description: "Matos reviewing status",
   })
-  matos: ReviewingStatus;
+  matos: ReviewingStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -37,7 +37,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
     example: REVIEWING,
     description: "Elec reviewing status",
   })
-  elec: ReviewingStatus;
+  elec: ReviewingStatus<"FT">;
 }
 
 const rejectedReviewStatuses = [...reviewStatuses, REJECTED];
@@ -49,7 +49,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
     example: REJECTED,
     description: "Humain reviewing status",
   })
-  humain: RejectionReviewStatus;
+  humain: RejectionReviewStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -57,7 +57,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
     example: REVIEWING,
     description: "Matos reviewing status",
   })
-  matos: RejectionReviewStatus;
+  matos: RejectionReviewStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -65,7 +65,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
     example: NOT_ASKING_TO_REVIEW,
     description: "Elec reviewing status",
   })
-  elec: RejectionReviewStatus;
+  elec: RejectionReviewStatus<"FT">;
 }
 
 export class ValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
@@ -75,7 +75,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
     example: APPROVED,
     description: "Humain reviewing status",
   })
-  humain: ApprovalReviewStatus;
+  humain: ApprovalReviewStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -83,7 +83,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
     example: APPROVED,
     description: "Matos reviewing status",
   })
-  matos: ApprovalReviewStatus;
+  matos: ApprovalReviewStatus<"FT">;
 
   @ApiProperty({
     required: true,
@@ -91,5 +91,5 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
     example: NOT_ASKING_TO_REVIEW,
     description: "Elec reviewing status",
   })
-  elec: ApprovalReviewStatus;
+  elec: ApprovalReviewStatus<"FT">;
 }

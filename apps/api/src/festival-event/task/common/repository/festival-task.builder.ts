@@ -46,7 +46,7 @@ type VisualizeFestivalTask<
 
 type DatabaseReview = {
   team: Reviewer<"FT">;
-  status: ReviewStatus;
+  status: ReviewStatus<"FT">;
 };
 
 type FestivalTaskWithoutStatus = Omit<FestivalTaskWithoutConflicts, "status">;
@@ -184,7 +184,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
   private static findReviewStatusByTeam(
     reviews: DatabaseReview[],
     reviewer: Reviewer<"FT">,
-  ): ReviewStatus {
+  ): ReviewStatus<"FT"> {
     const review = reviews.find((review) => review.team === reviewer);
     return review?.status ?? NOT_ASKING_TO_REVIEW;
   }

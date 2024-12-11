@@ -78,17 +78,19 @@ import {
   type FtStatusLabel,
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
-import { getActivityReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import {
+  getActivityReviewerStatus,
+  hasReviewerAlreadyDoneHisActivityReview,
+} from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   type FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { BROUILLON } from "~/utils/festival-event/festival-event.constant";
-import { getTaskReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 import {
+  getTaskReviewerStatus,
   hasReviewerAlreadyDoneHisTaskReview,
-  hasReviewerAlreadyDoneHisActivityReview,
-} from "~/utils/festival-event/festival-event.utils";
+} from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();
@@ -166,8 +168,8 @@ const status = computed<string>(() =>
 
 const getReviewerStatus = (reviewer: Team): string => {
   const status = isActivity.value
-    ? getActivityReviewStatus(selectedActivity.value, reviewer.code)
-    : getTaskReviewStatus(selectedTask.value, reviewer.code);
+    ? getActivityReviewerStatus(selectedActivity.value, reviewer.code)
+    : getTaskReviewerStatus(selectedTask.value, reviewer.code);
   return status.toLowerCase();
 };
 

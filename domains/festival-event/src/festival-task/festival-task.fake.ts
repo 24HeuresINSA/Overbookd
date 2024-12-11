@@ -517,6 +517,20 @@ export const onlyApprovedByHumain = factory
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
 
+export const approvedByHumainAndMatos = factory
+  .inReview("Approved by humain and matos")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: APPROVED, matos: APPROVED })
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
 export const approvedByHumainRejectedByMatos = factory
   .refused("Approved by humain rejected by matos")
   .withInstructions({
@@ -546,6 +560,20 @@ export const approvedByHumainAndElecRejectedByMatos = factory
   })
   .withReviews({ humain: APPROVED, elec: APPROVED, matos: REJECTED })
   .withInquiries([{ ...deuxTables, drive: BACKLINE }])
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
+export const rejectedByElec = factory
+  .refused("Rejected by elec")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ elec: REJECTED, humain: REVIEWING, matos: REVIEWING })
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
 

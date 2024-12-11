@@ -1,10 +1,15 @@
-import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
+import {
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import { FestivalTask, Validated } from "../festival-task.js";
 import {
   Approval,
   NOT_ASKING_TO_REVIEW,
   Rejection,
   Reviewer,
+  WILL_NOT_REVIEW,
   elec,
   humain,
   matos,
@@ -18,7 +23,10 @@ import {
   ReviewableWithoutConflicts,
   ValidatedWithoutConflicts,
 } from "../volunteer-conflicts.js";
-import { FestivalTaskNotFound } from "../festival-task.error.js";
+import {
+  CannotIgnoreFestivalTask,
+  FestivalTaskNotFound,
+} from "../festival-task.error.js";
 import {
   AlreadyApproved,
   NotAskingToReview,
@@ -63,20 +71,45 @@ class Approve {
       FestivalTaskKeyEvents.approved(approval.reviewer),
     ];
 
-    if (Approve.hasAllApproved(reviews)) {
+    if (hasAllApproved(reviews)) {
       return { ...task, reviews, status: VALIDATED, history };
     }
 
     return { ...task, reviews, history };
   }
+}
 
-  private static hasAllApproved(
-    reviews: ReviewableWithoutConflicts["reviews"],
-  ): reviews is Validated["reviews"] {
-    return Object.values(reviews).every(
-      (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
-    );
+class Ignore {
+  static from<T extends ReviewableWithoutConflicts>(
+    task: T,
+    team: Reviewer<"FT">,
+  ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
+    if (team !== elec) throw new CannotIgnoreFestivalTask();
+    if (task.reviews.elec === NOT_ASKING_TO_REVIEW) return task;
+
+    const reviews = { ...task.reviews, [elec]: WILL_NOT_REVIEW } as const;
+
+    if (hasAllApproved(reviews)) {
+      return { ...task, reviews, status: VALIDATED };
+    }
+    if (this.hasNoRejected(reviews)) {
+      return { ...task, reviews, status: IN_REVIEW };
+    }
+    return { ...task, reviews };
   }
+
+  private static hasNoRejected(reviews: ReviewableWithoutConflicts["reviews"]) {
+    return Object.values(reviews).every((review) => review !== REJECTED);
+  }
+}
+
+function hasAllApproved(
+  reviews: ReviewableWithoutConflicts["reviews"],
+): reviews is Validated["reviews"] {
+  const validReviews = [APPROVED, NOT_ASKING_TO_REVIEW, WILL_NOT_REVIEW];
+  return Object.values(reviews).every((review) =>
+    validReviews.includes(review),
+  );
 }
 
 export class Review {
@@ -117,6 +150,18 @@ export class Review {
 
     const approved = Approve.from(task, approval);
     const saved = await this.tasks.save(approved);
+    return this.translator.translate(saved);
+  }
+
+  async ignore(
+    taskId: FestivalTask["id"],
+    team: Reviewer<"FT">,
+  ): Promise<ReviewableWithoutConflicts> {
+    const task = await this.tasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const ignored = Ignore.from(task, team);
+    const saved = await this.tasks.save(ignored);
     return this.translator.translate(saved);
   }
 

@@ -57,4 +57,5 @@ dist
 **/.output
 
 *.sql
+!migration.sql
 *.db

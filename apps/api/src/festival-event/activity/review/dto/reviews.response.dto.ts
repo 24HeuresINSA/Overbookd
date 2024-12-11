@@ -13,15 +13,15 @@ import {
 } from "@overbookd/festival-event";
 import { VALIDATED } from "@overbookd/festival-event-constants";
 
-const validatedReviewStatus: ApprovalReviewStatus[] = [
+const validatedReviewStatus: ApprovalReviewStatus<"FA">[] = [
   NOT_ASKING_TO_REVIEW,
   APPROVED,
 ];
-const inReviewReviewStatus: ReviewingStatus[] = [
+const inReviewReviewStatus: ReviewingStatus<"FA">[] = [
   ...validatedReviewStatus,
   REVIEWING,
 ];
-const refusedReviewStatus: RejectionReviewStatus[] = [
+const refusedReviewStatus: RejectionReviewStatus<"FA">[] = [
   ...inReviewReviewStatus,
   REJECTED,
 ];
@@ -32,7 +32,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Signa reviewing status",
   })
-  signa: ReviewingStatus;
+  signa: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -40,7 +40,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Humain reviewing status",
   })
-  humain: ReviewingStatus;
+  humain: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -48,7 +48,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Secu reviewing status",
   })
-  secu: ReviewingStatus;
+  secu: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -56,7 +56,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Matos reviewing status",
   })
-  matos: ReviewingStatus;
+  matos: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -64,7 +64,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Elec reviewing status",
   })
-  elec: ReviewingStatus;
+  elec: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -72,7 +72,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Barrieres reviewing status",
   })
-  barrieres: ReviewingStatus;
+  barrieres: ReviewingStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -80,7 +80,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
     example: REVIEWING,
     description: "Communication reviewing status",
   })
-  communication: ReviewingStatus;
+  communication: ReviewingStatus<"FA">;
 }
 export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
   @ApiProperty({
@@ -89,7 +89,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Signa reviewing status",
   })
-  signa: ApprovalReviewStatus;
+  signa: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -97,7 +97,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Humain reviewing status",
   })
-  humain: ApprovalReviewStatus;
+  humain: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -105,7 +105,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Secu reviewing status",
   })
-  secu: ApprovalReviewStatus;
+  secu: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -113,7 +113,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Matos reviewing status",
   })
-  matos: ApprovalReviewStatus;
+  matos: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -121,7 +121,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Elec reviewing status",
   })
-  elec: ApprovalReviewStatus;
+  elec: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -129,7 +129,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: VALIDATED,
     description: "Barrieres reviewing status",
   })
-  barrieres: ApprovalReviewStatus;
+  barrieres: ApprovalReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -137,7 +137,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
     example: NOT_ASKING_TO_REVIEW,
     description: "Communication reviewing status",
   })
-  communication: ApprovalReviewStatus;
+  communication: ApprovalReviewStatus<"FA">;
 }
 export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
   @ApiProperty({
@@ -146,7 +146,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Signa reviewing status",
   })
-  signa: RejectionReviewStatus;
+  signa: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -154,7 +154,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Humain reviewing status",
   })
-  humain: RejectionReviewStatus;
+  humain: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -162,7 +162,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Secu reviewing status",
   })
-  secu: RejectionReviewStatus;
+  secu: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -170,7 +170,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Matos reviewing status",
   })
-  matos: RejectionReviewStatus;
+  matos: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -178,7 +178,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Elec reviewing status",
   })
-  elec: RejectionReviewStatus;
+  elec: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -186,7 +186,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Barrieres reviewing status",
   })
-  barrieres: RejectionReviewStatus;
+  barrieres: RejectionReviewStatus<"FA">;
 
   @ApiProperty({
     required: true,
@@ -194,5 +194,5 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
     example: REJECTED,
     description: "Communication reviewing status",
   })
-  communication: RejectionReviewStatus;
+  communication: RejectionReviewStatus<"FA">;
 }

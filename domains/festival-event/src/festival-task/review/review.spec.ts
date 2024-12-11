@@ -12,11 +12,24 @@ import {
   noel,
 } from "../festival-task.test-util.js";
 import {
+  approvedByHumainAndElecRejectedByMatos,
+  approvedByHumainAndMatos,
+  flashMobOnJustDance,
   guardJustDance,
+  leadPressConference,
+  rejectedByElec,
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import { Approval, elec, humain, matos } from "../../common/review.js";
+import {
+  Approval,
+  elec,
+  humain,
+  matos,
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+  WILL_NOT_REVIEW,
+} from "../../common/review.js";
 import { APPROVED, REJECTED } from "../../common/action.js";
 import { NotAskingToReview } from "../../common/review.error.js";
 import { Review } from "./review.js";
@@ -27,6 +40,7 @@ import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
 import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";
+import { CannotIgnoreFestivalTask } from "../festival-task.error.js";
 
 const factory = getFactory();
 
@@ -63,6 +77,11 @@ const withSupplyRequestAndAllApprovedExceptElec = factory
   .withFestivalActivity({ hasSupplyRequest: true })
   .withReviews({ humain: APPROVED, matos: APPROVED })
   .build();
+const withSupplyRequestAndMatosApprovalAndElecIgnore = factory
+  .inReview("With supply request and matos approval and elec ignore")
+  .withFestivalActivity({ hasSupplyRequest: true })
+  .withReviews({ humain: APPROVED, elec: WILL_NOT_REVIEW })
+  .build();
 
 describe("Approve festival task", () => {
   let review: Review;
@@ -76,6 +95,7 @@ describe("Approve festival task", () => {
       withSomeValidInquiries,
       withoutSupplyRequestAndAllApprovedExceptMatos,
       withSupplyRequestAndAllApprovedExceptElec,
+      withSupplyRequestAndMatosApprovalAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
     const conflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -116,9 +136,10 @@ describe("Approve festival task", () => {
     });
   });
   describe.each`
-    team     | taskName                                                      | task                                             | reviewer
-    ${matos} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name} | ${withoutSupplyRequestAndAllApprovedExceptMatos} | ${noel}
-    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}     | ${withSupplyRequestAndAllApprovedExceptElec}     | ${lea}
+    team     | taskName                                                       | task                                              | reviewer
+    ${matos} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
+    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
+    ${matos} | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
   `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it("should switch to VALIDATED festival task", async () => {
@@ -248,6 +269,67 @@ describe("Reject festival task", () => {
             reason: "Elle arrive d'où l'eau ?",
           }),
       ).rejects.toThrow(NotAskingToReview);
+    });
+  });
+});
+
+describe("Ignore festival task", () => {
+  let review: Review;
+  beforeEach(() => {
+    const tasks = [
+      guardJustDance,
+      flashMobOnJustDance,
+      uninstallPreventionVillage,
+      approvedByHumainAndElecRejectedByMatos,
+      leadPressConference,
+      rejectedByElec,
+      approvedByHumainAndMatos,
+      withoutSupplyRequestAndAllApprovedExceptMatos,
+    ];
+    const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const translator = new FestivalTaskTranslator(conflicts);
+    review = new Review(festivalTasks, translator);
+  });
+  describe.each`
+    taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
+    ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
+    ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
+    ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
+    ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
+    ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
+    ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
+  `(
+    "when ignoring $taskName as elec reviewer with current review status $reviewerStatus",
+    ({ task, expectedTaskStatus }) => {
+      it("should define the elec review as WILL_NOT_REVIEW", async () => {
+        const { reviews } = await review.ignore(task.id, elec);
+        expect(reviews.elec).toBe(WILL_NOT_REVIEW);
+      });
+      it(`should switch to ${expectedTaskStatus} festival task`, async () => {
+        const { status } = await review.ignore(task.id, elec);
+        expect(status).toBe(expectedTaskStatus);
+      });
+    },
+  );
+  describe("when ignoring a task that does not require a review from elec", () => {
+    it("should not update elec review status", async () => {
+      const { reviews } = await review.ignore(
+        withoutSupplyRequestAndAllApprovedExceptMatos.id,
+        elec,
+      );
+      expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
+    });
+  });
+  describe.each`
+    reviewer  | taskName                            | task
+    ${humain} | ${guardJustDance.general.name}      | ${guardJustDance}
+    ${matos}  | ${flashMobOnJustDance.general.name} | ${flashMobOnJustDance}
+  `("when ignoring a task as $reviewer member", ({ reviewer, task }) => {
+    it(`should indicate that only elec can ingore festival task review`, async () => {
+      await expect(review.ignore(task.id, reviewer)).rejects.toThrow(
+        CannotIgnoreFestivalTask,
+      );
     });
   });
 });

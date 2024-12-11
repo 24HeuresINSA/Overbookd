@@ -19,16 +19,16 @@ import type { User } from "@overbookd/user";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
 import type { LocationQuery } from "vue-router";
-import { findReviewStatus } from "../festival-event.utils";
+import { findActivityReviewerStatusByString } from "./festival-activity.utils";
 
 export type ActivityReviewsFilter = {
-  humain?: ReviewStatus;
-  communication?: ReviewStatus;
-  matos?: ReviewStatus;
-  secu?: ReviewStatus;
-  signa?: ReviewStatus;
-  barrieres?: ReviewStatus;
-  elec?: ReviewStatus;
+  humain?: ReviewStatus<"FA">;
+  communication?: ReviewStatus<"FA">;
+  matos?: ReviewStatus<"FA">;
+  secu?: ReviewStatus<"FA">;
+  signa?: ReviewStatus<"FA">;
+  barrieres?: ReviewStatus<"FA">;
+  elec?: ReviewStatus<"FA">;
 };
 
 export type ActivityFilters = ActivityReviewsFilter & {
@@ -103,37 +103,37 @@ export class ActivityFilterBuilder {
       }
       case "humain": {
         const review = stringifyQueryParam(params.humain);
-        const humain = findReviewStatus(review);
+        const humain = findActivityReviewerStatusByString(review);
         return humain ? { humain } : {};
       }
       case "communication": {
         const review = stringifyQueryParam(params.communication);
-        const communication = findReviewStatus(review);
+        const communication = findActivityReviewerStatusByString(review);
         return communication ? { communication } : {};
       }
       case "matos": {
         const review = stringifyQueryParam(params.matos);
-        const matos = findReviewStatus(review);
+        const matos = findActivityReviewerStatusByString(review);
         return matos ? { matos } : {};
       }
       case "secu": {
         const review = stringifyQueryParam(params.secu);
-        const secu = findReviewStatus(review);
+        const secu = findActivityReviewerStatusByString(review);
         return secu ? { secu } : {};
       }
       case "signa": {
         const review = stringifyQueryParam(params.signa);
-        const signa = findReviewStatus(review);
+        const signa = findActivityReviewerStatusByString(review);
         return signa ? { signa } : {};
       }
       case "barrieres": {
         const review = stringifyQueryParam(params.barrieres);
-        const barrieres = findReviewStatus(review);
+        const barrieres = findActivityReviewerStatusByString(review);
         return barrieres ? { barrieres } : {};
       }
       case "elec": {
         const review = stringifyQueryParam(params.elec);
-        const elec = findReviewStatus(review);
+        const elec = findActivityReviewerStatusByString(review);
         return elec ? { elec } : {};
       }
       case "needSupply": {

@@ -104,7 +104,7 @@ import {
   type TaskFilters,
   type TaskReviewsFilter,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
-import { getPreviewReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { getPreviewReviewerStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 useHead({ title: "Fiches Tâches" });
 
@@ -189,7 +189,8 @@ const filterTaskByReviews =
 
     if (isDraftPreview(task)) return false;
     return reviewersWithStatus.every(
-      ([reviewer, status]) => getPreviewReviewStatus(task, reviewer) === status,
+      ([reviewer, status]) =>
+        getPreviewReviewerStatus(task, reviewer) === status,
     );
   };
 const filterTaskByReviewer =

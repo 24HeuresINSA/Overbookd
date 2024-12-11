@@ -590,8 +590,8 @@ export class PrepareFestivalTask {
   }
 
   private resetApproval(
-    previous: RejectionReviewStatus,
-  ): RejectionReviewStatus {
+    previous: RejectionReviewStatus<"FT">,
+  ): RejectionReviewStatus<"FT"> {
     return previous === APPROVED ? REVIEWING : previous;
   }
 }
