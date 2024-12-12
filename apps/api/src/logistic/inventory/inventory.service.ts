@@ -16,7 +16,7 @@ export type InventoryRepository = {
   ): Promise<InventoryGroupedRecord[]>;
   resetRecords(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]>;
   getRecords(gearId: number): Promise<InventoryRecord[]>;
-  getStorages(): Promise<string[]>;
+  getStoragesHavingGear(): Promise<string[]>;
 };
 
 export class InventoryService {
@@ -39,7 +39,7 @@ export class InventoryService {
     return this.inventoryRepository.getRecords(gearId);
   }
 
-  getStorages(): Promise<string[]> {
-    return this.inventoryRepository.getStorages();
+  getStoragesHavingGear(): Promise<string[]> {
+    return this.inventoryRepository.getStoragesHavingGear();
   }
 }

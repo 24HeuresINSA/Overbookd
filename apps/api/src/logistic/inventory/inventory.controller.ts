@@ -109,7 +109,7 @@ export class InventoryController {
   }
 
   @Permission(READ_INVENTORY)
-  @Get("/storages")
+  @Get("storages")
   @ApiResponse({
     status: 200,
     description: "Get inventory records storages",
@@ -117,7 +117,7 @@ export class InventoryController {
     type: String,
   })
   getStorages(): Promise<string[]> {
-    return this.inventoryService.getStorages();
+    return this.inventoryService.getStoragesHavingGear();
   }
 
   @Permission(READ_INVENTORY)

@@ -331,7 +331,7 @@ describe("Inventory Service", () => {
     const inventoryService = new InventoryService(inventoryRepository);
     describe("When searching storage locations", () => {
       it("should return all storages", async () => {
-        const res = await inventoryService.getStorages();
+        const res = await inventoryService.getStoragesHavingGear();
         expect(res).toHaveLength(3);
         expect(res).toEqual(["Local", "Cave du E", "Conteneur H"]);
       });

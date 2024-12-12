@@ -46,10 +46,6 @@ export class PrismaInventoryRepository implements InventoryRepository {
     },
   };
 
-  private readonly SELECT_STORAGE = {
-    storage: true,
-  };
-
   constructor(private readonly prismaService: PrismaService) {}
 
   async getRecords(gearId: number): Promise<InventoryRecord[]> {
@@ -95,12 +91,12 @@ export class PrismaInventoryRepository implements InventoryRepository {
       }, []);
   }
 
-  async getStorages(): Promise<string[]> {
+  async getStoragesHavingGear(): Promise<string[]> {
     const storages = await this.prismaService.inventoryRecord.findMany({
       distinct: ["storage"],
-      select: this.SELECT_STORAGE,
+      select: { storage: true },
     });
-    return storages.map((storage) => storage.storage);
+    return storages.map(({ storage }) => storage);
   }
 
   async resetRecords(

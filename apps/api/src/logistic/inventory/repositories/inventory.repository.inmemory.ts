@@ -51,7 +51,7 @@ export class InMemoryInventoryRepository implements InventoryRepository {
     );
   }
 
-  getStorages(): Promise<string[]> {
+  getStoragesHavingGear(): Promise<string[]> {
     return Promise.resolve([
       ...new Set(this.records.map((record) => record.storage)),
     ]);
