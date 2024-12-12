@@ -161,7 +161,7 @@ const myTaskReviewers = computed<Team[]>(() => {
   return reviewers.value.filter(({ code }) => {
     if (!isTaskReviewer(code)) return false;
     const isReviewer = userStore.isMemberOf(code);
-    const shouldReview = isNotConcerned(task.reviews[`${code}`]);
+    const shouldReview = isConcerned(task.reviews[`${code}`]);
     return isReviewer && shouldReview;
   });
 });
@@ -262,10 +262,10 @@ const canIgnore = (team: Team): boolean => {
   if (isActivity.value || team.code !== elec || isDraft(selectedTask.value)) {
     return false;
   }
-  return isNotConcerned(selectedTask.value.reviews[`${elec}`]);
+  return isConcerned(selectedTask.value.reviews[`${elec}`]);
 };
 
-const isNotConcerned = (review: ReviewStatus<"FT">): boolean => {
+const isConcerned = (review: ReviewStatus<"FT">): boolean => {
   return review !== NOT_ASKING_TO_REVIEW && review !== WILL_NOT_REVIEW;
 };
 </script>
