@@ -54,15 +54,37 @@ export class InventoryController {
     type: InventoryGroupedRecordResponseDto,
   })
   @ApiQuery({
-    name: "name",
+    name: "search",
     required: false,
     type: String,
-    description: "Get grouped records with gear that match the name",
+    description:
+      "Get inventory grouped records with gear that match the name or the reference code",
+  })
+  @ApiQuery({
+    name: "category",
+    required: false,
+    type: String,
+    description:
+      "Get inventory grouped records with gear that match the category with category name",
+  })
+  @ApiQuery({
+    name: "owner",
+    required: false,
+    type: String,
+    description:
+      "Get inventory grouped records with gear that are owned by team that match name",
+  })
+  @ApiQuery({
+    name: "storage",
+    required: false,
+    type: String,
+    description:
+      "Get inventory grouped records that are stored in this storage location",
   })
   search(
-    @Query() { name }: InventoryGroupedRecordSearchRequestDto,
+    @Query() searchOptions: InventoryGroupedRecordSearchRequestDto,
   ): Promise<InventoryGroupedRecordResponseDto[]> {
-    return this.inventoryService.search({ name });
+    return this.inventoryService.search(searchOptions);
   }
 
   @Permission(WRITE_INVENTORY)
@@ -84,6 +106,18 @@ export class InventoryController {
     @Body() records: InventoryRecordDto[],
   ): Promise<InventoryGroupedRecordResponseDto[]> {
     return this.inventoryService.setup(records);
+  }
+
+  @Permission(READ_INVENTORY)
+  @Get("storages")
+  @ApiResponse({
+    status: 200,
+    description: "Get inventory records storages",
+    isArray: true,
+    type: String,
+  })
+  getStorages(): Promise<string[]> {
+    return this.inventoryService.getStoragesHavingGear();
   }
 
   @Permission(READ_INVENTORY)

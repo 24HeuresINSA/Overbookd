@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-text>
-      <div class="filters">
+      <div class="filters-container">
         <GearFilter
           v-model:search="filters.search"
           v-model:category="filters.category"
@@ -120,11 +120,11 @@ const isCatalogWriter = computed<boolean>(() =>
 );
 const headers = computed<TableHeaders>(() => {
   const commonHeaders = [
-    { title: "Matos", value: "name", sortable: true },
-    { title: "Référence", value: "code", sortable: true },
+    { title: "Matos", value: "name", sortable: true, width: "30%" },
+    { title: "Référence", value: "code", sortable: true, width: "10%" },
     { title: "Matos d'appoint", value: "isPonctualUsage", sortable: true },
     { title: "Matos consommable", value: "isConsumable", sortable: true },
-    { title: "Catégorie", value: "category" },
+    { title: "Catégorie", value: "category", width: "20%" },
   ];
   const actionsHeader = { title: "Actions", value: "actions" };
   return isCatalogWriter.value
@@ -146,7 +146,7 @@ catalogGearStore.fetchGears({}).then(() => (loading.value = false));
 
 const selectedGear = ref<CatalogGear | undefined>();
 
-const searchGears = async (options: GearSearchOptions) => {
+const searchGears = (options: GearSearchOptions) => {
   loading.value = true;
   catalogGearStore.fetchGears(options).then(() => (loading.value = false));
 };
@@ -201,7 +201,7 @@ const exportCatalogCSV = async () => {
 </script>
 
 <style lang="scss" scoped>
-.filters {
+.filters-container {
   width: 100%;
   display: flex;
   gap: 15px;

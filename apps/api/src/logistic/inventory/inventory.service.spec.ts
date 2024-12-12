@@ -232,17 +232,41 @@ describe("Inventory Service", () => {
       });
     });
     describe.each`
-      gearName      | expectedGroupedRecords
-      ${TABLE.name} | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }]}
-      ${"A"}        | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }, { quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }]}
-      ${"Unknown"}  | ${[]}
-    `("When searching $gearName", ({ gearName, expectedGroupedRecords }) => {
-      it("should return all grouped records matching the gear", async () => {
-        const records = await inventoryService.search({ name: gearName });
-        expect(records).toHaveLength(expectedGroupedRecords.length);
-        expect(records).toEqual(expectedGroupedRecords);
-      });
-    });
+      search        | searchCategory | searchOwner  | searchPonctualUsage | searchStorage | expectedGroupedRecords
+      ${TABLE.name} | ${undefined}   | ${undefined} | ${undefined}        | ${undefined}  | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }]}
+      ${"A"}        | ${undefined}   | ${undefined} | ${undefined}        | ${undefined}  | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }, { quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }]}
+      ${"Unknown"}  | ${undefined}   | ${undefined} | ${undefined}        | ${undefined}  | ${[]}
+      ${"Br"}       | ${undefined}   | ${undefined} | ${undefined}        | ${undefined}  | ${[{ quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }, { quantity: 3, gear: PONCEUSE, records: ponceuseRecords.map(toLiteRecord) }]}
+      ${undefined}  | ${"MobIli"}    | ${undefined} | ${undefined}        | ${undefined}  | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }]}
+      ${"A"}        | ${"BricO"}     | ${undefined} | ${undefined}        | ${undefined}  | ${[{ quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }]}
+      ${undefined}  | ${undefined}   | ${"mAt"}     | ${undefined}        | ${undefined}  | ${[{ quantity: 30, gear: TABLE, records: tableRecords.map(toLiteRecord) }, { quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }, { quantity: 3, gear: PONCEUSE, records: ponceuseRecords.map(toLiteRecord) }]}
+      ${undefined}  | ${undefined}   | ${undefined} | ${true}             | ${undefined}  | ${[{ quantity: 20, gear: MARTEAU, records: marteauRecords.map(toLiteRecord) }, { quantity: 3, gear: PONCEUSE, records: ponceuseRecords.map(toLiteRecord) }]}
+      ${undefined}  | ${undefined}   | ${undefined} | ${undefined}        | ${"LocAl"}    | ${[{ quantity: 3, gear: TABLE, records: [toLiteRecord(tableRecords[0])] }, { quantity: 5, gear: MARTEAU, records: [toLiteRecord(marteauRecords[0])] }, { quantity: 3, gear: PONCEUSE, records: [toLiteRecord(ponceuseRecords[0])] }]}
+      ${undefined}  | ${undefined}   | ${undefined} | ${true}             | ${"tenEur"}   | ${[{ quantity: 15, gear: MARTEAU, records: [toLiteRecord(marteauRecords[1])] }]}
+      ${undefined}  | ${undefined}   | ${undefined} | ${undefined}        | ${"h"}        | ${[{ quantity: 7, gear: TABLE, records: [toLiteRecord(tableRecords[2])] }, { quantity: 15, gear: MARTEAU, records: [toLiteRecord(marteauRecords[1])] }]}
+    `(
+      'When looking for "$search" in $searchCategory category with $searchOwner owner with ponctual usage: $searchPonctualUsage and storage location: $searchStorage',
+      ({
+        search,
+        searchCategory,
+        searchOwner,
+        searchPonctualUsage,
+        searchStorage,
+        expectedGroupedRecords,
+      }) => {
+        it("should return all grouped records matching the gear", async () => {
+          const records = await inventoryService.search({
+            search,
+            category: searchCategory,
+            owner: searchOwner,
+            ponctualUsage: searchPonctualUsage,
+            storage: searchStorage,
+          });
+          expect(records).toHaveLength(expectedGroupedRecords.length);
+          expect(records).toEqual(expectedGroupedRecords);
+        });
+      },
+    );
   });
   describe("Retrieve inventory records for a dedicated gear", () => {
     const records = [
@@ -281,5 +305,36 @@ describe("Inventory Service", () => {
         });
       },
     );
+  });
+  describe("Retrieve inventory records storages", () => {
+    const records = [
+      { quantity: 3, gear: TABLE, storage: "Local" },
+      { quantity: 20, gear: TABLE, storage: "Cave du E" },
+      { quantity: 7, gear: TABLE, storage: "Conteneur H" },
+      {
+        quantity: 3,
+        gear: PONCEUSE,
+        storage: "Local",
+      },
+      {
+        quantity: 5,
+        gear: MARTEAU,
+        storage: "Local",
+      },
+      {
+        quantity: 15,
+        gear: MARTEAU,
+        storage: "Conteneur H",
+      },
+    ];
+    const inventoryRepository = new InMemoryInventoryRepository(records);
+    const inventoryService = new InventoryService(inventoryRepository);
+    describe("When searching storage locations", () => {
+      it("should return all storages", async () => {
+        const res = await inventoryService.getStoragesHavingGear();
+        expect(res).toHaveLength(3);
+        expect(res).toEqual(["Local", "Cave du E", "Conteneur H"]);
+      });
+    });
   });
 });

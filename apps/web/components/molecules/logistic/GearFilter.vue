@@ -16,6 +16,7 @@
       hide-details
       clearable
     />
+    <slot name="additional-filters" />
   </form>
 </template>
 
@@ -53,18 +54,16 @@ watch(searchOptions, () => emit("update:options", searchOptions.value), {
 
 <style lang="scss" scoped>
 .filters {
+  width: 100%;
   display: flex;
   gap: 15px;
   justify-content: space-evenly;
-  .v-input {
-    flex-grow: 1;
+  & > * {
+    flex: 1;
   }
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
-    gap: 5px;
-    .v-input {
-      width: 100%;
-    }
+    gap: 10px;
   }
 }
 </style>
