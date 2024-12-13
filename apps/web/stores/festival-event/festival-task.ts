@@ -21,6 +21,7 @@ import type {
   ReviewRejection,
   UpdateGeneralForm,
   UpdateInstructionsForm,
+  ReviewIgnoreTask,
 } from "@overbookd/http";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { FestivalTaskRepository } from "~/repositories/festival-event/festival-task.repository";
@@ -323,6 +324,13 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       const res = await repo.approve(this.selectedTask.id, approval);
       if (isHttpError(res)) return;
       sendSuccessNotification(`FT approuvée par l'équipe ${approval.team}`);
+      this.selectedTask = castTaskWithDate(res);
+    },
+
+    async ignore(ignore: ReviewIgnoreTask) {
+      const res = await repo.ignore(this.selectedTask.id, ignore);
+      if (isHttpError(res)) return;
+      sendSuccessNotification(`FT ignorée par l'équipe ${ignore.team}`);
       this.selectedTask = castTaskWithDate(res);
     },
 
