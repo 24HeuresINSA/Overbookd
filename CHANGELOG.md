@@ -1,3 +1,21 @@
+## [3.20.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.2...v3.20.0) (2024-12-13)
+
+### Features
+
+* **web:** add filters in inventory [#2292](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2292) ([87dab8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/87dab8e5730ae5564ed476460031157708e9c59d))
+
+### Bug Fixes
+
+* **ci:** opnssl error in api_e2e_test ([1eada2a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1eada2a1719d1683d8c6bf001a625c3b76c19025))
+* **docker:** :whale: install openssl in our images ([4932c61](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4932c614a596e806d477974588bd978814e6ed3d))
+* **festival-event:** add delay in search filter [#3319](https://gitlab.com/24-heures-insa/overbookd-mono/issues/3319) ([088edd2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/088edd2ffb65449cfb41f8c785ab17a643e57381))
+* **log:** add Cave des Bikers to inquiry locations [#2322](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2322) ([dfce95e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dfce95eef7f3f9a580ded9969045dbbe67fa7d58))
+* **log:** name of location Cave des bikers [#2322](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2322) ([9ad2874](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9ad28744b0e2a1a010ff3959cdeb22b97c8340bc))
+
+### Pre-Features
+
+* **ft:** allow elec reviewer to ignore ft review [#2316](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2316) ([bf10b6a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bf10b6ad6e3d5309695508bda3647d10880e20d0))
+
 ## [3.19.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.1...v3.19.2) (2024-12-09)
 
 ### Bug Fixes
