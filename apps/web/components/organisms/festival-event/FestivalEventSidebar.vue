@@ -257,7 +257,7 @@ const canIgnore = (team: Team): boolean => {
   if (isActivity.value || team.code !== elec || isDraft(selectedTask.value)) {
     return false;
   }
-  return isConcerned(selectedTask.value.reviews[`${elec}`]);
+  return isConcerned(selectedTask.value.reviews.elec);
 };
 
 const isConcerned = (review: ReviewStatus<"FT">): boolean => {
