@@ -4,6 +4,7 @@ export const PARKING_EIFFEL = "Parking Eiffel";
 export const CREUX_GCU = "Creux GCU";
 export const CREUX_GM = "Creux GM";
 export const CAVE_E = "Cave E";
+export const CAVE_BIKERS = "Cage des Bikers";
 export const CLUB_ROCK = "Club Rock";
 export const CONTENUR_24H = "Conteneur 24h";
 export const CONTENEUR_KARNA = "Conteneur Karna";
@@ -29,6 +30,7 @@ export type Drive =
   | typeof CREUX_GCU
   | typeof CREUX_GM
   | typeof CAVE_E
+  | typeof CAVE_BIKERS
   | typeof CLUB_ROCK
   | typeof CONTENUR_24H
   | typeof CONTENEUR_KARNA
@@ -54,6 +56,7 @@ export const drives: Drive[] = [
   CREUX_GCU,
   CREUX_GM,
   CAVE_E,
+  CAVE_BIKERS,
   CLUB_ROCK,
   CONTENUR_24H,
   CONTENEUR_KARNA,
