@@ -82,11 +82,7 @@ import {
   WILL_NOT_REVIEW,
   type ReviewStatus,
 } from "@overbookd/festival-event";
-import type {
-  ReviewApproval,
-  ReviewIgnoreTask,
-  ReviewRejection,
-} from "@overbookd/http";
+import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import {
   type FtStatusLabel,
@@ -223,8 +219,7 @@ const approve = (team: Team) => {
 };
 const ignore = (team: Team) => {
   if (isActivity.value) return;
-  const form = { team: team.code };
-  ftStore.ignore(form as ReviewIgnoreTask);
+  ftStore.ignore({ team: team.code });
 };
 
 const cantApproveAs = (team: Team): boolean => {
