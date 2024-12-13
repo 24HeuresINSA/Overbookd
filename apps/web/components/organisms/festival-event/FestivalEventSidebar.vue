@@ -46,7 +46,7 @@
           :text="`Ignorer pour ${team.name}`"
           class="ignore review-btn"
           size="small"
-          @click="ignore(team)"
+          @click="ignore"
         />
       </div>
 
@@ -217,9 +217,9 @@ const approve = (team: Team) => {
     ? faStore.approve(form as ReviewApproval<"FA">)
     : ftStore.approve(form as ReviewApproval<"FT">);
 };
-const ignore = (team: Team) => {
+const ignore = () => {
   if (isActivity.value) return;
-  ftStore.ignore({ team: team.code });
+  ftStore.ignore({ team: elec } as const);
 };
 
 const cantApproveAs = (team: Team): boolean => {
