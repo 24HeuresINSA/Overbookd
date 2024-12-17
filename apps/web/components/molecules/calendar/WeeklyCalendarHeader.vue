@@ -1,7 +1,7 @@
 <template>
   <header class="header-days">
     <DailyCalendarHeader
-      v-for="day in getWeekDays(displayedDay)"
+      v-for="day in weekDays"
       :key="day.date.toISOString()"
       :displayed-day="day.date"
     />
@@ -9,14 +9,16 @@
 </template>
 
 <script lang="ts" setup>
-import { getWeekDays } from "~/utils/calendar/calendar.utils";
+import { getWeekDays, type CalendarDay } from "~/utils/calendar/calendar.utils";
 
-defineProps({
+const props = defineProps({
   displayedDay: {
     type: Date,
     required: true,
   },
 });
+
+const weekDays = computed<CalendarDay[]>(() => getWeekDays(props.displayedDay));
 </script>
 
 <style lang="scss" scoped>

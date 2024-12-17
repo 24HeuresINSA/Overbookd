@@ -15,11 +15,8 @@
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
-        <DailyCalendarHeader v-show="isDayMode" :displayed-day="displayedDay" />
-        <WeeklyCalendarHeader
-          v-show="!isDayMode"
-          :displayed-day="displayedDay"
-        />
+        <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
+        <WeeklyCalendarHeader v-if="!isDayMode" :displayed-day="displayedDay" />
       </header>
 
       <div class="calendar-time">
@@ -44,7 +41,6 @@
       <div class="calendar-content">
         <DailyCalendarContent
           v-if="isDayMode"
-          v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
           :clickable-events="clickableEvents"
@@ -52,7 +48,6 @@
         />
         <WeeklyCalendarContent
           v-else
-          v-model:hovered-event-id="hoveredEventId"
           :events="events"
           :displayed-day="displayedDay"
           :clickable-events="clickableEvents"
@@ -123,8 +118,6 @@ const moveToNextWeekOrDay = () => {
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
 }
-
-const hoveredEventId = ref<string | undefined>();
 
 const emit = defineEmits(["event-click"]);
 const propagateEventClick = (event: CalendarEvent) => {

@@ -6,7 +6,6 @@
       class="weekly-content__day"
     >
       <DailyCalendarContent
-        v-model:hovered-event-id="hoveredEventId"
         :events="events"
         :displayed-day="day.date"
         :clickable-events="clickableEvents"
@@ -34,8 +33,6 @@ defineProps({
     default: false,
   },
 });
-
-const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
 
 const emit = defineEmits(["event-click"]);
 const propagateEventClick = (event: CalendarEvent) => {

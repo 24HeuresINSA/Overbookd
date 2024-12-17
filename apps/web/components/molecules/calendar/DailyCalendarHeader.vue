@@ -39,13 +39,20 @@ const displayableDay = computed<CalendarDay>(() => {
   return { name, number, date: props.displayedDay };
 });
 
+const publicHolidaysByDate = computed(() => {
+  return publicHolidayStore.calendarEvents.reduce(
+    (acc, event) => {
+      const dateKey = OverDate.from(event.start).dateString;
+      acc[dateKey] = event;
+      return acc;
+    },
+    {} as Record<string, DailyEvent>,
+  );
+});
+
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
-  const displayedDay = OverDate.from(props.displayedDay);
-  const events = publicHolidayStore.calendarEvents.filter((event) => {
-    const eventDay = OverDate.from(event.start);
-    return OverDate.isSameDay(eventDay, displayedDay);
-  });
-  return events.at(0);
+  const dateKey = OverDate.from(props.displayedDay).dateString;
+  return publicHolidaysByDate.value[dateKey];
 });
 
 const isToday = computed<boolean>(() => {

@@ -3,7 +3,6 @@
     <CalendarEvent
       v-for="event in eventsInDisplayedDay"
       :key="event.id"
-      v-model:hovered-event-id="hoveredEventId"
       :event="event"
       :displayed-day="displayedDay"
       :overlapping-events="getOverlappingEvents(event, events)"
@@ -38,8 +37,6 @@ const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
     Period.init(event).isInDay(props.displayedDay),
   );
 });
-
-const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
 
 const emit = defineEmits(["event-click"]);
 const propagateEventClick = (event: CalendarEvent) => {
