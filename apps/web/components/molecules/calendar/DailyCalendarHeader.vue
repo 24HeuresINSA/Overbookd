@@ -10,7 +10,9 @@
       :color="todayPublicHoliday.color"
       class="header-day__daily-event"
     >
-      <span>{{ todayPublicHoliday.name }}</span>
+      <div class="header-day__daily-event-content">
+        <span>{{ todayPublicHoliday.name }}</span>
+      </div>
     </v-card>
   </header>
 </template>
@@ -56,7 +58,7 @@ const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
     (acc, event) => {
       const dateKey = OverDate.from(event.start).dateString;
-      // eslint-disable-next-line security/detect-object-injection
+
       acc[dateKey] = event;
       return acc;
     },
@@ -66,7 +68,7 @@ const publicHolidaysByDate = computed(() => {
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
   const dateKey = OverDate.from(props.displayedDay).dateString;
-  // eslint-disable-next-line security/detect-object-injection
+
   return publicHolidaysByDate.value[dateKey];
 });
 
@@ -99,14 +101,24 @@ const isToday = computed<boolean>(() => {
   &__daily-event {
     width: 100%;
     height: 20px;
-    padding: 0 !important;
+    padding: 0 5px 0 10px !important;
     margin: 0 !important;
     background-color: rgb(var(--v-theme-error));
     color: rgb(var(--v-theme-on-error));
-    span {
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding-left: 10px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    &-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      span {
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
