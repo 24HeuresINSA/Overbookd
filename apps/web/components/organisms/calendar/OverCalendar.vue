@@ -16,7 +16,7 @@
       <div class="empty-case" />
       <header class="calendar-header">
         <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
-        <WeeklyCalendarHeader v-if="!isDayMode" :displayed-day="displayedDay" />
+        <WeeklyCalendarHeader v-else :displayed-day="displayedDay" />
       </header>
 
       <div class="calendar-time">
