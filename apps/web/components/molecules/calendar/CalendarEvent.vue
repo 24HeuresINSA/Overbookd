@@ -1,10 +1,7 @@
 <template>
   <v-card
     class="calendar-event"
-    :class="{
-      unclickable: !clickable,
-      'not-hovered': !isHovered && hoveredEventId,
-    }"
+    :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
     :style="{
       top: `${eventTopPositionInPixels + 1}px`,
@@ -13,8 +10,6 @@
       width: `${eventWidthInPercentage - 2}%`,
     }"
     :href="event.link"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
     @click="propagateClick"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
@@ -51,17 +46,6 @@ const props = defineProps({
     default: false,
   },
 });
-
-const hoveredEventId = defineModel<string | undefined>("hoveredEventId");
-const isHovered = computed<boolean>(
-  () => hoveredEventId.value === props.event.id,
-);
-const handleMouseEnter = () => (hoveredEventId.value = props.event.id);
-const handleMouseLeave = () => {
-  if (isHovered.value) {
-    hoveredEventId.value = undefined;
-  }
-};
 
 const emit = defineEmits(["click"]);
 const propagateClick = () => {
@@ -165,8 +149,5 @@ const eventTimePeriodText = computed<string>(() => {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-}
-.not-hovered {
-  opacity: 0.8;
 }
 </style>

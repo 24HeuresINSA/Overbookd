@@ -10,7 +10,9 @@
       :color="todayPublicHoliday.color"
       class="header-day__daily-event"
     >
-      <span>{{ todayPublicHoliday.name }}</span>
+      <div class="header-day__daily-event-content">
+        <span>{{ todayPublicHoliday.name }}</span>
+      </div>
     </v-card>
   </header>
 </template>
@@ -39,13 +41,35 @@ const displayableDay = computed<CalendarDay>(() => {
   return { name, number, date: props.displayedDay };
 });
 
+const calendarEvents = ref<DailyEvent[]>([]);
+const calendarEventsCurrentYear = ref<number>(props.displayedDay.getFullYear());
+calendarEvents.value = publicHolidayStore.calendarEventsForYear(
+  calendarEventsCurrentYear.value,
+);
+const updateCalendarEvents = () => {
+  const year = props.displayedDay.getFullYear();
+  if (calendarEventsCurrentYear.value === year) return;
+  calendarEventsCurrentYear.value = year;
+  calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
+};
+watch(() => props.displayedDay, updateCalendarEvents, { immediate: true });
+
+const publicHolidaysByDate = computed(() => {
+  return calendarEvents.value.reduce(
+    (acc, event) => {
+      const dateKey = OverDate.from(event.start).dateString;
+
+      acc[dateKey] = event;
+      return acc;
+    },
+    {} as Record<string, DailyEvent>,
+  );
+});
+
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
-  const displayedDay = OverDate.from(props.displayedDay);
-  const events = publicHolidayStore.calendarEvents.filter((event) => {
-    const eventDay = OverDate.from(event.start);
-    return OverDate.isSameDay(eventDay, displayedDay);
-  });
-  return events.at(0);
+  const dateKey = OverDate.from(props.displayedDay).dateString;
+
+  return publicHolidaysByDate.value[dateKey];
 });
 
 const isToday = computed<boolean>(() => {
@@ -77,14 +101,24 @@ const isToday = computed<boolean>(() => {
   &__daily-event {
     width: 100%;
     height: 20px;
-    padding: 0 !important;
+    padding: 0 5px 0 10px !important;
     margin: 0 !important;
     background-color: rgb(var(--v-theme-error));
     color: rgb(var(--v-theme-on-error));
-    span {
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding-left: 10px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    &-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      span {
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
