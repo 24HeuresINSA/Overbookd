@@ -22,11 +22,7 @@ export const usePublicHolidayStore = defineStore("public-holiday", {
       return (year: number): DailyEvent[] => {
         return state.all
           .filter(({ date }) => date.getFullYear() === year)
-          .map((holiday) => ({
-            start: holiday.date,
-            name: holiday.name,
-            color: "grey",
-          }));
+          .map(({ date, name }) => ({ start: date, name, color: "grey" }));
       };
     },
   },
