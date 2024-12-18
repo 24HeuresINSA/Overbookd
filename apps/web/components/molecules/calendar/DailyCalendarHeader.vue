@@ -33,6 +33,12 @@ const props = defineProps({
   },
 });
 
+const displayableDay = computed<CalendarDay>(() => {
+  const name = formatDateDayFullName(props.displayedDay).toUpperCase();
+  const number = +formatDateDayNumber(props.displayedDay);
+  return { name, number, date: props.displayedDay };
+});
+
 const calendarEvents = ref<DailyEvent[]>([]);
 const calendarEventsCurrentYear = ref<number>(props.displayedDay.getFullYear());
 calendarEvents.value = publicHolidayStore.calendarEventsForYear(
@@ -45,12 +51,6 @@ const updateCalendarEvents = () => {
   calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
 };
 watch(() => props.displayedDay, updateCalendarEvents, { immediate: true });
-
-const displayableDay = computed<CalendarDay>(() => {
-  const name = formatDateDayFullName(props.displayedDay).toUpperCase();
-  const number = +formatDateDayNumber(props.displayedDay);
-  return { name, number, date: props.displayedDay };
-});
 
 const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
