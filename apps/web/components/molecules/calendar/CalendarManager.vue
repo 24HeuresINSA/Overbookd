@@ -4,13 +4,13 @@
       <v-btn
         text="Aujourd'hui"
         color="primary"
-        :disabled="isCurrentWeekOrDay || isNavigating"
+        :disabled="isCurrentWeekOrDay"
         @click="moveToToday"
       />
       <v-btn
         text="Manif"
         color="primary"
-        :disabled="isEventStartWeekOrDay || isNavigating"
+        :disabled="isEventStartWeekOrDay"
         @click="moveToEventStartDay"
       />
     </div>
@@ -21,7 +21,6 @@
         size="x-large"
         density="compact"
         rounded="pill"
-        :disabled="isNavigating"
         @click="propagatePrevious"
       />
       <v-btn
@@ -30,7 +29,6 @@
         size="x-large"
         density="compact"
         rounded="pill"
-        :disabled="isNavigating"
         @click="propagateNext"
       />
     </div>
@@ -39,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ONE_SECOND_IN_MS, OverDate } from "@overbookd/time";
+import { OverDate } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 
@@ -83,19 +81,9 @@ const moveToEventStartDay = () => {
   displayedDay.value = eventStartDate.value;
 };
 
-const isNavigating = ref<boolean>(false);
-
 const emit = defineEmits(["previous", "next"]);
-const propagatePrevious = () => {
-  isNavigating.value = true;
-  emit("previous");
-  setTimeout(() => (isNavigating.value = false), ONE_SECOND_IN_MS / 10);
-};
-const propagateNext = () => {
-  isNavigating.value = true;
-  emit("next");
-  setTimeout(() => (isNavigating.value = false), ONE_SECOND_IN_MS / 10);
-};
+const propagatePrevious = () => emit("previous");
+const propagateNext = () => emit("next");
 </script>
 
 <style lang="scss" scoped>

@@ -18,12 +18,16 @@ export const usePublicHolidayStore = defineStore("public-holiday", {
     all: [],
   }),
   getters: {
-    calendarEvents(state): DailyEvent[] {
-      return state.all.map((holiday) => ({
-        start: holiday.date,
-        name: holiday.name,
-        color: "grey",
-      }));
+    calendarEventsForYear(state) {
+      return (year: number): DailyEvent[] => {
+        return state.all
+          .filter(({ date }) => date.getFullYear() === year)
+          .map((holiday) => ({
+            start: holiday.date,
+            name: holiday.name,
+            color: "grey",
+          }));
+      };
     },
   },
   actions: {

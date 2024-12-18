@@ -33,6 +33,19 @@ const props = defineProps({
   },
 });
 
+const calendarEvents = ref<DailyEvent[]>([]);
+const calendarEventsCurrentYear = ref<number>(props.displayedDay.getFullYear());
+calendarEvents.value = publicHolidayStore.calendarEventsForYear(
+  calendarEventsCurrentYear.value,
+);
+const updateCalendarEvents = () => {
+  const year = props.displayedDay.getFullYear();
+  if (calendarEventsCurrentYear.value === year) return;
+  calendarEventsCurrentYear.value = year;
+  calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
+};
+watch(() => props.displayedDay, updateCalendarEvents, { immediate: true });
+
 const displayableDay = computed<CalendarDay>(() => {
   const name = formatDateDayFullName(props.displayedDay).toUpperCase();
   const number = +formatDateDayNumber(props.displayedDay);
@@ -40,9 +53,10 @@ const displayableDay = computed<CalendarDay>(() => {
 });
 
 const publicHolidaysByDate = computed(() => {
-  return publicHolidayStore.calendarEvents.reduce(
+  return calendarEvents.value.reduce(
     (acc, event) => {
       const dateKey = OverDate.from(event.start).dateString;
+      // eslint-disable-next-line security/detect-object-injection
       acc[dateKey] = event;
       return acc;
     },
@@ -52,6 +66,7 @@ const publicHolidaysByDate = computed(() => {
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
   const dateKey = OverDate.from(props.displayedDay).dateString;
+  // eslint-disable-next-line security/detect-object-injection
   return publicHolidaysByDate.value[dateKey];
 });
 
