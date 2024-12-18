@@ -1,3 +1,13 @@
+## [3.21.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.20.0...v3.21.0) (2024-12-18)
+
+### Features
+
+* **ft:** enable elec ignore [#2316](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2316) ([a254789](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a254789eeb63701a3709e5cae34d3819f1746abb))
+
+### Performance Improvements
+
+* **calendar:** optimize on week update [#2303](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2303) ([633d65a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/633d65a0b9cb07afdf4cea66933a9de741d48707))
+
 ## [3.20.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.19.2...v3.20.0) (2024-12-13)
 
 ### Features
