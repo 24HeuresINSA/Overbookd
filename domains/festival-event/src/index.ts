@@ -14,7 +14,34 @@ export {
 export type { Adherent } from "./common/adherent.js";
 export type { Feedback } from "./common/feedback.js";
 export type { FestivalEventIdentifier } from "./common/festival-event.js";
-export { isAssignedToDrive, drives } from "./common/inquiry-request.js";
+export {
+  isAssignedToDrive,
+  BENNE_COLLETTE_BESSON,
+  BENNE_PARKING_K_FET,
+  PARKING_EIFFEL,
+  CREUX_GCU,
+  CREUX_GM,
+  CAVE_E,
+  CAVE_BIKERS,
+  CLUB_ROCK,
+  CONTENUR_24H,
+  CONTENEUR_KARNA,
+  CONTENEUR_PARKING_K_FET,
+  CONTENEUR_SCENE_PULSE,
+  HALL_DES_HUMANITES,
+  LOCAL_24H,
+  MAGASIN,
+  MDE,
+  SALLE_MONTREAL,
+  SALLE_RENE_CHAR,
+  NON_STOCKE,
+  QG_ORGA,
+  BACKLINE,
+  SALLE_CRLA,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_COM,
+  drives,
+} from "./common/inquiry-request.js";
 export type {
   InquiryRequestAssigned,
   InquiryRequest,
