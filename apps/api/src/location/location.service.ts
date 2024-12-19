@@ -40,16 +40,11 @@ export class LocationService {
     ]);
 
     if (linkedActivities.length > 0 || linkedTasks.length > 0) {
-      const activitiesError = linkedActivities
-        .map((activity) => `FA ${activity.id}`)
-        .join(", ");
-      const tasksError = linkedTasks.map((task) => `FT ${task.id}`).join(", ");
-      const separator =
-        linkedActivities.length > 0 && linkedTasks.length > 0 ? ", " : "";
-
-      throw new ForbiddenException(
-        `Impossible de supprimer le lieu, il est lié à : ${activitiesError}${separator}${tasksError}`,
-      );
+      const activitiesTitles = linkedActivities.map(({ id }) => `FA ${id}`);
+      const tasksTitles = linkedTasks.map(({ id }) => `FT ${id}`);
+      const allLinkedTitles = [...activitiesTitles, ...tasksTitles].join(", ");
+      const errorMessage = `Impossible de supprimer le lieu, il est lié à : ${allLinkedTitles}`;
+      throw new ForbiddenException(errorMessage);
     }
 
     return this.prisma.signaLocation.delete({ where: { id } });
