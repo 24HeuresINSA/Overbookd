@@ -13,7 +13,7 @@ import {
 import { APPROVED, REJECTED } from "../../common/action.js";
 import {
   BACKLINE,
-  CONTENEUR_SCENE_ROOTS,
+  CONTENEUR_SCENE_PULSE,
   LOCAL_24H,
   MAGASIN,
   PARKING_EIFFEL,
@@ -87,7 +87,7 @@ const withSomeValidInquiries = factory
       { ...deuxMarteaux, drive: MAGASIN },
     ],
     electricity: [
-      { ...uneMultiprise3Prises, drive: CONTENEUR_SCENE_ROOTS },
+      { ...uneMultiprise3Prises, drive: CONTENEUR_SCENE_PULSE },
       { ...uneMultiprise, drive: BACKLINE },
     ],
     barriers: [{ ...quinzeVaubans, drive: PARKING_EIFFEL }],
