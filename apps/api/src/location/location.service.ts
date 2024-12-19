@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { CreateLocationRequestDto } from "./dto/create-location.request.dto";
 import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 @Injectable()
 export class LocationService {
@@ -29,11 +30,11 @@ export class LocationService {
   async remove(id: number) {
     const [linkedActivities, linkedTasks] = await Promise.all([
       this.prisma.festivalActivity.findMany({
-        where: { locationId: id },
+        where: { locationId: id, ...IS_NOT_DELETED },
         select: { id: true },
       }),
       this.prisma.festivalTask.findMany({
-        where: { appointmentId: id },
+        where: { appointmentId: id, ...IS_NOT_DELETED },
         select: { id: true },
       }),
     ]);
