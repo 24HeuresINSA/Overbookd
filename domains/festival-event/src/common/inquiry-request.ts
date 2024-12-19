@@ -9,7 +9,7 @@ export const CLUB_ROCK = "Club Rock";
 export const CONTENUR_24H = "Conteneur 24h";
 export const CONTENEUR_KARNA = "Conteneur Karna";
 export const CONTENEUR_PARKING_K_FET = "Conteneur Parking K-fet";
-export const CONTENEUR_SCENE_ROOTS = "Conteneur Scène Roots";
+export const CONTENEUR_SCENE_PULSE = "Conteneur Scène Pulse";
 export const HALL_DES_HUMANITES = "Hall des Humanités";
 export const LOCAL_24H = "Local 24h";
 export const MAGASIN = "Magasin";
@@ -35,7 +35,7 @@ export type Drive =
   | typeof CONTENUR_24H
   | typeof CONTENEUR_KARNA
   | typeof CONTENEUR_PARKING_K_FET
-  | typeof CONTENEUR_SCENE_ROOTS
+  | typeof CONTENEUR_SCENE_PULSE
   | typeof HALL_DES_HUMANITES
   | typeof LOCAL_24H
   | typeof MAGASIN
@@ -61,7 +61,7 @@ export const drives: Drive[] = [
   CONTENUR_24H,
   CONTENEUR_KARNA,
   CONTENEUR_PARKING_K_FET,
-  CONTENEUR_SCENE_ROOTS,
+  CONTENEUR_SCENE_PULSE,
   HALL_DES_HUMANITES,
   LOCAL_24H,
   MAGASIN,
