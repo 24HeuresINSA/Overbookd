@@ -1,3 +1,10 @@
+## [3.21.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.21.0...v3.21.1) (2024-12-20)
+
+### Bug Fixes
+
+* **fa:** rename Conteneur Scène Roots into Conteneur Scène Pulse [#2329](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2329) ([04c29cc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/04c29ccb91c84d4d980b1f53af67197ca4765d12))
+* **location:** prevent deletion of a location if it's associated with a FA or a FT [#2321](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2321) ([e8cfc5f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e8cfc5f4e7ae3cd468a89fc2ed46bf579ffcd080))
+
 ## [3.21.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.20.0...v3.21.0) (2024-12-18)
 
 ### Features
