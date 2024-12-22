@@ -34,7 +34,7 @@ const props = defineProps({
     required: true,
   },
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
   overlappingEvents: {
@@ -55,7 +55,7 @@ const propagateClick = () => {
 const PIXELS_PER_MINUTE = 0.75;
 
 const currentDayStart = computed<Date>(
-  () => OverDate.getStartOfDay(props.displayedDay).date,
+  () => OverDate.getStartOfDay(props.displayedDay.date).date,
 );
 
 const displayedEventPeriod = computed<Period>(() => {

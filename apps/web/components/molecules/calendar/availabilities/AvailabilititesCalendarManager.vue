@@ -31,9 +31,11 @@
 </template>
 
 <script lang="ts" setup>
+import type { OverDate } from "@overbookd/time";
+
 const props = defineProps({
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
   disablePrevious: {
@@ -51,10 +53,10 @@ const props = defineProps({
 });
 
 const periodIndicator = computed<string>(() => {
-  const month = props.displayedDay.toLocaleDateString("fr-FR", {
+  const month = props.displayedDay.date.toLocaleDateString("fr-FR", {
     month: "long",
   });
-  const year = props.displayedDay.getFullYear();
+  const year = props.displayedDay.year;
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
 

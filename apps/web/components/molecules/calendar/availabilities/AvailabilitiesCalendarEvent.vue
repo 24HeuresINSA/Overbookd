@@ -18,6 +18,7 @@ import {
   MINUTES_IN_DAY,
   MINUTES_IN_HOUR,
   ONE_MINUTE_IN_MS,
+  OverDate,
   Period,
 } from "@overbookd/time";
 import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
@@ -31,7 +32,7 @@ const props = defineProps({
     required: true,
   },
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
 });
@@ -42,15 +43,15 @@ const propagateClick = () => emit("click", props.event);
 const PIXELS_PER_MINUTE = 0.75;
 
 const displayedEventPeriod = computed<Period>(() => {
-  const currentDayStart = new Date(props.displayedDay);
-  currentDayStart.setHours(0, 0, 0, 0);
-  const currentDayEnd = new Date(props.displayedDay);
-  currentDayEnd.setHours(23, 59, 59, 999);
+  const currentDayStart = OverDate.getStartOfDay(props.displayedDay.date);
+  const currentDayEnd = OverDate.getEndOfDay(props.displayedDay.date);
 
   const validStart =
-    props.event.start < currentDayStart ? currentDayStart : props.event.start;
+    props.event.start < currentDayStart.date
+      ? currentDayStart.date
+      : props.event.start;
   const validEnd =
-    props.event.end > currentDayEnd ? currentDayEnd : props.event.end;
+    props.event.end > currentDayEnd.date ? currentDayEnd.date : props.event.end;
 
   const start = validStart < validEnd ? validStart : validEnd;
   const end = validStart < validEnd ? validEnd : validStart;
