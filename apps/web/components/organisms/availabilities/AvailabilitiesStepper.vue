@@ -1,38 +1,40 @@
 <template>
-  <v-stepper v-model="step">
-    <v-stepper-header>
-      <v-stepper-item
-        v-for="({ title }, index) in calendarSteps"
-        :key="`step-${index}`"
-        :title="title"
-        :complete="step > index"
-        :value="index + 1"
-      />
-    </v-stepper-header>
-
-    <v-stepper-window
-      v-for="({ period }, index) in calendarSteps"
-      :key="`${period.start}-${period.end}`"
-    >
-      <v-stepper-window-item
-        :id="`calendar-part-${index + 1}`"
-        :value="index + 1"
-      >
-        <AvailabilitiesPickCalendar
-          v-model="displayedDays"
-          :disable-previous="shouldDisablePrevious"
-          :disable-next="shouldDisableNext"
-          :cant-validate="hasAvailabilityError"
-          @previous="moveToPreviousStep"
-          @next="moveToNextStep"
-          @validate="saveAvailabilities"
+  <div>
+    <v-stepper v-model="step">
+      <v-stepper-header>
+        <v-stepper-item
+          v-for="({ title }, index) in calendarSteps"
+          :key="`step-${index}`"
+          :title="title"
+          :complete="step > index + 1"
+          :value="index + 1"
         />
-      </v-stepper-window-item>
-    </v-stepper-window>
-  </v-stepper>
+      </v-stepper-header>
+
+      <v-stepper-window>
+        <v-stepper-window-item
+          v-for="(_, index) in calendarSteps"
+          :key="`content-${index}`"
+          :value="index + 1"
+        >
+          <AvailabilitiesPickCalendar
+            v-model="displayedDays"
+            :disable-previous="shouldDisablePrevious"
+            :disable-next="shouldDisableNext"
+            :cant-validate="hasAvailabilityError"
+            @previous="moveToPreviousStep"
+            @next="moveToNextStep"
+            @validate="saveAvailabilities"
+          />
+        </v-stepper-window-item>
+      </v-stepper-window>
+    </v-stepper>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { HARD_CODE } from "@overbookd/team-constants";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 import {
   CalendarEventPeriods,
   type CalendarStep,
@@ -51,22 +53,35 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 const userStore = useUserStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 
-const displayedDays = ref<Date[]>([new Date()]);
 const step = ref<number>(1);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
-  const isHard = (userStore.loggedUser?.teams ?? []).includes("hard");
+  const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
-const hasAvailabilityError = computed<boolean>(() => {
-  return availabilitiyStore.availabilities.errors.length > 0;
+const displayedDays = computed<Date[]>(() => {
+  const calendarStep = calendarSteps.value.at(step.value - 1);
+  const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
+  return splitedStep?.map(({ start }) => start) ?? [];
 });
 
-const shouldDisableNext = computed<boolean>(() => false);
-const shouldDisablePrevious = computed<boolean>(() => false);
+const hasAvailabilityError = computed<boolean>(
+  () => availabilitiyStore.availabilities.errors.length > 0,
+);
 
-const moveToPreviousStep = () => step.value--;
-const moveToNextStep = () => step.value++;
+const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
+const shouldDisableNext = computed<boolean>(
+  () => step.value >= calendarSteps.value.length,
+);
+
+const moveToPreviousStep = () => {
+  if (step.value <= 1) return;
+  step.value--;
+};
+const moveToNextStep = () => {
+  if (step.value >= calendarSteps.value.length) return;
+  step.value++;
+};
 
 const saveAvailabilities = async () => {
   await availabilitiyStore.updateVolunteerAvailabilities(
@@ -74,13 +89,3 @@ const saveAvailabilities = async () => {
   );
 };
 </script>
-
-<style lang="scss" scoped>
-@media only screen and (max-width: $mobile-max-width) {
-  @for $index from 1 through 5 {
-    #calendar-part-#{$index} {
-      padding: 5px 0 16px 0;
-    }
-  }
-}
-</style>

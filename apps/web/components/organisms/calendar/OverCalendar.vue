@@ -47,14 +47,14 @@
             :events="events"
             :displayed-day="displayedDay"
             :clickable-events="clickableEvents"
-            @event-click="propagateEventClick"
+            @click:event="propagateEventClick"
           />
           <WeeklyCalendarContent
             v-else
             :events="events"
             :displayed-day="displayedDay"
             :clickable-events="clickableEvents"
-            @event-click="propagateEventClick"
+            @click:event="propagateEventClick"
           />
         </slot>
       </div>
@@ -123,9 +123,9 @@ if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
 }
 
-const emit = defineEmits(["event-click"]);
+const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
-  emit("event-click", event);
+  emit("click:event", event);
 };
 </script>
 
