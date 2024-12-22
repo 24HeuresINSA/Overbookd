@@ -38,9 +38,9 @@ const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
   );
 });
 
-const emit = defineEmits(["event-click"]);
+const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) =>
-  emit("event-click", event);
+  emit("click:event", event);
 </script>
 
 <style scoped>
