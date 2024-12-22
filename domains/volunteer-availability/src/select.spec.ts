@@ -38,8 +38,8 @@ describe("Select and unselect availabilities", () => {
     `(
       "when selecting $date at $hour h",
       ({ date, hour, endHour, expectedError }) => {
-        const selected = { date, hour } as const;
-        const start = OverDate.init(selected).date;
+        const selected = OverDate.init({ date, hour });
+        const start = selected.date;
         const end = OverDate.init({ date, hour: endHour }).date;
         it(`should list one period from ${hour}h to ${endHour}h`, () => {
           const availabilities = Availabilities.init().select(selected);
@@ -69,8 +69,14 @@ describe("Select and unselect availabilities", () => {
     );
     describe(`when selecting ${festivalStartDate} at 10h then at 16h`, () => {
       it("should list two periods [10h-12h] and [16h-18h]", () => {
-        const selected10H = { date: festivalStartDate, hour: 10 } as const;
-        const selected16H = { date: festivalStartDate, hour: 16 } as const;
+        const selected10H = OverDate.init({
+          date: festivalStartDate,
+          hour: 10,
+        });
+        const selected16H = OverDate.init({
+          date: festivalStartDate,
+          hour: 16,
+        });
 
         const availabilities = Availabilities.init()
           .select(selected10H)
@@ -84,12 +90,24 @@ describe("Select and unselect availabilities", () => {
     });
     describe(`when selecting ${festivalStartDate} at 16h then at 10h (i.e. reverse order)`, () => {
       it("should list two periods [10h-12] and [16h-18h]", () => {
-        const selected10H = { date: festivalStartDate, hour: 10 } as const;
-        const selected16H = { date: festivalStartDate, hour: 16 } as const;
-        const start10H = OverDate.init(selected10H).date;
-        const end10H = OverDate.init({ ...selected10H, hour: 12 }).date;
-        const start16H = OverDate.init(selected16H).date;
-        const end16H = OverDate.init({ ...selected16H, hour: 18 }).date;
+        const selected10H = OverDate.init({
+          date: festivalStartDate,
+          hour: 10,
+        });
+        const selected16H = OverDate.init({
+          date: festivalStartDate,
+          hour: 16,
+        });
+        const start10H = selected10H.date;
+        const end10H = OverDate.init({
+          date: festivalStartDate,
+          hour: 12,
+        }).date;
+        const start16H = selected16H.date;
+        const end16H = OverDate.init({
+          date: festivalStartDate,
+          hour: 18,
+        }).date;
         const availabilities = Availabilities.init()
           .select(selected16H)
           .select(selected10H);
@@ -101,10 +119,13 @@ describe("Select and unselect availabilities", () => {
     });
     describe(`when selecting ${festivalStartDate} at 3h then at 4h`, () => {
       it("should list one period [03h-05h]", () => {
-        const selected3H = { date: festivalStartDate, hour: 3 } as const;
-        const selected4H = { date: festivalStartDate, hour: 4 } as const;
-        const start = OverDate.init(selected3H).date;
-        const end = OverDate.init({ ...selected3H, hour: 5 }).date;
+        const selected3H = OverDate.init({ date: festivalStartDate, hour: 3 });
+        const selected4H = OverDate.init({ date: festivalStartDate, hour: 4 });
+        const start = selected3H.date;
+        const end = OverDate.init({
+          date: festivalStartDate,
+          hour: 5,
+        }).date;
 
         const availabilities = Availabilities.init()
           .select(selected3H)
@@ -128,7 +149,7 @@ describe("Select and unselect availabilities", () => {
         "when unselecting $hour h",
         ({ date, hour, periodsCount, expectedPeriods, expectedError }) => {
           it(`should keep ${periodsCount} periods`, () => {
-            const unselected = { date, hour };
+            const unselected = OverDate.init({ date, hour });
             const availabilities = initialState.unselect(unselected);
             expect(availabilities.list).toHaveLength(periodsCount);
             expect(availabilities.list).toStrictEqual(expectedPeriods);
@@ -141,7 +162,7 @@ describe("Select and unselect availabilities", () => {
             ? indicateError
             : indicateAllRight;
           it(decideOnError, () => {
-            const unselected = { date, hour };
+            const unselected = OverDate.init({ date, hour });
             const expectedErrors = expectedError ? [expectedError] : [];
 
             const availabilities = initialState.unselect(unselected);
@@ -163,8 +184,7 @@ describe("Select and unselect availabilities", () => {
       });
       describe(`when selecting ${festivalStartDate} 21h`, () => {
         it("should list 4 periods [03h-05h], [10h-12h], [16h-19h] and [21h-22h]", () => {
-          const selected = { date: festivalStartDate, hour: 21 } as const;
-
+          const selected = OverDate.init({ date: festivalStartDate, hour: 21 });
           const availabilities = initialState.select(selected);
 
           expect(availabilities.list).toHaveLength(4);
@@ -176,7 +196,7 @@ describe("Select and unselect availabilities", () => {
           ]);
         });
         it("should indicate that availability [21h-22h] have to last at least 2 hours", () => {
-          const selected = { date: festivalStartDate, hour: 21 } as const;
+          const selected = OverDate.init({ date: festivalStartDate, hour: 21 });
           const expectedError = {
             period: from21hTo22h,
             message: AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION,
@@ -189,7 +209,7 @@ describe("Select and unselect availabilities", () => {
       });
       describe(`when selecting ${festivalStartDate} 02h`, () => {
         it("should list 3 periods [02h-05h], [10h-12h] and [16h-19h]", () => {
-          const selected = { date: festivalStartDate, hour: 2 } as const;
+          const selected = OverDate.init({ date: festivalStartDate, hour: 2 });
 
           const availabilities = initialState.select(selected);
 
@@ -201,7 +221,7 @@ describe("Select and unselect availabilities", () => {
           ]);
         });
         it("should indicate that all availabilities respect specification", () => {
-          const selected = { date: festivalStartDate, hour: 2 } as const;
+          const selected = OverDate.init({ date: festivalStartDate, hour: 2 });
 
           const availabilities = initialState.select(selected);
 
@@ -210,7 +230,7 @@ describe("Select and unselect availabilities", () => {
       });
       describe(`when trying to select ${festivalStartDate} 04h that is already recorded`, () => {
         it("shouldn't add it to selected list", () => {
-          const selected = { date: festivalStartDate, hour: 4 } as const;
+          const selected = OverDate.init({ date: festivalStartDate, hour: 4 });
 
           const availabilities = initialState.select(selected);
 
@@ -219,7 +239,10 @@ describe("Select and unselect availabilities", () => {
       });
       describe(`when trying to unselect ${festivalStartDate} 04h that is already recorded`, () => {
         it("shouldn't have any impact on listed periods", () => {
-          const unselected = { date: festivalStartDate, hour: 4 } as const;
+          const unselected = OverDate.init({
+            date: festivalStartDate,
+            hour: 4,
+          });
           const expectedPeriods = [from03hTo05h, from10hTo12h, from16hTo19h];
 
           const availabilities = initialState.unselect(unselected);
