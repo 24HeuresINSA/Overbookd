@@ -1,4 +1,4 @@
-import { type InitOverDate, Period } from "@overbookd/time";
+import { OverDate, Period } from "@overbookd/time";
 import { Availabilities } from "@overbookd/volunteer-availability";
 import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -59,17 +59,17 @@ export const useVolunteerAvailabilityStore = defineStore(
         this._initAvailabilities(castPeriodsWithDate(res));
       },
 
-      selectAvailability(date: InitOverDate, charisma: number) {
+      selectAvailability(date: OverDate, charisma: number) {
         this.availabilities = this.availabilities.select(date);
         this.currentCharisma = this.currentCharisma + charisma;
       },
 
-      unSelectAvailability(date: InitOverDate, charisma: number) {
+      unSelectAvailability(date: OverDate, charisma: number) {
         this.availabilities = this.availabilities.unselect(date);
         this.currentCharisma = this.currentCharisma - charisma;
       },
 
-      removeRecordedAvailability(date: InitOverDate, charisma: number) {
+      removeRecordedAvailability(date: OverDate, charisma: number) {
         const all = this.availabilities.list as Period[];
         this.availabilities = Availabilities.init({ selected: all });
         this.availabilities = this.availabilities.unselect(date);

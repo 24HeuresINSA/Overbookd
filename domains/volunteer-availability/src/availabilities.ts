@@ -1,4 +1,4 @@
-import { InitOverDate, Period } from "@overbookd/time";
+import { Period, OverDate } from "@overbookd/time";
 import { AvailabilityDate } from "./date.js";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 
@@ -23,8 +23,8 @@ export class Availabilities {
     return new Availabilities(recorded, selected);
   }
 
-  select(date: InitOverDate): Availabilities {
-    const period = AvailabilityDate.init(date).period;
+  select(date: OverDate): Availabilities {
+    const period = AvailabilityDate.fromOverDate(date).period;
     const isAlreadyRecorded = this.recorded.some((availability) =>
       availability.includes(period),
     );
@@ -34,8 +34,8 @@ export class Availabilities {
     return new Availabilities(this.recorded, Period.mergeContiguous(periods));
   }
 
-  unselect(date: InitOverDate): Availabilities {
-    const period = AvailabilityDate.init(date).period;
+  unselect(date: OverDate): Availabilities {
+    const period = AvailabilityDate.fromOverDate(date).period;
     const periods = this.selected.reduce(
       (availabilities: Period[], availability) => {
         const isPeriodIncluded = period.isOverlapping(availability);

@@ -17,8 +17,10 @@
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
-        <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
-        <WeeklyCalendarHeader v-else :displayed-day="displayedDay" />
+        <slot name="header">
+          <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
+          <WeeklyCalendarHeader v-else :displayed-day="displayedDay" />
+        </slot>
       </header>
 
       <div class="calendar-time">
