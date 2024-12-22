@@ -25,7 +25,7 @@
           v-model="calendarDisplayedDay"
           :events="calendarEvents"
           clickable-events
-          @event-click="openEditDialogByCalendar"
+          @click:event="openEditDialogByCalendar"
         />
       </v-card-text>
     </v-card>
