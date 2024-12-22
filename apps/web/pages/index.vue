@@ -21,7 +21,7 @@ const displayedName = computed<string>(() =>
 const isBirthdayToday = computed<boolean>(() => {
   if (!userStore.loggedUser) return false;
 
-  const today = OverDate.today();
+  const today = OverDate.now();
   const birthday = OverDate.from(userStore.loggedUser.birthdate);
 
   return (

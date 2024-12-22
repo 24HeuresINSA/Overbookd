@@ -52,7 +52,7 @@ defineProps({
   },
 });
 
-const displayedDays = defineModel<Date[]>({ required: true });
+const displayedDays = defineModel<OverDate[]>({ required: true });
 
 const globalPeriod = Period.init({
   start: CalendarEventPeriods.prePreManif.period.start,

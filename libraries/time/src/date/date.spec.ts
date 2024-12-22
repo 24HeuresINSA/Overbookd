@@ -112,6 +112,25 @@ describe("Over Date [Paris based date]", () => {
       },
     );
   });
+  describe("Get end of day", () => {
+    describe.each`
+      date                                 | expectedHour | expectedMinute | expectedDate
+      ${`${friday}T11:11+02:00`}           | ${23}        | ${59}          | ${`${friday}T23:59+02:00`}
+      ${`${saturday}T00:15+03:00`}         | ${23}        | ${59}          | ${`${friday}T23:59+02:00`}
+      ${`${friday}T17:45-11:00`}           | ${23}        | ${59}          | ${`${saturday}T23:59+02:00`}
+      ${`${fridayWinterTime}T12:30+01:00`} | ${23}        | ${59}          | ${`${fridayWinterTime}T23:59+01:00`}
+    `(
+      "when generating from $date",
+      ({ date, expectedHour, expectedMinute, expectedDate }) => {
+        it(`should generate date at ${expectedHour}h${expectedMinute}m`, () => {
+          const availabilityDate = OverDate.getEndOfDay(new Date(date));
+          expect(availabilityDate.hour).toBe(expectedHour);
+          expect(availabilityDate.minute).toBe(expectedMinute);
+          expect(availabilityDate.date).toStrictEqual(new Date(expectedDate));
+        });
+      },
+    );
+  });
   describe("Detect period inclusion", () => {
     describe.each`
       date      | hour  | periods                                   | isIncluded
