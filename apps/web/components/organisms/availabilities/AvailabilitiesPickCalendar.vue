@@ -11,6 +11,9 @@
         @validate="propagateValidation"
       />
     </template>
+    <template #header>
+      <AvailabilitiesCalendarHeader :displayed-days="displayedDays" />
+    </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
         :events="calendarEvents"
@@ -22,14 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  ONE_HOUR_IN_MS,
-  OverDate,
-  TWO_HOURS_IN_MS,
-  type InitOverDate,
-} from "@overbookd/time";
+import { ONE_HOUR_IN_MS, OverDate, TWO_HOURS_IN_MS } from "@overbookd/time";
 import { Period } from "@overbookd/time";
-import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
 import { CalendarEventPeriods } from "~/utils/availabilities/calendar-event-periods";
 import {
   CalendarEventBuilder,
@@ -69,27 +66,9 @@ const findCharismaPerHour = (period: Period): number => {
   return charismaPeriod ? charismaPeriod.charisma : 0;
 };
 
-const selectedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.selected as Period[],
-);
-const savedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.recorded as Period[],
-);
-const availabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.list as Period[],
-);
-const errors = computed<AvailabilityErrorMessage[]>(
-  () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
-);
-
-const isSaved = (period: Period): boolean => {
-  return savedAvailabilities.value.some((availability) =>
-    availability.includes(period),
-  );
-};
-
+const intervals = globalPeriod.splitWithIntervalInMs(TWO_HOURS_IN_MS);
 const calendarEvents = computed<CalendarEvent[]>(() =>
-  globalPeriod.splitWithIntervalInMs(TWO_HOURS_IN_MS).flatMap((splitPeriod) => {
+  intervals.flatMap((splitPeriod) => {
     const startHour = splitPeriod.start.getHours();
     const isPartyPeriod = isPartyShift(startHour);
 
@@ -105,15 +84,26 @@ const calendarEvents = computed<CalendarEvent[]>(() =>
         start: period.start,
         end: period.end,
         name: charisma.toString(),
-        color: isSaved(period) ? "success" : "primary",
       });
     });
   }),
 );
 
+const selectedAvailabilities = computed<Period[]>(
+  () => availabilityStore.availabilities.selected as Period[],
+);
+const isSelected = (event: CalendarEvent): boolean => {
+  return selectedAvailabilities.value.some((selected) =>
+    selected.isIncluding(event.start),
+  );
+};
 const click = (event: CalendarEvent) => {
-  const date = OverDate.from(event.start) as unknown as InitOverDate;
+  const date = OverDate.from(event.start);
   const charismaPerHour = findCharismaPerHour(Period.init(event));
+
+  if (isSelected(event)) {
+    return availabilityStore.unSelectAvailability(date, charismaPerHour);
+  }
   availabilityStore.selectAvailability(date, charismaPerHour);
 };
 
