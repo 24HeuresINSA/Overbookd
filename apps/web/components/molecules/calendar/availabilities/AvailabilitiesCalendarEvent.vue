@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="calendar-event"
-    :color="event.color || 'primary'"
+    :class="colorClass"
     :style="{
       top: `${eventTopPositionInPixels + 1}px`,
       height: `${eventHeightInPixels - 2}px`,
@@ -20,7 +20,10 @@ import {
   ONE_MINUTE_IN_MS,
   Period,
 } from "@overbookd/time";
+import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
 import type { CalendarEvent } from "~/utils/calendar/event";
+
+const availabilityStore = useVolunteerAvailabilityStore();
 
 const props = defineProps({
   event: {
@@ -75,6 +78,38 @@ const eventHeightInPixels = computed<number>(() => {
     PIXELS_PER_MINUTE
   );
 });
+
+const selectedAvailabilities = computed<Period[]>(
+  () => availabilityStore.availabilities.selected as Period[],
+);
+const savedAvailabilities = computed<Period[]>(
+  () => availabilityStore.availabilities.recorded as Period[],
+);
+const errors = computed<AvailabilityErrorMessage[]>(
+  () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
+);
+
+const isSaved = (period: Period): boolean => {
+  return savedAvailabilities.value.some((availability) =>
+    availability.includes(period),
+  );
+};
+const isSelected = (period: Period): boolean => {
+  return selectedAvailabilities.value.some((availability) =>
+    availability.includes(period),
+  );
+};
+const hasError = (period: Period): boolean => {
+  return errors.value.some((error) => error.period.includes(period));
+};
+
+const colorClass = computed<string>(() => {
+  const period = displayedEventPeriod.value;
+  if (hasError(period)) return "error";
+  if (isSaved(period)) return "validated";
+  if (isSelected(period)) return "selected";
+  return "unselected";
+});
 </script>
 
 <style lang="scss" scoped>
@@ -100,5 +135,22 @@ const eventHeightInPixels = computed<number>(() => {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.validated {
+  background-color: rgb(var(--v-theme-success));
+  color: rgb(var(--v-theme-on-success));
+}
+.selected {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+.unselected {
+  background-color: rgba(var(--v-theme-primary), 0.3);
+  color: rgb(var(--v-theme-on-surface));
+}
+.error {
+  background-color: rgb(var(--v-theme-error));
+  color: rgb(var(--v-theme-on-error));
 }
 </style>

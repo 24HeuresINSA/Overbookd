@@ -1,5 +1,5 @@
 <template>
-  <div class="multiday-content">
+  <div class="multiday-content" :style="gridTemplateStyle">
     <div
       v-for="day in displayedDays"
       :key="day.toISOString()"
@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-defineProps({
+const props = defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     required: true,
@@ -27,6 +27,10 @@ defineProps({
     required: true,
   },
 });
+
+const gridTemplateStyle = computed(() => ({
+  gridTemplateColumns: `repeat(${props.displayedDays.length}, 1fr)`,
+}));
 
 const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
@@ -41,7 +45,6 @@ const propagateEventClick = (event: CalendarEvent) => {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
   &__day {
     min-width: $calendar-day-min-width;
     border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
