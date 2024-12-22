@@ -65,6 +65,7 @@ const hasPersonalFA = computed<boolean>(() => userStore.can(WRITE_FA));
 .home {
   display: flex;
   gap: $card-gap;
+  flex-wrap: wrap;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
   }

@@ -52,6 +52,7 @@ import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const theme = useTheme();
 const { mine } = useLiveNotification();
+const userStore = useUserStore();
 const { refreshTokens } = useAuthStore();
 const { fetchMyRefusedActivities } = useNavigationBadgeStore();
 
@@ -72,8 +73,6 @@ onMounted(() => {
 onUnmounted(() => {
   mine.stopListening();
 });
-
-const userStore = useUserStore();
 
 const shouldApproveEULA = computed<boolean>(
   () => userStore.loggedUser?.hasApprovedEULA === false,

@@ -8,7 +8,7 @@
 }
 
 .mobile-only {
-  @media screen and (min-width: $mobile-max-width) {
+  @media screen and (min-width: calc($mobile-max-width + 0.1px)) {
     display: none !important;
   }
 }

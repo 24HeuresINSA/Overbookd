@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    v-if="isDesktop"
     v-model:rail="isFolded"
     :model-value="isDesktop"
     expand-on-hover
