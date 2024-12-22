@@ -94,8 +94,12 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<OverDate>({
-  default: OverDate.now(),
+const displayedDayModel = defineModel<Date>({
+  default: OverDate.now().date,
+});
+const displayedDay = computed<OverDate>({
+  get: () => OverDate.fromLocal(displayedDayModel.value),
+  set: (value) => (displayedDayModel.value = value.date),
 });
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,

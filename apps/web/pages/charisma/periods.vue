@@ -22,7 +22,7 @@
     <v-card>
       <v-card-text>
         <OverCalendar
-          v-model="calendarDisplayedDay as OverDate"
+          v-model="calendarDisplayedDay"
           :events="calendarEvents"
           clickable-events
           @click:event="openEditDialogByCalendar"
@@ -46,7 +46,6 @@
 
 <script lang="ts" setup>
 import type { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
-import { OverDate } from "@overbookd/time";
 import {
   type CalendarEvent,
   createCalendarEvent,
@@ -99,9 +98,8 @@ const deleteCharismaPeriod = async (charismaPeriod: SavedCharismaPeriod) => {
   await charismaPeriodStore.deleteCharismaPeriod(charismaPeriod);
 };
 
-const calendarDisplayedDay = ref<OverDate>(
-  OverDate.fromLocal(configurationStore.eventStartDate),
-);
+const calendarDisplayedDay = ref<Date>(configurationStore.eventStartDate);
+
 const maxCharisma = computed<number>(() =>
   Math.max(...charismaPeriods.value.map(({ charisma }) => charisma)),
 );
