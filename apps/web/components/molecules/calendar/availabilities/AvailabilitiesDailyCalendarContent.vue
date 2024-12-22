@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Period } from "@overbookd/time";
+import { OverDate, Period } from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -20,14 +20,14 @@ const props = defineProps({
     required: true,
   },
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
 });
 
 const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
   return props.events.filter((event) =>
-    Period.init(event).isInDay(props.displayedDay),
+    Period.init(event).isInDay(props.displayedDay.date),
   );
 });
 
