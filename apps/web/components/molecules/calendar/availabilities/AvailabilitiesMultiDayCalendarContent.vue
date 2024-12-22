@@ -2,7 +2,7 @@
   <div class="multiday-content" :style="gridTemplateStyle">
     <div
       v-for="day in displayedDays"
-      :key="day.toISOString()"
+      :key="day.time"
       class="multiday-content__day"
     >
       <AvailabilitiesDailyCalendarContent
@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { OverDate } from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -23,7 +24,7 @@ const props = defineProps({
     required: true,
   },
   displayedDays: {
-    type: Array as PropType<Date[]>,
+    type: Array as PropType<OverDate[]>,
     required: true,
   },
 });
