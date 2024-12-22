@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Period } from "@overbookd/time";
+import { OverDate, Period } from "@overbookd/time";
 import { getOverlappingEvents } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
@@ -23,7 +23,7 @@ const props = defineProps({
     required: true,
   },
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
   clickableEvents: {
@@ -34,7 +34,7 @@ const props = defineProps({
 
 const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
   return props.events.filter((event) =>
-    Period.init(event).isInDay(props.displayedDay),
+    Period.init(event).isInDay(props.displayedDay.date),
   );
 });
 

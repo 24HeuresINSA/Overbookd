@@ -30,24 +30,24 @@ const publicHolidayStore = usePublicHolidayStore();
 
 const props = defineProps({
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
 });
 
 const displayableDay = computed<CalendarDay>(() => {
-  const name = formatDateDayFullName(props.displayedDay).toUpperCase();
-  const number = +formatDateDayNumber(props.displayedDay);
+  const name = formatDateDayFullName(props.displayedDay.date).toUpperCase();
+  const number = +formatDateDayNumber(props.displayedDay.date);
   return { name, number, date: props.displayedDay };
 });
 
 const calendarEvents = ref<DailyEvent[]>([]);
-const calendarEventsCurrentYear = ref<number>(props.displayedDay.getFullYear());
+const calendarEventsCurrentYear = ref<number>(props.displayedDay.year);
 calendarEvents.value = publicHolidayStore.calendarEventsForYear(
   calendarEventsCurrentYear.value,
 );
 const updateCalendarEvents = () => {
-  const year = props.displayedDay.getFullYear();
+  const year = props.displayedDay.year;
   if (calendarEventsCurrentYear.value === year) return;
   calendarEventsCurrentYear.value = year;
   calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
@@ -66,14 +66,13 @@ const publicHolidaysByDate = computed(() => {
 });
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
-  const dateKey = OverDate.from(props.displayedDay).dateString;
+  const dateKey = props.displayedDay.dateString;
   return publicHolidaysByDate.value[dateKey];
 });
 
 const isToday = computed<boolean>(() => {
-  const today = OverDate.today();
-  const displayedDay = OverDate.from(props.displayedDay);
-  return OverDate.isSameDay(displayedDay, today);
+  const today = OverDate.now();
+  return OverDate.isSameDay(props.displayedDay, today);
 });
 </script>
 

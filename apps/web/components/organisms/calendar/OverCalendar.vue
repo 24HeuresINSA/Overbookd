@@ -70,6 +70,7 @@ import {
   HOURS_IN_DAY,
   ONE_DAY_IN_MS,
   ONE_WEEK_IN_MS,
+  OverDate,
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
@@ -93,7 +94,9 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<Date>({ default: new Date() });
+const displayedDay = defineModel<OverDate>({
+  default: OverDate.now(),
+});
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
 );
@@ -112,13 +115,13 @@ const getShiftDelimiterClass = (hour: number): string => {
 
 const moveToPreviousWeekOrDay = () => {
   displayedDay.value = isDayMode.value
-    ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
+    ? OverDate.from(displayedDay.value.time - ONE_DAY_IN_MS)
+    : OverDate.from(displayedDay.value.time - ONE_WEEK_IN_MS);
 };
 const moveToNextWeekOrDay = () => {
   displayedDay.value = isDayMode.value
-    ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
+    ? OverDate.from(displayedDay.value.time + ONE_DAY_IN_MS)
+    : OverDate.from(displayedDay.value.time + ONE_WEEK_IN_MS);
 };
 
 if (publicHolidayStore.all.length === 0) {

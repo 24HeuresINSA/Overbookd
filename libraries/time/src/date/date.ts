@@ -149,7 +149,8 @@ export class OverDate {
 
   static from(international: string): OverDate;
   static from(international: Date): OverDate;
-  static from(international: Date | string): OverDate {
+  static from(international: number): OverDate;
+  static from(international: Date | string | number): OverDate {
     const internationalDate = new Date(international);
 
     const [hourWithPad, minuteWithPad] = Intl.DateTimeFormat("fr", DISPLAY_TIME)
@@ -190,7 +191,7 @@ export class OverDate {
     return new OverDate({ year, monthlyDate, hour, minute, offset });
   }
 
-  static today(): OverDate {
+  static now(): OverDate {
     return OverDate.fromLocal(new Date());
   }
 
@@ -198,6 +199,14 @@ export class OverDate {
     return OverDate.init({
       date: OverDate.from(day).dateString,
       hour: 0,
+    });
+  }
+
+  static getEndOfDay(day: Date): OverDate {
+    return OverDate.init({
+      date: OverDate.from(day).dateString,
+      hour: 23,
+      minute: 59,
     });
   }
 
@@ -227,6 +236,10 @@ export class OverDate {
 
   get minute(): Minute {
     return this.definition.minute;
+  }
+
+  get time(): number {
+    return this.date.getTime();
   }
 
   get period(): Period {

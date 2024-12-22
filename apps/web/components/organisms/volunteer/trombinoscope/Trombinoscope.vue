@@ -104,7 +104,7 @@ const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
 
 const volunteersBornToday = computed<UserDataWithPotentialyProfilePicture[]>(
   () => {
-    const today = OverDate.today();
+    const today = OverDate.now();
     return props.volunteers.filter((volunteer) => {
       const birthdate = OverDate.from(volunteer.birthdate);
       return (

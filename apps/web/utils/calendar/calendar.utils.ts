@@ -8,7 +8,7 @@ export type CalendarMode = typeof DAY_MODE | typeof _WEEK_MODE;
 export type CalendarDay = {
   name: string;
   number: number;
-  date: Date;
+  date: OverDate;
 };
 
 export function getOverlappingEvents(
@@ -19,8 +19,8 @@ export function getOverlappingEvents(
   return allEvents.filter((e) => Period.init(e).isOverlapping(eventPeriod));
 }
 
-export function getWeekDays(date: Date): CalendarDay[] {
-  const monday = OverDate.from(date).getMonday().date;
+export function getWeekDays(date: OverDate): CalendarDay[] {
+  const monday = date.getMonday().date;
   const weekDates = Array.from({ length: 7 }, (_, i) =>
     OverDate.from(new Date(monday.getTime() + i * ONE_DAY_IN_MS)),
   );
@@ -29,6 +29,6 @@ export function getWeekDays(date: Date): CalendarDay[] {
       .toLocaleDateString("fr-FR", { weekday: "long" })
       .toUpperCase(),
     number: Number(overdate.monthlyDate.day),
-    date: overdate.date,
+    date: overdate,
   }));
 }

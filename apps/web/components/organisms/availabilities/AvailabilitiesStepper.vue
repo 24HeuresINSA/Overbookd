@@ -21,7 +21,7 @@
             v-model="displayedDays"
             :disable-previous="shouldDisablePrevious"
             :disable-next="shouldDisableNext"
-            :cant-validate="hasAvailabilityError"
+            :cant-validate="cannotValidate"
             @previous="moveToPreviousStep"
             @next="moveToNextStep"
             @validate="saveAvailabilities"
@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { HARD_CODE } from "@overbookd/team-constants";
-import { ONE_DAY_IN_MS } from "@overbookd/time";
+import { ONE_DAY_IN_MS, OverDate } from "@overbookd/time";
 import {
   CalendarEventPeriods,
   type CalendarStep,
@@ -59,15 +59,18 @@ const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
-const displayedDays = computed<Date[]>(() => {
+const displayedDays = computed<OverDate[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
   const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
-  return splitedStep?.map(({ start }) => start) ?? [];
+  return splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
 });
 
-const hasAvailabilityError = computed<boolean>(
-  () => availabilitiyStore.availabilities.errors.length > 0,
-);
+const cannotValidate = computed<boolean>(() => {
+  const hasNoSelection =
+    availabilitiyStore.availabilities.selected.length === 0;
+  const hasError = availabilitiyStore.availabilities.errors.length > 0;
+  return hasNoSelection || hasError;
+});
 
 const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
 const shouldDisableNext = computed<boolean>(

@@ -48,34 +48,36 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<Date>({ required: true });
-const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
+const displayedDay = defineModel<OverDate>({ required: true });
+const eventStartDate = computed<OverDate>(() =>
+  OverDate.fromLocal(configurationStore.eventStartDate),
+);
 
 const periodIndicator = computed<string>(() => {
-  const month = displayedDay.value.toLocaleDateString("fr-FR", {
+  const month = displayedDay.value.date.toLocaleDateString("fr-FR", {
     month: "long",
   });
-  const year = displayedDay.value.getFullYear();
+  const year = displayedDay.value.year;
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
-  const today = OverDate.today();
-  const day = OverDate.from(displayedDay.value);
+  const today = OverDate.now();
   return props.dayMode
-    ? OverDate.isSameDay(day, today)
-    : OverDate.isSameWeek(day, today);
+    ? OverDate.isSameDay(displayedDay.value, today)
+    : OverDate.isSameWeek(displayedDay.value, today);
 });
 const isEventStartWeekOrDay = computed<boolean>(() => {
-  const day = OverDate.from(displayedDay.value);
-  const eventStartOverDay = OverDate.from(configurationStore.eventStartDate);
+  const eventStartOverDay = OverDate.fromLocal(
+    configurationStore.eventStartDate,
+  );
   return props.dayMode
-    ? OverDate.isSameDay(day, eventStartOverDay)
-    : OverDate.isSameWeek(day, eventStartOverDay);
+    ? OverDate.isSameDay(displayedDay.value, eventStartOverDay)
+    : OverDate.isSameWeek(displayedDay.value, eventStartOverDay);
 });
 
 const moveToToday = () => {
-  displayedDay.value = new Date();
+  displayedDay.value = OverDate.now();
 };
 const moveToEventStartDay = () => {
   displayedDay.value = eventStartDate.value;

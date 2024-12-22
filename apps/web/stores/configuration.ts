@@ -1,6 +1,7 @@
 import type { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
+import { OverDate } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
@@ -18,10 +19,11 @@ export const useConfigurationStore = defineStore("configuration", {
     },
     eventStartDate(): Date {
       const eventDate = this.get("eventDate");
-      if (!isObject(eventDate) || !("start" in eventDate)) return new Date();
+      const now = OverDate.now().date;
+      if (!isObject(eventDate) || !("start" in eventDate)) return now;
       const start = eventDate.start;
-      if (typeof start !== "string") return new Date();
-      return new Date(start);
+      if (typeof start !== "string") return now;
+      return OverDate.fromLocal(new Date(start)).date;
     },
     registerFormDescription(): string {
       const registerForm = this.get("registerForm");

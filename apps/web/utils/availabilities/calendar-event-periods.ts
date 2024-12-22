@@ -8,7 +8,7 @@ export type CalendarStep = {
 export class CalendarEventPeriods {
   private static get start(): OverDate {
     const configurationStore = useConfigurationStore();
-    const overDate = OverDate.from(configurationStore.eventStartDate);
+    const overDate = OverDate.fromLocal(configurationStore.eventStartDate);
     return OverDate.init({ date: overDate.dateString, hour: 0 });
   }
 

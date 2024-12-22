@@ -2,7 +2,7 @@
   <div class="weekly-content">
     <div
       v-for="day in getWeekDays(displayedDay)"
-      :key="day.date.toISOString()"
+      :key="day.date.time"
       class="weekly-content__day"
     >
       <DailyCalendarContent
@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { OverDate } from "@overbookd/time";
 import { getWeekDays } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
@@ -25,7 +26,7 @@ defineProps({
     required: true,
   },
   displayedDay: {
-    type: Date,
+    type: Object as PropType<OverDate>,
     required: true,
   },
   clickableEvents: {

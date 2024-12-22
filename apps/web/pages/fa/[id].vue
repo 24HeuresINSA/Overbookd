@@ -20,7 +20,10 @@
       <DialogCard without-actions @close="closeCalendar">
         <template #title> Créneaux de l'activité </template>
         <template #content>
-          <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
+          <OverCalendar
+            v-model="calendarMarker as OverDate"
+            :events="allTimeWindows"
+          />
         </template>
       </DialogCard>
     </v-dialog>
@@ -29,6 +32,7 @@
 
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
+import { OverDate } from "@overbookd/time";
 import { FA_URL } from "@overbookd/web-page";
 import {
   createCalendarEvent,
@@ -83,8 +87,10 @@ const allTimeWindows = computed<CalendarEvent[]>(() => {
   return [...generalEvents, ...inquiryEvents];
 });
 
-const calendarMarker = ref<Date>(
-  allTimeWindows.value.at(0)?.start ?? configurationStore.eventStartDate,
+const calendarMarker = ref<OverDate>(
+  OverDate.fromLocal(
+    allTimeWindows.value.at(0)?.start ?? configurationStore.eventStartDate,
+  ),
 );
 </script>
 
