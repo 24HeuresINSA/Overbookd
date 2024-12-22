@@ -21,9 +21,7 @@ const props = defineProps({
 const weekDays = computed<CalendarDay[]>(() => getWeekDays(props.displayedDay));
 </script>
 
-<style lang="scss" scoped>
-@use "~/assets/calendar.scss" as *;
-
+<style scoped>
 .header-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);

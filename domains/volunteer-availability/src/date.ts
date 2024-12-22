@@ -9,6 +9,14 @@ import { SHIFT_HOURS } from "./shift.constant.js";
 import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
 
 export class AvailabilityDate extends OverDate {
+  static fromOverDate(date: OverDate): AvailabilityDate {
+    const definition = OverDate.defineFrom({
+      date: date.dateString,
+      hour: date.hour,
+    });
+    return new AvailabilityDate(definition);
+  }
+
   static init({ date, hour }: InitOverDate) {
     const isOdd = hour % 2 !== 0;
     const happenOutsideNightShift = happenOutsidePartyShift(hour);
