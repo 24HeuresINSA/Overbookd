@@ -8,7 +8,7 @@
       <AvailabilitiesDailyCalendarContent
         :events="events"
         :displayed-day="day"
-        @event-click="propagateEventClick"
+        @click:event="propagateEventClick"
       />
     </div>
   </div>
@@ -28,9 +28,9 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["event-click"]);
+const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
-  emit("event-click", event);
+  emit("click:event", event);
 };
 </script>
 

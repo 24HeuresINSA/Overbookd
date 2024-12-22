@@ -9,7 +9,7 @@
         :events="events"
         :displayed-day="day.date"
         :clickable-events="clickableEvents"
-        @event-click="propagateEventClick"
+        @click:event="propagateEventClick"
       />
     </div>
   </div>
@@ -34,9 +34,10 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["event-click"]);
-const propagateEventClick = (event: CalendarEvent) =>
-  emit("event-click", event);
+const emit = defineEmits(["click:event"]);
+const propagateEventClick = (event: CalendarEvent) => {
+  emit("click:event", event);
+};
 </script>
 
 <style lang="scss" scoped>
