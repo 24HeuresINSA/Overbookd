@@ -48,7 +48,7 @@
 import type { CharismaPeriod, SavedCharismaPeriod } from "@overbookd/http";
 import {
   type CalendarEvent,
-  CreateCalendarEvent,
+  createCalendarEvent,
 } from "~/utils/calendar/event";
 import { getCharismaColor } from "~/utils/charisma/charisma-period.utils";
 
@@ -104,7 +104,7 @@ const maxCharisma = computed<number>(() =>
 );
 const calendarEvents = computed<CalendarEvent[]>(() =>
   charismaPeriods.value.map((cp) =>
-    CreateCalendarEvent.init({
+    createCalendarEvent({
       start: cp.start,
       end: cp.end,
       name: cp.charisma.toString(),
