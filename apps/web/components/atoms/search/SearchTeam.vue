@@ -8,6 +8,7 @@
     :disabled="disabled"
     :hide-details="hideDetails"
     :clearable="clearable"
+    :density="density"
     hide-selected
     return-object
     :custom-filter="slugifiedFilter"
@@ -22,6 +23,7 @@
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
 import { slugifiedFilter } from "~/utils/search/search.utils";
+import type { Density } from "~/utils/vuetify/component-props";
 
 const team = defineModel<Team>("team", { required: false });
 
@@ -41,6 +43,10 @@ const props = defineProps({
   hideDetails: {
     type: Boolean,
     default: false,
+  },
+  density: {
+    type: String as PropType<Density>,
+    default: "comfortable",
   },
   list: {
     type: Array as PropType<Team[] | null>,

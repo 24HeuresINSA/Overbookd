@@ -14,7 +14,7 @@ export function matchingSearchItems<T>(
 
 export function keepMatchingSearchCriteria<T>(
   search: string,
-): (member: Searchable<T>) => boolean {
+): (item: Searchable<T>) => boolean {
   const slugifiedSearch = SlugifyService.apply(search);
   return ({ searchable }) => searchable.includes(slugifiedSearch);
 }
