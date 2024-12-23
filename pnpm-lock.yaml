@@ -316,8 +316,8 @@ importers:
         specifier: 7.4.47
         version: 7.4.47
       '@nuxtjs/leaflet':
-        specifier: 1.2.5
-        version: 1.2.5(typescript@5.6.3)
+        specifier: 1.2.6
+        version: 1.2.6(typescript@5.6.3)
       '@overbookd/access-manager':
         specifier: workspace:*
         version: link:../../domains/access-manager
@@ -428,7 +428,7 @@ importers:
         version: 1.83.0
       vite-plugin-vuetify:
         specifier: 2.0.4
-        version: 2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.5)
+        version: 2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)
       vue-chartjs:
         specifier: 5.3.2
         version: 5.3.2(chart.js@4.4.7)(vue@3.5.13(typescript@5.6.3))
@@ -436,8 +436,8 @@ importers:
         specifier: 1.0.10
         version: 1.0.10
       vuetify:
-        specifier: 3.7.5
-        version: 3.7.5(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
+        specifier: 3.7.6
+        version: 3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@pinia/nuxt':
         specifier: 0.9.0
@@ -1675,8 +1675,8 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
-  '@nuxtjs/leaflet@1.2.5':
-    resolution: {integrity: sha512-VlGYQ1YG642P9PWqckqJ5HIu8cZHQ0lQ4aEjwBTAB62nrEkfgJqJhHmM6Stn2OwWQIOO/noLQ1ZI/n1Av+Zs+g==}
+  '@nuxtjs/leaflet@1.2.6':
+    resolution: {integrity: sha512-AOefIxck/cp8LOndV91cbWfHy3qDOtxnGfSABZUxPpZNv3dBn+zY+kX/r8zmkHaoTAevFYMs7mv+oeMA2PmGJQ==}
 
   '@nuxtjs/opencollective@0.3.2':
     resolution: {integrity: sha512-um0xL3fO7Mf4fDxcqx9KryrB7zgRM5JSlvGN5AGkP6JLM5XEKyjeAiPbNxdXVXQ16isuAhYpvP88NgL2BGd6aA==}
@@ -7665,8 +7665,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.7.5:
-    resolution: {integrity: sha512-5aiSz8WJyGzYe3yfgDbzxsFATwHvKtdvFAaUJEDTx7xRv55s3YiOho/MFhs5iTbmh2VT4ToRgP0imBUP660UOw==}
+  vuetify@3.7.6:
+    resolution: {integrity: sha512-lol0Va5HtMIqZfjccSD5DLv5v31R/asJXzc6s7ULy51PHr1DjXxWylZejhq0kVpMGW64MiV1FmA/p8eYQfOWfQ==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -9086,7 +9086,7 @@ snapshots:
       - vti
       - vue-tsc
 
-  '@nuxtjs/leaflet@1.2.5(typescript@5.6.3)':
+  '@nuxtjs/leaflet@1.2.6(typescript@5.6.3)':
     dependencies:
       '@types/leaflet': 1.9.15
       '@vue-leaflet/vue-leaflet': 0.10.1(@types/leaflet@1.9.15)(leaflet@1.9.4)(typescript@5.6.3)
@@ -10179,11 +10179,11 @@ snapshots:
 
   '@vue/shared@3.5.13': {}
 
-  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.5)':
+  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)':
     dependencies:
       upath: 2.0.1
       vue: 3.5.13(typescript@5.6.3)
-      vuetify: 3.7.5(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
+      vuetify: 3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -16049,14 +16049,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-vuetify@2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.5):
+  vite-plugin-vuetify@2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6):
     dependencies:
-      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.5)
+      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)
       debug: 4.3.7(supports-color@9.4.0)
       upath: 2.0.1
       vite: 5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0)
       vue: 3.5.13(typescript@5.6.3)
-      vuetify: 3.7.5(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
+      vuetify: 3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
       - supports-color
 
@@ -16185,12 +16185,12 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
-  vuetify@3.7.5(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3)):
+  vuetify@3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3)):
     dependencies:
       vue: 3.5.13(typescript@5.6.3)
     optionalDependencies:
       typescript: 5.6.3
-      vite-plugin-vuetify: 2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.5)
+      vite-plugin-vuetify: 2.0.4(vite@5.4.11(@types/node@22.10.1)(sass@1.83.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)
 
   w3c-xmlserializer@5.0.0:
     dependencies:
