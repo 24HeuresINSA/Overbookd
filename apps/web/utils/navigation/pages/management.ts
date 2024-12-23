@@ -9,6 +9,7 @@ import {
 } from "@overbookd/permission";
 import type { PageInSummary } from "./desktop-summary";
 import {
+  ASSIGNMENT_ORGA_TASK_URL,
   CHARISMA_EVENTS_LIST_URL,
   CHARISMA_EVENTS_MANAGE_URL,
   CHARISMA_PERIODS_URL,
@@ -158,17 +159,17 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
   keywords: ["charisme-dispos", "charisme-disponibilites"],
 };
 
-// const ASSIGNMENT_ORGA_TASK_PAGE: Page = {
-//   icon: "mdi-human-greeting",
-//   title: "Affect Orga-Tâche",
-//   permission: AFFECT_VOLUNTEER,
-//   to: ASSIGNMENT_ORGA_TASK_URL,
-//   description: "Permet d'affecter des bénévoles à des tâches",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   hasParam: false,
-//   keywords: ["orga-tache", "affectation"],
-// };
+const ASSIGNMENT_ORGA_TASK_PAGE: PageInSummary = {
+  icon: "mdi-human-greeting",
+  title: "Affect Orga-Tâche",
+  permission: AFFECT_VOLUNTEER,
+  to: ASSIGNMENT_ORGA_TASK_URL,
+  description: "Permet d'affecter des bénévoles à des tâches",
+  mobileSupport: false,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["orga-tache", "affectation"],
+};
 
 // const ASSIGNMENT_TASK_ORGA_PAGE: Page = {
 //   icon: "mdi-human-greeting",
@@ -205,7 +206,7 @@ export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CHARISMA_EVENTS_MANAGE_PAGE,
   CHARISMA_EVENTS_LIST_PAGE,
   CHARISMA_PERIODS_PAGE,
-  // ASSIGNMENT_ORGA_TASK_PAGE,
+  ASSIGNMENT_ORGA_TASK_PAGE,
   // ASSIGNMENT_TASK_ORGA_PAGE,
   ORGA_NEED_PAGE,
 ];
