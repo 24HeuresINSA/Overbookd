@@ -99,7 +99,7 @@ const isSelected = (event: CalendarEvent): boolean => {
 };
 const click = (event: CalendarEvent) => {
   const date = OverDate.from(event.start);
-  const charismaPerHour = findCharismaPerHour(Period.init(event));
+  const charismaPerHour = +event.name;
 
   if (isSelected(event)) {
     return availabilityStore.unSelectAvailability(date, charismaPerHour);

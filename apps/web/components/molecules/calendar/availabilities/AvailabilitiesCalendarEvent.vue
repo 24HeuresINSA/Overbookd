@@ -3,26 +3,21 @@
     class="calendar-event"
     :class="colorClass"
     :style="{
-      top: `${eventTopPositionInPixels + 1}px`,
-      height: `${eventHeightInPixels - 2}px`,
+      top: `${eventManager.topPositionInPixels + 1}px`,
+      height: `${eventManager.heightInPixels - 2}px`,
     }"
     hover
     @click="propagateClick"
   >
-    <p class="calendar-event__name">{{ event.name }}</p>
+    <p class="calendar-event__charisma">{{ event.name }}</p>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import {
-  MINUTES_IN_DAY,
-  MINUTES_IN_HOUR,
-  ONE_MINUTE_IN_MS,
-  OverDate,
-  Period,
-} from "@overbookd/time";
-import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
 import type { CalendarEvent } from "~/utils/calendar/event";
+import type { OverDate, Period } from "@overbookd/time";
+import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
+import { CalendarEventManager } from "~/utils/calendar/calendar-event.manager";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 
@@ -40,75 +35,37 @@ const props = defineProps({
 const emit = defineEmits(["click"]);
 const propagateClick = () => emit("click", props.event);
 
-const PIXELS_PER_MINUTE = 0.75;
+const eventManager = new CalendarEventManager(props.event, props.displayedDay);
 
-const displayedEventPeriod = computed<Period>(() => {
-  const currentDayStart = OverDate.getStartOfDay(props.displayedDay.date);
-  const currentDayEnd = OverDate.getEndOfDay(props.displayedDay.date);
-
-  const validStart =
-    props.event.start < currentDayStart.date
-      ? currentDayStart.date
-      : props.event.start;
-  const validEnd =
-    props.event.end > currentDayEnd.date ? currentDayEnd.date : props.event.end;
-
-  const start = validStart < validEnd ? validStart : validEnd;
-  const end = validStart < validEnd ? validEnd : validStart;
-
-  return Period.init({ start, end });
-});
-
-const eventStartTotalMinutes = computed<number>(() => {
-  return (
-    displayedEventPeriod.value.start.getHours() * MINUTES_IN_HOUR +
-    displayedEventPeriod.value.start.getMinutes()
-  );
-});
-const eventTopPositionInPixels = computed<number>(() => {
-  return eventStartTotalMinutes.value * PIXELS_PER_MINUTE;
-});
-
-const eventHeightInPixels = computed<number>(() => {
-  const eventDurationInMs = displayedEventPeriod.value.duration.inMilliseconds;
-  const eventDurationInMinutes = eventDurationInMs / ONE_MINUTE_IN_MS;
-  const remainingEventMinutesInDay =
-    MINUTES_IN_DAY - eventStartTotalMinutes.value;
-  return (
-    Math.min(eventDurationInMinutes, remainingEventMinutesInDay) *
-    PIXELS_PER_MINUTE
-  );
-});
-
-const selectedAvailabilities = computed<Period[]>(
+const selectedAvailabilities = computed(
   () => availabilityStore.availabilities.selected as Period[],
 );
-const savedAvailabilities = computed<Period[]>(
+const savedAvailabilities = computed(
   () => availabilityStore.availabilities.recorded as Period[],
 );
-const errors = computed<AvailabilityErrorMessage[]>(
+const errors = computed(
   () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
 );
 
-const isSaved = (period: Period): boolean => {
-  return savedAvailabilities.value.some((availability) =>
-    availability.includes(period),
+const isSaved = (): boolean =>
+  savedAvailabilities.value.some((availability) =>
+    availability.includes(eventManager.displayedEventPeriod),
   );
-};
-const isSelected = (period: Period): boolean => {
-  return selectedAvailabilities.value.some((availability) =>
-    availability.includes(period),
-  );
-};
-const hasError = (period: Period): boolean => {
-  return errors.value.some((error) => error.period.includes(period));
-};
 
-const colorClass = computed<string>(() => {
-  const period = displayedEventPeriod.value;
-  if (hasError(period)) return "error";
-  if (isSaved(period)) return "validated";
-  if (isSelected(period)) return "selected";
+const isSelected = (): boolean =>
+  selectedAvailabilities.value.some((availability) =>
+    availability.includes(eventManager.displayedEventPeriod),
+  );
+
+const hasError = (): boolean =>
+  errors.value.some((error) =>
+    error.period.includes(eventManager.displayedEventPeriod),
+  );
+
+const colorClass = computed(() => {
+  if (hasError()) return "error";
+  if (isSaved()) return "validated";
+  if (isSelected()) return "selected";
   return "unselected";
 });
 </script>
@@ -127,7 +84,7 @@ const colorClass = computed<string>(() => {
   justify-content: center;
   text-align: center;
 
-  &__name {
+  &__charisma {
     width: 100%;
     font-size: 1rem;
     font-weight: bold;
