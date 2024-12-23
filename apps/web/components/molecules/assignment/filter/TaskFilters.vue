@@ -1,52 +1,52 @@
 <template>
   <div class="filters">
     <v-text-field
-      :value="search"
+      v-model="search"
       class="filters__search"
       label="Recherche"
+      density="compact"
       hide-details
-      @input="changeSearch"
     />
     <SearchTeam
-      :teams="requiredTeams"
+      v-model="requiredTeams"
       label="Chercher par équipe requise"
       class="filters__field filter__multi-select"
+      density="compact"
       hide-details
-      @change="changeTeamsRequired"
     />
     <SearchTeam
-      :value="inChargeTeam"
+      v-model="inChargeTeam"
       label="Chercher par équipe responsable"
       class="filters__field"
+      density="compact"
       hide-details
-      @change="changeInChargeTeam"
     />
     <div class="team-filter-completed-switch">
       <v-combobox
-        :value="category"
+        v-model="category"
         :items="categoryItems"
         label="Chercher une catégorie"
         class="filters__field"
         clearable
         return-object
         hide-details
-        @change="changeCategory"
       />
       <v-switch
         v-show="!isOrgaTask"
         v-model="completed"
         label="Toutes les FTs"
         class="filters__switch"
+        density="compact"
         hide-details
-        @change="changeCompleted"
       />
       <v-switch
         v-show="isOrgaTask"
         v-model="hasAssignedFriends"
         label="Amis assignés"
         class="filters__switch"
+        density="compact"
+        color="primary"
         hide-details
-        @change="changeHasAssignedFriends"
       />
     </div>
     <p class="stats">
@@ -57,6 +57,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FestivalEventIdentifier } from "@overbookd/festival-event";
 import type { Category } from "@overbookd/festival-event-constants";
 import type { Team } from "@overbookd/team";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
@@ -70,23 +71,14 @@ const router = useRouter();
 
 const props = defineProps({
   type: {
-    type: String,
-    default: "ft",
+    type: String as PropType<FestivalEventIdentifier>,
+    default: "FT",
   },
   listLength: {
     type: Number,
     default: 0,
   },
 });
-
-const emit = defineEmits([
-  "change:search",
-  "change:teams-required",
-  "change:team-in-charge",
-  "change:category",
-  "change:completed",
-  "change:has-assigned-friends",
-]);
 
 const search = ref<string>("");
 const requiredTeams = ref<Team[]>([]);
@@ -95,49 +87,19 @@ const category = ref<Category | TaskPriority | null>(null);
 const completed = ref<boolean>(false);
 const hasAssignedFriends = ref<boolean>(false);
 
-const isOrgaTask = computed<boolean>(() => {
-  return isOrgaTaskMode(router.currentRoute.value.fullPath);
-});
+const isOrgaTask = computed<boolean>(() =>
+  isOrgaTaskMode(router.currentRoute.value.fullPath),
+);
+const categoryItems = computed<string[]>(() => [
+  ...Object.values(TaskPriorities),
+  ...displayableCategories,
+]);
 
-const changeSearch = (value: string) => {
-  search.value = value;
-  emit("change:search", value);
-};
-
-const changeTeamsRequired = (teams: Team[]) => {
-  requiredTeams.value = teams;
-  emit("change:teams-required", teams);
-};
-
-const changeInChargeTeam = (team: Team | null) => {
-  inChargeTeam.value = team;
-  emit("change:team-in-charge", team);
-};
-
-const categoryItems = computed<string[]>(() => {
-  return [...Object.values(TaskPriorities), ...displayableCategories];
-});
-
-const changeCategory = (value: Category | null) => {
-  category.value = value;
-  emit("change:category", value);
-};
-
-const changeCompleted = (value: boolean) => {
-  completed.value = value;
-  emit("change:completed", value);
-};
-
-const changeHasAssignedFriends = (value: boolean) => {
-  hasAssignedFriends.value = value;
-  emit("change:has-assigned-friends", value);
-};
-
-const counterLabel = computed<string>(() => {
-  return props.type === "ft"
+const counterLabel = computed<string>(() =>
+  props.type === "FT"
     ? "Nombre de FT dans la liste : "
-    : "Nombre de créneaux dans la liste : ";
-});
+    : "Nombre de créneaux dans la liste : ",
+);
 </script>
 
 <style lang="scss" scoped>
@@ -146,7 +108,6 @@ const counterLabel = computed<string>(() => {
   height: fit-content;
   padding: 0px 15px;
   margin-top: auto;
-
   &__field {
     width: 100%;
     padding: 5px, 0px;
@@ -154,7 +115,6 @@ const counterLabel = computed<string>(() => {
     overflow-y: auto;
     overflow-x: hidden;
   }
-
   &__multi-select {
     max-height: 200px;
   }

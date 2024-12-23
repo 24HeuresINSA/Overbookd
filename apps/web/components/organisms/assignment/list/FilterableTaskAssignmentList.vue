@@ -2,13 +2,13 @@
   <v-card class="filterable-assignment-list">
     <v-card-text class="filterable-assignment-list__text">
       <TaskFilters
+        v-model:search="searchedTaskName"
+        v-model:required-teams="searchedRequiredTeams"
+        v-model:in-charge-team="searchedInChargeTeam"
+        v-model:category="searchedCategory"
+        v-model:has-assigned-friends="hasAssignedFriends"
         :list-length="filteredAssignments.length"
         class="filters"
-        @change:search="searchedTaskName = $event"
-        @change:required-teams="searchedRequiredTeams = $event"
-        @change:in-charge-team="searchedInChargeTeam = $event"
-        @change:category="searchedCategory = $event"
-        @change:has-assigned-friends="hasAssignedFriends = $event"
       />
       <v-divider />
       <TaskAssignmentList
@@ -36,7 +36,10 @@ import {
   TaskPriorities,
   type TaskPriority,
 } from "~/utils/assignment/task-priority";
-import type { Searchable } from "~/utils/search/search.utils";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
@@ -46,34 +49,33 @@ const searchedInChargeTeam = ref<Team | null>(null);
 const searchedCategory = ref<DisplayableCategory | TaskPriority | null>(null);
 const hasAssignedFriends = ref<boolean>(false);
 
-const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() => {
-  return searchableAssignments.value.filter((assignment) => {
+const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
+  searchableAssignments.value.filter((assignment) => {
     isMatchingFilter(assignment);
-  });
-});
+  }),
+);
 const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
-  () => {
-    return assignVolunteerToTaskStore.assignments.map((assignment) => ({
+  () =>
+    assignVolunteerToTaskStore.assignments.map((assignment) => ({
       ...assignment,
       searchable: SlugifyService.apply(
         `${assignment.taskId} ${assignment.name}`,
       ),
-    }));
-  },
+    })),
 );
 
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
-const shouldShowAssignmentList = computed<boolean>(() => {
-  return !!selectedVolunteer && filteredAssignments.value.length > 0;
-});
+const shouldShowAssignmentList = computed<boolean>(
+  () => selectedVolunteer !== null && filteredAssignments.value.length > 0,
+);
 
 const isMatchingFilter = (
   assignment: Searchable<AssignmentSummaryWithTask>,
 ): boolean => {
   return (
-    filterByTaskName(searchedTaskName.value)(assignment) &&
+    keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
     filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
     filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
     filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
@@ -81,12 +83,6 @@ const isMatchingFilter = (
   );
 };
 
-const filterByTaskName = (
-  searchedTaskName: string,
-): ((assignment: Searchable<AssignmentSummaryWithTask>) => boolean) => {
-  const slugifiedSearch = SlugifyService.apply(searchedTaskName);
-  return ({ searchable }) => searchable.includes(slugifiedSearch);
-};
 const filterByRequiredTeams = (
   searchedTeams: Team[],
 ): ((assignment: AssignmentSummaryWithTask) => boolean) => {
@@ -110,10 +106,9 @@ const filterByCategoryOrPriority = (
   searchedCategory: DisplayableCategory | TaskPriority | null,
 ): ((assignment: AssignmentSummaryWithTask) => boolean) => {
   if (!searchedCategory) return () => true;
-  if (isTaskPriority(searchedCategory)) {
-    return filterByPriority(searchedCategory);
-  }
-  return filterByCategory(searchedCategory);
+  return isTaskPriority(searchedCategory)
+    ? filterByPriority(searchedCategory)
+    : filterByCategory(searchedCategory);
 };
 const isTaskPriority = (
   category: TaskPriority | DisplayableCategory,
@@ -141,7 +136,10 @@ const filterByHasAssignedFriends = (
 <style lang="scss" scoped>
 $filters-height: 275px;
 $column-margins: 30px;
-$layout-padding: 20px;
+$layout-padding: $card-margin * 2;
+$list-height: calc(
+  100vh - $filters-height - $header-height - $layout-padding - $column-margins
+);
 
 .filterable-assignment-list {
   min-height: 100%;
@@ -159,20 +157,14 @@ $layout-padding: 20px;
 
 .assignment-list {
   padding: 0 5px;
-  height: calc(
-    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
-      #{$column-margins}
-  );
+  height: $list-height;
 }
 
 .error-message {
   align-items: center;
   justify-content: center;
   display: flex;
-  height: calc(
-    100vh - #{$filters-height} - #{$header-height} - #{$footer-height} - #{$layout-padding} -
-      #{$column-margins}
-  );
+  height: $list-height;
   margin: 0 5%;
 
   p {
