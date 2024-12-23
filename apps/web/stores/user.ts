@@ -1,5 +1,5 @@
 import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
-import type { PlanningEvent, PlanningTask } from "@overbookd/assignment";
+import type { PlanningEvent } from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
@@ -19,6 +19,7 @@ import type {
   AssignmentStat,
   Consumer,
   VolunteerWithAssignmentStats,
+  PlanningTask,
 } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
 import { UserRepository } from "~/repositories/user.repository";

@@ -31,7 +31,7 @@
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 import {
-  CreateCalendarEvent,
+  createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
 
@@ -71,13 +71,13 @@ const allTimeWindows = computed<CalendarEvent[]>(() => {
   const generalTimeWindows = selectedActivity.value.general.timeWindows;
   const generalEvents = generalTimeWindows.map(({ start, end }) => {
     const event = { start, end, name: "Animation", color: "primary" };
-    return CreateCalendarEvent.init(event);
+    return createCalendarEvent(event);
   });
 
   const inquiryTimeWindows = selectedActivity.value.inquiry.timeWindows;
   const inquiryEvents = inquiryTimeWindows.map(({ start, end }) => {
     const event = { start, end, name: "Matos", color: "secondary" };
-    return CreateCalendarEvent.init(event);
+    return createCalendarEvent(event);
   });
 
   return [...generalEvents, ...inquiryEvents];

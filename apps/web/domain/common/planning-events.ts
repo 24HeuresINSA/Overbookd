@@ -2,7 +2,7 @@ import { getColorByStatus } from "./status-color";
 import type { PlanningEvent } from "@overbookd/assignment";
 import type { IProvidePeriod } from "@overbookd/time";
 import {
-  CreateCalendarEvent,
+  createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
 
@@ -33,5 +33,5 @@ export function convertToCalendarBreak({
   start,
   end,
 }: IProvidePeriod): CalendarEvent {
-  return CreateCalendarEvent.init({ start, end, name: PAUSE, color: "black" });
+  return createCalendarEvent({ start, end, name: PAUSE, color: "black" });
 }
