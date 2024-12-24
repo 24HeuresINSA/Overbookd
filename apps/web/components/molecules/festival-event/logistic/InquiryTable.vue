@@ -168,12 +168,11 @@ const linkDrive = (slug: string, drive?: Drive) => {
 const driveSearch = ref<string>("");
 const customFilter = (value: string, query: string) => {
   if (!query) return true;
-  return value.toLowerCase().includes(query.toLowerCase());
+  return value.includes(SlugifyService.apply(query));
 };
 const selectFirstDrive = (inquiry: InquiryRequest) => {
-  const slugifiedSearch = SlugifyService.apply(driveSearch.value);
   const filteredDrives = sortedDrives.value.filter(({ name }) =>
-    customFilter(name, slugifiedSearch),
+    customFilter(name, driveSearch.value),
   );
   const firstDrive = filteredDrives.at(0);
   if (!firstDrive) return;
