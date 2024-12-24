@@ -20,7 +20,9 @@ export class UpdateSignageRequestDto implements UpdateSignageRequest {
     enum: signageTypes,
   })
   @IsOptional()
-  @IsEnum(signageTypes)
+  @IsEnum(signageTypes, {
+    message: () => "Le type de signalétique est invalide",
+  })
   type?: SignageType;
 
   @ApiProperty({ required: false })

@@ -17,11 +17,14 @@
       <p v-if="cantLinkDrive">{{ gearDrive(item) || "" }}</p>
       <v-autocomplete
         v-else
+        v-model:search="driveSearch"
         :model-value="gearDrive(item)"
-        :items="drives"
+        :items="sortedDrives"
+        :custom-filter="customFilter"
         density="compact"
         hide-details
         @update:model-value="(drive) => linkDrive(item.slug, drive)"
+        @keydown.enter="selectFirstDrive(item)"
       />
     </template>
 
@@ -110,6 +113,15 @@ const noDataMessage = computed<string>(() => {
   }
 });
 
+const sortedDrives = computed(() => {
+  const selectedDrives = props.inquiries
+    .map(gearDrive)
+    .filter((drive): drive is Drive => !!drive);
+  const selectedSet = new Set(selectedDrives);
+  const nonSelectedDrives = drives.filter((drive) => !selectedSet.has(drive));
+  return [...selectedSet, ...nonSelectedDrives];
+});
+
 const cantLinkDrive = computed<boolean>(
   () => !userStore.isMemberOf(props.owner),
 );
@@ -131,7 +143,26 @@ const gearDrive = (inquiry: InquiryRequest): Drive | undefined => {
 
 const emit = defineEmits(["remove", "link-drive"]);
 const removeInquiry = (inquiry: InquiryRequest) => emit("remove", inquiry);
-const linkDrive = (slug: string, drive: Drive) => {
+const linkDrive = (slug: string, drive: Drive | null) => {
+  if (!drive) return;
   emit("link-drive", { slug, drive });
+};
+
+const driveSearch = ref<string>("");
+const customFilter = (value: string, query: string) => {
+  if (!query) return true;
+  return value.toLowerCase().includes(query.toLowerCase());
+};
+const selectFirstDrive = (inquiry: InquiryRequest) => {
+  const filteredDrives = sortedDrives.value.filter((drive) =>
+    customFilter(drive, driveSearch.value),
+  );
+  const firstDrive = filteredDrives.at(0);
+  if (!firstDrive) return;
+
+  linkDrive(inquiry.slug, firstDrive);
+
+  if (!(document.activeElement instanceof HTMLElement)) return;
+  document.activeElement.blur();
 };
 </script>

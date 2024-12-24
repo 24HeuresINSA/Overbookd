@@ -22,7 +22,7 @@ export class UpdateElectricitySupplyRequestDto
 {
   @ApiProperty({ required: false, enum: connections })
   @IsOptional()
-  @IsEnum(connections)
+  @IsEnum(connections, { message: () => "Le type de connexion est invalide" })
   connection?: ElectricityConnection;
 
   @ApiProperty({ required: false, example: "Lampe" })

@@ -8,6 +8,6 @@ export class AddPageToFavoritesRequestDto implements AddPageToFavorites {
     enum: pagesURL,
     example: PLANNING_URL,
   })
-  @IsEnum(pagesURL)
+  @IsEnum(pagesURL, { message: () => "La page est invalide" })
   page: PageURL;
 }

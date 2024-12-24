@@ -10,7 +10,7 @@ export class AddElectricitySupplyRequestDto
   implements PrepareElectricitySupplyCreation
 {
   @ApiProperty({ required: true, enum: connections })
-  @IsEnum(connections)
+  @IsEnum(connections, { message: () => "Le type de connexion est invalide" })
   connection: ElectricityConnection;
 
   @ApiProperty({ required: true, example: "Lampe" })
