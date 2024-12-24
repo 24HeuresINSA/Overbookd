@@ -6,6 +6,7 @@
       label="Recherche"
       density="compact"
       hide-details
+      clearable
     />
     <SearchTeams
       v-model="teams"
