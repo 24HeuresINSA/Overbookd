@@ -12,6 +12,7 @@
         >
           <AssignmentResume
             :assignment="item"
+            class="assignment-list__item"
             @selected-team="assign(item, $event)"
           />
         </v-list-item>

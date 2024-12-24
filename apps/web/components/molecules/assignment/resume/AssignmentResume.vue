@@ -18,6 +18,7 @@
           :team="team"
           with-name
           show-hidden
+          clickable
           @click="selectTeam(team)"
         />
       </div>
@@ -105,6 +106,9 @@ const teamSelectShortcut = () => {
 
 .assignment-remaining-team-requests {
   color: grey;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .assignment-teams {
