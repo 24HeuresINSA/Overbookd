@@ -2,24 +2,22 @@
   <v-card class="friends-card">
     <v-card-title class="friends-card__title">{{ title }}</v-card-title>
     <v-card-text class="friends-card__list">
-      <v-list-item-group>
-        <v-list-item
-          v-for="friend in selectedVolunteerFriends"
-          :key="friend.id"
-          class="friend-item"
-          :value="friend.id"
-          @click="selectVolunteer(friend)"
-          @contextmenu.prevent="openAssignmentPageInNewTab(friend.id)"
-        >
-          {{ buildUserName(friend) }}
-        </v-list-item>
-        <v-list-item
-          v-if="selectedVolunteerFriends.length === 0"
-          class="friend-item"
-        >
-          Aucun ami 😭
-        </v-list-item>
-      </v-list-item-group>
+      <v-list-item
+        v-for="friend in selectedVolunteerFriends"
+        :key="friend.id"
+        class="friend-item"
+        :value="friend.id"
+        @click="selectVolunteer(friend)"
+        @contextmenu.prevent="openAssignmentPageInNewTab(friend.id)"
+      >
+        {{ buildUserName(friend) }}
+      </v-list-item>
+      <v-list-item
+        v-if="selectedVolunteerFriends.length === 0"
+        class="friend-item"
+      >
+        Aucun ami 😭
+      </v-list-item>
     </v-card-text>
   </v-card>
 </template>

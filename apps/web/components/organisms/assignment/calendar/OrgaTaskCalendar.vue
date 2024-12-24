@@ -152,6 +152,7 @@ const formatTaskForCalendar = ({
 <style lang="scss" scoped>
 .title {
   display: flex;
+  align-items: center;
   &__name {
     font-size: 1.4rem;
     font-weight: 500;
