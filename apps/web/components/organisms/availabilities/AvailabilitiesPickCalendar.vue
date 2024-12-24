@@ -29,7 +29,7 @@ import { ONE_HOUR_IN_MS, OverDate, TWO_HOURS_IN_MS } from "@overbookd/time";
 import { Period } from "@overbookd/time";
 import { CalendarEventPeriods } from "~/utils/availabilities/calendar-event-periods";
 import {
-  CalendarEventBuilder,
+  createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
 import { isPartyShift } from "~/utils/shift.utils";
@@ -80,7 +80,7 @@ const calendarEvents = computed<CalendarEvent[]>(() =>
       const charismaPerHour = findCharismaPerHour(period);
       const charisma = isPartyPeriod ? charismaPerHour : charismaPerHour * 2;
 
-      return CalendarEventBuilder.build({
+      return createCalendarEvent({
         start: period.start,
         end: period.end,
         name: charisma.toString(),
