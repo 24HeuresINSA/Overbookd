@@ -79,9 +79,11 @@ const closeAssignmentDetailsDialog = () => {
 </script>
 
 <style lang="scss" scoped>
+$layout-padding: 15px;
+
 .assignment {
   display: flex;
-  height: calc(100vh - $header-height);
+  height: calc(100vh - $header-height - $layout-padding * 2);
   overflow-y: scroll;
 }
 

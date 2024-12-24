@@ -8,11 +8,12 @@
       hide-details
       clearable
     />
-    <SearchTeam
+    <SearchTeams
       v-model="requiredTeams"
-      label="Chercher par équipe requise"
+      label="Chercher par équipe(s) requise(s)"
       class="filters__field"
       density="compact"
+      closable-chips
       hide-details
       clearable
     />

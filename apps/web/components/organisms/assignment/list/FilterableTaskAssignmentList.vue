@@ -51,7 +51,13 @@ const hasAssignedFriends = ref<boolean>(false);
 
 const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
   searchableAssignments.value.filter((assignment) => {
-    isMatchingFilter(assignment);
+    return (
+      keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
+      filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
+      filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
+      filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
+      filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
+    );
   }),
 );
 const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
@@ -70,18 +76,6 @@ const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
 const shouldShowAssignmentList = computed<boolean>(
   () => selectedVolunteer !== null && filteredAssignments.value.length > 0,
 );
-
-const isMatchingFilter = (
-  assignment: Searchable<AssignmentSummaryWithTask>,
-): boolean => {
-  return (
-    keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
-    filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
-    filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
-    filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
-    filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
-  );
-};
 
 const filterByRequiredTeams = (
   searchedTeams: Team[],
