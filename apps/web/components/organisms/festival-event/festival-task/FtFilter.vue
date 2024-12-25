@@ -59,6 +59,7 @@ import {
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { REVIEWER_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -96,7 +97,7 @@ const updateReviewParams = (
 };
 
 const updateReviewerParam = (reviewer?: User) => {
-  updateQueryParams("reviewer", reviewer?.id);
+  updateQueryParams(REVIEWER_QUERY_PARAM, reviewer?.id);
 };
 </script>
 

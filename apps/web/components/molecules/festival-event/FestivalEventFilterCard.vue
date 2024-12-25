@@ -60,6 +60,12 @@ import {
 } from "~/utils/festival-event/festival-task/festival-task.model";
 import type { FestivalEventStatus } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import {
+  ADHERENT_QUERY_PARAM,
+  SEARCH_QUERY_PARAM,
+  STATUS_QUERY_PARAM,
+  TEAM_QUERY_PARAM,
+} from "~/utils/festival-event/festival-event.constant";
 
 const userStore = useUserStore();
 
@@ -98,17 +104,17 @@ const updateSearchParam = (newSearch: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => {
     search.value = newSearch;
-    updateQueryParams("search", newSearch);
+    updateQueryParams(SEARCH_QUERY_PARAM, newSearch);
   }, 200);
 };
 const updateTeamParam = (team?: Team) => {
-  updateQueryParams("team", team?.code);
+  updateQueryParams(TEAM_QUERY_PARAM, team?.code);
 };
 const updateAdherentParam = (adherent?: User) => {
-  updateQueryParams("adherent", adherent?.id);
+  updateQueryParams(ADHERENT_QUERY_PARAM, adherent?.id);
 };
 const updateStatusParam = (status: FestivalEventStatus | null) => {
-  updateQueryParams("status", status);
+  updateQueryParams(STATUS_QUERY_PARAM, status);
 };
 </script>
 
