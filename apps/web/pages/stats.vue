@@ -114,8 +114,8 @@ const handleChartClick = (_: ChartEvent, elements: ActiveElement[]) => {
   if (elements.length === 0) return;
   const datasetIndex = elements[0].datasetIndex;
   const index = elements[0].index;
-  const teamCode = stats.value[index].teamCode;
-  const statusLabel = datasets.value[datasetIndex].label;
+  const teamCode = stats.value[`${index}`].teamCode;
+  const statusLabel = datasets.value[`${datasetIndex}`].label;
   const status = findStatusByLabel(statusLabel);
 
   const path = displayTaskStats.value ? FT_URL : FA_URL;
