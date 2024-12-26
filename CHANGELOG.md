@@ -1,3 +1,23 @@
+## [3.22.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.21.1...v3.22.0) (2024-12-26)
+
+### Features
+
+* **assignment:** add orga-task page [#2231](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2231) ([1712caa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1712caa91a2c9453726742399e1ef439e2e5b567))
+* **fa:** add drive location selection on the enter key and better location sorting [#2333](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2333) ([8bb726f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8bb726f27dfa2e2d21d8757a2f349f54e2288a02))
+* **stats:** redirect to FA or FT page with filters on graph click [#2331](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2331) ([75e5808](https://gitlab.com/24-heures-insa/overbookd-mono/commit/75e5808e8ef08af5cad82208bd18980c85599575))
+
+### Bug Fixes
+
+* **fa:** prevent FA removal if linked to a FT [#1598](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1598) ([7d4b3bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d4b3bbbf7687269956a96fe782f3943648705bd))
+* **festival-event:** add a margin to the list to see all pagination buttons [#2335](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2335) ([81110fa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/81110fa518bddadebd389c36e172f8380afda386))
+* **layout:** mobile and desktop navigation bar display [#2309](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2309) ([e7fc480](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e7fc48005ad820f85388d22ee411128d41a4034c))
+* **time:** add a delay before recalculating the time with the step [#2282](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2282) ([3c5c336](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c5c3367f60e129d0cadf9be3264ed928da9c79a))
+
+### Pre-Features
+
+* **assignment:** add filterable task assignment list and task filters [#2229](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2229) ([c87959e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c87959ec2d49b3c580b596f8292ddc73fbe4c342))
+* **assignment:** add orga-task calendar [#2230](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2230) ([6e4e0b8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e4e0b874db0dfc0bef8a1dc810ee70c6f635911))
+
 ## [3.21.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.21.0...v3.21.1) (2024-12-20)
 
 ### Bug Fixes
