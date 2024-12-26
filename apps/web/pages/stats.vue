@@ -121,7 +121,9 @@ const handleChartClick = (_: ChartEvent, elements: ActiveElement[]) => {
   const path = displayTaskStats.value ? FT_URL : FA_URL;
   const teamQuery = { [TEAM_QUERY_PARAM]: teamCode };
   if (!status) {
-    window.open(`${CTMA_URL}${path}?${new URLSearchParams(teamQuery)}`);
+    const url = new URL(`${CTMA_URL}${path}`);
+    url.searchParams.append(TEAM_QUERY_PARAM, teamCode);
+    window.open(url);
     return;
   }
 
