@@ -69,7 +69,7 @@ const addNewBarrel = async () => {
   price.value = 100;
   openedOn.value = new Date();
 };
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const adjustBarrelPrice = (slug: string, price: number) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(

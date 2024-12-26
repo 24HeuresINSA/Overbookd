@@ -61,7 +61,7 @@ const inChargeTeam = computed<Team | undefined>(() =>
   teamStore.getTeamByCode(general.value.team ?? ""),
 );
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const updateName = (name: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => ftStore.updateGeneral({ name }), 800);

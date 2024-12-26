@@ -35,7 +35,7 @@ const team = defineModel<Team | undefined>("team", { required: true });
 const updateSearch = (value: string | null) =>
   emit("update:search", value ?? "");
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const defectSearchUpdate = (search: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => updateSearch(search), 800);

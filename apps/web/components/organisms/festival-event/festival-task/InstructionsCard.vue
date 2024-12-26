@@ -219,7 +219,7 @@ watch(isResetApprovalsDialogOpen, (value: boolean) => {
 const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
   ftStore.updateInstructions({ appointmentId });
 };
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const updateGlobal = (canBeEmpty: string) => {
   openResetApprovalsDialogIfNeeded();
   if (delay.value) clearInterval(delay.value);

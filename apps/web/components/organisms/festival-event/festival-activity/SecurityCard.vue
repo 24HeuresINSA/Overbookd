@@ -4,7 +4,7 @@
     <v-card-subtitle>
       Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
       de ton activité, contacte
-      <a :href="`mailto:${SECURITE_EMAIL}`">{{ SECURITE_EMAIL }}</a>.
+      <a :href="`mailto:${SECURITE_EMAIL}`">{{ SECURITE_EMAIL }} </a>.
     </v-card-subtitle>
     <v-card-text>
       <v-textarea
@@ -46,7 +46,7 @@ const security = computed<FestivalActivity["security"]>(
   () => selectedActivity.value.security,
 );
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 const updateSpecialNeed = (canBeEmpty: string) => {
   if (delay.value) clearInterval(delay.value);
   const specialNeed = canBeEmpty.trim() || null;
