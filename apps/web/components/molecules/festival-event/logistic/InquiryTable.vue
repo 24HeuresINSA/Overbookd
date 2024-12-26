@@ -17,11 +17,17 @@
       <p v-if="cantLinkDrive">{{ gearDrive(item) || "" }}</p>
       <v-autocomplete
         v-else
+        v-model:search="driveSearch"
         :model-value="gearDrive(item)"
-        :items="drives"
+        :items="sortedDrives"
+        :custom-filter="customFilter"
+        item-title="name"
+        item-value="slug"
         density="compact"
         hide-details
-        @update:model-value="(drive) => linkDrive(item.slug, drive)"
+        return-object
+        @update:model-value="(drive) => linkDrive(item.slug, drive?.name)"
+        @keydown.enter="selectFirstDrive(item)"
       />
     </template>
 
@@ -46,6 +52,7 @@ import {
   drives,
   type TimeWindow,
 } from "@overbookd/festival-event";
+import { SlugifyService } from "@overbookd/slugify";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const userStore = useUserStore();
@@ -110,6 +117,26 @@ const noDataMessage = computed<string>(() => {
   }
 });
 
+type DriveWithSlug = { name: Drive; slug: string };
+const drivesWithSlug: DriveWithSlug[] = drives.map((drive) => ({
+  name: drive,
+  slug: SlugifyService.apply(drive),
+}));
+const sortedDrives = computed<DriveWithSlug[]>(() => {
+  const selectedDrivesName = props.inquiries
+    .map((inquiry) => gearDrive(inquiry)?.name)
+    .filter((drive): drive is Drive => !!drive);
+  const selectedSet = new Set(selectedDrivesName);
+
+  const selectedDrives = drivesWithSlug.filter(({ name }) =>
+    selectedSet.has(name),
+  );
+  const nonSelectedDrives = drivesWithSlug.filter(
+    ({ name }) => !selectedSet.has(name),
+  );
+  return [...selectedDrives, ...nonSelectedDrives];
+});
+
 const cantLinkDrive = computed<boolean>(
   () => !userStore.isMemberOf(props.owner),
 );
@@ -125,13 +152,34 @@ const displayQuantity = (inquiry: InquiryRequest): string => {
   const total = timeWindowCount * inquiry.quantity;
   return `${total} (${timeWindowCount} créneaux X ${inquiry.quantity} demandes)`;
 };
-const gearDrive = (inquiry: InquiryRequest): Drive | undefined => {
-  return "drive" in inquiry ? inquiry.drive : undefined;
+const gearDrive = (inquiry: InquiryRequest): DriveWithSlug | undefined => {
+  return "drive" in inquiry
+    ? sortedDrives.value?.find(({ name }) => name === inquiry.drive)
+    : undefined;
 };
 
 const emit = defineEmits(["remove", "link-drive"]);
 const removeInquiry = (inquiry: InquiryRequest) => emit("remove", inquiry);
-const linkDrive = (slug: string, drive: Drive) => {
+const linkDrive = (slug: string, drive?: Drive) => {
+  if (!drive) return;
   emit("link-drive", { slug, drive });
+};
+
+const driveSearch = ref<string>("");
+const customFilter = (value: string, query: string) => {
+  if (!query) return true;
+  return value.includes(SlugifyService.apply(query));
+};
+const selectFirstDrive = (inquiry: InquiryRequest) => {
+  const filteredDrives = sortedDrives.value.filter(({ name }) =>
+    customFilter(name, driveSearch.value),
+  );
+  const firstDrive = filteredDrives.at(0);
+  if (!firstDrive) return;
+
+  linkDrive(inquiry.slug, firstDrive.name);
+
+  if (!(document.activeElement instanceof HTMLElement)) return;
+  document.activeElement.blur();
 };
 </script>

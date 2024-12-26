@@ -1,3 +1,6 @@
+export const MAGASIN = "Magasin";
+export const LIVRE_PAR_LOGISTIQUE = "Livré par l'équipe logistique";
+export const LIVRE_PAR_COM = "Livré par une com";
 export const BENNE_COLLETTE_BESSON = "Benne Collette Besson";
 export const BENNE_PARKING_K_FET = "Benne Parking K-fet";
 export const PARKING_EIFFEL = "Parking Eiffel";
@@ -12,7 +15,6 @@ export const CONTENEUR_PARKING_K_FET = "Conteneur Parking K-fet";
 export const CONTENEUR_SCENE_PULSE = "Conteneur Scène Pulse";
 export const HALL_DES_HUMANITES = "Hall des Humanités";
 export const LOCAL_24H = "Local 24h";
-export const MAGASIN = "Magasin";
 export const MDE = "MdE";
 export const SALLE_MONTREAL = "Salle Montréal";
 export const SALLE_RENE_CHAR = "Salle René Char";
@@ -20,10 +22,11 @@ export const NON_STOCKE = "Non stocké";
 export const QG_ORGA = "QG Orga";
 export const BACKLINE = "Backline";
 export const SALLE_CRLA = "Salle CRL-A Humanités";
-export const LIVRE_PAR_LOGISTIQUE = "Livré par l'équipe logistique";
-export const LIVRE_PAR_COM = "Livré par une com";
 
 export type Drive =
+  | typeof MAGASIN
+  | typeof LIVRE_PAR_LOGISTIQUE
+  | typeof LIVRE_PAR_COM
   | typeof BENNE_COLLETTE_BESSON
   | typeof BENNE_PARKING_K_FET
   | typeof PARKING_EIFFEL
@@ -38,18 +41,18 @@ export type Drive =
   | typeof CONTENEUR_SCENE_PULSE
   | typeof HALL_DES_HUMANITES
   | typeof LOCAL_24H
-  | typeof MAGASIN
   | typeof MDE
   | typeof SALLE_MONTREAL
   | typeof SALLE_RENE_CHAR
   | typeof NON_STOCKE
   | typeof QG_ORGA
   | typeof BACKLINE
-  | typeof SALLE_CRLA
-  | typeof LIVRE_PAR_LOGISTIQUE
-  | typeof LIVRE_PAR_COM;
+  | typeof SALLE_CRLA;
 
 export const drives: Drive[] = [
+  MAGASIN,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_COM,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,
@@ -64,7 +67,6 @@ export const drives: Drive[] = [
   CONTENEUR_SCENE_PULSE,
   HALL_DES_HUMANITES,
   LOCAL_24H,
-  MAGASIN,
   MDE,
   SALLE_MONTREAL,
   SALLE_RENE_CHAR,
@@ -72,8 +74,6 @@ export const drives: Drive[] = [
   QG_ORGA,
   BACKLINE,
   SALLE_CRLA,
-  LIVRE_PAR_LOGISTIQUE,
-  LIVRE_PAR_COM,
 ];
 
 export type BaseInquiryRequest = {
