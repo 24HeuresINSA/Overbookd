@@ -225,12 +225,13 @@ const filteredTasks = computed<PreviewFestivalTask[]>(() => {
   }
   &__listing {
     height: fit-content;
-    width: 100vw;
-    flex-grow: 3;
+    width: 100%;
+    flex-grow: 4;
+    margin-bottom: 40px !important;
   }
   &__filtering {
     flex-grow: 1;
-    min-width: 300px;
+    min-width: 280px;
   }
   #status {
     font-weight: bold;
