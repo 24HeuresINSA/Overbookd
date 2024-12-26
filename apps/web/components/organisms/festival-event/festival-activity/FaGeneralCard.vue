@@ -7,7 +7,7 @@
         <a :href="`mailto:${contact}`"> {{ contact }} </a>.
         <br />
         Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+        <a :href="CTMA_URL">cetaitmieuxavant</a>
         en te connectant avec {{ CTMA_EMAIL }}.
       </v-card-subtitle>
 
@@ -98,6 +98,7 @@ import {
   HUMAINS_EMAIL,
   CTMA_EMAIL,
 } from "~/utils/mail/mail.constant";
+import { CTMA_URL } from "~/utils/navigation/url.constant";
 
 const faStore = useFestivalActivityStore();
 

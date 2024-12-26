@@ -90,6 +90,7 @@ import {
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
 import { LOG_ELEC_CODE } from "@overbookd/team-constants";
+import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -147,7 +148,7 @@ const hasLogElecTeam = computed<boolean>(() => {
   return userStore.isMemberOf(LOG_ELEC_CODE);
 });
 const updateNeedSupply = (needSupply: boolean | null) => {
-  updateQueryParams("needSupply", !!needSupply);
+  updateQueryParams(NEED_SUPPLY_QUERY_PARAM, !!needSupply);
 };
 </script>
 

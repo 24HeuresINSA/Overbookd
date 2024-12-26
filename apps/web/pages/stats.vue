@@ -18,7 +18,12 @@
 
 <script lang="ts" setup>
 import { Bar } from "vue-chartjs";
-import type { ChartData, ChartOptions, ChartEvent } from "chart.js";
+import type {
+  ChartData,
+  ChartOptions,
+  ChartEvent,
+  ActiveElement,
+} from "chart.js";
 import type { Statistics } from "@overbookd/http";
 import { useTheme } from "vuetify";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
@@ -35,6 +40,9 @@ import {
   REFUSEE,
   VALIDEE,
   PRETE_POUR_AFFECTATION,
+  TEAM_QUERY_PARAM,
+  findStatusByLabel,
+  STATUS_QUERY_PARAM,
 } from "~/utils/festival-event/festival-event.constant";
 import {
   type FestivalEventStatus,
@@ -45,10 +53,13 @@ import {
   oldTasks,
 } from "~/utils/festival-event/past-year.constant";
 import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
+import { FA_URL, FT_URL } from "@overbookd/web-page";
+import { CTMA_URL } from "~/utils/navigation/url.constant";
 
 useHead({ title: "Statistiques des FA" });
 
 const theme = useTheme();
+const router = useRouter();
 
 const displayTaskStats = ref<boolean>(false);
 
@@ -99,6 +110,27 @@ const sortedOldEvents = computed<number[]>(() =>
   displayTaskStats.value ? sortedOldTasks.value : sortedOldActivities.value,
 );
 
+const handleChartClick = (_: ChartEvent, elements: ActiveElement[]) => {
+  if (elements.length === 0) return;
+  const datasetIndex = elements[0].datasetIndex;
+  const index = elements[0].index;
+  const teamCode = stats.value[`${index}`].teamCode;
+  const statusLabel = datasets.value[`${datasetIndex}`].label;
+  const status = findStatusByLabel(statusLabel);
+
+  const path = displayTaskStats.value ? FT_URL : FA_URL;
+  const teamQuery = { [TEAM_QUERY_PARAM]: teamCode };
+  if (!status) {
+    const url = new URL(`${CTMA_URL}${path}`);
+    url.searchParams.append(TEAM_QUERY_PARAM, teamCode);
+    window.open(url);
+    return;
+  }
+
+  const statusQuery = { [STATUS_QUERY_PARAM]: status };
+  router.push({ path, query: { ...teamQuery, ...statusQuery } });
+};
+
 const maxTotal = computed<number>(() =>
   Math.max(
     ...stats.value.map((stat) =>
@@ -147,6 +179,11 @@ const options = computed<ChartOptions<"bar">>(() => {
       },
     },
     indexAxis: "y",
+    onClick: handleChartClick,
+    onHover: (event: ChartEvent, elements: ActiveElement[]) => {
+      const target = event?.native?.target as HTMLElement;
+      target.style.cursor = elements.length > 0 ? "pointer" : "default";
+    },
   } as const;
 });
 
