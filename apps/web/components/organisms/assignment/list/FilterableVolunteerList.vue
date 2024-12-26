@@ -143,29 +143,27 @@ const shouldShowVolunteerList = computed<boolean>(() => {
 
 $filters-height: $volunteer-list-filters-height;
 $friends-height: $volunteer-list-friends-card-height;
-$layout-padding: $card-margin * 2;
-$column-margins: 30px;
+$page-content-padding: $desktop-content-vertical-padding * 2;
+$card-paddings: $card-margin * 2;
 
 .filterable-volunteer-list {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-
   &__text {
     padding: 0;
   }
 }
 
+$base-list-height: calc(
+  100vh - $header-height - $filters-height - $card-paddings -
+    $page-content-padding
+);
 .volunteer-list {
   padding: 0 5px;
-  height: calc(
-    100vh - $filters-height - $header-height - $layout-padding - $column-margins
-  );
+  height: $base-list-height;
   &--with-friend-list {
-    max-height: calc(
-      100vh - $filters-height - $header-height - $friends-height -
-        $layout-padding - $column-margins
-    );
+    max-height: calc($base-list-height - $friends-height);
   }
 }
 
@@ -173,7 +171,7 @@ $column-margins: 30px;
   align-items: center;
   justify-content: center;
   display: flex;
-  height: calc(100vh - $filters-height - $header-height - $layout-padding);
+  height: $base-list-height;
   margin: 0 5%;
 
   p {

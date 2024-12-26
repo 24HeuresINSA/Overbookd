@@ -6,11 +6,13 @@
       label="Recherche"
       density="compact"
       hide-details
+      clearable
     />
     <SearchTeams
       v-model="teams"
       class="filters__field"
       density="compact"
+      closable-chips
       hide-details
     />
     <SearchTeams
@@ -18,6 +20,7 @@
       label="Exclure des équipes"
       class="filters__field"
       density="compact"
+      closable-chips
       hide-details
     />
 

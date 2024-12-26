@@ -2,17 +2,20 @@
   <div class="filters">
     <v-text-field
       v-model="search"
-      class="filters__search"
+      class="filters__field"
       label="Recherche"
       density="compact"
       hide-details
+      clearable
     />
-    <SearchTeam
+    <SearchTeams
       v-model="requiredTeams"
-      label="Chercher par équipe requise"
-      class="filters__field filter__multi-select"
+      label="Chercher par équipe(s) requise(s)"
+      class="filters__field"
       density="compact"
+      closable-chips
       hide-details
+      clearable
     />
     <SearchTeam
       v-model="inChargeTeam"
@@ -20,34 +23,57 @@
       class="filters__field"
       density="compact"
       hide-details
+      clearable
     />
-    <div class="team-filter-completed-switch">
+    <div class="filters-row">
       <v-combobox
         v-model="category"
         :items="categoryItems"
         label="Chercher une catégorie"
-        class="filters__field"
+        class="filters-row__field"
+        density="compact"
         clearable
         return-object
         hide-details
       />
-      <v-switch
+      <v-btn
         v-show="!isOrgaTask"
-        v-model="completed"
-        label="Toutes les FTs"
-        class="filters__switch"
+        v-tooltip:bottom="
+          completed
+            ? 'Afficher uniquement les FTs non terminées'
+            : 'Afficher toutes les FTs'
+        "
+        :variant="completed ? 'elevated' : 'outlined'"
         density="compact"
-        hide-details
-      />
-      <v-switch
-        v-show="isOrgaTask"
-        v-model="hasAssignedFriends"
-        label="Amis assignés"
-        class="filters__switch"
-        density="compact"
+        size="small"
         color="primary"
+        class="filters-row__btn"
         hide-details
-      />
+        @click="completed = !completed"
+      >
+        <template #default>
+          <span>Toutes<br />les FTs</span>
+        </template>
+      </v-btn>
+      <v-btn
+        v-show="isOrgaTask"
+        v-tooltip:bottom="
+          hasAssignedFriends
+            ? 'Afficher toutes les tâches'
+            : 'Afficher uniquement les tâches avec au moins un·e ami·e assigné·e'
+        "
+        :variant="hasAssignedFriends ? 'elevated' : 'outlined'"
+        density="compact"
+        size="small"
+        color="primary"
+        class="filters-row__btn"
+        hide-details
+        @click="hasAssignedFriends = !hasAssignedFriends"
+      >
+        <template #default>
+          <span>Amis<br />assignés</span>
+        </template>
+      </v-btn>
     </div>
     <p class="stats">
       {{ counterLabel }}
@@ -58,10 +84,12 @@
 
 <script lang="ts" setup>
 import type { FestivalEventIdentifier } from "@overbookd/festival-event";
-import type { Category } from "@overbookd/festival-event-constants";
 import type { Team } from "@overbookd/team";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
-import { displayableCategories } from "~/utils/assignment/task-category";
+import {
+  displayableCategories,
+  type DisplayableCategory,
+} from "~/utils/assignment/task-category";
 import {
   TaskPriorities,
   type TaskPriority,
@@ -80,12 +108,16 @@ const props = defineProps({
   },
 });
 
-const search = ref<string>("");
-const requiredTeams = ref<Team[]>([]);
-const inChargeTeam = ref<Team | null>(null);
-const category = ref<Category | TaskPriority | null>(null);
-const completed = ref<boolean>(false);
-const hasAssignedFriends = ref<boolean>(false);
+const search = defineModel<string>("search", { default: "" });
+const requiredTeams = defineModel<Team[]>("requiredTeams", { default: [] });
+const inChargeTeam = defineModel<Team | null>("inChargeTeam");
+const category = defineModel<DisplayableCategory | TaskPriority | undefined>(
+  "category",
+);
+const completed = defineModel<boolean>("completed", { default: false });
+const hasAssignedFriends = defineModel<boolean>("hasAssignedFriends", {
+  default: false,
+});
 
 const isOrgaTask = computed<boolean>(() =>
   isOrgaTaskMode(router.currentRoute.value.fullPath),
@@ -103,37 +135,36 @@ const counterLabel = computed<string>(() =>
 </script>
 
 <style lang="scss" scoped>
+@use "~/assets/assignment.scss" as *;
+
 .filters {
   width: 100%;
-  height: fit-content;
-  padding: 0px 15px;
+  padding: 5px 15px 0 15px;
   margin-top: auto;
+  height: $task-list-filters-height;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
   &__field {
     width: 100%;
-    padding: 5px, 0px;
-    height: 65px;
-    overflow-y: auto;
     overflow-x: hidden;
   }
-  &__multi-select {
-    max-height: 200px;
-  }
 }
-
 .stats {
   margin-bottom: 5px;
 }
 
-.team-filter-completed-switch {
-  width: 100%;
+.filters-row {
   display: flex;
+  gap: 10px;
   align-items: center;
-  gap: 5px;
-  .filters {
-    &__switch {
-      margin-top: 0;
-      margin-right: 5px;
-    }
+  &__field {
+    width: 100%;
+  }
+  &__btn {
+    height: 100%;
+    max-width: 20%;
   }
 }
 </style>

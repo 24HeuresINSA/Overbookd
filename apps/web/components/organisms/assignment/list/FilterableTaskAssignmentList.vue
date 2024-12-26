@@ -45,13 +45,19 @@ const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
 const searchedTaskName = ref<string>("");
 const searchedRequiredTeams = ref<Team[]>([]);
-const searchedInChargeTeam = ref<Team | null>(null);
-const searchedCategory = ref<DisplayableCategory | TaskPriority | null>(null);
+const searchedInChargeTeam = ref<Team | undefined>();
+const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
 
 const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
   searchableAssignments.value.filter((assignment) => {
-    isMatchingFilter(assignment);
+    return (
+      keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
+      filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
+      filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
+      filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
+      filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
+    );
   }),
 );
 const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
@@ -71,18 +77,6 @@ const shouldShowAssignmentList = computed<boolean>(
   () => selectedVolunteer !== null && filteredAssignments.value.length > 0,
 );
 
-const isMatchingFilter = (
-  assignment: Searchable<AssignmentSummaryWithTask>,
-): boolean => {
-  return (
-    keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
-    filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
-    filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
-    filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
-    filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
-  );
-};
-
 const filterByRequiredTeams = (
   searchedTeams: Team[],
 ): ((assignment: AssignmentSummaryWithTask) => boolean) => {
@@ -94,7 +88,7 @@ const filterByRequiredTeams = (
     : () => true;
 };
 const filterByInChargeTeam = (
-  searchedInChargeTeam: Team | null,
+  searchedInChargeTeam?: Team,
 ): ((assignment: AssignmentSummaryWithTask) => boolean) => {
   return (assignment) => {
     return !searchedInChargeTeam?.code
@@ -103,7 +97,7 @@ const filterByInChargeTeam = (
   };
 };
 const filterByCategoryOrPriority = (
-  searchedCategory: DisplayableCategory | TaskPriority | null,
+  searchedCategory?: DisplayableCategory | TaskPriority,
 ): ((assignment: AssignmentSummaryWithTask) => boolean) => {
   if (!searchedCategory) return () => true;
   return isTaskPriority(searchedCategory)
@@ -134,9 +128,11 @@ const filterByHasAssignedFriends = (
 </script>
 
 <style lang="scss" scoped>
-$filters-height: 275px;
-$column-margins: 30px;
+@use "~/assets/assignment.scss" as *;
+
+$filters-height: $task-list-filters-height;
 $layout-padding: $card-margin * 2;
+$column-margins: 30px;
 $list-height: calc(
   100vh - $filters-height - $header-height - $layout-padding - $column-margins
 );
