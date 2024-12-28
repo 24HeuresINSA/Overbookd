@@ -2,7 +2,7 @@
   <div class="weekly-content">
     <div
       v-for="day in getWeekDays(displayedDay)"
-      :key="day.date.time"
+      :key="day.date.timestamp"
       class="weekly-content__day"
     >
       <DailyCalendarContent

@@ -2,7 +2,7 @@
   <header class="header-days">
     <DailyCalendarHeader
       v-for="day in getWeekDays(props.displayedDay)"
-      :key="day.date.time"
+      :key="day.date.timestamp"
       :displayed-day="day.date"
     />
   </header>
