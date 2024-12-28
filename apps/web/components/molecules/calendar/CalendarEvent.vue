@@ -4,10 +4,10 @@
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
     :style="{
-      top: `${eventManager.topPositionInPixels + 1}px`,
-      left: `${eventManager.leftInPercentage + 1}%`,
-      height: `${eventManager.heightInPixels - 2}px`,
-      width: `${eventManager.widthInPercentage - 2}%`,
+      top: `${eventManager.topPositionInPixels}px`,
+      left: `${eventManager.leftInPercentage}%`,
+      height: `${eventManager.heightInPixels}px`,
+      width: `${eventManager.widthInPercentage}%`,
     }"
     :href="event.link"
     @click="propagateClick"
@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { OverDate } from "@overbookd/time";
-import { CalendarEventManager } from "~/utils/calendar/calendar-event.manager";
+import { CalendarEventManager } from "~/utils/calendar/availability-presenter";
 
 const props = defineProps({
   event: {

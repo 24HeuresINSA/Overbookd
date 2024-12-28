@@ -2,7 +2,7 @@
   <div class="multiday-content" :style="gridTemplateStyle">
     <div
       v-for="day in displayedDays"
-      :key="day.time"
+      :key="day.timestamp"
       class="multiday-content__day"
     >
       <AvailabilitiesDailyCalendarContent

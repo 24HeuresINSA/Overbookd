@@ -119,13 +119,13 @@ const getShiftDelimiterClass = (hour: number): string => {
 
 const moveToPreviousWeekOrDay = () => {
   displayedDay.value = isDayMode.value
-    ? OverDate.from(displayedDay.value.time - ONE_DAY_IN_MS)
-    : OverDate.from(displayedDay.value.time - ONE_WEEK_IN_MS);
+    ? OverDate.from(displayedDay.value.timestamp - ONE_DAY_IN_MS)
+    : OverDate.from(displayedDay.value.timestamp - ONE_WEEK_IN_MS);
 };
 const moveToNextWeekOrDay = () => {
   displayedDay.value = isDayMode.value
-    ? OverDate.from(displayedDay.value.time + ONE_DAY_IN_MS)
-    : OverDate.from(displayedDay.value.time + ONE_WEEK_IN_MS);
+    ? OverDate.from(displayedDay.value.timestamp + ONE_DAY_IN_MS)
+    : OverDate.from(displayedDay.value.timestamp + ONE_WEEK_IN_MS);
 };
 
 if (publicHolidayStore.all.length === 0) {

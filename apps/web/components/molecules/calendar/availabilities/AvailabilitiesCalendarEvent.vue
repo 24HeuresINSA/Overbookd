@@ -3,8 +3,8 @@
     class="calendar-event"
     :class="colorClass"
     :style="{
-      top: `${eventManager.topPositionInPixels + 1}px`,
-      height: `${eventManager.heightInPixels - 2}px`,
+      top: `${presenter.topPositionInPixels}px`,
+      height: `${presenter.heightInPixels}px`,
     }"
     hover
     @click="propagateClick"
@@ -17,7 +17,7 @@
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { OverDate, Period } from "@overbookd/time";
 import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
-import { CalendarEventManager } from "~/utils/calendar/calendar-event.manager";
+import { AvailabilityPresenter } from "~/utils/calendar/availability-presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 
@@ -35,32 +35,33 @@ const props = defineProps({
 const emit = defineEmits(["click"]);
 const propagateClick = () => emit("click", props.event);
 
-const eventManager = new CalendarEventManager(props.event, props.displayedDay);
+const presenter = new AvailabilityPresenter(props.event, props.displayedDay);
 
-const selectedAvailabilities = computed(
-  () => availabilityStore.availabilities.selected as Period[],
+const selectedAvailabilities = computed<Period[]>(
+  () => availabilityStore.availabilities.selected,
 );
-const savedAvailabilities = computed(
-  () => availabilityStore.availabilities.recorded as Period[],
+const savedAvailabilities = computed<Period[]>(
+  () => availabilityStore.availabilities.recorded,
 );
-const errors = computed(
-  () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
+const errors = computed<AvailabilityErrorMessage[]>(
+  () => availabilityStore.availabilities.errors,
 );
 
-const isSaved = (): boolean =>
+const isSaved = computed<boolean>(() =>
   savedAvailabilities.value.some((availability) =>
-    availability.includes(eventManager.displayedEventPeriod),
-  );
-
-const isSelected = (): boolean =>
+    availability.includes(presenter.displayedEventPeriod),
+  ),
+);
+const isSelected = computed<boolean>(() =>
   selectedAvailabilities.value.some((availability) =>
-    availability.includes(eventManager.displayedEventPeriod),
-  );
-
-const hasError = (): boolean =>
+    availability.includes(presenter.displayedEventPeriod),
+  ),
+);
+const hasError = computed<boolean>(() =>
   errors.value.some((error) =>
-    error.period.includes(eventManager.displayedEventPeriod),
-  );
+    error.period.includes(presenter.displayedEventPeriod),
+  ),
+);
 
 const colorClass = computed(() => {
   if (hasError()) return "error";

@@ -238,7 +238,7 @@ export class OverDate {
     return this.definition.minute;
   }
 
-  get time(): number {
+  get timestamp(): number {
     return this.date.getTime();
   }
 
