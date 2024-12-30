@@ -1,6 +1,9 @@
 import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
 import { IProvidePeriod, Period } from "../period/period.js";
-import { formatDateNumberValue } from "./format-date.utils.js";
+import {
+  formatDateNumberValue,
+  formatDateWithMinutes,
+} from "./format-date.utils.js";
 
 type January = "01";
 type February = "02";
@@ -246,6 +249,10 @@ export class OverDate {
     const start = this.date;
     const end = new Date(this.date.getTime() + ONE_HOUR_IN_MS);
     return Period.init({ start, end });
+  }
+
+  toString(): string {
+    return formatDateWithMinutes(this.date);
   }
 
   isIncludedBy(periods: IProvidePeriod[]): boolean {
