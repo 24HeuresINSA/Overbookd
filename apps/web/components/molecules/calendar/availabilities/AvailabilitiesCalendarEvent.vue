@@ -2,10 +2,7 @@
   <v-card
     class="calendar-event"
     :class="colorClass"
-    :style="{
-      top: `${presenter.topPositionInPixels}px`,
-      height: `${presenter.heightInPixels}px`,
-    }"
+    :style="style"
     hover
     @click="propagateClick"
   >
@@ -17,7 +14,7 @@
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { OverDate, Period } from "@overbookd/time";
 import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
-import { AvailabilityPresenter } from "~/utils/calendar/availability-presenter";
+import { CalendarEventPresenter } from "~/utils/calendar/calendar-event.presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 
@@ -35,7 +32,7 @@ const props = defineProps({
 const emit = defineEmits(["click"]);
 const propagateClick = () => emit("click", props.event);
 
-const presenter = new AvailabilityPresenter(props.event, props.displayedDay);
+const presenter = new CalendarEventPresenter(props.event, props.displayedDay);
 
 const selectedAvailabilities = computed<Period[]>(
   () => availabilityStore.availabilities.selected,
@@ -64,11 +61,15 @@ const hasError = computed<boolean>(() =>
 );
 
 const colorClass = computed(() => {
-  if (hasError()) return "error";
-  if (isSaved()) return "validated";
-  if (isSelected()) return "selected";
+  if (hasError.value) return "error";
+  if (isSaved.value) return "validated";
+  if (isSelected.value) return "selected";
   return "unselected";
 });
+const style = computed(() => ({
+  left: presenter.left.css,
+  width: presenter.width.css,
+}));
 </script>
 
 <style lang="scss" scoped>

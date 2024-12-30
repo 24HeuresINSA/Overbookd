@@ -5,7 +5,23 @@ import type { CalendarEvent } from "~/utils/calendar/event";
 const VERTICAL_MARGIN_IN_PIXELS = 1;
 const HORIZONTAL_MARGIN_IN_PERCENTAGE = 1;
 
-export class AvailabilityPresenter {
+class Pixel {
+  constructor(public readonly value: number) {}
+
+  get css(): string {
+    return `${this.value}px`;
+  }
+}
+
+class Percentage {
+  constructor(public readonly value: number) {}
+
+  get css(): string {
+    return `${this.value}%`;
+  }
+}
+
+export class CalendarEventPresenter {
   constructor(
     private readonly event: CalendarEvent,
     private readonly displayedDay: OverDate,
@@ -38,29 +54,33 @@ export class AvailabilityPresenter {
     return Period.init({ start, end });
   }
 
-  get topPositionInPixels(): number {
-    return (
+  get top(): Pixel {
+    return new Pixel(
       this.eventStartTotalMinutes * PIXELS_PER_MINUTE +
-      VERTICAL_MARGIN_IN_PIXELS
+        VERTICAL_MARGIN_IN_PIXELS,
     );
   }
 
-  get heightInPixels(): number {
+  get height(): Pixel {
     const eventDuration = this.displayedEventPeriod.duration.inMinutes;
     const remainingMinutesInDay = MINUTES_IN_DAY - this.eventStartTotalMinutes;
     const displayedDuration = Math.min(eventDuration, remainingMinutesInDay);
     const verticalMargin = VERTICAL_MARGIN_IN_PIXELS * 2;
-    return displayedDuration * PIXELS_PER_MINUTE - verticalMargin;
+    return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
-  get widthInPercentage(): number {
+  get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    return 100 / this.overlappingEvents.length - horizontalMargin;
+    return new Percentage(
+      100 / this.overlappingEvents.length - horizontalMargin,
+    );
   }
 
-  get leftInPercentage(): number {
+  get left(): Percentage {
     const index = this.overlappingEvents.findIndex((e) => e === this.event);
-    return index * this.widthInPercentage + HORIZONTAL_MARGIN_IN_PERCENTAGE;
+    return new Percentage(
+      index * this.width.value + HORIZONTAL_MARGIN_IN_PERCENTAGE,
+    );
   }
 
   get periodText(): string {

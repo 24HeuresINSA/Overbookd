@@ -3,12 +3,7 @@
     class="calendar-event"
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
-    :style="{
-      top: `${presenter.topPositionInPixels}px`,
-      left: `${presenter.leftInPercentage}%`,
-      height: `${presenter.heightInPixels}px`,
-      width: `${presenter.widthInPercentage}%`,
-    }"
+    :style="style"
     :href="event.link"
     @click="propagateClick"
   >
@@ -20,7 +15,7 @@
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { OverDate } from "@overbookd/time";
-import { AvailabilityPresenter } from "~/utils/calendar/availability-presenter";
+import { CalendarEventPresenter } from "~/utils/calendar/calendar-event.presenter";
 
 const props = defineProps({
   event: {
@@ -46,11 +41,17 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const presenter = new AvailabilityPresenter(
+const presenter = new CalendarEventPresenter(
   props.event,
   props.displayedDay,
   props.overlappingEvents,
 );
+const style = computed(() => ({
+  top: presenter.top.css,
+  left: presenter.left.css,
+  height: presenter.height.css,
+  width: presenter.width.css,
+}));
 </script>
 
 <style lang="scss" scoped>
