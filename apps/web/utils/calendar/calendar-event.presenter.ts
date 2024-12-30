@@ -44,12 +44,8 @@ export class CalendarEventPresenter {
     const dayStart = OverDate.getStartOfDay(this.displayedDay.date).date;
     const dayEnd = OverDate.getEndOfDay(this.displayedDay.date).date;
 
-    const validStart =
-      this.event.start < dayStart ? dayStart : this.event.start;
-    const validEnd = this.event.end > dayEnd ? dayEnd : this.event.end;
-
-    const start = validStart < validEnd ? validStart : validEnd;
-    const end = validStart < validEnd ? validEnd : validStart;
+    const start = this.event.start < dayStart ? dayStart : this.event.start;
+    const end = this.event.end > dayEnd ? dayEnd : this.event.end;
 
     return Period.init({ start, end });
   }
