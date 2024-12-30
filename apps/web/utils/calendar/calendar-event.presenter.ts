@@ -1,9 +1,9 @@
 import { Period, OverDate, MINUTES_IN_DAY, Duration } from "@overbookd/time";
-import { PIXELS_PER_MINUTE } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-const VERTICAL_MARGIN_IN_PIXELS = 1;
-const HORIZONTAL_MARGIN_IN_PERCENTAGE = 1;
+export const PIXELS_PER_MINUTE = 0.75;
+export const VERTICAL_MARGIN_IN_PIXELS = 1;
+export const HORIZONTAL_MARGIN_IN_PERCENTAGE = 1;
 
 class Pixel {
   constructor(public readonly value: number) {}
@@ -25,7 +25,7 @@ export class CalendarEventPresenter {
   constructor(
     private readonly event: CalendarEvent,
     private readonly displayedDay: OverDate,
-    private readonly overlappingEvents: CalendarEvent[] = [],
+    private readonly overlappingEvents: CalendarEvent[] = [this.event],
   ) {}
 
   private get currentDayStart(): OverDate {
@@ -55,6 +55,7 @@ export class CalendarEventPresenter {
   }
 
   get top(): Pixel {
+    console.log(this.eventStartTotalMinutes);
     return new Pixel(
       this.eventStartTotalMinutes * PIXELS_PER_MINUTE +
         VERTICAL_MARGIN_IN_PIXELS,
@@ -71,9 +72,11 @@ export class CalendarEventPresenter {
 
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    return new Percentage(
-      100 / this.overlappingEvents.length - horizontalMargin,
-    );
+    const hasOverlappingEvents = this.overlappingEvents.length > 0;
+    const baseWidth = hasOverlappingEvents
+      ? 100 / this.overlappingEvents.length
+      : 100;
+    return new Percentage(baseWidth - horizontalMargin);
   }
 
   get left(): Percentage {

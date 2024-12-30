@@ -35,13 +35,13 @@ const propagateClick = () => emit("click", props.event);
 const presenter = new CalendarEventPresenter(props.event, props.displayedDay);
 
 const selectedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.selected,
+  () => availabilityStore.availabilities.selected as Period[],
 );
 const savedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.recorded,
+  () => availabilityStore.availabilities.recorded as Period[],
 );
 const errors = computed<AvailabilityErrorMessage[]>(
-  () => availabilityStore.availabilities.errors,
+  () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
 );
 
 const isSaved = computed<boolean>(() =>

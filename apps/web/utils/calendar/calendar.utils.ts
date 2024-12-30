@@ -1,8 +1,6 @@
 import { ONE_DAY_IN_MS, OverDate, Period } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
 
-export const PIXELS_PER_MINUTE = 0.75;
-
 export const DAY_MODE = "day";
 const _WEEK_MODE = "week";
 export type CalendarMode = typeof DAY_MODE | typeof _WEEK_MODE;
