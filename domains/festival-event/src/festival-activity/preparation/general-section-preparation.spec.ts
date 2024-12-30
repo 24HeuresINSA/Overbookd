@@ -19,7 +19,10 @@ import {
 } from "./preparation.test-utils.js";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { sunday14hToSunday18h } from "../festival-activity.fake.js";
+import {
+  friday11hToFriday15h,
+  sunday14hToSunday18h,
+} from "../festival-activity.fake.js";
 import { isDraft } from "../../festival-event.js";
 
 describe("General section of festival activity preparation", () => {
@@ -213,7 +216,6 @@ describe("General section of festival activity preparation", () => {
           );
 
         const expectedTimeWindow = { ...timeWindow, id: expectedId };
-
         expect(general.timeWindows).toContainEqual(expectedTimeWindow);
       });
 
@@ -240,6 +242,55 @@ describe("General section of festival activity preparation", () => {
           await expect(
             prepareFestivalActivity.addTimeWindowInGeneral(
               activity.id,
+              invalidTimeWindow,
+            ),
+          ).rejects.toThrow(EndBeforeStart);
+        });
+      });
+    },
+  );
+
+  describe.each`
+    update                  | activityName                  | activity         | toUpdate                                | expectedId
+    ${friday11hToFriday15h} | ${escapeGame.general.name}    | ${escapeGame}    | ${escapeGame.general.timeWindows[0]}    | ${friday11hToFriday15h.id}
+    ${sunday14hToSunday18h} | ${justDance.general.name}     | ${justDance}     | ${justDance.general.timeWindows[0]}     | ${sunday14hToSunday18h.id}
+    ${friday11hToFriday15h} | ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${baladeEnPoney.general.timeWindows[0]} | ${friday11hToFriday15h.id}
+  `(
+    "when adherent want to update a time window in $activityName",
+    ({ update, activity, toUpdate, expectedId }) => {
+      it("should update the time window", async () => {
+        const { general } =
+          await prepareFestivalActivity.updateTimeWindowInGeneral(
+            activity.id,
+            toUpdate.id,
+            update,
+          );
+
+        const expectedTimeWindow = { ...update, id: expectedId };
+        expect(general.timeWindows).toContainEqual(expectedTimeWindow);
+      });
+      describe("when adherent want to update a time window that doesn't exist", () => {
+        it("should indicate that the time window doesn't exist", async () => {
+          await expect(
+            prepareFestivalActivity.updateTimeWindowInGeneral(
+              activity.id,
+              "132-456",
+              friday11hToFriday15h,
+            ),
+          ).rejects.toThrow(PrepareError.TimeWindowNotFound);
+        });
+      });
+      describe("when adherent want to update a time window with end before start", () => {
+        it("should indicate that end should be after start", async () => {
+          const invalidTimeWindow = {
+            start: new Date("2023-05-17T09:00+02:00"),
+            end: new Date("2023-05-17T08:00+02:00"),
+          };
+
+          await expect(
+            prepareFestivalActivity.updateTimeWindowInGeneral(
+              activity.id,
+              toUpdate.id,
               invalidTimeWindow,
             ),
           ).rejects.toThrow(EndBeforeStart);
@@ -284,11 +335,11 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                            | activityId                    | toAdd                   | toRemove                                          | update
+    activityName                            | activityId                    | toAdd                   | timeWindow                                        | update
     ${approvedByCommunication.general.name} | ${approvedByCommunication.id} | ${sunday14hToSunday18h} | ${approvedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by communication",
-    ({ activityId, toAdd, toRemove, update }) => {
+    ({ activityId, toAdd, timeWindow, update }) => {
       describe("when trying to add a timeWindow", () => {
         it("should be able to add time window", async () => {
           const { general } =
@@ -300,12 +351,24 @@ describe("General section of festival activity preparation", () => {
           expect(general.timeWindows).toContainEqual(toAdd);
         });
       });
+      describe("when trying to update a timeWindow", () => {
+        it("should be able to update time window", async () => {
+          const { general } =
+            await prepareFestivalActivity.updateTimeWindowInGeneral(
+              activityId,
+              timeWindow.id,
+              toAdd,
+            );
+
+          expect(general.timeWindows).toContainEqual(toAdd);
+        });
+      });
       describe("when trying to remove a timeWindow", () => {
         it("should be able to remove time window", async () => {
           const { general } =
             await prepareFestivalActivity.removeTimeWindowFromGeneral(
               activityId,
-              toRemove.id,
+              timeWindow.id,
             );
 
           expect(general.timeWindows).not.toContainEqual(toAdd);
@@ -326,12 +389,12 @@ describe("General section of festival activity preparation", () => {
   );
 
   describe.each`
-    activityName                           | activityId                   | toAdd                   | toRemove
+    activityName                           | activityId                   | toAdd                   | timeWindow
     ${approvedByHumain.general.name}       | ${approvedByHumain.id}       | ${sunday14hToSunday18h} | ${approvedByHumain.general.timeWindows[0]}
     ${publicApprovedByHumain.general.name} | ${publicApprovedByHumain.id} | ${sunday14hToSunday18h} | ${publicApprovedByHumain.general.timeWindows[0]}
   `(
     "when $activityName was already validated by humain",
-    ({ activityId, toAdd, toRemove }) => {
+    ({ activityId, toAdd, timeWindow }) => {
       describe("when trying to add a timeWindow", () => {
         it("should indicate that general section is locked", async () => {
           expect(
@@ -343,13 +406,25 @@ describe("General section of festival activity preparation", () => {
           ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
         });
       });
+      describe("when trying to update a timeWindow", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.updateTimeWindowInGeneral(
+                activityId,
+                timeWindow.id,
+                toAdd,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
       describe("when trying to remove a timeWindow", () => {
         it("should indicate that general section is locked", async () => {
           expect(
             async () =>
               await prepareFestivalActivity.removeTimeWindowFromGeneral(
                 activityId,
-                toRemove.id,
+                timeWindow.id,
               ),
           ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
         });

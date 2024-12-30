@@ -71,6 +71,15 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, general };
   }
 
+  updateGeneralTimeWindow(id: TimeWindow["id"], period: IProvidePeriod): Draft {
+    const timeWindows = TimeWindows.build(
+      this.activity.general.timeWindows,
+    ).update(id, period).entries;
+
+    const general = { ...this.activity.general, timeWindows };
+    return { ...this.activity, general };
+  }
+
   removeGeneralTimeWindow(id: TimeWindow["id"]): Draft {
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
