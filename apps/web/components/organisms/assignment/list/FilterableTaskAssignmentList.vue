@@ -49,6 +49,15 @@ const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
 
+const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
+  () =>
+    assignVolunteerToTaskStore.assignments.map((assignment) => ({
+      ...assignment,
+      searchable: SlugifyService.apply(
+        `${assignment.taskId} ${assignment.name}`,
+      ),
+    })),
+);
 const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
   searchableAssignments.value.filter((assignment) => {
     return (
@@ -59,15 +68,6 @@ const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
       filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
     );
   }),
-);
-const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
-  () =>
-    assignVolunteerToTaskStore.assignments.map((assignment) => ({
-      ...assignment,
-      searchable: SlugifyService.apply(
-        `${assignment.taskId} ${assignment.name}`,
-      ),
-    })),
 );
 
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
@@ -116,9 +116,12 @@ const filterByPriority = (
   return ({ topPriority }) => topPriority === hasPriority;
 };
 const filterByCategory = (
-  searchedCategory: DisplayableCategory,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  return (assignment) => assignment.category === searchedCategory;
+  categorySearched: DisplayableCategory,
+): ((task: AssignmentSummaryWithTask) => boolean) => {
+  return (task) => {
+    if (categorySearched === "AUCUNE") return task.category === null;
+    return task.category === categorySearched;
+  };
 };
 const filterByHasAssignedFriends = (
   hasAssignedFriends: boolean,
@@ -141,7 +144,6 @@ $list-height: calc(
   min-height: 100%;
   display: flex;
   flex-direction: column;
-
   &__text {
     padding: 0;
   }
