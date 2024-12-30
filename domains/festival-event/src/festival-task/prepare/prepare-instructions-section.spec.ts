@@ -29,7 +29,10 @@ import {
 } from "../festival-task.fake.js";
 import { PrepareFestivalTask } from "./prepare.js";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
-import { FestivalTaskNotFound } from "../festival-task.error.js";
+import {
+  FestivalTaskNotFound,
+  ForceUpdateError,
+} from "../festival-task.error.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { AlreadyApprovedBy } from "../../common/review.error.js";
@@ -706,96 +709,62 @@ describe("Prepare festival task instructions section", () => {
   });
 
   describe("Force instructions update", () => {
-    describe("when forcing global instructions on ready to assign task", () => {
-      const forceInstructions = { global: "C'est push" };
-      it("should update global instructions", async () => {
-        const updated = await prepare.forceInstructions(
-          gabIsAssignedTo.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.instructions.global).toBe(forceInstructions.global);
-      });
-      it("should should add FORCED_UPDATE key event to history", async () => {
-        const message = "Mise à jour forcée des instructions";
-        const updated = await prepare.forceInstructions(
-          gabIsAssignedTo.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.history).toStrictEqual([
-          ...gabIsAssignedTo.history,
-          {
-            action: FORCED_UPDATE,
-            by: noel,
-            at: expect.any(Date),
-            description: message,
-          },
-        ]);
-      });
-    });
-    describe("when forcing in charge instructions on ready to assign task", () => {
-      const forceInstructions = { inCharge: "C'est push" };
-      it("should update in charge instructions", async () => {
-        const updated = await prepare.forceInstructions(
-          parcoursCollageTrajetA.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.instructions.inCharge.instruction).toBe(
-          forceInstructions.inCharge,
-        );
-      });
-      it("should should add FORCED_UPDATE key event to history", async () => {
-        const message = "Mise à jour forcée des instructions";
-        const updated = await prepare.forceInstructions(
-          parcoursCollageTrajetA.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.history).toStrictEqual([
-          ...parcoursCollageTrajetA.history,
-          {
-            action: FORCED_UPDATE,
-            by: noel,
-            at: expect.any(Date),
-            description: message,
-          },
-        ]);
+    describe.each`
+      fields                   | update                                              | approvers   | taskName                               | task
+      ${"global"}              | ${{ global: "C'est push" }}                         | ${[humain]} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      ${"inCharge"}            | ${{ inCharge: "C'est push" }}                       | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      ${"global and inCharge"} | ${{ inCharge: "C'est push", global: "Avec force" }} | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+    `(
+      "when forcing $fields instructions on $taskName",
+      ({ fields, update, task }) => {
+        it(`should update ${fields} instructions`, async () => {
+          const updated = await prepare.forceInstructions(
+            task.id,
+            update,
+            noel,
+          );
+          expect(updated.instructions.global).toBe(
+            update?.global ?? task.instructions.global,
+          );
+          expect(updated.instructions.inCharge.instruction).toBe(
+            update?.inCharge ?? task.instructions.inCharge.instruction,
+          );
+        });
+        it("should should add FORCED_UPDATE key event to history", async () => {
+          const message = "Mise à jour forcée des instructions";
+          const updated = await prepare.forceInstructions(
+            task.id,
+            update,
+            noel,
+          );
+          expect(updated.history).toStrictEqual([
+            ...task.history,
+            {
+              action: FORCED_UPDATE,
+              by: noel,
+              at: expect.any(Date),
+              description: message,
+            },
+          ]);
+        });
+      },
+    );
+    describe("when trying to force update on a task not in review", () => {
+      it("should indicate task is not in review", async () => {
+        const taskId = installEscapeGame.id;
+        const update = { global: "C'est push" };
+        expect(
+          async () => await prepare.forceInstructions(taskId, update, noel),
+        ).rejects.toThrow(ForceUpdateError.isDraft(taskId));
       });
     });
-    describe("when forcing in charge and global instructions on ready to assign task", () => {
-      const forceInstructions = {
-        inCharge: "C'est push",
-        global: "Avec force",
-      };
-      it("should update in charge instructions", async () => {
-        const updated = await prepare.forceInstructions(
-          parcoursCollageTrajetA.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.instructions.global).toBe(forceInstructions.global);
-        expect(updated.instructions.inCharge.instruction).toBe(
-          forceInstructions.inCharge,
-        );
-      });
-      it("should should add FORCED_UPDATE key event to history", async () => {
-        const message = "Mise à jour forcée des instructions";
-        const updated = await prepare.forceInstructions(
-          parcoursCollageTrajetA.id,
-          forceInstructions,
-          noel,
-        );
-        expect(updated.history).toStrictEqual([
-          ...parcoursCollageTrajetA.history,
-          {
-            action: FORCED_UPDATE,
-            by: noel,
-            at: expect.any(Date),
-            description: message,
-          },
-        ]);
+    describe("when trying to force update on a task without approval", () => {
+      it("should indicate task is not approved", async () => {
+        const taskId = guardJustDance.id;
+        const update = { global: "C'est push" };
+        expect(
+          async () => await prepare.forceInstructions(taskId, update, noel),
+        ).rejects.toThrow(ForceUpdateError.noApprovals(taskId));
       });
     });
   });

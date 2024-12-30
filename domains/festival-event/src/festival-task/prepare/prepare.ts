@@ -31,7 +31,12 @@ import {
 } from "../volunteer-conflicts.js";
 import { Mobilizations } from "./sections/mobilizations.js";
 import { Adherent } from "../../common/adherent.js";
-import { isDraft, isRefused, isValidated } from "../../festival-event.js";
+import {
+  isDraft,
+  isInReview,
+  isRefused,
+  isValidated,
+} from "../../festival-event.js";
 import {
   REVIEWING,
   RejectionReviewStatus,
@@ -168,8 +173,10 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isReadyToAssign(task)) {
-      throw ForceUpdateError.notReadyToAssign(task.id);
+    if (isDraft(task)) throw ForceUpdateError.isDraft(task.id);
+    const canHaveNoApprovals = isInReview(task) || isRefused(task);
+    if (canHaveNoApprovals && this.areNoneOfTheReviewersApproved(task)) {
+      throw ForceUpdateError.noApprovals(task.id);
     }
     const instructions = Instructions.forceUpdate(task.instructions, force);
     const history = [
