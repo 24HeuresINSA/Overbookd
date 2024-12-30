@@ -4,23 +4,23 @@
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
     :style="{
-      top: `${eventManager.topPositionInPixels}px`,
-      left: `${eventManager.leftInPercentage}%`,
-      height: `${eventManager.heightInPixels}px`,
-      width: `${eventManager.widthInPercentage}%`,
+      top: `${presenter.topPositionInPixels}px`,
+      left: `${presenter.leftInPercentage}%`,
+      height: `${presenter.heightInPixels}px`,
+      width: `${presenter.widthInPercentage}%`,
     }"
     :href="event.link"
     @click="propagateClick"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
-    <p class="calendar-event__hour">{{ eventManager.periodText }}</p>
+    <p class="calendar-event__hour">{{ presenter.periodText }}</p>
   </v-card>
 </template>
 
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { OverDate } from "@overbookd/time";
-import { CalendarEventManager } from "~/utils/calendar/availability-presenter";
+import { AvailabilityPresenter } from "~/utils/calendar/availability-presenter";
 
 const props = defineProps({
   event: {
@@ -46,7 +46,7 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const eventManager = new CalendarEventManager(
+const presenter = new AvailabilityPresenter(
   props.event,
   props.displayedDay,
   props.overlappingEvents,
