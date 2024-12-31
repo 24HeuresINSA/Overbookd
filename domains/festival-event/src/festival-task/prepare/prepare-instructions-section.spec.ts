@@ -710,31 +710,31 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Force instructions update", () => {
     describe.each`
-      fields                   | update                                              | approvers   | taskName                               | task
+      fields                   | instructions                                        | approvers   | taskName                               | task
       ${"global"}              | ${{ global: "C'est push" }}                         | ${[humain]} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
       ${"inCharge"}            | ${{ inCharge: "C'est push" }}                       | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
       ${"global and inCharge"} | ${{ inCharge: "C'est push", global: "Avec force" }} | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
     `(
       "when forcing $fields instructions on $taskName",
-      ({ fields, update, task }) => {
+      ({ fields, instructions, task }) => {
         it(`should update ${fields} instructions`, async () => {
           const updated = await prepare.forceInstructions(
             task.id,
-            update,
+            instructions,
             noel,
           );
           expect(updated.instructions.global).toBe(
-            update?.global ?? task.instructions.global,
+            instructions?.global ?? task.instructions.global,
           );
           expect(updated.instructions.inCharge.instruction).toBe(
-            update?.inCharge ?? task.instructions.inCharge.instruction,
+            instructions?.inCharge ?? task.instructions.inCharge.instruction,
           );
         });
         it("should should add FORCED_UPDATE key event to history", async () => {
           const message = "Mise à jour forcée des instructions";
           const updated = await prepare.forceInstructions(
             task.id,
-            update,
+            instructions,
             noel,
           );
           expect(updated.history).toStrictEqual([
