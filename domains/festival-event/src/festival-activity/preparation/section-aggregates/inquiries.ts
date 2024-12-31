@@ -2,10 +2,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivity } from "../../festival-activity.js";
 import { InquiryRequest } from "../../../common/inquiry-request.js";
 import { TimeWindow } from "../../../common/time-window.js";
-import {
-  FestivalActivityError,
-  InquiryAlreadyExists,
-} from "../../festival-activity.error.js";
+import { FestivalActivityError } from "../../festival-activity.error.js";
 import { TimeWindows } from "./time-windows.js";
 import {
   LinkInquiryDrive,
@@ -203,10 +200,18 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
   }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
     const inquiry = { slug, quantity, name };
 
-    const alreadyExists = this.inquiries.some(
+    const existingIndex = this.inquiries.findIndex(
       (inquiry) => inquiry.slug === slug,
     );
-    if (alreadyExists) throw new InquiryAlreadyExists(name);
+    if (existingIndex !== -1) {
+      return new InquiryRequests(
+        updateItemToList(
+          this.inquiries,
+          existingIndex,
+          inquiry,
+        ) as WithAtLeastOneItem<InquiryRequest>,
+      );
+    }
 
     return new InquiryRequests([inquiry, ...this.inquiries]);
   }

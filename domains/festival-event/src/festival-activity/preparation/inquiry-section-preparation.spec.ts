@@ -1,9 +1,6 @@
 import { Duration, EndBeforeStart } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  InquiryAlreadyExists,
-  TimeWindowAlreadyExists,
-} from "../festival-activity.error.js";
+import { TimeWindowAlreadyExists } from "../festival-activity.error.js";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   baladeEnPoney,
@@ -315,24 +312,25 @@ describe("Inquiry section of festival activity preparation", () => {
     );
 
     describe.each`
-      activityName                  | activityId          | requestName                               | request
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: MATOS }}
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], owner: BARRIERES }}
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: ELEC }}
-      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: MATOS }}
-      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: ELEC }}
-      ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].name} | ${{ ...baladeEnPoney.inquiry.barriers[0], owner: BARRIERES }}
+      activityName                  | activityId          | requestName                               | request                                                                     | group
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: MATOS, quantity: 100 }}          | ${"gears"}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], owner: BARRIERES, quantity: 10 }}    | ${"barriers"}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: ELEC, quantity: 20 }}      | ${"electricity"}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: MATOS, quantity: 2 }}             | ${"gears"}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: ELEC, quantity: 20 }}       | ${"electricity"}
+      ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].name} | ${{ ...baladeEnPoney.inquiry.barriers[0], owner: BARRIERES, quantity: 15 }} | ${"barriers"}
     `(
       "when adding again $requestName on $activityName",
-      ({ activityId, requestName, request }) => {
-        it(`should indicate that there is already a request for ${requestName}`, async () => {
-          expect(
-            async () =>
-              await prepareFestivalActivity.addInquiryRequest(
-                activityId,
-                request,
-              ),
-          ).rejects.toThrow(InquiryAlreadyExists);
+      ({ activityId, requestName, request, group }) => {
+        it(`should override ${requestName} with new quantity`, async () => {
+          const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
+            activityId,
+            request,
+          );
+          const expectedInquiry = inquiry[group as keyof WithInquiries].find(
+            ({ slug }) => slug === request.slug,
+          );
+          expect(expectedInquiry?.quantity).toBe(request.quantity);
         });
       },
     );
