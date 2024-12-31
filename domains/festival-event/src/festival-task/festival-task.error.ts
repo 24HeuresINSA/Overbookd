@@ -64,8 +64,12 @@ export class ReadyToAssignError extends FestivalTaskError {
 }
 
 export class ForceUpdateError extends FestivalTaskError {
-  static notReadyToAssign(ftId: FestivalTask["id"]) {
-    const notReadyToAssign = `La ft #${ftId} n'est pas en affectation`;
-    return new ForceUpdateError(notReadyToAssign);
+  static isDraft(ftId: FestivalTask["id"]) {
+    const isDraft = `La fiche tâche #${ftId} est en brouillon`;
+    return new ForceUpdateError(isDraft);
+  }
+  static noApprovals(ftId: FestivalTask["id"]) {
+    const noApprovals = `La fiche tâche #${ftId} n'a aucune approbation`;
+    return new ForceUpdateError(noApprovals);
   }
 }
