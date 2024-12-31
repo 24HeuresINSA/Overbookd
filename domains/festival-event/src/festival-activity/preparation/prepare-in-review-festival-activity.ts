@@ -453,6 +453,21 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, inquiry };
   }
 
+  updateInquiryTimeWindow(
+    id: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): Reviewable {
+    this.checkIfHasImpactOnApprovedRequests();
+    this.checkIfAlreadyInitialized();
+
+    const inquiry = Inquiries.build(this.activity.inquiry).updateTimeWindow(
+      id,
+      period,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
+  }
+
   private checkIfHasImpactOnApprovedRequests() {
     type ListAndOwner = [InquiryRequest[], InquiryOwner];
 

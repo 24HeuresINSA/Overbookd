@@ -254,7 +254,7 @@ describe("General section of festival activity preparation", () => {
     update                  | activityName                  | activity         | toUpdate                                | expectedId
     ${friday11hToFriday15h} | ${escapeGame.general.name}    | ${escapeGame}    | ${escapeGame.general.timeWindows[0]}    | ${friday11hToFriday15h.id}
     ${sunday14hToSunday18h} | ${justDance.general.name}     | ${justDance}     | ${justDance.general.timeWindows[0]}     | ${sunday14hToSunday18h.id}
-    ${friday11hToFriday15h} | ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${baladeEnPoney.general.timeWindows[0]} | ${friday11hToFriday15h.id}
+    ${friday11hToFriday15h} | ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${baladeEnPoney.general.timeWindows[1]} | ${friday11hToFriday15h.id}
   `(
     "when adherent want to update a time window in $activityName",
     ({ update, activity, toUpdate, expectedId }) => {

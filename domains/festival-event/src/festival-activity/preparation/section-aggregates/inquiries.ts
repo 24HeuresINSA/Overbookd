@@ -148,6 +148,15 @@ export class Inquiries<
     );
   }
 
+  updateTimeWindow(id: TimeWindow["id"], period: IProvidePeriod) {
+    return new Inquiries(
+      this.timeWindows.update(id, period),
+      this.gears,
+      this.barriers,
+      this.electricity,
+    );
+  }
+
   removeTimeWindow(id: TimeWindow["id"]) {
     return new Inquiries(
       this.timeWindows.remove(id),

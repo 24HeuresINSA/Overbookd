@@ -43,6 +43,7 @@ import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
 import {
   cinqGuirlandeLED,
   deuxMarteaux,
+  friday11hToFriday15h,
   friday12hToFriday14h,
   quatreHeras,
   quinzeVaubans,
@@ -254,6 +255,55 @@ describe("Inquiry section of festival activity preparation", () => {
     );
   });
 
+  describe.each`
+    update                  | activityName                  | activity         | toUpdate                                | expectedId
+    ${friday11hToFriday15h} | ${escapeGame.general.name}    | ${escapeGame}    | ${escapeGame.inquiry.timeWindows[0]}    | ${friday11hToFriday15h.id}
+    ${sunday14hToSunday18h} | ${justDance.general.name}     | ${justDance}     | ${justDance.inquiry.timeWindows[1]}     | ${sunday14hToSunday18h.id}
+    ${friday11hToFriday15h} | ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${baladeEnPoney.inquiry.timeWindows[0]} | ${friday11hToFriday15h.id}
+  `(
+    "when adherent want to update a time window in $activityName",
+    ({ update, activity, toUpdate, expectedId }) => {
+      it("should update the time window", async () => {
+        const { inquiry } =
+          await prepareFestivalActivity.updateTimeWindowInInquiry(
+            activity.id,
+            toUpdate.id,
+            update,
+          );
+
+        const expectedTimeWindow = { ...update, id: expectedId };
+        expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
+      });
+      describe("when adherent want to update a time window that doesn't exist", () => {
+        it("should indicate that the time window doesn't exist", async () => {
+          await expect(
+            prepareFestivalActivity.updateTimeWindowInInquiry(
+              activity.id,
+              "132-456",
+              friday11hToFriday15h,
+            ),
+          ).rejects.toThrow(PrepareError.TimeWindowNotFound);
+        });
+      });
+      describe("when adherent want to update a time window with end before start", () => {
+        it("should indicate that end should be after start", async () => {
+          const invalidTimeWindow = {
+            start: new Date("2023-05-17T09:00+02:00"),
+            end: new Date("2023-05-17T08:00+02:00"),
+          };
+
+          await expect(
+            prepareFestivalActivity.updateTimeWindowInInquiry(
+              activity.id,
+              toUpdate.id,
+              invalidTimeWindow,
+            ),
+          ).rejects.toThrow(EndBeforeStart);
+        });
+      });
+    },
+  );
+
   describe("when adherent want to remove a time window", () => {
     it.each`
       activityName               | activityId       | timeWindowIdToRemove
@@ -460,6 +510,18 @@ describe("Inquiry section of festival activity preparation", () => {
           ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
         });
       });
+      describe("when trying to update a time window", () => {
+        it("should indicate that time window inquiry section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.updateTimeWindowInInquiry(
+                activityId,
+                saturday14hToSaturday18h.id,
+                friday12hToFriday14h,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
       describe("when trying to remove a time window", () => {
         it("should indicate that time window inquiry section is locked", async () => {
           expect(
@@ -632,6 +694,15 @@ describe("Inquiry section of festival activity preparation", () => {
         );
         expect(activity.inquiry.timeWindows).toContainEqual(timeWindow);
       });
+      it("should be possible to update a time window", async () => {
+        const activity =
+          await prepareFestivalActivity.updateTimeWindowInInquiry(
+            activityId,
+            friday12hToFriday14h.id,
+            timeWindow,
+          );
+        expect(activity.inquiry.timeWindows).toContainEqual(timeWindow);
+      });
       it("should be possible to remove a time window", async () => {
         const activity =
           await prepareFestivalActivity.removeTimeWindowFromInquiry(
@@ -657,7 +728,19 @@ describe("Inquiry section of festival activity preparation", () => {
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });
     });
-    describe("when trying to remove time window", () => {
+    describe("when trying to update a time window", () => {
+      it("should indicate that inquiry section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateTimeWindowInInquiry(
+              approvedByAllInquiryOwnersWithoutRequest.id,
+              saturday14hToSaturday18h.id,
+              friday12hToFriday14h,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to remove a time window", () => {
       it("should indicate that inquiry section is locked", async () => {
         expect(
           async () =>

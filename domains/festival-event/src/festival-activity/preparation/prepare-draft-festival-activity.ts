@@ -221,6 +221,14 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inquiry };
   }
 
+  updateInquiryTimeWindow(id: TimeWindow["id"], period: IProvidePeriod): Draft {
+    const inquiry = Inquiries.build(this.activity.inquiry).updateTimeWindow(
+      id,
+      period,
+    ).inquiry;
+    return { ...this.activity, inquiry };
+  }
+
   removeInquiryTimeWindow(id: TimeWindow["id"]): Draft {
     const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
       id,
