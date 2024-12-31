@@ -130,8 +130,7 @@
         "^docker/[Dd]ockerfile$"
       ],
       "matchStrings": [
-        "\\s*- npm install -g (?<depName>.*?)@(?<currentValue>.*?)\\n",
-        "RUN npm install -g (?<depName>.*?)@(?<currentValue>.*?)\n"
+        "\\s*npm install -g (?<depName>.*?)@(?<currentValue>[^\\s]+)"
       ]
     }
   ]
