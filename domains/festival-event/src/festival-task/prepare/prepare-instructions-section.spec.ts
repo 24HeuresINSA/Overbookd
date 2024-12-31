@@ -749,8 +749,8 @@ describe("Prepare festival task instructions section", () => {
         });
       },
     );
-    describe("when trying to force update on a task not in review", () => {
-      it("should indicate task is not in review", async () => {
+    describe("when trying to force update on a task in draft", () => {
+      it("should indicate task is in draft", async () => {
         const taskId = installEscapeGame.id;
         const update = { global: "C'est push" };
         expect(
