@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>FT associées</v-card-title>
-    <v-card-text class="ft">
+    <v-card-text>
       <v-data-table
         :headers="headers"
         :items="selectedActivity.tasks"
@@ -18,7 +18,7 @@
         </template>
         <template #item.status="{ item }">
           <v-chip-group id="status">
-            <v-chip :color="item.status.toLowerCase()" size="small">
+            <v-chip :class="item.status.toLowerCase()" size="small">
               {{ getStatusLabel(item) }}
             </v-chip>
           </v-chip-group>
