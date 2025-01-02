@@ -18,7 +18,7 @@
         </template>
         <template #item.status="{ item }">
           <v-chip-group id="status">
-            <v-chip :color="getStatusColor(item)" size="small">
+            <v-chip :class="item.status.toLowerCase()" size="small">
               {{ getStatusLabel(item) }}
             </v-chip>
           </v-chip-group>
@@ -55,9 +55,6 @@ const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
 
-const getStatusColor = ({ status }: FestivalTaskChild): string => {
-  return status.toLowerCase();
-};
 const getStatusLabel = ({ status }: FestivalTaskChild): FtStatusLabel => {
   return ftStatusLabels.get(status) ?? BROUILLON;
 };
