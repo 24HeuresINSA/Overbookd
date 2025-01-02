@@ -5,11 +5,13 @@ import { TimeWindow } from "../../../common/time-window.js";
 import {
   FestivalActivityError,
   InquiryAlreadyExists,
+  InquiryNotFound,
 } from "../../festival-activity.error.js";
 import { TimeWindows } from "./time-windows.js";
 import {
   LinkInquiryDrive,
   PrepareInquiryRequestCreation,
+  PrepareInquiryRequestUpdating,
 } from "../prepare-festival-activity.model.js";
 import { AssignDrive } from "../../../common/inquiry-request.js";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry.js";
@@ -130,6 +132,33 @@ export class Inquiries<
     }
   }
 
+  updateRequest({ owner, ...request }: PrepareInquiryRequestUpdating) {
+    switch (owner) {
+      case MATOS:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears.update(request),
+          this.barriers,
+          this.electricity,
+        );
+      case BARRIERES:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers.update(request),
+          this.electricity,
+        );
+
+      case ELEC:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers,
+          this.electricity.update(request),
+        );
+    }
+  }
+
   removeRequest(slug: InquiryRequest["slug"]) {
     return new Inquiries(
       this.timeWindows,
@@ -218,6 +247,27 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     if (alreadyExists) throw new InquiryAlreadyExists(name);
 
     return new InquiryRequests([inquiry, ...this.inquiries]);
+  }
+
+  update({
+    slug,
+    quantity,
+    name,
+  }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
+    const inquiryIndex = this.inquiries.findIndex(
+      (inquiry) => inquiry.slug === slug,
+    );
+    const inquiry = this.inquiries.at(inquiryIndex);
+    if (inquiryIndex === -1 || !inquiry) {
+      throw new InquiryNotFound(name);
+    }
+
+    const inquiries = updateItemToList(this.inquiries, inquiryIndex, {
+      ...inquiry,
+      quantity,
+    }) as WithAtLeastOneItem<InquiryRequest>;
+
+    return new InquiryRequests(inquiries);
   }
 
   remove(slug: InquiryRequest["slug"]): InquiryRequests<InquiryRequest[]> {

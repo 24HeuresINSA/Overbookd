@@ -244,6 +244,14 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inquiry };
   }
 
+  updateInquiry(form: PrepareInquiryRequestCreation): Draft {
+    const inquiry = Inquiries.build(this.activity.inquiry).updateRequest(
+      form,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
+  }
+
   removeInquiry(form: PrepareInquiryRequestRemoving): Draft {
     const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
       form.slug,

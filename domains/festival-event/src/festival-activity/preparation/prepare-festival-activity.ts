@@ -11,6 +11,7 @@ import {
   PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
   PrepareInquiryRequestRemoving,
+  PrepareInquiryRequestUpdating,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSignageCreation,
@@ -38,6 +39,7 @@ export type PrepareFestivalActivityRepository = {
 export type Prepare<T extends FestivalActivity> = {
   updateGeneral(general: PrepareGeneralUpdate): T;
   addGeneralTimeWindow(period: IProvidePeriod): T;
+  updateGeneralTimeWindow(id: TimeWindow["id"], period: IProvidePeriod): T;
   removeGeneralTimeWindow(id: TimeWindow["id"]): T;
   updateInCharge(inCharge: PrepareInChargeUpdate): T;
   addContractor(contractor: PrepareContractorCreation): T;
@@ -54,9 +56,11 @@ export type Prepare<T extends FestivalActivity> = {
   updateElectricitySupply(electricitySupply: PrepareElectricitySupplyUpdate): T;
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
   addInquiryTimeWindow(period: IProvidePeriod): T;
+  updateInquiryTimeWindow(id: TimeWindow["id"], period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
   addInquiry(inquiry: PrepareInquiryRequestCreation): T;
   initInquiry(initializer: InitInquiry): T;
+  updateInquiry(inquiry: PrepareInquiryRequestUpdating): T;
   removeInquiry(inquiry: PrepareInquiryRequestRemoving): T;
   assignInquiryToDrive(link: LinkInquiryDrive): T;
 };
@@ -343,6 +347,17 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.addInquiry(inquiry);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async updateInquiryRequest(
+    faId: FestivalActivity["id"],
+    inquiry: PrepareInquiryRequestUpdating,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateInquiry(inquiry);
     return this.festivalActivities.save(updatedFA);
   }
 
