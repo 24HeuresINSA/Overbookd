@@ -580,6 +580,7 @@ describe("Inquiry section of festival activity preparation", () => {
           ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
         });
       });
+
       describe("when trying to add the first request with time window", () => {
         it("should indicate that inquiry section is already initialized", async () => {
           expect(
@@ -591,6 +592,7 @@ describe("Inquiry section of festival activity preparation", () => {
           ).rejects.toThrow(AlreadyInitialized);
         });
       });
+
       describe("when trying to add a gear inquiry request", () => {
         if (gearsAvailable) {
           it("should add it to the current requests", async () => {
@@ -612,6 +614,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to update a gear inquiry request", () => {
         if (gearsAvailable) {
           it("should update it in the current requests", async () => {
@@ -642,6 +645,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to remove a gear inquiry request", () => {
         if (gearsAvailable) {
           it("should remove it from the current requests", async () => {
@@ -667,6 +671,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to add a barrier inquiry request", () => {
         if (barriersAvailable) {
           it("should add it to the current requests", async () => {
@@ -688,6 +693,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to update a barrier inquiry request", () => {
         if (barriersAvailable) {
           it("should update it in the current requests", async () => {
@@ -718,6 +724,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to remove a barrier inquiry request", () => {
         if (barriersAvailable) {
           it("should remove it from the current requests", async () => {
@@ -743,6 +750,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to add an electricity inquiry request", () => {
         if (elecAvailable) {
           it("should add it to the current requests", async () => {
@@ -764,6 +772,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to update an electricity inquiry request", () => {
         if (elecAvailable) {
           it("should update it in the current requests", async () => {
@@ -794,6 +803,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         }
       });
+
       describe("when trying to remove an electricity inquiry request", () => {
         if (elecAvailable) {
           it("should remove it from the current requests", async () => {
