@@ -3,7 +3,7 @@ import {
   ONE_HOUR_IN_MS,
   ONE_MINUTE_IN_MS,
   ONE_SECOND_IN_MS,
-  ONE_WEEK_IN_MS
+  ONE_WEEK_IN_MS,
 } from "./duration.constant.js";
 
 export class Duration {
@@ -14,7 +14,7 @@ export class Duration {
   }
 
   static get ONE_WEEK(): Duration {
-    return new Duration(ONE_WEEK_IN_MS)
+    return new Duration(ONE_WEEK_IN_MS);
   }
 
   static hours(hours: number): Duration {
