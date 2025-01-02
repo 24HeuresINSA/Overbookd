@@ -2,17 +2,20 @@ import { describe, expect, it } from "vitest";
 import { MINUTES_IN_HOUR, OverDate } from "@overbookd/time";
 import { createCalendarEvent } from "./event";
 import {
+  AvailabilityPresenter,
   CalendarEventPresenter,
   HORIZONTAL_MARGIN_IN_PERCENTAGE,
   PIXELS_PER_MINUTE,
   VERTICAL_MARGIN_IN_PIXELS,
-} from "./calendar-event.presenter";
+} from "./calendar.presenter";
+import { DayPresenter } from "./day.presenter";
 
 const sunday = "2024-12-29";
 const monday = "2024-12-30";
 const tuesday = "2024-12-31";
 
 const displayedDate = OverDate.init({ date: monday, hour: 0 });
+const displayedDatePresenter = new DayPresenter(displayedDate);
 
 const monday09hto10hEvent = createCalendarEvent({
   start: OverDate.init({ date: monday, hour: 9 }).date,
@@ -62,7 +65,10 @@ describe("Calendar Event Presenter", () => {
     ${sunday23htoMonday01hEvent}  | ${OverDate.init({ date: monday, hour: 0 }).date}  | ${OverDate.init({ date: monday, hour: 1 }).date}
   `("displayed event period", ({ event, expectedStart, expectedEnd }) => {
     it(`should calculate displayed period as ${expectedStart} to ${expectedEnd} for ${event.name}`, () => {
-      const presenter = new CalendarEventPresenter(event, displayedDate);
+      const presenter = new AvailabilityPresenter(
+        event,
+        displayedDatePresenter,
+      );
       const displayedPeriod = presenter.displayedEventPeriod;
       expect(displayedPeriod.start).toEqual(expectedStart);
       expect(displayedPeriod.end).toEqual(expectedEnd);
@@ -74,10 +80,28 @@ describe("Calendar Event Presenter", () => {
     ${monday09hto10hEvent}     | ${"9h - 10h"}
     ${monday14h15to16h30Event} | ${"14h15 - 16h30"}
     ${monday00hto23h59Event}   | ${"0h - 23h59"}
-  `("period text", ({ event, expectedPeriodText }) => {
+  `("calendar event period text", ({ event, expectedPeriodText }) => {
     it(`should return "${expectedPeriodText}" for ${event.name}`, () => {
-      const presenter = new CalendarEventPresenter(event, displayedDate);
+      const presenter = new CalendarEventPresenter(
+        event,
+        displayedDatePresenter,
+        [event],
+      );
+      expect(presenter.periodText).toBe(expectedPeriodText);
+    });
+  });
 
+  describe.each`
+    event                      | expectedPeriodText
+    ${monday09hto10hEvent}     | ${monday09hto10hEvent.name}
+    ${monday14h15to16h30Event} | ${monday14h15to16h30Event.name}
+    ${monday00hto23h59Event}   | ${monday00hto23h59Event.name}
+  `("availability event period text", ({ event, expectedPeriodText }) => {
+    it(`should return "${expectedPeriodText}" for ${event.name}`, () => {
+      const presenter = new AvailabilityPresenter(
+        event,
+        displayedDatePresenter,
+      );
       expect(presenter.periodText).toBe(expectedPeriodText);
     });
   });
@@ -85,11 +109,14 @@ describe("Calendar Event Presenter", () => {
   describe.each`
     event                         | expectedTop                                                                    | expectedHeight
     ${monday09hto10hEvent}        | ${PIXELS_PER_MINUTE * MINUTES_IN_HOUR * 9 + VERTICAL_MARGIN_IN_PIXELS}         | ${PIXELS_PER_MINUTE * MINUTES_IN_HOUR - VERTICAL_MARGINS}
-    ${monday14h15to16h30Event}    | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 14 + 15) + VERTICAL_MARGIN_IN_PIXELS} | ${PIXELS_PER_MINUTE * 135 - VERTICAL_MARGINS}
+    ${monday14h15to16h30Event}    | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 14 + 15) + VERTICAL_MARGIN_IN_PIXELS} | ${PIXELS_PER_MINUTE * (2 * MINUTES_IN_HOUR + 15) - VERTICAL_MARGINS}
     ${monday22htoTuesday02hEvent} | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 22) + VERTICAL_MARGIN_IN_PIXELS}      | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 2 - 1) - VERTICAL_MARGINS}
   `("top and height", ({ event, expectedTop, expectedHeight }) => {
     it(`should calculate top as ${expectedTop}px and height as ${expectedHeight}px for ${event.name}`, () => {
-      const presenter = new CalendarEventPresenter(event, displayedDate);
+      const presenter = new AvailabilityPresenter(
+        event,
+        displayedDatePresenter,
+      );
       expect(presenter.top.value).toBe(expectedTop);
       expect(presenter.height.value).toBe(expectedHeight);
     });
@@ -101,12 +128,12 @@ describe("Calendar Event Presenter", () => {
     ${monday09hto10hEvent} | ${[monday08hto10hEvent, monday09hto10hEvent]}                      | ${50 - HORIZONTAL_MARGINS}      | ${50 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
     ${monday08hto10hEvent} | ${[monday07hto12hEvent, monday08hto10hEvent, monday09hto10hEvent]} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
   `(
-    "width and left",
+    "calendar event width and left",
     ({ event, overlappingEvents, expectedWidth, expectedLeft }) => {
       it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
         const presenter = new CalendarEventPresenter(
           event,
-          displayedDate,
+          displayedDatePresenter,
           overlappingEvents,
         );
         expect(presenter.width.value).toBe(expectedWidth);
@@ -114,4 +141,19 @@ describe("Calendar Event Presenter", () => {
       });
     },
   );
+
+  describe.each`
+    event                  | expectedWidth               | expectedLeft
+    ${monday09hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+  `("availability width and left", ({ event, expectedWidth, expectedLeft }) => {
+    it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
+      const presenter = new AvailabilityPresenter(
+        event,
+        displayedDatePresenter,
+      );
+      expect(presenter.width.value).toBe(expectedWidth);
+      expect(presenter.left.value).toBe(expectedLeft);
+    });
+  });
 });
