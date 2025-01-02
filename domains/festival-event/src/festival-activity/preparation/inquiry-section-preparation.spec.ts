@@ -434,7 +434,6 @@ describe("Inquiry section of festival activity preparation", () => {
       },
     );
 
-    // update unexisting request
     describe.each`
       activityName               | activityId       | requestName           | request
       ${escapeGame.general.name} | ${escapeGame.id} | ${branleCanisse.name} | ${{ ...branleCanisse, quantity: 5 }}
