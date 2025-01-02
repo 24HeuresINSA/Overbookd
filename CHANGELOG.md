@@ -1,3 +1,16 @@
+## [3.22.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.22.0...v3.22.1) (2025-01-02)
+
+### Bug Fixes
+
+* **fa:** add color to linked child ft [#2339](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2339) ([ba18d85](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ba18d85537ec9a7910738c9caefcae5ebd6e3073))
+* **festival-event:** inquiry drive filter [#2337](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2337) ([bf47a72](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bf47a7267a322e77ee1a8fecb00942574c3c7623))
+
+### Pre-Features
+
+* **assignment:** add FilterableTaskList component [#2234](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2234) ([0c7c74b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0c7c74ba11f6d5b009be58d014e3eda4a51998f4))
+* **assignment:** add TaskList & TaskResume components [#2233](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2233) ([557e260](https://gitlab.com/24-heures-insa/overbookd-mono/commit/557e2600c6947934658408f65dbe647b54f574da))
+* **ft:** authorize forced updating of  instructions when there is at least one approval [#2254](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2254) ([05ed381](https://gitlab.com/24-heures-insa/overbookd-mono/commit/05ed38190d7f50ddfa92b7569827c7724f27dc73))
+
 ## [3.22.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.21.1...v3.22.0) (2024-12-26)
 
 ### Features
