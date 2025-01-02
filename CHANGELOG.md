@@ -1,3 +1,14 @@
+## [3.23.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.22.1...v3.23.0) (2025-01-02)
+
+### Features
+
+* **fa:** update the quantity of an inquiry request in api & web [#2213](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2213) ([4caad9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4caad9b7cd8d67e16b285c2a4402f52fc95e05f8))
+
+### Pre-Features
+
+* **fa:** add time window update in domain [#2215](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2215) ([3637cff](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3637cffbab9ae84583d5022090bb9ea31e15f070))
+* **fa:** update the quantity of an inquiry request in domain [#2213](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2213) ([b00761d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b00761d7a12beaf608344812320f9e5890c9c11b))
+
 ## [3.22.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.22.0...v3.22.1) (2025-01-02)
 
 ### Bug Fixes
