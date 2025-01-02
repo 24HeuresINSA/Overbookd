@@ -55,8 +55,7 @@ export class MobilizationWithAtLeastOneTeamAndAssignmentsDto
 
 export class MobilizationWithAtLeastOneVolunteerAndAssignmentsDto
   extends MobilizationWithAtLeastOneVolunteerDto
-  implements
-    AtLeastOneVolunteer<{ withConflicts: true; withAssignments: true }>
+  implements AtLeastOneVolunteer<{ withConflicts: true; withAssignments: true }>
 {
   @ApiProperty({ type: AssignmentResponseDto, isArray: true })
   assignments: Assignment[];
