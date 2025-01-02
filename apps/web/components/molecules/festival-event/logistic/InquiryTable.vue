@@ -40,15 +40,19 @@
     <template #item.actions="{ item }">
       <div v-if="currentInquiryUpdate === item">
         <v-btn
-          icon="mdi-close-circle"
-          size="small"
+          icon="mdi-close"
           color="error"
+          size="small"
+          density="comfortable"
+          rounded="pill"
           @click="currentInquiryUpdate = null"
         />
         <v-btn
-          icon="mdi-check-circle"
-          size="small"
+          icon="mdi-check"
           color="success"
+          size="small"
+          density="comfortable"
+          rounded="pill"
           @click="updateInquiry(item)"
         />
       </div>
@@ -187,7 +191,7 @@ const updateInquiry = (inquiry: InquiryRequest) => {
     currentInquiryUpdate.value = null;
     return;
   }
-  emit("update", inquiry, newQuantity.value);
+  emit("update", inquiry, +newQuantity.value);
   currentInquiryUpdate.value = null;
 };
 const removeInquiry = (inquiry: InquiryRequest) => emit("remove", inquiry);

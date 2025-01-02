@@ -39,9 +39,7 @@
           <template #item.action="{ item, index }">
             <v-btn
               icon="mdi-pencil"
-              small
-              fab
-              dark
+              size="small"
               color="warning"
               @click="startEditMode(item, index)"
             />
@@ -73,7 +71,6 @@
       prepend-icon="mdi-check"
       color="success"
       size="large"
-      rounded
       @click="saveInventory"
     />
 

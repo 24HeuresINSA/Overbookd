@@ -77,6 +77,7 @@
             :owner="MATOS"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
+            @update="updateInquiry"
             @remove="removeInquiry"
           />
         </div>
@@ -91,6 +92,7 @@
             :owner="ELEC"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
+            @update="updateInquiry"
             @remove="removeInquiry"
           />
         </div>
@@ -105,6 +107,7 @@
             :owner="BARRIERES"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
+            @update="updateInquiry"
             @remove="removeInquiry"
           />
         </div>
@@ -174,6 +177,9 @@ const addInquiry = () => {
   faStore.addInquiryRequest(inquiry);
   gear.value = undefined;
   quantity.value = 1;
+};
+const updateInquiry = (inquiry: InquiryRequest, quantity: number) => {
+  faStore.updateInquiryRequest(inquiry.slug, quantity);
 };
 const removeInquiry = (inquiry: InquiryRequest) => {
   faStore.removeInquiryRequest(inquiry.slug);
