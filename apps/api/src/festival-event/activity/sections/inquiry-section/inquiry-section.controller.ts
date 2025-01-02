@@ -238,7 +238,7 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
-  @Post(":faId/inquiry/requests/:inquirySlug")
+  @Patch(":faId/inquiry/requests/:inquirySlug")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -314,7 +314,7 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
-  @Patch(":faId/inquiry/requests/:inquirySlug")
+  @Patch(":faId/inquiry/requests/:inquirySlug/link-drive")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

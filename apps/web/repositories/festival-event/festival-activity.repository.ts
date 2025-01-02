@@ -333,7 +333,7 @@ export class FestivalActivityRepository {
 
   static linkDrive(faId: FestivalActivity["id"], { slug, drive }: AssignDrive) {
     return HttpClient.patch<FestivalActivity>(
-      `${this.basePath}/${faId}/inquiry/requests/${slug}`,
+      `${this.basePath}/${faId}/inquiry/requests/${slug}/link-drive`,
       { drive },
     );
   }
