@@ -321,6 +321,16 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.selectedActivity = castActivityWithDate(res);
     },
 
+    async updateInquiryRequest(slug: InquiryRequest["slug"], quantity: number) {
+      const res = await repo.updateInquiryRequest(
+        this.selectedActivity.id,
+        slug,
+        { quantity },
+      );
+      if (isHttpError(res)) return;
+      this.selectedActivity = castActivityWithDate(res);
+    },
+
     async removeInquiryRequest(slug: InquiryRequest["slug"]) {
       const res = await repo.removeInquiryRequest(
         this.selectedActivity.id,

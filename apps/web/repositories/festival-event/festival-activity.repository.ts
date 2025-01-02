@@ -31,6 +31,7 @@ import type {
 import type { IProvidePeriod } from "@overbookd/time";
 import type {
   AddInquiryRequestForm,
+  UpdateInquiryRequestForm,
   PublishFeedbackForm,
   ReviewApproval,
   Statistics,
@@ -293,6 +294,17 @@ export class FestivalActivityRepository {
   ) {
     return HttpClient.post<FestivalActivity>(
       `${this.basePath}/${faId}/inquiry/requests`,
+      request,
+    );
+  }
+
+  static updateInquiryRequest(
+    faId: FestivalActivity["id"],
+    slug: InquiryRequest["slug"],
+    request: UpdateInquiryRequestForm,
+  ) {
+    return HttpClient.patch<FestivalActivity>(
+      `${this.basePath}/${faId}/inquiry/requests/${slug}`,
       request,
     );
   }

@@ -10,7 +10,14 @@
     hide-default-footer
   >
     <template #item.quantity="{ item }">
-      {{ displayQuantity(item) }}
+      <v-text-field
+        v-if="currentInquiryUpdate === item"
+        v-model="newQuantity"
+        type="number"
+        :rules="[isNumber, min(1)]"
+        hide-details
+      />
+      <span v-else>{{ displayQuantity(item) }}</span>
     </template>
 
     <template #item.drive="{ item }">
@@ -31,11 +38,26 @@
 
     <template #item.actions="{ item }">
       <v-btn
-        icon="mdi-trash-can"
+        v-if="currentInquiryUpdate === item"
+        icon="mdi-check-circle"
         size="small"
-        variant="flat"
-        @click="removeInquiry(item)"
+        color="success"
+        @click="updateInquiry(item)"
       />
+      <div v-else>
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openInquiryUpdateForm(item)"
+        />
+        <v-btn
+          icon="mdi-trash-can"
+          size="small"
+          variant="flat"
+          @click="removeInquiry(item)"
+        />
+      </div>
     </template>
   </v-data-table>
 </template>
@@ -52,6 +74,7 @@ import {
 } from "@overbookd/festival-event";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { isNumber, min } from "~/utils/rules/input.rules";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();
@@ -143,7 +166,21 @@ const gearDrive = (inquiry: InquiryRequest): Drive | undefined => {
   return "drive" in inquiry ? inquiry.drive : undefined;
 };
 
-const emit = defineEmits(["remove", "link-drive"]);
+const currentInquiryUpdate = ref<InquiryRequest | null>(null);
+const newQuantity = ref<number>(1);
+const openInquiryUpdateForm = (inquiry: InquiryRequest) => {
+  currentInquiryUpdate.value = inquiry;
+  newQuantity.value = inquiry.quantity;
+};
+
+const emit = defineEmits(["update", "remove", "link-drive"]);
+const updateInquiry = (inquiry: InquiryRequest) => {
+  if (currentInquiryUpdate.value?.slug !== inquiry.slug) {
+    currentInquiryUpdate.value = null;
+    return;
+  }
+  emit("update", inquiry, newQuantity.value);
+};
 const removeInquiry = (inquiry: InquiryRequest) => emit("remove", inquiry);
 const linkDrive = (slug: string, drive?: Drive) => {
   if (!drive) return;

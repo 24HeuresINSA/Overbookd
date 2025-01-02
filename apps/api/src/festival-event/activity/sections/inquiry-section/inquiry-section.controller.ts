@@ -50,6 +50,7 @@ import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
 import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { UpdateInquiryRequestDto } from "./dto/update-inquiry-request.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -233,6 +234,47 @@ export class InquirySectionController {
     @Body() inquiryRequest: AddInquiryRequestDto,
   ): Promise<FestivalActivity> {
     return this.inquiryService.addInquiryRequest(faId, inquiryRequest);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/inquiry/requests/:inquirySlug")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Inquiry request quantity to update in inquiry section of festival activity",
+    type: UpdateInquiryRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "inquirySlug",
+    type: String,
+    description: "Inquiry Request Slug",
+    required: true,
+  })
+  updateInquiryRequest(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("inquirySlug") slug: InquiryRequest["slug"],
+    @Body() inquiryRequest: UpdateInquiryRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.inquiryService.updateInquiryRequest(faId, slug, inquiryRequest);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
