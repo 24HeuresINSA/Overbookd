@@ -1,6 +1,7 @@
 // FESTIVAL EVENT
 export type {
   AddInquiryRequestForm,
+  UpdateInquiryRequestForm,
   PublishFeedbackForm,
 } from "./festival-event/common.js";
 export type {

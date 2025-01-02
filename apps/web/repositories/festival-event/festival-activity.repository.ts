@@ -31,6 +31,7 @@ import type {
 import type { IProvidePeriod } from "@overbookd/time";
 import type {
   AddInquiryRequestForm,
+  UpdateInquiryRequestForm,
   PublishFeedbackForm,
   ReviewApproval,
   Statistics,
@@ -297,6 +298,17 @@ export class FestivalActivityRepository {
     );
   }
 
+  static updateInquiryRequest(
+    faId: FestivalActivity["id"],
+    slug: InquiryRequest["slug"],
+    request: UpdateInquiryRequestForm,
+  ) {
+    return HttpClient.patch<FestivalActivity>(
+      `${this.basePath}/${faId}/inquiry/requests/${slug}`,
+      request,
+    );
+  }
+
   static removeInquiryRequest(
     faId: FestivalActivity["id"],
     requestSlug: InquiryRequest["slug"],
@@ -321,7 +333,7 @@ export class FestivalActivityRepository {
 
   static linkDrive(faId: FestivalActivity["id"], { slug, drive }: AssignDrive) {
     return HttpClient.patch<FestivalActivity>(
-      `${this.basePath}/${faId}/inquiry/requests/${slug}`,
+      `${this.basePath}/${faId}/inquiry/requests/${slug}/link-drive`,
       { drive },
     );
   }

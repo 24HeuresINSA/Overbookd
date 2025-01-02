@@ -6,7 +6,11 @@ import {
   PrepareFestivalActivity,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { InitInquiryRequest, AddInquiryRequestForm } from "@overbookd/http";
+import {
+  InitInquiryRequest,
+  AddInquiryRequestForm,
+  UpdateInquiryRequestForm,
+} from "@overbookd/http";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { Inquiries } from "../../common/festival-activity-common.model";
 import { TeamService } from "../../../../team/team.service";
@@ -65,6 +69,16 @@ export class InquirySectionService {
     const request = { ...inquiryRequest, ...inquiry };
 
     return this.prepare.addInquiryRequest(faId, request);
+  }
+
+  async updateInquiryRequest(
+    faId: FestivalActivity["id"],
+    slug: InquiryRequest["slug"],
+    { quantity }: UpdateInquiryRequestForm,
+  ) {
+    const inquiry = await this.inquiries.find(slug);
+    const request = { ...inquiry, quantity };
+    return this.prepare.updateInquiryRequest(faId, request);
   }
 
   async removeInquiryRequest(

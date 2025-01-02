@@ -4,7 +4,7 @@
       :model-value="quantity"
       type="number"
       label="Quantité"
-      :rules="[rules.number, rules.min]"
+      :rules="[isNumber, min(1)]"
       class="inquiry-form__quantity"
       :disabled="disabled"
       :hide-details="hideDetails"
@@ -41,8 +41,6 @@ defineProps({
     default: false,
   },
 });
-
-const rules = { number: isNumber, min: min(1) };
 
 const emit = defineEmits(["update:quantity"]);
 const updateQuantity = (value: string) => emit("update:quantity", +value);
