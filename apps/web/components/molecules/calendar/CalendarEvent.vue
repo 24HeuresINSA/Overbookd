@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { OverDate } from "@overbookd/time";
-import { CalendarEventPresenter } from "~/utils/calendar/calendar-event.presenter";
+import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 
 const props = defineProps({
   event: {

@@ -14,7 +14,7 @@
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { OverDate, Period } from "@overbookd/time";
 import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
-import { CalendarEventPresenter } from "~/utils/calendar/calendar-event.presenter";
+import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 

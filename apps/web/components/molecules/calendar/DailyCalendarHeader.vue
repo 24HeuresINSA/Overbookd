@@ -58,7 +58,7 @@ const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
     (acc, event) => {
       const dateKey = OverDate.from(event.start).dateString;
-      acc[dateKey] = event;
+      acc[`${dateKey}`] = event;
       return acc;
     },
     {} as Record<string, DailyEvent>,
@@ -67,7 +67,7 @@ const publicHolidaysByDate = computed(() => {
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
   const dateKey = props.displayedDay.dateString;
-  return publicHolidaysByDate.value[dateKey];
+  return publicHolidaysByDate.value[`${dateKey}`];
 });
 
 const isToday = computed<boolean>(() => {

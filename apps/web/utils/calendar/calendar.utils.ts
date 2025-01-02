@@ -1,5 +1,6 @@
 import { ONE_DAY_IN_MS, OverDate, Period } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
+import { DayPresenter } from "./day.presenter";
 
 export const DAY_MODE = "day";
 const _WEEK_MODE = "week";
@@ -20,9 +21,9 @@ export function getOverlappingEvents(
 }
 
 export function getWeekDays(date: OverDate): CalendarDay[] {
-  const monday = date.getMonday().date;
+  const monday = new DayPresenter(date).monday;
   const weekDates = Array.from({ length: 7 }, (_, i) =>
-    OverDate.from(new Date(monday.getTime() + i * ONE_DAY_IN_MS)),
+    OverDate.from(new Date(monday.date.getTime() + i * ONE_DAY_IN_MS)),
   );
   return weekDates.map((overdate) => ({
     name: overdate.date
