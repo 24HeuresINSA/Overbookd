@@ -38,13 +38,20 @@
     </template>
 
     <template #item.actions="{ item }">
-      <v-btn
-        v-if="currentInquiryUpdate === item"
-        icon="mdi-check-circle"
-        size="small"
-        color="success"
-        @click="updateInquiry(item)"
-      />
+      <div v-if="currentInquiryUpdate === item">
+        <v-btn
+          icon="mdi-close-circle"
+          size="small"
+          color="error"
+          @click="currentInquiryUpdate = null"
+        />
+        <v-btn
+          icon="mdi-check-circle"
+          size="small"
+          color="success"
+          @click="updateInquiry(item)"
+        />
+      </div>
       <div v-else>
         <v-btn
           icon="mdi-pencil"
