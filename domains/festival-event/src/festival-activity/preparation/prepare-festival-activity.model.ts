@@ -96,6 +96,9 @@ type WithInquiryOwner = {
 export type PrepareInquiryRequestCreation = BaseInquiryRequest &
   WithInquiryOwner;
 
+export type PrepareInquiryRequestUpdating = BaseInquiryRequest &
+  WithInquiryOwner;
+
 export type PrepareInquiryRequestRemoving = {
   slug: string;
   owner: InquiryOwner;

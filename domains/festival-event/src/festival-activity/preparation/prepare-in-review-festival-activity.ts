@@ -46,6 +46,7 @@ import {
   LinkSignageCatalogItem,
   PrepareSecurityUpdate,
   PrepareInquiryRequestRemoving,
+  PrepareInquiryRequestUpdating,
 } from "./prepare-festival-activity.model.js";
 import {
   FestivalActivityError,
@@ -565,6 +566,15 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     if (!Inquiries.alreadyInitialized(this.activity.inquiry)) {
       throw new NotYetInitialized();
     }
+  }
+
+  updateInquiry(request: PrepareInquiryRequestUpdating): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy(request.owner);
+    const inquiry = Inquiries.build(this.activity.inquiry).updateRequest(
+      request,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
   }
 
   removeInquiry(request: PrepareInquiryRequestRemoving): Reviewable {
