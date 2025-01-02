@@ -15,6 +15,7 @@
         v-model="newQuantity"
         type="number"
         :rules="[isNumber, min(1)]"
+        density="compact"
         hide-details
       />
       <span v-else>{{ displayQuantity(item) }}</span>
