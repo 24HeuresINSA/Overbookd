@@ -180,6 +180,7 @@ const updateInquiry = (inquiry: InquiryRequest) => {
     return;
   }
   emit("update", inquiry, newQuantity.value);
+  currentInquiryUpdate.value = null;
 };
 const removeInquiry = (inquiry: InquiryRequest) => emit("remove", inquiry);
 const linkDrive = (slug: string, drive?: Drive) => {
