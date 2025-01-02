@@ -76,10 +76,17 @@ class NeedAtLeastOneTimeWindow extends FestivalActivityError {
   }
 }
 
+class TimeWindowNotFound extends FestivalActivityError {
+  constructor() {
+    super("Le créneau n'a pas été trouvé.");
+  }
+}
+
 export const PrepareError = {
   IsNotPublicActivity,
   NeedAtLeastOneTimeWindow,
   AlreadyApprovedBy,
+  TimeWindowNotFound,
 };
 
 type GeneralReviewer = typeof humain | typeof communication;
@@ -200,6 +207,17 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, general, reviews, status: IN_REVIEW };
   }
 
+  private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {
+    const { reviews, general: generalData } = this.activity;
+    const defaultReviewer = generalData.toPublish ? communication : humain;
+    const reviewer = askingReviewer ?? defaultReviewer;
+    const general = General.init(generalData);
+
+    if (general.isAlreadyValidatedBy(reviewer, reviews)) {
+      throw new AlreadyApprovedBy([reviewer], "FA");
+    }
+  }
+
   addGeneralTimeWindow(period: IProvidePeriod): Reviewable {
     this.checkIfGeneralAlreadyApproved(humain);
     const timeWindows = TimeWindows.build(
@@ -210,15 +228,17 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, general };
   }
 
-  private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {
-    const { reviews, general: generalData } = this.activity;
-    const defaultReviewer = generalData.toPublish ? communication : humain;
-    const reviewer = askingReviewer ?? defaultReviewer;
-    const general = General.init(generalData);
+  updateGeneralTimeWindow(
+    id: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): Reviewable {
+    this.checkIfGeneralAlreadyApproved(humain);
+    const timeWindows = TimeWindows.build(
+      this.activity.general.timeWindows,
+    ).update(id, period).entries;
 
-    if (general.isAlreadyValidatedBy(reviewer, reviews)) {
-      throw new AlreadyApprovedBy([reviewer], "FA");
-    }
+    const general = { ...this.activity.general, timeWindows };
+    return { ...this.activity, general };
   }
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
@@ -427,6 +447,21 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     this.checkIfAlreadyInitialized();
 
     const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
+      period,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
+  }
+
+  updateInquiryTimeWindow(
+    id: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): Reviewable {
+    this.checkIfHasImpactOnApprovedRequests();
+    this.checkIfAlreadyInitialized();
+
+    const inquiry = Inquiries.build(this.activity.inquiry).updateTimeWindow(
+      id,
       period,
     ).inquiry;
 

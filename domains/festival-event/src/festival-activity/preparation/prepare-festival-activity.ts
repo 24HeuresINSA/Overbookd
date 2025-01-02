@@ -116,6 +116,18 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
+  async updateTimeWindowInGeneral(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateGeneralTimeWindow(timeWindowId, period);
+    return this.festivalActivities.save(updatedFA);
+  }
+
   async removeTimeWindowFromGeneral(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
@@ -297,6 +309,18 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.addInquiryTimeWindow(period);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async updateTimeWindowInInquiry(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateInquiryTimeWindow(timeWindowId, period);
     return this.festivalActivities.save(updatedFA);
   }
 

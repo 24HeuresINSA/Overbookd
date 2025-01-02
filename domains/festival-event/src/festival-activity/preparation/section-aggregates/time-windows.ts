@@ -1,7 +1,8 @@
-import { Duration, IProvidePeriod, Period } from "@overbookd/time";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { TimeWindowAlreadyExists } from "../../festival-activity.error.js";
 import { TimeWindow } from "../../../common/time-window.js";
 import { WithAtLeastOneItem } from "@overbookd/list";
+import { PrepareError } from "../prepare-in-review-festival-activity.js";
 
 export class TimeWindows<T extends TimeWindow[]> {
   private constructor(private readonly timeWindows: T) {}
@@ -15,10 +16,8 @@ export class TimeWindows<T extends TimeWindow[]> {
   }
 
   add(period: IProvidePeriod): TimeWindows<WithAtLeastOneItem<TimeWindow>> {
-    const { start, end } = Period.init(period);
-    const id = this.generateTimeWindowId({ start, end });
+    const { id, start, end } = Period.init(period);
     const timeWindow = { id, start, end };
-
     const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
     if (alreadyExists) throw new TimeWindowAlreadyExists();
 
@@ -28,15 +27,23 @@ export class TimeWindows<T extends TimeWindow[]> {
     ]);
   }
 
-  remove(id: TimeWindow["id"]): TimeWindows<TimeWindow[]> {
-    return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
+  update(
+    currentId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ): TimeWindows<WithAtLeastOneItem<TimeWindow>> {
+    const exists = this.timeWindows.some((tw) => tw.id === currentId);
+    if (!exists) throw new PrepareError.TimeWindowNotFound();
+
+    const { id, start, end } = Period.init(period);
+    const timeWindow = { id, start, end };
+    const timeWindows = this.timeWindows.map((tw) =>
+      tw.id === currentId ? timeWindow : tw,
+    ) as WithAtLeastOneItem<TimeWindow>;
+
+    return new TimeWindows<WithAtLeastOneItem<TimeWindow>>(timeWindows);
   }
 
-  private generateTimeWindowId(period: IProvidePeriod): TimeWindow["id"] {
-    const { start, end } = period;
-    const startMinutes = Duration.ms(start.getTime()).inMinutes;
-    const endMinutes = Duration.ms(end.getTime()).inMinutes;
-
-    return `${startMinutes}-${endMinutes}`;
+  remove(id: TimeWindow["id"]): TimeWindows<TimeWindow[]> {
+    return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
   }
 }
