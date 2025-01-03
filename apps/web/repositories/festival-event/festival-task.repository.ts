@@ -256,7 +256,7 @@ export class FestivalTaskRepository {
     { slug, drive }: AssignDrive,
   ) {
     return HttpClient.patch<FestivalTaskWithConflicts>(
-      `${this.basePath}/${ftId}/inquiry/requests/${slug}`,
+      `${this.basePath}/${ftId}/inquiry/requests/${slug}/link-drive`,
       { drive },
     );
   }
