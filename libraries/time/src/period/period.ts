@@ -189,19 +189,12 @@ export class Period {
   }
 
   isInDay(day: Date): boolean {
-    const startOfStartDay = OverDate.getStartOfDay(day).date.getTime();
-    const endOfEndDay = startOfStartDay + ONE_DAY_IN_MS;
-
-    const periodStart = this.start.getTime();
-    const periodEnd = this.end.getTime();
-
-    const isStartInDay =
-      periodStart >= startOfStartDay && periodStart < endOfEndDay;
-    const isEndInDay = periodEnd > startOfStartDay && periodEnd <= endOfEndDay;
-    const isDayBetweenPeriod =
-      periodStart < startOfStartDay && periodEnd > endOfEndDay;
-
-    return isStartInDay || isEndInDay || isDayBetweenPeriod;
+    const dayString = OverDate.from(day).dateString;
+    const dayStart = OverDate.init({ date: dayString, hour: 0, minute: 0 });
+    const dayEnd = OverDate.from(dayStart.date.getTime() + ONE_DAY_IN_MS);
+    return this.isOverlapping(
+      Period.init({ start: dayStart.date, end: dayEnd.date }),
+    );
   }
 
   toString(): string {

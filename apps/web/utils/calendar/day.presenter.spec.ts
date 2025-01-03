@@ -102,4 +102,30 @@ describe("Date presenter", () => {
       },
     );
   });
+
+  describe("Get week days", () => {
+    it("should return 7 days starting from the correct Monday", () => {
+      const date = OverDate.from(`${friday}T11:11+02:00`);
+      const presenter = new DayPresenter(date);
+      const weekDays = presenter.weekDays;
+
+      expect(weekDays).toHaveLength(7);
+      expect(weekDays[0].name).toBe("LUNDI");
+      expect(weekDays[6].name).toBe("DIMANCHE");
+      expect(weekDays[0].number).toBe(13); // Lundi 13 mai
+      expect(weekDays[6].number).toBe(19); // Dimanche 19 mai
+    });
+
+    it("should handle weeks spanning multiple months", () => {
+      const date = OverDate.from(`${mondayWinterTime}T12:30+01:00`);
+      const presenter = new DayPresenter(date);
+      const weekDays = presenter.weekDays;
+
+      expect(weekDays).toHaveLength(7);
+      expect(weekDays[0].name).toBe("LUNDI");
+      expect(weekDays[0].number).toBe(2); // Lundi 2 décembre
+      expect(weekDays[6].name).toBe("DIMANCHE");
+      expect(weekDays[6].number).toBe(8); // Dimanche 8 décembre
+    });
+  });
 });
