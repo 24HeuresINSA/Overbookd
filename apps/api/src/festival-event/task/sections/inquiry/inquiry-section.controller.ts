@@ -22,7 +22,6 @@ import {
 } from "@nestjs/swagger";
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
-import { AddInquiryRequestDto } from "./dto/add-inquiry-request.request.dto";
 import { VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
@@ -36,6 +35,8 @@ import {
   ValidatedFestivalTaskResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
+import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
+import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -83,6 +84,45 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
+  @Patch(":ftId/inquiry/requests/:inquirySlug")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Inquiry request quantity to update",
+    type: UpdateInquiryRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  @ApiParam({
+    name: "inquirySlug",
+    type: String,
+    description: "Inquiry Request Slug",
+    required: true,
+  })
+  updateInquiryRequest(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Param("inquirySlug") slug: InquiryRequest["slug"],
+    @Body() inquiryRequest: UpdateInquiryRequestDto,
+  ): Promise<FestivalTask> {
+    return this.inquiryService.updateInquiryRequest(ftId, slug, inquiryRequest);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
   @Delete(":ftId/inquiry/requests/:inquirySlug")
   @ApiResponse({
     status: 200,
@@ -116,7 +156,7 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FT)
-  @Patch(":ftId/inquiry/requests/:inquirySlug")
+  @Patch(":ftId/inquiry/requests/:inquirySlug/link-drive")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

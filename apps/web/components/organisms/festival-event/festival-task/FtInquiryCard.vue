@@ -26,6 +26,7 @@
         :owner="MATOS"
         :disabled="disabled"
         @link-drive="linkDrive"
+        @update="updateInquiry"
         @remove="removeInquiry"
       />
     </v-card-text>
@@ -78,6 +79,9 @@ const addInquiry = () => {
   }
 };
 const linkDrive = (link: AssignDrive) => ftStore.linkDrive(link);
+const updateInquiry = (inquiry: InquiryRequest, quantity: number) => {
+  ftStore.updateInquiryRequest(inquiry.slug, quantity);
+};
 const removeInquiry = (inquiry: InquiryRequest) => {
   ftStore.removeInquiryRequest(inquiry.slug);
 };

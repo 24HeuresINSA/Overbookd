@@ -45,12 +45,12 @@ import {
   AssignedInquiryRequestResponseDto,
 } from "../../common/dto/inquiry-request.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
-import { AddInquiryRequestDto } from "./dto/add-inquiry-request.request.dto";
 import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
 import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { UpdateInquiryRequestDto } from "./dto/update-inquiry-request.request.dto";
+import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
+import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")

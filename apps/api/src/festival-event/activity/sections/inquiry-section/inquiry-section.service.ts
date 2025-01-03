@@ -63,11 +63,12 @@ export class InquirySectionService {
 
   async addInquiryRequest(
     faId: FestivalActivity["id"],
-    inquiryRequest: AddInquiryRequestForm,
+    { slug, quantity }: AddInquiryRequestForm,
   ) {
-    const inquiry = await this.inquiries.find(inquiryRequest.slug);
-    const request = { ...inquiryRequest, ...inquiry };
+    const gear = await this.inquiries.find(slug);
+    if (!gear) throw new NotFoundException("Le matos recherché n'existe pas");
 
+    const request = { ...gear, quantity };
     return this.prepare.addInquiryRequest(faId, request);
   }
 
@@ -76,8 +77,10 @@ export class InquirySectionService {
     slug: InquiryRequest["slug"],
     { quantity }: UpdateInquiryRequestForm,
   ) {
-    const inquiry = await this.inquiries.find(slug);
-    const request = { ...inquiry, quantity };
+    const gear = await this.inquiries.find(slug);
+    if (!gear) throw new NotFoundException("Le matos recherché n'existe pas");
+
+    const request = { ...gear, quantity };
     return this.prepare.updateInquiryRequest(faId, request);
   }
 
@@ -96,17 +99,15 @@ export class InquirySectionService {
     user: JwtUtil,
     { activityId, slug, drive }: LinkDriveToInquiryRequest,
   ): Promise<FestivalActivity> {
-    const inquiry = await this.inquiries.find(slug);
-    if (!inquiry) {
-      throw new NotFoundException("Le matos recherché n'existe pas");
-    }
+    const gear = await this.inquiries.find(slug);
+    if (!gear) throw new NotFoundException("Le matos recherché n'existe pas");
 
-    TeamService.checkMembership(user, inquiry.owner);
+    TeamService.checkMembership(user, gear.owner);
 
     return this.prepare.assignInquiryToDrive(activityId, {
       drive,
       slug,
-      owner: inquiry.owner,
+      owner: gear.owner,
     });
   }
 }
