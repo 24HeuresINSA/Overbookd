@@ -28,7 +28,6 @@ type IPresentCalendar = {
   height: Pixel;
   width: Percentage;
   left: Percentage;
-  periodText: string;
 };
 
 abstract class BaseCalendarPresenter implements IPresentCalendar {
@@ -74,7 +73,6 @@ abstract class BaseCalendarPresenter implements IPresentCalendar {
 
   abstract get width(): Percentage;
   abstract get left(): Percentage;
-  abstract get periodText(): string;
 }
 
 export class AvailabilityPresenter
@@ -88,10 +86,6 @@ export class AvailabilityPresenter
 
   get left(): Percentage {
     return new Percentage(HORIZONTAL_MARGIN_IN_PERCENTAGE);
-  }
-
-  get periodText(): string {
-    return this.event.name;
   }
 }
 

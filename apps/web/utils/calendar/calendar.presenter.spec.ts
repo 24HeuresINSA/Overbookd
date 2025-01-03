@@ -92,21 +92,6 @@ describe("Calendar Event Presenter", () => {
   });
 
   describe.each`
-    event                      | expectedPeriodText
-    ${monday09hto10hEvent}     | ${monday09hto10hEvent.name}
-    ${monday14h15to16h30Event} | ${monday14h15to16h30Event.name}
-    ${monday00hto23h59Event}   | ${monday00hto23h59Event.name}
-  `("availability event period text", ({ event, expectedPeriodText }) => {
-    it(`should return "${expectedPeriodText}" for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
-        event,
-        displayedDatePresenter,
-      );
-      expect(presenter.periodText).toBe(expectedPeriodText);
-    });
-  });
-
-  describe.each`
     event                         | expectedTop                                                                    | expectedHeight
     ${monday09hto10hEvent}        | ${PIXELS_PER_MINUTE * MINUTES_IN_HOUR * 9 + VERTICAL_MARGIN_IN_PIXELS}         | ${PIXELS_PER_MINUTE * MINUTES_IN_HOUR - VERTICAL_MARGINS}
     ${monday14h15to16h30Event}    | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 14 + 15) + VERTICAL_MARGIN_IN_PIXELS} | ${PIXELS_PER_MINUTE * (2 * MINUTES_IN_HOUR + 15) - VERTICAL_MARGINS}

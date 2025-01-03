@@ -1,5 +1,11 @@
 import { Duration, ONE_DAY_IN_MS, OverDate, Period } from "@overbookd/time";
 
+export type CalendarDay = {
+  name: string;
+  number: number;
+  date: OverDate;
+};
+
 export class DayPresenter {
   constructor(public readonly date: OverDate) {}
 
@@ -27,6 +33,19 @@ export class DayPresenter {
       hour: 23,
       minute: 59,
     });
+  }
+
+  get weekDays(): CalendarDay[] {
+    const weekDates = Array.from({ length: 7 }, (_, i) =>
+      OverDate.from(new Date(this.monday.plus(i * ONE_DAY_IN_MS))),
+    );
+    return weekDates.map((overdate) => ({
+      name: overdate.date
+        .toLocaleDateString("fr-FR", { weekday: "long" })
+        .toUpperCase(),
+      number: Number(overdate.monthlyDate.day),
+      date: overdate,
+    }));
   }
 
   isSameDayThan(other: OverDate): boolean {
