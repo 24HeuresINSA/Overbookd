@@ -157,7 +157,7 @@ describe("Prepare festival task inquiries list", () => {
         const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
         const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
 
-        expect(updated?.quantity).toBe(20);
+        expect(updated?.quantity).toBe(inquiry.quantity);
       });
     });
     describe.each`
@@ -167,7 +167,7 @@ describe("Prepare festival task inquiries list", () => {
     `(
       "when updating inquiry from $taskName task with status $taskStatus",
       ({ task, inquiry }) => {
-        it("should update it to inquiries list", async () => {
+        it("should update it from inquiries list", async () => {
           const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
           const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
 
@@ -185,7 +185,7 @@ describe("Prepare festival task inquiries list", () => {
       });
     });
     describe("when updating inquiry when only humain approved the task", () => {
-      it("should add it to inquiries list", async () => {
+      it("should update it from inquiries list", async () => {
         const task = onlyApprovedByHumain;
         const inquiry = { ...task.inquiries[0], quantity: 100 };
 
