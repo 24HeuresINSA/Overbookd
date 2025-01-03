@@ -25,11 +25,6 @@ const ELECTRICITY_SUPPLY_NOT_FOUND_ERROR_MESSAGE =
 const ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une demande d'elec similaire existe déjà dans la fiche activité";
 
-const INQUIRY_ALREADY_EXISTS_ERROR_MESSAGE =
-  "Une demande de matos existe déjà pour";
-
-const INQUIRY_NOT_FOUND_ERROR_MESSAGE = "n'existe pas dans la fiche activité";
-
 export class FestivalActivityError extends FestivalEventError {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
@@ -77,17 +72,5 @@ export class ElectricitySupplyNotFound extends FestivalActivityError {
 export class ElectricitySupplyAlreadyExists extends FestivalActivityError {
   constructor() {
     super(ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE);
-  }
-}
-
-export class InquiryAlreadyExists extends FestivalActivityError {
-  constructor(gear: string) {
-    super(`${INQUIRY_ALREADY_EXISTS_ERROR_MESSAGE} ${gear}`);
-  }
-}
-
-export class InquiryNotFound extends FestivalActivityError {
-  constructor(gear: string) {
-    super(`${gear} ${INQUIRY_NOT_FOUND_ERROR_MESSAGE}`);
   }
 }

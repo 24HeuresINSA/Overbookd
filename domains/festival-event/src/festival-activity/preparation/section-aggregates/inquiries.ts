@@ -2,11 +2,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivity } from "../../festival-activity.js";
 import { InquiryRequest } from "../../../common/inquiry-request.js";
 import { TimeWindow } from "../../../common/time-window.js";
-import {
-  FestivalActivityError,
-  InquiryAlreadyExists,
-  InquiryNotFound,
-} from "../../festival-activity.error.js";
+import { FestivalActivityError } from "../../festival-activity.error.js";
 import { TimeWindows } from "./time-windows.js";
 import {
   LinkInquiryDrive,
@@ -17,6 +13,10 @@ import { AssignDrive } from "../../../common/inquiry-request.js";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry.js";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
 import { FestivalTaskError } from "../../../festival-task/festival-task.error.js";
+import {
+  InquiryAlreadyExists,
+  InquiryNotFound,
+} from "../../../common/inquiry-request.error.js";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
@@ -234,38 +234,30 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     return new InquiryRequests(inquiries);
   }
 
-  add({
-    slug,
-    quantity,
-    name,
-  }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
-    const inquiry = { slug, quantity, name };
-
+  add(
+    inquiry: InquiryRequest,
+  ): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
     const alreadyExists = this.inquiries.some(
-      (inquiry) => inquiry.slug === slug,
+      ({ slug }) => slug === inquiry.slug,
     );
-    if (alreadyExists) throw new InquiryAlreadyExists(name);
+    if (alreadyExists) throw new InquiryAlreadyExists(inquiry.name);
 
     return new InquiryRequests([inquiry, ...this.inquiries]);
   }
 
-  update({
-    slug,
-    quantity,
-    name,
-  }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
+  update(
+    inquiry: InquiryRequest,
+  ): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
     const inquiryIndex = this.inquiries.findIndex(
-      (inquiry) => inquiry.slug === slug,
+      ({ slug }) => slug === inquiry.slug,
     );
-    const inquiry = this.inquiries.at(inquiryIndex);
-    if (inquiryIndex === -1 || !inquiry) {
-      throw new InquiryNotFound(name);
-    }
+    if (inquiryIndex === -1) throw new InquiryNotFound(inquiry.name);
 
-    const inquiries = updateItemToList(this.inquiries, inquiryIndex, {
-      ...inquiry,
-      quantity,
-    }) as WithAtLeastOneItem<InquiryRequest>;
+    const inquiries = updateItemToList(
+      this.inquiries,
+      inquiryIndex,
+      inquiry,
+    ) as WithAtLeastOneItem<InquiryRequest>;
 
     return new InquiryRequests(inquiries);
   }

@@ -11,8 +11,7 @@ import {
 } from "../festival-task.fake.js";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
 import { PrepareFestivalTask } from "./prepare.js";
-import { ficelle, sacPoubelle } from "../festival-task.test-util.js";
-import { GearAlreadyRequested } from "../festival-task.error.js";
+import { chaise, ficelle, sacPoubelle } from "../festival-task.test-util.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { onlyApprovedByMatos } from "../festival-task.fake.js";
@@ -20,7 +19,11 @@ import { APPROVED } from "../../common/action.js";
 import { REVIEWING } from "../../common/review.js";
 import { isDraft } from "../../festival-event.js";
 import { PARKING_EIFFEL } from "../../common/inquiry-request.js";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
+import {
+  AssignDriveInDraft,
+  InquiryAlreadyExists,
+  InquiryNotFound,
+} from "../../common/inquiry-request.error.js";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
@@ -128,10 +131,91 @@ describe("Prepare festival task inquiries list", () => {
         const inquiry = { ...sacPoubelle, quantity: 1 };
         expect(
           async () => await prepare.addInquiry(task.id, inquiry),
-        ).rejects.toThrow(GearAlreadyRequested);
+        ).rejects.toThrow(InquiryAlreadyExists);
       });
     });
   });
+
+  describe("Update inquiry", () => {
+    describe("when inquiry is about an existing gear", () => {
+      it("should update inquiry to the list", async () => {
+        const task = uninstallEscapeGame;
+        const inquiry = { ...task.inquiries[0], quantity: 10 };
+
+        const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
+        const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
+
+        expect(inquiries).toHaveLength(task.inquiries.length);
+        expect(updated?.quantity).toBe(inquiry.quantity);
+      });
+    });
+    describe("when updating inquiry in an in review task", () => {
+      it("should update inquiry from the list", async () => {
+        const task = guardJustDance;
+        const inquiry = { ...task.inquiries[0], quantity: 20 };
+
+        const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
+        const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
+
+        expect(updated?.quantity).toBe(inquiry.quantity);
+      });
+    });
+    describe.each`
+      taskName                        | taskStatus                | task               | inquiry
+      ${guardJustDance.general.name}  | ${guardJustDance.status}  | ${guardJustDance}  | ${{ ...guardJustDance.inquiries[0], quantity: 5 }}
+      ${installBarbecue.general.name} | ${installBarbecue.status} | ${installBarbecue} | ${{ ...installBarbecue.inquiries[0], quantity: 10 }}
+    `(
+      "when updating inquiry from $taskName task with status $taskStatus",
+      ({ task, inquiry }) => {
+        it("should update it from inquiries list", async () => {
+          const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
+          const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
+
+          expect(updated?.quantity).toBe(inquiry.quantity);
+        });
+      },
+    );
+    describe("when updating inquiry when matos approved the task", () => {
+      it("should indicate that inquiries are locked", async () => {
+        const inquiry = { ...ficelle, quantity: 1 };
+        expect(
+          async () =>
+            await prepare.updateInquiry(onlyApprovedByMatos.id, inquiry),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
+      });
+    });
+    describe("when updating inquiry when only humain approved the task", () => {
+      it("should update it from inquiries list", async () => {
+        const task = onlyApprovedByHumain;
+        const inquiry = { ...task.inquiries[0], quantity: 100 };
+
+        const { inquiries } = await prepare.updateInquiry(task.id, inquiry);
+        const updated = inquiries.find(({ slug }) => slug === inquiry.slug);
+
+        expect(updated?.quantity).toBe(inquiry.quantity);
+      });
+      it("should keep same reviews", async () => {
+        const task = onlyApprovedByHumain;
+        const inquiry = { ...task.inquiries[0], quantity: 1 };
+
+        const updatedTask = await prepare.updateInquiry(task.id, inquiry);
+        if (isDraft(updatedTask)) throw new Error();
+
+        expect(updatedTask.reviews.humain).toBe(APPROVED);
+        expect(updatedTask.reviews.matos).toBe(REVIEWING);
+      });
+    });
+    describe("when inquiry is about an unexisting gear", () => {
+      it("should indicate that there is no request for it", () => {
+        const task = uninstallEscapeGame;
+        const inquiry = { ...chaise, quantity: 1 };
+        expect(
+          async () => await prepare.updateInquiry(task.id, inquiry),
+        ).rejects.toThrow(InquiryNotFound);
+      });
+    });
+  });
+
   describe("Remove inquiry", () => {
     describe("when removing a requested inquiry", () => {
       it("should remove it from inquiries list", async () => {
