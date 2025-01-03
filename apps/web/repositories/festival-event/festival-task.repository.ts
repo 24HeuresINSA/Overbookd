@@ -4,6 +4,7 @@ import type {
   AddInChargeVolunteerForm,
   FestivalTaskCreationForm,
   UpdateGeneralForm,
+  UpdateInquiryRequestForm,
   UpdateInstructionsForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
@@ -239,6 +240,17 @@ export class FestivalTaskRepository {
     return HttpClient.post<FestivalTaskWithConflicts>(
       `${this.basePath}/${ftId}/inquiry/requests`,
       inquiry,
+    );
+  }
+
+  static updateInquiryRequest(
+    ftId: FestivalTaskWithConflicts["id"],
+    slug: InquiryRequest["slug"],
+    request: UpdateInquiryRequestForm,
+  ) {
+    return HttpClient.patch<FestivalTaskWithConflicts>(
+      `${this.basePath}/${ftId}/inquiry/requests/${slug}`,
+      request,
     );
   }
 

@@ -290,6 +290,17 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       this.selectedTask = castTaskWithDate(res);
     },
 
+    async updateInquiryRequest(
+      slug: InquiryRequest["slug"],
+      quantity: InquiryRequest["quantity"],
+    ) {
+      const res = await repo.updateInquiryRequest(this.selectedTask.id, slug, {
+        quantity,
+      });
+      if (isHttpError(res)) return;
+      this.selectedTask = castTaskWithDate(res);
+    },
+
     async removeInquiryRequest(inquirySlug: InquiryRequest["slug"]) {
       const res = await repo.removeInquiryRequest(
         this.selectedTask.id,
