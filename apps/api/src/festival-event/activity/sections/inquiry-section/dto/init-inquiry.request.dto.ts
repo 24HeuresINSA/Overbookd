@@ -4,7 +4,7 @@ import { AddInquiryRequestForm, InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
 import { PeriodRequestDto } from "../../../../../common/dto/period.request.dto";
 import { Type } from "class-transformer";
-import { AddInquiryRequestDto } from "./add-inquiry-request.request.dto";
+import { AddInquiryRequestDto } from "../../../../common/dto/add-inquiry-request.request.dto";
 
 export class InitInquiryRequestDto implements InitInquiryRequest {
   @ApiProperty({
