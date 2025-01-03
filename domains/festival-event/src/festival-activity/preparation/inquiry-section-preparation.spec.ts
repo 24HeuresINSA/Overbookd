@@ -1,10 +1,6 @@
 import { Duration, EndBeforeStart } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  InquiryAlreadyExists,
-  InquiryNotFound,
-  TimeWindowAlreadyExists,
-} from "../festival-activity.error.js";
+import { TimeWindowAlreadyExists } from "../festival-activity.error.js";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
   baladeEnPoney,
@@ -40,7 +36,11 @@ import {
 } from "./section-aggregates/inquiries.js";
 import { elec, matos } from "../../common/review.js";
 import { WithInquiries } from "../sections/inquiry.js";
-import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
+import {
+  AssignDriveInDraft,
+  InquiryAlreadyExists,
+  InquiryNotFound,
+} from "../../common/inquiry-request.error.js";
 import {
   cinqGuirlandeLED,
   deuxMarteaux,

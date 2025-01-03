@@ -512,6 +512,22 @@ export class PrepareFestivalTask {
     return this.save({ ...task, inquiries });
   }
 
+  async updateInquiry(
+    taskId: FestivalTask["id"],
+    inquiry: BaseInquiryRequest,
+  ): Promise<WithConflicts> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isApprovedBy(matos, task)) {
+      throw new AlreadyApprovedBy([matos], "FT");
+    }
+
+    const builder = Inquiries.build(task.inquiries);
+    const inquiries = builder.update(inquiry).json;
+
+    return this.save({ ...task, inquiries });
+  }
+
   async removeInquiry(
     taskId: FestivalTask["id"],
     slug: InquiryRequest["slug"],

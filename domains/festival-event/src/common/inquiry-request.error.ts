@@ -10,3 +10,15 @@ export class AssignDriveInDraft<
     );
   }
 }
+
+export class InquiryAlreadyExists extends FestivalEventError {
+  constructor(gear: string) {
+    super(`Une demande de matos existe déjà pour ${gear}`);
+  }
+}
+
+export class InquiryNotFound extends FestivalEventError {
+  constructor(gear: string) {
+    super(`Il n'y a aucune demande de matos pour ${gear}`);
+  }
+}
