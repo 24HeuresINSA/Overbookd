@@ -105,7 +105,7 @@ describe("Date presenter", () => {
 
   describe("Get week days", () => {
     it("should return 7 days starting from the correct Monday", () => {
-      const date = OverDate.from(`${friday}T11:11+02:00`);
+      const date = OverDate.init({ date: friday, hour: 0 });
       const presenter = new DayPresenter(date);
       const weekDays = presenter.weekDays;
 
@@ -117,7 +117,7 @@ describe("Date presenter", () => {
     });
 
     it("should handle weeks spanning multiple months", () => {
-      const date = OverDate.from(`${mondayWinterTime}T12:30+01:00`);
+      const date = OverDate.init({ date: mondayWinterTime, hour: 10 });
       const presenter = new DayPresenter(date);
       const weekDays = presenter.weekDays;
 
