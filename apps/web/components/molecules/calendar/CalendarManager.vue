@@ -38,6 +38,7 @@
 
 <script lang="ts" setup>
 import { OverDate } from "@overbookd/time";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const configurationStore = useConfigurationStore();
 
@@ -48,39 +49,39 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<OverDate>({ required: true });
+const day = defineModel<DayPresenter>({ required: true });
 const eventStartDate = computed<OverDate>(() =>
   OverDate.fromLocal(configurationStore.eventStartDate),
 );
 
 const periodIndicator = computed<string>(() => {
-  const month = displayedDay.value.date.toLocaleDateString("fr-FR", {
+  const month = day.value.date.date.toLocaleDateString("fr-FR", {
     month: "long",
   });
-  const year = displayedDay.value.year;
+  const year = day.value.date.year;
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
   const today = OverDate.now();
   return props.dayMode
-    ? OverDate.isSameDay(displayedDay.value, today)
-    : OverDate.isSameWeek(displayedDay.value, today);
+    ? day.value.isSameDayThan(today)
+    : day.value.isSameWeekThan(today);
 });
 const isEventStartWeekOrDay = computed<boolean>(() => {
   const eventStartOverDay = OverDate.fromLocal(
     configurationStore.eventStartDate,
   );
   return props.dayMode
-    ? OverDate.isSameDay(displayedDay.value, eventStartOverDay)
-    : OverDate.isSameWeek(displayedDay.value, eventStartOverDay);
+    ? day.value.isSameDayThan(eventStartOverDay)
+    : day.value.isSameWeekThan(eventStartOverDay);
 });
 
 const moveToToday = () => {
-  displayedDay.value = OverDate.now();
+  day.value = new DayPresenter(OverDate.now());
 };
 const moveToEventStartDay = () => {
-  displayedDay.value = eventStartDate.value;
+  day.value = new DayPresenter(eventStartDate.value);
 };
 
 const emit = defineEmits(["previous", "next"]);

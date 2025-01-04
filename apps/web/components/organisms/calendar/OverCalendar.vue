@@ -8,7 +8,7 @@
   >
     <slot name="manager">
       <CalendarManager
-        v-model="displayedDay"
+        v-model="day"
         :day-mode="isDayMode"
         @previous="moveToPreviousWeekOrDay"
         @next="moveToNextWeekOrDay"
@@ -18,8 +18,8 @@
       <div class="empty-case" />
       <header class="calendar-header">
         <slot name="header">
-          <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
-          <WeeklyCalendarHeader v-else :displayed-day="displayedDay" />
+          <DailyCalendarHeader v-if="isDayMode" :day="day" />
+          <WeeklyCalendarHeader v-else :day="day" />
         </slot>
       </header>
 
@@ -47,14 +47,14 @@
           <DailyCalendarContent
             v-if="isDayMode"
             :events="events"
-            :displayed-day="displayedDay"
+            :day="day"
             :clickable-events="clickableEvents"
             @click:event="propagateEventClick"
           />
           <WeeklyCalendarContent
             v-else
             :events="events"
-            :displayed-day="displayedDay"
+            :day="day"
             :clickable-events="clickableEvents"
             @click:event="propagateEventClick"
           />
@@ -66,15 +66,15 @@
 
 <script lang="ts" setup>
 import {
+  Duration,
   formatDateNumberValue,
   HOURS_IN_DAY,
-  ONE_DAY_IN_MS,
-  ONE_WEEK_IN_MS,
   OverDate,
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();
@@ -94,12 +94,12 @@ const props = defineProps({
   },
 });
 
-const displayedDayModel = defineModel<Date>({
+const dayModel = defineModel<Date>({
   default: OverDate.now().date,
 });
-const displayedDay = computed<OverDate>({
-  get: () => OverDate.fromLocal(displayedDayModel.value),
-  set: (value) => (displayedDayModel.value = value.date),
+const day = computed<DayPresenter>({
+  get: () => new DayPresenter(OverDate.fromLocal(dayModel.value)),
+  set: (value) => (dayModel.value = value.date.date),
 });
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
@@ -118,14 +118,10 @@ const getShiftDelimiterClass = (hour: number): string => {
 };
 
 const moveToPreviousWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
-    ? OverDate.from(displayedDay.value.timestamp - ONE_DAY_IN_MS)
-    : OverDate.from(displayedDay.value.timestamp - ONE_WEEK_IN_MS);
+  day.value.date.minus(isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK);
 };
 const moveToNextWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
-    ? OverDate.from(displayedDay.value.timestamp + ONE_DAY_IN_MS)
-    : OverDate.from(displayedDay.value.timestamp + ONE_WEEK_IN_MS);
+  day.value.date.plus(isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK);
 };
 
 if (publicHolidayStore.all.length === 0) {

@@ -18,7 +18,7 @@
           :value="index + 1"
         >
           <AvailabilitiesPickCalendar
-            v-model="displayedDays"
+            v-model="days"
             :disable-previous="shouldDisablePrevious"
             :disable-next="shouldDisableNext"
             :cant-validate="cannotValidate"
@@ -39,6 +39,7 @@ import {
   CalendarEventPeriods,
   type CalendarStep,
 } from "~/utils/availabilities/calendar-event-periods";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const SOFT_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.preManif,
@@ -59,10 +60,11 @@ const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
-const displayedDays = computed<OverDate[]>(() => {
+const days = computed<DayPresenter[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
   const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
-  return splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
+  const dates = splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
+  return dates.map((date) => new DayPresenter(date));
 });
 
 const cannotValidate = computed<boolean>(() => {

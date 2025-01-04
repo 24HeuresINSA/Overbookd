@@ -248,6 +248,10 @@ export class OverDate {
   plus(duration: Duration): OverDate {
     return OverDate.from(this.timestamp + duration.inMilliseconds);
   }
+
+  minus(duration: Duration): OverDate {
+    return OverDate.from(this.timestamp - duration.inMilliseconds);
+  }
 }
 
 const DATE_TEMPORAL_PARTS = 3;

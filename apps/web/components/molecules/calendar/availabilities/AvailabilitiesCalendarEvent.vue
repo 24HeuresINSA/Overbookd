@@ -12,9 +12,10 @@
 
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
-import type { OverDate, Period } from "@overbookd/time";
+import type { Period } from "@overbookd/time";
 import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
-import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
+import { AvailabilityPresenter } from "~/utils/calendar/calendar.presenter";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 
@@ -23,8 +24,8 @@ const props = defineProps({
     type: Object as PropType<CalendarEvent>,
     required: true,
   },
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
 });
@@ -32,7 +33,7 @@ const props = defineProps({
 const emit = defineEmits(["click"]);
 const propagateClick = () => emit("click", props.event);
 
-const presenter = new CalendarEventPresenter(props.event, props.displayedDay);
+const presenter = new AvailabilityPresenter(props.event, props.day);
 
 const selectedAvailabilities = computed<Period[]>(
   () => availabilityStore.availabilities.selected as Period[],

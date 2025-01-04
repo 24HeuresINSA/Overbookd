@@ -31,11 +31,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
   disablePrevious: {
@@ -53,10 +53,10 @@ const props = defineProps({
 });
 
 const periodIndicator = computed<string>(() => {
-  const month = props.displayedDay.date.toLocaleDateString("fr-FR", {
+  const month = props.day.date.date.toLocaleDateString("fr-FR", {
     month: "long",
   });
-  const year = props.displayedDay.year;
+  const year = props.day.date.year;
   return `${capitalizeFirstLetter(month)} ${year}`;
 });
 

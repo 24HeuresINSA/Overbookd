@@ -23,36 +23,36 @@ import {
   formatDateDayNumber,
   OverDate,
 } from "@overbookd/time";
-import type { CalendarDay } from "~/utils/calendar/calendar.utils";
+import type { CalendarDay, DayPresenter } from "~/utils/calendar/day.presenter";
 import type { DailyEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();
 
 const props = defineProps({
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
 });
 
 const displayableDay = computed<CalendarDay>(() => {
-  const name = formatDateDayFullName(props.displayedDay.date).toUpperCase();
-  const number = +formatDateDayNumber(props.displayedDay.date);
-  return { name, number, date: props.displayedDay };
+  const name = formatDateDayFullName(props.day.date.date).toUpperCase();
+  const number = +formatDateDayNumber(props.day.date.date);
+  return { name, number, date: props.day.date };
 });
 
 const calendarEvents = ref<DailyEvent[]>([]);
-const calendarEventsCurrentYear = ref<number>(props.displayedDay.year);
+const calendarEventsCurrentYear = ref<number>(props.day.date.year);
 calendarEvents.value = publicHolidayStore.calendarEventsForYear(
   calendarEventsCurrentYear.value,
 );
 const updateCalendarEvents = () => {
-  const year = props.displayedDay.year;
+  const year = props.day.date.year;
   if (calendarEventsCurrentYear.value === year) return;
   calendarEventsCurrentYear.value = year;
   calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
 };
-watch(() => props.displayedDay, updateCalendarEvents, { immediate: true });
+watch(() => props.day, updateCalendarEvents, { immediate: true });
 
 const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
@@ -66,13 +66,13 @@ const publicHolidaysByDate = computed(() => {
 });
 
 const todayPublicHoliday = computed<DailyEvent | undefined>(() => {
-  const dateKey = props.displayedDay.dateString;
+  const dateKey = props.day.date.dateString;
   return publicHolidaysByDate.value[`${dateKey}`];
 });
 
 const isToday = computed<boolean>(() => {
   const today = OverDate.now();
-  return OverDate.isSameDay(props.displayedDay, today);
+  return props.day.isSameDayThan(today);
 });
 </script>
 

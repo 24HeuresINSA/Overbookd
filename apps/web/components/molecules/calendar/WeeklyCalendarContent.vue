@@ -1,13 +1,13 @@
 <template>
   <div class="weekly-content">
     <div
-      v-for="day in getWeekDays(displayedDay)"
-      :key="day.date.timestamp"
+      v-for="weekDay in day.weekDays"
+      :key="weekDay.date.toString()"
       class="weekly-content__day"
     >
       <DailyCalendarContent
         :events="events"
-        :displayed-day="day.date"
+        :day="day"
         :clickable-events="clickableEvents"
         @click:event="propagateEventClick"
       />
@@ -16,8 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
-import { getWeekDays } from "~/utils/calendar/calendar.utils";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 defineProps({
@@ -25,8 +24,8 @@ defineProps({
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
   clickableEvents: {

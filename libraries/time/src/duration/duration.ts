@@ -1,5 +1,6 @@
 import { formatDateNumberValue } from "../date/format-date.utils.js";
 import {
+  ONE_DAY_IN_MS,
   ONE_HOUR_IN_MS,
   ONE_MINUTE_IN_MS,
   ONE_SECOND_IN_MS,
@@ -11,6 +12,10 @@ export class Duration {
 
   static ms(milliseconds: number): Duration {
     return new Duration(milliseconds);
+  }
+
+  static get ONE_DAY(): Duration {
+    return new Duration(ONE_DAY_IN_MS);
   }
 
   static get ONE_WEEK(): Duration {

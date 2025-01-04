@@ -36,9 +36,10 @@ export class DayPresenter {
   }
 
   get weekDays(): CalendarDay[] {
-    const weekDates = Array.from({ length: 7 }, (_, i) =>
-      OverDate.from(new Date(this.monday.plus(i * ONE_DAY_IN_MS))),
-    );
+    const weekDates = Array.from({ length: 7 }, (_, i) => {
+      const daysFromMondayInMs = Duration.ms(i * ONE_DAY_IN_MS);
+      return this.monday.plus(daysFromMondayInMs);
+    });
     return weekDates.map((overdate) => ({
       name: overdate.date
         .toLocaleDateString("fr-FR", { weekday: "long" })

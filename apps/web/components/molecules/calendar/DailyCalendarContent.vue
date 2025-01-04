@@ -4,7 +4,7 @@
       v-for="event in eventsInDisplayedDay"
       :key="event.id"
       :event="event"
-      :displayed-day="displayedDay"
+      :day="day"
       :overlapping-events="getOverlappingEvents(event, events)"
       :clickable="clickableEvents"
       @click="propagateEventClick"
@@ -13,8 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import { OverDate, Period } from "@overbookd/time";
+import { Period } from "@overbookd/time";
 import { getOverlappingEvents } from "~/utils/calendar/calendar.utils";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -22,8 +23,8 @@ const props = defineProps({
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
   clickableEvents: {
@@ -34,7 +35,7 @@ const props = defineProps({
 
 const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
   return props.events.filter((event) =>
-    Period.init(event).isInDay(props.displayedDay.date),
+    Period.init(event).isInDay(props.day.date.date),
   );
 });
 
