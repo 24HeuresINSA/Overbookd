@@ -94,6 +94,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     },
 
     async fetchTask(id: number) {
+      this.selectedTask = fakeTask;
       const res = await repo.getOne(id);
       if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
@@ -101,6 +102,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
 
     /* CREATE */
     async create(form: FestivalTaskCreationForm) {
+      this.selectedTask = fakeTask;
       const res = await repo.create(form);
       if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);

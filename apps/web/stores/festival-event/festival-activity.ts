@@ -125,6 +125,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     },
 
     async fetchActivity(id: number) {
+      this.selectedActivity = fakeActivity;
       const res = await repo.getOne(id);
       if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
@@ -132,6 +133,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
 
     /* CREATE */
     async create(form: CreateFestivalActivityForm) {
+      this.selectedActivity = fakeActivity;
       const res = await repo.create(form);
       if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
