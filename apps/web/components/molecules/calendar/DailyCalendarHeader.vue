@@ -3,8 +3,8 @@
     class="header-day"
     :class="{ today: isToday, 'with-daily-event': todayPublicHoliday }"
   >
-    <p class="header-day__name">{{ displayableDay.name }}</p>
-    <p class="header-day__number">{{ displayableDay.number }}</p>
+    <p class="header-day__name">{{ day.calendarHeader.name }}</p>
+    <p class="header-day__number">{{ day.calendarHeader.number }}</p>
     <v-card
       v-if="todayPublicHoliday"
       :color="todayPublicHoliday.color"
@@ -18,12 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  formatDateDayFullName,
-  formatDateDayNumber,
-  OverDate,
-} from "@overbookd/time";
-import type { CalendarDay, DayPresenter } from "~/utils/calendar/day.presenter";
+import { OverDate } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { DailyEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();
@@ -33,12 +29,6 @@ const props = defineProps({
     type: Object as PropType<DayPresenter>,
     required: true,
   },
-});
-
-const displayableDay = computed<CalendarDay>(() => {
-  const name = formatDateDayFullName(props.day.date.date).toUpperCase();
-  const number = +formatDateDayNumber(props.day.date.date);
-  return { name, number, date: props.day.date };
 });
 
 const calendarEvents = ref<DailyEvent[]>([]);

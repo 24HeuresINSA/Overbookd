@@ -3,13 +3,13 @@
     <DailyCalendarHeader
       v-for="weekDay in day.weekDays"
       :key="weekDay.date.toString()"
-      :day="day"
+      :day="weekDay"
     />
   </header>
 </template>
 
 <script lang="ts" setup>
-import type { DayPresenter } from "~/utils/calendar/day.presenter";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 defineProps({
   day: {

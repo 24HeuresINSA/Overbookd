@@ -7,7 +7,7 @@
     >
       <DailyCalendarContent
         :events="events"
-        :day="day"
+        :day="weekDay"
         :clickable-events="clickableEvents"
         @click:event="propagateEventClick"
       />
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { DayPresenter } from "~/utils/calendar/day.presenter";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 defineProps({

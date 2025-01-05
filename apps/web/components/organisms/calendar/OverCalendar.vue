@@ -118,10 +118,14 @@ const getShiftDelimiterClass = (hour: number): string => {
 };
 
 const moveToPreviousWeekOrDay = () => {
-  day.value.date.minus(isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK);
+  dayModel.value = day.value.date.minus(
+    isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK,
+  ).date;
 };
 const moveToNextWeekOrDay = () => {
-  day.value.date.plus(isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK);
+  dayModel.value = day.value.date.plus(
+    isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK,
+  ).date;
 };
 
 if (publicHolidayStore.all.length === 0) {
