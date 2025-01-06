@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import type { HelpingVolunteer } from "@overbookd/http";
 import { buildUserNameWithNickname } from "@overbookd/user";
+import { PLANNING_URL } from "@overbookd/web-page";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
@@ -54,7 +55,7 @@ const loading = ref<boolean>(volunteers.value.length === 0);
 needHelpStore.fetchVolunteers().then(() => (loading.value = false));
 
 const openCalendarInNewTab = (volunteerId: number) => {
-  window.open(`/planning/${volunteerId}`, "_blank");
+  window.open(`${PLANNING_URL}/${volunteerId}`);
 };
 </script>
 

@@ -145,9 +145,7 @@ const sortTimeWindows = (timeWindows: TimeWindow[]): TimeWindow[] => {
   return Period.sort([...timeWindows]);
 };
 
-const openPhotoLinkInNewTab = (photoLink: string) => {
-  window.open(photoLink, "_blank");
-};
+const openPhotoLinkInNewTab = (photoLink: string) => window.open(photoLink);
 </script>
 
 <style scoped>

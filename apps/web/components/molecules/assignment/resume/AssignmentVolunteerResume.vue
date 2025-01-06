@@ -124,7 +124,7 @@ const shouldShowRequestedOnDraftTaskIcon = computed<boolean>(
 );
 
 const openPlanning = (): void => {
-  window.open(`${PLANNING_URL}/${props.volunteer.id}`, "_blank");
+  window.open(`${PLANNING_URL}/${props.volunteer.id}`);
 };
 </script>
 

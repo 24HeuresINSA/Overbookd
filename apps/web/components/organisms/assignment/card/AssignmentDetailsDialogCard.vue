@@ -234,7 +234,7 @@ const unassignVolunteer = (teamMember: TeamMemberForDetails) => {
 const close = () => emit("close");
 
 const openPlanningInNewTab = (assigneeId: number) => {
-  window.open(`${PLANNING_URL}/${assigneeId}`, "_blank");
+  window.open(`${PLANNING_URL}/${assigneeId}`);
 };
 
 const formatDuration = (duration: number): string => {

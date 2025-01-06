@@ -34,7 +34,7 @@ const sortedVolunteerTeams = computed<string[]>(() =>
 );
 
 const openFtNewTab = (ftId: number) => {
-  window.open(`${FT_URL}/${ftId}`, "_blank");
+  window.open(`${FT_URL}/${ftId}`);
 };
 </script>
 

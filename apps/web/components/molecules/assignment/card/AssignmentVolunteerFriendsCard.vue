@@ -45,7 +45,7 @@ const selectVolunteer = (friend: User) => {
   emit("select-volunteer", volunteer);
 };
 const openAssignmentPageInNewTab = (id: number) => {
-  window.open(`${ASSIGNMENT_ORGA_TASK_URL}?volunteer=${id}`, "_blank");
+  window.open(`${ASSIGNMENT_ORGA_TASK_URL}?volunteer=${id}`);
 };
 </script>
 <style lang="scss" scoped>
