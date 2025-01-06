@@ -1,3 +1,20 @@
+## [3.24.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.23.0...v3.24.0) (2025-01-06)
+
+### Features
+
+* **ft:** update the quantity of an inquiry request [#2343](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2343) ([6aee47d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6aee47d84422b29755dee3e8c08b65d6646040c8))
+
+### Bug Fixes
+
+* **ci:** docker image scan ([566c1c7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/566c1c79135f3264e0c8962bca99ee67c7fac25a))
+* **festival-event:** remove current data while waiting to load the new [#2345](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2345) ([faa0e91](https://gitlab.com/24-heures-insa/overbookd-mono/commit/faa0e91436f6c70030a98ae76620f8bf410cd90e))
+* **stats:** allow redirection to a new tab & remove error if missing perm [#2347](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2347) ([4814c8c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4814c8ce27c63dd09b65cf5fe92f72cf783b5ba0))
+* **web:** add margins in bug report and inquiry dialogs [#2280](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2280) [#2284](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2284) ([9ed0543](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9ed0543ad56bc54a2cc47bfb13b79ceb9e9cc451))
+
+### Pre-Features
+
+* **ft:** update the quantity of an inquiry request in domain [#2343](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2343) ([7e47461](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7e47461a8302515ab3a97e3ae468edba7636d839))
+
 ## [3.23.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.22.1...v3.23.0) (2025-01-02)
 
 ### Features
