@@ -55,6 +55,7 @@ import {
 import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 import { FA_URL, FT_URL } from "@overbookd/web-page";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
+import { READ_FA, READ_FT } from "@overbookd/permission";
 
 useHead({ title: "Statistiques des FA" });
 
@@ -69,9 +70,15 @@ const updateTitle = (value: boolean | null) => {
 
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
+const userStore = useUserStore();
 
-statsStore.fetchActivityStats();
-statsStore.fetchTaskStats();
+const canReadFA = computed<boolean>(() => userStore.can(READ_FA));
+const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
+
+onMounted(() => {
+  if (canReadFA.value) return statsStore.fetchActivityStats();
+  if (canReadFT.value) statsStore.fetchTaskStats();
+});
 
 const activityStats = computed<Statistics<FestivalActivity>[]>(
   () => statsStore.activityStats,
@@ -110,25 +117,43 @@ const sortedOldEvents = computed<number[]>(() =>
   displayTaskStats.value ? sortedOldTasks.value : sortedOldActivities.value,
 );
 
-const handleChartClick = (_: ChartEvent, elements: ActiveElement[]) => {
-  if (elements.length === 0) return;
-  const datasetIndex = elements[0].datasetIndex;
+const handleChartClick = (event: ChartEvent, elements: ActiveElement[]) => {
+  if (elements.length === 0 || event.type !== "click") return;
+
   const index = elements[0].index;
+  const datasetIndex = elements[0].datasetIndex;
   const teamCode = stats.value[`${index}`].teamCode;
   const statusLabel = datasets.value[`${datasetIndex}`].label;
   const status = findStatusByLabel(statusLabel);
 
+  redirectToFestivalEventsPage(event, teamCode, status);
+};
+const redirectToFestivalEventsPage = (
+  event: ChartEvent,
+  team: string,
+  status?: FestivalActivity["status"] | FestivalTask["status"],
+) => {
   const path = displayTaskStats.value ? FT_URL : FA_URL;
-  const teamQuery = { [TEAM_QUERY_PARAM]: teamCode };
+  const teamQuery = { [TEAM_QUERY_PARAM]: team };
+  const statusQuery = status ? { [STATUS_QUERY_PARAM]: status } : {};
+
+  type EventWithKey = Event & { native?: { ctrlKey: boolean } };
+  const shouldOpenInNewTab = (event as unknown as EventWithKey).native?.ctrlKey;
+
   if (!status) {
     const url = new URL(`${CTMA_URL}${path}`);
-    url.searchParams.append(TEAM_QUERY_PARAM, teamCode);
+    url.searchParams.append(TEAM_QUERY_PARAM, team);
     window.open(url);
     return;
   }
 
-  const statusQuery = { [STATUS_QUERY_PARAM]: status };
-  router.push({ path, query: { ...teamQuery, ...statusQuery } });
+  const route = { path, query: { ...teamQuery, ...statusQuery } };
+  if (shouldOpenInNewTab) {
+    const url = router.resolve(route);
+    window.open(url.href);
+    return;
+  }
+  router.push(route);
 };
 
 const maxTotal = computed<number>(() =>

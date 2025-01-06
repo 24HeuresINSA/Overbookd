@@ -1,7 +1,7 @@
 export function openPageWithIdInNewTab(path: string, id: number) {
   const router = useRouter();
   const taskRoute = router.resolve(`${path}/${id}`);
-  window.open(taskRoute.href, "_blank");
+  window.open(taskRoute.href);
 }
 
 export function openPageWithId(event: PointerEvent, path: string, id: number) {
