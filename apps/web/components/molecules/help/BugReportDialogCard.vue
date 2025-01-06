@@ -14,6 +14,7 @@
         ⚠️ Le formulaire ci-dessous permet de remplir le modèle. Utilise le bien
         pour ton mail, cela nous aide vraiment pour notre travail. Merci 🙏
       </p>
+      <br />
       <v-textarea
         v-model="expectedBehaviour"
         class="expected-behaviour-input"

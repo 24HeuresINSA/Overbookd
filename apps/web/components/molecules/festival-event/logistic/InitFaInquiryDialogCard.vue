@@ -66,3 +66,9 @@ const initInquiry = () => {
   end.value = configurationStore.eventStartDate;
 };
 </script>
+
+<style lang="scss" scoped>
+::v-deep(h3) {
+  margin-bottom: 5px;
+}
+</style>
