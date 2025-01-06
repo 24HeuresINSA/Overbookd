@@ -16,25 +16,28 @@
       </p>
       <v-textarea
         v-model="expectedBehaviour"
-        class="expected-behaviour-input"
+        class="textarea"
         label="Comportement attendu"
-        no-resize
         rows="4"
+        no-resize
+        hide-details
       />
       <v-textarea
         v-model="actualBehaviour"
-        class="actual-behaviour-input"
+        class="textarea"
         label="Comportement constaté"
-        no-resize
         rows="4"
+        no-resize
+        hide-details
       />
       <v-textarea
         v-model="stepsToReproduce"
-        class="steps-to-reproduce-input"
+        class="textarea"
         label="Étapes pour reproduire"
         :placeholder="stepsToReproducePlaceholder"
-        no-resize
         rows="4"
+        no-resize
+        hide-details
       />
     </template>
     <template #actions>
@@ -91,6 +94,10 @@ const copyIssueTemplate = async () => {
 </script>
 
 <style lang="scss" scoped>
+.textarea {
+  margin-top: 15px;
+}
+
 .actions {
   display: flex;
   gap: 10px;
