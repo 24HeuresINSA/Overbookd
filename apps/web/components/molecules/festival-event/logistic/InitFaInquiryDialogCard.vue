@@ -38,7 +38,7 @@ const period = computed<IProvidePeriod>(() => ({
 }));
 const isPeriodInvalid = computed<boolean>(() => !Period.isValid(period.value));
 const cantAddInquiry = computed<boolean>(
-  () => !gear.value && quantity.value <= 0,
+  () => !gear.value || quantity.value <= 0,
 );
 const cantInitInquiry = computed<boolean>(
   () => cantAddInquiry.value || isPeriodInvalid.value,
