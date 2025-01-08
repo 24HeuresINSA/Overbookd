@@ -26,4 +26,11 @@ export class AdherentResponseDto implements Adherent {
     required: false,
   })
   nickname?: string;
+
+  @ApiProperty({
+    description: "Adherent teams",
+    type: String,
+    isArray: true,
+  })
+  teams: string[];
 }
