@@ -17,18 +17,21 @@ const lea: Member = {
   lastname: "Mauyno",
   nickname: "Shogosse",
   permissions: [PAY_CONTRIBUTION],
+  teams: [],
 };
 const noel: Member = {
   id: 2,
   firstname: "Noël",
   lastname: "Ertsemud",
   permissions: [PAY_CONTRIBUTION],
+  teams: ["hard", "vieux"],
 };
 const tatouin: Member = {
   id: 3,
   firstname: "Tatouin",
   lastname: "Jesoph",
   permissions: [],
+  teams: ["vieux"],
 };
 const adherents: Member[] = [lea, noel, tatouin];
 

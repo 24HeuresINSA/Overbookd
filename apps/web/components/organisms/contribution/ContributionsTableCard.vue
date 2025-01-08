@@ -13,11 +13,21 @@
           <v-text-field
             v-model="search"
             label="Chercher un bénévole"
+            class="filters__input"
             clearable
             hide-details
             @click:clear="search = ''"
           />
+          <SearchTeam
+            v-model:team="team"
+            label="Équipe"
+            class="filters__input"
+            :list="FILTER_TEAMS"
+            clearable
+            hide-details
+          />
           <v-btn
+            class="filters__button"
             :text="toggleBtnLabbel"
             color="secondary"
             @click="toggleOutToDateCustomers"
@@ -48,11 +58,20 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import {
   type Searchable,
-  matchingSearchItems,
+  keepMatchingSearchCriteria,
 } from "~/utils/search/search.utils";
+import type { Team } from "@overbookd/team";
+import { keepMembersOf } from "~/utils/search/search-team.utils";
+import { ORGA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 
 const contributionStore = useContributionStore();
 const layoutStore = useLayoutStore();
+const teamStore = useTeamStore();
+
+const FILTER_TEAMS = [
+  teamStore.getTeamByCode(ORGA_CODE),
+  teamStore.getTeamByCode(VIEUX_CODE),
+].filter((team) => !!team);
 
 const headers: TableHeaders = [
   { title: "Prénom", value: "firstname", sortable: true },
@@ -63,6 +82,7 @@ const headers: TableHeaders = [
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const search = ref<string>("");
+const team = ref<Team | undefined>();
 
 const displayOutToDateCustomers = ref<boolean>(true);
 const toggleOutToDateCustomers = () => {
@@ -103,16 +123,27 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
     const adherents = displayOutToDateCustomers.value
       ? searchableOutToDateAdherents.value
       : searchableValidAdherents.value;
-    return matchingSearchItems(adherents, search.value);
+    const selectedTeam = team.value;
+    return adherents.filter(
+      (adherent) =>
+        keepMembersOf(selectedTeam ? [selectedTeam] : [])(adherent) &&
+        keepMatchingSearchCriteria(search.value)(adherent),
+    );
   },
 );
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .filters {
   display: flex;
   align-items: center;
   gap: 20px;
   margin: 10px 20px;
+  &__input {
+    flex: 1;
+  }
+  &__button {
+    min-width: 250px;
+  }
 }
 </style>

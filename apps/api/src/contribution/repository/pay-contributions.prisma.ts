@@ -13,7 +13,7 @@ export class PrismaPayContributions implements PayContributions {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
-    return this.prisma.user.findMany({
+    const prismaAdherents = await this.prisma.user.findMany({
       where: {
         contributions: {
           none: { edition },
@@ -21,6 +21,10 @@ export class PrismaPayContributions implements PayContributions {
         ...WHERE_CAN_PAY_CONTRIBUTION,
       },
       select: SELECT_ADHERENT,
+    });
+    return prismaAdherents.map(({ teams: teamCodes, ...adherent }) => {
+      const teams = teamCodes.map(({ teamCode }) => teamCode);
+      return { ...adherent, teams };
     });
   }
 
