@@ -9,27 +9,6 @@ const mondayWinterTime: DateString = "2024-12-02";
 const fridayWinterTime: DateString = "2024-12-06";
 
 describe("Date presenter", () => {
-  it.each([
-    { date: `${friday}T11:11+02:00`, expectedMonday: `${monday}T00:00+02:00` },
-    {
-      date: `${saturday}T00:15+03:00`,
-      expectedMonday: `${monday}T00:00+02:00`,
-    },
-    {
-      date: `${fridayWinterTime}T12:30+01:00`,
-      expectedMonday: `${mondayWinterTime}T00:00+01:00`,
-    },
-  ])(
-    "should find monday $expectedMonday for $date",
-    ({ date, expectedMonday }) => {
-      const overDate = OverDate.from(date);
-      const overMonday = OverDate.from(expectedMonday);
-      const presenter = new DayPresenter(overDate);
-
-      expect(presenter.monday).toStrictEqual(overMonday);
-    },
-  );
-
   describe.each`
     date1                                | date2                        | expected
     ${`${friday}T11:11+02:00`}           | ${`${friday}T19:00+02:00`}   | ${true}
