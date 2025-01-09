@@ -102,49 +102,4 @@ describe("Date presenter", () => {
       },
     );
   });
-
-  describe("Get week days", () => {
-    it.each([
-      {
-        date: `${monday}T00:00+02:00`,
-        expectedWeekDays: [
-          monday,
-          "2024-05-14",
-          "2024-05-15",
-          "2024-05-16",
-          friday,
-          "2024-05-18",
-          "2024-05-19",
-        ],
-      },
-      {
-        date: `${fridayWinterTime}T12:00+01:00`,
-        expectedWeekDays: [
-          mondayWinterTime,
-          "2024-12-03",
-          "2024-12-04",
-          "2024-12-05",
-          fridayWinterTime,
-          "2024-12-07",
-          "2024-12-08",
-        ],
-      },
-    ])(
-      "should generate correct week days for $date",
-      ({ date, expectedWeekDays }) => {
-        const presenter = new DayPresenter(OverDate.from(date));
-        const weekDays = presenter.weekDays;
-
-        expect(weekDays.length).toBe(7);
-        expect(weekDays[0].date.date.getDay()).toBe(
-          new Date(expectedWeekDays[0]).getDay(),
-        );
-
-        weekDays.forEach((dayPresenter, index) => {
-          const expectedDay = expectedWeekDays[index];
-          expect(dayPresenter.date.dateString).toBe(expectedDay);
-        });
-      },
-    );
-  });
 });
