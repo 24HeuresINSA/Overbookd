@@ -3,7 +3,6 @@ import { Duration } from "../duration/duration.js";
 import { IProvidePeriod, Period } from "../period/period.js";
 import {
   formatDateNumberValue,
-  formatDateWithMinutes,
 } from "./format-date.utils.js";
 
 type January = "01";
