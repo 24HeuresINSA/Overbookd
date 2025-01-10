@@ -32,7 +32,7 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ periodIndicator }}</h3>
+    <h3 class="period-indicator">{{ day.periodIndicatorText }}</h3>
   </div>
 </template>
 
@@ -53,14 +53,6 @@ const day = defineModel<DayPresenter>({ required: true });
 const eventStartDate = computed<OverDate>(() =>
   OverDate.fromLocal(configurationStore.eventStartDate),
 );
-
-const periodIndicator = computed<string>(() => {
-  const month = day.value.date.date.toLocaleDateString("fr-FR", {
-    month: "long",
-  });
-  const year = day.value.date.year;
-  return `${capitalizeFirstLetter(month)} ${year}`;
-});
 
 const isCurrentWeekOrDay = computed<boolean>(() => {
   const today = OverDate.now();

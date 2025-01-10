@@ -70,8 +70,8 @@ describe("Calendar Event Presenter", () => {
         displayedDatePresenter,
       );
       const displayedPeriod = presenter.displayedEventPeriod;
-      expect(displayedPeriod.start).toEqual(expectedStart);
-      expect(displayedPeriod.end).toEqual(expectedEnd);
+      expect(displayedPeriod.start).toStrictEqual(expectedStart);
+      expect(displayedPeriod.end).toStrictEqual(expectedEnd);
     });
   });
 

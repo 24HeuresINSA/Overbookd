@@ -2,10 +2,8 @@ import { OverDate, type DateString } from "@overbookd/time";
 import { describe, expect, it } from "vitest";
 import { DayPresenter } from "./day.presenter";
 
-const monday: DateString = "2024-05-13";
 const friday: DateString = "2024-05-17";
 const saturday: DateString = "2024-05-18";
-const mondayWinterTime: DateString = "2024-12-02";
 const fridayWinterTime: DateString = "2024-12-06";
 
 describe("Date presenter", () => {
@@ -80,5 +78,21 @@ describe("Date presenter", () => {
         });
       },
     );
+  });
+
+  describe("Get period indicator text", () => {
+    describe.each`
+      date                                 | expected
+      ${`${friday}T11:11+02:00`}           | ${"Mai 2024"}
+      ${`${saturday}T00:15+03:00`}         | ${"Mai 2024"}
+      ${`${friday}T17:45-11:00`}           | ${"Mai 2024"}
+      ${`${fridayWinterTime}T12:30+01:00`} | ${"Décembre 2024"}
+    `("when generating from $date", ({ date, expected }) => {
+      it(`should generate ${expected}`, () => {
+        const periodIndicatorText = new DayPresenter(OverDate.from(date))
+          .periodIndicatorText;
+        expect(periodIndicatorText).toBe(expected);
+      });
+    });
   });
 });

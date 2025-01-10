@@ -237,10 +237,6 @@ export class OverDate {
     return Period.init({ start, end });
   }
 
-  toString(): string {
-    return formatDateWithMinutes(this.date);
-  }
-
   isIncludedBy(periods: IProvidePeriod[]): boolean {
     return periods.some((period) => Period.init(period).isIncluding(this.date));
   }

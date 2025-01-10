@@ -6,6 +6,7 @@ import {
   OverDate,
   Period,
 } from "@overbookd/time";
+import type { CalendarEvent } from "./event";
 
 export type CalendarDay = {
   name: string;
@@ -27,27 +28,17 @@ export class DayPresenter {
   }
 
   get startsAt(): OverDate {
-    return OverDate.init({
-      date: this.date.dateString,
-      hour: 0,
-      minute: 0,
-    });
+    return OverDate.init({ date: this.date.dateString, hour: 0, minute: 0 });
   }
 
   get endsAt(): OverDate {
-    return OverDate.init({
-      date: this.date.dateString,
-      hour: 23,
-      minute: 59,
-    });
+    return OverDate.init({ date: this.date.dateString, hour: 23, minute: 59 });
   }
 
   get calendarHeader(): CalendarDay {
-    return {
-      name: formatDateDayFullName(this.date.date).toUpperCase(),
-      number: +formatDateDayNumber(this.date.date),
-      date: this.date,
-    };
+    const name = formatDateDayFullName(this.date.date).toUpperCase();
+    const number = +formatDateDayNumber(this.date.date);
+    return { name, number, date: this.date };
   }
 
   get weekDays(): DayPresenter[] {
@@ -56,6 +47,12 @@ export class DayPresenter {
       return this.monday.plus(daysFromMondayInMs);
     });
     return weekDates.map((day) => new DayPresenter(day));
+  }
+
+  get periodIndicatorText(): string {
+    const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
+    const year = this.date.year;
+    return `${capitalizeFirstLetter(month)} ${year}`;
   }
 
   isSameDayThan(other: OverDate): boolean {
@@ -70,5 +67,9 @@ export class DayPresenter {
     const nextMonday = this.monday.plus(Duration.ONE_WEEK);
     const week = Period.init({ start: this.monday.date, end: nextMonday.date });
     return week.isIncluding(other.date);
+  }
+
+  filterEventsToDisplay(events: CalendarEvent[]): CalendarEvent[] {
+    return events.filter((event) => Period.init(event).isInDay(this.date.date));
   }
 }

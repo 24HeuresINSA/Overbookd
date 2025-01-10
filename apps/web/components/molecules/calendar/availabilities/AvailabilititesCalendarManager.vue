@@ -26,7 +26,7 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ periodIndicator }}</h3>
+    <h3 class="period-indicator">{{ day.periodIndicatorText }}</h3>
   </div>
 </template>
 
@@ -50,14 +50,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
-
-const periodIndicator = computed<string>(() => {
-  const month = props.day.date.date.toLocaleDateString("fr-FR", {
-    month: "long",
-  });
-  const year = props.day.date.year;
-  return `${capitalizeFirstLetter(month)} ${year}`;
 });
 
 const emit = defineEmits(["previous", "next", "validate"]);
