@@ -81,7 +81,7 @@ const nonFavoritePages = computed<PageInSummary[]>(
 );
 
 const emit = defineEmits(["click"]);
-const propagateClick = (page: PageInSummary) => emit("click", page);
+const propagateClick = () => emit("click");
 </script>
 
 <style lang="scss" scoped>

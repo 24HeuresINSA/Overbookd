@@ -51,7 +51,7 @@ const isSelected = ({ to }: PageInSummary): boolean => {
 };
 
 const emit = defineEmits(["click"]);
-const propagateClick = (page: PageInSummary) => emit("click", page);
+const propagateClick = () => emit("click");
 </script>
 
 <style lang="scss" scoped>
