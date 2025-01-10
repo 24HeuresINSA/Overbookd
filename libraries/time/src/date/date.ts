@@ -1,9 +1,7 @@
 import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
 import { Duration } from "../duration/duration.js";
 import { IProvidePeriod, Period } from "../period/period.js";
-import {
-  formatDateNumberValue,
-} from "./format-date.utils.js";
+import { formatDateNumberValue } from "./format-date.utils.js";
 
 type January = "01";
 type February = "02";
