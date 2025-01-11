@@ -1,5 +1,4 @@
 import { Period, OverDate, MINUTES_IN_DAY, Duration } from "@overbookd/time";
-import type { WithAtLeastOneItem } from "@overbookd/list";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { DayPresenter } from "./day.presenter";
 
@@ -89,6 +88,8 @@ export class AvailabilityPresenter
   }
 }
 
+const DEFAULT_AMONG = { count: 1, index: 0 };
+
 export class CalendarEventPresenter
   extends BaseCalendarPresenter
   implements IPresentCalendar
@@ -96,22 +97,20 @@ export class CalendarEventPresenter
   constructor(
     event: CalendarEvent,
     day: DayPresenter,
-    private readonly overlappingEvents: WithAtLeastOneItem<CalendarEvent>,
+    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
   ) {
     super(event, day);
   }
 
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseWidth = 100 / this.overlappingEvents.length;
+    const baseWidth = 100 / this.among.count;
     return new Percentage(baseWidth - horizontalMargin);
   }
 
   get left(): Percentage {
-    const index = this.overlappingEvents.findIndex((e) => e === this.event);
-    return new Percentage(
-      index * this.width.value + HORIZONTAL_MARGIN_IN_PERCENTAGE,
-    );
+    const baseLeft = this.among.index * this.width.value;
+    return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
   }
 
   get periodText(): string {

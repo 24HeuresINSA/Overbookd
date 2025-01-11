@@ -108,18 +108,18 @@ describe("Calendar Event Presenter", () => {
   });
 
   describe.each`
-    event                  | overlappingEvents                                                  | expectedWidth                   | expectedLeft
-    ${monday09hto10hEvent} | ${[monday09hto10hEvent]}                                           | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday09hto10hEvent} | ${[monday08hto10hEvent, monday09hto10hEvent]}                      | ${50 - HORIZONTAL_MARGINS}      | ${50 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${[monday07hto12hEvent, monday08hto10hEvent, monday09hto10hEvent]} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    event                  | among                     | expectedWidth                   | expectedLeft
+    ${monday09hto10hEvent} | ${{ count: 1, index: 0 }} | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday09hto10hEvent} | ${{ count: 2, index: 1 }} | ${50 - HORIZONTAL_MARGINS}      | ${50 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${{ count: 3, index: 1 }} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
   `(
     "calendar event width and left",
-    ({ event, overlappingEvents, expectedWidth, expectedLeft }) => {
+    ({ event, among, expectedWidth, expectedLeft }) => {
       it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
         const presenter = new CalendarEventPresenter(
           event,
           displayedDatePresenter,
-          overlappingEvents,
+          among,
         );
         expect(presenter.width.value).toBe(expectedWidth);
         expect(presenter.left.value).toBe(expectedLeft);
