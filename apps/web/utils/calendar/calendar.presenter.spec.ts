@@ -42,11 +42,6 @@ const monday08hto10hEvent = createCalendarEvent({
   end: OverDate.init({ date: monday, hour: 10 }).date,
   name: "Event monday 08h to 10h",
 });
-const monday07hto12hEvent = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 7 }).date,
-  end: OverDate.init({ date: monday, hour: 12 }).date,
-  name: "Event monday 07h to 12h",
-});
 const sunday23htoMonday01hEvent = createCalendarEvent({
   start: OverDate.init({ date: sunday, hour: 23 }).date,
   end: OverDate.init({ date: monday, hour: 1 }).date,
@@ -109,8 +104,8 @@ describe("Calendar Event Presenter", () => {
   describe.each`
     event                  | among                     | expectedWidth                   | expectedLeft
     ${monday09hto10hEvent} | ${{ count: 1, index: 0 }} | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday09hto10hEvent} | ${{ count: 2, index: 1 }} | ${50 - HORIZONTAL_MARGINS}      | ${50 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${{ count: 3, index: 1 }} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 - HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday09hto10hEvent} | ${{ count: 2, index: 1 }} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${{ count: 3, index: 1 }} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
   `(
     "calendar event width and left",
     ({ event, among, expectedWidth, expectedLeft }) => {

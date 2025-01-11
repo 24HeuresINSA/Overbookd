@@ -1,7 +1,7 @@
 <template>
   <div class="daily-content">
     <AvailabilitiesCalendarEvent
-      v-for="event in day.filterEventsToDisplay(events)"
+      v-for="event in day.eventsOccuringThatDayAmong(events)"
       :key="event.id"
       :event="event"
       :day="day"

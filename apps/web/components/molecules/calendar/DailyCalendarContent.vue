@@ -1,11 +1,11 @@
 <template>
   <div class="daily-content">
     <CalendarEvent
-      v-for="event in day.filterEventsToDisplay(events)"
+      v-for="(event, index) in eventsToDisplay"
       :key="event.id"
       :event="event"
       :day="day"
-      :among="amongEvent(event)"
+      :among="{ count: eventsToDisplay.length, index }"
       :clickable="clickableEvents"
       @click="propagateEventClick"
     />
@@ -13,8 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Period } from "@overbookd/time";
-import type { AmongCalendarEvent } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
@@ -33,16 +31,9 @@ const props = defineProps({
   },
 });
 
-const amongEvent = (event: CalendarEvent): AmongCalendarEvent => {
-  const eventPeriod = Period.init(event);
-  const overlappingEvents = props.events.filter((e) =>
-    Period.init(e).isOverlapping(eventPeriod),
-  );
-  return {
-    count: overlappingEvents.length,
-    index: overlappingEvents.indexOf(event),
-  };
-};
+const eventsToDisplay = computed<CalendarEvent[]>(() =>
+  props.day.eventsOccuringThatDayAmong(props.events),
+);
 
 const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) =>

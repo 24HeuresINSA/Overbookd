@@ -80,7 +80,7 @@ describe("Date presenter", () => {
     );
   });
 
-  describe("Get period indicator text", () => {
+  describe("Get displayable month with year", () => {
     describe.each`
       date                                 | expected
       ${`${friday}T11:11+02:00`}           | ${"mai 2024"}
@@ -89,9 +89,9 @@ describe("Date presenter", () => {
       ${`${fridayWinterTime}T12:30+01:00`} | ${"décembre 2024"}
     `("when generating from $date", ({ date, expected }) => {
       it(`should generate ${expected}`, () => {
-        const periodIndicatorText = new DayPresenter(OverDate.from(date))
-          .periodIndicatorText;
-        expect(periodIndicatorText).toBe(expected);
+        const displayableMonthWithYear = new DayPresenter(OverDate.from(date))
+          .displayableMonthWithYear;
+        expect(displayableMonthWithYear).toBe(expected);
       });
     });
   });

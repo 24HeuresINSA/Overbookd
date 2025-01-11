@@ -49,7 +49,7 @@ export class DayPresenter {
     return weekDates.map((day) => new DayPresenter(day));
   }
 
-  get periodIndicatorText(): string {
+  get displayableMonthWithYear(): string {
     const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
     return `${month} ${this.date.year}`;
   }
@@ -68,7 +68,7 @@ export class DayPresenter {
     return week.isIncluding(other.date);
   }
 
-  filterEventsToDisplay(events: CalendarEvent[]): CalendarEvent[] {
+  eventsOccuringThatDayAmong(events: CalendarEvent[]): CalendarEvent[] {
     return events.filter((event) => Period.init(event).isInDay(this.date.date));
   }
 }

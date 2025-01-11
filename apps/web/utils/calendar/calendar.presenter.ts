@@ -36,7 +36,7 @@ abstract class BaseCalendarPresenter implements IPresentCalendar {
   ) {}
 
   private get minutesBetweenDayStartAndEventStart(): number {
-    const eventStart = this.event.start.getTime();
+    const eventStart = this.displayedEventPeriod.start.getTime();
     const dayStart = this.day.startsAt.date.getTime();
     const emptyDurationBeforeEvent = Duration.ms(eventStart - dayStart);
 
@@ -110,7 +110,9 @@ export class CalendarEventPresenter
   }
 
   get left(): Percentage {
-    const baseLeft = this.among.index * this.width.value;
+    const previousEventsMargin =
+      this.among.index * HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
+    const baseLeft = this.among.index * this.width.value + previousEventsMargin;
     return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
   }
 
