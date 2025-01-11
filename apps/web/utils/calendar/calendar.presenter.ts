@@ -97,7 +97,7 @@ export class CalendarEventPresenter
   constructor(
     event: CalendarEvent,
     day: DayPresenter,
-    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
+    private readonly among: { count: number; index: number } = DEFAULT_AMONG,
   ) {
     super(event, day);
   }
