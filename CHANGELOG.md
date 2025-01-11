@@ -1,3 +1,10 @@
+## [3.24.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.24.0...v3.24.1) (2025-01-11)
+
+### Bug Fixes
+
+* **nav:** clean search field after navigation [#2349](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2349) ([3e9ed60](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3e9ed60db0fe3e454fe653d1f15e3e558d238f27))
+* **web:** add team filter to contributions [#2348](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2348) ([1544530](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1544530120a6ecfad5c49f8fa2cac3dc271fd2b8))
+
 ## [3.24.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.23.0...v3.24.0) (2025-01-06)
 
 ### Features
