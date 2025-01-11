@@ -83,10 +83,10 @@ describe("Date presenter", () => {
   describe("Get period indicator text", () => {
     describe.each`
       date                                 | expected
-      ${`${friday}T11:11+02:00`}           | ${"Mai 2024"}
-      ${`${saturday}T00:15+03:00`}         | ${"Mai 2024"}
-      ${`${friday}T17:45-11:00`}           | ${"Mai 2024"}
-      ${`${fridayWinterTime}T12:30+01:00`} | ${"Décembre 2024"}
+      ${`${friday}T11:11+02:00`}           | ${"mai 2024"}
+      ${`${saturday}T00:15+03:00`}         | ${"mai 2024"}
+      ${`${friday}T17:45-11:00`}           | ${"mai 2024"}
+      ${`${fridayWinterTime}T12:30+01:00`} | ${"décembre 2024"}
     `("when generating from $date", ({ date, expected }) => {
       it(`should generate ${expected}`, () => {
         const periodIndicatorText = new DayPresenter(OverDate.from(date))

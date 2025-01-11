@@ -88,7 +88,8 @@ export class AvailabilityPresenter
   }
 }
 
-const DEFAULT_AMONG = { count: 1, index: 0 };
+export type AmongCalendarEvent = { count: number; index: number };
+const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
 
 export class CalendarEventPresenter
   extends BaseCalendarPresenter
@@ -97,7 +98,7 @@ export class CalendarEventPresenter
   constructor(
     event: CalendarEvent,
     day: DayPresenter,
-    private readonly among: { count: number; index: number } = DEFAULT_AMONG,
+    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
   ) {
     super(event, day);
   }

@@ -98,6 +98,7 @@ const propagateNext = () => emit("next");
   .period-indicator {
     font-size: 1.5rem;
     font-weight: normal;
+    text-transform: capitalize;
   }
 }
 </style>

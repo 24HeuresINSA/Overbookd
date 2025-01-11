@@ -5,7 +5,7 @@
       :key="event.id"
       :event="event"
       :day="day"
-      :overlapping-events="getOverlappingEvents(event, events)"
+      :among="amongEvent(event)"
       :clickable="clickableEvents"
       @click="propagateEventClick"
     />
@@ -13,11 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-import { getOverlappingEvents } from "~/utils/calendar/calendar.utils";
+import { Period } from "@overbookd/time";
+import type { AmongCalendarEvent } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-defineProps({
+const props = defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     required: true,
@@ -31,6 +32,17 @@ defineProps({
     default: false,
   },
 });
+
+const amongEvent = (event: CalendarEvent): AmongCalendarEvent => {
+  const eventPeriod = Period.init(event);
+  const overlappingEvents = props.events.filter((e) =>
+    Period.init(e).isOverlapping(eventPeriod),
+  );
+  return {
+    count: overlappingEvents.length,
+    index: overlappingEvents.indexOf(event),
+  };
+};
 
 const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) =>

@@ -14,7 +14,10 @@
 
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
-import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
+import {
+  CalendarEventPresenter,
+  type AmongCalendarEvent,
+} from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
@@ -26,8 +29,8 @@ const props = defineProps({
     type: Object as PropType<DayPresenter>,
     required: true,
   },
-  overlappingEvents: {
-    type: Array as PropType<CalendarEvent[]>,
+  among: {
+    type: Object as PropType<AmongCalendarEvent>,
     required: true,
   },
   clickable: {
@@ -41,11 +44,11 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const among = {
-  count: props.overlappingEvents.length,
-  index: props.overlappingEvents.indexOf(props.event),
-};
-const presenter = new CalendarEventPresenter(props.event, props.day, among);
+const presenter = new CalendarEventPresenter(
+  props.event,
+  props.day,
+  props.among,
+);
 const style = computed(() => ({
   top: presenter.top.css,
   left: presenter.left.css,

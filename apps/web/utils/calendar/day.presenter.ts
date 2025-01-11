@@ -51,8 +51,7 @@ export class DayPresenter {
 
   get periodIndicatorText(): string {
     const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
-    const displayableMonth = month.charAt(0).toUpperCase() + month.slice(1);
-    return `${displayableMonth} ${this.date.year}`;
+    return `${month} ${this.date.year}`;
   }
 
   isSameDayThan(other: OverDate): boolean {

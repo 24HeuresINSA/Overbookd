@@ -85,7 +85,6 @@ describe("Calendar Event Presenter", () => {
       const presenter = new CalendarEventPresenter(
         event,
         displayedDatePresenter,
-        [event],
       );
       expect(presenter.periodText).toBe(expectedPeriodText);
     });

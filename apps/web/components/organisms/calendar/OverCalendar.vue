@@ -71,7 +71,7 @@ import {
   HOURS_IN_DAY,
   OverDate,
 } from "@overbookd/time";
-import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
+import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
