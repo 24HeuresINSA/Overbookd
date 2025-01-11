@@ -22,14 +22,14 @@ class Percentage {
   }
 }
 
-type IPresentCalendar = {
+type IPresentEvent = {
   top: Pixel;
   height: Pixel;
   width: Percentage;
   left: Percentage;
 };
 
-abstract class BaseCalendarPresenter implements IPresentCalendar {
+abstract class BaseCalendarPresenter implements IPresentEvent {
   constructor(
     protected readonly event: CalendarEvent,
     protected readonly day: DayPresenter,
@@ -76,7 +76,7 @@ abstract class BaseCalendarPresenter implements IPresentCalendar {
 
 export class AvailabilityPresenter
   extends BaseCalendarPresenter
-  implements IPresentCalendar
+  implements IPresentEvent
 {
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
@@ -93,7 +93,7 @@ const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
 
 export class CalendarEventPresenter
   extends BaseCalendarPresenter
-  implements IPresentCalendar
+  implements IPresentEvent
 {
   constructor(
     event: CalendarEvent,

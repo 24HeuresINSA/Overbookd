@@ -42,9 +42,10 @@ export class DayPresenter {
   }
 
   get weekDays(): DayPresenter[] {
+    const monday = this.monday;
     const weekDates = Array.from({ length: 7 }, (_, i) => {
       const daysFromMondayInMs = Duration.ms(i * ONE_DAY_IN_MS);
-      return this.monday.plus(daysFromMondayInMs);
+      return monday.plus(daysFromMondayInMs);
     });
     return weekDates.map((day) => new DayPresenter(day));
   }
