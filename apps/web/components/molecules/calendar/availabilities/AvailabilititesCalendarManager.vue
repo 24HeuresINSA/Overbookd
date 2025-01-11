@@ -26,7 +26,7 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ day.periodIndicatorText }}</h3>
+    <h3 class="period-indicator">{{ day.displayableMonthWithYear }}</h3>
   </div>
 </template>
 
