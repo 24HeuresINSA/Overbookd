@@ -1,20 +1,19 @@
 <template>
   <header class="header-days">
     <DailyCalendarHeader
-      v-for="day in getWeekDays(props.displayedDay)"
-      :key="day.date.time"
-      :displayed-day="day.date"
+      v-for="weekDay in day.weekDays"
+      :key="weekDay.date.toString()"
+      :day="weekDay"
     />
   </header>
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
-import { getWeekDays } from "~/utils/calendar/calendar.utils";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
-const props = defineProps({
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+defineProps({
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
 });

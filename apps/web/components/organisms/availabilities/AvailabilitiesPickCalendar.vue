@@ -1,8 +1,8 @@
 <template>
-  <OverCalendar v-if="displayedDays.length > 0">
+  <OverCalendar v-if="days.length > 0">
     <template #manager>
       <AvailabilititesCalendarManager
-        :displayed-day="displayedDays[0]"
+        :day="days[0]"
         :disable-previous="disablePrevious"
         :disable-next="disableNext"
         :cant-validate="cantValidate"
@@ -12,12 +12,12 @@
       />
     </template>
     <template #header>
-      <AvailabilitiesCalendarHeader :displayed-days="displayedDays" />
+      <AvailabilitiesCalendarHeader :days="days" />
     </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
         :events="calendarEvents"
-        :displayed-days="displayedDays"
+        :days="days"
         @click:event="click"
       />
     </template>
@@ -28,6 +28,7 @@
 import { ONE_HOUR_IN_MS, OverDate, TWO_HOURS_IN_MS } from "@overbookd/time";
 import { Period } from "@overbookd/time";
 import { CalendarEventPeriods } from "~/utils/availabilities/calendar-event-periods";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import {
   createCalendarEvent,
   type CalendarEvent,
@@ -52,7 +53,7 @@ defineProps({
   },
 });
 
-const displayedDays = defineModel<OverDate[]>({ required: true });
+const days = defineModel<DayPresenter[]>({ required: true });
 
 const globalPeriod = Period.init({
   start: CalendarEventPeriods.prePreManif.period.start,
@@ -99,7 +100,7 @@ const isSelected = (event: CalendarEvent): boolean => {
 };
 const click = (event: CalendarEvent) => {
   const date = OverDate.from(event.start);
-  const charismaPerHour = findCharismaPerHour(Period.init(event));
+  const charismaPerHour = +event.name;
 
   if (isSelected(event)) {
     return availabilityStore.unSelectAvailability(date, charismaPerHour);

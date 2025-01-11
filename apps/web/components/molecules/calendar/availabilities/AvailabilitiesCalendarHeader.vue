@@ -1,25 +1,25 @@
 <template>
   <header class="header-days" :style="gridTemplateStyle">
     <DailyCalendarHeader
-      v-for="day in displayedDays"
-      :key="day.date.toISOString()"
-      :displayed-day="day"
+      v-for="day in days"
+      :key="day.date.toString()"
+      :day="day"
     />
   </header>
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
-  displayedDays: {
-    type: Array as PropType<OverDate[]>,
+  days: {
+    type: Array as PropType<DayPresenter[]>,
     required: true,
   },
 });
 
 const gridTemplateStyle = computed(() => ({
-  gridTemplateColumns: `repeat(${props.displayedDays.length}, 1fr)`,
+  gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
 }));
 </script>
 

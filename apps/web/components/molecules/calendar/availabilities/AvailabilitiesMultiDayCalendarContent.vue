@@ -1,13 +1,13 @@
 <template>
   <div class="multiday-content" :style="gridTemplateStyle">
     <div
-      v-for="day in displayedDays"
-      :key="day.time"
+      v-for="day in days"
+      :key="day.toString()"
       class="multiday-content__day"
     >
       <AvailabilitiesDailyCalendarContent
         :events="events"
-        :displayed-day="day"
+        :day="day"
         @click:event="propagateEventClick"
       />
     </div>
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -23,14 +23,14 @@ const props = defineProps({
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  displayedDays: {
-    type: Array as PropType<OverDate[]>,
+  days: {
+    type: Array as PropType<DayPresenter[]>,
     required: true,
   },
 });
 
 const gridTemplateStyle = computed(() => ({
-  gridTemplateColumns: `repeat(${props.displayedDays.length}, 1fr)`,
+  gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
 }));
 
 const emit = defineEmits(["click:event"]);

@@ -32,12 +32,13 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ periodIndicator }}</h3>
+    <h3 class="period-indicator">{{ day.displayableMonthWithYear }}</h3>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { OverDate } from "@overbookd/time";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const configurationStore = useConfigurationStore();
 
@@ -48,39 +49,26 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<OverDate>({ required: true });
+const day = defineModel<DayPresenter>({ required: true });
 const eventStartDate = computed<OverDate>(() =>
   OverDate.fromLocal(configurationStore.eventStartDate),
 );
 
-const periodIndicator = computed<string>(() => {
-  const month = displayedDay.value.date.toLocaleDateString("fr-FR", {
-    month: "long",
-  });
-  const year = displayedDay.value.year;
-  return `${capitalizeFirstLetter(month)} ${year}`;
-});
+const today = OverDate.now();
+const isCurrentWeekOrDay = props.dayMode
+  ? day.value.isSameDayThan(today)
+  : day.value.isSameWeekThan(today);
 
-const isCurrentWeekOrDay = computed<boolean>(() => {
-  const today = OverDate.now();
-  return props.dayMode
-    ? OverDate.isSameDay(displayedDay.value, today)
-    : OverDate.isSameWeek(displayedDay.value, today);
-});
-const isEventStartWeekOrDay = computed<boolean>(() => {
-  const eventStartOverDay = OverDate.fromLocal(
-    configurationStore.eventStartDate,
-  );
-  return props.dayMode
-    ? OverDate.isSameDay(displayedDay.value, eventStartOverDay)
-    : OverDate.isSameWeek(displayedDay.value, eventStartOverDay);
-});
+const eventStartOverDay = OverDate.fromLocal(configurationStore.eventStartDate);
+const isEventStartWeekOrDay = props.dayMode
+  ? day.value.isSameDayThan(eventStartOverDay)
+  : day.value.isSameWeekThan(eventStartOverDay);
 
 const moveToToday = () => {
-  displayedDay.value = OverDate.now();
+  day.value = new DayPresenter(OverDate.now());
 };
 const moveToEventStartDay = () => {
-  displayedDay.value = eventStartDate.value;
+  day.value = new DayPresenter(eventStartDate.value);
 };
 
 const emit = defineEmits(["previous", "next"]);
@@ -108,6 +96,7 @@ const propagateNext = () => emit("next");
   .period-indicator {
     font-size: 1.5rem;
     font-weight: normal;
+    text-transform: capitalize;
   }
 }
 </style>

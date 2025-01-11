@@ -1,34 +1,28 @@
 <template>
   <div class="daily-content">
     <AvailabilitiesCalendarEvent
-      v-for="event in eventsInDisplayedDay"
+      v-for="event in day.eventsOccuringThatDayAmong(events)"
       :key="event.id"
       :event="event"
-      :displayed-day="displayedDay"
+      :day="day"
       @click="propagateEventClick"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { OverDate, Period } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-const props = defineProps({
+defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
-});
-
-const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
-  return props.events.filter((event) =>
-    Period.init(event).isInDay(props.displayedDay.date),
-  );
 });
 
 const emit = defineEmits(["click:event"]);

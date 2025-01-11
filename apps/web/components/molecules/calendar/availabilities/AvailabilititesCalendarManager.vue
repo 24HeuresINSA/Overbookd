@@ -26,16 +26,16 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ periodIndicator }}</h3>
+    <h3 class="period-indicator">{{ day.displayableMonthWithYear }}</h3>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { OverDate } from "@overbookd/time";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
-  displayedDay: {
-    type: Object as PropType<OverDate>,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
   disablePrevious: {
@@ -50,14 +50,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
-
-const periodIndicator = computed<string>(() => {
-  const month = props.displayedDay.date.toLocaleDateString("fr-FR", {
-    month: "long",
-  });
-  const year = props.displayedDay.year;
-  return `${capitalizeFirstLetter(month)} ${year}`;
 });
 
 const emit = defineEmits(["previous", "next", "validate"]);
