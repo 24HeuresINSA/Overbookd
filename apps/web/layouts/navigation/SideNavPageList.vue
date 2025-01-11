@@ -10,6 +10,7 @@
       :key="page.to"
       :page="page"
       :is-folded="isFolded"
+      @click="propagateClick"
     />
     <v-divider
       v-show="favoritePages.length > 0 && nonFavoritePages.length > 0"
@@ -20,6 +21,7 @@
       :key="page.to"
       :page="page"
       :is-folded="isFolded"
+      @click="propagateClick"
     />
   </v-list>
 </template>
@@ -77,6 +79,9 @@ const favoritePages = computed<PageInSummary[]>(
 const nonFavoritePages = computed<PageInSummary[]>(
   () => PageFilter.from(filteredPages.value).nonFavorites,
 );
+
+const emit = defineEmits(["click"]);
+const propagateClick = () => emit("click");
 </script>
 
 <style lang="scss" scoped>

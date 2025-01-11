@@ -9,6 +9,7 @@
       'unfolded-item': !isFolded,
     }"
     link
+    @click="propagateClick"
   >
     <template #prepend>
       <v-badge
@@ -48,6 +49,9 @@ const isSelected = ({ to }: PageInSummary): boolean => {
   const currentPage = findPage(route.path);
   return currentPage?.to === to;
 };
+
+const emit = defineEmits(["click"]);
+const propagateClick = () => emit("click");
 </script>
 
 <style lang="scss" scoped>
