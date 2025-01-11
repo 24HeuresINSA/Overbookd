@@ -29,7 +29,7 @@ type IPresentEvent = {
   left: Percentage;
 };
 
-abstract class BaseCalendarPresenter implements IPresentEvent {
+abstract class EventPresenter implements IPresentEvent {
   constructor(
     protected readonly event: CalendarEvent,
     protected readonly day: DayPresenter,
@@ -75,7 +75,7 @@ abstract class BaseCalendarPresenter implements IPresentEvent {
 }
 
 export class AvailabilityPresenter
-  extends BaseCalendarPresenter
+  extends EventPresenter
   implements IPresentEvent
 {
   get width(): Percentage {
@@ -92,7 +92,7 @@ export type AmongCalendarEvent = { count: number; index: number };
 const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
 
 export class CalendarEventPresenter
-  extends BaseCalendarPresenter
+  extends EventPresenter
   implements IPresentEvent
 {
   constructor(
