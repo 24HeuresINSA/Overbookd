@@ -16,7 +16,6 @@
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { WithAtLeastOneItem } from "@overbookd/list";
 
 const props = defineProps({
   event: {
@@ -42,14 +41,11 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const notEmptyOverlappingEvents = (
-  props.overlappingEvents.length > 0 ? props.overlappingEvents : [props.event]
-) as WithAtLeastOneItem<CalendarEvent>;
-const presenter = new CalendarEventPresenter(
-  props.event,
-  props.day,
-  notEmptyOverlappingEvents,
-);
+const among = {
+  count: props.overlappingEvents.length,
+  index: props.overlappingEvents.indexOf(props.event),
+};
+const presenter = new CalendarEventPresenter(props.event, props.day, among);
 const style = computed(() => ({
   top: presenter.top.css,
   left: presenter.left.css,

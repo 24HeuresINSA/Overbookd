@@ -117,15 +117,12 @@ const getShiftDelimiterClass = (hour: number): string => {
   return shiftDelimiterMap.get(hour) || "";
 };
 
+const dayGapDuration = isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK;
 const moveToPreviousWeekOrDay = () => {
-  dayModel.value = day.value.date.minus(
-    isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK,
-  ).date;
+  dayModel.value = day.value.date.minus(dayGapDuration).date;
 };
 const moveToNextWeekOrDay = () => {
-  dayModel.value = day.value.date.plus(
-    isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK,
-  ).date;
+  dayModel.value = day.value.date.plus(dayGapDuration).date;
 };
 
 if (publicHolidayStore.all.length === 0) {
