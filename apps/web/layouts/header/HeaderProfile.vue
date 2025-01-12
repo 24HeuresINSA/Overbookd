@@ -1,10 +1,6 @@
 <template>
-  <div class="profile" @mouseleave="handleProfileLeave">
-    <div
-      class="profile__header"
-      @click="handleProfileClick"
-      @mouseover="handleProfileHover"
-    >
+  <div class="profile">
+    <div class="profile__header" @click="handleProfileClick">
       <div class="profile__data">
         <ProfilePicture
           v-if="loggedUser"
@@ -46,7 +42,7 @@
       </v-card>
     </v-dialog>
 
-    <div v-if="!isMobile && isMenuOpen" class="dropdown-container">
+    <div v-if="!isMobile" class="dropdown-container">
       <div class="dropdown-menu">
         <div class="dropdown-menu__item" @click="toggleCurrentTheme">
           <v-icon>{{ themeIcon }}</v-icon>
@@ -74,22 +70,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-
 import { nicknameOrFirstName } from "@overbookd/user";
 import { Money } from "@overbookd/money";
-import { useDisplay, useTheme } from "vuetify";
+import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 import { navigateTo } from "#app";
 import { LOGIN_URL } from "@overbookd/web-page";
 
 const theme = useTheme();
-const display = useDisplay();
 const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const isMobile = computed(() => display.xs.value);
+const isMobile = layoutStore.isMobile;
 const loggedUser = computed(() => userStore.loggedUser);
 const myName = computed<string>(() =>
   loggedUser.value ? nicknameOrFirstName(loggedUser.value) : "",
@@ -132,24 +125,12 @@ const displayEULA = () => {
   isEULADialogOpen.value = true;
 };
 const closeEULA = () => (isEULADialogOpen.value = false);
-
 const isMenuOpen = ref(false);
 
 const handleProfileClick = () => {
-  if (isMobile.value) {
+  console.log("isMobile", isMobile);
+  if (isMobile) {
     isMenuOpen.value = !isMenuOpen.value;
-  }
-};
-
-const handleProfileHover = () => {
-  if (!isMobile.value) {
-    isMenuOpen.value = true;
-  }
-};
-
-const handleProfileLeave = () => {
-  if (!isMobile.value) {
-    isMenuOpen.value = false;
   }
 };
 </script>
@@ -203,6 +184,19 @@ $header-profile-max-width: 300px;
       display: none;
     }
   }
+
+  &:hover {
+    .dropdown-container {
+      display: block;
+
+      .dropdown-menu {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+    }
+  }
+
   &:hover .extend-icon {
     transform: rotate(180deg);
   }
@@ -251,6 +245,7 @@ $header-profile-max-width: 300px;
   position: fixed;
   top: 100%;
   right: 0;
+  display: none;
 }
 
 .dropdown-menu {
@@ -264,8 +259,12 @@ $header-profile-max-width: 300px;
   border-radius: 0 0 10px 10px;
   align-items: center;
   animation: dropdown 0.3s ease forwards;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
 
-  .dropdown-menu__item {
+  &__item {
     display: flex;
     width: 80%;
     gap: 10px;
