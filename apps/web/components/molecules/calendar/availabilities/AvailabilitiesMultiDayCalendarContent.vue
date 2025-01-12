@@ -1,14 +1,13 @@
 <template>
-  <div class="weekly-content">
+  <div class="multiday-content" :style="gridTemplateStyle">
     <div
-      v-for="weekDay in day.weekDays"
-      :key="weekDay.date.toString()"
-      class="weekly-content__day"
+      v-for="day in days"
+      :key="day.toString()"
+      class="multiday-content__day"
     >
-      <DailyCalendarContent
+      <AvailabilitiesDailyCalendarContent
         :events="events"
-        :day="weekDay"
-        :clickable-events="clickableEvents"
+        :day="day"
         @click:event="propagateEventClick"
       />
     </div>
@@ -16,23 +15,23 @@
 </template>
 
 <script lang="ts" setup>
-import { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
-defineProps({
+const props = defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  day: {
-    type: Object as PropType<DayPresenter>,
+  days: {
+    type: Array as PropType<DayPresenter[]>,
     required: true,
   },
-  clickableEvents: {
-    type: Boolean,
-    default: false,
-  },
 });
+
+const gridTemplateStyle = computed(() => ({
+  gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
+}));
 
 const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
@@ -43,11 +42,10 @@ const propagateEventClick = (event: CalendarEvent) => {
 <style lang="scss" scoped>
 @use "~/assets/calendar.scss" as *;
 
-.weekly-content {
+.multiday-content {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
   &__day {
     min-width: $calendar-day-min-width;
     border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);

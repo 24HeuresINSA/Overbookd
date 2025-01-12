@@ -6,17 +6,21 @@
     }"
     class="calendar-with-manager"
   >
-    <CalendarManager
-      v-model="displayedDay"
-      :day-mode="isDayMode"
-      @previous="moveToPreviousWeekOrDay"
-      @next="moveToNextWeekOrDay"
-    />
+    <slot name="manager">
+      <CalendarManager
+        v-model="day"
+        :day-mode="isDayMode"
+        @previous="moveToPreviousWeekOrDay"
+        @next="moveToNextWeekOrDay"
+      />
+    </slot>
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />
       <header class="calendar-header">
-        <DailyCalendarHeader v-if="isDayMode" :displayed-day="displayedDay" />
-        <WeeklyCalendarHeader v-else :displayed-day="displayedDay" />
+        <slot name="header">
+          <DailyCalendarHeader v-if="isDayMode" :day="day" />
+          <WeeklyCalendarHeader v-else :day="day" />
+        </slot>
       </header>
 
       <div class="calendar-time">
@@ -33,26 +37,28 @@
         <div
           v-for="hour in HOURS_IN_DAY"
           :key="hour"
-          class="calendar-content-rows__hour"
+          class="calendar-content-rows__hour-separator"
           :class="getShiftDelimiterClass(hour)"
         />
       </div>
 
       <div class="calendar-content">
-        <DailyCalendarContent
-          v-if="isDayMode"
-          :events="events"
-          :displayed-day="displayedDay"
-          :clickable-events="clickableEvents"
-          @event-click="propagateEventClick"
-        />
-        <WeeklyCalendarContent
-          v-else
-          :events="events"
-          :displayed-day="displayedDay"
-          :clickable-events="clickableEvents"
-          @event-click="propagateEventClick"
-        />
+        <slot name="content">
+          <DailyCalendarContent
+            v-if="isDayMode"
+            :events="events"
+            :day="day"
+            :clickable-events="clickableEvents"
+            @click:event="propagateEventClick"
+          />
+          <WeeklyCalendarContent
+            v-else
+            :events="events"
+            :day="day"
+            :clickable-events="clickableEvents"
+            @click:event="propagateEventClick"
+          />
+        </slot>
       </div>
     </div>
   </div>
@@ -60,14 +66,15 @@
 
 <script lang="ts" setup>
 import {
+  Duration,
   formatDateNumberValue,
   HOURS_IN_DAY,
-  ONE_DAY_IN_MS,
-  ONE_WEEK_IN_MS,
+  OverDate,
 } from "@overbookd/time";
-import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar.utils";
+import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();
@@ -87,7 +94,13 @@ const props = defineProps({
   },
 });
 
-const displayedDay = defineModel<Date>({ default: new Date() });
+const dayModel = defineModel<Date>({
+  default: OverDate.now().date,
+});
+const day = computed<DayPresenter>({
+  get: () => new DayPresenter(OverDate.fromLocal(dayModel.value)),
+  set: (value) => (dayModel.value = value.date.date),
+});
 const isDayMode = computed<boolean>(() =>
   props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
 );
@@ -104,24 +117,21 @@ const getShiftDelimiterClass = (hour: number): string => {
   return shiftDelimiterMap.get(hour) || "";
 };
 
+const dayGapDuration = isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK;
 const moveToPreviousWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
-    ? new Date(displayedDay.value.getTime() - ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() - ONE_WEEK_IN_MS);
+  dayModel.value = day.value.date.minus(dayGapDuration).date;
 };
 const moveToNextWeekOrDay = () => {
-  displayedDay.value = isDayMode.value
-    ? new Date(displayedDay.value.getTime() + ONE_DAY_IN_MS)
-    : new Date(displayedDay.value.getTime() + ONE_WEEK_IN_MS);
+  dayModel.value = day.value.date.plus(dayGapDuration).date;
 };
 
 if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
 }
 
-const emit = defineEmits(["event-click"]);
+const emit = defineEmits(["click:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
-  emit("event-click", event);
+  emit("click:event", event);
 };
 </script>
 
@@ -215,7 +225,7 @@ $calendar-content-height: $hour-height * 24;
   grid-column: 2;
   border-bottom-right-radius: $calendar-radius;
 
-  &__hour {
+  &__hour-separator {
     height: $hour-height;
     border-top: 1px solid rgba(var(--v-theme-on-surface), 0.2);
     &:first-child {

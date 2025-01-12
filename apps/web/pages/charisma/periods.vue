@@ -25,7 +25,7 @@
           v-model="calendarDisplayedDay"
           :events="calendarEvents"
           clickable-events
-          @event-click="openEditDialogByCalendar"
+          @click:event="openEditDialogByCalendar"
         />
       </v-card-text>
     </v-card>
@@ -99,6 +99,7 @@ const deleteCharismaPeriod = async (charismaPeriod: SavedCharismaPeriod) => {
 };
 
 const calendarDisplayedDay = ref<Date>(configurationStore.eventStartDate);
+
 const maxCharisma = computed<number>(() =>
   Math.max(...charismaPeriods.value.map(({ charisma }) => charisma)),
 );

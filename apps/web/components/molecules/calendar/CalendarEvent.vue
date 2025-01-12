@@ -3,42 +3,34 @@
     class="calendar-event"
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
-    :style="{
-      top: `${eventTopPositionInPixels + 1}px`,
-      left: `${eventLeftInPercentage + 1}%`,
-      height: `${eventHeightInPixels - 2}px`,
-      width: `${eventWidthInPercentage - 2}%`,
-    }"
+    :style="presenter.css"
     :href="event.link"
     @click="propagateClick"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
-    <p class="calendar-event__hour">{{ eventTimePeriodText }}</p>
+    <p class="calendar-event__hour">{{ presenter.periodText }}</p>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import {
-  formatDateNumberValue,
-  MINUTES_IN_DAY,
-  ONE_DAY_IN_MS,
-  ONE_MINUTE_IN_MS,
-  OverDate,
-  Period,
-} from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
+import {
+  CalendarEventPresenter,
+  type AmongCalendarEvent,
+} from "~/utils/calendar/calendar.presenter";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
   event: {
     type: Object as PropType<CalendarEvent>,
     required: true,
   },
-  displayedDay: {
-    type: Date,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
-  overlappingEvents: {
-    type: Array as PropType<CalendarEvent[]>,
+  among: {
+    type: Object as PropType<AmongCalendarEvent>,
     required: true,
   },
   clickable: {
@@ -52,75 +44,11 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const PIXELS_PER_MINUTE = 0.75;
-
-const currentDayStart = computed<Date>(
-  () => OverDate.getStartOfDay(props.displayedDay).date,
+const presenter = new CalendarEventPresenter(
+  props.event,
+  props.day,
+  props.among,
 );
-
-const displayedEventPeriod = computed<Period>(() => {
-  const currentDayEnd = new Date(
-    currentDayStart.value.getTime() + ONE_DAY_IN_MS,
-  );
-
-  const validStart =
-    props.event.start < currentDayStart.value
-      ? currentDayStart.value
-      : props.event.start;
-  const validEnd =
-    props.event.end > currentDayEnd ? currentDayEnd : props.event.end;
-
-  const start = validStart < validEnd ? validStart : validEnd;
-  const end = validStart < validEnd ? validEnd : validStart;
-
-  return Period.init({ start, end });
-});
-
-const eventStartTotalMinutes = computed<number>(
-  () =>
-    (displayedEventPeriod.value.start.getTime() -
-      currentDayStart.value.getTime()) /
-    ONE_MINUTE_IN_MS,
-);
-const eventTopPositionInPixels = computed<number>(() => {
-  return eventStartTotalMinutes.value * PIXELS_PER_MINUTE;
-});
-
-const eventHeightInPixels = computed<number>(() => {
-  const eventDurationInMs = displayedEventPeriod.value.duration.inMilliseconds;
-  const eventDurationInMinutes = eventDurationInMs / ONE_MINUTE_IN_MS;
-  const remainingEventMinutesInDay =
-    MINUTES_IN_DAY - eventStartTotalMinutes.value;
-  return (
-    Math.min(eventDurationInMinutes, remainingEventMinutesInDay) *
-    PIXELS_PER_MINUTE
-  );
-});
-
-const overlappingEventsOnSameDay = computed<CalendarEvent[]>(() => {
-  return props.overlappingEvents.filter((e) => {
-    return Period.init(e).isOverlapping(displayedEventPeriod.value);
-  });
-});
-const eventWidthInPercentage = computed<number>(() => {
-  return 100 / overlappingEventsOnSameDay.value.length;
-});
-const eventLeftInPercentage = computed<number>(() => {
-  const index = overlappingEventsOnSameDay.value.indexOf(props.event);
-  return index * eventWidthInPercentage.value;
-});
-
-const eventTimePeriodText = computed<string>(() => {
-  const start = OverDate.from(props.event.start);
-  const end = OverDate.from(props.event.end);
-
-  const formattedStartMinutes =
-    start.minute !== 0 ? formatDateNumberValue(start.minute) : "";
-  const formattedEndMinutes =
-    end.minute !== 0 ? formatDateNumberValue(end.minute) : "";
-
-  return `${start.hour}h${formattedStartMinutes} - ${end.hour}h${formattedEndMinutes}`;
-});
 </script>
 
 <style lang="scss" scoped>

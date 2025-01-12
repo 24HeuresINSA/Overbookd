@@ -21,6 +21,10 @@
   cursor: default !important;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .vuetify-card {
   background-color: rgb(var(--v-theme-surface));
   border-radius: 25px;

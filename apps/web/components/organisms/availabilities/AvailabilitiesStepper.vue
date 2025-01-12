@@ -1,57 +1,45 @@
 <template>
-  <v-stepper v-model="step">
-    <v-stepper-header>
-      <v-stepper-item
-        v-for="({ title }, index) in calendarSteps"
-        :key="`step-${index}`"
-        :title="title"
-        :complete="step > index"
-        :value="index + 1"
-      />
-    </v-stepper-header>
+  <div>
+    <v-stepper v-model="step">
+      <v-stepper-header>
+        <v-stepper-item
+          v-for="({ title }, index) in calendarSteps"
+          :key="`step-${index}`"
+          :title="title"
+          :complete="step > index + 1"
+          :value="index + 1"
+        />
+      </v-stepper-header>
 
-    <v-stepper-window
-      v-for="({ period }, index) in calendarSteps"
-      v-show="step === index + 1"
-      :key="`${period.start}-${period.end}`"
-    >
-      <v-stepper-window-item
-        :id="`calendar-part-${index + 1}`"
-        :value="index + 1"
-      >
-        <p class="text-center">
-          Les disponibilités ne sont pas encore disponibles (c'est vraiment le
-          comble 😉).
-        </p>
-        <!--<v-btn
-          text="Valider"
-          color="success"
-          :disabled="hasAvailabilityError"
-          @click="saveAvailabilities"
-        />
-        <AvailabilitiesPickCalendar
-          :period="period"
-          :disable-next-period="shouldDisableNextOn(index + 1)"
-          :disable-previous-period="shouldDisablePreviousOn(index + 1)"
-          @reach:period-end="incrementStep"
-          @reach:period-start="decrementStep"
-        />
-        <v-btn
-          text="Valider"
-          color="success"
-          :disabled="hasAvailabilityError"
-          @click="saveAvailabilities"
-        />-->
-      </v-stepper-window-item>
-    </v-stepper-window>
-  </v-stepper>
+      <v-stepper-window>
+        <v-stepper-window-item
+          v-for="(_, index) in calendarSteps"
+          :key="`content-${index}`"
+          :value="index + 1"
+        >
+          <AvailabilitiesPickCalendar
+            v-model="days"
+            :disable-previous="shouldDisablePrevious"
+            :disable-next="shouldDisableNext"
+            :cant-validate="cannotValidate"
+            @previous="moveToPreviousStep"
+            @next="moveToNextStep"
+            @validate="saveAvailabilities"
+          />
+        </v-stepper-window-item>
+      </v-stepper-window>
+    </v-stepper>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { HARD_CODE } from "@overbookd/team-constants";
+import { ONE_DAY_IN_MS, OverDate } from "@overbookd/time";
 import {
   CalendarEventPeriods,
   type CalendarStep,
 } from "~/utils/availabilities/calendar-event-periods";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const SOFT_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.preManif,
@@ -64,43 +52,45 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 ];
 
 const userStore = useUserStore();
-// const availabilitiyStore = useVolunteerAvailabilityStore();
+const availabilitiyStore = useVolunteerAvailabilityStore();
 
 const step = ref<number>(1);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
-  const isHard = (userStore.loggedUser?.teams ?? []).includes("hard");
+  const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
-// const hasAvailabilityError = computed<boolean>(() => {
-//   return availabilitiyStore.availabilities.errors.length > 0;
-// });
+const days = computed<DayPresenter[]>(() => {
+  const calendarStep = calendarSteps.value.at(step.value - 1);
+  const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
+  const dates = splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
+  return dates.map((date) => new DayPresenter(date));
+});
 
-// const shouldDisableNextOn = (periodCount: number) => {
-//   const isLastPeriod = calendarSteps.value.length === periodCount;
-//   return isLastPeriod;
-// };
-// const shouldDisablePreviousOn = (periodCount: number) => {
-//   const isFirstPeriod = periodCount === 1;
-//   return isFirstPeriod;
-// };
+const cannotValidate = computed<boolean>(() => {
+  const hasNoSelection =
+    availabilitiyStore.availabilities.selected.length === 0;
+  const hasError = availabilitiyStore.availabilities.errors.length > 0;
+  return hasNoSelection || hasError;
+});
 
-// const incrementStep = () => step.value++;
-// const decrementStep = () => step.value--;
+const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
+const shouldDisableNext = computed<boolean>(
+  () => step.value >= calendarSteps.value.length,
+);
 
-// const saveAvailabilities = async () => {
-//   await availabilitiyStore.updateVolunteerAvailabilities(
-//     userStore.loggedUser?.id ?? 0,
-//   );
-// };
+const moveToPreviousStep = () => {
+  if (shouldDisablePrevious.value) return;
+  step.value--;
+};
+const moveToNextStep = () => {
+  if (shouldDisableNext.value) return;
+  step.value++;
+};
+
+const saveAvailabilities = async () => {
+  await availabilitiyStore.updateVolunteerAvailabilities(
+    userStore.loggedUser?.id ?? 0,
+  );
+};
 </script>
-
-<style lang="scss" scoped>
-@media only screen and (max-width: $mobile-max-width) {
-  @for $index from 1 through 5 {
-    #calendar-part-#{$index} {
-      padding: 5px 0 16px 0;
-    }
-  }
-}
-</style>

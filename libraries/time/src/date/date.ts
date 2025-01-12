@@ -1,4 +1,5 @@
 import { ONE_HOUR_IN_MS } from "../duration/duration.constant.js";
+import { Duration } from "../duration/duration.js";
 import { IProvidePeriod, Period } from "../period/period.js";
 import { formatDateNumberValue } from "./format-date.utils.js";
 
@@ -149,7 +150,8 @@ export class OverDate {
 
   static from(international: string): OverDate;
   static from(international: Date): OverDate;
-  static from(international: Date | string): OverDate {
+  static from(international: number): OverDate;
+  static from(international: Date | string | number): OverDate {
     const internationalDate = new Date(international);
 
     const [hourWithPad, minuteWithPad] = Intl.DateTimeFormat("fr", DISPLAY_TIME)
@@ -190,15 +192,8 @@ export class OverDate {
     return new OverDate({ year, monthlyDate, hour, minute, offset });
   }
 
-  static today(): OverDate {
+  static now(): OverDate {
     return OverDate.fromLocal(new Date());
-  }
-
-  static getStartOfDay(day: Date): OverDate {
-    return OverDate.init({
-      date: OverDate.from(day).dateString,
-      hour: 0,
-    });
   }
 
   get date(): Date {
@@ -229,9 +224,13 @@ export class OverDate {
     return this.definition.minute;
   }
 
+  private get timestamp(): number {
+    return this.date.getTime();
+  }
+
   get period(): Period {
     const start = this.date;
-    const end = new Date(this.date.getTime() + ONE_HOUR_IN_MS);
+    const end = new Date(this.timestamp + ONE_HOUR_IN_MS);
     return Period.init({ start, end });
   }
 
@@ -239,29 +238,12 @@ export class OverDate {
     return periods.some((period) => Period.init(period).isIncluding(this.date));
   }
 
-  getMonday(): OverDate {
-    const newDate = new Date(`${this.dateString}T00:00`);
-    const currentDay = newDate.getDay();
-
-    const isSunday = currentDay === 0;
-    const baseOffset = isSunday ? -6 : 1;
-    const daysToMonday = baseOffset - currentDay;
-
-    newDate.setDate(newDate.getDate() + daysToMonday);
-
-    return OverDate.fromLocal(newDate);
+  plus(duration: Duration): OverDate {
+    return OverDate.from(this.timestamp + duration.inMilliseconds);
   }
 
-  static isSameDay(date1: OverDate, date2: OverDate): boolean {
-    return (
-      date1.year === date2.year &&
-      date1.monthlyDate.month === date2.monthlyDate.month &&
-      date1.monthlyDate.day === date2.monthlyDate.day
-    );
-  }
-
-  static isSameWeek(date1: OverDate, date2: OverDate): boolean {
-    return OverDate.isSameDay(date1.getMonday(), date2.getMonday());
+  minus(duration: Duration): OverDate {
+    return OverDate.from(this.timestamp - duration.inMilliseconds);
   }
 }
 

@@ -1,11 +1,11 @@
 <template>
   <div class="daily-content">
     <CalendarEvent
-      v-for="event in eventsInDisplayedDay"
+      v-for="(event, index) in eventsToDisplay"
       :key="event.id"
       :event="event"
-      :displayed-day="displayedDay"
-      :overlapping-events="getOverlappingEvents(event, events)"
+      :day="day"
+      :among="{ count: eventsToDisplay.length, index }"
       :clickable="clickableEvents"
       @click="propagateEventClick"
     />
@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Period } from "@overbookd/time";
-import { getOverlappingEvents } from "~/utils/calendar/calendar.utils";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
@@ -22,8 +21,8 @@ const props = defineProps({
     type: Array as PropType<CalendarEvent[]>,
     required: true,
   },
-  displayedDay: {
-    type: Date,
+  day: {
+    type: Object as PropType<DayPresenter>,
     required: true,
   },
   clickableEvents: {
@@ -32,16 +31,13 @@ const props = defineProps({
   },
 });
 
-const eventsInDisplayedDay = computed<CalendarEvent[]>(() => {
-  return props.events.filter((event) =>
-    Period.init(event).isInDay(props.displayedDay),
-  );
-});
+const eventsToDisplay = computed<CalendarEvent[]>(() =>
+  props.day.eventsOccuringThatDayAmong(props.events),
+);
 
-const emit = defineEmits(["event-click"]);
-const propagateEventClick = (event: CalendarEvent) => {
-  emit("event-click", event);
-};
+const emit = defineEmits(["click:event"]);
+const propagateEventClick = (event: CalendarEvent) =>
+  emit("click:event", event);
 </script>
 
 <style scoped>
