@@ -128,11 +128,12 @@ export class CalendarEventPresenter
   get periodText(): string {
     const start = OverDate.from(this.event.start);
     const end = OverDate.from(this.event.end);
-
-    const formatMinutes = (minutes: number): string =>
-      minutes !== 0 ? `h${minutes.toString().padStart(2, "0")}` : "h";
     return `${start.hour}${formatMinutes(start.minute)} - ${end.hour}${formatMinutes(
       end.minute,
     )}`;
   }
 }
+
+const formatMinutes = (minutes: number): string => {
+  return minutes !== 0 ? `h${minutes.toString().padStart(2, "0")}` : "h";
+};
