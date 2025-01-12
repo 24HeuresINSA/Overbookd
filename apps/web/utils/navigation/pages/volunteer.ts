@@ -1,15 +1,17 @@
 import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
+  VIEW_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import {
   AVAILABILITIES_URL,
   MY_PERSONAL_ACCOUNT_URL,
+  PLANNING_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
-import type { Page, PageInSummary } from "./desktop-summary";
+import type { HiddenPage, Page, PageInSummary } from "./desktop-summary";
 
 export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
@@ -78,36 +80,36 @@ const AVAILABILITIES_PAGE: PageInSummary = {
   keywords: ["mes dispos", "disponibilites"],
 };
 
-// const MY_PLANNING_PAGE: PageInSummary = {
-//   icon: "mdi-calendar-clock",
-//   title: "Mon Planning",
-//   permission: VIEW_PLANNING,
-//   to: PLANNING_URL,
-//   description: "Permet d'avoir un apercu de son planning sur le festival",
-//   mobileSupport: true,
-//   canBeFavorite: true,
-//   hasParam: false,
-//   keywords: ["planning", "calendrier", "taches", "affectation"],
-// };
+const MY_PLANNING_PAGE: PageInSummary = {
+  icon: "mdi-calendar-clock",
+  title: "Mon Planning",
+  permission: VIEW_PLANNING,
+  to: PLANNING_URL,
+  description: "Permet d'avoir un apercu de son planning sur le festival",
+  mobileSupport: true,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["planning", "calendrier", "taches", "affectation"],
+};
 
-// const PLANNING_PAGE: HiddenPageWithParams = {
-//   title: "Planning",
-//   permission: VIEW_PLANNING,
-//   to: PLANNING_URL,
-//   mobileSupport: true,
-//   canBeFavorite: false,
-//   hasParam: true,
-// };
+const PLANNING_PAGE: HiddenPage = {
+  title: "Planning",
+  permission: VIEW_PLANNING,
+  to: PLANNING_URL,
+  mobileSupport: true,
+  canBeFavorite: false,
+  hasParam: true,
+};
 
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
   VOLUNTEERS_PAGE,
   AVAILABILITIES_PAGE,
-  // MY_PLANNING_PAGE,
+  MY_PLANNING_PAGE,
 ];
 
 export const VOLUNTEER_PAGES: Page[] = [
   ...VOLUNTEER_SUMMARY_PAGES,
-  // PLANNING_PAGE,
+  PLANNING_PAGE,
 ];
