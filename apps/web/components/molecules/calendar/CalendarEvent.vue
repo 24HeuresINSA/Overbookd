@@ -3,7 +3,7 @@
     class="calendar-event"
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
-    :style="style"
+    :style="presenter.css"
     :href="event.link"
     @click="propagateClick"
   >
@@ -49,12 +49,6 @@ const presenter = new CalendarEventPresenter(
   props.day,
   props.among,
 );
-const style = computed(() => ({
-  top: presenter.top.css,
-  left: presenter.left.css,
-  height: presenter.height.css,
-  width: presenter.width.css,
-}));
 </script>
 
 <style lang="scss" scoped>

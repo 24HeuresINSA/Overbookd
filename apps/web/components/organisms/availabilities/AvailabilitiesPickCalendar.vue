@@ -1,5 +1,5 @@
 <template>
-  <OverCalendar v-if="days.length > 0">
+  <OverCalendar>
     <template #manager>
       <AvailabilititesCalendarManager
         :day="days[0]"
@@ -18,7 +18,7 @@
       <AvailabilitiesMultiDayCalendarContent
         :events="calendarEvents"
         :days="days"
-        @click:event="click"
+        @click:event="selectOrUnselectAvailability"
       />
     </template>
   </OverCalendar>
@@ -68,8 +68,8 @@ const findCharismaPerHour = (period: Period): number => {
 };
 
 const intervals = globalPeriod.splitWithIntervalInMs(TWO_HOURS_IN_MS);
-const calendarEvents = computed<CalendarEvent[]>(() =>
-  intervals.flatMap((splitPeriod) => {
+const calendarEvents = computed<CalendarEvent[]>(() => {
+  return intervals.flatMap((splitPeriod) => {
     const startHour = splitPeriod.start.getHours();
     const isPartyPeriod = isPartyShift(startHour);
 
@@ -87,22 +87,22 @@ const calendarEvents = computed<CalendarEvent[]>(() =>
         name: charisma.toString(),
       });
     });
-  }),
-);
+  });
+});
 
-const selectedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.selected as Period[],
+const selectedAvailabilities = computed(
+  () => availabilityStore.availabilities.selected,
 );
 const isSelected = (event: CalendarEvent): boolean => {
   return selectedAvailabilities.value.some((selected) =>
     selected.isIncluding(event.start),
   );
 };
-const click = (event: CalendarEvent) => {
-  const date = OverDate.from(event.start);
-  const charismaPerHour = +event.name;
+const selectOrUnselectAvailability = (availability: CalendarEvent) => {
+  const date = OverDate.fromLocal(availability.start);
+  const charismaPerHour = +availability.name;
 
-  if (isSelected(event)) {
+  if (isSelected(availability)) {
     return availabilityStore.unSelectAvailability(date, charismaPerHour);
   }
   availabilityStore.selectAvailability(date, charismaPerHour);

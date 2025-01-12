@@ -80,11 +80,11 @@ const shouldDisableNext = computed<boolean>(
 );
 
 const moveToPreviousStep = () => {
-  if (step.value <= 1) return;
+  if (shouldDisablePrevious.value) return;
   step.value--;
 };
 const moveToNextStep = () => {
-  if (step.value >= calendarSteps.value.length) return;
+  if (shouldDisableNext.value) return;
   step.value++;
 };
 

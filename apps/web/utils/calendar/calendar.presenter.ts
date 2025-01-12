@@ -70,6 +70,15 @@ abstract class EventPresenter implements IPresentEvent {
     return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
+  get css(): Record<string, string> {
+    return {
+      top: this.top.css,
+      height: this.height.css,
+      width: this.width.css,
+      left: this.left.css,
+    };
+  }
+
   abstract get width(): Percentage;
   abstract get left(): Percentage;
 }

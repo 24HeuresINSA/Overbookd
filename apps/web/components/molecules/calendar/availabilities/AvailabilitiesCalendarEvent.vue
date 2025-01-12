@@ -2,7 +2,7 @@
   <v-card
     class="calendar-event"
     :class="colorClass"
-    :style="style"
+    :style="presenter.css"
     hover
     @click="propagateClick"
   >
@@ -12,8 +12,6 @@
 
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
-import type { Period } from "@overbookd/time";
-import type { AvailabilityErrorMessage } from "@overbookd/volunteer-availability";
 import { AvailabilityPresenter } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
@@ -35,15 +33,13 @@ const propagateClick = () => emit("click", props.event);
 
 const presenter = new AvailabilityPresenter(props.event, props.day);
 
-const selectedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.selected as Period[],
+const selectedAvailabilities = computed(
+  () => availabilityStore.availabilities.selected,
 );
-const savedAvailabilities = computed<Period[]>(
-  () => availabilityStore.availabilities.recorded as Period[],
+const savedAvailabilities = computed(
+  () => availabilityStore.availabilities.recorded,
 );
-const errors = computed<AvailabilityErrorMessage[]>(
-  () => availabilityStore.availabilities.errors as AvailabilityErrorMessage[],
-);
+const errors = computed(() => availabilityStore.availabilities.errors);
 
 const isSaved = computed<boolean>(() =>
   savedAvailabilities.value.some((availability) =>
@@ -67,10 +63,6 @@ const colorClass = computed(() => {
   if (isSelected.value) return "selected";
   return "unselected";
 });
-const style = computed(() => ({
-  left: presenter.left.css,
-  width: presenter.width.css,
-}));
 </script>
 
 <style lang="scss" scoped>

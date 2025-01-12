@@ -32,7 +32,9 @@
         @click="propagateNext"
       />
     </div>
-    <h3 class="period-indicator">{{ day.displayableMonthWithYear }}</h3>
+    <h3 class="period-indicator capitalize">
+      {{ day.displayableMonthWithYear }}
+    </h3>
   </div>
 </template>
 
@@ -96,7 +98,6 @@ const propagateNext = () => emit("next");
   .period-indicator {
     font-size: 1.5rem;
     font-weight: normal;
-    text-transform: capitalize;
   }
 }
 </style>
