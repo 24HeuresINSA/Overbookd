@@ -1,6 +1,11 @@
 <template>
   <div class="profile">
-    <div class="profile__header">
+    <div
+      class="profile__header"
+      @click="handleProfileClick"
+      @mouseover="handleProfileHover"
+      @mouseleave="handleProfileLeave"
+    >
       <div class="profile__data">
         <ProfilePicture
           v-if="loggedUser"
@@ -17,8 +22,14 @@
       </div>
       <v-icon class="extend-icon">mdi-chevron-down</v-icon>
     </div>
-
-    <div class="dropdown-menu">
+    <div
+      ref="dropdownMenu"
+      :class="{ 'dropdown-menu--open': isDropdownOpen }"
+      :style="{ display: isDropdownOpen ? 'flex' : 'none' }"
+      class="dropdown-menu"
+      @mouseover="handleDropdownHover"
+      @mouseleave="handleDropdownLeave"
+    >
       <a class="dropdown-menu__item" @click="toggleCurrentTheme">
         <v-icon>{{ themeIcon }}</v-icon>
         {{ themeTitle }}
@@ -50,6 +61,7 @@ import { LOGIN_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
 import { navigateTo } from "#app";
+import { onMounted, onBeforeUnmount, ref, computed } from "vue";
 
 const theme = useTheme();
 const layoutStore = useLayoutStore();
@@ -92,6 +104,59 @@ const toggleCurrentTheme = () => {
   const currentTheme = theme.global.name.value;
   theme.global.name.value = pickReverseTheme(currentTheme);
 };
+
+const isDropdownOpen = ref(false);
+const dropdownMenu = ref<HTMLElement | null>(null);
+const isNotMobile = computed(() => window.innerWidth > 768);
+
+const handleProfileClick = () => {
+  if (!isNotMobile.value) {
+    isDropdownOpen.value = !isDropdownOpen.value;
+  }
+};
+const handleProfileHover = () => {
+  if (isNotMobile.value) {
+    isDropdownOpen.value = true;
+  }
+};
+
+const handleProfileLeave = () => {
+  if (isNotMobile.value) {
+    isDropdownOpen.value = false;
+  }
+};
+
+const handleDropdownHover = () => {
+  if (isNotMobile.value) {
+    isDropdownOpen.value = true;
+  }
+};
+
+const handleDropdownLeave = () => {
+  if (isNotMobile.value) {
+    isDropdownOpen.value = false;
+  }
+};
+
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target;
+  if (
+    dropdownMenu.value &&
+    target instanceof HTMLElement &&
+    !dropdownMenu.value.contains(target) &&
+    !target.closest(".profile__header")
+  ) {
+    isDropdownOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 const isEULADialogOpen = ref<boolean>(false);
 const displayEULA = () => (isEULADialogOpen.value = true);
@@ -154,31 +219,24 @@ $header-profile-max-width: 300px;
   }
 }
 
-@media only screen and (min-width: $mobile-max-width) {
-  .profile:hover .dropdown-menu {
-    display: flex;
-    animation: dropdown 0.3s ease forwards;
-  }
-}
-
 .dropdown-menu {
   display: none;
   position: fixed;
-  top: 100%;
+  opacity: 0;
   right: 0;
   min-width: $header-profile-min-width;
-  max-width: $header-profile-max-width;
   padding: 2px 10px 10px 10px;
   flex-direction: column;
   gap: 5px;
   background-color: rgb(var(--v-theme-surface));
   border-radius: 0 0 10px 10px;
   align-items: center;
-  opacity: 0;
   transform: translateY(-10px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+
+  &.dropdown-menu--open {
+    display: flex;
+    animation: dropdown 0.3s ease forwards;
+  }
 
   &__item {
     display: flex;
@@ -207,6 +265,26 @@ $header-profile-max-width: 300px;
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+  .dropdown-menu {
+    display: none;
+    position: fixed;
+    top: calc(50vh - 12vh); /* Ajuste la position verticale */
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 70%;
+    left: 0;
+    margin-left: 15%;
+    padding: 20px 10px 20px 10px;
+    border-radius: 30px;
+    gap: 7.5px;
+    &__item {
+      font-size: 1rem;
+      padding: 1rem;
+    }
   }
 }
 
