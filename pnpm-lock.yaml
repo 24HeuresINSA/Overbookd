@@ -93,8 +93,8 @@ importers:
         specifier: 10.4.15
         version: 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
       '@nestjs/swagger':
-        specifier: 8.1.0
-        version: 8.1.0(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+        specifier: 8.1.1
+        version: 8.1.1(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
       '@nestjs/throttler':
         specifier: 6.3.0
         version: 6.3.0(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(reflect-metadata@0.2.2)
@@ -174,8 +174,8 @@ importers:
         specifier: workspace:*
         version: link:../../constants/web-page
       '@prisma/client':
-        specifier: 6.1.0
-        version: 6.1.0(prisma@6.1.0)
+        specifier: 6.2.1
+        version: 6.2.1(prisma@6.2.1)
       bcrypt:
         specifier: 5.1.1
         version: 5.1.1
@@ -195,8 +195,8 @@ importers:
         specifier: 1.2.1
         version: 1.2.1
       html-to-pdfmake:
-        specifier: 2.5.19
-        version: 2.5.19
+        specifier: 2.5.20
+        version: 2.5.20
       ics:
         specifier: 3.8.1
         version: 3.8.1
@@ -289,8 +289,8 @@ importers:
         specifier: 16.0.0
         version: 16.0.0
       prisma:
-        specifier: 6.1.0
-        version: 6.1.0
+        specifier: 6.2.1
+        version: 6.2.1
       source-map-support:
         specifier: 0.5.21
         version: 0.5.21
@@ -1593,8 +1593,8 @@ packages:
     peerDependencies:
       typescript: '>=4.8.2'
 
-  '@nestjs/swagger@8.1.0':
-    resolution: {integrity: sha512-8hzH+r/31XshzXHC9vww4T0xjDAxMzvOaT1xAOvvY1LtXTWyNRCUP2iQsCYJOnnMrR+vydWjvRZiuB3hdvaHxA==}
+  '@nestjs/swagger@8.1.1':
+    resolution: {integrity: sha512-5Mda7H1DKnhKtlsb0C7PYshcvILv8UFyUotHzxmWh0G65Z21R3LZH/J8wmpnlzL4bmXIfr42YwbEwRxgzpJ5sQ==}
     peerDependencies:
       '@fastify/static': ^6.0.0 || ^7.0.0
       '@nestjs/common': ^9.0.0 || ^10.0.0
@@ -1870,8 +1870,8 @@ packages:
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==}
 
-  '@prisma/client@6.1.0':
-    resolution: {integrity: sha512-AbQYc5+EJKm1Ydfq3KxwcGiy7wIbm4/QbjCKWWoNROtvy7d6a3gmAGkKjK0iUCzh+rHV8xDhD5Cge8ke/kiy5Q==}
+  '@prisma/client@6.2.1':
+    resolution: {integrity: sha512-msKY2iRLISN8t5X0Tj7hU0UWet1u0KuxSPHWuf3IRkB4J95mCvGpyQBfQ6ufcmvKNOMQSq90O2iUmJEN2e5fiA==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -1879,20 +1879,20 @@ packages:
       prisma:
         optional: true
 
-  '@prisma/debug@6.1.0':
-    resolution: {integrity: sha512-0himsvcM4DGBTtvXkd2Tggv6sl2JyUYLzEGXXleFY+7Kp6rZeSS3hiTW9mwtUlXrwYbJP6pwlVNB7jYElrjWUg==}
+  '@prisma/debug@6.2.1':
+    resolution: {integrity: sha512-0KItvt39CmQxWkEw6oW+RQMD6RZ43SJWgEUnzxN8VC9ixMysa7MzZCZf22LCK5DSooiLNf8vM3LHZm/I/Ni7bQ==}
 
-  '@prisma/engines-version@6.1.0-21.11f085a2012c0f4778414c8db2651556ee0ef959':
-    resolution: {integrity: sha512-PdJqmYM2Fd8K0weOOtQThWylwjsDlTig+8Pcg47/jszMuLL9iLIaygC3cjWJLda69siRW4STlCTMSgOjZzvKPQ==}
+  '@prisma/engines-version@6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69':
+    resolution: {integrity: sha512-7tw1qs/9GWSX6qbZs4He09TOTg1ff3gYsB3ubaVNN0Pp1zLm9NC5C5MZShtkz7TyQjx7blhpknB7HwEhlG+PrQ==}
 
-  '@prisma/engines@6.1.0':
-    resolution: {integrity: sha512-GnYJbCiep3Vyr1P/415ReYrgJUjP79fBNc1wCo7NP6Eia0CzL2Ot9vK7Infczv3oK7JLrCcawOSAxFxNFsAERQ==}
+  '@prisma/engines@6.2.1':
+    resolution: {integrity: sha512-lTBNLJBCxVT9iP5I7Mn6GlwqAxTpS5qMERrhebkUhtXpGVkBNd/jHnNJBZQW4kGDCKaQg/r2vlJYkzOHnAb7ZQ==}
 
-  '@prisma/fetch-engine@6.1.0':
-    resolution: {integrity: sha512-asdFi7TvPlEZ8CzSZ/+Du5wZ27q6OJbRSXh+S8ISZguu+S9KtS/gP7NeXceZyb1Jv1SM1S5YfiCv+STDsG6rrg==}
+  '@prisma/fetch-engine@6.2.1':
+    resolution: {integrity: sha512-OO7O9d6Mrx2F9i+Gu1LW+DGXXyUFkP7OE5aj9iBfA/2jjDXEJjqa9X0ZmM9NZNo8Uo7ql6zKm6yjDcbAcRrw1A==}
 
-  '@prisma/get-platform@6.1.0':
-    resolution: {integrity: sha512-ia8bNjboBoHkmKGGaWtqtlgQOhCi7+f85aOkPJKgNwWvYrT6l78KgojLekE8zMhVk0R9lWcifV0Pf8l3/15V0Q==}
+  '@prisma/get-platform@6.2.1':
+    resolution: {integrity: sha512-zp53yvroPl5m5/gXYLz7tGCNG33bhG+JYCm74ohxOq1pPnrL47VQYFfF3RbTZ7TzGWCrR3EtoiYMywUBw7UK6Q==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -4401,8 +4401,8 @@ packages:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
 
-  html-to-pdfmake@2.5.19:
-    resolution: {integrity: sha512-SzG9F5Sr2ura+mEHojbxBmh62S+H4dGEG1LUr01DPL1Cs7N/x8QDwrzbPOM9IRV36GB0Z0CfXky0srWrxjC2jw==}
+  html-to-pdfmake@2.5.20:
+    resolution: {integrity: sha512-sops7m5JpVzcsfFn8C6+NZ8D8hT5tSXT8NsduMVP4qXq+xhlR9haTfNTgZlE6p2zpwKEiYtBXScQ3P2vwCKCaQ==}
 
   html-to-text@9.0.5:
     resolution: {integrity: sha512-qY60FjREgVZL03vJU6IfMV4GDjGBIoOyvuFdpBDIX9yTlDw0TjxVBQp+P8NvpdIXNJvfWBTNul7fsAQJq2FNpg==}
@@ -6340,8 +6340,8 @@ packages:
     resolution: {integrity: sha512-ZtV1YrwscEjlrUzYrTSs6Nwo49JM3pXLM4fFOBSC3wSni+bxaWlw9/Qgk75PZO8M7cX2EybmL2iwvaV3vkAttw==}
     engines: {node: '>=14'}
 
-  prisma@6.1.0:
-    resolution: {integrity: sha512-aFI3Yi+ApUxkwCJJwyQSwpyzUX7YX3ihzuHNHOyv4GJg3X5tQsmRaJEnZ+ZyfHpMtnyahhmXVfbTZ+lS8ZtfKw==}
+  prisma@6.2.1:
+    resolution: {integrity: sha512-hhyM0H13pQleQ+br4CkzGizS5I0oInoeTw3JfLw1BRZduBSQxPILlJLwi+46wZzj9Je7ndyQEMGw/n5cN2fknA==}
     engines: {node: '>=18.18'}
     hasBin: true
 
@@ -8991,7 +8991,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/swagger@8.1.0(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)':
+  '@nestjs/swagger@8.1.1(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -9446,30 +9446,30 @@ snapshots:
 
   '@polka/url@1.0.0-next.28': {}
 
-  '@prisma/client@6.1.0(prisma@6.1.0)':
+  '@prisma/client@6.2.1(prisma@6.2.1)':
     optionalDependencies:
-      prisma: 6.1.0
+      prisma: 6.2.1
 
-  '@prisma/debug@6.1.0': {}
+  '@prisma/debug@6.2.1': {}
 
-  '@prisma/engines-version@6.1.0-21.11f085a2012c0f4778414c8db2651556ee0ef959': {}
+  '@prisma/engines-version@6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69': {}
 
-  '@prisma/engines@6.1.0':
+  '@prisma/engines@6.2.1':
     dependencies:
-      '@prisma/debug': 6.1.0
-      '@prisma/engines-version': 6.1.0-21.11f085a2012c0f4778414c8db2651556ee0ef959
-      '@prisma/fetch-engine': 6.1.0
-      '@prisma/get-platform': 6.1.0
+      '@prisma/debug': 6.2.1
+      '@prisma/engines-version': 6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69
+      '@prisma/fetch-engine': 6.2.1
+      '@prisma/get-platform': 6.2.1
 
-  '@prisma/fetch-engine@6.1.0':
+  '@prisma/fetch-engine@6.2.1':
     dependencies:
-      '@prisma/debug': 6.1.0
-      '@prisma/engines-version': 6.1.0-21.11f085a2012c0f4778414c8db2651556ee0ef959
-      '@prisma/get-platform': 6.1.0
+      '@prisma/debug': 6.2.1
+      '@prisma/engines-version': 6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69
+      '@prisma/get-platform': 6.2.1
 
-  '@prisma/get-platform@6.1.0':
+  '@prisma/get-platform@6.2.1':
     dependencies:
-      '@prisma/debug': 6.1.0
+      '@prisma/debug': 6.2.1
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -12437,7 +12437,7 @@ snapshots:
 
   html-tags@3.3.1: {}
 
-  html-to-pdfmake@2.5.19: {}
+  html-to-pdfmake@2.5.20: {}
 
   html-to-text@9.0.5:
     dependencies:
@@ -14918,9 +14918,9 @@ snapshots:
       uuid: 9.0.1
     optional: true
 
-  prisma@6.1.0:
+  prisma@6.2.1:
     dependencies:
-      '@prisma/engines': 6.1.0
+      '@prisma/engines': 6.2.1
     optionalDependencies:
       fsevents: 2.3.3
 
