@@ -54,8 +54,8 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "13.2.3",
     "@semantic-release/npm": "12.0.1",
-    "@typescript-eslint/eslint-plugin": "8.19.0",
-    "@typescript-eslint/parser": "8.19.0",
+    "@typescript-eslint/eslint-plugin": "8.19.1",
+    "@typescript-eslint/parser": "8.19.1",
     "@vitest/coverage-v8": "2.1.8",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "9.17.0",
@@ -66,8 +66,8 @@
     "semantic-release": "24.2.1",
     "ts-prune": "0.10.3",
     "tsup": "8.3.5",
-    "typescript": "5.7.2",
-    "typescript-eslint": "8.19.0",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.19.1",
     "vitest": "2.1.8"
   }
 }
