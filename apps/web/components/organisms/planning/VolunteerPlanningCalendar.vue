@@ -1,10 +1,17 @@
 <template>
-  <OverCalendar :events="events" />
+  <div>
+    <AssignmentVolunteerStats
+      v-show="shouldShowStats"
+      :stats="stats"
+      class="mb-2"
+    />
+    <OverCalendar :events="events" clickable-events />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import type { PlanningEvent } from "@overbookd/assignment";
-import type { PlanningTask } from "@overbookd/http";
+import type { AssignmentStat, PlanningTask } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import type { IProvidePeriod } from "@overbookd/time";
 import type { User } from "@overbookd/user";
@@ -19,9 +26,13 @@ import {
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
+type Volunteer = User & {
+  teams: string[];
+};
+
 const props = defineProps({
   volunteer: {
-    type: Object as () => User,
+    type: Object as () => Volunteer,
     required: true,
   },
 });
@@ -29,14 +40,15 @@ const props = defineProps({
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
+const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
-  () => canAssignVolunteer.value && layoutStore.isDesktop,
+  () => canAssignVolunteer.value && isDesktop.value,
 );
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
+  userStore.getVolunteerTasks(props.volunteer.id);
   userStore.getVolunteerAssignments(props.volunteer.id);
-  userStore.getVolunteerAssignmentStats(props.volunteer.id);
   if (canAssignVolunteer.value) {
     userStore.getVolunteerBreakPeriods(props.volunteer.id);
   }
@@ -45,6 +57,9 @@ onMounted(() => {
   }
 });
 
+const stats = computed<AssignmentStat[]>(
+  () => userStore.selectedUserAssignmentStats,
+);
 const assignments = computed<PlanningEvent[]>(
   () => userStore.selectedUserAssignments,
 );

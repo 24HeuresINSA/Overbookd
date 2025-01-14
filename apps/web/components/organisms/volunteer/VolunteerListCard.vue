@@ -63,6 +63,7 @@ import {
 import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { PLANNING_URL } from "@overbookd/web-page";
 
 defineProps({
   volunteers: {
@@ -102,10 +103,8 @@ const propagateClickedVolunteer = (
 ) => emit("click:volunteer", { ...item });
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const openCalendar = (volunteerId: number) => {
-  sendFailureNotification("Cette page n'est pas encore disponible");
-  //window.open(`${PLANNING_URL}/${volunteerId}`);
+  window.open(`${PLANNING_URL}/${volunteerId}`);
 };
 const callVolunteer = (phone: string) => {
   window.location.href = formatPhoneLink(phone);

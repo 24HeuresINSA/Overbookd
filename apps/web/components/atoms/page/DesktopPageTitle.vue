@@ -1,17 +1,22 @@
 <template>
-  <div class="desktop-page-title">
-    <h1>{{ pageTitle }}</h1>
-    <v-icon
-      v-show="canBeFavorite"
-      :icon="favoriteIcon"
-      color="primary"
-      :title="favoriteIconTitle"
-      :class="{
-        rotating: isRotating && !isShrinking,
-        finalizing: isShrinking,
-      }"
-      @click="toggleFavorite"
-    />
+  <div class="page-title-container" :class="{ 'desktop-only': desktopOnly }">
+    <div class="page-title">
+      <h1>{{ pageTitle }}</h1>
+      <v-icon
+        v-show="canBeFavorite"
+        :icon="favoriteIcon"
+        color="primary"
+        :title="favoriteIconTitle"
+        :class="{
+          rotating: isRotating && !isShrinking,
+          finalizing: isShrinking,
+        }"
+        @click="toggleFavorite"
+      />
+    </div>
+    <div>
+      <slot name="additional" />
+    </div>
   </div>
 </template>
 
@@ -27,6 +32,10 @@ const props = defineProps({
   title: {
     type: String,
     default: undefined,
+  },
+  desktopOnly: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -69,14 +78,20 @@ const toggleFavorite = async () => {
 </script>
 
 <style lang="scss" scoped>
-.desktop-page-title {
+.page-title-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  gap: 8px;
+  @media screen and (max-width: $mobile-max-width) {
+    justify-content: center;
+  }
+}
+
+.page-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
 }
 
 h1 {

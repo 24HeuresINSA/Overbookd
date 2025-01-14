@@ -70,7 +70,7 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
 
 const AVAILABILITIES_PAGE: PageInSummary = {
   icon: "mdi-clock",
-  title: "Mes dispos",
+  title: "Mes Dispos",
   to: AVAILABILITIES_URL,
   description:
     "Permet de renseigner quand tu es disponible pour aider sur le festival",
