@@ -256,7 +256,7 @@ const cantRejectAs = (team: Team): boolean => {
 };
 const canIgnore = (team: Team): boolean => {
   if (isActivity.value) return false;
-  const canIgnoreAs = canIgnoreFestivalTask(team.code);
+  const canIgnoreAs = canIgnoreFestivalTask(team.code as Reviewer<"FT">);
   if (canIgnoreAs || isDraft(selectedTask.value)) return false;
   return isConcerned(selectedTask.value.reviews.elec);
 };
