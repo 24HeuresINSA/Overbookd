@@ -108,7 +108,7 @@ import {
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { getPreviewReviewerStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
-import { ITEMS_PER_PAGE_QUERY_PARAMS } from "~/utils/festival-event/festival-event.constant";
+import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Fiches Tâches" });
@@ -221,7 +221,7 @@ const filteredTasks = computed<PreviewFestivalTask[]>(() => {
 });
 
 const updateItemsPerPage = (itemsPerPage: number) => {
-  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAMS, itemsPerPage);
+  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
 };
 </script>
 
