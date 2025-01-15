@@ -1,6 +1,7 @@
 import { createVuetify } from "vuetify";
 import { VTreeview } from "vuetify/labs/components";
 import { fr } from "vuetify/locale";
+import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
 import {
   blueDarkTheme,
   redDarkTheme,
@@ -41,7 +42,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     defaults: {
       VDataTable: {
-        itemsPerPage: 25,
+        itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
         noDataText: "Aucune donnée",
         loadingText: "Chargement des données ...",
       },
@@ -84,9 +85,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       VTextarea: commonFieldDefaultSettings,
       VFileInput: commonFieldDefaultSettings,
     },
-    components: {
-      VTreeview,
-    },
+    components: { VTreeview },
   });
 
   nuxtApp.vueApp.use(vuetify);

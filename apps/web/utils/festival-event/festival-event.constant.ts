@@ -19,6 +19,7 @@ export const TEAM_QUERY_PARAM = "team";
 export const STATUS_QUERY_PARAM = "status";
 export const REVIEWER_QUERY_PARAM = "reviewer";
 export const NEED_SUPPLY_QUERY_PARAM = "needSupply";
+export const ITEMS_PER_PAGE_QUERY_PARAM = "itemsPerPage";
 
 export function findStatusByLabel(
   status: string,

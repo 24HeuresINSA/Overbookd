@@ -22,6 +22,7 @@ import type { LocationQuery } from "vue-router";
 import { findActivityReviewerStatusByString } from "./festival-activity.utils";
 import {
   ADHERENT_QUERY_PARAM,
+  ITEMS_PER_PAGE_QUERY_PARAM,
   NEED_SUPPLY_QUERY_PARAM,
   SEARCH_QUERY_PARAM,
   STATUS_QUERY_PARAM,
@@ -44,6 +45,7 @@ export type ActivityFilters = ActivityReviewsFilter & {
   adherent?: User;
   status?: FestivalActivity["status"];
   needSupply?: boolean;
+  itemsPerPage?: number;
 };
 
 export class ActivityFilterBuilder {
@@ -55,6 +57,10 @@ export class ActivityFilterBuilder {
     const needSupply = this.extractQueryParamsValue(
       query,
       NEED_SUPPLY_QUERY_PARAM,
+    );
+    const itemsPerPage = this.extractQueryParamsValue(
+      query,
+      ITEMS_PER_PAGE_QUERY_PARAM,
     );
     const humainReview = this.extractQueryParamsValue(query, humain);
     const matosReview = this.extractQueryParamsValue(query, matos);
@@ -73,6 +79,7 @@ export class ActivityFilterBuilder {
       ...adherent,
       ...status,
       ...needSupply,
+      ...itemsPerPage,
       ...humainReview,
       ...matosReview,
       ...elecReview,
@@ -114,6 +121,10 @@ export class ActivityFilterBuilder {
       case NEED_SUPPLY_QUERY_PARAM: {
         const needSupply = params.needSupply !== undefined;
         return { needSupply };
+      }
+      case ITEMS_PER_PAGE_QUERY_PARAM: {
+        const itemsPerPage = stringifyQueryParam(params.itemsPerPage);
+        return itemsPerPage ? { itemsPerPage: +itemsPerPage } : {};
       }
       case humain: {
         const review = stringifyQueryParam(params.humain);

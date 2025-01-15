@@ -19,6 +19,7 @@ import type { LocationQuery } from "vue-router";
 import { findTaskReviewerStatusByString } from "./festival-task.utils";
 import {
   ADHERENT_QUERY_PARAM,
+  ITEMS_PER_PAGE_QUERY_PARAM,
   REVIEWER_QUERY_PARAM,
   SEARCH_QUERY_PARAM,
   STATUS_QUERY_PARAM,
@@ -37,6 +38,7 @@ export type TaskFilters = TaskReviewsFilter & {
   adherent?: User;
   status?: FestivalTask["status"];
   reviewer?: User;
+  itemsPerPage?: number;
 };
 
 export class TaskFilterBuilder {
@@ -46,6 +48,10 @@ export class TaskFilterBuilder {
     const adherent = this.extractQueryParamsValue(query, ADHERENT_QUERY_PARAM);
     const status = this.extractQueryParamsValue(query, STATUS_QUERY_PARAM);
     const reviewer = this.extractQueryParamsValue(query, REVIEWER_QUERY_PARAM);
+    const itemsPerPage = this.extractQueryParamsValue(
+      query,
+      ITEMS_PER_PAGE_QUERY_PARAM,
+    );
     const humainReview = this.extractQueryParamsValue(query, humain);
     const matosReview = this.extractQueryParamsValue(query, matos);
     const elecReview = this.extractQueryParamsValue(query, elec);
@@ -56,6 +62,7 @@ export class TaskFilterBuilder {
       ...adherent,
       ...status,
       ...reviewer,
+      ...itemsPerPage,
       ...humainReview,
       ...matosReview,
       ...elecReview,
@@ -96,6 +103,10 @@ export class TaskFilterBuilder {
         const userStore = useUserStore();
         const reviewer = userStore.adherents.find(({ id }) => id === defaultId);
         return reviewer ? { reviewer } : {};
+      }
+      case ITEMS_PER_PAGE_QUERY_PARAM: {
+        const itemsPerPage = stringifyQueryParam(params.itemsPerPage);
+        return itemsPerPage ? { itemsPerPage: +itemsPerPage } : {};
       }
       case humain: {
         const review = stringifyQueryParam(params.humain);

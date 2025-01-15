@@ -10,10 +10,12 @@
         :loading="loading"
         loading-text="Chargement des fiches tâches..."
         no-data-text="Aucune fiche tâche trouvée"
+        :items-per-page="filters.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE"
         :hover="filteredTasks.length > 0"
         :mobile="isMobile"
         @click:row="openTask"
         @auxclick:row="openTaskInNewTab"
+        @update:items-per-page="updateItemsPerPage"
       >
         <template #item.id="{ item }">
           <v-chip-group id="status">
@@ -105,6 +107,9 @@ import {
   type TaskReviewsFilter,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { getPreviewReviewerStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
+import { ITEMS_PER_PAGE_QUERY_PARAMS } from "~/utils/festival-event/festival-event.constant";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Fiches Tâches" });
 
@@ -214,6 +219,10 @@ const filteredTasks = computed<PreviewFestivalTask[]>(() => {
     );
   });
 });
+
+const updateItemsPerPage = (itemsPerPage: number) => {
+  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAMS, itemsPerPage);
+};
 </script>
 
 <style lang="scss" scoped>
