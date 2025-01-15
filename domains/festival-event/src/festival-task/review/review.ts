@@ -198,5 +198,5 @@ function getTeamReview(
 }
 
 export function canIgnoreFestivalTask(team: Reviewer<"FT">) {
-  return team === elec || team === matos;
+  return [elec, matos].includes(team);
 }
