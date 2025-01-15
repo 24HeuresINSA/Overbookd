@@ -206,8 +206,15 @@ const filterTaskByReviewer =
   };
 
 const filteredTasks = computed<PreviewFestivalTask[]>(() => {
-  const { team, status, search, adherent, reviewer, ...reviews } =
-    filters.value;
+  const {
+    team,
+    status,
+    search,
+    adherent,
+    reviewer,
+    itemsPerPage: _,
+    ...reviews
+  } = filters.value;
   return searchableTasks.value.filter((task) => {
     return (
       filterTaskByTeam(team)(task) &&

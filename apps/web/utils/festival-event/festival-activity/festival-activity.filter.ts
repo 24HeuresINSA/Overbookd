@@ -124,7 +124,8 @@ export class ActivityFilterBuilder {
       }
       case ITEMS_PER_PAGE_QUERY_PARAM: {
         const itemsPerPage = stringifyQueryParam(params.itemsPerPage);
-        return itemsPerPage ? { itemsPerPage: +itemsPerPage } : {};
+        const isValid = !isNaN(+itemsPerPage);
+        return isValid ? { itemsPerPage: +itemsPerPage } : {};
       }
       case humain: {
         const review = stringifyQueryParam(params.humain);
