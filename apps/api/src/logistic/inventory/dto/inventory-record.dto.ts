@@ -23,4 +23,11 @@ export class InventoryRecordDto implements InventoryRecord {
     type: String,
   })
   storage: string;
+
+  @ApiProperty({
+    required: false,
+    description: "Gear comment",
+    type: String,
+  })
+  comment?: string;
 }

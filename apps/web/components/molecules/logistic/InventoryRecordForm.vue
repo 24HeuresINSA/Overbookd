@@ -4,12 +4,15 @@
     <template #content>
       <form class="inventory-form">
         <div class="inventory-form__fields">
-          <SearchGear v-model="gear" :label="gearHelpMessage" :dense="true" />
+          <SearchGear v-model="gear" :label="gearHelpMessage" hide-details />
           <span class="fields--imutable">
             Quantite: {{ inventoryError?.record.quantity }}
           </span>
           <span class="fields--imutable">
             Lieu de stockage: {{ inventoryError?.record.storage }}
+          </span>
+          <span v-if="inventoryError?.record.comment" class="fields--imutable">
+            Commentaire: {{ inventoryError?.record.comment }}
           </span>
         </div>
       </form>
@@ -73,13 +76,13 @@ watch(
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 
   &__fields {
     width: 80%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     &--immutable {
       font-size: 1.7rem;
       color: black;

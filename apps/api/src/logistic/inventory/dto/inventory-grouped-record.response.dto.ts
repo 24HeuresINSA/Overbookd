@@ -7,11 +7,26 @@ import {
 import { CatalogGearResponseDto } from "../../common/dto/catalog-gear.response.dto";
 
 class LiteInventoryRecordDto implements LiteInventoryRecord {
-  @ApiProperty()
+  @ApiProperty({
+    required: true,
+    description: "Gear quantity",
+    type: Number,
+  })
   quantity: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: true,
+    description: "Gear storage location",
+    type: String,
+  })
   storage: string;
+
+  @ApiProperty({
+    required: false,
+    description: "Gear comment",
+    type: String,
+  })
+  comment?: string;
 }
 
 export class InventoryGroupedRecordResponseDto

@@ -40,6 +40,7 @@ const marteauInLocal: InventoryImportRaw = {
   gear: "Marteau",
   quantity: 5,
   storage: "Local",
+  comment: "Pool des assos",
 };
 
 const marteauInCaveE: InventoryImportRaw = {
@@ -113,6 +114,7 @@ describe("Inventory import", () => {
           gear: "Martascie",
           quantity: 3,
           storage: "Cave du E",
+          comment: "2 en 1",
         },
         scieCirculaireInLocal,
       ],

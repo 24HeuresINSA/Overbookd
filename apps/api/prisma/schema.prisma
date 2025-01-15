@@ -251,6 +251,7 @@ model InventoryRecord {
   gearId   Int         @map("gear_id")
   storage  String
   quantity Int
+  comment  String?
 
   @@unique([gearId, storage])
   @@map("inventory_record")

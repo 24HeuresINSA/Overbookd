@@ -1,89 +1,96 @@
 <template>
-  <div class="inventory-update">
-    <h2>Mise à jour de l'inventaire</h2>
+  <h2 class="title">Mise à jour de l'inventaire</h2>
 
-    <v-file-input
-      class="file-import"
-      truncate-length="50"
-      accept="text/csv"
-      label="Import"
-      show-size
-      @update:model-value="extractInventoryRecords"
-    />
+  <v-file-input
+    class="file-import"
+    truncate-length="50"
+    accept="text/csv"
+    label="Import"
+    show-size
+    @update:model-value="extractInventoryRecords"
+  />
 
-    <v-card v-show="hasError" class="warning">
-      <v-card-title>
-        ⚠️ {{ inventoryImportErrors.length }} erreurs
-      </v-card-title>
-      <v-card-text>
-        <v-data-table
-          :headers="errorsHeaders"
-          :items="displayableInventoryImportErrors"
-          :loading="loading"
-        >
-          <template #item.code="{ item }">
-            {{ item.record.code }}
-          </template>
-          <template #item.gear="{ item }">
-            {{ item.record.gear }}
-          </template>
-          <template #item.quantity="{ item }">
-            {{ item.record.quantity }}
-          </template>
-          <template #item.storage="{ item }">
-            {{ item.record.storage }}
-          </template>
-          <template #item.message="{ item }">
-            {{ item.error }}
-          </template>
-          <template #item.action="{ item, index }">
-            <v-btn
-              icon="mdi-pencil"
-              size="small"
-              color="warning"
-              @click="startEditMode(item, index)"
-            />
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-
-    <v-card>
+  <v-card v-show="hasError" class="warning">
+    <v-card-title> ⚠️ {{ inventoryImportErrors.length }} erreurs </v-card-title>
+    <v-card-text>
       <v-data-table
-        :headers="recordsHeaders"
-        :items="inventoryRecords"
+        :headers="errorsHeaders"
+        :items="displayableInventoryImportErrors"
         :loading="loading"
-        loading-text="Chargement de l'inventaire..."
-        no-data-text="Inventaire vide"
       >
         <template #item.code="{ item }">
-          {{ item.gear.code }}
+          {{ item.record.code }}
         </template>
         <template #item.gear="{ item }">
-          {{ item.gear.name }}
+          {{ item.record.gear }}
+        </template>
+        <template #item.quantity="{ item }">
+          {{ item.record.quantity }}
+        </template>
+        <template #item.storage="{ item }">
+          {{ item.record.storage }}
+        </template>
+        <template #item.comment="{ item }">
+          {{ item.record.comment }}
+        </template>
+        <template #item.message="{ item }">
+          {{ item.error }}
+        </template>
+        <template #item.action="{ item, index }">
+          <v-btn
+            icon="mdi-pencil"
+            size="small"
+            color="warning"
+            @click="startEditMode(item, index)"
+          />
         </template>
       </v-data-table>
-    </v-card>
+    </v-card-text>
+  </v-card>
 
+  <v-card>
+    <v-data-table
+      :headers="recordsHeaders"
+      :items="inventoryRecords"
+      :loading="loading"
+      loading-text="Chargement de l'inventaire..."
+      no-data-text="Inventaire vide"
+    >
+      <template #item.code="{ item }">
+        {{ item.gear.code }}
+      </template>
+      <template #item.gear="{ item }">
+        {{ item.gear.name }}
+      </template>
+    </v-data-table>
+  </v-card>
+
+  <div class="action-buttons">
     <v-btn
-      class="action-button"
+      text="Annuler"
+      prepend-icon="mdi-cancel"
+      color="error"
+      size="large"
+      @click="cancel"
+    />
+    <v-btn
       text="Sauvegarder l'inventaire"
       prepend-icon="mdi-check"
       color="success"
       size="large"
       @click="saveInventory"
     />
-
-    <v-dialog v-model="isUpdateImportErrorDialogOpen" width="600px">
-      <InventoryRecordForm
-        :inventory-error="
-          selectedImportError as DisplayableManualInventoryRecordError
-        "
-        @close="stopEditMode"
-        @add-to-inventory="addToInventory"
-      />
-    </v-dialog>
   </div>
+
+  <v-dialog v-model="isUpdateImportErrorDialogOpen" width="600px">
+    <InventoryRecordForm
+      :inventory-error="
+        selectedImportError as DisplayableManualInventoryRecordError
+      "
+      @close="stopEditMode"
+      @add-to-inventory="addToInventory"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -103,16 +110,18 @@ const catalogGearStore = useCatalogGearStore();
 const inventoryStore = useInventoryStore();
 
 const recordsHeaders: TableHeaders = [
-  { title: "Référence", value: "code" },
-  { title: "Matos", value: "gear" },
-  { title: "Quantité", value: "quantity" },
-  { title: "Lieu de stockage", value: "storage" },
+  { title: "Référence", value: "code", width: "20%" },
+  { title: "Matos", value: "gear", width: "20%" },
+  { title: "Quantité", value: "quantity", sortable: true, width: "15%" },
+  { title: "Lieu de stockage", value: "storage", sortable: true, width: "20%" },
+  { title: "Commentaire", value: "comment" },
 ];
 const errorsHeaders: TableHeaders = [
-  { title: "Référence", value: "code" },
-  { title: "Matos", value: "gear" },
-  { title: "Quantité", value: "quantity" },
-  { title: "Lieu de stockage", value: "storage" },
+  { title: "Référence", value: "code", width: "10%" },
+  { title: "Matos", value: "gear", width: "15%" },
+  { title: "Quantité", value: "quantity", sortable: true, width: "10%" },
+  { title: "Lieu de stockage", value: "storage", sortable: true, width: "15%" },
+  { title: "Commentaire", value: "comment", width: "20%" },
   { title: "Erreur detectée", value: "message" },
   { title: "Action", value: "action" },
 ];
@@ -197,10 +206,12 @@ const saveInventory = async () => {
   inventoryRecords.value = [];
   emit("import-done");
 };
+
+const cancel = () => emit("import-done");
 </script>
 
 <style lang="scss" scoped>
-.inventory-update {
+.title {
   text-align: center;
 }
 
@@ -212,7 +223,10 @@ const saveInventory = async () => {
   }
 }
 
-.action-button {
+.action-buttons {
   margin-top: 15px;
+  display: flex;
+  gap: 25px;
+  justify-content: center;
 }
 </style>

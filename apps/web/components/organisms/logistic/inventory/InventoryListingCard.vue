@@ -29,12 +29,12 @@
         density="comfortable"
         :mobile="isMobile"
       >
-        <template #item.name="{ item }">
-          {{ item.gear.name }}
-        </template>
-
         <template #item.code="{ item }">
           {{ item.gear.code }}
+        </template>
+
+        <template #item.name="{ item }">
+          {{ item.gear.name }}
         </template>
 
         <template #item.storage="{ item }">
@@ -46,21 +46,22 @@
             <strong v-if="item.records.length > 1">
               ({{ record.quantity }})
             </strong>
+            <span v-if="record.comment"> - {{ record.comment }}</span>
           </div>
         </template>
       </v-data-table>
     </v-card-text>
-
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        text="Réinitialiser"
-        class="reset-button"
-        rounded
-        @click="askForInit"
-      />
-    </v-card-actions>
   </v-card>
+
+  <div class="action-buttons">
+    <v-btn
+      text="Réinitialiser"
+      prepend-icon="mdi-refresh"
+      color="primary"
+      size="large"
+      @click="askForInit"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -77,9 +78,9 @@ const inventoryStore = useInventoryStore();
 const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
-  { title: "Nom du matos", value: "name", width: "30%" },
   { title: "Référence", value: "code", width: "20%" },
-  { title: "Quantité", value: "quantity", sortable: true, width: "20%" },
+  { title: "Nom du matos", value: "name", width: "30%" },
+  { title: "Quantité", value: "quantity", sortable: true, width: "15%" },
   { title: "Lieu de stockage", value: "storage", sortable: true },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
@@ -128,5 +129,12 @@ const askForInit = () => emit("ask-init");
 <style scoped>
 .card-content {
   padding-bottom: 0;
+}
+
+.action-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 25px;
+  justify-content: center;
 }
 </style>
