@@ -79,7 +79,6 @@ import {
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   type Reviewer,
-  elec,
   WILL_NOT_REVIEW,
   type ReviewStatus,
 } from "@overbookd/festival-event";
@@ -218,9 +217,9 @@ const approve = (team: Team) => {
     ? faStore.approve(form as ReviewApproval<"FA">)
     : ftStore.approve(form as ReviewApproval<"FT">);
 };
-const ignore = () => {
+const ignore = (team: Reviewer<"FT">) => {
   if (isActivity.value) return;
-  ftStore.ignore({ team: elec } as const);
+  ftStore.ignore({ team });
 };
 
 const cantApproveAs = (team: Team): boolean => {
@@ -258,7 +257,7 @@ const canIgnore = (team: Team): boolean => {
   if (isActivity.value) return false;
   const canIgnoreAs = canIgnoreFestivalTask(team.code as Reviewer<"FT">);
   if (canIgnoreAs || isDraft(selectedTask.value)) return false;
-  return isConcerned(selectedTask.value.reviews.elec);
+  return isConcerned(selectedTask.value.reviews[`${team.code}`]);
 };
 
 const isConcerned = (review: ReviewStatus<"FT">): boolean => {
