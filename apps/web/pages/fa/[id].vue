@@ -49,11 +49,16 @@ const headTitle = computed<string>(() => {
   return `FA ${activityIdFromUrl.value}${displayedName}`;
 });
 
+const calendarMarker = ref<Date>(configurationStore.eventStartDate);
+
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
   if (selectedActivity.value.id !== activityIdFromUrl.value) {
     navigateTo(FA_URL);
   }
+
+  const firstTimeWindow = allTimeWindows.value?.at(0);
+  if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
 });
 
 useHead({ title: headTitle.value });
@@ -82,10 +87,6 @@ const allTimeWindows = computed<CalendarEvent[]>(() => {
 
   return [...generalEvents, ...inquiryEvents];
 });
-
-const calendarMarker = ref<Date>(
-  allTimeWindows.value.at(0)?.start ?? configurationStore.eventStartDate,
-);
 </script>
 
 <style lang="scss" scoped>
