@@ -254,7 +254,7 @@ const cantRejectAs = (team: Team): boolean => {
   return isAlreadyRejectedBy || !isTeamMember;
 };
 const canIgnore = (team: Team): boolean => {
-  if (isActivity.value || !isTaskReviewer(code)) return false;
+  if (isActivity.value || !isTaskReviewer(team.code)) return false;
   const cantIgnoreAs = !canIgnoreFestivalTask(team.code);
   if (cantIgnoreAs || isDraft(selectedTask.value)) return false;
   return isConcerned(selectedTask.value.reviews[`${team.code}`]);
