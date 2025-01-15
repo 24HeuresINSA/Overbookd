@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper v-model="step">
+    <v-stepper v-model="step" class="mb-3">
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
@@ -10,25 +10,16 @@
           :value="index + 1"
         />
       </v-stepper-header>
-
-      <v-stepper-window>
-        <v-stepper-window-item
-          v-for="(_, index) in calendarSteps"
-          :key="`content-${index}`"
-          :value="index + 1"
-        >
-          <AvailabilitiesPickCalendar
-            v-model="days"
-            :disable-previous="shouldDisablePrevious"
-            :disable-next="shouldDisableNext"
-            :cant-validate="cannotValidate"
-            @previous="moveToPreviousStep"
-            @next="moveToNextStep"
-            @validate="saveAvailabilities"
-          />
-        </v-stepper-window-item>
-      </v-stepper-window>
     </v-stepper>
+    <AvailabilitiesPickCalendar
+      v-model="days"
+      :disable-previous="shouldDisablePrevious"
+      :disable-next="shouldDisableNext"
+      :cant-validate="cannotValidate"
+      @previous="moveToPreviousStep"
+      @next="moveToNextStep"
+      @validate="saveAvailabilities"
+    />
   </div>
 </template>
 
@@ -54,17 +45,21 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 const userStore = useUserStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 
-const step = ref<number>(1);
+const step = ref<number>(0);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
 const days = computed<DayPresenter[]>(() => {
-  const calendarStep = calendarSteps.value.at(step.value - 1);
-  const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
-  const dates = splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
-  return dates.map((date) => new DayPresenter(date));
+  const calendarStep = calendarSteps.value.at(step.value);
+  if (!calendarStep) return [];
+
+  const splitedStep = calendarStep.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
+  const dates = splitedStep.map(({ start }) => OverDate.from(start)) ?? [];
+  const lastDate = OverDate.from(calendarStep.period.end);
+  const datesWithLastDay = [...dates, lastDate];
+  return datesWithLastDay.map((date) => new DayPresenter(date));
 });
 
 const cannotValidate = computed<boolean>(() => {
@@ -74,9 +69,9 @@ const cannotValidate = computed<boolean>(() => {
   return hasNoSelection || hasError;
 });
 
-const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
+const shouldDisablePrevious = computed<boolean>(() => step.value <= 0);
 const shouldDisableNext = computed<boolean>(
-  () => step.value >= calendarSteps.value.length,
+  () => step.value >= calendarSteps.value.length - 1,
 );
 
 const moveToPreviousStep = () => {
@@ -89,8 +84,9 @@ const moveToNextStep = () => {
 };
 
 const saveAvailabilities = async () => {
+  if (!userStore.loggedUser) return;
   await availabilitiyStore.updateVolunteerAvailabilities(
-    userStore.loggedUser?.id ?? 0,
+    userStore.loggedUser.id,
   );
 };
 </script>
