@@ -57,14 +57,18 @@ const eventStartDate = computed<OverDate>(() =>
 );
 
 const today = OverDate.now();
-const isCurrentWeekOrDay = props.dayMode
-  ? day.value.isSameDayThan(today)
-  : day.value.isSameWeekThan(today);
+const isCurrentWeekOrDay = computed<boolean>(() =>
+  props.dayMode
+    ? day.value.isSameDayThan(today)
+    : day.value.isSameWeekThan(today),
+);
 
 const eventStartOverDay = OverDate.fromLocal(configurationStore.eventStartDate);
-const isEventStartWeekOrDay = props.dayMode
-  ? day.value.isSameDayThan(eventStartOverDay)
-  : day.value.isSameWeekThan(eventStartOverDay);
+const isEventStartWeekOrDay = computed<boolean>(() =>
+  props.dayMode
+    ? day.value.isSameDayThan(eventStartOverDay)
+    : day.value.isSameWeekThan(eventStartOverDay),
+);
 
 const moveToToday = () => {
   day.value = new DayPresenter(OverDate.now());

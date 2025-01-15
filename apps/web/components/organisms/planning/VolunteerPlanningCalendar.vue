@@ -5,7 +5,7 @@
       :stats="stats"
       class="mb-2"
     />
-    <OverCalendar :events="events" clickable-events />
+    <OverCalendar v-model="calendarMarker" :events="events" clickable-events />
   </div>
 </template>
 
@@ -25,10 +25,9 @@ import {
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
+const configurationStore = useConfigurationStore();
 
-type Volunteer = User & {
-  teams: string[];
-};
+type Volunteer = User & { teams: string[] };
 
 const props = defineProps({
   volunteer: {
@@ -56,6 +55,8 @@ onMounted(() => {
     userStore.getVolunteerAssignmentStats(props.volunteer.id);
   }
 });
+
+const calendarMarker = ref<Date>(configurationStore.eventStartDate);
 
 const stats = computed<AssignmentStat[]>(
   () => userStore.selectedUserAssignmentStats,
