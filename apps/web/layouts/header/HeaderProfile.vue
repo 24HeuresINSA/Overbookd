@@ -19,7 +19,7 @@
     </div>
 
     <v-dialog
-      v-if="isMobile && isMenuOpen"
+      v-if="isMobile"
       v-model="isMenuOpen"
       max-width="300"
       transition="dialog-bottom-transition"
@@ -71,6 +71,7 @@
 
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
@@ -82,14 +83,20 @@ const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const isMobile = layoutStore.isMobile;
+const isMobile = computed(() => layoutStore.isMobile);
+
 const loggedUser = computed(() => userStore.loggedUser);
 const myName = computed<string>(() =>
   loggedUser.value ? nicknameOrFirstName(loggedUser.value) : "",
 );
+
+const haveBalance = computed<boolean>(() =>
+  userStore.can(HAVE_PERSONAL_ACCOUNT),
+);
+
 const myBalance = computed(() => loggedUser.value?.balance ?? 0);
 const displayedBalance = computed<string>(() =>
-  myBalance.value ? Money.cents(myBalance.value).toString() : "",
+  haveBalance.value ? Money.cents(myBalance.value).toString() : "",
 );
 const balanceClassColor = computed<string>(() => {
   if (myBalance.value < 0) return "negative";
@@ -128,7 +135,6 @@ const closeEULA = () => (isEULADialogOpen.value = false);
 const isMenuOpen = ref(false);
 
 const handleProfileClick = () => {
-  console.log("isMobile", isMobile);
   if (isMobile) {
     isMenuOpen.value = !isMenuOpen.value;
   }
@@ -201,6 +207,7 @@ $header-profile-max-width: 300px;
     transform: rotate(180deg);
   }
 }
+
 .mobile_menu {
   padding: 10px;
   display: flex;
