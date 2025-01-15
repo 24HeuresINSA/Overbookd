@@ -15,10 +15,12 @@
         :loading="loading"
         loading-text="Chargement des fiches activités..."
         no-data-text="Aucune fiche activité trouvée"
+        :items-per-page="filters.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE"
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
         @click:row="openActivity"
         @auxclick:row="openActivityInNewTab"
+        @update:items-per-page="updateItemsPerPage"
       >
         <template #item.id="{ item }">
           <v-chip-group id="status">
@@ -120,6 +122,9 @@ import {
   FESTIVAL_ACTIVITY_REJECTED,
 } from "@overbookd/domain-events";
 import { FA_URL } from "@overbookd/web-page";
+import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
+import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Fiches Activités" });
 
@@ -219,8 +224,15 @@ const filterActivityBySupplyNeed =
     return !needSupply || activity.needSupply;
   };
 const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
-  const { team, status, search, adherent, needSupply, ...reviews } =
-    filters.value;
+  const {
+    team,
+    status,
+    search,
+    adherent,
+    needSupply,
+    itemsPerPage: _,
+    ...reviews
+  } = filters.value;
 
   return searchableActivities.value.filter((activity) => {
     return (
@@ -254,6 +266,10 @@ onMounted(() => {
     updatePreviousPreview(data.festivalActivity);
   });
 });
+
+const updateItemsPerPage = (itemsPerPage: number) => {
+  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
+};
 
 onUnmounted(() => {
   festivalActivities.stopListening();
