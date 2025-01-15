@@ -1,3 +1,20 @@
+## [3.25.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.24.1...v3.25.0) (2025-01-15)
+
+### Features
+
+* **availabilities:** add pick calendar [#2220](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2220) ([bd2c56f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bd2c56fbdee542e52becb21f30d063e6df12339f))
+* **ft:** enable matos ignore [#2359](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2359) ([bebe12f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bebe12f9054f12813fba16c46b7c15a92e5306c7))
+
+### Bug Fixes
+
+* add hard option in contributions filter [#2351](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2351) ([ee1d197](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ee1d19723e76a7a42f73e913a5e4f7ed42e725ff))
+* **calendar:** manager buttons & displayed date on initialization [#2360](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2360) ([a077f37](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a077f370173770abe570f5fb53fdec2f121c60b2))
+* **festival-event:** save items per page in URL [#2358](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2358) ([4e22d1b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4e22d1b851d5f731d5a67391792a9cf7a0954a19))
+
+### Pre-Features
+
+* **planning:** create pages [#2260](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2260) ([8033e2d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8033e2d1648a314a065b86eefafa63be8b03d450))
+
 ## [3.24.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.24.0...v3.24.1) (2025-01-11)
 
 ### Bug Fixes
