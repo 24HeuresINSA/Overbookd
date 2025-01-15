@@ -84,10 +84,10 @@ class Ignore {
     task: T,
     team: Reviewer<"FT">,
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
-    if (team !== elec) throw new CannotIgnoreFestivalTask();
-    if (task.reviews.elec === NOT_ASKING_TO_REVIEW) return task;
+    if (!canIgnoreFestivalTask(team)) throw new CannotIgnoreFestivalTask();
+    if (task.reviews[`${team}`] === NOT_ASKING_TO_REVIEW) return task;
 
-    const reviews = { ...task.reviews, [elec]: WILL_NOT_REVIEW } as const;
+    const reviews = { ...task.reviews, [`${team}`]: WILL_NOT_REVIEW } as const;
 
     if (hasAllApproved(reviews)) {
       return { ...task, reviews, status: VALIDATED };
@@ -195,4 +195,8 @@ function getTeamReview(
     case elec:
       return reviews.elec;
   }
+}
+
+export function canIgnoreFestivalTask(team: Reviewer<"FT">) {
+  return [elec, matos].includes(team);
 }

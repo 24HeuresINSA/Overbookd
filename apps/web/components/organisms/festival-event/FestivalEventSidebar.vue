@@ -46,7 +46,7 @@
           :text="`Ignorer pour ${team.name}`"
           class="ignore review-btn"
           size="small"
-          @click="ignore"
+          @click="ignore(team.code)"
         />
       </div>
 
@@ -71,6 +71,7 @@ import {
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
+  canIgnoreFestivalTask,
   isActivityReviewer,
   isTaskReviewer,
   isDraft,
@@ -78,7 +79,6 @@ import {
   NOT_ASKING_TO_REVIEW,
   REJECTED,
   type Reviewer,
-  elec,
   WILL_NOT_REVIEW,
   type ReviewStatus,
 } from "@overbookd/festival-event";
@@ -217,9 +217,9 @@ const approve = (team: Team) => {
     ? faStore.approve(form as ReviewApproval<"FA">)
     : ftStore.approve(form as ReviewApproval<"FT">);
 };
-const ignore = () => {
-  if (isActivity.value) return;
-  ftStore.ignore({ team: elec } as const);
+const ignore = (team: string) => {
+  if (isActivity.value || !isTaskReviewer(team)) return;
+  ftStore.ignore({ team });
 };
 
 const cantApproveAs = (team: Team): boolean => {
@@ -254,10 +254,10 @@ const cantRejectAs = (team: Team): boolean => {
   return isAlreadyRejectedBy || !isTeamMember;
 };
 const canIgnore = (team: Team): boolean => {
-  if (isActivity.value || team.code !== elec || isDraft(selectedTask.value)) {
-    return false;
-  }
-  return isConcerned(selectedTask.value.reviews.elec);
+  if (isActivity.value || !isTaskReviewer(team.code)) return false;
+  const cantIgnoreAs = !canIgnoreFestivalTask(team.code);
+  if (cantIgnoreAs || isDraft(selectedTask.value)) return false;
+  return isConcerned(selectedTask.value.reviews[`${team.code}`]);
 };
 
 const isConcerned = (review: ReviewStatus<"FT">): boolean => {

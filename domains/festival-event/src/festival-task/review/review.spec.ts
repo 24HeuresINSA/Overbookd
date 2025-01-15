@@ -82,6 +82,10 @@ const withSupplyRequestAndMatosApprovalAndElecIgnore = factory
   .withFestivalActivity({ hasSupplyRequest: true })
   .withReviews({ humain: APPROVED, elec: WILL_NOT_REVIEW })
   .build();
+const withMatosAndElecIgnore = factory
+  .inReview("With matos and elec ignore")
+  .withReviews({ matos: WILL_NOT_REVIEW, elec: WILL_NOT_REVIEW })
+  .build();
 
 describe("Approve festival task", () => {
   let review: Review;
@@ -96,6 +100,7 @@ describe("Approve festival task", () => {
       withoutSupplyRequestAndAllApprovedExceptMatos,
       withSupplyRequestAndAllApprovedExceptElec,
       withSupplyRequestAndMatosApprovalAndElecIgnore,
+      withMatosAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
     const conflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -136,10 +141,11 @@ describe("Approve festival task", () => {
     });
   });
   describe.each`
-    team     | taskName                                                       | task                                              | reviewer
-    ${matos} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
-    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
-    ${matos} | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
+    team      | taskName                                                       | task                                              | reviewer
+    ${matos}  | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
+    ${elec}   | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
+    ${matos}  | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
+    ${humain} | ${withMatosAndElecIgnore.general.name}                         | ${withMatosAndElecIgnore}                         | ${george}
   `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it("should switch to VALIDATED festival task", async () => {
@@ -292,22 +298,25 @@ describe("Ignore festival task", () => {
     review = new Review(festivalTasks, translator);
   });
   describe.each`
-    taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
-    ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
-    ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
-    ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
-    ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
-    ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
-    ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
+    reviewer | taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
+    ${elec}  | ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
+    ${elec}  | ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
+    ${elec}  | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
+    ${matos} | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${REJECTED}    | ${VALIDATED}
+    ${elec}  | ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
+    ${elec}  | ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
+    ${elec}  | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
+    ${matos} | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${IN_REVIEW}
   `(
-    "when ignoring $taskName as elec reviewer with current review status $reviewerStatus",
-    ({ task, expectedTaskStatus }) => {
-      it("should define the elec review as WILL_NOT_REVIEW", async () => {
-        const { reviews } = await review.ignore(task.id, elec);
-        expect(reviews.elec).toBe(WILL_NOT_REVIEW);
+    "when ignoring $taskName as $reviewer reviewer with current review status $reviewerStatus",
+    ({ reviewer, task, expectedTaskStatus }) => {
+      it(`should define the ${reviewer} review as WILL_NOT_REVIEW`, async () => {
+        const { reviews } = await review.ignore(task.id, reviewer);
+        const updatedReview = reviews[reviewer as typeof elec | typeof matos];
+        expect(updatedReview).toBe(WILL_NOT_REVIEW);
       });
       it(`should switch to ${expectedTaskStatus} festival task`, async () => {
-        const { status } = await review.ignore(task.id, elec);
+        const { status } = await review.ignore(task.id, reviewer);
         expect(status).toBe(expectedTaskStatus);
       });
     },
@@ -321,13 +330,9 @@ describe("Ignore festival task", () => {
       expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
     });
   });
-  describe.each`
-    reviewer  | taskName                            | task
-    ${humain} | ${guardJustDance.general.name}      | ${guardJustDance}
-    ${matos}  | ${flashMobOnJustDance.general.name} | ${flashMobOnJustDance}
-  `("when ignoring a task as $reviewer member", ({ reviewer, task }) => {
-    it(`should indicate that only elec can ingore festival task review`, async () => {
-      await expect(review.ignore(task.id, reviewer)).rejects.toThrow(
+  describe("when ignoring a task as humain member", () => {
+    it("should indicate that only elec and matos can ignore festival task review", async () => {
+      await expect(review.ignore(guardJustDance.id, humain)).rejects.toThrow(
         CannotIgnoreFestivalTask,
       );
     });

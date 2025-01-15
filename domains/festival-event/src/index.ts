@@ -279,7 +279,10 @@ export type {
   ReadyToAssignWithConflicts,
 } from "./festival-task/volunteer-conflicts.js";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts.js";
-export { Review as ReviewTask } from "./festival-task/review/review.js";
+export {
+  Review as ReviewTask,
+  canIgnoreFestivalTask,
+} from "./festival-task/review/review.js";
 export type { FestivalTasksForReview } from "./festival-task/review/review.js";
 export type {
   ForceInstructions,

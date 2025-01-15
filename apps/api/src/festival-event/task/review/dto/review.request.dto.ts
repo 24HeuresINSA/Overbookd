@@ -34,8 +34,8 @@ export class ApproveRequestDto implements ReviewApproval<"FT"> {
 
 export class IgnoreTaskRequestDto implements ReviewIgnoreTask {
   @ApiProperty({ required: true, enum: reviewers })
-  @IsEnum([elec], {
-    message: () => "Seule l'équipe elec peut ignorer une FT",
+  @IsEnum([elec, matos], {
+    message: () => "Seule les équipes elec et matos peuvent ignorer une FT",
   })
   team: Reviewer<"FT">;
 }
