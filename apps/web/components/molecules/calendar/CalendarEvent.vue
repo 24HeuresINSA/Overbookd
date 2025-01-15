@@ -4,7 +4,7 @@
     :class="{ unclickable: !clickable }"
     :color="event.color || 'primary'"
     :style="presenter.css"
-    :href="event.link"
+    :href="clickable ? event.link : undefined"
     @click="propagateClick"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
