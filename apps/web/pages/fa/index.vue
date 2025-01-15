@@ -224,8 +224,15 @@ const filterActivityBySupplyNeed =
     return !needSupply || activity.needSupply;
   };
 const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
-  const { team, status, search, adherent, needSupply, ...reviews } =
-    filters.value;
+  const {
+    team,
+    status,
+    search,
+    adherent,
+    needSupply,
+    itemsPerPage: _,
+    ...reviews
+  } = filters.value;
 
   return searchableActivities.value.filter((activity) => {
     return (
