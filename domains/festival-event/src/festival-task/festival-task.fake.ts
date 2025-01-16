@@ -607,6 +607,40 @@ export const approvedByMatosRejectedByHumainAndElec = factory
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
 
+export const approvedByMatosWithoutInquiries = factory
+  .inReview("Approved by matos without inquiries")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ matos: APPROVED })
+  .withMobilizations([
+    friday10hFriday18hInReviewMobilization,
+    friday09hFriday10hInReviewMobilization,
+  ])
+  .build();
+
+export const rejectedByHumainAndApprovedByMatosWithoutInquiries = factory
+  .refused("Rejected by humain and approved by matos without inquiries")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: REJECTED, matos: APPROVED, elec: REVIEWING })
+  .withMobilizations([
+    friday10hFriday18hInReviewMobilization,
+    friday09hFriday10hInReviewMobilization,
+  ])
+  .build();
+
 export const guardPS1 = factory
   .validated("Guard PS1")
   .withFestivalActivity(securityAccess)
