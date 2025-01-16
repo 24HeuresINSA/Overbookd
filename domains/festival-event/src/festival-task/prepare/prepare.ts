@@ -389,14 +389,25 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.hasReviewersAllowToUpdateMobilizations(task)) {
+
+    const hasDurationSplit = update.durationSplitInHour !== undefined;
+    if (isApprovedBy(humain, task) && hasDurationSplit) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
+    if (
+      !hasDurationSplit &&
+      !this.hasReviewersAllowToUpdateMobilizations(task)
+    ) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
-    const validTask = checkValidity({ ...task, mobilizations });
+    const validTask = checkValidity({
+      ...(task as UpdatableFestivalTask),
+      mobilizations,
+    });
 
     const readablePeriod = readablePeriodFromId(mobilizationId);
     const updatedTask =
