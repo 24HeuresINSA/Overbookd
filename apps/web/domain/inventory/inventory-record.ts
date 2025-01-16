@@ -10,14 +10,20 @@ export class InventoryRecord implements Record {
     public readonly gear: CatalogGear,
     public readonly quantity: number,
     public readonly storage: string,
+    public readonly comment?: string,
   ) {}
 
   private add(newRecord: InventoryRecord) {
     const quantity = newRecord.quantity + this.quantity;
+    const bothRecordsHaveComment = !!this.comment && !!newRecord.comment;
+    const comment = bothRecordsHaveComment
+      ? `${this.comment} | ${newRecord.comment}`
+      : this.comment || newRecord.comment;
     const updatedRecord = new InventoryRecord(
       this.gear,
       quantity,
       this.storage,
+      comment,
     );
     return updatedRecord;
   }
@@ -34,11 +40,20 @@ export class InventoryRecord implements Record {
   }
 
   toJson(): Record {
-    return { gear: this.gear, quantity: this.quantity, storage: this.storage };
+    return {
+      gear: this.gear,
+      quantity: this.quantity,
+      storage: this.storage,
+      comment: this.comment,
+    };
   }
 
   toLiteRecord(): LiteInventoryRecord {
-    return { quantity: this.quantity, storage: this.storage };
+    return {
+      quantity: this.quantity,
+      storage: this.storage,
+      comment: this.comment,
+    };
   }
 
   static isSimilar(

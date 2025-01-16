@@ -7,7 +7,8 @@ import {
 } from "@overbookd/http";
 
 export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
-  return { quantity: record.quantity, storage: record.storage };
+  const { gear: _, ...liteRecord } = record;
+  return liteRecord;
 }
 
 export type InventoryRepository = {

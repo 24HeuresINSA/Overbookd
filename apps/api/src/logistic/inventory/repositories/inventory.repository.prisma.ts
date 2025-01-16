@@ -37,6 +37,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   private readonly SELECT_LITE_RECORD = {
     storage: true,
     quantity: true,
+    comment: true,
   };
 
   private readonly SELECT_RECORD = {
@@ -58,6 +59,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
     return records.map((r) => ({
       storage: r.storage,
       quantity: r.quantity,
+      comment: r.comment,
       gear: convertGearToApiContract(r.gear),
     }));
   }
@@ -114,9 +116,10 @@ export class PrismaInventoryRepository implements InventoryRepository {
   }
 
   private insertRecords(records: InventoryRecord[]) {
-    const data = records.map(({ storage, quantity, gear }) => ({
+    const data = records.map(({ storage, quantity, comment, gear }) => ({
       quantity,
       storage,
+      comment,
       gearId: gear.id,
     }));
     return this.prismaService.inventoryRecord.createMany({

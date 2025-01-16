@@ -24,11 +24,11 @@ describe("Inventory Fill Form", () => {
           const gears = [marteau, perceuse, scieCirculaire];
           const gearRepository = new InMemoryGears(gears);
           const manualRecord = new ManualInventoryRecord(
+            gearRepository,
             (gear as CatalogGear).code ?? "",
             (gear as CatalogGear).name,
             quantity as number,
             storage as string,
-            gearRepository,
           );
           record = await manualRecord.toInventoryRecord();
         });
@@ -52,11 +52,11 @@ describe("Inventory Fill Form", () => {
       const gears = [marteau, perceuse, scieCirculaire];
       const gearRepository = new InMemoryGears(gears);
       manualRecord = new ManualInventoryRecord(
+        gearRepository,
         inexistingGearCode,
         inexistingGearName,
         12,
         "Cave du E",
-        gearRepository,
       );
     });
     it("should inform user gear is not found", async () => {
@@ -78,11 +78,11 @@ describe("Inventory Fill Form", () => {
     const quantity = 12;
     const storage = "local";
     const manualRecord = new ManualInventoryRecord(
+      gearRepository,
       "",
       "test",
       quantity,
       storage,
-      gearRepository,
     );
     it("should generate an inventory record", () => {
       const error = new ManualInventoryRecordError(manualRecord);

@@ -1,4 +1,4 @@
-import { CatalogCategoryIdentifier, CategoryOwner } from "./catalog.js";
+import { CatalogCategoryIdentifier, CategoryOwner } from "./catalog";
 
 export type GearSearchOptions = {
   search?: string;

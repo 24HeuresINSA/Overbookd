@@ -1,4 +1,4 @@
-import { CatalogGear, GearSearchOptions } from "./gear.js";
+import { CatalogGear, GearSearchOptions } from "./gear";
 
 export type InventoryRecordSearchOptions = GearSearchOptions & {
   storage?: string;
@@ -8,6 +8,7 @@ export type InventoryRecord = {
   gear: CatalogGear;
   quantity: number;
   storage: string;
+  comment?: string;
 };
 
 export type LiteInventoryRecord = Omit<InventoryRecord, "gear">;

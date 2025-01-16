@@ -85,6 +85,7 @@ describe("Inventory Service", () => {
             quantity: 5,
             gear: MARTEAU,
             storage: "Local",
+            comment: "Pool des assos",
           },
         ]);
       });
@@ -107,6 +108,7 @@ describe("Inventory Service", () => {
             {
               quantity: 5,
               storage: "Local",
+              comment: "Pool des assos",
             },
           ],
         });
@@ -119,7 +121,7 @@ describe("Inventory Service", () => {
     describe("when ask to setup inventory with 3 records for same gear", () => {
       it("should return a unique grouped record with the sum of quantities", async () => {
         const records = [
-          { quantity: 3, gear: TABLE, storage: "Local" },
+          { quantity: 3, gear: TABLE, storage: "Local", comment: "Très usées" },
           { quantity: 20, gear: TABLE, storage: "Cave du E" },
           { quantity: 7, gear: TABLE, storage: "Conteneur H" },
         ];
@@ -151,6 +153,7 @@ describe("Inventory Service", () => {
             quantity: 5,
             gear: MARTEAU,
             storage: "Local",
+            comment: "Pool des assos",
           },
           {
             quantity: 15,

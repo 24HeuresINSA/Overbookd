@@ -10,6 +10,7 @@ export type InventoryImportRaw = {
   gear: string;
   quantity: number;
   storage: string;
+  comment?: string;
 };
 
 export abstract class InventoryImportContainer {
@@ -19,13 +20,14 @@ export abstract class InventoryImportContainer {
     raws: InventoryImportRaw[],
   ): ManualInventoryRecord[] {
     return raws.map(
-      ({ code, gear, quantity, storage }) =>
+      ({ code, gear, quantity, storage, comment }) =>
         new ManualInventoryRecord(
+          this.gearRepository,
           code,
           gear,
           quantity,
           storage,
-          this.gearRepository,
+          comment,
         ),
     );
   }

@@ -4,17 +4,18 @@ import { InventoryRecord } from "./inventory-record";
 
 export class ManualInventoryRecord {
   constructor(
+    private readonly gearRepository: Gears,
     public readonly code: string,
     public readonly gear: string,
     public readonly quantity: number,
     public readonly storage: string,
-    private readonly gearRepository: Gears,
+    public readonly comment?: string,
   ) {}
 
   async toInventoryRecord(): Promise<InventoryRecord> {
     const gear = await this.findGear();
     if (!gear) throw new ManualInventoryRecordError(this);
-    return new InventoryRecord(gear, this.quantity, this.storage);
+    return new InventoryRecord(gear, this.quantity, this.storage, this.comment);
   }
 
   private findGear(): Promise<CatalogGear | undefined> {
@@ -44,6 +45,11 @@ export class DisplayableManualInventoryRecordError {
   }
 
   toInventoryRecord(gear: CatalogGear) {
-    return new InventoryRecord(gear, this.record.quantity, this.record.storage);
+    return new InventoryRecord(
+      gear,
+      this.record.quantity,
+      this.record.storage,
+      this.record.comment,
+    );
   }
 }
