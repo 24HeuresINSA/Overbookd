@@ -7,7 +7,7 @@
       :class="getCellClass(cell)"
       @click="propagateCellClick(cell)"
     >
-      <span v-if="cell.charisma">{{ cell.charisma }}</span>
+      <span>{{ cell.charisma }}</span>
     </div>
   </div>
 </template>
@@ -38,13 +38,13 @@ type AvailabilityCell = IProvidePeriod & {
 };
 const gridCells = computed<AvailabilityCell[]>(() => {
   return props.days.flatMap((day) => {
-    const dayStart = day.date.startOfDay();
+    const dayStart = day.startsAt;
     return Array.from({ length: HOURS_IN_DAY }, (_, hour) => {
       const start = dayStart.addHours(hour);
       const end = start.addHours(1);
       return {
         date: start,
-        period: new Period({ start, end }),
+        period: Period.init({ start, end }),
         charisma: findCharismaPerHour(start),
       };
     });
