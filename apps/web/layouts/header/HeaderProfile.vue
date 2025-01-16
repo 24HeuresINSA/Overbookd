@@ -46,15 +46,15 @@
       <div class="dropdown-menu">
         <div class="dropdown-menu__item" @click="toggleCurrentTheme">
           <v-icon>{{ themeIcon }}</v-icon>
-          {{ themeTitle }}
+          <span>{{ themeTitle }}</span>
         </div>
         <div class="dropdown-menu__item" @click="displayEULA">
           <v-icon>mdi-book-open-variant-outline</v-icon>
-          Voir les CGU
+          <span>Voir les CGU</span>
         </div>
         <div class="dropdown-menu__item logout" @click="logout">
           <v-icon>mdi-close-circle-outline</v-icon>
-          <p>Déconnexion</p>
+          <span>Déconnexion</span>
         </div>
       </div>
     </div>
