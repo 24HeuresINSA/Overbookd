@@ -46,7 +46,7 @@
             <strong v-if="item.records.length > 1">
               ({{ record.quantity }})
             </strong>
-            <span v-if="record.comment"> - {{ record.comment }}</span>
+            <span v-if="record.comment"> • {{ record.comment }}</span>
           </div>
         </template>
       </v-data-table>

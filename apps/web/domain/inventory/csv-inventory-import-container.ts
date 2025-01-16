@@ -23,6 +23,9 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
     quantite: "quantity",
     nombre: "quantity",
     commentaire: "comment",
+    commentaires: "comment",
+    note: "comment",
+    notes: "comment",
   };
 
   constructor(

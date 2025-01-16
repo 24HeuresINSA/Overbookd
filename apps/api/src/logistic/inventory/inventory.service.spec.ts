@@ -153,7 +153,7 @@ describe("Inventory Service", () => {
             quantity: 5,
             gear: MARTEAU,
             storage: "Local",
-            cmment: "Pool des assos",
+            comment: "Pool des assos",
           },
           {
             quantity: 15,
