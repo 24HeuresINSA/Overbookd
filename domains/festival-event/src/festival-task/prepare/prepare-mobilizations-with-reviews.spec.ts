@@ -142,6 +142,20 @@ describe("Prepare festival task mobilizations list", () => {
           ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
         });
       });
+      describe("when trying to split duration of existing mobilization", () => {
+        it("should indicate task is already approved by humain", async () => {
+          const mobilization = task.mobilizations[0];
+          expect(
+            async () =>
+              await prepare.updateMobilization(
+                task.id,
+                mobilization.id,
+                { durationSplitInHour: 2 },
+                noel,
+              ),
+          ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+        });
+      });
     });
 
     describe("when task has no rejection", () => {
@@ -178,11 +192,10 @@ describe("Prepare festival task mobilizations list", () => {
               });
             }
             describe.each`
-              field                         | update
-              ${"start"}                    | ${{ start: saturday10h.date }}
-              ${"end"}                      | ${{ end: saturday10h.date }}
-              ${"split duration"}           | ${{ durationSplitInHour: 1 }}
-              ${"start and split duration"} | ${{ start: saturday10h.date, durationSplitInHour: 1 }}
+              field              | update
+              ${"start"}         | ${{ start: saturday10h.date }}
+              ${"end"}           | ${{ end: saturday10h.date }}
+              ${"start and end"} | ${{ start: saturday10h.date, end: sunday04h.date }}
             `(
               "when trying to update $field of existing mobilization",
               ({ update }) => {
@@ -200,6 +213,37 @@ describe("Prepare festival task mobilizations list", () => {
                 });
               },
             );
+            if (task.reviews.humain === APPROVED) {
+              describe("when trying to update duration split on task approved by humain", () => {
+                it(`should indicate task is already approved by humain`, async () => {
+                  const mobilization = task.mobilizations[0];
+                  expect(
+                    async () =>
+                      await prepare.updateMobilization(
+                        task.id,
+                        mobilization.id,
+                        { durationSplitInHour: 1 },
+                        noel,
+                      ),
+                  ).rejects.toThrow(AlreadyApprovedBy);
+                });
+              });
+            } else {
+              describe("when trying to update duration split on task not approved by humain", () => {
+                it("should update duration split", async () => {
+                  const mobilization = task.mobilizations[0];
+                  const { mobilizations } = await prepare.updateMobilization(
+                    task.id,
+                    mobilization.id,
+                    { durationSplitInHour: 1 },
+                    noel,
+                  );
+
+                  const updated = mobilizations[0];
+                  expect(updated.durationSplitInHour).toBe(1);
+                });
+              });
+            }
           });
         },
       );
@@ -256,15 +300,21 @@ describe("Prepare festival task mobilizations list", () => {
     });
 
     describe.each`
-      rejectors         | humain       | matos        | elec                    | taskName                                                           | task                                                  | firstMobilizationHumanReadable
-      ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}                    | ${approvedByHumainRejectedByMatos}                    | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name}             | ${approvedByHumainAndElecRejectedByMatos}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}                      | ${approvedByElecRejectedByMatos}                      | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[humain]}       | ${REJECTED}  | ${REVIEWING} | ${REVIEWING}            | ${rejectedByHumainAndApprovedByMatosWithoutInquiries.general.name} | ${rejectedByHumainAndApprovedByMatosWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      rejectors         | humainAfterReset | matosAfterReset | elecAfterReset          | taskName                                                           | task                                                  | firstMobilizationHumanReadable
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}                    | ${approvedByHumainRejectedByMatos}                    | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name}             | ${approvedByHumainAndElecRejectedByMatos}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}                      | ${approvedByElecRejectedByMatos}                      | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[humain]}       | ${REJECTED}      | ${REVIEWING}    | ${REVIEWING}            | ${rejectedByHumainAndApprovedByMatosWithoutInquiries.general.name} | ${rejectedByHumainAndApprovedByMatosWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
     `(
       "when $rejectors rejected the task $taskName",
-      ({ task, humain, matos, elec, firstMobilizationHumanReadable }) => {
+      ({
+        task,
+        humainAfterReset,
+        matosAfterReset,
+        elecAfterReset,
+        firstMobilizationHumanReadable,
+      }) => {
         describe("when trying to add mobilization", () => {
           const form = friday10hfriday11hMobilization.form;
           it("should add mobilization", async () => {
@@ -285,9 +335,9 @@ describe("Prepare festival task mobilizations list", () => {
                 );
                 if (isDraft(updated)) return;
 
-                expect(updated.reviews.humain).toBe(humain);
-                expect(updated.reviews.matos).toBe(matos);
-                expect(updated.reviews.elec).toBe(elec);
+                expect(updated.reviews.humain).toBe(humainAfterReset);
+                expect(updated.reviews.matos).toBe(matosAfterReset);
+                expect(updated.reviews.elec).toBe(elecAfterReset);
               });
               it("should add RESET_REVIEW key event to history", async () => {
                 const readablePeriod =
@@ -353,9 +403,9 @@ describe("Prepare festival task mobilizations list", () => {
                   );
                   if (isDraft(updated)) return;
 
-                  expect(updated.reviews.humain).toBe(humain);
-                  expect(updated.reviews.matos).toBe(matos);
-                  expect(updated.reviews.elec).toBe(elec);
+                  expect(updated.reviews.humain).toBe(humainAfterReset);
+                  expect(updated.reviews.matos).toBe(matosAfterReset);
+                  expect(updated.reviews.elec).toBe(elecAfterReset);
                 });
                 it("should add RESET_REVIEW key event to history", async () => {
                   const { history } = await prepare.removeMobilization(
@@ -399,14 +449,13 @@ describe("Prepare festival task mobilizations list", () => {
           });
         }
         describe.each`
-          field                         | instigator | update                                              | start                          | end                          | durationSplitInHour
-          ${"start"}                    | ${noel}    | ${{ start: friday9h.date }}                         | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
-          ${"end"}                      | ${noel}    | ${{ end: sunday04h.date }}                          | ${task.mobilizations[0].start} | ${sunday04h.date}            | ${task.mobilizations[0].durationSplitInHour}
-          ${"split duration"}           | ${noel}    | ${{ durationSplitInHour: 1 }}                       | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
-          ${"start and split duration"} | ${noel}    | ${{ start: friday9h.date, durationSplitInHour: 1 }} | ${friday9h.date}               | ${task.mobilizations[0].end} | ${1}
+          field              | instigator | update                                           | start                          | end
+          ${"start"}         | ${noel}    | ${{ start: friday9h.date }}                      | ${friday9h.date}               | ${task.mobilizations[0].end}
+          ${"end"}           | ${noel}    | ${{ end: sunday04h.date }}                       | ${task.mobilizations[0].start} | ${sunday04h.date}
+          ${"start and end"} | ${noel}    | ${{ start: friday9h.date, end: sunday04h.date }} | ${friday9h.date}               | ${sunday04h.date}
         `(
           "when trying to update $field of existing mobilization",
-          ({ field, instigator, update, start, end, durationSplitInHour }) => {
+          ({ field, instigator, update, start, end }) => {
             const mobilization = task.mobilizations[0];
             it(`should update ${field} accordingly`, async () => {
               const { mobilizations } = await prepare.updateMobilization(
@@ -419,7 +468,6 @@ describe("Prepare festival task mobilizations list", () => {
 
               expect(updated?.start).toBe(start);
               expect(updated?.end).toBe(end);
-              expect(updated?.durationSplitInHour).toBe(durationSplitInHour);
             });
             if (task.inquiries.length > 0) {
               describe("when task has inquiries", () => {
@@ -432,9 +480,9 @@ describe("Prepare festival task mobilizations list", () => {
                   );
                   if (isDraft(updated)) return;
 
-                  expect(updated.reviews.humain).toBe(humain);
-                  expect(updated.reviews.matos).toBe(matos);
-                  expect(updated.reviews.elec).toBe(elec);
+                  expect(updated.reviews.humain).toBe(humainAfterReset);
+                  expect(updated.reviews.matos).toBe(matosAfterReset);
+                  expect(updated.reviews.elec).toBe(elecAfterReset);
                 });
                 it("should add RESET_REVIEW key event to history", async () => {
                   const { history } = await prepare.updateMobilization(

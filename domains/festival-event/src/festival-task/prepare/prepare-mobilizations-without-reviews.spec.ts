@@ -33,10 +33,8 @@ import {
   saturday14h,
 } from "../festival-task.test-util.js";
 import {
-  approvedByMatosWithoutInquiries,
   gabIsAssignedTo,
   installEscapeGame,
-  rejectedByHumainAndApprovedByMatosWithoutInquiries,
   uninstallEscapeGame,
 } from "../festival-task.fake.js";
 import {
@@ -46,12 +44,6 @@ import {
   serveWaterOnJustDance,
   installBarbecue,
   uninstallBarbecue,
-  onlyApprovedByHumain,
-  onlyApprovedByMatos,
-  approvedByHumainRejectedByMatos,
-  approvedByHumainAndElecRejectedByMatos,
-  approvedByElecRejectedByMatos,
-  approvedByMatosRejectedByHumainAndElec,
 } from "../festival-task.fake.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
