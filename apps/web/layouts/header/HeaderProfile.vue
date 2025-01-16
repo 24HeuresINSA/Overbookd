@@ -83,7 +83,8 @@ const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const isMobile = computed(() => layoutStore.isMobile);
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
+const isMenuOpen = ref<boolean>(false);
 
 const loggedUser = computed(() => userStore.loggedUser);
 const myName = computed<string>(() =>
@@ -132,7 +133,6 @@ const displayEULA = () => {
   isEULADialogOpen.value = true;
 };
 const closeEULA = () => (isEULADialogOpen.value = false);
-const isMenuOpen = ref(false);
 
 const handleProfileClick = () => {
   if (isMobile) {
@@ -292,7 +292,7 @@ $header-profile-max-width: 300px;
 }
 
 .positive {
-  color: var(--v-theme-success);
+  color: rgb(var(--v-theme-success));
 }
 .negative,
 .logout {
