@@ -129,7 +129,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
 
     if (elecHasAlreadyStatus) return festivalTask.reviews;
 
-    return { ...festivalTask.reviews, elec: IN_REVIEW };
+    return { ...festivalTask.reviews, elec: REVIEWING };
   }
 
   withReviews<
