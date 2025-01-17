@@ -1,3 +1,14 @@
+## [3.26.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.25.0...v3.26.0) (2025-01-17)
+
+### Features
+
+* **web:** Add dropdown menu for mobile [#2332](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2332) ([900f164](https://gitlab.com/24-heures-insa/overbookd-mono/commit/900f164bbe917d04dc70260f00a49eccca763c27))
+* **web:** add inventory record comment [#2357](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2357) ([4637073](https://gitlab.com/24-heures-insa/overbookd-mono/commit/46370730a0242ec43fb542d1b63ffdd6ee72f779))
+
+### Bug Fixes
+
+* **web:** ft stats loading & default items per page [#2364](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2364) ([1214c9d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1214c9d4d13415f0667a760a7a0917d3d0d59c01))
+
 ## [3.25.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.24.1...v3.25.0) (2025-01-15)
 
 ### Features
