@@ -1,5 +1,6 @@
 <template>
   <div>
+    <DownloadPlanning />
     <AssignmentVolunteerStats
       v-show="shouldShowStats"
       :stats="stats"
