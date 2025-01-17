@@ -106,7 +106,7 @@ export class TaskFilterBuilder {
       }
       case ITEMS_PER_PAGE_QUERY_PARAM: {
         const itemsPerPage = stringifyQueryParam(params.itemsPerPage);
-        const isValid = !isNaN(+itemsPerPage);
+        const isValid = itemsPerPage && !isNaN(+itemsPerPage);
         return isValid ? { itemsPerPage: +itemsPerPage } : {};
       }
       case humain: {
