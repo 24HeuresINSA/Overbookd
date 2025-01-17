@@ -29,7 +29,7 @@
         <h3>Description de l'activité</h3>
         <RichEditor
           scope="activity-description"
-          :model-value="general.description ?? ''"
+          :model-value="description ?? ''"
           @update:model-value="updateDescription"
         />
 
@@ -86,6 +86,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import {
   type FestivalActivity,
   type TimeWindow,
@@ -120,25 +121,18 @@ const contact = computed<string>(() =>
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateName = (name: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => faStore.updateGeneral({ name }), 800);
-};
-const updateDescription = (description: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => faStore.updateGeneral({ description: description || null }),
-    800,
-  );
-};
-const updatePhotoLink = (photoLink: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => faStore.updateGeneral({ photoLink: photoLink || null }),
-    800,
-  );
-};
+const updateName = useDebounceFn((name: string) => {
+  faStore.updateGeneral({ name });
+}, 800);
+
+const description = ref<string>(general.value.description ?? "");
+const updateDescription = useDebounceFn((description: string) => {
+  faStore.updateGeneral({ description: description || null });
+}, 800);
+
+const updatePhotoLink = useDebounceFn((photoLink: string) => {
+  faStore.updateGeneral({ photoLink: photoLink || null });
+}, 800);
 const updateCategories = (categories: string[]) => {
   const isValid = categories.every((category) =>
     activityCategories.includes(category),
@@ -163,6 +157,13 @@ const addTimeWindow = (period: IProvidePeriod) => {
 const removeTimeWindow = (timeWindow: TimeWindow) => {
   faStore.removeGeneralTimeWindow(timeWindow.id);
 };
+
+const selectedActitivtyId = computed<number>(() => selectedActivity.value.id);
+watch(selectedActitivtyId, (newId, oldId) => {
+  if (newId !== oldId) {
+    description.value = selectedActivity.value.general.description ?? "";
+  }
+});
 </script>
 
 <style scoped>

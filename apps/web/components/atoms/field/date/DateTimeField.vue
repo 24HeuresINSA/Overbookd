@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import { OverDate, formatLocalDateTime, roundMinutes } from "@overbookd/time";
 
 const date = defineModel<Date>({ required: true });
@@ -56,15 +57,11 @@ watch(
 );
 
 const emit = defineEmits(["update:model-value", "enter"]);
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
 
-const updateDate = (date: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => {
-    const fixedDate = OverDate.fromLocal(new Date(date)).date;
-    const roundedMinutes = roundMinutes(fixedDate, step);
-    emit("update:model-value", roundedMinutes);
-  }, 500);
-};
+const updateDate = useDebounceFn((date: string) => {
+  const fixedDate = OverDate.fromLocal(new Date(date)).date;
+  const roundedMinutes = roundMinutes(fixedDate, step);
+  emit("update:model-value", roundedMinutes);
+}, 500);
 const enterKeyDown = () => emit("enter");
 </script>

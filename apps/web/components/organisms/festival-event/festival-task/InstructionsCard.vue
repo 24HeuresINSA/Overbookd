@@ -12,11 +12,11 @@
 
         <v-label>Instructions globales</v-label>
         <RichEditor
-          :model-value="instructions.global ?? ''"
+          :model-value="globalInstruction"
           scope="global-instruction"
           :readonly="disabled && cantForceInstruction"
           class="mb-3"
-          @update:model-value="updateGlobal"
+          @update:model-value="updateGlobalInstruction"
         />
 
         <v-switch
@@ -40,7 +40,7 @@
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
           <RichEditor
             scope="in-charge-instruction"
-            :model-value="instructions.inCharge.instruction ?? ''"
+            :model-value="inChargeInstruction"
             :readonly="disabled && cantForceInstruction"
             class="mb-3"
             @update:model-value="updateInChargeInstruction"
@@ -101,6 +101,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import {
   type Contact,
   type FestivalTaskWithConflicts,
@@ -137,7 +138,6 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const selectedTask = computed<FestivalTaskWithConflicts>(
   () => ftStore.selectedTask,
 );
-const selectedTaskId = computed<number>(() => selectedTask.value.id);
 const instructions = computed<FestivalTaskWithConflicts["instructions"]>(
   () => selectedTask.value.instructions,
 );
@@ -201,11 +201,51 @@ const checkActiveInChargeInstructions = () => {
   const hasInstruction = instructions.value.inCharge.instruction !== null;
   hasInChargeInstructions.value = hasVolunteers || hasInstruction;
 };
+
+const globalInstruction = ref<string>(instructions.value.global ?? "");
+const updateGlobalInstruction = (canBeEmpty: string) => {
+  openResetApprovalsDialogIfNeeded();
+  debouncedUpdateGlobalInstruction(canBeEmpty);
+};
+const debouncedUpdateGlobalInstruction = useDebounceFn((canBeEmpty: string) => {
+  const global = canBeEmpty.trim() || null;
+  if (cantForceInstruction.value) {
+    return ftStore.updateInstructions({ global });
+  }
+  if (global === null) return;
+  ftStore.forceInstructions({ global });
+}, 800);
+
+const inChargeInstruction = ref<string>(
+  instructions.value.inCharge.instruction ?? "",
+);
+const updateInChargeInstruction = (canBeEmpty: string) => {
+  openResetApprovalsDialogIfNeeded();
+  debouncedUpdateInChargeInstruction(canBeEmpty);
+};
+const debouncedUpdateInChargeInstruction = useDebounceFn(
+  (canBeEmpty: string) => {
+    const inCharge = canBeEmpty.trim() || null;
+    if (cantForceInstruction.value) {
+      return ftStore.updateInstructions({ inCharge });
+    }
+    if (inCharge === null) return;
+    ftStore.forceInstructions({ inCharge });
+  },
+  800,
+);
+
+const selectedTaskId = computed<number>(() => selectedTask.value.id);
 watch(
   selectedTaskId,
-  () => {
+  (newId, oldId) => {
     checkActiveInChargeInstructions();
     hasApproveResetAlert.value = false;
+
+    if (newId !== oldId) {
+      globalInstruction.value = instructions.value.global ?? "";
+      inChargeInstruction.value = instructions.value.inCharge.instruction ?? "";
+    }
   },
   { immediate: true },
 );
@@ -218,31 +258,6 @@ watch(isResetApprovalsDialogOpen, (value: boolean) => {
 
 const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
   ftStore.updateInstructions({ appointmentId });
-};
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateGlobal = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded();
-  if (delay.value) clearInterval(delay.value);
-  const global = canBeEmpty.trim() || null;
-  delay.value = setTimeout(() => {
-    if (cantForceInstruction.value) {
-      return ftStore.updateInstructions({ global });
-    }
-    if (global === null) return;
-    ftStore.forceInstructions({ global });
-  }, 800);
-};
-const updateInChargeInstruction = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded();
-  if (delay.value) clearInterval(delay.value);
-  const inCharge = canBeEmpty.trim() || null;
-  delay.value = setTimeout(() => {
-    if (cantForceInstruction.value) {
-      return ftStore.updateInstructions({ inCharge });
-    }
-    if (inCharge === null) return;
-    ftStore.forceInstructions({ inCharge });
-  }, 800);
 };
 
 const addContact = (contactId?: Contact["id"]) => {
@@ -265,6 +280,8 @@ const initInCharge = async (form: InitInChargeForm) => {
   await ftStore.initInCharge(form);
   closeInitInChargeDialog();
   hasInChargeInstructions.value = true;
+  inChargeInstruction.value =
+    selectedTask.value.instructions.inCharge.instruction ?? "";
 };
 </script>
 

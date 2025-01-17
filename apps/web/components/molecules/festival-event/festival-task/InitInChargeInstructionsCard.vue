@@ -41,7 +41,7 @@ import {
 } from "@overbookd/festival-event";
 
 const volunteers = ref<Adherent[]>([]);
-const instruction = ref<string | undefined>(undefined);
+const instruction = ref<string | undefined>();
 
 const cantInit = computed<boolean>(() => {
   if (instruction.value === undefined) return true;

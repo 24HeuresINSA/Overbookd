@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import type { FestivalTask } from "@overbookd/festival-event";
@@ -61,11 +62,9 @@ const inChargeTeam = computed<Team | undefined>(() =>
   teamStore.getTeamByCode(general.value.team ?? ""),
 );
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateName = (name: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => ftStore.updateGeneral({ name }), 800);
-};
+const updateName = useDebounceFn((name: string) => {
+  ftStore.updateGeneral({ name });
+}, 800);
 
 const updateAdministrator = (administrator: User) => {
   const administratorId = administrator.id;
