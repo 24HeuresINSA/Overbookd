@@ -400,7 +400,7 @@ importers:
         specifier: workspace:*
         version: link:../../constants/web-page
       '@vueuse/core':
-        specifier: ^12.4.0
+        specifier: 12.4.0
         version: 12.4.0(typescript@5.7.3)
       chart.js:
         specifier: 4.4.7
