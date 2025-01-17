@@ -6,7 +6,7 @@
           v-for="({ title }, index) in calendarSteps"
           :key="`step-${index}`"
           :title="title"
-          :complete="step > index + 1"
+          :complete="step > index"
           :value="index + 1"
         />
       </v-stepper-header>

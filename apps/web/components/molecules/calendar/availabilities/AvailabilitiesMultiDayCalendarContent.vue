@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar-grid" :style="gridTemplateStyle">
+  <div class="calendar-grid clickable" :style="gridTemplateStyle">
     <div
       v-for="(cell, index) in gridCells"
       :key="index"
@@ -13,7 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-import { HOURS_IN_DAY, Period, type IProvidePeriod } from "@overbookd/time";
+import {
+  HOURS_IN_DAY,
+  OverDate,
+  Period,
+  type Hour,
+  type IProvidePeriod,
+} from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const charismaPeriodStore = useCharismaPeriodStore();
@@ -33,19 +39,24 @@ const findCharismaPerHour = (date: Date): number => {
 };
 
 type AvailabilityCell = IProvidePeriod & {
-  date: Date;
   charisma: number;
 };
 const gridCells = computed<AvailabilityCell[]>(() => {
   return props.days.flatMap((day) => {
     const dayStart = day.startsAt;
     return Array.from({ length: HOURS_IN_DAY }, (_, hour) => {
-      const start = dayStart.addHours(hour);
-      const end = start.addHours(1);
+      const start = OverDate.init({
+        date: dayStart.dateString,
+        hour: hour as Hour,
+      });
+      const end = OverDate.init({
+        date: dayStart.dateString,
+        hour: (hour + 1) as Hour,
+      });
       return {
-        date: start,
-        period: Period.init({ start, end }),
-        charisma: findCharismaPerHour(start),
+        start: start.date,
+        end: end.date,
+        charisma: findCharismaPerHour(start.date),
       };
     });
   });
@@ -72,7 +83,6 @@ const propagateCellClick = (cell: AvailabilityCell) => {
   display: grid;
   width: 100%;
   height: 100%;
-  border: 1px solid rgba(var(--v-theme-on-surface), 0.2);
 
   &__cell {
     border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
