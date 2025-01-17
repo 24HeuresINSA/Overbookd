@@ -99,14 +99,10 @@ const statusWithLabels = computed<StatusLabels>(() => {
 });
 const clearStatus = () => (status.value = undefined);
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateSearchParam = (newSearch: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => {
-    search.value = newSearch;
-    updateQueryParams(SEARCH_QUERY_PARAM, newSearch);
-  }, 200);
-};
+const updateSearchParam = useDebounceFn((newSearch: string) => {
+  search.value = newSearch;
+  updateQueryParams(SEARCH_QUERY_PARAM, newSearch);
+}, 200);
 const updateTeamParam = (team?: Team) => {
   updateQueryParams(TEAM_QUERY_PARAM, team?.code);
 };

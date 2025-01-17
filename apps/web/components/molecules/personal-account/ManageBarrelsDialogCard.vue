@@ -69,21 +69,15 @@ const addNewBarrel = async () => {
   price.value = 100;
   openedOn.value = new Date();
 };
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const adjustBarrelPrice = (slug: string, price: number) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => personalAccountStore.adjustBarrelPrice({ slug, price }),
-    800,
-  );
-};
-const adjustBarrelOpeningDate = (slug: string, openedOn: Date) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => personalAccountStore.adjustBarrelOpeningDate({ slug, openedOn }),
-    800,
-  );
-};
+const adjustBarrelPrice = useDebounceFn((slug: string, price: number) => {
+  personalAccountStore.adjustBarrelPrice({ slug, price });
+}, 800);
+const adjustBarrelOpeningDate = useDebounceFn(
+  (slug: string, openedOn: Date) => {
+    personalAccountStore.adjustBarrelOpeningDate({ slug, openedOn });
+  },
+  800,
+);
 const removeBarrel = async (barrel: ConfiguredBarrel) => {
   await personalAccountStore.removeBarrel(barrel.slug);
   fetchBarrels();

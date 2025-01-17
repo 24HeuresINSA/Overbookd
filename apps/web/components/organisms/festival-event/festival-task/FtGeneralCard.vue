@@ -61,11 +61,9 @@ const inChargeTeam = computed<Team | undefined>(() =>
   teamStore.getTeamByCode(general.value.team ?? ""),
 );
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateName = (name: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => ftStore.updateGeneral({ name }), 800);
-};
+const updateName = useDebounceFn((name: string) => {
+  ftStore.updateGeneral({ name });
+}, 800);
 
 const updateAdministrator = (administrator: User) => {
   const administratorId = administrator.id;

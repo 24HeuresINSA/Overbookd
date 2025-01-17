@@ -120,26 +120,18 @@ const contact = computed<string>(() =>
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateName = (name: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => faStore.updateGeneral({ name }), 800);
-};
+const updateName = useDebounceFn((name: string) => {
+  faStore.updateGeneral({ name });
+}, 800);
+
 const description = ref<string>(general.value.description ?? "");
-const updateDescription = (description: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => faStore.updateGeneral({ description: description || null }),
-    800,
-  );
-};
-const updatePhotoLink = (photoLink: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => faStore.updateGeneral({ photoLink: photoLink || null }),
-    800,
-  );
-};
+const updateDescription = useDebounceFn((description: string) => {
+  faStore.updateGeneral({ description: description || null });
+}, 800);
+
+const updatePhotoLink = useDebounceFn((photoLink: string) => {
+  faStore.updateGeneral({ photoLink: photoLink || null });
+}, 800);
 const updateCategories = (categories: string[]) => {
   const isValid = categories.every((category) =>
     activityCategories.includes(category),

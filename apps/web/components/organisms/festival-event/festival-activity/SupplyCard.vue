@@ -51,10 +51,8 @@ const removeElectricitySupply = (supply: ElectricitySupply) => {
   faStore.removeElectricitySupply(supply.id);
 };
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateWaterSupply = (canBeEmpty: string) => {
-  if (delay.value) clearInterval(delay.value);
+const updateWaterSupply = useDebounceFn((canBeEmpty: string) => {
   const water = canBeEmpty.trim() ? canBeEmpty : null;
-  delay.value = setTimeout(() => faStore.updateSupply({ water }), 800);
-};
+  faStore.updateSupply({ water });
+}, 800);
 </script>

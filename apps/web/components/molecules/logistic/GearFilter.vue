@@ -7,7 +7,7 @@
       clearable
       clear-icon="mdi-close-circle-outline"
       hide-details
-      @update:model-value="defectSearchUpdate($event)"
+      @update:model-value="debouncedSearchUpdate($event)"
     />
     <SearchCategory v-model="category" label="Catégorie" hide-details />
     <SearchTeam
@@ -35,11 +35,9 @@ const team = defineModel<Team | undefined>("team", { required: true });
 const updateSearch = (value: string | null) =>
   emit("update:search", value ?? "");
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const defectSearchUpdate = (search: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(() => updateSearch(search), 800);
-};
+const debouncedSearchUpdate = useDebounceFn((search: string) => {
+  updateSearch(search);
+}, 800);
 
 const searchOptions = computed<GearSearchOptions>(() => {
   const validSearch = search.value?.trim() ? { search: search.value } : {};

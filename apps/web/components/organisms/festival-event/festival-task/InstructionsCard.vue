@@ -219,35 +219,39 @@ watch(isResetApprovalsDialogOpen, (value: boolean) => {
 const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
   ftStore.updateInstructions({ appointmentId });
 };
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
+
 const globalInstruction = ref<string>(instructions.value.global ?? "");
 const updateGlobalInstruction = (canBeEmpty: string) => {
   openResetApprovalsDialogIfNeeded();
-  if (delay.value) clearInterval(delay.value);
-  const global = canBeEmpty.trim() || null;
-  delay.value = setTimeout(() => {
-    if (cantForceInstruction.value) {
-      return ftStore.updateInstructions({ global });
-    }
-    if (global === null) return;
-    ftStore.forceInstructions({ global });
-  }, 800);
+  debouncedUpdateGlobalInstruction(canBeEmpty);
 };
+const debouncedUpdateGlobalInstruction = useDebounceFn((canBeEmpty: string) => {
+  const global = canBeEmpty.trim() || null;
+  if (cantForceInstruction.value) {
+    return ftStore.updateInstructions({ global });
+  }
+  if (global === null) return;
+  ftStore.forceInstructions({ global });
+}, 800);
+
 const inChargeInstruction = ref<string>(
   instructions.value.inCharge.instruction ?? "",
 );
 const updateInChargeInstruction = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded();
-  if (delay.value) clearInterval(delay.value);
-  const inCharge = canBeEmpty.trim() || null;
-  delay.value = setTimeout(() => {
+  openResetApprovalsDialogIfNeeded(); // Appel immédiat
+  debouncedUpdateInChargeInstruction(canBeEmpty);
+};
+const debouncedUpdateInChargeInstruction = useDebounceFn(
+  (canBeEmpty: string) => {
+    const inCharge = canBeEmpty.trim() || null;
     if (cantForceInstruction.value) {
       return ftStore.updateInstructions({ inCharge });
     }
     if (inCharge === null) return;
     ftStore.forceInstructions({ inCharge });
-  }, 800);
-};
+  },
+  800,
+);
 
 const addContact = (contactId?: Contact["id"]) => {
   if (!contactId) return;

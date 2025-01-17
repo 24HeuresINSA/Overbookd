@@ -46,17 +46,11 @@ const security = computed<FestivalActivity["security"]>(
   () => selectedActivity.value.security,
 );
 
-const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateSpecialNeed = (canBeEmpty: string) => {
-  if (delay.value) clearInterval(delay.value);
+const updateSpecialNeed = useDebounceFn((canBeEmpty: string) => {
   const specialNeed = canBeEmpty.trim() || null;
-  delay.value = setTimeout(() => faStore.updateSecurity({ specialNeed }), 800);
-};
-const updateFreePass = (freePass: string) => {
-  if (delay.value) clearInterval(delay.value);
-  delay.value = setTimeout(
-    () => faStore.updateSecurity({ freePass: +freePass }),
-    800,
-  );
-};
+  faStore.updateSecurity({ specialNeed });
+}, 800);
+const updateFreePass = useDebounceFn((freePass: string) => {
+  faStore.updateSecurity({ freePass: +freePass });
+}, 800);
 </script>
