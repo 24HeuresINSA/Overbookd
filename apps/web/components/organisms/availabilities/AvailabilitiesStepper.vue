@@ -69,7 +69,7 @@ const cannotValidate = computed<boolean>(() => {
   return hasNoSelection || hasError;
 });
 
-const shouldDisablePrevious = computed<boolean>(() => step.value < 1);
+const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
 const shouldDisableNext = computed<boolean>(
   () => step.value >= calendarSteps.value.length,
 );

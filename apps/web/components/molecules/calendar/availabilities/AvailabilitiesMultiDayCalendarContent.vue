@@ -5,12 +5,7 @@
       :key="index"
       class="calendar-grid__cell"
       :class="[colorClass(cell), cellDurationClass(cell)]"
-      :style="{
-        gridRowStart: cell.rowStart,
-        gridRowEnd: cell.rowEnd,
-        gridColumnStart: cell.columnStart,
-        gridColumnEnd: cell.columnEnd,
-      }"
+      :style="cellGridStyle(cell)"
       @click="propagateCellClick(cell)"
     >
       <span>{{ cell.charisma }}</span>
@@ -42,6 +37,10 @@ const props = defineProps({
   },
 });
 
+const TWO_HOURS_CELL_COUNT = (SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT) / 2;
+const ONE_HOUR_CELL_COUNT = HOURS_IN_DAY - TWO_HOURS_CELL_COUNT * 2;
+const CELLS_IN_DAY = TWO_HOURS_CELL_COUNT + ONE_HOUR_CELL_COUNT;
+
 const findCharismaPerHour = (date: Date): number => {
   const charismaPeriod = charismaPeriodStore.all.find((cp) =>
     Period.init({ start: cp.start, end: cp.end }).isIncluding(date),
@@ -52,50 +51,52 @@ const findCharismaPerHour = (date: Date): number => {
 };
 
 const gridCells = computed<AvailabilityCell[]>(() => {
-  const cells: AvailabilityCell[] = [];
-  props.days.forEach((day, dayIndex) => {
+  const daysArray = Array.from({ length: props.days.length }, (_, i) => i);
+  return daysArray.flatMap((dayIndex) => {
+    const day = props.days.at(dayIndex);
+    if (!day) return [];
     const dayStart = day.startsAt;
-
-    let hour = 0;
-    while (hour < HOURS_IN_DAY) {
-      const start = OverDate.init({
-        date: dayStart.dateString,
-        hour: hour as Hour,
-      });
-
-      const duration = isPartyShift(hour) ? 1 : 2;
-      const end = OverDate.init({
-        date: dayStart.dateString,
-        hour: Math.min(hour + duration, HOURS_IN_DAY) as Hour,
-      });
-
-      const rowStart = hour + 1;
-      const rowEnd = rowStart + duration;
-
-      cells.push({
-        start: start.date,
-        end: end.date,
-        charisma: findCharismaPerHour(start.date),
-        duration: duration,
-        rowStart,
-        rowEnd,
-        columnStart: dayIndex + 1,
-        columnEnd: dayIndex + 2,
-      });
-
-      hour += duration;
-    }
+    return generateAvailabilityCells(dayStart, dayIndex);
   });
-
-  return cells;
 });
+const generateAvailabilityCells = (
+  dayStart: OverDate,
+  dayIndex: number,
+): AvailabilityCell[] => {
+  let hour: Hour = 0;
+  return Array.from({ length: CELLS_IN_DAY }, (_, cellIndex) => {
+    const start = OverDate.init({
+      date: dayStart.dateString,
+      hour: hour,
+    });
 
-const TWO_HOURS_CELL_COUNT = SHIFT_HOURS.NIGHT - SHIFT_HOURS.NIGHT;
-const ONE_HOUR_CELL_COUNT = HOURS_IN_DAY - TWO_HOURS_CELL_COUNT;
-const CELL_COUNT = TWO_HOURS_CELL_COUNT + ONE_HOUR_CELL_COUNT;
+    const duration = isPartyShift(hour) ? 1 : 2;
+    const end = OverDate.init({
+      date: dayStart.dateString,
+      hour: Math.min(hour + duration, HOURS_IN_DAY) as Hour,
+    });
+
+    const rowStart = cellIndex + 1;
+    const rowEnd = rowStart + duration - 1;
+
+    hour += duration;
+
+    return {
+      start: start.date,
+      end: end.date,
+      charisma: findCharismaPerHour(start.date),
+      duration: duration,
+      rowStart,
+      rowEnd,
+      columnStart: dayIndex + 1,
+      columnEnd: dayIndex + 2,
+    };
+  });
+};
+
 const gridTemplateStyle = computed(() => ({
   gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
-  gridTemplateRows: `repeat(${CELL_COUNT}, auto)`,
+  gridTemplateRows: `repeat(${CELLS_IN_DAY}, auto)`,
 }));
 
 const selectedAvailabilities = computed(
@@ -123,6 +124,14 @@ const colorClass = ({ start, end }: AvailabilityEvent) => {
 };
 const cellDurationClass = (cell: AvailabilityCell) => {
   return cell.duration === 1 ? "cell-1h" : "cell-2h";
+};
+const cellGridStyle = (cell: AvailabilityCell) => {
+  return {
+    gridRowStart: cell.rowStart,
+    gridRowEnd: cell.rowEnd,
+    gridColumnStart: cell.columnStart,
+    gridColumnEnd: cell.columnEnd,
+  };
 };
 
 const emit = defineEmits(["click:event"]);
