@@ -4,7 +4,13 @@
       v-for="(cell, index) in gridCells"
       :key="index"
       class="calendar-grid__cell"
-      :class="getColorClass(cell)"
+      :class="[colorClass(cell), cellDurationClass(cell)]"
+      :style="{
+        gridRowStart: cell.rowStart,
+        gridRowEnd: cell.rowEnd,
+        gridColumnStart: cell.columnStart,
+        gridColumnEnd: cell.columnEnd,
+      }"
       @click="propagateCellClick(cell)"
     >
       <span>{{ cell.charisma }}</span>
@@ -15,7 +21,16 @@
 <script lang="ts" setup>
 import { HOURS_IN_DAY, OverDate, Period, type Hour } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { AvailabilityCell } from "~/utils/availabilities/availabilities";
+import type { AvailabilityEvent } from "~/utils/availabilities/availabilities";
+import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
+
+type AvailabilityCell = AvailabilityEvent & {
+  duration: number;
+  rowStart: number;
+  rowEnd: number;
+  columnStart: number;
+  columnEnd: number;
+};
 
 const charismaPeriodStore = useCharismaPeriodStore();
 const availabilityStore = useVolunteerAvailabilityStore();
@@ -31,34 +46,56 @@ const findCharismaPerHour = (date: Date): number => {
   const charismaPeriod = charismaPeriodStore.all.find((cp) =>
     Period.init({ start: cp.start, end: cp.end }).isIncluding(date),
   );
-  return charismaPeriod ? charismaPeriod.charisma : 0;
+  if (!charismaPeriod) return 0;
+  const isOneHourShift = isPartyShift(date.getHours());
+  return isOneHourShift ? charismaPeriod.charisma : charismaPeriod.charisma * 2;
 };
 
 const gridCells = computed<AvailabilityCell[]>(() => {
-  return props.days.flatMap((day) => {
+  const cells: AvailabilityCell[] = [];
+  props.days.forEach((day, dayIndex) => {
     const dayStart = day.startsAt;
-    return Array.from({ length: HOURS_IN_DAY }, (_, hour) => {
+
+    let hour = 0;
+    while (hour < HOURS_IN_DAY) {
       const start = OverDate.init({
         date: dayStart.dateString,
         hour: hour as Hour,
       });
+
+      const duration = isPartyShift(hour) ? 1 : 2;
       const end = OverDate.init({
         date: dayStart.dateString,
-        hour: (hour + 1) as Hour,
+        hour: Math.min(hour + duration, HOURS_IN_DAY) as Hour,
       });
-      return {
+
+      const rowStart = hour + 1;
+      const rowEnd = rowStart + duration;
+
+      cells.push({
         start: start.date,
         end: end.date,
         charisma: findCharismaPerHour(start.date),
-      };
-    });
+        duration: duration,
+        rowStart,
+        rowEnd,
+        columnStart: dayIndex + 1,
+        columnEnd: dayIndex + 2,
+      });
+
+      hour += duration;
+    }
   });
+
+  return cells;
 });
 
+const TWO_HOURS_CELL_COUNT = SHIFT_HOURS.NIGHT - SHIFT_HOURS.NIGHT;
+const ONE_HOUR_CELL_COUNT = HOURS_IN_DAY - TWO_HOURS_CELL_COUNT;
+const CELL_COUNT = TWO_HOURS_CELL_COUNT + ONE_HOUR_CELL_COUNT;
 const gridTemplateStyle = computed(() => ({
-  display: "grid",
   gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
-  gridTemplateRows: `repeat(${HOURS_IN_DAY}, auto)`,
+  gridTemplateRows: `repeat(${CELL_COUNT}, auto)`,
 }));
 
 const selectedAvailabilities = computed(
@@ -68,7 +105,8 @@ const savedAvailabilities = computed(
   () => availabilityStore.availabilities.recorded,
 );
 const errors = computed(() => availabilityStore.availabilities.errors);
-const getColorClass = ({ start, end }: AvailabilityCell) => {
+
+const colorClass = ({ start, end }: AvailabilityEvent) => {
   const period = Period.init({ start, end });
   const isSaved = savedAvailabilities.value.some((saved) =>
     saved.includes(period),
@@ -83,16 +121,22 @@ const getColorClass = ({ start, end }: AvailabilityCell) => {
   if (isSelected) return "selected";
   return "unselected";
 };
+const cellDurationClass = (cell: AvailabilityCell) => {
+  return cell.duration === 1 ? "cell-1h" : "cell-2h";
+};
 
 const emit = defineEmits(["click:event"]);
-const propagateCellClick = (cell: AvailabilityCell) => {
+const propagateCellClick = (cell: AvailabilityEvent) => {
   emit("click:event", cell);
 };
 </script>
 
 <style lang="scss" scoped>
+@use "~/assets/calendar.scss" as *;
+
 .calendar-grid {
   display: grid;
+  grid-auto-flow: column;
   width: 100%;
   height: 100%;
 
@@ -101,25 +145,34 @@ const propagateCellClick = (cell: AvailabilityCell) => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
     border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
+    &:last-child {
+      border-bottom-right-radius: $calendar-radius;
+    }
+  }
+
+  .cell-1h {
+    height: $hour-height;
+  }
+  .cell-2h {
+    height: $hour-height * 2;
   }
 }
 
+.unselected {
+  background-color: rgba($blue-24h, 0.3);
+  color: rgb(var(--v-theme-on-surface));
+  &:hover {
+    background-color: rgba($blue-24h, 0.9);
+  }
+}
+.selected {
+  background-color: rgba($blue-24h, 1);
+  color: white;
+}
 .validated {
   background-color: rgb(var(--v-theme-success));
   color: rgb(var(--v-theme-on-success));
-}
-.selected {
-  background-color: rgb(var(--v-theme-primary));
-  color: rgb(var(--v-theme-on-primary));
-}
-.unselected {
-  background-color: rgba(var(--v-theme-primary), 0.3);
-  color: rgb(var(--v-theme-on-surface));
-  &:hover {
-    background-color: rgba(var(--v-theme-primary, 0.9));
-  }
 }
 .error {
   background-color: rgb(var(--v-theme-error));

@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 import { OverDate } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { AvailabilityCell } from "~/utils/availabilities/availabilities";
+import type { AvailabilityEvent } from "~/utils/availabilities/availabilities";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 
@@ -50,12 +50,12 @@ const days = defineModel<DayPresenter[]>({ required: true });
 const selectedAvailabilities = computed(
   () => availabilityStore.availabilities.selected,
 );
-const isSelected = (event: AvailabilityCell): boolean => {
+const isSelected = (event: AvailabilityEvent): boolean => {
   return selectedAvailabilities.value.some((selected) =>
     selected.isIncluding(event.start),
   );
 };
-const selectOrUnselectAvailability = (availability: AvailabilityCell) => {
+const selectOrUnselectAvailability = (availability: AvailabilityEvent) => {
   const date = OverDate.fromLocal(availability.start);
   if (isSelected(availability)) {
     return availabilityStore.unSelectAvailability(date, availability.charisma);

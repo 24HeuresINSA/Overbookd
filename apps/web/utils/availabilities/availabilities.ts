@@ -6,7 +6,7 @@ import {
 } from "@overbookd/time";
 import { isPartyShift } from "../shift.utils";
 
-export type AvailabilityCell = IProvidePeriod & {
+export type AvailabilityEvent = IProvidePeriod & {
   charisma: number;
 };
 
