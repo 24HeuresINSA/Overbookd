@@ -76,7 +76,7 @@ const canReadFA = computed<boolean>(() => userStore.can(READ_FA));
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
-  if (canReadFA.value) return statsStore.fetchActivityStats();
+  if (canReadFA.value) statsStore.fetchActivityStats();
   if (canReadFT.value) statsStore.fetchTaskStats();
 });
 
