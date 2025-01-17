@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-stepper v-model="step" class="mb-3">
+    <v-stepper v-model="step" class="mb-3" editable>
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
           :key="`step-${index}`"
           :title="title"
-          :complete="step > index"
+          :complete="step > index + 1"
           :value="index + 1"
         />
       </v-stepper-header>
@@ -45,14 +45,14 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 const userStore = useUserStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 
-const step = ref<number>(0);
+const step = ref<number>(1);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
 const days = computed<DayPresenter[]>(() => {
-  const calendarStep = calendarSteps.value.at(step.value);
+  const calendarStep = calendarSteps.value.at(step.value - 1);
   if (!calendarStep) return [];
 
   const splitedStep = calendarStep.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
@@ -69,9 +69,9 @@ const cannotValidate = computed<boolean>(() => {
   return hasNoSelection || hasError;
 });
 
-const shouldDisablePrevious = computed<boolean>(() => step.value <= 0);
+const shouldDisablePrevious = computed<boolean>(() => step.value < 1);
 const shouldDisableNext = computed<boolean>(
-  () => step.value >= calendarSteps.value.length - 1,
+  () => step.value >= calendarSteps.value.length,
 );
 
 const moveToPreviousStep = () => {
