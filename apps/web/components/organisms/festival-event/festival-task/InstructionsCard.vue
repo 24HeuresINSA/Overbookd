@@ -138,7 +138,6 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const selectedTask = computed<FestivalTaskWithConflicts>(
   () => ftStore.selectedTask,
 );
-const selectedTaskId = computed<number>(() => selectedTask.value.id);
 const instructions = computed<FestivalTaskWithConflicts["instructions"]>(
   () => selectedTask.value.instructions,
 );
@@ -202,24 +201,6 @@ const checkActiveInChargeInstructions = () => {
   const hasInstruction = instructions.value.inCharge.instruction !== null;
   hasInChargeInstructions.value = hasVolunteers || hasInstruction;
 };
-watch(
-  selectedTaskId,
-  () => {
-    checkActiveInChargeInstructions();
-    hasApproveResetAlert.value = false;
-  },
-  { immediate: true },
-);
-watch(isInitInChargeDialogOpen, (value: boolean) => {
-  if (!value) checkActiveInChargeInstructions();
-});
-watch(isResetApprovalsDialogOpen, (value: boolean) => {
-  if (!value) checkActiveInChargeInstructions();
-});
-
-const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
-  ftStore.updateInstructions({ appointmentId });
-};
 
 const globalInstruction = ref<string>(instructions.value.global ?? "");
 const updateGlobalInstruction = (canBeEmpty: string) => {
@@ -239,7 +220,7 @@ const inChargeInstruction = ref<string>(
   instructions.value.inCharge.instruction ?? "",
 );
 const updateInChargeInstruction = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded(); // Appel immédiat
+  openResetApprovalsDialogIfNeeded();
   debouncedUpdateInChargeInstruction(canBeEmpty);
 };
 const debouncedUpdateInChargeInstruction = useDebounceFn(
@@ -253,6 +234,31 @@ const debouncedUpdateInChargeInstruction = useDebounceFn(
   },
   800,
 );
+
+const selectedTaskId = computed<number>(() => selectedTask.value.id);
+watch(
+  selectedTaskId,
+  (newId, oldId) => {
+    checkActiveInChargeInstructions();
+    hasApproveResetAlert.value = false;
+
+    if (newId !== oldId) {
+      globalInstruction.value = instructions.value.global ?? "";
+      inChargeInstruction.value = instructions.value.inCharge.instruction ?? "";
+    }
+  },
+  { immediate: true },
+);
+watch(isInitInChargeDialogOpen, (value: boolean) => {
+  if (!value) checkActiveInChargeInstructions();
+});
+watch(isResetApprovalsDialogOpen, (value: boolean) => {
+  if (!value) checkActiveInChargeInstructions();
+});
+
+const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
+  ftStore.updateInstructions({ appointmentId });
+};
 
 const addContact = (contactId?: Contact["id"]) => {
   if (!contactId) return;
@@ -274,6 +280,8 @@ const initInCharge = async (form: InitInChargeForm) => {
   await ftStore.initInCharge(form);
   closeInitInChargeDialog();
   hasInChargeInstructions.value = true;
+  inChargeInstruction.value =
+    selectedTask.value.instructions.inCharge.instruction ?? "";
 };
 </script>
 

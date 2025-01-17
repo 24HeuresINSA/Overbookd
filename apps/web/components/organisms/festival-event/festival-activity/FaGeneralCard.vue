@@ -157,6 +157,13 @@ const addTimeWindow = (period: IProvidePeriod) => {
 const removeTimeWindow = (timeWindow: TimeWindow) => {
   faStore.removeGeneralTimeWindow(timeWindow.id);
 };
+
+const selectedActitivtyId = computed<number>(() => selectedActivity.value.id);
+watch(selectedActitivtyId, (newId, oldId) => {
+  if (newId !== oldId) {
+    description.value = selectedActivity.value.general.description ?? "";
+  }
+});
 </script>
 
 <style scoped>
