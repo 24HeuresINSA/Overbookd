@@ -43,6 +43,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import type { ConfiguredBarrel } from "@overbookd/personal-account";
 
 const personalAccountStore = usePersonalAccountStore();

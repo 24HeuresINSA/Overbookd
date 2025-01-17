@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { SECURITE_EMAIL } from "~/utils/mail/mail.constant";

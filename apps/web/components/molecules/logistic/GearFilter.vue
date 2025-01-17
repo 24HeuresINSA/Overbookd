@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import type { CatalogCategory, GearSearchOptions } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 

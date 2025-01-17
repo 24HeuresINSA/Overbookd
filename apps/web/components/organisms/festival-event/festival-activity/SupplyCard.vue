@@ -25,6 +25,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
 import type {
   FestivalActivity,
   ElectricitySupply,
