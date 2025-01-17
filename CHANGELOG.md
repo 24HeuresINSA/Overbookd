@@ -1,3 +1,9 @@
+## [3.26.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.26.0...v3.26.1) (2025-01-17)
+
+### Bug Fixes
+
+* **festival-event:** rich editor update after saving [#2314](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2314) ([2166641](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2166641fd9846a2159ab73b6f8cc5e30ad981132))
+
 ## [3.26.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.25.0...v3.26.0) (2025-01-17)
 
 ### Features
