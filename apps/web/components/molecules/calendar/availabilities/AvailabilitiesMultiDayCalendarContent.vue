@@ -4,7 +4,7 @@
       v-for="(cell, index) in gridCells"
       :key="index"
       class="calendar-grid__cell"
-      :class="getCellClass(cell)"
+      :class="getColorClass(cell)"
       @click="propagateCellClick(cell)"
     >
       <span>{{ cell.charisma }}</span>
@@ -13,16 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  HOURS_IN_DAY,
-  OverDate,
-  Period,
-  type Hour,
-  type IProvidePeriod,
-} from "@overbookd/time";
+import { HOURS_IN_DAY, OverDate, Period, type Hour } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { AvailabilityCell } from "~/utils/availabilities/availabilities";
 
 const charismaPeriodStore = useCharismaPeriodStore();
+const availabilityStore = useVolunteerAvailabilityStore();
 
 const props = defineProps({
   days: {
@@ -38,9 +34,6 @@ const findCharismaPerHour = (date: Date): number => {
   return charismaPeriod ? charismaPeriod.charisma : 0;
 };
 
-type AvailabilityCell = IProvidePeriod & {
-  charisma: number;
-};
 const gridCells = computed<AvailabilityCell[]>(() => {
   return props.days.flatMap((day) => {
     const dayStart = day.startsAt;
@@ -68,8 +61,27 @@ const gridTemplateStyle = computed(() => ({
   gridTemplateRows: `repeat(${HOURS_IN_DAY}, auto)`,
 }));
 
-const getCellClass = (cell: AvailabilityCell) => {
-  return cell.charisma ? "cell--active" : "cell--inactive";
+const selectedAvailabilities = computed(
+  () => availabilityStore.availabilities.selected,
+);
+const savedAvailabilities = computed(
+  () => availabilityStore.availabilities.recorded,
+);
+const errors = computed(() => availabilityStore.availabilities.errors);
+const getColorClass = ({ start, end }: AvailabilityCell) => {
+  const period = Period.init({ start, end });
+  const isSaved = savedAvailabilities.value.some((saved) =>
+    saved.includes(period),
+  );
+  const isSelected = selectedAvailabilities.value.some((selected) =>
+    selected.includes(period),
+  );
+  const hasError = errors.value.some((error) => error.period.includes(period));
+
+  if (hasError) return "error";
+  if (isSaved) return "validated";
+  if (isSelected) return "selected";
+  return "unselected";
 };
 
 const emit = defineEmits(["click:event"]);
@@ -85,17 +97,32 @@ const propagateCellClick = (cell: AvailabilityCell) => {
   height: 100%;
 
   &__cell {
-    border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &--active {
-      background-color: rgba(var(--v-theme-primary), 0.3);
-    }
-    &--inactive {
-      background-color: rgba(var(--v-theme-surface), 0.1);
-    }
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
   }
+}
+
+.validated {
+  background-color: rgb(var(--v-theme-success));
+  color: rgb(var(--v-theme-on-success));
+}
+.selected {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+.unselected {
+  background-color: rgba(var(--v-theme-primary), 0.3);
+  color: rgb(var(--v-theme-on-surface));
+  &:hover {
+    background-color: rgba(var(--v-theme-primary, 0.9));
+  }
+}
+.error {
+  background-color: rgb(var(--v-theme-error));
+  color: rgb(var(--v-theme-on-error));
 }
 </style>
