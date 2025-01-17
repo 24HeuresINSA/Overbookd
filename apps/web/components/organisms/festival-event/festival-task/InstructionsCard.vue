@@ -12,11 +12,11 @@
 
         <v-label>Instructions globales</v-label>
         <RichEditor
-          :model-value="instructions.global ?? ''"
+          :model-value="globalInstruction"
           scope="global-instruction"
           :readonly="disabled && cantForceInstruction"
           class="mb-3"
-          @update:model-value="updateGlobal"
+          @update:model-value="updateGlobalInstruction"
         />
 
         <v-switch
@@ -40,7 +40,7 @@
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
           <RichEditor
             scope="in-charge-instruction"
-            :model-value="instructions.inCharge.instruction ?? ''"
+            :model-value="inChargeInstruction"
             :readonly="disabled && cantForceInstruction"
             class="mb-3"
             @update:model-value="updateInChargeInstruction"
@@ -220,7 +220,8 @@ const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
   ftStore.updateInstructions({ appointmentId });
 };
 const delay = ref<ReturnType<typeof setTimeout> | undefined>();
-const updateGlobal = (canBeEmpty: string) => {
+const globalInstruction = ref<string>(instructions.value.global ?? "");
+const updateGlobalInstruction = (canBeEmpty: string) => {
   openResetApprovalsDialogIfNeeded();
   if (delay.value) clearInterval(delay.value);
   const global = canBeEmpty.trim() || null;
@@ -232,6 +233,9 @@ const updateGlobal = (canBeEmpty: string) => {
     ftStore.forceInstructions({ global });
   }, 800);
 };
+const inChargeInstruction = ref<string>(
+  instructions.value.inCharge.instruction ?? "",
+);
 const updateInChargeInstruction = (canBeEmpty: string) => {
   openResetApprovalsDialogIfNeeded();
   if (delay.value) clearInterval(delay.value);

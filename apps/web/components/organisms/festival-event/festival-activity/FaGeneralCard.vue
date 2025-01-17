@@ -29,7 +29,7 @@
         <h3>Description de l'activité</h3>
         <RichEditor
           scope="activity-description"
-          :model-value="general.description ?? ''"
+          :model-value="description ?? ''"
           @update:model-value="updateDescription"
         />
 
@@ -125,6 +125,7 @@ const updateName = (name: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(() => faStore.updateGeneral({ name }), 800);
 };
+const description = ref<string>(general.value.description ?? "");
 const updateDescription = (description: string) => {
   if (delay.value) clearInterval(delay.value);
   delay.value = setTimeout(
