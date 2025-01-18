@@ -25,9 +25,7 @@
           </template>
         </v-list-item>
         <v-list-item prepend-icon="mdi-link" @click="copySyncLinkToClipboard">
-          <template #title>
-            Obtenir le lien <span class="desktop-only">de synchronisation</span>
-          </template>
+          <template #title> Obtenir le lien </template>
         </v-list-item>
       </v-list>
     </v-menu>
