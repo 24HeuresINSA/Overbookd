@@ -1,7 +1,11 @@
 <template>
   <div class="task-orga-calendar">
     <h3>{{ taskName }}</h3>
-    <OverCalendar v-model="calendarMarker" :events="assignments" />
+    <OverCalendar
+      v-model="calendarMarker"
+      :events="assignments"
+      class="task-orga-calendar__calendar"
+    />
   </div>
 </template>
 
@@ -80,5 +84,8 @@ const mapAssignmentToEvent = (
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  &__calendar {
+    width: 100%;
+  }
 }
 </style>
