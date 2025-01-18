@@ -49,6 +49,7 @@
             :events="events"
             :day="day"
             :clickable-events="clickableEvents"
+            :availabilities="availabilities"
             @click:event="propagateEventClick"
           />
           <WeeklyCalendarContent
@@ -56,6 +57,7 @@
             :events="events"
             :day="day"
             :clickable-events="clickableEvents"
+            :availabilities="availabilities"
             @click:event="propagateEventClick"
           />
         </slot>
@@ -70,6 +72,7 @@ import {
   formatDateNumberValue,
   HOURS_IN_DAY,
   OverDate,
+  type IProvidePeriod,
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
 import type { CalendarEvent } from "~/utils/calendar/event";
@@ -91,6 +94,10 @@ const props = defineProps({
   clickableEvents: {
     type: Boolean,
     default: false,
+  },
+  availabilities: {
+    type: Array as PropType<IProvidePeriod[]>,
+    default: () => [],
   },
 });
 

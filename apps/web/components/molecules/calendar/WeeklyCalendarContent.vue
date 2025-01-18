@@ -9,6 +9,7 @@
         :events="events"
         :day="weekDay"
         :clickable-events="clickableEvents"
+        :availabilities="availabilities"
         @click:event="propagateEventClick"
       />
     </div>
@@ -16,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { IProvidePeriod } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
@@ -31,6 +33,10 @@ defineProps({
   clickableEvents: {
     type: Boolean,
     default: false,
+  },
+  availabilities: {
+    type: Array as PropType<IProvidePeriod[]>,
+    default: () => [],
   },
 });
 

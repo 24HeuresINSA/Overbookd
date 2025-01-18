@@ -6,7 +6,12 @@
       :stats="stats"
       class="mb-2"
     />
-    <OverCalendar v-model="calendarMarker" :events="events" clickable-events />
+    <OverCalendar
+      v-model="calendarMarker"
+      :events="events"
+      :availabilities="availabilities"
+      clickable-events
+    />
   </div>
 </template>
 
@@ -27,6 +32,7 @@ import {
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
+const availabilityStore = useVolunteerAvailabilityStore();
 
 type Volunteer = User & { teams: string[] };
 
@@ -47,6 +53,7 @@ const shouldShowStats = computed<boolean>(
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
+  availabilityStore.fetchVolunteerAvailabilities(props.volunteer.id);
   userStore.getVolunteerTasks(props.volunteer.id);
   userStore.getVolunteerAssignments(props.volunteer.id);
   if (canAssignVolunteer.value) {
@@ -68,6 +75,9 @@ const assignments = computed<PlanningEvent[]>(
 const tasks = computed<PlanningTask[]>(() => userStore.selectedUserTasks);
 const breakPeriods = computed<IProvidePeriod[]>(
   () => userStore.selectedUserBreakPeriods,
+);
+const availabilities = computed<IProvidePeriod[]>(
+  () => availabilityStore.availabilities.list,
 );
 
 const events = computed<CalendarEvent[]>(() => {
