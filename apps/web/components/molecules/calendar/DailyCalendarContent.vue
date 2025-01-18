@@ -75,14 +75,10 @@ const isAvailable = (hour: number): boolean => {
   height: 100%;
 }
 
-.availabilities {
-  position: relative;
-  height: $calendar-content-height;
-  .availability {
-    height: $hour-height;
-  }
-  .available {
-    background-color: rgba(var(--v-theme-success), 0.2);
-  }
+.availability {
+  height: $hour-height;
+}
+.available {
+  background-color: rgba(var(--v-theme-success), 0.2);
 }
 </style>
