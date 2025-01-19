@@ -29,9 +29,10 @@
         <v-btn-toggle
           v-show="isTaskOrga"
           v-model="friendFilter"
-          color="deep-purple accent-3"
+          color="secondary"
+          density="compact"
+          size="small"
           tile
-          group
         >
           <v-btn
             v-for="label of friendFilterLabel"

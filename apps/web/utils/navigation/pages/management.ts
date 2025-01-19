@@ -10,6 +10,7 @@ import {
 import type { PageInSummary } from "./desktop-summary";
 import {
   ASSIGNMENT_ORGA_TASK_URL,
+  ASSIGNMENT_TASK_ORGA_URL,
   CHARISMA_EVENTS_LIST_URL,
   CHARISMA_EVENTS_MANAGE_URL,
   CHARISMA_PERIODS_URL,
@@ -171,17 +172,17 @@ const ASSIGNMENT_ORGA_TASK_PAGE: PageInSummary = {
   keywords: ["orga-tache", "affectation"],
 };
 
-// const ASSIGNMENT_TASK_ORGA_PAGE: Page = {
-//   icon: "mdi-human-greeting",
-//   title: "Affect Tâche-Orga",
-//   permission: AFFECT_VOLUNTEER,
-//   to: ASSIGNMENT_TASK_ORGA_URL,
-//   description: "Permet d'affecter des tâches à des bénévoles",
-//   mobileSupport: false,
-//   canBeFavorite: true,
-//   hasParam: false,
-//   keywords: ["tache-orga", "affectation"],
-// };
+const ASSIGNMENT_TASK_ORGA_PAGE: PageInSummary = {
+  icon: "mdi-human-greeting",
+  title: "Affect Tâche-Orga",
+  permission: AFFECT_VOLUNTEER,
+  to: ASSIGNMENT_TASK_ORGA_URL,
+  description: "Permet d'affecter des tâches à des bénévoles",
+  mobileSupport: false,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["tache-orga", "affectation"],
+};
 
 const ORGA_NEED_PAGE: PageInSummary = {
   icon: "mdi-clock",
@@ -207,6 +208,6 @@ export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
   CHARISMA_EVENTS_LIST_PAGE,
   CHARISMA_PERIODS_PAGE,
   ASSIGNMENT_ORGA_TASK_PAGE,
-  // ASSIGNMENT_TASK_ORGA_PAGE,
+  ASSIGNMENT_TASK_ORGA_PAGE,
   ORGA_NEED_PAGE,
 ];
