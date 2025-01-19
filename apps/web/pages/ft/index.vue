@@ -5,7 +5,7 @@
       <v-btn text="Mes FTs" variant="outlined" color="primary" />
     </nuxt-link>
   </div>
-  <div class="task ft">
+  <main class="task ft">
     <FtFilter v-model="filters" class="task__filtering" />
     <v-card class="task__listing">
       <v-data-table
@@ -52,7 +52,7 @@
         </template>
       </v-data-table>
     </v-card>
-  </div>
+  </main>
 
   <v-btn
     icon="mdi-plus-thick"
@@ -241,6 +241,12 @@ const updateItemsPerPage = (itemsPerPage: number) => {
 </script>
 
 <style lang="scss" scoped>
+.quick-filters {
+  padding: 0px 10px;
+  display: flex;
+  gap: 5px 10px;
+  flex-wrap: wrap;
+}
 .task {
   display: flex;
   gap: $card-gap;
