@@ -173,6 +173,16 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.selectedActivity = castActivityWithDate(res);
     },
 
+    async updateGeneralTimeWindow(timeWindow: TimeWindow) {
+      const res = await repo.updateGeneralTimeWindow(
+        this.selectedActivity.id,
+        timeWindow["id"],
+        timeWindow,
+      );
+      if (isHttpError(res)) return;
+      this.selectedActivity = castActivityWithDate(res);
+    },
+
     async removeGeneralTimeWindow(timeWindowId: TimeWindow["id"]) {
       const res = await repo.removeGeneralTimeWindow(
         this.selectedActivity.id,
@@ -299,6 +309,16 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     async addInquiryTimeWindow(timeWindow: IProvidePeriod) {
       const res = await repo.addInquiryTimeWindow(
         this.selectedActivity.id,
+        timeWindow,
+      );
+      if (isHttpError(res)) return;
+      this.selectedActivity = castActivityWithDate(res);
+    },
+
+    async updateInquiryTimeWindow(timeWindow: TimeWindow) {
+      const res = await repo.updateInquiryTimeWindow(
+        this.selectedActivity.id,
+        timeWindow["id"],
         timeWindow,
       );
       if (isHttpError(res)) return;

@@ -50,6 +50,7 @@
           :time-windows="inquiry.timeWindows"
           :disabled="shouldInitInquiry"
           @add="addTimeWindow"
+          @update="updateTimeWindow"
           @remove="removeTimeWindow"
         />
 
@@ -195,6 +196,9 @@ const linkDrive = (link: AssignDrive) => faStore.linkDrive(link);
 
 const addTimeWindow = (period: IProvidePeriod) => {
   faStore.addInquiryTimeWindow(period);
+};
+const updateTimeWindow = (timeWindow: TimeWindow) => {
+  faStore.updateInquiryTimeWindow(timeWindow);
 };
 const removeTimeWindow = (timeWindow: TimeWindow) => {
   faStore.removeInquiryTimeWindow(timeWindow.id);
