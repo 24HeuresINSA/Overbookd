@@ -1,120 +1,120 @@
 <template>
   <DialogCard :without-actions="!canManageUsers" @close="close">
-    <template #title>
-      <div class="card-title">
-        <ProfilePicture
-          size="large"
-          :user="volunteer"
-          class="profile-picture"
-        />
-        <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
-      </div>
-    </template>
-
     <template #content>
-      <p class="charisma">
-        Charisme: <strong>{{ volunteer.charisma }}</strong> 😎
-      </p>
-      <div class="team-list">
-        <TeamChip
-          v-for="team in volunteer.teams"
-          :key="team"
-          :team="team"
-          with-name
-          :show-hidden="canManageUsers"
-          :closable="canManageUsers"
-          @close="removeTeam"
-        />
-      </div>
-      <div class="volunteer-form">
-        <div v-if="canManageUsers" class="team-add">
-          <SearchTeams
-            v-model="newTeams"
-            label="Equipe à ajouter"
-            prepend-icon="mdi-account-group"
-            hide-details
-            closable-chips
-            :list="assignableTeams"
+      <div class="volunteer-informations">
+        <div class="card-title">
+          <ProfilePicture
+            size="large"
+            :user="volunteer"
+            class="profile-picture"
           />
-          <v-btn
-            icon="mdi-plus"
-            :disabled="hasNotNewTeamToAdd"
-            color="primary"
-            @click="addTeams"
+          <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
+        </div>
+        <p class="charisma">
+          Charisme: <strong>{{ volunteer.charisma }}</strong> 😎
+        </p>
+        <div class="team-list">
+          <TeamChip
+            v-for="team in volunteer.teams"
+            :key="team"
+            :team="team"
+            with-name
+            :show-hidden="canManageUsers"
+            :closable="canManageUsers"
+            @close="removeTeam"
           />
         </div>
-
-        <v-text-field
-          v-show="canManageUsers"
-          v-model="nickname"
-          label="Surnom"
-          :rules="[rules.maxLength(30)]"
-          prepend-icon="mdi-account"
-          :readonly="!canManageUsers"
-          hide-details
-          clearable
-        />
-
-        <v-text-field
-          v-model="email"
-          label="Email"
-          inputmode="email"
-          :rules="[rules.required, rules.email, rules.insaEmail]"
-          :readonly="!canManageUsers"
-          prepend-icon="mdi-send"
-          persistent-hint
-          hide-details
-          @click:prepend="sendEmail"
-        />
-
-        <v-text-field
-          v-model="phone"
-          label="Numéro de téléphone"
-          :readonly="!canManageUsers"
-          :rules="[rules.required, rules.mobilePhone]"
-          prepend-icon="mdi-phone"
-          hide-details
-          @click:prepend="callPhoneNumber"
-        />
-
-        <div>
-          <h3>Commentaire</h3>
-          <p>{{ volunteer.comment ?? "Aucun commentaire" }}</p>
-        </div>
-
-        <v-textarea
-          v-show="canManageUsers"
-          v-model="note"
-          label="Note des humains"
-          rows="3"
-          hide-details
-        />
-
-        <div class="friends">
-          <h3>Amis</h3>
-          <div class="friends__list">
-            <v-chip
-              v-for="friend in selectedVolunteerFriends"
-              :key="friend.id"
-              :closable="canManageUsers"
-              @click:close="removeFriend(friend)"
-            >
-              {{ buildUserName(friend) }}
-            </v-chip>
-            <span v-show="selectedVolunteerFriends.length === 0">
-              Aucun ami
-            </span>
+        <div class="volunteer-form">
+          <div v-if="canManageUsers" class="team-add">
+            <SearchTeams
+              v-model="newTeams"
+              label="Equipe à ajouter"
+              prepend-icon="mdi-account-group"
+              hide-details
+              closable-chips
+              :list="assignableTeams"
+            />
+            <v-btn
+              icon="mdi-plus"
+              :disabled="hasNotNewTeamToAdd"
+              color="primary"
+              @click="addTeams"
+            />
           </div>
-          <SearchFriend
+
+          <v-text-field
             v-show="canManageUsers"
-            v-model="newFriend"
-            title="Ajouter un ami"
-            class="friends__input"
+            v-model="nickname"
+            label="Surnom"
+            :rules="[rules.maxLength(30)]"
+            prepend-icon="mdi-account"
+            :readonly="!canManageUsers"
             hide-details
-            @update:model-value="sendFriendRequest"
+            clearable
           />
+
+          <v-text-field
+            v-model="email"
+            label="Email"
+            inputmode="email"
+            :rules="[rules.required, rules.email, rules.insaEmail]"
+            :readonly="!canManageUsers"
+            prepend-icon="mdi-send"
+            persistent-hint
+            hide-details
+            @click:prepend="sendEmail"
+          />
+
+          <v-text-field
+            v-model="phone"
+            label="Numéro de téléphone"
+            :readonly="!canManageUsers"
+            :rules="[rules.required, rules.mobilePhone]"
+            prepend-icon="mdi-phone"
+            hide-details
+            @click:prepend="callPhoneNumber"
+          />
+
+          <div>
+            <h3>Commentaire</h3>
+            <p>{{ volunteer.comment ?? "Aucun commentaire" }}</p>
+          </div>
+
+          <v-textarea
+            v-show="canManageUsers"
+            v-model="note"
+            label="Note des humains"
+            rows="3"
+            hide-details
+          />
+
+          <div class="friends">
+            <h3>Amis</h3>
+            <div class="friends__list">
+              <v-chip
+                v-for="friend in selectedVolunteerFriends"
+                :key="friend.id"
+                :closable="canManageUsers"
+                @click:close="removeFriend(friend)"
+              >
+                {{ buildUserName(friend) }}
+              </v-chip>
+              <span v-show="selectedVolunteerFriends.length === 0">
+                Aucun ami
+              </span>
+            </div>
+            <SearchFriend
+              v-show="canManageUsers"
+              v-model="newFriend"
+              title="Ajouter un ami"
+              class="friends__input"
+              hide-details
+              @update:model-value="sendFriendRequest"
+            />
+          </div>
         </div>
       </div>
+      <div class="volunteer-availabilitites desktop-only" />
     </template>
 
     <template #actions>
@@ -159,6 +159,7 @@ import { formatPhoneLink } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
+const configurationStore = useConfigurationStore();
 
 const props = defineProps({
   volunteer: {
@@ -199,6 +200,8 @@ const assignableTeams = computed<Team[]>(() => {
   if (userStore.can(MANAGE_ADMINS)) return teamsToAdd;
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
 });
+
+const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
@@ -276,8 +279,9 @@ const callPhoneNumber = () => {
   align-items: center;
   gap: 5px;
   h2 {
-    font-size: 1.3em;
+    font-size: 2em;
     line-height: 1.1;
+    margin-bottom: 5px;
   }
   .profile-picture {
     max-width: 160px;
