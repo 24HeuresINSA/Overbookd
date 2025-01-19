@@ -23,7 +23,7 @@ useHead({ title: "Affect Tâche-Orga" });
 
 const assignTaskToVolunteer = useAssignTaskToVolunteerStore();
 
-onMounted(() => assignTaskToVolunteer.fetchTasks());
+assignTaskToVolunteer.fetchTasks();
 
 const selectVolunteer = (volunteer: AssignableVolunteer) => {
   assignTaskToVolunteer.selectVolunteer(volunteer);

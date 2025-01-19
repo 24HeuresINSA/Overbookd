@@ -5,7 +5,11 @@
       <span>|</span>
       <AssignmentVolunteerStats :stats="stats" class="title__stats" />
     </div>
-    <OverCalendar v-model="calendarMarker" :events="events" />
+    <OverCalendar
+      v-model="calendarMarker"
+      :events="events"
+      :availabilities="availabilities"
+    />
   </div>
 </template>
 
@@ -96,13 +100,9 @@ const refreshVolunteerData = async (volunteerId: number) => {
   ]);
 };
 
-// const availabilities = computed<Period[]>(
-//   () => availabilitiesStore.availabilities.list as Period[],
-// );
-// const isVolunteerAvailableDuringThisHour = (date: DateString, hour: Hour) => {
-//   const overDate = OverDate.init({ date, hour });
-//   return isItAvailableDuringThisHour(availabilities.value, overDate);
-// };
+const availabilities = computed<IProvidePeriod[]>(
+  () => availabilitiesStore.availabilities.list,
+);
 
 // const emit = defineEmits(["display-assignment-details"]);
 // const selectAssignmentToDisplayDetails = (
