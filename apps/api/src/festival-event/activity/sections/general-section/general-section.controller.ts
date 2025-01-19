@@ -128,6 +128,45 @@ export class GeneralSectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
+  @Patch(":faId/general/time-windows/:timeWindowId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Time window to modify in general section of festival activity",
+    type: PeriodRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  updateGeneralTimeWindow(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("timeWindowId") timeWindowId: TimeWindow["id"],
+    @Body() period: PeriodRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.generalService.updateGeneralTimeWindow(
+      faId,
+      timeWindowId,
+      period,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
   @Delete(":faId/general/time-windows/:timeWindowId")
   @HttpCode(200)
   @ApiResponse({

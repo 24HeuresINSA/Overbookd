@@ -74,6 +74,7 @@
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow"
+          @update="updateTimeWindow"
           @remove="removeTimeWindow"
         />
       </v-card-text>
@@ -153,6 +154,9 @@ const updateToPublishOrAskPublic = (canBeNull: boolean | null) => {
 
 const addTimeWindow = (period: IProvidePeriod) => {
   faStore.addGeneralTimeWindow(period);
+};
+const updateTimeWindow = (timeWindow: TimeWindow) => {
+  faStore.updateGeneralTimeWindow(timeWindow);
 };
 const removeTimeWindow = (timeWindow: TimeWindow) => {
   faStore.removeGeneralTimeWindow(timeWindow.id);

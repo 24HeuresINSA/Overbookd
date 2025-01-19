@@ -25,6 +25,14 @@ export class GeneralSectionService {
     return this.prepare.addTimeWindowInGeneral(id, timeWindow);
   }
 
+  updateGeneralTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ) {
+    return this.prepare.updateTimeWindowInGeneral(faId, timeWindowId, period);
+  }
+
   removeGeneralTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],

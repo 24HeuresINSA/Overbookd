@@ -199,7 +199,7 @@ export class InquirySectionController {
     @Param("timeWindowId") timeWindowId: TimeWindow["id"],
     @Body() period: PeriodRequestDto,
   ): Promise<FestivalActivity> {
-    return this.inquiryService.updateTimeWindowInInquiry(
+    return this.inquiryService.updateInquiryTimeWindow(
       faId,
       timeWindowId,
       period,

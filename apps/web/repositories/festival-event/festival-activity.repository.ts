@@ -120,6 +120,17 @@ export class FestivalActivityRepository {
     );
   }
 
+  static updateGeneralTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ) {
+    return HttpClient.patch<FestivalActivity>(
+      `${this.basePath}/${faId}/general/time-windows/${timeWindowId}`,
+      period,
+    );
+  }
+
   static removeGeneralTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],

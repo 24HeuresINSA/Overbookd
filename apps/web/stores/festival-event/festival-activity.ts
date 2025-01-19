@@ -173,6 +173,16 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.selectedActivity = castActivityWithDate(res);
     },
 
+    async updateGeneralTimeWindow(timeWindow: TimeWindow) {
+      const res = await repo.updateGeneralTimeWindow(
+        this.selectedActivity.id,
+        timeWindow["id"],
+        timeWindow,
+      );
+      if (isHttpError(res)) return;
+      this.selectedActivity = castActivityWithDate(res);
+    },
+
     async removeGeneralTimeWindow(timeWindowId: TimeWindow["id"]) {
       const res = await repo.removeGeneralTimeWindow(
         this.selectedActivity.id,

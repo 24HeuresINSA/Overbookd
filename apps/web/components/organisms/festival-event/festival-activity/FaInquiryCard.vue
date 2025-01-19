@@ -198,7 +198,6 @@ const addTimeWindow = (period: IProvidePeriod) => {
   faStore.addInquiryTimeWindow(period);
 };
 const updateTimeWindow = (timeWindow: TimeWindow) => {
-  console.log("updateeeeed!");
   faStore.updateInquiryTimeWindow(timeWindow);
 };
 const removeTimeWindow = (timeWindow: TimeWindow) => {
