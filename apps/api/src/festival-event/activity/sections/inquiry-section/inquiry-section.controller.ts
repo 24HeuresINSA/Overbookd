@@ -169,6 +169,45 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
+  @Patch(":faId/inquiry/time-windows/:timeWindowId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Time window to modify in inquiry section of festival activity",
+    type: PeriodRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  updateInquiryTimeWindow(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("timeWindowId") timeWindowId: TimeWindow["id"],
+    @Body() period: PeriodRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.inquiryService.updateTimeWindowInInquiry(
+      faId,
+      timeWindowId,
+      period,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
   @Delete(":faId/inquiry/time-windows/:timeWindowId")
   @HttpCode(200)
   @ApiResponse({

@@ -18,7 +18,13 @@
         {{ formatDateWithMinutes(item.end) }}
       </template>
 
-      <template #item.removal="{ item }">
+      <template #item.actions="{ item }">
+        <v-btn
+          icon="mdi-pencil"
+          size="small"
+          variant="flat"
+          @click="openUpdateTimeWindowDialog(item)"
+        />
         <v-btn
           icon="mdi-trash-can"
           size="small"
@@ -33,11 +39,16 @@
       text="Ajouter un créneau"
       color="primary"
       class="time-windows__add"
-      @click="openAddDialog"
+      @click="openAddTimeWindowDialog"
     />
 
-    <v-dialog v-model="isAddDialogOpen" max-width="600px">
-      <CreatePeriodDialogCard @add="addTimeWindow" @close="closeAddDialog" />
+    <v-dialog v-model="isPeriodDialogOpen" max-width="600px">
+      <CreatePeriodDialogCard
+        :existing-period="selectedTimeWindow"
+        @add="addTimeWindow"
+        @update="updateTimeWindow"
+        @close="closeDialog"
+      />
     </v-dialog>
   </div>
 </template>
@@ -65,18 +76,30 @@ const headers = computed<TableHeaders>(() => {
     { title: "Date de début", value: "start", sortable: true },
     { title: "Date de fin", value: "end", sortable: true },
   ];
-  const removalHeader = { title: "Suppression", value: "removal" };
-  return props.disabled ? baseHeaders : [...baseHeaders, removalHeader];
+  const actionlHeader = { title: "Actions", value: "actions" };
+  return props.disabled ? baseHeaders : [...baseHeaders, actionlHeader];
 });
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
-const emit = defineEmits(["add", "remove"]);
-const addTimeWindow = (period: IProvidePeriod) => emit("add", period);
-const removeTimeWindow = (timeWindow: TimeWindow) => emit("remove", timeWindow);
+const selectedTimeWindow = ref<TimeWindow | null>(null);
+const isPeriodDialogOpen = ref<boolean>(false);
+const openAddTimeWindowDialog = () => {
+  selectedTimeWindow.value = null;
+  isPeriodDialogOpen.value = true;
+};
+const openUpdateTimeWindowDialog = (timeWindow: TimeWindow) => {
+  selectedTimeWindow.value = timeWindow;
+  isPeriodDialogOpen.value = true;
+};
+const closeDialog = () => {
+  selectedTimeWindow.value = null;
+  isPeriodDialogOpen.value = false;
+};
 
-const isAddDialogOpen = ref<boolean>(false);
-const openAddDialog = () => (isAddDialogOpen.value = true);
-const closeAddDialog = () => (isAddDialogOpen.value = false);
+const emit = defineEmits(["add", "update", "remove"]);
+const addTimeWindow = (period: IProvidePeriod) => emit("add", period);
+const updateTimeWindow = (timeWindow: TimeWindow) => emit("update", timeWindow);
+const removeTimeWindow = (timeWindow: TimeWindow) => emit("remove", timeWindow);
 </script>
 
 <style lang="scss" scoped>

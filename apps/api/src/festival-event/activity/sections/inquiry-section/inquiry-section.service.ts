@@ -54,6 +54,14 @@ export class InquirySectionService {
     return this.prepare.addTimeWindowInInquiry(faId, timeWindow);
   }
 
+  updateTimeWindowInInquiry(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ) {
+    return this.prepare.updateTimeWindowInInquiry(faId, timeWindowId, period);
+  }
+
   removeInquiryTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],

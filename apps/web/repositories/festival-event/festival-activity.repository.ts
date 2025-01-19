@@ -279,6 +279,17 @@ export class FestivalActivityRepository {
     );
   }
 
+  static updateInquiryTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+    period: IProvidePeriod,
+  ) {
+    return HttpClient.patch<FestivalActivity>(
+      `${this.basePath}/${faId}/inquiry/time-windows/${timeWindowId}`,
+      period,
+    );
+  }
+
   static removeInquiryTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
