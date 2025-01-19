@@ -1,5 +1,10 @@
 <template>
   <DesktopPageTitle />
+  <div class="quick-filters">
+    <nuxt-link :to="`${FT_URL}?adherent=${me?.id}`">
+      <v-btn text="Mes FTs" variant="outlined" color="primary" />
+    </nuxt-link>
+  </div>
   <div class="task ft">
     <FtFilter v-model="filters" class="task__filtering" />
     <v-card class="task__listing">
@@ -107,6 +112,7 @@ import {
   type TaskReviewsFilter,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { getPreviewReviewerStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { FT_URL } from "@overbookd/web-page";
 import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
 import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
@@ -117,6 +123,8 @@ const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
+
+const me = computed<User | undefined>(() => userStore.loggedUser);
 
 const canRemoveTask = computed<boolean>(() => userStore.can(WRITE_FT));
 const tableHeaders = computed<TableHeaders>(() => {
