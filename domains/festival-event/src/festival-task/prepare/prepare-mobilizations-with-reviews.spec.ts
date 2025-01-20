@@ -12,7 +12,6 @@ import {
   friday10hfriday11hMobilization,
   friday9h,
   sunday04h,
-  saturday04h,
   friday8h,
 } from "../festival-task.test-util.js";
 import {
