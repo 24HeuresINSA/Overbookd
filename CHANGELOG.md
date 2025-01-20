@@ -1,3 +1,25 @@
+## [3.27.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.26.1...v3.27.0) (2025-01-20)
+
+### Features
+
+* **fa:** time windows editable in fa (general and inquiry sections) [#2215](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2215) ([6d7e894](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d7e894ceae0b2c57e33e64804a1a58ba9999c4f))
+* **ft:** add button to quickly see them own FTs [#2341](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2341) ([eddea6a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eddea6ad20919630cc27fd562c329bc77622fd72))
+* **planning:** add sync and download on planning page [#2344](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2344) ([d80a34e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d80a34eb42d48eb20c51dbb91dce26b07b8802a1))
+
+### Bug Fixes
+
+* **availabilitites:** enable day selection [#2368](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2368) ([081bcef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/081bcefa8a0adb812ca11b686d9a3dac4422f903))
+* **calendar:** display availabilities in planning [#2336](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2336) ([9583e51](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9583e5152085d3c2e7211644a7492ac0c4a484d4)), closes [#2366](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2366)
+
+### Pre-Features
+
+* **assignment:** create task-orga page [#2236](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2236) ([ad3fb32](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ad3fb320ae1a9626a6054a324b6a55dfe10b6136))
+* **assignment:** create TaskOrgaCalendar [#2232](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2232) ([833f151](https://gitlab.com/24-heures-insa/overbookd-mono/commit/833f1516d8eed2999b53927c5b846d6d540bb970))
+
+### Performance Improvements
+
+* **calendar:** optimization [#2353](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2353) ([4dca439](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4dca4397147534793dbe834de5c85ec611d860fd))
+
 ## [3.26.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.26.0...v3.26.1) (2025-01-17)
 
 ### Bug Fixes
