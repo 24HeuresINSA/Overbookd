@@ -1,7 +1,13 @@
 <template>
   <header
+    :v-ripple="clickable"
     class="header-day"
-    :class="{ today: isToday, 'with-daily-event': todayPublicHoliday }"
+    :class="{
+      today: isToday,
+      'with-daily-event': todayPublicHoliday,
+      clickable,
+    }"
+    @click="propagateClick"
   >
     <p class="header-day__name">{{ day.calendarHeader.name }}</p>
     <p class="header-day__number">{{ day.calendarHeader.number }}</p>
@@ -29,6 +35,10 @@ const props = defineProps({
     type: Object as PropType<DayPresenter>,
     required: true,
   },
+  clickable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const calendarEvents = ref<DailyEvent[]>([]);
@@ -43,6 +53,11 @@ const updateCalendarEvents = () => {
   calendarEvents.value = publicHolidayStore.calendarEventsForYear(year);
 };
 watch(() => props.day, updateCalendarEvents, { immediate: true });
+
+const emit = defineEmits(["click"]);
+const propagateClick = () => {
+  if (props.clickable) emit("click", props.day);
+};
 
 const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
@@ -116,5 +131,9 @@ const isToday = computed<boolean>(() => {
 
 .today {
   color: rgb(var(--v-theme-primary));
+}
+
+.clickable:hover {
+  background-color: rgba(var(--v-theme-on-surface), 0.02);
 }
 </style>
