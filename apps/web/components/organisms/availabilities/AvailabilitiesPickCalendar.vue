@@ -12,7 +12,7 @@
       />
     </template>
     <template #header>
-      <AvailabilitiesCalendarHeader :days="days" />
+      <AvailabilitiesCalendarHeader :days="days" @click="selectOrUnselectDay" />
     </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
@@ -24,11 +24,16 @@
 </template>
 
 <script lang="ts" setup>
-import { OverDate } from "@overbookd/time";
+import { Duration, OverDate, Period } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { AvailabilityEvent } from "~/utils/availabilities/availabilities";
+import {
+  ALL_HOURS,
+  findCharismaPerHour,
+  type AvailabilityEvent,
+} from "~/utils/availabilities/availabilities";
 
 const availabilityStore = useVolunteerAvailabilityStore();
+const charismaPeriodStore = useCharismaPeriodStore();
 
 defineProps({
   disablePrevious: {
@@ -47,20 +52,59 @@ defineProps({
 
 const days = defineModel<DayPresenter[]>({ required: true });
 
+const availabilities = computed(() => availabilityStore.availabilities.list);
+const charismaPeriods = computed(() => charismaPeriodStore.all);
+
+const recordedAvailabilitites = computed(
+  () => availabilityStore.availabilities.recorded,
+);
+const isRecorded = (date: Date): boolean => {
+  return recordedAvailabilitites.value.some((recorded) =>
+    recorded.isIncluding(date),
+  );
+};
 const selectedAvailabilities = computed(
   () => availabilityStore.availabilities.selected,
 );
-const isSelected = (event: AvailabilityEvent): boolean => {
+const isSelected = (date: Date): boolean => {
   return selectedAvailabilities.value.some((selected) =>
-    selected.isIncluding(event.start),
+    selected.isIncluding(date),
   );
 };
 const selectOrUnselectAvailability = (availability: AvailabilityEvent) => {
   const date = OverDate.fromLocal(availability.start);
-  if (isSelected(availability)) {
+  if (isSelected(availability.start)) {
     return availabilityStore.unSelectAvailability(date, availability.charisma);
   }
   availabilityStore.selectAvailability(date, availability.charisma);
+};
+
+const isAllDaySelected = (day: DayPresenter): boolean => {
+  const start = day.startsAt;
+  const tomorrow = start.plus(Duration.ONE_DAY).date;
+  const period = Period.init({ start: start.date, end: tomorrow });
+  return availabilities.value.some((availability) =>
+    availability.includes(period),
+  );
+};
+const selectOrUnselectDay = (day: DayPresenter) => {
+  if (isAllDaySelected(day)) {
+    ALL_HOURS.forEach((hour) => {
+      const date = OverDate.init({ date: day.date.dateString, hour });
+      if (isSelected(date.date) && !isRecorded(date.date)) {
+        const charisma = findCharismaPerHour(charismaPeriods.value, date.date);
+        availabilityStore.unSelectAvailability(date, charisma);
+      }
+    });
+    return;
+  }
+  ALL_HOURS.forEach((hour) => {
+    const date = OverDate.init({ date: day.date.dateString, hour });
+    if (!isSelected(date.date) && !isRecorded(date.date)) {
+      const charisma = findCharismaPerHour(charismaPeriods.value, date.date);
+      availabilityStore.selectAvailability(date, charisma);
+    }
+  });
 };
 
 const emit = defineEmits(["previous", "next", "validate"]);

@@ -16,7 +16,10 @@
 <script lang="ts" setup>
 import { HOURS_IN_DAY, OverDate, Period, type Hour } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { AvailabilityEvent } from "~/utils/availabilities/availabilities";
+import {
+  findCharismaPerHour,
+  type AvailabilityEvent,
+} from "~/utils/availabilities/availabilities";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 
 type AvailabilityCell = AvailabilityEvent & {
@@ -40,15 +43,6 @@ const props = defineProps({
 const TWO_HOURS_CELL_COUNT = (SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT) / 2;
 const ONE_HOUR_CELL_COUNT = HOURS_IN_DAY - TWO_HOURS_CELL_COUNT * 2;
 const CELLS_IN_DAY = TWO_HOURS_CELL_COUNT + ONE_HOUR_CELL_COUNT;
-
-const findCharismaPerHour = (date: Date): number => {
-  const charismaPeriod = charismaPeriodStore.all.find((cp) =>
-    Period.init({ start: cp.start, end: cp.end }).isIncluding(date),
-  );
-  if (!charismaPeriod) return 0;
-  const isOneHourShift = isPartyShift(date.getHours());
-  return isOneHourShift ? charismaPeriod.charisma : charismaPeriod.charisma * 2;
-};
 
 const gridCells = computed<AvailabilityCell[]>(() => {
   const daysArray = Array.from({ length: props.days.length }, (_, i) => i);
@@ -84,7 +78,7 @@ const generateAvailabilityCells = (
     return {
       start: start.date,
       end: end.date,
-      charisma: findCharismaPerHour(start.date),
+      charisma: findCharismaPerHour(charismaPeriodStore.all, start.date),
       duration: duration,
       rowStart,
       rowEnd,
