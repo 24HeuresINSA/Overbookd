@@ -45,17 +45,16 @@ const assignments = computed<CalendarEvent[]>(() =>
 );
 
 const buildEventName = (team: AssignmentTeam): string => {
-  return `[${team.assigned}/${team.demand}] ${team.team}`;
+  const teamName = teamStore.getTeamByCode(team.team)?.name ?? team.team;
+  return `[${team.assigned}/${team.demand}] ${teamName}`;
 };
-const getTeamColor = (code: string): string => {
-  return teamStore.getTeamByCode(code)?.color ?? "blue";
-};
+
 const decimalToHex = (decimal: number): string => {
   const hex = Math.round(decimal).toString(16);
   return hex.length === 1 ? "0" + hex : hex;
 };
 const defineEventColor = (team: AssignmentTeam): string => {
-  const color = getTeamColor(team.team);
+  const color = teamStore.getTeamByCode(team.team)?.color ?? "#000000";
   const spread = (180 * team.assigned) / team.demand + 75;
   return color + decimalToHex(spread);
 };

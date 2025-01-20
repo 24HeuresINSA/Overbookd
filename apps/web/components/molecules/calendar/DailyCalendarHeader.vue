@@ -134,6 +134,6 @@ const isToday = computed<boolean>(() => {
 }
 
 .clickable:hover {
-  background-color: rgba(var(--v-theme-on-surface), 0.02);
+  background-color: rgba(var(--v-theme-on-surface), 0.05);
 }
 </style>

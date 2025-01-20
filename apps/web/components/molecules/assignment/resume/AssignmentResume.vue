@@ -7,7 +7,7 @@
         </div>
         <div class="assignment-remaining-team-requests">
           <span v-for="request in remaingTeamRequests" :key="request.team">
-            {{ request.team }}: {{ request.missing }}
+            {{ findTeamName(request.team) }}: {{ request.missing }}
           </span>
         </div>
       </div>
@@ -40,6 +40,7 @@
 import type { AssignmentSummaryWithTask } from "@overbookd/http";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
+const teamStore = useTeamStore();
 
 const props = defineProps({
   assignment: {
@@ -78,6 +79,10 @@ const teamSelectShortcut = () => {
   const team = props.assignment.teams.at(0)?.team;
   if (!team) return;
   selectTeam(team);
+};
+
+const findTeamName = (code: string): string => {
+  return teamStore.getTeamByCode(code)?.name ?? code;
 };
 </script>
 
