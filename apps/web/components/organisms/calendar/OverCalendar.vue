@@ -265,5 +265,6 @@ $calendar-content-height: $hour-height * 24;
   height: 100%;
   grid-row: 2;
   grid-column: 2;
+  z-index: 10;
 }
 </style>

@@ -6,6 +6,10 @@ import {
 } from "@overbookd/time";
 import { isPartyShift } from "../shift.utils";
 
+export type AvailabilityEvent = IProvidePeriod & {
+  charisma: number;
+};
+
 export const ALL_HOURS: Hour[] = Array.from(
   { length: 24 },
   (_, hour) => hour,

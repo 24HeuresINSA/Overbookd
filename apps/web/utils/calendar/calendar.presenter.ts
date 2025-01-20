@@ -22,17 +22,14 @@ class Percentage {
   }
 }
 
-type IPresentEvent = {
-  top: Pixel;
-  height: Pixel;
-  width: Percentage;
-  left: Percentage;
-};
+export type AmongCalendarEvent = { count: number; index: number };
+const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
 
-abstract class EventPresenter implements IPresentEvent {
+export class CalendarEventPresenter {
   constructor(
-    protected readonly event: CalendarEvent,
-    protected readonly day: DayPresenter,
+    private readonly event: CalendarEvent,
+    private readonly day: DayPresenter,
+    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
   ) {}
 
   private get minutesBetweenDayStartAndEventStart(): number {
@@ -70,48 +67,6 @@ abstract class EventPresenter implements IPresentEvent {
     return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
-  get css(): Record<string, string> {
-    return {
-      top: this.top.css,
-      height: this.height.css,
-      width: this.width.css,
-      left: this.left.css,
-    };
-  }
-
-  abstract get width(): Percentage;
-  abstract get left(): Percentage;
-}
-
-export class AvailabilityPresenter
-  extends EventPresenter
-  implements IPresentEvent
-{
-  get width(): Percentage {
-    const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    return new Percentage(100 - horizontalMargin);
-  }
-
-  get left(): Percentage {
-    return new Percentage(HORIZONTAL_MARGIN_IN_PERCENTAGE);
-  }
-}
-
-export type AmongCalendarEvent = { count: number; index: number };
-const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
-
-export class CalendarEventPresenter
-  extends EventPresenter
-  implements IPresentEvent
-{
-  constructor(
-    event: CalendarEvent,
-    day: DayPresenter,
-    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
-  ) {
-    super(event, day);
-  }
-
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
     const baseWidth = 100 / this.among.count;
@@ -123,6 +78,15 @@ export class CalendarEventPresenter
       this.among.index * HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
     const baseLeft = this.among.index * this.width.value + previousEventsMargin;
     return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
+  }
+
+  get css(): Record<string, string> {
+    return {
+      top: this.top.css,
+      height: this.height.css,
+      width: this.width.css,
+      left: this.left.css,
+    };
   }
 
   get periodText(): string {

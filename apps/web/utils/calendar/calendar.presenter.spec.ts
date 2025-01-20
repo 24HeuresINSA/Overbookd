@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { MINUTES_IN_HOUR, OverDate } from "@overbookd/time";
 import { createCalendarEvent } from "./event";
 import {
-  AvailabilityPresenter,
   CalendarEventPresenter,
   HORIZONTAL_MARGIN_IN_PERCENTAGE,
   PIXELS_PER_MINUTE,
@@ -60,7 +59,7 @@ describe("Calendar Event Presenter", () => {
     ${sunday23htoMonday01hEvent}  | ${OverDate.init({ date: monday, hour: 0 }).date}  | ${OverDate.init({ date: monday, hour: 1 }).date}
   `("displayed event period", ({ event, expectedStart, expectedEnd }) => {
     it(`should calculate displayed period as ${expectedStart} to ${expectedEnd} for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
+      const presenter = new CalendarEventPresenter(
         event,
         displayedDatePresenter,
       );
@@ -92,7 +91,7 @@ describe("Calendar Event Presenter", () => {
     ${monday22htoTuesday02hEvent} | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 22) + VERTICAL_MARGIN_IN_PIXELS}      | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 2 - 1) - VERTICAL_MARGINS}
   `("top and height", ({ event, expectedTop, expectedHeight }) => {
     it(`should calculate top as ${expectedTop}px and height as ${expectedHeight}px for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
+      const presenter = new CalendarEventPresenter(
         event,
         displayedDatePresenter,
       );
@@ -120,19 +119,4 @@ describe("Calendar Event Presenter", () => {
       });
     },
   );
-
-  describe.each`
-    event                  | expectedWidth               | expectedLeft
-    ${monday09hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  `("availability width and left", ({ event, expectedWidth, expectedLeft }) => {
-    it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
-        event,
-        displayedDatePresenter,
-      );
-      expect(presenter.width.value).toBe(expectedWidth);
-      expect(presenter.left.value).toBe(expectedLeft);
-    });
-  });
 });
