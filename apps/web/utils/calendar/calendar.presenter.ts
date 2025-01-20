@@ -22,14 +22,11 @@ class Percentage {
   }
 }
 
-export type AmongCalendarEvent = { count: number; index: number };
-const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
-
 export class CalendarEventPresenter {
   constructor(
     private readonly event: CalendarEvent,
     private readonly day: DayPresenter,
-    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
+    private readonly among: CalendarEvent[] = [],
   ) {}
 
   private get minutesBetweenDayStartAndEventStart(): number {
@@ -67,16 +64,38 @@ export class CalendarEventPresenter {
     return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
+  get simultaneousEvents(): CalendarEvent[] {
+    const event = Period.init({ start: this.event.start, end: this.event.end });
+    const overlappingEvents = this.among.filter((other) =>
+      event.isOverlapping(Period.init(other)),
+    );
+    return [this.event, ...overlappingEvents].sort((a, b) => {
+      if (a.start.getTime() !== b.start.getTime()) {
+        return a.start.getTime() - b.start.getTime();
+      }
+      if (a.end.getTime() !== b.end.getTime()) {
+        return a.end.getTime() - b.end.getTime();
+      }
+      const nameComparison = a.name.localeCompare(b.name);
+      if (nameComparison !== 0) return nameComparison;
+      return a.id.localeCompare(b.id);
+    });
+  }
+
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseWidth = 100 / this.among.count;
+    const baseWidth = 100 / this.simultaneousEvents.length;
     return new Percentage(baseWidth - horizontalMargin);
   }
 
   get left(): Percentage {
-    const previousEventsMargin =
-      this.among.index * HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseLeft = this.among.index * this.width.value + previousEventsMargin;
+    const index = this.simultaneousEvents.findIndex(
+      (simultaneous) => this.event.id === simultaneous.id,
+    );
+
+    if (index === -1) throw new Error("Event not found in simultaneousEvents");
+
+    const baseLeft = (100 / this.simultaneousEvents.length) * index;
     return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
   }
 

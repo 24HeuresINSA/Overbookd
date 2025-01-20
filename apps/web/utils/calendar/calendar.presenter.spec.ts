@@ -101,10 +101,28 @@ describe("Calendar Event Presenter", () => {
   });
 
   describe.each`
-    event                  | among                     | expectedWidth                   | expectedLeft
-    ${monday09hto10hEvent} | ${{ count: 1, index: 0 }} | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday09hto10hEvent} | ${{ count: 2, index: 1 }} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${{ count: 3, index: 1 }} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    event                  | among                                                  | expected
+    ${monday09hto10hEvent} | ${[]}                                                  | ${1}
+    ${monday09hto10hEvent} | ${[monday22htoTuesday02hEvent]}                        | ${1}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday22htoTuesday02hEvent]} | ${2}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday09hto10hEvent]}        | ${3}
+  `("simultaneous events", ({ event, among, expected }) => {
+    it(`should deduct simultaneous events of ${event.name}`, () => {
+      const presenter = new CalendarEventPresenter(
+        event,
+        displayedDatePresenter,
+        among,
+      );
+      expect(presenter.simultaneousEvents.length).toBe(expected);
+    });
+  });
+
+  describe.each`
+    event                  | among                                                  | expectedWidth                   | expectedLeft
+    ${monday09hto10hEvent} | ${[]}                                                  | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday09hto10hEvent} | ${[monday22htoTuesday02hEvent]}                        | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday22htoTuesday02hEvent]} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday09hto10hEvent]}        | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
   `(
     "calendar event width and left",
     ({ event, among, expectedWidth, expectedLeft }) => {
