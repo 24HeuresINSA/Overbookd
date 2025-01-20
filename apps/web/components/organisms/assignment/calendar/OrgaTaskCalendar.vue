@@ -90,6 +90,7 @@ const stats = computed<AssignmentStat[]>(
 );
 
 const refreshVolunteerData = async (volunteerId: number) => {
+  availabilitiesStore.clearVolunteerAvailabilities();
   await Promise.all([
     availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
     userStore.getVolunteerAssignments(volunteerId),
