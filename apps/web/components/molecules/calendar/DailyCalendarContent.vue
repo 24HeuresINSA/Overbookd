@@ -1,11 +1,11 @@
 <template>
   <div class="daily-content">
     <CalendarEvent
-      v-for="(event, index) in eventsToDisplay"
+      v-for="event in eventsToDisplay"
       :key="event.id"
       :event="event"
       :day="day"
-      :among="{ count: eventsToDisplay.length, index }"
+      :among="eventsToDisplayWithout(event)"
       :clickable="clickableEvents"
       @click="propagateEventClick"
     />
@@ -64,6 +64,10 @@ const isAvailable = (hour: number): boolean => {
     hour: hour as Hour,
   });
   return date.isIncludedBy(props.availabilities);
+};
+
+const eventsToDisplayWithout = (event: CalendarEvent): CalendarEvent[] => {
+  return eventsToDisplay.value.filter((e) => e.id !== event.id);
 };
 </script>
 

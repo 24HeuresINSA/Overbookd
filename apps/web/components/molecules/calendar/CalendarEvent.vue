@@ -5,6 +5,7 @@
     :color="event.color || 'primary'"
     :style="presenter.css"
     :href="clickable ? event.link : undefined"
+    :ripple="clickable"
     @click="propagateClick"
   >
     <p class="calendar-event__name">{{ event.name }}</p>
@@ -14,10 +15,7 @@
 
 <script lang="ts" setup>
 import type { CalendarEvent } from "~/utils/calendar/event";
-import {
-  CalendarEventPresenter,
-  type AmongCalendarEvent,
-} from "~/utils/calendar/calendar.presenter";
+import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const props = defineProps({
@@ -30,7 +28,7 @@ const props = defineProps({
     required: true,
   },
   among: {
-    type: Object as PropType<AmongCalendarEvent>,
+    type: Object as PropType<CalendarEvent[]>,
     required: true,
   },
   clickable: {
