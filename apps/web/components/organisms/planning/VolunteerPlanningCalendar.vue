@@ -11,17 +11,30 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
+      @click:event="openFtModal"
     />
   </div>
+
+  <v-dialog v-model="dialog" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-information-outline"
+      text="Your application will relaunch automatically after the update is complete."
+      :title="`FT n°` + ft_infos"
+    >
+      <template #actions>
+        <v-btn class="ms-auto" text="Ok" @click="dialog = false" />
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { PlanningEvent } from "@overbookd/assignment";
 import type { AssignmentStat, PlanningTask } from "@overbookd/http";
-import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER /*READ_FT*/ } from "@overbookd/permission";
 import type { IProvidePeriod } from "@overbookd/time";
 import type { User } from "@overbookd/user";
-import { FT_URL } from "@overbookd/web-page";
 import { convertToCalendarBreak } from "~/domain/common/planning-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import {
@@ -50,7 +63,7 @@ const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
   () => canAssignVolunteer.value && isDesktop.value,
 );
-const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
+// const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
   availabilityStore.fetchVolunteerAvailabilities(props.volunteer.id);
@@ -87,7 +100,8 @@ const events = computed<CalendarEvent[]>(() => {
       end,
       name: `[${task.id}] ${task.name}`,
       color: getColorByStatus(task.status),
-      link: canReadFT.value ? `${FT_URL}/${task.id}` : undefined,
+      //link: canReadFT.value ? `${FT_URL}/${task.id}` : undefined,
+      ft_id: `${task.id}`,
     }),
   );
   const taskEvents = tasks.value.map(
@@ -97,10 +111,19 @@ const events = computed<CalendarEvent[]>(() => {
         end,
         name: `[${id}] ${name}`,
         color: getColorByStatus(status),
-        link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
+        //link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
+        ft_id: `${id}`,
       }),
   );
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
+
+const dialog = ref(false);
+const ft_infos = ref("");
+
+const openFtModal = (event: CalendarEvent) => {
+  dialog.value = true;
+  if (event.ft_id) ft_infos.value = event.ft_id;
+};
 </script>

@@ -12,6 +12,7 @@ type BaseCalendarEvent = {
   name: string;
   link?: string;
   color?: string;
+  ft_id?: string;
 };
 
 export type CalendarEvent = BaseCalendarEvent & {
