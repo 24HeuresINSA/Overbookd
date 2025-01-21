@@ -14,6 +14,10 @@ export class Duration {
     return new Duration(milliseconds);
   }
 
+  static get ONE_HOUR(): Duration {
+    return new Duration(ONE_HOUR_IN_MS);
+  }
+
   static get ONE_DAY(): Duration {
     return new Duration(ONE_DAY_IN_MS);
   }

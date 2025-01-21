@@ -2,6 +2,7 @@
   <v-card
     class="profile-picture-card"
     :ripple="canViewVolunteerDetails"
+    :class="{ unclickable: !canViewVolunteerDetails }"
     @click="propagateClickedVolunteer"
   >
     <v-card-title class="name-with-picture">
