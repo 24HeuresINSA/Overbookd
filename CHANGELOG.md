@@ -1,3 +1,10 @@
+## [3.27.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.27.0...v3.27.1) (2025-01-21)
+
+### Bug Fixes
+
+* **assignment:** display team name instead of code [#2370](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2370) ([fa26909](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fa269095bab684bd52d1f6513d4e0197daa66369))
+* **calendar:** event width and left position [#2320](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2320) ([ea41e70](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ea41e7070fb5450a4d9e0b9b6173877fd08bce11))
+
 ## [3.27.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.26.1...v3.27.0) (2025-01-20)
 
 ### Features
