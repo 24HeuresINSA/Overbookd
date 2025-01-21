@@ -11,6 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
+      passReqToCallback: true,
     });
   }
 
@@ -21,12 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     id,
     username,
   }: JwtPayload & unknown): Promise<JwtPayload> {
-    return {
-      userId,
-      teams,
-      permissions,
-      id,
-      username,
-    };
+    return { userId, teams, permissions, id, username };
   }
 }
