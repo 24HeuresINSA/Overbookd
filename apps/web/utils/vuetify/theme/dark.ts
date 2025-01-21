@@ -1,6 +1,7 @@
 import type { ThemeDefinition } from "vuetify";
 import {
   blueMainColors,
+  mainColors,
   opacityVariables,
   redMainColors,
   statusColors,
@@ -19,6 +20,7 @@ export const blueDarkTheme: ThemeDefinition = {
     surface: "#273B42",
     "on-surface": WHITE,
     ...statusColors,
+    ...mainColors,
   },
   variables: opacityVariables,
 };
@@ -32,6 +34,7 @@ export const yellowDarkTheme: ThemeDefinition = {
     surface: "#2F3036",
     "on-surface": WHITE,
     ...statusColors,
+    ...mainColors,
   },
   variables: opacityVariables,
 };
@@ -45,6 +48,7 @@ export const redDarkTheme: ThemeDefinition = {
     surface: "#363A45",
     "on-surface": "#F4F4F4",
     ...statusColors,
+    ...mainColors,
   },
   variables: opacityVariables,
 };

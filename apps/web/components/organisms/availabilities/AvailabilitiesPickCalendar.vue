@@ -17,7 +17,7 @@
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
         :days="days"
-        @click:event="selectOrUnselectAvailability"
+        @click:availability="selectOrUnselectAvailability"
       />
     </template>
   </OverCalendar>
@@ -28,9 +28,9 @@ import { Duration, OverDate, Period } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import {
   ALL_HOURS,
-  findCharismaPerHour,
   type AvailabilityEvent,
 } from "~/utils/availabilities/availabilities";
+import { findCharismaPerHour } from "~/utils/availabilities/availability-grid.utils";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 const charismaPeriodStore = useCharismaPeriodStore();

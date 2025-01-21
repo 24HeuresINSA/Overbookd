@@ -10,6 +10,12 @@ export const ERROR = "#ED1D45";
 export const WHITE = "#FFFFFF";
 export const BLACK = "#2A2A2A";
 
+export const mainColors = {
+  blue: BLUE_24,
+  yellow: YELLOW_24,
+  red: RED_24,
+};
+
 export const opacityVariables = {
   "high-emphasis-opacity": 0.98,
   "medium-emphasis-opacity": 0.95,

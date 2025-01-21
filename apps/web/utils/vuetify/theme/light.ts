@@ -2,6 +2,7 @@ import type { ThemeDefinition } from "vuetify";
 import {
   BLACK,
   blueMainColors,
+  mainColors,
   opacityVariables,
   redMainColors,
   statusColors,
@@ -24,18 +25,33 @@ const lightBackgroundColors = {
 
 export const blueLightTheme: ThemeDefinition = {
   dark: false,
-  colors: { ...blueMainColors, ...lightBackgroundColors, ...statusColors },
+  colors: {
+    ...blueMainColors,
+    ...lightBackgroundColors,
+    ...statusColors,
+    ...mainColors,
+  },
   variables: opacityVariables,
 };
 
 export const yellowLightTheme: ThemeDefinition = {
   dark: false,
-  colors: { ...yellowMainColors, ...lightBackgroundColors, ...statusColors },
+  colors: {
+    ...yellowMainColors,
+    ...lightBackgroundColors,
+    ...statusColors,
+    ...mainColors,
+  },
   variables: opacityVariables,
 };
 
 export const redLightTheme: ThemeDefinition = {
   dark: false,
-  colors: { ...redMainColors, ...lightBackgroundColors, ...statusColors },
+  colors: {
+    ...redMainColors,
+    ...lightBackgroundColors,
+    ...statusColors,
+    ...mainColors,
+  },
   variables: opacityVariables,
 };
