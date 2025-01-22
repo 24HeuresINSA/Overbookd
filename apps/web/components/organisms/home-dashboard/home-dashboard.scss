@@ -25,6 +25,12 @@
   }
 }
 
+.content-title {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
 .no-content-label {
   font-size: 0.9rem;
   margin: 5px 10px;

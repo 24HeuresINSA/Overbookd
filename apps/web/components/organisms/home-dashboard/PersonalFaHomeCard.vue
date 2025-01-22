@@ -12,7 +12,7 @@
           :key="item.id"
           :to="`${FA_URL}/${item.id}`"
         >
-          <v-list-item-title class="activity-title">
+          <v-list-item-title class="content-title fa">
             <strong> N° {{ item.id }} - {{ item.name }} </strong>
             <v-icon class="status-dot" :class="item.status.toLowerCase()">
               mdi-circle
@@ -78,9 +78,4 @@ const myDisplayedActivities = computed<PreviewFestivalActivity[]>(() => {
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
 
-.activity-title {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
 </style>

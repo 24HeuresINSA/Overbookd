@@ -3,8 +3,8 @@
   <div class="home">
     <ProfileHomeCard />
     <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-    <PersonalFaHomeCard v-if="hasPersonalFA" />
     <PersonalFtHomeCard v-if="hasPersonalFT" />
+    <PersonalFaHomeCard v-if="hasPersonalFA" />
   </div>
 </template>
 

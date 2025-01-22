@@ -12,7 +12,7 @@
           :key="item.id"
           :to="`${FT_URL}/${item.id}`"
         >
-          <v-list-item-title class="activity-title">
+          <v-list-item-title class="content-title ft">
             <strong> N° {{ item.id }} - {{ item.name }} </strong>
             <v-icon class="status-dot" :class="item.status.toLowerCase()">
               mdi-circle
@@ -33,7 +33,7 @@
       </v-list>
       <span v-else class="no-content-label">
         Tu n'as aucune FTs 🤔<br />
-        Hop hop hop, au boulot !
+        J'espère que t'as une bonne excuse !
       </span>
     </v-card-text>
   </v-card>
@@ -78,9 +78,4 @@ const myDisplayedTasks = computed<PreviewFestivalTask[]>(() => {
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
 
-.task-title {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
 </style>
