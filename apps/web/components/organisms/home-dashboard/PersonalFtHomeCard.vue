@@ -77,5 +77,4 @@ const myDisplayedTasks = computed<PreviewFestivalTask[]>(() => {
 
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
-
 </style>
