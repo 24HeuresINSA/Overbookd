@@ -46,7 +46,10 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
 import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
-import { TaskResponseDto } from "./dto/task.response.dto";
+import {
+  TaskResponseDto,
+  ToPrintTaskResponseDto,
+} from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
 import { buildUserName } from "@overbookd/user";
 import { PlanningRenderStrategy } from "./render/render-strategy";
@@ -162,6 +165,38 @@ export class PlanningController {
       const planning = await this.formatPlanning(volunteerId, format);
       response.setHeader("content-type", format);
       response.send(planning);
+      return;
+    } catch (e) {
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      console.error(e);
+      response.status(500).send(e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @ApiBearerAuth()
+  @Get("ft-reader/:ftId")
+  @ApiResponse({
+    status: 200,
+    description: "Get FT description from ftId",
+    isArray: true,
+    type: ToPrintTaskResponseDto,
+  })
+  @ApiProduces(JSON, ICAL, PDF)
+  async getSpecificFtInfos(
+    @Param("ftId", ParseIntPipe) ftId: number,
+    @RequestDecorator() request: Request,
+    @Res() response: Response,
+  ): Promise<ToPrintTaskResponseDto[]> {
+    const format = request.headers.accept;
+    try {
+      const ftInfo = await this.planning.getSpecificTaskInfos(ftId);
+      response.setHeader("content-type", format);
+      response.send(ftInfo);
       return;
     } catch (e) {
       if (e instanceof HttpException) {

@@ -8,6 +8,9 @@ import type { User } from "@overbookd/user";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { downloadPlanning } from "~/utils/file/download-planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import type { FestivalTaskWithConflicts } from "@overbookd/festival-event";
+import { DRAFT } from "@overbookd/festival-event-constants";
+import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 export type HasAssignment = {
   assignment: Duration;
@@ -23,10 +26,41 @@ type VolunteerPlanning = {
   planningBase64Data: string;
 };
 
+// Va servir à initialiser la valeur du Store
+const fakeTask: FestivalTaskWithConflicts = {
+  id: 0,
+  status: DRAFT,
+  festivalActivity: {
+    id: 0,
+    name: "",
+    status: DRAFT,
+    timeWindows: [],
+    location: null,
+    hasSupplyRequest: false,
+    inquiry: { all: [], timeWindows: [] },
+  },
+  general: {
+    name: "",
+    administrator: { id: 0, firstname: "", lastname: "" },
+    team: null,
+  },
+  instructions: {
+    contacts: [],
+    appointment: null,
+    global: null,
+    inCharge: { instruction: null, volunteers: [] },
+  },
+  feedbacks: [],
+  inquiries: [],
+  history: [],
+  mobilizations: [],
+};
+
 type State = {
   link: string | null;
   planningBase64Data: string;
   volunteers: VolunteerForPlanning[];
+  ft_reader: FestivalTaskWithConflicts;
 };
 
 export const usePlanningStore = defineStore("planning", {
@@ -34,8 +68,16 @@ export const usePlanningStore = defineStore("planning", {
     link: null,
     planningBase64Data: "",
     volunteers: [],
+    ft_reader: fakeTask,
   }),
   actions: {
+    async getReadFtInfos(id: number) {
+      this.ft_reader = fakeTask;
+      const res = await PlanningRepository.getReadFtInfos(id);
+      if (isHttpError(res)) return;
+      this.ft_reader = castTaskWithDate(res);
+    },
+
     async fetchSubscriptionLink() {
       const res = await PlanningRepository.getPlanningSubscriptionLink();
       if (isHttpError(res)) return;

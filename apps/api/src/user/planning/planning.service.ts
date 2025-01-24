@@ -36,6 +36,10 @@ export class PlanningService {
     return this.breaks.for(breakDefinition);
   }
 
+  async getSpecificTaskInfos(ftId: number) {
+    return this.planning.getSpecificTaskInfos(ftId);
+  }
+
   removeBreakPeriod(volunteer: number, period: Period) {
     return this.breaks.remove({ volunteer, period });
   }

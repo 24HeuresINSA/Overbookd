@@ -9,6 +9,7 @@ import {
 import { ApiProperty } from "@nestjs/swagger";
 import { GeoLocation } from "@overbookd/geo-location";
 import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
+import { ToPrintTask } from "../domain/storedTask";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
@@ -121,6 +122,52 @@ export class TaskResponseDto implements Task {
     isArray: true,
   })
   assignments: Assignment[];
+
+  @ApiProperty({
+    name: "contacts",
+    description: "task contacts",
+    type: ContactRepresentation,
+    isArray: true,
+  })
+  contacts: Contact[];
+}
+
+export class ToPrintTaskResponseDto implements ToPrintTask {
+  @ApiProperty({
+    name: "id",
+    description: "task id",
+    type: Number,
+  })
+  id: number;
+
+  @ApiProperty({
+    name: "name",
+    description: "task name",
+    type: String,
+  })
+  name: string;
+
+  @ApiProperty({
+    name: "instructions",
+    description: "task instructions",
+    type: String,
+  })
+  instructions: string;
+
+  @ApiProperty({
+    name: "location",
+    description: "task location",
+    type: AppointmentLocationResponseDto,
+  })
+  location: AppointmentLocation;
+
+  // @ApiProperty({
+  //   name: "assignments",
+  //   description: "other volunteers assigned during similar periods",
+  //   type: AssignmentRepresentation,
+  //   isArray: true,
+  // })
+  // assignments: Assignment[];
 
   @ApiProperty({
     name: "contacts",

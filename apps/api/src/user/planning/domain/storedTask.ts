@@ -12,6 +12,14 @@ export type JsonStoredTask = Pick<
   assignees: Assignee[];
 };
 
+export type ToPrintTask = Pick<
+  Task,
+  "instructions" | "location" | "name" | "contacts"
+> & {
+  id: number;
+  // assignees: Assignee[];
+};
+
 export class StoredTask {
   constructor(private readonly storedTask: JsonStoredTask) {}
 

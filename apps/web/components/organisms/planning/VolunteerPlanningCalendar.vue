@@ -16,13 +16,28 @@
   </div>
 
   <v-dialog v-model="dialog" width="auto">
+    <!-- max-width="400" -->
     <v-card
-      max-width="400"
       prepend-icon="mdi-information-outline"
-      text="Your application will relaunch automatically after the update is complete."
-      :title="`FT n°` + ft_infos"
+      :text="
+        selectedTask.instructions.global
+          ? selectedTask.instructions.global
+          : 'Oops, pas de description'
+      "
+      :title="selectedTask.general.name"
     >
+      <!-- On aurait envie d'utiliser v-html mais c'est vachement vulnérable alors on va implémenter sa propre solution -->
+
       <template #actions>
+        <v-btn
+          v-if="canReadFT.valueOf()"
+          @click="navigateTo(`${FT_URL}/${selectedTask.id}`)"
+        >
+          <v-icon icon="mdi-pencil" />
+          <v-tooltip activator="parent" location="top" open-delay="750">
+            Editer FT
+          </v-tooltip>
+        </v-btn>
         <v-btn class="ms-auto" text="Ok" @click="dialog = false" />
       </template>
     </v-card>
@@ -32,7 +47,8 @@
 <script lang="ts" setup>
 import type { PlanningEvent } from "@overbookd/assignment";
 import type { AssignmentStat, PlanningTask } from "@overbookd/http";
-import { AFFECT_VOLUNTEER /*READ_FT*/ } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
+import { FT_URL } from "@overbookd/web-page";
 import type { IProvidePeriod } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 import { convertToCalendarBreak } from "~/domain/common/planning-events";
@@ -41,6 +57,7 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
+import { type FestivalTask } from "@overbookd/festival-event";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -63,7 +80,8 @@ const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
   () => canAssignVolunteer.value && isDesktop.value,
 );
-// const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
+
+const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
   availabilityStore.fetchVolunteerAvailabilities(props.volunteer.id);
@@ -100,8 +118,7 @@ const events = computed<CalendarEvent[]>(() => {
       end,
       name: `[${task.id}] ${task.name}`,
       color: getColorByStatus(task.status),
-      //link: canReadFT.value ? `${FT_URL}/${task.id}` : undefined,
-      ft_id: `${task.id}`,
+      ft_id: task.id,
     }),
   );
   const taskEvents = tasks.value.map(
@@ -111,19 +128,25 @@ const events = computed<CalendarEvent[]>(() => {
         end,
         name: `[${id}] ${name}`,
         color: getColorByStatus(status),
-        //link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
-        ft_id: `${id}`,
+        ft_id: id,
       }),
   );
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
-const dialog = ref(false);
-const ft_infos = ref("");
+// Aie aie, problème, on ne peut faire appel au ftStore qu'avec des perms hard
+const planningStore = usePlanningStore();
+const testFTstore = useFestivalTaskStore();
+const selectedTask = computed<FestivalTask>(() => planningStore.ft_reader);
 
-const openFtModal = (event: CalendarEvent) => {
-  dialog.value = true;
-  if (event.ft_id) ft_infos.value = event.ft_id;
+const dialog = ref<boolean>(false);
+
+const openFtModal = async (event: CalendarEvent) => {
+  if (event.ft_id) {
+    await testFTstore.fetchTask(event.ft_id);
+    await planningStore.getReadFtInfos(event.ft_id);
+    dialog.value = true;
+  }
 };
 </script>

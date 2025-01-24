@@ -1,10 +1,17 @@
 import { ICAL, PDF } from "@overbookd/http";
 import type { DuringBreakPeriods, VolunteerForPlanning } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
+import type { FestivalTaskWithConflicts } from "@overbookd/festival-event";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class PlanningRepository {
   private static readonly basePath = "planning";
+
+  static getReadFtInfos(id: FestivalTaskWithConflicts["id"]) {
+    return HttpClient.get<FestivalTaskWithConflicts>(
+      `${this.basePath}/ft-reader/${id}`,
+    );
+  }
 
   static getBreakPeriods(volunteer: number) {
     return HttpClient.get<IProvidePeriod[]>(

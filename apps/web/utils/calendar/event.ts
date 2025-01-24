@@ -10,9 +10,9 @@ type BaseCalendarEvent = {
   start: Date;
   end: Date;
   name: string;
-  link?: string;
+  link?: string; // Plutôt unsure de si c'est encore nécessaire
   color?: string;
-  ft_id?: string;
+  ft_id?: number;
 };
 
 export type CalendarEvent = BaseCalendarEvent & {

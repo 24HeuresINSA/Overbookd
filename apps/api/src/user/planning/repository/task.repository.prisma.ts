@@ -6,7 +6,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { PrismaService } from "../../../prisma.service";
 import { buildUserName } from "@overbookd/user";
 import { TaskRepository } from "../domain/planning";
-import { JsonStoredTask } from "../domain/storedTask";
+import { JsonStoredTask, ToPrintTask } from "../domain/storedTask";
 import { JsonValue } from "@prisma/client/runtime/library";
 import {
   SELECT_PERIOD,
@@ -113,6 +113,33 @@ export class PrismaTaskRepository implements TaskRepository {
     });
   }
 
+  async getSpecificTaskInfos(taskId: number): Promise<ToPrintTask> {
+    const ft = await this.prisma.festivalTask.findUnique({
+      where: {
+        id: taskId,
+        // assignees: { some: { userId: volunteerId } },
+        isDeleted: false,
+      },
+      select: this.buildTaskInfosSelection(),
+    });
+
+    return formatTaskToPrint(ft);
+  }
+
+  private buildTaskInfosSelection() {
+    return {
+      id: true,
+      name: true,
+      appointment: { select: { name: true, geoLocation: true } },
+      globalInstruction: true,
+      inChargeInstruction: true,
+      inChargeVolunteers: {
+        select: { volunteerId: true },
+      },
+      contacts: { select: SELECT_CONTACT },
+    };
+  }
+
   private buildAssignmentWithTaskSelection(volunteerId: number) {
     return {
       ...SELECT_PERIOD,
@@ -147,6 +174,44 @@ export class PrismaTaskRepository implements TaskRepository {
       },
     };
   }
+}
+
+function formatTaskToPrint(festivalTaskToPrint: DatabaseTask): ToPrintTask {
+  const contacts = festivalTaskToPrint.contacts.map(({ contact }) => ({
+    id: contact.id,
+    phone: contact.phone,
+    name: buildUserName(contact),
+  }));
+  const instructions =
+    festivalTaskToPrint.inChargeVolunteers.length === 0
+      ? `<hr>${festivalTaskToPrint.globalInstruction}`
+      : `<hr>${festivalTaskToPrint.globalInstruction}<hr><h3>Instructions responsables :</h3>${festivalTaskToPrint.inChargeInstruction}`;
+
+  // const assignees = assignments
+  //   .filter(({ festivalTaskId }) => festivalTaskId === festivalTask.id)
+  //   .flatMap(({ start, end, assignees }) => {
+  //     return assignees.map(({ personalData }) => ({
+  //       period: { start, end },
+  //       id: personalData.id,
+  //       name: buildUserName(personalData),
+  //     }));
+  //   });
+
+  const { appointment } = festivalTaskToPrint;
+
+  const location = {
+    name: appointment.name,
+    geoLocation: appointment.geoLocation as GeoLocation | null,
+  };
+
+  return {
+    id: festivalTaskToPrint.id,
+    name: festivalTaskToPrint.name,
+    location,
+    instructions,
+    contacts,
+    // assignees,
+  };
 }
 
 function toTask(

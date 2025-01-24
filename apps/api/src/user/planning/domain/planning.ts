@@ -1,6 +1,6 @@
 import { PlanningTask } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { JsonStoredTask, StoredTask } from "./storedTask";
+import { JsonStoredTask, StoredTask, ToPrintTask } from "./storedTask";
 import { Task } from "./task.model";
 
 export type TaskRepository = {
@@ -9,6 +9,8 @@ export type TaskRepository = {
   ): Promise<JsonStoredTask[]>;
 
   getVolunteerTasksHeIsPartOf(volunteerId: number): Promise<PlanningTask[]>;
+
+  getSpecificTaskInfos(taskId: number): Promise<ToPrintTask>;
 };
 
 export class Planning {
@@ -28,6 +30,10 @@ export class Planning {
 
   async listVolunteerTasks(volunteerId: number): Promise<PlanningTask[]> {
     return this.taskRepository.getVolunteerTasksHeIsPartOf(volunteerId);
+  }
+
+  async getSpecificTaskInfos(taskId: number): Promise<ToPrintTask> {
+    return this.taskRepository.getSpecificTaskInfos(taskId);
   }
 
   private groupTasks(
