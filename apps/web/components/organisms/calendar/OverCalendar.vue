@@ -157,7 +157,6 @@ const propagateEventClick = (event: CalendarEvent) => {
 <style lang="scss" scoped>
 @use "~/assets/calendar.scss" as *;
 
-$hour-height: 45px;
 $first-column-width: 60px;
 $calendar-content-height: $hour-height * 24;
 
