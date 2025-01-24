@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { lea, leaContact, noel, mdeHall } from "../festival-task.test-util.js";
 import {
+  approvedByMatosWithoutInquiries,
   gabIsAssignedTo,
   installEscapeGame,
   parcoursCollageTrajetA,
+  rejectedByHumainAndApprovedByMatosWithoutInquiries,
   uninstallEscapeGame,
 } from "../festival-task.fake.js";
 import {
@@ -33,12 +35,7 @@ import {
   humain,
   matos,
 } from "../../common/review.js";
-import {
-  APPROVED,
-  FORCED_UPDATE,
-  REJECTED,
-  RESET_REVIEW,
-} from "../../common/action.js";
+import { FORCED_UPDATE, REJECTED, RESET_REVIEW } from "../../common/action.js";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
@@ -59,6 +56,8 @@ describe("Prepare festival task instructions section", () => {
       approvedByMatosRejectedByHumainAndElec,
       gabIsAssignedTo,
       parcoursCollageTrajetA,
+      approvedByMatosWithoutInquiries,
+      rejectedByHumainAndApprovedByMatosWithoutInquiries,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -68,107 +67,109 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Update after approvals", () => {
     describe.each`
-      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
-      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
-      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
-      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
-      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
-      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
-      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+      taskName                                               | task
+      ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
+      ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
+      ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
+    `("when humain approved the task $taskName", ({ task }) => {
+      describe("when trying to update appointment location", () => {
+        it("should indicate task is already approved by humain", () => {
+          const update = { appointment: mdeHall };
+          expect(
+            async () =>
+              await prepare.updateInstructionsSection(task.id, update, noel),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to add a contact", () => {
+        it("should indicate task is already approved by humain", () => {
+          expect(
+            async () => await prepare.addContact(task.id, leaContact),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to remove a contact", () => {
+        it("should indicate task is already approved by humain", () => {
+          const contactId = task.instructions.contacts.at(0).id;
+          expect(
+            async () => await prepare.removeContact(task.id, contactId),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to add an in charge volunteer", () => {
+        it("should indicate task is already approved by humain", () => {
+          expect(
+            async () => await prepare.addInChargeVolunteer(task.id, lea),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to remove an in charge volunteer", () => {
+        it("should indicate task is already approved by humain", () => {
+          const volunteerId = task.instructions.inCharge.volunteers.at(0).id;
+          expect(
+            async () =>
+              await prepare.removeInChargeVolunteer(task.id, volunteerId),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        });
+      });
+    });
+
+    describe.each`
+      rejectors         | humainAfterReset | matosAfterReset | elecAfterReset          | taskName                                               | task
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
+      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
     `(
-      "when $approvers approved the task $taskName",
-      ({ approvers, task, rejectors, humain, matos, elec }) => {
-        if (approvers.includes(humain)) {
-          describe("humain ownership", () => {
-            describe("when trying to update appointment location", () => {
-              it("should indicate task is already approved by humain", () => {
-                const update = { appointment: mdeHall };
-                expect(
-                  async () =>
-                    await prepare.updateInstructionsSection(
-                      task.id,
-                      update,
-                      noel,
-                    ),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
+      "when $rejectors rejected the task $taskName",
+      ({ task, humainAfterReset, matosAfterReset, elecAfterReset }) => {
+        describe("when another reviewer rejects task", () => {
+          describe("when trying to update global instructions", () => {
+            const instigator = noel;
+            const update = { global: "Update global instruction" };
+            it("should update it", async () => {
+              const { instructions } = await prepare.updateInstructionsSection(
+                task.id,
+                update,
+                instigator,
+              );
+              expect(instructions.global).toBe(update.global);
             });
-            describe("when trying to add a contact", () => {
-              it("should indicate task is already approved by humain", () => {
-                expect(
-                  async () => await prepare.addContact(task.id, leaContact),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
+            it("should reset all approver review status to under review", async () => {
+              const updated = await prepare.updateInstructionsSection(
+                task.id,
+                update,
+                instigator,
+              );
+              if (isDraft(updated)) return;
+
+              expect(updated.reviews.humain).toBe(humainAfterReset);
+              expect(updated.reviews.matos).toBe(matosAfterReset);
+              expect(updated.reviews.elec).toBe(elecAfterReset);
             });
-            describe("when trying to remove a contact", () => {
-              it("should indicate task is already approved by humain", () => {
-                const contactId = task.instructions.contacts.at(0).id;
-                expect(
-                  async () => await prepare.removeContact(task.id, contactId),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-            describe("when trying to add an in charge volunteer", () => {
-              it("should indicate task is already approved by humain", () => {
-                expect(
-                  async () => await prepare.addInChargeVolunteer(task.id, lea),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-            describe("when trying to remove an in charge volunteer", () => {
-              it("should indicate task is already approved by humain", () => {
-                const volunteerId =
-                  task.instructions.inCharge.volunteers.at(0).id;
-                expect(
-                  async () =>
-                    await prepare.removeInChargeVolunteer(task.id, volunteerId),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
+            it("should add RESET_REVIEW key event to history", async () => {
+              const { history } = await prepare.updateInstructionsSection(
+                task.id,
+                update,
+                instigator,
+              );
+              expect(history).toStrictEqual([
+                ...task.history,
+                {
+                  action: RESET_REVIEW,
+                  by: instigator,
+                  at: expect.any(Date),
+                  description:
+                    "Précédentes approbations réinitialisées par un changement sur le champ instructions",
+                },
+              ]);
             });
           });
-        }
-        if (rejectors.length === 0) {
-          describe("when none of other reviewers rejects task", () => {
-            describe.each`
-              field                       | update
-              ${"global instructions"}    | ${{ global: "Update global instruction" }}
-              ${"in charge instructions"} | ${{ inCharge: "Update global instruction" }}
-            `("when trying to update $field on $taskName", ({ update }) => {
-              it(`should indicate task is already approved by ${approvers}`, () => {
-                expect(
-                  async () =>
-                    await prepare.updateInstructionsSection(
-                      task.id,
-                      update,
-                      noel,
-                    ),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-            describe("when trying to clear in charge section", () => {
-              it("should indicate task is already approved", () => {
-                expect(
-                  async () => await prepare.clearInCharge(task.id, noel),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-            describe("when trying to init in charge section", () => {
-              it("should indicate task is already approved", () => {
-                const form = {
-                  volunteers: [noel],
-                  instruction: "Some instruction",
-                };
-                expect(
-                  async () => await prepare.initInCharge(task.id, form, noel),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-          });
-        } else {
-          describe("when another reviewer rejects task", () => {
-            describe("when trying to update global instructions", () => {
+          if (task.instructions.inCharge.volunteers.length > 0) {
+            describe("when trying to update in charge instructions", () => {
               const instigator = noel;
-              const update = { global: "Update global instruction" };
+              const update = { inCharge: "Update global instruction" };
               it("should update it", async () => {
                 const { instructions } =
                   await prepare.updateInstructionsSection(
@@ -176,7 +177,7 @@ describe("Prepare festival task instructions section", () => {
                     update,
                     instigator,
                   );
-                expect(instructions.global).toBe(update.global);
+                expect(instructions.inCharge.instruction).toBe(update.inCharge);
               });
               it("should reset all approver review status to under review", async () => {
                 const updated = await prepare.updateInstructionsSection(
@@ -186,9 +187,9 @@ describe("Prepare festival task instructions section", () => {
                 );
                 if (isDraft(updated)) return;
 
-                expect(updated.reviews.humain).toBe(humain);
-                expect(updated.reviews.matos).toBe(matos);
-                expect(updated.reviews.elec).toBe(elec);
+                expect(updated.reviews.humain).toBe(humainAfterReset);
+                expect(updated.reviews.matos).toBe(matosAfterReset);
+                expect(updated.reviews.elec).toBe(elecAfterReset);
               });
               it("should add RESET_REVIEW key event to history", async () => {
                 const { history } = await prepare.updateInstructionsSection(
@@ -203,151 +204,197 @@ describe("Prepare festival task instructions section", () => {
                     by: instigator,
                     at: expect.any(Date),
                     description:
-                      "Précédentes approbations réinitialisées par un changement sur le champ instructions",
+                      "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables",
                   },
                 ]);
               });
             });
-            if (task.instructions.inCharge.volunteers.length > 0) {
-              describe("when trying to update in charge instructions", () => {
-                const instigator = noel;
-                const update = { inCharge: "Update global instruction" };
-                it("should update it", async () => {
-                  const { instructions } =
-                    await prepare.updateInstructionsSection(
-                      task.id,
-                      update,
-                      instigator,
-                    );
-                  expect(instructions.inCharge.instruction).toBe(
-                    update.inCharge,
-                  );
-                });
-                it("should reset all approver review status to under review", async () => {
-                  const updated = await prepare.updateInstructionsSection(
-                    task.id,
-                    update,
-                    instigator,
-                  );
-                  if (isDraft(updated)) return;
-
-                  expect(updated.reviews.humain).toBe(humain);
-                  expect(updated.reviews.matos).toBe(matos);
-                  expect(updated.reviews.elec).toBe(elec);
-                });
-                it("should add RESET_REVIEW key event to history", async () => {
-                  const { history } = await prepare.updateInstructionsSection(
-                    task.id,
-                    update,
-                    instigator,
-                  );
-                  expect(history).toStrictEqual([
-                    ...task.history,
-                    {
-                      action: RESET_REVIEW,
-                      by: instigator,
-                      at: expect.any(Date),
-                      description:
-                        "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables",
-                    },
-                  ]);
-                });
+          }
+          if (
+            task.instructions.inCharge.instruction ||
+            task.instructions.inCharge.volunteers.length > 0
+          ) {
+            describe("when trying to clear in charge section when exists", () => {
+              const instigator = noel;
+              it("should clear it", async () => {
+                const { instructions } = await prepare.clearInCharge(
+                  task.id,
+                  instigator,
+                );
+                expect(instructions.inCharge.volunteers).toHaveLength(0);
+                expect(instructions.inCharge.instruction).toBe(null);
               });
-            }
-            if (
-              task.instructions.inCharge.instruction ||
-              task.instructions.inCharge.volunteers.length > 0
-            ) {
-              describe("when trying to clear in charge section when exists", () => {
-                const instigator = noel;
-                it("should clear it", async () => {
-                  const { instructions } = await prepare.clearInCharge(
-                    task.id,
-                    instigator,
-                  );
-                  expect(instructions.inCharge.volunteers).toHaveLength(0);
-                  expect(instructions.inCharge.instruction).toBe(null);
-                });
-                it("should reset all approver review status to under review", async () => {
-                  const updated = await prepare.clearInCharge(
-                    task.id,
-                    instigator,
-                  );
-                  if (isDraft(updated)) return;
+              it("should reset all approver review status to under review", async () => {
+                const updated = await prepare.clearInCharge(
+                  task.id,
+                  instigator,
+                );
+                if (isDraft(updated)) return;
 
-                  expect(updated.reviews.humain).toBe(humain);
-                  expect(updated.reviews.matos).toBe(matos);
-                  expect(updated.reviews.elec).toBe(elec);
-                });
-                it("should add RESET_REVIEW key event to history", async () => {
-                  const { history } = await prepare.clearInCharge(
-                    task.id,
-                    instigator,
-                  );
-                  expect(history).toStrictEqual([
-                    ...task.history,
-                    {
-                      action: RESET_REVIEW,
-                      by: instigator,
-                      at: expect.any(Date),
-                      description:
-                        "Précédentes approbations réinitialisées par la suppression des instructions des responsables",
-                    },
-                  ]);
-                });
+                expect(updated.reviews.humain).toBe(humainAfterReset);
+                expect(updated.reviews.matos).toBe(matosAfterReset);
+                expect(updated.reviews.elec).toBe(elecAfterReset);
               });
-            } else {
-              describe("when trying to initialize in charge section", () => {
-                const volunteers = [noel, lea];
-                const instruction = "Some instruction";
-                const form = { volunteers, instruction };
-                const instigator = noel;
-                it("should initialize it", async () => {
-                  const { instructions } = await prepare.initInCharge(
-                    task.id,
-                    form,
-                    instigator,
-                  );
-                  expect(instructions.inCharge.volunteers).toStrictEqual(
-                    volunteers,
-                  );
-                  expect(instructions.inCharge.instruction).toBe(instruction);
-                });
-                it("should reset all approver review status to under review", async () => {
-                  const updated = await prepare.initInCharge(
-                    task.id,
-                    form,
-                    instigator,
-                  );
-                  if (isDraft(updated)) return;
+              it("should add RESET_REVIEW key event to history", async () => {
+                const { history } = await prepare.clearInCharge(
+                  task.id,
+                  instigator,
+                );
+                expect(history).toStrictEqual([
+                  ...task.history,
+                  {
+                    action: RESET_REVIEW,
+                    by: instigator,
+                    at: expect.any(Date),
+                    description:
+                      "Précédentes approbations réinitialisées par la suppression des instructions des responsables",
+                  },
+                ]);
+              });
+            });
+          } else {
+            describe("when trying to initialize in charge section", () => {
+              const volunteers = [noel, lea];
+              const instruction = "Some instruction";
+              const form = { volunteers, instruction };
+              const instigator = noel;
+              it("should initialize it", async () => {
+                const { instructions } = await prepare.initInCharge(
+                  task.id,
+                  form,
+                  instigator,
+                );
+                expect(instructions.inCharge.volunteers).toStrictEqual(
+                  volunteers,
+                );
+                expect(instructions.inCharge.instruction).toBe(instruction);
+              });
+              it("should reset all approver review status to under review", async () => {
+                const updated = await prepare.initInCharge(
+                  task.id,
+                  form,
+                  instigator,
+                );
+                if (isDraft(updated)) return;
 
-                  expect(updated.reviews.humain).toBe(humain);
-                  expect(updated.reviews.matos).toBe(matos);
-                  expect(updated.reviews.elec).toBe(elec);
-                });
-                it("should add RESET_REVIEW key event to history", async () => {
-                  const { history } = await prepare.initInCharge(
-                    task.id,
-                    form,
-                    instigator,
-                  );
-                  expect(history).toStrictEqual([
-                    ...task.history,
-                    {
-                      action: RESET_REVIEW,
-                      by: instigator,
-                      at: expect.any(Date),
-                      description:
-                        "Précédentes approbations réinitialisées par l'initialisation des instructions des responsables",
-                    },
-                  ]);
-                });
+                expect(updated.reviews.humain).toBe(humainAfterReset);
+                expect(updated.reviews.matos).toBe(matosAfterReset);
+                expect(updated.reviews.elec).toBe(elecAfterReset);
               });
-            }
-          });
-        }
+              it("should add RESET_REVIEW key event to history", async () => {
+                const { history } = await prepare.initInCharge(
+                  task.id,
+                  form,
+                  instigator,
+                );
+                expect(history).toStrictEqual([
+                  ...task.history,
+                  {
+                    action: RESET_REVIEW,
+                    by: instigator,
+                    at: expect.any(Date),
+                    description:
+                      "Précédentes approbations réinitialisées par l'initialisation des instructions des responsables",
+                  },
+                ]);
+              });
+            });
+          }
+        });
       },
     );
+
+    describe("when task has no rejection", () => {
+      describe.each`
+        approvers   | taskName                             | task
+        ${[humain]} | ${onlyApprovedByHumain.general.name} | ${onlyApprovedByHumain}
+        ${[matos]}  | ${onlyApprovedByMatos.general.name}  | ${onlyApprovedByMatos}
+      `(
+        "when task $taskName has at least one inquiry",
+        ({ approvers, task }) => {
+          describe.each`
+            field                       | update
+            ${"global instructions"}    | ${{ global: "Update global instruction" }}
+            ${"in charge instructions"} | ${{ inCharge: "Update global instruction" }}
+          `("when trying to update $field on $taskName", ({ update }) => {
+            it(`should indicate task is already approved by ${approvers}`, () => {
+              expect(
+                async () =>
+                  await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    noel,
+                  ),
+              ).rejects.toThrow(AlreadyApprovedBy);
+            });
+          });
+          describe("when trying to clear in charge section", () => {
+            it("should indicate task is already approved", () => {
+              expect(
+                async () => await prepare.clearInCharge(task.id, noel),
+              ).rejects.toThrow(AlreadyApprovedBy);
+            });
+          });
+          describe("when trying to init in charge section", () => {
+            it("should indicate task is already approved", () => {
+              const form = {
+                volunteers: [noel],
+                instruction: "Some instruction",
+              };
+              expect(
+                async () => await prepare.initInCharge(task.id, form, noel),
+              ).rejects.toThrow(AlreadyApprovedBy);
+            });
+          });
+        },
+      );
+
+      describe("when task has no inquiry and is approved by at least one logistic reviewer", () => {
+        const task = approvedByMatosWithoutInquiries;
+        describe.each`
+          field                                  | update                                          | global                         | inCharge
+          ${"global instructions"}               | ${{ global: "Update global instruction" }}      | ${"Update global instruction"} | ${task.instructions.inCharge.instruction}
+          ${"in charge instructions"}            | ${{ inCharge: "Update in charge instruction" }} | ${task.instructions.global}    | ${"Update in charge instruction"}
+          ${"global and in charge instructions"} | ${{ global: "Global", inCharge: "In charge" }}  | ${"Global"}                    | ${"In charge"}
+        `(
+          "when trying to update $field on $taskName",
+          ({ update, global, inCharge }) => {
+            it(`should update it`, async () => {
+              const { instructions } = await prepare.updateInstructionsSection(
+                task.id,
+                update,
+                noel,
+              );
+              expect(instructions.global).toBe(global);
+              expect(instructions.inCharge.instruction).toBe(inCharge);
+            });
+          },
+        );
+        describe("when trying to clear in charge section", () => {
+          it("should update it", async () => {
+            const { instructions } = await prepare.clearInCharge(task.id, noel);
+            expect(instructions.inCharge.volunteers).toHaveLength(0);
+          });
+        });
+        describe("when trying to init in charge section", () => {
+          it("should update it", async () => {
+            const form = {
+              volunteers: [noel],
+              instruction: "Some instruction",
+            };
+            const { instructions } = await prepare.initInCharge(
+              task.id,
+              form,
+              noel,
+            );
+            expect(instructions.inCharge.volunteers).toStrictEqual(
+              form.volunteers,
+            );
+            expect(instructions.inCharge.instruction).toBe(form.instruction);
+          });
+        });
+      });
+    });
   });
 
   describe("Reset review event after update", () => {
@@ -400,6 +447,7 @@ describe("Prepare festival task instructions section", () => {
       it.each`
         task                                      | update            | message
         ${approvedByElecRejectedByMatos}          | ${updateGlobal}   | ${messageGlobal}
+        ${approvedByMatosRejectedByHumainAndElec} | ${updateInCharge} | ${messageInCharge}
         ${approvedByMatosRejectedByHumainAndElec} | ${updateInCharge} | ${messageInCharge}
       `(
         "should add RESET_REVIEW key event to history",
