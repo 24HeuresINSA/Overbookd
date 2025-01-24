@@ -17,15 +17,7 @@
 
   <v-dialog v-model="dialog" width="auto">
     <!-- max-width="400" -->
-    <v-card
-      prepend-icon="mdi-information-outline"
-      :text="
-        selectedTask.instructions.global
-          ? selectedTask.instructions.global
-          : 'Oops, pas de description'
-      "
-      :title="selectedTask.general.name"
-    >
+    <v-card prepend-icon="mdi-information-outline">
       <!-- On aurait envie d'utiliser v-html mais c'est vachement vulnérable alors on va implémenter sa propre solution -->
 
       <template #actions>
@@ -135,16 +127,13 @@ const events = computed<CalendarEvent[]>(() => {
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
-// Aie aie, problème, on ne peut faire appel au ftStore qu'avec des perms hard
 const planningStore = usePlanningStore();
-const testFTstore = useFestivalTaskStore();
 const selectedTask = computed<FestivalTask>(() => planningStore.ft_reader);
 
 const dialog = ref<boolean>(false);
 
 const openFtModal = async (event: CalendarEvent) => {
   if (event.ft_id) {
-    await testFTstore.fetchTask(event.ft_id);
     await planningStore.getReadFtInfos(event.ft_id);
     dialog.value = true;
   }

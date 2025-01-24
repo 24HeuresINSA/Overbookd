@@ -177,7 +177,7 @@ export class PlanningController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permission(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
   @Get("ft-reader/:ftId")
   @ApiResponse({

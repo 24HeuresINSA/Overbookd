@@ -1,6 +1,6 @@
 import { PlanningTask } from "@overbookd/http";
 import { TaskRepository } from "./planning";
-import { JsonStoredTask } from "./storedTask";
+import { JsonStoredTask, ToPrintTask } from "./storedTask";
 import { Period } from "@overbookd/time";
 
 export class InMemoryTaskRepository implements TaskRepository {
@@ -24,6 +24,10 @@ export class InMemoryTaskRepository implements TaskRepository {
 
   getVolunteerTasksHeIsPartOf(): Promise<PlanningTask[]> {
     return Promise.resolve([]);
+  }
+
+  getSpecificTaskInfos(taskId: number): Promise<ToPrintTask> {
+    return this.getSpecificTaskInfos(taskId);
   }
 
   private findAllOtherAssignees(task: JsonStoredTask, volunteerId: number) {
