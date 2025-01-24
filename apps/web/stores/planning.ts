@@ -8,9 +8,7 @@ import type { User } from "@overbookd/user";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { downloadPlanning } from "~/utils/file/download-planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import type { FestivalTaskWithConflicts } from "@overbookd/festival-event";
-import { DRAFT } from "@overbookd/festival-event-constants";
-import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { type FestivalTaskDisplayInfos } from "../repositories/planning.repository.js";
 
 export type HasAssignment = {
   assignment: Duration;
@@ -27,40 +25,34 @@ type VolunteerPlanning = {
 };
 
 // Va servir à initialiser la valeur du Store
-const fakeTask: FestivalTaskWithConflicts = {
+const fakeDisplayTask: FestivalTaskDisplayInfos = {
   id: 0,
-  status: DRAFT,
-  festivalActivity: {
-    id: 0,
-    name: "",
-    status: DRAFT,
-    timeWindows: [],
-    location: null,
-    hasSupplyRequest: false,
-    inquiry: { all: [], timeWindows: [] },
+  name: "Display Task",
+  instructions: "DoTheDo",
+  location: {
+    name: "Right then left",
+    geolocation: {
+      type: "POINT",
+      coordinates: {
+        lat: 0,
+        lng: 0,
+      },
+    },
   },
-  general: {
-    name: "",
-    administrator: { id: 0, firstname: "", lastname: "" },
-    team: null,
-  },
-  instructions: {
-    contacts: [],
-    appointment: null,
-    global: null,
-    inCharge: { instruction: null, volunteers: [] },
-  },
-  feedbacks: [],
-  inquiries: [],
-  history: [],
-  mobilizations: [],
+  contacts: [
+    {
+      id: 0,
+      name: "",
+      phone: "",
+    },
+  ],
 };
 
 type State = {
   link: string | null;
   planningBase64Data: string;
   volunteers: VolunteerForPlanning[];
-  ft_reader: FestivalTaskWithConflicts;
+  ft_reader: FestivalTaskDisplayInfos;
 };
 
 export const usePlanningStore = defineStore("planning", {
@@ -68,14 +60,14 @@ export const usePlanningStore = defineStore("planning", {
     link: null,
     planningBase64Data: "",
     volunteers: [],
-    ft_reader: fakeTask,
+    ft_reader: fakeDisplayTask,
   }),
   actions: {
-    async getReadFtInfos(id: number) {
-      this.ft_reader = fakeTask;
+    async fetchFestivalTaskInfos(id: number) {
+      this.ft_reader = fakeDisplayTask;
       const res = await PlanningRepository.getReadFtInfos(id);
       if (isHttpError(res)) return;
-      this.ft_reader = castTaskWithDate(res);
+      this.ft_reader = res;
     },
 
     async fetchSubscriptionLink() {

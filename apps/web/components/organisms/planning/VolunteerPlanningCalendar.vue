@@ -15,11 +15,23 @@
     />
   </div>
 
-  <v-dialog v-model="dialog" width="auto">
+  <v-dialog v-model="dialog" width="600">
     <!-- max-width="400" -->
-    <v-card prepend-icon="mdi-information-outline">
+    <v-card prepend-icon="mdi-information-outline" :title="selectedTask.name">
       <!-- On aurait envie d'utiliser v-html mais c'est vachement vulnérable alors on va implémenter sa propre solution -->
-
+      <div v-html="selectedTask.instructions" class="ft_popup_content" />
+      <v-card
+        elevation="0"
+        title="Lieu"
+        prepend-icon="mdi-map-marker-outline"
+        :text="selectedTask.location.name"
+      />
+      <v-card
+        elevation="0"
+        title="Contacts"
+        prepend-icon="mdi-phone"
+        :text="contactsInfosToString(selectedTask.contacts)"
+      />
       <template #actions>
         <v-btn
           v-if="canReadFT.valueOf()"
@@ -49,12 +61,16 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
-import { type FestivalTask } from "@overbookd/festival-event";
+import {
+  type Contact,
+  type FestivalTaskDisplayInfos,
+} from "../../../repositories/planning.repository.js";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
+const planningStore = usePlanningStore();
 
 type Volunteer = User & { teams: string[] };
 
@@ -64,6 +80,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const selectedTask = computed<FestivalTaskDisplayInfos>(
+  () => planningStore.ft_reader,
+);
 
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
@@ -127,15 +147,29 @@ const events = computed<CalendarEvent[]>(() => {
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
-const planningStore = usePlanningStore();
-const selectedTask = computed<FestivalTask>(() => planningStore.ft_reader);
-
 const dialog = ref<boolean>(false);
 
 const openFtModal = async (event: CalendarEvent) => {
   if (event.ft_id) {
-    await planningStore.getReadFtInfos(event.ft_id);
+    await planningStore.fetchFestivalTaskInfos(event.ft_id);
+    // Retire le <hr> très moche
+    planningStore.ft_reader.instructions =
+      planningStore.ft_reader.instructions.replace("<hr>", "");
     dialog.value = true;
   }
 };
+
+const contactsInfosToString = (contactsInfos: Contact[]): string => {
+  let out = "";
+  contactsInfos.forEach((contact) => {
+    out += contact.name + " - " + contact.phone + "\n";
+  });
+  return out;
+};
 </script>
+
+<style lang="scss" scoped>
+.ft_popup_content {
+  padding: 2em;
+}
+</style>

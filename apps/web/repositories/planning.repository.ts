@@ -1,14 +1,31 @@
 import { ICAL, PDF } from "@overbookd/http";
+import { type GeoLocation } from "@overbookd/geo-location";
 import type { DuringBreakPeriods, VolunteerForPlanning } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
-import type { FestivalTaskWithConflicts } from "@overbookd/festival-event";
 import { HttpClient } from "~/utils/http/http-client";
+
+export type Contact = {
+  id: number;
+  name: string;
+  phone: string;
+};
+
+export type FestivalTaskDisplayInfos = {
+  id: number;
+  name: string;
+  instructions: string;
+  location: {
+    name: string;
+    geolocation: GeoLocation;
+  };
+  contacts: Contact[];
+};
 
 export class PlanningRepository {
   private static readonly basePath = "planning";
 
-  static getReadFtInfos(id: FestivalTaskWithConflicts["id"]) {
-    return HttpClient.get<FestivalTaskWithConflicts>(
+  static getReadFtInfos(id: number) {
+    return HttpClient.get<FestivalTaskDisplayInfos>(
       `${this.basePath}/ft-reader/${id}`,
     );
   }
