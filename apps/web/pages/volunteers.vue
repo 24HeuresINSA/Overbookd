@@ -23,8 +23,11 @@
       @click:volunteer="openVolunteerInfoDialog"
     />
 
-    <v-dialog v-model="isVolunteerInfoDialogOpen" max-width="700">
-      <VolunteerInformation
+    <v-dialog
+      v-model="isVolunteerInfoDialogOpen"
+      :max-width="canManageAvailabilities ? 1400 : 700"
+    >
+      <VolunteerInformationDialogCard
         v-if="selectedVolunteer"
         :volunteer="selectedVolunteer"
         @updated="closeVolunteerInfoDialog"
@@ -36,7 +39,7 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
+import { VIEW_VOLUNTEER_DETAILS, MANAGE_USERS } from "@overbookd/permission";
 import {
   keepMembersOf,
   excludeMembersOf,
@@ -62,6 +65,7 @@ useHead({ title: "Liste des bénévoles" });
 
 const route = useRoute();
 const userStore = useUserStore();
+const availabilityStore = useVolunteerAvailabilityStore();
 
 const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
   () => userStore.volunteers,
@@ -105,11 +109,17 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
+const canManageAvailabilities = computed<boolean>(() =>
+  userStore.can(MANAGE_USERS),
+);
 const openVolunteerInfoDialog = (
   volunteer: UserDataWithPotentialyProfilePicture,
 ) => {
   if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
   userStore.setSelectedUser(volunteer);
+  if (canManageAvailabilities.value) {
+    availabilityStore.fetchVolunteerAvailabilities(volunteer.id);
+  }
   isVolunteerInfoDialogOpen.value = true;
 };
 const closeVolunteerInfoDialog = () => {

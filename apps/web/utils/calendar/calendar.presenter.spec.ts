@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { MINUTES_IN_HOUR, OverDate } from "@overbookd/time";
 import { createCalendarEvent } from "./event";
 import {
-  AvailabilityPresenter,
   CalendarEventPresenter,
   HORIZONTAL_MARGIN_IN_PERCENTAGE,
   PIXELS_PER_MINUTE,
@@ -60,7 +59,7 @@ describe("Calendar Event Presenter", () => {
     ${sunday23htoMonday01hEvent}  | ${OverDate.init({ date: monday, hour: 0 }).date}  | ${OverDate.init({ date: monday, hour: 1 }).date}
   `("displayed event period", ({ event, expectedStart, expectedEnd }) => {
     it(`should calculate displayed period as ${expectedStart} to ${expectedEnd} for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
+      const presenter = new CalendarEventPresenter(
         event,
         displayedDatePresenter,
       );
@@ -92,7 +91,7 @@ describe("Calendar Event Presenter", () => {
     ${monday22htoTuesday02hEvent} | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 22) + VERTICAL_MARGIN_IN_PIXELS}      | ${PIXELS_PER_MINUTE * (MINUTES_IN_HOUR * 2 - 1) - VERTICAL_MARGINS}
   `("top and height", ({ event, expectedTop, expectedHeight }) => {
     it(`should calculate top as ${expectedTop}px and height as ${expectedHeight}px for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
+      const presenter = new CalendarEventPresenter(
         event,
         displayedDatePresenter,
       );
@@ -102,10 +101,28 @@ describe("Calendar Event Presenter", () => {
   });
 
   describe.each`
-    event                  | among                     | expectedWidth                   | expectedLeft
-    ${monday09hto10hEvent} | ${{ count: 1, index: 0 }} | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday09hto10hEvent} | ${{ count: 2, index: 1 }} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${{ count: 3, index: 1 }} | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    event                  | among                                                  | expected
+    ${monday09hto10hEvent} | ${[]}                                                  | ${1}
+    ${monday09hto10hEvent} | ${[monday22htoTuesday02hEvent]}                        | ${1}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday22htoTuesday02hEvent]} | ${2}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday09hto10hEvent]}        | ${3}
+  `("simultaneous events", ({ event, among, expected }) => {
+    it(`should deduct simultaneous events of ${event.name}`, () => {
+      const presenter = new CalendarEventPresenter(
+        event,
+        displayedDatePresenter,
+        among,
+      );
+      expect(presenter.simultaneousEvents.length).toBe(expected);
+    });
+  });
+
+  describe.each`
+    event                  | among                                                  | expectedWidth                   | expectedLeft
+    ${monday09hto10hEvent} | ${[]}                                                  | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday09hto10hEvent} | ${[monday22htoTuesday02hEvent]}                        | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday22htoTuesday02hEvent]} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent} | ${[monday00hto23h59Event, monday09hto10hEvent]}        | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
   `(
     "calendar event width and left",
     ({ event, among, expectedWidth, expectedLeft }) => {
@@ -120,19 +137,4 @@ describe("Calendar Event Presenter", () => {
       });
     },
   );
-
-  describe.each`
-    event                  | expectedWidth               | expectedLeft
-    ${monday09hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-    ${monday08hto10hEvent} | ${100 - HORIZONTAL_MARGINS} | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  `("availability width and left", ({ event, expectedWidth, expectedLeft }) => {
-    it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
-      const presenter = new AvailabilityPresenter(
-        event,
-        displayedDatePresenter,
-      );
-      expect(presenter.width.value).toBe(expectedWidth);
-      expect(presenter.left.value).toBe(expectedLeft);
-    });
-  });
 });

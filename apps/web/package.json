@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/web",
-  "version": "3.5.0",
+  "version": "3.5.5",
   "description": "Application web pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -70,7 +70,7 @@
     "nanoid": "5.0.9",
     "pinia": "2.3.0",
     "quill": "2.0.3",
-    "sass": "1.83.1",
+    "sass": "1.83.4",
     "vite-plugin-vuetify": "2.0.4",
     "vue-chartjs": "5.3.2",
     "vue-html-secure": "1.0.10",
@@ -79,13 +79,13 @@
   "devDependencies": {
     "@pinia/nuxt": "0.9.0",
     "eslint-plugin-vue": "9.32.0",
-    "nuxt": "3.15.1",
+    "nuxt": "3.15.2",
     "vue": "3.5.13",
     "vue-router": "4.5.0",
     "vue-tsc": "2.2.0"
   },
   "engines": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   }
 }

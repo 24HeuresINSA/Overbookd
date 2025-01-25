@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "2.22.36",
+  "version": "2.22.37",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -108,7 +108,7 @@
     "@types/jest": "29.5.14",
     "@types/jsonwebtoken": "9.0.7",
     "@types/multer": "1.4.12",
-    "@types/node": "22.10.5",
+    "@types/node": "22.10.7",
     "@types/passport-jwt": "4.0.1",
     "@types/passport-local": "1.0.38",
     "@types/pdfmake": "0.2.11",
@@ -120,7 +120,7 @@
     "source-map-support": "0.5.21",
     "supertest": "7.0.0",
     "ts-jest": "29.2.5",
-    "ts-loader": "9.5.1",
+    "ts-loader": "9.5.2",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0"
   },
@@ -152,6 +152,6 @@
   },
   "engines": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   }
 }

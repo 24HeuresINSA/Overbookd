@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper v-model="step">
+    <v-stepper v-model="step" class="mb-3" editable>
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
@@ -10,25 +10,16 @@
           :value="index + 1"
         />
       </v-stepper-header>
-
-      <v-stepper-window>
-        <v-stepper-window-item
-          v-for="(_, index) in calendarSteps"
-          :key="`content-${index}`"
-          :value="index + 1"
-        >
-          <AvailabilitiesPickCalendar
-            v-model="days"
-            :disable-previous="shouldDisablePrevious"
-            :disable-next="shouldDisableNext"
-            :cant-validate="cannotValidate"
-            @previous="moveToPreviousStep"
-            @next="moveToNextStep"
-            @validate="saveAvailabilities"
-          />
-        </v-stepper-window-item>
-      </v-stepper-window>
     </v-stepper>
+    <AvailabilitiesPickCalendar
+      v-model="days"
+      :disable-previous="shouldDisablePrevious"
+      :disable-next="shouldDisableNext"
+      :cant-validate="cannotValidate"
+      @previous="moveToPreviousStep"
+      @next="moveToNextStep"
+      @validate="saveAvailabilities"
+    />
   </div>
 </template>
 
@@ -62,9 +53,13 @@ const calendarSteps = computed<CalendarStep[]>(() => {
 });
 const days = computed<DayPresenter[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
-  const splitedStep = calendarStep?.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
-  const dates = splitedStep?.map(({ start }) => OverDate.from(start)) ?? [];
-  return dates.map((date) => new DayPresenter(date));
+  if (!calendarStep) return [];
+
+  const splitedStep = calendarStep.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
+  const dates = splitedStep.map(({ start }) => OverDate.from(start)) ?? [];
+  const lastDate = OverDate.from(calendarStep.period.end);
+  const datesWithLastDay = [...dates, lastDate];
+  return datesWithLastDay.map((date) => new DayPresenter(date));
 });
 
 const cannotValidate = computed<boolean>(() => {
@@ -89,8 +84,9 @@ const moveToNextStep = () => {
 };
 
 const saveAvailabilities = async () => {
+  if (!userStore.loggedUser) return;
   await availabilitiyStore.updateVolunteerAvailabilities(
-    userStore.loggedUser?.id ?? 0,
+    userStore.loggedUser.id,
   );
 };
 </script>

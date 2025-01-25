@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/contribution",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "Gestion des contributions pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -51,7 +51,7 @@
   ],
   "engines": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",

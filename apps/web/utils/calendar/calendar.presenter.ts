@@ -22,17 +22,11 @@ class Percentage {
   }
 }
 
-type IPresentEvent = {
-  top: Pixel;
-  height: Pixel;
-  width: Percentage;
-  left: Percentage;
-};
-
-abstract class EventPresenter implements IPresentEvent {
+export class CalendarEventPresenter {
   constructor(
-    protected readonly event: CalendarEvent,
-    protected readonly day: DayPresenter,
+    private readonly event: CalendarEvent,
+    private readonly day: DayPresenter,
+    private readonly among: CalendarEvent[] = [],
   ) {}
 
   private get minutesBetweenDayStartAndEventStart(): number {
@@ -70,6 +64,41 @@ abstract class EventPresenter implements IPresentEvent {
     return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
+  get simultaneousEvents(): CalendarEvent[] {
+    const event = Period.init({ start: this.event.start, end: this.event.end });
+    const overlappingEvents = this.among.filter((other) =>
+      event.isOverlapping(Period.init(other)),
+    );
+    return [this.event, ...overlappingEvents].sort((a, b) => {
+      if (a.start.getTime() !== b.start.getTime()) {
+        return a.start.getTime() - b.start.getTime();
+      }
+      if (a.end.getTime() !== b.end.getTime()) {
+        return a.end.getTime() - b.end.getTime();
+      }
+      const nameComparison = a.name.localeCompare(b.name);
+      if (nameComparison !== 0) return nameComparison;
+      return a.id.localeCompare(b.id);
+    });
+  }
+
+  get width(): Percentage {
+    const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
+    const baseWidth = 100 / this.simultaneousEvents.length;
+    return new Percentage(baseWidth - horizontalMargin);
+  }
+
+  get left(): Percentage {
+    const index = this.simultaneousEvents.findIndex(
+      (simultaneous) => this.event.id === simultaneous.id,
+    );
+
+    if (index === -1) throw new Error("Event not found in simultaneousEvents");
+
+    const baseLeft = (100 / this.simultaneousEvents.length) * index;
+    return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
+  }
+
   get css(): Record<string, string> {
     return {
       top: this.top.css,
@@ -77,52 +106,6 @@ abstract class EventPresenter implements IPresentEvent {
       width: this.width.css,
       left: this.left.css,
     };
-  }
-
-  abstract get width(): Percentage;
-  abstract get left(): Percentage;
-}
-
-export class AvailabilityPresenter
-  extends EventPresenter
-  implements IPresentEvent
-{
-  get width(): Percentage {
-    const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    return new Percentage(100 - horizontalMargin);
-  }
-
-  get left(): Percentage {
-    return new Percentage(HORIZONTAL_MARGIN_IN_PERCENTAGE);
-  }
-}
-
-export type AmongCalendarEvent = { count: number; index: number };
-const DEFAULT_AMONG: AmongCalendarEvent = { count: 1, index: 0 };
-
-export class CalendarEventPresenter
-  extends EventPresenter
-  implements IPresentEvent
-{
-  constructor(
-    event: CalendarEvent,
-    day: DayPresenter,
-    private readonly among: AmongCalendarEvent = DEFAULT_AMONG,
-  ) {
-    super(event, day);
-  }
-
-  get width(): Percentage {
-    const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseWidth = 100 / this.among.count;
-    return new Percentage(baseWidth - horizontalMargin);
-  }
-
-  get left(): Percentage {
-    const previousEventsMargin =
-      this.among.index * HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseLeft = this.among.index * this.width.value + previousEventsMargin;
-    return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
   }
 
   get periodText(): string {

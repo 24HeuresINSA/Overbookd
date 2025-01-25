@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/personal-account",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "description": "Gestion des consommations des bénévoles pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -54,7 +54,7 @@
   ],
   "engines": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",

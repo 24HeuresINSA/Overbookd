@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/logistic",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Gestion de la logistique pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -52,7 +52,7 @@
   ],
   "engines": {
     "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "pnpm": "9.15.4"
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",

@@ -12,31 +12,28 @@
       />
     </template>
     <template #header>
-      <AvailabilitiesCalendarHeader :days="days" />
+      <AvailabilitiesCalendarHeader :days="days" @click="selectOrUnselectDay" />
     </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
-        :events="calendarEvents"
         :days="days"
-        @click:event="selectOrUnselectAvailability"
+        @click:availability="selectOrUnselectAvailability"
       />
     </template>
   </OverCalendar>
 </template>
 
 <script lang="ts" setup>
-import { ONE_HOUR_IN_MS, OverDate, TWO_HOURS_IN_MS } from "@overbookd/time";
-import { Period } from "@overbookd/time";
-import { CalendarEventPeriods } from "~/utils/availabilities/calendar-event-periods";
+import { Duration, OverDate, Period } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import {
-  createCalendarEvent,
-  type CalendarEvent,
-} from "~/utils/calendar/event";
-import { isPartyShift } from "~/utils/shift.utils";
+  ALL_HOURS,
+  type AvailabilityEvent,
+} from "~/utils/availabilities/availabilities";
+import { findCharismaPerHour } from "~/utils/availabilities/availability-grid.utils";
 
-const charismaPeriodStore = useCharismaPeriodStore();
 const availabilityStore = useVolunteerAvailabilityStore();
+const charismaPeriodStore = useCharismaPeriodStore();
 
 defineProps({
   disablePrevious: {
@@ -55,57 +52,59 @@ defineProps({
 
 const days = defineModel<DayPresenter[]>({ required: true });
 
-const globalPeriod = Period.init({
-  start: CalendarEventPeriods.prePreManif.period.start,
-  end: CalendarEventPeriods.postManif.period.end,
-});
+const availabilities = computed(() => availabilityStore.availabilities.list);
+const charismaPeriods = computed(() => charismaPeriodStore.all);
 
-const findCharismaPerHour = (period: Period): number => {
-  const charismaPeriod = charismaPeriodStore.all.find((cp) =>
-    Period.init({ start: cp.start, end: cp.end }).isIncluding(period.start),
+const recordedAvailabilitites = computed(
+  () => availabilityStore.availabilities.recorded,
+);
+const isRecorded = (date: Date): boolean => {
+  return recordedAvailabilitites.value.some((recorded) =>
+    recorded.isIncluding(date),
   );
-  return charismaPeriod ? charismaPeriod.charisma : 0;
 };
-
-const intervals = globalPeriod.splitWithIntervalInMs(TWO_HOURS_IN_MS);
-const calendarEvents = computed<CalendarEvent[]>(() => {
-  return intervals.flatMap((splitPeriod) => {
-    const startHour = splitPeriod.start.getHours();
-    const isPartyPeriod = isPartyShift(startHour);
-
-    const periods = isPartyPeriod
-      ? splitPeriod.splitWithIntervalInMs(ONE_HOUR_IN_MS)
-      : [splitPeriod];
-
-    return periods.map((period) => {
-      const charismaPerHour = findCharismaPerHour(period);
-      const charisma = isPartyPeriod ? charismaPerHour : charismaPerHour * 2;
-
-      return createCalendarEvent({
-        start: period.start,
-        end: period.end,
-        name: charisma.toString(),
-      });
-    });
-  });
-});
-
 const selectedAvailabilities = computed(
   () => availabilityStore.availabilities.selected,
 );
-const isSelected = (event: CalendarEvent): boolean => {
+const isSelected = (date: Date): boolean => {
   return selectedAvailabilities.value.some((selected) =>
-    selected.isIncluding(event.start),
+    selected.isIncluding(date),
   );
 };
-const selectOrUnselectAvailability = (availability: CalendarEvent) => {
+const selectOrUnselectAvailability = (availability: AvailabilityEvent) => {
   const date = OverDate.fromLocal(availability.start);
-  const charismaPerHour = +availability.name;
-
-  if (isSelected(availability)) {
-    return availabilityStore.unSelectAvailability(date, charismaPerHour);
+  if (isSelected(availability.start)) {
+    return availabilityStore.unSelectAvailability(date, availability.charisma);
   }
-  availabilityStore.selectAvailability(date, charismaPerHour);
+  availabilityStore.selectAvailability(date, availability.charisma);
+};
+
+const isAllDaySelected = (day: DayPresenter): boolean => {
+  const start = day.startsAt;
+  const tomorrow = start.plus(Duration.ONE_DAY).date;
+  const period = Period.init({ start: start.date, end: tomorrow });
+  return availabilities.value.some((availability) =>
+    availability.includes(period),
+  );
+};
+const selectOrUnselectDay = (day: DayPresenter) => {
+  if (isAllDaySelected(day)) {
+    ALL_HOURS.forEach((hour) => {
+      const date = OverDate.init({ date: day.date.dateString, hour });
+      if (isSelected(date.date) && !isRecorded(date.date)) {
+        const charisma = findCharismaPerHour(charismaPeriods.value, date.date);
+        availabilityStore.unSelectAvailability(date, charisma);
+      }
+    });
+    return;
+  }
+  ALL_HOURS.forEach((hour) => {
+    const date = OverDate.init({ date: day.date.dateString, hour });
+    if (!isSelected(date.date) && !isRecorded(date.date)) {
+      const charisma = findCharismaPerHour(charismaPeriods.value, date.date);
+      availabilityStore.selectAvailability(date, charisma);
+    }
+  });
 };
 
 const emit = defineEmits(["previous", "next", "validate"]);
