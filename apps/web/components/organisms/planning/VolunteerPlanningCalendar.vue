@@ -19,7 +19,7 @@
     <!-- max-width="400" -->
     <v-card prepend-icon="mdi-information-outline" :title="selectedTask.name">
       <!-- On aurait envie d'utiliser v-html mais c'est vachement vulnérable alors on va implémenter sa propre solution -->
-      <div v-html="selectedTask.instructions" class="ft_popup_content" />
+      <div v-html-safe="selectedTask.instructions" class="ft_popup_content" />
       <v-card
         elevation="0"
         title="Lieu"
