@@ -1,18 +1,18 @@
 <template>
   <v-card class="sidebar fa ft" :class="{ closed: isSideBarClosed }">
-    <v-card-title id="title">{{ titleWithId(getId) }}</v-card-title>
-    <v-card-subtitle id="name">{{ name }}</v-card-subtitle>
+    <v-card-title id="title">{{ titleWithId(eventId) }}</v-card-title>
+    <v-card-subtitle v-show="!isSideBarClosed" id="name">
+      {{ name }}
+    </v-card-subtitle>
     <v-btn
       v-if="!isMobile"
-      icon
-      variant="plain"
+      icon="mdi-chevron-left"
+      variant="flat"
+      density="compact"
       class="btn-close-side-bar"
+      :class="{ 'rotate-180': isSideBarClosed }"
       @click="toggleSideBar"
-    >
-      <v-icon :class="{ 'rotate-180': isSideBarClosed }">
-        mdi-chevron-left
-      </v-icon>
-    </v-btn>
+    />
     <v-card-text class="sidebar__text">
       <div id="status">
         <span id="dot" :class="status" />
@@ -40,9 +40,9 @@
         @click="askForReview"
       >
         <v-icon class="mr-2">mdi-rocket-launch-outline</v-icon>
-        <p v-if="!isSideBarClosed">Demande de relecture</p>
+        <p v-show="!isSideBarClosed">Demande de relecture</p>
       </v-btn>
-      <div v-if="!isSideBarClosed">
+      <div v-show="!isSideBarClosed">
         <div v-for="team in myReviewers" :key="team.code" class="team-review">
           <v-btn
             :text="`Approuver pour ${team.name}`"
@@ -71,7 +71,7 @@
       <slot name="additional-actions" />
 
       <FestivalEventSummary
-        v-if="!isSideBarClosed"
+        v-show="!isSideBarClosed"
         class="summary"
         :festival-event="festivalEvent"
       />
@@ -152,7 +152,7 @@ const toggleSideBar = () => {
   isSideBarClosed.value = !isSideBarClosed.value;
 };
 
-const getId = computed<string | string[]>(() => route.params.id);
+const eventId = computed<string | string[]>(() => route.params.id);
 
 const titleWithId = (id: string | string[]): string => {
   if (isSideBarClosed.value) {
@@ -305,7 +305,8 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
 <style lang="scss" scoped>
 .btn-close-side-bar {
   position: absolute;
-  right: 0;
+  top: 10px;
+  right: 10px;
 }
 
 .rotate-180 {

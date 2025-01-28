@@ -102,9 +102,7 @@ $side-nav-width: calc(350px + $sidebar-margin);
   position: sticky;
   top: 0;
   width: $side-nav-width;
-  max-height: calc(
-    100vh - $header-height - 2 * $desktop-content-vertical-padding - 10px
-  );
+  height: fit-content;
   flex-shrink: 0;
   z-index: 10;
 }
