@@ -146,11 +146,12 @@
 
   #status,
   .status,
+  .name-container,
   #validators,
   #reviewers {
 
     .v-chip,
-    #dot {
+    .dot {
       @include background-color-by-status();
     }
   }

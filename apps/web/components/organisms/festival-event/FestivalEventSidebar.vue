@@ -1,9 +1,10 @@
 <template>
   <v-card class="sidebar fa ft" :class="{ closed: isSideBarClosed }">
     <v-card-title id="title">{{ titleWithId(eventId) }}</v-card-title>
-    <v-card-subtitle v-show="!isSideBarClosed" id="name">
-      {{ name }}
-    </v-card-subtitle>
+    <v-container class="name-container">
+      <span id="name">{{ name }}</span>
+      <span v-show="isSideBarClosed" class="dot dot_mini" :class="status" />
+    </v-container>
     <v-btn
       v-if="!isMobile"
       icon="mdi-chevron-left"
@@ -14,8 +15,8 @@
       @click="toggleSideBar"
     />
     <v-card-text class="sidebar__text">
-      <div id="status">
-        <span id="dot" :class="status" />
+      <div v-show="!isSideBarClosed" id="status">
+        <span class="dot" :class="status" />
         <h3>{{ statusLabel }}</h3>
       </div>
 
@@ -336,27 +337,42 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     padding-bottom: 0;
   }
 
-  #name {
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: rgb(89, 89, 89);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: auto;
-    display: block;
+  .name-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    #name {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: rgb(89, 89, 89);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: fit-content;
+    }
   }
 
   #status {
     display: flex;
     align-items: center;
+  }
 
-    #dot {
-      height: 25px;
-      width: 25px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 10px;
-    }
+  .dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 10px;
+  }
+  .dot_mini {
+    height: 15px;
+    width: 15px;
+    flex-shrink: 0;
   }
 
   .icons {
