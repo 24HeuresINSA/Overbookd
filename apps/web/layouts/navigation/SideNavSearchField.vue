@@ -12,7 +12,7 @@
       <template #title>
         <v-text-field
           ref="searchInput"
-          v-model="searchValue"
+          v-model="localSearchValue"
           label="Chercher une page"
           density="compact"
           variant="plain"
@@ -20,6 +20,8 @@
           hide-details
           single-line
           clearable
+          @input="handleInput"
+          @keydown.space.prevent="handleSpace"
         />
       </template>
     </v-list-item>
@@ -34,13 +36,32 @@ defineProps({
   },
 });
 
+const localSearchValue = ref("");
+
 const searchValue = defineModel<string | undefined>("searchValue", {
   required: true,
 });
+
 const searchInput = defineModel<HTMLInputElement | null>("searchInput", {
   required: true,
 });
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  searchValue.value = target.value;
+};
+
+const handleSpace = (event: KeyboardEvent) => {
+  event.preventDefault();
+  localSearchValue.value += " ";
+  searchValue.value = localSearchValue.value;
+};
+
 const focusOnSearch = () => searchInput.value?.focus();
+
+watch(searchValue, (newValue) => {
+  localSearchValue.value = newValue || "";
+});
 </script>
 
 <style lang="scss" scoped>
