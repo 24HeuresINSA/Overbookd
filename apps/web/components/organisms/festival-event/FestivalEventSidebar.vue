@@ -3,7 +3,7 @@
     <v-card-title id="title">{{ titleWithId(eventId) }}</v-card-title>
     <v-container class="name-container">
       <span id="name">{{ name }}</span>
-      <span v-show="isSideBarClosed" class="dot dot_mini" :class="status" />
+      <span v-show="isSideBarClosed" class="dot mini-dot" :class="status" />
     </v-container>
     <v-btn
       v-if="!isMobile"
@@ -369,7 +369,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     margin-left: 5px;
     margin-right: 10px;
   }
-  .dot_mini {
+  .mini-dot {
     height: 15px;
     width: 15px;
     flex-shrink: 0;
