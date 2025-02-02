@@ -1,16 +1,32 @@
 <template>
-  <v-card class="sidebar fa ft">
+  <v-card class="sidebar fa ft" :class="{ closed: isSideBarClosed }">
     <v-card-title id="title">{{ titleWithId }}</v-card-title>
-    <v-card-subtitle id="name">{{ name }}</v-card-subtitle>
-
+    <v-container class="name-container status">
+      <span id="name">{{ name }}</span>
+      <span v-show="isSideBarClosed" class="dot mini-dot" :class="status" />
+    </v-container>
+    <v-btn
+      v-if="!isMobile"
+      icon="mdi-chevron-left"
+      variant="flat"
+      density="compact"
+      class="btn-close-side-bar"
+      :class="{ 'rotate-180': isSideBarClosed }"
+      @click="toggleSideBar"
+    />
     <v-card-text class="sidebar__text">
-      <div id="status">
-        <span id="dot" :class="status" />
+      <div v-show="!isSideBarClosed" id="status">
+        <span class="dot" :class="status" />
         <h3>{{ statusLabel }}</h3>
       </div>
 
-      <div class="icons">
-        <div v-for="reviewer of reviewers" :key="reviewer.code" class="icon">
+      <div :class="['icons', { 'flex-column': isSideBarClosed }]">
+        <div
+          v-for="reviewer of reviewers"
+          :key="reviewer.code"
+          class="icon"
+          :class="{ closed: isSideBarClosed }"
+        >
           <v-icon :class="getReviewerStatus(reviewer)" size="26">
             {{ reviewer.icon }}
           </v-icon>
@@ -21,38 +37,45 @@
       <v-btn
         id="ask-for-review"
         class="review-btn"
-        text="Demande de relecture"
         :disabled="!canAskForReview"
         @click="askForReview"
-      />
-
-      <div v-for="team in myReviewers" :key="team.code" class="team-review">
-        <v-btn
-          :text="`Approuver pour ${team.name}`"
-          class="approve review-btn"
-          :disabled="cantApproveAs(team)"
-          size="small"
-          @click="approve(team)"
-        />
-        <v-btn
-          :text="`Rejeter pour ${team.name}`"
-          class="reject review-btn"
-          :disabled="cantRejectAs(team)"
-          size="small"
-          @click="openRejectDialog(team)"
-        />
-        <v-btn
-          v-if="canIgnore(team)"
-          :text="`Ignorer pour ${team.name}`"
-          class="ignore review-btn"
-          size="small"
-          @click="ignore(team.code)"
-        />
+      >
+        <v-icon class="mr-2">mdi-rocket-launch-outline</v-icon>
+        <p v-show="!isSideBarClosed">Demande de relecture</p>
+      </v-btn>
+      <div v-show="!isSideBarClosed">
+        <div v-for="team in myReviewers" :key="team.code" class="team-review">
+          <v-btn
+            :text="`Approuver pour ${team.name}`"
+            class="approve review-btn"
+            :disabled="cantApproveAs(team)"
+            size="small"
+            @click="approve(team)"
+          />
+          <v-btn
+            :text="`Rejeter pour ${team.name}`"
+            class="reject review-btn"
+            :disabled="cantRejectAs(team)"
+            size="small"
+            @click="openRejectDialog(team)"
+          />
+          <v-btn
+            v-if="canIgnore(team)"
+            :text="`Ignorer pour ${team.name}`"
+            class="ignore review-btn"
+            size="small"
+            @click="ignore(team.code)"
+          />
+        </div>
       </div>
 
       <slot name="additional-actions" />
 
-      <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
+      <FestivalEventSummary
+        v-show="!isSideBarClosed"
+        class="summary"
+        :festival-event="festivalEvent"
+      />
     </v-card-text>
 
     <v-dialog v-model="isRejectDialogOpen" max-width="600">
@@ -107,6 +130,10 @@ const faStore = useFestivalActivityStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
+const layoutStore = useLayoutStore();
+
+const isMobile = computed<boolean>(() => layoutStore.isMobile);
+const isSideBarClosed = ref<boolean>(false);
 
 const props = defineProps({
   festivalEvent: {
@@ -114,6 +141,7 @@ const props = defineProps({
     default: "FA",
   },
 });
+
 const isActivity = computed<boolean>(() => props.festivalEvent === "FA");
 
 const selectedActivity = computed<FestivalActivity>(
@@ -121,10 +149,19 @@ const selectedActivity = computed<FestivalActivity>(
 );
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 
+const toggleSideBar = () => {
+  isSideBarClosed.value = !isSideBarClosed.value;
+};
+
+const eventId = computed<number>(() => +route.params.id);
 const titleWithId = computed<string>(() => {
-  const id = route.params.id;
+  const id = eventId.value;
+  if (isSideBarClosed.value) {
+    return isActivity.value ? `FA n°${id}` : `FT n°${id}`;
+  }
   return isActivity.value ? `Fiche Activité n°${id}` : `Fiche Tâche n°${id}`;
 });
+
 const name = computed<string>(() =>
   isActivity.value
     ? selectedActivity.value.general.name
@@ -266,13 +303,31 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
 </script>
 
 <style lang="scss" scoped>
+.btn-close-side-bar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
 .sidebar {
   display: flex;
   flex-direction: column;
   width: 350px;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
 
   &__text {
     overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  &.closed {
+    width: 140px;
   }
 
   #title {
@@ -281,41 +336,58 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     padding-bottom: 0;
   }
 
-  #name {
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: rgb(89, 89, 89);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: auto;
-    display: block;
+  .name-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    #name {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: rgb(89, 89, 89);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: fit-content;
+    }
   }
 
   #status {
     display: flex;
     align-items: center;
+  }
 
-    #dot {
-      height: 25px;
-      width: 25px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 10px;
-    }
+  .dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 10px;
+  }
+  .mini-dot {
+    height: 15px;
+    width: 15px;
+    flex-shrink: 0;
   }
 
   .icons {
     display: flex;
-    margin: 20px 0 20px 0;
+    justify-content: space-around;
+    align-items: center;
+    margin: 30px 0 25px 0;
+    height: 300;
 
     .icon {
       position: relative;
       display: inline-block;
-      margin-right: 20px;
 
       .icon-detail {
         visibility: hidden;
-        width: 60px;
+        width: 100px;
         font-size: 0.9rem;
         text-align: center;
         border-radius: 6px;
@@ -325,7 +397,11 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
         z-index: 1;
         top: 100%;
         left: 50%;
-        margin-left: -30px;
+        margin-left: -50px;
+      }
+
+      &.closed {
+        margin-bottom: 15px;
       }
     }
   }

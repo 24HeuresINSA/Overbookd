@@ -95,25 +95,38 @@ $side-nav-width: calc(350px + $sidebar-margin);
 
 .activity {
   display: flex;
-  overflow: auto;
-  scroll-behavior: smooth;
-  gap: $card-gap;
+  width: 100%;
 }
 
 .sidebar {
-  position: fixed;
+  position: sticky;
+  top: 0;
   width: $side-nav-width;
+  height: fit-content;
   max-height: calc(
     100vh - $header-height - 2 * $desktop-content-vertical-padding - 10px
   );
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  width: calc(100% - $side-nav-width - $card-gap);
-  margin-left: $side-nav-width + $card-gap;
-  gap: $card-gap;
+  flex-grow: 1;
+  padding-left: 20px;
+  overflow-y: auto;
+}
+
+.container > * {
+  flex-grow: 1;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-grow: 1;
 }
 
 @media only screen and (max-width: $mobile-max-width) {
