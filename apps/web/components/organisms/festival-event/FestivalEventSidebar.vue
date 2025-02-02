@@ -1,7 +1,7 @@
 <template>
   <v-card class="sidebar fa ft" :class="{ closed: isSideBarClosed }">
-    <v-card-title id="title">{{ titleWithId(eventId) }}</v-card-title>
-    <v-container class="name-container">
+    <v-card-title id="title">{{ titleWithId }}</v-card-title>
+    <v-container class="name-container status">
       <span id="name">{{ name }}</span>
       <span v-show="isSideBarClosed" class="dot mini-dot" :class="status" />
     </v-container>
@@ -130,10 +130,10 @@ const faStore = useFestivalActivityStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
-const isSideBarClosed = ref(false);
 const layoutStore = useLayoutStore();
 
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
+const isSideBarClosed = ref<boolean>(false);
 
 const props = defineProps({
   festivalEvent: {
@@ -153,15 +153,14 @@ const toggleSideBar = () => {
   isSideBarClosed.value = !isSideBarClosed.value;
 };
 
-const eventId = computed<string | string[]>(() => route.params.id);
-
-const titleWithId = (id: string | string[]): string => {
+const eventId = computed<number>(() => +route.params.id);
+const titleWithId = computed<string>(() => {
+  const id = eventId.value;
   if (isSideBarClosed.value) {
     return isActivity.value ? `FA n°${id}` : `FT n°${id}`;
-  } else {
-    return isActivity.value ? `Fiche Activité n°${id}` : `Fiche Tâche n°${id}`;
   }
-};
+  return isActivity.value ? `Fiche Activité n°${id}` : `Fiche Tâche n°${id}`;
+});
 
 const name = computed<string>(() =>
   isActivity.value
