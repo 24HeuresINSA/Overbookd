@@ -5,7 +5,7 @@ import {
   gabIsAssignedTo,
   installEscapeGame,
   parcoursCollageTrajetA,
-  rejectedByHumainAndApprovedByMatosWithoutInquiries,
+  approvedByMatosAndRejectedByHumainWithoutInquiries,
   uninstallEscapeGame,
 } from "../festival-task.fake.js";
 import {
@@ -35,7 +35,12 @@ import {
   humain,
   matos,
 } from "../../common/review.js";
-import { FORCED_UPDATE, REJECTED, RESET_REVIEW } from "../../common/action.js";
+import {
+  APPROVED,
+  FORCED_UPDATE,
+  REJECTED,
+  RESET_REVIEW,
+} from "../../common/action.js";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
@@ -57,7 +62,7 @@ describe("Prepare festival task instructions section", () => {
       gabIsAssignedTo,
       parcoursCollageTrajetA,
       approvedByMatosWithoutInquiries,
-      rejectedByHumainAndApprovedByMatosWithoutInquiries,
+      approvedByMatosAndRejectedByHumainWithoutInquiries,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -115,12 +120,13 @@ describe("Prepare festival task instructions section", () => {
     });
 
     describe.each`
-      rejectors         | humainAfterReset | matosAfterReset | elecAfterReset          | taskName                                               | task
-      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
-      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
-      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
-      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
-      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+      rejectors         | humainAfterReset | matosAfterReset | elecAfterReset          | taskName                                                           | task
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}                    | ${approvedByHumainRejectedByMatos}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name}             | ${approvedByHumainAndElecRejectedByMatos}
+      ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}                      | ${approvedByElecRejectedByMatos}
+      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}
+      ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}
+      ${[matos]}        | ${REJECTED}      | ${APPROVED}     | ${REVIEWING}            | ${approvedByMatosAndRejectedByHumainWithoutInquiries.general.name} | ${approvedByMatosAndRejectedByHumainWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
     `(
       "when $rejectors rejected the task $taskName",
       ({ task, humainAfterReset, matosAfterReset, elecAfterReset }) => {
@@ -136,40 +142,65 @@ describe("Prepare festival task instructions section", () => {
               );
               expect(instructions.global).toBe(update.global);
             });
-            it("should reset all approver review status to under review", async () => {
-              const updated = await prepare.updateInstructionsSection(
-                task.id,
-                update,
-                instigator,
-              );
-              if (isDraft(updated)) return;
+            if (task.inquiries.length > 0) {
+              describe("when task has inquiries", () => {
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    instigator,
+                  );
+                  if (isDraft(updated)) return;
 
-              expect(updated.reviews.humain).toBe(humainAfterReset);
-              expect(updated.reviews.matos).toBe(matosAfterReset);
-              expect(updated.reviews.elec).toBe(elecAfterReset);
-            });
-            it("should add RESET_REVIEW key event to history", async () => {
-              const { history } = await prepare.updateInstructionsSection(
-                task.id,
-                update,
-                instigator,
-              );
-              expect(history).toStrictEqual([
-                ...task.history,
-                {
-                  action: RESET_REVIEW,
-                  by: instigator,
-                  at: expect.any(Date),
-                  description:
-                    "Précédentes approbations réinitialisées par un changement sur le champ instructions",
-                },
-              ]);
-            });
+                  expect(updated.reviews.humain).toBe(humainAfterReset);
+                  expect(updated.reviews.matos).toBe(matosAfterReset);
+                  expect(updated.reviews.elec).toBe(elecAfterReset);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    instigator,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: instigator,
+                      at: expect.any(Date),
+                      description:
+                        "Précédentes approbations réinitialisées par un changement sur le champ instructions",
+                    },
+                  ]);
+                });
+              });
+            } else {
+              describe("when task has no inquiries", () => {
+                it("should keep all approver review status", async () => {
+                  const updated = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    noel,
+                  );
+                  if (isDraft(updated)) return;
+
+                  expect(updated.reviews).toStrictEqual(task.reviews);
+                });
+                it("should not add event to history", async () => {
+                  const { history } = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    noel,
+                  );
+                  expect(history).toStrictEqual(task.history);
+                });
+              });
+            }
           });
           if (task.instructions.inCharge.volunteers.length > 0) {
             describe("when trying to update in charge instructions", () => {
               const instigator = noel;
-              const update = { inCharge: "Update global instruction" };
+              const update = { inCharge: "Update in charge instruction" };
               it("should update it", async () => {
                 const { instructions } =
                   await prepare.updateInstructionsSection(
@@ -179,35 +210,60 @@ describe("Prepare festival task instructions section", () => {
                   );
                 expect(instructions.inCharge.instruction).toBe(update.inCharge);
               });
-              it("should reset all approver review status to under review", async () => {
-                const updated = await prepare.updateInstructionsSection(
-                  task.id,
-                  update,
-                  instigator,
-                );
-                if (isDraft(updated)) return;
+              if (task.inquiries.length > 0) {
+                describe("when task has inquiries", () => {
+                  it("should reset all approver review status to under review", async () => {
+                    const updated = await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
 
-                expect(updated.reviews.humain).toBe(humainAfterReset);
-                expect(updated.reviews.matos).toBe(matosAfterReset);
-                expect(updated.reviews.elec).toBe(elecAfterReset);
-              });
-              it("should add RESET_REVIEW key event to history", async () => {
-                const { history } = await prepare.updateInstructionsSection(
-                  task.id,
-                  update,
-                  instigator,
-                );
-                expect(history).toStrictEqual([
-                  ...task.history,
-                  {
-                    action: RESET_REVIEW,
-                    by: instigator,
-                    at: expect.any(Date),
-                    description:
-                      "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables",
-                  },
-                ]);
-              });
+                    expect(updated.reviews.humain).toBe(humainAfterReset);
+                    expect(updated.reviews.matos).toBe(matosAfterReset);
+                    expect(updated.reviews.elec).toBe(elecAfterReset);
+                  });
+                  it("should add RESET_REVIEW key event to history", async () => {
+                    const { history } = await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual([
+                      ...task.history,
+                      {
+                        action: RESET_REVIEW,
+                        by: instigator,
+                        at: expect.any(Date),
+                        description:
+                          "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables",
+                      },
+                    ]);
+                  });
+                });
+              } else {
+                describe("when task has no inquiries", () => {
+                  it("should keep all approver review status", async () => {
+                    const updated = await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      noel,
+                    );
+                    if (isDraft(updated)) return;
+
+                    expect(updated.reviews).toStrictEqual(task.reviews);
+                  });
+                  it("should not add event to history", async () => {
+                    const { history } = await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      noel,
+                    );
+                    expect(history).toStrictEqual(task.history);
+                  });
+                });
+              }
             });
           }
           if (
@@ -224,33 +280,56 @@ describe("Prepare festival task instructions section", () => {
                 expect(instructions.inCharge.volunteers).toHaveLength(0);
                 expect(instructions.inCharge.instruction).toBe(null);
               });
-              it("should reset all approver review status to under review", async () => {
-                const updated = await prepare.clearInCharge(
-                  task.id,
-                  instigator,
-                );
-                if (isDraft(updated)) return;
+              if (task.inquiries.length > 0) {
+                describe("when task has inquiries", () => {
+                  it("should reset all approver review status to under review", async () => {
+                    const updated = await prepare.clearInCharge(
+                      task.id,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
 
-                expect(updated.reviews.humain).toBe(humainAfterReset);
-                expect(updated.reviews.matos).toBe(matosAfterReset);
-                expect(updated.reviews.elec).toBe(elecAfterReset);
-              });
-              it("should add RESET_REVIEW key event to history", async () => {
-                const { history } = await prepare.clearInCharge(
-                  task.id,
-                  instigator,
-                );
-                expect(history).toStrictEqual([
-                  ...task.history,
-                  {
-                    action: RESET_REVIEW,
-                    by: instigator,
-                    at: expect.any(Date),
-                    description:
-                      "Précédentes approbations réinitialisées par la suppression des instructions des responsables",
-                  },
-                ]);
-              });
+                    expect(updated.reviews.humain).toBe(humainAfterReset);
+                    expect(updated.reviews.matos).toBe(matosAfterReset);
+                    expect(updated.reviews.elec).toBe(elecAfterReset);
+                  });
+                  it("should add RESET_REVIEW key event to history", async () => {
+                    const { history } = await prepare.clearInCharge(
+                      task.id,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual([
+                      ...task.history,
+                      {
+                        action: RESET_REVIEW,
+                        by: instigator,
+                        at: expect.any(Date),
+                        description:
+                          "Précédentes approbations réinitialisées par la suppression des instructions des responsables",
+                      },
+                    ]);
+                  });
+                });
+              } else {
+                describe("when task has no inquiries", () => {
+                  it("should keep all approver review status", async () => {
+                    const updated = await prepare.clearInCharge(
+                      task.id,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
+
+                    expect(updated.reviews).toStrictEqual(task.reviews);
+                  });
+                  it("should not add event to history", async () => {
+                    const { history } = await prepare.clearInCharge(
+                      task.id,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual(task.history);
+                  });
+                });
+              }
             });
           } else {
             describe("when trying to initialize in charge section", () => {
@@ -269,35 +348,60 @@ describe("Prepare festival task instructions section", () => {
                 );
                 expect(instructions.inCharge.instruction).toBe(instruction);
               });
-              it("should reset all approver review status to under review", async () => {
-                const updated = await prepare.initInCharge(
-                  task.id,
-                  form,
-                  instigator,
-                );
-                if (isDraft(updated)) return;
+              if (task.inquiries.length > 0) {
+                describe("when task has inquiries", () => {
+                  it("should reset all approver review status to under review", async () => {
+                    const updated = await prepare.initInCharge(
+                      task.id,
+                      form,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
 
-                expect(updated.reviews.humain).toBe(humainAfterReset);
-                expect(updated.reviews.matos).toBe(matosAfterReset);
-                expect(updated.reviews.elec).toBe(elecAfterReset);
-              });
-              it("should add RESET_REVIEW key event to history", async () => {
-                const { history } = await prepare.initInCharge(
-                  task.id,
-                  form,
-                  instigator,
-                );
-                expect(history).toStrictEqual([
-                  ...task.history,
-                  {
-                    action: RESET_REVIEW,
-                    by: instigator,
-                    at: expect.any(Date),
-                    description:
-                      "Précédentes approbations réinitialisées par l'initialisation des instructions des responsables",
-                  },
-                ]);
-              });
+                    expect(updated.reviews.humain).toBe(humainAfterReset);
+                    expect(updated.reviews.matos).toBe(matosAfterReset);
+                    expect(updated.reviews.elec).toBe(elecAfterReset);
+                  });
+                  it("should add RESET_REVIEW key event to history", async () => {
+                    const { history } = await prepare.initInCharge(
+                      task.id,
+                      form,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual([
+                      ...task.history,
+                      {
+                        action: RESET_REVIEW,
+                        by: instigator,
+                        at: expect.any(Date),
+                        description:
+                          "Précédentes approbations réinitialisées par l'initialisation des instructions des responsables",
+                      },
+                    ]);
+                  });
+                });
+              } else {
+                describe("when task has no inquiries", () => {
+                  it("should keep all approver review status", async () => {
+                    const updated = await prepare.initInCharge(
+                      task.id,
+                      form,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
+
+                    expect(updated.reviews).toStrictEqual(task.reviews);
+                  });
+                  it("should not add event to history", async () => {
+                    const { history } = await prepare.initInCharge(
+                      task.id,
+                      form,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual(task.history);
+                  });
+                });
+              }
             });
           }
         });

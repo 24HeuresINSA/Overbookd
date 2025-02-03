@@ -624,8 +624,8 @@ export const approvedByMatosWithoutInquiries = factory
   ])
   .build();
 
-export const rejectedByHumainAndApprovedByMatosWithoutInquiries = factory
-  .refused("Rejected by humain and approved by matos without inquiries")
+export const approvedByMatosAndRejectedByHumainWithoutInquiries = factory
+  .refused("Approved by matos and rejected by humain without inquiries")
   .withFestivalActivity(escapeGame)
   .withInstructions({
     contacts: [noelContact, justDanceInstallerContact],

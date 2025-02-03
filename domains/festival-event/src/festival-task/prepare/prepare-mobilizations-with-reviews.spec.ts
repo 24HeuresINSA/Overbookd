@@ -18,7 +18,7 @@ import {
   approvedByMatosWithoutInquiries,
   gabIsAssignedTo,
   installEscapeGame,
-  rejectedByHumainAndApprovedByMatosWithoutInquiries,
+  approvedByMatosAndRejectedByHumainWithoutInquiries,
   uninstallEscapeGame,
 } from "../festival-task.fake.js";
 import {
@@ -67,7 +67,7 @@ describe("Prepare festival task mobilizations list", () => {
       approvedByMatosRejectedByHumainAndElec,
       gabIsAssignedTo,
       approvedByMatosWithoutInquiries,
-      rejectedByHumainAndApprovedByMatosWithoutInquiries,
+      approvedByMatosAndRejectedByHumainWithoutInquiries,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -165,85 +165,82 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "when task $taskName has at least one inquiry",
         ({ approvers, task }) => {
-          describe("when none of other reviewers rejects task", () => {
-            describe("when trying to add mobilization", () => {
+          describe("when trying to add mobilization", () => {
+            it(`should indicate task is already approved by ${approvers}`, async () => {
+              const form = friday18hsaturday10hMobilization.form;
+              expect(
+                async () => await prepare.addMobilization(task.id, form, noel),
+              ).rejects.toThrow(AlreadyApprovedBy);
+            });
+          });
+          if (task.mobilizations.length > 1) {
+            describe("when trying to remove mobilization which is not the last", () => {
               it(`should indicate task is already approved by ${approvers}`, async () => {
-                const form = friday18hsaturday10hMobilization.form;
+                const mobilization = task.mobilizations[0];
                 expect(
                   async () =>
-                    await prepare.addMobilization(task.id, form, noel),
+                    await prepare.removeMobilization(
+                      task.id,
+                      mobilization.id,
+                      noel,
+                    ),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
-            if (task.mobilizations.length > 1) {
-              describe("when trying to remove mobilization which is not the last", () => {
-                it(`should indicate task is already approved by ${approvers}`, async () => {
-                  const mobilization = task.mobilizations[0];
-                  expect(
-                    async () =>
-                      await prepare.removeMobilization(
-                        task.id,
-                        mobilization.id,
-                        noel,
-                      ),
-                  ).rejects.toThrow(AlreadyApprovedBy);
-                });
+          }
+          describe.each`
+            field              | update
+            ${"start"}         | ${{ start: saturday10h.date }}
+            ${"end"}           | ${{ end: saturday10h.date }}
+            ${"start and end"} | ${{ start: saturday10h.date, end: sunday04h.date }}
+          `(
+            "when trying to update $field of existing mobilization",
+            ({ update }) => {
+              it(`should indicate task is already approved by ${approvers}`, async () => {
+                const mobilization = task.mobilizations[0];
+                expect(
+                  async () =>
+                    await prepare.updateMobilization(
+                      task.id,
+                      mobilization.id,
+                      update,
+                      noel,
+                    ),
+                ).rejects.toThrow(AlreadyApprovedBy);
               });
-            }
-            describe.each`
-              field              | update
-              ${"start"}         | ${{ start: saturday10h.date }}
-              ${"end"}           | ${{ end: saturday10h.date }}
-              ${"start and end"} | ${{ start: saturday10h.date, end: sunday04h.date }}
-            `(
-              "when trying to update $field of existing mobilization",
-              ({ update }) => {
-                it(`should indicate task is already approved by ${approvers}`, async () => {
-                  const mobilization = task.mobilizations[0];
-                  expect(
-                    async () =>
-                      await prepare.updateMobilization(
-                        task.id,
-                        mobilization.id,
-                        update,
-                        noel,
-                      ),
-                  ).rejects.toThrow(AlreadyApprovedBy);
-                });
-              },
-            );
-            if (task.reviews.humain === APPROVED) {
-              describe("when trying to update duration split on task approved by humain", () => {
-                it(`should indicate task is already approved by humain`, async () => {
-                  const mobilization = task.mobilizations[0];
-                  expect(
-                    async () =>
-                      await prepare.updateMobilization(
-                        task.id,
-                        mobilization.id,
-                        { durationSplitInHour: 1 },
-                        noel,
-                      ),
-                  ).rejects.toThrow(AlreadyApprovedBy);
-                });
+            },
+          );
+          if (task.reviews.humain === APPROVED) {
+            describe("when trying to update duration split on task approved by humain", () => {
+              it(`should indicate task is already approved by humain`, async () => {
+                const mobilization = task.mobilizations[0];
+                expect(
+                  async () =>
+                    await prepare.updateMobilization(
+                      task.id,
+                      mobilization.id,
+                      { durationSplitInHour: 1 },
+                      noel,
+                    ),
+                ).rejects.toThrow(AlreadyApprovedBy);
               });
-            } else {
-              describe("when trying to update duration split on task not approved by humain", () => {
-                it("should update duration split", async () => {
-                  const mobilization = task.mobilizations[0];
-                  const { mobilizations } = await prepare.updateMobilization(
-                    task.id,
-                    mobilization.id,
-                    { durationSplitInHour: 1 },
-                    noel,
-                  );
+            });
+          } else {
+            describe("when trying to update duration split on task not approved by humain", () => {
+              it("should update duration split", async () => {
+                const mobilization = task.mobilizations[0];
+                const { mobilizations } = await prepare.updateMobilization(
+                  task.id,
+                  mobilization.id,
+                  { durationSplitInHour: 1 },
+                  noel,
+                );
 
-                  const updated = mobilizations[0];
-                  expect(updated.durationSplitInHour).toBe(1);
-                });
+                const updated = mobilizations[0];
+                expect(updated.durationSplitInHour).toBe(1);
               });
-            }
-          });
+            });
+          }
         },
       );
       describe("when task has no inquiry and is approved by at least one logistic reviewer", () => {
@@ -304,7 +301,7 @@ describe("Prepare festival task mobilizations list", () => {
       ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name}             | ${approvedByHumainAndElecRejectedByMatos}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
       ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}                      | ${approvedByElecRejectedByMatos}                      | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
       ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}             | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[humain]}       | ${REJECTED}      | ${REVIEWING}    | ${REVIEWING}            | ${rejectedByHumainAndApprovedByMatosWithoutInquiries.general.name} | ${rejectedByHumainAndApprovedByMatosWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${REJECTED}      | ${APPROVED}     | ${REVIEWING}            | ${approvedByMatosAndRejectedByHumainWithoutInquiries.general.name} | ${approvedByMatosAndRejectedByHumainWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
     `(
       "when $rejectors rejected the task $taskName",
       ({
