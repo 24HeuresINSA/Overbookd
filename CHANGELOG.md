@@ -1,3 +1,10 @@
+## [3.28.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.27.1...v3.28.0) (2025-02-03)
+
+### Features
+
+* **availabilities:** add calendar to manage other volunteer availabilitites [#2367](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2367) ([903392c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/903392ca8e3d3b22cb47899d39f4ae7fc08fc0c8))
+* **fa:** added the option of closing the side bar on FAs or FTs [#2312](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2312) ([164e8be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/164e8be92d2454f4681cd99cfc0e882c5480ff5d))
+
 ## [3.27.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.27.0...v3.27.1) (2025-01-21)
 
 ### Bug Fixes
