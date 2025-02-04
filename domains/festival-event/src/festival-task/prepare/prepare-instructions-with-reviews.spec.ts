@@ -126,7 +126,7 @@ describe("Prepare festival task instructions section", () => {
       ${[matos]}        | ${REVIEWING}     | ${REJECTED}     | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}                      | ${approvedByElecRejectedByMatos}
       ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}
       ${[humain, elec]} | ${REJECTED}      | ${REVIEWING}    | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name}             | ${approvedByMatosRejectedByHumainAndElec}
-      ${[matos]}        | ${REJECTED}      | ${APPROVED}     | ${REVIEWING}            | ${approvedByMatosAndRejectedByHumainWithoutInquiries.general.name} | ${approvedByMatosAndRejectedByHumainWithoutInquiries} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${REJECTED}      | ${APPROVED}     | ${REVIEWING}            | ${approvedByMatosAndRejectedByHumainWithoutInquiries.general.name} | ${approvedByMatosAndRejectedByHumainWithoutInquiries}
     `(
       "when $rejectors rejected the task $taskName",
       ({ task, humainAfterReset, matosAfterReset, elecAfterReset }) => {
@@ -265,11 +265,7 @@ describe("Prepare festival task instructions section", () => {
                 });
               }
             });
-          }
-          if (
-            task.instructions.inCharge.instruction ||
-            task.instructions.inCharge.volunteers.length > 0
-          ) {
+
             describe("when trying to clear in charge section when exists", () => {
               const instigator = noel;
               it("should clear it", async () => {

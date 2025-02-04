@@ -195,7 +195,7 @@ export class PrepareFestivalTask {
       update.global !== undefined || update.inCharge !== undefined;
 
     return isUpdatingSharedFields
-      ? this.hasReviewersAllowToUpdate(task)
+      ? this.areReviewersAllowingUpdate(task)
       : !isApprovedBy(humain, task);
   }
 
@@ -285,7 +285,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.hasReviewersAllowToUpdate(task)) {
+    if (!this.areReviewersAllowingUpdate(task)) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
@@ -309,7 +309,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.hasReviewersAllowToUpdate(task)) {
+    if (!this.areReviewersAllowingUpdate(task)) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
@@ -333,7 +333,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.hasReviewersAllowToUpdate(task)) {
+    if (!this.areReviewersAllowingUpdate(task)) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
@@ -358,7 +358,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.hasReviewersAllowToUpdate(task)) {
+    if (!this.areReviewersAllowingUpdate(task)) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
@@ -389,7 +389,7 @@ export class PrepareFestivalTask {
     if (isApprovedBy(humain, task) && hasDurationSplit) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
-    if (!hasDurationSplit && !this.hasReviewersAllowToUpdate(task)) {
+    if (!hasDurationSplit && !this.areReviewersAllowingUpdate(task)) {
       const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
@@ -583,7 +583,7 @@ export class PrepareFestivalTask {
     return this.festivalTaskTranslator.translate(updated);
   }
 
-  private hasReviewersAllowToUpdate(
+  private areReviewersAllowingUpdate(
     task: FestivalTask,
   ): task is UpdatableFestivalTask {
     if (isDraft(task) || isRefused(task)) return true;
