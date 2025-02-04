@@ -27,6 +27,7 @@
 import Logo from "./Logo.vue";
 import HeaderProfile from "./HeaderProfile.vue";
 import { findPage } from "~/utils/navigation/find-page.utils";
+import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
 
 const PREPROD_TOOLTIP_TITLE =
   "Tu es sur la version de pré-production d'Overbookd.";
@@ -41,13 +42,13 @@ const route = useRoute();
 const config = useRuntimeConfig();
 const url: string = config.public.baseURL;
 
-const isPreProd: boolean = url.includes("preprod");
-const isCetaitMieuxAvant: boolean = url.includes("cetaitmieuxavant");
+const isPreProd: boolean = url.includes(PREPROD);
+const isCetaitMieuxAvant: boolean = url.includes(CETAITMIEUXAVANT);
 
 const pageTitle = computed<string>(() => findPage(route.path)?.title || "");
 
 const watermark = computed<string | undefined>(() =>
-  isPreProd ? "preprod" : isCetaitMieuxAvant ? "ctma" : undefined,
+  isPreProd ? PREPROD : isCetaitMieuxAvant ? "ctma" : undefined,
 );
 const watermarkTooltipTitle = computed<string>(() =>
   isPreProd
