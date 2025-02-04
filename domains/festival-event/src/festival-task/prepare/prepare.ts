@@ -26,6 +26,7 @@ import {
   FestivalTaskTranslator,
   InReviewWithoutConflicts,
   RefusedWithoutConflicts,
+  ReviewableWithoutConflicts,
   WithConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts.js";
@@ -41,6 +42,7 @@ import {
   REVIEWING,
   RejectionReviewStatus,
   Reviewer,
+  WILL_NOT_REVIEW,
   elec,
   humain,
   matos,
@@ -502,6 +504,10 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+
+    if (isValidated(task) || isReadyToAssign(task)) {
+      throw new FestivalTaskError("Cas non géré");
+    }
     if (isApprovedBy(matos, task)) {
       throw new AlreadyApprovedBy([matos], "FT");
     }
@@ -509,7 +515,22 @@ export class PrepareFestivalTask {
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
 
-    return this.save({ ...task, inquiries });
+    const validTask = checkValidity({
+      ...task,
+      inquiries,
+    });
+    if (isDraft(validTask)) return this.save(validTask);
+
+    const updatedTask = this.restoreMatosReviewStatus(validTask);
+    return this.save(updatedTask);
+  }
+
+  private restoreMatosReviewStatus<T extends ReviewableWithoutConflicts>(
+    task: T,
+  ): T {
+    if (isDraft(task) || task.reviews.matos !== WILL_NOT_REVIEW) return task;
+    const reviews = { ...task.reviews, matos: REVIEWING } as const;
+    return { ...task, reviews };
   }
 
   async updateInquiry(

@@ -1,6 +1,6 @@
 import { BACKLINE, MAGASIN } from "../common/inquiry-request.js";
 import { APPROVED, REJECTED } from "../common/action.js";
-import { REVIEWING } from "../common/review.js";
+import { REVIEWING, WILL_NOT_REVIEW } from "../common/review.js";
 import {
   escapeGame,
   humaGrass,
@@ -288,6 +288,12 @@ export const flashMobOnPreventionVillage = factory
   .refused("Flash Mob on Prevention Village")
   .withFestivalActivity(preventionVillage)
   .withReviews({ humain: REJECTED })
+  .build();
+
+export const ignoredByMatos = factory
+  .inReview("Ignored by matos")
+  .withFestivalActivity(preventionVillage)
+  .withReviews({ matos: WILL_NOT_REVIEW })
   .build();
 
 export const withNoTeamTask = factory
