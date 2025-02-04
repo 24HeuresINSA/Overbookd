@@ -16,6 +16,7 @@ import {
   approvedByHumainAndMatos,
   flashMobOnJustDance,
   guardJustDance,
+  ignoredByMatos,
   leadPressConference,
   rejectedByElec,
   serveWaterOnJustDance,
@@ -41,6 +42,8 @@ import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";
 import { CannotIgnoreFestivalTask } from "../festival-task.error.js";
+import { PrepareFestivalTask } from "../prepare/prepare.js";
+import { isDraft } from "../../festival-event.js";
 
 const factory = getFactory();
 
@@ -281,6 +284,7 @@ describe("Reject festival task", () => {
 
 describe("Ignore festival task", () => {
   let review: Review;
+  let prepare: PrepareFestivalTask;
   beforeEach(() => {
     const tasks = [
       guardJustDance,
@@ -291,11 +295,13 @@ describe("Ignore festival task", () => {
       rejectedByElec,
       approvedByHumainAndMatos,
       withoutSupplyRequestAndAllApprovedExceptMatos,
+      ignoredByMatos,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
     const conflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
+    prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
     reviewer | taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
@@ -335,6 +341,16 @@ describe("Ignore festival task", () => {
       await expect(review.ignore(guardJustDance.id, humain)).rejects.toThrow(
         CannotIgnoreFestivalTask,
       );
+    });
+  });
+  describe("when ading an inquiry when matos is ignoring the task", () => {
+    it("should update matos review status to REVIEWING", async () => {
+      const updated = await prepare.addInquiry(
+        ignoredByMatos.id,
+        troisMarteaux,
+      );
+      if (isDraft(updated)) throw new Error();
+      expect(updated.reviews.matos).toBe(REVIEWING);
     });
   });
 });
