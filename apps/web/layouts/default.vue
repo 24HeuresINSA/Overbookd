@@ -38,6 +38,7 @@ import {
   FESTIVAL_ACTIVITY_REJECTED,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
+import { useFavicon } from "@vueuse/core";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
 import Header from "~/layouts/header/Header.vue";
@@ -48,6 +49,7 @@ import {
   saveContentFlipped,
   saveContentUnflipped,
 } from "~/utils/easter-egg/flip-content";
+import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
 import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const theme = useTheme();
@@ -55,6 +57,15 @@ const { mine } = useLiveNotification();
 const userStore = useUserStore();
 const { refreshTokens } = useAuthStore();
 const { fetchMyRefusedActivities } = useNavigationBadgeStore();
+
+const config = useRuntimeConfig();
+const url: string = config.public.baseURL;
+const favicon = useFavicon();
+
+const isPreProd: boolean = url.includes(PREPROD);
+const isCetaitMieuxAvant: boolean = url.includes(CETAITMIEUXAVANT);
+if (isPreProd) favicon.value = "/favicon-preprod.ico";
+if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
 
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
