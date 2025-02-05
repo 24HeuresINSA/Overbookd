@@ -17,13 +17,13 @@ import {
   flashMobOnPreventionVillage,
   flashMobOnJustDance,
   approvedByElecRejectedByMatos,
+  rejectedByHumainAndIgnoredByMatos,
 } from "../festival-task.fake.js";
 import { READY_TO_REVIEW } from "../../common/action.js";
 import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
-  Reviewer,
   elec,
   humain,
   matos,
@@ -56,6 +56,7 @@ describe("Festival Task - ask for review", () => {
     flashMobOnPreventionVillage,
     flashMobOnJustDance,
     approvedByElecRejectedByMatos,
+    rejectedByHumainAndIgnoredByMatos,
   ];
   beforeEach(() => {
     festivalTasks = new InMemoryAskForReviewTasks(tasks);
@@ -180,10 +181,11 @@ describe("Festival Task - ask for review", () => {
   });
   describe("when asking a review for refused festival task", () => {
     describe.each`
-      taskName                                      | task                             | rejectors         | instigator
-      ${flashMobOnPreventionVillage.general.name}   | ${flashMobOnPreventionVillage}   | ${[humain]}       | ${noel}
-      ${flashMobOnJustDance.general.name}           | ${flashMobOnJustDance}           | ${[humain, elec]} | ${noel}
-      ${approvedByElecRejectedByMatos.general.name} | ${approvedByElecRejectedByMatos} | ${[matos]}        | ${noel}
+      taskName                                          | task                                 | rejectors         | instigator
+      ${flashMobOnPreventionVillage.general.name}       | ${flashMobOnPreventionVillage}       | ${[humain]}       | ${noel}
+      ${flashMobOnJustDance.general.name}               | ${flashMobOnJustDance}               | ${[humain, elec]} | ${noel}
+      ${approvedByElecRejectedByMatos.general.name}     | ${approvedByElecRejectedByMatos}     | ${[matos]}        | ${noel}
+      ${rejectedByHumainAndIgnoredByMatos.general.name} | ${rejectedByHumainAndIgnoredByMatos} | ${[humain]}       | ${noel}
     `(
       "when $taskName was rejected by $rejectors",
       ({ task, instigator, rejectors }) => {
