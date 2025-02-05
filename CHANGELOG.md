@@ -1,3 +1,10 @@
+## [3.28.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.0...v3.28.1) (2025-02-05)
+
+### Bug Fixes
+
+* **ft:** cannot ignore as matos if ft has inquiry requests [#2378](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2378) ([d003958](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d00395851119e04f35bca50cb1a25110a42779e1))
+* **ft:** restore matos review status when adding an inquiry if it's WILL_NOT_REVIEW [#2377](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2377) ([c3a10a6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c3a10a6631dc63b256496a91327cc057b8047b89))
+
 ## [3.28.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.27.1...v3.28.0) (2025-02-03)
 
 ### Features
