@@ -565,7 +565,6 @@ export const approvedByHumainAndElecRejectedByMatos = factory
     },
   })
   .withReviews({ humain: APPROVED, elec: APPROVED, matos: REJECTED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
 

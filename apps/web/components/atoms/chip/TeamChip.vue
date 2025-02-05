@@ -83,7 +83,7 @@ const sendCloseEvent = () => emit("close", team);
   cursor: default;
 }
 .v-icon {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 span.name {
   margin-left: 4px;

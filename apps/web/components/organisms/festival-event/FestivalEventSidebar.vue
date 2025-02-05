@@ -94,7 +94,7 @@ import {
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
-  canIgnoreFestivalTask,
+  canIgnoreFestivalTaskAs,
   isActivityReviewer,
   isTaskReviewer,
   isDraft,
@@ -292,7 +292,7 @@ const cantRejectAs = (team: Team): boolean => {
 };
 const canIgnore = (team: Team): boolean => {
   if (isActivity.value || !isTaskReviewer(team.code)) return false;
-  const cantIgnoreAs = !canIgnoreFestivalTask(team.code);
+  const cantIgnoreAs = !canIgnoreFestivalTaskAs(team.code);
   if (cantIgnoreAs || isDraft(selectedTask.value)) return false;
   return isConcerned(selectedTask.value.reviews[`${team.code}`]);
 };
