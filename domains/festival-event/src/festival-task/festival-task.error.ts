@@ -13,7 +13,15 @@ export class FestivalTaskNotFound extends FestivalTaskError {
 
 export class CannotIgnoreFestivalTask extends FestivalTaskError {
   constructor() {
-    super("Seul.e le.a log elec peut ignorer une fiche tâche");
+    super("Tu ne peux pas ignorer une fiche tâche");
+  }
+}
+
+export class CannotIgnoreFestivalTaskWithInquiryRequests extends FestivalTaskError {
+  constructor() {
+    super(
+      "La log matos ne peux pas ignorer une fiche tâche ayant des demandes de matos",
+    );
   }
 }
 

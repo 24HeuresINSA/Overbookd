@@ -281,7 +281,7 @@ export type {
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts.js";
 export {
   Review as ReviewTask,
-  canIgnoreFestivalTask,
+  canIgnoreFestivalTaskAs,
 } from "./festival-task/review/review.js";
 export type { FestivalTasksForReview } from "./festival-task/review/review.js";
 export type {

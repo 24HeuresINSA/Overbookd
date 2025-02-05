@@ -25,6 +25,7 @@ import {
 } from "../volunteer-conflicts.js";
 import {
   CannotIgnoreFestivalTask,
+  CannotIgnoreFestivalTaskWithInquiryRequests,
   FestivalTaskNotFound,
 } from "../festival-task.error.js";
 import {
@@ -84,8 +85,12 @@ class Ignore {
     task: T,
     team: Reviewer<"FT">,
   ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
-    if (!canIgnoreFestivalTask(team)) throw new CannotIgnoreFestivalTask();
+    if (!canIgnoreFestivalTaskAs(team)) throw new CannotIgnoreFestivalTask();
     if (task.reviews[`${team}`] === NOT_ASKING_TO_REVIEW) return task;
+
+    if (team === matos && task.inquiries.length > 0) {
+      throw new CannotIgnoreFestivalTaskWithInquiryRequests();
+    }
 
     const reviews = { ...task.reviews, [`${team}`]: WILL_NOT_REVIEW } as const;
 
@@ -197,6 +202,6 @@ function getTeamReview(
   }
 }
 
-export function canIgnoreFestivalTask(team: Reviewer<"FT">) {
+export function canIgnoreFestivalTaskAs(team: Reviewer<"FT">) {
   return [elec, matos].includes(team);
 }

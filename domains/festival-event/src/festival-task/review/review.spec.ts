@@ -41,7 +41,10 @@ import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
 import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";
-import { CannotIgnoreFestivalTask } from "../festival-task.error.js";
+import {
+  CannotIgnoreFestivalTask,
+  CannotIgnoreFestivalTaskWithInquiryRequests,
+} from "../festival-task.error.js";
 import { PrepareFestivalTask } from "../prepare/prepare.js";
 import { isDraft } from "../../festival-event.js";
 
@@ -334,6 +337,13 @@ describe("Ignore festival task", () => {
         elec,
       );
       expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
+    });
+  });
+  describe("when ignoring a task with inquiry request as matos member", () => {
+    it("should indicate that matos cannot ignore task with inquiry request", async () => {
+      await expect(
+        review.ignore(withSomeValidInquiries.id, matos),
+      ).rejects.toThrow(CannotIgnoreFestivalTaskWithInquiryRequests);
     });
   });
   describe("when ignoring a task as humain member", () => {
