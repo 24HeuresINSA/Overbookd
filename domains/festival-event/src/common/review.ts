@@ -125,6 +125,9 @@ export function isValidatedReviews<T extends FestivalEventIdentifier>(
   reviews: Reviews<T>,
 ): reviews is ValidatedReviews<T> {
   return Object.values(reviews).every(
-    (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
+    (review) =>
+      review === APPROVED ||
+      review === NOT_ASKING_TO_REVIEW ||
+      review === WILL_NOT_REVIEW,
   );
 }

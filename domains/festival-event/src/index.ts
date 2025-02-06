@@ -274,6 +274,7 @@ export type {
   WithConflicts as FestivalTaskWithConflicts,
   WithoutConflicts as FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
+  RefusedWithoutConflicts,
   ReviewableWithoutConflicts,
   ReadyToAssignWithoutConflicts,
   ReadyToAssignWithConflicts,

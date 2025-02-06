@@ -296,6 +296,12 @@ export const ignoredByMatos = factory
   .withReviews({ matos: WILL_NOT_REVIEW })
   .build();
 
+export const rejectedByHumainAndIgnoredByMatos = factory
+  .refused("Rejected by humain and ignored by matos")
+  .withFestivalActivity(preventionVillage)
+  .withReviews({ humain: REJECTED, matos: WILL_NOT_REVIEW })
+  .build();
+
 export const withNoTeamTask = factory
   .draft("Task with NO TEAM")
   .withFestivalActivity(preventionVillage)

@@ -4,25 +4,38 @@ import {
   FestivalTaskError,
   FestivalTaskInReview,
   isInReview,
+  isRefused,
+  RefusedWithoutConflicts,
 } from "@overbookd/festival-event";
-import { DraftBuilder, FestivalTaskBuilder } from "./festival-task.builder";
+import {
+  DraftBuilder,
+  FestivalTaskBuilder,
+  ReviewableBuilder,
+} from "./festival-task.builder";
 import {
   FestivalTaskQueryBuilder,
   SELECT_FESTIVAL_TASK,
   buildFestivalTaskCondition,
 } from "./festival-task.query";
 import { PrismaService } from "../../../../prisma.service";
+import { DRAFT } from "@overbookd/festival-event-constants";
 
 export class PrismaAskForReview implements AskForReviewTasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: number): Promise<DraftWithoutConflicts> {
+  async findById(
+    id: number,
+  ): Promise<DraftWithoutConflicts | RefusedWithoutConflicts | null> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,
     });
     if (!task) return null;
-    return DraftBuilder.fromDatabase(task).festivalTask;
+    if (task.status === DRAFT) {
+      return DraftBuilder.fromDatabase(task).festivalTask;
+    }
+    const inReview = ReviewableBuilder.fromDatabase(task).festivalTask;
+    return isRefused(inReview) ? inReview : null;
   }
 
   async save(task: FestivalTaskInReview): Promise<FestivalTaskInReview> {
