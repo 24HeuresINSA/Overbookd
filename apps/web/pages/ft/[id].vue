@@ -1,14 +1,20 @@
 <template>
   <div class="task ft">
-    <FestivalEventSidebar festival-event="FT" class="sidebar">
+    <FestivalEventSidebar
+      festival-event="FT"
+      class="sidebar"
+      @toggle="toggleSidebar"
+    >
       <template #additional-actions>
         <v-btn
           v-if="canEnableAssignment"
           id="enable-assignment"
-          text="Commencer l'affectation"
           :disabled="cantStartAssignment"
           @click="openEnableAssignment"
-        />
+        >
+          <v-icon class="mr-2">mdi-human-greeting</v-icon>
+          <p v-show="!isSideBarClosed">Commencer l'affectation</p>
+        </v-btn>
       </template>
     </FestivalEventSidebar>
     <article class="container ft">
@@ -70,6 +76,11 @@ onMounted(async () => {
 
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
+
+const isSideBarClosed = ref<boolean>(false);
+const toggleSidebar = () => {
+  isSideBarClosed.value = !isSideBarClosed.value;
+};
 
 const isValidatedOrReadyToAssign = computed<boolean>(() => {
   const isTaskValidated = isValidated(selectedTask.value);

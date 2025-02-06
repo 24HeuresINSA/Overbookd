@@ -149,8 +149,10 @@ const selectedActivity = computed<FestivalActivity>(
 );
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 
+const emit = defineEmits(["toggle"]);
 const toggleSideBar = () => {
   isSideBarClosed.value = !isSideBarClosed.value;
+  emit("toggle");
 };
 
 const eventId = computed<number>(() => +route.params.id);
