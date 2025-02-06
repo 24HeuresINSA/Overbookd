@@ -1,3 +1,10 @@
+## [3.28.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.1...v3.28.2) (2025-02-06)
+
+### Bug Fixes
+
+* **ft:** correct assignment button text [#2376](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2376) ([b19b7c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b19b7c005caf7f90ed51a1185666c0d27e8a9f8f))
+* **ft:** right validated status despite WILL_NOT_REVIEW reviewer status & do not reset ignore status when asking for review [#2379](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2379) ([f555705](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f5557056f84fb41d11163f6da6aeff6aa4488810))
+
 ## [3.28.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.0...v3.28.1) (2025-02-05)
 
 ### Bug Fixes
