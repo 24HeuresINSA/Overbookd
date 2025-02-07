@@ -2,19 +2,19 @@
   <nav class="mobile-only bottom-nav">
     <v-btn-group class="bottom-nav__buttons">
       <v-btn
-        v-for="item in MOBILE_SUMMARY"
-        :key="item.to"
+        v-for="page in navigationPages"
+        :key="page.to"
         variant="plain"
         size="small"
-        :disabled="isDisabled(item)"
+        :disabled="isDisabled(page)"
         class="nav-btn"
-        :class="{ 'nav-btn__selected': isSelected(item) }"
-        @click="navigateTo(item.to)"
+        :class="{ 'nav-btn__selected': isSelected(page) }"
+        @click="navigateTo(page.to)"
       >
         <div class="nav-btn__content">
-          <v-icon class="nav-btn__icon">{{ item.icon }}</v-icon>
+          <v-icon class="nav-btn__icon">{{ page.icon }}</v-icon>
           <span class="nav-btn__label text-none">
-            {{ item.shortTitle ?? item.title }}
+            {{ page.shortTitle ?? page.title }}
           </span>
         </div>
       </v-btn>
@@ -23,13 +23,23 @@
 </template>
 
 <script lang="ts" setup>
-import { MOBILE_SUMMARY } from "~/utils/navigation/pages/mobile-summary";
+import {
+  ORGA_MOBILE_SUMMARY,
+  VOLUNTEER_MOBILE_SUMMARY,
+} from "~/utils/navigation/pages/mobile-summary";
 import type { PageInSummary } from "~/utils/navigation/pages/desktop-summary";
 import { findPage } from "~/utils/navigation/find-page.utils";
 import { navigateTo } from "#app";
+import { VIEW_ORGA_MOBILE_NAV } from "@overbookd/permission";
 
 const route = useRoute();
 const userStore = useUserStore();
+
+const navigationPages = computed<boolean>(() =>
+  userStore.can(VIEW_ORGA_MOBILE_NAV)
+    ? ORGA_MOBILE_SUMMARY
+    : VOLUNTEER_MOBILE_SUMMARY,
+);
 
 const isSelected = ({ to }: PageInSummary): boolean => {
   const currentPage = findPage(route.path);

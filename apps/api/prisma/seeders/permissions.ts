@@ -41,6 +41,7 @@ import {
   VIEW_SECURITY_DASHBOARD,
   SHOTGUN_SHARED_MEAL,
   OFFER_SHARED_MEAL,
+  VIEW_ORGA_MOBILE_NAV,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -456,6 +457,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "secu" }],
+      },
+    },
+  },
+  {
+    name: VIEW_ORGA_MOBILE_NAV,
+    description: "Peut voir la navigation mobile pour les orgas",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
