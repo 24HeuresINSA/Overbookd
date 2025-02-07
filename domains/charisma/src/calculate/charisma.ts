@@ -1,4 +1,4 @@
-import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
+import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 
 type CharismaEvent = {
   charisma: number;
@@ -36,7 +36,7 @@ export class Charisma {
     );
     const splitedAvailabilities = this.availabilities.flatMap(
       (availability) => {
-        return Period.init(availability).splitWithIntervalInMs(ONE_HOUR_IN_MS);
+        return Period.init(availability).splitWithInterval(Duration.ONE_HOUR);
       },
     );
     const fromAvailabilities: number = splitedAvailabilities.reduce(

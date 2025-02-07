@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { HARD_CODE } from "@overbookd/team-constants";
-import { ONE_DAY_IN_MS, OverDate } from "@overbookd/time";
+import { Duration, OverDate } from "@overbookd/time";
 import {
   CalendarEventPeriods,
   type CalendarStep,
@@ -55,7 +55,7 @@ const days = computed<DayPresenter[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
   if (!calendarStep) return [];
 
-  const splitedStep = calendarStep.period.splitWithIntervalInMs(ONE_DAY_IN_MS);
+  const splitedStep = calendarStep.period.splitWithInterval(Duration.ONE_DAY);
   const dates = splitedStep.map(({ start }) => OverDate.from(start)) ?? [];
   const lastDate = OverDate.from(calendarStep.period.end);
   const datesWithLastDay = [...dates, lastDate];
