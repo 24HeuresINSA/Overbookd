@@ -35,7 +35,7 @@ import { VIEW_ORGA_MOBILE_NAV } from "@overbookd/permission";
 const route = useRoute();
 const userStore = useUserStore();
 
-const navigationPages = computed<boolean>(() =>
+const navigationPages = computed<PageInSummary[]>(() =>
   userStore.can(VIEW_ORGA_MOBILE_NAV)
     ? ORGA_MOBILE_SUMMARY
     : VOLUNTEER_MOBILE_SUMMARY,
