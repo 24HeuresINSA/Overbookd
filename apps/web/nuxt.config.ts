@@ -61,6 +61,7 @@ export default defineNuxtConfig({
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
+    "@vite-pwa/nuxt",
     async (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         config.plugins ||= [];
@@ -79,5 +80,21 @@ export default defineNuxtConfig({
         extensions: [".vue"],
       },
     ],
+  },
+  pwa: {
+    manifest: {
+      name: "Overbookd",
+      short_name: "Overbookd",
+      theme_color: "#41C5E5",
+      description: "Organisation du festival des 24h de l’INSA",
+      lang: "fr",
+    },
+    workbox: {
+      navigateFallback: "/",
+    },
+    devOptions: {
+      enabled: true,
+      type: "module",
+    },
   },
 });
