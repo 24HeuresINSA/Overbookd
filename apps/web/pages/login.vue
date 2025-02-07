@@ -1,6 +1,10 @@
 <template>
   <div class="login-page">
-    <v-img :src="image" class="background" cover @error="image = GLASS" />
+    <v-img :src="image" class="background" cover>
+      <template #error>
+        <v-img :src="GLASS" class="background" cover />
+      </template>
+    </v-img>
 
     <div class="login-card-container">
       <v-card class="login-card" theme="loginTheme">
