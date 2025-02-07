@@ -88,13 +88,6 @@ export default defineNuxtConfig({
       theme_color: "#41C5E5",
       description: "Organisation du festival des 24h de l’INSA",
       lang: "fr",
-      icons: [
-        {
-          src: "img/logo/logo_mobile.png",
-          sizes: "150x150",
-          type: "image/png",
-        },
-      ],
     },
     workbox: {
       navigateFallback: "/",
