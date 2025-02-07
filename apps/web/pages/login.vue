@@ -1,6 +1,10 @@
 <template>
   <div class="login-page">
-    <v-img :src="image" class="background" cover />
+    <v-img :src="image" class="background" cover>
+      <template #error>
+        <v-img :src="GLASS" class="background" cover />
+      </template>
+    </v-img>
 
     <div class="login-card-container">
       <v-card class="login-card" theme="loginTheme">
@@ -76,7 +80,7 @@
 <script lang="ts" setup>
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
-import { pickRandomBackground } from "~/domain/login/login";
+import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { loginAndApplyForMembership } from "~/utils/login.utils";
 
@@ -98,7 +102,7 @@ const credentials = ref({
   password: "",
 });
 const loading = ref<boolean>(false);
-const image = ref(pickRandomBackground());
+const image = ref<string>(pickRandomBackground());
 
 setInterval(
   () => (image.value = pickRandomBackground(image.value)),
