@@ -176,7 +176,8 @@ export class Period {
     );
   }
 
-  splitWithIntervalInMs(intervalInMs: number): Period[] {
+  splitWithInterval(interval: Duration): Period[] {
+    const intervalInMs = interval.inMilliseconds;
     const periodCount = Math.ceil(
       (this.end.getTime() - this.start.getTime()) / intervalInMs,
     );

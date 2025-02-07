@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/time";
+import {
+  IProvidePeriod,
+  Period,
+  Duration,
+  QUARTER_IN_MS,
+} from "@overbookd/time";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
 import {
@@ -42,8 +47,9 @@ export class OrgaNeedsService {
   async computeOrgaStats(
     periodAndTeams: OrgaNeedRequest,
   ): Promise<OrgaNeedDetails[]> {
-    const intervals =
-      Period.init(periodAndTeams).splitWithIntervalInMs(QUARTER_IN_MS);
+    const intervals = Period.init(periodAndTeams).splitWithInterval(
+      Duration.ms(QUARTER_IN_MS),
+    );
 
     const [assignments, availabilities, requestedVolunteers, tasks] =
       await Promise.all([

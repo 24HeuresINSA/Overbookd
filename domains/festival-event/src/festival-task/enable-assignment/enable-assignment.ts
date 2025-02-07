@@ -125,8 +125,8 @@ export class Assignments {
     const mobilizationPeriod = Period.init(mobilization);
     if (mobilization.durationSplitInHour === null) return [mobilizationPeriod];
 
-    return mobilizationPeriod.splitWithIntervalInMs(
-      Duration.hours(mobilization.durationSplitInHour).inMilliseconds,
+    return mobilizationPeriod.splitWithInterval(
+      Duration.hours(mobilization.durationSplitInHour),
     );
   }
 }

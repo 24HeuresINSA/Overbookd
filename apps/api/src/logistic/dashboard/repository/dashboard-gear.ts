@@ -1,6 +1,11 @@
 import { GearDetails, GearPreview } from "@overbookd/http";
 import { DatabaseDashboardGear } from "./dashboard.model";
-import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/time";
+import {
+  IProvidePeriod,
+  Period,
+  Duration,
+  QUARTER_IN_MS,
+} from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 import { DashboardGearStockDiscrepancy } from "./dashboard-gear-stock-discrepancy";
@@ -24,7 +29,7 @@ export class DashboardGear {
     gear: DatabaseDashboardGear,
     period: Period,
   ): GearDetails[] {
-    const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
+    const periods = period.splitWithInterval(Duration.ms(QUARTER_IN_MS));
 
     return periods.map((period) => {
       return DashboardGear.periodDetails(gear, period);

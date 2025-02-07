@@ -1,5 +1,5 @@
 import { DatabaseDashboardGear } from "./dashboard.model";
-import { Period, QUARTER_IN_MS } from "@overbookd/time";
+import { Period, Duration, QUARTER_IN_MS } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 
@@ -43,7 +43,7 @@ export class DashboardGearStockDiscrepancy {
     timeWindow: Period,
   ): number {
     const period = Period.init(timeWindow);
-    const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
+    const periods = period.splitWithInterval(Duration.ms(QUARTER_IN_MS));
 
     const discrepancies = periods.map(({ start }) =>
       DashboardGearStockDiscrepancy.computeStockDiscrepancyByDateOn(

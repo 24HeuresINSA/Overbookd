@@ -44,6 +44,7 @@ import {
   thursday22hToFriday00h,
   saturday00hToSaturday02h,
 } from "./period.test-utils";
+import { Duration } from "../duration/duration";
 
 describe("Create a period", () => {
   describe("when start is before end", () => {
@@ -127,7 +128,7 @@ describe("Split period with interval", () => {
     "when period start is $readablePeriod",
     ({ period, intervalInMs, readableInterval, expectedPeriods }) => {
       it(`should split period with a ${readableInterval} interval`, () => {
-        const periods = period.splitWithIntervalInMs(intervalInMs);
+        const periods = period.splitWithInterval(Duration.ms(intervalInMs));
         expect(periods).toEqual(expectedPeriods);
       });
     },
