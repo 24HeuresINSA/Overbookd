@@ -5,7 +5,7 @@
     :value="page.to"
     class="navigation-item"
     :class="{
-      'navigation-item__selected': isSelected(page),
+      'navigation-item__current': isCurrent(page),
       'unfolded-item': !isFolded,
     }"
     link
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PageInSummary } from "~/utils/navigation/pages/desktop-summary";
+import type { PageInSummary } from "~/utils/navigation/pages/summary-pages";
 import { findPage } from "~/utils/navigation/find-page.utils";
 
 const route = useRoute();
@@ -45,7 +45,7 @@ defineProps({
   },
 });
 
-const isSelected = ({ to }: PageInSummary): boolean => {
+const isCurrent = ({ to }: PageInSummary): boolean => {
   const currentPage = findPage(route.path);
   return currentPage?.to === to;
 };
@@ -58,7 +58,7 @@ const propagateClick = () => emit("click");
 @use "./side-nav-list.scss" as *;
 
 .navigation-item {
-  &__selected {
+  &__current {
     background: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-on-primary));
   }

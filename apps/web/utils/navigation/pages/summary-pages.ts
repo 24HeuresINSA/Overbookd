@@ -1,6 +1,14 @@
 import type { Permission } from "@overbookd/permission";
 import { HOME_URL } from "@overbookd/web-page";
-import { VOLUNTEER_PAGES, VOLUNTEER_SUMMARY_PAGES } from "./volunteer";
+import {
+  AVAILABILITIES_PAGE,
+  MY_PERSONAL_ACCOUNT_PAGE,
+  MY_PLANNING_PAGE,
+  SHARED_MEALS_PAGE,
+  VOLUNTEER_PAGES,
+  VOLUNTEER_SUMMARY_PAGES,
+  VOLUNTEERS_PAGE,
+} from "./volunteer";
 import {
   FESTIVAL_EVENT_PAGES,
   FESTIVAL_EVENT_SUMMARY_PAGES,
@@ -41,7 +49,16 @@ export const HOME_PAGE: PageInSummary = {
   keywords: ["accueil", "home"],
 };
 
-export const summaryPages: PageInSummary[] = [
+export const All_PAGES: Page[] = [
+  HOME_PAGE,
+  ...VOLUNTEER_PAGES,
+  ...FESTIVAL_EVENT_PAGES,
+  ...MANAGEMENT_SUMMARY_PAGES,
+  ...CURRENT_EVENT_SUMMARY_PAGES,
+  ...LOGISTIC_PAGES,
+];
+
+export const DESKTOP_SUMMARY: PageInSummary[] = [
   HOME_PAGE,
   ...VOLUNTEER_SUMMARY_PAGES,
   ...FESTIVAL_EVENT_SUMMARY_PAGES,
@@ -50,11 +67,16 @@ export const summaryPages: PageInSummary[] = [
   ...LOGISTIC_SUMMARY_PAGES,
 ];
 
-export const allPages: Page[] = [
+export const VOLUNTEER_MOBILE_SUMMARY = [
   HOME_PAGE,
-  ...VOLUNTEER_PAGES,
-  ...FESTIVAL_EVENT_PAGES,
-  ...MANAGEMENT_SUMMARY_PAGES,
-  ...CURRENT_EVENT_SUMMARY_PAGES,
-  ...LOGISTIC_PAGES,
+  MY_PLANNING_PAGE,
+  AVAILABILITIES_PAGE,
+  VOLUNTEERS_PAGE,
+];
+
+export const ORGA_MOBILE_SUMMARY = [
+  HOME_PAGE,
+  MY_PERSONAL_ACCOUNT_PAGE,
+  SHARED_MEALS_PAGE,
+  VOLUNTEERS_PAGE,
 ];

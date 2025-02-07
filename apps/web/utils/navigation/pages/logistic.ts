@@ -7,7 +7,7 @@ import {
   VIEW_GEAR_DASHBOARD,
   VIEW_LOCATION,
 } from "@overbookd/permission";
-import type { Page, HiddenPage, PageInSummary } from "./desktop-summary";
+import type { Page, HiddenPage, PageInSummary } from "./summary-pages";
 import {
   BORROW_GEARS_URL,
   GEAR_CATALOG_URL,

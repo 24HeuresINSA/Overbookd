@@ -2,7 +2,7 @@ import type { PlanningPreference, Preference } from "@overbookd/http";
 import type { PageURL } from "@overbookd/web-page";
 import { PreferenceRepository } from "~/repositories/preference.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import type { Page } from "~/utils/navigation/pages/desktop-summary";
+import type { Page } from "~/utils/navigation/pages/summary-pages";
 
 type State = {
   myPreferences: Preference;

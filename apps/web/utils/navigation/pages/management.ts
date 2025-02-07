@@ -7,7 +7,7 @@ import {
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
-import type { PageInSummary } from "./desktop-summary";
+import type { PageInSummary } from "./summary-pages";
 import {
   ASSIGNMENT_ORGA_TASK_URL,
   ASSIGNMENT_TASK_ORGA_URL,

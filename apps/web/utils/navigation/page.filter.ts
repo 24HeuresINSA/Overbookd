@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { HOME_PAGE, type PageInSummary } from "./pages/desktop-summary";
+import { HOME_PAGE, type PageInSummary } from "./pages/summary-pages";
 
 export class PageFilter {
   private readonly preferenceStore = usePreferenceStore();

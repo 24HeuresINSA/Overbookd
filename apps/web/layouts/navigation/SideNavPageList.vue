@@ -28,9 +28,9 @@
 
 <script lang="ts" setup>
 import {
-  summaryPages,
+  DESKTOP_SUMMARY,
   type PageInSummary,
-} from "~/utils/navigation/pages/desktop-summary";
+} from "~/utils/navigation/pages/summary-pages";
 import SideNavPageItem from "./SideNavPageItem.vue";
 import {
   FA_URL,
@@ -55,7 +55,7 @@ const props = defineProps({
 const pagesWithBadge = computed<PageInSummary[]>(() => {
   const { myRefusedActivities, staffCandidates, volunteerCandidates } =
     navigationBadgeStore;
-  return summaryPages.map((page) => {
+  return DESKTOP_SUMMARY.map((page) => {
     switch (page.to) {
       case FA_URL:
         return { ...page, badgeValue: myRefusedActivities };

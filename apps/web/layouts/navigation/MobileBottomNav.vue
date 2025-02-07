@@ -2,13 +2,13 @@
   <nav class="mobile-only bottom-nav">
     <v-btn-group class="bottom-nav__buttons">
       <v-btn
-        v-for="page in navigationPages"
+        v-for="page in mainPages"
         :key="page.to"
         variant="plain"
         size="small"
-        :disabled="isDisabled(page)"
+        :disabled="!hasPermissionFor(page)"
         class="nav-btn"
-        :class="{ 'nav-btn__selected': isSelected(page) }"
+        :class="{ 'nav-btn__current': isCurrent(page) }"
         @click="navigateTo(page.to)"
       >
         <div class="nav-btn__content">
@@ -18,6 +18,24 @@
           </span>
         </div>
       </v-btn>
+
+      <v-menu :location="location">
+        <template #activator="{ props }">
+          <v-btn
+            v-if="shouldDisplayMenuButton"
+            v-bind="props"
+            variant="plain"
+            size="small"
+            class="nav-btn"
+          >
+            <div class="nav-btn__content">
+              <v-icon class="nav-btn__icon"> mdi-dots-horizontal </v-icon>
+              <span class="nav-btn__label text-none"> Plus </span>
+            </div>
+          </v-btn>
+        </template>
+        <!-- Add list -->
+      </v-menu>
     </v-btn-group>
   </nav>
 </template>
@@ -27,26 +45,40 @@ import {
   ORGA_MOBILE_SUMMARY,
   VOLUNTEER_MOBILE_SUMMARY,
 } from "~/utils/navigation/pages/mobile-summary";
-import type { PageInSummary } from "~/utils/navigation/pages/desktop-summary";
+import type { PageInSummary } from "~/utils/navigation/pages/summary-pages";
 import { findPage } from "~/utils/navigation/find-page.utils";
+import { PageFilter } from "~/utils/navigation/page.filter";
 import { navigateTo } from "#app";
 import { VIEW_ORGA_MOBILE_NAV } from "@overbookd/permission";
 
 const route = useRoute();
 const userStore = useUserStore();
 
-const navigationPages = computed<PageInSummary[]>(() =>
-  userStore.can(VIEW_ORGA_MOBILE_NAV)
-    ? ORGA_MOBILE_SUMMARY
-    : VOLUNTEER_MOBILE_SUMMARY,
+const shouldDisplayOrgaNav = computed<boolean>(() =>
+  userStore.can(VIEW_ORGA_MOBILE_NAV),
+);
+const mainPages = computed<PageInSummary[]>(() =>
+  shouldDisplayOrgaNav.value ? ORGA_MOBILE_SUMMARY : VOLUNTEER_MOBILE_SUMMARY,
 );
 
-const isSelected = ({ to }: PageInSummary): boolean => {
+const MOBILE_PAGES = PageFilter.from(ALL_PAGES).withMobileSupport;
+const otherNavigationPages = computed<PageInSummary[]>(() =>
+  MOBILE_PAGES.filter((page) => {
+    const isNotInMain = !mainNavigationPages.value.includes(page);
+    return isNotInMain && hasPermissionFor(page);
+  }),
+);
+
+const shouldDisplayMenuButton = computed<boolean>(
+  () => shouldDisplayOrgaNav.value && otherNavigationPages.value.length > 0,
+);
+
+const isCurrent = ({ to }: PageInSummary): boolean => {
   const currentPage = findPage(route.path);
   return currentPage?.to === to;
 };
-const isDisabled = ({ permission }: PageInSummary): boolean => {
-  return !userStore.can(permission);
+const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
+  return userStore.can(permission);
 };
 </script>
 
@@ -80,7 +112,7 @@ const isDisabled = ({ permission }: PageInSummary): boolean => {
     background 0.2s,
     color 0.2s;
 
-  &__selected {
+  &__current {
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-on-primary));
   }
