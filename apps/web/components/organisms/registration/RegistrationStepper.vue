@@ -2,7 +2,7 @@
   <v-card class="register-card" theme="loginTheme">
     <v-img
       class="register-illustration"
-      src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
+      src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
       cover
     >
       <v-card-title class="register-title">
