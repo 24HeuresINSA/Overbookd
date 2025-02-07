@@ -1,3 +1,19 @@
+## [3.29.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.2...v3.29.0) (2025-02-07)
+
+### Features
+
+* **mobile:** add pwa module to enable app download [#2383](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2383) ([a598556](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a598556ef5e42a3223b6865bf3f8609786b1f1d7))
+* **nav:** add mobile nav for volunteer [#2380](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2380) ([af1c150](https://gitlab.com/24-heures-insa/overbookd-mono/commit/af1c150103880ab658ac79ff05216c114d317f1e))
+
+### Bug Fixes
+
+* **image:** new wordpress link [#2387](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2387) ([ba4334e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ba4334ef2ae657e865a996f8fcb88e8269d8d573))
+* **mobile:** add dialog if user has something to ask [#2143](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2143) ([19af1ba](https://gitlab.com/24-heures-insa/overbookd-mono/commit/19af1ba69424de2f1bb769b20380fe852eac24f6))
+
+### Refactor
+
+* **time:** splitWithIntervalInMs to splitWithInterval with Duration [#2352](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2352) ([be26028](https://gitlab.com/24-heures-insa/overbookd-mono/commit/be260286682a069423ac83e6bfe356936fca0781))
+
 ## [3.28.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.1...v3.28.2) (2025-02-06)
 
 ### Bug Fixes
