@@ -1,12 +1,21 @@
 import { FA_LIST_PAGE } from "./festival-event";
 import { HOME_PAGE } from "./desktop-summary";
 import {
+  AVAILABILITIES_PAGE,
   MY_PERSONAL_ACCOUNT_PAGE,
+  MY_PLANNING_PAGE,
   SHARED_MEALS_PAGE,
   VOLUNTEERS_PAGE,
 } from "./volunteer";
 
-export const MOBILE_SUMMARY = [
+export const VOLUNTEER_MOBILE_SUMMARY = [
+  HOME_PAGE,
+  MY_PLANNING_PAGE,
+  AVAILABILITIES_PAGE,
+  VOLUNTEERS_PAGE,
+];
+
+export const ORGA_MOBILE_SUMMARY = [
   HOME_PAGE,
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,

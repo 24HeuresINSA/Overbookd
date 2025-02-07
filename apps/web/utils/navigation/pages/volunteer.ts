@@ -68,9 +68,10 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
   keywords: ["benevoles", "orgas", "liste"],
 };
 
-const AVAILABILITIES_PAGE: PageInSummary = {
+export const AVAILABILITIES_PAGE: PageInSummary = {
   icon: "mdi-clock",
   title: "Mes Dispos",
+  shortTitle: "Dispos",
   to: AVAILABILITIES_URL,
   description:
     "Permet de renseigner quand tu es disponible pour aider sur le festival",
@@ -80,9 +81,10 @@ const AVAILABILITIES_PAGE: PageInSummary = {
   keywords: ["mes dispos", "disponibilites"],
 };
 
-const MY_PLANNING_PAGE: PageInSummary = {
+export const MY_PLANNING_PAGE: PageInSummary = {
   icon: "mdi-calendar-clock",
   title: "Mon Planning",
+  shortTitle: "Planning",
   permission: VIEW_PLANNING,
   to: PLANNING_URL,
   description: "Permet d'avoir un apercu de son planning sur le festival",
