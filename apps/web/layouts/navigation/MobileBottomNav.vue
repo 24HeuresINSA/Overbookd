@@ -42,12 +42,12 @@
 
 <script lang="ts" setup>
 import {
+  MOBILE_PAGES,
   ORGA_MOBILE_SUMMARY,
   VOLUNTEER_MOBILE_SUMMARY,
-} from "~/utils/navigation/pages/mobile-summary";
-import type { PageInSummary } from "~/utils/navigation/pages/summary-pages";
+  type PageInSummary,
+} from "~/utils/navigation/pages/summary-pages";
 import { findPage } from "~/utils/navigation/find-page.utils";
-import { PageFilter } from "~/utils/navigation/page.filter";
 import { navigateTo } from "#app";
 import { VIEW_ORGA_MOBILE_NAV } from "@overbookd/permission";
 
@@ -61,10 +61,9 @@ const mainPages = computed<PageInSummary[]>(() =>
   shouldDisplayOrgaNav.value ? ORGA_MOBILE_SUMMARY : VOLUNTEER_MOBILE_SUMMARY,
 );
 
-const MOBILE_PAGES = PageFilter.from(ALL_PAGES).withMobileSupport;
 const otherNavigationPages = computed<PageInSummary[]>(() =>
   MOBILE_PAGES.filter((page) => {
-    const isNotInMain = !mainNavigationPages.value.includes(page);
+    const isNotInMain = !mainPages.value.includes(page);
     return isNotInMain && hasPermissionFor(page);
   }),
 );

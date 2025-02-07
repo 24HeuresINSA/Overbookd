@@ -16,6 +16,7 @@ import {
 import { MANAGEMENT_SUMMARY_PAGES } from "./management";
 import { LOGISTIC_PAGES, LOGISTIC_SUMMARY_PAGES } from "./logistic";
 import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
+import { PageFilter } from "../page.filter";
 
 export type PageInSummary = {
   icon: string;
@@ -49,7 +50,7 @@ export const HOME_PAGE: PageInSummary = {
   keywords: ["accueil", "home"],
 };
 
-export const All_PAGES: Page[] = [
+export const ALL_PAGES: Page[] = [
   HOME_PAGE,
   ...VOLUNTEER_PAGES,
   ...FESTIVAL_EVENT_PAGES,
@@ -58,7 +59,7 @@ export const All_PAGES: Page[] = [
   ...LOGISTIC_PAGES,
 ];
 
-export const DESKTOP_SUMMARY: PageInSummary[] = [
+export const SUMMARY_PAGES: PageInSummary[] = [
   HOME_PAGE,
   ...VOLUNTEER_SUMMARY_PAGES,
   ...FESTIVAL_EVENT_SUMMARY_PAGES,
@@ -66,6 +67,8 @@ export const DESKTOP_SUMMARY: PageInSummary[] = [
   ...CURRENT_EVENT_SUMMARY_PAGES,
   ...LOGISTIC_SUMMARY_PAGES,
 ];
+
+export const MOBILE_PAGES = PageFilter.from(SUMMARY_PAGES).withMobileSupport;
 
 export const VOLUNTEER_MOBILE_SUMMARY = [
   HOME_PAGE,
