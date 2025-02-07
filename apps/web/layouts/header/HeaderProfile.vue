@@ -34,6 +34,10 @@
             <v-icon>mdi-book-open-variant-outline</v-icon>
             <span>Voir les CGU</span>
           </div>
+          <div class="mobile_menu__item" @click="openQuestionDialog">
+            <v-icon>mdi-help-circle-outline</v-icon>
+            <span>Besoin d'aide ?</span>
+          </div>
           <div class="mobile_menu__item logout" @click="logout">
             <v-icon>mdi-close-circle-outline</v-icon>
             <span>Déconnexion</span>
@@ -65,6 +69,10 @@
       fullscreen
     >
       <EULADialogCard @close="closeEULA" />
+    </v-dialog>
+
+    <v-dialog v-model="isQuestionDialogOpen" max-width="600">
+      <AskQuestionDialogCard @close="closeQuestionDialog" />
     </v-dialog>
   </div>
 </template>
@@ -133,6 +141,13 @@ const displayEULA = () => {
   isEULADialogOpen.value = true;
 };
 const closeEULA = () => (isEULADialogOpen.value = false);
+
+const isQuestionDialogOpen = ref<boolean>(false);
+const openQuestionDialog = () => {
+  isMenuOpen.value = false;
+  isQuestionDialogOpen.value = true;
+};
+const closeQuestionDialog = () => (isQuestionDialogOpen.value = false);
 
 const handleProfileClick = () => {
   if (isMobile) {
