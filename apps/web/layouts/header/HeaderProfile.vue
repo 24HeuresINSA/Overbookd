@@ -174,6 +174,7 @@ $header-profile-max-width: 300px;
     cursor: pointer;
     @media only screen and (max-width: $mobile-max-width) {
       min-width: unset;
+      margin-right: 5px;
     }
   }
 

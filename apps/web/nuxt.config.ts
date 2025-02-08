@@ -89,12 +89,5 @@ export default defineNuxtConfig({
       description: "Organisation du festival des 24h de l’INSA",
       lang: "fr",
     },
-    workbox: {
-      navigateFallback: "/",
-    },
-    devOptions: {
-      enabled: true,
-      type: "module",
-    },
   },
 });

@@ -16,7 +16,6 @@ import {
 import { MANAGEMENT_SUMMARY_PAGES } from "./management";
 import { LOGISTIC_PAGES, LOGISTIC_SUMMARY_PAGES } from "./logistic";
 import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
-import { PageFilter } from "../page.filter";
 
 export type PageInSummary = {
   icon: string;
@@ -67,8 +66,6 @@ export const SUMMARY_PAGES: PageInSummary[] = [
   ...CURRENT_EVENT_SUMMARY_PAGES,
   ...LOGISTIC_SUMMARY_PAGES,
 ];
-
-export const MOBILE_PAGES = PageFilter.from(SUMMARY_PAGES).withMobileSupport;
 
 export const VOLUNTEER_MOBILE_SUMMARY = [
   HOME_PAGE,
