@@ -84,7 +84,6 @@ const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
   flex-wrap: wrap;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
-
   }
 }
 </style>
