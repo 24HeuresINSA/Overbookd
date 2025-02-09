@@ -1,11 +1,19 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
-  <div class="home">
-    <ProfileHomeCard />
-    <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-    <PersonalFtHomeCard v-if="hasPersonalFT" />
-    <PersonalFaHomeCard v-if="hasPersonalFA" />
-  </div>
+  <v-container fluid>
+    <v-row class="home">
+      <v-col>
+        <ProfileHomeCard />
+      </v-col>
+      <v-col v-if="hasPersonalAccount">
+        <PersonalAccountHomeCard />
+      </v-col>
+      <v-col v-if="canWriteFA || canWriteFT">
+        <PersonalFtHomeCard v-if="canWriteFT" />
+        <PersonalFaHomeCard v-if="canWriteFA" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
@@ -64,9 +72,9 @@ const hasPersonalAccount = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
 
-const hasPersonalFA = computed<boolean>(() => userStore.can(WRITE_FA));
+const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
 
-const hasPersonalFT = computed<boolean>(() => userStore.can(WRITE_FT));
+const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
 </script>
 
 <style lang="scss" scoped>
@@ -76,6 +84,7 @@ const hasPersonalFT = computed<boolean>(() => userStore.can(WRITE_FT));
   flex-wrap: wrap;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
+
   }
 }
 </style>
