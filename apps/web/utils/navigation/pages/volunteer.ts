@@ -11,7 +11,7 @@ import {
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
-import type { HiddenPage, Page, PageInSummary } from "./desktop-summary";
+import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
 export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   icon: "mdi-account-cash",
@@ -82,7 +82,7 @@ export const AVAILABILITIES_PAGE: PageInSummary = {
 };
 
 export const MY_PLANNING_PAGE: PageInSummary = {
-  icon: "mdi-calendar-clock",
+  icon: "mdi-calendar",
   title: "Mon Planning",
   shortTitle: "Planning",
   permission: VIEW_PLANNING,

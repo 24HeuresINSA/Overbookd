@@ -1,5 +1,5 @@
 import { ASK_FOR_HELP, VIEW_TIMELINE } from "@overbookd/permission";
-import type { PageInSummary } from "./desktop-summary";
+import type { PageInSummary } from "./summary-pages";
 import { NEED_HELP_URL, TIMELINE_URL } from "@overbookd/web-page";
 
 const TIMELINE_PAGE: PageInSummary = {
