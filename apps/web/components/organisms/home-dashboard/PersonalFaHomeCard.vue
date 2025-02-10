@@ -57,7 +57,7 @@ const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
 
 faStore.fetchMyActivities();
 
-const MAX_ACTIVITIES = 6;
+const MAX_ACTIVITIES = 5;
 
 const myActivities = computed<PreviewFestivalActivity[]>(() => {
   return faStore.activities.mine.filter(
