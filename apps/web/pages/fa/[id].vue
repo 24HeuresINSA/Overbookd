@@ -1,7 +1,7 @@
 <template>
-  <div class="activity fa">
+  <div class="activity">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
-    <article class="container fa">
+    <article class="container">
       <FaGeneralCard id="general" @open:calendar="openCalendar" />
       <FaInChargeCard id="in-charge" />
       <SignaCard id="signa" />

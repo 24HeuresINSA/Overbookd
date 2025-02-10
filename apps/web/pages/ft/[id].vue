@@ -1,5 +1,5 @@
 <template>
-  <div class="task ft">
+  <div class="task">
     <FestivalEventSidebar
       festival-event="FT"
       class="sidebar"
@@ -17,7 +17,7 @@
         </v-btn>
       </template>
     </FestivalEventSidebar>
-    <article class="container ft">
+    <article class="container">
       <FtGeneralCard id="general" :disabled="isValidatedOrReadyToAssign" />
       <ParentFaCard id="fa" />
       <FtInquiryCard id="inquiry" :disabled="isValidatedOrReadyToAssign" />
@@ -148,7 +148,7 @@ $side-nav-width: calc(350px + $sidebar-margin);
 }
 
 @media only screen and (max-width: $mobile-max-width) {
-  .activity {
+  .task {
     flex-direction: column;
     overflow-y: scroll;
     height: auto;
