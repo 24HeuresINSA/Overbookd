@@ -58,6 +58,7 @@
             label="Orga à contacter pour les bénévoles en cas de problème"
             :disabled="disabled"
             class="contact-form__fields"
+            hide-details
             @update:model-value="addContact($event?.id)"
           />
         </v-form>
@@ -324,7 +325,7 @@ const initInCharge = async (form: InitInChargeForm) => {
   display: flex;
   align-items: center;
   gap: 1em;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 0;
   gap: 1em;
   &__fields {

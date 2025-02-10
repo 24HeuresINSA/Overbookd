@@ -69,7 +69,7 @@ const save = () => emit("save", modifiedInstructions.value);
 const forceSave = () => emit("force-save", modifiedInstructions.value);
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .editor {
   margin: 6px 0;
 }
@@ -79,5 +79,11 @@ const forceSave = () => emit("force-save", modifiedInstructions.value);
   display: flex;
   gap: 25px;
   justify-content: right;
+
+  @media only screen and (max-width: $mobile-max-width) {
+    margin: 0 0 10px 0;
+    flex-direction: column;
+    gap: 5px;
+  }
 }
 </style>
