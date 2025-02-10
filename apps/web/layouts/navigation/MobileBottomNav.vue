@@ -54,14 +54,16 @@
 <script lang="ts" setup>
 import SideNavPageItem from "./SideNavPageItem.vue";
 import {
-  ORGA_MOBILE_SUMMARY,
+  ORGA_MOBILE_SUMMARY_WITHOUT_PLANNING,
+  ORGA_MOBILE_SUMMARY_WITH_PLANNING,
   SUMMARY_PAGES,
   VOLUNTEER_MOBILE_SUMMARY,
   type PageInSummary,
 } from "~/utils/navigation/pages/summary-pages";
 import { findPage } from "~/utils/navigation/find-page.utils";
-import { VIEW_ORGA_MOBILE_NAV } from "@overbookd/permission";
+import { VIEW_ORGA_MOBILE_NAV, VIEW_PLANNING } from "@overbookd/permission";
 import { PageFilter } from "~/utils/navigation/page.filter";
+import { MY_PLANNING_PAGE } from "~/utils/navigation/pages/volunteer";
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -69,13 +71,19 @@ const userStore = useUserStore();
 const shouldDisplayOrgaNav = computed<boolean>(() =>
   userStore.can(VIEW_ORGA_MOBILE_NAV),
 );
-const mainPages = computed<PageInSummary[]>(() =>
-  shouldDisplayOrgaNav.value ? ORGA_MOBILE_SUMMARY : VOLUNTEER_MOBILE_SUMMARY,
+const shouldDisplayPlanning = computed<boolean>(() =>
+  userStore.can(VIEW_PLANNING),
 );
+const mainPages = computed<PageInSummary[]>(() => {
+  if (!shouldDisplayOrgaNav.value) return VOLUNTEER_MOBILE_SUMMARY;
+  return shouldDisplayPlanning.value
+    ? ORGA_MOBILE_SUMMARY_WITH_PLANNING
+    : ORGA_MOBILE_SUMMARY_WITHOUT_PLANNING;
+});
 
 const otherNavigationPages = computed<PageInSummary[]>(() => {
   const notMain = SUMMARY_PAGES.filter(
-    (page) => !mainPages.value.includes(page),
+    (page) => !mainPages.value.includes(page) && page !== MY_PLANNING_PAGE,
   );
   return PageFilter.from(notMain).withMobileSupport;
 });
