@@ -27,6 +27,7 @@
               color="secondary"
               rounded="pill"
               density="comfortable"
+              class="home-card__button"
             />
           </nuxt-link>
         </v-list-item>

@@ -13,10 +13,15 @@
     color: rgb(var(--v-theme-secondary));
     padding-bottom: 0;
   }
+
   &__content {
     display: flex;
     flex-direction: column;
     padding: 0;
+  }
+
+  &__button {
+    margin-bottom: 2px;
   }
 
   @media only screen and (max-width: $mobile-max-width) {
