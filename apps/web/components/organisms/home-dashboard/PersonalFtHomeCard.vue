@@ -59,11 +59,7 @@ ftStore.fetchMyTasks();
 
 const MAX_TASKS = 5;
 
-const myTasks = computed<PreviewFestivalTask[]>(() => {
-  return ftStore.tasks.forAll.filter(
-    (tasks) => tasks.administrator.id === currentAdherent.value?.id,
-  );
-});
+const myTasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.mine);
 
 const myDisplayedTasks = computed<PreviewFestivalTask[]>(() => {
   const statusOrder = [REFUSED, IN_REVIEW, DRAFT, VALIDATED];
