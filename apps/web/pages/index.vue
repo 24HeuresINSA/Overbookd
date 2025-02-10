@@ -1,14 +1,14 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
   <v-container fluid>
-    <v-row class="home">
-      <v-col>
+    <v-row class="home" no-gutters>
+      <v-col class="home">
         <ProfileHomeCard />
       </v-col>
-      <v-col v-if="hasPersonalAccount">
+      <v-col v-if="hasPersonalAccount" class="home">
         <PersonalAccountHomeCard />
       </v-col>
-      <v-col v-if="canWriteFA || canWriteFT">
+      <v-col v-if="canWriteFA || canWriteFT" class="home">
         <PersonalFtHomeCard v-if="canWriteFT" />
         <PersonalFaHomeCard v-if="canWriteFA" />
       </v-col>
@@ -80,10 +80,11 @@ const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
 <style lang="scss" scoped>
 .home {
   display: flex;
-  gap: $card-gap;
   flex-wrap: wrap;
+  gap: $card-gap;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
+    gap: $card-gap;
   }
 }
 </style>
