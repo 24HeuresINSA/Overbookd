@@ -87,4 +87,7 @@ const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
     gap: $card-gap;
   }
 }
+.v-col {
+  align-self: flex-start;
+}
 </style>

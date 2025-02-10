@@ -27,12 +27,8 @@ import { ForgetRequestDto } from "./dto/forget.request.dto";
 @ApiBearerAuth()
 @ApiTags("registration")
 @Controller("registrations")
-@ApiBadRequestResponse({
-  description: "Bad Request",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBadRequestResponse({ description: "Bad Request" })
+@ApiForbiddenResponse({ description: "User can't access this resource" })
 @ApiUnauthorizedResponse({
   description: "User dont have the right to access this route",
 })

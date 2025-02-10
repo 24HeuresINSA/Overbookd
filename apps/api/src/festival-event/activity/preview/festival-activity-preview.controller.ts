@@ -92,7 +92,7 @@ export class FestivalActivityPreviewController {
   @Get("mine")
   @ApiResponse({
     status: 200,
-    description: "All festival activities",
+    description: "My festival activities",
     schema: {
       oneOf: [
         { $ref: getSchemaPath(DraftPreviewFestivalActivityResponseDto) },

@@ -15,4 +15,12 @@ export class InMemoryFestivalTasks implements FestivalTasksForView {
       this.tasks.map((task) => FestivalTaskBuilder.build(task).preview),
     );
   }
+
+  byAdherentId(adherentId: number): Promise<Preview[]> {
+    return Promise.resolve(
+      this.tasks
+        .filter((task) => task.general.administrator.id === adherentId)
+        .map((task) => FestivalTaskBuilder.build(task).preview),
+    );
+  }
 }

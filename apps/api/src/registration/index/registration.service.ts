@@ -20,7 +20,6 @@ import {
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
-import { VolunteerAvailabilityService } from "../../volunteer-availability/volunteer-availability.service";
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -29,7 +28,6 @@ type Member = {
 
 type Service = {
   event: Readonly<DomainEventService>;
-  availability: Readonly<VolunteerAvailabilityService>;
 };
 
 export class RegistrationService {

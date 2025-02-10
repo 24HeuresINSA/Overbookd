@@ -413,7 +413,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
   }
 
   #ask-for-review {
-    background-color: $submitted-color;
+    background-color: $in-review-color;
     margin-bottom: 5px;
   }
 

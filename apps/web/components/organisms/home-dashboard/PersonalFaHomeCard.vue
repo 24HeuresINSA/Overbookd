@@ -27,6 +27,7 @@
               color="secondary"
               rounded="pill"
               density="comfortable"
+              class="home-card__button"
             />
           </nuxt-link>
         </v-list-item>
@@ -59,11 +60,9 @@ faStore.fetchMyActivities();
 
 const MAX_ACTIVITIES = 5;
 
-const myActivities = computed<PreviewFestivalActivity[]>(() => {
-  return faStore.activities.mine.filter(
-    (activity) => activity.adherent.id === currentAdherent.value?.id,
-  );
-});
+const myActivities = computed<PreviewFestivalActivity[]>(
+  () => faStore.activities.mine,
+);
 
 const myDisplayedActivities = computed<PreviewFestivalActivity[]>(() => {
   const statusOrder = [REFUSED, IN_REVIEW, DRAFT, VALIDATED];

@@ -11,8 +11,6 @@ import { DomainEventService } from "../../domain-event/domain-event.service";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
 import { PrismaNotificationRepository } from "./repository/notification-repository.prisma";
-import { VolunteerAvailabilityModule } from "../../volunteer-availability/volunteer-availability.module";
-import { VolunteerAvailabilityService } from "../../volunteer-availability/volunteer-availability.service";
 
 @Module({
   controllers: [RegistrationController],
@@ -55,18 +53,11 @@ import { VolunteerAvailabilityService } from "../../volunteer-availability/volun
         register: RegisterNewcomer,
         event: DomainEventService,
         forget: ForgetMember,
-        availability: VolunteerAvailabilityService,
-      ) =>
-        new RegistrationService({ register, forget }, { event, availability }),
-      inject: [
-        RegisterNewcomer,
-        DomainEventService,
-        ForgetMember,
-        VolunteerAvailabilityService,
-      ],
+      ) => new RegistrationService({ register, forget }, { event }),
+      inject: [RegisterNewcomer, DomainEventService, ForgetMember],
     },
   ],
-  imports: [PrismaModule, DomainEventModule, VolunteerAvailabilityModule],
+  imports: [PrismaModule, DomainEventModule],
   exports: [RegisterNewcomer, ForgetMember],
 })
 export class RegistrationModule {}

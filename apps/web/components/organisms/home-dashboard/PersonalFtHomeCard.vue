@@ -27,6 +27,7 @@
               color="secondary"
               rounded="pill"
               density="comfortable"
+              class="home-card__button"
             />
           </nuxt-link>
         </v-list-item>
@@ -55,15 +56,11 @@ const ftStore = useFestivalTaskStore();
 
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
 
-ftStore.fetchAllTasks();
+ftStore.fetchMyTasks();
 
 const MAX_TASKS = 5;
 
-const myTasks = computed<PreviewFestivalTask[]>(() => {
-  return ftStore.tasks.forAll.filter(
-    (tasks) => tasks.administrator.id === currentAdherent.value?.id,
-  );
-});
+const myTasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.mine);
 
 const myDisplayedTasks = computed<PreviewFestivalTask[]>(() => {
   const statusOrder = [REFUSED, IN_REVIEW, DRAFT, VALIDATED];

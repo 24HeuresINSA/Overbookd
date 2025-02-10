@@ -25,14 +25,6 @@ export class InMemoryPrepareFestivalActivityRepository
     return Promise.resolve(this.festivalActivities.map(generatePreview));
   }
 
-  findByAdherentId(adherentId: number): Promise<PreviewFestivalActivity[]> {
-    return Promise.resolve(
-      this.festivalActivities
-        .filter((activity) => activity.inCharge.adherent.id === adherentId)
-        .map(generatePreview),
-    );
-  }
-
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,
@@ -69,11 +61,13 @@ function generatePreview<T extends FestivalActivity>(
 function generateInReviewPreview(
   festivalActivity: Reviewable,
 ): PreviewReviewable {
+  const supply = festivalActivity.supply;
   const base = {
     id: festivalActivity.id,
     name: festivalActivity.general.name,
     adherent: festivalActivity.inCharge.adherent,
     team: festivalActivity.inCharge.team,
+    needSupply: supply.electricity.length > 0 || !!supply.water,
   };
   const { reviews } = festivalActivity;
 
@@ -88,11 +82,13 @@ function generateInReviewPreview(
 }
 
 function generateDraftPreview(festivalActivity: Draft): PreviewDraft {
+  const supply = festivalActivity.supply;
   return {
     id: festivalActivity.id,
     name: festivalActivity.general.name,
     status: festivalActivity.status,
     adherent: festivalActivity.inCharge.adherent,
     team: festivalActivity.inCharge.team,
+    needSupply: supply.electricity.length > 0 || !!supply.water,
   };
 }
