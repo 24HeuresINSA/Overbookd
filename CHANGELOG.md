@@ -1,3 +1,15 @@
+## [3.30.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.29.0...v3.30.0) (2025-02-10)
+
+### Features
+
+* **ft:** add the component FTHomecard to the homepage [#2342](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2342) ([4e2208c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4e2208cd1a384865ff2928dd249898eba6acd610))
+
+### Bug Fixes
+
+* **ft:** add request to get my FTs for home page [#2388](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2388) ([7f146be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7f146beec7e90f8bc0d8830e5ddfefaaffafc712))
+* **nav:** add planning page in main pages [#2382](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2382) ([10b736c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/10b736c3be174812176a069d4fe27e0a894a17ba)), closes [#2383](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2383)
+* **nav:** update orga navigation [#2381](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2381) ([c4fe435](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c4fe435ec41f8369749778804cb5b891a09a66d0))
+
 ## [3.29.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.28.2...v3.29.0) (2025-02-07)
 
 ### Features
