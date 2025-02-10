@@ -2,7 +2,7 @@
 
 .home-card {
   min-width: 280px;
-  width: 25%;
+  width: 100%;
   height: fit-content;
 
   &__title {
@@ -23,6 +23,12 @@
     min-width: unset;
     width: calc(100% - calc($card-margin * 2));
   }
+}
+
+.content-title {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }
 
 .no-content-label {

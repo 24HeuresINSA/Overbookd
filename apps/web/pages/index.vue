@@ -1,15 +1,28 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
-  <div class="home">
-    <ProfileHomeCard />
-    <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-    <PersonalFaHomeCard v-if="hasPersonalFA" />
-  </div>
+  <v-container fluid>
+    <v-row class="home" no-gutters>
+      <v-col class="home">
+        <ProfileHomeCard />
+      </v-col>
+      <v-col v-if="hasPersonalAccount" class="home">
+        <PersonalAccountHomeCard />
+      </v-col>
+      <v-col v-if="canWriteFA || canWriteFT" class="home">
+        <PersonalFtHomeCard v-if="canWriteFT" />
+        <PersonalFaHomeCard v-if="canWriteFA" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
-import { HAVE_PERSONAL_ACCOUNT, WRITE_FA } from "@overbookd/permission";
+import {
+  HAVE_PERSONAL_ACCOUNT,
+  WRITE_FA,
+  WRITE_FT,
+} from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 
 const userStore = useUserStore();
@@ -58,16 +71,20 @@ const titleMessage = computed<string>(() => {
 const hasPersonalAccount = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
-const hasPersonalFA = computed<boolean>(() => userStore.can(WRITE_FA));
+
+const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
+
+const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
 </script>
 
 <style lang="scss" scoped>
 .home {
   display: flex;
-  gap: $card-gap;
   flex-wrap: wrap;
+  gap: $card-gap;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column;
+    gap: $card-gap;
   }
 }
 </style>
