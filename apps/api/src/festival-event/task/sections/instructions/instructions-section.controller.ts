@@ -35,6 +35,8 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
 import {
   InReviewFestivalTaskResponseDto,
   ReadyToAssignFestivalTaskResponseDto,
+  RefusedFestivalTaskResponseDto,
+  ValidatedFestivalTaskResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { RequestWithUserPayload } from "../../../../app.controller";
 import { InitInChargeRequestDto } from "./dto/init-in-charge.request.dto";
@@ -95,8 +97,15 @@ export class InstructionsSectionController {
   @Patch(":id/force/instructions")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: ReadyToAssignFestivalTaskResponseDto,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ReadyToAssignFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Instructions section of festival activity to save",
@@ -122,7 +131,7 @@ export class InstructionsSectionController {
       | ForceInChargeInstructionsRequestDto
       | ForceInstructionsRequestDto,
     @Request() { user }: RequestWithUserPayload,
-  ): Promise<ReadyToAssignFestivalTaskResponseDto> {
+  ): Promise<FestivalTask> {
     return this.instructionsService.force(id, instructions, user);
   }
 

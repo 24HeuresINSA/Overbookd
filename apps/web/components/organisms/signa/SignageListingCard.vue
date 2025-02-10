@@ -187,6 +187,7 @@ const closeSignageImageDisplayDialog = () => {
 const deleteSignage = async () => {
   if (!selectedSignage.value) return;
   await catalogSignageStore.deleteSignage(selectedSignage.value);
+  closeDeleteSignageDialog();
 };
 const filterSignagesByName = (
   search: string | null,

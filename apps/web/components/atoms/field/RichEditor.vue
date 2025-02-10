@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-editor">
+  <div class="rich-editor" :style="editorStyle">
     <div :id="id" />
   </div>
 </template>
@@ -19,10 +19,20 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  unsaved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const content = defineModel<string>({ required: false });
 const id = computed<string>(() => `editor-${props.scope}`);
+
+const editorStyle = computed(() => ({
+  "--border-color": props.unsaved
+    ? "rgb(var(--v-theme-error))"
+    : "rgba(var(--v-border-color), 0.3)",
+}));
 
 const options: QuillOptions = {
   theme: "snow",
@@ -61,7 +71,6 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 $toolbar-icon-color: rgba(var(--v-theme-on-surface), 0.8);
-$border-color: rgba(var(--v-border-color), 0.3);
 
 .rich-editor {
   :deep(.ql-fill) {
@@ -73,12 +82,12 @@ $border-color: rgba(var(--v-border-color), 0.3);
   :deep(.ql-toolbar) {
     border-top-left-radius: $field-border-radius;
     border-top-right-radius: $field-border-radius;
-    border-color: $border-color;
+    border-color: var(--border-color);
   }
   :deep(.ql-container) {
     border-bottom-left-radius: $field-border-radius;
     border-bottom-right-radius: $field-border-radius;
-    border-color: $border-color;
+    border-color: var(--border-color);
   }
 }
 </style>
