@@ -18,8 +18,8 @@ import { StatisticsModule } from "../statistics/statistics.module";
 
 @Module({
   controllers: [
-    FestivalTaskOverviewController,
     FestivalTaskPreviewController,
+    FestivalTaskOverviewController,
     FestivalTaskReviewController,
     GeneralSectionController,
     InstructionsSectionController,
@@ -28,8 +28,8 @@ import { StatisticsModule } from "../statistics/statistics.module";
   ],
   imports: [
     FestivalTaskCommonModule,
-    FestivalTaskOverviewModule,
     FestivalTaskPreviewModule,
+    FestivalTaskOverviewModule,
     FestivalTaskReviewModule,
     GeneralSectionModule,
     InstructionsSectionModule,

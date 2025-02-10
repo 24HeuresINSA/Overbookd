@@ -48,10 +48,9 @@
     }
   }
 
-  &.submitted,
   &.in_review,
   &.reviewing {
-    background-color: $submitted-color;
+    background-color: $in-review-color;
     color: black;
 
     .v-icon {
@@ -100,10 +99,9 @@
       border-left: 5px solid $validated-color;
     }
 
-    &.submitted,
     &.in_review,
     &.reviewing {
-      border-left: 5px solid $submitted-color;
+      border-left: 5px solid $in-review-color;
     }
 
     &.refused,
@@ -136,12 +134,14 @@
       color: $draft-color;
     }
 
-    &.submitted,
     &.in_review,
     &.reviewing {
-      color: $submitted-color;
+      color: $in-review-color;
     }
 
+    &.ready_to_assign {
+      color: $ready-color;
+    }
   }
 
   #status,
