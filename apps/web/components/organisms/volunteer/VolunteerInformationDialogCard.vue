@@ -122,12 +122,13 @@
               @click="savePersonalData"
             />
             <v-btn
-              v-if="!isMe"
+              v-if="!isMe && !hideDeleteButton"
               text="Supprimer le bénévole"
               color="red"
               size="small"
               @click="deleteVolunteer"
             />
+            <slot name="additional-actions" />
           </div>
         </div>
         <AvailabilitiesSumupCalendar
@@ -167,6 +168,10 @@ const props = defineProps({
   volunteer: {
     type: Object as PropType<UserDataWithPotentialyProfilePicture>,
     required: true,
+  },
+  hideDeleteButton: {
+    type: Boolean,
+    default: false,
   },
 });
 const volunteerId = computed<number>(() => props.volunteer.id);

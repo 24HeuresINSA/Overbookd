@@ -15,6 +15,7 @@ type State = {
   rejectedStaffCandidates: StaffCandidate[];
   volunteerCandidates: VolunteerCandidate[];
   rejectedVolunteerCandidates: VolunteerCandidate[];
+  selectedVolunteerCandidate?: VolunteerCandidate;
   inviteStaffLink?: URL;
 };
 
@@ -26,6 +27,7 @@ export const useMembershipApplicationStore = defineStore(
       rejectedStaffCandidates: [],
       volunteerCandidates: [],
       rejectedVolunteerCandidates: [],
+      selectedVolunteerCandidate: undefined,
       inviteStaffLink: undefined,
     }),
     actions: {
@@ -171,6 +173,10 @@ export const useMembershipApplicationStore = defineStore(
         this.rejectedVolunteerCandidates = res.map(
           castVolunteerCandidateWithDate,
         );
+      },
+
+      setSelectedVolunteerCandidate(candidate: VolunteerCandidate) {
+        this.selectedVolunteerCandidate = candidate;
       },
 
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {
