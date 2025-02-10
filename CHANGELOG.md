@@ -1,3 +1,9 @@
+## [3.31.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.30.0...v3.31.0) (2025-02-10)
+
+### Features
+
+* **web:** allow force update of FT instructions for validators [#2254](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2254) ([627e5b8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/627e5b8fbf400aa7a37bb92d08c5044b02313ce2))
+
 ## [3.30.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.29.0...v3.30.0) (2025-02-10)
 
 ### Features
