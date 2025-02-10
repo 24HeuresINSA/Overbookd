@@ -8,7 +8,7 @@
       <v-col v-if="hasPersonalAccount" class="home">
         <PersonalAccountHomeCard />
       </v-col>
-      <v-col v-if="canWriteFA || canWriteFT" class="home">
+      <v-col v-if="canWriteFA || canWriteFT" class="home" margin-bottom="2">
         <PersonalFtHomeCard v-if="canWriteFT" />
         <PersonalFaHomeCard v-if="canWriteFA" />
       </v-col>
@@ -86,5 +86,8 @@ const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
     flex-direction: column;
     gap: $card-gap;
   }
+}
+.v-col {
+  align-self: flex-start;
 }
 </style>
