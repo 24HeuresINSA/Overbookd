@@ -162,6 +162,7 @@ const cancelShotgun = (guest: Shotgun) => {
 
 const cancelMeal = () => {
   mealSharingStore.cancelMeal(props.shared.id);
+  closeCancelConfirmationDialog();
 };
 
 const toggleShotguns = () => {

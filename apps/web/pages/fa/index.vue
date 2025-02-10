@@ -174,6 +174,7 @@ const closeRemovalDialog = () => {
 const removeActivity = () => {
   if (!activityToRemove.value) return;
   faStore.remove(activityToRemove.value.id);
+  closeRemovalDialog();
 };
 
 const filters = ref<ActivityFilters>({});

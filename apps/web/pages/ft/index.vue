@@ -163,6 +163,7 @@ const closeRemovalDialog = () => {
 const removeTask = () => {
   if (!taskToRemove.value) return;
   ftStore.remove(taskToRemove.value.id);
+  closeRemovalDialog();
 };
 
 const filters = ref<TaskFilters>({});

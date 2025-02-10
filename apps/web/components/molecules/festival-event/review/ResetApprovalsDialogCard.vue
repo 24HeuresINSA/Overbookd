@@ -19,8 +19,5 @@
 <script lang="ts" setup>
 const emit = defineEmits(["confirm", "close"]);
 const close = () => emit("close");
-const confirm = () => {
-  emit("confirm");
-  close();
-};
+const confirm = () => emit("confirm");
 </script>

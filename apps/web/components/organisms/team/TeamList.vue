@@ -103,6 +103,7 @@ const updateTeam = async (team: Team) => {
 const removeSelectedTeam = async () => {
   if (!selectedTeam.value) return;
   await teamStore.removeTeam(selectedTeam.value);
+  closeDeleteConfirmationDialog();
 };
 
 const openAddTeamDialog = () => {

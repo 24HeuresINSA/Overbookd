@@ -11,12 +11,14 @@
         />
 
         <v-label>Instructions globales</v-label>
-        <RichEditor
+        <InstructionsEditor
           :model-value="globalInstruction"
           scope="global-instruction"
           :readonly="disabled && cantForceInstruction"
-          class="mb-3"
-          @update:model-value="updateGlobalInstruction"
+          :can-save="!disabled"
+          :can-force-instruction="!cantForceInstruction"
+          @save="saveGlobal"
+          @force-save="forceSaveGlobal"
         />
 
         <v-switch
@@ -38,12 +40,14 @@
           />
 
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
-          <RichEditor
-            scope="in-charge-instruction"
+          <InstructionsEditor
             :model-value="inChargeInstruction"
+            scope="in-charge-instruction"
             :readonly="disabled && cantForceInstruction"
-            class="mb-3"
-            @update:model-value="updateInChargeInstruction"
+            :can-save="!disabled"
+            :can-force-instruction="!cantForceInstruction"
+            @save="saveInCharge"
+            @force-save="forceSaveInCharge"
           />
         </div>
 
@@ -101,7 +105,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import {
   type Contact,
   type FestivalTaskWithConflicts,
@@ -109,7 +112,7 @@ import {
 } from "@overbookd/festival-event";
 import type { SignaLocation } from "@overbookd/signa";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
-import type { InitInChargeForm } from "@overbookd/http";
+import type { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { FORCE_WRITE_FT } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
@@ -159,42 +162,67 @@ const shouldResetApprovals = computed<boolean>(() =>
 );
 const cantForceInstruction = computed<boolean>(() => {
   const hasPermission = userStore.can(FORCE_WRITE_FT);
-  return !props.disabled || !hasPermission;
+  return (!props.disabled && !shouldResetApprovals.value) || !hasPermission;
 });
 
 const isInitInChargeDialogOpen = ref<boolean>(false);
 const openInitInChargeDialog = () => (isInitInChargeDialogOpen.value = true);
 const closeInitInChargeDialog = () => (isInitInChargeDialogOpen.value = false);
 
-const removeFocus = () => {
-  if (!(document.activeElement instanceof HTMLElement)) return;
-  document.activeElement.blur();
-};
+const hasInChargeInstructions = ref<boolean>(false);
 
 const isResetApprovalsDialogOpen = ref<boolean>(false);
-const hasApproveResetAlert = ref<boolean>(false);
-const hasInChargeInstructions = ref<boolean>(false);
-const openResetApprovalsDialogIfNeeded = () => {
-  if (!shouldResetApprovals.value || hasApproveResetAlert.value) return;
-  removeFocus();
-  isResetApprovalsDialogOpen.value = true;
-};
+const ADD_IN_CHARGE = "add-in-charge";
+const REMOVE_IN_CHARGE = "remove-in-charge";
+const MODIFY_INSTRUCTIONS = "modify-instructions";
+type ResetApprovalAction =
+  | {
+      type: typeof ADD_IN_CHARGE;
+      form: InitInChargeForm;
+    }
+  | {
+      type: typeof REMOVE_IN_CHARGE;
+    }
+  | {
+      type: typeof MODIFY_INSTRUCTIONS;
+      instructions: UpdateInstructionsForm;
+    };
+const resetApprovalAction = ref<ResetApprovalAction>();
+
 const declineResetApprovalsDialog = () =>
   (isResetApprovalsDialogOpen.value = false);
-const approveResetAlert = () => {
-  hasApproveResetAlert.value = true;
+const approveResetAlert = async () => {
+  const action = resetApprovalAction.value;
+  if (!action) return;
+  switch (action.type) {
+    case ADD_IN_CHARGE:
+      await ftStore.initInCharge(action.form);
+      hasInChargeInstructions.value = true;
+      break;
+    case REMOVE_IN_CHARGE:
+      await ftStore.clearInCharge();
+      break;
+    case MODIFY_INSTRUCTIONS:
+      await ftStore.updateInstructions(action.instructions);
+      break;
+  }
   isResetApprovalsDialogOpen.value = false;
 };
 
 const toggleInChargeInstructions = async () => {
   hasInChargeInstructions.value = !hasInChargeInstructions.value;
-  if (!hasInChargeInstructions.value) {
-    openResetApprovalsDialogIfNeeded();
-    if (isResetApprovalsDialogOpen.value) return;
-    await ftStore.clearInCharge();
+  if (hasInChargeInstructions.value) {
+    if (!isDraft(selectedTask.value)) openInitInChargeDialog();
     return;
   }
-  if (!isDraft(selectedTask.value)) openInitInChargeDialog();
+
+  if (shouldResetApprovals.value) {
+    resetApprovalAction.value = { type: REMOVE_IN_CHARGE };
+    isResetApprovalsDialogOpen.value = true;
+    return;
+  }
+
+  await ftStore.clearInCharge();
 };
 const checkActiveInChargeInstructions = () => {
   const hasVolunteers = instructions.value.inCharge.volunteers.length > 0;
@@ -202,50 +230,51 @@ const checkActiveInChargeInstructions = () => {
   hasInChargeInstructions.value = hasVolunteers || hasInstruction;
 };
 
-const globalInstruction = ref<string>(instructions.value.global ?? "");
-const updateGlobalInstruction = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded();
-  debouncedUpdateGlobalInstruction(canBeEmpty);
-};
-const debouncedUpdateGlobalInstruction = useDebounceFn((canBeEmpty: string) => {
-  const global = canBeEmpty.trim() || null;
-  if (cantForceInstruction.value) {
-    return ftStore.updateInstructions({ global });
+const globalInstruction = computed<string>(
+  () => instructions.value.global ?? "",
+);
+const saveGlobal = (global: string) => {
+  if (shouldResetApprovals.value) {
+    resetApprovalAction.value = {
+      type: MODIFY_INSTRUCTIONS,
+      instructions: { global },
+    };
+    isResetApprovalsDialogOpen.value = true;
+    return;
   }
-  if (global === null) return;
-  ftStore.forceInstructions({ global });
-}, 800);
 
-const inChargeInstruction = ref<string>(
-  instructions.value.inCharge.instruction ?? "",
-);
-const updateInChargeInstruction = (canBeEmpty: string) => {
-  openResetApprovalsDialogIfNeeded();
-  debouncedUpdateInChargeInstruction(canBeEmpty);
+  ftStore.updateInstructions({ global });
 };
-const debouncedUpdateInChargeInstruction = useDebounceFn(
-  (canBeEmpty: string) => {
-    const inCharge = canBeEmpty.trim() || null;
-    if (cantForceInstruction.value) {
-      return ftStore.updateInstructions({ inCharge });
-    }
-    if (inCharge === null) return;
-    ftStore.forceInstructions({ inCharge });
-  },
-  800,
+const forceSaveGlobal = (global: string) => {
+  if (cantForceInstruction.value) return;
+  ftStore.forceInstructions({ global });
+};
+
+const inChargeInstruction = computed<string>(
+  () => instructions.value.inCharge.instruction ?? "",
 );
+const saveInCharge = (inCharge: string) => {
+  if (shouldResetApprovals.value) {
+    resetApprovalAction.value = {
+      type: MODIFY_INSTRUCTIONS,
+      instructions: { inCharge },
+    };
+    isResetApprovalsDialogOpen.value = true;
+    return;
+  }
+
+  ftStore.updateInstructions({ inCharge });
+};
+const forceSaveInCharge = (inCharge: string) => {
+  if (cantForceInstruction.value) return;
+  ftStore.forceInstructions({ inCharge });
+};
 
 const selectedTaskId = computed<number>(() => selectedTask.value.id);
 watch(
   selectedTaskId,
-  (newId, oldId) => {
+  () => {
     checkActiveInChargeInstructions();
-    hasApproveResetAlert.value = false;
-
-    if (newId !== oldId) {
-      globalInstruction.value = instructions.value.global ?? "";
-      inChargeInstruction.value = instructions.value.inCharge.instruction ?? "";
-    }
   },
   { immediate: true },
 );
@@ -277,11 +306,16 @@ const removeInChargeVolunteer = async (volunteer: User) => {
 };
 
 const initInCharge = async (form: InitInChargeForm) => {
+  if (shouldResetApprovals.value) {
+    resetApprovalAction.value = { type: ADD_IN_CHARGE, form };
+    isResetApprovalsDialogOpen.value = true;
+    closeInitInChargeDialog();
+    return;
+  }
+
   await ftStore.initInCharge(form);
   closeInitInChargeDialog();
   hasInChargeInstructions.value = true;
-  inChargeInstruction.value =
-    selectedTask.value.instructions.inCharge.instruction ?? "";
 };
 </script>
 
