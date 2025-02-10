@@ -22,7 +22,7 @@ export class FestivalActivityPreviewService {
   }
 
   findMine(userId: number): Promise<PreviewForAll[]> {
-    return this.prepare.findByAdherentId(userId);
+    return this.previews.byAdherentId(userId);
   }
 
   findForSecurity(): Promise<PreviewForSecurity[]> {

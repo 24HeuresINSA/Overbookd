@@ -9,6 +9,7 @@ import {
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;
   one(ftId: FestivalTask["id"]): Promise<WithoutConflicts | null>;
+  byAdherentId(adherentId: number): Promise<Preview[]>;
 };
 export class ViewFestivalTask {
   constructor(
@@ -24,5 +25,9 @@ export class ViewFestivalTask {
     const task = await this.festivalTasks.one(ftId);
     if (!task) throw new FestivalTaskNotFound(ftId);
     return this.festivalTaskTranslator.translate(task);
+  }
+
+  async byAdherentId(adherentId: number): Promise<Preview[]> {
+    return this.festivalTasks.byAdherentId(adherentId);
   }
 }

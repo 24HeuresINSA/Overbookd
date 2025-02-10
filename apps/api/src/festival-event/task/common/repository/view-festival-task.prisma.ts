@@ -31,4 +31,13 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     if (!task) return null;
     return FestivalTaskBuilder.fromDatabase(task).festivalTask;
   }
+
+  async byAdherentId(adherentId: number): Promise<PreviewFestivalTask[]> {
+    const tasks = await this.prisma.festivalTask.findMany({
+      where: { ...IS_NOT_DELETED, adherentId },
+      select: SELECT_FESTIVAL_TASK,
+      orderBy: { id: "asc" },
+    });
+    return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
+  }
 }

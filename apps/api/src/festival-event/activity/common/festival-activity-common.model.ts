@@ -3,6 +3,7 @@ import {
   FestivalActivity,
   InquiryOwner,
   SignageCatalogItem,
+  PreviewFestivalActivity as PreviewForAll,
 } from "@overbookd/festival-event";
 import {
   PreviewForSecurity,
@@ -29,6 +30,7 @@ export type Inquiries = {
 };
 
 export type Previews = {
+  byAdherentId(id: number): Promise<PreviewForAll[]>;
   forSecurity(): Promise<PreviewForSecurity[]>;
   forCommunication(): Promise<PreviewForCommunication[]>;
   forLogistic(): Promise<PreviewForLogistic[]>;

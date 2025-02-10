@@ -1,4 +1,10 @@
-import { UseFilters, Controller, UseGuards, Get } from "@nestjs/common";
+import {
+  UseFilters,
+  Controller,
+  UseGuards,
+  Get,
+  Request,
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiTags,
@@ -20,6 +26,7 @@ import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task
 import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-task-in-review.response.dto";
 import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-task-refused.response.dto";
 import { PreviewFestivalTaskValidatedResponseDto } from "./dto/preview-festival-task-validated.response.dto";
+import { RequestWithUserPayload } from "../../../app.controller";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -58,5 +65,27 @@ export class FestivalTaskPreviewController {
   })
   findAll(): Promise<PreviewFestivalTask[]> {
     return this.previewService.findForAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FT)
+  @Get("mine")
+  @ApiResponse({
+    status: 200,
+    description: "My festival tasks",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(PreviewFestivalTaskDraftResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskInReviewResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskRefusedResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskValidatedResponseDto) },
+      ],
+    },
+    isArray: true,
+  })
+  findMine(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<PreviewFestivalTask[]> {
+    return this.previewService.findMine(user.id);
   }
 }

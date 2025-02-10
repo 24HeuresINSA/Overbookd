@@ -1,4 +1,4 @@
-import { Drive } from "@overbookd/festival-event";
+import { Drive, PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
   PreviewForCommunication,
   PreviewForLogistic,
@@ -14,9 +14,23 @@ import {
   SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
   SHOULD_BE_IN_LOGISTIC_DASHBOARD,
 } from "./previews.query";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
+import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
+import { FestivalActivityBuilder } from "./festival-activity.builder";
 
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}
+
+  async byAdherentId(adherentId: number): Promise<PreviewFestivalActivity[]> {
+    const activities = await this.prisma.festivalActivity.findMany({
+      where: { ...IS_NOT_DELETED, adherentId },
+      select: SELECT_FESTIVAL_ACTIVITY,
+      orderBy: { id: "asc" },
+    });
+    return activities.map(
+      (activity) => FestivalActivityBuilder.fromDatabase(activity).preview,
+    );
+  }
 
   async forSecurity(): Promise<PreviewForSecurity[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({

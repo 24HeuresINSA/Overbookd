@@ -55,7 +55,7 @@ const ftStore = useFestivalTaskStore();
 
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
 
-ftStore.fetchAllTasks();
+ftStore.fetchMyTasks();
 
 const MAX_TASKS = 5;
 

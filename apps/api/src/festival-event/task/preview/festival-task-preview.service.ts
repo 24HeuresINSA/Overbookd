@@ -11,4 +11,8 @@ export class FestivalTaskPreviewService {
   findForAll(): Promise<PreviewFestivalTask[]> {
     return this.view.all();
   }
+
+  findMine(userId: number): Promise<PreviewFestivalTask[]> {
+    return this.view.byAdherentId(userId);
+  }
 }

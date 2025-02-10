@@ -46,6 +46,10 @@ export class FestivalTaskRepository {
     return HttpClient.get<PreviewFestivalTask[]>(this.basePath);
   }
 
+  static getMine() {
+    return HttpClient.get<PreviewFestivalTask[]>(`${this.basePath}/mine`);
+  }
+
   static getOne(id: FestivalTaskWithConflicts["id"]) {
     return HttpClient.get<FestivalTaskWithConflicts>(`${this.basePath}/${id}`);
   }

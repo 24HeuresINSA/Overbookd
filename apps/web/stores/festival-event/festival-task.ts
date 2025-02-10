@@ -43,6 +43,7 @@ const repo = FestivalTaskRepository;
 type State = {
   tasks: {
     forAll: PreviewFestivalTask[];
+    mine: PreviewFestivalTask[];
   };
   selectedTask: FestivalTaskWithConflicts;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
@@ -81,6 +82,7 @@ export const useFestivalTaskStore = defineStore("festival-task", {
   state: (): State => ({
     tasks: {
       forAll: [],
+      mine: [],
     },
     selectedTask: fakeTask,
     assignmentDetails: null,
@@ -91,6 +93,12 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       const res = await repo.getAll();
       if (isHttpError(res)) return;
       this.tasks.forAll = res;
+    },
+
+    async fetchMyTasks() {
+      const res = await repo.getMine();
+      if (isHttpError(res)) return;
+      this.tasks.mine = res;
     },
 
     async fetchTask(id: number) {
