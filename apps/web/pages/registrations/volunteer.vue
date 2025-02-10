@@ -4,7 +4,7 @@
     <v-card-title>Candidats</v-card-title>
     <v-card-text>
       <v-data-table
-        v-model="selectedCandidates"
+        v-model="selectedCandidatesForEnrollement"
         :headers="headers"
         :items="filteredCandidates"
         :loading="loading"
@@ -13,6 +13,7 @@
         :mobile="isMobile"
         show-select
         return-object
+        @click:row="openCandidateInformations"
       >
         <template #top>
           <div class="filters">
@@ -45,14 +46,14 @@
           <v-btn
             v-show="!displayRejectedCandidates"
             text="Rejeter la candidature"
-            color="tertiary"
+            color="error"
             size="small"
             @click="rejectCandidate(item.id)"
           />
           <v-btn
             v-show="displayRejectedCandidates"
             text="Annuler le rejet"
-            color="tertiary"
+            color="error"
             size="small"
             @click="cancelCandidateRejection(item.id)"
           />
@@ -64,13 +65,22 @@
       <v-spacer />
       <v-btn
         v-if="!displayRejectedCandidates"
-        text="Enrôler en tant que soft"
+        text="Enrôler en tant que bénévole"
         :disabled="noVolunteerSelected"
         size="large"
         @click="enrollCandidates"
       />
     </v-card-actions>
   </v-card>
+
+  <v-dialog v-model="isCandidateInfoDialogOpen" max-width="1400">
+    <VolunteerInformationDialogCard
+      v-if="selectedCandidate"
+      :volunteer="selectedCandidate"
+      @updated="closeVolunteerInfoDialog"
+      @close="closeVolunteerInfoDialog"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -86,6 +96,7 @@ useHead({ title: "Admissions bénévoles" });
 
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
+const userStore = useUserStore();
 
 const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
@@ -99,7 +110,7 @@ const headers = [
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const searchedCandidate = ref<string>("");
-const selectedCandidates = ref<VolunteerCandidate[]>([]);
+const selectedCandidatesForEnrollement = ref<VolunteerCandidate[]>([]);
 
 const candidates = computed<VolunteerCandidate[]>(
   () => membershipApplicationStore.volunteerCandidates,
@@ -136,7 +147,7 @@ const toggleRejectedCandidates = () => {
     });
     return;
   }
-  selectedCandidates.value = [];
+  selectedCandidatesForEnrollement.value = [];
   loading.value = rejectedCandidates.value.length === 0;
   membershipApplicationStore.fetchRejectedVolunteerCandidates().then(() => {
     loading.value = false;
@@ -144,18 +155,30 @@ const toggleRejectedCandidates = () => {
 };
 
 const noVolunteerSelected = computed<boolean>(
-  () => selectedCandidates.value.length === 0,
+  () => selectedCandidatesForEnrollement.value.length === 0,
 );
 
 const enrollCandidates = () => {
-  membershipApplicationStore.enrollNewVolunteers(selectedCandidates.value);
-  selectedCandidates.value = [];
+  membershipApplicationStore.enrollNewVolunteers(
+    selectedCandidatesForEnrollement.value,
+  );
+  selectedCandidatesForEnrollement.value = [];
 };
 const rejectCandidate = (candidateId: number) => {
   membershipApplicationStore.rejectVolunteerCandidate(candidateId);
 };
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelVolunteerCandidateRejection(candidateId);
+};
+
+const isCandidateInfoDialogOpen = ref<boolean>(false);
+const selectedCandidate = computed(() => userStore.selectedUser);
+const openCandidateInformations = (candidate: VolunteerCandidate) => {
+  userStore.findUserById(candidate.id);
+  isCandidateInfoDialogOpen.value = true;
+};
+const closeVolunteerInfoDialog = () => {
+  isCandidateInfoDialogOpen.value = false;
 };
 </script>
 

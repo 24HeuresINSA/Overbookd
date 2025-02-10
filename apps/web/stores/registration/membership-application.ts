@@ -29,6 +29,18 @@ export const useMembershipApplicationStore = defineStore(
       inviteStaffLink: undefined,
     }),
     actions: {
+      async fetchInviteStaffLink() {
+        const res = await MembershipApplicationRepository.fetchStaffLink();
+        if (isHttpError(res)) return;
+        this.inviteStaffLink = new URL(res);
+      },
+
+      async generateInviteStaffLink() {
+        const res = await MembershipApplicationRepository.generateStaffLink();
+        if (isHttpError(res)) return;
+        this.inviteStaffLink = new URL(res);
+      },
+
       async submitStaffApplication(candidate: StaffApplication) {
         const res =
           await MembershipApplicationRepository.submitStaffApplication(
@@ -81,6 +93,22 @@ export const useMembershipApplicationStore = defineStore(
           await MembershipApplicationRepository.getRejectedStaffCandidates();
         if (isHttpError(res)) return;
         this.rejectedStaffCandidates = res.map(castStaffCandidateWithDate);
+      },
+
+      async enrollNewStaffs(staffs: StaffCandidate[]) {
+        const minimalStaffs = staffs.map(toStandAloneUser);
+        const res =
+          await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
+        if (isHttpError(res)) return;
+        sendSuccessNotification(
+          "Les candidats sélectionnés ont été enrôlés en tant que hards",
+        );
+        this.staffCandidates = this.staffCandidates.filter(
+          (staff) => !staffs.some(({ id }) => id === staff.id),
+        );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchStaffCandidates();
       },
 
       async submitVolunteerApplication(email: string) {
@@ -145,22 +173,6 @@ export const useMembershipApplicationStore = defineStore(
         );
       },
 
-      async enrollNewStaffs(staffs: StaffCandidate[]) {
-        const minimalStaffs = staffs.map(toStandAloneUser);
-        const res =
-          await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
-        if (isHttpError(res)) return;
-        sendSuccessNotification(
-          "Les candidats sélectionnés ont été enrôlés en tant que hards",
-        );
-        this.staffCandidates = this.staffCandidates.filter(
-          (staff) => !staffs.some(({ id }) => id === staff.id),
-        );
-
-        const navigationBadgeStore = useNavigationBadgeStore();
-        navigationBadgeStore.fetchStaffCandidates();
-      },
-
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {
         const minimalVolunteers = volunteers.map(toStandAloneUser);
         const res =
@@ -177,18 +189,6 @@ export const useMembershipApplicationStore = defineStore(
 
         const navigationBadgeStore = useNavigationBadgeStore();
         navigationBadgeStore.fetchVolunteerCandidates();
-      },
-
-      async fetchInviteStaffLink() {
-        const res = await MembershipApplicationRepository.fetchStaffLink();
-        if (isHttpError(res)) return;
-        this.inviteStaffLink = new URL(res);
-      },
-
-      async generateInviteStaffLink() {
-        const res = await MembershipApplicationRepository.generateStaffLink();
-        if (isHttpError(res)) return;
-        this.inviteStaffLink = new URL(res);
       },
 
       _updateVolunteer(volunteer: VolunteerCandidate) {
