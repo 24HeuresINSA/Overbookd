@@ -99,7 +99,7 @@ export type {
   FestivalTaskChild,
 } from "./festival-activity/festival-activity.js";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error.js";
-export { previewOf } from "./festival-activity/preview-of";
+export { previewOf as previewOfActivity } from "./festival-activity/preview-of";
 
 export type { Contractor } from "./festival-activity/sections/in-charge.js";
 
@@ -246,6 +246,7 @@ export type {
   Categorize,
 } from "./festival-task/festival-task.js";
 export { isReadyToAssign } from "./festival-task/festival-task.js";
+export { previewOf as previewOfTask } from "./festival-task/preview-of";
 export type {
   Volunteer,
   Contact,

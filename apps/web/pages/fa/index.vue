@@ -129,7 +129,6 @@ import { updateQueryParams } from "~/utils/http/url-params.utils";
 useHead({ title: "Fiches Activités" });
 
 const faStore = useFestivalActivityStore();
-const teamStore = useTeamStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
@@ -247,12 +246,15 @@ const filteredActivities = computed<PreviewFestivalActivity[]>(() => {
   });
 });
 
+const updateItemsPerPage = (itemsPerPage: number) => {
+  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
+};
+
 const { festivalActivities } = useLiveNotification();
 const { fetchAllActivities, addActivityToPreviews, updatePreviousPreview } =
   faStore;
 
 onMounted(() => {
-  teamStore.fetchFaReviewers();
   fetchAllActivities().then(() => (loading.value = false));
   festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
     addActivityToPreviews(data.festivalActivity);
@@ -267,10 +269,6 @@ onMounted(() => {
     updatePreviousPreview(data.festivalActivity);
   });
 });
-
-const updateItemsPerPage = (itemsPerPage: number) => {
-  updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
-};
 
 onUnmounted(() => {
   festivalActivities.stopListening();

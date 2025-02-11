@@ -38,6 +38,7 @@ import {
 import { isDraft } from "../festival-event.js";
 import { APPROVED, REJECTED } from "../common/action.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
+import { Adherent } from "../common/adherent.js";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -144,6 +145,12 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return new FestivalTaskBuilder<T>(festivalTask);
   }
 
+  withReviewer(reviewer: Adherent) {
+    if (isDraft<FestivalTask>(this.festivalTask)) return this;
+    const festivalTask = { ...this.festivalTask, reviewer } as const;
+    return new FestivalTaskBuilder<T>(festivalTask);
+  }
+
   withInstructions(instructions: Partial<T["instructions"]>) {
     const festivalTask = {
       ...this.festivalTask,
@@ -180,7 +187,6 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return Object.keys(current).reduce<T>((acc: T, key: string) => {
       if (!isKeyOf(current, key)) return acc;
 
-      // eslint-disable-next-line security/detect-object-injection
       const updated = update[key];
       if (updated === undefined) return acc;
 

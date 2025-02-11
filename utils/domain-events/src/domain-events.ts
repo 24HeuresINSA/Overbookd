@@ -20,6 +20,7 @@ import {
   FestivalTaskIgnored,
   FestivalTaskReadyToReview,
   FestivalTaskRejected,
+  FestivalTaskReadyToAssign,
 } from "./festival-task.js";
 import {
   StaffRegisteredEvent,
@@ -40,6 +41,7 @@ export type DomainEvent =
   | FestivalTaskRejected
   | FestivalTaskApproved
   | FestivalTaskIgnored
+  | FestivalTaskReadyToAssign
   | SharedMealClosed
   | PermissionGrantedEvent
   | PermissionRevokedEvent

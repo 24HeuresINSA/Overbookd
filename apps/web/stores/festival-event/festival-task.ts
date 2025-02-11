@@ -1,15 +1,18 @@
-import type {
-  PreviewFestivalTask,
-  InquiryRequest,
-  Contact,
-  Volunteer,
-  UpdateMobilization,
-  Mobilization,
-  TeamMobilization,
-  FestivalTaskWithConflicts,
-  AssignDrive,
-  Categorize,
-  ForceInstructions,
+import {
+  type PreviewFestivalTask,
+  type InquiryRequest,
+  type Contact,
+  type Volunteer,
+  type UpdateMobilization,
+  type Mobilization,
+  type TeamMobilization,
+  type FestivalTaskWithConflicts,
+  type AssignDrive,
+  type Categorize,
+  type ForceInstructions,
+  previewOfTask,
+  type FestivalTaskDraft,
+  type FestivalTaskReviewable,
 } from "@overbookd/festival-event";
 import type {
   AddInquiryRequestForm,
@@ -37,6 +40,7 @@ import {
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import { updateItemToList } from "@overbookd/list";
 
 const repo = FestivalTaskRepository;
 
@@ -106,6 +110,19 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       const res = await repo.getOne(id);
       if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
+    },
+
+    addTaskToPreviews(task: FestivalTaskDraft) {
+      const exists = this.tasks.forAll.some(({ id }) => task.id === id);
+      if (exists) return;
+      const preview = previewOfTask(task);
+      this.tasks.forAll = [...this.tasks.forAll, preview];
+    },
+
+    updatePreviousPreview(task: FestivalTaskReviewable) {
+      const preview = previewOfTask(task);
+      const index = this.tasks.forAll.findIndex(({ id }) => id === task.id);
+      this.tasks.forAll = updateItemToList(this.tasks.forAll, index, preview);
     },
 
     /* CREATE */

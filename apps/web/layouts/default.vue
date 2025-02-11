@@ -36,6 +36,10 @@ import {
   FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_IGNORED,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useTheme } from "vuetify";
@@ -54,7 +58,8 @@ const theme = useTheme();
 const { mine } = useLiveNotification();
 const userStore = useUserStore();
 const { refreshTokens } = useAuthStore();
-const { fetchMyRefusedActivities } = useNavigationBadgeStore();
+const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
+  useNavigationBadgeStore();
 
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
@@ -68,6 +73,10 @@ onMounted(() => {
     fetchMyRefusedActivities(),
   );
   mine.listen(FESTIVAL_ACTIVITY_APPROVED, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_TASK_REJECTED, () => fetchMyRefusedTasks());
+  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, () => fetchMyRefusedTasks());
+  mine.listen(FESTIVAL_TASK_APPROVED, () => fetchMyRefusedTasks());
+  mine.listen(FESTIVAL_TASK_IGNORED, () => fetchMyRefusedTasks());
 });
 
 onUnmounted(() => {
