@@ -60,6 +60,10 @@ export class FestivalTaskRepository {
     );
   }
 
+  static getMyRefusalsCount() {
+    return HttpClient.get<number>(`${this.basePath}/my-refusals/count`);
+  }
+
   /* CREATE */
   static create(data: FestivalTaskCreationForm) {
     return HttpClient.post<FestivalTaskWithConflicts>(this.basePath, data);

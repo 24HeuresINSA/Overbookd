@@ -4,6 +4,7 @@ import { FestivalEventStatistics } from "../statistics.service";
 import { PrismaService } from "../../../prisma.service";
 import { FestivalEventStatisticsBuilder } from "./festival-event-statistics.builder";
 import { REFUSED } from "@overbookd/festival-event-constants";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 const INIT_STATUS_STATISTICS: Statistics["status"] = {
   DRAFT: 0,
@@ -32,7 +33,7 @@ export class PrismaFestivalActivityStatistics<
   countRefusalsByUser(adherentId: number): Promise<number> {
     return this.prisma.festivalActivity.count({
       where: {
-        isDeleted: false,
+        ...IS_NOT_DELETED,
         status: REFUSED,
         adherentId,
       },

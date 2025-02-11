@@ -34,6 +34,7 @@ import {
 import SideNavPageItem from "./SideNavPageItem.vue";
 import {
   FA_URL,
+  FT_URL,
   REGISTRATIONS_STAFF_URL,
   REGISTRATIONS_VOLUNTEER_URL,
 } from "@overbookd/web-page";
@@ -53,12 +54,18 @@ const props = defineProps({
 });
 
 const pagesWithBadge = computed<PageInSummary[]>(() => {
-  const { myRefusedActivities, staffCandidates, volunteerCandidates } =
-    navigationBadgeStore;
+  const {
+    myRefusedActivities,
+    myRefusedTasks,
+    staffCandidates,
+    volunteerCandidates,
+  } = navigationBadgeStore;
   return SUMMARY_PAGES.map((page) => {
     switch (page.to) {
       case FA_URL:
         return { ...page, badgeValue: myRefusedActivities };
+      case FT_URL:
+        return { ...page, badgeValue: myRefusedTasks };
       case REGISTRATIONS_STAFF_URL:
         return { ...page, badgeValue: staffCandidates };
       case REGISTRATIONS_VOLUNTEER_URL:
