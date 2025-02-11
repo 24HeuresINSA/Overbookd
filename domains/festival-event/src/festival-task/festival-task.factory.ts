@@ -147,11 +147,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
 
   withReviewer(reviewer: Adherent) {
     if (isDraft<FestivalTask>(this.festivalTask)) return this;
-    const festivalTask = {
-      ...this.festivalTask,
-      reviewer,
-    } as const;
-    console.log(festivalTask);
+    const festivalTask = { ...this.festivalTask, reviewer } as const;
     return new FestivalTaskBuilder<T>(festivalTask);
   }
 
