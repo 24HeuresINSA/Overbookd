@@ -1,3 +1,15 @@
+## [3.32.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.31.0...v3.32.0) (2025-02-11)
+
+### Features
+
+* **festival-event:** allow live status update on home & detail pages [#2391](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2391) ([f10608c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f10608c9cdc1c9f1cbe1d92c9b6306d7ace7c8d0))
+* **ft:** allow live status update on list [#2390](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2390) ([98bb539](https://gitlab.com/24-heures-insa/overbookd-mono/commit/98bb539ec1a9fb8125ca26e60c01e3e6d66e9ff7))
+
+### Bug Fixes
+
+* **ft:** add badge in navigation [#2389](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2389) ([1c7f5b1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c7f5b1cde764bfbbbba94ef29ef6e0567803094))
+* **volunteer-registration:** add the info and availabilities dialog card and improve UX with better buttons [#2384](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2384) ([da996eb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/da996ebf1d3851c3e62f0f00548b570122c417e0))
+
 ## [3.31.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.30.0...v3.31.0) (2025-02-10)
 
 ### Features
