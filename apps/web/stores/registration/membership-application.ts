@@ -15,7 +15,6 @@ type State = {
   rejectedStaffCandidates: StaffCandidate[];
   volunteerCandidates: VolunteerCandidate[];
   rejectedVolunteerCandidates: VolunteerCandidate[];
-  selectedVolunteerCandidate?: VolunteerCandidate;
   inviteStaffLink?: URL;
 };
 
@@ -27,7 +26,6 @@ export const useMembershipApplicationStore = defineStore(
       rejectedStaffCandidates: [],
       volunteerCandidates: [],
       rejectedVolunteerCandidates: [],
-      selectedVolunteerCandidate: undefined,
       inviteStaffLink: undefined,
     }),
     actions: {
@@ -49,7 +47,9 @@ export const useMembershipApplicationStore = defineStore(
             candidate,
           );
         if (isHttpError(res)) return;
-        sendSuccessNotification("Ta demande pour devenir orga a été envoyée");
+        sendSuccessNotification(
+          "Ta demande pour devenir organisateur a été envoyée",
+        );
       },
 
       async rejectStaffCandidate(candidateId: number) {
@@ -74,7 +74,7 @@ export const useMembershipApplicationStore = defineStore(
             candidateId,
           );
         if (isHttpError(res)) return;
-        sendSuccessNotification("Le rejet de la candidature a été annulé");
+        sendSuccessNotification("La candidature a été restaurée");
 
         this.rejectedStaffCandidates = this.rejectedStaffCandidates.filter(
           ({ id }) => id !== candidateId,
@@ -103,7 +103,7 @@ export const useMembershipApplicationStore = defineStore(
           await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les candidats sélectionnés ont été enrôlés en tant que hards",
+          "Les candidats sélectionnés ont été enrôlés en tant qu'organisateurs",
         );
         this.staffCandidates = this.staffCandidates.filter(
           (staff) => !staffs.some(({ id }) => id === staff.id),
@@ -148,7 +148,7 @@ export const useMembershipApplicationStore = defineStore(
             candidateId,
           );
         if (isHttpError(res)) return;
-        sendSuccessNotification("Le rejet de la candidature a été annulé");
+        sendSuccessNotification("La candidature a été restaurée");
 
         this.rejectedVolunteerCandidates =
           this.rejectedVolunteerCandidates.filter(
@@ -175,10 +175,6 @@ export const useMembershipApplicationStore = defineStore(
         );
       },
 
-      setSelectedVolunteerCandidate(candidate: VolunteerCandidate) {
-        this.selectedVolunteerCandidate = candidate;
-      },
-
       async enrollNewVolunteers(volunteers: VolunteerCandidate[]) {
         const minimalVolunteers = volunteers.map(toStandAloneUser);
         const res =
@@ -187,7 +183,7 @@ export const useMembershipApplicationStore = defineStore(
           );
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les candidats sélectionnés a été enrôlé en tant que soft",
+          "Les candidats sélectionnés ont été enrôlés en tant que bénévoles",
         );
         this.volunteerCandidates = this.volunteerCandidates.filter(
           (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),

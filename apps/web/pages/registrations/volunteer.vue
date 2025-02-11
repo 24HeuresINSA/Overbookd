@@ -156,6 +156,7 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const searchedCandidate = ref<string>("");
 const candidatesToEnroll = ref<VolunteerCandidate[]>([]);
+const selectedCandidate = ref<VolunteerCandidate | undefined>();
 
 const candidates = computed<VolunteerCandidate[]>(
   () => membershipApplicationStore.volunteerCandidates,
@@ -220,9 +221,6 @@ const cancelCandidateRejection = (candidateId: number) => {
 };
 
 const isCandidateInfoDialogOpen = ref<boolean>(false);
-const selectedCandidate = computed<VolunteerCandidate | undefined>(
-  () => membershipApplicationStore.selectedVolunteerCandidate,
-);
 const isSelectedCandidateInCandidatesToEnroll = computed<boolean>(() =>
   selectedCandidate.value
     ? candidatesToEnroll.value.includes(selectedCandidate.value)
@@ -232,7 +230,7 @@ const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
   () => userStore.selectedUser,
 );
 const openCandidateInfoDialogue = (candidate: VolunteerCandidate) => {
-  membershipApplicationStore.setSelectedVolunteerCandidate(candidate);
+  selectedCandidate.value = candidate;
   userStore.findUserById(candidate.id);
   isCandidateInfoDialogOpen.value = true;
 };
