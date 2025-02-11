@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-editor" :style="editorStyle">
+  <div class="rich-editor" :class="{ unsaved }">
     <div :id="id" />
   </div>
 </template>
@@ -27,12 +27,6 @@ const props = defineProps({
 
 const content = defineModel<string>({ required: false });
 const id = computed<string>(() => `editor-${props.scope}`);
-
-const editorStyle = computed(() => ({
-  "--border-color": props.unsaved
-    ? "rgb(var(--v-theme-error))"
-    : "rgba(var(--v-border-color), 0.3)",
-}));
 
 const options: QuillOptions = {
   theme: "snow",
@@ -82,12 +76,21 @@ $toolbar-icon-color: rgba(var(--v-theme-on-surface), 0.8);
   :deep(.ql-toolbar) {
     border-top-left-radius: $field-border-radius;
     border-top-right-radius: $field-border-radius;
-    border-color: var(--border-color);
   }
   :deep(.ql-container) {
     border-bottom-left-radius: $field-border-radius;
     border-bottom-right-radius: $field-border-radius;
-    border-color: var(--border-color);
+  }
+}
+
+.unsaved {
+  :deep(.ql-toolbar) {
+    border-color: rgba(var(--v-theme-error), 0.6);
+    border-width: 3px;
+  }
+  :deep(.ql-container) {
+    border-color: rgba(var(--v-theme-error), 0.6);
+    border-width: 3px;
   }
 }
 </style>
