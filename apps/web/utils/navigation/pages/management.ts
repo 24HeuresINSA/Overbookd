@@ -40,7 +40,8 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   title: "Admission Organisateurs",
   permission: ENROLL_HARD,
   to: REGISTRATIONS_STAFF_URL,
-  description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
+  description:
+    "Permet d'enrôler les nouveaux arrivants en tant qu'organisateurs",
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
@@ -58,7 +59,7 @@ const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
   title: "Admission Bénévoles",
   permission: ENROLL_SOFT,
   to: REGISTRATIONS_VOLUNTEER_URL,
-  description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
+  description: "Permet d'enrôler les nouveaux arrivants en tant que bénévoles",
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,

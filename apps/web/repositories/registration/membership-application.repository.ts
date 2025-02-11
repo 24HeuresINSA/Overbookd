@@ -9,6 +9,14 @@ import { HttpClient } from "~/utils/http/http-client";
 export class MembershipApplicationRepository {
   private static readonly basePath = "registrations/membership-applications";
 
+  static generateStaffLink() {
+    return HttpClient.post<string>(`${this.basePath}/staffs/invitation-link`);
+  }
+
+  static fetchStaffLink() {
+    return HttpClient.get<string>(`${this.basePath}/staffs/invitation-link`);
+  }
+
   static submitStaffApplication(candidate: StaffApplication) {
     const options = {
       serverErrorMessage:
@@ -81,13 +89,5 @@ export class MembershipApplicationRepository {
     return HttpClient.post<void>(
       `${this.basePath}/volunteers/${candidateId}/cancel-rejection`,
     );
-  }
-
-  static generateStaffLink() {
-    return HttpClient.post<string>(`${this.basePath}/staffs/invitation-link`);
-  }
-
-  static fetchStaffLink() {
-    return HttpClient.get<string>(`${this.basePath}/staffs/invitation-link`);
   }
 }

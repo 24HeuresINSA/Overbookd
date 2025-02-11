@@ -4,7 +4,7 @@
     <v-card-title>Candidats</v-card-title>
     <v-card-text>
       <v-data-table
-        v-model="selectedCandidates"
+        v-model="candidatesToEnroll"
         :headers="headers"
         :items="filteredCandidates"
         :loading="loading"
@@ -41,19 +41,32 @@
           <TeamChip v-for="team of item.teams" :key="team" :team="team" />
         </template>
 
-        <template #item.action="{ item }">
+        <template #item.actions="{ item }">
           <v-btn
-            v-show="!displayRejectedCandidates"
-            text="Rejeter la candidature"
-            color="tertiary"
-            size="small"
+            v-if="!displayRejectedCandidates"
+            icon="mdi-check"
+            size="large"
+            variant="flat"
+            @click="enrollCandidate(item)"
+          />
+          <v-btn
+            icon="mdi-account-details"
+            size="large"
+            variant="flat"
+            @click="openCandidateInfoDialogue(item)"
+          />
+          <v-btn
+            v-if="!displayRejectedCandidates"
+            icon="mdi-trash-can-outline"
+            size="large"
+            variant="flat"
             @click="rejectCandidate(item.id)"
           />
           <v-btn
-            v-show="displayRejectedCandidates"
-            text="Annuler le rejet"
-            color="tertiary"
-            size="small"
+            v-else
+            icon="mdi-undo"
+            size="large"
+            variant="flat"
             @click="cancelCandidateRejection(item.id)"
           />
         </template>
@@ -64,13 +77,54 @@
       <v-spacer />
       <v-btn
         v-if="!displayRejectedCandidates"
-        text="Enrôler en tant que soft"
+        text="Enrôler en tant que bénévole"
         :disabled="noVolunteerSelected"
         size="large"
         @click="enrollCandidates"
       />
     </v-card-actions>
   </v-card>
+
+  <v-dialog v-model="isCandidateInfoDialogOpen" max-width="1400px">
+    <VolunteerInformationDialogCard
+      v-if="selectedUser"
+      :volunteer="selectedUser"
+      hide-delete-button
+      @close="closeCandidateInfoDialogue"
+    >
+      <template #additional-actions>
+        <v-btn
+          v-if="!displayRejectedCandidates"
+          :text="
+            isSelectedCandidateInCandidatesToEnroll
+              ? 'Retirer des candidats à enrôler'
+              : 'Ajouter aux candidats à enrôler'
+          "
+          color="primary"
+          size="large"
+          @click="
+            selectedCandidate && updateCandidatesToEnroll(selectedCandidate)
+          "
+        />
+        <v-btn
+          v-if="!displayRejectedCandidates"
+          text="Rejeter la candidature"
+          color="error"
+          size="large"
+          @click="selectedCandidate && rejectCandidate(selectedCandidate.id)"
+        />
+        <v-btn
+          v-else
+          text="Restaurer la candidature"
+          color="secondary"
+          size="large"
+          @click="
+            selectedCandidate && cancelCandidateRejection(selectedCandidate.id)
+          "
+        />
+      </template>
+    </VolunteerInformationDialogCard>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -81,11 +135,13 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 useHead({ title: "Admissions bénévoles" });
 
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
+const userStore = useUserStore();
 
 const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
@@ -93,13 +149,14 @@ const headers = [
   { title: "Nom", value: "lastname", sortable: true },
   { title: "Email", value: "email" },
   { title: "Charisme", value: "charisma", sortable: true },
-  { title: "Équipes", value: "teams" },
-  { title: "Action", value: "action" },
+  { title: "Équipes", value: "teams", sortable: true },
+  { title: "Actions", value: "actions" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const searchedCandidate = ref<string>("");
-const selectedCandidates = ref<VolunteerCandidate[]>([]);
+const candidatesToEnroll = ref<VolunteerCandidate[]>([]);
+const selectedCandidate = ref<VolunteerCandidate | undefined>();
 
 const candidates = computed<VolunteerCandidate[]>(
   () => membershipApplicationStore.volunteerCandidates,
@@ -136,7 +193,7 @@ const toggleRejectedCandidates = () => {
     });
     return;
   }
-  selectedCandidates.value = [];
+  candidatesToEnroll.value = [];
   loading.value = rejectedCandidates.value.length === 0;
   membershipApplicationStore.fetchRejectedVolunteerCandidates().then(() => {
     loading.value = false;
@@ -144,18 +201,51 @@ const toggleRejectedCandidates = () => {
 };
 
 const noVolunteerSelected = computed<boolean>(
-  () => selectedCandidates.value.length === 0,
+  () => candidatesToEnroll.value.length === 0,
 );
 
+const enrollCandidate = (candidate: VolunteerCandidate) => {
+  membershipApplicationStore.enrollNewVolunteers([candidate]);
+};
 const enrollCandidates = () => {
-  membershipApplicationStore.enrollNewVolunteers(selectedCandidates.value);
-  selectedCandidates.value = [];
+  membershipApplicationStore.enrollNewVolunteers(candidatesToEnroll.value);
+  candidatesToEnroll.value = [];
 };
 const rejectCandidate = (candidateId: number) => {
   membershipApplicationStore.rejectVolunteerCandidate(candidateId);
+  closeCandidateInfoDialogue();
 };
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelVolunteerCandidateRejection(candidateId);
+  closeCandidateInfoDialogue();
+};
+
+const isCandidateInfoDialogOpen = ref<boolean>(false);
+const isSelectedCandidateInCandidatesToEnroll = computed<boolean>(() =>
+  selectedCandidate.value
+    ? candidatesToEnroll.value.includes(selectedCandidate.value)
+    : false,
+);
+const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
+  () => userStore.selectedUser,
+);
+const openCandidateInfoDialogue = (candidate: VolunteerCandidate) => {
+  selectedCandidate.value = candidate;
+  userStore.findUserById(candidate.id);
+  isCandidateInfoDialogOpen.value = true;
+};
+const closeCandidateInfoDialogue = () => {
+  isCandidateInfoDialogOpen.value = false;
+};
+
+const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
+  if (candidatesToEnroll.value.includes(candidate)) {
+    candidatesToEnroll.value = candidatesToEnroll.value.filter(
+      (c) => c.id !== candidate.id,
+    );
+    return;
+  }
+  candidatesToEnroll.value = [...candidatesToEnroll.value, candidate];
 };
 </script>
 

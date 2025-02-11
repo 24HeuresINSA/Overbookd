@@ -48,14 +48,14 @@
             <v-btn
               v-show="!displayRejectedCandidates"
               text="Rejeter la candidature"
-              color="tertiary"
+              color="error"
               size="small"
               @click="rejectCandidate(item.id)"
             />
             <v-btn
               v-show="displayRejectedCandidates"
               text="Annuler le rejet"
-              color="tertiary"
+              color="error"
               size="small"
               @click="cancelCandidateRejection(item.id)"
             />
@@ -67,7 +67,8 @@
         <v-spacer />
         <v-btn
           v-if="!displayRejectedCandidates"
-          text="Enrôler en tant que hard"
+          text="Enrôler en tant qu'organisateur"
+          color="success"
           :disabled="noStaffSelected"
           size="large"
           @click="enrollCandidates"
