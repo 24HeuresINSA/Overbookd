@@ -123,6 +123,7 @@ import {
   FESTIVAL_TASK_APPROVED,
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 
 useHead({ title: "Fiches Tâches" });
@@ -263,6 +264,9 @@ onMounted(() => {
     updatePreviousPreview(data.festivalTask);
   });
   festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
 });

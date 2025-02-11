@@ -9,6 +9,7 @@ import {
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_APPROVED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
   type HandleEvent,
   addEventListener,
 } from "@overbookd/domain-events";
@@ -74,7 +75,8 @@ type FestivalTaskEvent =
   | typeof FESTIVAL_TASK_READY_TO_REVIEW
   | typeof FESTIVAL_TASK_REJECTED
   | typeof FESTIVAL_TASK_APPROVED
-  | typeof FESTIVAL_TASK_IGNORED;
+  | typeof FESTIVAL_TASK_IGNORED
+  | typeof FESTIVAL_TASK_READY_TO_ASSIGN;
 
 function buildFestivalTasksContext() {
   const source = new EventSource(generateEndpoint("festival-tasks"));

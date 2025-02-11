@@ -126,6 +126,15 @@ export class FestivalTaskReviewService {
     categoryze: Categorize,
   ): Promise<FestivalTaskReadyToAssign> {
     const adherent = await this.repositories.adherents.findOne(user.id);
-    return this.useCases.enableAssignment.for(ftId, adherent, categoryze);
+    const task = await this.useCases.enableAssignment.for(
+      ftId,
+      adherent,
+      categoryze,
+    );
+
+    const event = FestivalTaskEvents.readyToAssign(task, adherent.id);
+    this.eventStore.publish(event);
+
+    return task;
   }
 }
