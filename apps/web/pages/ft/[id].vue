@@ -86,19 +86,19 @@ onMounted(async () => {
     return;
   }
   live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
-    ftStore.updateCurrentSelectedTask(data.festivalTask);
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
   live.festivalTasks.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
-    ftStore.updateCurrentSelectedTask(data.festivalTask);
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
   live.festivalTasks.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
-    ftStore.updateCurrentSelectedTask(data.festivalTask);
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
   live.festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
-    ftStore.updateCurrentSelectedTask(data.festivalTask);
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
   live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
-    ftStore.updateCurrentSelectedTask(data.festivalTask);
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
 });
 

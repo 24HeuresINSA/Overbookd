@@ -132,8 +132,13 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       this.tasks.mine = updateItemToList(this.tasks.mine, index, preview);
     },
 
-    updateCurrentSelectedTask(task: FestivalTaskWithConflicts) {
-      if (task.id === this.selectedTask.id) this.selectedTask = task;
+    updateSelectedTaskStatus(task: FestivalTaskReviewable) {
+      if (this.selectedTask.id !== task.id) return;
+      this.selectedTask = {
+        ...this.selectedTask,
+        status: task.status,
+        reviews: task.reviews,
+      } as FestivalTaskWithConflicts;
     },
 
     /* CREATE */

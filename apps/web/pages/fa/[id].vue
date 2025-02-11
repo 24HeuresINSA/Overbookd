@@ -84,14 +84,14 @@ onMounted(async () => {
   live.festivalActivities.listen(
     FESTIVAL_ACTIVITY_READY_TO_REVIEW,
     ({ data }) => {
-      faStore.updateCurrentSelectedActivity(data.festivalTask);
+      faStore.updateSelectedActivityStatus(data.festivalActivity);
     },
   );
   live.festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
-    faStore.updateCurrentSelectedActivity(data.festivalTask);
+    faStore.updateSelectedActivityStatus(data.festivalActivity);
   });
   live.festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
-    faStore.updateCurrentSelectedActivity(data.festivalTask);
+    faStore.updateSelectedActivityStatus(data.festivalActivity);
   });
 });
 

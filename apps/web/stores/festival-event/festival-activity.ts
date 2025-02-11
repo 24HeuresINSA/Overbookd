@@ -117,8 +117,13 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       );
     },
 
-    updateCurrentSelectedActivity(activity: FestivalActivity) {
-      this.selectedActivity = activity;
+    updateSelectedActivityStatus(activity: Reviewable) {
+      if (this.selectedActivity.id !== activity.id) return;
+      this.selectedActivity = {
+        ...this.selectedActivity,
+        status: activity.status,
+        reviews: activity.reviews,
+      } as FestivalActivity;
     },
 
     async fetchSecurityPreviews() {
