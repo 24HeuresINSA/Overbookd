@@ -1,5 +1,5 @@
 <template>
-  <div class="task">
+  <div class="ft task">
     <FestivalEventSidebar
       festival-event="FT"
       class="sidebar"
