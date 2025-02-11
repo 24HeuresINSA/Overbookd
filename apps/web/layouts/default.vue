@@ -36,6 +36,10 @@ import {
   FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_IGNORED,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useTheme } from "vuetify";
@@ -68,6 +72,10 @@ onMounted(() => {
     fetchMyRefusedActivities(),
   );
   mine.listen(FESTIVAL_ACTIVITY_APPROVED, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_TASK_REJECTED, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_TASK_APPROVED, () => fetchMyRefusedActivities());
+  mine.listen(FESTIVAL_TASK_IGNORED, () => fetchMyRefusedActivities());
 });
 
 onUnmounted(() => {

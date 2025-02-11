@@ -19,7 +19,7 @@ import {
   type AssignDrive,
   defaultDraft,
   type Draft,
-  previewOf,
+  previewOfActivity,
   type Reviewable,
 } from "@overbookd/festival-event";
 import type {
@@ -88,12 +88,12 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         ({ id }) => activity.id === id,
       );
       if (exists) return;
-      const preview = previewOf(activity);
+      const preview = previewOfActivity(activity);
       this.activities.forAll = [...this.activities.forAll, preview];
     },
 
     updatePreviousPreview(activity: Reviewable) {
-      const preview = previewOf(activity);
+      const preview = previewOfActivity(activity);
       const index = this.activities.forAll.findIndex(
         ({ id }) => id === activity.id,
       );

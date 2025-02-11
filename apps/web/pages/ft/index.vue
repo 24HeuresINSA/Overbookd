@@ -116,11 +116,18 @@ import { FT_URL } from "@overbookd/web-page";
 import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
 import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { useLiveNotification } from "~/composable/useLiveNotification";
+import {
+  FESTIVAL_TASK_CREATED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_IGNORED,
+} from "@overbookd/domain-events";
 
 useHead({ title: "Fiches Tâches" });
 
 const ftStore = useFestivalTaskStore();
-const teamStore = useTeamStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
@@ -142,9 +149,7 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
 
-teamStore.fetchFtReviewers();
 const loading = ref<boolean>(tasks.value.length === 0);
-ftStore.fetchAllTasks().then(() => (loading.value = false));
 
 const isNewTaskDialogOpen = ref<boolean>(false);
 const openNewTaskDialog = () => (isNewTaskDialogOpen.value = true);
@@ -239,6 +244,32 @@ const filteredTasks = computed<PreviewFestivalTask[]>(() => {
 const updateItemsPerPage = (itemsPerPage: number) => {
   updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
 };
+
+const { festivalTasks } = useLiveNotification();
+const { fetchAllTasks, addTaskToPreviews, updatePreviousPreview } = ftStore;
+
+onMounted(() => {
+  fetchAllTasks().then(() => (loading.value = false));
+  festivalTasks.listen(FESTIVAL_TASK_CREATED, ({ data }) => {
+    addTaskToPreviews(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+});
+
+onUnmounted(() => {
+  festivalTasks.stopListening();
+});
 </script>
 
 <style lang="scss" scoped>

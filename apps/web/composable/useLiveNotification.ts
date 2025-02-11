@@ -4,6 +4,11 @@ import {
   FESTIVAL_ACTIVITY_CREATED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
+  FESTIVAL_TASK_CREATED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_IGNORED,
   type HandleEvent,
   addEventListener,
 } from "@overbookd/domain-events";
@@ -11,7 +16,8 @@ import {
 export function useLiveNotification() {
   const mine = buildMineContext();
   const festivalActivities = buildFestivalActivitiesContext();
-  return { mine, festivalActivities };
+  const festivalTasks = buildFestivalTasksContext();
+  return { mine, festivalActivities, festivalTasks };
 }
 
 function generateMineEndpoint() {
@@ -52,6 +58,28 @@ function buildFestivalActivitiesContext() {
   const source = new EventSource(generateEndpoint("festival-activities"));
   return {
     listen<T extends FestivalActivityEvent>(
+      type: T,
+      handler: HandleEvent<T>,
+    ): void {
+      addEventListener(source, type, handler);
+    },
+    stopListening(): void {
+      source.close();
+    },
+  };
+}
+
+type FestivalTaskEvent =
+  | typeof FESTIVAL_TASK_CREATED
+  | typeof FESTIVAL_TASK_READY_TO_REVIEW
+  | typeof FESTIVAL_TASK_REJECTED
+  | typeof FESTIVAL_TASK_APPROVED
+  | typeof FESTIVAL_TASK_IGNORED;
+
+function buildFestivalTasksContext() {
+  const source = new EventSource(generateEndpoint("festival-tasks"));
+  return {
+    listen<T extends FestivalTaskEvent>(
       type: T,
       handler: HandleEvent<T>,
     ): void {
