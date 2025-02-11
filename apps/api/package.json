@@ -42,11 +42,6 @@
     "database:migrate": "npx prisma migrate deploy",
     "database:seed": "npx prisma db seed"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "bcrypt"
-    ]
-  },
   "dependencies": {
     "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/common": "11.0.8",

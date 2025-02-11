@@ -47,6 +47,9 @@
     "node": "22.13.1",
     "pnpm": "10.3.0"
   },
+  "pnpm": {
+    "neverBuiltDependencies": []
+  },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.19.0",
