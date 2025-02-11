@@ -50,13 +50,35 @@ import {
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
+import { useLiveNotification } from "~/composable/useLiveNotification";
+import {
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 
 const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
+const { mine } = useLiveNotification();
+
+onMounted(() => {
+  faStore.fetchMyActivities();
+  mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) =>
+    faStore.updateMyPreview(data.festivalActivity),
+  );
+  mine.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) =>
+    faStore.updateMyPreview(data.festivalActivity),
+  );
+  mine.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) =>
+    faStore.updateMyPreview(data.festivalActivity),
+  );
+});
+
+onUnmounted(() => {
+  mine.stopListening();
+});
 
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
-
-faStore.fetchMyActivities();
 
 const MAX_ACTIVITIES = 5;
 

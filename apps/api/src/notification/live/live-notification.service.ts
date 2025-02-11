@@ -81,6 +81,11 @@ export class LiveNotificationService {
           return festivalActivity.inCharge.adherent.id === userId;
         }),
       ),
+      this.eventStore.festivalActivityApproved.pipe(
+        filter(({ data: { festivalActivity } }) => {
+          return festivalActivity.inCharge.adherent.id === userId;
+        }),
+      ),
       this.eventStore.festivalActivityReadyToReview.pipe(
         filter(({ data: { festivalActivity } }) => {
           return festivalActivity.inCharge.adherent.id === userId;
@@ -98,7 +103,22 @@ export class LiveNotificationService {
           return festivalTask.general.administrator.id === userId;
         }),
       ),
+      this.eventStore.festivalTaskApproved.pipe(
+        filter(({ data: { festivalTask } }) => {
+          return festivalTask.general.administrator.id === userId;
+        }),
+      ),
       this.eventStore.festivalTaskReadyToReview.pipe(
+        filter(({ data: { festivalTask } }) => {
+          return festivalTask.general.administrator.id === userId;
+        }),
+      ),
+      this.eventStore.festivalTaskIgnored.pipe(
+        filter(({ data: { festivalTask } }) => {
+          return festivalTask.general.administrator.id === userId;
+        }),
+      ),
+      this.eventStore.festivalTaskReadyToAssign.pipe(
         filter(({ data: { festivalTask } }) => {
           return festivalTask.general.administrator.id === userId;
         }),

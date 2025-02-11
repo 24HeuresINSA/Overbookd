@@ -30,14 +30,21 @@
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
+import { useLiveNotification } from "~/composable/useLiveNotification";
 import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
+import {
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();
 const configurationStore = useConfigurationStore();
+const live = useLiveNotification();
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
@@ -63,6 +70,31 @@ onMounted(async () => {
 
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
+
+onMounted(async () => {
+  await faStore.fetchActivity(activityIdFromUrl.value);
+  if (selectedActivity.value.id !== activityIdFromUrl.value) {
+    navigateTo(FA_URL);
+    return;
+  }
+
+  const firstTimeWindow = allTimeWindows.value?.at(0);
+  if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
+
+  live.festivalTasks.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+    faStore.updateCurrentSelectedActivity(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    faStore.updateCurrentSelectedActivity(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    faStore.updateCurrentSelectedActivity(data.festivalTask);
+  });
+});
+
+onUnmounted(() => {
+  live.festivalActivities.stopListening();
+});
 
 const publishFeedback = (content: string) => {
   faStore.publishFeedback({ content });
