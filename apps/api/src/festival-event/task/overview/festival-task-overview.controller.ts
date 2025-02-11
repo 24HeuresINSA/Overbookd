@@ -150,6 +150,19 @@ export class FestivalTaskOverviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FT)
+  @Get("my-refusals/count")
+  @ApiResponse({
+    status: 200,
+    description: "Number of refused festival tasks for the user",
+  })
+  getMyRefusedTasksCount(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<number> {
+    return this.statistics.countRefusedTasksByUser(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post()
   @ApiResponse({

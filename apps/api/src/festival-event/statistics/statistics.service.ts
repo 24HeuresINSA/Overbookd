@@ -24,6 +24,10 @@ export class StatisticsService {
     return this.festivalActivities.countRefusalsByUser(userId);
   }
 
+  async countRefusedTasksByUser(userId: number): Promise<number> {
+    return this.festivalTasks.countRefusalsByUser(userId);
+  }
+
   get festivalTask() {
     return this.festivalTasks.byTeams();
   }
