@@ -28,4 +28,9 @@ export class LiveNotificationController {
   festivalActivities(): Observable<DomainEvent> {
     return this.live.festivalActivities();
   }
+
+  @Sse("festival-tasks")
+  festivalTasks(): Observable<DomainEvent> {
+    return this.live.festivalTasks();
+  }
 }

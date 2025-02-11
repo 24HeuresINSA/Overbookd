@@ -25,6 +25,7 @@ export class LiveNotificationService {
       ...this.myPermissionBasedNotifications(permissions),
       ...this.myAccessManagmentNotifications({ teams, id }),
       ...this.myFestivalActivityNotifications(id),
+      ...this.myFestivalTaskNotifications(id),
     );
   }
 
@@ -34,6 +35,17 @@ export class LiveNotificationService {
       this.eventStore.festivalActivityReadyToReview,
       this.eventStore.festivalActivityRejected,
       this.eventStore.festivalActivityApproved,
+    );
+  }
+
+  festivalTasks(): Observable<DomainEvent> {
+    return merge(
+      this.eventStore.festivalTaskCreated,
+      this.eventStore.festivalTaskReadyToReview,
+      this.eventStore.festivalTaskRejected,
+      this.eventStore.festivalTaskApproved,
+      this.eventStore.festivalTaskIgnored,
+      this.eventStore.festivalTaskReadyToAssign,
     );
   }
 
@@ -72,6 +84,23 @@ export class LiveNotificationService {
       this.eventStore.festivalActivityReadyToReview.pipe(
         filter(({ data: { festivalActivity } }) => {
           return festivalActivity.inCharge.adherent.id === userId;
+        }),
+      ),
+    ];
+  }
+
+  private myFestivalTaskNotifications(
+    userId: number,
+  ): Observable<DomainEvent>[] {
+    return [
+      this.eventStore.festivalTaskRejected.pipe(
+        filter(({ data: { festivalTask } }) => {
+          return festivalTask.general.administrator.id === userId;
+        }),
+      ),
+      this.eventStore.festivalTaskReadyToReview.pipe(
+        filter(({ data: { festivalTask } }) => {
+          return festivalTask.general.administrator.id === userId;
         }),
       ),
     ];
