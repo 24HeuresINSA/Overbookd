@@ -81,13 +81,16 @@ onMounted(async () => {
   const firstTimeWindow = allTimeWindows.value?.at(0);
   if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
 
-  live.festivalTasks.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+  live.festivalActivities.listen(
+    FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+    ({ data }) => {
+      faStore.updateCurrentSelectedActivity(data.festivalTask);
+    },
+  );
+  live.festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
     faStore.updateCurrentSelectedActivity(data.festivalTask);
   });
-  live.festivalTasks.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
-    faStore.updateCurrentSelectedActivity(data.festivalTask);
-  });
-  live.festivalTasks.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+  live.festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
     faStore.updateCurrentSelectedActivity(data.festivalTask);
   });
 });
