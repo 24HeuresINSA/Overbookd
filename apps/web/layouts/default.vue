@@ -40,6 +40,7 @@ import {
   FESTIVAL_TASK_READY_TO_REVIEW,
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useTheme } from "vuetify";
@@ -60,6 +61,8 @@ const userStore = useUserStore();
 const { refreshTokens } = useAuthStore();
 const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
   useNavigationBadgeStore();
+const faStore = useFestivalActivityStore();
+const ftStore = useFestivalTaskStore();
 
 onMounted(() => {
   theme.global.name.value = pickDefaultTheme();
@@ -68,15 +71,37 @@ onMounted(() => {
   mine.listen(TEAMS_JOINED, () => refreshTokens());
   mine.listen(TEAM_LEFT, () => refreshTokens());
   mine.listen(CANDIDATE_ENROLLED, () => refreshTokens());
-  mine.listen(FESTIVAL_ACTIVITY_REJECTED, () => fetchMyRefusedActivities());
-  mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, () =>
-    fetchMyRefusedActivities(),
+  mine.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    faStore.updateMyPreview(data.festivalActivity);
+    fetchMyRefusedActivities();
+  });
+  mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+    faStore.updateMyPreview(data.festivalActivity);
+    fetchMyRefusedActivities();
+  });
+  mine.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    faStore.updateMyPreview(data.festivalActivity);
+    fetchMyRefusedActivities();
+  });
+  mine.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+    ftStore.updateMyPreview(data.festivalTask);
+    fetchMyRefusedTasks();
+  });
+  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+    ftStore.updateMyPreview(data.festivalTask);
+    fetchMyRefusedTasks();
+  });
+  mine.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+    ftStore.updateMyPreview(data.festivalTask);
+    fetchMyRefusedTasks();
+  });
+  mine.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    ftStore.updateMyPreview(data.festivalTask);
+    fetchMyRefusedTasks();
+  });
+  mine.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) =>
+    ftStore.updateMyPreview(data.festivalTask),
   );
-  mine.listen(FESTIVAL_ACTIVITY_APPROVED, () => fetchMyRefusedActivities());
-  mine.listen(FESTIVAL_TASK_REJECTED, () => fetchMyRefusedTasks());
-  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, () => fetchMyRefusedTasks());
-  mine.listen(FESTIVAL_TASK_APPROVED, () => fetchMyRefusedTasks());
-  mine.listen(FESTIVAL_TASK_IGNORED, () => fetchMyRefusedTasks());
 });
 
 onUnmounted(() => {

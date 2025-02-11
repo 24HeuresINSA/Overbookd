@@ -50,43 +50,13 @@ import {
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
-import { useLiveNotification } from "~/composable/useLiveNotification";
-import {
-  FESTIVAL_TASK_APPROVED,
-  FESTIVAL_TASK_READY_TO_REVIEW,
-  FESTIVAL_TASK_REJECTED,
-  FESTIVAL_TASK_IGNORED,
-  FESTIVAL_TASK_READY_TO_ASSIGN,
-} from "@overbookd/domain-events";
 
 const userStore = useUserStore();
 const ftStore = useFestivalTaskStore();
-const { mine } = useLiveNotification();
-
-onMounted(() => {
-  ftStore.fetchMyTasks();
-  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalActivity),
-  );
-  mine.listen(FESTIVAL_TASK_REJECTED, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalActivity),
-  );
-  mine.listen(FESTIVAL_TASK_APPROVED, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalActivity),
-  );
-  mine.listen(FESTIVAL_TASK_IGNORED, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalActivity),
-  );
-  mine.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalActivity),
-  );
-});
-
-onUnmounted(() => {
-  mine.stopListening();
-});
 
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
+
+ftStore.fetchMyTasks();
 
 const MAX_TASKS = 5;
 
