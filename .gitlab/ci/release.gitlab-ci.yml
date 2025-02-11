@@ -19,4 +19,5 @@ overbookd/release:
     - !reference [.setup-pnpm, before_script]
     - pnpm install
   script:
+    - git checkout -b main ssh_origin/main
     - npx semantic-release
