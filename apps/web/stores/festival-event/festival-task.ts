@@ -125,6 +125,22 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       this.tasks.forAll = updateItemToList(this.tasks.forAll, index, preview);
     },
 
+    updateMyPreview(task: FestivalTaskReviewable) {
+      const preview = previewOfTask(task);
+      const index = this.tasks.mine.findIndex(({ id }) => id === task.id);
+      if (index === -1) return;
+      this.tasks.mine = updateItemToList(this.tasks.mine, index, preview);
+    },
+
+    updateSelectedTaskStatus(task: FestivalTaskReviewable) {
+      if (this.selectedTask.id !== task.id) return;
+      this.selectedTask = {
+        ...this.selectedTask,
+        status: task.status,
+        reviews: task.reviews,
+      } as FestivalTaskWithConflicts;
+    },
+
     /* CREATE */
     async create(form: FestivalTaskCreationForm) {
       this.selectedTask = fakeTask;

@@ -54,10 +54,19 @@ import {
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { FT_URL } from "@overbookd/web-page";
+import { useLiveNotification } from "~/composable/useLiveNotification";
+import {
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
+} from "@overbookd/domain-events";
 
 const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
+const live = useLiveNotification();
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const taskIdFromUrl = computed<number>(() => +route.params.id);
@@ -67,15 +76,35 @@ const headTitle = computed<string>(() => {
   return `FT ${taskIdFromUrl.value}${displayedName}`;
 });
 
+useHead({ title: headTitle.value });
+watch(name, () => (document.title = headTitle.value));
+
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
   if (selectedTask.value.id !== taskIdFromUrl.value) {
     navigateTo(FT_URL);
+    return;
   }
+  live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
+  });
+  live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
+    ftStore.updateSelectedTaskStatus(data.festivalTask);
+  });
 });
 
-useHead({ title: headTitle.value });
-watch(name, () => (document.title = headTitle.value));
+onUnmounted(() => {
+  live.festivalTasks.stopListening();
+});
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSidebar = () => {

@@ -104,6 +104,28 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       );
     },
 
+    updateMyPreview(activity: Reviewable) {
+      const preview = previewOfActivity(activity);
+      const index = this.activities.mine.findIndex(
+        ({ id }) => id === activity.id,
+      );
+      if (index === -1) return;
+      this.activities.mine = updateItemToList(
+        this.activities.mine,
+        index,
+        preview,
+      );
+    },
+
+    updateSelectedActivityStatus(activity: Reviewable) {
+      if (this.selectedActivity.id !== activity.id) return;
+      this.selectedActivity = {
+        ...this.selectedActivity,
+        status: activity.status,
+        reviews: activity.reviews,
+      } as FestivalActivity;
+    },
+
     async fetchSecurityPreviews() {
       const res = await repo.getSecurityPreviews();
       if (isHttpError(res)) return;
