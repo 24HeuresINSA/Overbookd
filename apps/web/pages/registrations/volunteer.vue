@@ -45,27 +45,27 @@
           <v-btn
             v-if="!displayRejectedCandidates"
             icon="mdi-check"
-            size="small"
+            size="large"
             variant="flat"
             @click="enrollCandidate(item)"
           />
           <v-btn
             icon="mdi-account-details"
-            size="small"
+            size="large"
             variant="flat"
             @click="openCandidateInfoDialogue(item)"
           />
           <v-btn
             v-if="!displayRejectedCandidates"
             icon="mdi-trash-can-outline"
-            size="small"
+            size="large"
             variant="flat"
             @click="rejectCandidate(item.id)"
           />
           <v-btn
             v-else
             icon="mdi-undo"
-            size="small"
+            size="large"
             variant="flat"
             @click="cancelCandidateRejection(item.id)"
           />
@@ -89,7 +89,7 @@
     <VolunteerInformationDialogCard
       v-if="selectedUser"
       :volunteer="selectedUser"
-      :hide-delete-button="true"
+      hide-delete-button
       @close="closeCandidateInfoDialogue"
     >
       <template #additional-actions>
@@ -110,14 +110,14 @@
           v-if="!displayRejectedCandidates"
           text="Rejeter la candidature"
           color="error"
-          size="small"
+          size="large"
           @click="selectedCandidate && rejectCandidate(selectedCandidate.id)"
         />
         <v-btn
           v-else
           text="Restaurer la candidature"
           color="secondary"
-          size="small"
+          size="large"
           @click="
             selectedCandidate && cancelCandidateRejection(selectedCandidate.id)
           "
