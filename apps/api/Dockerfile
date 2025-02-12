@@ -3,38 +3,23 @@ FROM node:22.13.1-alpine AS installer
 WORKDIR /overbookd
 
 RUN npm install -g pnpm@10.3.0
-COPY pnpm-lock.yaml ./
+COPY pnpm-lock.yaml package.json ./
 
 RUN pnpm fetch
 
 COPY pnpm-workspace.yaml ./
-COPY package.json ./
 
-WORKDIR /overbookd/apps/api
-COPY apps/api/ ./
+COPY apps/api/ ./apps/api
+COPY libraries/ ./libraries
+COPY domains/ ./domains
+COPY constants/ ./constants
+COPY utils/ ./utils
 
-WORKDIR /overbookd/libraries
-COPY libraries/ ./
-
-WORKDIR /overbookd/domains
-COPY domains/ ./
-
-WORKDIR /overbookd/constants
-COPY constants/ ./
-
-WORKDIR /overbookd/utils
-COPY utils/ ./
-
-WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 
 FROM installer AS builder
 
-COPY tsconfig.cross-modules-import.json ./
-COPY tsconfig.build.json ./
-COPY tsconfig.package.json ./
-COPY tsconfig.all-modules-import.json ./
-COPY tsconfig.json ./
+COPY tsconfig.cross-modules-import.json tsconfig.build.json tsconfig.package.json tsconfig.all-modules-import.json tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
 RUN pnpm install --prod --recursive --offline --filter '@overbookd/api...'
