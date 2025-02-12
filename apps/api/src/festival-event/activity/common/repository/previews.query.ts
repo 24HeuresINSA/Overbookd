@@ -1,6 +1,7 @@
 import { APPROVED, FestivalActivity, secu } from "@overbookd/festival-event";
 import { VALIDATED, IN_REVIEW } from "@overbookd/festival-event-constants";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   id: true,
@@ -33,7 +34,7 @@ export const SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD = {
   categories: true,
 };
 
-export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
+export const SELECT_PREVIEW_FOR_LOGISTIC = {
   id: true,
   name: true,
   status: true,
@@ -63,7 +64,24 @@ export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
   },
 };
 
-export const SHOULD_BE_IN_LOGISTIC_DASHBOARD = {
-  isDeleted: false,
+export const SELECT_PREVIEW_FOR_SIGNA = {
+  id: true,
+  name: true,
+  team: { select: { name: true } },
+  location: { select: { name: true } },
+  signages: {
+    select: {
+      quantity: true,
+      text: true,
+      size: true,
+      type: true,
+      comment: true,
+      catalogItem: { select: { name: true } },
+    },
+  },
+};
+
+export const SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW = {
+  ...IS_NOT_DELETED,
   status: { in: [VALIDATED, IN_REVIEW] as FestivalActivity["status"][] },
 };

@@ -12,7 +12,6 @@ export type {
   PreviewForSecurity,
   PreviewForCommunication,
   LogisticInquiry,
-  PreviewForLogistic,
 } from "./festival-event/festival-activity.js";
 export type {
   Statistics,

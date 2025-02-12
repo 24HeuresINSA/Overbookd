@@ -3,12 +3,10 @@ import {
   PrepareFestivalActivity,
   PreviewFestivalActivity as PreviewForAll,
 } from "@overbookd/festival-event";
-import {
-  PreviewForSecurity,
-  PreviewForCommunication,
-  PreviewForLogistic,
-} from "@overbookd/http";
+import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
+import { PreviewForSigna } from "./signa-preview";
+import { PreviewForLogistic } from "./logistic-preview";
 
 @Injectable()
 export class FestivalActivityPreviewService {
@@ -35,5 +33,9 @@ export class FestivalActivityPreviewService {
 
   findForLogistic(): Promise<PreviewForLogistic[]> {
     return this.previews.forLogistic();
+  }
+
+  findForSigna(): Promise<PreviewForSigna[]> {
+    return this.previews.forSigna();
   }
 }

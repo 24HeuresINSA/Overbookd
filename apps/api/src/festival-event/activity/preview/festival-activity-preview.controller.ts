@@ -23,9 +23,7 @@ import { PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
   PreviewForSecurity,
   PreviewForCommunication,
-  JSON,
   CSV,
-  PreviewForLogistic,
 } from "@overbookd/http";
 import { READ_FA } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
@@ -40,9 +38,9 @@ import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-rev
 import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft-festival-activity.response.dto";
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
 import { RequestWithUserPayload } from "../../../app.controller";
-import { LogisticPreview } from "./logistic-preview";
-import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview-festival-activity.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { LogisticPreview } from "./logistic-preview";
+import { SignaPreview } from "./signa-preview";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -141,20 +139,47 @@ export class FestivalActivityPreviewController {
   @Get("for-logistic")
   @ApiResponse({
     status: 200,
-    description: "All festival activities",
-    type: PreviewForLogisticResponseDto,
-    isArray: true,
+    description: "All inquiries from festival activities",
   })
-  @ApiProduces(JSON, CSV)
+  @ApiProduces(CSV)
   async findAllForLogistic(
     @Request() request: RequestWithUserPayload,
     @Res() response: Response,
-  ): Promise<PreviewForLogistic[]> {
+  ) {
     const format = request.headers.accept;
     try {
       const preview = await this.previewService.findForLogistic();
       response.setHeader("content-type", format);
-      response.send(LogisticPreview.withFormat(format).format(preview));
+      response.send(LogisticPreview.toCsv(preview));
+      return;
+    } catch (e) {
+      this.logger.error(e);
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      response.status(500).send(e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @ApiBearerAuth()
+  @Get("for-signa")
+  @ApiResponse({
+    status: 200,
+    description: "All signages from festival activities",
+  })
+  @ApiProduces(CSV)
+  async findAllForSigna(
+    @Request() request: RequestWithUserPayload,
+    @Res() response: Response,
+  ) {
+    const format = request.headers.accept;
+    try {
+      const preview = await this.previewService.findForSigna();
+      response.setHeader("content-type", format);
+      response.send(SignaPreview.toCsv(preview));
       return;
     } catch (e) {
       this.logger.error(e);

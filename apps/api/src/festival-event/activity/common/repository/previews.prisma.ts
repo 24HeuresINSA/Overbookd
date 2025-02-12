@@ -1,9 +1,5 @@
 import { Drive, PreviewFestivalActivity } from "@overbookd/festival-event";
-import {
-  PreviewForCommunication,
-  PreviewForLogistic,
-  PreviewForSecurity,
-} from "@overbookd/http";
+import { PreviewForCommunication, PreviewForSecurity } from "@overbookd/http";
 import { Previews } from "../festival-activity-common.model";
 import { PrismaService } from "../../../../prisma.service";
 import {
@@ -11,12 +7,15 @@ import {
   SELECT_PREVIEW_FOR_SECURITY_DASHBOARD,
   IS_PUBLIC,
   SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD,
-  SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
-  SHOULD_BE_IN_LOGISTIC_DASHBOARD,
+  SELECT_PREVIEW_FOR_LOGISTIC,
+  SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+  SELECT_PREVIEW_FOR_SIGNA,
 } from "./previews.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
+import { PreviewForLogistic } from "../../preview/logistic-preview";
+import { PreviewForSigna } from "../../preview/signa-preview";
 
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}
@@ -68,8 +67,8 @@ export class PrismaPreviews implements Previews {
 
   async forLogistic(): Promise<PreviewForLogistic[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({
-      where: SHOULD_BE_IN_LOGISTIC_DASHBOARD,
-      select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
+      where: SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+      select: SELECT_PREVIEW_FOR_LOGISTIC,
     });
 
     return fromDatabase.map((activity) => ({
@@ -88,6 +87,28 @@ export class PrismaPreviews implements Previews {
           isPonctualUsage: inquiry.catalogItem.isPonctualUsage,
           category: inquiry.catalogItem.category,
         },
+      })),
+    }));
+  }
+
+  async forSigna(): Promise<PreviewForSigna[]> {
+    const fromDatabase = await this.prisma.festivalActivity.findMany({
+      where: SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+      select: SELECT_PREVIEW_FOR_SIGNA,
+    });
+
+    return fromDatabase.map((activity) => ({
+      id: activity.id,
+      name: activity.name,
+      team: activity.team.name,
+      location: activity.location.name,
+      signages: activity.signages.map((signage) => ({
+        quantity: signage.quantity,
+        text: signage.text,
+        size: signage.size,
+        type: signage.type,
+        comment: signage.comment,
+        catalogName: signage.catalogItem.name,
       })),
     }));
   }
