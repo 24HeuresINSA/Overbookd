@@ -20,7 +20,10 @@
       <DialogCard without-actions @close="closeCalendar">
         <template #title> Créneaux de l'activité </template>
         <template #content>
-          <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
+          <OverCalendar
+            v-model="calendarMarker"
+            :events="allTimeWindowEvents"
+          />
         </template>
       </DialogCard>
     </v-dialog>
@@ -64,7 +67,7 @@ onMounted(async () => {
     navigateTo(FA_URL);
   }
 
-  const firstTimeWindow = allTimeWindows.value?.at(0);
+  const firstTimeWindow = allTimeWindowEvents.value?.at(0);
   if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
 });
 
@@ -78,7 +81,7 @@ onMounted(async () => {
     return;
   }
 
-  const firstTimeWindow = allTimeWindows.value?.at(0);
+  const firstTimeWindow = allTimeWindowEvents.value?.at(0);
   if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
 
   live.festivalActivities.listen(
@@ -107,7 +110,7 @@ const isCalendarDialogOpen = ref<boolean>(false);
 const openCalendar = () => (isCalendarDialogOpen.value = true);
 const closeCalendar = () => (isCalendarDialogOpen.value = false);
 
-const allTimeWindows = computed<CalendarEvent[]>(() => {
+const allTimeWindowEvents = computed<CalendarEvent[]>(() => {
   const generalTimeWindows = selectedActivity.value.general.timeWindows;
   const generalEvents = generalTimeWindows.map(({ start, end }) => {
     const event = { start, end, name: "Animation", color: "primary" };

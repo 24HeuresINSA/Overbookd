@@ -35,6 +35,7 @@
     <h3 class="period-indicator capitalize">
       {{ day.displayableMonthWithYear }}
     </h3>
+    <slot name="additional-actions" />
   </div>
 </template>
 
@@ -85,7 +86,7 @@ const propagateNext = () => emit("next");
 <style lang="scss" scoped>
 .calendar-manager {
   display: flex;
-  gap: 5px;
+  gap: 15px;
   align-items: center;
   flex-wrap: wrap;
   justify-content: left;

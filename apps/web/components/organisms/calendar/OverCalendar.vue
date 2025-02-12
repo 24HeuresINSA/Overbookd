@@ -12,7 +12,11 @@
         :day-mode="isDayMode"
         @previous="moveToPreviousWeekOrDay"
         @next="moveToNextWeekOrDay"
-      />
+      >
+        <template #additional-actions>
+          <slot name="additional-actions" />
+        </template>
+      </CalendarManager>
     </slot>
     <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
       <div class="empty-case" />

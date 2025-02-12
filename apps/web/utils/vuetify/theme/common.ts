@@ -10,6 +10,8 @@ export const ERROR = "#ED1D45";
 export const WHITE = "#FFFFFF";
 export const BLACK = "#2A2A2A";
 
+export const READY_TO_ASSIGN_COLOR = "#673AB7";
+
 export const mainColors = {
   blue: BLUE_24,
   yellow: YELLOW_24,
