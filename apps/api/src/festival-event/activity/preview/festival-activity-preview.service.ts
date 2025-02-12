@@ -5,8 +5,8 @@ import {
 } from "@overbookd/festival-event";
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
-import { PreviewForSigna } from "./signa-preview";
-import { PreviewForLogistic } from "./logistic-preview";
+import { SignaPreview } from "./signa-preview";
+import { LogisticPreview } from "./logistic-preview";
 
 @Injectable()
 export class FestivalActivityPreviewService {
@@ -31,11 +31,13 @@ export class FestivalActivityPreviewService {
     return this.previews.forCommunication();
   }
 
-  findForLogistic(): Promise<PreviewForLogistic[]> {
-    return this.previews.forLogistic();
+  async findForLogisticInCsv(): Promise<string> {
+    const previews = await this.previews.forLogistic();
+    return LogisticPreview.toCsv(previews);
   }
 
-  findForSigna(): Promise<PreviewForSigna[]> {
-    return this.previews.forSigna();
+  async findForSignaInCsv(): Promise<string> {
+    const previews = await this.previews.forSigna();
+    return SignaPreview.toCsv(previews);
   }
 }

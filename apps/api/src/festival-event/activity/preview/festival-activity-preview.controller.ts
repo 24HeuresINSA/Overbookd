@@ -39,8 +39,6 @@ import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft-fes
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
 import { RequestWithUserPayload } from "../../../app.controller";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
-import { LogisticPreview } from "./logistic-preview";
-import { SignaPreview } from "./signa-preview";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -146,11 +144,10 @@ export class FestivalActivityPreviewController {
     @Request() request: RequestWithUserPayload,
     @Res() response: Response,
   ) {
-    const format = request.headers.accept;
     try {
-      const preview = await this.previewService.findForLogistic();
-      response.setHeader("content-type", format);
-      response.send(LogisticPreview.toCsv(preview));
+      response.setHeader("content-type", request.headers.accept);
+      const csv = await this.previewService.findForLogisticInCsv();
+      response.send(csv);
       return;
     } catch (e) {
       this.logger.error(e);
@@ -175,11 +172,10 @@ export class FestivalActivityPreviewController {
     @Request() request: RequestWithUserPayload,
     @Res() response: Response,
   ) {
-    const format = request.headers.accept;
     try {
-      const preview = await this.previewService.findForSigna();
-      response.setHeader("content-type", format);
-      response.send(SignaPreview.toCsv(preview));
+      response.setHeader("content-type", request.headers.accept);
+      const csv = await this.previewService.findForSignaInCsv();
+      response.send(csv);
       return;
     } catch (e) {
       this.logger.error(e);
