@@ -59,6 +59,12 @@
       "vue-demi"
     ]
   },
+  "scarfSettings": {
+    "enabled": false,
+    "allowTopLevel": false,
+    "defaultOptIn": false,
+    "skipTraversal": false
+  },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.19.0",
