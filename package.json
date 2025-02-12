@@ -60,10 +60,7 @@
     ]
   },
   "scarfSettings": {
-    "enabled": false,
-    "allowTopLevel": false,
-    "defaultOptIn": false,
-    "skipTraversal": false
+    "enabled": false
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.2.0",
