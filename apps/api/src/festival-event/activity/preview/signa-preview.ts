@@ -1,11 +1,11 @@
-import { FestivalActivity } from "@overbookd/festival-event";
+import { BaseSignage, FestivalActivity } from "@overbookd/festival-event";
 
 export type PreviewForSigna = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];
   team: FestivalActivity["inCharge"]["team"];
-  location: FestivalActivity["signa"]["location"];
-  signages: FestivalActivity["signa"]["signages"];
+  locationName: FestivalActivity["signa"]["location"]["name"];
+  signages: (BaseSignage & { catalogName?: string })[];
 };
 
 export class SignaPreview {
@@ -29,8 +29,8 @@ export class SignaPreview {
           preview.id,
           preview.name,
           preview.team,
-          preview.location?.name ?? "",
-          signage.catalogItem?.name ?? "",
+          preview.locationName ?? "",
+          signage.catalogName ?? "",
           signage.type,
           signage.quantity,
           signage.text,

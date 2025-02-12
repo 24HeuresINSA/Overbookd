@@ -52,16 +52,20 @@ const SELECT_IN_CHARGE = {
   },
 };
 
+export const SELECT_BASE_SIGNAGE = {
+  id: true,
+  quantity: true,
+  text: true,
+  size: true,
+  type: true,
+  comment: true,
+};
+
 const SELECT_SIGNA = {
   location: { select: SELECT_LOCATION },
   signages: {
     select: {
-      id: true,
-      quantity: true,
-      text: true,
-      size: true,
-      type: true,
-      comment: true,
+      ...SELECT_BASE_SIGNAGE,
       catalogItem: {
         select: SELECT_CATALOG_SIGNAGE,
       },

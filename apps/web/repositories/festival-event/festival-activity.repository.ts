@@ -68,6 +68,12 @@ export class FestivalActivityRepository {
     });
   }
 
+  static getCSVSignaPreviews() {
+    return HttpClient.get<string>(`${this.basePath}/for-signa`, {
+      acceptedType: CSV,
+    });
+  }
+
   static getOne(id: FestivalActivity["id"]) {
     return HttpClient.get<FestivalActivity>(`${this.basePath}/${id}`);
   }

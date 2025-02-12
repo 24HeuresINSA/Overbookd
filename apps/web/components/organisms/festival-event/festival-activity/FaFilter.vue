@@ -47,12 +47,11 @@
       <v-btn
         v-if="canViewSecurityDashboard"
         prepend-icon="mdi-security"
-        color="tertiary"
+        color="secondary"
         text="Récapitulatif Sécurité"
         class="desktop-only page-button"
         @click="openSecurityDashboard"
       />
-
       <v-btn
         v-if="canViewAnimationsToPublish"
         prepend-icon="mdi-web-sync"
@@ -60,6 +59,16 @@
         text="Animations à publier"
         class="desktop-only page-button"
         @click="openAnimationsToPublish"
+      />
+
+      <v-btn
+        v-if="canViewAnimationsToPublish"
+        prepend-icon="mdi-sign-direction"
+        color="tertiary"
+        text="Export Signa"
+        :loading="signaExportLoading"
+        class="desktop-only page-button"
+        @click="exportSignaCsv"
       />
     </template>
   </FestivalEventFilterCard>
@@ -91,10 +100,12 @@ import {
 } from "@overbookd/permission";
 import { LOG_ELEC_CODE } from "@overbookd/team-constants";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
+import { download } from "~/utils/file/download.utils";
 
 const route = useRoute();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
+const faStore = useFestivalActivityStore();
 
 const filters = defineModel<ActivityFilters>({ required: true });
 const updateFilters = () => {
@@ -149,6 +160,15 @@ const hasLogElecTeam = computed<boolean>(() => {
 });
 const updateNeedSupply = (needSupply: boolean | null) => {
   updateQueryParams(NEED_SUPPLY_QUERY_PARAM, !!needSupply);
+};
+
+const signaExportLoading = ref<boolean>(false);
+const exportSignaCsv = async () => {
+  signaExportLoading.value = true;
+  await faStore.fetchSignaPreviews();
+  const csv = faStore.activities.forSigna.csv;
+  if (csv) download("export-signa.csv", csv);
+  signaExportLoading.value = false;
 };
 </script>
 

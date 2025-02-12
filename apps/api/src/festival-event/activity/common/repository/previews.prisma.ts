@@ -8,8 +8,9 @@ import {
   IS_PUBLIC,
   SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD,
   SELECT_PREVIEW_FOR_LOGISTIC,
-  SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+  SHOULD_BE_IN_LOGISTIC_PREVIEW,
   SELECT_PREVIEW_FOR_SIGNA,
+  SHOULD_BE_IN_SIGNA_PREVIEW,
 } from "./previews.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
@@ -67,7 +68,7 @@ export class PrismaPreviews implements Previews {
 
   async forLogistic(): Promise<PreviewForLogistic[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({
-      where: SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+      where: SHOULD_BE_IN_LOGISTIC_PREVIEW,
       select: SELECT_PREVIEW_FOR_LOGISTIC,
     });
 
@@ -93,7 +94,7 @@ export class PrismaPreviews implements Previews {
 
   async forSigna(): Promise<PreviewForSigna[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({
-      where: SHOULD_BE_IN_LOGISTIC_OR_SIGNA_PREVIEW,
+      where: SHOULD_BE_IN_SIGNA_PREVIEW,
       select: SELECT_PREVIEW_FOR_SIGNA,
     });
 
@@ -101,14 +102,10 @@ export class PrismaPreviews implements Previews {
       id: activity.id,
       name: activity.name,
       team: activity.team.name,
-      location: activity.location.name,
+      locationName: activity.location.name,
       signages: activity.signages.map((signage) => ({
-        quantity: signage.quantity,
-        text: signage.text,
-        size: signage.size,
-        type: signage.type,
-        comment: signage.comment,
-        catalogName: signage.catalogItem.name,
+        ...signage,
+        catalogName: signage.catalogItem?.name ?? "",
       })),
     }));
   }
