@@ -1,3 +1,9 @@
+## [3.32.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.0...v3.32.1) (2025-02-12)
+
+### Bug Fixes
+
+* **ft:** display volunteer chips color in mobilizations & increase instructions border width when unsaved [#2392](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2392) ([0e57072](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0e57072bb60284dc227736fe48714f922a506105))
+
 ## [3.32.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.31.0...v3.32.0) (2025-02-11)
 
 ### Features
