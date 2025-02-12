@@ -59,7 +59,7 @@
             />
             <v-switch
               v-model="displayMobilizationEvents"
-              color="rgb(103, 58, 183)"
+              :color="READY_TO_ASSIGN_COLOR"
               label="Mobilisations"
             />
           </template>
