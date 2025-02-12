@@ -1,3 +1,10 @@
+## [3.32.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.1...v3.32.2) (2025-02-12)
+
+### Bug Fixes
+
+* **docker:** add package.json to run pre script ([e228d35](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e228d35f88056ded30f8a31894fcd81e408113d6))
+* **ft:** add calendar dialog [#2198](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2198) ([6e1bc80](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e1bc80737ed4625a51258e689233bb31241c395))
+
 ## [3.32.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.0...v3.32.1) (2025-02-12)
 
 ### Bug Fixes
