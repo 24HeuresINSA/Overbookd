@@ -47,9 +47,9 @@ const isAlreadyAssigned = computed<boolean>(
 );
 
 const volunteerStatus = computed<string>(() => {
-  if (isAlreadyAssigned.value) return "conflict-already-assigned";
-  if (isAlsoRequested.value) return "conflict-also-requested-by-ft-color";
-  if (isNotAvailable.value) return "conflict-not-available-for-ft-color";
+  if (isAlreadyAssigned.value) return "already-assigned";
+  if (isAlsoRequested.value) return "also-requested-by-ft";
+  if (isNotAvailable.value) return "not-available";
   return "";
 });
 

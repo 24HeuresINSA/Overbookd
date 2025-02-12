@@ -12,7 +12,7 @@
     <v-btn
       v-if="canForceInstruction"
       text="Sauvegarde forcée"
-      color="primary"
+      color="secondary"
       :disabled="!unsaved"
       @click="forceSave"
     />
@@ -75,7 +75,6 @@ const forceSave = () => emit("force-save", modifiedInstructions.value);
 }
 
 .actions {
-  margin-right: 10px;
   display: flex;
   gap: 25px;
   justify-content: right;

@@ -1,5 +1,5 @@
 <template>
-  <div class="activity">
+  <div class="fa activity">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container">
       <FaGeneralCard id="general" @open:calendar="openCalendar" />

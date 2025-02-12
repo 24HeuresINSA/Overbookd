@@ -157,48 +157,46 @@
 }
 
 .ft {
-  .volunteer-request {
-    .v-chip {
-      &.also-requested-by-ft {
-        background-color: $conflict-also-requested-by-ft-color;
+  .v-chip {
+    &.also-requested-by-ft {
+      background-color: $conflict-also-requested-by-ft-color;
+      color: white;
+
+      .v-icon {
         color: white;
-
-        .v-icon {
-          color: white;
-        }
-
-        &.v-chip--clickable:hover {
-          background-color: color.adjust($color: $conflict-also-requested-by-ft-color,
-              $lightness: -5%);
-        }
       }
 
-      &.not-available {
-        background-color: $conflict-not-available-for-ft-color;
+      &.v-chip--clickable:hover {
+        background-color: color.adjust($color: $conflict-also-requested-by-ft-color,
+            $lightness: -5%);
+      }
+    }
+
+    &.not-available {
+      background-color: $conflict-not-available-for-ft-color;
+      color: black;
+
+      .v-icon {
         color: black;
-
-        .v-icon {
-          color: black;
-        }
-
-        &.v-chip--clickable:hover {
-          background-color: color.adjust($color: $conflict-not-available-for-ft-color,
-              $lightness: -5%);
-        }
       }
 
-      &.already-assigned {
-        background-color: $conflict-already-assigned;
+      &.v-chip--clickable:hover {
+        background-color: color.adjust($color: $conflict-not-available-for-ft-color,
+            $lightness: -5%);
+      }
+    }
+
+    &.already-assigned {
+      background-color: $conflict-already-assigned;
+      color: white;
+
+      .v-icon {
         color: white;
+      }
 
-        .v-icon {
-          color: white;
-        }
-
-        &.v-chip--clickable:hover {
-          background-color: color.adjust($color: $conflict-already-assigned,
-              $lightness: -5%);
-        }
+      &.v-chip--clickable:hover {
+        background-color: color.adjust($color: $conflict-already-assigned,
+            $lightness: -5%);
       }
     }
   }
