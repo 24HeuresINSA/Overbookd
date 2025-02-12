@@ -102,7 +102,6 @@
     "@nestjs/cli": "11.0.2",
     "@nestjs/schematics": "11.0.0",
     "@nestjs/testing": "11.0.8",
-    "@types/bcrypt": "5.0.2",
     "@types/express": "5.0.0",
     "@types/html-to-pdfmake": "2.4.4",
     "@types/jest": "29.5.14",
@@ -152,6 +151,6 @@
   },
   "engines": {
     "node": "22.13.1",
-    "pnpm": "9.15.5"
+    "pnpm": "10.3.0"
   }
 }

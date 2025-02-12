@@ -14,4 +14,3 @@
     - git remote remove ssh_origin || true # Local repo state may be cached
     - git remote add ssh_origin "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
     - git fetch --all
-    - git checkout -b main ssh_origin/main
