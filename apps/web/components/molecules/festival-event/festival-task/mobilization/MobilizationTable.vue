@@ -71,14 +71,14 @@
             icon="mdi-clock-edit"
             :disabled="disabled"
             size="small"
-            density="comfortable"
+            variant="flat"
             @click="openUpdateDialog(item)"
           />
           <v-btn
             icon="mdi-trash-can"
             :disabled="disabled"
             size="small"
-            density="comfortable"
+            variant="flat"
             @click="removeMobilization(item)"
           />
         </div>

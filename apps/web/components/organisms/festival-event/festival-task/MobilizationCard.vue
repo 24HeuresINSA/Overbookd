@@ -1,6 +1,15 @@
 <template>
   <v-card>
-    <v-card-title> Mobilisations </v-card-title>
+    <div class="title">
+      <v-card-title> Mobilisations </v-card-title>
+      <v-btn
+        icon="mdi-calendar-blank"
+        color="secondary"
+        rounded="pill"
+        density="comfortable"
+        @click="openCalendar"
+      />
+    </div>
     <v-card-text>
       <MobilizationTable
         :disabled="disabled"
@@ -28,6 +37,9 @@ defineProps({
   },
 });
 
+const emit = defineEmits(["open:calendar"]);
+const openCalendar = () => emit("open:calendar");
+
 const addMobilization = (mobilization: AddMobilizationForm) => {
   ftStore.addMobilization(mobilization);
 };
@@ -41,3 +53,11 @@ const removeMobilization = (mobilization: Mobilization) => {
   ftStore.removeMobilization(mobilization.id);
 };
 </script>
+
+<style scoped>
+.title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+</style>

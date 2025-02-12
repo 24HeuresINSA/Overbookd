@@ -42,11 +42,9 @@ const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
 };
 
-const presenter = new CalendarEventPresenter(
-  props.event,
-  props.day,
-  props.among,
-);
+const presenter = computed<CalendarEventPresenter>(() => {
+  return new CalendarEventPresenter(props.event, props.day, props.among);
+});
 </script>
 
 <style lang="scss" scoped>

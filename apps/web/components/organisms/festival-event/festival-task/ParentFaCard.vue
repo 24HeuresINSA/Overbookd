@@ -14,14 +14,32 @@
       </NuxtLink>
 
       <span v-show="activity.location">
-        <v-icon>mdi-map</v-icon>
+        <v-icon>mdi-map-marker-radius</v-icon>
         {{ activity.location?.name }}
       </span>
 
-      <h3>Déroulement de l'activité</h3>
+      <div class="time-windows-title">
+        <h3>Créneaux de l'activité</h3>
+        <v-btn
+          icon="mdi-calendar-blank"
+          color="secondary"
+          rounded="pill"
+          density="comfortable"
+          @click="openCalendar"
+        />
+      </div>
       <FaTimeWindowTable :time-windows="activity.timeWindows" disabled />
 
-      <h3>Demandes de matos</h3>
+      <div class="time-windows-title">
+        <h3>Demandes de matos</h3>
+        <v-btn
+          icon="mdi-calendar-blank"
+          color="secondary"
+          rounded="pill"
+          density="comfortable"
+          @click="openCalendar"
+        />
+      </div>
       <FaTimeWindowTable
         :time-windows="activity.inquiry.timeWindows"
         disabled
@@ -45,6 +63,9 @@ const ftStore = useFestivalTaskStore();
 const activity = computed<FestivalTask["festivalActivity"]>(
   () => ftStore.selectedTask.festivalActivity,
 );
+
+const emit = defineEmits(["open:calendar"]);
+const openCalendar = () => emit("open:calendar");
 </script>
 
 <style lang="scss" scoped>
@@ -65,5 +86,11 @@ const activity = computed<FestivalTask["festivalActivity"]>(
 h3 {
   font-size: 1.1rem;
   margin: 25px 0 10px 0;
+}
+
+.time-windows-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 </style>
