@@ -20,7 +20,7 @@ import {
 } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { isDraftPreview as isActivityDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { isDraftPreview as isTaskDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
+import { isDraftPreview as isTaskDraftPreview } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const teamStore = useTeamStore();
 

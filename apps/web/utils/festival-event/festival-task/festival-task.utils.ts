@@ -14,6 +14,7 @@ import {
   REVIEWING,
   WILL_NOT_REVIEW,
   type Reviewer,
+  type PreviewFestivalTaskDraft,
 } from "@overbookd/festival-event";
 import type {
   DraftWithConflicts as Draft,
@@ -21,7 +22,6 @@ import type {
 } from "@overbookd/http";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
-import { isDraftPreview } from "./festival-task.model";
 import { CastReviewable } from "./reviewable";
 
 export function castTaskWithDate(
@@ -53,6 +53,12 @@ export function getTaskReviewerStatus(
 function isHttpDraft(
   task: HttpStringified<FestivalTask>,
 ): task is HttpStringified<Draft> {
+  return task.status === DRAFT;
+}
+
+export function isDraftPreview(
+  task: PreviewFestivalTask,
+): task is PreviewFestivalTaskDraft {
   return task.status === DRAFT;
 }
 

@@ -55,10 +55,6 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
-import {
-  type FtStatusLabel,
-  ftStatusLabels,
-} from "~/utils/festival-event/festival-task/festival-task.model";
 import type { FestivalEventStatus } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
@@ -67,6 +63,10 @@ import {
   STATUS_QUERY_PARAM,
   TEAM_QUERY_PARAM,
 } from "~/utils/festival-event/festival-event.constant";
+import {
+  statusLabels,
+  type StatusLabel as FtStatusLabel,
+} from "@overbookd/festival-event-constants";
 
 const userStore = useUserStore();
 
@@ -95,7 +95,7 @@ const statusWithLabels = computed<StatusLabels>(() => {
   const noneOfThem = { key: null, label: "Tous" } as const;
   const keyWithLabel = isActivity.value
     ? [...faStatusLabels.entries()]
-    : [...ftStatusLabels.entries()];
+    : [...statusLabels.entries()];
   return [noneOfThem, ...keyWithLabel.map(([key, label]) => ({ key, label }))];
 });
 const clearStatus = () => (status.value = undefined);

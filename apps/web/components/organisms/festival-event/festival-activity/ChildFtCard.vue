@@ -33,11 +33,11 @@ import type {
   FestivalActivity,
   FestivalTaskChild,
 } from "@overbookd/festival-event";
-import { BROUILLON } from "~/utils/festival-event/festival-event.constant";
 import {
-  type FtStatusLabel,
-  ftStatusLabels,
-} from "~/utils/festival-event/festival-task/festival-task.model";
+  BROUILLON,
+  statusLabels,
+  type StatusLabel,
+} from "@overbookd/festival-event-constants";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 
@@ -55,7 +55,7 @@ const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
 
-const getStatusLabel = ({ status }: FestivalTaskChild): FtStatusLabel => {
-  return ftStatusLabels.get(status) ?? BROUILLON;
+const getStatusLabel = ({ status }: FestivalTaskChild): StatusLabel => {
+  return statusLabels.get(status) ?? BROUILLON;
 };
 </script>

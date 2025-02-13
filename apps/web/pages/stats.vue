@@ -33,13 +33,13 @@ import {
   REFUSED,
   VALIDATED,
   READY_TO_ASSIGN,
-} from "@overbookd/festival-event-constants";
-import {
   BROUILLON,
   RELECTURE_EN_COURS,
   REFUSEE,
   VALIDEE,
   PRETE_POUR_AFFECTATION,
+} from "@overbookd/festival-event-constants";
+import {
   TEAM_QUERY_PARAM,
   findStatusByLabel,
   STATUS_QUERY_PARAM,
