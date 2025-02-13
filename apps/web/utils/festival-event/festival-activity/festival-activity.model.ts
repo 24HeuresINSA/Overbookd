@@ -20,13 +20,11 @@ import {
   IN_REVIEW,
   VALIDATED,
   REFUSED,
-} from "@overbookd/festival-event-constants";
-import {
   BROUILLON,
   RELECTURE_EN_COURS,
   VALIDEE,
   REFUSEE,
-} from "../festival-event.constant";
+} from "@overbookd/festival-event-constants";
 
 export type FaStatusLabel =
   | typeof BROUILLON

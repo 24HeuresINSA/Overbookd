@@ -105,7 +105,7 @@ import {
 } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { buildUserName } from "@overbookd/user";
-import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
+import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
 import {
   type TaskFilters,

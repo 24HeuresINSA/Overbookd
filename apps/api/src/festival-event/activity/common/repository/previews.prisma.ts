@@ -101,6 +101,7 @@ export class PrismaPreviews implements Previews {
     return fromDatabase.map((activity) => ({
       id: activity.id,
       name: activity.name,
+      status: activity.status,
       team: activity.team?.name ?? "",
       locationName: activity.location?.name ?? "",
       signages: activity.signages.map((signage) => ({

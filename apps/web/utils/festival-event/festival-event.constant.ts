@@ -1,17 +1,16 @@
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import {
+  BROUILLON,
   DRAFT,
   IN_REVIEW,
+  PRETE_POUR_AFFECTATION,
   READY_TO_ASSIGN,
   REFUSED,
+  REFUSEE,
+  RELECTURE_EN_COURS,
   VALIDATED,
+  VALIDEE,
 } from "@overbookd/festival-event-constants";
-
-export const BROUILLON = "Brouillon";
-export const RELECTURE_EN_COURS = "Relecture en cours";
-export const VALIDEE = "Validée";
-export const REFUSEE = "Refusée";
-export const PRETE_POUR_AFFECTATION = "Prête pour affectation";
 
 export const SEARCH_QUERY_PARAM = "search";
 export const ADHERENT_QUERY_PARAM = "adherent";

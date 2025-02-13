@@ -108,18 +108,14 @@ import {
 import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import {
-  type FtStatusLabel,
-  ftStatusLabels,
-} from "~/utils/festival-event/festival-task/festival-task.model";
+  BROUILLON,
+  statusLabels,
+  type StatusLabel,
+} from "@overbookd/festival-event-constants";
 import {
   getActivityReviewerStatus,
   hasReviewerAlreadyDoneHisActivityReview,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
-import {
-  type FaStatusLabel,
-  faStatusLabels,
-} from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { BROUILLON } from "~/utils/festival-event/festival-event.constant";
 import {
   getTaskReviewerStatus,
   hasReviewerAlreadyDoneHisTaskReview,
@@ -204,11 +200,12 @@ const myReviewers = computed<Team[]>(() =>
   isActivity.value ? myActivityReviewers.value : myTaskReviewers.value,
 );
 
-const statusLabel = computed<FaStatusLabel | FtStatusLabel>(() =>
-  isActivity.value
-    ? (faStatusLabels.get(selectedActivity.value.status) ?? BROUILLON)
-    : (ftStatusLabels.get(selectedTask.value.status) ?? BROUILLON),
-);
+const statusLabel = computed<StatusLabel>(() => {
+  const status = isActivity.value
+    ? selectedActivity.value.status
+    : selectedTask.value.status;
+  return statusLabels.get(status) ?? BROUILLON;
+});
 const status = computed<string>(() =>
   isActivity.value
     ? selectedActivity.value.status.toLowerCase()

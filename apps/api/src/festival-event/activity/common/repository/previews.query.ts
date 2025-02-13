@@ -1,5 +1,9 @@
 import { APPROVED, FestivalActivity, secu } from "@overbookd/festival-event";
-import { VALIDATED, IN_REVIEW } from "@overbookd/festival-event-constants";
+import {
+  VALIDATED,
+  IN_REVIEW,
+  DRAFT,
+} from "@overbookd/festival-event-constants";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_BASE_SIGNAGE } from "./festival-activity.query";
@@ -68,6 +72,7 @@ export const SELECT_PREVIEW_FOR_LOGISTIC = {
 export const SELECT_PREVIEW_FOR_SIGNA = {
   id: true,
   name: true,
+  status: true,
   team: { select: { name: true } },
   location: { select: { name: true } },
   signages: {
@@ -86,6 +91,6 @@ export const SHOULD_BE_IN_LOGISTIC_PREVIEW = {
 
 export const SHOULD_BE_IN_SIGNA_PREVIEW = {
   ...IS_NOT_DELETED,
-  status: { in: [VALIDATED, IN_REVIEW] as FestivalActivity["status"][] },
+  status: { not: DRAFT as FestivalActivity["status"] },
   signages: { some: {} },
 };
