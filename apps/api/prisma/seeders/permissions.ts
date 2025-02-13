@@ -42,6 +42,7 @@ import {
   SHOTGUN_SHARED_MEAL,
   OFFER_SHARED_MEAL,
   VIEW_ORGA_MOBILE_NAV,
+  EXPORT_FOR_SIGNA,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -466,6 +467,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: EXPORT_FOR_SIGNA,
+    description: "Peut exporter pour la signa",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }],
       },
     },
   },

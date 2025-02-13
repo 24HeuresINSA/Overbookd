@@ -62,7 +62,7 @@
       />
 
       <v-btn
-        v-if="canViewAnimationsToPublish"
+        v-if="canExportForSigna"
         prepend-icon="mdi-sign-direction"
         color="tertiary"
         text="Export Signa"
@@ -97,6 +97,7 @@ import { FA_TO_PUBLISH_URL, SECURITY_DASHBOARD_URL } from "@overbookd/web-page";
 import {
   READ_ANIMATION_TO_PUBLISH,
   VIEW_SECURITY_DASHBOARD,
+  EXPORT_FOR_SIGNA,
 } from "@overbookd/permission";
 import { LOG_ELEC_CODE } from "@overbookd/team-constants";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
@@ -162,6 +163,9 @@ const updateNeedSupply = (needSupply: boolean | null) => {
   updateQueryParams(NEED_SUPPLY_QUERY_PARAM, !!needSupply);
 };
 
+const canExportForSigna = computed<boolean>(() => {
+  return userStore.can(EXPORT_FOR_SIGNA);
+});
 const signaExportLoading = ref<boolean>(false);
 const exportSignaCsv = async () => {
   signaExportLoading.value = true;

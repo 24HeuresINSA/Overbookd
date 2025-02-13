@@ -25,7 +25,12 @@ import {
   PreviewForCommunication,
   CSV,
 } from "@overbookd/http";
-import { READ_FA } from "@overbookd/permission";
+import {
+  EXPORT_FOR_SIGNA,
+  READ_ANIMATION_TO_PUBLISH,
+  READ_FA,
+  VIEW_SECURITY_DASHBOARD,
+} from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
@@ -106,7 +111,7 @@ export class FestivalActivityPreviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
+  @Permission(VIEW_SECURITY_DASHBOARD)
   @Get("for-security")
   @ApiResponse({
     status: 200,
@@ -119,7 +124,7 @@ export class FestivalActivityPreviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
+  @Permission(READ_ANIMATION_TO_PUBLISH)
   @Get("for-communication")
   @ApiResponse({
     status: 200,
@@ -160,7 +165,7 @@ export class FestivalActivityPreviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
+  @Permission(EXPORT_FOR_SIGNA)
   @ApiBearerAuth()
   @Get("for-signa")
   @ApiResponse({
