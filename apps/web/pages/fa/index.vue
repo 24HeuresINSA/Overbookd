@@ -103,7 +103,7 @@ import {
   type ActivityFilters,
   type ActivityReviewsFilter,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
-import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
+import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   keepMatchingSearchCriteria,

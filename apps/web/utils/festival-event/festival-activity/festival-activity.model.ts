@@ -12,8 +12,6 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-  type PreviewDraft,
-  type PreviewFestivalActivity,
 } from "@overbookd/festival-event";
 import {
   DRAFT,
@@ -71,9 +69,3 @@ export type ElectricityConnectionWithLabel = {
   connection: ElectricityConnection;
   label: string;
 };
-
-export function isDraftPreview(
-  activity: PreviewFestivalActivity,
-): activity is PreviewDraft {
-  return activity.status === DRAFT;
-}
