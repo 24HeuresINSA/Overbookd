@@ -118,6 +118,7 @@ const updateStatusParam = (status: FestivalEventStatus | null) => {
 <style scoped>
 .festival-event-filter {
   height: fit-content;
+  max-width: 350px;
 }
 
 .filters-input {

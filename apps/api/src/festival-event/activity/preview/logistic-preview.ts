@@ -1,24 +1,17 @@
-import { CSV, JSON, PreviewForLogistic } from "@overbookd/http";
+import { LogisticInquiry } from "@overbookd/http";
 import { GearReferenceCodeService } from "../../../logistic/catalog/gear-reference-code.service";
+import { FestivalActivity } from "@overbookd/festival-event";
 
-type Formater<T, U> = {
-  format(raw: T): U;
+export type PreviewForLogistic = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  status: FestivalActivity["status"];
+  timeWindows: FestivalActivity["inquiry"]["timeWindows"];
+  inquiries: LogisticInquiry[];
 };
 
 export class LogisticPreview {
-  static withFormat(format: string): Formater<PreviewForLogistic[], unknown> {
-    switch (format) {
-      case CSV: {
-        return { format: (raw) => LogisticPreview.toCsv(raw) };
-      }
-      case JSON:
-      default: {
-        return { format: (raw) => raw };
-      }
-    }
-  }
-
-  private static toCsv(previews: PreviewForLogistic[]): string {
+  static toCsv(previews: PreviewForLogistic[]): string {
     const csvHeader = [
       "seeker.type",
       "seeker.id",

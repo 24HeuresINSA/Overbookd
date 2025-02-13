@@ -61,11 +61,3 @@ export type LogisticInquiry = InquiryRequestAssigned & {
     };
   };
 };
-
-export type PreviewForLogistic = {
-  id: FestivalActivity["id"];
-  name: FestivalActivity["general"]["name"];
-  status: FestivalActivity["status"];
-  timeWindows: FestivalActivity["inquiry"]["timeWindows"];
-  inquiries: LogisticInquiry[];
-};
