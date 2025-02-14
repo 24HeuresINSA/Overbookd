@@ -48,10 +48,20 @@
               v-model="nickname"
               label="Surnom"
               :rules="[rules.maxLength(30)]"
-              prepend-icon="mdi-account"
               :readonly="!canManageUsers"
+              prepend-icon="mdi-account"
               hide-details
               clearable
+            />
+
+            <v-text-field
+              v-model="birthday"
+              label="Date de naissance"
+              type="date"
+              :rules="[rules.required, rules.minDate, rules.maxDate]"
+              :readonly="!canManageUsers"
+              prepend-icon="mdi-calendar"
+              hide-details
             />
 
             <v-text-field
@@ -155,11 +165,14 @@ import {
   isInsaEmail,
   isMobilePhoneNumber,
   isNumber,
+  maxDate,
   maxLength,
+  minDate,
   required,
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
+import { formatLocalDate } from "@overbookd/time";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -177,6 +190,7 @@ const props = defineProps({
 const volunteerId = computed<number>(() => props.volunteer.id);
 
 const nickname = ref<string | null>(null);
+const birthday = ref<string>("");
 const phone = ref<string>("");
 const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
@@ -190,6 +204,8 @@ const rules = {
   mobilePhone: isMobilePhoneNumber,
   number: isNumber,
   maxLength,
+  minDate: minDate(new Date("1950-01-01")),
+  maxDate: maxDate(),
 };
 
 const selectedVolunteerFriends = computed<User[]>(
@@ -210,6 +226,7 @@ const assignableTeams = computed<Team[]>(() => {
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
+  birthday.value = formatLocalDate(props.volunteer.birthdate);
   phone.value = props.volunteer.phone ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
@@ -252,6 +269,7 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
   return {
     ...props.volunteer,
     nickname: nickname.value,
+    birthdate: new Date(birthday.value),
     phone: phone.value,
     email: email.value,
     note: trimmedNote,
