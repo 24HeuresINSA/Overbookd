@@ -27,7 +27,7 @@ import type {
   PlanningTask,
 } from "@overbookd/http";
 import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
-import { convertToCalendarBreak } from "~/domain/common/planning-events";
+import { convertToCalendarBreak } from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 
