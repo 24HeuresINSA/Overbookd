@@ -34,7 +34,7 @@
         </summary>
         <ul v-if="gearDetails.purchases.length">
           <li v-for="purchase in gearDetails.purchases" :key="purchase.id">
-            <nuxt-link :to="`/logistic/purchase/${purchase.id}`">
+            <nuxt-link :to="`${PURCHASE_GEARS_URL}/${purchase.id}`">
               Achat #{{ purchase.id }} - {{ purchase.seller }}:
               <strong>{{ purchase.quantity }}</strong>
             </nuxt-link>
@@ -52,7 +52,7 @@
         </summary>
         <ul v-if="gearDetails.borrows.length">
           <li v-for="borrow in gearDetails.borrows" :key="borrow.id">
-            <nuxt-link :to="`/logistic/borrows/${borrow.id}`">
+            <nuxt-link :to="`${BORROW_GEARS_URL}/${borrow.id}`">
               Emprunt #{{ borrow.id }} - {{ borrow.lender }}:
               <strong>{{ borrow.quantity }}</strong>
             </nuxt-link>
@@ -77,7 +77,7 @@
         </summary>
         <ul v-if="gearDetails.activities.length">
           <li v-for="activity in gearDetails.activities" :key="activity.id">
-            <nuxt-link :to="`/fa/${activity.id}#inquiry`">
+            <nuxt-link :to="`${FA_URL}/${activity.id}#inquiry`">
               FA #{{ activity.id }} - {{ activity.name }}:
               <strong>{{ activity.quantity }}</strong>
             </nuxt-link>
@@ -95,7 +95,7 @@
         </summary>
         <ul v-if="gearDetails.tasks.length">
           <li v-for="task in gearDetails.tasks" :key="task.id">
-            <nuxt-link :to="`/ft/${task.id}#inquiry`">
+            <nuxt-link :to="`${FT_URL}/${task.id}#inquiry`">
               FT #{{ task.id }} - {{ task.name }}:
               <strong>{{ task.quantity }}</strong>
             </nuxt-link>
@@ -110,6 +110,12 @@
 <script lang="ts" setup>
 import type { GearDetails } from "@overbookd/http";
 import { formatDateToHumanReadable } from "@overbookd/time";
+import {
+  FA_URL,
+  FT_URL,
+  PURCHASE_GEARS_URL,
+  BORROW_GEARS_URL,
+} from "@overbookd/web-page";
 import { sumQuantities } from "~/utils/logistic/quantity";
 
 type GearDetailsWithName = GearDetails & { name: string };
