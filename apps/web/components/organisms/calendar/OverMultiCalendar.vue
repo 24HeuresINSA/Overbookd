@@ -22,16 +22,17 @@
 </template>
 
 <script lang="ts" setup>
+import { OverDate } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
-import { CalendarEvent } from "~/utils/calendar/event";
+import type { CalendarEvent } from "~/utils/calendar/event";
 import { DAY_MODE } from "~/utils/calendar/calendar-mode";
 
 const day = defineModel<DayPresenter>({
   default: new DayPresenter(OverDate.now()),
 });
 
-defineProps({
+const props = defineProps({
   volunteers: {
     type: Array as PropType<VolunteerForCalendar[]>,
     default: () => [],
@@ -42,8 +43,8 @@ defineProps({
   },
 });
 
-const gridStyle = computed<string>(() => ({
-  gridTemplateColumns: `repeat(${volunteers.length}, 1fr)`,
+const gridStyle = computed(() => ({
+  gridTemplateColumns: `repeat(${props.volunteers.length}, 1fr)`,
 }));
 </script>
 
