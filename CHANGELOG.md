@@ -1,3 +1,15 @@
+## [3.33.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.2...v3.33.0) (2025-02-14)
+
+### Features
+
+* **fa:** add signa export [#2393](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2393) ([85bbe4b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/85bbe4b83ba08fbf8ea8a98ada99ff446aaadcc9))
+
+### Bug Fixes
+
+* **fa:** add missing permission to export for signa [#2393](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2393) ([c8d9e8e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c8d9e8e44c8c8a94a54eab0fa006bffceb50a26c))
+* **fa:** add status in signa export [#2393](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2393) ([2324b19](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2324b19187d6c8219b6f46a28308f88fe368a167))
+* **logistic-dashboard:** redirection url [#2396](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2396) ([1e7208a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e7208ac8c804a1efc01ee05bb9ba835a1421090))
+
 ## [3.32.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.1...v3.32.2) (2025-02-12)
 
 ### Bug Fixes
