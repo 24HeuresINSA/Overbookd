@@ -1,8 +1,10 @@
 import { BaseSignage, FestivalActivity } from "@overbookd/festival-event";
+import { statusLabels } from "@overbookd/festival-event-constants";
 
 export type PreviewForSigna = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];
+  status: FestivalActivity["status"];
   team: FestivalActivity["inCharge"]["team"];
   locationName: FestivalActivity["signa"]["location"]["name"];
   signages: (BaseSignage & { catalogName?: string })[];
@@ -13,6 +15,7 @@ export class SignaPreview {
     const csvHeader = [
       "Id FA",
       "Nom FA",
+      "Statut FA",
       "Equipe",
       "Lieu",
       "Nom catalogue",
@@ -28,6 +31,7 @@ export class SignaPreview {
         return [
           preview.id,
           preview.name,
+          statusLabels.get(preview.status) ?? "",
           preview.team,
           preview.locationName ?? "",
           signage.catalogName ?? "",

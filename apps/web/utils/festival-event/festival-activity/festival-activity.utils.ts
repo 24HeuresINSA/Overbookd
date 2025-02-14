@@ -3,6 +3,7 @@ import {
   type Draft,
   type FestivalActivity,
   NOT_ASKING_TO_REVIEW,
+  type PreviewDraft,
   type PreviewFestivalActivity,
   REJECTED,
   REVIEWING,
@@ -24,7 +25,6 @@ import type {
 } from "@overbookd/http";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
-import { isDraftPreview } from "./festival-activity.model";
 import { CastReviewable } from "./reviewable";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
@@ -84,6 +84,12 @@ export function getActivityReviewerStatus(
     default:
       return NOT_ASKING_TO_REVIEW;
   }
+}
+
+export function isDraftPreview(
+  activity: PreviewFestivalActivity,
+): activity is PreviewDraft {
+  return activity.status === DRAFT;
 }
 
 export function getPreviewReviewStatus(
