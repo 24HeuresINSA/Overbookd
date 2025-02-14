@@ -58,7 +58,7 @@
               v-model="birthday"
               label="Date de naissance"
               type="date"
-              :rules="[rules.required, rules.minDateRule, rules.maxDateRule]"
+              :rules="[rules.required, rules.minDate, rules.maxDate]"
               :readonly="!canManageUsers"
               prepend-icon="mdi-calendar"
               hide-details
@@ -204,8 +204,8 @@ const rules = {
   mobilePhone: isMobilePhoneNumber,
   number: isNumber,
   maxLength,
-  minDateRule: minDate(new Date("1950-01-01")),
-  maxDateRule: maxDate(),
+  minDate: minDate(new Date("1950-01-01")),
+  maxDate: maxDate(),
 };
 
 const selectedVolunteerFriends = computed<User[]>(
