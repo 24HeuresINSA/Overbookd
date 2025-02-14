@@ -64,7 +64,7 @@ import {
   TEAM_QUERY_PARAM,
 } from "~/utils/festival-event/festival-event.constant";
 import {
-  statusLabels,
+  statusLabels as ftStatusLabels,
   type StatusLabel as FtStatusLabel,
 } from "@overbookd/festival-event-constants";
 
@@ -95,7 +95,7 @@ const statusWithLabels = computed<StatusLabels>(() => {
   const noneOfThem = { key: null, label: "Tous" } as const;
   const keyWithLabel = isActivity.value
     ? [...faStatusLabels.entries()]
-    : [...statusLabels.entries()];
+    : [...ftStatusLabels.entries()];
   return [noneOfThem, ...keyWithLabel.map(([key, label]) => ({ key, label }))];
 });
 const clearStatus = () => (status.value = undefined);
