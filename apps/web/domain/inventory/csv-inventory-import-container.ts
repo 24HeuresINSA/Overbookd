@@ -4,28 +4,38 @@ import {
   type InventoryImportRaw,
 } from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
-import { type Options, parse } from "csv-parse/browser/esm/sync";
+import {
+  type Options,
+  type CastingContext,
+  parse,
+} from "csv-parse/browser/esm/sync";
 import { SlugifyService } from "@overbookd/slugify";
+
+const CODE = "code";
+const GEAR = "gear";
+const STORAGE = "storage";
+const QUANTITY = "quantity";
+const COMMENT = "comment";
 
 export class CSVInventoryImportContainer extends InventoryImportContainer {
   private static readonly headerTranslation: Record<
     string,
     keyof InventoryImportRaw
   > = {
-    code: "code",
-    reference: "code",
-    matos: "gear",
-    materiel: "gear",
-    nom: "gear",
-    stockage: "storage",
-    lieu: "storage",
-    "lieu-de-stockage": "storage",
-    quantite: "quantity",
-    nombre: "quantity",
-    commentaire: "comment",
-    commentaires: "comment",
-    note: "comment",
-    notes: "comment",
+    code: CODE,
+    reference: CODE,
+    matos: GEAR,
+    materiel: GEAR,
+    nom: GEAR,
+    stockage: STORAGE,
+    lieu: STORAGE,
+    "lieu-de-stockage": STORAGE,
+    quantite: QUANTITY,
+    nombre: QUANTITY,
+    commentaire: COMMENT,
+    commentaires: COMMENT,
+    note: COMMENT,
+    notes: COMMENT,
   };
 
   constructor(
@@ -43,7 +53,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       skip_records_with_empty_values: true,
       delimiter: ";",
       columns: this.convertFileHeaderToRecordKeys,
-      cast: this.castNumbersWhenPossible,
+      cast: this.castNumbersForQuantity,
     };
     try {
       const importRaws = parse(content, parseOptions) as InventoryImportRaw[];
@@ -67,7 +77,8 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
     });
   }
 
-  private castNumbersWhenPossible(value: string) {
+  private castNumbersForQuantity(value: string, context: CastingContext) {
+    if (context.column !== QUANTITY) return value;
     const numeric = parseInt(value, 10);
     return isNaN(numeric) ? value : numeric;
   }
