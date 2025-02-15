@@ -80,6 +80,11 @@ export function getPreviewReviewerStatus(
   }
 }
 
+export function hasTaskApprovals(task: FestivalTask): boolean {
+  if (isDraft(task)) return false;
+  return extractApprovers(task).length > 0;
+}
+
 export function shouldResetTaskApprovals(task: FestivalTask): boolean {
   if (isDraft(task)) return false;
   const isTaskRefused = isRefused(task);

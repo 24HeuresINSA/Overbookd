@@ -53,8 +53,8 @@ const unsaved = computed(() => {
   return instructions.value !== modifiedInstructions.value;
 });
 
-const updateInstructions = (newInstructions: string) => {
-  modifiedInstructions.value = newInstructions.trim();
+const updateInstructions = (newInstructions?: string) => {
+  modifiedInstructions.value = newInstructions?.trim() ?? "";
 };
 
 watch(

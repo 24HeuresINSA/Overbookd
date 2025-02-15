@@ -14,9 +14,9 @@
         <InstructionsEditor
           :model-value="globalInstruction"
           scope="global-instruction"
-          :readonly="disabled && cantForceInstruction"
-          :can-save="!disabled"
-          :can-force-instruction="!cantForceInstruction"
+          :readonly="disabled && !canForceInstruction"
+          :can-save="canSaveInstructions"
+          :can-force-instruction="canForceInstruction"
           @save="saveGlobal"
           @force-save="forceSaveGlobal"
         />
@@ -43,9 +43,9 @@
           <InstructionsEditor
             :model-value="inChargeInstruction"
             scope="in-charge-instruction"
-            :readonly="disabled && cantForceInstruction"
-            :can-save="!disabled"
-            :can-force-instruction="!cantForceInstruction"
+            :readonly="disabled && !canForceInstruction"
+            :can-save="canSaveInstructions"
+            :can-force-instruction="canForceInstruction"
             @save="saveInCharge"
             @force-save="forceSaveInCharge"
           />
@@ -116,7 +116,10 @@ import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import type { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { FORCE_WRITE_FT } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
+import {
+  hasTaskApprovals,
+  shouldResetTaskApprovals,
+} from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
@@ -161,10 +164,16 @@ const potentialContacts = computed<User[]>(() => {
 const shouldResetApprovals = computed<boolean>(() =>
   shouldResetTaskApprovals(selectedTask.value),
 );
-const cantForceInstruction = computed<boolean>(() => {
+const hasApprovals = computed<boolean>(() =>
+  hasTaskApprovals(selectedTask.value),
+);
+const canForceInstruction = computed<boolean>(() => {
   const hasPermission = userStore.can(FORCE_WRITE_FT);
-  return (!props.disabled && !shouldResetApprovals.value) || !hasPermission;
+  return (props.disabled || hasApprovals.value) && hasPermission;
 });
+const canSaveInstructions = computed<boolean>(
+  () => !props.disabled && (shouldResetApprovals.value || !hasApprovals.value),
+);
 
 const isInitInChargeDialogOpen = ref<boolean>(false);
 const openInitInChargeDialog = () => (isInitInChargeDialogOpen.value = true);
@@ -247,7 +256,7 @@ const saveGlobal = (global: string) => {
   ftStore.updateInstructions({ global });
 };
 const forceSaveGlobal = (global: string) => {
-  if (cantForceInstruction.value) return;
+  if (!canForceInstruction.value) return;
   ftStore.forceInstructions({ global });
 };
 
@@ -267,7 +276,7 @@ const saveInCharge = (inCharge: string) => {
   ftStore.updateInstructions({ inCharge });
 };
 const forceSaveInCharge = (inCharge: string) => {
-  if (cantForceInstruction.value) return;
+  if (!canForceInstruction.value) return;
   ftStore.forceInstructions({ inCharge });
 };
 
