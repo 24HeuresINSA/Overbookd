@@ -9,6 +9,7 @@
       loading-text="Chargement du matos..."
       no-data-text="Aucun matos"
       show-expand
+      expand-on-click
       @update:expanded="expandOnIconClick"
     >
       <template #item.isConsumable="{ item }">
