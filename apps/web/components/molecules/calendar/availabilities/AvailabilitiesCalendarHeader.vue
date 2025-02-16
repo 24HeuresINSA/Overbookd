@@ -7,6 +7,11 @@
       clickable
       @click="propagateDayClick"
     />
+    <v-tooltip activator="parent" location="top">
+      <v-icon icon="mdi-lightbulb-alert-outline" /> Astuce : Tu peux
+      sélectionner tous les créneaux d'une journée en cliquant sur le chiffre de
+      la date.
+    </v-tooltip>
   </header>
 </template>
 
