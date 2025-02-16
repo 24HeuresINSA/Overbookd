@@ -7,10 +7,14 @@
       </v-col>
       <v-col v-if="hasPersonalAccount" class="home">
         <PersonalAccountHomeCard />
+        <FriendsCard />
       </v-col>
       <v-col v-if="canWriteFA || canWriteFT" class="home">
         <PersonalFtHomeCard v-if="canWriteFT" />
         <PersonalFaHomeCard v-if="canWriteFA" />
+      </v-col>
+      <v-col v-if="! hasPersonalAccount" class="home">
+        <FriendsCard v-if="! hasPersonalAccount" />
       </v-col>
     </v-row>
   </v-container>
@@ -75,6 +79,7 @@ const hasPersonalAccount = computed<boolean>(() =>
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
 
 const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
+
 </script>
 
 <style lang="scss" scoped>
