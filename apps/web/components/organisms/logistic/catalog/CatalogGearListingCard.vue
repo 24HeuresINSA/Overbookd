@@ -71,14 +71,22 @@
       </v-data-table>
     </v-card-text>
 
-    <v-dialog v-model="isUpsertGearDialogOpen" width="600px">
+    <v-dialog
+      v-model="isUpsertGearDialogOpen"
+      width="600px"
+      @after-leave="emptySelectedGear"
+    >
       <CatalogGearFormDialogCard
         :gear="selectedGear"
         @close="closeUpsertGearDialog"
       />
     </v-dialog>
 
-    <v-dialog v-model="isDeleteGearDialogOpen" width="600px">
+    <v-dialog
+      v-model="isDeleteGearDialogOpen"
+      width="600px"
+      @after-leave="emptySelectedGear"
+    >
       <ConfirmationDialogCard
         confirm-color="error"
         @close="closeDeleteGearDialog"
@@ -175,6 +183,8 @@ const deleteGear = async () => {
   closeDeleteGearDialog();
 };
 
+const emptySelectedGear = () => (selectedGear.value = undefined);
+
 const exportCatalogCSV = async () => {
   if (!isCatalogWriter.value) return;
 
@@ -198,13 +208,6 @@ const exportCatalogCSV = async () => {
   const today = formatLocalDate(new Date());
   download(`catalogue_${today}.csv`, csv);
 };
-
-watch(isUpsertGearDialogOpen, (value: boolean) => {
-  if (!value) selectedGear.value = undefined;
-});
-watch(isDeleteGearDialogOpen, (value: boolean) => {
-  if (!value) selectedGear.value = undefined;
-});
 </script>
 
 <style lang="scss" scoped>
