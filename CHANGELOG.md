@@ -1,3 +1,11 @@
+## [3.33.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.0...v3.33.1) (2025-02-16)
+
+### Bug Fixes
+
+* **web:** add birthdate to volunteer list [#2395](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2395) ([9dac479](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9dac479436e1b73996bdb1b1928f2e321c0e5ba3))
+* **web:** allow to force save instructions for FTs with only approvals [#2398](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2398) ([e392098](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e39209867a945f7ddd7c8f9ed64b439b2bd908be))
+* **web:** fix inventory import for entries with numeric comment [#2400](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2400) ([cc42021](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cc42021a846deeb7a8152eeffa2e464acf02d6d0))
+
 ## [3.33.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.32.2...v3.33.0) (2025-02-14)
 
 ### Features
