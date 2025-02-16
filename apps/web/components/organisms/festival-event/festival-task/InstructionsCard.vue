@@ -89,14 +89,22 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="isInitInChargeDialogOpen" max-width="800">
+    <v-dialog
+      v-model="isInitInChargeDialogOpen"
+      max-width="800"
+      @after-leave="checkActiveInChargeInstructions"
+    >
       <InitInChargeInstructionsCard
         @init="initInCharge"
         @close="closeInitInChargeDialog"
       />
     </v-dialog>
 
-    <v-dialog v-model="isResetApprovalsDialogOpen" max-width="600">
+    <v-dialog
+      v-model="isResetApprovalsDialogOpen"
+      max-width="600"
+      @after-leave="checkActiveInChargeInstructions"
+    >
       <ResetApprovalsDialogCard
         @confirm="approveResetAlert"
         @close="declineResetApprovalsDialog"
@@ -288,12 +296,6 @@ watch(
   },
   { immediate: true },
 );
-watch(isInitInChargeDialogOpen, (value: boolean) => {
-  if (!value) checkActiveInChargeInstructions();
-});
-watch(isResetApprovalsDialogOpen, (value: boolean) => {
-  if (!value) checkActiveInChargeInstructions();
-});
 
 const updateAppointment = (appointmentId?: SignaLocation["id"]) => {
   ftStore.updateInstructions({ appointmentId });

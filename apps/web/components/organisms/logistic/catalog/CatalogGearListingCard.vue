@@ -71,14 +71,22 @@
       </v-data-table>
     </v-card-text>
 
-    <v-dialog v-model="isUpsertGearDialogOpen" width="600px">
+    <v-dialog
+      v-model="isUpsertGearDialogOpen"
+      width="600px"
+      @after-leave="emptySelectedGear"
+    >
       <CatalogGearFormDialogCard
         :gear="selectedGear"
         @close="closeUpsertGearDialog"
       />
     </v-dialog>
 
-    <v-dialog v-model="isDeleteGearDialogOpen" width="600px">
+    <v-dialog
+      v-model="isDeleteGearDialogOpen"
+      width="600px"
+      @after-leave="emptySelectedGear"
+    >
       <ConfirmationDialogCard
         confirm-color="error"
         @close="closeDeleteGearDialog"
@@ -144,7 +152,7 @@ const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
 const loading = ref<boolean>(gears.value.length === 0);
 catalogGearStore.fetchGears({}).then(() => (loading.value = false));
 
-const selectedGear = ref<CatalogGear | undefined>();
+const selectedGear = ref<CatalogGear>();
 
 const searchGears = (options: GearSearchOptions) => {
   loading.value = true;
@@ -174,6 +182,8 @@ const deleteGear = async () => {
   await catalogGearStore.deleteGear(selectedGear.value);
   closeDeleteGearDialog();
 };
+
+const emptySelectedGear = () => (selectedGear.value = undefined);
 
 const exportCatalogCSV = async () => {
   if (!isCatalogWriter.value) return;
