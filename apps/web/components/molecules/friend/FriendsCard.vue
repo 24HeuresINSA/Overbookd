@@ -20,8 +20,15 @@
                 class="friend-search"
                 @update:model-value="sendFriendRequest"
               />
-              <v-list v-for="(friend, index) in myFriends" :key="index" class="friend" elevation="2">
-                <span class="name">{{ buildUserNameWithNickname(friend) }}</span>
+              <v-list
+                v-for="(friend, index) in myFriends"
+                :key="index"
+                class="friend"
+                elevation="2"
+              >
+                <span class="name">{{
+                  buildUserNameWithNickname(friend)
+                }}</span>
                 <v-btn
                   density="compact"
                   icon="mdi-close"
