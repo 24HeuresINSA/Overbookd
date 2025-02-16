@@ -1,30 +1,39 @@
 <template>
   <v-card class="friends-card">
-    <v-card-title>Amis ❤️</v-card-title>
-    <v-card-subtitle>
+    <v-card-title class="friends-card__title">
+      <span>❤️ Amis </span>
+    </v-card-title>
+    <v-card-text class="friends-card__text">
       Nous ferons notre maximum pour que vous soyez ensemble pendant vos
       créneaux.
-    </v-card-subtitle>
+    </v-card-text>
     <v-card-text class="friends-card__content">
-      <img :src="image.link" :alt="image.description" />
-      <div class="friends-management">
-        <ul class="friends-list">
-          <li v-for="(friend, index) in myFriends" :key="index" class="friend">
-            <span class="name">{{ buildUserNameWithNickname(friend) }}</span>
-            <v-btn
-              density="compact"
-              icon="mdi-close"
-              variant="flat"
-              @click="removeFriend(friend)"
-            />
-          </li>
-          <SearchFriend
-            v-model="newFriend"
-            class="friend-search"
-            @update:model-value="sendFriendRequest"
-          />
-        </ul>
-      </div>
+      <v-row>
+        <v-col justify="start" flex-wrap="wrap">
+          <img :src="image.link" :alt="image.description" flex-wrap="wrap" />
+        </v-col>
+        <v-col cols="auto" flex-wrap="wrap">
+          <div class="friends-management" flex-wrap="wrap">
+            <div class="friends-list">
+              <SearchFriend
+                v-model="newFriend"
+                class="friend-search"
+                @update:model-value="sendFriendRequest"
+              />
+              <v-list v-for="(friend, index) in myFriends" :key="index" class="friend" elevation="2">
+                <span class="name">{{ buildUserNameWithNickname(friend) }}</span>
+                <v-btn
+                  density="compact"
+                  icon="mdi-close"
+                  variant="flat"
+                  color="secondary"
+                  @click="removeFriend(friend)"
+                />
+              </v-list>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
@@ -76,58 +85,76 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
 <style lang="scss" scoped>
 .friends-card {
   padding: 0;
+  min-width: 280px;
+  width: 100%;
+  height: fit-content;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: rgb(var(--v-theme-secondary));
+    padding-bottom: 0;
+  }
+
+  &__text {
+    font-size: 0.9rem;
+    margin: 10px 1px;
+    opacity: 0.7;
+    text-align: start;
+  }
+
   &__content {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: start;
     gap: 20px;
+
     .friends-management {
       display: flex;
       gap: 5px;
       align-items: flex-start;
       flex-direction: column;
-      width: 100%;
     }
+
     .friends-list {
       padding: unset;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 300px));
       gap: 10px;
-      width: 100%;
     }
+
     .friend-search {
       margin-top: 10px;
       grid-column: 1 / span 1;
     }
 
     .friend {
-      padding: 0px 0px 0px 10px;
+      opacity: 0.8;
+      color: rgb(var(--v-theme-text));
+      padding: 5px 5px 5px 10px;
       list-style: none;
-      color: black;
+      border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       place-self: center stretch;
+      min-width: 100px;
+      width: auto;
+
       .name {
         text-overflow: ellipsis;
       }
     }
-    @media screen and (max-width: $mobile-max-width) {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-direction: column;
-      .friends-list {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
 
-      img {
-        max-width: 100%;
-      }
-      .friend,
-      .friend-search {
-        min-width: 100%;
-      }
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
     }
   }
 }
