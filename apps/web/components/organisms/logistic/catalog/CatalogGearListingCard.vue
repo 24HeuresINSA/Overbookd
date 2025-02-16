@@ -144,7 +144,7 @@ const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
 const loading = ref<boolean>(gears.value.length === 0);
 catalogGearStore.fetchGears({}).then(() => (loading.value = false));
 
-const selectedGear = ref<CatalogGear | undefined>();
+const selectedGear = ref<CatalogGear>();
 
 const searchGears = (options: GearSearchOptions) => {
   loading.value = true;
@@ -198,6 +198,13 @@ const exportCatalogCSV = async () => {
   const today = formatLocalDate(new Date());
   download(`catalogue_${today}.csv`, csv);
 };
+
+watch(isUpsertGearDialogOpen, (value: boolean) => {
+  if (!value) selectedGear.value = undefined;
+});
+watch(isDeleteGearDialogOpen, (value: boolean) => {
+  if (!value) selectedGear.value = undefined;
+});
 </script>
 
 <style lang="scss" scoped>
