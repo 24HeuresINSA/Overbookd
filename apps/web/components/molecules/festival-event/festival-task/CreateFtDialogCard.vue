@@ -2,8 +2,16 @@
   <DialogCard @close="close">
     <template #title>Créer une nouvelle Fiche Tâche</template>
     <template #content>
-      <v-text-field v-model="name" label="Nom de la FT" />
-      <SearchFestivalActivity v-model="selectedActivity" label="FA associée" />
+      <v-text-field
+        v-model="name"
+        label="Nom de la FT"
+        @keydown.enter="createNewTask"
+      />
+      <SearchFestivalActivity
+        v-model="selectedActivity"
+        label="FA associée"
+        @keydown.enter="createNewTask"
+      />
     </template>
     <template #actions>
       <v-btn

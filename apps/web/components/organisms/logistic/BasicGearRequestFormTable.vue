@@ -5,6 +5,7 @@
         v-model:gear="gear"
         v-model:quantity="quantity"
         class="gear-request-form__fields"
+        @enter="addGearRequest"
       />
       <v-btn
         icon="mdi-plus"

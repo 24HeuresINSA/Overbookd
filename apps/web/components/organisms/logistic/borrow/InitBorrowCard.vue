@@ -2,8 +2,16 @@
   <DialogCard @close="close">
     <template #title>Ajouter une nouvelle Fiche Emprunt</template>
     <template #content>
-      <v-text-field v-model="lender" label="Prêteur" />
-      <DateTimeField v-model="availableOn" label="Date de disponibilité" />
+      <v-text-field
+        v-model="lender"
+        label="Prêteur"
+        @keydown.enter="initBorrow"
+      />
+      <DateTimeField
+        v-model="availableOn"
+        label="Date de disponibilité"
+        @enter="initBorrow"
+      />
       <DateTimeField
         v-model="unavailableOn"
         label="Date de retour"
