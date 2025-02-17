@@ -11,6 +11,7 @@
     :disabled="disabled"
     :custom-filter="slugifiedFilter"
     no-data-text="Aucun matos correspondant"
+    @keydown.enter="propagateEnter"
   >
     <template #item="{ props, item }">
       <v-list-item v-bind="props" :subtitle="item.raw.category?.path || ''" />
@@ -67,4 +68,7 @@ const buildGearNameWithCode = (gear: CatalogGear): string => {
 const gears = computed<CatalogGear[]>(() => catalogGearStore.gears);
 const loading = ref<boolean>(gears.value.length === 0);
 fetchGears().then(() => (loading.value = false));
+
+const emit = defineEmits(["enter"]);
+const propagateEnter = () => emit("enter");
 </script>

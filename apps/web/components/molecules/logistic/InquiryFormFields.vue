@@ -9,6 +9,7 @@
       :disabled="disabled"
       :hide-details="hideDetails"
       @update:model-value="updateQuantity"
+      @keydown.enter="propagateEnter"
     />
     <SearchGear
       v-model="gear"
@@ -16,6 +17,7 @@
       :ponctual-usage="ponctualUsage"
       :disabled="disabled"
       :hide-details="hideDetails"
+      @enter="propagateEnter"
     />
   </v-form>
 </template>
@@ -42,8 +44,9 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["update:quantity"]);
+const emit = defineEmits(["update:quantity", "enter"]);
 const updateQuantity = (value: string) => emit("update:quantity", +value);
+const propagateEnter = () => emit("enter");
 </script>
 
 <style lang="scss" scoped>

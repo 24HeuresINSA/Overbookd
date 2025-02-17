@@ -2,7 +2,11 @@
   <DialogCard @close="close">
     <template #title> Ajouter une nouvelle Fiche Achat</template>
     <template #content>
-      <v-text-field v-model="seller" label="Vendeur" />
+      <v-text-field
+        v-model="seller"
+        label="Vendeur"
+        @keydown.enter="initPurchase"
+      />
       <DateTimeField
         v-model="availableOn"
         label="Date de disponibilité"
