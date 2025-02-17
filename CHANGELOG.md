@@ -1,3 +1,11 @@
+## [3.33.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.1...v3.33.2) (2025-02-17)
+
+### Bug Fixes
+
+* **web:** expand gear details on row click [#2399](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2399) ([5c9a757](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5c9a757237259c6c0a4788000f0048a7e0e2774e))
+* **web:** fix selected gear value when closing dialog [#2397](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2397) ([3342e51](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3342e5101540f8145bee40ed65f66aef834bd5ff))
+* **web:** move availabilities informations [#2405](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2405) ([33b9e51](https://gitlab.com/24-heures-insa/overbookd-mono/commit/33b9e51b0f2071b50822b654dece8f4d04e7afec))
+
 ## [3.33.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.0...v3.33.1) (2025-02-16)
 
 ### Bug Fixes
