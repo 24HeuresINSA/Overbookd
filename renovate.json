@@ -129,7 +129,9 @@
         "^apps/.*/[Dd]ockerfile$",
         "^docker/[Dd]ockerfile$"
       ],
-      "matchStrings": ["\\s* (?<depName>.*?)@(?<currentValue>[^\\s]+)"]
+      "matchStrings": [
+        "\\s*npm install -g (?<depName>.*?)@(?<currentValue>[^\\s]+)"
+      ]
     }
   ]
 }

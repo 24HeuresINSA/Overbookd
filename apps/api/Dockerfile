@@ -1,8 +1,8 @@
-FROM node:22.13.1-alpine AS installer
+FROM node:22.14.0-alpine AS installer
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@10.3.0
+RUN npm install -g pnpm@10.4.0
 COPY pnpm-lock.yaml package.json ./
 
 RUN pnpm fetch
@@ -24,7 +24,7 @@ RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
 RUN pnpm install --prod --recursive --offline --filter '@overbookd/api...'
 
-FROM node:22.13.1-alpine
+FROM node:22.14.0-alpine
 
 ARG API_VERSION
 ARG OVERBOOKD_VERSION
@@ -38,7 +38,7 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV=production
 
-RUN npm install -g pnpm@10.3.0 \
+RUN npm install -g pnpm@10.4.0 \
   && apk update \
   && apk add --no-cache openssl
 

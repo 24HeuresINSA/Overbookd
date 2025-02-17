@@ -1,8 +1,8 @@
-FROM node:22.13.1-alpine AS installer
+FROM node:22.14.0-alpine AS installer
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@10.3.0
+RUN npm install -g pnpm@10.4.0
 COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
@@ -32,7 +32,7 @@ COPY tsconfig.build.json ./
 COPY tsconfig.all-modules-import.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
-FROM node:22.13.1-alpine
+FROM node:22.14.0-alpine
 
 ARG WEB_VERSION
 

@@ -37,7 +37,7 @@ secret_detection:
 
 .format:
   extends: .check
-  image: node:22.13.1-alpine
+  image: node:22.14.0-alpine
   before_script:
     - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
@@ -62,7 +62,7 @@ overbookd/format:
 
 overbookd/prune:
   extends: .check
-  image: node:22.13.1-alpine
+  image: node:22.14.0-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -75,7 +75,7 @@ overbookd/prune:
   before_script:
     - npm install -g corepack@0.31.0
     - corepack enable
-    - corepack prepare pnpm@10.3.0 --activate
+    - corepack prepare pnpm@latest-10 --activate
     - pnpm config set store-dir .pnpm-store
     - pnpm i
   script:
