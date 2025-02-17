@@ -41,10 +41,22 @@ export class PrismaCatalogSignageRepository
   async remove(id: number): Promise<void> {
     const signage = await this.prisma.catalogSignage.findUnique({
       where: { id },
+      select: {
+        image: true,
+        festivalActivityRequests: { select: { faId: true } },
+      },
     });
-    if (signage?.image) {
-      this.fileService.deleteFile(signage.image);
+
+    if (signage?.festivalActivityRequests.length) {
+      const faIds = signage.festivalActivityRequests
+        .map(({ faId }) => `FA ${faId}`)
+        .join(", ");
+      throw new SignageError(
+        `Impossible de supprimer la signalisation, elle est liée à : ${faIds}`,
+      );
     }
+
+    if (signage?.image) this.fileService.deleteFile(signage.image);
     await this.prisma.catalogSignage.delete({ where: { id } });
   }
 

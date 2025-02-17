@@ -1,9 +1,13 @@
 import { CatalogCategory, CatalogGear } from "@overbookd/http";
-import { CatalogService } from "./catalog.service";
+import { CatalogService, GearLinkedItems } from "./catalog.service";
 import {
   InMemoryCategoryRepository,
   InMemoryGearRepository,
 } from "./repositories/in-memory";
+import {
+  CatalogGearWithLinkedItems,
+  EMPTY_GEAR_LINKED_ITEMS,
+} from "./repositories/in-memory/gear.repository.inmemory";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamBarriere = { name: "Orga Logistique et Securite", code: "barrieres" };
@@ -47,7 +51,7 @@ const CATEGORIES: CatalogCategory[] = [
   },
 ];
 
-const PERCEUSE: CatalogGear = {
+const PERCEUSE: CatalogGearWithLinkedItems = {
   id: 1,
   name: "Perceuse",
   slug: "perceuse",
@@ -60,42 +64,50 @@ const PERCEUSE: CatalogGear = {
   code: "BR_OU_001",
   isPonctualUsage: true,
   isConsumable: false,
+  ...EMPTY_GEAR_LINKED_ITEMS,
+  tasks: [2],
+  purchases: [4],
 };
 
-const GEARS: CatalogGear[] = [
-  PERCEUSE,
-  {
-    id: 2,
-    name: "Chaise",
-    slug: "chaise",
-    category: {
-      id: CATEGORIES[2].id,
-      path: CATEGORIES[2].path,
-      name: CATEGORIES[2].name,
-    },
-    owner: teamMatos,
-    code: "MO_002",
-    isPonctualUsage: false,
-    isConsumable: false,
+const CHAISE = {
+  id: 2,
+  name: "Chaise",
+  slug: "chaise",
+  category: {
+    id: CATEGORIES[2].id,
+    path: CATEGORIES[2].path,
+    name: CATEGORIES[2].name,
   },
-  {
-    id: 3,
-    name: "Tireuse",
-    slug: "tireuse",
-    isPonctualUsage: false,
-    isConsumable: false,
-  },
-];
+  owner: teamMatos,
+  code: "MO_002",
+  isPonctualUsage: false,
+  isConsumable: false,
+  ...EMPTY_GEAR_LINKED_ITEMS,
+};
 
-const TABLIER: CatalogGear = {
+const TIREUSE = {
+  id: 3,
+  name: "Tireuse",
+  slug: "tireuse",
+  isPonctualUsage: false,
+  isConsumable: false,
+  ...EMPTY_GEAR_LINKED_ITEMS,
+  actitivities: [1, 5],
+  borrows: [3],
+};
+
+const GEARS: CatalogGearWithLinkedItems[] = [PERCEUSE, CHAISE, TIREUSE];
+
+const TABLIER: CatalogGearWithLinkedItems = {
   id: 4,
   name: "Tablier",
   slug: "tablier",
   isPonctualUsage: true,
   isConsumable: false,
+  ...EMPTY_GEAR_LINKED_ITEMS,
 };
 
-const PONCEUSE: CatalogGear = {
+const PONCEUSE: CatalogGearWithLinkedItems = {
   id: 5,
   name: "Ponçeuse",
   slug: "ponceuse",
@@ -108,9 +120,10 @@ const PONCEUSE: CatalogGear = {
   code: "BR_OU_005",
   isPonctualUsage: true,
   isConsumable: false,
+  ...EMPTY_GEAR_LINKED_ITEMS,
 };
 
-const SIMILAR_GEARS: CatalogGear[] = [
+const SIMILAR_GEARS: CatalogGearWithLinkedItems[] = [
   ...GEARS,
   TABLIER,
   PONCEUSE,
@@ -127,6 +140,7 @@ const SIMILAR_GEARS: CatalogGear[] = [
     code: "MO_006",
     isPonctualUsage: false,
     isConsumable: false,
+    ...EMPTY_GEAR_LINKED_ITEMS,
   },
 ];
 
@@ -138,6 +152,7 @@ describe("Catalog", () => {
     categoryRepository.categories = CATEGORIES;
     gearRepository.gears = GEARS;
   });
+
   describe("Get gear", () => {
     describe.each`
       gearId | expectedGear
@@ -147,7 +162,7 @@ describe("Catalog", () => {
     `("When #$gearId gear exists", ({ gearId, expectedGear }) => {
       it(`should retrieve #${gearId} gear information`, async () => {
         const gear = await catalog.find(gearId);
-        expect(gear).toEqual(expectedGear);
+        expect(expectedGear).toMatchObject(gear);
       });
     });
     describe("When gear doesn't exist", () => {
@@ -158,6 +173,7 @@ describe("Catalog", () => {
       });
     });
   });
+
   describe("Add gear", () => {
     describe.each`
       name               | category     | isPonctualUsage | isConsumable | expectedSlug       | expectedCategory                                         | expectedCodeStart | expectedOwner
@@ -251,6 +267,7 @@ describe("Catalog", () => {
       });
     });
   });
+
   describe("Update gear", () => {
     describe.each`
       toUpdateGear                                      | expectedSlug        | expectedCategory
@@ -270,11 +287,12 @@ describe("Catalog", () => {
         it("should persist update", async () => {
           await catalog.update(toUpdateGear);
           const updatedGear = await catalog.find(toUpdateGear.id);
-          expect(updatedGear).toEqual({
+          const expectedGear = {
             ...toUpdateGear,
             slug: expectedSlug,
             category: expectedCategory,
-          });
+          };
+          expect(updatedGear).toMatchObject(expectedGear);
         });
         if (expectedCategory) {
           it(`should link ${toUpdateGear.name} to ${expectedCategory.name} category`, async () => {
@@ -298,11 +316,14 @@ describe("Catalog", () => {
       });
     });
   });
+
   describe("Delete gear", () => {
+    beforeEach(() => {
+      gearRepository.gears = GEARS;
+    });
     describe.each`
       toDeleteGearId
-      ${1}
-      ${3}
+      ${CHAISE.id}
       ${123}
     `("Delete #$toDeleteGearId gear", ({ toDeleteGearId }) => {
       it(`should remove #${toDeleteGearId} gear from persistance`, async () => {
@@ -312,7 +333,22 @@ describe("Catalog", () => {
         ).rejects.toThrow(`Gear #${toDeleteGearId} doesn't exist`);
       });
     });
+    describe.each`
+      toDeleteGearId | expectedError
+      ${PERCEUSE.id} | ${`Impossible de supprimer le matériel, il est lié à : FT 2, Fiche Achat 4`}
+      ${TIREUSE.id}  | ${`Impossible de supprimer le matériel, il est lié à : FA 1, FA 5, Fiche Emprunt 3`}
+    `(
+      "When gear #$toDeleteGearId is used in linked items",
+      ({ toDeleteGearId, expectedError }) => {
+        it("should indicate that gear can't be deleted", async () => {
+          await expect(
+            async () => await catalog.remove(toDeleteGearId),
+          ).rejects.toThrow(expectedError);
+        });
+      },
+    );
   });
+
   describe("Search gear", () => {
     beforeAll(() => {
       gearRepository.gears = SIMILAR_GEARS;

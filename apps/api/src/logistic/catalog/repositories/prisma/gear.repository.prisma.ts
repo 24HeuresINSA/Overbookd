@@ -6,6 +6,7 @@ import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { GearFilter } from "../../../common/gear.filter";
 import { DatabaseGear, SELECT_GEAR } from "../../../common/dto/gear.query";
+import { GearLinkedItems } from "../../catalog.service";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
   const baseGear = {
@@ -60,8 +61,7 @@ export class PrismaGearRepository implements GearRepository {
   }
 
   private buildUpsertData(gear: Omit<CatalogGear, "id">) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { category, owner, ...baseGear } = gear;
+    const { category, owner: _, ...baseGear } = gear;
     const categoryLink = category
       ? { category: { connect: { id: category.id } } }
       : {};
@@ -81,6 +81,24 @@ export class PrismaGearRepository implements GearRepository {
 
   async removeGear(id: number): Promise<void> {
     await this.prismaService.catalogGear.delete({ where: { id } });
+  }
+
+  async getLinkedItems(id: number): Promise<GearLinkedItems> {
+    const gear = await this.prismaService.catalogGear.findUnique({
+      where: { id },
+      select: {
+        festivalActivityInquiries: { select: { faId: true } },
+        festivalTaskInquiries: { select: { ftId: true } },
+        borrows: { select: { borrowId: true } },
+        purchases: { select: { purchaseId: true } },
+      },
+    });
+    return {
+      actitivities: gear.festivalActivityInquiries.map(({ faId }) => faId),
+      tasks: gear.festivalTaskInquiries.map(({ ftId }) => ftId),
+      borrows: gear.borrows.map(({ borrowId }) => borrowId),
+      purchases: gear.purchases.map(({ purchaseId }) => purchaseId),
+    };
   }
 
   async searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
