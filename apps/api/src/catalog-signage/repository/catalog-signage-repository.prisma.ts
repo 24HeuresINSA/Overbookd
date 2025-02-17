@@ -3,7 +3,7 @@ import { FileService } from "../../utils/file.service";
 import { PrismaService } from "../../prisma.service";
 import { CatalogSignageRepository } from "../catalog-signage.service";
 import { SlugifyService } from "@overbookd/slugify";
-import { StreamableFile } from "@nestjs/common";
+import { ForbiddenException, StreamableFile } from "@nestjs/common";
 
 export class PrismaCatalogSignageRepository
   implements CatalogSignageRepository
@@ -41,10 +41,22 @@ export class PrismaCatalogSignageRepository
   async remove(id: number): Promise<void> {
     const signage = await this.prisma.catalogSignage.findUnique({
       where: { id },
+      select: {
+        image: true,
+        festivalActivityRequests: { select: { faId: true } },
+      },
     });
-    if (signage?.image) {
-      this.fileService.deleteFile(signage.image);
+
+    if (signage?.festivalActivityRequests.length) {
+      const faIds = signage.festivalActivityRequests
+        .map(({ faId }) => `FA ${faId}`)
+        .join(", ");
+      throw new ForbiddenException(
+        `Impossible de supprimer la signalisation, elle est liée à : ${faIds}`,
+      );
     }
+
+    if (signage?.image) this.fileService.deleteFile(signage.image);
     await this.prisma.catalogSignage.delete({ where: { id } });
   }
 

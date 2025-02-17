@@ -6,6 +6,7 @@ import {
   CategorySearchOptions,
   GearSearchOptions,
 } from "@overbookd/http";
+import { GearLinkedItems } from "../catalog.service";
 
 export type GearRepository = {
   getGear(id: number): Promise<CatalogGear>;
@@ -15,6 +16,7 @@ export type GearRepository = {
   ): Promise<CatalogGear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: GearSearchOptions): Promise<CatalogGear[]>;
+  getLinkedItems(id: number): Promise<GearLinkedItems | undefined>;
 };
 
 export type CategoryRepository = {

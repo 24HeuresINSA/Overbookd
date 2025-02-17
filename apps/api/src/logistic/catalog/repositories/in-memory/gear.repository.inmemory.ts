@@ -1,16 +1,25 @@
 import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
-import { GearNotFoundException } from "../../catalog.service";
+import { GearLinkedItems, GearNotFoundException } from "../../catalog.service";
 import { GearRepository } from "../catalog-repositories";
 import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 import { GearSearchBuilder } from "../../../common/gear-search.builder";
 
+export type CatalogGearWithLinkedItems = CatalogGear & GearLinkedItems;
+
+export const EMPTY_GEAR_LINKED_ITEMS = {
+  tasks: [],
+  actitivities: [],
+  borrows: [],
+  purchases: [],
+};
+
 @Injectable()
 export class InMemoryGearRepository implements GearRepository {
-  gears: CatalogGear[] = [];
+  gears: CatalogGearWithLinkedItems[] = [];
 
   getGear(id: number): Promise<CatalogGear | undefined> {
     const gear = this.gears.find((gear) => gear.id === id);
@@ -25,7 +34,7 @@ export class InMemoryGearRepository implements GearRepository {
     const code = gear.category
       ? GearReferenceCodeService.computeGearCode(gear.category, id)
       : undefined;
-    const createdGear = { ...gear, id, code };
+    const createdGear = { ...gear, id, code, ...EMPTY_GEAR_LINKED_ITEMS };
     this.gears = [...this.gears, createdGear];
     return Promise.resolve(createdGear);
   }
@@ -35,8 +44,9 @@ export class InMemoryGearRepository implements GearRepository {
   ): Promise<CatalogGear | undefined> {
     const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
     if (gearIndex === -1) return Promise.resolve(undefined);
-    this.gears = updateItemToList(this.gears, gearIndex, gear);
-    return Promise.resolve(gear);
+    const toUpdate = { ...gear, ...EMPTY_GEAR_LINKED_ITEMS };
+    this.gears = updateItemToList(this.gears, gearIndex, toUpdate);
+    return Promise.resolve(toUpdate);
   }
 
   removeGear(id: number): Promise<void> {
@@ -44,6 +54,11 @@ export class InMemoryGearRepository implements GearRepository {
     if (gearIndex === -1) return Promise.resolve();
     this.gears = removeItemAtIndex(this.gears, gearIndex);
     return Promise.resolve();
+  }
+
+  getLinkedItems(id: number): Promise<GearLinkedItems | undefined> {
+    const gear = this.gears.find((g) => g.id === id);
+    return Promise.resolve(gear);
   }
 
   searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
