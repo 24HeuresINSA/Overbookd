@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CategoryNotFoundException } from "./category.service";
 import {
   CategoryRepository,
@@ -96,7 +101,7 @@ export class CatalogService {
         ...purchases,
       ];
       const errorMessage = `Impossible de supprimer le matériel, il est lié à : ${allLinkedItems.join(", ")}`;
-      throw new Error(errorMessage);
+      throw new ForbiddenException(errorMessage);
     }
 
     return this.gearRepository.removeGear(id);
