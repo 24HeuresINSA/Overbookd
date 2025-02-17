@@ -1,3 +1,10 @@
+## [3.33.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.2...v3.33.3) (2025-02-17)
+
+### Bug Fixes
+
+* **availabilities:** web permission to manage other volunteer availabilitites [#2402](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2402) ([2736148](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2736148cd39793a4b83bf314f29d4c0633a883e0))
+* **web:** fix calendar event content display [#2406](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2406) [#2340](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2340) ([7d9c66c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d9c66cd707b325354aceee176f4b3018318e968))
+
 ## [3.33.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.1...v3.33.2) (2025-02-17)
 
 ### Bug Fixes
