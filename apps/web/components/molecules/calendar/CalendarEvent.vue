@@ -8,8 +8,10 @@
     :ripple="clickable"
     @click="propagateClick"
   >
-    <p class="calendar-event__name">{{ event.name }}</p>
-    <p class="calendar-event__hour">{{ presenter.periodText }}</p>
+    <v-tooltip activator="parent" location="top">
+      <CalendarEventContent :name="event.name" :hour="presenter.periodText" />
+    </v-tooltip>
+    <CalendarEventContent :name="event.name" :hour="presenter.periodText" />
   </v-card>
 </template>
 
@@ -52,26 +54,5 @@ const presenter = computed<CalendarEventPresenter>(() => {
   position: absolute;
   margin: 0 !important;
   border-radius: 6px !important;
-  padding: 8px 3px 8px 10px !important;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  &__name {
-    font-size: 0.85rem;
-    font-weight: bold;
-    line-height: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__hour {
-    font-size: 0.75rem;
-    line-height: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }
 </style>
