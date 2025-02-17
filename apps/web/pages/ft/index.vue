@@ -4,6 +4,13 @@
     <nuxt-link :to="`${FT_URL}?adherent=${me?.id}`">
       <v-btn text="Mes FTs" variant="outlined" color="primary" />
     </nuxt-link>
+    <nuxt-link
+      v-for="team in teamsWithTasks"
+      :key="team"
+      :to="`${FT_URL}?team=${team}`"
+    >
+      <v-btn variant="outlined" color="primary">FTs de {{ team }}</v-btn>
+    </nuxt-link>
   </div>
   <main class="task ft">
     <FtFilter v-model="filters" class="task__filtering" />
@@ -98,7 +105,7 @@ import type {
 import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
-import type { User } from "@overbookd/user";
+import type { User, UserPersonalData } from "@overbookd/user";
 import {
   keepMatchingSearchCriteria,
   type Searchable,
@@ -132,7 +139,7 @@ const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
-const me = computed<User | undefined>(() => userStore.loggedUser);
+const me = computed<UserPersonalData | undefined>(() => userStore.loggedUser);
 
 const canRemoveTask = computed<boolean>(() => userStore.can(WRITE_FT));
 const tableHeaders = computed<TableHeaders>(() => {
@@ -149,6 +156,14 @@ const tableHeaders = computed<TableHeaders>(() => {
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
+const teamsWithTasks = computed<Set<string>>(() =>
+  tasks.value.reduce((teams: Set<string>, task) => {
+    const { team } = task;
+    if (team === null) return teams;
+    if (!me.value?.teams.includes(team)) return teams;
+    return teams.add(team);
+  }, new Set<string>()),
+);
 
 const loading = ref<boolean>(tasks.value.length === 0);
 
@@ -278,6 +293,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .quick-filters {
+  margin-bottom: 5px;
   padding: 0px 10px;
   display: flex;
   gap: 5px 10px;
