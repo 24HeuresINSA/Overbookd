@@ -39,7 +39,10 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import { VIEW_VOLUNTEER_DETAILS, MANAGE_USERS } from "@overbookd/permission";
+import {
+  VIEW_VOLUNTEER_DETAILS,
+  AFFECT_VOLUNTEER,
+} from "@overbookd/permission";
 import {
   keepMembersOf,
   excludeMembersOf,
@@ -110,7 +113,7 @@ const addTeamInFilters = (team: Team) => {
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
 const canManageAvailabilities = computed<boolean>(() =>
-  userStore.can(MANAGE_USERS),
+  userStore.can(AFFECT_VOLUNTEER),
 );
 const openVolunteerInfoDialog = (
   volunteer: UserDataWithPotentialyProfilePicture,

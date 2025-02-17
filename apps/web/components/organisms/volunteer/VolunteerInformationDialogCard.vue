@@ -142,7 +142,7 @@
           </div>
         </div>
         <AvailabilitiesSumupCalendar
-          v-if="canManageUsers"
+          v-if="canManageAvailabilities"
           :volunteer-id="volunteer.id"
           class="availabilitites desktop-only"
         />
@@ -153,7 +153,11 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import { MANAGE_ADMINS, MANAGE_USERS } from "@overbookd/permission";
+import {
+  AFFECT_VOLUNTEER,
+  MANAGE_ADMINS,
+  MANAGE_USERS,
+} from "@overbookd/permission";
 import {
   type User,
   type UserPersonalData,
@@ -212,6 +216,9 @@ const selectedVolunteerFriends = computed<User[]>(
   () => userStore.selectedUserFriends,
 );
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canManageAvailabilities = computed<boolean>(() =>
+  userStore.can(AFFECT_VOLUNTEER),
+);
 const isMe = computed<boolean>(
   () => userStore.loggedUser?.id === volunteerId.value,
 );
