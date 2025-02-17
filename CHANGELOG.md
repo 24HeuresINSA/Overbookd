@@ -1,3 +1,10 @@
+## [3.33.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.3...v3.33.4) (2025-02-17)
+
+### Bug Fixes
+
+* **api:** add safeties to avoid deletion in catalogs [#2404](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2404) ([11d2a08](https://gitlab.com/24-heures-insa/overbookd-mono/commit/11d2a0874474c0765c57f40e7d443c2da8829be9))
+* **ft:** add back my teams FTs quick filters [#2407](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2407) ([9c2b2ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9c2b2abf248883ed88aef59c625e5cbdd84e2fb5))
+
 ## [3.33.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.2...v3.33.3) (2025-02-17)
 
 ### Bug Fixes
