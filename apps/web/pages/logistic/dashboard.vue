@@ -9,7 +9,7 @@
         v-model:category="filters.category"
         @update:options="searchGears"
       />
-      <div class="dashboard__datepicker">
+      <div class="dashboard__datepicker-export">
         <DateTimeField
           v-model="start"
           label="Début du créneau"
@@ -18,7 +18,13 @@
         <DateTimeField
           v-model="end"
           label="Fin du créneau"
-          @change="updateSelectedGear"
+          @update:model-value="updateSelectedGear"
+        />
+        <v-btn
+          text="Export"
+          color="secondary"
+          :loading="exportLoading"
+          @click="exportCsv"
         />
       </div>
       <DashboardGearListing
@@ -32,8 +38,9 @@
 
 <script lang="ts" setup>
 import type { FilterGear } from "~/utils/logistic/filter-gear";
-import { ONE_DAY_IN_MS } from "@overbookd/time";
+import { formatLocalDate, ONE_DAY_IN_MS } from "@overbookd/time";
 import type { GearSearchOptions } from "@overbookd/http";
+import { download } from "~/utils/file/download.utils";
 
 useHead({ title: "Récap Matos" });
 
@@ -63,6 +70,17 @@ const updateSelectedGear = () => {
     start.value,
     end.value,
   );
+};
+
+const exportLoading = ref<boolean>(false);
+const exportCsv = async () => {
+  exportLoading.value = true;
+  await dashboardStore.fetchCSVRequirements(filters.value);
+  if (dashboardStore.csvRequirements) {
+    const date = formatLocalDate(new Date());
+    download(`recap-matos-${date}.csv`, dashboardStore.csvRequirements);
+  }
+  exportLoading.value = false;
 };
 </script>
 

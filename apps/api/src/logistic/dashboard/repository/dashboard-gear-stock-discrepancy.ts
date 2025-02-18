@@ -3,10 +3,17 @@ import { Period, Duration, QUARTER_IN_MS } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 
+export type StockDiscrepancy = {
+  timeWindow?: Period;
+  quantity: number;
+};
+
 export class DashboardGearStockDiscrepancy {
   private constructor() {}
 
-  static computeMinStockDiscrepancyOn(gear: DatabaseDashboardGear): number {
+  static computeMinStockDiscrepancyOn(
+    gear: DatabaseDashboardGear,
+  ): StockDiscrepancy {
     const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
@@ -28,14 +35,26 @@ export class DashboardGearStockDiscrepancy {
     const mergedTimeWindows = Period.mergeContiguous(timeWindows);
 
     const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) => {
-      return DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
-        gear,
-        timeWindow,
-      );
+      const quantity =
+        DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
+          gear,
+          timeWindow,
+        );
+      return { timeWindow, quantity };
     });
 
     const inventory = DashboardGearStock.findInventoryQuantity(gear);
-    return Math.min(...discrepanciesFromTimeWindows, inventory);
+    const discrepanciesFromInventory = { quantity: inventory };
+
+    const discrepancies = [
+      discrepanciesFromInventory,
+      ...discrepanciesFromTimeWindows,
+    ];
+    return discrepancies.reduce(
+      (min, discrepancy) =>
+        discrepancy.quantity < min.quantity ? discrepancy : min,
+      discrepancies[0],
+    );
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(

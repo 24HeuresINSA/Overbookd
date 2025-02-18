@@ -9,6 +9,7 @@ import {
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 import { DashboardGearStockDiscrepancy } from "./dashboard-gear-stock-discrepancy";
+import { GearRequirementForCsv } from "../dashboard.service";
 
 export class DashboardGear {
   private constructor() {}
@@ -21,7 +22,37 @@ export class DashboardGear {
       name: gear.name,
       slug: gear.slug,
       isConsumable: gear.isConsumable,
-      stockDiscrepancy,
+      stockDiscrepancy: stockDiscrepancy.quantity,
+    };
+  }
+
+  public static generateRequirementForCsv(
+    gear: DatabaseDashboardGear,
+  ): GearRequirementForCsv | null {
+    if (gear.isConsumable) return null;
+    const stockDiscrepancy =
+      DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear);
+    if (stockDiscrepancy.quantity <= 0) return null;
+
+    const details = DashboardGear.gearPeriodDetails(
+      gear,
+      stockDiscrepancy.timeWindow,
+    );
+
+    return {
+      name: gear.name,
+      missing: stockDiscrepancy.quantity,
+      date: stockDiscrepancy.timeWindow.start,
+      stock: {
+        inventory: details.inventory,
+        borrows: details.borrows,
+        purchases: details.purchases,
+        total: details.stock,
+      },
+      inquiries: {
+        activities: details.activities,
+        tasks: details.tasks,
+      },
     };
   }
 
