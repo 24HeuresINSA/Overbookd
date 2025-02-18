@@ -62,25 +62,24 @@ export class DashboardService {
     const header = "Matos,Manque,Details Manque,Stock,Details Stock,Date\n";
 
     const lines = requirements.map((requirement) => {
+      const { name, date, missing, inquiries, stock } = requirement;
       const missingDetails = [
-        ...requirement.inquiries.activities.map(
-          (a) => `FA ${a.id} - ${a.name} (${a.quantity})`,
-        ),
-        ...requirement.inquiries.tasks.map(
-          (t) => `FT ${t.id} - ${t.name} (${t.quantity})`,
-        ),
+        ...inquiries.activities.map((a) => `FA ${formatInquiry(a)})`),
+        ...inquiries.tasks.map((t) => `FT ${formatInquiry(t)})`),
       ].join("\n");
-
       const stockDetails = [
-        `Inventaire - ${requirement.stock.inventory}`,
-        ...requirement.stock.borrows.map((b) => `${b.lender} - ${b.quantity}`),
+        `Inventaire - ${stock.inventory}`,
+        ...stock.borrows.map((b) => `${b.lender} - ${b.quantity}`),
+        ...stock.purchases.map((p) => `${p.seller} - ${p.quantity}`),
       ].join("\n");
-
-      const date = formatDateWithMinutes(requirement.date);
-
-      return `${requirement.name},${requirement.missing},"${missingDetails}",${requirement.stock.total},"${stockDetails}",${date}`;
+      const formattedDate = formatDateWithMinutes(date);
+      return `${name},${missing},"${missingDetails}",${stock.total},"${stockDetails}",${formattedDate}`;
     });
 
     return header + lines.join("\n");
   }
+}
+
+function formatInquiry(inquiry: GearDetailsInquiry): string {
+  return `${inquiry.id} - ${inquiry.name} (${inquiry.quantity})`;
 }
