@@ -1,4 +1,4 @@
-import { DatabaseDashboardGear } from "./dashboard.model";
+import { DatabaseDashboardGear } from "../repository/dashboard.model";
 import { Period } from "@overbookd/time";
 import { sumQuantity } from "./sum-quantity";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";

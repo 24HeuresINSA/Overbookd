@@ -38,9 +38,8 @@ export const useLogisticDashboardStore = defineStore("logistic-dashboard", {
       this.selectedGear = { ...res, details };
     },
 
-    async fetchCSVRequirements(searchOptions?: GearSearchOptions) {
-      const res =
-        await LogisticDashboardRepository.getCSVRequirements(searchOptions);
+    async fetchCSVRequirements() {
+      const res = await LogisticDashboardRepository.getCSVRequirements();
       if (isHttpError(res)) return;
       this.csvRequirements = res;
     },

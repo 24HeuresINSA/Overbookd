@@ -11,7 +11,7 @@ import {
   DatabaseTaskInquiry,
   DatabaseBorrow,
   DatabasePurchase,
-} from "./dashboard.model";
+} from "../repository/dashboard.model";
 
 const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),

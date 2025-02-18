@@ -118,33 +118,13 @@ export class DashboardController {
     description: "Gear previews in CSV",
   })
   @ApiProduces(CSV)
-  @ApiQuery({
-    name: "search",
-    required: false,
-    type: String,
-    description: "Get gears that match the name or the reference code",
-  })
-  @ApiQuery({
-    name: "category",
-    required: false,
-    type: String,
-    description: "Get gears that match the category with category name",
-  })
-  @ApiQuery({
-    name: "owner",
-    required: false,
-    type: String,
-    description: "Get gears that are owned by team that match name",
-  })
   async getRequirementsInCsv(
     @Request() request: RequestWithUserPayload,
     @Res() response: Response,
-    @Query() searchOptions: GearSearchRequestDto,
   ) {
     try {
       response.setHeader("content-type", request.headers.accept);
-      const csv =
-        await this.dashboardService.getRequirementsInCsv(searchOptions);
+      const csv = await this.dashboardService.getRequirementsInCsv();
       response.send(csv);
       return;
     } catch (e) {

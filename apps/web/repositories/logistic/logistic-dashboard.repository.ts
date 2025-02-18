@@ -24,10 +24,9 @@ export class LogisticDashboardRepository {
     });
   }
 
-  static getCSVRequirements(searchOptions?: GearSearchOptions) {
-    return HttpClient.get<string>(
-      { path: `${this.basePath}/export`, params: searchOptions },
-      { acceptedType: CSV },
-    );
+  static getCSVRequirements() {
+    return HttpClient.get<string>(`${this.basePath}/export`, {
+      acceptedType: CSV,
+    });
   }
 }

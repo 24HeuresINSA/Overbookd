@@ -51,18 +51,3 @@ export type GearWithDetails = {
   slug: string;
   details: GearDetails[];
 };
-
-export type GearRequirementForCsv = {
-  reference: string;
-  name: string;
-  missing: number;
-  stock: {
-    inventory: number;
-    borrows: GearBorrow[];
-    purchases: GearPurchase[];
-  };
-  inquiries: {
-    activities: Inquiry[];
-    tasks: Inquiry[];
-  };
-};

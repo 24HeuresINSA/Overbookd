@@ -1,5 +1,5 @@
 import { GearDetails, GearPreview } from "@overbookd/http";
-import { DatabaseDashboardGear } from "./dashboard.model";
+import { DatabaseDashboardGear } from "../repository/dashboard.model";
 import {
   IProvidePeriod,
   Period,

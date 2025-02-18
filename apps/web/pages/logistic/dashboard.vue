@@ -75,7 +75,7 @@ const updateSelectedGear = () => {
 const exportLoading = ref<boolean>(false);
 const exportCsv = async () => {
   exportLoading.value = true;
-  await dashboardStore.fetchCSVRequirements(filters.value);
+  await dashboardStore.fetchCSVRequirements();
   if (dashboardStore.csvRequirements) {
     const date = formatLocalDate(new Date());
     download(`recap-matos-${date}.csv`, dashboardStore.csvRequirements);

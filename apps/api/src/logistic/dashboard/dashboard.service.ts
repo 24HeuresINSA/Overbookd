@@ -7,7 +7,8 @@ import {
   GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
-import { formatDateWithMinutes, Period } from "@overbookd/time";
+import { Period } from "@overbookd/time";
+import { DashboardGearFormat } from "./domain/dashboard-gear-format";
 
 export type GearRequirementForCsv = {
   name: string;
@@ -28,9 +29,7 @@ export type GearRequirementForCsv = {
 export type DashboardGears = {
   getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;
   getDetails(slug: string, period: Period): Promise<GearWithDetails>;
-  getRequirementsForCsv(
-    searchOptions: GearSearchOptions,
-  ): Promise<GearRequirementForCsv[]>;
+  getRequirementsForCsv(): Promise<GearRequirementForCsv[]>;
 };
 
 @Injectable()
@@ -50,36 +49,8 @@ export class DashboardService {
     return this.dashboardGears.getDetails(slug, period);
   }
 
-  async getRequirementsInCsv(
-    searchOptions: GearSearchOptions,
-  ): Promise<string> {
-    const requirements =
-      await this.dashboardGears.getRequirementsForCsv(searchOptions);
-    return this.toCsv(requirements);
+  async getRequirementsInCsv(): Promise<string> {
+    const requirements = await this.dashboardGears.getRequirementsForCsv();
+    return DashboardGearFormat.toCsv(requirements);
   }
-
-  private toCsv(requirements: GearRequirementForCsv[]): string {
-    const header = "Matos,Manque,Details Manque,Stock,Details Stock,Date\n";
-
-    const lines = requirements.map((requirement) => {
-      const { name, date, missing, inquiries, stock } = requirement;
-      const missingDetails = [
-        ...inquiries.activities.map((a) => `FA ${formatInquiry(a)})`),
-        ...inquiries.tasks.map((t) => `FT ${formatInquiry(t)})`),
-      ].join("\n");
-      const stockDetails = [
-        `Inventaire - ${stock.inventory}`,
-        ...stock.borrows.map((b) => `${b.lender} - ${b.quantity}`),
-        ...stock.purchases.map((p) => `${p.seller} - ${p.quantity}`),
-      ].join("\n");
-      const formattedDate = formatDateWithMinutes(date);
-      return `${name},${missing},"${missingDetails}",${stock.total},"${stockDetails}",${formattedDate}`;
-    });
-
-    return header + lines.join("\n");
-  }
-}
-
-function formatInquiry(inquiry: GearDetailsInquiry): string {
-  return `${inquiry.id} - ${inquiry.name} (${inquiry.quantity})`;
 }
