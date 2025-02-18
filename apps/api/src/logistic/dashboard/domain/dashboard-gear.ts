@@ -32,7 +32,7 @@ export class DashboardGear {
     if (gear.isConsumable) return null;
     const stockDiscrepancy =
       DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear);
-    if (stockDiscrepancy.quantity <= 0) return null;
+    if (stockDiscrepancy.quantity >= 0) return null;
 
     const details = DashboardGear.gearPeriodDetails(
       gear,
@@ -41,7 +41,7 @@ export class DashboardGear {
 
     return {
       name: gear.name,
-      missing: stockDiscrepancy.quantity,
+      missing: Math.abs(stockDiscrepancy.quantity),
       date: stockDiscrepancy.timeWindow.start,
       stock: {
         inventory: details.inventory,

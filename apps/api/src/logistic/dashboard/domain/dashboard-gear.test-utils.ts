@@ -12,6 +12,7 @@ import {
   DatabaseBorrow,
   DatabasePurchase,
 } from "../repository/dashboard.model";
+import { GearRequirementForCsv } from "../dashboard.service";
 
 const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),
@@ -741,3 +742,50 @@ export const consumableGearWithOneInquiryAndOnePurchaseForGraph: GearDetails[] =
       consumed: 20,
     },
   ];
+
+export const gearWithTwoInquiryAndTwoInventoryRecordForCsv: GearRequirementForCsv =
+  {
+    name: "gear with one inquiry and one inventory record",
+    missing: 25,
+    date: friday08hto09h.start,
+    stock: {
+      inventory: 30,
+      borrows: [],
+      purchases: [],
+      total: 30,
+    },
+    inquiries: {
+      activities: [{ ...justeDanceActivity, quantity: 30 }],
+      tasks: [{ ...installEscapeGameTask, quantity: 25 }],
+    },
+  };
+export const gearWithOneInquiryAndOnePurchaseForCsv: GearRequirementForCsv = {
+  name: "gear with one inquiry and one purchase",
+  missing: 5,
+  date: friday08hto09h.start,
+  stock: {
+    inventory: 0,
+    borrows: [],
+    purchases: [purchaseFromFriday08h],
+    total: 5,
+  },
+  inquiries: {
+    activities: [{ ...escapeGameActivity, quantity: 10 }],
+    tasks: [],
+  },
+};
+export const gearWithOneInquiryAndOneBorrowForCsv: GearRequirementForCsv = {
+  name: "gear with one inquiry and one borrow",
+  missing: 5,
+  date: friday08hto09h.start,
+  stock: {
+    inventory: 0,
+    borrows: [borrowFromFriday08hto09h],
+    purchases: [],
+    total: 5,
+  },
+  inquiries: {
+    activities: [{ ...escapeGameActivity, quantity: 10 }],
+    tasks: [],
+  },
+};
