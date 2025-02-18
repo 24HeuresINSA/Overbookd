@@ -87,7 +87,7 @@ const exportCsv = async () => {
 <style lang="scss" scoped>
 .dashboard {
   margin-left: auto;
-  &__datepicker {
+  &__datepicker-export {
     display: flex;
     gap: 15px;
     align-items: center;
