@@ -35,11 +35,16 @@ export class PeriodOrchestrator {
   areNewPeriodsAdded(maybeNewPeriods: IProvidePeriod[]) {
     return maybeNewPeriods.some(
       (newPeriod) =>
-        !this.periods.some(
-          (period) =>
-            period.start.getTime() <= newPeriod.start.getTime() &&
-            newPeriod.end.getTime() <= period.end.getTime(),
-        ),
+        !this.periods.some((period) => {
+          const isNewPeriodStartAfterExistingPeriodStart =
+            period.start.getTime() <= newPeriod.start.getTime();
+          const isNewPeriodEndBeforeExistingPeriodEnd =
+            newPeriod.end.getTime() <= period.end.getTime();
+          return (
+            isNewPeriodStartAfterExistingPeriodStart &&
+            isNewPeriodEndBeforeExistingPeriodEnd
+          );
+        }),
     );
   }
 
