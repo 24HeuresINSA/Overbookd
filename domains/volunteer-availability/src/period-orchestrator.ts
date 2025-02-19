@@ -32,6 +32,17 @@ export class PeriodOrchestrator {
     }, [] as Period[]);
   }
 
+  areNewPeriodsAdded(maybeNewPeriods: Period[]) {
+    return maybeNewPeriods.some(
+      (newPeriod) =>
+        !this.periods.some(
+          (period) =>
+            period.start.getTime() <= newPeriod.start.getTime() &&
+            newPeriod.end.getTime() <= period.end.getTime(),
+        ),
+    );
+  }
+
   get errors(): PeriodWithError[] {
     return this.availabilityPeriods
       .filter((period) => {

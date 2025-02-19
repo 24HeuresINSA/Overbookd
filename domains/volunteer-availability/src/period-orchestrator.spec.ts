@@ -8,12 +8,18 @@ describe("Period orchestrator", () => {
       expect(() => PeriodOrchestrator.init()).not.toThrow();
     });
     describe("when adding a 1 hour period", () => {
+      let periodOrchestrator: PeriodOrchestrator;
+      const period = Period.init({
+        start: new Date("2023-05-12 05:00+02:00"),
+        end: new Date("2023-05-12 06:00+02:00"),
+      });
+      beforeEach(() => {
+        periodOrchestrator = PeriodOrchestrator.init();
+      });
+      it("should tell this is a new period", () => {
+        expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(true);
+      });
       it("should alert the user that the period is too short and should last at least 2 hours", () => {
-        const periodOrchestrator = PeriodOrchestrator.init();
-        const period = Period.init({
-          start: new Date("2023-05-12 05:00+02:00"),
-          end: new Date("2023-05-12 06:00+02:00"),
-        });
         periodOrchestrator.addPeriod(period);
         expect(periodOrchestrator.errors).toEqual([
           {
@@ -84,15 +90,18 @@ describe("Period orchestrator", () => {
       });
       describe("when adding an existing period", () => {
         let periodOrchestrator: PeriodOrchestrator;
+        const period = Period.init({
+          start: new Date("2023-05-12 04:00+02:00"),
+          end: new Date("2023-05-12 05:00+02:00"),
+        });
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = Period.init({
-            start: new Date("2023-05-12 04:00+02:00"),
-            end: new Date("2023-05-12 05:00+02:00"),
-          });
-          periodOrchestrator.addPeriod(period);
+        });
+        it("should tell this is a not new period", () => {
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(false);
         });
         it("should not duplicate periods", () => {
+          periodOrchestrator.addPeriod(period);
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             {
@@ -112,18 +121,22 @@ describe("Period orchestrator", () => {
       });
       describe("when adding a period before the period from 2 to 3", () => {
         let periodOrchestrator: PeriodOrchestrator;
+        const period = Period.init({
+          start: new Date("2023-05-12 00:00+02:00"),
+          end: new Date("2023-05-12 02:00+02:00"),
+        });
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = Period.init({
-            start: new Date("2023-05-12 00:00+02:00"),
-            end: new Date("2023-05-12 02:00+02:00"),
-          });
-          periodOrchestrator.addPeriod(period);
+        });
+        it("should tell this is a new period", () => {
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(true);
         });
         it("shouldn't have any error in the report", () => {
+          periodOrchestrator.addPeriod(period);
           expect(periodOrchestrator.errors).toEqual([]);
         });
         it("should merge the 6 periods to 3 jointed ones", () => {
+          periodOrchestrator.addPeriod(period);
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             {
