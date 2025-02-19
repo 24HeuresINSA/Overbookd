@@ -113,6 +113,13 @@ const taskInquiryFromFriday08hto09h: DatabaseTaskInquiry = {
     mobilizations: [friday08hto09h],
   },
 };
+const taskInquiryFromFriday08h15to08h30: DatabaseTaskInquiry = {
+  quantity: 25,
+  ft: {
+    ...installEscapeGameTask,
+    mobilizations: [friday08h15to08h30],
+  },
+};
 
 const inventoryRecordWith5Quantity: InventoryRecord = {
   quantity: 5,
@@ -195,20 +202,21 @@ export const gearWithOneInquiryAndOneInventoryRecord: DatabaseDashboardGear = {
   borrows: [],
   purchases: [],
 };
-export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseDashboardGear = {
-  id: 6,
-  name: "gear with one inquiry and one inventory record",
-  slug: "gear-with-one-inquiry-and-one-inventory-record",
-  isConsumable: false,
-  festivalActivityInquiries: [activityInquiryFromFriday08hto09hAnd10hto12h],
-  festivalTaskInquiries: [taskInquiryFromFriday08hto09h],
-  inventoryRecords: [
-    inventoryRecordWith5Quantity,
-    inventoryRecordWith25Quantity,
-  ],
-  borrows: [],
-  purchases: [],
-};
+export const gearWithTwoInquiriesAndTwoInventoryRecords: DatabaseDashboardGear =
+  {
+    id: 6,
+    name: "gear with two inquiries and two inventory records",
+    slug: "gear-with-two-inquiries-and-two-inventory-records",
+    isConsumable: false,
+    festivalActivityInquiries: [activityInquiryFromFriday08hto09hAnd10hto12h],
+    festivalTaskInquiries: [taskInquiryFromFriday08h15to08h30],
+    inventoryRecords: [
+      inventoryRecordWith5Quantity,
+      inventoryRecordWith25Quantity,
+    ],
+    borrows: [],
+    purchases: [],
+  };
 export const consumableGearWithOneInquiry: DatabaseDashboardGear = {
   id: 7,
   name: "consumable gear with one inquiry",
@@ -527,9 +535,9 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       ...emptyGearDetails,
       ...friday08hto08h15,
       stock: 30,
-      inquiry: 55,
+      inquiry: 30,
       activities: [{ ...justeDanceActivity, quantity: 30 }],
-      tasks: [{ ...installEscapeGameTask, quantity: 25 }],
+      tasks: [],
       inventory: 30,
     },
     {
@@ -545,18 +553,18 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       ...emptyGearDetails,
       ...friday08h30to08h45,
       stock: 30,
-      inquiry: 55,
+      inquiry: 30,
       activities: [{ ...justeDanceActivity, quantity: 30 }],
-      tasks: [{ ...installEscapeGameTask, quantity: 25 }],
+      tasks: [],
       inventory: 30,
     },
     {
       ...emptyGearDetails,
       ...friday08h45to09h,
       stock: 30,
-      inquiry: 55,
+      inquiry: 30,
       activities: [{ ...justeDanceActivity, quantity: 30 }],
-      tasks: [{ ...installEscapeGameTask, quantity: 25 }],
+      tasks: [],
       inventory: 30,
     },
     {
@@ -743,11 +751,11 @@ export const consumableGearWithOneInquiryAndOnePurchaseForGraph: GearDetails[] =
     },
   ];
 
-export const gearWithTwoInquiryAndTwoInventoryRecordForCsv: GearRequirementForCsv =
+export const gearWithTwoInquiriesAndTwoInventoryRecordsForCsv: GearRequirementForCsv =
   {
-    name: "gear with one inquiry and one inventory record",
+    name: "gear with two inquiries and two inventory records",
     missing: 25,
-    date: friday08hto09h.start,
+    date: friday08h15to08h30.start,
     stock: {
       inventory: 30,
       borrows: [],

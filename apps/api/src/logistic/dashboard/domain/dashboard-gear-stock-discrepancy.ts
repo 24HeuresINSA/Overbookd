@@ -34,14 +34,12 @@ export class DashboardGearStockDiscrepancy {
     ];
     const mergedTimeWindows = Period.mergeContiguous(timeWindows);
 
-    const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) => {
-      const quantity =
-        DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
-          gear,
-          timeWindow,
-        );
-      return { timeWindow, quantity };
-    });
+    const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) =>
+      DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
+        gear,
+        timeWindow,
+      ),
+    );
 
     const inventory = DashboardGearStock.findInventoryQuantity(gear);
     const discrepanciesFromInventory = { quantity: inventory };
@@ -60,7 +58,7 @@ export class DashboardGearStockDiscrepancy {
   private static computeStockDiscrepancyByTimeWindowOn(
     gear: DatabaseDashboardGear,
     timeWindow: Period,
-  ): number {
+  ): StockDiscrepancy {
     const period = Period.init(timeWindow);
     const periods = period.splitWithInterval(Duration.ms(QUARTER_IN_MS));
 
