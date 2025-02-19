@@ -32,6 +32,22 @@ export class PeriodOrchestrator {
     }, [] as Period[]);
   }
 
+  areNewPeriodsAdded(maybeNewPeriods: IProvidePeriod[]) {
+    return maybeNewPeriods.some(
+      (newPeriod) =>
+        !this.periods.some((period) => {
+          const isNewPeriodStartAfterExistingPeriodStart =
+            period.start.getTime() <= newPeriod.start.getTime();
+          const isNewPeriodEndBeforeExistingPeriodEnd =
+            newPeriod.end.getTime() <= period.end.getTime();
+          return (
+            isNewPeriodStartAfterExistingPeriodStart &&
+            isNewPeriodEndBeforeExistingPeriodEnd
+          );
+        }),
+    );
+  }
+
   get errors(): PeriodWithError[] {
     return this.availabilityPeriods
       .filter((period) => {
