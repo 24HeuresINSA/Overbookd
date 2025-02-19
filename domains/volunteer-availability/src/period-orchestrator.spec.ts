@@ -17,7 +17,7 @@ describe("Period orchestrator", () => {
         periodOrchestrator = PeriodOrchestrator.init();
       });
       it("should tell this is a new period", () => {
-        expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(true);
+        expect(periodOrchestrator.areNewPeriodsAdded([period])).toBe(true);
       });
       it("should alert the user that the period is too short and should last at least 2 hours", () => {
         periodOrchestrator.addPeriod(period);
@@ -98,7 +98,7 @@ describe("Period orchestrator", () => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
         });
         it("should tell this is a not new period", () => {
-          expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(false);
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).toBe(false);
         });
         it("should not duplicate periods", () => {
           periodOrchestrator.addPeriod(period);
@@ -129,7 +129,7 @@ describe("Period orchestrator", () => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
         });
         it("should tell this is a new period", () => {
-          expect(periodOrchestrator.areNewPeriodsAdded([period])).equal(true);
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).toBe(true);
         });
         it("shouldn't have any error in the report", () => {
           periodOrchestrator.addPeriod(period);
@@ -154,17 +154,20 @@ describe("Period orchestrator", () => {
           ]);
         });
       });
-      describe("when adding a period before the period from 8 to 10", () => {
+      describe("when adding a period before the period from 8 to 12", () => {
         let periodOrchestrator: PeriodOrchestrator;
+        const period = Period.init({
+          start: new Date("2023-05-12 06:00+02:00"),
+          end: new Date("2023-05-12 08:00+02:00"),
+        });
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = Period.init({
-            start: new Date("2023-05-12 06:00+02:00"),
-            end: new Date("2023-05-12 08:00+02:00"),
-          });
-          periodOrchestrator.addPeriod(period);
+        });
+        it("should tell this is a new period", () => {
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).toBe(true);
         });
         it("should inform the user that only the period from 2 to 3 is too short", () => {
+          periodOrchestrator.addPeriod(period);
           expect(periodOrchestrator.errors).toEqual([
             {
               start: new Date("2023-05-12 02:00+02:00"),
@@ -174,6 +177,7 @@ describe("Period orchestrator", () => {
           ]);
         });
         it("should merge the 6 periods to 2 jointed ones", () => {
+          periodOrchestrator.addPeriod(period);
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(2);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             {
@@ -185,6 +189,114 @@ describe("Period orchestrator", () => {
               end: new Date("2023-05-12 12:00+02:00"),
             },
           ]);
+        });
+      });
+      describe("when adding a period inside the period from 8 to 12", () => {
+        let periodOrchestrator: PeriodOrchestrator;
+        const period = Period.init({
+          start: new Date("2023-05-12 09:00+02:00"),
+          end: new Date("2023-05-12 11:00+02:00"),
+        });
+        beforeEach(() => {
+          periodOrchestrator = PeriodOrchestrator.init(periods);
+        });
+        it("should tell this is not a new period", () => {
+          expect(periodOrchestrator.areNewPeriodsAdded([period])).toBe(false);
+        });
+        it("should inform the user that only the period from 2 to 3 is too short", () => {
+          periodOrchestrator.addPeriod(period);
+          expect(periodOrchestrator.errors).toEqual([
+            {
+              start: new Date("2023-05-12 02:00+02:00"),
+              end: new Date("2023-05-12 03:00+02:00"),
+              message: "La période doit durer au moins 2 heures",
+            },
+          ]);
+        });
+        it("should merge the 6 periods to 3 jointed ones", () => {
+          periodOrchestrator.addPeriod(period);
+          expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
+          expect(periodOrchestrator.availabilityPeriods).toEqual([
+            {
+              start: new Date("2023-05-12 02:00+02:00"),
+              end: new Date("2023-05-12 03:00+02:00"),
+            },
+            {
+              start: new Date("2023-05-12 04:00+02:00"),
+              end: new Date("2023-05-12 06:00+02:00"),
+            },
+            {
+              start: new Date("2023-05-12 08:00+02:00"),
+              end: new Date("2023-05-12 12:00+02:00"),
+            },
+          ]);
+        });
+      });
+    });
+    describe("when adding multiple periods", () => {
+      let periodOrchestrator: PeriodOrchestrator;
+      beforeEach(() => {
+        periodOrchestrator = PeriodOrchestrator.init(periods);
+      });
+      describe("when adding the same periods", () => {
+        it("should tell there is no new period", () => {
+          expect(periodOrchestrator.areNewPeriodsAdded(periods)).toBe(false);
+        });
+      });
+      describe("when adding an existing period with a new one", () => {
+        it("should tell there is a new period", () => {
+          expect(
+            periodOrchestrator.areNewPeriodsAdded([
+              {
+                start: new Date("2023-05-12 04:00+02:00"),
+                end: new Date("2023-05-12 06:00+02:00"),
+              },
+              {
+                start: new Date("2023-05-12 14:00+02:00"),
+                end: new Date("2023-05-12 16:00+02:00"),
+              },
+            ]),
+          ).toBe(true);
+        });
+      });
+      describe("when adding an existing period with a overlapping one", () => {
+        it("should tell there is a new period", () => {
+          expect(
+            periodOrchestrator.areNewPeriodsAdded([
+              {
+                start: new Date("2023-05-12 04:00+02:00"),
+                end: new Date("2023-05-12 06:00+02:00"),
+              },
+              {
+                start: new Date("2023-05-12 07:00+02:00"),
+                end: new Date("2023-05-12 09:00+02:00"),
+              },
+            ]),
+          ).toBe(true);
+          expect(
+            periodOrchestrator.areNewPeriodsAdded([
+              {
+                start: new Date("2023-05-12 04:00+02:00"),
+                end: new Date("2023-05-12 06:00+02:00"),
+              },
+              {
+                start: new Date("2023-05-12 11:00+02:00"),
+                end: new Date("2023-05-12 13:00+02:00"),
+              },
+            ]),
+          ).toBe(true);
+          expect(
+            periodOrchestrator.areNewPeriodsAdded([
+              {
+                start: new Date("2023-05-12 04:00+02:00"),
+                end: new Date("2023-05-12 06:00+02:00"),
+              },
+              {
+                start: new Date("2023-05-12 07:00+02:00"),
+                end: new Date("2023-05-12 13:00+02:00"),
+              },
+            ]),
+          ).toBe(true);
         });
       });
     });

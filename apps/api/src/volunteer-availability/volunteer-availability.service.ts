@@ -20,16 +20,15 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilities(
     userId: number,
-    iPeriods: IProvidePeriod[],
+    periods: IProvidePeriod[],
   ): Promise<IProvidePeriod[]> {
     const previousAvailabilityPeriods =
       await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init(
       previousAvailabilityPeriods,
     );
-    const periods = iPeriods.map(Period.init);
     const newPeriodsAdded = periodOrchestrator.areNewPeriodsAdded(periods);
-    periods.forEach((period) => periodOrchestrator.addPeriod(period));
+    periods.map((period) => periodOrchestrator.addPeriod(Period.init(period)));
 
     this.checkPeriodsErrors(periodOrchestrator);
 

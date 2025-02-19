@@ -32,7 +32,7 @@ export class PeriodOrchestrator {
     }, [] as Period[]);
   }
 
-  areNewPeriodsAdded(maybeNewPeriods: Period[]) {
+  areNewPeriodsAdded(maybeNewPeriods: IProvidePeriod[]) {
     return maybeNewPeriods.some(
       (newPeriod) =>
         !this.periods.some(
