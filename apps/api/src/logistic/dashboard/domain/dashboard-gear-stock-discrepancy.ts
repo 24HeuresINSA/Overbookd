@@ -4,7 +4,7 @@ import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 
 type StockDiscrepancy = {
-  timeWindow?: Period;
+  date?: Date;
   quantity: number;
 };
 
@@ -68,13 +68,17 @@ export class DashboardGearStockDiscrepancy {
         start,
       ),
     );
-    return Math.min(...discrepancies);
+    return discrepancies.reduce(
+      (max, discrepancy) =>
+        discrepancy.quantity < max.quantity ? discrepancy : max,
+      discrepancies[0],
+    );
   }
 
   private static computeStockDiscrepancyByDateOn(
     gear: DatabaseDashboardGear,
     date: Date,
-  ) {
+  ): StockDiscrepancy {
     const stock = DashboardGearStock.findStockByDate(gear, date);
     const { inquiry } = gear.isConsumable
       ? DashboardGearInquiry.computeConsumableInquiries(gear, date)
@@ -82,6 +86,8 @@ export class DashboardGearStockDiscrepancy {
     const consumed = gear.isConsumable
       ? DashboardGearInquiry.computeConsumedQuantityByDateOn(gear, date)
       : 0;
-    return stock - (inquiry + consumed);
+
+    const quantity = stock - (inquiry + consumed);
+    return { quantity, date };
   }
 }

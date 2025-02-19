@@ -13,15 +13,18 @@
         <DateTimeField
           v-model="start"
           label="Début du créneau"
+          hide-details
           @update:model-value="updateSelectedGear"
         />
         <DateTimeField
           v-model="end"
           label="Fin du créneau"
+          hide-details
           @update:model-value="updateSelectedGear"
         />
         <v-btn
-          text="Export"
+          text="Exporter"
+          prepend-icon="mdi-export"
           color="secondary"
           :loading="exportLoading"
           @click="exportCsv"

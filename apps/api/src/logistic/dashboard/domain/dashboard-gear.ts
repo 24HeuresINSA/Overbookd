@@ -5,6 +5,7 @@ import {
   Period,
   Duration,
   QUARTER_IN_MS,
+  OverDate,
 } from "@overbookd/time";
 import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
@@ -32,17 +33,16 @@ export class DashboardGear {
     if (gear.isConsumable) return null;
     const stockDiscrepancy =
       DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear);
-    if (stockDiscrepancy.quantity >= 0) return null;
 
-    const details = DashboardGear.gearPeriodDetails(
-      gear,
-      stockDiscrepancy.timeWindow,
-    );
+    const start = stockDiscrepancy.date;
+    if (stockDiscrepancy.quantity >= 0 || !start) return null;
+    const end = OverDate.from(start).plus(Duration.ms(QUARTER_IN_MS)).date;
+    const details = DashboardGear.gearPeriodDetails(gear, { start, end });
 
     return {
       name: gear.name,
       missing: Math.abs(stockDiscrepancy.quantity),
-      date: stockDiscrepancy.timeWindow.start,
+      date: stockDiscrepancy.date,
       stock: {
         inventory: details.inventory,
         borrows: details.borrows,
@@ -70,7 +70,7 @@ export class DashboardGear {
   private static periodDetails(
     gear: DatabaseDashboardGear,
     period: IProvidePeriod,
-  ) {
+  ): GearDetails {
     if (!gear.isConsumable) {
       return DashboardGear.gearPeriodDetails(gear, period);
     }
@@ -80,7 +80,7 @@ export class DashboardGear {
   private static consumablePeriodDetails(
     gear: DatabaseDashboardGear,
     { start, end }: IProvidePeriod,
-  ) {
+  ): GearDetails {
     const { inquiry, activities, tasks } =
       DashboardGearInquiry.computeConsumableInquiries(gear, start);
     const { stock, inventory, consumed, borrows, purchases } =
@@ -103,7 +103,7 @@ export class DashboardGear {
   private static gearPeriodDetails(
     gear: DatabaseDashboardGear,
     { end, start }: IProvidePeriod,
-  ) {
+  ): GearDetails {
     const { inquiry, tasks, activities } =
       DashboardGearInquiry.computeGearInquiries(gear, start);
     const { stock, inventory, borrows, purchases } =

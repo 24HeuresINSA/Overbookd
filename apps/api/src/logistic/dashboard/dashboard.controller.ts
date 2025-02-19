@@ -80,6 +80,33 @@ export class DashboardController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_GEAR_DASHBOARD)
+  @Get("export")
+  @ApiResponse({
+    status: 200,
+    description: "Gear previews in CSV",
+  })
+  @ApiProduces(CSV)
+  async getRequirementsInCsv(
+    @Request() request: RequestWithUserPayload,
+    @Res() response: Response,
+  ) {
+    try {
+      response.setHeader("content-type", request.headers.accept);
+      const csv = await this.dashboardService.getRequirementsInCsv();
+      response.send(csv);
+      return;
+    } catch (e) {
+      this.logger.error(e);
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      response.status(500).send(e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_GEAR_DASHBOARD)
   @Get(":slug")
   @ApiResponse({
     status: 200,
@@ -108,32 +135,5 @@ export class DashboardController {
     @Query("end") end: Date,
   ): Promise<GearWithDetails> {
     return this.dashboardService.getDetails(slug, start, end);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_GEAR_DASHBOARD)
-  @Get("export")
-  @ApiResponse({
-    status: 200,
-    description: "Gear previews in CSV",
-  })
-  @ApiProduces(CSV)
-  async getRequirementsInCsv(
-    @Request() request: RequestWithUserPayload,
-    @Res() response: Response,
-  ) {
-    try {
-      response.setHeader("content-type", request.headers.accept);
-      const csv = await this.dashboardService.getRequirementsInCsv();
-      response.send(csv);
-      return;
-    } catch (e) {
-      this.logger.error(e);
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
   }
 }
