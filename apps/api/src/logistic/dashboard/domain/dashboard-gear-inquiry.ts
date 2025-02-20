@@ -3,7 +3,7 @@ import {
   DatabaseActivityInquiry,
   DatabaseDashboardGear,
   DatabaseTaskInquiry,
-} from "./dashboard.model";
+} from "../repository/dashboard.model";
 import { Period } from "@overbookd/time";
 import { sumQuantity } from "./sum-quantity";
 

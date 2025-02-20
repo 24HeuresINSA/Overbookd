@@ -138,7 +138,6 @@ export class FestivalActivityPreviewController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
-  @ApiBearerAuth()
   @Get("for-logistic")
   @ApiResponse({
     status: 200,
@@ -166,7 +165,6 @@ export class FestivalActivityPreviewController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(EXPORT_FOR_SIGNA)
-  @ApiBearerAuth()
   @Get("for-signa")
   @ApiResponse({
     status: 200,

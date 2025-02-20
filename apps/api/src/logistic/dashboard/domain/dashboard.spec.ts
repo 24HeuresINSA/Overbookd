@@ -4,7 +4,7 @@ import {
   gearWithTwoInquiries,
   gearWithOneInquiryWithTwoTimeWindows,
   gearWithOneInquiryAndOneInventoryRecord,
-  gearWithTwoInquiryAndTwoInventoryRecord,
+  gearWithTwoInquiriesAndTwoInventoryRecords,
   friday08hto09h30,
   gearWithNoInquiryForGraph,
   gearWithOneInquiryAndOneInventoryRecordForGraph,
@@ -26,6 +26,9 @@ import {
   consumableGearWithOneInquiryAndOnePurchase,
   gearWithOneInventoryRecordAndOnePurchaseForGraph,
   consumableGearWithOneInquiryAndOnePurchaseForGraph,
+  gearWithOneInquiryAndOnePurchaseForCsv,
+  gearWithTwoInquiriesAndTwoInventoryRecordsForCsv,
+  gearWithOneInquiryAndOneBorrowForCsv,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/time";
@@ -38,7 +41,7 @@ describe("Summarize gear as preview", () => {
     ${"has two inquiries only"}                                           | ${gearWithTwoInquiries}                                       | ${-25}
     ${"has one inquiry with two time windows"}                            | ${gearWithOneInquiryWithTwoTimeWindows}                       | ${-30}
     ${"has one inquiry with one inventory record"}                        | ${gearWithOneInquiryAndOneInventoryRecord}                    | ${15}
-    ${"has two inquiries with two inventory records"}                     | ${gearWithTwoInquiryAndTwoInventoryRecord}                    | ${-25}
+    ${"has two inquiries with two inventory records"}                     | ${gearWithTwoInquiriesAndTwoInventoryRecords}                 | ${-25}
     ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${-10}
     ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${-60}
     ${"is consumable and has two inquiries and one inventory records"}    | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${-40}
@@ -69,7 +72,7 @@ describe("Summarize gear for graph", () => {
     explaination                                                          | gear                                                          | period              | expectedData
     ${"has no entries"}                                                   | ${gearWithNoInquiry}                                          | ${friday08hto09h30} | ${gearWithNoInquiryForGraph}
     ${"has one inquiry and one inventory record"}                         | ${gearWithOneInquiryAndOneInventoryRecord}                    | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordForGraph}
-    ${"has two inquiries and two inventory records"}                      | ${gearWithTwoInquiryAndTwoInventoryRecord}                    | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
+    ${"has two inquiries and two inventory records"}                      | ${gearWithTwoInquiriesAndTwoInventoryRecords}                 | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
     ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
     ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${friday08hto09h30} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph}
     ${"is consumable and has two inquiries and one inventory record"}     | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
@@ -84,6 +87,39 @@ describe("Summarize gear for graph", () => {
         Period.init(period),
       );
       expect(gearForGraph).toEqual(expectedData);
+    });
+  });
+});
+
+describe("Summarize gear as requirement for CSV", () => {
+  describe.each`
+    explaination                                      | gear                                          | expected
+    ${"has two inquiries with two inventory records"} | ${gearWithTwoInquiriesAndTwoInventoryRecords} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForCsv}
+    ${"has one inquiry and one purchase"}             | ${gearWithOneInquiryAndOnePurchase}           | ${gearWithOneInquiryAndOnePurchaseForCsv}
+    ${"has one inquiry and one borrow"}               | ${gearWithOneInquiryAndOneBorrow}             | ${gearWithOneInquiryAndOneBorrowForCsv}
+  `("when gear $explaination", ({ gear, expected }) => {
+    it(`should return requirement for CSV`, () => {
+      const requirement = DashboardGear.generateRequirementForCsv(gear);
+      expect(requirement).toEqual(expected);
+    });
+  });
+  describe("when gear is consumable", () => {
+    it("should return null", () => {
+      const consumableGear = consumableGearWithOneInquiryAndOnePurchase;
+      const requirement =
+        DashboardGear.generateRequirementForCsv(consumableGear);
+      expect(requirement).toBeNull();
+    });
+  });
+  describe.each`
+    explaination                                   | gear
+    ${"has no entries"}                            | ${gearWithNoInquiry}
+    ${"has one inventory record and one borrow"}   | ${gearWithOneInventoryRecordAndOneBorrow}
+    ${"has one inventory record and one purchase"} | ${gearWithOneInventoryRecordAndOnePurchase}
+  `("when gear without stock discrepancy $explaination", ({ gear }) => {
+    it("should return null", () => {
+      const requirement = DashboardGear.generateRequirementForCsv(gear);
+      expect(requirement).toBeNull();
     });
   });
 });

@@ -1,7 +1,8 @@
-import type {
-  GearPreview,
-  GearSearchOptions,
-  GearWithDetails,
+import {
+  CSV,
+  type GearPreview,
+  type GearSearchOptions,
+  type GearWithDetails,
 } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -20,6 +21,12 @@ export class LogisticDashboardRepository {
     return HttpClient.get<GearWithDetails>({
       path: `${this.basePath}/${slug}`,
       params,
+    });
+  }
+
+  static getCSVRequirements() {
+    return HttpClient.get<string>(`${this.basePath}/export`, {
+      acceptedType: CSV,
     });
   }
 }

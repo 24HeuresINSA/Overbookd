@@ -12,6 +12,7 @@ import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 type State = {
   previews: GearPreview[];
   selectedGear?: GearWithDetails;
+  csvRequirements?: string;
 };
 
 export const useLogisticDashboardStore = defineStore("logistic-dashboard", {
@@ -20,9 +21,8 @@ export const useLogisticDashboardStore = defineStore("logistic-dashboard", {
     selectedGear: undefined,
   }),
   actions: {
-    async fetchPreviews(gearSearchOptions?: GearSearchOptions) {
-      const res =
-        await LogisticDashboardRepository.getPreviews(gearSearchOptions);
+    async fetchPreviews(searchOptions?: GearSearchOptions) {
+      const res = await LogisticDashboardRepository.getPreviews(searchOptions);
       if (isHttpError(res)) return;
       this.previews = res;
     },
@@ -36,6 +36,12 @@ export const useLogisticDashboardStore = defineStore("logistic-dashboard", {
       if (isHttpError(res)) return;
       const details = res.details.map(castGearDetailsWithDate);
       this.selectedGear = { ...res, details };
+    },
+
+    async fetchCSVRequirements() {
+      const res = await LogisticDashboardRepository.getCSVRequirements();
+      if (isHttpError(res)) return;
+      this.csvRequirements = res;
     },
   },
 });
