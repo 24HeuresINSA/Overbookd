@@ -1,3 +1,14 @@
+## [3.34.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.4...v3.34.0) (2025-02-20)
+
+### Features
+
+* **logistic-dashboard:** add requirements export [#2409](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2409) ([fd2144d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fd2144d6b588efd70890be3a65ad6abed99f8b1f))
+* **volunteer-registration:** automaticaly reset volunteer application... ([3e7c50e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3e7c50ec292c82d0e768676f70948758d1f76e2e)), closes [#2411](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2411)
+
+### Bug Fixes
+
+* **web:** detect more keydown enter to valid forms [#2408](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2408) ([83fa23d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/83fa23d610a0cea35e71ad8f8386b328bfff1763))
+
 ## [3.33.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.3...v3.33.4) (2025-02-17)
 
 ### Bug Fixes
