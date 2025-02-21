@@ -54,7 +54,9 @@ export class MembershipApplicationRepository {
   }
 
   static submitVolunteerApplication(email: string) {
-    return HttpClient.post<void>(`${this.basePath}/volunteers/apply/${email}`);
+    return HttpClient.post<void>(`${this.basePath}/volunteers/apply/${email}`, {
+      hideErrorMessage: true,
+    });
   }
 
   static getVolunteerCandidates() {

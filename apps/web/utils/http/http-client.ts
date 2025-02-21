@@ -13,6 +13,7 @@ const DEFAULT_SERVER_ERROR_MESSAGE =
 const DEFAULT_OPTIONS: RequestOptions = {
   acceptedType: JSON,
   serverErrorMessage: DEFAULT_SERVER_ERROR_MESSAGE,
+  hideErrorMessage: false,
 };
 
 export class HttpClient {
