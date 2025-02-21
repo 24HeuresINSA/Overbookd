@@ -70,7 +70,7 @@ const actualBehaviour = ref<string>("");
 const stepsToReproduce = ref<string>("");
 
 const bugReportEmail =
-  "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com";
+  "incoming+24-heures-insa-overbookd-mono-31598236-20ragsga8dk53tbc4cu2exj9r-issue@incoming.gitlab.com";
 const stepsToReproducePlaceholder = "- Étape 1\n- Étape 2\n...";
 
 const emit = defineEmits(["close"]);
