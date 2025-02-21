@@ -1,3 +1,9 @@
+## [3.34.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.34.0...v3.34.1) (2025-02-21)
+
+### Bug Fixes
+
+* new report bug email. [#2416](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2416) ([f34643b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f34643b448755605cb4223558a076427c9235d67))
+
 ## [3.34.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.33.4...v3.34.0) (2025-02-20)
 
 ### Features
