@@ -7,13 +7,13 @@
       Nous ferons notre maximum pour que vous soyez ensemble pendant vos
       créneaux.
     </v-card-text>
-    <v-card-text class="friends-card__content">
+    <v-container class="friends-card__content">
       <v-row>
-        <v-col justify="start" flex-wrap="wrap">
-          <img :src="image.link" :alt="image.description" flex-wrap="wrap" />
+        <v-col justify="start" flex-wrap="wrap" class="d-flex justify-center">
+          <img :src="image.link" :alt="image.description" />
         </v-col>
-        <v-col cols="auto" flex-wrap="wrap">
-          <div class="friends-management" flex-wrap="wrap">
+        <v-col cols="auto" flex-wrap="wrap" class="d-flex justify-center">
+          <div class="friends-management">
             <div class="friends-list">
               <SearchFriend
                 v-model="newFriend"
@@ -26,9 +26,9 @@
                 class="friend"
                 elevation="2"
               >
-                <span class="name">{{
-                  buildUserNameWithNickname(friend)
-                }}</span>
+                <span class="name">
+                  {{ buildUserNameWithNickname(friend) }}
+                </span>
                 <v-btn
                   density="compact"
                   icon="mdi-close"
@@ -41,7 +41,7 @@
           </div>
         </v-col>
       </v-row>
-    </v-card-text>
+    </v-container>
   </v-card>
 </template>
 
@@ -113,27 +113,23 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
   }
 
   &__content {
-    display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: start;
-    gap: 20px;
+    margin-top: -20px;
 
     .friends-management {
-      display: flex;
-      gap: 5px;
-      align-items: flex-start;
       flex-direction: column;
+      width: auto;
     }
 
     .friends-list {
-      padding: unset;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 300px));
+      grid-template-columns: minmax(200px, 800px);
       gap: 10px;
     }
 
     .friend-search {
+      min-width: 100px;
+      width: auto;
       margin-top: 10px;
       grid-column: 1 / span 1;
     }
@@ -142,26 +138,17 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
       opacity: 0.8;
       color: rgb(var(--v-theme-text));
       padding: 5px 5px 5px 10px;
-      list-style: none;
       border-radius: 10px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      place-self: center stretch;
-      min-width: 100px;
-      width: auto;
-
-      .name {
-        text-overflow: ellipsis;
-      }
     }
 
     img {
       max-width: 100%;
-      border-radius: 10px;
       min-width: 200px;
-      display: flex;
-      flex-direction: column;
+      width: auto;
+      border-radius: 10px;
+
     }
   }
 }

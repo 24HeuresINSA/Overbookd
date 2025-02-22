@@ -14,7 +14,7 @@
         <PersonalFaHomeCard v-if="canWriteFA" />
       </v-col>
       <v-col v-if="!hasPersonalAccount" class="home">
-        <FriendsCard v-if="!hasPersonalAccount" />
+        <FriendsCard />
       </v-col>
     </v-row>
   </v-container>
