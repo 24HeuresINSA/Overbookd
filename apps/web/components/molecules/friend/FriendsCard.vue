@@ -148,7 +148,6 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
       min-width: 200px;
       width: auto;
       border-radius: 10px;
-
     }
   }
 }
