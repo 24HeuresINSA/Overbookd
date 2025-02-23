@@ -22,7 +22,7 @@
       <div class="empty-case" />
       <header class="calendar-header">
         <slot name="header">
-          <DailyCalendarHeader v-if="isDayMode" :day="day" />
+          <DailyCalendarHeader v-if="isDayMode" :day="day" display-arrows />
           <WeeklyCalendarHeader v-else :day="day" />
         </slot>
       </header>

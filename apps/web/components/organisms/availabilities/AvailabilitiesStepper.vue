@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper v-model="step" class="mb-3" editable>
+    <v-stepper v-model="step" class="mb-3" :mobile="!isDesktop" editable>
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
