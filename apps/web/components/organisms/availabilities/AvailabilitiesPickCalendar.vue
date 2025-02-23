@@ -12,7 +12,12 @@
       />
     </template>
     <template #header>
-      <AvailabilitiesCalendarHeader :days="days" @click="selectOrUnselectDay" />
+      <AvailabilitiesCalendarHeader
+        :days="days"
+        @click="selectOrUnselectDay"
+        @previous="propagatePrevious"
+        @next="propagateNext"
+      />
     </template>
     <template #content>
       <AvailabilitiesMultiDayCalendarContent
