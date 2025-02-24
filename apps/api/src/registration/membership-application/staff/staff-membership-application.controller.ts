@@ -20,7 +20,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { StaffCandidate } from "@overbookd/http";
+import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
 import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
@@ -30,6 +30,7 @@ import { PermissionsGuard } from "../../../authentication/permissions-auth.guard
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
 import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
+import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/staffs")
@@ -59,6 +60,25 @@ export class StaffMembershipApplicationController {
   })
   applyFor(@Body() { email, token }: StaffCandidateRequestDto): Promise<void> {
     return this.applicationService.applyFor(email, token);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(":email")
+  @ApiParam({
+    name: "email",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get current staff application",
+    type: HasApplicationResponseDto,
+    isArray: true,
+  })
+  getCurrentApplication(
+    @Param("email") email: string,
+  ): Promise<HasApplication> {
+    return this.applicationService.getCurrentApplication(email);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

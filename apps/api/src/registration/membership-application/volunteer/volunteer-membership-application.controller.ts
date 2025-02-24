@@ -26,9 +26,10 @@ import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
 import { ENROLL_SOFT } from "@overbookd/permission";
-import { VolunteerCandidate } from "@overbookd/http";
+import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
+import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/volunteers")
@@ -56,8 +57,27 @@ export class VolunteerMembershipApplicationController {
     name: "email",
     type: String,
   })
-  submitApplication(@Param("email") email: string): Promise<void> {
+  applyFor(@Param("email") email: string): Promise<void> {
     return this.applicationService.applyFor(email);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(":email")
+  @ApiParam({
+    name: "email",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get current volunteer application",
+    type: HasApplicationResponseDto,
+    isArray: true,
+  })
+  getCurrentApplication(
+    @Param("email") email: string,
+  ): Promise<HasApplication> {
+    return this.applicationService.getCurrentApplication(email);
   }
 
   @UseGuards(JwtAuthGuard)

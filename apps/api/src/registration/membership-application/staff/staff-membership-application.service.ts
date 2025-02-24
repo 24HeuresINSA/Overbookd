@@ -11,7 +11,7 @@ import { jwtConstants } from "../../../authentication/jwt-constants";
 import { Users } from "../common/repository/users";
 import { Configurations } from "./repository/configurations";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
-import { StaffCandidate } from "@overbookd/http";
+import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { HARD_CODE } from "@overbookd/team-constants";
 
 type UseCases = {
@@ -43,6 +43,12 @@ export class StaffMembershipApplicationService {
     }
 
     return this.useCases.applyFor.staff({ email });
+  }
+
+  async getCurrentApplication(email: string): Promise<HasApplication> {
+    const hasApplication =
+      await this.repositories.enroll.hasStaffApplication(email);
+    return { hasApplication };
   }
 
   async rejectStaffApplication(candidateId: number): Promise<void> {

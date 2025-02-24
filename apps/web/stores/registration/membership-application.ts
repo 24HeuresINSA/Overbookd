@@ -193,6 +193,24 @@ export const useMembershipApplicationStore = defineStore(
         navigationBadgeStore.fetchVolunteerCandidates();
       },
 
+      async hasCurrentStaffApplication(email: string): Promise<boolean> {
+        const res =
+          await MembershipApplicationRepository.getCurrentStaffApplication(
+            email,
+          );
+        if (isHttpError(res)) return false;
+        return res.hasApplication;
+      },
+
+      async hasCurrentVolunteerApplication(email: string): Promise<boolean> {
+        const res =
+          await MembershipApplicationRepository.getCurrentVolunteerApplication(
+            email,
+          );
+        if (isHttpError(res)) return false;
+        return res.hasApplication;
+      },
+
       _updateVolunteer(volunteer: VolunteerCandidate) {
         const volunteerIndex = this.volunteerCandidates.findIndex(
           ({ id }) => id === volunteer.id,

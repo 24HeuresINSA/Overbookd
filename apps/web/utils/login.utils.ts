@@ -15,14 +15,22 @@ export async function loginAndApplyForMembership(
   playJauneAudio();
 
   const membershipApplicationStore = useMembershipApplicationStore();
+  const { email } = credentials;
   if (token) {
+    const hasApplication =
+      await membershipApplicationStore.hasCurrentStaffApplication(email);
+    if (hasApplication) return;
     membershipApplicationStore.submitStaffApplication({
-      email: credentials.email,
+      email,
       token,
     });
     return;
   }
+
   const userStore = useUserStore();
   if (userStore.can(BE_AFFECTED)) return;
-  membershipApplicationStore.submitVolunteerApplication(credentials.email);
+  const hasApplication =
+    await membershipApplicationStore.hasCurrentVolunteerApplication(email);
+  if (hasApplication) return;
+  membershipApplicationStore.submitVolunteerApplication(email);
 }
