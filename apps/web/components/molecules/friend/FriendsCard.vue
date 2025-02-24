@@ -152,7 +152,7 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
   }
 }
 
-.cols{
+.cols {
   display: flex;
   justify-content: center;
 }
