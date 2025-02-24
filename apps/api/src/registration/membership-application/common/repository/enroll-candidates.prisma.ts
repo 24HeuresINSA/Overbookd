@@ -140,6 +140,7 @@ function formatToEnrollableVolunteer(
     .calculate();
   return {
     ...formatToStaffCandidate(volunteer),
+    nickname: volunteer.nickname,
     charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,

@@ -1,9 +1,7 @@
 import { IProvidePeriod } from "@overbookd/time";
+import { User } from "@overbookd/user";
 
-export type StaffCandidate = {
-  id: number;
-  firstname: string;
-  lastname: string;
+export type StaffCandidate = User & {
   email: string;
   candidatedAt: Date;
   teams: string[];

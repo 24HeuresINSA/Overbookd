@@ -15,6 +15,7 @@ export const SELECT_STAFF = {
 
 export const SELECT_VOLUNTEER = {
   ...SELECT_STAFF,
+  nickname: true,
   availabilities: { select: SELECT_PERIOD },
   phone: true,
   birthdate: true,
@@ -84,6 +85,7 @@ export type DatabaseStaffCandidate = {
 };
 
 export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
+  nickname: string | null;
   availabilities: IProvidePeriod[];
   phone: string;
   comment: string | null;
