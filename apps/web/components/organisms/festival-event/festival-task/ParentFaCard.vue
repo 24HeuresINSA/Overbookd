@@ -83,14 +83,11 @@ const openCalendar = () => emit("open:calendar");
   }
 }
 
-h3 {
-  font-size: 1.1rem;
-  margin: 25px 0 10px 0;
-}
-
 .time-windows-title {
   display: flex;
   gap: 10px;
   align-items: center;
+  font-size: 1rem;
+  margin: 25px 0 5px 0;
 }
 </style>

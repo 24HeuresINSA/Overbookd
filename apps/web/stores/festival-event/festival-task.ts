@@ -165,6 +165,9 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       sendSuccessNotification(`FT #${id} supprimée 🗑️`);
       this.selectedTask = fakeTask;
       await this.fetchAllTasks();
+
+      const navigationStore = useNavigationBadgeStore();
+      navigationStore.fetchMyRefusedTasks();
     },
 
     /* UPDATE GENERAL SECTION */

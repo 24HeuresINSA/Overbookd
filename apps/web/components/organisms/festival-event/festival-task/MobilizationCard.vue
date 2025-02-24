@@ -1,16 +1,18 @@
 <template>
   <v-card>
     <div class="title">
-      <v-card-title> Mobilisations </v-card-title>
-      <v-btn
-        icon="mdi-calendar-blank"
-        color="secondary"
-        rounded="pill"
-        density="comfortable"
-        @click="openCalendar"
-      />
+      <v-card-title class="title">
+        <span>Mobilisations</span>
+        <v-btn
+          icon="mdi-calendar-blank"
+          color="secondary"
+          rounded="pill"
+          density="comfortable"
+          @click="openCalendar"
+        />
+      </v-card-title>
     </div>
-    <v-card-text>
+    <v-card-text class="mobilizations">
       <MobilizationTable
         :disabled="disabled"
         @add="addMobilization"
@@ -59,5 +61,9 @@ const removeMobilization = (mobilization: Mobilization) => {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.mobilizations {
+  padding-top: 0;
 }
 </style>
