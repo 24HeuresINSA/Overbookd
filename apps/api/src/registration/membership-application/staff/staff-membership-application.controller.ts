@@ -73,7 +73,6 @@ export class StaffMembershipApplicationController {
     status: 200,
     description: "Get current staff application",
     type: HasApplicationResponseDto,
-    isArray: true,
   })
   getCurrentApplication(
     @Param("email") email: string,

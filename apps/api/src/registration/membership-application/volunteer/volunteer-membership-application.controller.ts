@@ -72,7 +72,6 @@ export class VolunteerMembershipApplicationController {
     status: 200,
     description: "Get current volunteer application",
     type: HasApplicationResponseDto,
-    isArray: true,
   })
   getCurrentApplication(
     @Param("email") email: string,
