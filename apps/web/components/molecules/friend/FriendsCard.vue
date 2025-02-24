@@ -9,10 +9,10 @@
     </v-card-text>
     <v-container class="friends-card__content">
       <v-row>
-        <v-col justify="start" flex-wrap="wrap" class="d-flex justify-center">
+        <v-col justify="start" flex-wrap="wrap" class="cols">
           <img :src="image.link" :alt="image.description" />
         </v-col>
-        <v-col cols="auto" flex-wrap="wrap" class="d-flex justify-center">
+        <v-col cols="auto" flex-wrap="wrap" class="cols">
           <div class="friends-management">
             <div class="friends-list">
               <SearchFriend
@@ -150,5 +150,10 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
       border-radius: 10px;
     }
   }
+}
+
+.cols{
+  display: flex;
+  justify-content: center;
 }
 </style>
