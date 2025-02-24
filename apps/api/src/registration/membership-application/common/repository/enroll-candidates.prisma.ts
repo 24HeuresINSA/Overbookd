@@ -124,6 +124,28 @@ export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
     );
   }
 
+  async hasStaffApplication(email: string): Promise<boolean> {
+    const application = await this.prisma.membershipApplication.findFirst({
+      where: {
+        user: { email },
+        membership: STAFF,
+        edition: Edition.current,
+      },
+    });
+    return application !== null;
+  }
+
+  async hasVolunteerApplication(email: string): Promise<boolean> {
+    const application = await this.prisma.membershipApplication.findFirst({
+      where: {
+        user: { email },
+        membership: VOLUNTEER,
+        edition: Edition.current,
+      },
+    });
+    return application !== null;
+  }
+
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
     return this.prisma.charismaPeriod.findMany({
       select: SELECT_CHARISMA_PERIOD,

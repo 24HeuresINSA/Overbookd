@@ -1,4 +1,5 @@
 import type {
+  HasApplication,
   StaffCandidate,
   VolunteerCandidate,
   StaffApplication,
@@ -15,6 +16,10 @@ export class MembershipApplicationRepository {
 
   static fetchStaffLink() {
     return HttpClient.get<string>(`${this.basePath}/staffs/invitation-link`);
+  }
+
+  static getCurrentStaffApplication(email: string) {
+    return HttpClient.get<HasApplication>(`${this.basePath}/staffs/${email}`);
   }
 
   static submitStaffApplication(candidate: StaffApplication) {
@@ -51,6 +56,12 @@ export class MembershipApplicationRepository {
     return HttpClient.post<void>(`${this.basePath}/staffs/enroll`, {
       candidates,
     });
+  }
+
+  static getCurrentVolunteerApplication(email: string) {
+    return HttpClient.get<HasApplication>(
+      `${this.basePath}/volunteers/${email}`,
+    );
   }
 
   static submitVolunteerApplication(email: string) {

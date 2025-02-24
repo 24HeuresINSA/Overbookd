@@ -94,6 +94,7 @@ export type {
   StaffCandidate,
   VolunteerCandidate,
   StaffApplication,
+  HasApplication,
 } from "./registration.js";
 export type { EditAmountForm } from "./contribution.js";
 export type {

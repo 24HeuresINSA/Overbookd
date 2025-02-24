@@ -68,7 +68,7 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
       ) =>
         new VolunteerMembershipApplicationService(
           { applyFor, reject, enroll },
-          { users, enrollCandidates },
+          { users, enroll: enrollCandidates },
         ),
       inject: [
         ApplyFor,
