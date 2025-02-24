@@ -14,8 +14,11 @@ export async function loginAndApplyForMembership(
 
   playJauneAudio();
 
+  applyForMembership(credentials.email, token);
+}
+
+async function applyForMembership(email: string, token?: string) {
   const membershipApplicationStore = useMembershipApplicationStore();
-  const { email } = credentials;
   if (token) {
     const hasApplication =
       await membershipApplicationStore.hasCurrentStaffApplication(email);
