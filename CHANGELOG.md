@@ -1,3 +1,14 @@
+## [3.35.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.34.1...v3.35.0) (2025-02-25)
+
+### Features
+
+* :art: Add the Friend component and change littles styles things on it [#2386](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2386) ([ecdee84](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ecdee84e18478171b173f3b908f59cfdd638b418))
+
+### Bug Fixes
+
+* **application:** check if application already exists before applying for a new one [#2412](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2412) ([b3e5de1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b3e5de12c28fab2590bb9f45fd0bfca81de77c78))
+* **log:** remove inventory details when null in export [#2424](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2424) ([acf8b5c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/acf8b5c5eb626ec95ef5927a4eaf4c44c3be2366))
+
 ## [3.34.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.34.0...v3.34.1) (2025-02-21)
 
 ### Bug Fixes
