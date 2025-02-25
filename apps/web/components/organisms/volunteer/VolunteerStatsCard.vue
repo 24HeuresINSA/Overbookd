@@ -3,7 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="displayedVolunteers"
-      :loading="globalLoading"
+      :loading="mergeLoading"
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"
       :mobile="isMobile"
@@ -154,7 +154,7 @@ userStore
   .fetchVolunteersWithAssignmentStats()
   .then(() => (assignementStatsLoading.value = false));
 
-const globalLoading = computed<boolean>(
+const mergeLoading = computed<boolean>(
   () => props.loading || assignementStatsLoading.value,
 );
 
