@@ -13,7 +13,7 @@
       />
       <SearchTeams
         :model-value="filters.teams ?? []"
-        label="Equipe(s)"
+        label="Équipe(s)"
         density="compact"
         bg-color="surface"
         class="filters__field"
@@ -43,6 +43,15 @@
         density="comfortable"
         class="icons-action__button"
         @click="exportCSV"
+      />
+      <v-btn
+        v-if="canManageUsers"
+        icon="mdi-download"
+        variant="flat"
+        size="large"
+        density="comfortable"
+        class="icons-action__button"
+        @click="downloadLeaflets"
       />
       <v-btn-toggle
         v-model="isTrombinoscopeDisplayed"
@@ -94,10 +103,14 @@ const canFilterByExcludedTeams = computed<boolean>(
 
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
 
-const emit = defineEmits(["export-csv"]);
+const emit = defineEmits(["export-csv", "download-leaflets"]);
 const exportCSV = () => {
   if (!canManageUsers.value) return;
   emit("export-csv");
+};
+const downloadLeaflets = () => {
+  if (!canManageUsers.value) return;
+  emit("download-leaflets");
 };
 </script>
 

@@ -14,6 +14,19 @@ import { Duration } from "@overbookd/time";
 import { AUCUNE } from "../assignment/task-category";
 import type { UserName } from "@overbookd/user";
 
+export function compareVolunteersOnNames(a: UserName, b: UserName) {
+  return a.firstname.localeCompare(b.firstname);
+}
+
+export function compareVolunteersOnAssignment(
+  a: HasAssignment,
+  b: HasAssignment,
+) {
+  return a.assignment.inMilliseconds - b.assignment.inMilliseconds;
+}
+
+/* ------------------------- */
+
 export function sumAssignmentDuration(stats: AssignmentStat[]) {
   return Duration.ms(
     stats.reduce((total, { duration }) => total + duration, 0),
