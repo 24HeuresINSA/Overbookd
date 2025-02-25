@@ -42,8 +42,9 @@ export class DashboardGearFormat {
     const formattedPurchases = purchases.map(
       (p) => `${p.seller} - ${p.quantity}`,
     );
+    const formattedInventory = inventory > 0 ? `Inventaire - ${inventory}` : "";
     return [
-      `Inventaire - ${inventory}`,
+      formattedInventory,
       ...formattedBorrows,
       ...formattedPurchases,
     ].join("\n");
