@@ -5,8 +5,9 @@
       <v-col class="home">
         <ProfileHomeCard />
       </v-col>
-      <v-col v-if="hasPersonalAccount" class="home">
-        <PersonalAccountHomeCard />
+      <v-col class="home">
+        <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+        <FriendsCard />
       </v-col>
       <v-col v-if="canWriteFA || canWriteFT" class="home">
         <PersonalFtHomeCard v-if="canWriteFT" />
