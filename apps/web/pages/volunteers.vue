@@ -3,13 +3,13 @@
   <div class="volunteers-page">
     <VolunteerListHeader
       v-model:filters="filters"
-      v-model:trombinoscope="isTrombinoscopeDisplayed"
+      v-model:display-mode="displayMode"
       @export-csv="exportCSV"
       @download-leaflets="openDownloadLeafletsDialog"
     />
 
     <Trombinoscope
-      v-show="isTrombinoscopeDisplayed"
+      v-show="displayMode === TROMBINOSCOPE"
       :volunteers="filteredVolunteers"
       :loading="loading"
       @click:team="addTeamInFilters"
@@ -17,10 +17,18 @@
     />
 
     <VolunteerListCard
-      v-show="!isTrombinoscopeDisplayed"
+      v-show="displayMode === VOLUNTEER_LIST"
       :volunteers="filteredVolunteers"
       :loading="loading"
       @click:team="addTeamInFilters"
+      @click:volunteer="openVolunteerInfoDialog"
+    />
+
+    <VolunteerStatsCard
+      v-if="canManageUsers"
+      v-show="displayMode === VOLUNTEER_STATS"
+      :volunteers="filteredVolunteers"
+      :loading="loading"
       @click:volunteer="openVolunteerInfoDialog"
     />
 
@@ -35,6 +43,7 @@
         @close="closeVolunteerInfoDialog"
       />
     </v-dialog>
+
     <v-dialog
       v-if="canManageUsers"
       v-model="isDownloadLeafletsOpen"
@@ -72,6 +81,13 @@ import { sanitizeFieldForCSV } from "~/utils/file/csv.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import {
+  DisplayModeBuilder,
+  TROMBINOSCOPE,
+  VOLUNTEER_LIST,
+  VOLUNTEER_STATS,
+  type DisplayMode,
+} from "~/utils/user/volunteer.display";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -85,12 +101,12 @@ const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
 const loading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (loading.value = false));
 
-const isTrombinoscopeDisplayed = ref<boolean>(true);
-
 const filters = ref<VolunteerFilters>({});
-onMounted(
-  () => (filters.value = VolunteerFilterBuilder.getFromRouteQuery(route.query)),
-);
+const displayMode = ref<DisplayMode>(TROMBINOSCOPE);
+onMounted(() => {
+  filters.value = VolunteerFilterBuilder.getFromRouteQuery(route.query);
+  displayMode.value = DisplayModeBuilder.getFromRouteQuery(route.query);
+});
 
 const searchableVolunteers = computed<
   Searchable<UserDataWithPotentialyProfilePicture>[]
