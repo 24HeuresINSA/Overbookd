@@ -153,24 +153,4 @@ const close = () => emit("close");
   flex-direction: column;
   gap: 15px;
 }
-
-details {
-  border: 1px solid #aaa;
-  border-radius: $field-border-radius;
-  padding: 0.5em 0.5em 0;
-  min-width: 100%;
-  & summary {
-    font-weight: bold;
-    margin: -0.5em -0.5em 0;
-    padding: 0.5em;
-  }
-
-  &[open] {
-    padding: 0.5em;
-    & summary {
-      border-bottom: 1px solid #aaa;
-      margin-bottom: 0.5em;
-    }
-  }
-}
 </style>
