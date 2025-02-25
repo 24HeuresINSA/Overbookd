@@ -110,7 +110,7 @@ const emit = defineEmits(["add", "close"]);
 const close = () => emit("close");
 
 const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
-const addTeam = (team: Team | null) => {
+const addTeam = (team?: Team) => {
   if (!team) return;
   const count = +teamQuantity.value;
   teams.value = [...teams.value, { team: team.code, count }];
@@ -131,7 +131,7 @@ const addableVolunteers = computed<User[]>(() =>
       !volunteers.value.some(({ id }: User) => id === volunteer.id),
   ),
 );
-const addVolunteer = (volunteer: User | null) => {
+const addVolunteer = (volunteer?: User) => {
   if (!volunteer) return;
   volunteers.value = [...volunteers.value, volunteer];
   volunteerToAdd.value = undefined;

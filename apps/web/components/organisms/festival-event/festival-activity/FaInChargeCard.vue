@@ -66,11 +66,12 @@ const inChargeTeam = computed<Team | undefined>(() => {
 const adherents = computed<User[]>(() => userStore.adherents);
 if (adherents.value.length === 0) await userStore.fetchAdherents();
 
-const updateAdherent = (adherent: User | null) => {
+const updateAdherent = (adherent?: User) => {
   if (!adherent) return;
   faStore.updateInCharge({ adherentId: adherent.id });
 };
-const updateTeam = (team: Team) => {
+const updateTeam = (team?: Team) => {
+  if (!team) return;
   faStore.updateInCharge({ team: team.code });
 };
 const addContractor = (contractor: PrepareContractorCreation) => {
