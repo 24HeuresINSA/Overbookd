@@ -66,9 +66,13 @@ const updateName = useDebounceFn((name: string) => {
   ftStore.updateGeneral({ name });
 }, 800);
 
-const updateAdministrator = (administrator: User) => {
+const updateAdministrator = (administrator?: User) => {
+  if (!administrator) return;
   const administratorId = administrator.id;
   ftStore.updateGeneral({ administratorId });
 };
-const updateTeam = (team: Team) => ftStore.updateGeneral({ team: team.code });
+const updateTeam = (team?: Team) => {
+  if (!team) return;
+  ftStore.updateGeneral({ team: team.code });
+};
 </script>

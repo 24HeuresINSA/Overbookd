@@ -34,7 +34,7 @@
           label="Lier une équipe"
           hide-details
           clearable
-          @update:team="grantPermission(item, $event.code)"
+          @update:team="grantPermission(item, $event?.code)"
         />
         <v-btn
           icon="mdi-trash-can"
@@ -74,7 +74,8 @@ const revokePermission = async (permission: Permission, teamCode: string) => {
   await permissionStore.revoke(permission.name, teamCode);
 };
 
-const grantPermission = async (permission: Permission, teamCode: string) => {
+const grantPermission = async (permission: Permission, teamCode?: string) => {
+  if (!teamCode) return;
   await permissionStore.grant(permission.name, teamCode);
 };
 </script>

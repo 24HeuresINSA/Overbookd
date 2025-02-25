@@ -127,7 +127,7 @@ const updateName = useDebounceFn((name: string) => {
 }, 800);
 
 const description = ref<string>(general.value.description ?? "");
-const updateDescription = useDebounceFn((description: string) => {
+const updateDescription = useDebounceFn((description?: string) => {
   faStore.updateGeneral({ description: description || null });
 }, 800);
 
