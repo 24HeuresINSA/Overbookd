@@ -54,14 +54,21 @@
         @click="downloadLeaflets"
       />
       <v-btn-toggle
-        v-model="isTrombinoscopeDisplayed"
+        v-model="displayMode"
         color="primary"
         size="small"
         class="icons-action__button"
         mandatory
+        @update:model-value="updateDisplayModeParam"
       >
-        <v-btn :value="true" icon="mdi-view-grid" :rounded="false" />
-        <v-btn :value="false" icon="mdi-view-list" :rounded="false" />
+        <v-btn :value="TROMBINOSCOPE" icon="mdi-view-grid" :rounded="false" />
+        <v-btn :value="VOLUNTEER_LIST" icon="mdi-view-list" :rounded="false" />
+        <v-btn
+          v-if="canManageUsers"
+          :value="VOLUNTEER_STATS"
+          icon="mdi-chart-bar"
+          :rounded="false"
+        />
       </v-btn-toggle>
     </div>
   </div>
@@ -71,12 +78,18 @@
 import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import {
+  TROMBINOSCOPE,
+  VOLUNTEER_LIST,
+  VOLUNTEER_STATS,
+  type DisplayMode,
+} from "~/utils/user/volunteer.display";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 
 const userStore = useUserStore();
 
 const filters = defineModel<VolunteerFilters>("filters", { required: true });
-const isTrombinoscopeDisplayed = defineModel<boolean>("trombinoscope", {
+const displayMode = defineModel<DisplayMode>("displayMode", {
   required: true,
 });
 
@@ -93,6 +106,10 @@ const updateExcludedTeamsParam = (excludedTeams: Team[]) => {
   filters.value.excludedTeams = excludedTeams;
   const excludedTeamsCode = excludedTeams.map(({ code }) => code);
   updateQueryParams("excludedTeams", excludedTeamsCode);
+};
+
+const updateDisplayModeParam = (mode: DisplayMode) => {
+  updateQueryParams("displayMode", mode);
 };
 
 const canFilterByExcludedTeams = computed<boolean>(

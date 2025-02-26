@@ -22,6 +22,7 @@ import {
   taskCategoryEmojiMap,
   taskCategoryEmojis,
 } from "~/utils/assignment/task-category";
+import { sumAssignmentDuration } from "~/utils/sort/sort-stats.utils";
 import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
 const props = defineProps({
@@ -46,9 +47,7 @@ const sortedStats = computed<DisplayableAssignmentStat[]>(() => {
     });
 });
 const displayedTotalDuration = computed<string>(() => {
-  return Duration.ms(
-    sortedStats.value.reduce((total, { duration }) => total + duration, 0),
-  ).toString();
+  return sumAssignmentDuration(sortedStats.value).toString();
 });
 
 const getStatCategoryEmoji = (category: DisplayableCategory | null): string => {
