@@ -5,6 +5,7 @@
       v-model:filters="filters"
       v-model:trombinoscope="isTrombinoscopeDisplayed"
       @export-csv="exportCSV"
+      @download-leaflets="openDownloadLeafletsDialog"
     />
 
     <Trombinoscope
@@ -34,6 +35,13 @@
         @close="closeVolunteerInfoDialog"
       />
     </v-dialog>
+    <v-dialog
+      v-if="canManageUsers"
+      v-model="isDownloadLeafletsOpen"
+      width="1000"
+    >
+      <DownloadLeafletsCard @close="closeDownloadLeafletsDialog" />
+    </v-dialog>
   </div>
 </template>
 
@@ -42,6 +50,7 @@ import type { Team } from "@overbookd/team";
 import {
   VIEW_VOLUNTEER_DETAILS,
   AFFECT_VOLUNTEER,
+  MANAGE_USERS,
 } from "@overbookd/permission";
 import {
   keepMembersOf,
@@ -155,6 +164,16 @@ const exportCSV = async () => {
 
   const csv = [csvHeader, ...csvContent].join("\n");
   download("benevoles.csv", csv);
+};
+
+const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const isDownloadLeafletsOpen = ref<boolean>(false);
+const openDownloadLeafletsDialog = () => {
+  if (!canManageUsers.value) return;
+  isDownloadLeafletsOpen.value = true;
+};
+const closeDownloadLeafletsDialog = () => {
+  isDownloadLeafletsOpen.value = false;
 };
 </script>
 

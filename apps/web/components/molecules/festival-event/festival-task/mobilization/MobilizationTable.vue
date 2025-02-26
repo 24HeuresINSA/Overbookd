@@ -4,7 +4,6 @@
       :headers="headers"
       :items="selectedTask.mobilizations"
       :items-per-page="-1"
-      :custom-sort="sortMobilizations"
       no-data-text="Aucune mobilisation"
       :mobile="isMobile"
       disable-pagination
@@ -139,10 +138,6 @@ import type {
 } from "@overbookd/festival-event";
 import { formatDateWithMinutes } from "@overbookd/time";
 import type { AddMobilizationForm } from "@overbookd/http";
-import {
-  type SortablePeriodHeader,
-  periodsSorts,
-} from "~/utils/sort/sort-period.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const ftStore = useFestivalTaskStore();
@@ -240,18 +235,6 @@ const removeTeam = (mobilization: Mobilization, { team }: TeamMobilization) => {
 
 const formatDurationSplitInHour = (duration: number | null): string => {
   return duration ? `${duration}h` : "";
-};
-const sortMobilizations = (
-  mobilizations: Mobilization[],
-  sortsBy: SortablePeriodHeader[],
-  sortsDesc: boolean[],
-) => {
-  const sortBy = sortsBy.at(0) ?? "start";
-  const sortFnc = periodsSorts.get(sortBy);
-  if (!sortFnc) return mobilizations;
-
-  const sortDesc = sortsDesc.at(0) ?? false;
-  return sortFnc(mobilizations, sortDesc);
 };
 </script>
 
