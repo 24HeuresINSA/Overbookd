@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { ConfigurationValue } from "./configuration.model";
-import { Configuration } from "@overbookd/configuration";
+import { Configuration, ConfigurationKey } from "@overbookd/configuration";
 
 @Injectable()
 export class ConfigurationService {
@@ -11,22 +10,21 @@ export class ConfigurationService {
     return this.prisma.configuration.findMany();
   }
 
-  findOne(key: string): Promise<Configuration> {
+  findOne(key: ConfigurationKey): Promise<Configuration> {
     return this.prisma.configuration.findUnique({
       where: { key },
     });
   }
 
-  upsert(key: string, { value }: ConfigurationValue): Promise<Configuration> {
-    const configuration = { key, value };
+  upsert(configuration: Configuration): Promise<Configuration> {
     return this.prisma.configuration.upsert({
-      where: { key },
+      where: { key: configuration.key },
       create: configuration,
       update: configuration,
     });
   }
 
-  async remove(key: string) {
+  async remove(key: ConfigurationKey): Promise<void> {
     await this.prisma.configuration.delete({
       where: { key },
     });

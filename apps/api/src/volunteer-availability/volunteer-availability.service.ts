@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import {
   Edition,
@@ -13,10 +13,32 @@ import {
 import { PrismaService } from "../prisma.service";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { VOLUNTEER } from "@overbookd/registration";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 
 @Injectable()
 export class VolunteerAvailabilityService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly eventStore: DomainEventService,
+    private readonly prisma: PrismaService,
+  ) {}
+
+  private logger = new Logger("VolunteerAvailabilityService");
+
+  onApplicationBootstrap() {
+    this.eventStore.volunteersEnrolled.subscribe(
+      async ({ data: enrolling }) => {
+        this.logger.log("Adding briefing availabilities");
+        this.logger.debug(JSON.stringify(enrolling));
+        const briefing = await this.getBriefingTimeWindow();
+        if (!briefing) {
+          this.logger.error("Briefing time window not found");
+          return;
+        }
+        this.addAvailabilitiesWithoutCheck(enrolling.candidate.id, [briefing]);
+      },
+    );
+  }
 
   async addAvailabilities(
     userId: number,
@@ -109,6 +131,12 @@ export class VolunteerAvailabilityService {
         .join("\n");
       throw new ForbiddenException(errors);
     }
+  }
+
+  private async getBriefingTimeWindow(): Promise<IProvidePeriod | null> {
+    return this.prisma.configuration.findUnique({
+      where: { key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY },
+    });
   }
 }
 

@@ -129,6 +129,7 @@
 
 <script lang="ts" setup>
 import type { VolunteerCandidate } from "@overbookd/http";
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 import { formatDate } from "@overbookd/time";
 import {
   matchingSearchItems,
@@ -142,6 +143,7 @@ useHead({ title: "Admissions bénévoles" });
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 const userStore = useUserStore();
+const configurationStore = useConfigurationStore();
 
 const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
@@ -246,6 +248,16 @@ const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
     return;
   }
   candidatesToEnroll.value = [...candidatesToEnroll.value, candidate];
+};
+
+const saveBriefingTimeWindow = async () => {
+  await configurationStore.save({
+    key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+    value: {
+      start: new Date(),
+      end: new Date(),
+    },
+  });
 };
 </script>
 

@@ -20,10 +20,16 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { ConfigurationValue } from "./configuration.model";
-import { Configuration } from "@overbookd/configuration";
+import {
+  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+  Configuration,
+  ConfigurationKey,
+} from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
-import { MANAGE_CONFIG } from "@overbookd/permission";
+import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
+import { PeriodResponseDto } from "../common/dto/period.response.dto";
+import { PeriodRequestDto } from "../common/dto/period.request.dto";
+import { IProvidePeriod } from "@overbookd/time";
 
 @ApiTags("configuration")
 @Controller("configuration")
@@ -47,8 +53,30 @@ export class ConfigurationController {
     description: "Get configuration by key",
     type: ConfigurationResponseDto,
   })
-  findOne(@Param("key") key: string): Promise<Configuration> {
+  findOne(@Param("key") key: ConfigurationKey): Promise<Configuration> {
     return this.configurationService.findOne(key);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_SOFT)
+  @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
+  @ApiResponse({
+    status: 201,
+    description: "Upsert briefing time window",
+    type: PeriodResponseDto,
+  })
+  @ApiBody({
+    description: "Briefing time window",
+    type: PeriodRequestDto,
+  })
+  upsertBriefingTimeWindow(
+    @Body() briefingTimeWindow: IProvidePeriod,
+  ): Promise<Configuration> {
+    return this.configurationService.upsert({
+      key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+      value: briefingTimeWindow,
+    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -65,10 +93,10 @@ export class ConfigurationController {
     type: UpsertConfigurationDto,
   })
   upsert(
-    @Param("key") key: string,
-    @Body() configurationValue: ConfigurationValue,
+    @Param("key") key: ConfigurationKey,
+    @Body() { value }: UpsertConfigurationDto,
   ): Promise<Configuration> {
-    return this.configurationService.upsert(key, configurationValue);
+    return this.configurationService.upsert({ key, value });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -84,7 +112,7 @@ export class ConfigurationController {
     name: "key",
     description: "Configuration key",
   })
-  remove(@Param("key") key: string) {
+  remove(@Param("key") key: ConfigurationKey): Promise<void> {
     return this.configurationService.remove(key);
   }
 }

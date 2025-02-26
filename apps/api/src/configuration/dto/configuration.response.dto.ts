@@ -1,16 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
-import { ConfigurationRepresentation } from "../configuration.model";
+import { IsEnum, IsNotEmpty, IsObject } from "class-validator";
+import {
+  Configuration,
+  ConfigurationKey,
+  configurationKeys,
+} from "@overbookd/configuration";
 
-export class ConfigurationResponseDto implements ConfigurationRepresentation {
+export class ConfigurationResponseDto implements Configuration {
   @ApiProperty({
     required: true,
     description:
       "Configuration key, most of the time, correspond to page in the view",
   })
-  @IsString()
+  @IsEnum(configurationKeys, { message: () => "La clé est invalide" })
   @IsNotEmpty()
-  key: string;
+  key: ConfigurationKey;
 
   @ApiProperty({
     required: true,

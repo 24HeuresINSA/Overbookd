@@ -3,7 +3,11 @@ import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service"
 import { categoriesAndGears } from "./seeders/gears";
 import { permissions } from "./seeders/permissions";
 import { signaLocations } from "./seeders/signa-locations";
-import { Configuration } from "@overbookd/configuration";
+import {
+  Configuration,
+  EVENT_DATE_KEY,
+  REGISTER_FORM_KEY,
+} from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { teams } from "./seeders/teams";
@@ -151,45 +155,29 @@ async function main() {
 
   console.log(`\n${savedPermissions.length} permissions inserted`);
 
-  const sgConfig: Configuration = {
-    key: "sg",
-    value: {
-      prixFutBlonde: 0,
-      prixFutBlanche: 0,
-      prixFutTriple: 0,
-      prixFutFlower: 0,
-    },
-  };
-  console.log("Creating of sg config");
-  await prisma.configuration.upsert({
-    where: { key: "sg" },
-    update: sgConfig,
-    create: sgConfig,
-  });
-
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
   const eventDateConfig: Configuration = {
-    key: "eventDate",
+    key: EVENT_DATE_KEY,
     value: {
       start: currentDate.toISOString(),
     },
   };
   console.log("Creating of event date config");
   await prisma.configuration.upsert({
-    where: { key: "eventDate" },
+    where: { key: EVENT_DATE_KEY },
     update: eventDateConfig,
     create: eventDateConfig,
   });
   console.log("Creating of register form config");
   const registerFormConfig: Configuration = {
-    key: "registerForm",
+    key: REGISTER_FORM_KEY,
     value: {
       description: defaultCommitmentPresentation,
     },
   };
   await prisma.configuration.upsert({
-    where: { key: "registerForm" },
+    where: { key: REGISTER_FORM_KEY },
     update: registerFormConfig,
     create: registerFormConfig,
   });
