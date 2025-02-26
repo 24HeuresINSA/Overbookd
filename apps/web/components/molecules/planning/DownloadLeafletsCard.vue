@@ -38,7 +38,6 @@
             {{ displayedVolunteers.length }} bénévoles correspondant
           </summary>
           <v-data-table
-            v-model:sort-by="sortBy"
             :headers="headers"
             :items="displayedVolunteers"
             no-data-text="Aucun bénévole correspondant"
@@ -86,7 +85,7 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
-import type { TableHeaders, SortItem } from "~/utils/vuetify/component-props";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   compareVolunteersOnNames,
   compareVolunteersOnAssignment,
@@ -98,7 +97,6 @@ const layoutStore = useLayoutStore();
 const planningStore = usePlanningStore();
 planningStore.fetchVolunteers();
 
-const sortBy = ref<SortItem[]>([]);
 const headers: TableHeaders = [
   {
     title: "Prénom Nom (Surnom)",
