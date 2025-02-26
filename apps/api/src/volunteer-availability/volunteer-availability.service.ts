@@ -136,7 +136,7 @@ export class VolunteerAvailabilityService {
   private async getBriefingTimeWindow(): Promise<IProvidePeriod | null> {
     return this.prisma.configuration.findUnique({
       where: { key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY },
-    });
+    }) as Promise<IProvidePeriod | null>;
   }
 }
 
