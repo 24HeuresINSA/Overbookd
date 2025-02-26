@@ -27,7 +27,6 @@ import {
 } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
-import { PeriodResponseDto } from "../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../common/dto/period.request.dto";
 import { IProvidePeriod } from "@overbookd/time";
 
@@ -64,7 +63,7 @@ export class ConfigurationController {
   @ApiResponse({
     status: 201,
     description: "Upsert briefing time window",
-    type: PeriodResponseDto,
+    type: ConfigurationResponseDto,
   })
   @ApiBody({
     description: "Briefing time window",

@@ -26,6 +26,6 @@ export type Configuration<
     | number
     | boolean,
 > = {
-  key: ConfigurationKey;
+  key: string;
   value: T;
 };
