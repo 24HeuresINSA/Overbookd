@@ -1,13 +1,9 @@
 import { Event } from "@overbookd/event";
 import { BENEVOLE_CODE, HARD_CODE, SOFT_CODE } from "@overbookd/team-constants";
 import { JoinableTeam } from "./joinable-team";
+import { IProvidePeriod } from "@overbookd/time";
 
 export const CANDIDATE_ENROLLED = "candidate-enrolled" as const;
-
-export type EnrollingCandidates = {
-  candidates: Candidate[];
-  team: JoinableTeam;
-};
 
 export type Candidate = { id: number; name: string };
 
@@ -20,6 +16,11 @@ export type Memberships = {
 
   enrolledIn(team: JoinedTeam): {
     among: (candidates: Candidate[]) => Promise<Candidate[]>;
+  };
+};
+export type BriefingAvailabilities = {
+  add(period: IProvidePeriod): {
+    to: (candidateId: Candidate["id"]) => Promise<void>;
   };
 };
 
@@ -38,29 +39,42 @@ export class EnrollCandidates {
   constructor(
     private readonly memberships: Memberships,
     private readonly events: Events,
+    private readonly availabilities: BriefingAvailabilities,
   ) {}
 
-  async apply(enrolling: EnrollingCandidates) {
-    await this.checkEnrolledInOtherTeam(enrolling);
+  async applyAsHard(candidates: Candidate[]) {
+    await this.apply(candidates, HARD_CODE);
+  }
 
-    const toEnrollCandidates = await this.retrieveCandidatesToEnroll(enrolling);
-    const { team } = enrolling;
+  async applyAsSoft(candidates: Candidate[], briefTimeWindow: IProvidePeriod) {
+    await this.apply(candidates, SOFT_CODE);
+    candidates.map(({ id }) => this.availabilities.add(briefTimeWindow).to(id));
+  }
+
+  private async apply(candidates: Candidate[], team: JoinableTeam) {
+    await this.checkEnrolledInOtherTeam(candidates, team);
+
+    const toEnrollCandidates = await this.retrieveCandidatesToEnroll(
+      candidates,
+      team,
+    );
 
     await this.memberships.join([team, BENEVOLE_CODE]).as(toEnrollCandidates);
 
-    this.generateEvents({ candidates: toEnrollCandidates, team });
+    this.generateEvents(toEnrollCandidates, team);
   }
 
-  private generateEvents({ candidates, team }: EnrollingCandidates) {
+  private generateEvents(candidates: Candidate[], team: JoinableTeam) {
     candidates.map((candidate) => {
       const data = { candidate, team };
       this.events.publish({ type: CANDIDATE_ENROLLED, data });
     });
   }
 
-  private async retrieveCandidatesToEnroll(enrolling: EnrollingCandidates) {
-    const { team, candidates } = enrolling;
-
+  private async retrieveCandidatesToEnroll(
+    candidates: Candidate[],
+    team: JoinableTeam,
+  ) {
     const enrolledInSameTeam = await this.memberships
       .enrolledIn(team)
       .among(candidates);
@@ -68,9 +82,10 @@ export class EnrollCandidates {
     return this.keepNotEnrolled(candidates).among(enrolledInSameTeam);
   }
 
-  private async checkEnrolledInOtherTeam(enrolling: EnrollingCandidates) {
-    const { team, candidates } = enrolling;
-
+  private async checkEnrolledInOtherTeam(
+    candidates: Candidate[],
+    team: JoinableTeam,
+  ) {
     const otherTeam = team === HARD_CODE ? SOFT_CODE : HARD_CODE;
 
     const enrolledInOtherTeam = await this.memberships
@@ -79,7 +94,6 @@ export class EnrollCandidates {
 
     const noneEnrolledInOtherTeam = enrolledInOtherTeam.length === 0;
     if (noneEnrolledInOtherTeam) return;
-
     throw new AlreadyEnrolledError(enrolledInOtherTeam);
   }
 
