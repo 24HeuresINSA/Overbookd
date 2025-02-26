@@ -27,8 +27,6 @@ import {
 } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
-import { PeriodRequestDto } from "../common/dto/period.request.dto";
-import { IProvidePeriod } from "@overbookd/time";
 
 @ApiTags("configuration")
 @Controller("configuration")
@@ -67,14 +65,14 @@ export class ConfigurationController {
   })
   @ApiBody({
     description: "Briefing time window",
-    type: PeriodRequestDto,
+    type: UpsertConfigurationDto,
   })
   upsertBriefingTimeWindow(
-    @Body() briefingTimeWindow: IProvidePeriod,
+    @Body() { value }: UpsertConfigurationDto,
   ): Promise<Configuration> {
     return this.configurationService.upsert({
       key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value: briefingTimeWindow,
+      value,
     });
   }
 

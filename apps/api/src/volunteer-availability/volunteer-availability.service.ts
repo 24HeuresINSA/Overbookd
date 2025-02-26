@@ -35,7 +35,7 @@ export class VolunteerAvailabilityService {
           this.logger.error("Briefing time window not found");
           return;
         }
-        this.addAvailabilitiesWithoutCheck(enrolling.candidate.id, [briefing]);
+        this.addAvailabilities(enrolling.candidate.id, [briefing]);
       },
     );
   }
@@ -134,9 +134,12 @@ export class VolunteerAvailabilityService {
   }
 
   private async getBriefingTimeWindow(): Promise<IProvidePeriod | null> {
-    return this.prisma.configuration.findUnique({
+    const config = await this.prisma.configuration.findUnique({
       where: { key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY },
-    }) as Promise<IProvidePeriod | null>;
+    });
+    if (!config) return null;
+    const { start, end } = config.value as unknown as IProvidePeriod;
+    return { start: new Date(start), end: new Date(end) };
   }
 }
 

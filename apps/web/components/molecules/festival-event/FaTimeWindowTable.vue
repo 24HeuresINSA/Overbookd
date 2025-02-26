@@ -43,7 +43,7 @@
     />
 
     <v-dialog v-model="isPeriodDialogOpen" max-width="600px">
-      <CreatePeriodDialogCard
+      <UpsertPeriodDialogCard
         :existing-period="selectedTimeWindow"
         @add="addTimeWindow"
         @update="updateTimeWindow"
@@ -97,8 +97,10 @@ const closeDialog = () => {
 };
 
 const emit = defineEmits(["add", "update", "remove"]);
-const addTimeWindow = (period: IProvidePeriod) => emit("add", period);
-const updateTimeWindow = (timeWindow: TimeWindow) => emit("update", timeWindow);
+const addTimeWindow = (timeWindow: IProvidePeriod) => emit("add", timeWindow);
+const updateTimeWindow = (timeWindow: IProvidePeriod) => {
+  emit("update", { ...timeWindow, id: selectedTimeWindow.value?.id });
+};
 const removeTimeWindow = (timeWindow: TimeWindow) => emit("remove", timeWindow);
 </script>
 

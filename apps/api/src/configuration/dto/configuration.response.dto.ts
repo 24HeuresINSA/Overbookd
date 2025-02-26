@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty, IsObject } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
 import {
   Configuration,
   ConfigurationKey,
@@ -20,7 +20,5 @@ export class ConfigurationResponseDto implements Configuration {
     required: true,
     description: "Contains Json config object, with arbitrary value",
   })
-  @IsObject()
-  @IsNotEmpty()
-  value: object;
+  value: object | null;
 }

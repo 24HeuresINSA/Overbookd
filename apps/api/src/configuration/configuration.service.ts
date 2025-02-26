@@ -10,10 +10,14 @@ export class ConfigurationService {
     return this.prisma.configuration.findMany();
   }
 
-  findOne(key: ConfigurationKey): Promise<Configuration> {
-    return this.prisma.configuration.findUnique({
+  async findOne(key: ConfigurationKey): Promise<Configuration> {
+    const config = await this.prisma.configuration.findUnique({
       where: { key },
     });
+    return {
+      key,
+      value: config?.value ?? null,
+    };
   }
 
   upsert(configuration: Configuration): Promise<Configuration> {

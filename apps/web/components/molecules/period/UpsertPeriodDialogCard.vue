@@ -28,7 +28,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { TimeWindow } from "@overbookd/festival-event";
 import {
   type IProvidePeriod,
   ONE_HOUR_IN_MS,
@@ -40,7 +39,7 @@ const configurationStore = useConfigurationStore();
 
 const props = defineProps({
   existingPeriod: {
-    type: Object as PropType<TimeWindow | null>,
+    type: Object as PropType<IProvidePeriod | null>,
     default: () => null,
   },
 });
@@ -84,12 +83,8 @@ const emit = defineEmits(["add", "update", "close"]);
 const close = () => emit("close");
 const confirmPeriod = () => {
   if (!isValid.value) return;
-  if (isUpdate.value) {
-    emit("update", { ...period.value, id: props.existingPeriod?.id });
-  } else {
-    emit("add", { ...period.value });
-    clearPeriod();
-  }
+  emit(isUpdate.value ? "update" : "add", { ...period.value });
+  clearPeriod();
   close();
 };
 </script>
