@@ -145,7 +145,7 @@ const emit = defineEmits(["close"]);
 const close = () => emit("close");
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .content {
   display: flex;
   flex-direction: column;
