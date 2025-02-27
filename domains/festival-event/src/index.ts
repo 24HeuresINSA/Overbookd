@@ -40,6 +40,7 @@ export {
   SALLE_CRLA,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
+  LIVRE_PAR_BAR,
   drives,
 } from "./common/inquiry-request.js";
 export type {
