@@ -3,7 +3,10 @@
     v-show="showTeam"
     :size="size"
     :color="color"
-    :class="classes"
+    :class="{
+      clickable: clickable,
+      flip: isBde,
+    }"
     :closable="closable"
     :ripple="clickable"
     variant="elevated"
@@ -16,7 +19,9 @@
     <span v-if="withName" class="name">
       {{ teamText }}
     </span>
-    <v-tooltip location="top" activator="parent" :text="teamText" />
+    <v-tooltip :location="isBde ? 'bottom' : 'top'" activator="parent">
+      <span :class="{ flip: isBde }">{{ teamText }}</span>
+    </v-tooltip>
   </v-chip>
 </template>
 
@@ -67,10 +72,7 @@ const teamText = computed<string>(() => {
   return `${chipPrefix}${teamMetadata.value?.name}`;
 });
 const color = computed<string>(() => teamMetadata.value?.color ?? "grey");
-const classes = computed(() => ({
-  clickable: clickable,
-  flip: team === "bde",
-}));
+const isBde = computed<boolean>(() => team === "bde");
 
 const emit = defineEmits(["click", "close"]);
 const sendEvent = () => emit("click", teamMetadata.value);
