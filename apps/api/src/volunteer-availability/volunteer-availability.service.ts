@@ -28,11 +28,13 @@ export class VolunteerAvailabilityService {
   onApplicationBootstrap() {
     this.eventStore.volunteersEnrolled.subscribe(
       async ({ data: enrolling }) => {
-        this.logger.log("Adding briefing availabilities");
-        this.logger.debug(JSON.stringify(enrolling));
+        const candidateName = enrolling.candidate.name;
+        this.logger.log(`Adding briefing availabilities for ${candidateName}`);
         const briefing = await this.getBriefingTimeWindow();
         if (!briefing) {
-          this.logger.error("Briefing time window not found");
+          this.logger.error(
+            `Briefing time window not found for ${candidateName}`,
+          );
           return;
         }
         this.addAvailabilities(enrolling.candidate.id, [briefing]);
