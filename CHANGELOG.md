@@ -1,3 +1,9 @@
+## [3.36.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.36.0...v3.36.1) (2025-02-27)
+
+### Bug Fixes
+
+* **log:** add drive location "Livré par l'équipe bar" ([dfa335c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dfa335c21e35876e7ca7bea86dfa30d89af0f7bf))
+
 ## [3.36.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.35.0...v3.36.0) (2025-02-27)
 
 ### Features
