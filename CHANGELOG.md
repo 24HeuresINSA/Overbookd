@@ -1,3 +1,14 @@
+## [3.36.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.35.0...v3.36.0) (2025-02-27)
+
+### Features
+
+* **assignment:** add volunteers assignment stats table [#2420](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2420) ([f606dd3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f606dd37825794fc13bd1e511206d39677537c71))
+* **planning:** add the download leaflets card [#2419](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2419) ([70f896b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/70f896bfb3e5924da6de626b914a606c4402aeac))
+
+### Bug Fixes
+
+* **issue:** revert old email to create issue ([ecb2c7c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ecb2c7cd10b217f1b975e5763acfe97ed659f281))
+
 ## [3.35.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.34.1...v3.35.0) (2025-02-25)
 
 ### Features
