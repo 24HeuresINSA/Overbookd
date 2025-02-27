@@ -31,7 +31,6 @@ export function compareVolunteersOnTaskCategoryAssignmentDuration(
     const bAssignmentDuration =
       b.stats.find((stat) => (stat.category ?? AUCUNE) === displayableCategory)
         ?.duration ?? 0;
-    console.log(aAssignmentDuration, bAssignmentDuration);
     return aAssignmentDuration - bAssignmentDuration;
   };
 }

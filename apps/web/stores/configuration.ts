@@ -1,4 +1,8 @@
-import type { Configuration } from "@overbookd/configuration";
+import {
+  EVENT_DATE_KEY,
+  REGISTER_FORM_KEY,
+  type Configuration,
+} from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { OverDate } from "@overbookd/time";
@@ -18,7 +22,7 @@ export const useConfigurationStore = defineStore("configuration", {
       return state.configurations.find((c) => c.key === key)?.value;
     },
     eventStartDate(): Date {
-      const eventDate = this.get("eventDate");
+      const eventDate = this.get(EVENT_DATE_KEY);
       const now = OverDate.now().date;
       if (!isObject(eventDate) || !("start" in eventDate)) return now;
       const start = eventDate.start;
@@ -26,7 +30,7 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
     registerFormDescription(): string {
-      const registerForm = this.get("registerForm");
+      const registerForm = this.get(REGISTER_FORM_KEY);
       if (!isObject(registerForm) || !("description" in registerForm)) {
         return defaultCommitmentPresentation;
       }

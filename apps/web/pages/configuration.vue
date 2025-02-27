@@ -72,6 +72,7 @@
 </template>
 
 <script lang="ts" setup>
+import { EVENT_DATE_KEY, REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 useHead({ title: "Config admin" });
@@ -92,13 +93,13 @@ const replaceRegisterDescriptionByTemplate = () => {
 };
 const saveRegisterFormDescription = async () => {
   await configurationStore.save({
-    key: "registerForm",
+    key: REGISTER_FORM_KEY,
     value: { description: registerFormDescription.value },
   });
 };
 const saveEventStartDate = async () => {
   await configurationStore.save({
-    key: "eventDate",
+    key: EVENT_DATE_KEY,
     value: { start: dateEventStart.value },
   });
 };

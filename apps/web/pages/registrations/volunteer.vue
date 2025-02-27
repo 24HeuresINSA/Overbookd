@@ -1,89 +1,113 @@
 <template>
   <DesktopPageTitle />
-  <v-card class="registrations">
-    <v-card-title>Candidats</v-card-title>
-    <v-card-text>
-      <v-data-table
-        v-model="candidatesToEnroll"
-        :headers="headers"
-        :items="filteredCandidates"
-        :loading="loading"
-        loading-text="Chargement des candidats..."
-        :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
-        :mobile="isMobile"
-        show-select
-        return-object
-      >
-        <template #top>
-          <div class="filters">
-            <v-text-field
-              v-model="searchedCandidate"
-              label="Rechercher un candidat"
-              class="search-filter"
-              clearable
-              hide-details
-              @click:clear="searchedCandidate = ''"
+
+  <div class="registrations">
+    <v-card>
+      <v-card-title>Briefing bénévole</v-card-title>
+      <v-card-text>
+        <p>
+          Ajouter le créneau du briefing bénévole permet d'ajouter
+          automatiquement la disponibilité aux bénévoles enrôlé·e·s.
+        </p>
+        <p class="important">
+          {{ readableBriefingTimeWindow }}
+        </p>
+        <v-btn
+          text="Enregistrer le créneau"
+          color="primary"
+          class="mt-2"
+          :loading="briefingLoading"
+          size="small"
+          @click="openBriefingTimeWindowDialog"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-card>
+      <v-card-title>Candidats</v-card-title>
+      <v-card-text>
+        <v-data-table
+          v-model="candidatesToEnroll"
+          :headers="headers"
+          :items="filteredCandidates"
+          :loading="loading"
+          loading-text="Chargement des candidats..."
+          :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
+          :mobile="isMobile"
+          show-select
+          return-object
+        >
+          <template #top>
+            <div class="filters">
+              <v-text-field
+                v-model="searchedCandidate"
+                label="Rechercher un candidat"
+                class="search-filter"
+                clearable
+                hide-details
+                @click:clear="searchedCandidate = ''"
+              />
+              <v-btn
+                text="Candidats rejetés"
+                color="secondary"
+                :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
+                @click="toggleRejectedCandidates"
+              />
+            </div>
+          </template>
+
+          <template #item.candidatedAt="{ item }">
+            {{ formatDate(item.candidatedAt) }}
+          </template>
+
+          <template #item.teams="{ item }">
+            <TeamChip v-for="team of item.teams" :key="team" :team="team" />
+          </template>
+
+          <template #item.actions="{ item }">
+            <v-btn
+              v-if="!displayRejectedCandidates"
+              icon="mdi-check"
+              size="large"
+              variant="flat"
+              @click="enrollCandidate(item)"
             />
             <v-btn
-              text="Candidats rejetés"
-              color="secondary"
-              :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
-              @click="toggleRejectedCandidates"
+              icon="mdi-account-details"
+              size="large"
+              variant="flat"
+              @click="openCandidateInfoDialogue(item)"
             />
-          </div>
-        </template>
+            <v-btn
+              v-if="!displayRejectedCandidates"
+              icon="mdi-trash-can-outline"
+              size="large"
+              variant="flat"
+              @click="rejectCandidate(item.id)"
+            />
+            <v-btn
+              v-else
+              icon="mdi-undo"
+              size="large"
+              variant="flat"
+              @click="cancelCandidateRejection(item.id)"
+            />
+          </template>
+        </v-data-table>
+      </v-card-text>
 
-        <template #item.candidatedAt="{ item }">
-          {{ formatDate(item.candidatedAt) }}
-        </template>
-
-        <template #item.teams="{ item }">
-          <TeamChip v-for="team of item.teams" :key="team" :team="team" />
-        </template>
-
-        <template #item.actions="{ item }">
-          <v-btn
-            v-if="!displayRejectedCandidates"
-            icon="mdi-check"
-            size="large"
-            variant="flat"
-            @click="enrollCandidate(item)"
-          />
-          <v-btn
-            icon="mdi-account-details"
-            size="large"
-            variant="flat"
-            @click="openCandidateInfoDialogue(item)"
-          />
-          <v-btn
-            v-if="!displayRejectedCandidates"
-            icon="mdi-trash-can-outline"
-            size="large"
-            variant="flat"
-            @click="rejectCandidate(item.id)"
-          />
-          <v-btn
-            v-else
-            icon="mdi-undo"
-            size="large"
-            variant="flat"
-            @click="cancelCandidateRejection(item.id)"
-          />
-        </template>
-      </v-data-table>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        v-if="!displayRejectedCandidates"
-        text="Enrôler en tant que bénévole"
-        :disabled="noVolunteerSelected"
-        size="large"
-        @click="enrollCandidates"
-      />
-    </v-card-actions>
-  </v-card>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          v-if="!displayRejectedCandidates"
+          text="Enrôler en tant que bénévole"
+          :disabled="noVolunteerSelected"
+          size="large"
+          @click="enrollCandidates"
+        />
+      </v-card-actions>
+    </v-card>
+  </div>
 
   <v-dialog v-model="isCandidateInfoDialogOpen" max-width="1400px">
     <VolunteerInformationDialogCard
@@ -125,11 +149,25 @@
       </template>
     </VolunteerInformationDialogCard>
   </v-dialog>
+
+  <v-dialog v-model="isBriefingTimeWindowDialogOpen" max-width="600px">
+    <UpsertPeriodDialogCard
+      :existing-period="briefingTimeWindow"
+      @add="saveBriefingTimeWindow"
+      @update="saveBriefingTimeWindow"
+      @close="closeBriefingTimeWindowDialog"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { VolunteerCandidate } from "@overbookd/http";
-import { formatDate } from "@overbookd/time";
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import {
+  formatDate,
+  formatDateWithMinutes,
+  type IProvidePeriod,
+} from "@overbookd/time";
 import {
   matchingSearchItems,
   type Searchable,
@@ -142,6 +180,7 @@ useHead({ title: "Admissions bénévoles" });
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 const userStore = useUserStore();
+const configurationStore = useConfigurationStore();
 
 const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
@@ -165,6 +204,7 @@ const loading = ref<boolean>(candidates.value.length === 0);
 membershipApplicationStore.fetchVolunteerCandidates().then(() => {
   loading.value = false;
 });
+
 const searchableEnrollableCandidates = computed<
   Searchable<VolunteerCandidate>[]
 >(() => candidates.value.map(toSearchable));
@@ -246,6 +286,36 @@ const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
     return;
   }
   candidatesToEnroll.value = [...candidatesToEnroll.value, candidate];
+};
+
+const briefingLoading = ref<boolean>(true);
+configurationStore.fetch(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY).then(() => {
+  briefingLoading.value = false;
+});
+const briefingTimeWindow = computed<IProvidePeriod | null>(() => {
+  const timeWindow = configurationStore.get(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY);
+  if (briefingLoading.value || !timeWindow) return null;
+  const { start, end } = timeWindow as IProvidePeriod;
+  return { start: new Date(start), end: new Date(end) };
+});
+const readableBriefingTimeWindow = computed<string>(() => {
+  if (briefingLoading.value) return "";
+  return briefingTimeWindow.value
+    ? `Créneau du briefing bénévole : ${formatDateWithMinutes(briefingTimeWindow.value.start)} - ${formatDateWithMinutes(briefingTimeWindow.value.end)}`
+    : "Le créneau du briefing bénévole n'est pas défini. Les disponibilités ne pourront donc pas être ajoutées.";
+});
+const isBriefingTimeWindowDialogOpen = ref<boolean>(false);
+const openBriefingTimeWindowDialog = () => {
+  isBriefingTimeWindowDialogOpen.value = true;
+};
+const closeBriefingTimeWindowDialog = () => {
+  isBriefingTimeWindowDialogOpen.value = false;
+};
+const saveBriefingTimeWindow = async (period: IProvidePeriod) => {
+  await configurationStore.save({
+    key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+    value: period,
+  });
 };
 </script>
 
