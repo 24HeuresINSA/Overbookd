@@ -12,7 +12,8 @@
         mail. Si rien ne se passe, tu peux utiliser les deux autres bontons pour
         copier l'adresse mail et le template. <br />
         ⚠️ Le formulaire ci-dessous permet de remplir le modèle. Utilise le bien
-        pour ton mail, cela nous aide vraiment pour notre travail. Merci 🙏
+        pour ton mail, cela nous aide vraiment pour notre travail (et n'oublie
+        pas l'objet du mail 😉). Merci 🙏
       </p>
       <v-textarea
         v-model="expectedBehaviour"
@@ -70,7 +71,7 @@ const actualBehaviour = ref<string>("");
 const stepsToReproduce = ref<string>("");
 
 const bugReportEmail =
-  "incoming+24-heures-insa-overbookd-mono-31598236-20ragsga8dk53tbc4cu2exj9r-issue@incoming.gitlab.com";
+  "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com";
 const stepsToReproducePlaceholder = "- Étape 1\n- Étape 2\n...";
 
 const emit = defineEmits(["close"]);
