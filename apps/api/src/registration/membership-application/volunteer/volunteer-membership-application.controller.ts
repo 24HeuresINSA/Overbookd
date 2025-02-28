@@ -63,24 +63,6 @@ export class VolunteerMembershipApplicationController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Get(":email")
-  @ApiParam({
-    name: "email",
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Get current volunteer application",
-    type: HasApplicationResponseDto,
-  })
-  getCurrentApplication(
-    @Param("email") email: string,
-  ): Promise<HasApplication> {
-    return this.applicationService.getCurrentApplication(email);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Get()
   @ApiResponse({
@@ -135,6 +117,25 @@ export class VolunteerMembershipApplicationController {
   })
   enroll(@Body() { candidates }: EnrollCandidatesRequestDto): Promise<void> {
     return this.applicationService.enroll(candidates);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(":email")
+  @ApiParam({
+    name: "email",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get current volunteer application",
+    type: HasApplicationResponseDto,
+  })
+  getCurrentApplication(
+    @Param("email") email: string,
+  ): Promise<HasApplication> {
+    console.log("cc");
+    return this.applicationService.getCurrentApplication(email);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

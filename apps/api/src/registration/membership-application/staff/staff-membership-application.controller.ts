@@ -62,24 +62,6 @@ export class StaffMembershipApplicationController {
     return this.applicationService.applyFor(email, token);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Get(":email")
-  @ApiParam({
-    name: "email",
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Get current staff application",
-    type: HasApplicationResponseDto,
-  })
-  getCurrentApplication(
-    @Param("email") email: string,
-  ): Promise<HasApplication> {
-    return this.applicationService.getCurrentApplication(email);
-  }
-
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
@@ -140,6 +122,40 @@ export class StaffMembershipApplicationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
+  @Get("invitation-link")
+  getStaffInvitationLink(): Promise<URL | undefined> {
+    return this.applicationService.getStaffInvitationLink();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
+  @Post("invitation-link")
+  generateStaffInvitationLink(): Promise<URL> {
+    return this.applicationService.generateStaffInvitationLink();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(":email")
+  @ApiParam({
+    name: "email",
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get current staff application",
+    type: HasApplicationResponseDto,
+  })
+  getCurrentApplication(
+    @Param("email") email: string,
+  ): Promise<HasApplication> {
+    return this.applicationService.getCurrentApplication(email);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
   @Delete(":candidateId")
   @HttpCode(204)
   @ApiResponse({
@@ -173,21 +189,5 @@ export class StaffMembershipApplicationController {
     @Param("candidateId", ParseIntPipe) candidateId: number,
   ): Promise<void> {
     return this.applicationService.cancelStaffApplicationRejection(candidateId);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
-  @Get("invitation-link")
-  getStaffInvitationLink(): Promise<URL | undefined> {
-    return this.applicationService.getStaffInvitationLink();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
-  @Post("invitation-link")
-  generateStaffInvitationLink(): Promise<URL> {
-    return this.applicationService.generateStaffInvitationLink();
   }
 }
