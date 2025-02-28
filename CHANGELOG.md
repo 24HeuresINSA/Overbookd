@@ -1,3 +1,13 @@
+## [3.37.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.36.1...v3.37.0) (2025-02-28)
+
+### Features
+
+* **application:** add briefing availabilitites when enrolled as soft [#2423](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2423) ([d3dc413](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d3dc413017c030661cb0c52f26d93c053827d435))
+
+### Bug Fixes
+
+* **edb:** flip tooltip if it's bde team [#2427](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2427) ([b270165](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b270165cc005118d41c1535ea104614c094af90d))
+
 ## [3.36.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.36.0...v3.36.1) (2025-02-27)
 
 ### Bug Fixes
