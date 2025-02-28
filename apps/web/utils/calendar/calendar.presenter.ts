@@ -1,4 +1,10 @@
-import { Period, OverDate, MINUTES_IN_DAY, Duration } from "@overbookd/time";
+import {
+  Period,
+  OverDate,
+  MINUTES_IN_DAY,
+  Duration,
+  QUARTER_IN_MS,
+} from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { DayPresenter } from "./day.presenter";
 
@@ -66,10 +72,21 @@ export class CalendarEventPresenter {
 
   get simultaneousEvents(): CalendarEvent[] {
     const event = Period.init({ start: this.event.start, end: this.event.end });
-    const overlappingEvents = this.among.filter((other) =>
-      event.isOverlapping(Period.init(other)),
+    const splitedEvent = event.splitInto(QUARTER_IN_MS);
+    const overlappingEventsEachQuarter = splitedEvent.map((quarter) =>
+      this.among.filter((other) => quarter.isOverlapping(Period.init(other))),
     );
-    return [this.event, ...overlappingEvents].sort((a, b) => {
+    const maxOverlappingEvents: CalendarEvent[] =
+      overlappingEventsEachQuarter.reduce(
+        (maxOverlappingEvents, overlappingEvents) => {
+          return overlappingEvents.length > maxOverlappingEvents.length
+            ? overlappingEvents
+            : maxOverlappingEvents;
+        },
+        [],
+      );
+
+    return [this.event, ...maxOverlappingEvents].sort((a, b) => {
       if (a.start.getTime() !== b.start.getTime()) {
         return a.start.getTime() - b.start.getTime();
       }
@@ -92,7 +109,6 @@ export class CalendarEventPresenter {
     const index = this.simultaneousEvents.findIndex(
       (simultaneous) => this.event.id === simultaneous.id,
     );
-
     if (index === -1) throw new Error("Event not found in simultaneousEvents");
 
     const baseLeft = (100 / this.simultaneousEvents.length) * index;
