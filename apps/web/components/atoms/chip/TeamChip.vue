@@ -20,7 +20,7 @@
       {{ teamText }}
     </span>
     <v-tooltip :location="isBde ? 'bottom' : 'top'" activator="parent">
-      <span :class="{ flip: isBde }">{{ teamText }}</span>
+      <p :class="{ flip: isBde }">{{ teamText }}</p>
     </v-tooltip>
   </v-chip>
 </template>
