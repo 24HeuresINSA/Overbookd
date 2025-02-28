@@ -134,7 +134,6 @@ export class VolunteerMembershipApplicationController {
   getCurrentApplication(
     @Param("email") email: string,
   ): Promise<HasApplication> {
-    console.log("cc");
     return this.applicationService.getCurrentApplication(email);
   }
 
