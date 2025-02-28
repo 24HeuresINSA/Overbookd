@@ -84,12 +84,8 @@ const sendCloseEvent = () => emit("close", team);
   margin: 2px;
   cursor: default;
 }
-.v-icon {
-  margin-top: 2px;
-}
 span.name {
   margin-left: 4px;
-  margin-top: 4px;
 }
 .flip {
   transform: rotate(180deg);
