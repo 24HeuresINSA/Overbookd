@@ -16,7 +16,10 @@ import {
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
-import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
+import {
+  ORDER_BY_PERIOD,
+  SELECT_PERIOD_WITH_ID,
+} from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 const SELECT_REVIEW = {
@@ -31,7 +34,10 @@ const SELECT_GENERAL = {
   photoLink: true,
   isFlagship: true,
   categories: true,
-  generalTimeWindows: { select: SELECT_PERIOD_WITH_ID },
+  generalTimeWindows: {
+    select: SELECT_PERIOD_WITH_ID,
+    orderBy: ORDER_BY_PERIOD,
+  },
 };
 
 const SELECT_IN_CHARGE = {
@@ -93,7 +99,10 @@ const SELECT_SUPPLY = {
 };
 
 const SELECT_INQUIRY = {
-  inquiryTimeWindows: { select: SELECT_PERIOD_WITH_ID },
+  inquiryTimeWindows: {
+    select: SELECT_PERIOD_WITH_ID,
+    orderBy: ORDER_BY_PERIOD,
+  },
   inquiries: {
     select: {
       slug: true,

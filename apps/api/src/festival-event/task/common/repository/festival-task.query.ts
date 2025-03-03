@@ -27,6 +27,7 @@ import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { Item } from "@overbookd/list";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
+import { ORDER_BY_PERIOD } from "../../../../common/query/period.query";
 
 const SELECT_REVIEWS = {
   reviews: {
@@ -51,7 +52,7 @@ export const SELECT_FESTIVAL_TASK = {
   globalInstruction: true,
   inChargeInstruction: true,
   inChargeVolunteers: { select: { volunteer: { select: SELECT_VOLUNTEER } } },
-  mobilizations: { select: SELECT_MOBILIZATION },
+  mobilizations: { select: SELECT_MOBILIZATION, orderBy: ORDER_BY_PERIOD },
   inquiries: { select: SELECT_INQUIRY_REQUEST },
   events: { select: SELECT_EVENT },
   ...SELECT_FEEDBACKS,
