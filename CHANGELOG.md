@@ -1,3 +1,12 @@
+## [3.37.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.0...v3.37.1) (2025-03-03)
+
+### Bug Fixes
+
+* **api:** fix membership applications controller order [#2428](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2428) ([a7d3b31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a7d3b3103f636e7a109635243fea499485cc54a8))
+* **calendar:** event width if overlapping [#2429](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2429) ([81593b5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/81593b5eb26abbd5dc8775c433232a2ea15e7beb))
+* **calendar:** use in memoy variables & optimize loops [#2430](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2430) ([af7621a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/af7621a832e739e0ef610a000924bc6b2e6ecf37))
+* **ft:** sort time windows in api return [#2431](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2431) ([e41fbea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e41fbea5f2d765fae8040f36972edf1e1b09546e))
+
 ## [3.37.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.36.1...v3.37.0) (2025-02-28)
 
 ### Features
