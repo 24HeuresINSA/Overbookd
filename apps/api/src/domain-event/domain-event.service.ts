@@ -65,7 +65,7 @@ export class DomainEventService {
   }
 
   listen<T extends DomainEvent["type"]>(domain: T): Observable<EventOf<T>> {
-    return filterEvents(domain, this.$events);
+    return filterEvents(domain, this.$events.asObservable());
   }
 
   publish(event: DomainEvent): void {

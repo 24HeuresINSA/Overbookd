@@ -48,7 +48,7 @@
   "dependencies": {
     "@overbookd/contribution": "workspace:*",
     "@overbookd/personal-account": "workspace:*",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.2"
   },
   "keywords": [
     "alerts",
