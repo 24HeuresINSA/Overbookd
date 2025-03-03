@@ -4,6 +4,8 @@ export const SELECT_PERIOD = { start: true, end: true };
 
 export const SELECT_PERIOD_WITH_ID = { id: true, ...SELECT_PERIOD };
 
+export const ORDER_BY_PERIOD = [{ start: "asc" }, { end: "asc" }];
+
 export function overlapPeriodCondition(period: IProvidePeriod) {
   return {
     start: { lt: period.end },
