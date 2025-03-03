@@ -115,7 +115,7 @@ describe("Calendar Event Presenter", () => {
         displayedDatePresenter,
         among,
       );
-      expect(presenter.simultaneousEvents.length).toBe(expected);
+      expect(presenter.simultaneousEventCount).toBe(expected);
     });
   });
 
