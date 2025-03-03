@@ -3,6 +3,7 @@ import { PrismaService } from "../prisma.service";
 import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
+import { ORDER_BY_PERIOD } from "../common/query/period.query";
 
 @Injectable()
 export class CharismaPeriodService {
@@ -27,7 +28,9 @@ export class CharismaPeriodService {
   }
 
   async findAllCharismaPeriods(): Promise<CharismaPeriodResponseDto[]> {
-    return this.prisma.charismaPeriod.findMany();
+    return this.prisma.charismaPeriod.findMany({
+      orderBy: ORDER_BY_PERIOD,
+    });
   }
 
   async findOneCharismaPeriod(id: number): Promise<CharismaPeriodResponseDto> {
