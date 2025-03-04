@@ -39,33 +39,7 @@
   </div>
 
   <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
-    <DialogCard without-actions @close="closeCalendar">
-      <template #title> Créneaux de la tâche </template>
-      <template #content>
-        <OverCalendar
-          v-model="calendarMarker"
-          :events="filteredAllTimeWindowEvents"
-        >
-          <template #additional-actions>
-            <v-switch
-              v-model="displayActivityEvents"
-              color="primary"
-              label="Animations"
-            />
-            <v-switch
-              v-model="displeyInquiryEvents"
-              color="secondary"
-              label="Matos"
-            />
-            <v-switch
-              v-model="displayMobilizationEvents"
-              :color="READY_TO_ASSIGN_COLOR"
-              label="Mobilisations"
-            />
-          </template>
-        </OverCalendar>
-      </template>
-    </DialogCard>
+    <FtCalendarDialogCard @close="closeCalendar" />
   </v-dialog>
 
   <v-dialog v-model="isEnableAssignmentOpen" width="600">
@@ -93,16 +67,10 @@ import {
   FESTIVAL_TASK_IGNORED,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
-import {
-  createCalendarEvent,
-  type CalendarEvent,
-} from "~/utils/calendar/event";
-import { READY_TO_ASSIGN_COLOR } from "~/utils/vuetify/theme/common";
 
 const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
-const configurationStore = useConfigurationStore();
 const live = useLiveNotification();
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
@@ -112,11 +80,6 @@ const headTitle = computed<string>(() => {
   const displayedName = name.value ? ` - ${name.value}` : "";
   return `FT ${taskIdFromUrl.value}${displayedName}`;
 });
-
-const calendarMarker = ref<Date>(configurationStore.eventStartDate);
-const displayActivityEvents = ref<boolean>(false);
-const displeyInquiryEvents = ref<boolean>(false);
-const displayMobilizationEvents = ref<boolean>(true);
 
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
@@ -180,56 +143,6 @@ const publishFeedback = (content: string) => {
 const isCalendarDialogOpen = ref<boolean>(false);
 const openCalendar = () => (isCalendarDialogOpen.value = true);
 const closeCalendar = () => (isCalendarDialogOpen.value = false);
-
-const filteredAllTimeWindowEvents = computed<CalendarEvent[]>(() => {
-  return [
-    ...filteredActivityEvents.value,
-    ...filteredInquiryEvents.value,
-    ...filteredMobilizationEvents.value,
-  ];
-});
-
-const filteredActivityEvents = computed<CalendarEvent[]>(() => {
-  return displayActivityEvents.value
-    ? selectedTask.value.festivalActivity.timeWindows.map(({ start, end }) => {
-        const event = {
-          start,
-          end,
-          name: selectedTask.value.festivalActivity.name,
-          color: "primary",
-        };
-        return createCalendarEvent(event);
-      })
-    : [];
-});
-const filteredInquiryEvents = computed<CalendarEvent[]>(() => {
-  return displeyInquiryEvents.value
-    ? selectedTask.value.festivalActivity.inquiry.timeWindows.map(
-        ({ start, end }) => {
-          const event = {
-            start,
-            end,
-            name: "Matos",
-            color: "secondary",
-          };
-          return createCalendarEvent(event);
-        },
-      )
-    : [];
-});
-const filteredMobilizationEvents = computed<CalendarEvent[]>(() => {
-  return displayMobilizationEvents.value
-    ? selectedTask.value.mobilizations.map(({ start, end }) => {
-        const event = {
-          start,
-          end,
-          name: selectedTask.value.general.name,
-          color: READY_TO_ASSIGN_COLOR,
-        };
-        return createCalendarEvent(event);
-      })
-    : [];
-});
 </script>
 
 <style lang="scss" scoped>
