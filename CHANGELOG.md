@@ -1,3 +1,10 @@
+## [3.37.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.1...v3.37.2) (2025-03-04)
+
+### Bug Fixes
+
+* **availabilities:** mobile version [#2375](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2375) ([7a694bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7a694bb72959c89b96eb85804fbb5e07830e841d))
+* **festival-task:** differentiate mobilizations and assignments in ft calendar and add assignment details when an assignment is clicked [#2433](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2433) [#2413](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2413) ([00df6eb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/00df6eb3a9fd6b0cc6cf392c0fc899a302060f08))
+
 ## [3.37.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.0...v3.37.1) (2025-03-03)
 
 ### Bug Fixes
