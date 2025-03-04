@@ -131,7 +131,7 @@ const isToday = computed<boolean>(() => {
   &__daily-event {
     width: 100%;
     height: 20px;
-    padding: 0 5px 0 10px !important;
+    padding: 0 10px !important;
     margin: 0 !important;
     background-color: rgb(var(--v-theme-error));
     color: rgb(var(--v-theme-on-error));

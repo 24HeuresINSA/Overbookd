@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper v-model="step" class="mb-3" :mobile="!isDesktop" editable>
+    <v-stepper v-model="step" class="mb-3 desktop-only" editable>
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
@@ -11,6 +11,10 @@
         />
       </v-stepper-header>
     </v-stepper>
+    <h2 class="mb-3 mobile-only">
+      {{ calendarSteps[step - 1].title }}
+      <i>(Jour {{ mobileStepDayIndex + 1 }} sur {{ stepDays.length }})</i>
+    </h2>
     <AvailabilitiesPickCalendar
       v-model="calendarDays"
       :disable-previous="shouldDisablePrevious"

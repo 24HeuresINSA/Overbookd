@@ -22,10 +22,10 @@
     </v-card>
 
     <v-card>
-      <v-card-title>
-        Mon Charisme : {{ charisma }} {{ charismaEmoji }}
-      </v-card-title>
       <v-card-text>
+        <p class="desktop-only charisma">
+          Mon Charisme : {{ charisma }} {{ charismaEmoji }}
+        </p>
         <AvailabilitiesStepper />
       </v-card-text>
     </v-card>
@@ -67,5 +67,11 @@ availabilitiyStore.fetchVolunteerAvailabilities(volunteerId.value);
 .warning {
   color: red;
   font-weight: bold;
+}
+
+.charisma {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 </style>
