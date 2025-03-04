@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper v-model="step" class="mb-3" editable>
+    <v-stepper v-model="step" class="mb-3 desktop-only" editable>
       <v-stepper-header>
         <v-stepper-item
           v-for="({ title }, index) in calendarSteps"
@@ -11,13 +11,17 @@
         />
       </v-stepper-header>
     </v-stepper>
+    <h2 class="mb-3 mobile-only">
+      {{ calendarSteps[step - 1].title }}
+      <i>(Jour {{ mobileStepDayIndex + 1 }} sur {{ stepDays.length }})</i>
+    </h2>
     <AvailabilitiesPickCalendar
-      v-model="days"
+      v-model="calendarDays"
       :disable-previous="shouldDisablePrevious"
       :disable-next="shouldDisableNext"
       :cant-validate="cannotValidate"
-      @previous="moveToPreviousStep"
-      @next="moveToNextStep"
+      @previous="moveToPrevious"
+      @next="moveToNext"
       @validate="saveAvailabilities"
     />
   </div>
@@ -44,14 +48,18 @@ const HARD_CALENDAR_STEPS: CalendarStep[] = [
 
 const userStore = useUserStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
+const layoutStore = useLayoutStore();
 
 const step = ref<number>(1);
+const mobileStepDayIndex = ref<number>(0);
+
+const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
   const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
   return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
 });
-const days = computed<DayPresenter[]>(() => {
+const stepDays = computed<DayPresenter[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
   if (!calendarStep) return [];
 
@@ -59,7 +67,13 @@ const days = computed<DayPresenter[]>(() => {
   const dates = splitedStep.map(({ start }) => OverDate.from(start)) ?? [];
   const lastDate = OverDate.from(calendarStep.period.end);
   const datesWithLastDay = [...dates, lastDate];
+
   return datesWithLastDay.map((date) => new DayPresenter(date));
+});
+const calendarDays = computed<DayPresenter[]>(() => {
+  if (isDesktop.value) return stepDays.value;
+  const selectedDay = stepDays.value[mobileStepDayIndex.value];
+  return selectedDay ? [selectedDay] : [new DayPresenter(OverDate.now())];
 });
 
 const cannotValidate = computed<boolean>(() => {
@@ -69,18 +83,34 @@ const cannotValidate = computed<boolean>(() => {
   return hasNoSelection || hasError;
 });
 
-const shouldDisablePrevious = computed<boolean>(() => step.value <= 1);
-const shouldDisableNext = computed<boolean>(
-  () => step.value >= calendarSteps.value.length,
-);
+const shouldDisablePrevious = computed<boolean>(() => {
+  const isFirstStep = step.value <= 1;
+  if (isDesktop.value) return isFirstStep;
+  return isFirstStep && mobileStepDayIndex.value <= 0;
+});
+const shouldDisableNext = computed<boolean>(() => {
+  const isLastStep = step.value >= calendarSteps.value.length;
+  if (isDesktop.value) return isLastStep;
+  return isLastStep && mobileStepDayIndex.value >= stepDays.value.length - 1;
+});
 
-const moveToPreviousStep = () => {
-  if (shouldDisablePrevious.value) return;
-  step.value--;
+const moveToPrevious = () => {
+  if (isDesktop.value && !shouldDisablePrevious.value) return step.value--;
+  if (mobileStepDayIndex.value > 0) return mobileStepDayIndex.value--;
+  if (step.value > 1) {
+    step.value--;
+    mobileStepDayIndex.value = stepDays.value.length - 1;
+  }
 };
-const moveToNextStep = () => {
-  if (shouldDisableNext.value) return;
-  step.value++;
+const moveToNext = () => {
+  if (isDesktop.value && !shouldDisableNext.value) return step.value++;
+  if (mobileStepDayIndex.value < stepDays.value.length - 1) {
+    return mobileStepDayIndex.value++;
+  }
+  if (step.value < calendarSteps.value.length) {
+    step.value++;
+    mobileStepDayIndex.value = 0;
+  }
 };
 
 const saveAvailabilities = async () => {

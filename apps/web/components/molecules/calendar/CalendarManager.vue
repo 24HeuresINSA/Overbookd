@@ -88,7 +88,7 @@ const propagateNext = () => emit("next");
   display: flex;
   gap: 15px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
   justify-content: left;
   @media (max-width: $mobile-max-width) {
     justify-content: center;

@@ -5,21 +5,38 @@
     :class="{
       today: isToday,
       'with-daily-event': todayPublicHoliday,
+      'with-arrows': displayArrows,
       clickable,
     }"
     @click="propagateClick"
   >
-    <p class="header-day__name">{{ day.calendarHeader.name }}</p>
-    <p class="header-day__number">{{ day.calendarHeader.number }}</p>
-    <v-card
-      v-if="todayPublicHoliday"
-      :color="todayPublicHoliday.color"
-      class="header-day__daily-event"
-    >
-      <div class="header-day__daily-event-content">
-        <span>{{ todayPublicHoliday.name }}</span>
-      </div>
-    </v-card>
+    <v-icon
+      v-if="displayArrows"
+      class="header-day__arrow"
+      icon="mdi-chevron-left"
+      size="large"
+      @click.stop="propagatePrevious"
+    />
+    <div class="header-day__content">
+      <p class="header-day__name">{{ day.calendarHeader.name }}</p>
+      <p class="header-day__number">{{ day.calendarHeader.number }}</p>
+      <v-card
+        v-if="todayPublicHoliday"
+        :color="todayPublicHoliday.color"
+        class="header-day__daily-event"
+      >
+        <div class="header-day__daily-event-content">
+          <span>{{ todayPublicHoliday.name }}</span>
+        </div>
+      </v-card>
+    </div>
+    <v-icon
+      v-if="displayArrows"
+      class="header-day__arrow"
+      icon="mdi-chevron-right"
+      size="large"
+      @click.stop="propagateNext"
+    />
   </header>
 </template>
 
@@ -39,6 +56,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  displayArrows: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const calendarEvents = ref<DailyEvent[]>([]);
@@ -54,10 +75,12 @@ const updateCalendarEvents = () => {
 };
 watch(() => props.day, updateCalendarEvents, { immediate: true });
 
-const emit = defineEmits(["click"]);
+const emit = defineEmits(["click", "previous", "next"]);
 const propagateClick = () => {
   if (props.clickable) emit("click", props.day);
 };
+const propagatePrevious = () => emit("previous");
+const propagateNext = () => emit("next");
 
 const publicHolidaysByDate = computed(() => {
   return calendarEvents.value.reduce(
@@ -88,10 +111,15 @@ const isToday = computed<boolean>(() => {
   width: 100%;
   min-width: $calendar-day-min-width;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 5px;
   padding: 10px;
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
   &__name {
     font-size: 1.2rem;
   }
@@ -103,7 +131,7 @@ const isToday = computed<boolean>(() => {
   &__daily-event {
     width: 100%;
     height: 20px;
-    padding: 0 5px 0 10px !important;
+    padding: 0 10px !important;
     margin: 0 !important;
     background-color: rgb(var(--v-theme-error));
     color: rgb(var(--v-theme-on-error));
@@ -127,6 +155,9 @@ const isToday = computed<boolean>(() => {
 
 .with-daily-event {
   padding-bottom: 5px;
+}
+.with-arrows {
+  justify-content: space-between;
 }
 
 .today {

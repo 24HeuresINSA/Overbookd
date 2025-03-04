@@ -4,13 +4,15 @@
       v-for="day in days"
       :key="day.date.toString()"
       :day="day"
+      :display-arrows="days.length === 1"
       clickable
       @click="propagateDayClick"
+      @previous="propagatePrevious"
+      @next="propagateNext"
     />
     <v-tooltip activator="parent" location="top">
       <v-icon icon="mdi-lightbulb-alert-outline" /> Astuce : Tu peux
-      sélectionner tous les créneaux d'une journée en cliquant sur le chiffre de
-      la date.
+      sélectionner tous les créneaux d'une journée en cliquant sur la date.
     </v-tooltip>
   </header>
 </template>
@@ -29,8 +31,10 @@ const gridTemplateStyle = computed(() => ({
   gridTemplateColumns: `repeat(${props.days.length}, 1fr)`,
 }));
 
-const emit = defineEmits(["click"]);
+const emit = defineEmits(["click", "previous", "next"]);
 const propagateDayClick = (day: DayPresenter) => emit("click", day);
+const propagatePrevious = () => emit("previous");
+const propagateNext = () => emit("next");
 </script>
 
 <style scoped>
