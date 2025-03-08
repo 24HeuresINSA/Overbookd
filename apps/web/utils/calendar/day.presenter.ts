@@ -72,4 +72,12 @@ export class DayPresenter {
   eventsOccuringThatDayAmong(events: CalendarEvent[]): CalendarEvent[] {
     return events.filter((event) => Period.init(event).isInDay(this.date.date));
   }
+
+  nextDay(): DayPresenter {
+    return new DayPresenter(this.date.plus(Duration.ONE_DAY));
+  }
+
+  previousDay(): DayPresenter {
+    return new DayPresenter(this.date.minus(Duration.ONE_DAY));
+  }
 }
