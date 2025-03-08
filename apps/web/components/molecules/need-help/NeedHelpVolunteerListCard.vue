@@ -37,8 +37,18 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
-const needHelpStore = useNeedHelpStore();
 const layoutStore = useLayoutStore();
+
+defineProps({
+  volunteers: {
+    type: Array as PropType<HelpingVolunteer[]>,
+    required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const headers: TableHeaders = [
   { title: "Bénévole", value: "volunteer" },
@@ -46,13 +56,6 @@ const headers: TableHeaders = [
   { title: "Téléphone", value: "phone" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
-
-const volunteers = computed<HelpingVolunteer[]>(
-  () => needHelpStore.filteredVolunteers,
-);
-
-const loading = ref<boolean>(volunteers.value.length === 0);
-needHelpStore.fetchVolunteers().then(() => (loading.value = false));
 
 const openCalendarInNewTab = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);
