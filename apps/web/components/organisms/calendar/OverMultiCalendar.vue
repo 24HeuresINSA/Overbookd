@@ -1,24 +1,29 @@
 <template>
-  <div class="multi-calendar" :style="gridStyle">
-    <OverCalendar :mode="DAY_MODE">
-      <template #header>
-        <DailyCalendarHeader :day="day" />
-      </template>
-      <template #content>
-        <div
+  <OverCalendar v-model="dayModel" :mode="DAY_MODE" class="multi-calendar">
+    <template #header>
+      <DailyCalendarHeader :day="day" />
+      <div class="multi-calendar__volunteers" :style="gridStyle">
+        <NeedHelpVolunteerResumeCalendarHeader
           v-for="volunteer in volunteers"
           :key="volunteer.id"
+          :volunteer="volunteer"
           class="multi-calendar__volunteer"
-        >
-          <DailyCalendarContent
-            :day="day"
-            :events="volunteer.assignments"
-            :availabilities="volunteer.availabilities"
-          />
-        </div>
-      </template>
-    </OverCalendar>
-  </div>
+        />
+      </div>
+    </template>
+    <template #content>
+      <div class="multi-calendar__volunteers" :style="gridStyle">
+        <DailyCalendarContent
+          v-for="volunteer in volunteers"
+          :key="volunteer.id"
+          :day="day"
+          :events="withEventToAdd(volunteer.assignments)"
+          :availabilities="volunteer.availabilities"
+          class="multi-calendar__volunteer"
+        />
+      </div>
+    </template>
+  </OverCalendar>
 </template>
 
 <script lang="ts" setup>
@@ -28,8 +33,12 @@ import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { DAY_MODE } from "~/utils/calendar/calendar-mode";
 
-const day = defineModel<DayPresenter>({
-  default: new DayPresenter(OverDate.now()),
+const dayModel = defineModel<Date>({
+  default: OverDate.now().date,
+});
+const day = computed<DayPresenter>({
+  get: () => new DayPresenter(OverDate.fromLocal(dayModel.value)),
+  set: (value) => (dayModel.value = value.date.date),
 });
 
 const props = defineProps({
@@ -43,8 +52,12 @@ const props = defineProps({
   },
 });
 
+const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
+  return props.eventToAdd ? [...assignments, props.eventToAdd] : assignments;
+};
+
 const gridStyle = computed(() => ({
-  gridTemplateColumns: `repeat(${props.volunteers.length}, 1fr)`,
+  gridTemplateColumns: `repeat(${props.volunteers.length + 1}, 1fr)`,
 }));
 </script>
 
@@ -55,8 +68,12 @@ const gridStyle = computed(() => ({
   width: 100%;
   height: 100%;
   display: grid;
+  &__volunteers {
+    display: flex;
+  }
   &__volunteer {
-    min-width: $calendar-day-min-width;
+    width: 100%;
+    min-width: 100px;
     border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
     &:first-child {
       border-left: none;
