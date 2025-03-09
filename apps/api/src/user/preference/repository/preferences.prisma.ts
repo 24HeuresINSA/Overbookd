@@ -1,4 +1,6 @@
 import {
+  AssignmentPreference,
+  DEFAULT_PREFERENCE,
   PagesPreference,
   PlanningPreference,
   Preference,
@@ -7,18 +9,13 @@ import { PrismaService } from "../../../prisma.service";
 import { Preferences } from "../preference.service";
 import { isPageURL, PageURL } from "@overbookd/web-page";
 
-const DEFAULT_PREFERENCE: Preference = {
-  paperPlanning: null,
-  favoritePages: [],
-};
-
 export class PrismaPreferences implements Preferences {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(userId: number): Promise<Preference> {
     const dbPreference = await this.prisma.preference.findUnique({
       where: { userId },
-      select: { paperPlanning: true, favoritePages: true },
+      select: { paperPlanning: true, assignment: true, favoritePages: true },
     });
     if (!dbPreference) return DEFAULT_PREFERENCE;
 
@@ -35,6 +32,18 @@ export class PrismaPreferences implements Preferences {
       update: preference,
       create: { userId, ...preference },
       select: { paperPlanning: true },
+    });
+  }
+
+  async saveAssignmentPreference(
+    userId: number,
+    preference: AssignmentPreference,
+  ): Promise<AssignmentPreference> {
+    return this.prisma.preference.upsert({
+      where: { userId },
+      update: preference,
+      create: { userId, ...preference },
+      select: { assignment: true },
     });
   }
 

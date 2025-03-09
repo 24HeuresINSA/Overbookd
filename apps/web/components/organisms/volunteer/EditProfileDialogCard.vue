@@ -66,6 +66,7 @@
           <p class="planning-preference__label">
             Je souhaite avoir une version imprimée de mon planning
           </p>
+
         </div>
         <CommentField v-model="comment" />
       </v-form>
@@ -85,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Preference } from "@overbookd/http";
+import { assignmentPreferences, type Preference } from "@overbookd/http";
 import { formatLocalDate } from "@overbookd/time";
 import {
   required,
@@ -133,6 +134,13 @@ const loading = ref<boolean>(false);
 const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   if (paperPlanning === null) return;
   preferenceStore.updatePlanningPreference({ paperPlanning });
+};
+
+const updateAssignmentPreference = (assignment: string) => {
+  if (!assignmentPreferences.includes(assignment)) return;
+  preferenceStore.updateAssignmentPreference({
+    assignment: assignment as Preference["assignment"],
+  });
 };
 
 const save = async () => {

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {
+  AssignmentPreference,
   PagesPreference,
   PlanningPreference,
   Preference,
@@ -12,6 +13,10 @@ export type Preferences = {
     userId: number,
     preference: PlanningPreference,
   ): Promise<PlanningPreference>;
+  saveAssignmentPreference(
+    userId: number,
+    preference: AssignmentPreference,
+  ): Promise<AssignmentPreference>;
   addPageToFavorites(userId: number, page: PageURL): Promise<PagesPreference>;
   removePageFromFavorites(
     userId: number,
@@ -32,6 +37,13 @@ export class PreferenceService {
     preference: PlanningPreference,
   ): Promise<PlanningPreference> {
     return this.preferences.savePlanningPreference(userId, preference);
+  }
+
+  updateAssignmentPreference(
+    userId: number,
+    preference: AssignmentPreference,
+  ): Promise<AssignmentPreference> {
+    return this.preferences.saveAssignmentPreference(userId, preference);
   }
 
   addPageToFavorites(userId: number, page: PageURL): Promise<PagesPreference> {

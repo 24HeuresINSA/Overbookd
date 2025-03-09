@@ -84,11 +84,21 @@ model User {
   @@map("user")
 }
 
+enum AssignmentPreference {
+  NO_PREF
+  STACKED
+  FRAGMENTED
+  NO_REST
+
+  @@map("assignement_preference")
+}
+
 model Preference {
-  userId        Int      @id @map("user_id")
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  paperPlanning Boolean? @map("paper_planning")
-  favoritePages String[] @map("favorite_pages") @db.VarChar(50)
+  userId        Int                  @id @map("user_id")
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paperPlanning Boolean?             @map("paper_planning")
+  favoritePages String[]             @map("favorite_pages") @db.VarChar(50)
+  assignment    AssignmentPreference @default(NO_PREF)
 
   @@map("preference")
 }

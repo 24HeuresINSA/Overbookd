@@ -22,6 +22,7 @@
       <div class="teams">
         <TeamChip v-for="team of teams" :key="team" :team="team" with-name />
       </div>
+
       <div class="stats-container">
         <div class="stats">
           <span class="stats__value">{{ charisma }}</span>
@@ -42,15 +43,18 @@
           </span>
         </div>
       </div>
+
       <div class="personal-info-container">
         <div class="personal-info">
           <v-icon class="personal-info__icon">mdi-email</v-icon>
           <span class="personal-info__label">{{ loggedUser?.email }}</span>
         </div>
+
         <div class="personal-info">
           <v-icon class="personal-info__icon">mdi-phone</v-icon>
           <span class="personal-info__label">{{ phone }}</span>
         </div>
+
         <div v-if="wantsPaperPlanning" class="personal-info">
           <v-icon class="personal-info__icon">mdi-notebook-check</v-icon>
           <span class="personal-info__label">
@@ -64,6 +68,14 @@
             téléphone
           </span>
         </div>
+
+        <div class="personal-info">
+          <v-icon class="personal-info__icon">mdi-calendar-blank-multiple</v-icon>
+          <span class="personal-info__label">
+            {{ assignmentPreferenceLabel }}
+          </span>
+        </div>
+
         <div class="personal-info">
           <v-icon class="personal-info__icon">mdi-comment-text</v-icon>
           <span class="personal-info__label">
@@ -80,6 +92,7 @@
 </template>
 
 <script lang="ts" setup>
+import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/http";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { formatUserPhone } from "~/utils/user/user.utils";
 
@@ -114,6 +127,19 @@ const additionalPlural = (count: number) => {
 const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,
 );
+
+const assignmentPreferenceLabel = computed<string>(() => {
+  switch (preferenceStore.myPreferences.assignment) {
+    case NO_PREF:
+      return "Pas de préférence";
+    case STACKED:
+      return "Planning regroupé";
+    case FRAGMENTED:
+      return "Planning aéré";
+    case NO_REST:
+      return "PAS DE REPOS POUR LES BRAVES";
+  }
+});
 
 const isEditProfileDialogOpen = ref<boolean>(false);
 const editProfile = () => (isEditProfileDialogOpen.value = true);

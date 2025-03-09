@@ -1,4 +1,9 @@
-import type { PlanningPreference, Preference } from "@overbookd/http";
+import {
+  DEFAULT_PREFERENCE,
+  type AssignmentPreference,
+  type PlanningPreference,
+  type Preference,
+} from "@overbookd/http";
 import type { PageURL } from "@overbookd/web-page";
 import { PreferenceRepository } from "~/repositories/preference.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -10,10 +15,7 @@ type State = {
 
 export const usePreferenceStore = defineStore("preference", {
   state: (): State => ({
-    myPreferences: {
-      paperPlanning: null,
-      favoritePages: [],
-    },
+    myPreferences: DEFAULT_PREFERENCE,
   }),
   getters: {
     isPageFavorite:
@@ -37,6 +39,14 @@ export const usePreferenceStore = defineStore("preference", {
       if (isHttpError(res)) return;
       sendSuccessNotification("Ta préférence a été mise à jour");
       this.myPreferences.paperPlanning = res.paperPlanning;
+    },
+
+    async updateAssignmentPreference(preference: AssignmentPreference) {
+      const res =
+        await PreferenceRepository.updateAssignmentPreference(preference);
+      if (isHttpError(res)) return;
+      sendSuccessNotification("Ta préférence a été mise à jour");
+      this.myPreferences.assignment = res.assignment;
     },
 
     async addPageToFavorites(page: PageURL) {
