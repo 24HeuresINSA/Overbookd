@@ -64,6 +64,7 @@
     "@overbookd/http": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/logistic": "workspace:*",
+    "@overbookd/pdf-book": "workspace:*",
     "@overbookd/permission": "workspace:*",
     "@overbookd/personal-account": "workspace:*",
     "@overbookd/planning": "workspace:*",
