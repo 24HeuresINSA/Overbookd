@@ -50,6 +50,14 @@
         >
           <template #title> Au format ICal </template>
         </v-list-item>
+
+        <v-list-item
+          v-if="canAffectVolunteer"
+          prepend-icon="mdi-book-open-variant-outline"
+          @click="downloadBooklet"
+        >
+          <template #title> Sous forme de livret </template>
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>
@@ -75,6 +83,10 @@ const isMe = computed<boolean>(
 );
 const canDownloadPlanning = computed<boolean>(() =>
   userStore.can(isMe.value ? DOWNLOAD_PLANNING : AFFECT_VOLUNTEER),
+);
+
+const canAffectVolunteer = computed<boolean>(() =>
+  userStore.can(AFFECT_VOLUNTEER),
 );
 
 const syncLink = computed<string | null>(() => planningStore.link);
@@ -110,6 +122,9 @@ const downloadPdf = () => {
 const downloadIcal = () => {
   if (isMe.value) return planningStore.downloadMyIcalPlanning();
   return planningStore.downloadIcalPlanning(selectedUser.value!.id);
+};
+const downloadBooklet = () => {
+  return planningStore.downloadBookletPlanning(selectedUser.value!);
 };
 </script>
 

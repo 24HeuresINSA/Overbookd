@@ -54,4 +54,16 @@ export class PlanningRepository {
       acceptedType: ICAL,
     });
   }
+
+  static getVolunteerBooklet(volunteerId: number) {
+    return HttpClient.get<string>(`${this.basePath}/booklets/${volunteerId}`, {
+      acceptedType: PDF,
+    });
+  }
+
+  static getVolunteersBooklets(volunteerIds: number[]) {
+    return HttpClient.post<string>(`${this.basePath}/booklets`, volunteerIds, {
+      acceptedType: PDF,
+    });
+  }
 }

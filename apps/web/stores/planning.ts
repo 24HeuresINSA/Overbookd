@@ -6,7 +6,10 @@ import {
 import { Duration, Edition } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 import { PlanningRepository } from "~/repositories/planning.repository";
-import { downloadPlanning } from "~/utils/file/download-planning.utils";
+import {
+  downloadPdfFromBase64,
+  downloadPdfPlanning,
+} from "~/utils/file/download-planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 export type HasAssignment = {
@@ -25,14 +28,12 @@ type VolunteerPlanning = {
 
 type State = {
   link: string | null;
-  planningBase64Data: string;
   volunteers: VolunteerForPlanning[];
 };
 
 export const usePlanningStore = defineStore("planning", {
   state: (): State => ({
     link: null,
-    planningBase64Data: "",
     volunteers: [],
   }),
   actions: {
@@ -51,7 +52,7 @@ export const usePlanningStore = defineStore("planning", {
       if (!loggedUser) return;
       const { firstname, lastname, id } = loggedUser;
       const volunteer = { firstname, lastname, id };
-      downloadPlanning(res, volunteer);
+      downloadPdfPlanning(res, volunteer);
     },
 
     async downloadMyIcalPlanning() {
@@ -83,9 +84,23 @@ export const usePlanningStore = defineStore("planning", {
         plannings
           .filter((res): res is VolunteerPlanning => res !== undefined)
           .map(({ volunteer, planningBase64Data }) =>
-            downloadPlanning(planningBase64Data, volunteer),
+            downloadPdfPlanning(planningBase64Data, volunteer),
           );
       }
+    },
+
+    async downloadBookletPlanning(volunteer: User) {
+      const res = await PlanningRepository.getVolunteerBooklet(volunteer.id);
+      if (isHttpError(res)) return;
+      downloadPdfPlanning(res, volunteer);
+    },
+
+    async downloadBookletsPlannings(volunteers: User[]) {
+      const res = await PlanningRepository.getVolunteersBooklets(
+        volunteers.map(({ id }) => id),
+      );
+      if (isHttpError(res)) return;
+      downloadPdfFromBase64(res, "plannings.pdf");
     },
 
     async fetchVolunteers() {

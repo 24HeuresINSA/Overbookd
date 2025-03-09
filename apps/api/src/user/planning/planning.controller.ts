@@ -52,6 +52,7 @@ import { buildUserName } from "@overbookd/user";
 import { PlanningRenderStrategy } from "./render/render-strategy";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
+import { PDFBook } from "@overbookd/pdf-book";
 
 @ApiTags("planning")
 @Controller("planning")
@@ -139,6 +140,72 @@ export class PlanningController {
     const { tasks } = await this.planning.getPlanning(volunteerId);
     const icalRender = new IcalRenderStrategy();
     return icalRender.render(tasks);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Post("booklets")
+  @ApiResponse({
+    status: 200,
+    description: "Get volunteers plannings as booklets",
+  })
+  @ApiBody({
+    description: "Volunteer ids",
+    type: [Number],
+  })
+  async getBooklets(
+    @Body() volunteerIds: number[],
+    @Res() response: Response,
+  ): Promise<string> {
+    try {
+      const pdfs = await Promise.all(
+        volunteerIds.map(
+          (id) => this.formatPlanning(id, PDF) as Promise<string>,
+        ),
+      );
+      const pdfbook = new PDFBook();
+      const booklets = await pdfbook.generateMultipleBooklets(pdfs);
+      response.setHeader("content-type", PDF);
+      response.send(booklets);
+      return;
+    } catch (e) {
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      console.error(e);
+      response.status(500).send(e);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("booklets/:volunteerId")
+  @ApiResponse({
+    status: 200,
+    description: "Get volunteer planning as a booklet",
+  })
+  async getVolunteerBooklet(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+    @Res() response: Response,
+  ): Promise<string> {
+    try {
+      const pdf = (await this.formatPlanning(volunteerId, PDF)) as string;
+      const pdfbook = new PDFBook();
+      const booklets = await pdfbook.generateBooklet(pdf);
+      response.setHeader("content-type", PDF);
+      response.send(booklets);
+      return;
+    } catch (e) {
+      if (e instanceof HttpException) {
+        response.status(e.getStatus()).send(e.message);
+        return;
+      }
+      console.error(e);
+      response.status(500).send(e);
+    }
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
