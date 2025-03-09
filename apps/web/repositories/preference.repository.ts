@@ -1,4 +1,5 @@
 import type {
+  AssignmentPreference,
   PagesPreference,
   PlanningPreference,
   Preference,
@@ -16,6 +17,13 @@ export class PreferenceRepository {
   static updatePlanningPreference(preference: PlanningPreference) {
     return HttpClient.patch<PlanningPreference>(
       `${this.basePath}/me/planning`,
+      preference,
+    );
+  }
+
+  static updateAssignmentPreference(preference: AssignmentPreference) {
+    return HttpClient.patch<AssignmentPreference>(
+      `${this.basePath}/me/assignment`,
       preference,
     );
   }

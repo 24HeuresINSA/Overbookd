@@ -30,6 +30,7 @@ import { PagesPreferenceResponseDto } from "./dto/pages-preference.response.dto"
 import { AddPageToFavoritesRequestDto } from "./dto/add-page-to-favorites.request.dto";
 import { PreferenceResponseDto } from "./dto/preference.response.dto";
 import { pagesURL, PageURL } from "@overbookd/web-page";
+import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
 
 @ApiBearerAuth()
 @ApiTags("preferences")
@@ -73,6 +74,25 @@ export class PreferenceController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<PlanningPreferenceDto> {
     return this.preferenceService.updatePlanningPreference(user.id, preference);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Patch("me/assignment")
+  @ApiResponse({
+    status: 200,
+    description: "Updated assignment preference",
+    type: AssignmentPreferenceDto,
+  })
+  @ApiBody({
+    description: "Assignment preference to update",
+    type: AssignmentPreferenceDto,
+  })
+  updateAssignmentPreference(
+    @Body() preference: AssignmentPreferenceDto,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<AssignmentPreferenceDto> {
+    return this.preferenceService.updateAssignmentPreference(user.id, preference);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
