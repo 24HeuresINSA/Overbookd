@@ -63,15 +63,26 @@
     </template>
 
     <template #actions>
-      <v-btn
-        color="primary"
-        :loading="downloadInProgress"
-        prepend-icon="mdi-download"
-        size="x-large"
-        @click="downloadAllPlannings"
-      >
-        Télécharger {{ displayedVolunteers.length }} plannings
-      </v-btn>
+      <div class="actions">
+        <v-btn
+          color="primary"
+          :loading="downloadAllPlanningsInProgress"
+          prepend-icon="mdi-download-multiple"
+          size="large"
+          @click="downloadAllPlannings"
+        >
+          Télécharger {{ displayedVolunteers.length }} plannings
+        </v-btn>
+        <v-btn
+          color="primary"
+          :loading="downloadBookletsInProgress"
+          prepend-icon="mdi-download"
+          size="large"
+          @click="downloadBooklets"
+        >
+          Télécharger {{ displayedVolunteers.length }} livrets
+        </v-btn>
+      </div>
     </template>
   </DialogCard>
 </template>
@@ -134,11 +145,18 @@ const isMaximumVolunteerLimitReached = computed<boolean>(
   () => displayedVolunteers.value.length > MAX_PLANNING_DOWNLOAD_IN_PARALLEL,
 );
 
-const downloadInProgress = ref<boolean>(false);
+const downloadAllPlanningsInProgress = ref<boolean>(false);
 const downloadAllPlannings = async () => {
-  downloadInProgress.value = true;
+  downloadAllPlanningsInProgress.value = true;
   await planningStore.downloadAllPdfPlannings(displayedVolunteers.value);
-  downloadInProgress.value = false;
+  downloadAllPlanningsInProgress.value = false;
+};
+
+const downloadBookletsInProgress = ref<boolean>(false);
+const downloadBooklets = async () => {
+  downloadBookletsInProgress.value = true;
+  await planningStore.downloadBookletsPlannings(displayedVolunteers.value);
+  downloadBookletsInProgress.value = false;
 };
 
 const emit = defineEmits(["close"]);
@@ -150,5 +168,11 @@ const close = () => emit("close");
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 </style>
