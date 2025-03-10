@@ -124,7 +124,9 @@ const downloadIcal = () => {
   return planningStore.downloadIcalPlanning(selectedUser.value!.id);
 };
 const downloadBooklet = () => {
-  return planningStore.downloadBookletPlanning(selectedUser.value!);
+  if (!loggedUser.value) return;
+  const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
+  return planningStore.downloadBookletPlanning(volunteer);
 };
 </script>
 
