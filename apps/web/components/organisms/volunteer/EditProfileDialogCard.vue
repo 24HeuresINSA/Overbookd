@@ -66,7 +66,17 @@
           <p class="planning-preference__label">
             Je souhaite avoir une version imprimée de mon planning
           </p>
-
+        </div>
+        <div class="planning-preference">
+          <p class="planning-preference__label">
+            Le type de planning que je souhaite avoir :
+          </p>
+          <v-radio-group v-model="selectedAssignment" inline @update:model-value="handleAssignmentPreferenceUpdate">
+            <v-radio label="Pas de préférence" value="NO_PREF" />
+            <v-radio label="Planning regroupé (créneaux bénévoles collés et grandes pauses)" value="STACKED" />
+            <v-radio label="Planning aéré (créneaux bénévoles espacés de petites pauses)" value="FRAGMENTED" />
+            <v-radio label="PAS DE REPOS POUR LES BRAVES (Le repos ? Connais pas !)" value="NO_REST" />
+          </v-radio-group>
         </div>
         <CommentField v-model="comment" />
       </v-form>
@@ -86,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { assignmentPreferences, type Preference } from "@overbookd/http";
+import { assignmentPreferences, NO_PREF, type Preference } from "@overbookd/http";
 import { formatLocalDate } from "@overbookd/time";
 import {
   required,
@@ -115,6 +125,7 @@ const birthday = ref<string>(
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phone = ref<string>(loggedUser.value?.phone ?? "");
 const preferences = computed<Preference>(() => preferenceStore.myPreferences);
+const selectedAssignment = ref<string>(preferences.value?.assignment ?? NO_PREF);
 const hasFilledPreferences = computed<boolean>(
   () =>
     preferences.value?.paperPlanning !== undefined &&
@@ -141,6 +152,12 @@ const updateAssignmentPreference = (assignment: string) => {
   preferenceStore.updateAssignmentPreference({
     assignment: assignment as Preference["assignment"],
   });
+};
+
+const handleAssignmentPreferenceUpdate = (value: string | null) => {
+  if (value !== null) {
+    updateAssignmentPreference(value);
+  }
 };
 
 const save = async () => {
@@ -205,6 +222,9 @@ const save = async () => {
     .v-btn {
       background-color: rgba(var(--v-theme-primary), 0.2);
     }
+  .v-radio-goupe {
+    margin: 0px 0px;
+  }
   }
 }
 </style>
