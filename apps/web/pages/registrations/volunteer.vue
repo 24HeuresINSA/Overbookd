@@ -76,7 +76,7 @@
               icon="mdi-account-details"
               size="large"
               variant="flat"
-              @click="openCandidateInfoDialogue(item)"
+              @click="openCandidateInfoDialog(item)"
             />
             <v-btn
               v-if="!displayRejectedCandidates"
@@ -269,9 +269,9 @@ const isSelectedCandidateInCandidatesToEnroll = computed<boolean>(() =>
 const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
   () => userStore.selectedUser,
 );
-const openCandidateInfoDialogue = (candidate: VolunteerCandidate) => {
+const openCandidateInfoDialog = async (candidate: VolunteerCandidate) => {
   selectedCandidate.value = candidate;
-  userStore.findUserById(candidate.id);
+  await userStore.findUserById(candidate.id);
   isCandidateInfoDialogOpen.value = true;
 };
 const closeCandidateInfoDialogue = () => {

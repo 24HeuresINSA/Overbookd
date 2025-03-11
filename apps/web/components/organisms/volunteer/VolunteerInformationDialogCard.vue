@@ -238,6 +238,8 @@ const updateVolunteerInformations = async () => {
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
 
+  await userStore.fetchSelectedUserFriends();
+
   if (props.volunteer.profilePictureBlob) return;
   await userStore.setSelectedUserProfilePicture();
 };
