@@ -1,3 +1,13 @@
+## [3.38.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.2...v3.38.0) (2025-03-11)
+
+### Features
+
+* **planning:** can download plannings as booklets for printing [#2432](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2432) ([4d348ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4d348ab919028649137c758b7b361cd28015acf9))
+
+### Bug Fixes
+
+* **planning:** fix download of own planning booklet [#2444](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2444) ([411553f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/411553fa242e1db3598e32234a6d6579b2798261))
+
 ## [3.37.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.1...v3.37.2) (2025-03-04)
 
 ### Bug Fixes
