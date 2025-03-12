@@ -297,7 +297,7 @@ const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const isVolunteerRegistration = computed<boolean>(() => !token.value);
 
 const cleanComment = computed<string | undefined>(
-  () => comment.value || undefined,
+  () => comment.value?.trim() || undefined,
 );
 
 const membership = computed<string>(() =>

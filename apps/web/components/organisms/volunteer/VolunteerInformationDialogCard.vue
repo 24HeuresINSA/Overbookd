@@ -88,7 +88,7 @@
 
             <div>
               <h3>Commentaire</h3>
-              <p>{{ volunteer.comment ?? "Aucun commentaire" }}</p>
+              <p>{{ volunteer.comment || "Aucun commentaire" }}</p>
             </div>
 
             <v-textarea
@@ -275,6 +275,7 @@ const removeFriend = (friend: User) => {
 
 const updatedVolunteer = computed<UserPersonalData>(() => {
   const trimmedNote = note.value?.trim() || null;
+  const trimmedComment = props.volunteer.comment?.trim() || null;
   return {
     ...props.volunteer,
     nickname: nickname.value,
@@ -282,6 +283,7 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
     phone: phone.value,
     email: email.value,
     note: trimmedNote,
+    comment: trimmedComment,
   };
 });
 
