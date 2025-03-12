@@ -85,9 +85,13 @@ export const useUserStore = defineStore("user", {
       },
   },
   actions: {
-    async setSelectedUser(user: UserPersonalData) {
+    setSelectedUser(user: UserPersonalData) {
       this.selectedUser = user;
-      const res = await UserRepository.getUserFriends(user.id);
+    },
+
+    async fetchSelectedUserFriends() {
+      if (!this.selectedUser) return (this.selectedUserFriends = []);
+      const res = await UserRepository.getUserFriends(this.selectedUser.id);
       if (isHttpError(res)) return;
       this.selectedUserFriends = res;
     },
