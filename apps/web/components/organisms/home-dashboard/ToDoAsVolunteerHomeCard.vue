@@ -14,8 +14,8 @@
         <p>
           En attendant, tu peux
           <nuxt-link :to="AVAILABILITIES_URL">
-            ajouter des disponibilités </nuxt-link
-          >, nous donner le nom de tes amis ou encore compléter tes informations
+            ajouter des disponibilités
+          </nuxt-link>, nous donner le nom de tes amis ou encore compléter tes informations
           pour qu'on en sache plus sur toi. 🤗
         </p>
         <p>
