@@ -1,3 +1,16 @@
+## [3.39.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.38.0...v3.39.0) (2025-03-13)
+
+### Features
+
+* **preference:** create the assignment preference for the volunter  and add the radio button [#2438](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2438) ([241a6eb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/241a6ebf36d6753462911e272ad5462e0abd31b7))
+
+### Bug Fixes
+
+* **availabilities:** add permission to enter extended availabilities [#2448](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2448) ([e82be2f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e82be2fee924124105f8de9f0081406f5d733d6b))
+* **export-log:** remove useless line break [#2446](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2446) ([86dd466](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86dd46695170bfdc98c0c6e6bd15aec06556bf05))
+* **registration:** update informations given in the volunteer enrolment email [#2441](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2441) ([442bf54](https://gitlab.com/24-heures-insa/overbookd-mono/commit/442bf54e741d5fc3224d6cf07a89b9e88a36cf01))
+* **registration:** volunteer details displayed data update [#2445](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2445) ([1e845ad](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e845add68cc2474b7632b6c0937285fa11c4d67))
+
 ## [3.38.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.37.2...v3.38.0) (2025-03-11)
 
 ### Features
