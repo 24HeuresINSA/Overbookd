@@ -3,8 +3,8 @@ import type { Searchable } from "./search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 
 type SearchedUser = UserName & {
-  mobilePhone: string;
-  email: string;
+  mobilePhone?: string;
+  email?: string;
 };
 
 export function toSearchable<T extends SearchedUser>(user: T): Searchable<T> {
