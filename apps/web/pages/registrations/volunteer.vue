@@ -240,7 +240,6 @@ membershipApplicationStore.fetchVolunteerCandidates().then(() => {
 const searchableEnrollableCandidates = computed<
   Searchable<VolunteerCandidate>[]
 >(() => candidates.value.map(toSearchable));
-console.log(searchableEnrollableCandidates.value);
 
 const displayRejectedCandidates = ref<boolean>(false);
 
