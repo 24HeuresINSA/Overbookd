@@ -1,7 +1,8 @@
 <template>
   <v-card class="friends-card">
     <v-card-title class="friends-card__title">
-      <span>❤️ Amis </span>
+      <v-icon>mdi-heart</v-icon>
+      <span>Ami·e·s </span>
     </v-card-title>
     <v-card-text class="friends-card__text">
       Nous ferons notre maximum pour que vous soyez ensemble pendant vos
