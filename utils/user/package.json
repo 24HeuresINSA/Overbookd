@@ -53,6 +53,7 @@
     "pnpm": "10.6.2"
   },
   "dependencies": {
-    "@overbookd/permission": "workspace:*"
+    "@overbookd/permission": "workspace:*",
+    "@overbookd/registration": "workspace:*"
   }
 }

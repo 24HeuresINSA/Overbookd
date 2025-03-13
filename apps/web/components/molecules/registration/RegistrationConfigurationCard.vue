@@ -51,7 +51,7 @@ const expirationInviteStaffLinkDate = computed<string>(() => {
 const copyToClipBoard = async () => {
   if (!inviteStaffLink.value?.toString()) return;
   await navigator.clipboard.writeText(inviteStaffLink.value.toString());
-  sendSuccessNotification("Lien copié");
+  sendInfoNotification("Lien copié ✅");
 };
 const refreshInviteStaffLink = () =>
   membershipApplicationStore.generateInviteStaffLink();

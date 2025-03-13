@@ -5,13 +5,18 @@
       <v-col class="home">
         <ProfileHomeCard />
       </v-col>
+
       <v-col class="home">
+        <PlanningDownloadHomeCard v-if="canDownloadAndSyncPlanning" />
         <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-        <FriendsHomeCard />
+        <ToDoAsVolunteerHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
+        <FriendsHomeCard v-else />
       </v-col>
-      <v-col v-if="canWriteFA || canWriteFT" class="home">
+
+      <v-col v-if="hasThirdColumn" class="home">
         <PersonalFtHomeCard v-if="canWriteFT" />
         <PersonalFaHomeCard v-if="canWriteFA" />
+        <FriendsHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
       </v-col>
     </v-row>
   </v-container>
@@ -20,11 +25,15 @@
 <script lang="ts" setup>
 import { nicknameOrFirstName } from "@overbookd/user";
 import {
+  DOWNLOAD_PLANNING,
   HAVE_PERSONAL_ACCOUNT,
+  SYNC_PLANNING,
   WRITE_FA,
   WRITE_FT,
 } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
+import { VOLUNTEER } from "@overbookd/registration";
+import { SOFT_CODE } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 
@@ -72,10 +81,24 @@ const titleMessage = computed<string>(() => {
 const hasPersonalAccount = computed<boolean>(() =>
   userStore.can(HAVE_PERSONAL_ACCOUNT),
 );
+const canDownloadAndSyncPlanning = computed<boolean>(
+  () => userStore.can(DOWNLOAD_PLANNING) && userStore.can(SYNC_PLANNING),
+);
+const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
+  const wantToBeVolunteer = userStore.loggedUser?.registration === VOLUNTEER;
+  const isVolunteer = (userStore.loggedUser?.teams ?? []).includes(SOFT_CODE);
+  const hasNoPlanning = !canDownloadAndSyncPlanning.value;
+  return (wantToBeVolunteer || isVolunteer) && hasNoPlanning;
+});
 
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
-
 const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
+const hasThirdColumn = computed<boolean>(
+  () =>
+    canWriteFA.value ||
+    canWriteFT.value ||
+    shouldDisplayInstructionsForVolunteer.value,
+);
 </script>
 
 <style lang="scss" scoped>

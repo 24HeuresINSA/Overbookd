@@ -1,4 +1,5 @@
 import { Permission } from "@overbookd/permission";
+import { Membership } from "@overbookd/registration";
 
 export type UserName = {
   firstname: string;
@@ -32,4 +33,5 @@ export type MyUserInformation = UserPersonalData & {
   permissions: Permission[];
   tasksCount: number;
   hasApprovedEULA: boolean;
+  membershipApplication: Membership | null;
 };

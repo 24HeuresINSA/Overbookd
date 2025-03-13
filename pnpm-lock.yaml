@@ -709,6 +709,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
+      '@overbookd/registration':
+        specifier: workspace:*
+        version: link:../../domains/registration
 
 packages:
 
