@@ -70,7 +70,9 @@
         </div>
 
         <div class="personal-info">
-          <v-icon class="personal-info__icon">mdi-calendar-blank-multiple</v-icon>
+          <v-icon class="personal-info__icon">
+            mdi-calendar-blank-multiple
+          </v-icon>
           <span class="personal-info__label">
             {{ assignmentPreferenceLabel }}
           </span>

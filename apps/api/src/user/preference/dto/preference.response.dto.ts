@@ -12,11 +12,11 @@ export class PreferenceResponseDto implements Preference {
   paperPlanning: Preference["paperPlanning"];
 
   @ApiProperty({
-      description: "User want to choose his assignment preference",
-      enum: assignmentPreferences,
-      example: NO_PREF,
-    })
-    assignment: Preference["assignment"];
+    description: "User want to choose his assignment preference",
+    enum: assignmentPreferences,
+    example: NO_PREF,
+  })
+  assignment: Preference["assignment"];
 
   @ApiProperty({
     description: "User preference for favorite pages",

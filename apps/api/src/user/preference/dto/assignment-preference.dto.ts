@@ -1,5 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AssignmentPreference, assignmentPreferences, NO_PREF } from "@overbookd/http";
+import {
+  AssignmentPreference,
+  assignmentPreferences,
+  NO_PREF,
+} from "@overbookd/http";
 import { IsEnum } from "class-validator";
 
 export class AssignmentPreferenceDto implements AssignmentPreference {

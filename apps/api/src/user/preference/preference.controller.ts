@@ -92,7 +92,10 @@ export class PreferenceController {
     @Body() preference: AssignmentPreferenceDto,
     @Request() { user }: RequestWithUserPayload,
   ): Promise<AssignmentPreferenceDto> {
-    return this.preferenceService.updateAssignmentPreference(user.id, preference);
+    return this.preferenceService.updateAssignmentPreference(
+      user.id,
+      preference,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
