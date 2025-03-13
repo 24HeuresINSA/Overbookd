@@ -43,6 +43,7 @@ import {
   OFFER_SHARED_MEAL,
   VIEW_ORGA_MOBILE_NAV,
   EXPORT_FOR_SIGNA,
+  ENTER_EXTENDED_AVAILABILITITES,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -476,6 +477,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "signa" }],
+      },
+    },
+  },
+  {
+    name: ENTER_EXTENDED_AVAILABILITITES,
+    description: "Peut renseigner des disponibilités étendues",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
