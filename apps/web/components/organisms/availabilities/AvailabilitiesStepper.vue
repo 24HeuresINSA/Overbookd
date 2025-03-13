@@ -28,22 +28,22 @@
 </template>
 
 <script lang="ts" setup>
-import { HARD_CODE } from "@overbookd/team-constants";
 import { Duration, OverDate } from "@overbookd/time";
+import { ENTER_EXTENDED_AVAILABILITITES } from "@overbookd/permission";
 import {
   CalendarEventPeriods,
   type CalendarStep,
 } from "~/utils/availabilities/calendar-event-periods";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 
-const SOFT_CALENDAR_STEPS: CalendarStep[] = [
+const BASE_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.preManif,
   CalendarEventPeriods.manif,
   CalendarEventPeriods.postManif,
 ];
-const HARD_CALENDAR_STEPS: CalendarStep[] = [
+const EXTENDED_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.prePreManif,
-  ...SOFT_CALENDAR_STEPS,
+  ...BASE_CALENDAR_STEPS,
 ];
 
 const userStore = useUserStore();
@@ -56,8 +56,8 @@ const mobileStepDayIndex = ref<number>(0);
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
-  const isHard = (userStore.loggedUser?.teams ?? []).includes(HARD_CODE);
-  return isHard ? HARD_CALENDAR_STEPS : SOFT_CALENDAR_STEPS;
+  const canViewExtended = userStore.can(ENTER_EXTENDED_AVAILABILITITES);
+  return canViewExtended ? EXTENDED_CALENDAR_STEPS : BASE_CALENDAR_STEPS;
 });
 const stepDays = computed<DayPresenter[]>(() => {
   const calendarStep = calendarSteps.value.at(step.value - 1);
