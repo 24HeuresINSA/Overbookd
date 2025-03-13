@@ -10,7 +10,12 @@ export type UserPasswordOnly = {
 
 export type DatabaseMyUserInformation = Omit<
   MyUserInformation,
-  "teams" | "permissions" | "tasksCount" | "balance" | "charisma"
+  | "teams"
+  | "permissions"
+  | "tasksCount"
+  | "balance"
+  | "charisma"
+  | "membershipApplication"
 > &
   UserDataForCharisma &
   WithTransactionsForBalance & {
