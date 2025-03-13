@@ -5,6 +5,8 @@ export type UserName = {
   firstname: string;
   lastname: string;
   nickname?: string | null;
+  email?: string;
+  mobilePhone?: string;
 };
 
 export type User = UserName & {

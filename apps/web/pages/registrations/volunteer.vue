@@ -214,6 +214,7 @@ const headers = [
   { title: "Nom", value: "lastname", sortable: true },
   { title: "Surnom", value: "nickname", sortable: true },
   { title: "Email", value: "email" },
+  { title: "Téléphone", value: "phone" },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams", sortable: true },
   { title: "Actions", value: "actions" },
