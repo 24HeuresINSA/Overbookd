@@ -37,15 +37,17 @@ import { SOFT_CODE } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 
+const me = computed(() => userStore.loggedUser);
+
 const displayedName = computed<string>(() =>
-  userStore.loggedUser ? nicknameOrFirstName(userStore.loggedUser) : "",
+  me.value ? nicknameOrFirstName(me.value) : "",
 );
 
 const isBirthdayToday = computed<boolean>(() => {
-  if (!userStore.loggedUser) return false;
+  if (!me.value) return false;
 
   const today = OverDate.now();
-  const birthday = OverDate.from(userStore.loggedUser.birthdate);
+  const birthday = OverDate.from(me.value.birthdate);
 
   return (
     today.monthlyDate.month === birthday.monthlyDate.month &&
@@ -85,8 +87,9 @@ const canDownloadAndSyncPlanning = computed<boolean>(
   () => userStore.can(DOWNLOAD_PLANNING) && userStore.can(SYNC_PLANNING),
 );
 const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
-  const wantToBeVolunteer = userStore.loggedUser?.registration === VOLUNTEER;
-  const isVolunteer = (userStore.loggedUser?.teams ?? []).includes(SOFT_CODE);
+  if (!me.value) return false;
+  const wantToBeVolunteer = me.value.membershipApplication === VOLUNTEER;
+  const isVolunteer = me.value.teams.includes(SOFT_CODE);
   const hasNoPlanning = !canDownloadAndSyncPlanning.value;
   return (wantToBeVolunteer || isVolunteer) && hasNoPlanning;
 });
