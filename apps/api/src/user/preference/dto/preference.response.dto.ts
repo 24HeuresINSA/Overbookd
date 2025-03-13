@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Preference } from "@overbookd/http";
-import { pagesURL, PageURL, PLANNING_URL } from "@overbookd/web-page";
+import { assignmentPreferences, NO_PREF, Preference } from "@overbookd/http";
+import { pagesURL, PLANNING_URL } from "@overbookd/web-page";
 
 export class PreferenceResponseDto implements Preference {
   @ApiProperty({
@@ -9,7 +9,14 @@ export class PreferenceResponseDto implements Preference {
     example: false,
     nullable: true,
   })
-  paperPlanning: boolean | null;
+  paperPlanning: Preference["paperPlanning"];
+
+  @ApiProperty({
+    description: "User want to choose his assignment preference",
+    enum: assignmentPreferences,
+    example: NO_PREF,
+  })
+  assignment: Preference["assignment"];
 
   @ApiProperty({
     description: "User preference for favorite pages",
@@ -17,5 +24,5 @@ export class PreferenceResponseDto implements Preference {
     enum: pagesURL,
     isArray: true,
   })
-  favoritePages: PageURL[];
+  favoritePages: Preference["favoritePages"];
 }

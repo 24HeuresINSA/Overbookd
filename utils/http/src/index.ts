@@ -97,8 +97,17 @@ export type {
   HasApplication,
 } from "./registration.js";
 export type { EditAmountForm } from "./contribution.js";
+export {
+  assignmentPreferences,
+  NO_PREF,
+  FRAGMENTED,
+  NO_REST,
+  STACKED,
+  DEFAULT_PREFERENCE,
+} from "./preference.js";
 export type {
   Preference,
+  AssignmentPreference,
   PlanningPreference,
   PagesPreference,
   AddPageToFavorites,

@@ -67,6 +67,30 @@
             Je souhaite avoir une version imprimée de mon planning
           </p>
         </div>
+        <div class="planning-preference__assignment">
+          <p class="planning-preference__label">
+            Le type de planning que je souhaite avoir :
+          </p>
+          <v-radio-group
+            v-model="selectedAssignment"
+            inline
+            @update:model-value="handleAssignmentPreferenceUpdate"
+          >
+            <v-radio label="Pas de préférence" value="NO_PREF" />
+            <v-radio
+              label="Planning regroupé (créneaux bénévoles collés et grandes pauses)"
+              value="STACKED"
+            />
+            <v-radio
+              label="Planning aéré (créneaux bénévoles espacés de petites pauses)"
+              value="FRAGMENTED"
+            />
+            <v-radio
+              label="PAS DE REPOS POUR LES BRAVES (Le repos ? Connais pas !)"
+              value="NO_REST"
+            />
+          </v-radio-group>
+        </div>
         <CommentField v-model="comment" />
       </v-form>
     </template>
@@ -85,7 +109,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { Preference } from "@overbookd/http";
+import {
+  assignmentPreferences,
+  NO_PREF,
+  type Preference,
+} from "@overbookd/http";
 import { formatLocalDate } from "@overbookd/time";
 import {
   required,
@@ -114,6 +142,9 @@ const birthday = ref<string>(
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phone = ref<string>(loggedUser.value?.phone ?? "");
 const preferences = computed<Preference>(() => preferenceStore.myPreferences);
+const selectedAssignment = ref<string>(
+  preferences.value?.assignment ?? NO_PREF,
+);
 const hasFilledPreferences = computed<boolean>(
   () =>
     preferences.value?.paperPlanning !== undefined &&
@@ -133,6 +164,18 @@ const loading = ref<boolean>(false);
 const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   if (paperPlanning === null) return;
   preferenceStore.updatePlanningPreference({ paperPlanning });
+};
+
+const updateAssignmentPreference = (assignment: string) => {
+  if (!assignmentPreferences.includes(assignment)) return;
+  preferenceStore.updateAssignmentPreference({
+    assignment: assignment as Preference["assignment"],
+  });
+};
+
+const handleAssignmentPreferenceUpdate = (value: string | null) => {
+  if (value === null) return;
+  updateAssignmentPreference(value);
 };
 
 const save = async () => {
@@ -189,6 +232,15 @@ const save = async () => {
   margin-bottom: 5px;
   &__label {
     margin: 0 10px;
+  }
+  &__assignment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -5px;
+    .v-radio {
+      margin-block: -3px;
+    }
   }
   .v-btn-group {
     flex-shrink: 0;
