@@ -4,29 +4,29 @@
       <v-icon>{{ icon }}</v-icon>
       <span> {{ title }} </span>
     </v-card-title>
-    <v-card-text class="home-card__content">
-      <div v-if="isEnrolled">
-        <p>Bravo, tu as été accepté dans l'équipe bénévole !</p>
-        <p>
-          Reste connecté, l'équipe responsable des bénévoles te concocte un
-          planning aux petits oignons. 🧑‍💻
-        </p>
-        <p>
-          En attendant, tu peux
-          <nuxt-link :to="AVAILABILITIES_URL">
-            ajouter des disponibilités
-          </nuxt-link>, nous donner le nom de tes amis ou encore compléter tes informations
-          pour qu'on en sache plus sur toi. 🤗
-        </p>
-        <p>
-          Si tu as besoin d'informations sur ton planning, n'hésite pas à
-          <a :href="`mailto:${HUMAINS_EMAIL}`"> nous contacter</a>. 📨
-        </p>
-      </div>
-      <div v-else>
-        <p>Très bonne question !</p>
-        <!-- TODO -->
-      </div>
+    <v-card-text v-if="isEnrolled" class="home-card__text">
+      <p>Bravo, <strong>tu as été accepté dans l'équipe bénévole !</strong></p>
+      <p>
+        Reste connecté·e, l'équipe responsable des bénévoles te concocte un
+        planning aux petits oignons. 🧑‍💻
+      </p>
+      <p>
+        En attendant, tu peux
+        <nuxt-link :to="AVAILABILITIES_URL">
+          <strong>ajouter des disponibilités</strong>,
+        </nuxt-link>
+        nous donner le <strong>nom de tes amis</strong> ou encore
+        <strong>compléter tes informations</strong> pour qu'on en sache plus sur
+        toi. 🤗
+      </p>
+      <p>
+        Si tu as besoin d'informations sur ton planning, n'hésite pas à
+        <a :href="`mailto:${HUMAINS_EMAIL}`"> nous contacter</a>. 📨
+      </p>
+    </v-card-text>
+    <v-card-text v-else class="home-card__text">
+      <p>Très bonne question !</p>
+      <!-- TODO -->
     </v-card-text>
   </v-card>
 </template>

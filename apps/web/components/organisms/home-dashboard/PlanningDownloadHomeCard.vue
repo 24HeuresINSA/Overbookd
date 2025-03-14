@@ -4,13 +4,13 @@
       <v-icon>mdi-calendar-clock</v-icon>
       <span> Ton planning est disponible ! </span>
     </v-card-title>
-    <v-card-text class="home-card__content">
+    <v-card-text class="home-card__text">
       <p>
-        Ceci est un planning <strong> définitif</strong>, cependant des imprévus
+        C'est un planning <strong> définitif</strong>, cependant des imprévus
         peuvent entrainer des mises à jour. 😞
       </p>
       <p>
-        Pour éviter toute déconvenue nous te conseillons de
+        Pour éviter toute déconvenue, nous te conseillons de
         <strong>
           synchroniser ton planning avec ton application d'agenda.
         </strong>
@@ -19,7 +19,9 @@
       <p>
         Pour réaliser cette opération tu auras besoin du lien vers
         <a href="#" @click="copyToClipBoard">ton planning personnel</a>
-        <v-icon @click="copyToClipBoard">mdi-content-copy</v-icon>
+        <v-icon size="small" class="ml-1" @click="copyToClipBoard">
+          mdi-content-copy
+        </v-icon>
       </p>
       <p>
         Ce lien sera nécesssaire pour configurer la synchronisation avec ton
@@ -46,8 +48,8 @@
     </v-card-text>
     <v-card-actions>
       <v-btn
-        text="Télécharger mon livret"
-        color="primary"
+        text="Télécharger mon planning PDF"
+        color="secondary"
         @click="exportPlanning"
       />
     </v-card-actions>
@@ -87,4 +89,16 @@ const exportPlanning = async () => {
 
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
+
+.home-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+li {
+  margin-left: 20px;
+}
 </style>

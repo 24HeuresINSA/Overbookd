@@ -20,6 +20,15 @@
     padding: 0;
   }
 
+  &__text {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    gap: 5px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+  }
+
   &__button {
     margin-bottom: 2px;
   }

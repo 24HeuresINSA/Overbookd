@@ -4,19 +4,19 @@
     <v-row class="home" no-gutters>
       <v-col class="home">
         <ProfileHomeCard />
+        <FriendsHomeCard v-if="!isOrWantsToBeVolunteer" />
       </v-col>
 
       <v-col class="home">
         <PlanningDownloadHomeCard v-if="canDownloadAndSyncPlanning" />
         <PersonalAccountHomeCard v-if="hasPersonalAccount" />
         <ToDoAsVolunteerHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
-        <FriendsHomeCard v-else />
       </v-col>
 
       <v-col v-if="hasThirdColumn" class="home">
         <PersonalFtHomeCard v-if="canWriteFT" />
         <PersonalFaHomeCard v-if="canWriteFA" />
-        <FriendsHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
+        <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
       </v-col>
     </v-row>
   </v-container>
@@ -86,21 +86,21 @@ const hasPersonalAccount = computed<boolean>(() =>
 const canDownloadAndSyncPlanning = computed<boolean>(
   () => userStore.can(DOWNLOAD_PLANNING) && userStore.can(SYNC_PLANNING),
 );
-const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
+const isOrWantsToBeVolunteer = computed<boolean>(() => {
   if (!me.value) return false;
   const wantToBeVolunteer = me.value.membershipApplication === VOLUNTEER;
   const isVolunteer = me.value.teams.includes(SOFT_CODE);
+  return wantToBeVolunteer || isVolunteer;
+});
+const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
   const hasNoPlanning = !canDownloadAndSyncPlanning.value;
-  return (wantToBeVolunteer || isVolunteer) && hasNoPlanning;
+  return isOrWantsToBeVolunteer.value && hasNoPlanning;
 });
 
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
 const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
 const hasThirdColumn = computed<boolean>(
-  () =>
-    canWriteFA.value ||
-    canWriteFT.value ||
-    shouldDisplayInstructionsForVolunteer.value,
+  () => canWriteFA.value || canWriteFT.value || isOrWantsToBeVolunteer.value,
 );
 </script>
 
