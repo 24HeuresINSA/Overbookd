@@ -1,25 +1,23 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
-  <v-container fluid>
-    <v-row class="home" no-gutters>
-      <v-col class="home">
-        <ProfileHomeCard />
-        <FriendsHomeCard v-if="!isOrWantsToBeVolunteer" />
-      </v-col>
+  <v-row class="home" no-gutters>
+    <v-col class="home">
+      <ProfileHomeCard />
+      <FriendsHomeCard v-if="!isOrWantsToBeVolunteer" />
+    </v-col>
 
-      <v-col class="home">
-        <PlanningDownloadHomeCard v-if="canDownloadAndSyncPlanning" />
-        <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-        <ToDoAsVolunteerHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
-      </v-col>
+    <v-col class="home">
+      <PlanningDownloadHomeCard v-if="canDownloadAndSyncPlanning" />
+      <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+      <ToDoAsVolunteerHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
+    </v-col>
 
-      <v-col v-if="hasThirdColumn" class="home">
-        <PersonalFtHomeCard v-if="canWriteFT" />
-        <PersonalFaHomeCard v-if="canWriteFA" />
-        <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-col v-if="hasThirdColumn" class="home">
+      <PersonalFtHomeCard v-if="canWriteFT" />
+      <PersonalFaHomeCard v-if="canWriteFA" />
+      <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts" setup>

@@ -4,46 +4,44 @@
       <v-icon>mdi-heart</v-icon>
       <span>Ami·e·s </span>
     </v-card-title>
-    <v-card-text class="home-card__text">
-      <p>
+    <v-card-text class="home-card__content">
+      <p class="description">
         Nous ferons notre maximum pour que vous soyez ensemble pendant vos
         créneaux.
       </p>
 
-      <v-container class="home-card__content">
-        <v-row>
-          <v-col justify="start" class="cols">
-            <img :src="image.link" :alt="image.description" />
-          </v-col>
-          <v-col cols="auto" class="cols">
-            <div class="friends">
-              <SearchFriend
-                v-model="newFriend"
-                class="friends-list__search"
-                hide-details
-                @update:model-value="sendFriendRequest"
+      <div>
+        <v-col justify="start" class="cols">
+          <img :src="image.link" :alt="image.description" />
+        </v-col>
+        <v-col cols="auto" class="cols">
+          <div class="friends">
+            <SearchFriend
+              v-model="newFriend"
+              class="friends-list__search"
+              hide-details
+              @update:model-value="sendFriendRequest"
+            />
+            <v-list
+              v-for="(friend, index) in myFriends"
+              :key="index"
+              class="friends__item"
+              elevation="2"
+            >
+              <span class="name">
+                {{ buildUserNameWithNickname(friend) }}
+              </span>
+              <v-btn
+                density="compact"
+                icon="mdi-close"
+                variant="flat"
+                color="secondary"
+                @click="removeFriend(friend)"
               />
-              <v-list
-                v-for="(friend, index) in myFriends"
-                :key="index"
-                class="friends__item"
-                elevation="2"
-              >
-                <span class="name">
-                  {{ buildUserNameWithNickname(friend) }}
-                </span>
-                <v-btn
-                  density="compact"
-                  icon="mdi-close"
-                  variant="flat"
-                  color="secondary"
-                  @click="removeFriend(friend)"
-                />
-              </v-list>
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
+            </v-list>
+          </div>
+        </v-col>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -99,7 +97,7 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
   display: grid;
   grid-template-columns: minmax(200px, 800px);
   gap: 10px;
-  margin-bottom: 10px;
+  margin: 0 5px 5px 10px;
   &__search {
     min-width: 100px;
     width: auto;
@@ -116,12 +114,18 @@ const removeFriend = (friend: User) => userStore.removeFriend(friend);
   }
 }
 
+.description {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  margin: 10px 1rem;
+}
+
 img {
   max-width: 100%;
   min-width: 100px;
   width: auto;
   border-radius: 10px;
-  margin: 10px 5px;
+  margin: 0 5px 10px 5px;
 }
 
 .cols {
