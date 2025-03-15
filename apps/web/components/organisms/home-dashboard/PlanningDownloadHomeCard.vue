@@ -25,8 +25,8 @@
       </p>
       <p>
         Ce lien sera nécesssaire pour configurer la synchronisation avec ton
-        application d'agenda.<br />
-        Voici une liste d'applications supportant cette synchronisation:
+        agenda (on te conseile de faire ça sur PC).<br />
+        Voici une liste d'applications supportant cette synchronisation :
       </p>
       <ul>
         <li>
