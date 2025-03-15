@@ -27,6 +27,12 @@
     gap: 5px;
     margin-top: 10px;
     padding-bottom: 10px;
+
+    span {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
   }
 
   &__button {

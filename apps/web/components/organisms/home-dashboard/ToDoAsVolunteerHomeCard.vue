@@ -4,29 +4,43 @@
       <v-icon>{{ icon }}</v-icon>
       <span> {{ title }} </span>
     </v-card-title>
-    <v-card-text v-if="isEnrolled" class="home-card__text">
-      <p>Bravo, <strong>tu as été accepté dans l'équipe bénévole !</strong></p>
+    <v-card-text class="home-card__text">
+      <span v-if="isEnrolled">
+        <p>
+          Bravo, <strong>tu as été accepté·e dans l'équipe bénévole !</strong>
+        </p>
+        <p>
+          Reste connecté·e, l'équipe responsable des bénévoles te concocte un
+          planning aux petits oignons. 🧑‍💻
+        </p>
+        <p>En attendant, tu peux :</p>
+      </span>
+      <span v-else>
+        <p>Bienvenue sur Overbookd, le site d'inscription des bénévoles !</p>
+        <p>
+          Tu veux profiter du festival en étant du meilleur côté ? Tu vas voir,
+          c'est plutôt simple. Voici ce que tu peux faire pour
+          <strong>maximiser tes chances d'être accepté dans l'équipe :</strong>
+        </p>
+      </span>
+
+      <ul>
+        <li>
+          <nuxt-link :to="AVAILABILITIES_URL">
+            Renseigner <strong>tes disponibilités</strong>
+          </nuxt-link>
+        </li>
+        <li>Nous donner le <strong>nom de tes amis</strong></li>
+        <li>
+          <strong>Compléter tes informations</strong> pour qu'on en sache plus
+          sur toi. 🤗
+        </li>
+      </ul>
+
       <p>
-        Reste connecté·e, l'équipe responsable des bénévoles te concocte un
-        planning aux petits oignons. 🧑‍💻
-      </p>
-      <p>
-        En attendant, tu peux
-        <nuxt-link :to="AVAILABILITIES_URL">
-          <strong>ajouter des disponibilités</strong>,
-        </nuxt-link>
-        nous donner le <strong>nom de tes amis</strong> ou encore
-        <strong>compléter tes informations</strong> pour qu'on en sache plus sur
-        toi. 🤗
-      </p>
-      <p>
-        Si tu as besoin d'informations sur ton planning, n'hésite pas à
+        Si tu as des questions, n'hésite pas à
         <a :href="`mailto:${HUMAINS_EMAIL}`"> nous contacter</a>. 📨
       </p>
-    </v-card-text>
-    <v-card-text v-else class="home-card__text">
-      <p>Très bonne question !</p>
-      <!-- TODO -->
     </v-card-text>
   </v-card>
 </template>
@@ -50,4 +64,8 @@ const icon = computed<string>(() =>
 
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
+
+li {
+  margin-left: 20px;
+}
 </style>

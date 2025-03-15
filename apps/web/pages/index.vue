@@ -2,14 +2,29 @@
   <DesktopPageTitle :title="titleMessage" />
   <v-row class="home" no-gutters>
     <v-col class="home">
+      <ToDoAsVolunteerHomeCard
+        v-if="shouldDisplayInstructionsForVolunteer"
+        class="mobile-only"
+      />
+      <PlanningDownloadHomeCard
+        v-if="canDownloadAndSyncPlanning"
+        class="mobile-only"
+      />
+
       <ProfileHomeCard />
       <FriendsHomeCard v-if="!isOrWantsToBeVolunteer" />
     </v-col>
 
     <v-col class="home">
-      <PlanningDownloadHomeCard v-if="canDownloadAndSyncPlanning" />
+      <PlanningDownloadHomeCard
+        v-if="canDownloadAndSyncPlanning"
+        class="desktop-only"
+      />
+      <ToDoAsVolunteerHomeCard
+        v-if="shouldDisplayInstructionsForVolunteer"
+        class="desktop-only"
+      />
       <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-      <ToDoAsVolunteerHomeCard v-if="shouldDisplayInstructionsForVolunteer" />
     </v-col>
 
     <v-col v-if="hasThirdColumn" class="home">
