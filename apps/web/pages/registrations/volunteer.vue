@@ -256,20 +256,16 @@ const filteredCandidates = computed<VolunteerCandidate[]>(() => {
     : searchableEnrollableCandidates.value;
 
   const searchTerm = filters.value.search?.toLocaleLowerCase() ?? "";
-
   const selectedTeams = filters.value.teams ?? [];
 
-  let filtered = matchingSearchItems(searchableCandidates, searchTerm);
+  const matching = matchingSearchItems(searchableCandidates, searchTerm);
 
-  if (selectedTeams.length > 0) {
-    filtered = filtered.filter((candidate) => {
-      return candidate.teams.some((team) =>
-        selectedTeams.some((selectedTeam) => selectedTeam.code === team),
-      );
-    });
-  }
-
-  return filtered;
+  if (selectedTeams.length === 0) return matching;
+  return matching.filter((candidate) => {
+    return candidate.teams.some((team) =>
+      selectedTeams.some((selectedTeam) => selectedTeam.code === team),
+    );
+  });
 });
 
 const toggleRejectedCandidates = () => {
