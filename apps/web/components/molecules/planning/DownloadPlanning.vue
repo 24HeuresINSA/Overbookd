@@ -112,7 +112,7 @@ const syncWithMicrosoft = () => {
 const copySyncLinkToClipboard = async () => {
   if (!syncLink.value) return;
   await navigator.clipboard.writeText(syncLink.value);
-  sendSuccessNotification("Lien copié ✅");
+  sendInfoNotification("Lien copié ✅");
 };
 
 const downloadPdf = () => {

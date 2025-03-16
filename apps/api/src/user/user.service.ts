@@ -306,6 +306,7 @@ export class UserService {
       transactionsFrom,
       transactionsTo,
       hasApprovedEULA,
+      membershipApplications,
       ...personalData
     } = user;
 
@@ -315,6 +316,7 @@ export class UserService {
       permissions: [...retrievePermissions(user.teams)],
       tasksCount: _count.assigned,
       balance: Balance.calculate({ transactionsFrom, transactionsTo }),
+      membershipApplication: membershipApplications?.at(0)?.membership ?? null,
     };
   }
 

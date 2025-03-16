@@ -2,6 +2,7 @@ import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { TeamWithNestedPermissions } from "../team/utils/permissions";
 import { WithTransactionsForBalance } from "../common/query/transaction.query";
 import { UserDataForCharisma } from "../common/query/charisma.query";
+import { Membership } from "@overbookd/registration";
 
 export type UserPasswordOnly = {
   password: string;
@@ -9,12 +10,18 @@ export type UserPasswordOnly = {
 
 export type DatabaseMyUserInformation = Omit<
   MyUserInformation,
-  "teams" | "permissions" | "tasksCount" | "balance" | "charisma"
+  | "teams"
+  | "permissions"
+  | "tasksCount"
+  | "balance"
+  | "charisma"
+  | "membershipApplication"
 > &
   UserDataForCharisma &
   WithTransactionsForBalance & {
     teams: TeamWithNestedPermissions[];
     _count: { assigned: number };
+    membershipApplications: { membership: Membership }[];
   };
 
 export type DatabaseTeamCode = {

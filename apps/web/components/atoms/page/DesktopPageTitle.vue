@@ -81,6 +81,7 @@ const toggleFavorite = async () => {
 .page-title-container {
   display: flex;
   flex-wrap: wrap;
+  margin-left: 5px;
   margin-bottom: 10px;
   gap: 8px;
   @media screen and (max-width: $mobile-max-width) {

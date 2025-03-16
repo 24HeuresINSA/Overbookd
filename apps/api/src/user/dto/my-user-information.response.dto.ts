@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { UserPersonalDataResponseDto } from "./user-personal-data.response.dto";
 import { MyUserInformation } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
+import { Membership } from "@overbookd/registration";
 
 export class MyUserInformationResponseDto
   extends UserPersonalDataResponseDto
@@ -31,4 +32,10 @@ export class MyUserInformationResponseDto
     type: Boolean,
   })
   hasApprovedEULA: boolean;
+
+  @ApiProperty({
+    description: "User membership application",
+    type: String,
+  })
+  membershipApplication: Membership | null;
 }
