@@ -134,12 +134,14 @@ const getShiftDelimiterClass = (hour: number): string => {
   return shiftDelimiterMap.get(hour) || "";
 };
 
-const dayGapDuration = isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK;
+const dayGapDuration = computed<Duration>(() =>
+  isDayMode.value ? Duration.ONE_DAY : Duration.ONE_WEEK,
+);
 const moveToPreviousWeekOrDay = () => {
-  dayModel.value = day.value.date.minus(dayGapDuration).date;
+  dayModel.value = day.value.date.minus(dayGapDuration.value).date;
 };
 const moveToNextWeekOrDay = () => {
-  dayModel.value = day.value.date.plus(dayGapDuration).date;
+  dayModel.value = day.value.date.plus(dayGapDuration.value).date;
 };
 
 if (publicHolidayStore.all.length === 0) {
