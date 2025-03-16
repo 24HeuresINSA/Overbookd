@@ -185,6 +185,9 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       sendSuccessNotification(`FA #${id} supprimée 🗑️`);
       this.selectedActivity = fakeActivity;
       await this.fetchAllActivities();
+
+      const navigationStore = useNavigationBadgeStore();
+      navigationStore.fetchMyRefusedActivities();
     },
 
     /* UPDATE GENERAL SECTION */

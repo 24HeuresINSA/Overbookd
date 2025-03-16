@@ -39,13 +39,35 @@
         >
           <template #top>
             <div class="filters">
-              <v-text-field
-                v-model="searchedCandidate"
-                label="Rechercher un candidat"
-                class="search-filter"
-                clearable
+              <v-tooltip
+                v-model="showTooltip"
+                location="top"
+                open-delay="200"
+                text="Recherchez par nom, prénom, surnom, email ou numéro de téléphone"
+              >
+                <template #activator="{ props }">
+                  <v-text-field
+                    v-model="filters.search"
+                    v-bind="props"
+                    label="Rechercher un candidat"
+                    class="search-filter"
+                    density="compact"
+                    clearable
+                    hide-details
+                    @mouseenter="handleMouseEnter"
+                    @click:clear="filters.search = ''"
+                  />
+                </template>
+              </v-tooltip>
+              <SearchTeams
+                :model-value="filters.teams ?? []"
+                label="Equipe(s)"
+                density="compact"
+                bg-color="surface"
+                class="filters__field"
+                closable-chips
                 hide-details
-                @click:clear="searchedCandidate = ''"
+                @update:model-value="updateTeamsParam"
               />
               <v-btn
                 text="Candidats rejetés"
@@ -168,12 +190,15 @@ import {
   formatDateWithMinutes,
   type IProvidePeriod,
 } from "@overbookd/time";
+import type { Team } from "@overbookd/team";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 
 useHead({ title: "Admissions bénévoles" });
 
@@ -181,25 +206,32 @@ const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 const userStore = useUserStore();
 const configurationStore = useConfigurationStore();
+const showTooltip = ref<boolean>(false);
 
 const headers = [
   { title: "Date de canidature", value: "candidatedAt", sortable: true },
   { title: "Prénom", value: "firstname", sortable: true },
   { title: "Nom", value: "lastname", sortable: true },
+  { title: "Surnom", value: "nickname", sortable: true },
   { title: "Email", value: "email" },
+  { title: "Téléphone", value: "phone" },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams", sortable: true },
   { title: "Actions", value: "actions" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
-const searchedCandidate = ref<string>("");
+const filters = ref<VolunteerFilters>({
+  search: "",
+  teams: [],
+});
 const candidatesToEnroll = ref<VolunteerCandidate[]>([]);
 const selectedCandidate = ref<VolunteerCandidate | undefined>();
 
 const candidates = computed<VolunteerCandidate[]>(
   () => membershipApplicationStore.volunteerCandidates,
 );
+
 const loading = ref<boolean>(candidates.value.length === 0);
 membershipApplicationStore.fetchVolunteerCandidates().then(() => {
   loading.value = false;
@@ -210,6 +242,7 @@ const searchableEnrollableCandidates = computed<
 >(() => candidates.value.map(toSearchable));
 
 const displayRejectedCandidates = ref<boolean>(false);
+
 const rejectedCandidates = computed<VolunteerCandidate[]>(
   () => membershipApplicationStore.rejectedVolunteerCandidates,
 );
@@ -221,7 +254,18 @@ const filteredCandidates = computed<VolunteerCandidate[]>(() => {
   const searchableCandidates = displayRejectedCandidates.value
     ? searchableRejectedCandidates.value
     : searchableEnrollableCandidates.value;
-  return matchingSearchItems(searchableCandidates, searchedCandidate.value);
+
+  const searchTerm = filters.value.search?.toLocaleLowerCase() ?? "";
+  const selectedTeams = filters.value.teams ?? [];
+
+  const matching = matchingSearchItems(searchableCandidates, searchTerm);
+
+  if (selectedTeams.length === 0) return matching;
+  return matching.filter((candidate) => {
+    return candidate.teams.some((team) =>
+      selectedTeams.some((selectedTeam) => selectedTeam.code === team),
+    );
+  });
 });
 
 const toggleRejectedCandidates = () => {
@@ -278,6 +322,12 @@ const closeCandidateInfoDialogue = () => {
   isCandidateInfoDialogOpen.value = false;
 };
 
+const updateTeamsParam = (teams: Team[]) => {
+  filters.value.teams = teams;
+  const teamsCode = teams.map(({ code }) => code);
+  updateQueryParams("teams", teamsCode);
+};
+
 const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
   if (candidatesToEnroll.value.includes(candidate)) {
     candidatesToEnroll.value = candidatesToEnroll.value.filter(
@@ -316,6 +366,11 @@ const saveBriefingTimeWindow = async (period: IProvidePeriod) => {
     key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
     value: period,
   });
+};
+
+const handleMouseEnter = () => {
+  showTooltip.value = true;
+  setTimeout(() => (showTooltip.value = false), 2000);
 };
 </script>
 
