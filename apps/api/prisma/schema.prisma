@@ -90,7 +90,7 @@ enum AssignmentPreference {
   FRAGMENTED
   NO_REST
 
-  @@map("assignement_preference")
+  @@map("assignment_preference")
 }
 
 model Preference {

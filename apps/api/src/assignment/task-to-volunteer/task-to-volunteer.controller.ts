@@ -108,7 +108,7 @@ export class TaskToVolunteerController {
     description: "Assignment id",
     type: String,
   })
-  getAssignableVolunteersForAssignement(
+  getAssignableVolunteersForAssignment(
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
