@@ -53,6 +53,9 @@
           />
         </div>
         <div class="planning-preference">
+          <p class="planning-preference__label">
+            Je souhaite avoir une version imprimée de mon planning :
+          </p>
           <v-btn-toggle
             :model-value="preferences?.paperPlanning"
             color="primary"
@@ -63,32 +66,31 @@
             <v-btn :value="true"> <strong>OUI</strong> </v-btn>
             <v-btn :value="false"> <strong>NON</strong> </v-btn>
           </v-btn-toggle>
-          <p class="planning-preference__label">
-            Je souhaite avoir une version imprimée de mon planning
-          </p>
         </div>
-        <div class="planning-preference__assignment">
-          <p class="planning-preference__label">
+        <div class="assignment-preference">
+          <p class="assignment-preference__label">
             Le type de planning que je souhaite avoir :
           </p>
           <v-radio-group
             v-model="selectedAssignment"
-            inline
-            @update:model-value="handleAssignmentPreferenceUpdate"
+            @update:model-value="updateAssignmentPreference"
           >
-            <v-radio label="Pas de préférence" value="NO_PREF" />
-            <v-radio
-              label="Planning regroupé (créneaux bénévoles collés et grandes pauses)"
-              value="STACKED"
-            />
-            <v-radio
-              label="Planning aéré (créneaux bénévoles espacés de petites pauses)"
-              value="FRAGMENTED"
-            />
-            <v-radio
-              label="PAS DE REPOS POUR LES BRAVES (Le repos ? Connais pas !)"
-              value="NO_REST"
-            />
+            <v-hover
+              v-for="assignmentType of assignmentPreferences"
+              :key="assignmentType"
+            >
+              <template #default="{ isHovering, props }">
+                <v-radio
+                  v-bind="props"
+                  :label="
+                    isHard && isHovering
+                      ? assignmentTypeDetailedLabel.NO_REST
+                      : assignmentPreferenceLabels[assignmentType]
+                  "
+                  :value="assignmentType"
+                />
+              </template>
+            </v-hover>
           </v-radio-group>
         </div>
         <CommentField v-model="comment" />
@@ -112,8 +114,12 @@
 import {
   assignmentPreferences,
   NO_PREF,
+  isAssignementType,
+  assignmentTypeDetailedLabel,
   type Preference,
+  type AssignmentType,
 } from "@overbookd/http";
+import { HARD_CODE } from "@overbookd/team-constants";
 import { formatLocalDate } from "@overbookd/time";
 import {
   required,
@@ -142,7 +148,7 @@ const birthday = ref<string>(
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phone = ref<string>(loggedUser.value?.phone ?? "");
 const preferences = computed<Preference>(() => preferenceStore.myPreferences);
-const selectedAssignment = ref<string>(
+const selectedAssignment = ref<AssignmentType>(
   preferences.value?.assignment ?? NO_PREF,
 );
 const hasFilledPreferences = computed<boolean>(
@@ -166,16 +172,21 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   preferenceStore.updatePlanningPreference({ paperPlanning });
 };
 
-const updateAssignmentPreference = (assignment: string) => {
-  if (!assignmentPreferences.includes(assignment)) return;
-  preferenceStore.updateAssignmentPreference({
-    assignment: assignment as Preference["assignment"],
-  });
-};
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
+const assignmentPreferenceLabels = computed<Record<AssignmentType, string>>(
+  () => {
+    const labels = { ...assignmentTypeDetailedLabel };
+    if (isHard.value) {
+      labels.NO_REST = assignmentTypeDetailedLabel[selectedAssignment.value];
+      labels[selectedAssignment.value] = assignmentTypeDetailedLabel.NO_REST;
+    }
+    return labels;
+  },
+);
 
-const handleAssignmentPreferenceUpdate = (value: string | null) => {
-  if (value === null) return;
-  updateAssignmentPreference(value);
+const updateAssignmentPreference = (assignment: string | null) => {
+  if (assignment === null || !isAssignementType(assignment)) return;
+  preferenceStore.updateAssignmentPreference({ assignment });
 };
 
 const save = async () => {
@@ -233,15 +244,6 @@ const save = async () => {
   &__label {
     margin: 0 10px;
   }
-  &__assignment {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: -5px;
-    .v-radio {
-      margin-block: -3px;
-    }
-  }
   .v-btn-group {
     flex-shrink: 0;
     display: flex;
@@ -249,6 +251,17 @@ const save = async () => {
     .v-btn {
       background-color: rgba(var(--v-theme-primary), 0.2);
     }
+  }
+}
+
+.assignment-preference {
+  margin-bottom: 5px;
+  &__label {
+    margin: 0 10px;
+  }
+  .v-radio {
+    margin-left: 15px;
+    width: fit-content;
   }
 }
 </style>

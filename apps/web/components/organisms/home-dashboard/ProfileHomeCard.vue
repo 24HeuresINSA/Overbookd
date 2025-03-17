@@ -94,7 +94,8 @@
 </template>
 
 <script lang="ts" setup>
-import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/http";
+import { assignmentTypeLabel } from "@overbookd/http";
+import { HARD_CODE } from "@overbookd/team-constants";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { formatUserPhone } from "~/utils/user/user.utils";
 
@@ -130,17 +131,10 @@ const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,
 );
 
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
 const assignmentPreferenceLabel = computed<string>(() => {
-  switch (preferenceStore.myPreferences.assignment) {
-    case NO_PREF:
-      return "Pas de préférence";
-    case STACKED:
-      return "Planning regroupé";
-    case FRAGMENTED:
-      return "Planning aéré";
-    case NO_REST:
-      return "PAS DE REPOS POUR LES BRAVES";
-  }
+  if (isHard.value) return assignmentTypeLabel.NO_REST;
+  return assignmentTypeLabel[preferenceStore.myPreferences.assignment];
 });
 
 const isEditProfileDialogOpen = ref<boolean>(false);
