@@ -1,3 +1,13 @@
+## [3.40.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.39.0...v3.40.0) (2025-03-17)
+
+### Features
+
+* **web:** addition of a filter for soft volunteers [#1657](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1657) ([8f74667](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8f7466798c4b532f219993f91f3524e89ccee06d))
+
+### Bug Fixes
+
+* **calendar:** move current day with arrows [#2451](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2451) ([86de4ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86de4ab69d8eebb893c57cdc228676f92f34191b))
+
 ## [3.39.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.38.0...v3.39.0) (2025-03-13)
 
 ### Features
