@@ -147,15 +147,15 @@ const displayedVolunteers = computed<VolunteerWithAssignmentStats[]>(() => {
   );
 });
 
-const assignementStatsLoading = ref<boolean>(
+const assignmentStatsLoading = ref<boolean>(
   userStore.volunteersWithAssignmentStats.length === 0,
 );
 userStore
   .fetchVolunteersWithAssignmentStats()
-  .then(() => (assignementStatsLoading.value = false));
+  .then(() => (assignmentStatsLoading.value = false));
 
 const mergeLoading = computed<boolean>(
-  () => props.loading || assignementStatsLoading.value,
+  () => props.loading || assignmentStatsLoading.value,
 );
 
 const retrieveStat = (

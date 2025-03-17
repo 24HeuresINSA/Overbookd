@@ -22,7 +22,7 @@ export type AssignmentPreference = {
   assignment: AssignmentType;
 };
 
-export function isAssignementType(
+export function isAssignmentType(
   assignment: string,
 ): assignment is AssignmentType {
   return assignmentPreferences.includes(assignment as AssignmentType);

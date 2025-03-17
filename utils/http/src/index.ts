@@ -106,7 +106,7 @@ export {
   NO_REST,
   STACKED,
   DEFAULT_PREFERENCE,
-  isAssignementType,
+  isAssignmentType,
 } from "./preference.js";
 export type {
   Preference,

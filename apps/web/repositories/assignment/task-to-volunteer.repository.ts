@@ -22,7 +22,7 @@ export class TaskToVolunteerRepository {
     );
   }
 
-  static getAssignableVolunteersForAssignement({
+  static getAssignableVolunteersForAssignment({
     taskId,
     mobilizationId,
     assignmentId,

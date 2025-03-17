@@ -114,7 +114,7 @@
 import {
   assignmentPreferences,
   NO_PREF,
-  isAssignementType,
+  isAssignmentType,
   assignmentTypeDetailedLabel,
   type Preference,
   type AssignmentType,
@@ -185,7 +185,7 @@ const assignmentPreferenceLabels = computed<Record<AssignmentType, string>>(
 );
 
 const updateAssignmentPreference = (assignment: string | null) => {
-  if (assignment === null || !isAssignementType(assignment)) return;
+  if (assignment === null || !isAssignmentType(assignment)) return;
   preferenceStore.updateAssignmentPreference({ assignment });
 };
 

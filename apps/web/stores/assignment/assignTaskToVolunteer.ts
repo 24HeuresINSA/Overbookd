@@ -60,7 +60,7 @@ export const useAssignTaskToVolunteerStore = defineStore(
 
       async selectAssignment(assignmentIdentifier: AssignmentIdentifier) {
         const [assignableVolunteersRes, assignmentRes] = await Promise.all([
-          TaskToVolunteerRepository.getAssignableVolunteersForAssignement(
+          TaskToVolunteerRepository.getAssignableVolunteersForAssignment(
             assignmentIdentifier,
           ),
           AssignmentsRepository.findOne(assignmentIdentifier),
