@@ -75,7 +75,7 @@
     "vite-plugin-vuetify": "2.1.0",
     "vue-chartjs": "5.3.2",
     "vue-html-secure": "1.0.10",
-    "vuetify": "3.7.15"
+    "vuetify": "3.7.16"
   },
   "devDependencies": {
     "@pinia/nuxt": "0.10.1",
