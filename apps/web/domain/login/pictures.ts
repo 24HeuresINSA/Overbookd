@@ -1,4 +1,5 @@
-export const GLASS = "/img/login-background.jpg";
+export const GLASS = "/img/glass.jpg";
+export const ORGA_49 = "/img/orga-49.jpg";
 const BIKE_TRACK_NIGHT =
   "https://wordpress.24heures.org/wp-content/uploads/2024/08/velo_parcours_nuit-scaled.jpg";
 const BIKE_TRACK_DAY =
