@@ -5,6 +5,7 @@ import type {
   VolunteerCandidate,
 } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
+import { STAFF, VOLUNTEER } from "@overbookd/registration";
 import { toStandAloneUser } from "@overbookd/user";
 import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
@@ -50,6 +51,9 @@ export const useMembershipApplicationStore = defineStore(
         sendSuccessNotification(
           "Ta demande pour devenir organisateur a été envoyée",
         );
+
+        const userStore = useUserStore();
+        userStore.setLoggedUserMembershipApplication(STAFF);
       },
 
       async rejectStaffCandidate(candidateId: number) {
@@ -122,6 +126,9 @@ export const useMembershipApplicationStore = defineStore(
         sendSuccessNotification(
           "Ta demande pour devenir bénévole a été envoyée",
         );
+
+        const userStore = useUserStore();
+        userStore.setLoggedUserMembershipApplication(VOLUNTEER);
       },
 
       async rejectVolunteerCandidate(candidateId: VolunteerCandidate["id"]) {

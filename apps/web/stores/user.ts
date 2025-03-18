@@ -26,6 +26,7 @@ import { UserRepository } from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
+import type { Membership } from "@overbookd/registration";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
@@ -353,6 +354,14 @@ export const useUserStore = defineStore("user", {
       this.selectedUserBreakPeriods = res.map((period) =>
         Period.init(castPeriodWithDate(period)),
       );
+    },
+
+    setLoggedUserMembershipApplication(application: Membership) {
+      if (!this.loggedUser) return;
+      this.loggedUser = {
+        ...this.loggedUser,
+        membershipApplication: application,
+      };
     },
 
     _updateVolunteerFromList(volunteer: UserDataWithPotentialyProfilePicture) {
