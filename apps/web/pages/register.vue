@@ -1,10 +1,6 @@
 <template>
   <div class="background-wrapper">
-    <v-img
-      src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg"
-      class="background"
-      cover
-    />
+    <v-img src="/img/register-background.jpg" class="background" cover />
     <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
     <RegistrationStepper v-else class="stepper" />
   </div>

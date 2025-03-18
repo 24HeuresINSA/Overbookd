@@ -34,6 +34,7 @@ import { AssignmentsRepository } from "~/repositories/assignment/assignments.rep
 import { PlanningRepository } from "~/repositories/planning.repository";
 import type { Membership } from "@overbookd/registration";
 import { ADMIN_CODE } from "@overbookd/team-constants";
+import type { Membership } from "@overbookd/registration";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;

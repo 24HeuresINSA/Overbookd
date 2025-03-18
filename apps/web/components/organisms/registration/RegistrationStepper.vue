@@ -1,8 +1,8 @@
 <template>
   <v-card class="register-card" theme="loginTheme">
     <v-img
+      src="/img/register-frontground.jpg"
       class="register-illustration"
-      src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
       cover
     >
       <v-card-title class="register-title">
