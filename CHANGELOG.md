@@ -1,3 +1,9 @@
+## [3.40.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.0...v3.40.1) (2025-03-18)
+
+### Bug Fixes
+
+* **assignment:** assignment preference no rest for orgas [#2452](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2452) ([cb33ddf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cb33ddff06095da811ee4239918c9331f46283a6))
+
 ## [3.40.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.39.0...v3.40.0) (2025-03-17)
 
 ### Features
