@@ -1,3 +1,9 @@
+## [3.40.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.1...v3.40.2) (2025-03-18)
+
+### Bug Fixes
+
+* **registration:** membership application for first login ([0855752](https://gitlab.com/24-heures-insa/overbookd-mono/commit/08557521c7fbc68870d3c94e50c125cf6e41c3ba))
+
 ## [3.40.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.0...v3.40.1) (2025-03-18)
 
 ### Bug Fixes
