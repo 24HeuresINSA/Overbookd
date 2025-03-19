@@ -32,14 +32,14 @@ export const assignmentTypeLabel: Record<AssignmentType, string> = {
   NO_PREF: "Pas de préférence",
   STACKED: "Planning regroupé",
   FRAGMENTED: "Planning aéré",
-  NO_REST: "PAS DE REPOS POUR LES BRAVES",
+  NO_REST: "JE VEUX UN MAX DE CRÉNEAUX !",
 };
 
 export const assignmentTypeDetailedLabel: Record<AssignmentType, string> = {
   NO_PREF: assignmentTypeLabel.NO_PREF,
   STACKED: `${assignmentTypeLabel.STACKED} (créneaux bénévoles collés et grandes pauses)`,
   FRAGMENTED: `${assignmentTypeLabel.FRAGMENTED} (créneaux bénévoles espacés de petites pauses)`,
-  NO_REST: `${assignmentTypeLabel.NO_REST} (Le repos ? Connais pas !)`,
+  NO_REST: `${assignmentTypeLabel.NO_REST} (Quand je dors pas, je suis bénévole)`,
 };
 
 export type PagesPreference = {
