@@ -32,7 +32,7 @@ export const assignmentTypeLabel: Record<AssignmentType, string> = {
   NO_PREF: "Pas de préférence",
   STACKED: "Planning regroupé",
   FRAGMENTED: "Planning aéré",
-  NO_REST: "PAS DE REPOS POUR LES BRAVES",
+  NO_REST: "JE VEUX UN MAX DE CRÉNEAUX !",
 };
 
 export const assignmentTypeDetailedLabel: Record<AssignmentType, string> = {
