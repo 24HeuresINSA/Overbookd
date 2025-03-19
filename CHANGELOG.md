@@ -1,3 +1,9 @@
+## [3.40.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.2...v3.40.3) (2025-03-19)
+
+### Bug Fixes
+
+* **preference:** update no rest preference label ([676e144](https://gitlab.com/24-heures-insa/overbookd-mono/commit/676e144dca1d15ecc03b98d1de40c95a6f0b5e4a))
+
 ## [3.40.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.1...v3.40.2) (2025-03-18)
 
 ### Bug Fixes
