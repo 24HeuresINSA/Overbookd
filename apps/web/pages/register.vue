@@ -1,6 +1,6 @@
 <template>
   <div class="background-wrapper">
-    <v-img :src="GLASS" class="background" cover />
+    <v-img :src="ORGA_49" class="background" cover />
     <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
     <RegistrationStepper v-else class="stepper" />
   </div>
@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
-import { GLASS } from "~/domain/login/pictures";
+import { ORGA_49 } from "~/domain/login/pictures";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 definePageMeta({ layout: false });
