@@ -61,6 +61,11 @@ export const SELECT_USER_PERSONAL_DATA = {
 export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
   ...SELECT_USER_PERSONAL_DATA,
   note: true,
+  preference: {
+    select: {
+      assignment: true,
+    },
+  },
 };
 
 export const SELECT_PERIOD_AND_CATEGORY = {
