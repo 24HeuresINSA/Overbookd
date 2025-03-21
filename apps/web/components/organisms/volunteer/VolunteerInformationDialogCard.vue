@@ -85,6 +85,14 @@
               hide-details
               @click:prepend="callPhoneNumber"
             />
+            <div v-if="isAssignmentPreferenceDefined" class="preference">
+              <v-icon class="preference__icon">
+                mdi-calendar-blank-multiple
+              </v-icon>
+              <span class="preference__label">
+                {{ assignmentPreferenceLabel }}
+              </span>
+            </div>
 
             <div>
               <h3>Commentaire</h3>
@@ -174,6 +182,7 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
+import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/http";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
@@ -200,6 +209,7 @@ const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
+const assignment = ref<string | undefined>(undefined);
 
 const rules = {
   required,
@@ -211,6 +221,18 @@ const rules = {
   minDate: minDate(new Date("1950-01-01")),
   maxDate: maxDate(),
 };
+
+watch(
+  volunteerId,
+  async () => {
+    await userStore.findUserById(volunteerId.value);
+    assignment.value = userStore.selectedUser?.preference?.assignment;
+  },
+  { immediate: true },
+);
+const isAssignmentPreferenceDefined = computed<boolean>(
+  () => assignment.value !== undefined,
+);
 
 const selectedVolunteerFriends = computed<User[]>(
   () => userStore.selectedUserFriends,
@@ -229,6 +251,21 @@ const assignableTeams = computed<Team[]>(() => {
   );
   if (userStore.can(MANAGE_ADMINS)) return teamsToAdd;
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
+});
+
+const assignmentPreferenceLabel = computed<string>(() => {
+  switch (assignment.value) {
+    case NO_PREF:
+      return "Pas de préférence";
+    case STACKED:
+      return "Planning regroupé";
+    case FRAGMENTED:
+      return "Planning aéré";
+    case NO_REST:
+      return "PAS DE REPOS POUR LES BRAVES";
+    default:
+      return "Aucune préférence définie";
+  }
 });
 
 const updateVolunteerInformations = async () => {
@@ -369,6 +406,19 @@ const callPhoneNumber = () => {
   flex-direction: column;
   gap: 20px;
   margin-top: 10px;
+}
+
+.preference {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  &__icon {
+    font-size: 1.6rem;
+  }
+  &__label {
+    font-size: 1.1rem;
+    word-break: break-word;
+  }
 }
 
 .friends {

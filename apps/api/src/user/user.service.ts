@@ -272,6 +272,7 @@ export class UserService {
       teams,
       availabilities,
       charismaEventParticipations,
+      preference,
       ...userWithoutTeams
     } = user;
 
@@ -283,6 +284,11 @@ export class UserService {
       ...userWithoutTeams,
       charisma,
       teams: extractTeamCodes(teams),
+      preference: preference
+        ? {
+            assignment: preference.assignment,
+          }
+        : undefined,
     };
   }
 

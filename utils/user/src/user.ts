@@ -26,6 +26,9 @@ export type UserPersonalData = User & {
   charisma: number;
   teams: string[];
   note?: string | null;
+  preference?: {
+    assignment: string;
+  };
 };
 
 export type MyUserInformation = UserPersonalData & {
