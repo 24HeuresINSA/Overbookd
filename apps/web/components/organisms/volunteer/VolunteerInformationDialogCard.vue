@@ -256,7 +256,6 @@ const updateVolunteerInformations = async () => {
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
   assignment.value = props.volunteer.preference?.assignment;
-  console.log(assignment.value, props.volunteer);
   await userStore.fetchSelectedUserFriends();
 
   if (props.volunteer.profilePictureBlob) return;
