@@ -85,7 +85,7 @@
               hide-details
               @click:prepend="callPhoneNumber"
             />
-            <div v-if="assignment" class="preference">
+            <div v-if="canManageUsers" class="preference">
               <v-icon class="preference__icon">
                 mdi-calendar-blank-multiple
               </v-icon>
@@ -182,11 +182,11 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import { assignmentTypeLabel } from "@overbookd/http";
+import { assignmentTypeLabel, type AssignmentType } from "@overbookd/http";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
-type AssignmentType = keyof typeof assignmentTypeLabel;
+import { HARD_CODE } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -242,8 +242,11 @@ const assignableTeams = computed<Team[]>(() => {
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
 });
 
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
 const assignmentPreferenceLabel = computed<string>(() => {
-  return assignment.value ? assignmentTypeLabel[assignment.value] : "";
+  if (!assignment.value) return "";
+  if (isHard.value) return assignmentTypeLabel.NO_REST;
+  return assignmentTypeLabel[assignment.value];
 });
 
 const updateVolunteerInformations = async () => {
@@ -252,15 +255,12 @@ const updateVolunteerInformations = async () => {
   phone.value = props.volunteer.phone ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
-
+  assignment.value = props.volunteer.preference?.assignment;
+  console.log(assignment.value, props.volunteer);
   await userStore.fetchSelectedUserFriends();
 
   if (props.volunteer.profilePictureBlob) return;
   await userStore.setSelectedUserProfilePicture();
-
-  await userStore.findUserById(volunteerId.value);
-  assignment.value = userStore.selectedUser?.preference
-    ?.assignment as AssignmentType;
 };
 
 watch(props.volunteer, async () => await updateVolunteerInformations(), {

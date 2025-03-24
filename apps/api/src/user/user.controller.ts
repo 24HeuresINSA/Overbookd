@@ -89,8 +89,10 @@ export class UserController {
     type: UserPersonalDataResponseDto,
     isArray: true,
   })
-  getVolunteers(): Promise<UserPersonalData[]> {
-    return this.userService.getVolunteers();
+  getVolunteers(
+    @RequestDecorator() { user }: RequestWithUserPayload,
+  ): Promise<UserPersonalData[]> {
+    return this.userService.getVolunteers(new JwtUtil(user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

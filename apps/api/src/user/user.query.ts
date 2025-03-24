@@ -58,7 +58,7 @@ export const SELECT_USER_PERSONAL_DATA = {
   ...SELECT_USER_TEAMS,
 };
 
-export const SELECT_USER_PERSONAL_DATA_WITH_NOTE = {
+export const SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER = {
   ...SELECT_USER_PERSONAL_DATA,
   note: true,
   preference: {

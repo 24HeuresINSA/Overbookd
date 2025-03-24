@@ -29,7 +29,7 @@ import {
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
-  SELECT_USER_PERSONAL_DATA_WITH_NOTE,
+  SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER,
   hasPermission,
 } from "./user.query";
 import { Category } from "@overbookd/festival-event-constants";
@@ -65,7 +65,7 @@ export class UserService {
   ): Promise<UserPersonalData | null> {
     const select =
       currentUser && currentUser.can(MANAGE_USERS)
-        ? SELECT_USER_PERSONAL_DATA_WITH_NOTE
+        ? SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER
         : SELECT_USER_PERSONAL_DATA;
 
     const [user, charismaPeriods] = await Promise.all([
@@ -123,11 +123,15 @@ export class UserService {
     });
   }
 
-  async getVolunteers(): Promise<UserPersonalData[]> {
+  async getVolunteers(currentUser?: JwtUtil): Promise<UserPersonalData[]> {
+    const select =
+      currentUser && currentUser.can(MANAGE_USERS)
+        ? SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER
+        : SELECT_USER_PERSONAL_DATA;
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
         where: { ...IS_NOT_DELETED, ...hasPermission(BE_AFFECTED) },
-        select: SELECT_USER_PERSONAL_DATA,
+        select: select,
         orderBy: { id: "asc" },
       }),
       this.selectCharismaPeriods(),
