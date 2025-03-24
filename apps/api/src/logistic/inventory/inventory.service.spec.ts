@@ -5,6 +5,7 @@ import {
 } from "@overbookd/http";
 import { InventoryService, toLiteRecord } from "./inventory.service";
 import { InMemoryInventoryRepository } from "./repositories/inventory.repository.inmemory";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 

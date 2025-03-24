@@ -32,6 +32,7 @@ import {
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/time";
+import { describe, expect, it } from "vitest";
 
 describe("Summarize gear as preview", () => {
   describe.each`

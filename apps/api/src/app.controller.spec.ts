@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -11,7 +12,7 @@ describe("AppController", () => {
       controllers: [AppController],
       providers: [
         AppService,
-        { provide: MailService, useValue: { mailTest: jest.fn() } },
+        { provide: MailService, useValue: { mailTest: vi.fn() } },
       ],
     }).compile();
 

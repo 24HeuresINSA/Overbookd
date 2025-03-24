@@ -30,13 +30,10 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test:unit": "pnpm prisma:generate && jest",
-    "test:unit:ci": "pnpm prisma:generate && jest --collectCoverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:e2e:ci": "jest --config ./test/jest-e2e.json --ci --reporters=default --reporters=jest-junit --watchAll=false",
-    "test:watch": "jest --watch",
+    "test:unit": "vitest --config ../../vitest.config.ts",
+    "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false",
+    "test:e2e": "vitest --config test/vitest.e2e-config.ts",
+    "test:e2e:ci": "vitest --config ../../vitest-ci.e2e-config.ts --watch=false",
     "prisma:generate": "npx prisma generate",
     "database:init": "pnpm prisma:generate && pnpm database:migrate && pnpm database:seed",
     "database:migrate": "npx prisma migrate deploy",
@@ -105,7 +102,6 @@
     "@nestjs/testing": "11.0.12",
     "@types/express": "5.0.1",
     "@types/html-to-pdfmake": "2.4.4",
-    "@types/jest": "29.5.14",
     "@types/jsonwebtoken": "9.0.9",
     "@types/multer": "1.4.12",
     "@types/node": "22.13.11",
@@ -114,41 +110,15 @@
     "@types/pdfmake": "0.2.11",
     "@types/sanitize-html": "2.13.0",
     "@types/supertest": "6.0.2",
-    "jest": "29.7.0",
-    "jest-junit": "16.0.0",
     "prisma": "6.5.0",
     "source-map-support": "0.5.21",
     "supertest": "7.1.0",
-    "ts-jest": "29.2.6",
     "ts-loader": "9.5.2",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageReporters": [
-      "html",
-      "text",
-      "text-summary",
-      "cobertura"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   },
   "engines": {
     "node": "22.14.0",

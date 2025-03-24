@@ -3,6 +3,7 @@ import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { AppModule } from "../src/app.module";
 import { Team } from "@overbookd/team";
+import { describe, beforeAll, it, expect } from "vitest";
 
 const TEAMS: Team[] = [
   {
