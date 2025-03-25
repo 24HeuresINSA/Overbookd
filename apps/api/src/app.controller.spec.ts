@@ -15,8 +15,10 @@ describe("AppController", () => {
         { provide: MailService, useValue: { mailTest: vi.fn() } },
       ],
     }).compile();
-
-    appController = app.get<AppController>(AppController);
+    appController = new AppController(
+      app.get(AppService),
+      app.get(MailService),
+    );
   });
 
   describe("root", () => {
