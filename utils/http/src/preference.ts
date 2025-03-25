@@ -1,11 +1,9 @@
-import { assignmentPreferences, NO_PREF } from "@overbookd/preference";
+import { AssignmentPreferenceType, NO_PREF } from "@overbookd/preference";
 import { PageURL } from "@overbookd/web-page";
 
 export type PlanningPreference = {
   paperPlanning: boolean | null;
 };
-
-export type AssignmentPreferenceType = (typeof assignmentPreferences)[number];
 
 export type AssignmentPreference = {
   assignment: AssignmentPreferenceType;
