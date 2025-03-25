@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/http",
-  "version": "1.2.114",
-  "description": "Utilitaire pour les requêtes HTTP",
+  "name": "@overbookd/preference",
+  "version": "1.0.0",
+  "description": "Gestion des constantes des préférences des bénévoles pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "utils/http"
+    "directory": "constants/preference"
   },
   "type": "module",
   "exports": {
@@ -46,23 +46,8 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "keywords": [
-    "http",
-    "utils"
+    "preference"
   ],
-  "dependencies": {
-    "@overbookd/assignment": "workspace:*",
-    "@overbookd/charisma": "workspace:*",
-    "@overbookd/festival-event": "workspace:*",
-    "@overbookd/festival-event-constants": "workspace:*",
-    "@overbookd/logistic": "workspace:*",
-    "@overbookd/personal-account": "workspace:*",
-    "@overbookd/preference": "workspace:*",
-    "@overbookd/registration": "workspace:*",
-    "@overbookd/signa": "workspace:*",
-    "@overbookd/time": "workspace:*",
-    "@overbookd/user": "workspace:*",
-    "@overbookd/web-page": "workspace:*"
-  },
   "engines": {
     "node": "22.14.0",
     "pnpm": "10.6.5"

@@ -84,8 +84,8 @@
                   v-bind="props"
                   :label="
                     isHard && isHovering
-                      ? assignmentTypeDetailedLabel.NO_REST
-                      : assignmentPreferenceLabels[assignmentType]
+                      ? assignmentPreferenceDetailedLabels.NO_REST
+                      : selectableAssignmentPreferenceLabels[assignmentType]
                   "
                   :value="assignmentType"
                 />
@@ -111,16 +111,16 @@
 </template>
 
 <script lang="ts" setup>
+import type { Preference } from "@overbookd/http";
 import {
   assignmentPreferences,
   NO_PREF,
-  isAssignmentType,
-  assignmentTypeDetailedLabel,
-  type Preference,
-  type AssignmentType,
-} from "@overbookd/http";
+  isAssignmentPreference,
+  type AssignmentPreferenceType,
+} from "@overbookd/preference";
 import { HARD_CODE } from "@overbookd/team-constants";
 import { formatLocalDate } from "@overbookd/time";
+import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preference";
 import {
   required,
   isMobilePhoneNumber,
@@ -148,7 +148,7 @@ const birthday = ref<string>(
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phone = ref<string>(loggedUser.value?.phone ?? "");
 const preferences = computed<Preference>(() => preferenceStore.myPreferences);
-const selectedAssignment = ref<AssignmentType>(
+const selectedAssignment = ref<AssignmentPreferenceType>(
   preferences.value?.assignment ?? NO_PREF,
 );
 const hasFilledPreferences = computed<boolean>(
@@ -173,19 +173,21 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
 };
 
 const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
-const assignmentPreferenceLabels = computed<Record<AssignmentType, string>>(
-  () => {
-    const labels = { ...assignmentTypeDetailedLabel };
-    if (isHard.value) {
-      labels.NO_REST = assignmentTypeDetailedLabel[selectedAssignment.value];
-      labels[selectedAssignment.value] = assignmentTypeDetailedLabel.NO_REST;
-    }
-    return labels;
-  },
-);
+const selectableAssignmentPreferenceLabels = computed<
+  Record<AssignmentPreferenceType, string>
+>(() => {
+  const labels = { ...assignmentPreferenceDetailedLabels };
+  if (isHard.value) {
+    labels.NO_REST =
+      assignmentPreferenceDetailedLabels[selectedAssignment.value];
+    labels[selectedAssignment.value] =
+      assignmentPreferenceDetailedLabels.NO_REST;
+  }
+  return labels;
+});
 
 const updateAssignmentPreference = (assignment: string | null) => {
-  if (assignment === null || !isAssignmentType(assignment)) return;
+  if (assignment === null || !isAssignmentPreference(assignment)) return;
   preferenceStore.updateAssignmentPreference({ assignment });
 };
 

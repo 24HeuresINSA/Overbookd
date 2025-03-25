@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import type { AssignmentPreference } from "@overbookd/http";
 import {
-  type AssignmentPreference,
-  type AssignmentType,
   assignmentPreferences,
   NO_PREF,
-} from "@overbookd/http";
+  type AssignmentPreferenceType,
+} from "@overbookd/preference";
 import { IsEnum } from "class-validator";
 
 export class AssignmentPreferenceDto implements AssignmentPreference {
@@ -14,5 +14,5 @@ export class AssignmentPreferenceDto implements AssignmentPreference {
     example: NO_PREF,
   })
   @IsEnum(assignmentPreferences, { message: () => "Préférence non existante" })
-  assignment: AssignmentType;
+  assignment: AssignmentPreferenceType;
 }

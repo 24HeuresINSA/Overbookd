@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { assignmentPreferences, NO_PREF, Preference } from "@overbookd/http";
+import { Preference } from "@overbookd/http";
+import { assignmentPreferences, NO_PREF } from "@overbookd/preference";
 import { pagesURL, PLANNING_URL } from "@overbookd/web-page";
 
 export class PreferenceResponseDto implements Preference {

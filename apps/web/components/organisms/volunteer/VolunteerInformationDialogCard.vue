@@ -85,6 +85,14 @@
               hide-details
               @click:prepend="callPhoneNumber"
             />
+            <div v-if="canManageUsers" class="preference">
+              <v-icon class="preference__icon">
+                mdi-calendar-blank-multiple
+              </v-icon>
+              <span class="preference__label">
+                {{ assignmentPreferenceLabel }}
+              </span>
+            </div>
 
             <div>
               <h3>Commentaire</h3>
@@ -174,9 +182,12 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
+import type { AssignmentPreferenceType } from "@overbookd/preference";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
+import { HARD_CODE } from "@overbookd/team-constants";
+import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -200,6 +211,7 @@ const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
+const assignment = ref<AssignmentPreferenceType | undefined>();
 
 const rules = {
   required,
@@ -231,13 +243,20 @@ const assignableTeams = computed<Team[]>(() => {
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
 });
 
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
+const assignmentPreferenceLabel = computed<string>(() => {
+  if (!assignment.value) return "";
+  if (isHard.value) return assignmentPreferenceLabels.NO_REST;
+  return assignmentPreferenceLabels[assignment.value];
+});
+
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
   birthday.value = formatLocalDate(props.volunteer.birthdate);
   phone.value = props.volunteer.phone ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
-
+  assignment.value = props.volunteer.preference?.assignment;
   await userStore.fetchSelectedUserFriends();
 
   if (props.volunteer.profilePictureBlob) return;
@@ -369,6 +388,19 @@ const callPhoneNumber = () => {
   flex-direction: column;
   gap: 20px;
   margin-top: 10px;
+}
+
+.preference {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  &__icon {
+    font-size: 1.6rem;
+  }
+  &__label {
+    font-size: 1.1rem;
+    word-break: break-word;
+  }
 }
 
 .friends {

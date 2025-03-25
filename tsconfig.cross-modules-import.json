@@ -7,6 +7,7 @@
       ],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/permission": ["./constants/permission/src"],
+      "@overbookd/preference": ["./constants/preference/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],
       "@overbookd/team-constants": ["./constants/team-constants/src"],
       "@overbookd/time": ["./libraries/time/src"],

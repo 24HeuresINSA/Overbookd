@@ -1,5 +1,6 @@
 import { Permission } from "@overbookd/permission";
 import { Membership } from "@overbookd/registration";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export type UserName = {
   firstname: string;
@@ -26,6 +27,9 @@ export type UserPersonalData = User & {
   charisma: number;
   teams: string[];
   note?: string | null;
+  preference?: {
+    assignment: AssignmentPreferenceType;
+  };
 };
 
 export type MyUserInformation = UserPersonalData & {
