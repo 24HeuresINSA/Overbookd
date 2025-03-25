@@ -182,11 +182,12 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import { assignmentTypeLabel, type AssignmentType } from "@overbookd/http";
+import type { AssignmentPreferenceType } from "@overbookd/preference";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
 import { HARD_CODE } from "@overbookd/team-constants";
+import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -210,7 +211,7 @@ const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
-const assignment = ref<AssignmentType | undefined>();
+const assignment = ref<AssignmentPreferenceType | undefined>();
 
 const rules = {
   required,
@@ -245,8 +246,8 @@ const assignableTeams = computed<Team[]>(() => {
 const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
 const assignmentPreferenceLabel = computed<string>(() => {
   if (!assignment.value) return "";
-  if (isHard.value) return assignmentTypeLabel.NO_REST;
-  return assignmentTypeLabel[assignment.value];
+  if (isHard.value) return assignmentPreferenceLabels.NO_REST;
+  return assignmentPreferenceLabels[assignment.value];
 });
 
 const updateVolunteerInformations = async () => {

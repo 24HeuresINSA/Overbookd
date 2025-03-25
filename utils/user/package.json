@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@overbookd/permission": "workspace:*",
+    "@overbookd/preference": "workspace:*",
     "@overbookd/registration": "workspace:*"
   }
 }

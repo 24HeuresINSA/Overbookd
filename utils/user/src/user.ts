@@ -1,7 +1,6 @@
 import { Permission } from "@overbookd/permission";
 import { Membership } from "@overbookd/registration";
-
-type AssignmentType = "NO_PREF" | "STACKED" | "FRAGMENTED" | "NO_REST";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export type UserName = {
   firstname: string;
@@ -29,7 +28,7 @@ export type UserPersonalData = User & {
   teams: string[];
   note?: string | null;
   preference?: {
-    assignment: AssignmentType;
+    assignment: AssignmentPreferenceType;
   };
 };
 

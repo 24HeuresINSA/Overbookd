@@ -94,9 +94,12 @@
 </template>
 
 <script lang="ts" setup>
-import { assignmentTypeLabel } from "@overbookd/http";
 import { HARD_CODE } from "@overbookd/team-constants";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
+import {
+  assignmentPreferenceDetailedLabels,
+  assignmentPreferenceLabels,
+} from "~/utils/assignment/preference";
 import { formatUserPhone } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
@@ -133,8 +136,8 @@ const wantsPaperPlanning = computed<boolean>(
 
 const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
 const assignmentPreferenceLabel = computed<string>(() => {
-  if (isHard.value) return assignmentTypeLabel.NO_REST;
-  return assignmentTypeLabel[preferenceStore.myPreferences.assignment];
+  if (isHard.value) return assignmentPreferenceDetailedLabels.NO_REST;
+  return assignmentPreferenceLabels[preferenceStore.myPreferences.assignment];
 });
 
 const isEditProfileDialogOpen = ref<boolean>(false);
