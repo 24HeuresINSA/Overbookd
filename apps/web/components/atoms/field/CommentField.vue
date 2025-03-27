@@ -2,12 +2,7 @@
   <div>
     <div class="comment-title">
       <span>Commentaire</span>
-      <v-tooltip
-        location="top"
-        :activate-on-click="true"
-        open-on-click
-        close-on-back
-      >
+      <v-tooltip location="top" open-on-click>
         <template #activator="{ props }">
           <v-icon v-bind="props" icon="mdi-information" color="primary" />
         </template>
