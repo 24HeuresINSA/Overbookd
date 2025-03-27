@@ -30,7 +30,7 @@ export class PrismaTransactions implements Transactions {
     }));
   }
 
-  async existsAndIsNotDeleted(id: number): Promise<boolean> {
+  async checkIfDeletable(id: number): Promise<void> {
     const transaction = await this.prisma.transaction.findUnique({
       where: { id },
       select: { isDeleted: true },
@@ -44,7 +44,6 @@ export class PrismaTransactions implements Transactions {
         `Transaction avec l'id ${id} déjà supprimée`,
       );
     }
-    return true;
   }
 
   async deleteOne(id: number): Promise<void> {

@@ -38,7 +38,7 @@ type UseCases = {
 export type Transactions = {
   getAll: () => Promise<TransactionWithSenderAndReceiver[]>;
   getMine: (userId: number) => Promise<MyTransaction[]>;
-  existsAndIsNotDeleted: (id: number) => Promise<boolean>;
+  checkIfDeletable: (id: number) => Promise<void>;
   deleteOne: (id: number) => Promise<void>;
   createManyForSharedMeal: (
     transactions: SharedMealTransaction[],
@@ -97,7 +97,7 @@ export class TransactionService implements OnApplicationBootstrap {
   }
 
   async deleteTransaction(id: number): Promise<void> {
-    await this.repositories.transactions.existsAndIsNotDeleted(id);
+    await this.repositories.transactions.checkIfDeletable(id);
     await this.repositories.transactions.deleteOne(id);
   }
 
