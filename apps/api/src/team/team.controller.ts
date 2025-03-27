@@ -37,28 +37,28 @@ export class TeamController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
-  @Get("fa-validators")
+  @Get("fa-reviewers")
   @ApiResponse({
     status: 200,
-    description: "Get all fa validators",
+    description: "Get all FA reviewers",
     type: TeamResponseDto,
     isArray: true,
   })
-  async findAllFaValidators(): Promise<TeamResponseDto[]> {
-    return this.teamService.findFaValidators();
+  async findFaReviewers(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFaReviewers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
-  @Get("ft-validators")
+  @Get("ft-reviewers")
   @ApiResponse({
     status: 200,
-    description: "Get all ft validators",
+    description: "Get all FT validators",
     type: TeamResponseDto,
     isArray: true,
   })
-  async findAllFtValidators(): Promise<TeamResponseDto[]> {
-    return this.teamService.findFtValidators();
+  async findFtReviewers(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFtReviewers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

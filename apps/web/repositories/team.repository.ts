@@ -9,11 +9,11 @@ export class TeamRepository {
   }
 
   static getFaReviewers() {
-    return HttpClient.get<Team[]>(`${this.basePath}/fa-validators`);
+    return HttpClient.get<Team[]>(`${this.basePath}/fa-reviewers`);
   }
 
   static getFtReviewers() {
-    return HttpClient.get<Team[]>(`${this.basePath}/ft-validators`);
+    return HttpClient.get<Team[]>(`${this.basePath}/ft-reviewers`);
   }
 
   static createTeam(team: Team) {

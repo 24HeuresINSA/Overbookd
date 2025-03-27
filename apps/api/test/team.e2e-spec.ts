@@ -46,17 +46,17 @@ describe("Teams (e2e)", () => {
     expect(res.body).toEqual(expect.any(Array));
   });
 
-  it("/teams/fa-validators (GET)", async () => {
+  it("/teams/fa-reviewers (GET)", async () => {
     const res = await request(app.getHttpServer())
-      .get("/teams/fa-validators")
+      .get("/teams/fa-reviewers")
       .set("Authorization", `Bearer ${adminToken}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual(expect.any(Array));
   });
 
-  it("/teams/ft-validators (GET)", async () => {
+  it("/teams/ft-reviewers (GET)", async () => {
     const res = await request(app.getHttpServer())
-      .get("/teams/ft-validators")
+      .get("/teams/ft-reviewers")
       .set("Authorization", `Bearer ${adminToken}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual(expect.any(Array));
