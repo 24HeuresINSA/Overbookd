@@ -37,12 +37,6 @@ const reviewers = computed<Team[]>(() =>
   isActivity.value ? teamStore.faReviewers : teamStore.ftReviewers,
 );
 
-onMounted(() => {
-  if (reviewers.value.length > 0) return;
-  if (isActivity.value) return teamStore.fetchFaReviewers();
-  teamStore.fetchFtReviewers();
-});
-
 const getReviewerStatus = (reviewer: Team): string => {
   if (isActivity.value) {
     return getActivityReviewerStatus(
