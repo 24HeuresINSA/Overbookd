@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  OnApplicationBootstrap,
-} from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
-import { SELECT_COMPLETE_TRANSACTION } from "./repository/transaction.query";
+import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import {
   PastSharedMeal,
@@ -43,6 +35,16 @@ type UseCases = {
   externalEvent: Readonly<CreateExternalEventTransactions>;
 };
 
+export type Transactions = {
+  getAll: () => Promise<TransactionWithSenderAndReceiver[]>;
+  getMine: (userId: number) => Promise<MyTransaction[]>;
+  checkIfDeletable: (id: number) => Promise<void>;
+  deleteOne: (id: number) => Promise<void>;
+  createManyForSharedMeal: (
+    transactions: SharedMealTransaction[],
+  ) => Promise<void>;
+};
+
 @Injectable()
 export class TransactionService implements OnApplicationBootstrap {
   private logger = new Logger(TransactionService.name);
@@ -50,7 +52,6 @@ export class TransactionService implements OnApplicationBootstrap {
   constructor(
     private readonly repositories: Repositories,
     private readonly useCases: UseCases,
-    private readonly prisma: PrismaService,
     private readonly eventStore: DomainEventService,
   ) {}
 
@@ -63,14 +64,7 @@ export class TransactionService implements OnApplicationBootstrap {
   }
 
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
-    const transactions = await this.prisma.transaction.findMany({
-      select: SELECT_COMPLETE_TRANSACTION,
-      orderBy: { createdAt: "desc" },
-    });
-    return transactions.map(({ createdAt, ...transaction }) => ({
-      ...transaction,
-      date: createdAt,
-    }));
+    return this.repositories.transactions.getAll();
   }
 
   async getMyTransactions(user: JwtPayload): Promise<MyTransaction[]> {
@@ -103,43 +97,14 @@ export class TransactionService implements OnApplicationBootstrap {
   }
 
   async deleteTransaction(id: number): Promise<void> {
-    await this.checkTransactionExistence(id);
-    await this.prisma.transaction.update({
-      where: { id },
-      data: { isDeleted: true },
-    });
+    await this.repositories.transactions.checkIfDeletable(id);
+    await this.repositories.transactions.deleteOne(id);
   }
 
   private async generateForMeal(event: PastSharedMeal) {
     const transactions = SharedMealPayment.refound(event);
-    await this.createMealTransactions(transactions, event);
-  }
-
-  private createMealTransactions(
-    transactions: SharedMealTransaction[],
-    event: PastSharedMeal,
-  ) {
     const mealTransactionsMessage = `Generating ${transactions.length} transactions for meal #${event.id}`;
     this.logger.log(mealTransactionsMessage);
-    return this.prisma.transaction.createMany({
-      data: transactions,
-    });
-  }
-
-  private async checkTransactionExistence(transactionId: number) {
-    const transaction = await this.prisma.transaction.findFirst({
-      where: { id: transactionId },
-      select: SELECT_COMPLETE_TRANSACTION,
-    });
-    if (!transaction) {
-      throw new NotFoundException(
-        `Transaction with ID ${transactionId} not found`,
-      );
-    }
-    if (transaction.isDeleted) {
-      throw new BadRequestException(
-        `Transaction with ID ${transactionId} is already deleted`,
-      );
-    }
+    await this.repositories.transactions.createManyForSharedMeal(transactions);
   }
 }

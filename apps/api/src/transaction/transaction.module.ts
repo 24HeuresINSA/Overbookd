@@ -91,13 +91,11 @@ import { CreateExternalEventTransactions } from "@overbookd/personal-account";
         barrel: CreateBarrelTransactions,
         provisions: CreateProvisionsTransactions,
         externalEvent: CreateExternalEventTransactions,
-        prisma: PrismaService,
         eventStore: DomainEventService,
       ) =>
         new TransactionService(
           { transactions, barrels },
           { deposit, barrel, provisions, externalEvent },
-          prisma,
           eventStore,
         ),
       inject: [
@@ -107,7 +105,6 @@ import { CreateExternalEventTransactions } from "@overbookd/personal-account";
         CreateBarrelTransactions,
         CreateProvisionsTransactions,
         CreateExternalEventTransactions,
-        PrismaService,
         DomainEventService,
       ],
     },

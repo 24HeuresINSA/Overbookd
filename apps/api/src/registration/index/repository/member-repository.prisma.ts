@@ -8,6 +8,7 @@ import { PrismaService } from "../../../prisma.service";
 import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export class PrismaMemberRepository implements MemberRepository {
   constructor(
@@ -36,7 +37,10 @@ export class PrismaMemberRepository implements MemberRepository {
 
   async hasTransactions(email: string): Promise<boolean> {
     const transactions = await this.prisma.transaction.count({
-      where: { OR: [{ payor: { email } }, { payee: { email } }] },
+      where: {
+        ...IS_NOT_DELETED,
+        OR: [{ payor: { email } }, { payee: { email } }],
+      },
     });
     return transactions > 0;
   }

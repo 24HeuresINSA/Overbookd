@@ -1,6 +1,13 @@
+import { IS_NOT_DELETED } from "./not-deleted.query";
+
+const SELECT_TRANSACTIONS = {
+  select: { amount: true },
+  where: IS_NOT_DELETED,
+};
+
 export const SELECT_TRANSACTIONS_FOR_BALANCE = {
-  transactionsFrom: { select: { amount: true } },
-  transactionsTo: { select: { amount: true } },
+  transactionsFrom: SELECT_TRANSACTIONS,
+  transactionsTo: SELECT_TRANSACTIONS,
 };
 
 export type WithTransactionsForBalance = {
