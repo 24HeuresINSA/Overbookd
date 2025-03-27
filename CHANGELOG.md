@@ -1,3 +1,11 @@
+## [3.40.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.3...v3.40.4) (2025-03-27)
+
+### Bug Fixes
+
+* **transaction:** returns deletion status and ignores in personal account... ([48ae215](https://gitlab.com/24-heures-insa/overbookd-mono/commit/48ae21507f1da70db917b113cf7b831944fcc8af)), closes [#2465](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2465)
+* **web:** display the assignment preference in the volunteer details window. [#2447](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2447) ([5828930](https://gitlab.com/24-heures-insa/overbookd-mono/commit/58289303de6a07347b398d55f627ded96996619f))
+* **web:** the tooltip can be clicked from a cell phone [#2463](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2463) ([cb4e129](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cb4e129bf752fbd5298a93ec44833c047d4d67f3))
+
 ## [3.40.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.2...v3.40.3) (2025-03-19)
 
 ### Bug Fixes
