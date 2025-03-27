@@ -53,7 +53,7 @@ export class TeamController {
   @Get("ft-reviewers")
   @ApiResponse({
     status: 200,
-    description: "Get all FT validators",
+    description: "Get all FT reviewers",
     type: TeamResponseDto,
     isArray: true,
   })
