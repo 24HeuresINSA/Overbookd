@@ -1,9 +1,14 @@
 import { EVENT_DATE_KEY } from "@overbookd/configuration";
 
-export default defineNuxtRouteMiddleware(() => {
+export default defineNuxtRouteMiddleware(async () => {
   const teamStore = useTeamStore();
-  if (teamStore.teams.length === 0) teamStore.fetchTeams();
-
   const configurationStore = useConfigurationStore();
-  configurationStore.fetch(EVENT_DATE_KEY);
+
+  teamStore.fetchFaReviewers();
+  teamStore.fetchFtReviewers();
+
+  await Promise.all([
+    teamStore.fetchTeams(),
+    configurationStore.fetch(EVENT_DATE_KEY),
+  ]);
 });

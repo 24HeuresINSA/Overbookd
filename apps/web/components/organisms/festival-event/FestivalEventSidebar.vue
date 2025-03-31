@@ -169,11 +169,6 @@ const name = computed<string>(() =>
 const reviewers = computed<Team[]>(() =>
   isActivity.value ? teamStore.faReviewers : teamStore.ftReviewers,
 );
-if (reviewers.value.length === 0) {
-  isActivity.value
-    ? teamStore.fetchFaReviewers()
-    : teamStore.fetchFtReviewers();
-}
 const myActivityReviewers = computed<Team[]>(() => {
   const activity = selectedActivity.value;
   if (isDraft(activity)) return [];

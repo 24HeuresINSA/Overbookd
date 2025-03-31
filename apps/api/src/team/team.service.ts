@@ -39,13 +39,13 @@ export class TeamService {
     return this.prisma.team.findMany({ orderBy: { name: "asc" } });
   }
 
-  async findFaValidators(): Promise<Team[]> {
+  async findFaReviewers(): Promise<Team[]> {
     return this.prisma.team.findMany({
       where: { permissions: { some: { permissionName: VALIDATE_FA } } },
     });
   }
 
-  async findFtValidators(): Promise<Team[]> {
+  async findFtReviewers(): Promise<Team[]> {
     return this.prisma.team.findMany({
       where: { permissions: { some: { permissionName: VALIDATE_FT } } },
     });
