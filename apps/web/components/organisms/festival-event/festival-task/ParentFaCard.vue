@@ -57,10 +57,16 @@
 </template>
 
 <script lang="ts" setup>
-import { type FestivalTask, MATOS } from "@overbookd/festival-event";
+import {
+  type AssignDrive,
+  type FestivalTask,
+  MATOS,
+} from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();
+const faStore = useFestivalActivityStore();
+
 const activity = computed<FestivalTask["festivalActivity"]>(
   () => ftStore.selectedTask.festivalActivity,
 );
