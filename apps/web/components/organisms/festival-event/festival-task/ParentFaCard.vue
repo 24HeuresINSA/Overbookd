@@ -50,6 +50,7 @@
         :time-windows="activity.inquiry.timeWindows"
         :owner="MATOS"
         disabled
+        @link-drive="linkDrive"
       />
     </v-card-text>
   </v-card>
@@ -66,6 +67,8 @@ const activity = computed<FestivalTask["festivalActivity"]>(
 
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
+
+const linkDrive = (link: AssignDrive) => faStore.linkDrive(link);
 </script>
 
 <style lang="scss" scoped>
