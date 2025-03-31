@@ -43,6 +43,12 @@
             size="small"
             color="orange"
           />
+          <v-icon
+            v-if="true"
+            v-tooltip:top="'il préfere ...'"
+            icon="mdi-align-vertical-distribute"
+            size="small"
+          />
         </div>
       </div>
       <div>
