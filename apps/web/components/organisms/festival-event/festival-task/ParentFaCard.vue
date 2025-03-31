@@ -50,22 +50,31 @@
         :time-windows="activity.inquiry.timeWindows"
         :owner="MATOS"
         disabled
+        @link-drive="linkDrive"
       />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { type FestivalTask, MATOS } from "@overbookd/festival-event";
+import {
+  type AssignDrive,
+  type FestivalTask,
+  MATOS,
+} from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();
+const faStore = useFestivalActivityStore();
+
 const activity = computed<FestivalTask["festivalActivity"]>(
   () => ftStore.selectedTask.festivalActivity,
 );
 
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
+
+const linkDrive = (link: AssignDrive) => faStore.linkDrive(link);
 </script>
 
 <style lang="scss" scoped>
