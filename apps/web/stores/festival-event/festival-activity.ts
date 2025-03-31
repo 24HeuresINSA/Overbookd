@@ -410,8 +410,8 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.selectedActivity = castActivityWithDate(res);
     },
 
-    async linkDrive(link: AssignDrive) {
-      const res = await repo.linkDrive(this.selectedActivity.id, link);
+    async linkDrive(link: AssignDrive, activityId: number) {
+      const res = await repo.linkDrive(activityId, link);
       if (isHttpError(res)) return;
       this.selectedActivity = castActivityWithDate(res);
     },

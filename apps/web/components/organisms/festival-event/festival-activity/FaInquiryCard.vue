@@ -192,7 +192,9 @@ const openCalendar = () => emit("open:calendar");
 const shouldHideDrive = computed<boolean>(() => {
   return isDraft(selectedActivity.value);
 });
-const linkDrive = (link: AssignDrive) => faStore.linkDrive(link);
+const linkDrive = (link: AssignDrive) => {
+  faStore.linkDrive(link, selectedActivity.value.id);
+};
 
 const addTimeWindow = (period: IProvidePeriod) => {
   faStore.addInquiryTimeWindow(period);

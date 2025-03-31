@@ -74,7 +74,9 @@ const activity = computed<FestivalTask["festivalActivity"]>(
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
-const linkDrive = (link: AssignDrive) => faStore.linkDrive(link);
+const linkDrive = (link: AssignDrive) => {
+  faStore.linkDrive(link, activity.value.id);
+};
 </script>
 
 <style lang="scss" scoped>
