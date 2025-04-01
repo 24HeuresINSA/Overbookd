@@ -1,5 +1,8 @@
 import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
-import type { PlanningEvent } from "@overbookd/assignment";
+import type {
+  // AssignmentIdentifier,
+  PlanningEvent,
+} from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
@@ -20,6 +23,7 @@ import type {
   Consumer,
   VolunteerWithAssignmentStats,
   PlanningTask,
+  TaskForCalendar,
 } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
 import { UserRepository } from "~/repositories/user.repository";
@@ -33,6 +37,7 @@ type State = {
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
   selectedUserAssignments: PlanningEvent[];
+  currentTaskForCalendar?: TaskForCalendar;
   selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
   selectedUserAssignmentStats: AssignmentStat[];
@@ -52,6 +57,7 @@ export const useUserStore = defineStore("user", {
     selectedUser: undefined,
     selectedUserFriends: [],
     selectedUserAssignments: [],
+    currentTaskForCalendar: undefined,
     selectedUserBreakPeriods: [],
     selectedUserTasks: [],
     selectedUserAssignmentStats: [],
@@ -319,6 +325,14 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.getVolunteerAssignments(userId);
       if (isHttpError(res)) return;
       this.selectedUserAssignments = castPlanningEventsWithDate(res);
+    },
+
+    // async getVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {
+    async getVolunteerAssignmentDetails(identifier: string) {
+      const res =
+        await UserRepository.getVolunteerAssignmentDetails(identifier);
+      if (isHttpError(res)) return;
+      this.currentTaskForCalendar = res;
     },
 
     async getVolunteerAssignmentStats(userId: number) {

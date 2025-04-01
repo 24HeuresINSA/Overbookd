@@ -11,13 +11,84 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
+      @click:event="openAssignmentDetails"
     />
   </div>
+
+  <v-dialog v-model="isTaskDetailsDialogOpen" width="600">
+    <DialogCard without-actions @close="isTaskDetailsDialogOpen = false">
+      <template #title>
+        [{{ selectedTask.id }}] {{ selectedTask.name }}
+        <v-icon
+          v-if="canReadFT"
+          icon="mdi-open-in-new"
+          size="x-small"
+          @click="OpenAssignmentInNewTab"
+        />
+      </template>
+      <template #content>
+        <div class="assignment-details__content">
+          <div class="assignment-metadata">
+            <v-chip color="primary" class="assignment-metadata__chip">
+              <v-icon icon="mdi-map-marker" />
+              <span>{{
+                selectedTask.appointment
+                  ? selectedTask.appointment.name
+                  : "No location name"
+              }}</span>
+            </v-chip>
+            <v-chip color="primary" class="assignment-metadata__chip">
+              <v-icon icon="mdi-clock" />
+              <span>
+                {{ formatTimeWindowForCalendar(selectedTask.timeWindow) }}
+              </span>
+            </v-chip>
+          </div>
+        </div>
+        <div class="contacts">
+          <h3 v-if="selectedTask.contacts.length <= 1">Orga à contacter</h3>
+          <h3 v-if="selectedTask.contacts.length > 1">Orgas à contacter</h3>
+          <ul>
+            <li v-for="contact in selectedTask.contacts" :key="contact.phone">
+              {{ contact.firstname }}
+              {{ contact.lastname }}
+              <span v-if="contact.nickname">({{ contact.nickname }})</span>
+              - {{ contact.phone }}
+            </li>
+          </ul>
+        </div>
+        <div class="instructions">
+          <center><h3>Instructions</h3></center>
+          <hr />
+          <div
+            v-html-safe="selectedTask.globalInstructions"
+            class="assignment_globalInstructions"
+          />
+          <div v-if="selectedTask.inChargeInstructions">
+            <br />
+            <center>
+              <h3>Instructions pour les responsables</h3>
+            </center>
+            <hr />
+            <div
+              v-html-safe="selectedTask.inChargeInstructions"
+              class="assignment_inChargeInstructions"
+            />
+          </div>
+        </div>
+      </template>
+    </DialogCard>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { PlanningEvent } from "@overbookd/assignment";
-import type { AssignmentStat, PlanningTask } from "@overbookd/http";
+import type { TimeWindow } from "@overbookd/festival-event";
+import type {
+  AssignmentStat,
+  PlanningTask,
+  TaskForCalendar,
+} from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import type { IProvidePeriod } from "@overbookd/time";
 import { FT_URL } from "@overbookd/web-page";
@@ -27,6 +98,7 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
+import { formatDateDayToHumanReadable } from "@overbookd/time";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -40,6 +112,27 @@ const props = defineProps({
   },
 });
 
+const selectedTask = computed<TaskForCalendar>(() => {
+  if (userStore.currentTaskForCalendar) {
+    return userStore.currentTaskForCalendar;
+  } else {
+    return {
+      id: -99,
+      appointment: { id: 0, name: "Error" },
+      contacts: [],
+      globalInstructions: "<p>Error: selectedTask is undefined</p>",
+      inChargeInstructions: null,
+      name: "Error",
+      status: "REFUSED",
+      timeWindow: {
+        start: new Date("2025-03-16 20:00"),
+        end: new Date("2025-03-16 22:00"),
+        id: "0",
+      },
+    };
+  }
+});
+
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
@@ -47,6 +140,7 @@ const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
   () => canAssignVolunteer.value && isDesktop.value,
 );
+
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
@@ -84,7 +178,7 @@ const events = computed<CalendarEvent[]>(() => {
       end,
       name: `[${task.id}] ${task.name}`,
       color: getColorByStatus(task.status),
-      link: canReadFT.value ? `${FT_URL}/${task.id}` : undefined,
+      ft_id: task.id,
     }),
   );
   const taskEvents = tasks.value.map(
@@ -94,10 +188,92 @@ const events = computed<CalendarEvent[]>(() => {
         end,
         name: `[${id}] ${name}`,
         color: getColorByStatus(status),
-        link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
+        ft_id: id,
       }),
   );
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
+
+const isTaskDetailsDialogOpen = ref<boolean>(false);
+
+const openAssignmentDetails = async (event: CalendarEvent) => {
+  if (event.id) {
+    await userStore.getVolunteerAssignmentDetails(event.id);
+    isTaskDetailsDialogOpen.value = true;
+  }
+};
+
+const OpenAssignmentInNewTab = () => {
+  navigateTo(`${FT_URL}/${selectedTask.value.id}`);
+};
+
+const formatTimeWindowForCalendar = (timeWindow: TimeWindow) => {
+  const padStart = (value: number): string => value.toString().padStart(2, "0");
+  var time = `${padStart(timeWindow.start.getHours())}H${padStart(timeWindow.start.getMinutes())} - ${padStart(timeWindow.end.getHours())}H${padStart(timeWindow.end.getMinutes())}`;
+  var date = "";
+  if (timeWindow.start.getDate() == timeWindow.end.getDate()) {
+    date = formatDateDayToHumanReadable(timeWindow.start);
+  } else {
+    date = `${formatDateDayToHumanReadable(timeWindow.start)} - ${formatDateDayToHumanReadable(timeWindow.end)}`;
+  }
+  return `${time} | ${date}`;
+};
 </script>
+
+<style lang="scss" scoped>
+.assignment-metadata {
+  display: flex;
+  gap: 15px;
+  &__chip {
+    .v-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
+.assignment-details {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    h2 {
+      margin-bottom: 5px;
+    }
+    .friend-list {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin: 4px 0;
+    }
+  }
+}
+
+.assignees {
+  &__assignee-team {
+    margin-left: 4px;
+  }
+  &__actions {
+    display: flex;
+    gap: 5px;
+  }
+}
+
+.volunteer-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.instructions {
+  padding-top: 2rem;
+}
+
+.contacts {
+  padding-top: 2rem;
+}
+
+.contacts > ul {
+  padding-left: 2rem;
+}
+</style>
