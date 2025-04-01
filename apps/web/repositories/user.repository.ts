@@ -1,5 +1,13 @@
-import type { PlanningEvent } from "@overbookd/assignment";
-import type { AssignmentStat, Consumer, PlanningTask } from "@overbookd/http";
+import type {
+  // AssignmentIdentifier,
+  PlanningEvent,
+} from "@overbookd/assignment";
+import type {
+  AssignmentStat,
+  Consumer,
+  PlanningTask,
+  TaskForCalendar,
+} from "@overbookd/http";
 import type {
   MyUserInformation,
   Profile,
@@ -100,6 +108,41 @@ export class UserRepository {
     return HttpClient.get<PlanningEvent[]>(
       `${this.basePath}/${userId}/assignments`,
     );
+  }
+
+  // static getVolunteerAssignmentDetails(_identifier: AssignmentIdentifier) {
+  static getVolunteerAssignmentDetails(_identifier: string) {
+    const fakeTaskForCalendar: TaskForCalendar = {
+      id: 42,
+      appointment: { id: 0, name: "Nowhere" },
+      contacts: [
+        {
+          id: 69,
+          firstname: "Léon",
+          lastname: "Mounya",
+          phone: "0612345678",
+          nickname: "Tartibon",
+        },
+        {
+          id: 420,
+          firstname: "Ta grosse",
+          lastname: "daronne",
+          phone: "0669696969",
+          nickname: "Énoooorme",
+        },
+      ],
+      globalInstructions:
+        "<h1>Ceci est un titre</h1><p>Ceci est une instruction</p>",
+      inChargeInstructions: "<h2>Instructions pour les inCharge</h2>",
+      name: "La FT du test lokal",
+      status: "VALIDATED",
+      timeWindow: {
+        start: new Date("2025-03-16 20:00"),
+        end: new Date("2025-03-16 22:00"),
+        id: "0",
+      },
+    };
+    return Promise.resolve(fakeTaskForCalendar);
   }
 
   static getVolunteerAssignmentStats(userId: number) {
