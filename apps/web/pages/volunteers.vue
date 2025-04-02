@@ -25,7 +25,7 @@
     />
 
     <VolunteerStatsCard
-      v-if="canManageUsers"
+      v-if="canManageAvailabilitiesOrViewStats"
       v-show="displayMode === VOLUNTEER_STATS"
       :volunteers="filteredVolunteers"
       :loading="loading"
@@ -34,7 +34,7 @@
 
     <v-dialog
       v-model="isVolunteerInfoDialogOpen"
-      :max-width="canManageAvailabilities ? 1400 : 700"
+      :max-width="canManageAvailabilitiesOrViewStats ? 1400 : 700"
     >
       <VolunteerInformationDialogCard
         v-if="selectedVolunteer"
@@ -137,7 +137,7 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const canManageAvailabilities = computed<boolean>(() =>
+const canManageAvailabilitiesOrViewStats = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
 const openVolunteerInfoDialog = (
@@ -145,7 +145,7 @@ const openVolunteerInfoDialog = (
 ) => {
   if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
   userStore.setSelectedUser(volunteer);
-  if (canManageAvailabilities.value) {
+  if (canManageAvailabilitiesOrViewStats.value) {
     availabilityStore.fetchVolunteerAvailabilities(volunteer.id);
   }
   isVolunteerInfoDialogOpen.value = true;
