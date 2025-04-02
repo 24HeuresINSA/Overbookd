@@ -25,7 +25,7 @@
     />
 
     <VolunteerStatsCard
-      v-if="canManageAvailabilitiesOrViewStats"
+      v-if="canAffectVolunteer"
       v-show="displayMode === VOLUNTEER_STATS"
       :volunteers="filteredVolunteers"
       :loading="loading"
@@ -34,7 +34,7 @@
 
     <v-dialog
       v-model="isVolunteerInfoDialogOpen"
-      :max-width="canManageAvailabilitiesOrViewStats ? 1400 : 700"
+      :max-width="canAffectVolunteer ? 1400 : 700"
     >
       <VolunteerInformationDialogCard
         v-if="selectedVolunteer"
@@ -44,11 +44,7 @@
       />
     </v-dialog>
 
-    <v-dialog
-      v-if="canManageUsers"
-      v-model="isDownloadLeafletsOpen"
-      width="1000"
-    >
+    <v-dialog v-model="isDownloadLeafletsOpen" width="1000">
       <DownloadLeafletsCard @close="closeDownloadLeafletsDialog" />
     </v-dialog>
   </div>
@@ -59,7 +55,6 @@ import type { Team } from "@overbookd/team";
 import {
   VIEW_VOLUNTEER_DETAILS,
   AFFECT_VOLUNTEER,
-  MANAGE_USERS,
 } from "@overbookd/permission";
 import {
   keepMembersOf,
@@ -137,7 +132,7 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const canManageAvailabilitiesOrViewStats = computed<boolean>(() =>
+const canAffectVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
 const openVolunteerInfoDialog = (
@@ -145,7 +140,7 @@ const openVolunteerInfoDialog = (
 ) => {
   if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
   userStore.setSelectedUser(volunteer);
-  if (canManageAvailabilitiesOrViewStats.value) {
+  if (canAffectVolunteer.value) {
     availabilityStore.fetchVolunteerAvailabilities(volunteer.id);
   }
   isVolunteerInfoDialogOpen.value = true;
@@ -182,10 +177,8 @@ const exportCSV = async () => {
   download("benevoles.csv", csv);
 };
 
-const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
 const isDownloadLeafletsOpen = ref<boolean>(false);
 const openDownloadLeafletsDialog = () => {
-  if (!canManageUsers.value) return;
   isDownloadLeafletsOpen.value = true;
 };
 const closeDownloadLeafletsDialog = () => {

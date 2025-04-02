@@ -45,7 +45,7 @@
         @click="exportCSV"
       />
       <v-btn
-        v-if="canManageUsers"
+        v-if="canAffectVolunteer"
         icon="mdi-download"
         variant="flat"
         size="large"
@@ -64,7 +64,7 @@
         <v-btn :value="TROMBINOSCOPE" icon="mdi-view-grid" :rounded="false" />
         <v-btn :value="VOLUNTEER_LIST" icon="mdi-view-list" :rounded="false" />
         <v-btn
-          v-if="canManageUsers"
+          v-if="canAffectVolunteer"
           :value="VOLUNTEER_STATS"
           icon="mdi-chart-bar"
           :rounded="false"
@@ -112,13 +112,14 @@ const updateDisplayModeParam = (mode: DisplayMode) => {
   updateQueryParams("displayMode", mode);
 };
 
-const canFilterByExcludedTeams = computed<boolean>(
-  () =>
-    userStore.can(AFFECT_VOLUNTEER) ||
-    filters.value.excludedTeams?.length !== 0,
+const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canAffectVolunteer = computed<boolean>(() =>
+  userStore.can(AFFECT_VOLUNTEER),
 );
 
-const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canFilterByExcludedTeams = computed<boolean>(
+  () => canAffectVolunteer.value || filters.value.excludedTeams?.length !== 0,
+);
 
 const emit = defineEmits(["export-csv", "download-leaflets"]);
 const exportCSV = () => {
@@ -126,7 +127,7 @@ const exportCSV = () => {
   emit("export-csv");
 };
 const downloadLeaflets = () => {
-  if (!canManageUsers.value) return;
+  if (!canAffectVolunteer.value) return;
   emit("download-leaflets");
 };
 </script>
