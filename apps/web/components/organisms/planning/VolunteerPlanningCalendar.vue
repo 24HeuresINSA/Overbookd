@@ -20,7 +20,6 @@ import type { PlanningEvent } from "@overbookd/assignment";
 import type { AssignmentStat, PlanningTask } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import type { IProvidePeriod } from "@overbookd/time";
-import type { User } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import { convertToCalendarBreak } from "~/domain/common/planning-events";
 import { getColorByStatus } from "~/domain/common/status-color";
@@ -34,11 +33,9 @@ const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
-type Volunteer = User & { teams: string[] };
-
 const props = defineProps({
-  volunteer: {
-    type: Object as () => Volunteer,
+  volunteerId: {
+    type: Number,
     required: true,
   },
 });
@@ -53,14 +50,14 @@ const shouldShowStats = computed<boolean>(
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
 onMounted(() => {
-  availabilityStore.fetchVolunteerAvailabilities(props.volunteer.id);
-  userStore.getVolunteerTasks(props.volunteer.id);
-  userStore.getVolunteerAssignments(props.volunteer.id);
+  availabilityStore.fetchVolunteerAvailabilities(props.volunteerId);
+  userStore.getVolunteerTasks(props.volunteerId);
+  userStore.getVolunteerAssignments(props.volunteerId);
   if (canAssignVolunteer.value) {
-    userStore.getVolunteerBreakPeriods(props.volunteer.id);
+    userStore.getVolunteerBreakPeriods(props.volunteerId);
   }
   if (shouldShowStats.value) {
-    userStore.getVolunteerAssignmentStats(props.volunteer.id);
+    userStore.getVolunteerAssignmentStats(props.volunteerId);
   }
 });
 
