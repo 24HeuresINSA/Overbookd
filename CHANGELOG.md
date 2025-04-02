@@ -1,3 +1,9 @@
+## [3.40.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.5...v3.40.6) (2025-04-02)
+
+### Bug Fixes
+
+* **festival-event:** fetch reviewers from page or component instead of middleware [#2471](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2471) ([438255a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/438255a51355dc9e86fb8d2a00f9aab29df6abdd))
+
 ## [3.40.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.4...v3.40.5) (2025-04-02)
 
 ### Bug Fixes
