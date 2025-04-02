@@ -138,6 +138,7 @@ useHead({ title: "Fiches Tâches" });
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
+const teamStore = useTeamStore();
 
 const me = computed<UserPersonalData | undefined>(() => userStore.loggedUser);
 
@@ -264,8 +265,10 @@ const updateItemsPerPage = (itemsPerPage: number) => {
 const { festivalTasks } = useLiveNotification();
 const { fetchAllTasks, addTaskToPreviews, updatePreviousPreview } = ftStore;
 
+fetchAllTasks().then(() => (loading.value = false));
+if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();
+
 onMounted(() => {
-  fetchAllTasks().then(() => (loading.value = false));
   festivalTasks.listen(FESTIVAL_TASK_CREATED, ({ data }) => {
     addTaskToPreviews(data.festivalTask);
   });

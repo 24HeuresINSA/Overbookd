@@ -72,6 +72,7 @@ const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
 const live = useLiveNotification();
+const teamStore = useTeamStore();
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
 const taskIdFromUrl = computed<number>(() => +route.params.id);
@@ -110,6 +111,8 @@ onMounted(async () => {
 onUnmounted(() => {
   live.festivalTasks.stopListening();
 });
+
+if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSidebar = () => {

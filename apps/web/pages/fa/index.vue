@@ -131,6 +131,7 @@ useHead({ title: "Fiches Activités" });
 const faStore = useFestivalActivityStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
+const teamStore = useTeamStore();
 
 const me = computed<User | undefined>(() => userStore.loggedUser);
 
@@ -254,8 +255,10 @@ const { festivalActivities } = useLiveNotification();
 const { fetchAllActivities, addActivityToPreviews, updatePreviousPreview } =
   faStore;
 
+fetchAllActivities().then(() => (loading.value = false));
+if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();
+
 onMounted(() => {
-  fetchAllActivities().then(() => (loading.value = false));
   festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
     addActivityToPreviews(data.festivalActivity);
   });
