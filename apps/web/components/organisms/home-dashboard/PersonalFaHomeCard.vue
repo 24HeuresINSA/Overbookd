@@ -53,10 +53,12 @@ import { FA_URL } from "@overbookd/web-page";
 
 const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
+const teamStore = useTeamStore();
 
 const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
 
 faStore.fetchMyActivities();
+if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();
 
 const MAX_ACTIVITIES = 5;
 

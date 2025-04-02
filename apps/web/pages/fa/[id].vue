@@ -48,6 +48,7 @@ const route = useRoute();
 const faStore = useFestivalActivityStore();
 const configurationStore = useConfigurationStore();
 const live = useLiveNotification();
+const teamStore = useTeamStore();
 
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
@@ -101,6 +102,8 @@ onMounted(async () => {
 onUnmounted(() => {
   live.festivalActivities.stopListening();
 });
+
+if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();
 
 const publishFeedback = (content: string) => {
   faStore.publishFeedback({ content });
