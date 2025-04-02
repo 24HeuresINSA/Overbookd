@@ -1,3 +1,14 @@
+## [3.40.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.4...v3.40.5) (2025-04-02)
+
+### Bug Fixes
+
+* **assignment:** allow volunteers that can be affected to see assignments. [#2436](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2436) ([2221494](https://gitlab.com/24-heures-insa/overbookd-mono/commit/22214945a995efdca00513555d3818f9413fad23))
+* **festival-event:** fetch reviewers in middleware [#2456](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2456) ([2f2be06](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2f2be06d2a0b26dd6e0fa13b88c6740307bc7921))
+* **ft:** allow FA link drive from child FT [#2468](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2468) ([af5dfbf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/af5dfbf8e95cc78624f7c40f3ac26521c9433b3e))
+* **ft:** parent activity drive link [#2468](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2468) ([c962a2e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c962a2ee44c710410ebf01f044660471f93876ab))
+* **traefik:** remove let's encrypt certificate ([63ecf00](https://gitlab.com/24-heures-insa/overbookd-mono/commit/63ecf00a4cd0a929b18659c4d7009730f47799c2))
+* **web:** ensure selected user is set before loading it planning. [#2462](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2462) ([35c93b9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/35c93b9d44c8d53f8d02d0613fdde13ca61516d4))
+
 ## [3.40.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.3...v3.40.4) (2025-03-27)
 
 ### Bug Fixes
