@@ -9,10 +9,7 @@
       />
     </template>
   </DesktopPageTitle>
-  <VolunteerPlanningCalendar
-    v-if="selectedUser?.id"
-    :volunteer="selectedUser"
-  />
+  <VolunteerPlanningCalendar v-if="canDisplayPlanning" :volunteer-id="userId" />
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +24,10 @@ const userId = ref<number>(+route.params.userId);
 const selectedUser = computed(() => userStore.selectedUser);
 
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
+const canDisplayPlanning = computed<boolean>(() => {
+  const isSameUser = selectedUser.value?.id === userId.value;
+  return !isNaN(userId.value) && isSameUser;
+});
 
 onMounted(async () => {
   if (isNaN(userId.value)) return navigateTo(HOME_URL);

@@ -1,6 +1,6 @@
 <template>
   <DesktopPageTitle />
-  <VolunteerPlanningCalendar v-if="me?.id" :volunteer="me" />
+  <VolunteerPlanningCalendar v-if="me?.id" :volunteer-id="me.id" />
 </template>
 
 <script lang="ts" setup>
