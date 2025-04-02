@@ -15,7 +15,7 @@ export class PlanningRepository {
   static addBreakPeriod(volunteer: number, during: DuringBreakPeriods) {
     return HttpClient.post<IProvidePeriod[]>(
       `${this.basePath}/${volunteer}/break-periods`,
-      { body: during },
+      { ...during },
     );
   }
 

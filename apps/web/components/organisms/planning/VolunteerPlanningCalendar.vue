@@ -12,6 +12,7 @@
       :availabilities="availabilities"
       clickable-events
       @click:event="openAssignmentDetails"
+      @click:period="askForBreak"
     />
   </div>
 
@@ -85,6 +86,14 @@
       </template>
     </DialogCard>
   </v-dialog>
+
+  <v-dialog v-model="isBreakPeriodDialogOpen" max-width="900">
+    <CreateBreakPeriodDialogCard
+      :start="breakPeriodStart"
+      @create="saveBreak"
+      @close="closeBreakDialog"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -99,7 +108,7 @@ import type {
   TaskForCalendar,
 } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
-import type { IProvidePeriod } from "@overbookd/time";
+import type { IProvidePeriod, Period } from "@overbookd/time";
 import { FT_URL } from "@overbookd/web-page";
 import { convertToCalendarBreak } from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
@@ -110,6 +119,7 @@ import {
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
+import type { BreakDefinition } from "@overbookd/planning";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -225,6 +235,23 @@ const openAssignmentInNewTab = () => {
 
 const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {
   return `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
+};
+
+const isBreakPeriodDialogOpen = ref<boolean>(false);
+const breakPeriodStart = ref<Date>(new Date());
+
+const askForBreak = (period: Period) => {
+  breakPeriodStart.value = period.start;
+  isBreakPeriodDialogOpen.value = true;
+};
+
+const closeBreakDialog = () => {
+  isBreakPeriodDialogOpen.value = false;
+};
+
+const saveBreak = (during: BreakDefinition["during"]) => {
+  closeBreakDialog();
+  userStore.addVolunteerBreakPeriods({ during, volunteer: props.volunteerId });
 };
 </script>
 

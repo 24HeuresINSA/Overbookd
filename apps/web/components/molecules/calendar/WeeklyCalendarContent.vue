@@ -11,13 +11,14 @@
         :clickable-events="clickableEvents"
         :availabilities="availabilities"
         @click:event="propagateEventClick"
+        @click:period="propagatePeriodClick"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { IProvidePeriod } from "@overbookd/time";
+import type { IProvidePeriod, Period } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
 
@@ -40,9 +41,12 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["click:event"]);
+const emit = defineEmits(["click:event", "click:period"]);
 const propagateEventClick = (event: CalendarEvent) => {
   emit("click:event", event);
+};
+const propagatePeriodClick = (period: Period) => {
+  emit("click:period", period);
 };
 </script>
 
