@@ -103,6 +103,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     },
     NotoEmoji: {
       normal: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      bold: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      italics: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      bolditalics: join(
+        __dirname,
+        "../../../..",
+        "/fonts/NotoEmoji-Regular.ttf",
+      ),
     },
   };
 

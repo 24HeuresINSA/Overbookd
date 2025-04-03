@@ -1,7 +1,8 @@
 import type { Content } from "pdfmake/interfaces";
 
 const EMOJI_REGEX =
-  /[\p{Extended_Pictographic}(\u200d\p{Extended_Pictographic})*]+/gu;
+  // eslint-disable-next-line security/detect-unsafe-regex
+  /(\p{Extended_Pictographic}(\u200d\p{Extended_Pictographic})*)+/gu;
 
 export function fixEmojis(content: Content, emojiFont = "NotoEmoji"): Content {
   if (typeof content === "string")
