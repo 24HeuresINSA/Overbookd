@@ -26,6 +26,7 @@ import { updateItemToList } from "@overbookd/list";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { GeoCoordinates } from "ics";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
+import { fixEmojis } from "./pdf/fix-emojis";
 
 class PdfException extends Error {}
 
@@ -34,9 +35,6 @@ const NB_ASSIGNEES_PER_LINE = 4;
 const NB_CONTACTS_PER_LINE = 3;
 const MAX_LINES = 5;
 const SECURITY_PLAN_PAGE = 2;
-
-const EMOJI_REGEX =
-  /\p{Extended_Pictographic}(\u200d\p{Extended_Pictographic})*/gu;
 
 export class PdfRenderStrategy implements RenderStrategy {
   private printer: Printer;
@@ -114,7 +112,7 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   render(tasks: Task[], volunteer: VolunteerWithTeams): Promise<unknown> {
     const pdfContent = this.generateContent(tasks, volunteer);
-    const pdfContentWithEmojis = this.fixEmojis(pdfContent);
+    const pdfContentWithEmojis = fixEmojis(pdfContent);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();
     const info = this.generateMetadata(volunteer);
@@ -143,43 +141,6 @@ export class PdfRenderStrategy implements RenderStrategy {
       });
       pdf.end();
     });
-  }
-
-  private fixEmojis(content: Content, emojiFont = "NotoEmoji"): Content {
-    if (typeof content === "string")
-      return this.splitTextWithEmojis(content, emojiFont);
-    if (typeof content === "number") return content;
-    if (Array.isArray(content))
-      return content.map((item) => this.fixEmojis(item, emojiFont));
-
-    const textProps = ["text", "stack", "ul", "ol", "table", "columns"];
-    textProps.forEach((prop) => {
-      if (prop in content)
-        content[`${prop}`] = this.fixEmojis(content[`${prop}`], emojiFont);
-    });
-
-    return content;
-  }
-
-  private splitTextWithEmojis(text: string, font: string): Content {
-    const parts: Content[] = [];
-    let lastIndex = 0;
-    const regex = new RegExp(EMOJI_REGEX);
-
-    let match: RegExpExecArray;
-    while ((match = regex.exec(text)) !== null) {
-      const [emoji] = match;
-      const index = match.index;
-
-      if (index > lastIndex) parts.push(text.slice(lastIndex, index));
-      parts.push({ text: emoji, font });
-
-      lastIndex = index + emoji.length;
-    }
-
-    if (lastIndex < text.length) parts.push(text.slice(lastIndex));
-
-    return parts.length === 1 ? parts[0] : parts;
   }
 
   private generateMetadata(volunteer: Volunteer) {
