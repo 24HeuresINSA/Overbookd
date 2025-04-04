@@ -26,6 +26,7 @@ import { updateItemToList } from "@overbookd/list";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { GeoCoordinates } from "ics";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
+import { fixEmojis } from "./pdf/fix-emojis";
 
 class PdfException extends Error {}
 
@@ -100,6 +101,16 @@ export class PdfRenderStrategy implements RenderStrategy {
         "/fonts/Roboto-MediumItalic.ttf",
       ),
     },
+    NotoEmoji: {
+      normal: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      bold: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      italics: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
+      bolditalics: join(
+        __dirname,
+        "../../../..",
+        "/fonts/NotoEmoji-Regular.ttf",
+      ),
+    },
   };
 
   constructor() {
@@ -108,6 +119,7 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   render(tasks: Task[], volunteer: VolunteerWithTeams): Promise<unknown> {
     const pdfContent = this.generateContent(tasks, volunteer);
+    const pdfContentWithEmojis = fixEmojis(pdfContent);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();
     const info = this.generateMetadata(volunteer);
@@ -116,7 +128,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       info,
       header,
       footer,
-      content: pdfContent,
+      content: pdfContentWithEmojis,
       defaultStyle: { fontSize: 10 },
       styles: this.pdfStyles,
       pageMargins: [40, 80, 40, 80],
