@@ -182,12 +182,12 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import type { AssignmentPreferenceType } from "@overbookd/preference";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
 import { HARD_CODE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
+import type { AssignmentPreferenceType } from "@overbookd/preference";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -211,7 +211,6 @@ const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
-const assignment = ref<AssignmentPreferenceType | undefined>();
 
 const rules = {
   required,
@@ -243,11 +242,14 @@ const assignableTeams = computed<Team[]>(() => {
   return teamsToAdd.filter((team: Team) => team.code !== "admin");
 });
 
-const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
+const isHard = computed<boolean>(() =>
+  props.volunteer.teams.includes(HARD_CODE),
+);
 const assignmentPreferenceLabel = computed<string>(() => {
-  if (!assignment.value) return "";
+  const assignment = props.volunteer.preference?.assignment;
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;
-  return assignmentPreferenceLabels[assignment.value];
+  if (!assignment) return assignmentPreferenceLabels.NO_PREF;
+  return assignmentPreferenceLabels[assignment as AssignmentPreferenceType];
 });
 
 const updateVolunteerInformations = async () => {
@@ -256,7 +258,6 @@ const updateVolunteerInformations = async () => {
   phone.value = props.volunteer.phone ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
-  assignment.value = props.volunteer.preference?.assignment;
   await userStore.fetchSelectedUserFriends();
 
   if (props.volunteer.profilePictureBlob) return;
