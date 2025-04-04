@@ -1,3 +1,11 @@
+## [3.40.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.6...v3.40.7) (2025-04-04)
+
+### Bug Fixes
+
+* **home:** display and load of friends component [#2472](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2472) ([48ecb76](https://gitlab.com/24-heures-insa/overbookd-mono/commit/48ecb76a776f1ff4393f83b6d47cade6413e1d98))
+* **planning:** render emojis in pdf plannings [#2443](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2443) ([f81df27](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f81df27068bb54afe6b136f973fca19f06261d3b))
+* **preference:** check teams of selected volunteer instead of logged user [#2473](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2473) ([be21934](https://gitlab.com/24-heures-insa/overbookd-mono/commit/be219349f34afa5b12344aef987a168d7dfe8720))
+
 ## [3.40.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.5...v3.40.6) (2025-04-02)
 
 ### Bug Fixes
