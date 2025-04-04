@@ -187,6 +187,7 @@ import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
 import { HARD_CODE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
+import type { AssignmentPreferenceType } from "@overbookd/preference";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -248,7 +249,7 @@ const assignmentPreferenceLabel = computed<string>(() => {
   const assignment = props.volunteer.preference?.assignment;
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;
   if (!assignment) return assignmentPreferenceLabels.NO_PREF;
-  return assignmentPreferenceLabels[assignment];
+  return assignmentPreferenceLabels[assignment as AssignmentPreferenceType];
 });
 
 const updateVolunteerInformations = async () => {
