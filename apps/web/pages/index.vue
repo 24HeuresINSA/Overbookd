@@ -12,7 +12,7 @@
       />
 
       <ProfileHomeCard />
-      <FriendsHomeCard v-if="!isOrWantsToBeVolunteer" />
+      <FriendsHomeCard v-if="isOrWantsToBeVolunteer === false" />
     </v-col>
 
     <v-col class="home">
@@ -99,21 +99,21 @@ const hasPersonalAccount = computed<boolean>(() =>
 const canDownloadAndSyncPlanning = computed<boolean>(
   () => userStore.can(DOWNLOAD_PLANNING) && userStore.can(SYNC_PLANNING),
 );
-const isOrWantsToBeVolunteer = computed<boolean>(() => {
-  if (!me.value) return false;
+const isOrWantsToBeVolunteer = computed<boolean | undefined>(() => {
+  if (!me.value) return;
   const wantToBeVolunteer = me.value.membershipApplication === VOLUNTEER;
   const isVolunteer = me.value.teams.includes(SOFT_CODE);
   return wantToBeVolunteer || isVolunteer;
 });
 const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
   const hasNoPlanning = !canDownloadAndSyncPlanning.value;
-  return isOrWantsToBeVolunteer.value && hasNoPlanning;
+  return !!isOrWantsToBeVolunteer.value && hasNoPlanning;
 });
 
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
 const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
 const hasThirdColumn = computed<boolean>(
-  () => canWriteFA.value || canWriteFT.value || isOrWantsToBeVolunteer.value,
+  () => canWriteFA.value || canWriteFT.value || !!isOrWantsToBeVolunteer.value,
 );
 </script>
 
