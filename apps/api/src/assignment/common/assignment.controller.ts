@@ -39,7 +39,8 @@ import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignme
 import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
 import { DisplayableAssignmentResponseDto } from "./dto/displayable-assignment.response.dto";
 import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
-import { VolunteerWithAssignmentStats } from "@overbookd/http";
+import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
+import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -57,6 +58,40 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BE_AFFECTED)
+  @Get(
+    "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/for-calendar",
+  )
+  @ApiResponse({
+    status: 200,
+    description: "Assignment For Calendar",
+    type: TaskForCalendarResponseDto,
+  })
+  @ApiParam({
+    name: "taskId",
+    description: "Task id",
+    type: Number,
+  })
+  @ApiParam({
+    name: "mobilizationId",
+    description: "Mobilization id",
+    type: String,
+  })
+  @ApiParam({
+    name: "assignmentId",
+    description: "Assignment id",
+    type: String,
+  })
+  findOneForCalendar(
+    @Param("taskId", ParseIntPipe) taskId: number,
+    @Param("mobilizationId") mobilizationId: string,
+    @Param("assignmentId") assignmentId: string,
+  ): Promise<TaskForCalendar> {
+    const identifier = { taskId, mobilizationId, assignmentId };
+    return this.assignment.findOneForCalendar(identifier);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
   @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
   @ApiResponse({
     status: 200,
