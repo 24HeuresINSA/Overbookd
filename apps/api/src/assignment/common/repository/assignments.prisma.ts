@@ -18,6 +18,7 @@ import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import {
   VolunteerWithAssignmentStats,
   DisplayableAssignment,
+  TaskForCalendar,
 } from "@overbookd/http";
 import {
   SELECT_PERIOD_AND_CATEGORY,
@@ -34,9 +35,69 @@ import {
   SELECT_USER_DATA_FOR_CHARISMA,
 } from "../../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
+import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async findOneForCalendar(
+    identifier: AssignmentIdentifier,
+  ): Promise<TaskForCalendar> {
+    const { assignmentId, mobilizationId, taskId } = identifier;
+    const assignment = await this.prisma.assignment.findUnique({
+      where: {
+        id_mobilizationId_festivalTaskId: {
+          festivalTaskId: taskId,
+          id: assignmentId,
+          mobilizationId,
+        },
+      },
+      select: {
+        ...SELECT_PERIOD_WITH_ID,
+        festivalTask: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            globalInstruction: true,
+            inChargeInstruction: true,
+            appointment: { select: { id: true, name: true } },
+            contacts: {
+              select: {
+                contact: {
+                  select: {
+                    id: true,
+                    firstname: true,
+                    lastname: true,
+                    phone: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return {
+      id: assignment.festivalTask.id,
+      name: assignment.festivalTask.name,
+      status: assignment.festivalTask.status,
+      appointment: assignment.festivalTask.appointment,
+      contacts: assignment.festivalTask.contacts.map(({ contact }) => ({
+        id: contact.id,
+        firstname: contact.firstname,
+        lastname: contact.lastname,
+        phone: contact.phone,
+      })),
+      globalInstructions: assignment.festivalTask.globalInstruction,
+      inChargeInstructions: assignment.festivalTask.inChargeInstruction,
+      timeWindow: {
+        id: assignment.id,
+        start: assignment.start,
+        end: assignment.end,
+      },
+    };
+  }
 
   async findOne<T extends boolean>(
     identifier: AssignmentIdentifier,

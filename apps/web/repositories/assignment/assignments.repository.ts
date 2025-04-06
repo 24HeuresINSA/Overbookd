@@ -7,6 +7,7 @@ import type {
 import type {
   DisplayableAssignment,
   HttpStringified,
+  TaskForCalendar,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -44,6 +45,16 @@ export class AssignmentsRepository implements Assignments {
       path: `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}`,
       params: { withDetails },
     });
+  }
+
+  static async findOneForCalendar({
+    taskId,
+    mobilizationId,
+    assignmentId,
+  }: AssignmentIdentifier) {
+    return HttpClient.get<TaskForCalendar>(
+      `${this.basePath}/tasks/${taskId}/mobilizations/${mobilizationId}/assignments/${assignmentId}/for-calendar`,
+    );
   }
 
   static findAllFor(volunteerId: number) {

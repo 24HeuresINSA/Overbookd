@@ -1,6 +1,6 @@
 import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
 import type {
-  // AssignmentIdentifier,
+  AssignmentIdentifier,
   PlanningEvent,
 } from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
@@ -327,12 +327,13 @@ export const useUserStore = defineStore("user", {
       this.selectedUserAssignments = castPlanningEventsWithDate(res);
     },
 
-    // async getVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {
-    async getVolunteerAssignmentDetails(identifier: string) {
-      const res =
-        await UserRepository.getVolunteerAssignmentDetails(identifier);
+    async getVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {
+      const res = await AssignmentsRepository.findOneForCalendar(identifier);
       if (isHttpError(res)) return;
-      this.currentTaskForCalendar = res;
+      this.currentTaskForCalendar = {
+        ...res,
+        timeWindow: castPeriodWithDate(res.timeWindow),
+      };
     },
 
     async getVolunteerAssignmentStats(userId: number) {

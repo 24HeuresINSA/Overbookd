@@ -15,7 +15,7 @@
     />
   </div>
 
-  <v-dialog v-model="isTaskDetailsDialogOpen" width="600">
+  <v-dialog v-if="selectedTask" v-model="isTaskDetailsDialogOpen" width="600">
     <DialogCard without-actions @close="isTaskDetailsDialogOpen = false">
       <template #title>
         [{{ selectedTask.id }}] {{ selectedTask.name }}
@@ -23,7 +23,7 @@
           v-if="canReadFT"
           icon="mdi-open-in-new"
           size="x-small"
-          @click="OpenAssignmentInNewTab"
+          @click="openAssignmentInNewTab"
         />
       </template>
       <template #content>
@@ -82,7 +82,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { PlanningEvent } from "@overbookd/assignment";
+import type {
+  AssignmentIdentifier,
+  PlanningEvent,
+} from "@overbookd/assignment";
 import type { TimeWindow } from "@overbookd/festival-event";
 import type {
   AssignmentStat,
@@ -105,6 +108,17 @@ const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
+type CalendarEventWithTaskId = CalendarEvent & {
+  taskId: number;
+};
+type CalendarEventWithAssignmentIdentifier = CalendarEvent & {
+  identifier: AssignmentIdentifier;
+};
+type CalendarEventForPlanning =
+  | CalendarEvent
+  | CalendarEventWithTaskId
+  | CalendarEventWithAssignmentIdentifier;
+
 const props = defineProps({
   volunteerId: {
     type: Number,
@@ -112,26 +126,9 @@ const props = defineProps({
   },
 });
 
-const selectedTask = computed<TaskForCalendar>(() => {
-  if (userStore.currentTaskForCalendar) {
-    return userStore.currentTaskForCalendar;
-  } else {
-    return {
-      id: -99,
-      appointment: { id: 0, name: "Error" },
-      contacts: [],
-      globalInstructions: "<p>Error: selectedTask is undefined</p>",
-      inChargeInstructions: null,
-      name: "Error",
-      status: "REFUSED",
-      timeWindow: {
-        start: new Date("2025-03-16 20:00"),
-        end: new Date("2025-03-16 22:00"),
-        id: "0",
-      },
-    };
-  }
-});
+const selectedTask = computed<TaskForCalendar | undefined>(
+  () => userStore.currentTaskForCalendar,
+);
 
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
@@ -171,15 +168,25 @@ const availabilities = computed<IProvidePeriod[]>(
   () => availabilityStore.availabilities.list,
 );
 
-const events = computed<CalendarEvent[]>(() => {
-  const assignmentEvents = assignments.value.map(({ start, end, task }) =>
-    createCalendarEvent({
-      start,
-      end,
-      name: `[${task.id}] ${task.name}`,
-      color: getColorByStatus(task.status),
-      ft_id: task.id,
-    }),
+const events = computed<CalendarEventForPlanning[]>(() => {
+  const assignmentEvents = assignments.value.map(
+    ({ start, end, task, assignmentId, mobilizationId }) => {
+      const identifier =
+        mobilizationId && assignmentId
+          ? {
+              taskId: task.id,
+              assignmentId: assignmentId,
+              mobilizationId: mobilizationId,
+            }
+          : undefined;
+      return createCalendarEvent({
+        start,
+        end,
+        name: `[${task.id}] ${task.name}`,
+        color: getColorByStatus(task.status),
+        identifier,
+      });
+    },
   );
   const taskEvents = tasks.value.map(
     ({ name, id, status, timeWindow: { start, end } }) =>
@@ -188,7 +195,6 @@ const events = computed<CalendarEvent[]>(() => {
         end,
         name: `[${id}] ${name}`,
         color: getColorByStatus(status),
-        ft_id: id,
       }),
   );
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
@@ -197,14 +203,15 @@ const events = computed<CalendarEvent[]>(() => {
 
 const isTaskDetailsDialogOpen = ref<boolean>(false);
 
-const openAssignmentDetails = async (event: CalendarEvent) => {
-  if (event.id) {
-    await userStore.getVolunteerAssignmentDetails(event.id);
-    isTaskDetailsDialogOpen.value = true;
-  }
+const openAssignmentDetails = async (event: CalendarEventForPlanning) => {
+  console.log("openAssignmentDetails", event);
+  if (!("identifier" in event)) return;
+  await userStore.getVolunteerAssignmentDetails(event.identifier);
+  isTaskDetailsDialogOpen.value = true;
 };
 
-const OpenAssignmentInNewTab = () => {
+const openAssignmentInNewTab = () => {
+  if (!selectedTask.value) return;
   navigateTo(`${FT_URL}/${selectedTask.value.id}`);
 };
 
