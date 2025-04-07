@@ -81,12 +81,21 @@ export default defineNuxtConfig({
     ],
   },
   pwa: {
+    registerType: "autoUpdate",
     manifest: {
       name: "Overbookd",
-      short_name: "Overbookd",
       theme_color: "#41C5E5",
       description: "Organisation du festival des 24h de l’INSA",
       lang: "fr",
+    },
+    includeAssets: ["favicon.ico"],
+    workbox: {
+      navigateFallback: "/",
+      globPatterns: ["favicon.ico"],
+    },
+    devOptions: {
+      enabled: true,
+      type: "module",
     },
   },
 });
