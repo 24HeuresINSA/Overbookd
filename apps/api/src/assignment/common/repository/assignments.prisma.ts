@@ -36,6 +36,8 @@ import {
 } from "../../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
+import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
+import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -61,19 +63,8 @@ export class PrismaAssignments implements AssignmentRepository {
             status: true,
             globalInstruction: true,
             inChargeInstruction: true,
-            appointment: { select: { id: true, name: true } },
-            contacts: {
-              select: {
-                contact: {
-                  select: {
-                    id: true,
-                    firstname: true,
-                    lastname: true,
-                    phone: true,
-                  },
-                },
-              },
-            },
+            appointment: { select: SELECT_LOCATION },
+            contacts: { select: { contact: { select: SELECT_CONTACT } } },
           },
         },
       },
