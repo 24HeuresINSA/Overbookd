@@ -1,8 +1,8 @@
 <template>
   <OverCalendar v-model="dayModel" :mode="DAY_MODE" class="multi-calendar">
     <template #header>
-      <DailyCalendarHeader :day="day" />
-      <div class="multi-calendar__volunteers" :style="gridStyle">
+      <DailyCalendarHeader :day="day" class="multi-calendar__day" />
+      <div class="multi-calendar__volunteers">
         <NeedHelpVolunteerResumeCalendarHeader
           v-for="volunteer in volunteers"
           :key="volunteer.id"
@@ -12,7 +12,7 @@
       </div>
     </template>
     <template #content>
-      <div class="multi-calendar__volunteers" :style="gridStyle">
+      <div class="multi-calendar__volunteers">
         <DailyCalendarContent
           v-for="volunteer in volunteers"
           :key="volunteer.id"
@@ -55,10 +55,6 @@ const props = defineProps({
 const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
   return props.eventToAdd ? [...assignments, props.eventToAdd] : assignments;
 };
-
-const gridStyle = computed(() => ({
-  gridTemplateColumns: `repeat(${props.volunteers.length + 1}, 1fr)`,
-}));
 </script>
 
 <style lang="scss" scoped>
@@ -67,17 +63,27 @@ const gridStyle = computed(() => ({
 .multi-calendar {
   width: 100%;
   height: 100%;
-  display: grid;
-  &__volunteers {
-    display: flex;
-  }
-  &__volunteer {
-    width: 100%;
-    min-width: 100px;
-    border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
-    &:first-child {
-      border-left: none;
-    }
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.multi-calendar__volunteers {
+  display: flex;
+  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+  flex-grow: 1;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+}
+
+.multi-calendar__volunteer {
+  flex: 0 0 150px;
+  width: 150px;
+  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+
+  &:first-child {
+    border-left: none;
   }
 }
 </style>

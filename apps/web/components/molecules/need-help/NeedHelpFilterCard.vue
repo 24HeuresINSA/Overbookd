@@ -4,16 +4,18 @@
     <v-card-text class="card-content">
       <div class="time-slot">
         <DateTimeField
-          v-model="start"
+          v-model="period.start"
           label="Début"
           class="card-field"
           hide-details
+          @enter="fetchVolunteers"
         />
         <DateTimeField
-          v-model="end"
+          v-model="period.end"
           label="Fin"
           class="card-field"
           hide-details
+          @enter="fetchVolunteers"
         />
         <v-btn
           text="Appliquer"
@@ -46,6 +48,7 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
+import type { IProvidePeriod } from "@overbookd/time";
 
 defineProps({
   loading: {
@@ -56,14 +59,8 @@ defineProps({
 
 const needHelpStore = useNeedHelpStore();
 
-const start = computed<Date>({
-  get: () => needHelpStore.start,
-  set: (value: Date) => needHelpStore.updateStart(value),
-});
-const end = computed<Date>({
-  get: () => needHelpStore.end,
-  set: (value: Date) => needHelpStore.updateEnd(value),
-});
+const period = ref<IProvidePeriod>(needHelpStore.period);
+
 const search = computed<string>({
   get: () => needHelpStore.search,
   set: (value: string | null) => {
@@ -76,7 +73,10 @@ const teams = computed<Team[]>({
 });
 
 const emit = defineEmits(["fetch"]);
-const fetchVolunteers = () => emit("fetch");
+const fetchVolunteers = () => {
+  needHelpStore.updatePeriod(period.value);
+  emit("fetch");
+};
 </script>
 
 <style lang="scss" scoped>
