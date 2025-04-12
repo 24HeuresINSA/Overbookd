@@ -1,7 +1,6 @@
 <template>
   <OverCalendar v-model="dayModel" :mode="DAY_MODE" class="multi-calendar">
     <template #header>
-      <DailyCalendarHeader :day="day" class="multi-calendar__day" />
       <div class="multi-calendar__volunteers">
         <NeedHelpVolunteerResumeCalendarHeader
           v-for="volunteer in volunteers"
