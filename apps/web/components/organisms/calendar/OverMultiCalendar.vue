@@ -1,25 +1,43 @@
 <template>
-  <OverCalendar v-model="dayModel" :mode="DAY_MODE" class="multi-calendar">
+  <OverCalendar
+    v-model="dayModel"
+    :mode="DAY_MODE"
+    class="multi-calendar"
+    display-day-in-manager
+  >
     <template #header>
-      <div class="multi-calendar__volunteers">
-        <NeedHelpVolunteerResumeCalendarHeader
-          v-for="volunteer in volunteers"
-          :key="volunteer.id"
-          :volunteer="volunteer"
-          class="multi-calendar__volunteer"
-        />
+      <div
+        ref="headerScrollRef"
+        class="multi-calendar__scroll"
+        @scroll="syncScroll(HEADER)"
+      >
+        <div class="multi-calendar__volunteers">
+          <NeedHelpVolunteerResumeCalendarHeader
+            v-for="volunteer in volunteers"
+            :key="volunteer.id"
+            :volunteer="volunteer"
+            class="multi-calendar__volunteer"
+          />
+        </div>
       </div>
     </template>
+
     <template #content>
-      <div class="multi-calendar__volunteers">
-        <DailyCalendarContent
-          v-for="volunteer in volunteers"
-          :key="volunteer.id"
-          :day="day"
-          :events="withEventToAdd(volunteer.assignments)"
-          :availabilities="volunteer.availabilities"
-          class="multi-calendar__volunteer"
-        />
+      <div
+        ref="contentScrollRef"
+        class="multi-calendar__scroll"
+        @scroll="syncScroll(CONTENT)"
+      >
+        <div class="multi-calendar__volunteers">
+          <DailyCalendarContent
+            v-for="volunteer in volunteers"
+            :key="volunteer.id"
+            :day="day"
+            :events="withEventToAdd(volunteer.assignments)"
+            :availabilities="volunteer.availabilities"
+            class="multi-calendar__volunteer"
+          />
+        </div>
       </div>
     </template>
   </OverCalendar>
@@ -54,6 +72,31 @@ const props = defineProps({
 const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
   return props.eventToAdd ? [...assignments, props.eventToAdd] : assignments;
 };
+
+const headerScrollRef = ref<HTMLElement | null>(null);
+const contentScrollRef = ref<HTMLElement | null>(null);
+const isSyncingScroll = ref<boolean>(false);
+
+const HEADER = "header";
+const CONTENT = "content";
+
+const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
+  if (isSyncingScroll.value) return;
+  isSyncingScroll.value = true;
+
+  const sourceEl =
+    source === HEADER ? headerScrollRef.value : contentScrollRef.value;
+  const targetEl =
+    source === HEADER ? contentScrollRef.value : headerScrollRef.value;
+
+  if (sourceEl && targetEl) {
+    targetEl.scrollLeft = sourceEl.scrollLeft;
+  }
+
+  requestAnimationFrame(() => {
+    isSyncingScroll.value = false;
+  });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -67,18 +110,21 @@ const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
   overflow: hidden;
 }
 
-.multi-calendar__volunteers {
-  display: flex;
+.multi-calendar__scroll {
   overflow-x: auto;
   width: 100%;
-  min-width: 0;
-  flex-grow: 1;
-  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+}
+
+.multi-calendar__volunteers {
+  display: flex;
+  flex-wrap: nowrap;
+  width: fit-content;
 }
 
 .multi-calendar__volunteer {
   flex: 0 0 150px;
   width: 150px;
+  box-sizing: border-box;
   border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
 
   &:first-child {

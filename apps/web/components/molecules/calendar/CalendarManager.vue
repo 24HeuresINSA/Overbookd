@@ -33,7 +33,7 @@
       />
     </div>
     <h3 class="period-indicator capitalize">
-      {{ displayablePeriod }}
+      {{ displayableTimeIndicator }}
     </h3>
     <slot name="additional-actions" />
   </div>
@@ -47,6 +47,10 @@ const configurationStore = useConfigurationStore();
 
 const props = defineProps({
   dayMode: {
+    type: Boolean,
+    default: false,
+  },
+  displayDay: {
     type: Boolean,
     default: false,
   },
@@ -78,8 +82,8 @@ const moveToEventStartDay = () => {
   day.value = new DayPresenter(eventStartDate.value);
 };
 
-const displayablePeriod = computed<string>(() =>
-  props.dayMode
+const displayableTimeIndicator = computed<string>(() =>
+  props.dayMode && props.displayDay
     ? day.value.displayableDate
     : day.value.displayableMonthWithYear,
 );

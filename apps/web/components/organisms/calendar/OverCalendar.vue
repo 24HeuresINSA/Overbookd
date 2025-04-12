@@ -10,6 +10,7 @@
       <CalendarManager
         v-model="day"
         :day-mode="isDayMode"
+        :display-day="displayDayInManager"
         @previous="moveToPreviousWeekOrDay"
         @next="moveToNextWeekOrDay"
       >
@@ -109,6 +110,10 @@ const props = defineProps({
     type: Array as PropType<IProvidePeriod[]>,
     default: () => [],
   },
+  displayDayInManager: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const dayModel = defineModel<Date>({
@@ -190,11 +195,11 @@ $calendar-content-height: $hour-height * 24;
 }
 
 .calendar-header {
-  width: 100%;
   grid-row: 1;
   grid-column: 2;
   border-top-right-radius: $calendar-radius;
   border-bottom: 1px solid rgb(var(--v-theme-on-surface));
+  overflow-x: auto;
 }
 
 .calendar-time {
@@ -272,8 +277,8 @@ $calendar-content-height: $hour-height * 24;
 }
 
 .calendar-content {
-  width: 100%;
   height: 100%;
+  overflow-x: auto;
   grid-row: 2;
   grid-column: 2;
   z-index: 10;
