@@ -12,11 +12,15 @@
       class="need-help__item mobile-only"
     />
     <OverMultiCalendar
+      v-show="!loading && volunteers.length > 0"
       v-model="day"
       :volunteers="volunteersForCalendar"
       :event-to-add="eventToAdd"
       class="need-help__item desktop-only"
     />
+    <p v-if="!loading && volunteers.length === 0" class="no-volunteers">
+      Aucun bénévole disponible sur ce créneau
+    </p>
   </div>
 </template>
 
@@ -79,5 +83,11 @@ const eventToAdd = computed<CalendarEvent>(() => {
   &__item {
     width: 100%;
   }
+}
+
+.no-volunteers {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 2rem;
 }
 </style>
