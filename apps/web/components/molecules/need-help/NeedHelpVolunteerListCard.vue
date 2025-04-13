@@ -21,7 +21,13 @@
       </template>
       <template #item.phone="{ item }">
         <div class="assignee-phone">
-          <v-btn icon="mdi-phone" :href="formatPhoneLink(item.phone)" />
+          <v-btn
+            icon="mdi-phone"
+            :href="formatPhoneLink(item.phone)"
+            density="comfortable"
+            size="small"
+            rounded="pill"
+          />
           <h3>{{ formatUserPhone(item.phone) }}</h3>
         </div>
       </template>
@@ -70,7 +76,7 @@ const openCalendarInNewTab = (volunteerId: number) => {
 
 .assignee-phone {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
 }
 .teams {

@@ -18,7 +18,10 @@
       :event-to-add="eventToAdd"
       class="need-help__item desktop-only"
     />
-    <p v-if="!loading && volunteers.length === 0" class="no-volunteers">
+    <p
+      v-if="!loading && volunteers.length === 0"
+      class="no-volunteers desktop-only"
+    >
       Aucun bénévole disponible sur ce créneau
     </p>
   </div>
