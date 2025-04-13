@@ -209,15 +209,24 @@ const configurationStore = useConfigurationStore();
 const showTooltip = ref<boolean>(false);
 
 const headers = [
-  { title: "Date de canidature", value: "candidatedAt", sortable: true },
-  { title: "Prénom", value: "firstname", sortable: true },
-  { title: "Nom", value: "lastname", sortable: true },
-  { title: "Surnom", value: "nickname", sortable: true },
-  { title: "Email", value: "email" },
-  { title: "Téléphone", value: "phone" },
-  { title: "Charisme", value: "charisma", sortable: true },
-  { title: "Équipes", value: "teams", sortable: true },
-  { title: "Actions", value: "actions" },
+  {
+    title: "Date de canidature",
+    maxWidth: 1,
+    value: "candidatedAt",
+    sortable: true,
+  },
+  { title: "Prénom", maxWidth: 1, value: "firstname", sortable: true },
+  { title: "Nom", maxWidth: 1, value: "lastname", sortable: true },
+  { title: "Surnom", maxWidth: 1, value: "nickname", sortable: true },
+  { title: "Email", maxWidth: 1, value: "email" },
+  { title: "Téléphone", maxWidth: 1, value: "phone" },
+  { title: "Charisme", maxWidth: 1, value: "charisma", sortable: true },
+  { title: "Équipes", maxWidth: 1, value: "teams", sortable: true },
+  {
+    title: "Actions",
+    maxWidth: 1,
+    value: "actions",
+  },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
