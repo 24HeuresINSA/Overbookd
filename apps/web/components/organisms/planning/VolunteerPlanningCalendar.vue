@@ -21,7 +21,7 @@ import type { AssignmentStat, PlanningTask } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import type { IProvidePeriod } from "@overbookd/time";
 import { FT_URL } from "@overbookd/web-page";
-import { convertToCalendarBreak } from "~/domain/common/planning-events";
+import { convertToCalendarBreak } from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import {
   createCalendarEvent,

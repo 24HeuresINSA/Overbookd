@@ -50,6 +50,12 @@ export class DayPresenter {
     return weekDates.map((day) => new DayPresenter(day));
   }
 
+  get displayableDate(): string {
+    const day = this.date.date.toLocaleDateString("fr-FR", { day: "2-digit" });
+    const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
+    return `${day} ${month} ${this.date.year}`;
+  }
+
   get displayableMonthWithYear(): string {
     const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
     return `${month} ${this.date.year}`;
@@ -71,5 +77,13 @@ export class DayPresenter {
 
   eventsOccuringThatDayAmong(events: CalendarEvent[]): CalendarEvent[] {
     return events.filter((event) => Period.init(event).isInDay(this.date.date));
+  }
+
+  nextDay(): DayPresenter {
+    return new DayPresenter(this.date.plus(Duration.ONE_DAY));
+  }
+
+  previousDay(): DayPresenter {
+    return new DayPresenter(this.date.minus(Duration.ONE_DAY));
   }
 }

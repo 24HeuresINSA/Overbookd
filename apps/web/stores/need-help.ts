@@ -1,8 +1,8 @@
 import {
-  type IProvidePeriod,
   ONE_HOUR_IN_MS,
   Period,
   QUARTER_IN_MS,
+  type IProvidePeriod,
 } from "@overbookd/time";
 import { SlugifyService } from "@overbookd/slugify";
 import type { UserName } from "@overbookd/user";
@@ -53,7 +53,6 @@ export const useNeedHelpStore = defineStore("need-help", {
     updatePeriod({ start, end }: IProvidePeriod) {
       this.start = start;
       this.end = end;
-      this.fetchVolunteers();
     },
     updateSearch(search: string | null) {
       this.search = search ?? "";
@@ -62,8 +61,9 @@ export const useNeedHelpStore = defineStore("need-help", {
       this.teams = teams;
     },
     resetToDefaultPeriod() {
-      const period = defaultPeriod();
-      this.updatePeriod(period);
+      const { start, end } = defaultPeriod();
+      this.start = start;
+      this.end = end;
     },
   },
 });

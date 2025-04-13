@@ -33,7 +33,7 @@
       />
     </div>
     <h3 class="period-indicator capitalize">
-      {{ day.displayableMonthWithYear }}
+      {{ displayableTimeIndicator }}
     </h3>
     <slot name="additional-actions" />
   </div>
@@ -47,6 +47,10 @@ const configurationStore = useConfigurationStore();
 
 const props = defineProps({
   dayMode: {
+    type: Boolean,
+    default: false,
+  },
+  displayDay: {
     type: Boolean,
     default: false,
   },
@@ -77,6 +81,12 @@ const moveToToday = () => {
 const moveToEventStartDay = () => {
   day.value = new DayPresenter(eventStartDate.value);
 };
+
+const displayableTimeIndicator = computed<string>(() =>
+  props.dayMode && props.displayDay
+    ? day.value.displayableDate
+    : day.value.displayableMonthWithYear,
+);
 
 const emit = defineEmits(["previous", "next"]);
 const propagatePrevious = () => emit("previous");
