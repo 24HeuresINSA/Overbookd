@@ -21,7 +21,14 @@
       </template>
       <template #item.phone="{ item }">
         <div class="assignee-phone">
-          <v-btn icon="mdi-phone" :href="formatPhoneLink(item.phone)" />
+          <v-btn
+            icon="mdi-phone"
+            :href="formatPhoneLink(item.phone)"
+            density="comfortable"
+            size="small"
+            class="mr-1"
+            rounded="pill"
+          />
           <h3>{{ formatUserPhone(item.phone) }}</h3>
         </div>
       </template>
