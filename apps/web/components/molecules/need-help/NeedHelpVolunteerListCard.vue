@@ -26,7 +26,6 @@
             :href="formatPhoneLink(item.phone)"
             density="comfortable"
             size="small"
-            class="mr-1"
             rounded="pill"
           />
           <h3>{{ formatUserPhone(item.phone) }}</h3>
@@ -77,7 +76,7 @@ const openCalendarInNewTab = (volunteerId: number) => {
 
 .assignee-phone {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   align-items: center;
 }
 .teams {
