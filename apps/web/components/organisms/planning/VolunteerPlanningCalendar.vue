@@ -201,7 +201,6 @@ const events = computed<CalendarEventForPlanning[]>(() => {
 const isTaskDetailsDialogOpen = ref<boolean>(false);
 
 const openAssignmentDetails = async (event: CalendarEventForPlanning) => {
-  console.log("openAssignmentDetails", event);
   if (!("identifier" in event)) return;
   await userStore.getVolunteerAssignmentDetails(event.identifier);
   isTaskDetailsDialogOpen.value = true;
@@ -212,8 +211,8 @@ const openAssignmentInNewTab = () => {
   navigateTo(`${FT_URL}/${selectedTask.value.id}`);
 };
 
-const formatTimeWindowForCalendar = (timeWindow: TimeWindow) => {
-  return `${formatDateToHumanReadable(timeWindow.start)} - ${formatDateToHumanReadable(timeWindow.end)}`;
+const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {
+  return `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
 };
 </script>
 
