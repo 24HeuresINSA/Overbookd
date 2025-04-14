@@ -503,6 +503,9 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
+      '@overbookd/preference':
+        specifier: workspace:*
+        version: link:../../constants/preference
       '@overbookd/team-constants':
         specifier: workspace:*
         version: link:../../constants/team-constants
