@@ -46,8 +46,9 @@
           </div>
         </div>
         <div class="contacts">
-          <h3 v-if="selectedTask.contacts.length <= 1">Orga à contacter</h3>
-          <h3 v-if="selectedTask.contacts.length > 1">Orgas à contacter</h3>
+          <h3>
+            Orga{{ selectedTask.contacts.length > 1 ? "s" : "" }} à contacter
+          </h3>
           <ul>
             <li v-for="contact in selectedTask.contacts" :key="contact.phone">
               {{ contact.firstname }}
