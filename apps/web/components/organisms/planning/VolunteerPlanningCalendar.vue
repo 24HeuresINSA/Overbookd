@@ -53,7 +53,7 @@
               {{ contact.firstname }}
               {{ contact.lastname }}
               <span v-if="contact.nickname">({{ contact.nickname }})</span>
-              - {{ contact.phone }}
+              - {{ formatUserPhone(contact.phone) }}
             </li>
           </ul>
         </div>
@@ -97,7 +97,8 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
-import { formatDateDayToHumanReadable } from "@overbookd/time";
+import { formatUserPhone } from "~/utils/user/user.utils";
+import { formatDateToHumanReadable } from "@overbookd/time";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -212,15 +213,7 @@ const openAssignmentInNewTab = () => {
 };
 
 const formatTimeWindowForCalendar = (timeWindow: TimeWindow) => {
-  const padStart = (value: number): string => value.toString().padStart(2, "0");
-  var time = `${padStart(timeWindow.start.getHours())}H${padStart(timeWindow.start.getMinutes())} - ${padStart(timeWindow.end.getHours())}H${padStart(timeWindow.end.getMinutes())}`;
-  var date = "";
-  if (timeWindow.start.getDate() == timeWindow.end.getDate()) {
-    date = formatDateDayToHumanReadable(timeWindow.start);
-  } else {
-    date = `${formatDateDayToHumanReadable(timeWindow.start)} - ${formatDateDayToHumanReadable(timeWindow.end)}`;
-  }
-  return `${time} | ${date}`;
+  return `${formatDateToHumanReadable(timeWindow.start)} - ${formatDateToHumanReadable(timeWindow.end)}`;
 };
 </script>
 
