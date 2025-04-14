@@ -61,14 +61,14 @@
           <h3>Instructions</h3>
           <div
             v-html-safe="selectedTask.globalInstructions"
-            class="assignment_globalInstructions"
+            class="assignment__global-instructions"
           />
           <div v-if="selectedTask.inChargeInstructions">
             <br />
             <h3>Instructions pour les responsables</h3>
             <div
               v-html-safe="selectedTask.inChargeInstructions"
-              class="assignment_inChargeInstructions"
+              class="assignment__in-charge-instructions"
             />
           </div>
         </div>
@@ -263,9 +263,11 @@ const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {
 .instructions {
   padding-top: 2rem;
 
-  .assignment_globalInstructions,
-  .assignment_inChargeInstructions {
-    margin-left: 1rem;
+  .assignment {
+    &__global-instructions,
+    &__in-charge-instructions {
+      margin-left: 1rem;
+    }
   }
   :deep(h1) {
     font-size: x-large;
