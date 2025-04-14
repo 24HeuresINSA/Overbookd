@@ -6,7 +6,7 @@ export const SELECT_USER_IDENTIFIER = {
   lastname: true,
   nickname: true,
 };
-export const SELECT_USER_ASSiGNMENT_PREFERENCE = {
+export const SELECT_USER_ASSIGNMENT_PREFERENCE = {
   preference: {
     select: {
       assignment: true,

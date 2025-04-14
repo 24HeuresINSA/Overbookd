@@ -44,9 +44,9 @@
             color="orange"
           />
           <v-icon
-            v-if="true"
-            v-tooltip:top="'il préfere ...'"
-            icon="mdi-align-vertical-distribute"
+            v-if="preferenceAssignmentIcon"
+            v-tooltip:top="preferenceAssignmentIcon.toolTipTexte"
+            :icon="preferenceAssignmentIcon.iconName"
             size="small"
           />
         </div>
@@ -84,6 +84,31 @@ const props = defineProps({
     type: Object as PropType<AssignmentVolunteer>,
     required: true,
   },
+});
+
+const preferenceAssignmentIcon = computed<{
+  iconName: string;
+  toolTipTexte: string;
+} | null>(() => {
+  switch (props.volunteer.preference.assignment) {
+    case "NO_REST":
+      return null;
+    case "STACKED":
+      return {
+        iconName: "mdi-menu",
+        toolTipTexte: "Des créneaux régroupés",
+      };
+    case "FRAGMENTED":
+      return {
+        iconName: "mdi-align-vertical-distribute",
+        toolTipTexte: "Des créneaux éparpillés",
+      };
+    default:
+      return {
+        iconName: "mdi-tailwind",
+        toolTipTexte: "Pa de préférence",
+      };
+  }
 });
 
 const sortedVolunteerTeams = computed<string[]>(() =>

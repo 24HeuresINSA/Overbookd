@@ -1,9 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export class VolunteerWithAssignmentDurationResponseDto
   implements VolunteerWithAssignmentDuration
 {
+  nickname?: string;
   @ApiProperty({ type: Number })
   id: number;
 
@@ -27,6 +29,9 @@ export class VolunteerWithAssignmentDurationResponseDto
 
   @ApiProperty({ type: Number })
   assignmentDuration: number;
+
+  @ApiProperty({ type: String })
+  preference: { assignment: AssignmentPreferenceType };
 
   @ApiProperty({ type: Boolean })
   hasAtLeastOneFriend: boolean;
