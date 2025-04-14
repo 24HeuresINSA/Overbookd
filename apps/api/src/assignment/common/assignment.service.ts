@@ -10,9 +10,13 @@ import {
 import {
   VolunteerWithAssignmentStats,
   DisplayableAssignment,
+  TaskForCalendar,
 } from "@overbookd/http";
 
 export type AssignmentRepository = Assignments & {
+  findOneForCalendar(
+    identifier: AssignmentIdentifier,
+  ): Promise<TaskForCalendar>;
   findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
     withDetails: T,
@@ -27,6 +31,12 @@ export class AssignmentService {
     private readonly assignments: AssignmentRepository,
     private readonly planning: Planning,
   ) {}
+
+  async findOneForCalendar(
+    identifier: AssignmentIdentifier,
+  ): Promise<TaskForCalendar> {
+    return this.assignments.findOneForCalendar(identifier);
+  }
 
   async findOne<T extends boolean>(
     identifier: AssignmentIdentifier,

@@ -74,7 +74,7 @@ export type {
 } from "./logistic/catalog.js";
 
 // PLANNING
-export type { Task as PlanningTask } from "./planning/task.js";
+export type { Task as PlanningTask, TaskForCalendar } from "./planning/task.js";
 export type { During as DuringBreakPeriods } from "./planning/break-periods.js";
 export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer.js";
 
