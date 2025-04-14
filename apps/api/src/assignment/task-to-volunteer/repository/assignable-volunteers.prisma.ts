@@ -145,7 +145,9 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
 }
 
 function toStoredAssignableVolunteer(
-  volunteer: DatabaseStoredAssignableVolunteer,
+  volunteer: DatabaseStoredAssignableVolunteer & {
+    preference?: { assignment: AssignmentPreferenceType };
+  },
   { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
   charismaPeriods: MinimalCharismaPeriod[],
 ): StoredAssignableVolunteer {
