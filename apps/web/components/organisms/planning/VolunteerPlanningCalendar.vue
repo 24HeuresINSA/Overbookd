@@ -15,7 +15,11 @@
     />
   </div>
 
-  <v-dialog v-if="selectedTask" v-model="isTaskDetailsDialogOpen" width="600">
+  <v-dialog
+    v-if="selectedTask"
+    v-model="isTaskDetailsDialogOpen"
+    max-width="900"
+  >
     <DialogCard without-actions @close="isTaskDetailsDialogOpen = false">
       <template #title>
         [{{ selectedTask.id }}] {{ selectedTask.name }}
@@ -29,15 +33,23 @@
       <template #content>
         <div class="assignment-details__content">
           <div class="assignment-metadata">
-            <v-chip color="primary" class="assignment-metadata__chip">
+            <v-chip
+              color="primary"
+              variant="flat"
+              class="assignment-metadata__chip"
+            >
               <v-icon icon="mdi-map-marker" />
               <span>{{
                 selectedTask.appointment
                   ? selectedTask.appointment.name
-                  : "No location name"
+                  : "Aucun lieu assigné"
               }}</span>
             </v-chip>
-            <v-chip color="primary" class="assignment-metadata__chip">
+            <v-chip
+              color="primary"
+              variant="flat"
+              class="assignment-metadata__chip"
+            >
               <v-icon icon="mdi-clock" />
               <span>
                 {{ formatTimeWindowForCalendar(selectedTask.timeWindow) }}
