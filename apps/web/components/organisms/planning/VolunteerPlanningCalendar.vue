@@ -35,7 +35,7 @@
           <div class="assignment-metadata">
             <v-chip
               color="primary"
-              variant="flat"
+              variant="elevated"
               class="assignment-metadata__chip"
             >
               <v-icon icon="mdi-map-marker" />
@@ -47,7 +47,7 @@
             </v-chip>
             <v-chip
               color="primary"
-              variant="flat"
+              variant="elevated"
               class="assignment-metadata__chip"
             >
               <v-icon icon="mdi-clock" />
