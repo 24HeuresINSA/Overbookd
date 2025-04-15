@@ -90,12 +90,16 @@ const preferenceAssignmentIcon = computed<{
   iconName: string;
   toolTipTexte: string;
 } | null>(() => {
+  if (!props.volunteer.teams.includes("soft")) return null;
   switch (props.volunteer.preference.assignment) {
     case "NO_REST":
-      return null;
-    case "STACKED":
       return {
         iconName: "mdi-menu",
+        toolTipTexte: "Pas de repos !",
+      };
+    case "STACKED":
+      return {
+        iconName: "mdi-format-vertical-align-center",
         toolTipTexte: "Des créneaux régroupés",
       };
     case "FRAGMENTED":
@@ -104,10 +108,7 @@ const preferenceAssignmentIcon = computed<{
         toolTipTexte: "Des créneaux éparpillés",
       };
     default:
-      return {
-        iconName: "mdi-tailwind",
-        toolTipTexte: "Pa de préférence",
-      };
+      return null;
   }
 });
 
