@@ -8,11 +8,19 @@
     <template #content>
       <div class="assignment-details__content">
         <div class="assignment-metadata">
-          <v-chip color="primary" class="assignment-metadata__chip">
+          <v-chip
+            color="primary"
+            variant="elevated"
+            class="assignment-metadata__chip"
+          >
             <v-icon icon="mdi-map-marker" />
             <span>{{ location }}</span>
           </v-chip>
-          <v-chip color="primary" class="assignment-metadata__chip">
+          <v-chip
+            color="primary"
+            variant="elevated"
+            class="assignment-metadata__chip"
+          >
             <v-icon icon="mdi-clock" />
             <span>{{ timetable }}</span>
           </v-chip>
