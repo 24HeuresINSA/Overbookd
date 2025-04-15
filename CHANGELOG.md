@@ -1,3 +1,15 @@
+## [3.41.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.7...v3.41.0) (2025-04-15)
+
+### Features
+
+* **need-help:** add calendar with multiple plannings [#2262](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2262) ([9932d3b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9932d3bf62674343a25b6506b461b063aa5d3264))
+* **planning:** display popup with task details in the planning [#2363](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2363) ([22fac23](https://gitlab.com/24-heures-insa/overbookd-mono/commit/22fac238223abd42ac1cf1199cdf9cc9fbdd2e0f))
+
+### Bug Fixes
+
+* **need-help:** phone btn style and error message on desktop ([8dc7a2c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8dc7a2cc26882032a9b5b5220646fae4b950ac5f))
+* **planning:** extend planning dialog width and improve chip style [#2363](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2363) ([908fe4f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/908fe4f8bb5a965f4a0458dd7082017dee4a84ed))
+
 ## [3.40.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.6...v3.40.7) (2025-04-04)
 
 ### Bug Fixes
