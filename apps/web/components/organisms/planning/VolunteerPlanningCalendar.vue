@@ -63,10 +63,8 @@
           </h3>
           <ul>
             <li v-for="contact in selectedTask.contacts" :key="contact.phone">
-              {{ contact.firstname }}
-              {{ contact.lastname }}
-              <span v-if="contact.nickname">({{ contact.nickname }})</span>
-              - {{ formatUserPhone(contact.phone) }}
+              {{ buildUserNameWithNickname(contact) }} -
+              {{ formatUserPhone(contact.phone) }}
             </li>
           </ul>
         </div>
@@ -74,16 +72,15 @@
           <h3>Instructions</h3>
           <div
             v-html-safe="selectedTask.globalInstructions"
-            class="assignment__global-instructions"
+            class="instructions__text"
           />
-          <div v-if="selectedTask.inChargeInstructions">
-            <br />
-            <h3>Instructions pour les responsables</h3>
-            <div
-              v-html-safe="selectedTask.inChargeInstructions"
-              class="assignment__in-charge-instructions"
-            />
-          </div>
+        </div>
+        <div v-if="selectedTask.inChargeInstructions" class="instructions">
+          <h3>Instructions pour les responsables</h3>
+          <div
+            v-html-safe="selectedTask.inChargeInstructions"
+            class="instructions__text"
+          />
         </div>
       </template>
     </DialogCard>
@@ -112,6 +109,7 @@ import {
 } from "~/utils/calendar/event";
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
+import { buildUserNameWithNickname } from "@overbookd/user";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -205,6 +203,7 @@ const events = computed<CalendarEventForPlanning[]>(() => {
         end,
         name: `[${id}] ${name}`,
         color: getColorByStatus(status),
+        link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
       }),
   );
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
@@ -276,11 +275,8 @@ const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {
 .instructions {
   padding-top: 2rem;
 
-  .assignment {
-    &__global-instructions,
-    &__in-charge-instructions {
-      margin-left: 1rem;
-    }
+  &__text {
+    margin-left: 1rem;
   }
   :deep(h1) {
     font-size: x-large;
