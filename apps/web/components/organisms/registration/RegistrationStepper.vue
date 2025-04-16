@@ -237,15 +237,10 @@
 
 <script lang="ts" setup>
 import {
-  BDE_CODE,
-  KARNA_CODE,
-  KFET_CODE,
   RegisterForm,
-  STRASBOURG_CODE,
-  TECKOS_CODE,
-  TENDRESTIVAL_CODE,
   type RegistrationTeams,
-  CVL_CODE,
+  REGISTRATION_TEAM_CODES,
+  type RegistrationTeamCode,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
 import {
@@ -267,6 +262,7 @@ import { loginAndApplyForMembership } from "~/utils/login.utils";
 const route = useRoute();
 const registrationStore = useRegistrationStore();
 const configurationStore = useConfigurationStore();
+const teamStore = useTeamStore();
 
 configurationStore.fetchAll();
 
@@ -324,15 +320,13 @@ const registerForm = computed<RegisterForm>(() => {
 
 const birthdayDate = computed<Date>(() => new Date(birthday.value));
 
-const comingFromTeams: string[] = [
-  BDE_CODE,
-  STRASBOURG_CODE,
-  KFET_CODE,
-  KARNA_CODE,
-  CVL_CODE,
-  TECKOS_CODE,
-  TENDRESTIVAL_CODE,
-];
+type TeamForRegistration = { name: string; code: RegistrationTeamCode };
+const comingFromTeams = computed<TeamForRegistration[]>(() => {
+  return REGISTRATION_TEAM_CODES.map((code) => {
+    const team = teamStore.getTeamByCode(code);
+    return team ? { name: team.name, code: team.code } : undefined;
+  }).filter((team): team is TeamForRegistration => team !== undefined);
+});
 
 const presentationRules = computed(() => [
   () => step.value <= 2 || rules.required(firstname.value),

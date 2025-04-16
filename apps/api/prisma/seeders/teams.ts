@@ -265,4 +265,10 @@ export const teams: Team[] = [
     color: "#18CE5C",
     icon: "mdi-waves",
   },
+  {
+    name: "INSA Rouen",
+    code: "rouen",
+    color: "#D6FF00",
+    icon: "mdi-dolphin",
+  },
 ];
