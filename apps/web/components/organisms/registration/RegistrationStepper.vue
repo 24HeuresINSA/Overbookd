@@ -321,9 +321,11 @@ const registerForm = computed<RegisterForm>(() => {
 const birthdayDate = computed<Date>(() => new Date(birthday.value));
 
 type TeamForRegistration = { name: string; code: RegistrationTeamCode };
-const comingFromTeams = computed<TeamForRegistration[]>(() =>
-  REGISTRATION_TEAM_CODES.map(teamStore.getTeamByCode).filter(Boolean),
-);
+const comingFromTeams = computed<TeamForRegistration[]>(() => {
+  return REGISTRATION_TEAM_CODES.map(teamStore.getTeamByCode).filter(
+    (team): team is TeamForRegistration => team !== undefined,
+  );
+});
 
 const presentationRules = computed(() => [
   () => step.value <= 2 || rules.required(firstname.value),
