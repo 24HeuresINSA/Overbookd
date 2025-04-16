@@ -1,3 +1,9 @@
+## [3.41.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.0...v3.41.1) (2025-04-16)
+
+### Bug Fixes
+
+* **registration:** add INSA Rouen team and display name instead of code [#2483](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2483) ([04925d1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/04925d134425f1ed3e778872ee3b4ded4318c505))
+
 ## [3.41.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.40.7...v3.41.0) (2025-04-15)
 
 ### Features
