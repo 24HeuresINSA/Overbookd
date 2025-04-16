@@ -322,9 +322,10 @@ const birthdayDate = computed<Date>(() => new Date(birthday.value));
 
 type TeamForRegistration = { name: string; code: RegistrationTeamCode };
 const comingFromTeams = computed<TeamForRegistration[]>(() => {
-  return REGISTRATION_TEAM_CODES.map(teamStore.getTeamByCode).filter(
-    (team): team is TeamForRegistration => team !== undefined,
-  );
+  return REGISTRATION_TEAM_CODES.map((code) => {
+    const team = teamStore.getTeamByCode(code);
+    return team ? { name: team.name, code: team.code } : undefined;
+  }).filter((team): team is TeamForRegistration => team !== undefined);
 });
 
 const presentationRules = computed(() => [
