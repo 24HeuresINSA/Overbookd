@@ -1,9 +1,9 @@
 import { Permissions } from "@overbookd/contribution";
 import { Permission, isPermission } from "@overbookd/permission";
-import { PrismaClient } from "@prisma/client";
+import { PrismaService } from "../../prisma.service";
 
 export class PrismaPermissions implements Permissions {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async mine(id: number): Promise<Permission[]> {
     const where = this.includeMemberCondition(id);
