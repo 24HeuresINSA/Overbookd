@@ -1,3 +1,9 @@
+## [3.41.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.1...v3.41.2) (2025-04-17)
+
+### Bug Fixes
+
+* **planning:** allow click to redirect to FT when time window is not affected [#2484](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2484) ([38d27c8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/38d27c81b973ba45f3711c7f6b8e43d4b1816d32))
+
 ## [3.41.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.0...v3.41.1) (2025-04-16)
 
 ### Bug Fixes
