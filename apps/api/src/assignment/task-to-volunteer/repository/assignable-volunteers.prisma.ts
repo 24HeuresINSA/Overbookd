@@ -28,7 +28,7 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
-import { NO_PREF } from "@overbookd/preference";
+import { AssignmentPreferenceType, NO_PREF } from "@overbookd/preference";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
