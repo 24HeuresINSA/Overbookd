@@ -62,6 +62,7 @@
             :clickable-events="clickableEvents"
             :availabilities="availabilities"
             @click:event="propagateEventClick"
+            @click:period="propagatePeriodClick"
           />
           <WeeklyCalendarContent
             v-else
@@ -70,6 +71,7 @@
             :clickable-events="clickableEvents"
             :availabilities="availabilities"
             @click:event="propagateEventClick"
+            @click:period="propagatePeriodClick"
           />
         </slot>
       </div>
@@ -83,6 +85,7 @@ import {
   formatDateNumberValue,
   HOURS_IN_DAY,
   OverDate,
+  Period,
   type IProvidePeriod,
 } from "@overbookd/time";
 import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
@@ -153,9 +156,12 @@ if (publicHolidayStore.all.length === 0) {
   publicHolidayStore.fetchAll();
 }
 
-const emit = defineEmits(["click:event"]);
+const emit = defineEmits(["click:event", "click:period"]);
 const propagateEventClick = (event: CalendarEvent) => {
   emit("click:event", event);
+};
+const propagatePeriodClick = (period: Period) => {
+  emit("click:period", period);
 };
 </script>
 

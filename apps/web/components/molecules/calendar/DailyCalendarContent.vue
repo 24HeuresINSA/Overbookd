@@ -15,6 +15,7 @@
         :key="hour"
         class="availability"
         :class="{ available: isAvailable(hour - 1) }"
+        @click="propagatePeriodClick(hour - 1)"
       />
     </div>
   </div>
@@ -22,8 +23,11 @@
 
 <script lang="ts" setup>
 import {
+  Duration,
   HOURS_IN_DAY,
+  isHour,
   OverDate,
+  Period,
   type Hour,
   type IProvidePeriod,
 } from "@overbookd/time";
@@ -53,9 +57,16 @@ const eventsToDisplay = computed<CalendarEvent[]>(() =>
   props.day.eventsOccuringThatDayAmong(props.events),
 );
 
-const emit = defineEmits(["click:event"]);
+const emit = defineEmits(["click:event", "click:period"]);
 const propagateEventClick = (event: CalendarEvent) => {
   emit("click:event", event);
+};
+const propagatePeriodClick = (hour: number) => {
+  if (!isHour(hour)) return;
+  const start = OverDate.init({ date: props.day.date.dateString, hour });
+  const end = start.plus(Duration.ONE_HOUR);
+  const period = Period.init({ start: start.date, end: end.date });
+  emit("click:period", period);
 };
 
 const isAvailable = (hour: number): boolean => {
