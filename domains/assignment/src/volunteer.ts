@@ -10,7 +10,7 @@ export type Volunteer = {
   comment?: string;
   note?: string;
   teams: string[];
-  preference: {
+  preference?: {
     assignment: AssignmentPreferenceType;
   };
 };
