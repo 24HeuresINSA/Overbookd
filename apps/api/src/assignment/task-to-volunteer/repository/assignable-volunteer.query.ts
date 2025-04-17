@@ -10,6 +10,7 @@ import {
   UserDataForCharisma,
 } from "../../../common/query/charisma.query";
 import { User } from "@overbookd/user";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 
 type DatabaseFriend = {
   id: number;
@@ -35,6 +36,7 @@ export type DatabaseStoredAssignableVolunteer = User &
     assigned: {
       assignment: DatabaseVolunteerAssignmentStat;
     }[];
+    preference?: { assignment: AssignmentPreferenceType };
     festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
     friends: { requestor: DatabaseFriend }[];
     friendRequestors: { friend: DatabaseFriend }[];

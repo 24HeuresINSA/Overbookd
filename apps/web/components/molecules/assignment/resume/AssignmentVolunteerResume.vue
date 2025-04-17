@@ -66,6 +66,8 @@
 
 <script lang="ts" setup>
 import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
+import { SOFT_CODE } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -90,19 +92,19 @@ const preferenceAssignmentIcon = computed<{
   iconName: string;
   toolTipTexte: string;
 } | null>(() => {
-  if (!props.volunteer.teams.includes("soft")) return null;
+  if (!props.volunteer.teams.includes(SOFT_CODE)) return null;
   switch (props.volunteer.preference.assignment) {
-    case "NO_REST":
+    case NO_REST:
       return {
         iconName: "mdi-menu",
         toolTipTexte: "Pas de repos !",
       };
-    case "STACKED":
+    case STACKED:
       return {
         iconName: "mdi-format-vertical-align-center",
         toolTipTexte: "Des créneaux régroupés",
       };
-    case "FRAGMENTED":
+    case FRAGMENTED:
       return {
         iconName: "mdi-align-vertical-distribute",
         toolTipTexte: "Des créneaux éparpillés",
