@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
+      "@overbookd/csv": ["./libraries/csv/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-event-constants": [
         "./constants/festival-event-constants/src"

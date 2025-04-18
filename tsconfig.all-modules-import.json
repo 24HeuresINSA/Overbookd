@@ -7,6 +7,7 @@
       "@overbookd/charisma": ["./domains/charisma/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./utils/configuration/src"],
+      "@overbookd/csv": ["./libraries/csv/src"],
       "@overbookd/domain-events": ["./utils/domain-events/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-event": ["./domains/festival-event/src"],
