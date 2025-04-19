@@ -31,12 +31,10 @@ export class CSVBuilder {
       ? this.headers
       : Object.keys(this.data[0]);
 
-    this.data.forEach((row) => {
-      const dataKeys = Object.keys(row);
-      if (dataKeys.length !== finalHeaders.length) {
-        throw new Error(HEADERS_ERROR_MESSAGE);
-      }
-    });
+    const hasMismatch = this.data.some(
+      (row) => Object.keys(row).length !== finalHeaders.length,
+    );
+    if (hasMismatch) throw new Error(HEADERS_ERROR_MESSAGE);
 
     const csvContent = this.data.map((row) => {
       return finalHeaders
