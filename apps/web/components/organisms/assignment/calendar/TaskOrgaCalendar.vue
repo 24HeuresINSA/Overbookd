@@ -5,6 +5,7 @@
       v-model="calendarMarker"
       :events="assignments"
       class="task-orga-calendar__calendar"
+      clickable-events
     />
   </div>
 </template>

@@ -9,6 +9,8 @@
       v-model="calendarMarker"
       :events="events"
       :availabilities="availabilities"
+      clickable-events
+      @click:event="selectAssignmentToDisplayDetails"
     />
   </div>
 </template>
@@ -30,6 +32,7 @@ import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
 import { convertToCalendarBreak } from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
+import { FT_URL } from "@overbookd/web-page";
 
 const userStore = useUserStore();
 const configurationStore = useConfigurationStore();
@@ -105,27 +108,22 @@ const availabilities = computed<IProvidePeriod[]>(
   () => availabilitiesStore.availabilities.list,
 );
 
-// const emit = defineEmits(["display-assignment-details"]);
-// const selectAssignmentToDisplayDetails = (
-//   event: DisplayableAssignment | CalendarEvent,
-// ) => {
-//   if ("taskId" in event) {
-//     assignVolunteerToTaskStore.fetchAssignmentDetails(event);
-//     emit("display-assignment-details");
-//   }
-// };
-
-// const openFtInNewTab = (event: DisplayableAssignment | CalendarEvent) => {
-//   if ("taskId" in event) return;
-//   window.open(event.link);
-// };
+const emit = defineEmits(["display-assignment-details"]);
+const selectAssignmentToDisplayDetails = (
+  event: CalendarEventWithIdentifier | CalendarEvent,
+) => {
+  if (!("identifier" in event)) return;
+  assignVolunteerToTaskStore.fetchAssignmentDetails(event.identifier);
+  emit("display-assignment-details");
+};
 
 const formatAssignmentForCalendar = (
   assignment: DisplayableAssignment,
   color?: string,
 ): CalendarEventWithIdentifier => {
   return createCalendarEvent({
-    ...assignment,
+    start: assignment.start,
+    end: assignment.end,
     color,
     name: `[${assignment.taskId}] ${assignment.name}`,
     identifier: {
@@ -146,6 +144,7 @@ const formatTaskForCalendar = ({
     end,
     name: `[${id}] ${name}`,
     color: getColorByStatus(status),
+    link: `${FT_URL}/${id}`,
   });
 };
 </script>

@@ -140,10 +140,9 @@ import {
 } from "@overbookd/assignment";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import { buildUserName } from "@overbookd/user";
-import { openTaskInNewTab } from "~/utils/festival-event/open-page";
 import { Duration, formatDateToHumanReadable } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { PLANNING_URL } from "@overbookd/web-page";
+import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
@@ -243,6 +242,9 @@ const close = () => emit("close");
 
 const openPlanningInNewTab = (assigneeId: number) => {
   window.open(`${PLANNING_URL}/${assigneeId}`);
+};
+const openTaskInNewTab = () => {
+  window.open(`${FT_URL}/${props.assignmentDetails.taskId}`);
 };
 
 const formatDuration = (duration: number): string => {
