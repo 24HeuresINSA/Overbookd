@@ -10,8 +10,8 @@
         loading-text="Chargement des fiches activités..."
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
-        @click:row="openActivity"
-        @auxclick:row="openActivityInNewTab"
+        @click:row="openActivityFromDataTable"
+        @auxclick:row="openActivityInNewTabFromDataTable"
       >
         <template #top>
           <v-text-field
@@ -46,8 +46,8 @@ import {
   type IProvidePeriod,
 } from "@overbookd/time";
 import {
-  openActivity,
-  openActivityInNewTab,
+  openActivityFromDataTable,
+  openActivityInNewTabFromDataTable,
 } from "~/utils/festival-event/open-page";
 import {
   matchingSearchItems,

@@ -6,7 +6,7 @@ import {
 
 type FestivalEventId = { id: number };
 
-export const openActivityInNewTab = (
+export const openActivityInNewTabFromDataTable = (
   _: PointerEvent,
   { item }: { item: FestivalEventId },
 ) => {
@@ -14,7 +14,7 @@ export const openActivityInNewTab = (
   openPageWithIdInNewTab(FA_URL, id);
 };
 
-export const openActivity = (
+export const openActivityFromDataTable = (
   event: PointerEvent,
   target: { item: FestivalEventId },
 ) => {
@@ -22,7 +22,7 @@ export const openActivity = (
   openPageWithId(event, FA_URL, id);
 };
 
-export const openTaskInNewTab = (
+export const openTaskInNewTabFromDataTable = (
   _: PointerEvent,
   { item }: { item: FestivalEventId },
 ) => {
@@ -30,7 +30,7 @@ export const openTaskInNewTab = (
   openPageWithIdInNewTab(FT_URL, id);
 };
 
-export const openTask = (
+export const openTaskFromDataTable = (
   event: PointerEvent,
   target: { item: FestivalEventId },
 ) => {
