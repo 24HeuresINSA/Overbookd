@@ -14,7 +14,7 @@
       <AssignmentDetailsDialogCard
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
-        @close-dialog="closeAssignmentDetailsDialog"
+        @close="closeAssignmentDetailsDialog"
         @unassign="unassignVolunteer"
       />
     </v-dialog>

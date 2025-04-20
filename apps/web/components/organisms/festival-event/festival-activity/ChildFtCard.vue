@@ -10,8 +10,8 @@
         no-data-text="Aucune FT associée"
         :hover="selectedActivity.tasks.length > 0"
         :mobile="isMobile"
-        @click:row="openTask"
-        @auxclick:row="openTaskInNewTab"
+        @click:row="openTaskFromDataTable"
+        @auxclick:row="openTaskInNewTabFromDataTable"
       >
         <template #item.id="{ item }">
           <v-chip size="small">{{ item.id }}</v-chip>
@@ -39,7 +39,10 @@ import {
   type StatusLabel,
 } from "@overbookd/festival-event-constants";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
+import {
+  openTaskFromDataTable,
+  openTaskInNewTabFromDataTable,
+} from "~/utils/festival-event/open-page";
 
 const faStore = useFestivalActivityStore();
 const layoutStore = useLayoutStore();

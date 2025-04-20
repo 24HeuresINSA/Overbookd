@@ -25,8 +25,8 @@
         :items-per-page="filters.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE"
         :hover="filteredTasks.length > 0"
         :mobile="isMobile"
-        @click:row="openTask"
-        @auxclick:row="openTaskInNewTab"
+        @click:row="openTaskFromDataTable"
+        @auxclick:row="openTaskInNewTabFromDataTable"
         @update:items-per-page="updateItemsPerPage"
       >
         <template #item.id="{ item }">
@@ -113,7 +113,10 @@ import {
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { buildUserName } from "@overbookd/user";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.utils";
-import { openTask, openTaskInNewTab } from "~/utils/festival-event/open-page";
+import {
+  openTaskFromDataTable,
+  openTaskInNewTabFromDataTable,
+} from "~/utils/festival-event/open-page";
 import {
   type TaskFilters,
   type TaskReviewsFilter,

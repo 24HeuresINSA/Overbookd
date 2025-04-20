@@ -18,8 +18,8 @@
         :items-per-page="filters.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE"
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
-        @click:row="openActivity"
-        @auxclick:row="openActivityInNewTab"
+        @click:row="openActivityFromDataTable"
+        @auxclick:row="openActivityInNewTabFromDataTable"
         @update:items-per-page="updateItemsPerPage"
       >
         <template #item.id="{ item }">
@@ -111,8 +111,8 @@ import {
 } from "~/utils/search/search.utils";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
-  openActivity,
-  openActivityInNewTab,
+  openActivityFromDataTable,
+  openActivityInNewTabFromDataTable,
 } from "~/utils/festival-event/open-page";
 import { useLiveNotification } from "~/composable/useLiveNotification";
 import {

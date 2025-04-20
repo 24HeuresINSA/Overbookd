@@ -11,8 +11,8 @@
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
         class="fa"
-        @click:row="openActivity"
-        @auxclick:row="openActivityInNewTab"
+        @click:row="openActivityFromDataTable"
+        @auxclick:row="openActivityInNewTabFromDataTable"
       >
         <template #top>
           <v-text-field
@@ -90,8 +90,8 @@ import type { TimeWindow } from "@overbookd/festival-event";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { Period, formatDateWithMinutes } from "@overbookd/time";
 import {
-  openActivity,
-  openActivityInNewTab,
+  openActivityFromDataTable,
+  openActivityInNewTabFromDataTable,
 } from "~/utils/festival-event/open-page";
 import {
   matchingSearchItems,
