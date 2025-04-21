@@ -131,9 +131,7 @@
           text="Enrôler candidat"
           color="primary"
           size="large"
-          @click="
-            selectedCandidate && updateCandidatesToEnroll(selectedCandidate)
-          "
+          @click="selectedCandidate && enrollCandidate(selectedCandidate)"
         />
         <v-btn
           v-if="!displayRejectedCandidates"
@@ -300,16 +298,6 @@ const updateTeamsParam = (teams: Team[]) => {
   filters.value.teams = teams;
   const teamsCode = teams.map(({ code }) => code);
   updateQueryParams("teams", teamsCode);
-};
-
-const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
-  if (candidatesToEnroll.value.includes(candidate)) {
-    candidatesToEnroll.value = candidatesToEnroll.value.filter(
-      (c) => c.id !== candidate.id,
-    );
-    return;
-  }
-  candidatesToEnroll.value = [...candidatesToEnroll.value, candidate];
 };
 
 const briefingLoading = ref<boolean>(true);
