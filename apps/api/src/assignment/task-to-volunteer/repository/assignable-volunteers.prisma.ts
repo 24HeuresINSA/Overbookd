@@ -28,6 +28,7 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
+import { NO_PREF } from "@overbookd/preference";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -197,6 +198,7 @@ function toStoredAssignableVolunteer(
     assignableFriendsIds: Array.from(new Set(assignableFriendsIds)),
     hasFriendAssigned: assignedFriends.length > 0,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
+    assignmentPreference: volunteer.preference?.assignment || NO_PREF,
   };
 }
 

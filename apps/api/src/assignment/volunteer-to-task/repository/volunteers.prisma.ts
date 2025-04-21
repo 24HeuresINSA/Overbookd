@@ -14,6 +14,7 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
+import { NO_PREF } from "@overbookd/preference";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -59,6 +60,7 @@ function toVolunteerWithAssignments(
     note: volunteer.note,
     charisma,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
+    assignmentPreference: volunteer.preference?.assignment || NO_PREF,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
     assignments,
   };

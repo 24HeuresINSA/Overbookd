@@ -43,6 +43,12 @@
             size="small"
             color="orange"
           />
+          <v-icon
+            v-if="preferenceAssignmentIcon"
+            v-tooltip:top="preferenceAssignmentIcon.label"
+            :icon="preferenceAssignmentIcon.icon"
+            size="small"
+          />
         </div>
       </div>
       <div>
@@ -60,6 +66,8 @@
 
 <script lang="ts" setup>
 import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
+import { SOFT_CODE } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -79,6 +87,32 @@ const props = defineProps({
     required: true,
   },
 });
+
+type AssignmentPreferenceIcon = { icon: string; label: string };
+const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
+  () => {
+    if (!props.volunteer.teams.includes(SOFT_CODE)) return null;
+    switch (props.volunteer.assignmentPreference) {
+      case NO_REST:
+        return {
+          icon: "mdi-menu",
+          label: "Pas de repos !",
+        };
+      case STACKED:
+        return {
+          icon: "mdi-format-vertical-align-center",
+          label: "Des créneaux régroupés",
+        };
+      case FRAGMENTED:
+        return {
+          icon: "mdi-align-vertical-distribute",
+          label: "Des créneaux éparpillés",
+        };
+      default:
+        return null;
+    }
+  },
+);
 
 const sortedVolunteerTeams = computed<string[]>(() =>
   sortTeamsForAssignment(props.volunteer.teams),

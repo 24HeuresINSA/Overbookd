@@ -1,7 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { AssignableVolunteer } from "@overbookd/assignment";
+import {
+  assignmentPreferences,
+  AssignmentPreferenceType,
+} from "@overbookd/preference";
 
 export class AssignableVolunteerResponseDto implements AssignableVolunteer {
+  @ApiProperty({ enum: assignmentPreferences })
+  assignmentPreference: AssignmentPreferenceType;
+
   @ApiProperty({ type: Number })
   id: number;
 

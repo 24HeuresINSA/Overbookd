@@ -1,4 +1,5 @@
 import { Period } from "@overbookd/time";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export type Volunteer = {
   id: number;
@@ -9,6 +10,7 @@ export type Volunteer = {
   comment?: string;
   note?: string;
   teams: string[];
+  assignmentPreference: AssignmentPreferenceType;
 };
 
 export class FormatVolunteer {
