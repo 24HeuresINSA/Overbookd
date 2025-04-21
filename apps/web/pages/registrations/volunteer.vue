@@ -79,27 +79,35 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn
-              v-if="!displayRejectedCandidates"
-              icon="mdi-check"
-              size="large"
-              variant="flat"
-              @click.stop="enrollCandidate(item)"
-            />
-            <v-btn
-              v-if="!displayRejectedCandidates"
-              icon="mdi-trash-can-outline"
-              size="large"
-              variant="flat"
-              @click.stop="rejectCandidate(item.id)"
-            />
-            <v-btn
-              v-else
-              icon="mdi-undo"
-              size="large"
-              variant="flat"
-              @click.stop="cancelCandidateRejection(item.id)"
-            />
+            <div class="actions">
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-check"
+                size="large"
+                color="success"
+                rounded="pill"
+                density="compact"
+                @click.stop="enrollCandidate(item)"
+              />
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-cancel"
+                size="large"
+                color="error"
+                rounded="pill"
+                density="compact"
+                @click.stop="rejectCandidate(item.id)"
+              />
+              <v-btn
+                v-else
+                icon="mdi-undo"
+                size="large"
+                color="warning"
+                rounded="pill"
+                density="compact"
+                @click.stop="cancelCandidateRejection(item.id)"
+              />
+            </div>
           </template>
 
           <template #item.candidatedAt="{ item }">
@@ -351,5 +359,10 @@ const handleMouseEnter = () => {
 
 .search-filter {
   margin: 5px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
 }
 </style>
