@@ -115,7 +115,7 @@ const teams = computed<string[]>(() => loggedUser.value?.teams ?? []);
 const charisma = computed<number>(() =>
   loggedUser.value ? loggedUser.value.charisma : 0,
 );
-const friendsCount = computed<number>(() => userStore.mFriends.length);
+const friendsCount = computed<number>(() => userStore.myFriends.length);
 const tasksCount = computed<number>(() =>
   loggedUser.value ? loggedUser.value.tasksCount : 0,
 );

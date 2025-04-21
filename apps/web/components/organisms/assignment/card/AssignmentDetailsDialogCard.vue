@@ -113,12 +113,14 @@
                   icon="mdi-calendar"
                   size="small"
                   density="comfortable"
+                  variant="flat"
                   @click="openPlanningInNewTab(item.id)"
                 />
                 <v-btn
                   icon="mdi-close"
                   size="small"
                   density="comfortable"
+                  variant="flat"
                   @click="unassignVolunteer(item)"
                 />
               </div>
@@ -262,6 +264,7 @@ const formatDuration = (duration: number): string => {
     .v-icon {
       margin-right: 5px;
     }
+    font-size: 14px;
   }
 }
 

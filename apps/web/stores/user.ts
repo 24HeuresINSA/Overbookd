@@ -46,7 +46,7 @@ type State = {
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
   friends: User[];
-  mFriends: User[];
+  myFriends: User[];
 };
 
 type Token = { teams: string[]; permissions: Permission[] };
@@ -66,7 +66,7 @@ export const useUserStore = defineStore("user", {
     volunteersWithAssignmentStats: [],
     adherents: [],
     friends: [],
-    mFriends: [],
+    myFriends: [],
   }),
   getters: {
     can:
@@ -159,14 +159,14 @@ export const useUserStore = defineStore("user", {
       if (!this.loggedUser) return;
       const res = await UserRepository.getUserFriends(this.loggedUser.id);
       if (isHttpError(res)) return;
-      this.mFriends = res;
+      this.myFriends = res;
     },
 
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
-      this.mFriends = [...this.mFriends, friend];
+      this.myFriends = [...this.myFriends, friend];
     },
 
     async removeFriend(friend: User) {
@@ -175,7 +175,7 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été supprimé de tes amis 😯`,
       );
-      this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
+      this.myFriends = this.myFriends.filter((f) => f.id !== friend.id);
     },
 
     async addFriendToUser(userId: number, friend: User) {

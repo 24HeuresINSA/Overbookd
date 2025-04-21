@@ -56,6 +56,7 @@ import {
   type IDefineCandidate,
 } from "@overbookd/assignment";
 import { FT_URL } from "@overbookd/web-page";
+import { getColorByStatus } from "~/domain/common/status-color";
 import { candidateFactory, assignments } from "~/utils/assignment/funnel";
 import {
   type CalendarEvent,
@@ -63,7 +64,7 @@ import {
 } from "~/utils/calendar/event";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
-import { BLACK, READY_TO_ASSIGN_COLOR } from "~/utils/vuetify/theme/common";
+import { BLACK } from "~/utils/vuetify/theme/common";
 
 const props = defineProps({
   assignment: {
@@ -104,24 +105,26 @@ const candidatesForCalendar = computed<VolunteerForCalendar[]>(() => {
     ],
   }));
 });
-const retreiveCandidateTasksAsEvents = (candidate: IDefineCandidate) => {
+const retreiveCandidateTasksAsEvents = (
+  candidate: IDefineCandidate,
+): CalendarEvent[] => {
   return candidate.planning.map((assignment) => {
     return createCalendarEvent({
       start: assignment.start,
       end: assignment.end,
       name: assignment.task.name,
-      id: assignment.task.id,
-      color: READY_TO_ASSIGN_COLOR,
+      color: getColorByStatus(assignment.task.status),
     });
   });
 };
-const retrieveCandidateBreaksAsEvents = (candidate: IDefineCandidate) => {
+const retrieveCandidateBreaksAsEvents = (
+  candidate: IDefineCandidate,
+): CalendarEvent[] => {
   return candidate.breakPeriods.map((breakPeriod) => {
     return createCalendarEvent({
       start: breakPeriod.start,
       end: breakPeriod.end,
       name: "Pause",
-      id: candidate.id,
       color: BLACK,
     });
   });
@@ -131,7 +134,6 @@ const assignmentAsEvent = computed<CalendarEvent>(() => {
     start: props.assignment.start,
     end: props.assignment.end,
     name: props.assignment.name,
-    id: props.assignment.taskId,
   });
 });
 

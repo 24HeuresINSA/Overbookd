@@ -74,7 +74,7 @@ const howToMakeFriends =
 const newFriend = ref<User | null>(null);
 
 const loggedUser = computed(() => userStore.loggedUser);
-const myFriends = computed(() => userStore.mFriends);
+const myFriends = computed(() => userStore.myFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
 
 const sendFriendRequest = async () => {

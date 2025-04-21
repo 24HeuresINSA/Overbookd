@@ -6,8 +6,7 @@
     />
     <TaskOrgaCalendar
       class="calendar"
-      @display-assignment-details="openAssignmentDetailsDialog"
-      @select-assignment="selectAssignment"
+      @open-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskList class="task-list" />
   </div>
@@ -21,14 +20,23 @@
       @volunteers-assigned="refreshTaskAssignments"
     />
   </v-dialog>
+  <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+    <AssignmentDetailsDialogCard
+      v-if="assignmentDetails"
+      :assignment-details="assignmentDetails"
+      @close="closeAssignmentDetailsDialog"
+      @unassign="unassignVolunteer"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type {
+  AssignmentWithDetails,
   AssignableVolunteer,
   Assignment,
-  AssignmentSummary,
 } from "@overbookd/assignment";
+import type { UnassignForm } from "~/utils/assignment/assignment";
 
 useHead({ title: "Affect Tâche-Orga" });
 
@@ -53,16 +61,20 @@ const selectVolunteer = (volunteer: AssignableVolunteer) => {
   assignTaskToVolunteerStore.selectVolunteer(volunteer);
   openFunnelDialog.value = true;
 };
-const selectAssignment = (assignment: AssignmentSummary) => {
-  const taskId = assignTaskToVolunteerStore.selectedTask?.id;
-  console.log("taskId", taskId);
-  if (!taskId) return;
-  assignTaskToVolunteerStore.selectAssignment(assignment);
+
+const assignmentDetails = computed<AssignmentWithDetails | null>(
+  () => assignTaskToVolunteerStore.assignmentDetails,
+);
+const unassignVolunteer = (form: UnassignForm) => {
+  assignTaskToVolunteerStore.unassign(form);
 };
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
-const openAssignmentDetailsDialog = () =>
-  (displayAssignmentDetailsDialog.value = true);
+const openAssignmentDetailsDialog = () => {
+  displayAssignmentDetailsDialog.value = true;
+};
+const closeAssignmentDetailsDialog = () =>
+  (displayAssignmentDetailsDialog.value = false);
 </script>
 
 <style lang="scss" scoped>

@@ -7,6 +7,7 @@
       clickable-events
       class="task-orga-calendar__calendar"
       @click:event="selectAssignment"
+      @click-right:event="openAssignmentDetails"
     />
   </div>
 </template>
@@ -86,6 +87,15 @@ const selectAssignment = (
 ) => {
   if (!hasAssignmentIdentifier(event)) return;
   assignTaskToVolunteerStore.selectAssignment(event.identifier);
+};
+
+const emit = defineEmits(["open-assignment-details"]);
+const openAssignmentDetails = (
+  event: CalendarEvent | CalendarEventWithIdentifier,
+) => {
+  if (!hasAssignmentIdentifier(event)) return;
+  assignTaskToVolunteerStore.fetchAssignmentDetails(event.identifier);
+  emit("open-assignment-details");
 };
 </script>
 

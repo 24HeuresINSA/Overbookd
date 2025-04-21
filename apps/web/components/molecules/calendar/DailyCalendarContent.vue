@@ -8,6 +8,7 @@
       :among="eventsToDisplayWithout(event)"
       :clickable="clickableEvents"
       @click="propagateEventClick"
+      @click-right="propagateEventRightClick"
     />
     <div v-if="availabilities.length > 0" class="availabilities">
       <div
@@ -57,9 +58,12 @@ const eventsToDisplay = computed<CalendarEvent[]>(() =>
   props.day.eventsOccuringThatDayAmong(props.events),
 );
 
-const emit = defineEmits(["click:event", "click:period"]);
+const emit = defineEmits(["click:event", "click-right:event", "click:period"]);
 const propagateEventClick = (event: CalendarEvent) => {
   emit("click:event", event);
+};
+const propagateEventRightClick = (event: CalendarEvent) => {
+  emit("click-right:event", event);
 };
 const propagatePeriodClick = (hour: number) => {
   if (!isHour(hour)) return;

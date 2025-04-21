@@ -7,6 +7,7 @@
     :href="clickable ? event.link : undefined"
     :ripple="clickable"
     @click="propagateClick"
+    @contextmenu.prevent="propagateRightClick"
   >
     <v-tooltip activator="parent" location="top">
       <CalendarEventContent :name="event.name" :hour="presenter.periodText" />
@@ -39,9 +40,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["click"]);
+const emit = defineEmits(["click", "click-right"]);
 const propagateClick = () => {
   if (props.clickable) emit("click", props.event);
+};
+const propagateRightClick = () => {
+  if (props.clickable) emit("click-right", props.event);
 };
 
 const presenter = computed<CalendarEventPresenter>(() => {
