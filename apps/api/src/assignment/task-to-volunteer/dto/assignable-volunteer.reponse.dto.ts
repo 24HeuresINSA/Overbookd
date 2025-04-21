@@ -5,14 +5,9 @@ import {
   AssignmentPreferenceType,
 } from "@overbookd/preference";
 
-export class AssignmentPreferenceDto {
-  @ApiProperty({ enum: assignmentPreferences })
-  assignment: AssignmentPreferenceType;
-}
-
 export class AssignableVolunteerResponseDto implements AssignableVolunteer {
-  @ApiProperty({ type: AssignmentPreferenceDto, required: false })
-  preference?: AssignmentPreferenceDto;
+  @ApiProperty({ enum: assignmentPreferences })
+  assignmentPreference: AssignmentPreferenceType;
 
   @ApiProperty({ type: Number })
   id: number;

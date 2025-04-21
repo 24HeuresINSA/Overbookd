@@ -45,8 +45,8 @@
           />
           <v-icon
             v-if="preferenceAssignmentIcon"
-            v-tooltip:top="preferenceAssignmentIcon.toolTipTexte"
-            :icon="preferenceAssignmentIcon.iconName"
+            v-tooltip:top="preferenceAssignmentIcon.label"
+            :icon="preferenceAssignmentIcon.icon"
             size="small"
           />
         </div>
@@ -88,31 +88,31 @@ const props = defineProps({
   },
 });
 
-const preferenceAssignmentIcon = computed<{
-  iconName: string;
-  toolTipTexte: string;
-} | null>(() => {
-  if (!props.volunteer.teams.includes(SOFT_CODE)) return null;
-  switch (props.volunteer.preference.assignment) {
-    case NO_REST:
-      return {
-        iconName: "mdi-menu",
-        toolTipTexte: "Pas de repos !",
-      };
-    case STACKED:
-      return {
-        iconName: "mdi-format-vertical-align-center",
-        toolTipTexte: "Des créneaux régroupés",
-      };
-    case FRAGMENTED:
-      return {
-        iconName: "mdi-align-vertical-distribute",
-        toolTipTexte: "Des créneaux éparpillés",
-      };
-    default:
-      return null;
-  }
-});
+type AssignmentPreferenceIcon = { icon: string; label: string };
+const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
+  () => {
+    if (!props.volunteer.teams.includes(SOFT_CODE)) return null;
+    switch (props.volunteer.assignmentPreference) {
+      case NO_REST:
+        return {
+          icon: "mdi-menu",
+          label: "Pas de repos !",
+        };
+      case STACKED:
+        return {
+          icon: "mdi-format-vertical-align-center",
+          label: "Des créneaux régroupés",
+        };
+      case FRAGMENTED:
+        return {
+          icon: "mdi-align-vertical-distribute",
+          label: "Des créneaux éparpillés",
+        };
+      default:
+        return null;
+    }
+  },
+);
 
 const sortedVolunteerTeams = computed<string[]>(() =>
   sortTeamsForAssignment(props.volunteer.teams),

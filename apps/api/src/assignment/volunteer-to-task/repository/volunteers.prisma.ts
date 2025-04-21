@@ -60,9 +60,7 @@ function toVolunteerWithAssignments(
     note: volunteer.note,
     charisma,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
-    preference: {
-      assignment: volunteer.preference?.assignment || NO_PREF,
-    },
+    assignmentPreference: volunteer.preference?.assignment || NO_PREF,
     hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
     assignments,
   };
