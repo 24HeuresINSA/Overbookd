@@ -128,7 +128,7 @@
       <template #additional-actions>
         <v-btn
           v-if="!displayRejectedCandidates"
-          text="Enrôler candidat"
+          text="Enrôler le candidat"
           color="primary"
           size="large"
           @click="selectedCandidate && enrollCandidate(selectedCandidate)"
