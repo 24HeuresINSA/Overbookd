@@ -248,9 +248,6 @@ const close = () => emit("close");
 const openPlanningInNewTab = (assigneeId: number) => {
   window.open(`${PLANNING_URL}/${assigneeId}`);
 };
-const openTaskInNewTab = () => {
-  window.open(`${FT_URL}/${props.assignmentDetails.taskId}`);
-};
 
 const formatDuration = (duration: number): string => {
   return Duration.ms(duration).toString();
