@@ -128,17 +128,28 @@
       <template #additional-actions>
         <v-btn
           v-if="!displayRejectedCandidates"
+          text="Enrôler candidat"
+          color="primary"
+          size="large"
+          @click="
+            selectedCandidate && updateCandidatesToEnroll(selectedCandidate)
+          "
+        />
+        <v-btn
+          v-if="!displayRejectedCandidates"
           text="Rejeter la candidature"
           color="error"
           size="large"
-          @click="rejectCandidate(selectedUser.id)"
+          @click="selectedCandidate && rejectCandidate(selectedCandidate.id)"
         />
         <v-btn
           v-else
           text="Restaurer la candidature"
           color="secondary"
           size="large"
-          @click="cancelCandidateRejection(selectedUser.id)"
+          @click="
+            selectedCandidate && cancelCandidateRejection(selectedCandidate.id)
+          "
         />
       </template>
     </VolunteerInformationDialogCard>
@@ -274,14 +285,13 @@ const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
   () => userStore.selectedUser,
 );
 const openCandidateInfoDialog = async (
-  _: PointerEvent,
-  { candidate }: { candidate: VolunteerCandidate },
+  _: MouseEvent,
+  { item }: { item: VolunteerCandidate },
 ) => {
-  selectedCandidate.value = candidate;
+  selectedCandidate.value = item;
+  await userStore.findUserById(item.id);
   isCandidateInfoDialogOpen.value = true;
-  await userStore.findUserById(candidate.id);
 };
-
 const closeCandidateInfoDialogue = () => {
   isCandidateInfoDialogOpen.value = false;
 };
@@ -290,6 +300,16 @@ const updateTeamsParam = (teams: Team[]) => {
   filters.value.teams = teams;
   const teamsCode = teams.map(({ code }) => code);
   updateQueryParams("teams", teamsCode);
+};
+
+const updateCandidatesToEnroll = (candidate: VolunteerCandidate) => {
+  if (candidatesToEnroll.value.includes(candidate)) {
+    candidatesToEnroll.value = candidatesToEnroll.value.filter(
+      (c) => c.id !== candidate.id,
+    );
+    return;
+  }
+  candidatesToEnroll.value = [...candidatesToEnroll.value, candidate];
 };
 
 const briefingLoading = ref<boolean>(true);
