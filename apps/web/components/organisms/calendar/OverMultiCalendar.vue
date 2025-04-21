@@ -5,6 +5,9 @@
     class="multi-calendar"
     display-day-in-manager
   >
+    <template #additional-actions>
+      <slot name="additional-actions" />
+    </template>
     <template #header>
       <div
         ref="headerScrollRef"
@@ -12,12 +15,7 @@
         @scroll="syncScroll(HEADER)"
       >
         <div class="multi-calendar__volunteers">
-          <NeedHelpVolunteerResumeCalendarHeader
-            v-for="volunteer in volunteers"
-            :key="volunteer.id"
-            :volunteer="volunteer"
-            class="multi-calendar__volunteer"
-          />
+          <slot name="volunteer-header" class="multi-calendar__volunteer" />
         </div>
       </div>
     </template>

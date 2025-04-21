@@ -143,6 +143,7 @@ import { buildUserName } from "@overbookd/user";
 import { Duration, formatDateToHumanReadable } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
+import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
@@ -155,6 +156,10 @@ const props = defineProps({
 });
 
 const selectedAssigneeId = ref<number | undefined>();
+
+const openTaskInNewTab = () => {
+  openPageWithIdInNewTab(FT_URL, props.assignmentDetails.taskId);
+};
 
 const taskName = computed<string>(
   () => `[${props.assignmentDetails.taskId}] ${props.assignmentDetails.name}`,

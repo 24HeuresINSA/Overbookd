@@ -11,27 +11,53 @@
     />
     <FilterableTaskList class="task-list" />
   </div>
+
+  <v-dialog v-model="openFunnelDialog" width="1000px">
+    <AssignmentFunnelDialogCard
+      v-if="volunteer && assignment"
+      :volunteer="volunteer"
+      :assignment="assignment"
+      @close="closeFunnelDialog"
+      @volunteers-assigned="refreshTaskAssignments"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type {
   AssignableVolunteer,
+  Assignment,
   AssignmentSummary,
 } from "@overbookd/assignment";
 
 useHead({ title: "Affect Tâche-Orga" });
 
-const assignTaskToVolunteer = useAssignTaskToVolunteerStore();
+const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
-assignTaskToVolunteer.fetchTasks();
+assignTaskToVolunteerStore.fetchTasks();
+
+const volunteer = computed<AssignableVolunteer | null>(
+  () => assignTaskToVolunteerStore.selectedVolunteer,
+);
+const assignment = computed<Assignment | null>(
+  () => assignTaskToVolunteerStore.selectedAssignment,
+);
+
+const openFunnelDialog = ref<boolean>(false);
+const closeFunnelDialog = () => (openFunnelDialog.value = false);
+const refreshTaskAssignments = ({ taskId }: Assignment) => {
+  assignTaskToVolunteerStore.selectTask(taskId);
+};
 
 const selectVolunteer = (volunteer: AssignableVolunteer) => {
-  assignTaskToVolunteer.selectVolunteer(volunteer);
+  assignTaskToVolunteerStore.selectVolunteer(volunteer);
+  openFunnelDialog.value = true;
 };
 const selectAssignment = (assignment: AssignmentSummary) => {
-  const taskId = assignTaskToVolunteer.selectedTask?.id;
+  const taskId = assignTaskToVolunteerStore.selectedTask?.id;
+  console.log("taskId", taskId);
   if (!taskId) return;
-  assignTaskToVolunteer.selectAssignment(assignment);
+  assignTaskToVolunteerStore.selectAssignment(assignment);
 };
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
