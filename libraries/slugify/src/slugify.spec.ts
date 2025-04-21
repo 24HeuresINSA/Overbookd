@@ -15,6 +15,7 @@ describe("slugify service", () => {
     ${"comment ça va ?"}            | ${"comment-ca-va"}
     ${"  salut"}                    | ${"salut"}
     ${"Comptage #1"}                | ${"comptage-1"}
+    ${"Vinícius Júnior"}            | ${"vinicius-junior"}
   `("when slugify $sentence", ({ sentence, expected }) => {
     it(`should return ${expected}`, () => {
       expect(SlugifyService.apply(sentence)).toBe(expected);
