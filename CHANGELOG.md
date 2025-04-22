@@ -1,3 +1,15 @@
+## [3.42.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.2...v3.42.0) (2025-04-22)
+
+### Features
+
+* **orga-task:** Add an icon with planning preferences [#2459](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2459) ([73e1791](https://gitlab.com/24-heures-insa/overbookd-mono/commit/73e17914e800e9afd2d095752995b08039abf971))
+* **web:** allow break periods on planning. [#2470](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2470) ([bfc95ce](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bfc95cee3805bc6a0d633022e7027d36c8726340))
+
+### Bug Fixes
+
+* **admission:** Make the volunteer action buttons always visible [#2474](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2474) ([dec687f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dec687fbf0b77e03c97bbfd7d54737a0bb2f876f))
+* **orga-task:** allow assignment click in calendar [#2481](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2481) ([ad4a9d5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ad4a9d5ac56b242c2cdf290fb62101fe30328e47))
+
 ## [3.41.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.1...v3.41.2) (2025-04-17)
 
 ### Bug Fixes
