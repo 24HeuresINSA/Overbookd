@@ -56,3 +56,54 @@ export class CSVBuilder {
     return [csvHeader, ...csvContent].join("\n");
   }
 }
+
+const SPECIAL_CHARACTERS = /["\n\r,\\]/;
+const ALL_QUOTES = /"/g;
+
+type CsvObject = Record<string, CsvData>;
+
+export class CSVBuilderB<
+  Item extends CsvObject,
+  Header extends keyof Item = keyof Item,
+> {
+  private constructor(
+    private readonly items: Item[],
+    private readonly headers: Header[],
+    private readonly delimiter: string = DEFAULT_DELIMITER,
+  ) {}
+
+  static from<T extends CsvObject>(items: T[]): CSVBuilderB<T, keyof T> {
+    const headers = Object.keys(items.at(0) ?? {});
+    return new CSVBuilderB(items, headers);
+  }
+
+  withHeaders(headers: Header[]): CSVBuilderB<Item, Header> {
+    return new CSVBuilderB(this.items, headers, this.delimiter);
+  }
+
+  withDelimiter(delimiter: string): CSVBuilderB<Item, Header> {
+    return new CSVBuilderB(this.items, this.headers, delimiter);
+  }
+
+  build(): string {
+    const headers = this.headers.join(this.delimiter);
+    const lines = this.items.map((item) =>
+      this.headers
+        .map((key) => this.escapeWhenNeeded(item[key.toString()]))
+        .join(this.delimiter),
+    );
+    return [headers, ...lines].join("\n");
+  }
+
+  private escapeWhenNeeded(value: CsvData) {
+    if (typeof value !== "string") return value;
+    const hasSpecialCharacters = SPECIAL_CHARACTERS.test(value);
+    const hasDelimiter = value.includes(this.delimiter);
+    const shouldEscape = hasSpecialCharacters || hasDelimiter;
+    return shouldEscape ? escape(value) : value;
+  }
+}
+
+function escape(value: string): string {
+  return `"${value.replace(ALL_QUOTES, '""')}"`;
+}
