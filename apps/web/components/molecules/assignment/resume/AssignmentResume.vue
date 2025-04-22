@@ -12,14 +12,18 @@
         </div>
       </div>
       <div class="assignment-teams">
-        <TeamChip
+        <span
           v-for="{ team } of assignment.teams"
           :key="team"
-          :team="team"
-          show-hidden
-          clickable
-          @click="selectTeam(team)"
-        />
+          class="team-chip-wrapper"
+        >
+          <TeamChip
+            :team="team"
+            show-hidden
+            clickable
+            @click="selectTeam(team)"
+          />
+        </span>
       </div>
     </div>
     <div class="has-friends-assigned">
@@ -96,6 +100,7 @@ const findTeamName = (code: string): string => {
 .assignment-card-data {
   min-height: 70px;
   display: flex;
+  cursor: default;
 }
 
 .assignment-details {
@@ -123,6 +128,14 @@ const findTeamName = (code: string): string => {
   flex-wrap: wrap;
   flex-basis: 100px;
   gap: 2px;
+}
+
+.team-chip-wrapper {
+  opacity: 0.6;
+}
+
+.team-chip-wrapper:hover {
+  opacity: 1;
 }
 
 .has-friends-assigned {
