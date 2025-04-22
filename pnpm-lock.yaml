@@ -122,6 +122,9 @@ importers:
       '@overbookd/contribution':
         specifier: workspace:*
         version: link:../../domains/contribution
+      '@overbookd/csv':
+        specifier: workspace:*
+        version: link:../../libraries/csv
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
@@ -345,6 +348,9 @@ importers:
       '@overbookd/contribution':
         specifier: workspace:*
         version: link:../../domains/contribution
+      '@overbookd/csv':
+        specifier: workspace:*
+        version: link:../../libraries/csv
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
@@ -623,6 +629,8 @@ importers:
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
+
+  libraries/csv: {}
 
   libraries/event: {}
 
