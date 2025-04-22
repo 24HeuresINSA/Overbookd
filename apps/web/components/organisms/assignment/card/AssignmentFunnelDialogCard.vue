@@ -57,7 +57,8 @@ import {
 } from "@overbookd/assignment";
 import { FT_URL } from "@overbookd/web-page";
 import { getColorByStatus } from "~/domain/common/status-color";
-import { candidateFactory, assignments } from "~/utils/assignment/funnel";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import { candidateFactory } from "~/utils/assignment/funnel";
 import {
   type CalendarEvent,
   createCalendarEvent,
@@ -78,11 +79,14 @@ const props = defineProps({
 });
 
 const funnel = ref<IActAsFunnel | null>(null);
-(async () => {
-  funnel.value = await ReadyToStart.init(candidateFactory(), assignments())
+onMounted(async () => {
+  funnel.value = await ReadyToStart.init(
+    candidateFactory(),
+    new AssignmentsRepository(),
+  )
     .select(props.assignment)
     .select(props.volunteer);
-})();
+});
 
 const day = ref<Date>(props.assignment.start);
 
