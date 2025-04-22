@@ -113,12 +113,14 @@
                   icon="mdi-calendar"
                   size="small"
                   density="comfortable"
+                  variant="flat"
                   @click="openPlanningInNewTab(item.id)"
                 />
                 <v-btn
                   icon="mdi-close"
                   size="small"
                   density="comfortable"
+                  variant="flat"
                   @click="unassignVolunteer(item)"
                 />
               </div>
@@ -143,6 +145,7 @@ import { buildUserName } from "@overbookd/user";
 import { Duration, formatDateToHumanReadable } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
+import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
@@ -155,6 +158,10 @@ const props = defineProps({
 });
 
 const selectedAssigneeId = ref<number | undefined>();
+
+const openTaskInNewTab = () => {
+  openPageWithIdInNewTab(FT_URL, props.assignmentDetails.taskId);
+};
 
 const taskName = computed<string>(
   () => `[${props.assignmentDetails.taskId}] ${props.assignmentDetails.name}`,
@@ -242,9 +249,6 @@ const close = () => emit("close");
 
 const openPlanningInNewTab = (assigneeId: number) => {
   window.open(`${PLANNING_URL}/${assigneeId}`);
-};
-const openTaskInNewTab = () => {
-  window.open(`${FT_URL}/${props.assignmentDetails.taskId}`);
 };
 
 const formatDuration = (duration: number): string => {

@@ -9,4 +9,6 @@ export type VolunteerForCalendar = User & {
   phone?: string;
   availabilities: IProvidePeriod[];
   assignments: CalendarEvent[];
+  charisma?: number;
+  assignmentDuration?: number;
 };

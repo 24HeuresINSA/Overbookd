@@ -31,6 +31,7 @@ import { AssignmentsRepository } from "~/repositories/assignment/assignments.rep
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import type { Membership } from "@overbookd/registration";
+import { ADMIN_CODE } from "@overbookd/team-constants";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
@@ -46,7 +47,7 @@ type State = {
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
   friends: User[];
-  mFriends: User[];
+  myFriends: User[];
 };
 
 type Token = { teams: string[]; permissions: Permission[] };
@@ -66,7 +67,7 @@ export const useUserStore = defineStore("user", {
     volunteersWithAssignmentStats: [],
     adherents: [],
     friends: [],
-    mFriends: [],
+    myFriends: [],
   }),
   getters: {
     can:
@@ -78,7 +79,7 @@ export const useUserStore = defineStore("user", {
         if (!accessToken.value) return false;
         const decodedToken: Token = jwtDecode(accessToken.value);
 
-        const isAdmin = decodedToken.teams.includes("admin");
+        const isAdmin = decodedToken.teams.includes(ADMIN_CODE);
         const hasPermission = decodedToken.permissions.includes(permission);
         return isAdmin || hasPermission;
       },
@@ -87,7 +88,8 @@ export const useUserStore = defineStore("user", {
       (team: string): boolean => {
         if (!loggedUser) return false;
         return (
-          loggedUser.teams.includes("admin") || loggedUser.teams.includes(team)
+          loggedUser.teams.includes(ADMIN_CODE) ||
+          loggedUser.teams.includes(team)
         );
       },
   },
@@ -159,14 +161,14 @@ export const useUserStore = defineStore("user", {
       if (!this.loggedUser) return;
       const res = await UserRepository.getUserFriends(this.loggedUser.id);
       if (isHttpError(res)) return;
-      this.mFriends = res;
+      this.myFriends = res;
     },
 
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
-      this.mFriends = [...this.mFriends, friend];
+      this.myFriends = [...this.myFriends, friend];
     },
 
     async removeFriend(friend: User) {
@@ -175,7 +177,7 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été supprimé de tes amis 😯`,
       );
-      this.mFriends = this.mFriends.filter((f) => f.id !== friend.id);
+      this.myFriends = this.myFriends.filter((f) => f.id !== friend.id);
     },
 
     async addFriendToUser(userId: number, friend: User) {

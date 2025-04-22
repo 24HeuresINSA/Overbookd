@@ -11,6 +11,7 @@
         :clickable-events="clickableEvents"
         :availabilities="availabilities"
         @click:event="propagateEventClick"
+        @click-right:event="propagateEventRightClick"
         @click:period="propagatePeriodClick"
       />
     </div>
@@ -41,9 +42,12 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["click:event", "click:period"]);
+const emit = defineEmits(["click:event", "click:period", "click-right:event"]);
 const propagateEventClick = (event: CalendarEvent) => {
   emit("click:event", event);
+};
+const propagateEventRightClick = (event: CalendarEvent) => {
+  emit("click-right:event", event);
 };
 const propagatePeriodClick = (period: Period) => {
   emit("click:period", period);

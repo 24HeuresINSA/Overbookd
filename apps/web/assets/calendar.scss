@@ -53,3 +53,14 @@ $hour-height: 45px;
   background-color: rgb(var(--v-theme-error));
   color: rgb(var(--v-theme-on-error));
 }
+
+.volunteer-header {
+  flex: 0 0 150px;
+  width: 150px;
+  box-sizing: border-box;
+  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+
+  &:first-child {
+    border-left: none;
+  }
+}

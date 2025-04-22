@@ -17,7 +17,16 @@
       :volunteers="volunteersForCalendar"
       :event-to-add="eventToAdd"
       class="need-help__item desktop-only"
-    />
+    >
+      <template #volunteer-header>
+        <NeedHelpVolunteerResumeCalendarHeader
+          v-for="volunteer in volunteersForCalendar"
+          :key="volunteer.id"
+          :volunteer="volunteer"
+          class="volunteer-header"
+        />
+      </template>
+    </OverMultiCalendar>
     <p
       v-if="!loading && volunteers.length === 0"
       class="no-volunteers desktop-only"
@@ -76,6 +85,8 @@ const eventToAdd = computed<CalendarEvent>(() => {
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/calendar.scss";
+
 .need-help {
   display: flex;
   flex-direction: column;

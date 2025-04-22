@@ -4,8 +4,10 @@
     <OverCalendar
       v-model="calendarMarker"
       :events="assignments"
-      class="task-orga-calendar__calendar"
       clickable-events
+      class="task-orga-calendar__calendar"
+      @click:event="selectAssignment"
+      @click-right:event="openAssignmentDetails"
     />
   </div>
 </template>
@@ -20,7 +22,10 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
-import { type CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
+import {
+  hasAssignmentIdentifier,
+  type CalendarEventWithIdentifier,
+} from "~/utils/assignment/calendar-event";
 
 const teamStore = useTeamStore();
 const configurationStore = useConfigurationStore();
@@ -75,6 +80,22 @@ const mapAssignmentToEvent = (
       },
     }),
   );
+};
+
+const selectAssignment = (
+  event: CalendarEvent | CalendarEventWithIdentifier,
+) => {
+  if (!hasAssignmentIdentifier(event)) return;
+  assignTaskToVolunteerStore.selectAssignment(event.identifier);
+};
+
+const emit = defineEmits(["open-assignment-details"]);
+const openAssignmentDetails = (
+  event: CalendarEvent | CalendarEventWithIdentifier,
+) => {
+  if (!hasAssignmentIdentifier(event)) return;
+  assignTaskToVolunteerStore.fetchAssignmentDetails(event.identifier);
+  emit("open-assignment-details");
 };
 </script>
 
