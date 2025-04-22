@@ -53,8 +53,22 @@ describe("CSVBuilder bis", () => {
           { id: 1, name: "John Doe", age: 30 },
           { id: 2, name: "Jane Smith", age: 25 },
         ];
-        const csv = CSVBuilderB.from(data).withHeaders(["age", "name"]).build();
+        const csv = CSVBuilderB.from(data).select(["age", "name"]).build();
         expect(csv).toBe("age,name\n30,John Doe\n25,Jane Smith");
+      });
+      describe("when headers are translated", () => {
+        it("should use translation", () => {
+          const data = [
+            { id: 1, name: "John Doe", age: 30 },
+            { id: 2, name: "Jane Smith", age: 25 },
+          ];
+          const csv = CSVBuilderB.from(data)
+            .select(["age", "name"])
+            .translate([["name", "nom"]])
+            .build();
+
+          expect(csv).toBe("age,nom\n30,John Doe\n25,Jane Smith");
+        });
       });
     });
 
@@ -64,7 +78,7 @@ describe("CSVBuilder bis", () => {
           { id: 1, name: "John Doe", age: 30 },
           { id: 2, name: "Jane Smith", age: 25 },
         ];
-        const csv = CSVBuilderB.from(data).withDelimiter(";").build();
+        const csv = CSVBuilderB.from(data).delimitWith(";").build();
         expect(csv).toBe("id;name;age\n1;John Doe;30\n2;Jane Smith;25");
       });
 
@@ -74,7 +88,7 @@ describe("CSVBuilder bis", () => {
             { id: 1, name: "John; Doe" },
             { id: 2, name: "Jane; Smith" },
           ];
-          const csv = CSVBuilderB.from(data).withDelimiter(";").build();
+          const csv = CSVBuilderB.from(data).delimitWith(";").build();
           expect(csv).toBe('id;name\n1;"John; Doe"\n2;"Jane; Smith"');
         });
       });

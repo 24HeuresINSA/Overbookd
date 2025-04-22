@@ -70,6 +70,7 @@ export class CSVBuilderB<
     private readonly items: Item[],
     private readonly headers: Header[],
     private readonly delimiter: string = DEFAULT_DELIMITER,
+    private readonly translations: Map<Header, string> = new Map(),
   ) {}
 
   static from<T extends CsvObject>(items: T[]): CSVBuilderB<T, keyof T> {
@@ -77,21 +78,44 @@ export class CSVBuilderB<
     return new CSVBuilderB(items, headers);
   }
 
-  withHeaders(headers: Header[]): CSVBuilderB<Item, Header> {
-    return new CSVBuilderB(this.items, headers, this.delimiter);
+  select(headers: Header[]): CSVBuilderB<Item, Header> {
+    return new CSVBuilderB(
+      this.items,
+      headers,
+      this.delimiter,
+      this.translations,
+    );
   }
 
-  withDelimiter(delimiter: string): CSVBuilderB<Item, Header> {
-    return new CSVBuilderB(this.items, this.headers, delimiter);
+  delimitWith(delimiter: string): CSVBuilderB<Item, Header> {
+    return new CSVBuilderB(
+      this.items,
+      this.headers,
+      delimiter,
+      this.translations,
+    );
+  }
+
+  translate(translations: [Header, string][]) {
+    return new CSVBuilderB(
+      this.items,
+      this.headers,
+      this.delimiter,
+      new Map(translations),
+    );
   }
 
   build(): string {
-    const headers = this.headers.join(this.delimiter);
+    const headers = this.headers
+      .map((header) => this.translations.get(header) ?? header)
+      .join(this.delimiter);
+
     const lines = this.items.map((item) =>
       this.headers
         .map((key) => this.escapeWhenNeeded(item[key.toString()]))
         .join(this.delimiter),
     );
+
     return [headers, ...lines].join("\n");
   }
 
