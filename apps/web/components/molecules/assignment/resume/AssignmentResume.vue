@@ -1,6 +1,13 @@
 <template>
-  <div class="assignment-card" @click="teamSelectShortcut">
-    <div class="assignment-card-data">
+  <div
+    class="assignment-card"
+    :class="{ 'only-one-team': hasOnlyOneTeamToSelect }"
+    @click="teamSelectShortcut"
+  >
+    <div
+      class="assignment-card-data"
+      :class="{ clickable: hasOnlyOneTeamToSelect }"
+    >
       <div class="assignment-details">
         <div class="assignment-name">
           <span>{{ assignment.taskId }} - {{ assignment.name }}</span>
@@ -77,8 +84,12 @@ const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
 const emit = defineEmits(["selected-team"]);
 const selectTeam = (teamCode: string) => emit("selected-team", teamCode);
 
+const hasOnlyOneTeamToSelect = computed(() => {
+  return props.assignment.teams.length === 1;
+});
+
 const teamSelectShortcut = () => {
-  if (props.assignment.teams.length !== 1) return;
+  if (!hasOnlyOneTeamToSelect.value) return;
   const team = props.assignment.teams.at(0)?.team;
   if (!team) return;
   selectTeam(team);
@@ -94,7 +105,6 @@ const findTeamName = (code: string): string => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
 }
 
 .assignment-card-data {
@@ -134,7 +144,8 @@ const findTeamName = (code: string): string => {
   opacity: 0.6;
 }
 
-.team-chip-wrapper:hover {
+.team-chip-wrapper:hover,
+.assignment-card.only-one-team:hover .team-chip-wrapper {
   opacity: 1;
 }
 
