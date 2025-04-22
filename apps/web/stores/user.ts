@@ -1,7 +1,7 @@
 import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
 import type {
+  AssignmentEvent,
   AssignmentIdentifier,
-  PlanningEvent,
 } from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -26,9 +26,11 @@ import type {
   TaskForCalendar,
 } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
-import { UserRepository } from "~/repositories/user.repository";
+import {
+  castAssignmentEventsWithDate,
+  UserRepository,
+} from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
-import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import type { Membership } from "@overbookd/registration";
 import { ADMIN_CODE } from "@overbookd/team-constants";
@@ -37,7 +39,7 @@ type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
-  selectedUserAssignments: PlanningEvent[];
+  selectedUserAssignments: AssignmentEvent[];
   currentTaskForCalendar?: TaskForCalendar;
   selectedUserBreakPeriods: Period[];
   selectedUserTasks: PlanningTask[];
@@ -326,7 +328,7 @@ export const useUserStore = defineStore("user", {
     async getVolunteerAssignments(userId: number) {
       const res = await UserRepository.getVolunteerAssignments(userId);
       if (isHttpError(res)) return;
-      this.selectedUserAssignments = castPlanningEventsWithDate(res);
+      this.selectedUserAssignments = castAssignmentEventsWithDate(res);
     },
 
     async getVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {

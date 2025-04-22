@@ -56,6 +56,7 @@ import {
   type IDefineCandidate,
 } from "@overbookd/assignment";
 import { FT_URL } from "@overbookd/web-page";
+import { convertToCalendarBreak } from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { candidateFactory } from "~/utils/assignment/funnel";
@@ -65,7 +66,6 @@ import {
 } from "~/utils/calendar/event";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
-import { BLACK } from "~/utils/vuetify/theme/common";
 
 const props = defineProps({
   assignment: {
@@ -123,14 +123,7 @@ const retreiveCandidateTasksAsEvents = (
 const retrieveCandidateBreaksAsEvents = (
   candidate: IDefineCandidate,
 ): CalendarEvent[] => {
-  return candidate.breakPeriods.map((breakPeriod) => {
-    return createCalendarEvent({
-      start: breakPeriod.start,
-      end: breakPeriod.end,
-      name: "Pause",
-      color: BLACK,
-    });
-  });
+  return candidate.breakPeriods.map(convertToCalendarBreak);
 };
 const assignmentAsEvent = computed<CalendarEvent>(() => {
   return createCalendarEvent({

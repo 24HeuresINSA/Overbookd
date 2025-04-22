@@ -1,18 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PlanningEvent, PlanningTask } from "@overbookd/assignment";
+import type { AssignmentEvent, PlanningTask } from "@overbookd/assignment";
 import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 import { PlanningTaskResponseDto } from "./planning-task.response.dto";
 
-export class PlanningEventResponseDto
+export class AssignmentEventResponseDto
   extends PeriodResponseDto
-  implements PlanningEvent
+  implements AssignmentEvent
 {
   @ApiProperty({ type: PlanningTaskResponseDto })
   task: PlanningTask;
 
   @ApiProperty({ type: String, required: false })
-  assignmentId?: PlanningEvent["assignmentId"];
+  assignmentId: AssignmentEvent["assignmentId"];
 
   @ApiProperty({ type: String, required: false })
-  mobilizationId?: PlanningEvent["mobilizationId"];
+  mobilizationId: AssignmentEvent["mobilizationId"];
 }

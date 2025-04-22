@@ -11,7 +11,7 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
-      @click:event="openAssignmentDetails"
+      @click:event="handleEventClicked"
       @click:period="askForBreak"
     />
   </div>
@@ -94,12 +94,39 @@
       @close="closeBreakDialog"
     />
   </v-dialog>
+
+  <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
+    <ConfirmationDialogCard
+      confirm-color="error"
+      abort-color="success"
+      @close="cancelBreakRemoval"
+      @confirm="removeBreak"
+    >
+      <template #title>Supprimer le créneau de pause</template>
+      <template #statement>
+        <div class="delete-statement">
+          <p>Tu vas supprimer la pause de</p>
+          <v-chip
+            color="primary"
+            variant="elevated"
+            class="assignment-metadata__chip"
+          >
+            <v-icon left>mdi-clock</v-icon>
+            <span>{{ selectedBreak?.toString() }}</span>
+          </v-chip>
+        </div>
+      </template>
+      <template #confirm-btn-content>
+        <v-icon left> mdi-delete-empty-outline </v-icon>Supprimer
+      </template>
+    </ConfirmationDialogCard>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type {
+  AssignmentEvent,
   AssignmentIdentifier,
-  PlanningEvent,
 } from "@overbookd/assignment";
 import type { TimeWindow } from "@overbookd/festival-event";
 import type {
@@ -108,9 +135,12 @@ import type {
   TaskForCalendar,
 } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
-import type { IProvidePeriod, Period } from "@overbookd/time";
+import { Period, type IProvidePeriod } from "@overbookd/time";
 import { FT_URL } from "@overbookd/web-page";
-import { convertToCalendarBreak } from "~/domain/common/break-events";
+import {
+  convertToCalendarBreak,
+  type BreakEvent,
+} from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import {
   createCalendarEvent,
@@ -126,16 +156,19 @@ const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
-type CalendarEventWithTaskId = CalendarEvent & {
+type RequestedDuringMobilization = CalendarEvent & {
   taskId: number;
+  kind: "mobilization";
 };
-type CalendarEventWithAssignmentIdentifier = CalendarEvent & {
+type AssignedToTask = CalendarEvent & {
   identifier: AssignmentIdentifier;
+  kind: "assignment";
 };
+
 type CalendarEventForPlanning =
-  | CalendarEvent
-  | CalendarEventWithTaskId
-  | CalendarEventWithAssignmentIdentifier;
+  | RequestedDuringMobilization
+  | AssignedToTask
+  | BreakEvent;
 
 const props = defineProps({
   volunteerId: {
@@ -175,7 +208,7 @@ const calendarMarker = ref<Date>(configurationStore.eventStartDate);
 const stats = computed<AssignmentStat[]>(
   () => userStore.selectedUserAssignmentStats,
 );
-const assignments = computed<PlanningEvent[]>(
+const assignments = computed<AssignmentEvent[]>(
   () => userStore.selectedUserAssignments,
 );
 const tasks = computed<PlanningTask[]>(() => userStore.selectedUserTasks);
@@ -187,45 +220,44 @@ const availabilities = computed<IProvidePeriod[]>(
 );
 
 const events = computed<CalendarEventForPlanning[]>(() => {
-  const assignmentEvents = assignments.value.map(
-    ({ start, end, task, assignmentId, mobilizationId }) => {
-      const identifier =
-        mobilizationId && assignmentId
-          ? {
-              taskId: task.id,
-              assignmentId: assignmentId,
-              mobilizationId: mobilizationId,
-            }
-          : undefined;
-      return createCalendarEvent({
-        start,
-        end,
-        name: `[${task.id}] ${task.name}`,
-        color: getColorByStatus(task.status),
-        identifier,
-      });
-    },
-  );
-  const taskEvents = tasks.value.map(
-    ({ name, id, status, timeWindow: { start, end } }) =>
-      createCalendarEvent({
-        start,
-        end,
-        name: `[${id}] ${name}`,
-        color: getColorByStatus(status),
-        link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
-      }),
-  );
+  const assignmentEvents = assignments.value.map(toCalendarAssignment);
+  const taskEvents = tasks.value.map(toCalendarTask);
   const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
 const isTaskDetailsDialogOpen = ref<boolean>(false);
 
-const openAssignmentDetails = async (event: CalendarEventForPlanning) => {
-  if (!("identifier" in event)) return;
-  await userStore.getVolunteerAssignmentDetails(event.identifier);
+const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
+  await userStore.getVolunteerAssignmentDetails(identifier);
   isTaskDetailsDialogOpen.value = true;
+};
+
+const CLICK_ON_EVENT: {
+  [kind in CalendarEventForPlanning["kind"]]: (
+    event: Extract<CalendarEventForPlanning, { kind: kind }>,
+  ) => void | Promise<void>;
+} = {
+  mobilization: () => {
+    console.debug("redirection is already handled by the calendar");
+  },
+  assignment: async (taskAssigned) => {
+    openAssignmentDetails(taskAssigned.identifier);
+  },
+  break: (period) => {
+    openBreakRemoval(period);
+  },
+};
+
+const handleEventClicked = (event: CalendarEventForPlanning) => {
+  switch (event.kind) {
+    case "mobilization":
+      return CLICK_ON_EVENT.mobilization(event);
+    case "assignment":
+      return CLICK_ON_EVENT.assignment(event);
+    case "break":
+      return CLICK_ON_EVENT.break(event);
+  }
 };
 
 const openAssignmentInNewTab = () => {
@@ -253,6 +285,55 @@ const saveBreak = (during: BreakDefinition["during"]) => {
   closeBreakDialog();
   userStore.addVolunteerBreakPeriods({ during, volunteer: props.volunteerId });
 };
+
+const selectedBreak = ref<Period | null>(null);
+const isBreakRemovalDialogOpen = ref<boolean>(false);
+
+const openBreakRemoval = (period: BreakEvent) => {
+  selectedBreak.value = Period.init(period);
+  isBreakRemovalDialogOpen.value = true;
+};
+
+const cancelBreakRemoval = () => {
+  isBreakRemovalDialogOpen.value = false;
+};
+
+const removeBreak = async () => {
+  if (selectedBreak.value === null) return;
+  const period = selectedBreak.value;
+  const volunteer = props.volunteerId;
+  await userStore.deleteVolunteerBreakPeriods({ volunteer, period });
+  isBreakRemovalDialogOpen.value = false;
+};
+
+function toCalendarAssignment(assignment: AssignmentEvent): AssignedToTask {
+  const { start, end, task, assignmentId, mobilizationId } = assignment;
+  const identifier = { taskId: task.id, assignmentId, mobilizationId };
+
+  return createCalendarEvent({
+    start,
+    end,
+    name: `[${task.id}] ${task.name}`,
+    color: getColorByStatus(task.status),
+    identifier,
+    kind: "assignment",
+  });
+}
+
+function toCalendarTask(task: PlanningTask): RequestedDuringMobilization {
+  const { name, id, status, timeWindow } = task;
+  const { start, end } = timeWindow;
+
+  return createCalendarEvent({
+    start,
+    end,
+    taskId: id,
+    name: `[${id}] ${name}`,
+    color: getColorByStatus(status),
+    link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
+    kind: "mobilization",
+  });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -323,5 +404,13 @@ const saveBreak = (during: BreakDefinition["during"]) => {
 
 .contacts > ul {
   padding-left: 2rem;
+}
+
+.delete-statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 </style>
