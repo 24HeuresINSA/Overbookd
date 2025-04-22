@@ -4,7 +4,7 @@ import {
   HARD_CODE,
   ORGA_CODE,
   SOFT_CODE,
-  TRUST_CODE,
+  CONFIANCE_CODE,
 } from "@overbookd/team-constants";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
@@ -12,7 +12,7 @@ export function sortTeamsForAssignment(teams: string[]): string[] {
     (team) => team !== ADMIN_CODE && team !== ORGA_CODE,
   );
 
-  const confianceIndex = getTeamIndex(sortedTeams, TRUST_CODE);
+  const confianceIndex = getTeamIndex(sortedTeams, CONFIANCE_CODE);
   if (confianceIndex !== -1) {
     sortedTeams = moveAtFirstIndex(sortedTeams, confianceIndex);
   }
