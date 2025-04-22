@@ -16,7 +16,6 @@
           v-for="{ team } of assignment.teams"
           :key="team"
           :team="team"
-          with-name
           show-hidden
           clickable
           @click="selectTeam(team)"
@@ -95,8 +94,7 @@ const findTeamName = (code: string): string => {
 }
 
 .assignment-card-data {
-  height: 70px;
-  overflow: hidden;
+  min-height: 70px;
   display: flex;
 }
 
