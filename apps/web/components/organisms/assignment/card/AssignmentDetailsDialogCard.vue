@@ -264,7 +264,6 @@ const formatDuration = (duration: number): string => {
     .v-icon {
       margin-right: 5px;
     }
-    font-size: 14px;
   }
 }
 

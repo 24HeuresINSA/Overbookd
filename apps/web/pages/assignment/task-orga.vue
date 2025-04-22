@@ -73,8 +73,9 @@ const displayAssignmentDetailsDialog = ref<boolean>(false);
 const openAssignmentDetailsDialog = () => {
   displayAssignmentDetailsDialog.value = true;
 };
-const closeAssignmentDetailsDialog = () =>
-  (displayAssignmentDetailsDialog.value = false);
+const closeAssignmentDetailsDialog = () => {
+  displayAssignmentDetailsDialog.value = false;
+};
 </script>
 
 <style lang="scss" scoped>

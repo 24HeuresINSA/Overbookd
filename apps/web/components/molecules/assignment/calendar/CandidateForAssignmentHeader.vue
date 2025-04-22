@@ -57,11 +57,11 @@ import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 
 const props = defineProps({
   candidate: {
-    type: Object as () => VolunteerForCalendar,
+    type: Object as PropType<VolunteerForCalendar>,
     required: true,
   },
   funnel: {
-    type: Object as () => IActAsFunnel,
+    type: Object as PropType<IActAsFunnel>,
     required: true,
   },
 });
@@ -91,15 +91,9 @@ const isNotAssignedAs = (team: string) => {
 };
 
 const emit = defineEmits(["revoke", "next", "previous", "temporary-assign"]);
-const revokeCandidate = () => {
-  emit("revoke");
-};
-const previousCandidate = () => {
-  emit("previous");
-};
-const nextCandidate = () => {
-  emit("next");
-};
+const revokeCandidate = () => emit("revoke");
+const previousCandidate = () => emit("previous");
+const nextCandidate = () => emit("next");
 const temporaryAssign = (team: string, candidate: VolunteerForCalendar) => {
   emit("temporary-assign", team, candidate);
 };

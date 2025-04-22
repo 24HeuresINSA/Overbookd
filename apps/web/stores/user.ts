@@ -31,6 +31,7 @@ import { AssignmentsRepository } from "~/repositories/assignment/assignments.rep
 import { castPlanningEventsWithDate } from "~/repositories/assignment/planning.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import type { Membership } from "@overbookd/registration";
+import { ADMIN_CODE } from "@overbookd/team-constants";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
@@ -78,7 +79,7 @@ export const useUserStore = defineStore("user", {
         if (!accessToken.value) return false;
         const decodedToken: Token = jwtDecode(accessToken.value);
 
-        const isAdmin = decodedToken.teams.includes("admin");
+        const isAdmin = decodedToken.teams.includes(ADMIN_CODE);
         const hasPermission = decodedToken.permissions.includes(permission);
         return isAdmin || hasPermission;
       },
@@ -87,7 +88,8 @@ export const useUserStore = defineStore("user", {
       (team: string): boolean => {
         if (!loggedUser) return false;
         return (
-          loggedUser.teams.includes("admin") || loggedUser.teams.includes(team)
+          loggedUser.teams.includes(ADMIN_CODE) ||
+          loggedUser.teams.includes(team)
         );
       },
   },

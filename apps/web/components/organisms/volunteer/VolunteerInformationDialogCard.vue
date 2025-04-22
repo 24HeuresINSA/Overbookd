@@ -185,7 +185,7 @@ import {
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
-import { HARD_CODE } from "@overbookd/team-constants";
+import { ADMIN_CODE, HARD_CODE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import type { AssignmentPreferenceType } from "@overbookd/preference";
 
@@ -239,7 +239,7 @@ const assignableTeams = computed<Team[]>(() => {
     (team: Team) => !props.volunteer.teams?.includes(team.code),
   );
   if (userStore.can(MANAGE_ADMINS)) return teamsToAdd;
-  return teamsToAdd.filter((team: Team) => team.code !== "admin");
+  return teamsToAdd.filter((team: Team) => team.code !== ADMIN_CODE);
 });
 
 const isHard = computed<boolean>(() =>

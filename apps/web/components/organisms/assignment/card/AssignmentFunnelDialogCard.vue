@@ -68,17 +68,16 @@ import { BLACK } from "~/utils/vuetify/theme/common";
 
 const props = defineProps({
   assignment: {
-    type: Object as () => Assignment,
+    type: Object as PropType<Assignment>,
     required: true,
   },
   volunteer: {
-    type: Object as () => AssignableVolunteer,
+    type: Object as PropType<AssignableVolunteer>,
     required: true,
   },
 });
 
 const funnel = ref<IActAsFunnel | null>(null);
-
 (async () => {
   funnel.value = await ReadyToStart.init(candidateFactory(), assignments())
     .select(props.assignment)
@@ -163,8 +162,7 @@ const temporaryAssign = (team: string, candidate: VolunteerForCalendar) => {
 
 const emit = defineEmits(["volunteers-assigned", "close"]);
 const assign = async () => {
-  if (!funnel.value) return;
-  if (!funnel.value.canAssign) return;
+  if (!funnel.value || !funnel.value.canAssign) return;
   await funnel.value.assign();
   emit("volunteers-assigned", props.assignment);
   close();
@@ -173,15 +171,8 @@ const close = () => emit("close");
 </script>
 
 <style scoped lang="scss">
-.volunteer-header {
-  width: 150px;
-  box-sizing: border-box;
-  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+@import "~/assets/calendar.scss";
 
-  &:first-child {
-    border-left: none;
-  }
-}
 .volunteer-headers {
   display: flex;
 }

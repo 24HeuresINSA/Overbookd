@@ -20,12 +20,13 @@ import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
+import { sortTeamsForAssignment } from "~/utils/sort/sort-teams.utils";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
 const props = defineProps({
   volunteer: {
-    type: Object as () => VolunteerForCalendar,
+    type: Object as PropType<VolunteerForCalendar>,
     required: true,
   },
 });
@@ -34,18 +35,9 @@ const displayableVolunteerNameWithCharisma = computed(() => {
   const formatedName = buildUserName(props.volunteer);
   return `${formatedName} | ${props.volunteer.charisma}`;
 });
-const sortedVolunteerTeams = computed<string[]>(() => {
-  const filteredTeams = props.volunteer.teams.filter(
-    (team) => team !== "admin" && team !== "orga",
-  );
-  if (filteredTeams.includes("soft")) {
-    return ["soft", ...filteredTeams.filter((team) => team !== "soft")];
-  }
-  if (filteredTeams.includes("hard")) {
-    return ["hard", ...filteredTeams.filter((team) => team !== "hard")];
-  }
-  return filteredTeams;
-});
+const sortedVolunteerTeams = computed<string[]>(() =>
+  sortTeamsForAssignment(props.volunteer.teams),
+);
 const assignmentStat = computed<string>(() => {
   const duration = Duration.ms(props.volunteer.assignmentDuration ?? 0);
   return `${category.value.toLowerCase()} : ${duration.toString()}`;

@@ -85,6 +85,8 @@ const eventToAdd = computed<CalendarEvent>(() => {
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/calendar.scss";
+
 .need-help {
   display: flex;
   flex-direction: column;
@@ -101,16 +103,5 @@ const eventToAdd = computed<CalendarEvent>(() => {
   text-align: center;
   font-size: 1.5rem;
   margin-top: 2rem;
-}
-
-.volunteer-header {
-  flex: 0 0 150px;
-  width: 150px;
-  box-sizing: border-box;
-  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
-
-  &:first-child {
-    border-left: none;
-  }
 }
 </style>
