@@ -57,8 +57,8 @@ import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/index/registration-error.filter";
 import { UserIdentifierResponseDto } from "../common/dto/user-identifier.response.dto";
 import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
-import { PlanningEventResponseDto } from "../assignment/common/dto/planning-event.response.dto";
 import { PlanningService } from "./planning/planning.service";
+import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -216,11 +216,11 @@ export class UserController {
     status: 200,
     description: "Get tasks a volunteer is assigned to",
     isArray: true,
-    type: PlanningEventResponseDto,
+    type: AssignmentEventResponseDto,
   })
   async getVolunteerAssignments(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<PlanningEventResponseDto[]> {
+  ): Promise<AssignmentEventResponseDto[]> {
     return this.userService.getVolunteerAssignments(id);
   }
 
