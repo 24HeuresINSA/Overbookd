@@ -80,7 +80,6 @@ export default pluginTs.config(
     ignores: [
       "**/build/",
       "**/dist/",
-      "apps/old-web/",
       "apps/web/.nuxt/",
       "apps/web/.output/",
       "**/*.spec.ts",

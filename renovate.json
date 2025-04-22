@@ -113,10 +113,6 @@
       "matchDatasources": ["npm"],
       "versioning": "npm",
       "minimumReleaseAge": "3 days"
-    },
-    {
-      "matchFileNames": ["apps/old-web/**"],
-      "enabled": false
     }
   ],
   "customManagers": [
