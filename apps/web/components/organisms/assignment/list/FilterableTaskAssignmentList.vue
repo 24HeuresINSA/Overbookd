@@ -149,10 +149,6 @@ $list-height: calc(
   }
 }
 
-.filters {
-  height: $filters-height;
-}
-
 .assignment-list {
   padding: 0 5px;
   height: $list-height;
