@@ -141,34 +141,20 @@ import {
   convertToCalendarBreak,
   type BreakEvent,
 } from "~/domain/common/break-events";
-import { getColorByStatus } from "~/domain/common/status-color";
-import {
-  createCalendarEvent,
-  type CalendarEvent,
-} from "~/utils/calendar/event";
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { BreakDefinition } from "@overbookd/planning";
+import {
+  toCalendarAssignment,
+  buildToCalendarTask,
+  type CalendarEventForPlanning,
+} from "~/utils/planning/event";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
-
-type RequestedDuringMobilization = CalendarEvent & {
-  taskId: number;
-  kind: "mobilization";
-};
-type AssignedToTask = CalendarEvent & {
-  identifier: AssignmentIdentifier;
-  kind: "assignment";
-};
-
-type CalendarEventForPlanning =
-  | RequestedDuringMobilization
-  | AssignedToTask
-  | BreakEvent;
 
 const props = defineProps({
   volunteerId: {
@@ -218,6 +204,8 @@ const breakPeriods = computed<IProvidePeriod[]>(
 const availabilities = computed<IProvidePeriod[]>(
   () => availabilityStore.availabilities.list,
 );
+
+const toCalendarTask = buildToCalendarTask({ canReadFt: canReadFT.value });
 
 const events = computed<CalendarEventForPlanning[]>(() => {
   const assignmentEvents = assignments.value.map(toCalendarAssignment);
@@ -305,35 +293,6 @@ const removeBreak = async () => {
   await userStore.deleteVolunteerBreakPeriods({ volunteer, period });
   isBreakRemovalDialogOpen.value = false;
 };
-
-function toCalendarAssignment(assignment: AssignmentEvent): AssignedToTask {
-  const { start, end, task, assignmentId, mobilizationId } = assignment;
-  const identifier = { taskId: task.id, assignmentId, mobilizationId };
-
-  return createCalendarEvent({
-    start,
-    end,
-    name: `[${task.id}] ${task.name}`,
-    color: getColorByStatus(task.status),
-    identifier,
-    kind: "assignment",
-  });
-}
-
-function toCalendarTask(task: PlanningTask): RequestedDuringMobilization {
-  const { name, id, status, timeWindow } = task;
-  const { start, end } = timeWindow;
-
-  return createCalendarEvent({
-    start,
-    end,
-    taskId: id,
-    name: `[${id}] ${name}`,
-    color: getColorByStatus(status),
-    link: canReadFT.value ? `${FT_URL}/${id}` : undefined,
-    kind: "mobilization",
-  });
-}
 </script>
 
 <style lang="scss" scoped>
