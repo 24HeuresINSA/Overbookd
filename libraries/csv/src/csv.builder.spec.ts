@@ -20,12 +20,13 @@ describe("CSVBuilder", () => {
     });
 
     describe.each`
-      type           | data                             | expected
-      ${"string"}    | ${[{ id: 1, name: "John Doe" }]} | ${"id,name\n1,John Doe"}
-      ${"number"}    | ${[{ id: 1, name: 30 }]}         | ${"id,name\n1,30"}
-      ${"boolean"}   | ${[{ id: 1, name: true }]}       | ${"id,name\n1,true"}
-      ${"null"}      | ${[{ id: 1, name: null }]}       | ${"id,name\n1,"}
-      ${"undefined"} | ${[{ id: 1, name: undefined }]}  | ${"id,name\n1,"}
+      type           | data                                     | expected
+      ${"string"}    | ${[{ id: 1, name: "John Doe" }]}         | ${"id,name\n1,John Doe"}
+      ${"number"}    | ${[{ id: 1, name: 30 }]}                 | ${"id,name\n1,30"}
+      ${"boolean"}   | ${[{ id: 1, name: true }]}               | ${"id,name\n1,true"}
+      ${"null"}      | ${[{ id: 1, name: null }]}               | ${"id,name\n1,"}
+      ${"undefined"} | ${[{ id: 1, name: undefined }]}          | ${"id,name\n1,"}
+      ${"undefined"} | ${[{ id: 1, name: undefined, age: 30 }]} | ${"id,name,age\n1,,30"}
     `("when data contains a $type value", ({ data, expected }) => {
       it("should handle the value correctly", () => {
         const csv = CSVBuilder.from(data).build();
