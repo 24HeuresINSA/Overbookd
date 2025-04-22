@@ -122,10 +122,6 @@ $list-height: calc(
   }
 }
 
-.filters {
-  height: $filters-height;
-}
-
 .task-list {
   padding: 0 5px;
   height: $list-height;

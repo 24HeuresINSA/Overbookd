@@ -141,14 +141,13 @@ const counterLabel = computed<string>(() =>
   width: 100%;
   padding: 5px 15px 0 15px;
   margin-top: auto;
-  height: $task-list-filters-height;
   display: flex;
   flex-direction: column;
   gap: 10px;
   overflow-y: auto;
   &__field {
     width: 100%;
-    overflow-x: hidden;
+    overflow: visible;
   }
 }
 .stats {

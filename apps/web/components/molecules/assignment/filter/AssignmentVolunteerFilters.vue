@@ -111,7 +111,6 @@ const stringify = (label: string) => SlugifyService.apply(label);
   width: 100%;
   padding: 5px 15px 0 15px;
   margin-top: auto;
-  height: $volunteer-list-filters-height;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -119,7 +118,7 @@ const stringify = (label: string) => SlugifyService.apply(label);
 
   &__field {
     width: 100%;
-    overflow-x: hidden;
+    overflow: visible;
   }
 }
 
