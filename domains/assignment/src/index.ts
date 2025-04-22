@@ -52,6 +52,7 @@ export type {
 export type {
   Planning,
   PlanningEvent,
+  AssignmentEvent,
   Task as PlanningTask,
   Availabilities,
   Friends,

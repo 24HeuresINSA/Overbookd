@@ -1,4 +1,9 @@
-import { Planning, PlanningEvent, PlanningTask } from "@overbookd/assignment";
+import {
+  AssignmentEvent,
+  Planning,
+  PlanningEvent,
+  PlanningTask,
+} from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
@@ -42,7 +47,7 @@ export class PrismaPlanning implements Planning {
 
 export function toPlanningEventFromAssignment(
   event: DatabaseAssignment,
-): PlanningEvent {
+): AssignmentEvent {
   const { start, end, id, mobilizationId, festivalTask } = event;
   return {
     start,

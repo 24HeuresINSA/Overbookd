@@ -1,5 +1,10 @@
-import type { PlanningEvent } from "@overbookd/assignment";
-import type { AssignmentStat, Consumer, PlanningTask } from "@overbookd/http";
+import type { AssignmentEvent } from "@overbookd/assignment";
+import type {
+  AssignmentStat,
+  Consumer,
+  HttpStringified,
+  PlanningTask,
+} from "@overbookd/http";
 import type {
   MyUserInformation,
   Profile,
@@ -7,6 +12,7 @@ import type {
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import { HttpClient } from "~/utils/http/http-client";
 import { ImageRepository } from "~/utils/http/image.repository";
 
@@ -97,7 +103,7 @@ export class UserRepository {
   }
 
   static getVolunteerAssignments(userId: number) {
-    return HttpClient.get<PlanningEvent[]>(
+    return HttpClient.get<AssignmentEvent[]>(
       `${this.basePath}/${userId}/assignments`,
     );
   }
@@ -118,4 +124,13 @@ export class UserRepository {
   static removeTeamFromUser(userId: number, team: string) {
     return HttpClient.delete(`${this.basePath}/${userId}/teams/${team}`);
   }
+}
+
+export function castAssignmentEventsWithDate(
+  assignments: HttpStringified<AssignmentEvent[]>,
+): AssignmentEvent[] {
+  return assignments.map((assignment) => ({
+    ...assignment,
+    ...castPeriodWithDate(assignment),
+  }));
 }

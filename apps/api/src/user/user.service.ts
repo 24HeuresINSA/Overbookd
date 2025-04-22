@@ -40,7 +40,7 @@ import {
   MANAGE_USERS,
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
-import { PlanningEvent } from "@overbookd/assignment";
+import { AssignmentEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
 import { Period } from "@overbookd/time";
@@ -166,7 +166,9 @@ export class UserService {
     );
   }
 
-  async getVolunteerAssignments(volunteerId: number): Promise<PlanningEvent[]> {
+  async getVolunteerAssignments(
+    volunteerId: number,
+  ): Promise<AssignmentEvent[]> {
     const assignments = await this.prisma.assignment.findMany({
       where: {
         assignees: { some: { userId: volunteerId } },

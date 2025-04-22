@@ -12,6 +12,8 @@ export type PlanningEvent = IProvidePeriod &
     task: Task;
   };
 
+export type AssignmentEvent = Required<PlanningEvent>;
+
 export type Planning = {
   for(volunteer: AssignableVolunteer["id"]): Promise<PlanningEvent[]>;
 };

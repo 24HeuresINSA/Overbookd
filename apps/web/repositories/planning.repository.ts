@@ -21,7 +21,7 @@ export class PlanningRepository {
 
   static removeBreakPeriod(volunteer: number, { start, end }: IProvidePeriod) {
     return HttpClient.delete<IProvidePeriod[]>(
-      `${this.basePath}/${volunteer}/break-periods?start=${start}&end=${end}`,
+      `${this.basePath}/${volunteer}/break-periods?start=${start.toISOString()}&end=${end.toISOString()}`,
     );
   }
 
