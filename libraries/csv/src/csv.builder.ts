@@ -98,11 +98,10 @@ function isPath<T extends CsvObject>(
 }
 
 function extractKeys(value: object): string[] {
-  return Object.entries(value).flatMap(([key, value]) =>
-    isObject(value)
-      ? extractKeys(value).map((nested) => `${key}.${nested}`)
-      : key,
-  );
+  return Object.entries(value).flatMap(([key, value]) => {
+    if (!isObject(value)) return key;
+    return extractKeys(value).map((nested) => `${key}.${nested}`);
+  });
 }
 
 function get<T extends CsvObject>(item: T, path: DeepPath<T>) {
