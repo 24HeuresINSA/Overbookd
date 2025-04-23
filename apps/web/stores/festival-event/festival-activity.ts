@@ -51,7 +51,6 @@ type State = {
     mine: PreviewFestivalActivity[];
     forSecurity: PreviewForSecurity[];
     forCommunication: PreviewForCommunication[];
-    forLogistic: { csv: string };
     forSigna: { csv: string };
   };
   selectedActivity: FestivalActivity;
@@ -66,7 +65,6 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       mine: [],
       forSecurity: [],
       forCommunication: [],
-      forLogistic: { csv: "" },
       forSigna: { csv: "" },
     },
     selectedActivity: fakeActivity,
@@ -140,12 +138,6 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.activities.forCommunication = res.map(
         castPreviewForCommunicationWithDate,
       );
-    },
-
-    async fetchLogisticPreviews() {
-      const res = await repo.getCSVLogisticPreviews();
-      if (isHttpError(res)) return;
-      this.activities.forLogistic.csv = res;
     },
 
     async fetchSignaPreviews() {

@@ -7,7 +7,6 @@ import {
 } from "@overbookd/festival-event";
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { PreviewForSigna } from "../preview/signa-preview";
-import { PreviewForLogistic } from "../preview/logistic-preview";
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
@@ -31,7 +30,6 @@ export type Previews = {
   byAdherentId(id: number): Promise<PreviewForAll[]>;
   forSecurity(): Promise<PreviewForSecurity[]>;
   forCommunication(): Promise<PreviewForCommunication[]>;
-  forLogistic(): Promise<PreviewForLogistic[]>;
   forSigna(): Promise<PreviewForSigna[]>;
 };
 

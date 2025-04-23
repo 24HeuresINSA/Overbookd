@@ -62,12 +62,6 @@ export class FestivalActivityRepository {
     );
   }
 
-  static getCSVLogisticPreviews() {
-    return HttpClient.get<string>(`${this.basePath}/for-logistic`, {
-      acceptedType: CSV,
-    });
-  }
-
   static getCSVSignaPreviews() {
     return HttpClient.get<string>(`${this.basePath}/for-signa`, {
       acceptedType: CSV,
