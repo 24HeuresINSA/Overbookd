@@ -30,7 +30,7 @@
     <v-card>
       <v-card-title class="gear-list__title">
         <span>Matos à emprunter</span>
-        <v-icon
+        <v-btn
           icon="mdi-export"
           color="secondary"
           rounded="pill"
@@ -99,7 +99,13 @@ const removeGearRequest = (gear: GearRequest) => {
 };
 
 const exportCSv = () => {
-  const csv = CSVBuilder.from(selectedBorrow.value.gears).build();
+  const csv = CSVBuilder.from(selectedBorrow.value.gears)
+    .select(["name", "quantity"])
+    .translate([
+      ["name", "Nom"],
+      ["quantity", "Quantité"],
+    ])
+    .build();
   downloadCsv(selectedBorrow.value.lender, csv);
 };
 </script>
