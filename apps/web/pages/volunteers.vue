@@ -72,7 +72,6 @@ import {
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { downloadCsv } from "~/utils/file/download.utils";
-import { sanitizeFieldForCSV } from "~/utils/file/csv.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
 import { BENEVOLE_CODE } from "@overbookd/team-constants";
@@ -83,6 +82,7 @@ import {
   VOLUNTEER_STATS,
   type DisplayMode,
 } from "~/utils/user/volunteer.display";
+import { CSVBuilder } from "@overbookd/csv";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -150,30 +150,42 @@ const closeVolunteerInfoDialog = () => {
 };
 
 const exportCSV = async () => {
-  // Parse data into a CSV string to be passed to the download function
-  const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
-  const csvHeader =
-    "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire;Note";
+  const csv = CSVBuilder.from(
+    filteredVolunteers.value.map((volunteer) => {
+      const teams = volunteer.teams
+        .filter((team) => team !== BENEVOLE_CODE)
+        .join(", ");
+      const birthdate = formatDate(volunteer.birthdate);
+      const phone = formatUserPhone(volunteer.phone);
+      return { ...volunteer, teams, phone, birthdate };
+    }),
+  )
+    .select([
+      "firstname",
+      "lastname",
+      "nickname",
+      "charisma",
+      "teams",
+      "email",
+      "birthdate",
+      "phone",
+      "comment",
+      "note",
+    ])
+    .translate([
+      ["firstname", "Prenom"],
+      ["lastname", "Nom"],
+      ["nickname", "Surnom"],
+      ["charisma", "Charisme"],
+      ["teams", "Equipes"],
+      ["email", "Email"],
+      ["birthdate", "Date de naissance"],
+      ["phone", "Telephone"],
+      ["comment", "Commentaire"],
+      ["note", "Note"],
+    ])
+    .build();
 
-  const csvContent = filteredVolunteers.value.map((volunteer) => {
-    const teams = volunteer.teams.filter((team) => team !== BENEVOLE_CODE);
-    return [
-      volunteer.firstname,
-      volunteer.lastname,
-      volunteer.nickname,
-      volunteer.charisma.toString(),
-      teams.join(", "),
-      volunteer.email,
-      formatDate(volunteer.birthdate),
-      formatUserPhone(volunteer.phone),
-      volunteer.comment?.replace(lineReturnRegex, " "),
-      volunteer.note?.replace(lineReturnRegex, " "),
-    ]
-      .map(sanitizeFieldForCSV)
-      .join(";");
-  });
-
-  const csv = [csvHeader, ...csvContent].join("\n");
   downloadCsv("benevoles", csv);
 };
 
