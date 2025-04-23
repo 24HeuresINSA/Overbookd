@@ -6,7 +6,6 @@ import {
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
 import { SignaPreview } from "./signa-preview";
-import { LogisticPreview } from "./logistic-preview";
 
 @Injectable()
 export class FestivalActivityPreviewService {
@@ -29,11 +28,6 @@ export class FestivalActivityPreviewService {
 
   findForCommunication(): Promise<PreviewForCommunication[]> {
     return this.previews.forCommunication();
-  }
-
-  async findForLogisticInCsv(): Promise<string> {
-    const previews = await this.previews.forLogistic();
-    return LogisticPreview.toCsv(previews);
   }
 
   async findForSignaInCsv(): Promise<string> {

@@ -137,33 +137,6 @@ export class FestivalActivityPreviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get("for-logistic")
-  @ApiResponse({
-    status: 200,
-    description: "All inquiries from festival activities",
-  })
-  @ApiProduces(CSV)
-  async findAllForLogistic(
-    @Request() request: RequestWithUserPayload,
-    @Res() response: Response,
-  ) {
-    try {
-      response.setHeader("content-type", request.headers.accept);
-      const csv = await this.previewService.findForLogisticInCsv();
-      response.send(csv);
-      return;
-    } catch (e) {
-      this.logger.error(e);
-      if (e instanceof HttpException) {
-        response.status(e.getStatus()).send(e.message);
-        return;
-      }
-      response.status(500).send(e);
-    }
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(EXPORT_FOR_SIGNA)
   @Get("for-signa")
   @ApiResponse({

@@ -113,11 +113,8 @@ import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { downloadCsv } from "~/utils/file/download.utils";
-import {
-  sanitizeFieldForCSV,
-  booleanToReadableString,
-} from "~/utils/file/csv.utils";
-import { formatLocalDate } from "@overbookd/time";
+import { booleanToReadableString } from "~/utils/file/csv.utils";
+import { CSVBuilder } from "@overbookd/csv";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();
@@ -188,25 +185,33 @@ const emptySelectedGear = () => (selectedGear.value = undefined);
 const exportCatalogCSV = async () => {
   if (!isCatalogWriter.value) return;
 
-  const csvHeader = "Référence;Catégorie;Nom;Consommable;Appoint";
-  const csvContent = gears.value.map((gear) => {
-    const category = gear.category
-      ? `${gear.category.name} (${gear.category.path})`
-      : "";
-    return [
-      gear.code ?? "",
-      category,
-      gear.name,
-      booleanToReadableString(gear.isConsumable),
-      booleanToReadableString(gear.isPonctualUsage),
-    ]
-      .map(sanitizeFieldForCSV)
-      .join(";");
-  });
+  const csv = CSVBuilder.from(
+    gears.value.map((gear) => {
+      const category = gear.category ?? { name: "", path: "" };
+      const isConsumable = booleanToReadableString(gear.isConsumable);
+      const isPonctualUsage = booleanToReadableString(gear.isPonctualUsage);
+      return { ...gear, category, isConsumable, isPonctualUsage };
+    }),
+  )
+    .select([
+      "code",
+      "category.name",
+      "category.path",
+      "name",
+      "isConsumable",
+      "isPonctualUsage",
+    ])
+    .translate([
+      ["code", "Référence"],
+      ["category.name", "Catégorie"],
+      ["category.path", "Catégorie complète"],
+      ["name", "Materiel"],
+      ["isConsumable", "Consommable"],
+      ["isPonctualUsage", "Appoint"],
+    ])
+    .build();
 
-  const csv = [csvHeader, ...csvContent].join("\n");
-  const today = formatLocalDate(new Date());
-  downloadCsv(`catalogue_${today}`, csv);
+  downloadCsv("catalogue", csv);
 };
 </script>
 

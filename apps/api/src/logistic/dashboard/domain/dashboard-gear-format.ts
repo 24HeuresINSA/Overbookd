@@ -1,3 +1,4 @@
+import { CSVBuilder } from "@overbookd/csv";
 import { GearRequirementForCsv } from "../dashboard.service";
 import { formatDateWithMinutes } from "@overbookd/time";
 
@@ -5,20 +6,34 @@ export class DashboardGearFormat {
   private constructor() {}
 
   static toCsv(requirements: GearRequirementForCsv[]): string {
-    const header = "Matos,Manque,Details Manque,Stock,Details Stock,Date\n";
-
-    const lines = requirements.map((requirement) => {
+    const data = requirements.map((requirement) => {
       const missingDetails =
         DashboardGearFormat.formatMissingDetailsForCsv(requirement);
       const stockDetails =
         DashboardGearFormat.formatStockDetailsForCsv(requirement);
 
-      const { name, date, missing, stock } = requirement;
-      const formattedDate = formatDateWithMinutes(date);
-      return `${name},${missing},"${missingDetails}",${stock.total},"${stockDetails}",${formattedDate}`;
+      const date = formatDateWithMinutes(requirement.date);
+      return { ...requirement, date, missingDetails, stockDetails };
     });
 
-    return header + lines.join("\n");
+    return CSVBuilder.from(data)
+      .select([
+        "name",
+        "missing",
+        "missingDetails",
+        "stock.total",
+        "stockDetails",
+        "date",
+      ])
+      .translate([
+        ["name", "Matos"],
+        ["missing", "Manque"],
+        ["missingDetails", "Détails manque"],
+        ["stock.total", "Stock"],
+        ["stockDetails", "Détails stock"],
+        ["date", "Date"],
+      ])
+      .build();
   }
 
   private static formatMissingDetailsForCsv(

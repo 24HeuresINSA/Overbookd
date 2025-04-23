@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import type { FilterGear } from "~/utils/logistic/filter-gear";
-import { formatLocalDate, ONE_DAY_IN_MS } from "@overbookd/time";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 import type { GearSearchOptions } from "@overbookd/http";
 import { downloadCsv } from "~/utils/file/download.utils";
 
@@ -80,8 +80,7 @@ const exportCsv = async () => {
   exportLoading.value = true;
   await dashboardStore.fetchCSVRequirements();
   if (dashboardStore.csvRequirements) {
-    const date = formatLocalDate(new Date());
-    downloadCsv(`recap-matos-${date}`, dashboardStore.csvRequirements);
+    downloadCsv("recap-matos", dashboardStore.csvRequirements);
   }
   exportLoading.value = false;
 };
