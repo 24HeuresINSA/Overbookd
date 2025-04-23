@@ -1,3 +1,5 @@
+import { formatLocalDate } from "@overbookd/time";
+
 const CSV_EXTENSION = ".csv";
 
 export function downloadCsv(filename: string, text: string) {
@@ -9,10 +11,11 @@ export function downloadCsv(filename: string, text: string) {
 
   const element = document.createElement("a");
   element.href = url;
+  const date = formatLocalDate(new Date());
 
   const withExtension = filename.endsWith(CSV_EXTENSION)
     ? filename
-    : `${filename}${CSV_EXTENSION}`;
+    : `${filename}-${date}${CSV_EXTENSION}`;
   element.setAttribute("download", withExtension);
 
   document.body.appendChild(element);

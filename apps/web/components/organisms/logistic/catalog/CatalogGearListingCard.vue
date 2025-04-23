@@ -114,7 +114,6 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { booleanToReadableString } from "~/utils/file/csv.utils";
-import { formatLocalDate } from "@overbookd/time";
 import { CSVBuilder } from "@overbookd/csv";
 
 const catalogGearStore = useCatalogGearStore();
@@ -212,8 +211,7 @@ const exportCatalogCSV = async () => {
     ])
     .build();
 
-  const today = formatLocalDate(new Date());
-  downloadCsv(`catalogue_${today}`, csv);
+  downloadCsv("catalogue", csv);
 };
 </script>
 
