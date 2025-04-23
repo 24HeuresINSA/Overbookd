@@ -71,7 +71,7 @@ import {
 } from "~/utils/user/volunteer.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { download } from "~/utils/file/download.utils";
+import { downloadCsv } from "~/utils/file/download.utils";
 import { sanitizeFieldForCSV } from "~/utils/file/csv.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
@@ -174,7 +174,7 @@ const exportCSV = async () => {
   });
 
   const csv = [csvHeader, ...csvContent].join("\n");
-  download("benevoles.csv", csv);
+  downloadCsv("benevoles", csv);
 };
 
 const isDownloadLeafletsOpen = ref<boolean>(false);

@@ -1,4 +1,6 @@
-export function download(filename: string, text: string) {
+const CSV_EXTENSION = ".csv";
+
+export function downloadCsv(filename: string, text: string) {
   const BOM = "\uFEFF";
   const textWithBOM = BOM + text;
 
@@ -7,7 +9,11 @@ export function download(filename: string, text: string) {
 
   const element = document.createElement("a");
   element.href = url;
-  element.setAttribute("download", filename);
+
+  const withExtension = filename.endsWith(CSV_EXTENSION)
+    ? filename
+    : `${filename}${CSV_EXTENSION}`;
+  element.setAttribute("download", withExtension);
 
   document.body.appendChild(element);
   element.click();

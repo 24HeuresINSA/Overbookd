@@ -43,7 +43,7 @@
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { formatLocalDate, ONE_DAY_IN_MS } from "@overbookd/time";
 import type { GearSearchOptions } from "@overbookd/http";
-import { download } from "~/utils/file/download.utils";
+import { downloadCsv } from "~/utils/file/download.utils";
 
 useHead({ title: "Récap Matos" });
 
@@ -81,7 +81,7 @@ const exportCsv = async () => {
   await dashboardStore.fetchCSVRequirements();
   if (dashboardStore.csvRequirements) {
     const date = formatLocalDate(new Date());
-    download(`recap-matos-${date}.csv`, dashboardStore.csvRequirements);
+    downloadCsv(`recap-matos-${date}`, dashboardStore.csvRequirements);
   }
   exportLoading.value = false;
 };

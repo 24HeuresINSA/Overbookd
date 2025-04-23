@@ -112,7 +112,7 @@ import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
-import { download } from "~/utils/file/download.utils";
+import { downloadCsv } from "~/utils/file/download.utils";
 import {
   sanitizeFieldForCSV,
   booleanToReadableString,
@@ -206,7 +206,7 @@ const exportCatalogCSV = async () => {
 
   const csv = [csvHeader, ...csvContent].join("\n");
   const today = formatLocalDate(new Date());
-  download(`catalogue_${today}.csv`, csv);
+  downloadCsv(`catalogue_${today}`, csv);
 };
 </script>
 
