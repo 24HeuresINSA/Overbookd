@@ -204,7 +204,7 @@ const exportCatalogCSV = async () => {
     .translate([
       ["code", "Référence"],
       ["category.name", "Catégorie"],
-      ["category.path", "Catégorie complete"],
+      ["category.path", "Catégorie complète"],
       ["name", "Materiel"],
       ["isConsumable", "Consommable"],
       ["isPonctualUsage", "Appoint"],

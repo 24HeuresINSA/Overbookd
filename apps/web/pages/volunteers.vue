@@ -173,14 +173,14 @@ const exportCSV = async () => {
       "note",
     ])
     .translate([
-      ["firstname", "Prenom"],
+      ["firstname", "Prénom"],
       ["lastname", "Nom"],
       ["nickname", "Surnom"],
       ["charisma", "Charisme"],
-      ["teams", "Equipes"],
+      ["teams", "Équipes"],
       ["email", "Email"],
       ["birthdate", "Date de naissance"],
-      ["phone", "Telephone"],
+      ["phone", "Téléphone"],
       ["comment", "Commentaire"],
       ["note", "Note"],
     ])

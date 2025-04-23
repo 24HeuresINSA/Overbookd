@@ -40,7 +40,7 @@ export class SignaPreview {
         ["activity.id", "Id FA"],
         ["activity.name", "Nom FA"],
         ["activity.status", "Statut FA"],
-        ["activity.team", "Equipe"],
+        ["activity.team", "Équipe"],
         ["activity.locationName", "Lieu"],
         ["signage.catalogName", "Nom catalogue"],
         ["signage.type", "Type"],

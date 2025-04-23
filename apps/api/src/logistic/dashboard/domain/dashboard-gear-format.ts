@@ -28,9 +28,9 @@ export class DashboardGearFormat {
       .translate([
         ["name", "Matos"],
         ["missing", "Manque"],
-        ["missingDetails", "Details Manque"],
+        ["missingDetails", "Détails manque"],
         ["stock.total", "Stock"],
-        ["stockDetails", "Details Stock"],
+        ["stockDetails", "Détails stock"],
         ["date", "Date"],
       ])
       .delimitWith(";")
