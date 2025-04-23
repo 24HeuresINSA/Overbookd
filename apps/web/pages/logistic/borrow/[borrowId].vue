@@ -28,7 +28,16 @@
     </v-card>
 
     <v-card>
-      <v-card-title>Matos à emprunter</v-card-title>
+      <v-card-title class="gear-list__title">
+        <span>Matos à emprunter</span>
+        <v-icon
+          icon="mdi-export"
+          color="secondary"
+          rounded="pill"
+          density="comfortable"
+          @click="exportCSv"
+        />
+      </v-card-title>
       <v-card-text>
         <BasicGearRequestFormTable
           :gears="selectedBorrow.gears"
@@ -44,6 +53,8 @@
 <script lang="ts" setup>
 import type { GearRequest, Borrow } from "@overbookd/logistic";
 import { BORROW_GEARS_URL } from "@overbookd/web-page";
+import { CSVBuilder } from "@overbookd/csv";
+import { downloadCsv } from "~/utils/file/download.utils";
 
 const route = useRoute();
 const borrowStore = useBorrowStore();
@@ -86,6 +97,11 @@ const addGearRequest = (gear: GearRequest) => {
 const removeGearRequest = (gear: GearRequest) => {
   borrowStore.removeGearRequest(gear.slug);
 };
+
+const exportCSv = () => {
+  const csv = CSVBuilder.from(selectedBorrow.value.gears).build();
+  downloadCsv(selectedBorrow.value.lender, csv);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -110,5 +126,11 @@ const removeGearRequest = (gear: GearRequest) => {
       gap: 0.2em;
     }
   }
+}
+
+.gear-list__title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 </style>

@@ -102,7 +102,7 @@ import {
 import { ELEC_CODE } from "@overbookd/team-constants";
 import { formatLocalDate } from "@overbookd/time";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
-import { download } from "~/utils/file/download.utils";
+import { downloadCsv } from "~/utils/file/download.utils";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -174,7 +174,7 @@ const exportSignaCsv = async () => {
   const csv = faStore.activities.forSigna.csv;
   if (csv) {
     const date = formatLocalDate(new Date());
-    download(`export-signa-${date}.csv`, csv);
+    downloadCsv(`export-signa-${date}`, csv);
   }
   signaExportLoading.value = false;
 };
