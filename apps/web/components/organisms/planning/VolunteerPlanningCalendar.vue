@@ -150,6 +150,7 @@ import {
   buildToCalendarTask,
   type CalendarEventForPlanning,
 } from "~/utils/planning/event";
+import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -250,7 +251,7 @@ const handleEventClicked = (event: CalendarEventForPlanning) => {
 
 const openAssignmentInNewTab = () => {
   if (!selectedTask.value) return;
-  navigateTo(`${FT_URL}/${selectedTask.value.id}`);
+  openPageWithIdInNewTab(FT_URL, selectedTask.value.id);
 };
 
 const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {

@@ -28,6 +28,7 @@
 <script lang="ts" setup>
 import type { InitPurchaseForm, Purchase } from "@overbookd/logistic";
 import { PURCHASE_GEARS_URL } from "@overbookd/web-page";
+import { openPageWithId } from "~/utils/navigation/router.utils";
 
 const purchaseStore = usePurchaseStore();
 
@@ -45,7 +46,7 @@ const close = () => {
   loading.value = false;
 };
 
-const initPurchase = async () => {
+const initPurchase = async (event: PointerEvent) => {
   if (!seller.value || !availableOn.value) return;
   loading.value = true;
 
@@ -56,7 +57,7 @@ const initPurchase = async () => {
   await purchaseStore.init(purchase);
 
   if (!selectedPurchase.value.id) return;
-  await navigateTo(`${PURCHASE_GEARS_URL}/${selectedPurchase.value.id}`);
+  await openPageWithId(event, PURCHASE_GEARS_URL, selectedPurchase.value.id);
   close();
 };
 </script>

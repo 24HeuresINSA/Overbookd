@@ -102,6 +102,7 @@ import {
 import { ELEC_CODE } from "@overbookd/team-constants";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { downloadCsv } from "~/utils/file/download.utils";
+import { openPage } from "~/utils/navigation/router.utils";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -145,15 +146,15 @@ const updateReviewerParams = (
 const canViewSecurityDashboard = computed<boolean>(() => {
   return userStore.can(VIEW_SECURITY_DASHBOARD);
 });
-const openSecurityDashboard = () => {
-  navigateTo(SECURITY_DASHBOARD_URL);
+const openSecurityDashboard = (event: PointerEvent) => {
+  openPage(event, SECURITY_DASHBOARD_URL);
 };
 
 const canViewAnimationsToPublish = computed<boolean>(() => {
   return userStore.can(READ_ANIMATION_TO_PUBLISH);
 });
-const openAnimationsToPublish = () => {
-  navigateTo(FA_TO_PUBLISH_URL);
+const openAnimationsToPublish = (event: PointerEvent) => {
+  openPage(event, FA_TO_PUBLISH_URL);
 };
 
 const hasLogElecTeam = computed<boolean>(() => {

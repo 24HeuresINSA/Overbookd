@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
+import { openPageWithId } from "~/utils/navigation/router.utils";
 
 const faStore = useFestivalActivityStore();
 
@@ -43,7 +44,7 @@ const cantCreate = computed<boolean>(
 const selectedActivity = computed<FestivalActivity>(
   () => faStore.selectedActivity,
 );
-const createNewActivity = async () => {
+const createNewActivity = async (event: PointerEvent) => {
   if (cantCreate.value) return;
   loading.value = true;
 
@@ -51,7 +52,7 @@ const createNewActivity = async () => {
   await faStore.create(blankFa);
 
   if (!selectedActivity.value?.id) return;
-  await navigateTo(`${FA_URL}/${selectedActivity.value.id}`);
+  await openPageWithId(event, FA_URL, selectedActivity.value.id);
   close();
 };
 </script>

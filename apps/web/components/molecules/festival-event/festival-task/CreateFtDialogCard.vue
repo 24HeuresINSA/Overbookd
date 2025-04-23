@@ -32,6 +32,7 @@ import type {
   PreviewFestivalActivity,
 } from "@overbookd/festival-event";
 import { FT_URL } from "@overbookd/web-page";
+import { openPageWithId } from "~/utils/navigation/router.utils";
 
 const ftStore = useFestivalTaskStore();
 
@@ -51,7 +52,7 @@ const cantCreate = computed<boolean>(
   () => name.value.trim() === "" || !selectedActivity.value || loading.value,
 );
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
-const createNewTask = async () => {
+const createNewTask = async (event: PointerEvent) => {
   if (cantCreate.value || !selectedActivity.value) return;
   loading.value = true;
 
@@ -62,7 +63,7 @@ const createNewTask = async () => {
   await ftStore.create(blankFt);
 
   if (!selectedTask.value?.id) return;
-  await navigateTo(`${FT_URL}/${selectedTask.value.id}`);
+  await openPageWithId(event, FT_URL, selectedTask.value.id);
   close();
 };
 </script>

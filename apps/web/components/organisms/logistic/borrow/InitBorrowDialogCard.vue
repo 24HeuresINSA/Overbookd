@@ -34,6 +34,7 @@
 import type { Borrow, InitBorrowForm } from "@overbookd/logistic";
 import { Period } from "@overbookd/time";
 import { BORROW_GEARS_URL } from "@overbookd/web-page";
+import { openPageWithId } from "~/utils/navigation/router.utils";
 
 const borrowStore = useBorrowStore();
 
@@ -62,7 +63,7 @@ const close = () => {
   loading.value = false;
 };
 
-const initBorrow = async () => {
+const initBorrow = async (event: PointerEvent) => {
   if (!lender.value || !availableOn.value || !unavailableOn.value) return;
   loading.value = true;
 
@@ -74,6 +75,7 @@ const initBorrow = async () => {
   await borrowStore.init(borrow);
 
   if (!selectBorrow.value.id) return;
-  await navigateTo(`${BORROW_GEARS_URL}/${selectBorrow.value.id}`);
+  await openPageWithId(event, BORROW_GEARS_URL, selectBorrow.value.id);
+  close();
 };
 </script>
