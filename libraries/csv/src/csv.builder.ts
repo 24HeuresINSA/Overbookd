@@ -25,7 +25,7 @@ export class CSVBuilder<
 
   static from<T extends CsvObject>(items: T[]): CSVBuilder<T, DeepPath<T>> {
     const headers = items.reduce((headers, item) => {
-      const keys = extractKeys(item).filter((key) => isPath<T>(key));
+      const keys = extractKeys(item).filter((key) => isPath(item, key));
       return new Set<DeepPath<T>>([...headers, ...keys]);
     }, new Set<DeepPath<T>>());
 
@@ -90,8 +90,11 @@ function escape(value: string): string {
   return `"${value.replace(ALL_QUOTES, '""')}"`;
 }
 
-function isPath<T>(key: string): key is DeepPath<T> {
-  return true;
+function isPath<T extends CsvObject>(
+  item: T,
+  path: string,
+): path is DeepPath<T> {
+  return pathExists(item, path);
 }
 
 function extractKeys(value: object): string[] {
@@ -111,4 +114,12 @@ function get<T extends CsvObject>(item: T, path: DeepPath<T>) {
 
 function hasProperty(item: unknown, key: string): item is { [key]: unknown } {
   return isObject(item) && key in item;
+}
+
+function pathExists(item: unknown, path: string): boolean {
+  const [key, ...remaining] = path.split(".");
+  if (key === undefined || key === "") return true;
+  if (!isObject(item)) return false;
+  const nextPath = remaining.join(".");
+  return hasProperty(item, key) && pathExists(item[`${key}`], nextPath);
 }
