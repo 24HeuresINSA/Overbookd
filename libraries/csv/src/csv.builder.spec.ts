@@ -95,4 +95,57 @@ describe("CSVBuilder", () => {
       });
     });
   });
+  describe("when data has nested objects", () => {
+    it("should flatten the data", () => {
+      const data = [
+        { id: 1, civil: { firstName: "John", lastName: "Doe" }, age: 30 },
+        { id: 2, civil: { firstName: "Jane", lastName: "Smith" }, age: 25 },
+      ];
+      const csv = CSVBuilder.from(data).build();
+      expect(csv).toBe(
+        "id,civil.firstName,civil.lastName,age\n1,John,Doe,30\n2,Jane,Smith,25",
+      );
+    });
+  });
+  describe("when manipulating realistic data for signage", () => {
+    it("should generate a CSV with the right headers and data", () => {
+      const data = [
+        {
+          preview: { id: 1, name: "Test", status: "DRAFT" },
+          signage: { quantity: 2, text: "Test", size: "XL" },
+        },
+        {
+          preview: { id: 1, name: "Test", status: "DRAFT" },
+          signage: {
+            quantity: 10,
+            text: "Small indication",
+            size: "S",
+            comment: "Attention",
+          },
+        },
+        {
+          preview: { id: 2, name: "Nearly done", status: "IN REVIEW" },
+          signage: { quantity: 1, text: "Here", size: "XL", comment: "Test" },
+        },
+      ];
+      expect(
+        CSVBuilder.from(data)
+          .select([
+            "preview.status",
+            "signage.size",
+            "signage.text",
+            "signage.quantity",
+          ])
+          .translate([
+            ["preview.status", "task status"],
+            ["signage.size", "size"],
+            ["signage.text", "text"],
+            ["signage.quantity", "quantity"],
+          ])
+          .build(),
+      ).toBe(
+        "task status,size,text,quantity\nDRAFT,XL,Test,2\nDRAFT,S,Small indication,10\nIN REVIEW,XL,Here,1",
+      );
+    });
+  });
 });
