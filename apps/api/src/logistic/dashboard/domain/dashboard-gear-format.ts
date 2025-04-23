@@ -33,7 +33,6 @@ export class DashboardGearFormat {
         ["stockDetails", "Détails stock"],
         ["date", "Date"],
       ])
-      .delimitWith(";")
       .build();
   }
 
