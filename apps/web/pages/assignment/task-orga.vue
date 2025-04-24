@@ -53,9 +53,7 @@ const assignment = computed<Assignment | null>(
 );
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
-  if (displayAssignmentDetailsDialog.value || openFunnelDialog.value)
-    return false;
-  return true;
+  return !displayAssignmentDetailsDialog.value && !openFunnelDialog.value;
 });
 
 const openFunnelDialog = ref<boolean>(false);

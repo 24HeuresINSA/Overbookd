@@ -6,7 +6,7 @@
     />
     <OrgaTaskCalendar
       class="calendar"
-      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
+      :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskAssignmentList class="task-list" />
@@ -37,11 +37,6 @@ const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
-
-const canUseCalendarShortcuts = computed<boolean>(() => {
-  if (displayAssignmentDetailsDialog.value) return false;
-  return true;
-});
 
 const assignmentDetails = computed<AssignmentWithDetails | null>(
   () => assignVolunteerToTaskStore.assignmentDetails,

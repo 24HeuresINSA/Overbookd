@@ -59,8 +59,7 @@ const charismaPeriodStore = useCharismaPeriodStore();
 const configurationStore = useConfigurationStore();
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
-  if (isUpdateDialogOpen.value || isAddDialogOpen.value) return false;
-  return true;
+  return !isUpdateDialogOpen.value && !isAddDialogOpen.value;
 });
 
 const charismaPeriods = computed<SavedCharismaPeriod[]>(

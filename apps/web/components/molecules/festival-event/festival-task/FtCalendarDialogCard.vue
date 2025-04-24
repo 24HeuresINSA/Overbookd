@@ -187,7 +187,7 @@ const unassignVolunteer = (form: UnassignForm) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .v-switch {
   display: flex;
 }
