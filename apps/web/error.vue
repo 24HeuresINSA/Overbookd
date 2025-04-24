@@ -9,8 +9,6 @@
 </template>
 
 <script lang="ts" setup>
-import { WEBSITE_TITLE } from "./nuxt.config";
-
 const nuxtError = useError();
 
 const pageNotFoundErrorCode = 404;
@@ -43,7 +41,7 @@ const context = isPageNotFoundError.value ? lost : other;
 const message = nuxtError.value?.message || "";
 const error: PageError = { ...context, message };
 
-const pageTitle = isPageNotFoundError.value ? "404 Not Found" : WEBSITE_TITLE;
+const pageTitle = isPageNotFoundError.value ? "404 Not Found" : "Overbookd";
 useHead({ title: pageTitle });
 </script>
 
