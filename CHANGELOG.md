@@ -1,3 +1,25 @@
+## [3.43.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.42.0...v3.43.0) (2025-04-24)
+
+### Features
+
+* **borrow:** add csv export [#2489](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2489) ([1153826](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1153826ea9ab640c3052fb0cb778bc39c4eb5a84))
+* **csv:** add lib to handle csv generation [#2414](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2414) ([7f8a0bd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7f8a0bdbc440a9f60142a41e5bd351c2a8e0da6a))
+* **csv:** handle nested object on file generation. [#2496](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2496) ([6ebb7ce](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6ebb7ce4da5a33409779e5c7d4b98bd7430dba29))
+* **planning:** allow break period removal. [#2486](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2486) ([f075426](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f075426a034574cbfa0258b12342779ea8b72f9b))
+* **task-orga:** add funnel dialog card [#2237](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2237) ([676fc37](https://gitlab.com/24-heures-insa/overbookd-mono/commit/676fc372250116f3fcf7a6118908d74e045000ec))
+
+### Bug Fixes
+
+* add shortcuts for calendar [#2497](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2497) ([156aac3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/156aac3b9135e5bf25688e4c2483342d57bcd668))
+* **borrow:** wrong component name for creation [#2499](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2499) ([52c8a15](https://gitlab.com/24-heures-insa/overbookd-mono/commit/52c8a15451730545846e738903f2786186f8bed5))
+* **orga-task:** better rendering of teamchips and filters for assignment [#2403](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2403) ([9f69696](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f696969dd1f06c97bbbbe49b7709faa4bebaa79))
+* **web:** handle crtl click when changing page if necssary [#2498](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2498) ([22561d1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/22561d1dd18b551c9a58b66145c39647eaa0c83a))
+* **web:** remove old-web app [#2494](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2494) ([2491e51](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2491e516a8030049cc31b59d9ba70edd19f09b65))
+
+### Refactor
+
+* use csv builder for all exports. [#2495](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2495) ([313afba](https://gitlab.com/24-heures-insa/overbookd-mono/commit/313afba2326d27b5e4dc4969f1239927590123eb))
+
 ## [3.42.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.41.2...v3.42.0) (2025-04-22)
 
 ### Features
