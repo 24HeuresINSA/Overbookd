@@ -11,6 +11,7 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
+      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @click:event="handleEventClicked"
       @click:period="askForBreak"
     />
@@ -162,6 +163,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+});
+
+const canUseCalendarShortcuts = computed<boolean>(() => {
+  return (
+    !isTaskDetailsDialogOpen.value &&
+    !isBreakPeriodDialogOpen.value &&
+    !isBreakRemovalDialogOpen.value
+  );
 });
 
 const selectedTask = computed<TaskForCalendar | undefined>(
