@@ -271,14 +271,13 @@ const isBreakPeriodDialogOpen = ref<boolean>(false);
 const breakPeriodStart = ref<Date>(new Date());
 
 const askForBreak = (period: Period) => {
+  if (!canAssignVolunteer.value) return;
   breakPeriodStart.value = period.start;
   isBreakPeriodDialogOpen.value = true;
 };
-
 const closeBreakDialog = () => {
   isBreakPeriodDialogOpen.value = false;
 };
-
 const saveBreak = (during: BreakDefinition["during"]) => {
   closeBreakDialog();
   userStore.addVolunteerBreakPeriods({ during, volunteer: props.volunteerId });
@@ -286,12 +285,11 @@ const saveBreak = (during: BreakDefinition["during"]) => {
 
 const selectedBreak = ref<Period | null>(null);
 const isBreakRemovalDialogOpen = ref<boolean>(false);
-
 const openBreakRemoval = (period: BreakEvent) => {
+  if (!canAssignVolunteer.value) return;
   selectedBreak.value = Period.init(period);
   isBreakRemovalDialogOpen.value = true;
 };
-
 const cancelBreakRemoval = () => {
   isBreakRemovalDialogOpen.value = false;
 };
