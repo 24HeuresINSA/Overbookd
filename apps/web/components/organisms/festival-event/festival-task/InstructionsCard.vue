@@ -29,7 +29,14 @@
           hide-details
           @update:model-value="toggleDialogConfirmationPopUp"
         />
-        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1em;">
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1em;
+          "
+        >
           <DialogCard
             v-if="isConfirmationDialogOpen"
             width="600"
@@ -47,7 +54,9 @@
             </template>
 
             <template #actions>
-              <v-btn @click="closeConfirmationDialog">Garder les instructions</v-btn>
+              <v-btn @click="closeConfirmationDialog">
+                Garder les instructions
+              </v-btn>
               <v-btn color="error" @click="toggleInChargeInstructions">
                 Supprimer les instructions
               </v-btn>
