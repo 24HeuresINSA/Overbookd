@@ -41,7 +41,8 @@ const context = isPageNotFoundError.value ? lost : other;
 const message = nuxtError.value?.message || "";
 const error: PageError = { ...context, message };
 
-useHead({ title: error.title });
+const pageTitle = isPageNotFoundError.value ? "404 Not Found" : "Overbookd";
+useHead({ title: pageTitle });
 </script>
 
 <style lang="scss" scoped>

@@ -85,7 +85,7 @@ const eventToAdd = computed<CalendarEvent>(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 .need-help {
   display: flex;

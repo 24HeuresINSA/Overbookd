@@ -180,7 +180,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "~/assets/calendar.scss";
+@use "~/assets/calendar.scss" as *;
 
 .volunteer-headers {
   display: flex;
