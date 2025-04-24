@@ -1,6 +1,8 @@
 import { defineNuxtConfig } from "nuxt/config";
 import vuetify from "vite-plugin-vuetify";
 
+export const WEBSITE_TITLE = "Overbookd";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
@@ -21,7 +23,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   app: {
     head: {
-      title: "Overbookd",
+      title: WEBSITE_TITLE,
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -83,7 +85,7 @@ export default defineNuxtConfig({
   pwa: {
     registerType: "autoUpdate",
     manifest: {
-      name: "Overbookd",
+      name: WEBSITE_TITLE,
       theme_color: "#41C5E5",
       description: "Organisation du festival des 24h de l’INSA",
       lang: "fr",
