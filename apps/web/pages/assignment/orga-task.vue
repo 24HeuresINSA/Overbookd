@@ -6,6 +6,7 @@
     />
     <OrgaTaskCalendar
       class="calendar"
+      :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskAssignmentList class="task-list" />

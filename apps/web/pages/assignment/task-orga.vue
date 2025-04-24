@@ -6,6 +6,7 @@
     />
     <TaskOrgaCalendar
       class="calendar"
+      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @open-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskList class="task-list" />
@@ -50,6 +51,10 @@ const volunteer = computed<AssignableVolunteer | null>(
 const assignment = computed<Assignment | null>(
   () => assignTaskToVolunteerStore.selectedAssignment,
 );
+
+const canUseCalendarShortcuts = computed<boolean>(() => {
+  return !displayAssignmentDetailsDialog.value && !openFunnelDialog.value;
+});
 
 const openFunnelDialog = ref<boolean>(false);
 const closeFunnelDialog = () => (openFunnelDialog.value = false);

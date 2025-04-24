@@ -62,6 +62,17 @@ const propagateNext = () => {
 const propagateValidation = () => {
   if (!props.cantValidate) emit("validate");
 };
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === "ArrowLeft") propagatePrevious();
+  if (event.key === "ArrowRight") propagateNext();
+};
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <style lang="scss" scoped>

@@ -3,6 +3,18 @@
   <div class="charisma-periods">
     <v-card>
       <v-card-text>
+        <OverCalendar
+          v-model="calendarDisplayedDay"
+          :events="calendarEvents"
+          clickable-events
+          :can-use-calendar-shortcuts="canUseCalendarShortcuts"
+          @click:event="openEditDialogByCalendar"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-card>
+      <v-card-text>
         <CharismaPeriodTable
           :loading="loading"
           @update="openEditDialogByTable"
@@ -17,17 +29,6 @@
           @click="openAddDialog"
         />
       </v-card-actions>
-    </v-card>
-
-    <v-card>
-      <v-card-text>
-        <OverCalendar
-          v-model="calendarDisplayedDay"
-          :events="calendarEvents"
-          clickable-events
-          @click:event="openEditDialogByCalendar"
-        />
-      </v-card-text>
     </v-card>
   </div>
 
@@ -56,6 +57,10 @@ useHead({ title: "Charisme des dispos" });
 
 const charismaPeriodStore = useCharismaPeriodStore();
 const configurationStore = useConfigurationStore();
+
+const canUseCalendarShortcuts = computed<boolean>(() => {
+  return !isUpdateDialogOpen.value && !isAddDialogOpen.value;
+});
 
 const charismaPeriods = computed<SavedCharismaPeriod[]>(
   () => charismaPeriodStore.all,

@@ -165,6 +165,18 @@ const assign = async () => {
   close();
 };
 const close = () => emit("close");
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (["Backspace", "Delete"].includes(event.key)) revokeLastCandidate();
+  if (["=", "+"].includes(event.key)) addCandidate();
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <style scoped lang="scss">
