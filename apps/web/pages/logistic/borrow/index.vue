@@ -12,7 +12,7 @@
   />
 
   <v-dialog v-model="isNewBorrowDialogOpen" max-width="500px">
-    <InitBorrowCard @close="closeNewBorrowDialog" />
+    <InitBorrowDialogCard @close="closeNewBorrowDialog" />
   </v-dialog>
 </template>
 
