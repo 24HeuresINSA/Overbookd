@@ -186,3 +186,9 @@ const unassignVolunteer = (form: UnassignForm) => {
   ftStore.unassign(form);
 };
 </script>
+
+<style scoped lang="scss">
+.v-switch {
+  display: flex;
+}
+</style>

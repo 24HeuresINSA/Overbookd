@@ -11,6 +11,7 @@
         v-model="day"
         :day-mode="isDayMode"
         :display-day="displayDayInManager"
+        :can-use-calendar-shortcuts="canUseCalendarShortcuts"
         @previous="moveToPreviousWeekOrDay"
         @next="moveToNextWeekOrDay"
       >
@@ -118,6 +119,10 @@ const props = defineProps({
   displayDayInManager: {
     type: Boolean,
     default: false,
+  },
+  canUseCalendarShortcuts: {
+    type: Boolean,
+    default: true,
   },
 });
 

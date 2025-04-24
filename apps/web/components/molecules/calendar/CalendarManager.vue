@@ -54,6 +54,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  canUseCalendarShortcuts: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const day = defineModel<DayPresenter>({ required: true });
@@ -91,6 +95,20 @@ const displayableTimeIndicator = computed<string>(() =>
 const emit = defineEmits(["previous", "next"]);
 const propagatePrevious = () => emit("previous");
 const propagateNext = () => emit("next");
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (!props.canUseCalendarShortcuts) return;
+  if (event.key === "ArrowLeft") propagateNext();
+  if (event.key === "ArrowRight") propagatePrevious();
+  if (event.key === "a") moveToToday();
+  if (event.key === "m") moveToEventStartDay();
+};
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <style lang="scss" scoped>

@@ -10,6 +10,7 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
+      :can-use-calendar-shortcuts="props.canUseCalendarShortcuts"
       @click:event="selectAssignmentToDisplayDetails"
     />
   </div>
@@ -38,6 +39,13 @@ const userStore = useUserStore();
 const configurationStore = useConfigurationStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
+
+const props = defineProps({
+  canUseCalendarShortcuts: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
@@ -83,10 +91,6 @@ const events = computed<CalendarEvent[]>(() => {
   const calendarBreaks = breaks.value.map(convertToCalendarBreak);
   return [...tasks, ...alreadyAssigned, ...hoverAssignments, ...calendarBreaks];
 });
-
-// const hourToScrollTo = computed<number | undefined>(() =>
-//   hoverAssignment.value?.start.getHours(),
-// );
 
 const stats = computed<AssignmentStat[]>(
   () => userStore.selectedUserAssignmentStats,
