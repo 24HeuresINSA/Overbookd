@@ -24,7 +24,16 @@
     </v-card>
 
     <v-card>
-      <v-card-title>Candidats</v-card-title>
+      <v-card-title class="registrations__title">
+        <span>Candidats bénévoles</span>
+        <v-btn
+          icon="mdi-export"
+          color="secondary"
+          rounded="pill"
+          density="comfortable"
+          @click="exportCSv"
+        />
+      </v-card-title>
       <v-card-text>
         <v-data-table
           v-model="candidatesToEnroll"
@@ -189,6 +198,9 @@ import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 import { buildUserNameWithNickname } from "@overbookd/user";
+import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registrations/volunteer-candidates.utils";
+import { CSVBuilder } from "@overbookd/csv";
+import { downloadCsv } from "~/utils/file/download.utils";
 
 useHead({ title: "Admissions bénévoles" });
 
@@ -275,7 +287,6 @@ const toggleRejectedCandidates = () => {
 const enrollCandidate = (candidate: VolunteerCandidate) => {
   membershipApplicationStore.enrollNewVolunteers([candidate]);
 };
-
 const rejectCandidate = (candidateId: number) => {
   membershipApplicationStore.rejectVolunteerCandidate(candidateId);
   closeCandidateInfoDialogue();
@@ -283,6 +294,46 @@ const rejectCandidate = (candidateId: number) => {
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelVolunteerCandidateRejection(candidateId);
   closeCandidateInfoDialogue();
+};
+
+const exportCSv = async () => {
+  if (displayRejectedCandidates.value)
+    await membershipApplicationStore.fetchVolunteerCandidates();
+  else await membershipApplicationStore.fetchRejectedVolunteerCandidates();
+
+  const candidatesWithRejectionStatus = candidates.value.map((candidate) =>
+    buildVolunteerCandidateWithRejectionStatus(candidate, false),
+  );
+  const rejectedCandidatesWithRejectionStatus = rejectedCandidates.value.map(
+    (candidate) => buildVolunteerCandidateWithRejectionStatus(candidate, true),
+  );
+
+  const csv = CSVBuilder.from([
+    ...candidatesWithRejectionStatus,
+    ...rejectedCandidatesWithRejectionStatus,
+  ])
+    .select([
+      "candidatedAt",
+      "charisma",
+      "firstname",
+      "lastname",
+      "teams",
+      "email",
+      "mobilePhone",
+      "isRejected",
+    ])
+    .translate([
+      ["candidatedAt", "Date de candidature"],
+      ["charisma", "Charisme"],
+      ["firstname", "Prénom"],
+      ["lastname", "Nom"],
+      ["teams", "Équipes"],
+      ["email", "Email"],
+      ["mobilePhone", "Téléphone"],
+      ["isRejected", "Rejeté"],
+    ])
+    .build();
+  downloadCsv("Candidats_benevoles", csv);
 };
 
 const isCandidateInfoDialogOpen = ref<boolean>(false);
@@ -349,6 +400,12 @@ const handleMouseEnter = () => {
   display: flex;
   flex-direction: column;
   gap: $card-gap;
+
+  &__title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
 }
 
 .filters {
