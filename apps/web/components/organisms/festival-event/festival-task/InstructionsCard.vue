@@ -27,42 +27,8 @@
           label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
           color="primary"
           hide-details
-          @update:model-value="toggleDialogConfirmationPopUp"
+          @update:model-value="toggleConfirmationDialogCard"
         />
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1em;
-          "
-        >
-          <DialogCard
-            v-if="isConfirmationDialogOpen"
-            width="600"
-            justify-self="center"
-            @close="closeConfirmationDialog"
-          >
-            <template #title>
-              <h5>Confirmation de la suppression</h5>
-            </template>
-            <template #content>
-              <p>
-                Êtes-vous sûr de vouloir supprimer les instructions spécifiques
-                pour le.s responsable.s de la tâche ?
-              </p>
-            </template>
-
-            <template #actions>
-              <v-btn @click="closeConfirmationDialog">
-                Garder les instructions
-              </v-btn>
-              <v-btn color="error" @click="toggleInChargeInstructions">
-                Supprimer les instructions
-              </v-btn>
-            </template>
-          </DialogCard>
-        </div>
         <div v-show="hasInChargeInstructions">
           <SearchUsers
             v-model="instructions.inCharge.volunteers"
@@ -134,6 +100,24 @@
       />
     </v-dialog>
 
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="650">
+      <ConfirmationDialogCard
+        width="600"
+        justify-self="center"
+        @close="closeConfirmationDialog"
+        @confirm="toggleInChargeInstructions"
+      >
+        <template #statement>
+          <p>
+            Vous êtes sur le point de supprimer les instructions pour le
+            responsable de tâche !
+          </p>
+          <br />
+          <p>Souhaitez-vous continuer ?</p>
+        </template>
+      </ConfirmationDialogCard>
+    </v-dialog>
+
     <v-dialog
       v-model="isResetApprovalsDialogOpen"
       max-width="600"
@@ -162,6 +146,7 @@ import {
   hasTaskApprovals,
   shouldResetTaskApprovals,
 } from "~/utils/festival-event/festival-task/festival-task.utils";
+import ConfirmationDialogCard from "~/components/atoms/card/ConfirmationDialogCard.vue";
 
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
@@ -265,7 +250,7 @@ const approveResetAlert = async () => {
   isResetApprovalsDialogOpen.value = false;
 };
 
-const toggleDialogConfirmationPopUp = () => {
+const toggleConfirmationDialogCard = () => {
   if (hasInChargeInstructions.value) {
     openConfirmationDialog();
     return;
