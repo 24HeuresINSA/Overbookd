@@ -1,3 +1,14 @@
+## [3.44.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.43.0...v3.44.0) (2025-04-25)
+
+### Features
+
+* **volunteer-registration:** add a csv export [#2503](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2503) ([62e1126](https://gitlab.com/24-heures-insa/overbookd-mono/commit/62e11262d0ee3f20c8f04fa433a29e8e519e6e0d))
+
+### Bug Fixes
+
+* keep default page name when error 500 [#2502](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2502) ([144fb48](https://gitlab.com/24-heures-insa/overbookd-mono/commit/144fb481fb251713764a95e8fd1866debd90c105))
+* **planning:** disable shortcuts when dialog is open and disable break dialog opening when the user does not have the perm [#2501](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2501) ([8cc653a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8cc653a57b89aad5b4c0db6685303b8cd22782a7))
+
 ## [3.43.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.42.0...v3.43.0) (2025-04-24)
 
 ### Features
