@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { GrantPermission, RevokePermission } from "@overbookd/access-manager";
 import { Permission } from "@overbookd/permission";
-import { Prisma } from "../prisma/generated-client";
+import { Prisma } from "../prisma/generated";
 import { PrismaService } from "../prisma.service";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
