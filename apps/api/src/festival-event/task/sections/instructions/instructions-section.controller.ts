@@ -9,6 +9,7 @@ import {
   Post,
   Delete,
   Request,
+  Put,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -28,9 +29,9 @@ import { PermissionsGuard } from "../../../../authentication/permissions-auth.gu
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
-import { Contact, FestivalTask, Volunteer } from "@overbookd/festival-event";
+import { Contact, FestivalTask } from "@overbookd/festival-event";
 import { AddContactRequestDto } from "./dto/add-contact.request.dto";
-import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
+import { UpdateInChargeVolunteersRequestDto } from "./dto/update-volunteers.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import {
   InReviewFestivalTaskResponseDto,
@@ -199,7 +200,7 @@ export class InstructionsSectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
-  @Post(":ftId/instructions/in-charge/volunteers")
+  @Put(":ftId/instructions/in-charge/volunteers")
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -211,8 +212,8 @@ export class InstructionsSectionController {
     },
   })
   @ApiBody({
-    description: "Volunteer to add",
-    type: AddInChargeVolunteerRequestDto,
+    description: "Volunteers to update",
+    type: UpdateInChargeVolunteersRequestDto,
   })
   @ApiParam({
     name: "ftId",
@@ -220,43 +221,14 @@ export class InstructionsSectionController {
     description: "Festival task id",
     required: true,
   })
-  addInChargeVolunteer(
+  updateInChargeVolunteers(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Body() { volunteerId }: AddInChargeVolunteerRequestDto,
+    @Body() { volunteersId }: UpdateInChargeVolunteersRequestDto,
   ): Promise<FestivalTask> {
-    return this.instructionsService.addInChargeVolunteer(ftId, volunteerId);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
-  @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
-  @ApiResponse({
-    status: 200,
-    description: "A festival task",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "ftId",
-    type: Number,
-    description: "Festival task id",
-    required: true,
-  })
-  @ApiParam({
-    name: "volunteerId",
-    type: Number,
-    description: "Volunteer id",
-    required: true,
-  })
-  removeInChargeVolunteer(
-    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Param("volunteerId", ParseIntPipe) volunteerId: Volunteer["id"],
-  ): Promise<FestivalTask> {
-    return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
+    return this.instructionsService.updateInChargeVolunteers(
+      ftId,
+      volunteersId,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

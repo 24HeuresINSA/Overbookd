@@ -12,11 +12,12 @@
 
         <v-label>Instructions globales</v-label>
         <InstructionsEditor
-          :model-value="globalInstruction"
+          v-model="globalInstruction"
           scope="global-instruction"
           :readonly="disabled && !canForceInstruction"
           :can-save="canSaveInstructions"
           :can-force-instruction="canForceInstruction"
+          :saved-instructions="instructions.global ?? ''"
           @save="saveGlobal"
           @force-save="forceSaveGlobal"
         />
@@ -31,21 +32,21 @@
         />
         <div v-show="hasInChargeInstructions">
           <SearchUsers
-            v-model="instructions.inCharge.volunteers"
+            v-model="inChargeVolunteers"
             label="Responsables de la tâche"
             :disabled="disabled"
             closable-chips
-            @add="addInChargeVolunteer"
-            @remove="removeInChargeVolunteer"
+            @update:model-value="updateInChargeVolunteers"
           />
 
           <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
           <InstructionsEditor
-            :model-value="inChargeInstruction"
+            v-model="inChargeInstruction"
             scope="in-charge-instruction"
             :readonly="disabled && !canForceInstruction"
             :can-save="canSaveInstructions"
             :can-force-instruction="canForceInstruction"
+            :saved-instructions="instructions.inCharge.instruction ?? ''"
             @save="saveInCharge"
             @force-save="forceSaveInCharge"
           />
@@ -230,6 +231,15 @@ const approveResetAlert = async () => {
 const toggleInChargeInstructions = async () => {
   hasInChargeInstructions.value = !hasInChargeInstructions.value;
   if (hasInChargeInstructions.value) {
+    const hasTmpInstructions = inChargeInstruction.value !== "";
+    const hasTmpVolunteers =
+      inChargeVolunteers.value.length > 0;
+    if (hasTmpInstructions && hasTmpVolunteers) {
+      await ftStore.initInCharge({
+        instruction: inChargeInstruction.value,
+        volunteers: inChargeVolunteers.value.map(({ id }) => id),
+      });
+    }
     if (!isDraft(selectedTask.value)) openInitInChargeDialog();
     return;
   }
@@ -248,40 +258,38 @@ const checkActiveInChargeInstructions = () => {
   hasInChargeInstructions.value = hasVolunteers || hasInstruction;
 };
 
-const globalInstruction = computed<string>(
-  () => instructions.value.global ?? "",
-);
-const saveGlobal = (global: string) => {
+const globalInstruction = ref<string>(instructions.value.global ?? "");
+const saveGlobal = () => {
   if (shouldResetApprovals.value) {
     resetApprovalAction.value = {
       type: MODIFY_INSTRUCTIONS,
-      instructions: { global },
+      instructions: { global: globalInstruction.value },
     };
     isResetApprovalsDialogOpen.value = true;
     return;
   }
 
-  ftStore.updateInstructions({ global });
+  ftStore.updateInstructions({ global: globalInstruction.value });
 };
 const forceSaveGlobal = (global: string) => {
   if (!canForceInstruction.value) return;
   ftStore.forceInstructions({ global });
 };
 
-const inChargeInstruction = computed<string>(
-  () => instructions.value.inCharge.instruction ?? "",
+const inChargeInstruction = ref<string>(
+  instructions.value.inCharge.instruction ?? "",
 );
-const saveInCharge = (inCharge: string) => {
+const saveInCharge = () => {
   if (shouldResetApprovals.value) {
     resetApprovalAction.value = {
       type: MODIFY_INSTRUCTIONS,
-      instructions: { inCharge },
+      instructions: { inCharge: inChargeInstruction.value },
     };
     isResetApprovalsDialogOpen.value = true;
     return;
   }
 
-  ftStore.updateInstructions({ inCharge });
+  ftStore.updateInstructions({ inCharge: inChargeInstruction.value });
 };
 const forceSaveInCharge = (inCharge: string) => {
   if (!canForceInstruction.value) return;
@@ -293,6 +301,8 @@ watch(
   selectedTaskId,
   () => {
     checkActiveInChargeInstructions();
+    inChargeInstruction.value = instructions.value.inCharge.instruction ?? "";
+    globalInstruction.value = instructions.value.global ?? "";
   },
   { immediate: true },
 );
@@ -310,12 +320,12 @@ const removeContact = (contact: User) => {
   ftStore.removeContact(contact.id);
 };
 
-const addInChargeVolunteer = async (volunteer: User) => {
-  await ftStore.addInChargeVolunteer(volunteer.id);
+const inChargeVolunteers =ref<User[]>(instructions.value.inCharge.volunteers);
+const updateInChargeVolunteers = async () => {
+  await ftStore.updateInChargeVolunteers(inChargeVolunteers.value.map(({ id }) => id));
+  inChargeVolunteers.value = instructions.value.inCharge.volunteers;
 };
-const removeInChargeVolunteer = async (volunteer: User) => {
-  await ftStore.removeInChargeVolunteer(volunteer.id);
-};
+
 
 const initInCharge = async (form: InitInChargeForm) => {
   if (shouldResetApprovals.value) {
@@ -326,6 +336,8 @@ const initInCharge = async (form: InitInChargeForm) => {
   }
 
   await ftStore.initInCharge(form);
+  inChargeVolunteers.value = instructions.value.inCharge.volunteers;
+  inChargeInstruction.value = instructions.value.inCharge.instruction ?? "";
   closeInitInChargeDialog();
   hasInChargeInstructions.value = true;
 };

@@ -15,7 +15,6 @@
     :closable-chips="closableChips"
     :custom-filter="slugifiedFilter"
     no-data-text="Aucun utilisateur correspondant"
-    @update:model-value="propagateChange"
   />
 </template>
 
@@ -51,25 +50,5 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["add", "remove"]);
-
-const lastUsers = ref<User[]>(users.value);
-
 const userList = computed<User[]>(() => props.list ?? userStore.volunteers);
-
-const propagateChange = (selectedUsers: User[]) => {
-  const addedUsers = selectedUsers.filter(
-    (user) => !lastUsers.value.some(({ id }) => id === user.id),
-  );
-  const removedUsers = lastUsers.value.filter(
-    (user) => !selectedUsers.some(({ id }) => id === user.id),
-  );
-
-  lastUsers.value = selectedUsers;
-
-  addedUsers.forEach((addedUser) => propagateAdd(addedUser));
-  removedUsers.forEach((removedUser) => propagateRemove(removedUser));
-};
-const propagateAdd = (user: User) => emit("add", user);
-const propagateRemove = (user: User) => emit("remove", user);
 </script>

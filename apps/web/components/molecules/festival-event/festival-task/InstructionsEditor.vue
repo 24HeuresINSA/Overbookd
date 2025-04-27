@@ -1,11 +1,10 @@
 <template>
   <RichEditor
-    :model-value="instructions"
+    v-model="instructions"
     :scope="scope"
     :readonly="readonly"
     :unsaved="unsaved"
     class="editor"
-    @update:model-value="updateInstructions"
   />
 
   <div class="actions">
@@ -29,7 +28,7 @@
 <script lang="ts" setup>
 const instructions = defineModel<string>({ required: true });
 
-defineProps({
+const props = defineProps({
   scope: {
     type: String,
     required: true,
@@ -40,33 +39,26 @@ defineProps({
   },
   canSave: {
     type: Boolean,
-    defaul: true,
+    default: true,
   },
   canForceInstruction: {
     type: Boolean,
-    defaul: false,
+    default: false,
+  },
+  savedInstructions: {
+    type: String,
+    required: true,
   },
 });
 
-const modifiedInstructions = ref<string>("");
 const unsaved = computed(() => {
-  return instructions.value !== modifiedInstructions.value;
+  return instructions.value !== props.savedInstructions;
 });
-
-const updateInstructions = (newInstructions?: string) => {
-  modifiedInstructions.value = newInstructions?.trim() ?? "";
-};
-
-watch(
-  () => instructions.value,
-  () => (modifiedInstructions.value = instructions.value),
-  { immediate: true },
-);
 
 const emit = defineEmits(["save", "force-save"]);
 
-const save = () => emit("save", modifiedInstructions.value);
-const forceSave = () => emit("force-save", modifiedInstructions.value);
+const save = () => emit("save");
+const forceSave = () => emit("force-save");
 </script>
 
 <style lang="scss" scoped>

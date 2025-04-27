@@ -1,11 +1,11 @@
 import type {
   AddInquiryRequestForm,
   AddContactForm,
-  AddInChargeVolunteerForm,
   FestivalTaskCreationForm,
   UpdateGeneralForm,
   UpdateInquiryRequestForm,
   UpdateInstructionsForm,
+  UpdateInChargeVolunteersForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
   PublishFeedbackForm,
@@ -132,22 +132,13 @@ export class FestivalTaskRepository {
     );
   }
 
-  static addInChargeVolunteer(
+  static updateInChargeVolunteers(
     ftId: FestivalTaskWithConflicts["id"],
-    volunteer: AddInChargeVolunteerForm,
+    form: UpdateInChargeVolunteersForm,
   ) {
-    return HttpClient.post<FestivalTaskWithConflicts>(
+    return HttpClient.put<FestivalTaskWithConflicts>(
       `${this.basePath}/${ftId}/instructions/in-charge/volunteers`,
-      volunteer,
-    );
-  }
-
-  static removeInChargeVolunteer(
-    ftId: FestivalTaskWithConflicts["id"],
-    volunteerId: Volunteer["id"],
-  ) {
-    return HttpClient.delete<FestivalTaskWithConflicts>(
-      `${this.basePath}/${ftId}/instructions/in-charge/volunteers/${volunteerId}`,
+      form,
     );
   }
 

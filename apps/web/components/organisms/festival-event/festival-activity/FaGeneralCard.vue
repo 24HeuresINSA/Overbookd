@@ -28,8 +28,8 @@
 
         <h3>Description de l'activité</h3>
         <RichEditor
+          v-model="description"
           scope="activity-description"
-          :model-value="description ?? ''"
           @update:model-value="updateDescription"
         />
 

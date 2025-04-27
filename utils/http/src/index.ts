@@ -23,7 +23,7 @@ export type {
   UpdateGeneralForm,
   UpdateInstructionsForm,
   AddContactForm,
-  AddInChargeVolunteerForm,
+  UpdateInChargeVolunteersForm,
   InitInChargeForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,

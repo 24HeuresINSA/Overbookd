@@ -30,8 +30,8 @@ export type AddContactForm = {
   contactId: Contact["id"];
 };
 
-export type AddInChargeVolunteerForm = {
-  volunteerId: Volunteer["id"];
+export type UpdateInChargeVolunteersForm = {
+  volunteersId: Volunteer["id"][];
 };
 
 export type InitInChargeForm = {
