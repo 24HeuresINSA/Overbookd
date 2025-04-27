@@ -1,3 +1,9 @@
+## [3.44.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.0...v3.44.1) (2025-04-27)
+
+### Bug Fixes
+
+* **ft:** restore category and priority in sidebar [#2504](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2504) ([1e8ea73](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e8ea733b2de392e3b09612283370f15a28a52a8))
+
 ## [3.44.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.43.0...v3.44.0) (2025-04-25)
 
 ### Features
