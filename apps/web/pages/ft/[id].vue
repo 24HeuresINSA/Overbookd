@@ -15,6 +15,15 @@
           <v-icon class="mr-2">mdi-human-greeting</v-icon>
           <p v-show="!isSideBarClosed">Commencer l'affectation</p>
         </v-btn>
+
+        <div v-if="isReadyToAssign(selectedTask)" class="mt-2">
+          <p>
+            Catégorie de la tâche : <strong>{{ taskCategory }}</strong>
+          </p>
+          <p>
+            Tâche prioritaire : <strong>{{ taskPriority }}</strong>
+          </p>
+        </div>
       </template>
     </FestivalEventSidebar>
     <article class="container">
@@ -67,6 +76,7 @@ import {
   FESTIVAL_TASK_IGNORED,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
+import { AUCUNE } from "~/utils/assignment/task-category";
 
 const route = useRoute();
 const ftStore = useFestivalTaskStore();
@@ -114,10 +124,17 @@ onUnmounted(() => {
 
 if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();
 
+const taskCategory = computed<string>(() => {
+  if (!isReadyToAssign(selectedTask.value)) return "";
+  return selectedTask.value.category ?? AUCUNE;
+});
+const taskPriority = computed<string>(() => {
+  if (!isReadyToAssign(selectedTask.value)) return "";
+  return selectedTask.value.topPriority ? "OUI" : "NON";
+});
+
 const isSideBarClosed = ref<boolean>(false);
-const toggleSidebar = () => {
-  isSideBarClosed.value = !isSideBarClosed.value;
-};
+const toggleSidebar = () => (isSideBarClosed.value = !isSideBarClosed.value);
 
 const isValidatedOrReadyToAssign = computed<boolean>(() => {
   const isTaskValidated = isValidated(selectedTask.value);
