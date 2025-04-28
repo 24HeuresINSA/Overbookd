@@ -1,3 +1,9 @@
+## [3.44.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.1...v3.44.2) (2025-04-28)
+
+### Bug Fixes
+
+* **calendar:** invert arrow shorcuts [#2505](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2505) ([ff06dea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ff06dead218b7731e7eec0f18d937638a9b62f09))
+
 ## [3.44.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.0...v3.44.1) (2025-04-27)
 
 ### Bug Fixes
