@@ -232,8 +232,7 @@ const toggleInChargeInstructions = async () => {
   hasInChargeInstructions.value = !hasInChargeInstructions.value;
   if (hasInChargeInstructions.value) {
     const hasTmpInstructions = inChargeInstruction.value !== "";
-    const hasTmpVolunteers =
-      inChargeVolunteers.value.length > 0;
+    const hasTmpVolunteers = inChargeVolunteers.value.length > 0;
     if (hasTmpInstructions && hasTmpVolunteers) {
       await ftStore.initInCharge({
         instruction: inChargeInstruction.value,
@@ -320,12 +319,13 @@ const removeContact = (contact: User) => {
   ftStore.removeContact(contact.id);
 };
 
-const inChargeVolunteers =ref<User[]>(instructions.value.inCharge.volunteers);
+const inChargeVolunteers = ref<User[]>(instructions.value.inCharge.volunteers);
 const updateInChargeVolunteers = async () => {
-  await ftStore.updateInChargeVolunteers(inChargeVolunteers.value.map(({ id }) => id));
+  await ftStore.updateInChargeVolunteers(
+    inChargeVolunteers.value.map(({ id }) => id),
+  );
   inChargeVolunteers.value = instructions.value.inCharge.volunteers;
 };
-
 
 const initInCharge = async (form: InitInChargeForm) => {
   if (shouldResetApprovals.value) {

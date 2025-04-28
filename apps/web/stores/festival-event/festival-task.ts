@@ -209,10 +209,9 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     },
 
     async updateInChargeVolunteers(volunteersId: Volunteer["id"][]) {
-      const res = await repo.updateInChargeVolunteers(
-        this.selectedTask.id,
-        {volunteersId},
-      );
+      const res = await repo.updateInChargeVolunteers(this.selectedTask.id, {
+        volunteersId,
+      });
       if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
     },
