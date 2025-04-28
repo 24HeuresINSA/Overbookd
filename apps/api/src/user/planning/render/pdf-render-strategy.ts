@@ -167,9 +167,9 @@ export class PdfRenderStrategy implements RenderStrategy {
           {
             stack: [
               { text: "Responsables Bénévoles", style: ["bold"] },
-              "Mathilde : 06 44 36 92 99",
-              "Aglaé : 06 27 52 10 99",
-              "Jérémy : 06 21 67 72 82",
+              "Alix : 06 40 95 34 29",
+              "Candice : 07 82 62 70 50",
+              "Gaëlle : 06 51 82 66 25",
             ],
             width: 150,
           },

@@ -18,7 +18,7 @@ export class Introduction {
       },
       {
         ul: [
-          "Le plan bénévole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circontances avec sa carte interactive",
+          "Le plan bénévole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circonstances avec sa carte interactive",
           "Le plan sécu en page 2, il est là pour te donner une vision spécifique du site en soirée (où est-ce que tu peux rentrer, où sont les bars etc...)",
           "Un planning avec une liste de créneaux pendant lesquels on compte sur toi pour nous aider",
           "Un rappel du dispositif cocktail purple en toute fin de livret, ce dispositif vise à mettre à l'abri des personnes qui se sentent en danger sur le festival",

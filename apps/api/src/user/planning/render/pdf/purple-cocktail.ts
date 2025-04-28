@@ -1,133 +1,105 @@
+import { join } from "path";
 import { Content } from "pdfmake/interfaces";
 
 export class PurpleCocktail {
   static generateWorkflow(): Content[] {
     const headerText = "Procédure Cocktail Purple\n- 24h de l’INSA -";
-    const descriptionText =
-      "Définition : Cocktail Purple est un dispositif mis en place par l’association Purple Effect en milieu festif. Une victime de VHSS (violences et harcèlement sexistes et sexuels) a la possibilité de commander au bar de l’événement un cocktail purple, qui est un nom de code permettant de la mettre en sécurité et de prévenir les équipes de sécurité et de prévention.";
+    const descriptionText = {
+      text: [
+        "L'objectif principal de ce protocole est de fournir un moyen sûr et discret pour que toute personne se sentant en danger ou mal à l'aise puisse signaler sa situation et recevoir de l'aide immédiatement. Ce système vise à prévenir et à intervenir rapidement dans les ",
+        { text: "situations d'agression ou de harcèlement", style: ["bold"] },
+        ".",
+      ],
+    };
     const procedureSteps = [
       {
         text: [
-          "La ",
+          { text: "Signalement", style: ["bold"] },
+          " : la ",
           { text: "VICTIME", style: ["bold"] },
-          " se présente au bar et commande un cocktail purple au ",
-          { text: "BARMAN A.", style: ["bold"] },
-        ],
-      },
-      {
-        text: [
-          "Le ",
+          " commande un cocktail purple au ",
           { text: "BARMAN A", style: ["bold"] },
-          " reste en contact avec la ",
+          " qui informe le ",
+          { text: "BARMAN B", style: ["bold"] },
+          " tout en RESTANT EN CONTACT avec la ",
           { text: "VICTIME", style: ["bold"] },
-          " et prévient la personne la plus proche de lui ",
-          { text: "(BARMAN B).", style: ["bold"] },
+          ".",
         ],
       },
       {
         text: [
-          "Le ",
+          { text: "Alerte", style: ["bold"] },
+          " : le ",
           { text: "BARMAN B", style: ["bold"] },
-          " va chercher le ",
+          " prévient le ",
           {
             text: "RESP BARMAN",
             style: ["bold"],
           },
-          ", lui explique qu'il y a une commande de cocktail purple.",
+          "qui alerte la ",
+          { text: "SÉCURITÉ", style: ["bold"] },
+          " par talkie en précisant le nom du bar.",
         ],
       },
       {
         text: [
-          "Le ",
+          { text: "Intervention", style: ["bold"] },
+          " : en attendant l'arrivée de la ",
+          { text: "SÉCURITÉ", style: ["bold"] },
+          " ou de ",
+          { text: "PURPLE EFFECT", style: ["bold"] },
+          ", le ",
           { text: "RESP BARMAN", style: ["bold"] },
-          " appelle par radio la ",
-          { text: "SECURITE", style: ["bold"] },
-          ", informe qu'il y a une commande de cocktail purple et précise le nom du bar",
-        ],
-      },
-      {
-        text: [
-          "Le ",
-          { text: "RESP BARMAN", style: ["bold"] },
-          " repère la position du ",
-          { text: "BARMAN A", style: ["bold"] },
-          " et de la ",
-          { text: "VICTIME", style: ["bold"] },
-          ", se rend avec le ",
+          " et le ",
           { text: "BARMAN B", style: ["bold"] },
-          " dans la fosse et prend contact avec la ",
-          { text: "VICTIME.", style: ["bold"] },
+          " rejoignent la ",
+          { text: "VICTIME", style: ["bold"] },
+          ".",
         ],
       },
       {
         text: [
-          "La ",
-          { text: "SECURITE", style: ["bold"] },
-          " prévient l'équipe mobile d'",
-          { text: "AGENTS DE SECURITE", style: ["bold"] },
-          " et la maraude de ",
-          { text: "PURPLE EFFECT", style: ["bold"] },
-        ],
-      },
-      {
-        text: [
-          "Un des responsables ",
-          { text: "SECURITE", style: ["bold"] },
-          " se rend sur place s'il est disponible ",
-        ],
-      },
-      {
-        text: [
-          "Une équipe mobile d'",
-          { text: "AGENTS DE SECURITE", style: ["bold"] },
-          " se rend sur place.",
-        ],
-      },
-      {
-        text: [
-          "Une maraude de ",
-          { text: "PURPLE EFFECT", style: ["bold"] },
-          " se rend sur place.",
-        ],
-      },
-      {
-        text: [
-          "Le ",
+          { text: "Mise en sécurité", style: ["bold"] },
+          " : le ",
           { text: "RESP BARMAN", style: ["bold"] },
           " accompagne la ",
           { text: "VICTIME", style: ["bold"] },
-          " derrière le bar. L'",
-          { text: "AGENT DE SECURITE", style: ["bold"] },
-          " en charge de l'accès est au courant, en cas de difficulté pour passer, le ",
+          " derrière le bar. En cas de difficulté, le ",
           { text: "RESP BARMAN", style: ["bold"] },
-          " appelle par radio la ",
-          { text: "SECURITE", style: ["bold"] },
+          " alerte de nouveau la ",
+          { text: "SÉCURITÉ", style: ["bold"] },
+          " par talkie.",
         ],
       },
       {
         text: [
-          "Une fois la ",
+          { text: "Prise en charge", style: ["bold"] },
+          " : la",
           { text: "VICTIME", style: ["bold"] },
-          "  à l'abri, elle est prise en charge par l'équipe mobile d'",
-          { text: "AGENTS DE SECURITE", style: ["bold"] },
-          " et les bénévoles de ",
+          "  est confiée à la ",
+          { text: "SÉCURITÉ", style: ["bold"] },
+          " et à ",
           { text: "PURPLE EFFECT", style: ["bold"] },
           ". Au besoin, elle pourra être accompagnée à la safezone.",
         ],
       },
     ];
+    const procedureDiagramImagePath = "/assets/purple_cocktail_diagram.png";
     const safetyInstructionsText = [
       "Si le BARMAN A ne se sent pas de rester seul avec la VICTIME, il peut demander à une autre personne de rester avec lui ou de le remplacer.",
       "Si le RESP BARMAN ou le BARMAN B ne se sentent pas d'aller dans la fosse, ils peuvent prévenir le RESP BAR qui peut y aller à leur place.",
-      "Dans la fosse, si vous êtes en contact avec l'AGRESSEUR, ne pas chercher à le confronter ou à le surveiller. L'objectif est de mettre la VICTIME à l'abri, le reste sera à la charge de la SECURITE.",
+      "Si vous allez dans la fosse et que vous êtes en contact avec l’AGRESSEUR, ne cherchez pas à le confronter ou à le surveiller. L’objectif est de mettre la VICTIME à l’abri, le reste sera à la charge de la SÉCURITÉ.",
     ];
     const header = PurpleCocktail.generateHeader(headerText);
     const description = PurpleCocktail.generateDescription(descriptionText);
     const steps: Content = PurpleCocktail.generateSteps(procedureSteps);
+    const procedureDiagram = PurpleCocktail.generateDiagram(
+      procedureDiagramImagePath,
+    );
     const safetyInstructions: Content =
       PurpleCocktail.generateSafetyInstructions(safetyInstructionsText);
 
-    return [header, description, steps, safetyInstructions];
+    return [header, description, steps, procedureDiagram, safetyInstructions];
   }
 
   private static generateSafetyInstructions(
@@ -140,9 +112,22 @@ export class PurpleCocktail {
       },
       {
         ul: safetyInstructionsText,
+        style: ["paragraph", "liteSpaceBetween"],
         margin: [75, 0, 50, 5],
+        alignment: "justify",
       },
     ];
+  }
+
+  private static generateDiagram(imagePath: string): Content {
+    return {
+      image: join(__dirname, "../../../../..", imagePath),
+      fit: [400, 400],
+      style: {
+        alignment: "center",
+      },
+      margin: [0, 10, 0, 40],
+    };
   }
 
   private static generateSteps(
@@ -150,21 +135,30 @@ export class PurpleCocktail {
   ): Content {
     return [
       {
+        text: "Procédure :",
+        style: ["paragraph", "liteSpaceBetween"],
+      },
+      {
         ol: procedureSteps,
         style: ["paragraph", "liteSpaceBetween"],
-        margin: [75, 20, 50, 5],
+        margin: [75, 0, 50, 5],
+        alignment: "justify",
       },
     ];
   }
 
-  private static generateDescription(descriptionText: string) {
+  private static generateDescription(descriptionText: {
+    text: (string | { text: string; style: string[] })[];
+  }): Content {
     return {
       text: descriptionText,
       style: ["paragraph", "largeSpaceBetween"],
+      margin: [50, 0, 50, 20],
+      alignment: "justify",
     };
   }
 
-  private static generateHeader(headerText: string) {
+  private static generateHeader(headerText: string): Content {
     return {
       text: headerText,
       style: ["header", "bold"],
