@@ -98,8 +98,8 @@ const propagateNext = () => emit("next");
 
 const handleKeydown = (event: KeyboardEvent) => {
   if (!props.canUseCalendarShortcuts) return;
-  if (event.key === "ArrowLeft") propagateNext();
-  if (event.key === "ArrowRight") propagatePrevious();
+  if (event.key === "ArrowRight") propagateNext();
+  if (event.key === "ArrowLeft") propagatePrevious();
   if (event.key === "a") moveToToday();
   if (event.key === "m") moveToEventStartDay();
 };
