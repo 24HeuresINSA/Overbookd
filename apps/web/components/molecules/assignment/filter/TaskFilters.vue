@@ -7,6 +7,7 @@
       density="compact"
       hide-details
       clearable
+      @click:clear="search = ''"
     />
     <SearchTeams
       v-model="requiredTeams"
