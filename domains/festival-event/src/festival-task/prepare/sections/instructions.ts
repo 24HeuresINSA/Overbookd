@@ -92,16 +92,9 @@ export class Instructions {
     return new Instructions({ ...this.instructions, contacts });
   }
 
-  addVolunteer(volunteer: Volunteer) {
+  updateVolunteers(volunteers: Volunteer[]) {
     const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const inCharge = inChargeBuilder.addVolunteer(volunteer).json;
-
-    return new Instructions({ ...this.instructions, inCharge });
-  }
-
-  removeVolunteer(volunteerId: Volunteer["id"]) {
-    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const inCharge = inChargeBuilder.removeVolunteer(volunteerId).json;
+    const inCharge = inChargeBuilder.updateVolunteers(volunteers).json;
 
     return new Instructions({ ...this.instructions, inCharge });
   }
@@ -138,22 +131,17 @@ class InCharge {
     return new InCharge({ ...this.inCharge, instruction });
   }
 
-  addVolunteer(volunteer: Volunteer) {
-    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
-    const volunteers = volunteerBuilder.add(volunteer).json;
-
-    return new InCharge({ ...this.inCharge, volunteers });
-  }
-
-  removeVolunteer(volunteerId: Volunteer["id"]) {
-    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
-    const volunteers = volunteerBuilder.remove(volunteerId).json;
-
-    return new InCharge({ ...this.inCharge, volunteers });
+  updateVolunteers(volunteers: Volunteer[]) {
+    const volunteerMap = volunteers.reduce((map, volunteer) => {
+      map.set(volunteer.id, volunteer);
+      return map;
+    }, new Map<number, Volunteer>());
+    const filteredVolunteers = Array.from(volunteerMap.values());
+    return new InCharge({ ...this.inCharge, volunteers: filteredVolunteers });
   }
 
   clear() {
-    const volunteers = Volunteers.build([]).json;
+    const volunteers: Volunteer[] = [];
     const instruction = null;
 
     return new InCharge({ ...this.inCharge, volunteers, instruction });
@@ -187,33 +175,5 @@ class Contacts {
 
   get json(): Contact[] {
     return [...this.contacts];
-  }
-}
-
-class Volunteers {
-  private constructor(private volunteers: Volunteer[]) {}
-
-  static build(volunteers: Volunteer[]) {
-    return new Volunteers(volunteers);
-  }
-
-  add(volunteer: Volunteer) {
-    if (this.has(volunteer)) return this;
-
-    return new Volunteers([...this.volunteers, volunteer]);
-  }
-
-  remove(volunteerId: Volunteer["id"]) {
-    const volunteers = this.volunteers.filter(({ id }) => id !== volunteerId);
-
-    return new Volunteers(volunteers);
-  }
-
-  private has(volunteer: Volunteer): boolean {
-    return this.volunteers.some(({ id }) => id === volunteer.id);
-  }
-
-  get json(): Volunteer[] {
-    return [...this.volunteers];
   }
 }

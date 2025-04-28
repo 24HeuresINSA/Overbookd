@@ -241,9 +241,9 @@ export class PrepareFestivalTask {
     return this.save(updatedTask);
   }
 
-  async addInChargeVolunteer(
+  async updateInChargeVolunteers(
     taskId: FestivalTask["id"],
-    volunteer: Volunteer,
+    volunteers: Volunteer[],
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
@@ -255,27 +255,7 @@ export class PrepareFestivalTask {
     }
 
     const builder = Instructions.build(task.instructions);
-    const instructions = builder.addVolunteer(volunteer).json;
-    const updatedTask = checkValidity({ ...task, instructions });
-
-    return this.save(updatedTask);
-  }
-
-  async removeInChargeVolunteer(
-    taskId: FestivalTask["id"],
-    volunteerId: Volunteer["id"],
-  ): Promise<WithConflicts> {
-    const task = await this.festivalTasks.findById(taskId);
-    if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task) || isReadyToAssign(task)) {
-      throw new FestivalTaskError("Cas non géré");
-    }
-    if (isApprovedBy(humain, task)) {
-      throw new AlreadyApprovedBy([humain], "FT");
-    }
-
-    const builder = Instructions.build(task.instructions);
-    const instructions = builder.removeVolunteer(volunteerId).json;
+    const instructions = builder.updateVolunteers(volunteers).json;
     const updatedTask = checkValidity({ ...task, instructions });
 
     return this.save(updatedTask);

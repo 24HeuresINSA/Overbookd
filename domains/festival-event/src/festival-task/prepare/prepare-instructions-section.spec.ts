@@ -219,84 +219,65 @@ describe("Prepare festival task instructions section", () => {
     });
   });
 
-  describe("Add in charge volunteers", () => {
+  describe("Update in charge volunteers", () => {
     describe.each`
-      taskName                              | task                     | volunteer
-      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${noel}
-      ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${lea}
-      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${lea}
+      taskName                              | task                     | volunteers
+      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${[...uninstallEscapeGame.instructions.inCharge.volunteers, noel]}
+      ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${[george, ...presentEscapeGame.instructions.inCharge.volunteers, lea]}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${[...serveWaterOnJustDance.instructions.inCharge.volunteers]}
     `(
-      "when a new in charge volunteer is added to $taskName",
-      ({ task, volunteer }) => {
-        it("should add vounteer to in charge volunteers list", async () => {
-          const { instructions } = await prepare.addInChargeVolunteer(
+      "when update in charge volunteers from $taskName",
+      ({ task, volunteers }) => {
+        it("should update vounteers from in charge volunteers list", async () => {
+          const { instructions } = await prepare.updateInChargeVolunteers(
             task.id,
-            volunteer,
+            volunteers,
           );
-          expect(instructions.inCharge.volunteers).toContainEqual(volunteer);
-          expect(instructions.inCharge.volunteers).toHaveLength(
-            task.instructions.inCharge.volunteers.length + 1,
-          );
+          expect(instructions.inCharge.volunteers).toEqual(volunteers);
         });
       },
     );
-    describe("when an already registered in charge volunteer is added", () => {
-      it("should keep in charge voulunteers list unchanged", async () => {
-        const volunteer = lea;
+    describe("when adding same volunteer twice", () => {
+      it("should add it only once", async () => {
         const task = uninstallEscapeGame;
-        const { instructions } = await prepare.addInChargeVolunteer(
+        const volunteers = [
+          ...uninstallEscapeGame.instructions.inCharge.volunteers,
+          noel,
+          noel,
+        ];
+        const { instructions } = await prepare.updateInChargeVolunteers(
           task.id,
-          volunteer,
+          volunteers,
         );
-        expect(instructions.inCharge.volunteers).toStrictEqual(
-          task.instructions.inCharge.volunteers,
-        );
-      });
-    });
-    describe("when task is under review and doesn't have in charge instructions", () => {
-      it("should indicate instructions are also required", async () => {
-        expect(
-          async () =>
-            await prepare.addInChargeVolunteer(guardJustDance.id, noelContact),
-        ).rejects.toThrow(
-          "Des instructions spécifiques sont nécessaires pour les responsables",
+        expect(instructions.inCharge.volunteers).toContainEqual(noel);
+        expect(instructions.inCharge.volunteers).toHaveLength(
+          task.instructions.inCharge.volunteers.length + 1,
         );
       });
     });
-  });
-
-  describe("Remove in charge volunteers", () => {
-    describe.each`
-      taskName                              | task                     | volunteerId
-      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${lea.id}
-      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${george.id}
-    `(
-      "when removing a known volunteer on $taskName",
-      ({ task, volunteerId }) => {
-        it("should remove it from volunteers list", async () => {
-          const expectedLength =
-            task.instructions.inCharge.volunteers.length - 1;
-
-          const { instructions } = await prepare.removeInChargeVolunteer(
-            task.id,
-            volunteerId,
+    describe("when task is under review", () => {
+      describe("when task doesn't have in charge instructions", () => {
+        it("should indicate instructions are also required", async () => {
+          expect(
+            async () =>
+              await prepare.updateInChargeVolunteers(guardJustDance.id, [noel]),
+          ).rejects.toThrow(
+            "Des instructions spécifiques sont nécessaires pour les responsables",
           );
-
-          expect(instructions.inCharge.volunteers).toHaveLength(expectedLength);
         });
-      },
-    );
-    describe("when removing an unknown volunteer", () => {
-      it("should keep in charge volunteers list unchanged", async () => {
-        const volunteerId = -1;
-        const task = uninstallEscapeGame;
-
-        const { instructions } = await prepare.removeInChargeVolunteer(
-          task.id,
-          volunteerId,
-        );
-
-        expect(instructions).toStrictEqual(task.instructions);
+      });
+      describe("when update in charge volunteers with no volunteers", () => {
+        it("should indicate at least one volunteer is required", async () => {
+          expect(
+            async () =>
+              await prepare.updateInChargeVolunteers(
+                serveWaterOnJustDance.id,
+                [],
+              ),
+          ).rejects.toThrow(
+            "Des responsables sont nécessaires pour les instructions spécifiques",
+          );
+        });
       });
     });
   });
@@ -373,20 +354,11 @@ describe("Prepare festival task instructions section", () => {
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
-            describe("when trying to add an in charge volunteer", () => {
+            describe("when trying to update in charge volunteers", () => {
               it("should indicate task is already approved by humain", () => {
-                expect(
-                  async () => await prepare.addInChargeVolunteer(task.id, lea),
-                ).rejects.toThrow(AlreadyApprovedBy);
-              });
-            });
-            describe("when trying to remove an in charge volunteer", () => {
-              it("should indicate task is already approved by humain", () => {
-                const volunteerId =
-                  task.instructions.inCharge.volunteers.at(0).id;
                 expect(
                   async () =>
-                    await prepare.removeInChargeVolunteer(task.id, volunteerId),
+                    await prepare.updateInChargeVolunteers(task.id, [lea]),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
