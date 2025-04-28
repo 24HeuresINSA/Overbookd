@@ -13,12 +13,12 @@ export class Introduction {
         style: ["paragraph", "largeSpaceBetween"],
       },
       {
-        text: "Tu trouveras dans ce livret l'essentiel des informations dont tu as besoin pour profiter et nous filer un coup de main avec:",
+        text: "Tu trouveras dans ce livret l'essentiel des informations dont tu as besoin pour profiter et nous filer un coup de main avec :",
         style: ["paragraph"],
       },
       {
         ul: [
-          "Le plan bénévole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circontances avec sa carte interactive",
+          "Le plan bénévole disponible sous forme de QR Code, il te permettra de trouver ton chemin en toutes circonstances avec sa carte interactive",
           "Le plan sécu en page 2, il est là pour te donner une vision spécifique du site en soirée (où est-ce que tu peux rentrer, où sont les bars etc...)",
           "Un planning avec une liste de créneaux pendant lesquels on compte sur toi pour nous aider",
           "Un rappel du dispositif cocktail purple en toute fin de livret, ce dispositif vise à mettre à l'abri des personnes qui se sentent en danger sur le festival",
@@ -27,7 +27,7 @@ export class Introduction {
         margin: [75, 0, 50, 5],
       },
       {
-        text: "Lorsque tu as du temps libre n'hésite pas à passer au QG pour:",
+        text: "Lorsque tu as du temps libre n'hésite pas à passer au QG pour :",
         style: ["paragraph"],
       },
       {
