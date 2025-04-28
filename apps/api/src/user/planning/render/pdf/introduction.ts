@@ -13,7 +13,7 @@ export class Introduction {
         style: ["paragraph", "largeSpaceBetween"],
       },
       {
-        text: "Tu trouveras dans ce livret l'essentiel des informations dont tu as besoin pour profiter et nous filer un coup de main avec:",
+        text: "Tu trouveras dans ce livret l'essentiel des informations dont tu as besoin pour profiter et nous filer un coup de main avec :",
         style: ["paragraph"],
       },
       {
@@ -27,7 +27,7 @@ export class Introduction {
         margin: [75, 0, 50, 5],
       },
       {
-        text: "Lorsque tu as du temps libre n'hésite pas à passer au QG pour:",
+        text: "Lorsque tu as du temps libre n'hésite pas à passer au QG pour :",
         style: ["paragraph"],
       },
       {
