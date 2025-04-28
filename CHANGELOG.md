@@ -1,3 +1,10 @@
+## [3.44.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.2...v3.44.3) (2025-04-28)
+
+### Bug Fixes
+
+* **assignment:** reset list when clearing search field [#2506](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2506) ([a826e25](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a826e2542931167b2850b0b0315b2cc1f7b70e3b))
+* **planning:** update the planning informations [#2480](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2480) ([aeb7eb2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aeb7eb267beee3de31067c7a7ff47514f7b834eb))
+
 ## [3.44.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.1...v3.44.2) (2025-04-28)
 
 ### Bug Fixes
