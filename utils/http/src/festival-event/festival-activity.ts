@@ -1,6 +1,7 @@
 import {
+  BaseInquiryRequest,
+  Drive,
   FestivalActivity,
-  InquiryRequestAssigned,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
@@ -35,10 +36,11 @@ export type PreviewForSecurity = {
   freePass: FestivalActivity["security"]["freePass"];
 };
 
-export type ActivityGearInquiryForPreview = InquiryRequestAssigned & {
+export type ActivityGearInquiryForPreview = BaseInquiryRequest & {
   isPonctualUsage: boolean;
   isConsumable: boolean;
-  owner: string;
+  drive?: Drive;
+  owner?: string;
 };
 export type PreviewForLogistic = {
   id: FestivalActivity["id"];

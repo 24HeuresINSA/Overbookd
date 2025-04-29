@@ -15,11 +15,21 @@ export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
   teamCode: true,
   inquiries: {
     select: {
-      slug: true,
-      name: true,
-      isPonctualUsage: true,
-      isConsumable: true,
-      owner: { select: { name: true, slug: true } },
+      quantity: true,
+      drive: true,
+      catalogItem: {
+        select: {
+          slug: true,
+          name: true,
+          isPonctualUsage: true,
+          isConsumable: true,
+          category: {
+            select: {
+              owner: { select: { name: true } },
+            },
+          },
+        },
+      },
     },
   },
 };

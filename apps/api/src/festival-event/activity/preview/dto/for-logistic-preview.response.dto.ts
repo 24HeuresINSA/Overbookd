@@ -4,20 +4,33 @@ import {
   PreviewForLogistic,
 } from "@overbookd/http";
 import { BasePreviewForDashboardResponseDto } from "./base-preview-for-dashboard.response.dto";
-import { AssignedInquiryRequestResponseDto } from "../../common/dto/inquiry-request.response.dto";
+import { Drive, drives } from "@overbookd/festival-event";
 
-class GearInquiryDto
-  extends AssignedInquiryRequestResponseDto
-  implements ActivityGearInquiryForPreview
-{
+class GearInquiryDto implements ActivityGearInquiryForPreview {
+  @ApiProperty({ description: "Gear slug", type: String })
+  slug: string;
+
+  @ApiProperty({ description: "Gear quantity", type: Number })
+  quantity: number;
+
+  @ApiProperty({ description: "Gear name", type: String })
+  name: string;
+
+  @ApiProperty({ description: "Gear drive", enum: drives, required: false })
+  drive?: Drive;
+
   @ApiProperty({ description: "Gear usage", type: Boolean })
   isPonctualUsage: boolean;
 
   @ApiProperty({ description: "Gear consumable status", type: Boolean })
   isConsumable: boolean;
 
-  @ApiProperty({ description: "Gear owner name", type: String })
-  owner: string;
+  @ApiProperty({
+    description: "Gear owner name",
+    type: String,
+    required: false,
+  })
+  owner?: string;
 }
 
 export class PreviewForLogisticResponseDto
@@ -35,5 +48,5 @@ export class PreviewForLogisticResponseDto
     type: GearInquiryDto,
     isArray: true,
   })
-  inquiries: PreviewForLogistic["inquiries"];
+  inquiries: ActivityGearInquiryForPreview[];
 }

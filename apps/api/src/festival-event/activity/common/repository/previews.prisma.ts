@@ -46,12 +46,14 @@ export class PrismaPreviews implements Previews {
       name: activity.name,
       status: activity.status,
       team: activity.teamCode,
-      inquiries: activity.inquiries.map((inquiry) => ({
-        slug: inquiry.slug,
-        name: inquiry.name,
-        isPonctualUsage: inquiry.isPonctualUsage,
-        isConsumable: inquiry.isConsumable,
-        owner: inquiry.owner.name,
+      inquiries: activity.inquiries.map(({ quantity, drive, catalogItem }) => ({
+        quantity,
+        drive,
+        isPonctualUsage: catalogItem.isPonctualUsage,
+        isConsumable: catalogItem.isConsumable,
+        slug: catalogItem.slug,
+        name: catalogItem.name,
+        owner: catalogItem.category.owner?.name,
       })),
     }));
   }
