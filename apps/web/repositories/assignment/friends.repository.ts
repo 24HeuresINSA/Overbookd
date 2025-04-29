@@ -1,6 +1,6 @@
 import type { IProvidePeriod } from "@overbookd/time";
 import type { AssignableVolunteer, Friends } from "@overbookd/assignment";
-import { useAssignTaskToVolunteerStore } from "~/stores/assignment/assignTaskToVolunteer";
+import { useAssignTaskToVolunteerStore } from "~/stores/assignment/task-to-volunteer";
 
 export class FriendsRepository implements Friends {
   async availableDuringWith(

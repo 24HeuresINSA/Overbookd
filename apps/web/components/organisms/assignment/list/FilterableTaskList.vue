@@ -6,7 +6,7 @@
         v-model:required-teams="searchedRequiredTeams"
         v-model:in-charge-team="searchedInChargeTeam"
         v-model:category="searchedCategory"
-        v-model:has-assigned-friends="hasAssignedFriends"
+        v-model:completed="displayCompleted"
         :list-length="filteredTasks.length"
         class="filters"
       />
@@ -36,7 +36,12 @@ const searchedTaskName = ref<string>("");
 const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
-const hasAssignedFriends = ref<boolean>(false);
+const displayCompleted = ref<boolean>(false);
+
+watch(
+  () => displayCompleted.value,
+  (completed) => assignTaskToVolunteerStore.fetchTasks(completed),
+);
 
 const searchableTasks = computed<Searchable<MissingAssignmentTask>[]>(() =>
   assignTaskToVolunteerStore.tasks.map((task) => ({
