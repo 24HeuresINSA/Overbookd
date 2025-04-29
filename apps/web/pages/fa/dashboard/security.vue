@@ -11,6 +11,7 @@
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
         class="fa"
+        density="comfortable"
         @click:row="openActivityFromDataTable"
         @auxclick:row="openActivityInNewTabFromDataTable"
       >
@@ -33,12 +34,6 @@
         <template #item.team="{ item }">
           <TeamChip v-if="item.team" :team="item.team" with-name />
         </template>
-        <template #item.start="{ item }">
-          {{ displayDate(item.start) }}
-        </template>
-        <template #item.end="{ item }">
-          {{ displayDate(item.end) }}
-        </template>
         <template #item.timeWindowsCount="{ item }">
           {{ item.timeWindows.length }}
         </template>
@@ -50,10 +45,7 @@
 <script lang="ts" setup>
 import type { PreviewForSecurity } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-import {
-  formatDateToHumanReadable,
-  type IProvidePeriod,
-} from "@overbookd/time";
+import { formatDateToHumanReadable } from "@overbookd/time";
 import {
   openActivityFromDataTable,
   openActivityInNewTabFromDataTable,
@@ -91,15 +83,20 @@ const headers: TableHeaders = [
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
-type PreviewForSecurityWithGlobalTimeWindow = PreviewForSecurity &
-  IProvidePeriod;
+type PreviewForSecurityWithDisplayableTimeWindow = PreviewForSecurity & {
+  start?: string;
+  end?: string;
+};
 
-const activities = computed<PreviewForSecurityWithGlobalTimeWindow[]>(() =>
-  faStore.activities.forSecurity.map((fa) => ({
-    ...fa,
-    start: startingTimeWindow(fa.timeWindows),
-    end: endingTimeWindow(fa.timeWindows),
-  })),
+const activities = computed<PreviewForSecurityWithDisplayableTimeWindow[]>(() =>
+  faStore.activities.forSecurity.map((fa) => {
+    if (fa.timeWindows.length === 0) return fa;
+    return {
+      ...fa,
+      start: displayableTimeWindowStart(fa.timeWindows),
+      end: displayableTimeWindowEnd(fa.timeWindows),
+    };
+  }),
 );
 const loading = ref<boolean>(activities.value.length === 0);
 faStore.fetchSecurityPreviews().then(() => (loading.value = false));
@@ -107,26 +104,29 @@ faStore.fetchSecurityPreviews().then(() => (loading.value = false));
 const search = ref<string>("");
 
 const searchableActivities = computed<
-  Searchable<PreviewForSecurityWithGlobalTimeWindow>[]
+  Searchable<PreviewForSecurityWithDisplayableTimeWindow>[]
 >(() =>
   activities.value.map((fa) => ({
     ...fa,
     searchable: SlugifyService.apply(`${fa.id} ${fa.name} ${fa.specialNeeds}`),
   })),
 );
-const filteredActivities = computed<PreviewForSecurityWithGlobalTimeWindow[]>(
-  () => matchingSearchItems(searchableActivities.value, search.value),
-);
+const filteredActivities = computed<
+  PreviewForSecurityWithDisplayableTimeWindow[]
+>(() => matchingSearchItems(searchableActivities.value, search.value));
 
-const displayDate = (date: Date) => formatDateToHumanReadable(date);
-const startingTimeWindow = (timeWindows: PreviewForSecurity["timeWindows"]) => {
+const displayableTimeWindowStart = (
+  timeWindows: PreviewForSecurity["timeWindows"],
+): string => {
   const starts = timeWindows.map(({ start }) => start);
   const minTimestamp = Math.min(...starts.map((end) => end.getTime()));
-  return new Date(minTimestamp);
+  return formatDateToHumanReadable(new Date(minTimestamp));
 };
-const endingTimeWindow = (timeWindows: PreviewForSecurity["timeWindows"]) => {
+const displayableTimeWindowEnd = (
+  timeWindows: PreviewForSecurity["timeWindows"],
+): string => {
   const ends = timeWindows.map(({ end }) => end);
   const maxTimestamp = Math.max(...ends.map((end) => end.getTime()));
-  return new Date(maxTimestamp);
+  return formatDateToHumanReadable(new Date(maxTimestamp));
 };
 </script>

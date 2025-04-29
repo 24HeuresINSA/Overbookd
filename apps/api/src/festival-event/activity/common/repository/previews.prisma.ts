@@ -1,4 +1,4 @@
-import { PreviewFestivalActivity } from "@overbookd/festival-event";
+import { Drive, PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
   PreviewForCommunication,
   PreviewForLogistic,
@@ -46,15 +46,18 @@ export class PrismaPreviews implements Previews {
       name: activity.name,
       status: activity.status,
       team: activity.teamCode,
-      inquiries: activity.inquiries.map(({ quantity, drive, catalogItem }) => ({
-        quantity,
-        drive,
-        isPonctualUsage: catalogItem.isPonctualUsage,
-        isConsumable: catalogItem.isConsumable,
-        slug: catalogItem.slug,
-        name: catalogItem.name,
-        owner: catalogItem.category.owner?.name,
-      })),
+      inquiries: activity.inquiries.map((inquiry) => {
+        const drive = inquiry.drive ? (inquiry.drive as Drive) : undefined;
+        return {
+          drive,
+          quantity: inquiry.quantity,
+          isPonctualUsage: inquiry.catalogItem.isPonctualUsage,
+          isConsumable: inquiry.catalogItem.isConsumable,
+          slug: inquiry.catalogItem.slug,
+          name: inquiry.catalogItem.name,
+          owner: inquiry.catalogItem.category.owner?.name,
+        };
+      }),
     }));
   }
 

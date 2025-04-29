@@ -11,6 +11,7 @@
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
         class="fa"
+        density="comfortable"
         @click:row="openActivityFromDataTable"
         @auxclick:row="openActivityInNewTabFromDataTable"
       >
