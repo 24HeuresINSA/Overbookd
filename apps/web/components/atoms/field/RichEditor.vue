@@ -41,21 +41,25 @@ const options: QuillOptions = {
   },
 };
 
-const quill = ref<Quill | undefined>();
+const quill = computed(() => new Quill(`#${id.value}`, options));
+
+const fixLineBreaks = (htmlContent: string) =>
+  htmlContent.replace(/<p><\/p>/g, "<p><br></p>");
 
 onMounted(() => {
-  quill.value = new Quill(`#${id.value}`, options);
-  quill.value.root.innerHTML = content.value ?? "";
+  const delta = quill.value.clipboard.convert({ html: content.value ?? "" });
+  quill.value.setContents(delta, "silent");
   quill.value.on("text-change", () => {
-    content.value = quill.value?.root.innerHTML ?? "";
+    content.value = fixLineBreaks(quill.value.getSemanticHTML());
   });
 });
 
 watch(content, (newContent) => {
   if (!quill.value) return;
-  const currentContent = quill.value.root.innerHTML;
+  const currentContent = fixLineBreaks(quill.value.getSemanticHTML());
   if (newContent === currentContent) return;
-  quill.value.root.innerHTML = newContent ?? "";
+  const delta = quill.value.clipboard.convert({ html: content.value ?? "" });
+  quill.value.setContents(delta, "silent");
 });
 
 onUnmounted(() => {
