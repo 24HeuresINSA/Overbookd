@@ -430,7 +430,7 @@ function databaseFestivalActivityWithoutListsMapping(
   return {
     id: activity.id,
     status: activity.status,
-    isDeleted: false,
+    ...IS_NOT_DELETED,
     name: activity.general.name,
     description: activity.general.description,
     toPublish: activity.general.toPublish,

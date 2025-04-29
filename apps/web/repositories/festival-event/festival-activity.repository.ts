@@ -5,6 +5,7 @@ import {
   type PrepareInChargeForm,
   type PrepareSignaForm,
   type PreviewForCommunication,
+  type PreviewForLogistic,
   type PreviewForSecurity,
   type ReviewRejection,
 } from "@overbookd/http";
@@ -48,6 +49,12 @@ export class FestivalActivityRepository {
 
   static getMine() {
     return HttpClient.get<PreviewFestivalActivity[]>(`${this.basePath}/mine`);
+  }
+
+  static getLogisticPreviews() {
+    return HttpClient.get<PreviewForLogistic[]>(
+      `${this.basePath}/for-logistic`,
+    );
   }
 
   static getSecurityPreviews() {

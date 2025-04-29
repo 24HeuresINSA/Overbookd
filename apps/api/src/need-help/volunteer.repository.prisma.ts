@@ -9,6 +9,7 @@ import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 type DatabaseHelpingVolunteer = {
   id: number;
@@ -61,7 +62,7 @@ export class PrismaHelpingVolunteers implements HelpingVolunteers {
   private buildIsAvailableCondition({ start, end }: IProvidePeriod) {
     return {
       ...IS_MEMBER_OF_VOLUNTEER_TEAM,
-      isDeleted: false,
+      ...IS_NOT_DELETED,
       availabilities: {
         some: {
           start: { lte: start },

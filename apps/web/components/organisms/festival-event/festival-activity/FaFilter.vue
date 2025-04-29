@@ -53,6 +53,14 @@
         @click="openSecurityDashboard"
       />
       <v-btn
+        v-if="canViewGearDashboard"
+        prepend-icon="mdi-tools"
+        color="secondary"
+        text="Demandes de matériel"
+        class="desktop-only page-button"
+        @click="openGearDashboard"
+      />
+      <v-btn
         v-if="canViewAnimationsToPublish"
         prepend-icon="mdi-web-sync"
         color="secondary"
@@ -93,9 +101,14 @@ import {
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
-import { FA_TO_PUBLISH_URL, SECURITY_DASHBOARD_URL } from "@overbookd/web-page";
+import {
+  FA_GEAR_DASHBOARD_URL,
+  FA_TO_PUBLISH_URL,
+  SECURITY_DASHBOARD_URL,
+} from "@overbookd/web-page";
 import {
   READ_ANIMATION_TO_PUBLISH,
+  VIEW_FA_GEAR_DASHBOARD,
   VIEW_SECURITY_DASHBOARD,
   EXPORT_FOR_SIGNA,
 } from "@overbookd/permission";
@@ -148,6 +161,13 @@ const canViewSecurityDashboard = computed<boolean>(() => {
 });
 const openSecurityDashboard = (event: PointerEvent) => {
   openPage(event, SECURITY_DASHBOARD_URL);
+};
+
+const canViewGearDashboard = computed<boolean>(() => {
+  return userStore.can(VIEW_FA_GEAR_DASHBOARD);
+});
+const openGearDashboard = (event: PointerEvent) => {
+  openPage(event, FA_GEAR_DASHBOARD_URL);
 };
 
 const canViewAnimationsToPublish = computed<boolean>(() => {

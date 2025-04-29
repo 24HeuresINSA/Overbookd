@@ -10,6 +10,7 @@
         loading-text="Chargement des fiches activités..."
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
+        class="fa"
         @click:row="openActivityFromDataTable"
         @auxclick:row="openActivityInNewTabFromDataTable"
       >
@@ -19,6 +20,14 @@
             label="Rechercher une activité"
             hide-details
           />
+        </template>
+
+        <template #item.id="{ item }">
+          <div class="status">
+            <v-chip :class="item.status.toLowerCase()">
+              {{ item.id }}
+            </v-chip>
+          </div>
         </template>
 
         <template #item.team="{ item }">

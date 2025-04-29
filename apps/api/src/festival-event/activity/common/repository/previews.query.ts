@@ -4,9 +4,33 @@ import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_BASE_SIGNAGE } from "./festival-activity.query";
 
-export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
+const SELECT_BASE_PREVIEW = {
   id: true,
   name: true,
+  status: true,
+};
+
+export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
+  ...SELECT_BASE_PREVIEW,
+  teamCode: true,
+  inquiries: {
+    select: {
+      slug: true,
+      name: true,
+      isPonctualUsage: true,
+      isConsumable: true,
+      owner: { select: { name: true, slug: true } },
+    },
+  },
+};
+
+export const SHOULD_BE_IN_LOGISTIC_DASHBOARD = {
+  ...IS_NOT_DELETED,
+  inquiries: { some: {} },
+};
+
+export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
+  ...SELECT_BASE_PREVIEW,
   teamCode: true,
   specialNeed: true,
   freePass: true,
@@ -14,7 +38,7 @@ export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
 };
 
 export const SHOULD_BE_IN_SECURITY_DASHBOARD = {
-  isDeleted: false,
+  ...IS_NOT_DELETED,
   reviews: { some: { team: secu, status: APPROVED } as const },
   //                                                ^ Mandatory to match prisma type on review status
   OR: [{ specialNeed: { not: null } }, { freePass: { gt: 0 } }],
@@ -25,9 +49,7 @@ export const IS_PUBLIC = {
 };
 
 export const SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD = {
-  id: true,
-  status: true,
-  name: true,
+  ...SELECT_BASE_PREVIEW,
   generalTimeWindows: { select: SELECT_PERIOD_WITH_ID },
   description: true,
   photoLink: true,

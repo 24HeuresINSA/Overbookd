@@ -2,6 +2,7 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   READ_FT,
+  VIEW_FA_GEAR_DASHBOARD,
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
@@ -9,6 +10,7 @@ import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 import {
   FA_URL,
   FT_URL,
+  FA_GEAR_DASHBOARD_URL,
   FA_TO_PUBLISH_URL,
   STATS_URL,
   SECURITY_DASHBOARD_URL,
@@ -77,6 +79,15 @@ const SECURITY_DASHBOARD_PAGE: HiddenPage = {
   hasParam: false,
 };
 
+const FA_GEAR_DASHBOARD_PAGE: HiddenPage = {
+  title: "Demandes de matériel FA",
+  permission: VIEW_FA_GEAR_DASHBOARD,
+  to: FA_GEAR_DASHBOARD_URL,
+  mobileSupport: false,
+  canBeFavorite: false,
+  hasParam: false,
+};
+
 const FESTIVAL_EVENTS_STATS_PAGE: PageInSummary = {
   icon: "mdi-chart-areaspline-variant",
   title: "Statistiques",
@@ -109,5 +120,6 @@ export const FESTIVAL_EVENT_PAGES: Page[] = [
   FA_PAGE,
   FT_PAGE,
   SECURITY_DASHBOARD_PAGE,
+  FA_GEAR_DASHBOARD_PAGE,
   FA_TO_PUBLISH_PAGE,
 ];

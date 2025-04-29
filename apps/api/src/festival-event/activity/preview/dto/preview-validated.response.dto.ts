@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PreviewReviewable, ValidatedReviews } from "@overbookd/festival-event";
 import { VALIDATED } from "@overbookd/festival-event-constants";
 import { ValidatedReviewsResponseDto } from "../../review/dto/reviews.response.dto";
-import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
+import { ReviewablePreviewBaseResponseDto } from "./base-preview.response.dto";
 
 type ValidatedPreview = Extract<
   PreviewReviewable,

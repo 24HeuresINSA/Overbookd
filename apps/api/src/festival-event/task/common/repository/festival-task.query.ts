@@ -398,7 +398,7 @@ function databaseFestivalTaskWithoutListsMapping(
   return {
     id: task.id,
     status: task.status,
-    isDeleted: false,
+    ...IS_NOT_DELETED,
     name: task.general.name,
     administratorId: task.general.administrator.id,
     teamCode: task.general.team,

@@ -1,5 +1,9 @@
 import { PreviewFestivalActivity } from "@overbookd/festival-event";
-import { PreviewForCommunication, PreviewForSecurity } from "@overbookd/http";
+import {
+  PreviewForCommunication,
+  PreviewForLogistic,
+  PreviewForSecurity,
+} from "@overbookd/http";
 import { Previews } from "../festival-activity-common.model";
 import { PrismaService } from "../../../../prisma.service";
 import {
@@ -9,6 +13,8 @@ import {
   SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD,
   SELECT_PREVIEW_FOR_SIGNA,
   SHOULD_BE_IN_SIGNA_PREVIEW,
+  SHOULD_BE_IN_LOGISTIC_DASHBOARD,
+  SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
 } from "./previews.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
@@ -29,6 +35,27 @@ export class PrismaPreviews implements Previews {
     );
   }
 
+  async forLogistic(): Promise<PreviewForLogistic[]> {
+    const fromDatabase = await this.prisma.festivalActivity.findMany({
+      where: SHOULD_BE_IN_LOGISTIC_DASHBOARD,
+      select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
+    });
+
+    return fromDatabase.map((activity) => ({
+      id: activity.id,
+      name: activity.name,
+      status: activity.status,
+      team: activity.teamCode,
+      inquiries: activity.inquiries.map((inquiry) => ({
+        slug: inquiry.slug,
+        name: inquiry.name,
+        isPonctualUsage: inquiry.isPonctualUsage,
+        isConsumable: inquiry.isConsumable,
+        owner: inquiry.owner.name,
+      })),
+    }));
+  }
+
   async forSecurity(): Promise<PreviewForSecurity[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({
       where: SHOULD_BE_IN_SECURITY_DASHBOARD,
@@ -38,6 +65,7 @@ export class PrismaPreviews implements Previews {
     return fromDatabase.map((activity) => ({
       id: activity.id,
       name: activity.name,
+      status: activity.status,
       team: activity.teamCode,
       timeWindows: activity.generalTimeWindows,
       specialNeeds: activity.specialNeed,
