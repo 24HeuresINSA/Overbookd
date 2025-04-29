@@ -157,6 +157,8 @@ const formatTaskForCalendar = ({
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: 4px;
+  margin-bottom: 8px;
   &__name {
     font-size: 1.4rem;
     font-weight: 500;
@@ -164,7 +166,5 @@ const formatTaskForCalendar = ({
   &__stats {
     margin-top: 2px;
   }
-  margin-left: 4px;
-  margin-bottom: 8px;
 }
 </style>
