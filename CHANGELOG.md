@@ -1,3 +1,13 @@
+## [3.45.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.6...v3.45.0) (2025-04-29)
+
+### Features
+
+* **fa:** add gear dashboard page [#2490](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2490) ([671b2bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/671b2bb867979a048a1558583513ad630aa819aa))
+
+### Bug Fixes
+
+* **task-orga:** display right total assignment duration [#2520](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2520) ([444eb61](https://gitlab.com/24-heures-insa/overbookd-mono/commit/444eb612b9fe054a59938508cc74bdfd155eaf4a))
+
 ## [3.44.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.5...v3.44.6) (2025-04-29)
 
 ### Bug Fixes
