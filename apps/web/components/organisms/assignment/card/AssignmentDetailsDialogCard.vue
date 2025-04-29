@@ -96,7 +96,11 @@
 
             <template #item.friends="{ item }">
               <div class="friend-list">
-                <v-chip v-for="friend in item.friends" :key="friend.id">
+                <v-chip
+                  v-for="friend in item.friends"
+                  :key="friend.id"
+                  :color="shouldHighlight(friend.id) ? 'secondary' : undefined"
+                >
                   <v-icon left>mdi-account</v-icon>
                   {{ buildUserName(friend) }}
                 </v-chip>
@@ -155,6 +159,10 @@ const props = defineProps({
     type: Object as PropType<AssignmentWithDetails>,
     required: true,
   },
+  highlightedAssigneeId: {
+    type: Number,
+    default: undefined,
+  },
 });
 
 const selectedAssigneeId = ref<number | undefined>();
@@ -180,25 +188,28 @@ const requestedTeams = computed<AssignmentTeam[]>(() =>
     return { team, demand, assigned };
   }),
 );
-const requiredVolunteers = computed<NamelyDemandedForDetails[]>(() =>
-  props.assignmentDetails.assignees
-    .map((requiredVolunteer) => {
-      if (!isTeamMember(requiredVolunteer)) return requiredVolunteer;
-    })
-    .filter(
-      (requiredVolunteer): requiredVolunteer is NamelyDemandedForDetails =>
-        requiredVolunteer !== undefined,
-    ),
-);
-const assignees = computed<TeamMemberForDetails[]>(() =>
-  props.assignmentDetails.assignees
-    .map((assignee) => {
-      if (isTeamMember(assignee)) return assignee;
-    })
-    .filter(
-      (assignee): assignee is TeamMemberForDetails => assignee !== undefined,
-    ),
-);
+
+const shouldHighlight = (assigneeId: number): boolean => {
+  return props.highlightedAssigneeId === assigneeId;
+};
+function prioritizeHighlighted<T extends { id: number }>(list: T[]): T[] {
+  if (props.highlightedAssigneeId === undefined) return list;
+  return list.sort((a, b) =>
+    shouldHighlight(a.id) ? -1 : shouldHighlight(b.id) ? 1 : 0,
+  );
+}
+
+const requiredVolunteers = computed<NamelyDemandedForDetails[]>(() => {
+  const list = props.assignmentDetails.assignees.filter(
+    (a): a is NamelyDemandedForDetails => !isTeamMember(a),
+  );
+  return prioritizeHighlighted(list);
+});
+const assignees = computed<TeamMemberForDetails[]>(() => {
+  const list = props.assignmentDetails.assignees.filter(isTeamMember);
+  return prioritizeHighlighted(list);
+});
+
 const isUpdateAssignedTeamActive = computed<boolean>(
   () => selectedAssigneeId.value !== undefined,
 );

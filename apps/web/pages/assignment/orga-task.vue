@@ -15,6 +15,7 @@
       <AssignmentDetailsDialogCard
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
+        :highlighted-assignee-id="selectedVolunteer?.id"
         @close="closeAssignmentDetailsDialog"
         @unassign="unassignVolunteer"
       />
@@ -42,10 +43,12 @@ const assignmentDetails = computed<AssignmentWithDetails | null>(
   () => assignVolunteerToTaskStore.assignmentDetails,
 );
 
+const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
+  () => assignVolunteerToTaskStore.selectedVolunteer,
+);
 const title = computed<string>(() => {
-  const selectedVolunteer = assignVolunteerToTaskStore.selectedVolunteer;
-  if (!selectedVolunteer) return DEFAULT_TITLE;
-  return `${buildUserName(selectedVolunteer)} affect`;
+  if (!selectedVolunteer.value) return DEFAULT_TITLE;
+  return `${buildUserName(selectedVolunteer.value)} affect`;
 });
 watch(title, (newTitle) => (document.title = newTitle));
 
