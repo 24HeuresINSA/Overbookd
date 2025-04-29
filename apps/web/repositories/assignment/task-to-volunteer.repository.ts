@@ -1,7 +1,7 @@
 import type {
   AssignableVolunteer,
   AssignmentIdentifier,
-  MissingAssignmentTask,
+  TaskForAssignment,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import { HttpClient } from "~/utils/http/http-client";
@@ -10,7 +10,7 @@ export class TaskToVolunteerRepository {
   private static readonly basePath = "assignments/task-to-volunteer";
 
   static getTasks() {
-    return HttpClient.get<MissingAssignmentTask[]>({
+    return HttpClient.get<TaskForAssignment[]>({
       path: `${this.basePath}/tasks`,
       params: { all: true },
     });

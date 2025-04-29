@@ -8,7 +8,7 @@ import { Assignment, AssignmentIdentifier } from "./assignment.js";
 import {
   Task,
   TaskIdentifier,
-  MissingAssignmentTask,
+  TaskForAssignment,
   TaskWithAssignmentsSummary,
 } from "./task.js";
 import { countAssigneesInTeam } from "../count-assignees-in-team.js";
@@ -36,16 +36,15 @@ export class AssignTaskToVolunteer {
     private readonly assignableVolunteers: AssignableVolunteers,
   ) {}
 
-  async tasks(): Promise<MissingAssignmentTask[]> {
+  async tasks(): Promise<TaskForAssignment[]> {
     const tasks = await this.allTasks.findAll();
 
-    const withMissingTeams = tasks.map((task) =>
-      this.computeMissingAssignmentTeams(task),
-    );
-    return withMissingTeams.map(({ teams, ...task }) => ({
-      ...task,
-      teams: removeDuplicates(teams),
-    }));
+    return tasks
+      .map((task) => this.computeMissingAssignmentTeams(task))
+      .map(({ teams, ...task }) => ({
+        ...task,
+        teams: removeDuplicates(teams),
+      }));
   }
 
   async selectTask(
@@ -98,7 +97,7 @@ export class AssignTaskToVolunteer {
     });
   }
 
-  private computeMissingAssignmentTeams(task: Task): MissingAssignmentTask {
+  private computeMissingAssignmentTeams(task: Task): TaskForAssignment {
     const missingTeamMembers = task.assignments.reduce(
       (teams: string[], assignment) => {
         const missingTeamMembers = this.filterMissingTeamMembers(assignment);

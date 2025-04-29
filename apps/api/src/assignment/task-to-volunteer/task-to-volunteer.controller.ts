@@ -18,7 +18,7 @@ import { TaskToVolunteerService } from "./task-to-volunteer.service";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import {
   AssignableVolunteer,
-  MissingAssignmentTask,
+  TaskForAssignment,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import { Permission } from "../../authentication/permissions-auth.decorator";
@@ -51,7 +51,7 @@ export class TaskToVolunteerController {
     type: MissingAssignmentTaskResponseDto,
     isArray: true,
   })
-  findTasks(): Promise<MissingAssignmentTask[]> {
+  findTasks(): Promise<TaskForAssignment[]> {
     return this.taskToVolunteer.findTasks();
   }
 

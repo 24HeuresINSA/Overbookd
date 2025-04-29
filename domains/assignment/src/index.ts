@@ -29,7 +29,7 @@ export {
 } from "./assign-task-to-volunteer/assignment.js";
 export type {
   Task,
-  MissingAssignmentTask,
+  TaskForAssignment,
   TaskCategorized,
   TaskIdentifier,
   TaskWithAssignmentsSummary,

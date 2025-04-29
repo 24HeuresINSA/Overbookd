@@ -18,18 +18,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { MissingAssignmentTask } from "@overbookd/assignment";
+import type { TaskForAssignment } from "@overbookd/assignment";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
 defineProps({
   tasks: {
-    type: Array as PropType<MissingAssignmentTask[]>,
+    type: Array as PropType<TaskForAssignment[]>,
     required: true,
   },
 });
 
-const selectTask = (task: MissingAssignmentTask) => {
+const selectTask = (task: TaskForAssignment) => {
   assignTaskToVolunteerStore.selectTask(task.id);
 };
 
