@@ -95,7 +95,6 @@ const handleKeydown = (event: KeyboardEvent) => {
   if (teamShortcut.includes(event.key)) {
     const indexTeamSelect = teamShortcut.indexOf(event.key);
     temporaryAssign(assignableTeams.value[indexTeamSelect], props.candidate);
-    console.log(event.key);
   }
 };
 
