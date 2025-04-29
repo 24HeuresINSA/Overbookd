@@ -1,3 +1,9 @@
+## [3.44.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.5...v3.44.6) (2025-04-29)
+
+### Bug Fixes
+
+* **assignment:** display completely assigned tasks when selecting all tasks in task orga mode. [#2516](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2516) ([6474fd2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6474fd2302d33bbeb52cdd986bfabb44de9f82a5))
+
 ## [3.44.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.4...v3.44.5) (2025-04-29)
 
 ### Bug Fixes
