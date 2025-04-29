@@ -2,7 +2,6 @@
   <div class="orga-task-calendar">
     <div v-show="selectedVolunteer" class="title">
       <h1 class="title__name">{{ volunteerName }}</h1>
-      <span>|</span>
       <AssignmentVolunteerStats :stats="stats" class="title__stats" />
     </div>
     <OverCalendar
@@ -156,15 +155,16 @@ const formatTaskForCalendar = ({
 <style lang="scss" scoped>
 .title {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   &__name {
     font-size: 1.4rem;
     font-weight: 500;
-    margin-right: 8px;
   }
   &__stats {
     margin-top: 2px;
-    margin-left: 8px;
   }
+  margin-left: 4px;
+  margin-bottom: 8px;
 }
 </style>
