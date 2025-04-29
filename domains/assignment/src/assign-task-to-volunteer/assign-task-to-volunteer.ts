@@ -36,18 +36,16 @@ export class AssignTaskToVolunteer {
     private readonly assignableVolunteers: AssignableVolunteers,
   ) {}
 
-  async tasks(all: boolean = false): Promise<MissingAssignmentTask[]> {
+  async tasks(): Promise<MissingAssignmentTask[]> {
     const tasks = await this.allTasks.findAll();
 
     const withMissingTeams = tasks.map((task) =>
       this.computeMissingAssignmentTeams(task),
     );
-    return withMissingTeams
-      .filter((task) => all || task.teams.length > 0)
-      .map(({ teams, ...task }) => ({
-        ...task,
-        teams: removeDuplicates(teams),
-      }));
+    return withMissingTeams.map(({ teams, ...task }) => ({
+      ...task,
+      teams: removeDuplicates(teams),
+    }));
   }
 
   async selectTask(
