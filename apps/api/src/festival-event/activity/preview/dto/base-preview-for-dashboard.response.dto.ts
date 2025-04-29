@@ -3,9 +3,9 @@ import { FestivalActivity } from "@overbookd/festival-event";
 import {
   DRAFT,
   IN_REVIEW,
+  REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { REFUSED } from "dns";
 
 const statuses = [DRAFT, IN_REVIEW, VALIDATED, REFUSED];
 
