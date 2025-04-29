@@ -90,6 +90,22 @@ const isNotAssignedAs = (team: string) => {
   return funnelCandidate.value?.as !== team;
 };
 
+const handleKeydown = (event: KeyboardEvent) => {
+  const teamShortcut = [`&`, `é`, `"`, `'`];
+  if (teamShortcut.includes(event.key)) {
+    const indexTeamSelect = teamShortcut.indexOf(event.key);
+    temporaryAssign(assignableTeams.value[indexTeamSelect], props.candidate);
+    console.log(event.key);
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
+
 const emit = defineEmits(["revoke", "next", "previous", "temporary-assign"]);
 const revokeCandidate = () => emit("revoke");
 const previousCandidate = () => emit("previous");
