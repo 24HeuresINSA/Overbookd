@@ -38,17 +38,21 @@ const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const displayCompleted = ref<boolean>(false);
 
-watch(
-  () => displayCompleted.value,
-  (completed) => assignTaskToVolunteerStore.fetchTasks(completed),
-);
+const toSearchableTask = (
+  task: MissingAssignmentTask,
+): Searchable<MissingAssignmentTask> => ({
+  ...task,
+  searchable: SlugifyService.apply(`${task.id} ${task.name}`),
+});
 
-const searchableTasks = computed<Searchable<MissingAssignmentTask>[]>(() =>
-  assignTaskToVolunteerStore.tasks.map((task) => ({
-    ...task,
-    searchable: SlugifyService.apply(`${task.id} ${task.name}`),
-  })),
-);
+const searchableTasks = computed<Searchable<MissingAssignmentTask>[]>(() => {
+  const tasks = displayCompleted.value
+    ? assignTaskToVolunteerStore.allTasks
+    : assignTaskToVolunteerStore.toAssign;
+
+  return tasks.map(toSearchableTask);
+});
+
 const filteredTasks = computed<MissingAssignmentTask[]>(() =>
   searchableTasks.value.filter((task) => {
     return (
