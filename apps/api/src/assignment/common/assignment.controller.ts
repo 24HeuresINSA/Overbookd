@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentService } from "./assignment.service";
-import { AFFECT_VOLUNTEER, BE_AFFECTED } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER, VIEW_PLANNING } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
@@ -57,7 +57,7 @@ export class AssignmentController {
   constructor(private readonly assignment: AssignmentService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(BE_AFFECTED)
+  @Permission(VIEW_PLANNING)
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/for-calendar",
   )
@@ -91,7 +91,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permission(VIEW_PLANNING)
   @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
   @ApiResponse({
     status: 200,
