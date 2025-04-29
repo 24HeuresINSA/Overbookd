@@ -1,3 +1,11 @@
+## [3.44.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.3...v3.44.4) (2025-04-29)
+
+### Bug Fixes
+
+* **assignment:** add shortcut to assign [#2508](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2508) ([1383b1a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1383b1ae8b838d854e980b59e94de078ffda0e9b))
+* **assignment:** highlight selected volunteer in details dialog [#2510](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2510) ([e50b536](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e50b5362328e138598f8f9ad50bf68a69b47dffe))
+* **web:** display title with two lines [#2509](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2509) ([97855b3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/97855b382c535d106741402c29b92cede43bdbc7))
+
 ## [3.44.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.2...v3.44.3) (2025-04-28)
 
 ### Bug Fixes
