@@ -1,3 +1,11 @@
+## [3.44.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.4...v3.44.5) (2025-04-29)
+
+### Bug Fixes
+
+* **assignment:** permission to view details [#2513](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2513) ([f996edc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f996edc14c4ce647c0da5cab1380c058a754d07d))
+* **task-orga:** display all FT filter [#2515](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2515) ([e62d171](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e62d1719fc1a36d7c909481965195733344ca6eb))
+* **web:** fix unordered lists in the rich text editor [#2512](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2512) ([0d12bc2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0d12bc224cc8db659a1e55373c1614f579e82aba))
+
 ## [3.44.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.3...v3.44.4) (2025-04-29)
 
 ### Bug Fixes
