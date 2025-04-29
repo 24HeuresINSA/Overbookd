@@ -65,7 +65,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import type {
+  AssignableVolunteer,
+  TaskWithAssignmentsSummary,
+} from "@overbookd/assignment";
 import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
 import { SOFT_CODE } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
@@ -83,7 +86,7 @@ const route = useRoute();
 
 const props = defineProps({
   volunteer: {
-    type: Object as PropType<AssignmentVolunteer>,
+    type: Object as PropType<AssignmentVolunteer | AssignableVolunteer>,
     required: true,
   },
 });
@@ -132,7 +135,7 @@ const category = computed<string>(() => {
 const assignmentStats = computed<string>(() => {
   const duration = Duration.ms(props.volunteer.assignmentDuration).toString();
   const displayedTotalDuration = isAssignableVolunteer(props.volunteer)
-    ? ` • total: ${duration}`
+    ? ` • total: ${Duration.ms(props.volunteer.totalAssignmentDuration).toString()}`
     : "";
   return `${category.value.toLowerCase()}: ${duration}${displayedTotalDuration}`;
 });
