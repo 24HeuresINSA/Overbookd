@@ -28,7 +28,7 @@ import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
-import type { MissingAssignmentTask } from "@overbookd/assignment";
+import type { TaskForAssignment } from "@overbookd/assignment";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
@@ -38,18 +38,22 @@ const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const displayCompleted = ref<boolean>(false);
 
-watch(
-  () => displayCompleted.value,
-  (completed) => assignTaskToVolunteerStore.fetchTasks(completed),
-);
+const toSearchableTask = (
+  task: TaskForAssignment,
+): Searchable<TaskForAssignment> => ({
+  ...task,
+  searchable: SlugifyService.apply(`${task.id} ${task.name}`),
+});
 
-const searchableTasks = computed<Searchable<MissingAssignmentTask>[]>(() =>
-  assignTaskToVolunteerStore.tasks.map((task) => ({
-    ...task,
-    searchable: SlugifyService.apply(`${task.id} ${task.name}`),
-  })),
-);
-const filteredTasks = computed<MissingAssignmentTask[]>(() =>
+const searchableTasks = computed<Searchable<TaskForAssignment>[]>(() => {
+  const tasks = displayCompleted.value
+    ? assignTaskToVolunteerStore.tasks.all
+    : assignTaskToVolunteerStore.tasks.toAssign;
+
+  return tasks.map(toSearchableTask);
+});
+
+const filteredTasks = computed<TaskForAssignment[]>(() =>
   searchableTasks.value.filter((task) => {
     return (
       keepMatchingSearchCriteria(searchedTaskName.value)(task) &&
@@ -62,7 +66,7 @@ const filteredTasks = computed<MissingAssignmentTask[]>(() =>
 
 const filterByRequiredTeams = (
   searchedTeams: Team[],
-): ((task: MissingAssignmentTask) => boolean) => {
+): ((task: TaskForAssignment) => boolean) => {
   return searchedTeams.length > 0
     ? (task) =>
         searchedTeams.every((team) =>
@@ -72,7 +76,7 @@ const filterByRequiredTeams = (
 };
 const filterByInChargeTeam = (
   teamSearched: Team | undefined,
-): ((task: MissingAssignmentTask) => boolean) => {
+): ((task: TaskForAssignment) => boolean) => {
   return (task) => {
     return !teamSearched?.code
       ? true
@@ -86,7 +90,7 @@ const isTaskPriority = (
 };
 const filterByCategoryOrPriority = (
   categorySearched: DisplayableCategory | TaskPriority | undefined,
-): ((task: MissingAssignmentTask) => boolean) => {
+): ((task: TaskForAssignment) => boolean) => {
   if (!categorySearched) return () => true;
   return isTaskPriority(categorySearched)
     ? filterByPriority(categorySearched)
@@ -94,7 +98,7 @@ const filterByCategoryOrPriority = (
 };
 const filterByCategory = (
   categorySearched: DisplayableCategory,
-): ((task: MissingAssignmentTask) => boolean) => {
+): ((task: TaskForAssignment) => boolean) => {
   return (task) => {
     if (categorySearched === "AUCUNE") return task.category === null;
     return task.category === categorySearched;
@@ -102,7 +106,7 @@ const filterByCategory = (
 };
 const filterByPriority = (
   prioritySearched: TaskPriority,
-): ((task: MissingAssignmentTask) => boolean) => {
+): ((task: TaskForAssignment) => boolean) => {
   const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
   return (task) => task.topPriority === hasPriority;
 };

@@ -2,7 +2,7 @@ import type {
   AssignableVolunteer,
   Assignment,
   AssignmentIdentifier,
-  MissingAssignmentTask,
+  TaskForAssignment,
   PlanningEvent,
   TaskWithAssignmentsSummary,
   VolunteersForAssignment,
@@ -21,7 +21,10 @@ import { isHttpError } from "~/utils/http/http-error.utils";
 import { AssignmentPlanningRepository } from "~/repositories/assignment/planning.repository";
 
 type State = {
-  tasks: MissingAssignmentTask[];
+  tasks: {
+    all: TaskForAssignment[];
+    toAssign: TaskForAssignment[];
+  };
   selectedTask: TaskWithAssignmentsSummary | null;
   selectedAssignment: Assignment | null;
   assignableVolunteers: AssignableVolunteer[];
@@ -33,7 +36,7 @@ export const useAssignTaskToVolunteerStore = defineStore(
   "assign-task-to-volunteer",
   {
     state: (): State => ({
-      tasks: [],
+      tasks: { all: [], toAssign: [] },
       selectedTask: null,
       selectedAssignment: null,
       assignableVolunteers: [],
@@ -41,10 +44,11 @@ export const useAssignTaskToVolunteerStore = defineStore(
       assignmentDetails: null,
     }),
     actions: {
-      async fetchTasks(all: boolean = false) {
-        const res = await TaskToVolunteerRepository.getTasks(all);
+      async fetchTasks() {
+        const res = await TaskToVolunteerRepository.getTasks();
         if (isHttpError(res)) return;
-        this.tasks = res;
+        const toAssign = res.filter((task) => task.teams.length > 0);
+        this.tasks = { all: res, toAssign };
       },
 
       async selectTask(taskId: number) {

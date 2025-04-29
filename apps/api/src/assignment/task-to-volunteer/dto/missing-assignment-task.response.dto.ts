@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MissingAssignmentTask } from "@overbookd/assignment";
+import { TaskForAssignment } from "@overbookd/assignment";
 import { Category } from "@overbookd/festival-event-constants";
 import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
 
 export class MissingAssignmentTaskResponseDto
   extends TaskIdentifierResponseDto
-  implements MissingAssignmentTask
+  implements TaskForAssignment
 {
   @ApiProperty({ type: String })
   inChargeTeam: string;

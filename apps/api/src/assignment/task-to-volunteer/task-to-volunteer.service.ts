@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {
   AssignmentIdentifier,
   AssignTaskToVolunteer,
-  MissingAssignmentTask,
+  TaskForAssignment,
   TaskIdentifier,
 } from "@overbookd/assignment";
 
@@ -10,8 +10,8 @@ import {
 export class TaskToVolunteerService {
   constructor(private readonly assign: AssignTaskToVolunteer) {}
 
-  async findTasks(all: boolean): Promise<MissingAssignmentTask[]> {
-    return this.assign.tasks(all);
+  async findTasks(): Promise<TaskForAssignment[]> {
+    return this.assign.tasks();
   }
 
   async selectTask(taskId: TaskIdentifier["id"]) {

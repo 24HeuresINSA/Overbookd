@@ -23,6 +23,6 @@ export type Task = TaskCategorized & {
   assignments: Assignment[];
 };
 
-export type MissingAssignmentTask = TaskCategorized & {
+export type TaskForAssignment = TaskCategorized & {
   teams: string[];
 };
