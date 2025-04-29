@@ -206,7 +206,9 @@ const requiredVolunteers = computed<NamelyDemandedForDetails[]>(() => {
   return prioritizeHighlighted(list);
 });
 const assignees = computed<TeamMemberForDetails[]>(() => {
-  const list = props.assignmentDetails.assignees.filter(isTeamMember);
+  const list = props.assignmentDetails.assignees.filter(
+    (assignee): assignee is TeamMemberForDetails => isTeamMember(assignee),
+  );
   return prioritizeHighlighted(list);
 });
 
