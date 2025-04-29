@@ -18,13 +18,14 @@
 </template>
 
 <script lang="ts" setup>
+import type { AssignableVolunteer } from "@overbookd/assignment";
 import type { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
 defineProps({
   volunteers: {
-    type: Array as PropType<AssignmentVolunteer[]>,
+    type: Array as PropType<(AssignmentVolunteer | AssignableVolunteer)[]>,
     required: true,
   },
 });
