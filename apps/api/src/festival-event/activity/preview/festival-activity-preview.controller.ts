@@ -24,26 +24,29 @@ import {
   PreviewForSecurity,
   PreviewForCommunication,
   CSV,
+  PreviewForLogistic,
 } from "@overbookd/http";
 import {
   EXPORT_FOR_SIGNA,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
+  VIEW_FA_GEAR_DASHBOARD,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
-import { PreviewForCommunicationResponseDto } from "./dto/for-communication-preview-festival-activity.response.dto";
-import { PreviewForSecurityResponseDto } from "./dto/for-security-preview-festival-activity.response.dto";
-import { RefusedPreviewFestivalActivityResponseDto } from "./dto/preview-refused-festival-activity.response.dto";
-import { ValidatedPreviewFestivalActivityResponseDto } from "./dto/preview-validated-festival-activity.response.dto";
-import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-review-festival-activity.response.dto";
-import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft-festival-activity.response.dto";
+import { PreviewForCommunicationResponseDto } from "./dto/for-communication-preview.response.dto";
+import { PreviewForSecurityResponseDto } from "./dto/for-security-preview.response.dto";
+import { RefusedPreviewFestivalActivityResponseDto } from "./dto/preview-refused.response.dto";
+import { ValidatedPreviewFestivalActivityResponseDto } from "./dto/preview-validated.response.dto";
+import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-review.response.dto";
+import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft.response.dto";
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
 import { RequestWithUserPayload } from "../../../app.controller";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -111,11 +114,24 @@ export class FestivalActivityPreviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_FA_GEAR_DASHBOARD)
+  @Get("for-logistic")
+  @ApiResponse({
+    status: 200,
+    description: "Festival activities for logistic",
+    type: PreviewForLogisticResponseDto,
+    isArray: true,
+  })
+  findAllForLogistic(): Promise<PreviewForLogistic[]> {
+    return this.previewService.findForLogistic();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_SECURITY_DASHBOARD)
   @Get("for-security")
   @ApiResponse({
     status: 200,
-    description: "All festival activities",
+    description: "Festival activities for security",
     type: PreviewForSecurityResponseDto,
     isArray: true,
   })
@@ -128,7 +144,7 @@ export class FestivalActivityPreviewController {
   @Get("for-communication")
   @ApiResponse({
     status: 200,
-    description: "All festival activities",
+    description: "Festival activities for communication",
     type: PreviewForCommunicationResponseDto,
     isArray: true,
   })

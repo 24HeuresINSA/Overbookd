@@ -46,6 +46,7 @@ export const BORROW_GEARS = "borrow-gears";
 export const MANAGE_CHARISMA_EVENTS = "manage-charisma-events";
 export const SET_FAVORITE_PAGES = "set-favorite-pages";
 export const VIEW_SECURITY_DASHBOARD = "view-security-dashboard";
+export const VIEW_FA_GEAR_DASHBOARD = "view-fa-gear-dashboard";
 export const VIEW_ORGA_MOBILE_NAV = "view-orga-mobile-nav";
 export const EXPORT_FOR_SIGNA = "export-for-signa";
 export const ENTER_EXTENDED_AVAILABILITITES = "enter-extended-availabilities";
@@ -99,6 +100,7 @@ export const permissions = [
   MANAGE_CHARISMA_EVENTS,
   SET_FAVORITE_PAGES,
   VIEW_SECURITY_DASHBOARD,
+  VIEW_FA_GEAR_DASHBOARD,
   VIEW_ORGA_MOBILE_NAV,
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,

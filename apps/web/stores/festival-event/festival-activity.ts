@@ -27,6 +27,7 @@ import type {
   PrepareSignaForm,
   ReviewRejection,
   InitInquiryRequest,
+  PreviewForLogistic,
   PreviewForSecurity,
   PreviewForCommunication,
   PublishFeedbackForm,
@@ -49,6 +50,7 @@ type State = {
   activities: {
     forAll: PreviewFestivalActivity[];
     mine: PreviewFestivalActivity[];
+    forLogistic: PreviewForLogistic[];
     forSecurity: PreviewForSecurity[];
     forCommunication: PreviewForCommunication[];
     forSigna: { csv: string };
@@ -63,6 +65,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     activities: {
       forAll: [],
       mine: [],
+      forLogistic: [],
       forSecurity: [],
       forCommunication: [],
       forSigna: { csv: "" },
@@ -124,6 +127,12 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
         status: activity.status,
         reviews: activity.reviews,
       } as FestivalActivity;
+    },
+
+    async fetchLogisticPreviews() {
+      const res = await repo.getLogisticPreviews();
+      if (isHttpError(res)) return;
+      this.activities.forLogistic = res;
     },
 
     async fetchSecurityPreviews() {

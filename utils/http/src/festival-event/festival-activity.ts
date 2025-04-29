@@ -1,6 +1,7 @@
 import {
+  BaseInquiryRequest,
+  Drive,
   FestivalActivity,
-  InquiryRequestAssigned,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
@@ -27,11 +28,26 @@ export type LinkSignageCatalogItemForm = {
 
 export type PreviewForSecurity = {
   id: FestivalActivity["id"];
+  status: FestivalActivity["status"];
   name: FestivalActivity["general"]["name"];
   team: FestivalActivity["inCharge"]["team"];
   timeWindows: TimeWindow[];
   specialNeeds: FestivalActivity["security"]["specialNeed"];
   freePass: FestivalActivity["security"]["freePass"];
+};
+
+export type ActivityGearInquiryForPreview = BaseInquiryRequest & {
+  isPonctualUsage: boolean;
+  isConsumable: boolean;
+  drive?: Drive;
+  owner?: string;
+};
+export type PreviewForLogistic = {
+  id: FestivalActivity["id"];
+  status: FestivalActivity["status"];
+  name: FestivalActivity["general"]["name"];
+  team: FestivalActivity["inCharge"]["team"];
+  inquiries: ActivityGearInquiryForPreview[];
 };
 
 export type PreviewForCommunication = {
@@ -43,21 +59,4 @@ export type PreviewForCommunication = {
   photoLink: FestivalActivity["general"]["photoLink"];
   isFlagship: FestivalActivity["general"]["isFlagship"];
   categories: FestivalActivity["general"]["categories"];
-};
-
-export type LogisticInquiry = InquiryRequestAssigned & {
-  gear: {
-    id: number;
-    isPonctualUsage: boolean;
-    isConsumable: boolean;
-    category: {
-      name: string;
-      path: string;
-      id: number;
-      owner: {
-        name: string;
-        code: string;
-      };
-    };
-  };
 };

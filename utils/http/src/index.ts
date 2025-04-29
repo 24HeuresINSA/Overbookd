@@ -9,9 +9,10 @@ export type {
   PrepareSignaForm,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
+  ActivityGearInquiryForPreview,
+  PreviewForLogistic,
   PreviewForSecurity,
   PreviewForCommunication,
-  LogisticInquiry,
 } from "./festival-event/festival-activity.js";
 export type {
   Statistics,

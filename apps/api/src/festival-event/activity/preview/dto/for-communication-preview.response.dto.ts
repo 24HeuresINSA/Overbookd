@@ -1,36 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PreviewForCommunication } from "@overbookd/http";
-import {
-  DRAFT,
-  IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-} from "@overbookd/festival-event-constants";
 import { TimeWindowResponseDto } from "../../../common/dto/time-window.response.dto";
-
-const statuses = [DRAFT, IN_REVIEW, VALIDATED, REFUSED];
+import { BasePreviewForDashboardResponseDto } from "./base-preview-for-dashboard.response.dto";
 
 export class PreviewForCommunicationResponseDto
+  extends BasePreviewForDashboardResponseDto
   implements PreviewForCommunication
 {
-  @ApiProperty({
-    description: "The festival activity id",
-    type: Number,
-  })
-  id: PreviewForCommunication["id"];
-
-  @ApiProperty({
-    description: "The festival activity status",
-    enum: statuses,
-  })
-  status: PreviewForCommunication["status"];
-
-  @ApiProperty({
-    description: "The festival activity name",
-    type: String,
-  })
-  name: PreviewForCommunication["name"];
-
   @ApiProperty({
     description: "The festival activity time windows",
     type: TimeWindowResponseDto,

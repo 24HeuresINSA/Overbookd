@@ -11,6 +11,7 @@
         :hover="filteredActivities.length > 0"
         :mobile="isMobile"
         class="fa"
+        density="comfortable"
         @click:row="openActivityFromDataTable"
         @auxclick:row="openActivityInNewTabFromDataTable"
       >
@@ -105,7 +106,7 @@ const faStore = useFestivalActivityStore();
 const layoutStore = useLayoutStore();
 
 const tableHeaders: TableHeaders = [
-  { title: "Statut", value: "id", sortable: true },
+  { title: "Numéro", value: "id", sortable: true },
   { title: "Nom", value: "name", sortable: true },
   { title: "Photo", value: "photoLink", align: "center", width: "80px" },
   { title: "Description", value: "description" },

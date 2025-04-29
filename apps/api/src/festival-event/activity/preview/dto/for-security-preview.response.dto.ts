@@ -1,20 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PreviewForSecurity } from "@overbookd/http";
 import { TimeWindowResponseDto } from "../../../common/dto/time-window.response.dto";
+import { BasePreviewForDashboardResponseDto } from "./base-preview-for-dashboard.response.dto";
 
-export class PreviewForSecurityResponseDto implements PreviewForSecurity {
-  @ApiProperty({
-    description: "The festival activity id",
-    type: Number,
-  })
-  id: PreviewForSecurity["id"];
-
-  @ApiProperty({
-    description: "The festival activity name",
-    type: String,
-  })
-  name: PreviewForSecurity["name"];
-
+export class PreviewForSecurityResponseDto
+  extends BasePreviewForDashboardResponseDto
+  implements PreviewForSecurity
+{
   @ApiProperty({
     description: "Team in charge of this festival activity",
     type: String,
