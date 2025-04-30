@@ -1,4 +1,4 @@
-import { AlreadyAddedGear } from "./logistic.error.js";
+import { updateItemToList } from "@overbookd/list";
 
 export type Gear = {
   slug: string;
@@ -17,9 +17,13 @@ export class GearRequests {
   }
 
   add(gear: GearRequest): GearRequests {
-    const existingGear = this.gears.some((g) => g.slug === gear.slug);
-    if (existingGear) throw new AlreadyAddedGear(gear.name);
-    return new GearRequests([...this.gears, gear]);
+    const existingGearIndex = this.gears.findIndex((g) => g.slug === gear.slug);
+    if (existingGearIndex === -1) {
+      return new GearRequests([...this.gears, gear]);
+    }
+    return new GearRequests(
+      updateItemToList(this.gears, existingGearIndex, gear),
+    );
   }
 
   remove(slug: GearRequest["slug"]): GearRequests {
