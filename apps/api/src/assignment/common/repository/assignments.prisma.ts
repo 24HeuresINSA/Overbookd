@@ -70,6 +70,10 @@ export class PrismaAssignments implements AssignmentRepository {
         },
       },
     });
+    const assignementPeriod = Period.init({
+      start: assignment.start,
+      end: assignment.end,
+    });
     return {
       id: assignment.festivalTask.id,
       name: assignment.festivalTask.name,
@@ -86,12 +90,7 @@ export class PrismaAssignments implements AssignmentRepository {
           Period.init({
             start: assignee.assignment.start,
             end: assignee.assignment.end,
-          }).isOverlapping(
-            Period.init({
-              start: assignment.start,
-              end: assignment.end,
-            }),
-          ),
+          }).isOverlapping(assignementPeriod),
         )
         .map(({ personalData }) => ({
           id: personalData.id,
