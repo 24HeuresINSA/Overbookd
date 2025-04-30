@@ -16,11 +16,19 @@
         expand-on-click
       >
         <template #top>
-          <v-text-field
-            v-model="search"
-            label="Rechercher une activité"
-            hide-details
-          />
+          <div class="filters">
+            <v-text-field
+              v-model="search"
+              label="Rechercher une activité"
+              hide-details
+            />
+            <v-btn
+              prepend-icon="mdi-export"
+              text="Exporter les FA affichées"
+              color="secondary"
+              @click="exportCsv"
+            />
+          </div>
         </template>
 
         <template #item.id="{ item }">
@@ -64,9 +72,11 @@
 </template>
 
 <script lang="ts" setup>
+import { CSVBuilder } from "@overbookd/csv";
 import type { PreviewForLogistic } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 import { FA_URL } from "@overbookd/web-page";
+import { downloadCsv } from "~/utils/file/download.utils";
 import { openPageWithId } from "~/utils/navigation/router.utils";
 import {
   matchingSearchItems,
@@ -78,6 +88,7 @@ useHead({ title: "Demandes de matos FA" });
 
 const faStore = useFestivalActivityStore();
 const layoutStore = useLayoutStore();
+const teamStore = useTeamStore();
 
 const activityHeaders: TableHeaders = [
   { title: "Numéro", value: "id", sortable: true },
@@ -110,4 +121,59 @@ const searchableActivities = computed<Searchable<PreviewForLogistic>[]>(() =>
 const filteredActivities = computed<PreviewForLogistic[]>(() =>
   matchingSearchItems(searchableActivities.value, search.value),
 );
+
+type CsvItem = {
+  faId: string;
+  faName: string;
+  faStatus: string;
+  faTeam: string;
+  owner: string;
+  name: string;
+  quantity: number;
+  drive: string;
+};
+const exportCsv = async () => {
+  const allInquiries: CsvItem[] = filteredActivities.value.flatMap((activity) =>
+    activity.inquiries.map((inquiry) => ({
+      faId: activity.id,
+      faName: activity.name,
+      faStatus: activity.status,
+      faTeam: teamStore.getTeamByCode(activity.team)?.name ?? "",
+      ...inquiry,
+    })),
+  );
+
+  const csv = CSVBuilder.from(allInquiries)
+    .select([
+      "faId",
+      "faName",
+      "faStatus",
+      "faTeam",
+      "owner",
+      "name",
+      "quantity",
+      "drive",
+    ])
+    .translate([
+      ["faId", "Numéro FA"],
+      ["faName", "Nom FA"],
+      ["faStatus", "Statut FA"],
+      ["faTeam", "Equipe"],
+      ["owner", "Responsable"],
+      ["name", "Nom"],
+      ["quantity", "Quantité"],
+      ["drive", "Lieu de stockage"],
+    ])
+    .build();
+
+  downloadCsv("demandes-matos-FA", csv);
+};
 </script>
+
+<style scoped>
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+</style>
