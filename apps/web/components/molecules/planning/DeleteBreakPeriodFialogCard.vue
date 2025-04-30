@@ -40,3 +40,21 @@ const pauseLabel = computed(
   () => props.selectedBreak?.toString() ?? "Période inconnue",
 );
 </script>
+<style lang="scss" scoped>
+.assignment-metadata {
+  display: flex;
+  gap: 15px;
+  &__chip {
+    .v-icon {
+      margin-right: 5px;
+    }
+  }
+}
+.delete-statement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+</style>

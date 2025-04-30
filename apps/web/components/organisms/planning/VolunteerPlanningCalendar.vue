@@ -353,12 +353,4 @@ const removeBreak = async () => {
 .contacts > ul {
   padding-left: 2rem;
 }
-
-.delete-statement {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
 </style>
