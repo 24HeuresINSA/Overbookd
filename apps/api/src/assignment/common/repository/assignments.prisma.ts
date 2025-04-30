@@ -82,10 +82,16 @@ export class PrismaAssignments implements AssignmentRepository {
         phone: contact.phone,
       })),
       assignees: assignment.festivalTask.assignees
-        .filter(
-          (assignee) =>
-            assignee.assignment.start < assignment.end &&
-            assignee.assignment.end > assignment.start,
+        .filter((assignee) =>
+          Period.init({
+            start: assignee.assignment.start,
+            end: assignee.assignment.end,
+          }).isOverlapping(
+            Period.init({
+              start: assignment.start,
+              end: assignment.end,
+            }),
+          ),
         )
         .map(({ personalData }) => ({
           id: personalData.id,
