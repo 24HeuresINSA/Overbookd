@@ -132,14 +132,6 @@ const downloadLeaflets = () => {
   if (!canAffectVolunteer.value) return;
   emit("download-leaflets");
 };
-
-const view = ref<string>(DisplayModeBuilder.getFromRouteQuery(useRoute().query));
-
-watch(view, (newView) => {
-  if ([TROMBINOSCOPE, VOLUNTEER_LIST, VOLUNTEER_STATS].includes(newView)) {
-    DisplayModeBuilder.saveToStorage(newView as DisplayMode);
-  }
-});
 </script>
 
 <style lang="scss" scoped>
