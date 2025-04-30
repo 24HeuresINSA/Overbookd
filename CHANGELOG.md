@@ -1,3 +1,14 @@
+## [3.46.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.45.1...v3.46.0) (2025-04-30)
+
+### Features
+
+* implement storage for preferred display mode [#2511](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2511) ([0c383c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0c383c0eba1dbf78ca9e0fe9fe8999b799141f5b))
+
+### Bug Fixes
+
+* **assignment:** show preference icons in task-orga mode [#2527](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2527) ([a4ce907](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a4ce907b162f204ab05e4e4a6dbaa4f5b9cedf02))
+* **web:** fetch middleware store data only if needed [#2530](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2530) ([51daebc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/51daebc2674f9ee758d0a76b613ceac94e45d387))
+
 ## [3.45.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.45.0...v3.45.1) (2025-04-30)
 
 ### Bug Fixes
