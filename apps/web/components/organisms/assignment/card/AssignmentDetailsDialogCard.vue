@@ -121,6 +121,7 @@
                   @click="openPlanningInNewTab(item.id)"
                 />
                 <v-btn
+                  v-if="canUnassignVolunteer"
                   icon="mdi-close"
                   size="small"
                   density="comfortable"
@@ -150,9 +151,11 @@ import { Duration, formatDateToHumanReadable } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
+const userStore = useUserStore();
 
 const props = defineProps({
   assignmentDetails: {
@@ -249,6 +252,10 @@ const selectedAssignee = computed<TeamMemberForDetails[]>(() => {
 
 const emit = defineEmits(["close", "unassign"]);
 
+const canUnassignVolunteer = computed<boolean>(() =>
+  userStore.can(AFFECT_VOLUNTEER),
+);
+userStore;
 const unassignVolunteer = (teamMember: TeamMemberForDetails) => {
   const assignmentIdentifier = {
     assignmentId: props.assignmentDetails.assignmentId,
