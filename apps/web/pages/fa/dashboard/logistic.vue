@@ -123,7 +123,7 @@ const filteredActivities = computed<PreviewForLogistic[]>(() =>
 );
 
 type CsvItem = {
-  faId: string;
+  faId: number;
   faName: string;
   faStatus: string;
   faTeam: string;
