@@ -25,13 +25,20 @@
               @close="removeTeam"
             />
           </div>
-          <div v-if="!canManageUsers" class="preference__icon">
-            <v-icon class="preference__icon" @click.stop="openCalendar(volunteer.id)">
-              mdi-calendar-blank-multiple
-            </v-icon>
-            <v-text class="volunteer-calendar">
-              Planning des disponibilités
-            </v-text>
+          <div v-if="!canManageUsers" class="calendar-button" style="text-align: center; margin-top: 10px;">
+            <v-tooltip bottom text="Voir le planning des disponibilités">
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon="mdi-calendar-blank-multiple"
+                  color="primary"
+                  size="small"
+                  style="border-radius: 40%;"
+                  @click.stop="openCalendar(volunteer.id)"
+                />
+              </template>
+              <span>Voir le planning des disponibilités</span>
+            </v-tooltip>
           </div>
           <div class="volunteer-form">
             <div v-if="canManageUsers" class="team-add">
@@ -94,9 +101,19 @@
               @click:prepend="callPhoneNumber"
             />
             <div v-if="canManageUsers" class="preference">
-              <v-icon class="preference__icon" @click.stop="openCalendar(volunteer.id)">
-                mdi-calendar-blank-multiple
-              </v-icon>
+              <v-tooltip bottom text="Voir le planning des disponibilités">
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    icon="mdi-calendar-blank-multiple"
+                    color="primary"
+                    size="small"
+                    style="border-radius: 40%;"
+                    @click.stop="openCalendar(volunteer.id)"
+                  />
+                </template>
+                <span>Voir le planning des disponibilités</span>
+              </v-tooltip>
               <span class="preference__label">
                 {{ assignmentPreferenceLabel }}
               </span>
@@ -339,12 +356,17 @@ const openCalendar = (volunteerId: number) => {
 </script>
 
 <style lang="scss" scoped>
+.calendar-button {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;}
 .volunteer-content {
   display: flex;
   gap: 20px;
   .volunteer-calendar {
     font-size: 1.1rem;
-    margin-left: 10px;
+    margin-left: 20px;
   }
   .volunteer-informations {
     flex: 1;
