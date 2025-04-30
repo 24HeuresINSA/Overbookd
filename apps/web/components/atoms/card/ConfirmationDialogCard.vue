@@ -17,9 +17,28 @@
           <v-icon left> mdi-close-circle-outline </v-icon>Annuler
         </slot>
       </v-btn>
-      <v-btn :color="confirmColor" size="large" @click="confirm">
+      <v-tooltip
+        v-if="confirmTooltipText"
+        :text="confirmTooltipText"
+        location="top"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            :color="confirmColor"
+            size="large"
+            @click="confirm"
+          >
+            <slot name="confirm-btn-content">
+              <v-icon left>mdi-checkbox-marked-circle-outline</v-icon>
+              Confirmer
+            </slot>
+          </v-btn>
+        </template>
+      </v-tooltip>
+      <v-btn v-else :color="confirmColor" size="large" @click="confirm">
         <slot name="confirm-btn-content">
-          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
+          <v-icon left>mdi-checkbox-marked-circle-outline</v-icon>
           Confirmer
         </slot>
       </v-btn>
@@ -36,6 +55,10 @@ defineProps({
   abortColor: {
     type: String,
     default: "warning",
+  },
+  confirmTooltipText: {
+    type: String,
+    default: "",
   },
 });
 

@@ -62,6 +62,17 @@ const createBreakPeriod = () => {
   emit("create", during);
   close();
 };
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === "Enter") createBreakPeriod();
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <style lang="scss" scoped>

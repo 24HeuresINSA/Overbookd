@@ -99,7 +99,8 @@
   <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
     <ConfirmationDialogCard
       confirm-color="error"
-      abort-color="success"
+      abort-color="primary"
+      confirm-tooltip-text="[ Suppr ]"
       @close="cancelBreakRemoval"
       @confirm="removeBreak"
     >
@@ -301,6 +302,20 @@ const removeBreak = async () => {
   await userStore.deleteVolunteerBreakPeriods({ volunteer, period });
   isBreakRemovalDialogOpen.value = false;
 };
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === "Delete") {
+    if (isBreakRemovalDialogOpen.value) return removeBreak();
+    return closeBreakDialog();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
 </script>
 
 <style lang="scss" scoped>
