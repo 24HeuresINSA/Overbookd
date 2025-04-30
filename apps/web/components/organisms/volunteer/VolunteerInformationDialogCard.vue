@@ -25,6 +25,14 @@
               @close="removeTeam"
             />
           </div>
+          <div v-if="!canManageUsers" class="preference__icon">
+            <v-icon class="preference__icon" @click.stop="openCalendar(volunteer.id)">
+              mdi-calendar-blank-multiple
+            </v-icon>
+            <v-text class="volunteer-calendar">
+              Planning des disponibilités
+            </v-text>
+          </div>
           <div class="volunteer-form">
             <div v-if="canManageUsers" class="team-add">
               <SearchTeams
@@ -86,7 +94,7 @@
               @click:prepend="callPhoneNumber"
             />
             <div v-if="canManageUsers" class="preference">
-              <v-icon class="preference__icon">
+              <v-icon class="preference__icon" @click.stop="openCalendar(volunteer.id)">
                 mdi-calendar-blank-multiple
               </v-icon>
               <span class="preference__label">
@@ -188,6 +196,7 @@ import { formatLocalDate } from "@overbookd/time";
 import { ADMIN_CODE, HARD_CODE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import type { AssignmentPreferenceType } from "@overbookd/preference";
+import { PLANNING_URL } from "@overbookd/web-page";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -324,12 +333,19 @@ const sendEmail = () => {
 const callPhoneNumber = () => {
   window.location.href = formatPhoneLink(props.volunteer.phone);
 };
+const openCalendar = (volunteerId: number) => {
+  window.open(`${PLANNING_URL}/${volunteerId}`);
+};
 </script>
 
 <style lang="scss" scoped>
 .volunteer-content {
   display: flex;
   gap: 20px;
+  .volunteer-calendar {
+    font-size: 1.1rem;
+    margin-left: 10px;
+  }
   .volunteer-informations {
     flex: 1;
     display: flex;
