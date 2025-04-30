@@ -19,7 +19,11 @@
     <span v-if="withName" class="name">
       {{ teamText }}
     </span>
-    <v-tooltip v-if="!withName" :location="isBde ? 'bottom' : 'top'" activator="parent">
+    <v-tooltip
+      v-if="!withName"
+      :location="isBde ? 'bottom' : 'top'"
+      activator="parent"
+    >
       <p :class="{ flip: isBde }">{{ teamText }}</p>
     </v-tooltip>
   </v-chip>
