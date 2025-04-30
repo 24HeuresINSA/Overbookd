@@ -126,11 +126,11 @@ type CsvItem = {
   faId: number;
   faName: string;
   faStatus: string;
-  faTeam: string;
-  owner: string;
+  faTeam?: string;
+  owner?: string;
   name: string;
   quantity: number;
-  drive: string;
+  drive?: string;
   isPonctualUsage: boolean;
   isConsumable: boolean;
 };
@@ -142,14 +142,14 @@ const exportCsv = async () => {
         faId: id,
         faName: name,
         faStatus: status,
-        faTeam: teamName ?? "",
+        faTeam: teamName,
       };
       return inquiries.map((inquiry) => ({
         ...activity,
-        owner: inquiry.owner ?? "",
+        owner: inquiry.owner,
         name: inquiry.name,
         quantity: inquiry.quantity,
-        drive: inquiry.drive ?? "",
+        drive: inquiry.drive,
         isPonctualUsage: inquiry.isPonctualUsage,
         isConsumable: inquiry.isConsumable,
       }));
