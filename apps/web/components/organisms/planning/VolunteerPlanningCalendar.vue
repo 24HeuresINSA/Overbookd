@@ -100,7 +100,6 @@
     <ConfirmationDialogCard
       confirm-color="error"
       abort-color="primary"
-      confirm-tooltip-text="[ Suppr ]"
       @close="cancelBreakRemoval"
       @confirm="removeBreak"
     >
@@ -304,7 +303,7 @@ const removeBreak = async () => {
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "Delete") {
+  if (event.key === "Enter") {
     if (isBreakRemovalDialogOpen.value) return removeBreak();
     return closeBreakDialog();
   }

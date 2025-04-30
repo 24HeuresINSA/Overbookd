@@ -42,11 +42,20 @@ const { noClosable } = defineProps({
   },
 });
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "enter"]);
+
 const close = () => {
   if (noClosable) return;
   emit("close");
 };
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter") emit("enter");
+  if (e.key === "Escape") emit("close");
+};
+
+onMounted(() => window.addEventListener("keydown", handleKeydown));
+onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 </script>
 
 <style lang="scss" scoped>
