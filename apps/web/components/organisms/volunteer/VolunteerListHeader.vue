@@ -79,6 +79,7 @@ import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
+  DisplayModeBuilder,
   TROMBINOSCOPE,
   VOLUNTEER_LIST,
   VOLUNTEER_STATS,
@@ -110,6 +111,7 @@ const updateExcludedTeamsParam = (excludedTeams: Team[]) => {
 
 const updateDisplayModeParam = (mode: DisplayMode) => {
   updateQueryParams("displayMode", mode);
+  DisplayModeBuilder.saveToStorage(mode);
 };
 
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
@@ -130,6 +132,18 @@ const downloadLeaflets = () => {
   if (!canAffectVolunteer.value) return;
   emit("download-leaflets");
 };
+
+const view = ref<string>("trombi");
+
+onMounted(() => {
+  view.value = DisplayModeBuilder.getFromRouteQuery(useRoute().query);
+});
+
+watch(view, (newView) => {
+  if ([TROMBINOSCOPE, VOLUNTEER_LIST, VOLUNTEER_STATS].includes(newView)) {
+    DisplayModeBuilder.saveToStorage(newView as DisplayMode);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
