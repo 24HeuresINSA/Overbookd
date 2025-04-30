@@ -12,6 +12,7 @@
       />
     </div>
     <p class="stat">{{ assignmentStat }}</p>
+    <p class="stat">{{ totalAssignmentStat }}</p>
   </div>
 </template>
 
@@ -41,6 +42,10 @@ const sortedVolunteerTeams = computed<string[]>(() =>
 const assignmentStat = computed<string>(() => {
   const duration = Duration.ms(props.volunteer.assignmentDuration ?? 0);
   return `${category.value.toLowerCase()} : ${duration.toString()}`;
+});
+const totalAssignmentStat = computed<string>(() => {
+  const duration = Duration.ms(props.volunteer.totalAssignmentDuration ?? 0);
+  return `total : ${duration.toString()}`;
 });
 
 const selectedTask = computed<TaskWithAssignmentsSummary | null>(
