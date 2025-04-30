@@ -32,6 +32,7 @@ import { IActAsFunnel } from "./funnel.js";
 import { BreakPeriods } from "./planning.js";
 import { IProvidePeriod } from "@overbookd/time";
 import { Volunteer } from "../../volunteer.js";
+import { AssignVolunteerFunnel } from "./assign-volunteer-funnel.js";
 
 class InMemoryBreakPeriods implements BreakPeriods {
   constructor(private breakPeriods: Map<Volunteer["id"], IProvidePeriod[]>) {}
@@ -756,7 +757,8 @@ describe("Assign volunteers funnel", () => {
     Nathan is already assigned as benevole,
     Ambre is already selected as candidate
   `, () => {
-    it("should indicate more candidate could be assigned", async () => {
+    let funnel: IActAsFunnel;
+    beforeAll(async () => {
       const friends = new InMemoryFriends(
         new Map([
           [bruce.volunteer.id, [amanda.volunteer, rachid.volunteer]],
@@ -766,12 +768,33 @@ describe("Assign volunteers funnel", () => {
       );
       const candidateFactory = new CandidateFactory(agendas, friends);
       const assignments = new InMemoryAssignments(initialAssignments);
-      const funnel = await WaitingForVolunteer.init(
+      funnel = await WaitingForVolunteer.init(
         candidateFactory,
         assignments,
         nettoyerEspaceConcessions,
       ).select(bruce.volunteer);
+    });
+    it("should indicate more candidate could be assigned", async () => {
       expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+    });
+    describe("when asking for more candidate to assign", () => {
+      let twoCandidatesFunnel: IActAsFunnel;
+      beforeAll(async () => {
+        twoCandidatesFunnel = await funnel.addCandidate();
+      });
+      it("should indicate no more candidate could be assigned", () => {
+        expect(twoCandidatesFunnel.canFulfillMoreRemainingDemands).toBe(false);
+      });
+      it("should indicate it can change the last candidate", async () => {
+        expect(twoCandidatesFunnel.canChangeLastCandidate).toBe(true);
+      });
+      describe("when asking for next candidate", () => {
+        it("should change last candidate", async () => {
+          const lastCandidate = twoCandidatesFunnel.candidates.at(-1);
+          const nextCandidate = await twoCandidatesFunnel.nextCandidate();
+          expect(nextCandidate.candidates).not.toContainEqual(lastCandidate);
+        });
+      });
     });
   });
 });

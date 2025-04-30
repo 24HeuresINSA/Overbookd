@@ -115,9 +115,7 @@ export class AssignVolunteerFunnel
     );
   }
 
-  private async countBasedCandidateSelection(
-    increment: number,
-  ): Promise<IActAsFunnel> {
+  private async changeOtherCandidate(increment: number): Promise<IActAsFunnel> {
     if (!this.canChangeLastCandidate) return Promise.resolve(this);
     const currentFriend = this._candidates.at(-1);
     if (!currentFriend) return Promise.resolve(this);
@@ -131,11 +129,17 @@ export class AssignVolunteerFunnel
     const nextFriend = friendsAssignableOnLastDemand.at(nextIndex);
     if (!nextFriend) return Promise.resolve(this);
 
+    return this.select(nextFriend);
+  }
+
+  private async select(nextFriend: AssignableVolunteer): Promise<IActAsFunnel> {
     const otherCandidatesThanTheLastOne = this.otherCandidatesThanTheLastOne;
     const asCandidate = await this.toCandidate(nextFriend);
+
     const candidates = [...otherCandidatesThanTheLastOne, asCandidate];
     const assignedCandidates =
       this.assignCandidateAccordingToRemainingDemands(candidates);
+
     return new AssignVolunteerFunnel(
       assignedCandidates,
       this.repositories,
@@ -144,10 +148,10 @@ export class AssignVolunteerFunnel
   }
 
   async previousCandidate(): Promise<IActAsFunnel> {
-    return this.countBasedCandidateSelection(-1);
+    return this.changeOtherCandidate(-1);
   }
 
   nextCandidate(): Promise<IActAsFunnel> {
-    return this.countBasedCandidateSelection(+1);
+    return this.changeOtherCandidate(+1);
   }
 }
