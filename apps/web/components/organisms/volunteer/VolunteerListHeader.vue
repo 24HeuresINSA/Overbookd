@@ -79,6 +79,7 @@ import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
+  DisplayModeBuilder,
   TROMBINOSCOPE,
   VOLUNTEER_LIST,
   VOLUNTEER_STATS,
@@ -110,6 +111,7 @@ const updateExcludedTeamsParam = (excludedTeams: Team[]) => {
 
 const updateDisplayModeParam = (mode: DisplayMode) => {
   updateQueryParams("displayMode", mode);
+  DisplayModeBuilder.saveToStorage(mode);
 };
 
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));

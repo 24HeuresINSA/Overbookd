@@ -11,9 +11,18 @@
             />
             <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
           </div>
-          <p class="charisma">
+          <div class="charisma">
             Charisme: <strong>{{ volunteer.charisma }}</strong> 😎
-          </p>
+            <span v-if="canViewPlanning"> | </span>
+            <v-btn
+              v-if="canViewPlanning"
+              prepend-icon="mdi-calendar-blank-multiple"
+              color="primary"
+              size="small"
+              text="Voir le planning"
+              @click="openCalendar(volunteer.id)"
+            />
+          </div>
           <div class="team-list">
             <TeamChip
               v-for="team in volunteer.teams"
@@ -165,6 +174,7 @@ import {
   AFFECT_VOLUNTEER,
   MANAGE_ADMINS,
   MANAGE_USERS,
+  VIEW_PLANNING,
 } from "@overbookd/permission";
 import {
   type User,
@@ -188,6 +198,7 @@ import { formatLocalDate } from "@overbookd/time";
 import { ADMIN_CODE, HARD_CODE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import type { AssignmentPreferenceType } from "@overbookd/preference";
+import { PLANNING_URL } from "@overbookd/web-page";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -227,6 +238,7 @@ const selectedVolunteerFriends = computed<User[]>(
   () => userStore.selectedUserFriends,
 );
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canViewPlanning = computed<boolean>(() => userStore.can(VIEW_PLANNING));
 const canManageAvailabilities = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
@@ -324,12 +336,25 @@ const sendEmail = () => {
 const callPhoneNumber = () => {
   window.location.href = formatPhoneLink(props.volunteer.phone);
 };
+const openCalendar = (volunteerId: number) => {
+  window.open(`${PLANNING_URL}/${volunteerId}`);
+};
 </script>
 
 <style lang="scss" scoped>
+.calendar-button {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .volunteer-content {
   display: flex;
   gap: 20px;
+  .volunteer-calendar {
+    font-size: 1.1rem;
+    margin-left: 20px;
+  }
   .volunteer-informations {
     flex: 1;
     display: flex;
