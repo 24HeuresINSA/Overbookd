@@ -456,7 +456,7 @@ export const permissions = [
   },
   {
     name: VIEW_FA_GEAR_DASHBOARD,
-    description: "Peut voir les demandes de matos des FA",
+    description: "Peut voir la page avec toutes les demandes de matos des FA",
     teams: {
       createMany: {
         data: [
