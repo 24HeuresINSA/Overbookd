@@ -5,4 +5,5 @@ export type FilterGear = {
   search: string;
   category?: CatalogCategory;
   team?: Team;
+  storage?: string;
 };
