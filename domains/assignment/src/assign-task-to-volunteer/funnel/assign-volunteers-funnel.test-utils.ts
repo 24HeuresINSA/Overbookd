@@ -6,6 +6,7 @@ import { Assignment } from "../assignment.js";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PlanningEvent } from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/preference";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
 const friday22h = new Date("2024-05-17T22:00+02:00");
@@ -86,6 +87,7 @@ export const noel: TestHelper = {
     firstname: "Noel",
     lastname: "Ertsemud",
     teams: [BENEVOLE_CODE, VIEUX],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [
@@ -108,6 +110,7 @@ export const lea: TestHelper = {
     firstname: "Lea",
     lastname: "Mauyno",
     teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
+    assignmentPreference: NO_REST,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -121,6 +124,7 @@ export const ontaine: TestHelper = {
     firstname: "Ontaine",
     lastname: "Porin",
     teams: [BENEVOLE_CODE, "catering", CONDUCTEUR],
+    assignmentPreference: FRAGMENTED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -137,6 +141,7 @@ export const tatouin: TestHelper = {
     firstname: "Tatouin",
     lastname: "Jesoph",
     teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
+    assignmentPreference: STACKED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -155,6 +160,7 @@ export const luce: TestHelper = {
     firstname: "Luce",
     lastname: "Nehgahredanv",
     teams: [BENEVOLE_CODE, HARD],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -168,6 +174,7 @@ export const nathan: TestHelper = {
     firstname: "Nathan",
     lastname: "Trice",
     teams: [BENEVOLE_CODE, VIEUX, HARD],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -181,6 +188,7 @@ export const bruce: TestHelper = {
     firstname: "Bruce",
     lastname: "Eel",
     teams: [BENEVOLE_CODE],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -194,6 +202,7 @@ export const amanda: TestHelper = {
     firstname: "Amanda",
     lastname: "Lousie",
     teams: [BENEVOLE_CODE],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -201,12 +210,13 @@ export const amanda: TestHelper = {
   breakPeriods: [sunday06hTo12h],
 };
 
-const rachid: TestHelper = {
+export const rachid: TestHelper = {
   volunteer: {
     id: 9,
     firstname: "Rachid",
     lastname: "Datti",
     teams: [BENEVOLE_CODE],
+    assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
   planning: [],
@@ -332,4 +342,15 @@ export const collageParcoursF: Assignment = {
     { team: CONDUCTEUR, demand: 1 },
   ],
   assignees: [],
+};
+
+export const nettoyerEspaceConcessions: Assignment = {
+  start: sunday02hTo06h.start,
+  end: sunday02hTo06h.end,
+  taskId: 7,
+  mobilizationId: sunday02hTo06h.id,
+  assignmentId: sunday02hTo06h.id,
+  name: "Nettoyer L'espace concessions",
+  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  assignees: [{ as: BENEVOLE_CODE, id: nathan.volunteer.id }],
 };
