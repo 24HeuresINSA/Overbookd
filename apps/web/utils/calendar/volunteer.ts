@@ -11,4 +11,5 @@ export type VolunteerForCalendar = User & {
   assignments: CalendarEvent[];
   charisma?: number;
   assignmentDuration?: number;
+  totalAssignmentDuration?: number;
 };
