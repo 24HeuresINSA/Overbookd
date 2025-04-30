@@ -17,7 +17,6 @@
 
 <script lang="ts" setup>
 import { buildUserName } from "@overbookd/user";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 

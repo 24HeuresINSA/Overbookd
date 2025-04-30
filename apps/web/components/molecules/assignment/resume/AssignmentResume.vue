@@ -22,12 +22,15 @@
         <span
           v-for="{ team } of assignment.teams"
           :key="team"
-          class="team-chip-wrapper"
+          :class="{
+            'team-chip-wrapper': true,
+            clickable: doesSelectedVolunteerHaveGivenTeam(team),
+          }"
         >
           <TeamChip
             :team="team"
             show-hidden
-            clickable
+            :clickable="doesSelectedVolunteerHaveGivenTeam(team)"
             @click="selectTeam(team)"
           />
         </span>
@@ -47,6 +50,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import type { AssignmentSummaryWithTask } from "@overbookd/http";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
@@ -58,6 +62,13 @@ const props = defineProps({
     required: true,
   },
 });
+
+const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
+  () => assignVolunteerToTaskStore.selectedVolunteer,
+);
+
+const doesSelectedVolunteerHaveGivenTeam = (teamCode: string) =>
+  !!selectedVolunteer.value?.teams.includes(teamCode);
 
 const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
   () => {
@@ -82,7 +93,10 @@ const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
 );
 
 const emit = defineEmits(["selected-team"]);
-const selectTeam = (teamCode: string) => emit("selected-team", teamCode);
+const selectTeam = (teamCode: string) => {
+  if (doesSelectedVolunteerHaveGivenTeam(teamCode))
+    emit("selected-team", teamCode);
+};
 
 const hasOnlyOneTeamToSelect = computed(() => {
   return props.assignment.teams.length === 1;
@@ -144,7 +158,7 @@ const findTeamName = (code: string): string => {
   opacity: 0.6;
 }
 
-.team-chip-wrapper:hover,
+.team-chip-wrapper.clickable:hover,
 .assignment-card.only-one-team:hover .team-chip-wrapper {
   opacity: 1;
 }
