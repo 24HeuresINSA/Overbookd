@@ -2,7 +2,7 @@
   <form class="filters">
     <v-text-field
       :model-value="search"
-      label="Rechercher"
+      label="Rechercher un matos"
       autofocus
       clearable
       clear-icon="mdi-close-circle-outline"

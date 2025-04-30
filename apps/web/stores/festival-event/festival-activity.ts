@@ -32,6 +32,7 @@ import type {
   PreviewForCommunication,
   PublishFeedbackForm,
   ReviewApproval,
+  ActivityGearSearchOptions,
 } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
@@ -129,8 +130,8 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       } as FestivalActivity;
     },
 
-    async fetchLogisticPreviews() {
-      const res = await repo.getLogisticPreviews();
+    async fetchLogisticPreviews(searchOptions: ActivityGearSearchOptions) {
+      const res = await repo.getLogisticPreviews(searchOptions);
       if (isHttpError(res)) return;
       this.activities.forLogistic = res;
     },

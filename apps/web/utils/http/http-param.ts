@@ -1,4 +1,4 @@
-type PrimitiveParams = string | number | boolean | Date;
+type PrimitiveParams = string | number | boolean | Date | null | undefined;
 type SupportedParams = PrimitiveParams | PrimitiveParams[];
 export type Params = Record<string, SupportedParams>;
 type ParamsEntry = [string, SupportedParams];
@@ -15,11 +15,12 @@ export class HttpParams {
     if (Array.isArray(value)) {
       return value.map((item) => [`${key}[]`, HttpParams.toSearchOption(item)]);
     }
+    if (value === null || value === undefined) return [];
     return [[key, HttpParams.toSearchOption(value)]];
   }
 
   private static toSearchOption(item: PrimitiveParams): string {
     if (item instanceof Date) return item.toISOString();
-    return item.toString();
+    return item?.toString() ?? "";
   }
 }

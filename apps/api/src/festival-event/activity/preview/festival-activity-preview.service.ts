@@ -7,6 +7,7 @@ import {
   PreviewForSecurity,
   PreviewForCommunication,
   PreviewForLogistic,
+  ActivityGearSearchOptions,
 } from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
 import { SignaPreview } from "./signa-preview";
@@ -26,8 +27,10 @@ export class FestivalActivityPreviewService {
     return this.previews.byAdherentId(userId);
   }
 
-  findForLogistic(): Promise<PreviewForLogistic[]> {
-    return this.previews.forLogistic();
+  findForLogistic(
+    searchOptions: ActivityGearSearchOptions,
+  ): Promise<PreviewForLogistic[]> {
+    return this.previews.forLogistic(searchOptions);
   }
 
   findForSecurity(): Promise<PreviewForSecurity[]> {

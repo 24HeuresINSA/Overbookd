@@ -8,6 +8,7 @@ import {
   Logger,
   HttpException,
   Request,
+  Query,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -18,6 +19,7 @@ import {
   ApiResponse,
   getSchemaPath,
   ApiProduces,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
@@ -47,6 +49,7 @@ import { FestivalActivityPreviewService } from "./festival-activity-preview.serv
 import { RequestWithUserPayload } from "../../../app.controller";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
+import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -122,8 +125,38 @@ export class FestivalActivityPreviewController {
     type: PreviewForLogisticResponseDto,
     isArray: true,
   })
-  findAllForLogistic(): Promise<PreviewForLogistic[]> {
-    return this.previewService.findForLogistic();
+  @ApiQuery({
+    name: "search",
+    required: false,
+    type: String,
+    description:
+      "Get festival activity with gear inquiry that match the name or the reference code",
+  })
+  @ApiQuery({
+    name: "category",
+    required: false,
+    type: String,
+    description:
+      "Get festival activity with gear inquiry that match the category with category name",
+  })
+  @ApiQuery({
+    name: "owner",
+    required: false,
+    type: String,
+    description:
+      "Get festival activity with gear inquiry that are owned by team that match name",
+  })
+  @ApiQuery({
+    name: "drive",
+    required: false,
+    type: String,
+    description:
+      "Get festival activity with gear inquiry that are stored in this storage location",
+  })
+  findAllForLogistic(
+    @Query() searchOptions: ActivityGearSearchOptionsRequestDto,
+  ): Promise<PreviewForLogistic[]> {
+    return this.previewService.findForLogistic(searchOptions);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -9,6 +9,7 @@ import {
   PreviewForSecurity,
   PreviewForCommunication,
   PreviewForLogistic,
+  ActivityGearSearchOptions,
 } from "@overbookd/http";
 import { PreviewForSigna } from "../preview/signa-preview";
 
@@ -32,7 +33,9 @@ export type Inquiries = {
 
 export type Previews = {
   byAdherentId(id: number): Promise<PreviewForAll[]>;
-  forLogistic(): Promise<PreviewForLogistic[]>;
+  forLogistic(
+    searchOptions: ActivityGearSearchOptions,
+  ): Promise<PreviewForLogistic[]>;
   forSecurity(): Promise<PreviewForSecurity[]>;
   forCommunication(): Promise<PreviewForCommunication[]>;
   forSigna(): Promise<PreviewForSigna[]>;

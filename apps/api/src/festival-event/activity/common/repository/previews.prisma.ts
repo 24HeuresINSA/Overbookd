@@ -1,5 +1,6 @@
 import { Drive, PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
+  ActivityGearSearchOptions,
   PreviewForCommunication,
   PreviewForLogistic,
   PreviewForSecurity,
@@ -15,11 +16,13 @@ import {
   SHOULD_BE_IN_SIGNA_PREVIEW,
   SHOULD_BE_IN_LOGISTIC_DASHBOARD,
   SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
+  DatabasePreviewForLogistic,
 } from "./previews.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { PreviewForSigna } from "../../preview/signa-preview";
+import { FilterActivitiesByGearInquiry } from "../logistic/filter-activities-by-gear-inquiry";
 
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}
@@ -35,13 +38,19 @@ export class PrismaPreviews implements Previews {
     );
   }
 
-  async forLogistic(): Promise<PreviewForLogistic[]> {
-    const fromDatabase = await this.prisma.festivalActivity.findMany({
-      where: SHOULD_BE_IN_LOGISTIC_DASHBOARD,
-      select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
-    });
+  async forLogistic(
+    searchOptions: ActivityGearSearchOptions,
+  ): Promise<PreviewForLogistic[]> {
+    const fromDatabase: DatabasePreviewForLogistic[] =
+      await this.prisma.festivalActivity.findMany({
+        where: SHOULD_BE_IN_LOGISTIC_DASHBOARD,
+        select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
+      });
 
-    return fromDatabase.map((activity) => ({
+    const filter = new FilterActivitiesByGearInquiry(fromDatabase);
+    const filteredActivities = filter.apply(searchOptions);
+
+    return filteredActivities.map((activity) => ({
       id: activity.id,
       name: activity.name,
       status: activity.status,
@@ -55,7 +64,8 @@ export class PrismaPreviews implements Previews {
           isConsumable: inquiry.catalogItem.isConsumable,
           slug: inquiry.catalogItem.slug,
           name: inquiry.catalogItem.name,
-          owner: inquiry.catalogItem.category.owner?.name,
+          owner: inquiry.catalogItem.category?.owner?.name,
+          category: inquiry.catalogItem.category?.name,
         };
       }),
     }));
