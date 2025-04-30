@@ -65,6 +65,7 @@ export class PrismaAssignments implements AssignmentRepository {
             inChargeInstruction: true,
             appointment: { select: SELECT_LOCATION },
             contacts: { select: { contact: { select: SELECT_CONTACT } } },
+            assignees: { select: { personalData: true, assignmentId: true } },
           },
         },
       },
@@ -80,6 +81,14 @@ export class PrismaAssignments implements AssignmentRepository {
         lastname: contact.lastname,
         phone: contact.phone,
       })),
+      assignees: assignment.festivalTask.assignees
+        .filter((assigne) => assigne.assignmentId == identifier.assignmentId)
+        .map(({ personalData }) => ({
+          id: personalData.id,
+          firstname: personalData.firstname,
+          lastname: personalData.lastname,
+          phone: personalData.phone,
+        })),
       globalInstructions: assignment.festivalTask.globalInstruction,
       inChargeInstructions: assignment.festivalTask.inChargeInstruction,
       timeWindow: {

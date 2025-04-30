@@ -70,6 +70,15 @@
             </li>
           </ul>
         </div>
+        <div class="contacts">
+          <h3>Bénévoles affectés sur le créneau</h3>
+          <ul>
+            <li v-for="contact in selectedTask.assignees" :key="contact.phone">
+              {{ buildUserNameWithNickname(contact) }} -
+              {{ formatUserPhone(contact.phone) }}
+            </li>
+          </ul>
+        </div>
         <div class="instructions">
           <h3>Instructions</h3>
           <div
