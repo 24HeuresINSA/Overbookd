@@ -167,9 +167,22 @@ const assign = async () => {
 const close = () => emit("close");
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (["Backspace", "Delete"].includes(event.key)) revokeLastCandidate();
-  if (["=", "+"].includes(event.key)) addCandidate();
-  if (event.key === "Enter") assign();
+  switch (event.key) {
+    case "Backspace":
+    case "Delete":
+      return revokeLastCandidate();
+    case "=":
+    case "+":
+      return addCandidate();
+    case "Enter":
+      return assign();
+    case "ArrowUp":
+      event.preventDefault();
+      return previousCandidate();
+    case "ArrowDown":
+      event.preventDefault();
+      return nextCandidate();
+  }
 };
 
 onMounted(() => {
