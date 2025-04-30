@@ -44,6 +44,7 @@ import {
   VIEW_ORGA_MOBILE_NAV,
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,
+  VIEW_FA_GEAR_DASHBOARD,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -450,6 +451,20 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: VIEW_FA_GEAR_DASHBOARD,
+    description: "Peut voir la page avec toutes les demandes de matos des FA",
+    teams: {
+      createMany: {
+        data: [
+          { teamCode: "matos" },
+          { teamCode: "elec" },
+          { teamCode: "barrieres" },
+          { teamCode: "bar" },
+        ],
       },
     },
   },
