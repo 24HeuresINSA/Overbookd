@@ -135,19 +135,25 @@ type CsvItem = {
   isConsumable: boolean;
 };
 const exportCsv = async () => {
-  const allInquiries: CsvItem[] = filteredActivities.value.flatMap((activity) =>
-    activity.inquiries.map((inquiry) => ({
-      faId: activity.id,
-      faName: activity.name,
-      faStatus: activity.status,
-      faTeam: teamStore.getTeamByCode(activity.team)?.name ?? "",
-      owner: inquiry.owner ?? "",
-      name: inquiry.name,
-      quantity: inquiry.quantity,
-      drive: inquiry.drive ?? "",
-      isPonctualUsage: inquiry.isPonctualUsage,
-      isConsumable: inquiry.isConsumable,
-    })),
+  const allInquiries: CsvItem[] = filteredActivities.value.flatMap(
+    ({ id, name, status, team, inquiries }) => {
+      const teamName = teamStore.getTeamByCode(team ?? "")?.name;
+      const activity = {
+        faId: id,
+        faName: name,
+        faStatus: status,
+        faTeam: teamName ?? "",
+      };
+      return inquiries.map((inquiry) => ({
+        ...activity,
+        owner: inquiry.owner ?? "",
+        name: inquiry.name,
+        quantity: inquiry.quantity,
+        drive: inquiry.drive ?? "",
+        isPonctualUsage: inquiry.isPonctualUsage,
+        isConsumable: inquiry.isConsumable,
+      }));
+    },
   );
 
   const csv = CSVBuilder.from(allInquiries)
