@@ -65,10 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import type {
-  AssignableVolunteer,
-  TaskWithAssignmentsSummary,
-} from "@overbookd/assignment";
+import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
 import { SOFT_CODE } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
@@ -86,7 +83,7 @@ const route = useRoute();
 
 const props = defineProps({
   volunteer: {
-    type: Object as PropType<AssignmentVolunteer | AssignableVolunteer>,
+    type: Object as PropType<AssignmentVolunteer>,
     required: true,
   },
 });
