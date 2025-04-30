@@ -9,7 +9,7 @@ import {
   saturday19At16,
   table,
 } from "../../logistic.test-utils.js";
-import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error.js";
+import { NotEnoughQuantity } from "../../logistic.error.js";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;
@@ -66,11 +66,11 @@ describe("Plan borrow", () => {
       });
     });
     describe("when adding an already added gear", () => {
-      it("should indicate that the gear is already added", async () => {
+      it("should override quantity of the gear request", async () => {
         const request = { ...table, quantity: 10 };
-        await expect(
-          plan.addGear(karnaBorrow.id, request),
-        ).rejects.toThrowError(AlreadyAddedGear);
+        const updated = await plan.addGear(karnaBorrow.id, request);
+        expect(updated.gears).toContainEqual(request);
+        expect(updated.gears).toHaveLength(karnaBorrow.gears.length);
       });
     });
     describe("when the borrow does not exist", () => {

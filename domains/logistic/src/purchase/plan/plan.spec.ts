@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { chaise, saturday19At16, table } from "../../logistic.test-utils.js";
-import { AlreadyAddedGear, NotEnoughQuantity } from "../../logistic.error.js";
+import { NotEnoughQuantity } from "../../logistic.error.js";
 import { InMemoryPurchases } from "./purchase.inmemory.js";
 import { PlanPurchase } from "./plan.js";
 import { PurchaseNotFound } from "../purchase.error.js";
@@ -58,11 +58,11 @@ describe("Plan purchase", () => {
       });
     });
     describe("when adding an already added gear", () => {
-      it("should indicate that the gear is already added", async () => {
+      it("should override quantity of the gear request", async () => {
         const request = { ...table, quantity: 10 };
-        await expect(
-          plan.addGear(leroyMerlinPurchase.id, request),
-        ).rejects.toThrowError(AlreadyAddedGear);
+        const updated = await plan.addGear(leroyMerlinPurchase.id, request);
+        expect(updated.gears).toContainEqual(request);
+        expect(updated.gears).toHaveLength(leroyMerlinPurchase.gears.length);
       });
     });
     describe("when the purchase does not exist", () => {
