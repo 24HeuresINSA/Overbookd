@@ -133,11 +133,7 @@ const downloadLeaflets = () => {
   emit("download-leaflets");
 };
 
-const view = ref<string>("trombi");
-
-onMounted(() => {
-  view.value = DisplayModeBuilder.getFromRouteQuery(useRoute().query);
-});
+const view = ref<string>(DisplayModeBuilder.getFromRouteQuery(useRoute().query));
 
 watch(view, (newView) => {
   if ([TROMBINOSCOPE, VOLUNTEER_LIST, VOLUNTEER_STATS].includes(newView)) {

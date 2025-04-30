@@ -6,17 +6,14 @@ export const VOLUNTEER_LIST = "volunteer-list";
 export const VOLUNTEER_STATS = "volunteer-stats";
 
 const DISPLAY_MODES = [TROMBINOSCOPE, VOLUNTEER_LIST, VOLUNTEER_STATS] as const;
-const DISPLAY_MODE_STORAGE_KEY = "preferred-view";
+const DISPLAY_MODE_STORAGE_KEY = "last-volunteers-display-view";
 
 export type DisplayMode = (typeof DISPLAY_MODES)[number];
 
 export class DisplayModeBuilder {
   static getFromRouteQuery(query: LocationQuery): DisplayMode {
-    const displayMode = stringifyQueryParam(query.displayMode);
-    if (isDisplayMode(displayMode)) {
-      localStorage.setItem(DISPLAY_MODE_STORAGE_KEY, displayMode);
-      return displayMode;
-    }
+    const urlMode = stringifyQueryParam(query.displayMode);
+    if (isDisplayMode(urlMode)) return urlMode;
     const savedMode = localStorage.getItem(DISPLAY_MODE_STORAGE_KEY);
     return savedMode && isDisplayMode(savedMode) ? savedMode : TROMBINOSCOPE;
   }
