@@ -478,20 +478,6 @@ export const permissions = [
     },
   },
   {
-    name: VIEW_FA_GEAR_DASHBOARD,
-    description: "Peut voir les demandes de matos des FA",
-    teams: {
-      createMany: {
-        data: [
-          { teamCode: "matos" },
-          { teamCode: "elec" },
-          { teamCode: "barrieres" },
-          { teamCode: "bar" },
-        ],
-      },
-    },
-  },
-  {
     name: VIEW_ORGA_MOBILE_NAV,
     description: "Peut voir la navigation mobile pour les orgas",
     teams: {
