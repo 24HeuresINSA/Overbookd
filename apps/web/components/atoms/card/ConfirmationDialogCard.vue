@@ -44,6 +44,14 @@ const emit = defineEmits(["confirm", "close"]);
 
 const close = () => emit("close");
 const confirm = () => emit("confirm");
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter") confirm();
+  if (e.key === "Escape") close();
+};
+
+onMounted(() => window.addEventListener("keydown", handleKeydown));
+onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 </script>
 
 <style lang="scss" scoped>

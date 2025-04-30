@@ -97,30 +97,11 @@
   </v-dialog>
 
   <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
-    <ConfirmationDialogCard
-      confirm-color="error"
-      abort-color="primary"
+    <DeleteBreakPeriodFialogCard
+      :selected-break="selectedBreak"
       @close="cancelBreakRemoval"
       @confirm="removeBreak"
-    >
-      <template #title>Supprimer le créneau de pause</template>
-      <template #statement>
-        <div class="delete-statement">
-          <p>Tu vas supprimer la pause de</p>
-          <v-chip
-            color="primary"
-            variant="elevated"
-            class="assignment-metadata__chip"
-          >
-            <v-icon left>mdi-clock</v-icon>
-            <span>{{ selectedBreak?.toString() }}</span>
-          </v-chip>
-        </div>
-      </template>
-      <template #confirm-btn-content>
-        <v-icon left> mdi-delete-empty-outline </v-icon>Supprimer
-      </template>
-    </ConfirmationDialogCard>
+    />
   </v-dialog>
 </template>
 
@@ -301,20 +282,6 @@ const removeBreak = async () => {
   await userStore.deleteVolunteerBreakPeriods({ volunteer, period });
   isBreakRemovalDialogOpen.value = false;
 };
-
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "Enter") {
-    if (isBreakRemovalDialogOpen.value) return removeBreak();
-    return closeBreakDialog();
-  }
-};
-
-onMounted(() => {
-  window.addEventListener("keydown", handleKeydown);
-});
-onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeydown);
-});
 </script>
 
 <style lang="scss" scoped>
