@@ -1,3 +1,13 @@
+## [3.45.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.45.0...v3.45.1) (2025-04-30)
+
+### Bug Fixes
+
+* **assignment:** add shortcut to change candidate in funnel [#2526](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2526) ([6be56a5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6be56a557a75469d3e288018a35587343cebe4cd))
+* **assignment:** display total assignment stat in funnel [#2525](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2525) ([b1bea2c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b1bea2cfa562c1d685642d89df3b189b2ea45d2f))
+* **assignment:** hide btn to unassign in details if user does not have permission [#2521](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2521) ([0159ae3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0159ae33734144c4ea02a0d43e3b8c001eeed73d))
+* **fa:** add csv export of activities's gears [#2519](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2519) ([c629924](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c62992463c066ffd6175f3ac6254d7d349c000cf))
+* **logistic:** override gear instead of throw an error on borrow and purchase [#2523](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2523) ([7d41243](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7d41243b2a9d931e23dcee1c4139f27dfb01964a))
+
 ## [3.45.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.44.6...v3.45.0) (2025-04-29)
 
 ### Features
