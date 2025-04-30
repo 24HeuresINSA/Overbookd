@@ -131,6 +131,8 @@ type CsvItem = {
   name: string;
   quantity: number;
   drive: string;
+  isPonctualUsage: boolean;
+  isConsumable: boolean;
 };
 const exportCsv = async () => {
   const allInquiries: CsvItem[] = filteredActivities.value.flatMap((activity) =>
@@ -139,7 +141,12 @@ const exportCsv = async () => {
       faName: activity.name,
       faStatus: activity.status,
       faTeam: teamStore.getTeamByCode(activity.team)?.name ?? "",
-      ...inquiry,
+      owner: inquiry.owner ?? "",
+      name: inquiry.name,
+      quantity: inquiry.quantity,
+      drive: inquiry.drive ?? "",
+      isPonctualUsage: inquiry.isPonctualUsage,
+      isConsumable: inquiry.isConsumable,
     })),
   );
 
@@ -153,6 +160,8 @@ const exportCsv = async () => {
       "name",
       "quantity",
       "drive",
+      "isPonctualUsage",
+      "isConsumable",
     ])
     .translate([
       ["faId", "Numéro FA"],
@@ -163,6 +172,8 @@ const exportCsv = async () => {
       ["name", "Nom"],
       ["quantity", "Quantité"],
       ["drive", "Lieu de stockage"],
+      ["isPonctualUsage", "Appoint"],
+      ["isConsumable", "Consommable"],
     ])
     .build();
 
