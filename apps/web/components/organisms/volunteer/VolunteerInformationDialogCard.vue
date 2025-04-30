@@ -11,9 +11,18 @@
             />
             <h2>{{ buildUserNameWithNickname(volunteer) }}</h2>
           </div>
-          <p class="charisma">
+          <div class="charisma">
             Charisme: <strong>{{ volunteer.charisma }}</strong> 😎
-          </p>
+            <span v-if="canViewPlanning"> | </span>
+            <v-btn
+              v-if="canViewPlanning"
+              prepend-icon="mdi-calendar-blank-multiple"
+              color="primary"
+              size="small"
+              text="Voir le planning"
+              @click="openCalendar(volunteer.id)"
+            />
+          </div>
           <div class="team-list">
             <TeamChip
               v-for="team in volunteer.teams"
@@ -24,21 +33,6 @@
               :closable="canManageUsers"
               @close="removeTeam"
             />
-          </div>
-          <div v-if="!canManageUsers" class="calendar-button" style="text-align: center; margin-top: 10px;">
-            <v-tooltip bottom text="Voir le planning des disponibilités">
-              <template #activator="{ props }">
-                <v-btn
-                  v-bind="props"
-                  icon="mdi-calendar-blank-multiple"
-                  color="primary"
-                  size="small"
-                  style="border-radius: 40%;"
-                  @click.stop="openCalendar(volunteer.id)"
-                />
-              </template>
-              <span>Voir le planning des disponibilités</span>
-            </v-tooltip>
           </div>
           <div class="volunteer-form">
             <div v-if="canManageUsers" class="team-add">
@@ -101,19 +95,9 @@
               @click:prepend="callPhoneNumber"
             />
             <div v-if="canManageUsers" class="preference">
-              <v-tooltip bottom text="Voir le planning des disponibilités">
-                <template #activator="{ props }">
-                  <v-btn
-                    v-bind="props"
-                    icon="mdi-calendar-blank-multiple"
-                    color="primary"
-                    size="small"
-                    style="border-radius: 40%;"
-                    @click.stop="openCalendar(volunteer.id)"
-                  />
-                </template>
-                <span>Voir le planning des disponibilités</span>
-              </v-tooltip>
+              <v-icon class="preference__icon">
+                mdi-calendar-blank-multiple
+              </v-icon>
               <span class="preference__label">
                 {{ assignmentPreferenceLabel }}
               </span>
@@ -190,6 +174,7 @@ import {
   AFFECT_VOLUNTEER,
   MANAGE_ADMINS,
   MANAGE_USERS,
+  VIEW_PLANNING,
 } from "@overbookd/permission";
 import {
   type User,
@@ -253,6 +238,7 @@ const selectedVolunteerFriends = computed<User[]>(
   () => userStore.selectedUserFriends,
 );
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canViewPlanning = computed<boolean>(() => userStore.can(VIEW_PLANNING));
 const canManageAvailabilities = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
@@ -360,7 +346,8 @@ const openCalendar = (volunteerId: number) => {
   font-size: 1.6rem;
   display: flex;
   align-items: center;
-  justify-content: center;}
+  justify-content: center;
+}
 .volunteer-content {
   display: flex;
   gap: 20px;
