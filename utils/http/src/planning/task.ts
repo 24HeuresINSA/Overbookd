@@ -1,4 +1,5 @@
-import { FestivalTask, TimeWindow, Contact } from "@overbookd/festival-event";
+import { FestivalTask, TimeWindow } from "@overbookd/festival-event";
+import { User } from "@overbookd/user";
 
 export type Task = {
   timeWindow: TimeWindow;
@@ -10,7 +11,7 @@ export type Task = {
 
 export type TaskForCalendar = Task & {
   contacts: FestivalTask["instructions"]["contacts"];
-  assignees: Contact[];
+  assignees: User[];
   globalInstructions: FestivalTask["instructions"]["global"];
   inChargeInstructions: FestivalTask["instructions"]["inCharge"]["instruction"];
 };
