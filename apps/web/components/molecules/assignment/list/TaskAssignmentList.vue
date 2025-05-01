@@ -40,14 +40,17 @@ const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
 const hoverAssignment = (assignment: AssignmentSummaryWithTask | null) => {
   assignVolunteerToTaskStore.setHoverAssignment(assignment);
 };
-const assign = (
+
+const emit = defineEmits(["refresh-volunteer"]);
+const assign = async (
   { assignmentId, mobilizationId, taskId }: AssignmentSummaryWithTask,
   as: string,
 ) => {
   if (!selectedVolunteer.value) return;
   const assignment = { taskId, mobilizationId, assignmentId };
   const volunteer = { id: selectedVolunteer.value.id, as };
-  assignVolunteerToTaskStore.assign(assignment, volunteer);
+  await assignVolunteerToTaskStore.assign(assignment, volunteer);
+  emit("refresh-volunteer", volunteer.id);
 };
 </script>
 
