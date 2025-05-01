@@ -79,9 +79,9 @@ describe("Filter activities by gear inquiry", () => {
     ${"Tab"}     | ${undefined}     | ${undefined}   | ${undefined} | ${[activityWithTable, activityWithTableAndVauban]}
     ${"Unknown"} | ${undefined}     | ${undefined}   | ${undefined} | ${[]}
     ${undefined} | ${MOBILIER.path} | ${undefined}   | ${undefined} | ${[activityWithTable, activityWithTableAndVauban]}
-    ${undefined} | ${undefined}     | ${"barrieres"} | ${undefined} | ${[activityWithTableAndVauban, activityWithVauban]}
+    ${undefined} | ${undefined}     | ${"baRRieres"} | ${undefined} | ${[activityWithTableAndVauban, activityWithVauban]}
     ${undefined} | ${undefined}     | ${undefined}   | ${MAGASIN}   | ${[activityWithTable, activityWithTableAndVauban]}
-    ${"auba"}    | ${undefined}     | ${"barrieres"} | ${undefined} | ${[activityWithTableAndVauban, activityWithVauban]}
+    ${"auBa"}    | ${undefined}     | ${"barrieres"} | ${undefined} | ${[activityWithTableAndVauban, activityWithVauban]}
   `(
     'When looking for "$search" in $searchCategory category with $searchOwner owner and $searchDrive drive',
     ({

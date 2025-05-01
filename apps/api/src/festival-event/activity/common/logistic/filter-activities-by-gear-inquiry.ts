@@ -5,14 +5,12 @@ import { SlugifyService } from "@overbookd/slugify";
 export class FilterActivitiesByGearInquiry {
   constructor(private readonly activities: DatabasePreviewForLogistic[]) {}
 
-  apply(
-    searchOptions: ActivityGearSearchOptions,
-  ): DatabasePreviewForLogistic[] {
-    const search = SlugifyService.applyOnOptional(searchOptions.search);
-    const category = searchOptions.category;
-    const owner = searchOptions.owner;
-    const drive = searchOptions.drive;
-
+  apply({
+    search,
+    category,
+    owner,
+    drive,
+  }: ActivityGearSearchOptions): DatabasePreviewForLogistic[] {
     return this.activities.filter((activity) => {
       const inquiries = activity.inquiries.filter((inquiry) => {
         const inquirySlug = inquiry.catalogItem.slug;
@@ -36,6 +34,8 @@ export class FilterActivitiesByGearInquiry {
   ): boolean {
     if (!search) return true;
     if (!value) return false;
-    return value.includes(search);
+    const slugifiedValue = SlugifyService.apply(value);
+    const slugifiedSearch = SlugifyService.apply(search);
+    return slugifiedValue.includes(slugifiedSearch);
   }
 }
