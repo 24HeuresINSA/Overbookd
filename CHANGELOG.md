@@ -1,3 +1,12 @@
+## [3.46.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.1...v3.46.2) (2025-05-01)
+
+### Bug Fixes
+
+* **assignment:** don't count already assigned volunteers when checking remaning demands. [#2517](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2517) ([bd11f09](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bd11f09236cd855cd6eb1cdb9ed80881a938f63c))
+* **assignment:** refresh volunteer data on assignment changes [#2532](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2532) ([ec7936e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ec7936ed42a35b0f0fc94b605a7af1ce606cc88d))
+* **planning:** Display assigned volunteers list in assignement popup in planning [#2514](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2514) ([ad71f09](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ad71f09b47bb3bc6c9cc3a109676fb21148e372f))
+* **planning:** handle keyboard events in dialog [#2522](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2522) ([526188b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/526188b868179db19e81c0976549617cd157e8bb))
+
 ## [3.46.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.0...v3.46.1) (2025-05-01)
 
 ### Bug Fixes
