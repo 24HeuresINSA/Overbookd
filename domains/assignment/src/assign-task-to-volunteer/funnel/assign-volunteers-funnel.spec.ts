@@ -21,6 +21,8 @@ import {
   amanda,
   barmanBarDeLambiance,
   collageParcoursF,
+  rachid,
+  nettoyerEspaceConcessions,
 } from "./assign-volunteers-funnel.test-utils.js";
 import { CandidateFactory } from "./candidate.js";
 import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
@@ -30,6 +32,7 @@ import { IActAsFunnel } from "./funnel.js";
 import { BreakPeriods } from "./planning.js";
 import { IProvidePeriod } from "@overbookd/time";
 import { Volunteer } from "../../volunteer.js";
+import { AssignVolunteerFunnel } from "./assign-volunteer-funnel.js";
 
 class InMemoryBreakPeriods implements BreakPeriods {
   constructor(private breakPeriods: Map<Volunteer["id"], IProvidePeriod[]>) {}
@@ -718,7 +721,7 @@ describe("Assign volunteers funnel", () => {
       Lea is benevole and vieux and friend with Ontaine and Noel,
       Ontaine is benevole and conducteur and friend with Lea,
       Noel is benevole and vieux and friend with Lea,
-      All of them are available Scanner les billets,
+      All of them are available during Scanner les billets,
       1 confiance and 5 benevoles are demanded for Scanner les billets,
       5 other volunteer where namely required and already assigned
       Lea is already selected as candidate
@@ -742,6 +745,56 @@ describe("Assign volunteers funnel", () => {
     });
     it("should indicate it can fulfill more demands", () => {
       expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+    });
+  });
+  describe(`
+  Given:
+    Bruce is benevole and friend with both Amanda and Rachid,
+    Amanda is benevole and friend with Bruce,
+    Rachid is benevole and friend with Bruce,
+    All of them are available during Nettoyer l'espace concessions,
+    3 benevoles are demanded for Nettoyer l'espace concessions
+    Nathan is already assigned as benevole,
+    Ambre is already selected as candidate
+  `, () => {
+    let funnel: IActAsFunnel;
+    beforeAll(async () => {
+      const friends = new InMemoryFriends(
+        new Map([
+          [bruce.volunteer.id, [amanda.volunteer, rachid.volunteer]],
+          [amanda.volunteer.id, [bruce.volunteer]],
+          [rachid.volunteer.id, [bruce.volunteer]],
+        ]),
+      );
+      const candidateFactory = new CandidateFactory(agendas, friends);
+      const assignments = new InMemoryAssignments(initialAssignments);
+      funnel = await WaitingForVolunteer.init(
+        candidateFactory,
+        assignments,
+        nettoyerEspaceConcessions,
+      ).select(bruce.volunteer);
+    });
+    it("should indicate more candidate could be assigned", async () => {
+      expect(funnel.canFulfillMoreRemainingDemands).toBe(true);
+    });
+    describe("when asking for more candidate to assign", () => {
+      let twoCandidatesFunnel: IActAsFunnel;
+      beforeAll(async () => {
+        twoCandidatesFunnel = await funnel.addCandidate();
+      });
+      it("should indicate no more candidate could be assigned", () => {
+        expect(twoCandidatesFunnel.canFulfillMoreRemainingDemands).toBe(false);
+      });
+      it("should indicate it can change the last candidate", async () => {
+        expect(twoCandidatesFunnel.canChangeLastCandidate).toBe(true);
+      });
+      describe("when asking for next candidate", () => {
+        it("should change last candidate", async () => {
+          const lastCandidate = twoCandidatesFunnel.candidates.at(-1);
+          const nextCandidate = await twoCandidatesFunnel.nextCandidate();
+          expect(nextCandidate.candidates).not.toContainEqual(lastCandidate);
+        });
+      });
     });
   });
 });

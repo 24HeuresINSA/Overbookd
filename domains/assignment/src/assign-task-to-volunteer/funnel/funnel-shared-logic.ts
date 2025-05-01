@@ -54,21 +54,20 @@ export abstract class CommonFunnel implements IActAsFunnel {
   }
 
   protected remainingDemandsIfAssignThose(candidates: Candidate[]) {
-    const { assignees, demands } = this.assignment;
-    const remainingDemands = demands.reduce(
+    return this.assignment.demands.reduce(
       (remainingDemands: TeamDemanded[], { team, demand }) => {
-        const alreadyAssigned = assignees.filter(isMemberOf(team)).length;
         const temporarlyAssigned = candidates.filter((candidate) =>
           isMemberOf(team)(candidate.json),
         ).length;
-        const totalAssignees = alreadyAssigned + temporarlyAssigned;
-        if (totalAssignees === demand) return remainingDemands;
+        if (temporarlyAssigned === demand) return remainingDemands;
 
-        return [...remainingDemands, { team, demand: demand - totalAssignees }];
+        return [
+          ...remainingDemands,
+          { team, demand: demand - temporarlyAssigned },
+        ];
       },
       [],
     );
-    return remainingDemands;
   }
 
   protected get friendsAbleToFulfillNextDemand(): AssignableVolunteer[] {
