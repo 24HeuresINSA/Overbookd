@@ -22,8 +22,8 @@
         <span
           v-for="{ team } of assignment.teams"
           :key="team"
+          class="team-chip-wrapper"
           :class="{
-            'team-chip-wrapper': true,
             clickable: doesSelectedVolunteerHaveGivenTeam(team),
           }"
         >

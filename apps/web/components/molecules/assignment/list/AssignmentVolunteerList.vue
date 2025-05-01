@@ -21,7 +21,7 @@
 import type { AssignableVolunteer } from "@overbookd/assignment";
 import type { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
 
-const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
+const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
 defineProps({
   volunteers: {
@@ -31,7 +31,7 @@ defineProps({
 });
 
 const isSelected = (id: number): boolean => {
-  return assignTaskToVolunteerStore.selectedVolunteer?.id === id;
+  return assignVolunteerToTaskStore.selectedVolunteer?.id === id;
 };
 
 const emit = defineEmits(["select-volunteer"]);
