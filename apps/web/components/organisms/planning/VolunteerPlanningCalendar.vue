@@ -98,8 +98,9 @@
 
   <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
     <DeleteBreakPeriodFialogCard
+      v-if="selectedBreak"
       :selected-break="selectedBreak"
-      @close="cancelBreakRemoval"
+      @close="closeBreakDialog"
       @confirm="removeBreak"
     />
   </v-dialog>
@@ -270,9 +271,6 @@ const openBreakRemoval = (period: BreakEvent) => {
   if (!canAssignVolunteer.value) return;
   selectedBreak.value = Period.init(period);
   isBreakRemovalDialogOpen.value = true;
-};
-const cancelBreakRemoval = () => {
-  isBreakRemovalDialogOpen.value = false;
 };
 
 const removeBreak = async () => {

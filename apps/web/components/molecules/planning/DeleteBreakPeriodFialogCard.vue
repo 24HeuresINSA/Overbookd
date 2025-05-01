@@ -2,8 +2,8 @@
   <ConfirmationDialogCard
     confirm-color="error"
     abort-color="primary"
-    @close="close()"
-    @confirm="confirm()"
+    @close="close"
+    @confirm="confirm"
   >
     <template #title>Supprimer le créneau de pause</template>
     <template #statement>
@@ -25,20 +25,20 @@
   </ConfirmationDialogCard>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
-import type { Period } from "@overbookd/time";
+import type { IProvidePeriod } from "@overbookd/time";
 
-const props = defineProps<{
-  selectedBreak?: Period;
-}>();
+const props = defineProps({
+  selectedBreak: {
+    type: Object as PropType<IProvidePeriod>,
+    required: true,
+  },
+});
+
+const pauseLabel = computed<string>(() => props.selectedBreak.toString());
 
 const emit = defineEmits(["close", "confirm"]);
 const close = () => emit("close");
 const confirm = () => emit("confirm");
-
-const pauseLabel = computed(
-  () => props.selectedBreak?.toString() ?? "Période inconnue",
-);
 </script>
 <style lang="scss" scoped>
 .assignment-metadata {
