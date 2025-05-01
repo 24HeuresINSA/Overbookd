@@ -87,6 +87,7 @@ const sendCloseEvent = () => emit("close", team);
 .v-chip {
   margin: 2px;
   cursor: default;
+  padding: 0 10px;
 }
 span.name {
   margin-left: 4px;
