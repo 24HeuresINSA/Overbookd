@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="calendar-event"
-    :class="{ unclickable: !clickable }"
+    :class="{ unclickable: !clickable, 'event-selected': event.selected }"
     :color="event.color || 'primary'"
     :style="presenter.css"
     :href="clickable ? event.link : undefined"
@@ -58,5 +58,9 @@ const presenter = computed<CalendarEventPresenter>(() => {
   position: absolute;
   margin: 0 !important;
   border-radius: 6px !important;
+}
+
+.event-selected {
+  border: 2px solid rgba(var(--v-theme-on-surface), 0.7);
 }
 </style>

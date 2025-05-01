@@ -72,6 +72,8 @@ const defineEventColor = (team: AssignmentTeam): string => {
   const spread = (180 * team.assigned) / team.demand + 75;
   return color + decimalToHex(spread);
 };
+const isSelected = (assignmentId: string) =>
+  assignTaskToVolunteerStore.selectedAssignment?.assignmentId === assignmentId;
 const mapAssignmentToEvent = (
   assignment: AssignmentSummary,
 ): CalendarEventWithIdentifier[] => {
@@ -81,6 +83,7 @@ const mapAssignmentToEvent = (
       name: buildEventName(team),
       timed: true,
       color: defineEventColor(team),
+      selected: isSelected(assignment.assignmentId),
       identifier: {
         assignmentId: assignment.assignmentId,
         mobilizationId: assignment.mobilizationId,
