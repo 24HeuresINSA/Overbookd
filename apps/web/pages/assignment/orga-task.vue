@@ -9,7 +9,10 @@
       :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
     />
-    <FilterableTaskAssignmentList class="task-list" />
+    <FilterableTaskAssignmentList
+      class="task-list"
+      @refresh-volunteer="refreshVolunteerData"
+    />
 
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <AssignmentDetailsDialogCard
@@ -36,6 +39,8 @@ useHead({ title: DEFAULT_TITLE });
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
+const availabilitiesStore = useVolunteerAvailabilityStore();
+const userStore = useUserStore();
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
 
@@ -57,9 +62,23 @@ const volunteers = computed<VolunteerWithAssignmentDuration[]>(
 );
 const selectVolunteer = (volunteer: VolunteerWithAssignmentDuration) => {
   assignVolunteerToTaskStore.selectVolunteer(volunteer);
+  refreshVolunteerData(volunteer.id);
 };
 const unassignVolunteer = (form: UnassignForm) => {
   assignVolunteerToTaskStore.unassign(form);
+  refreshVolunteerData(form.assigneeId);
+};
+
+const refreshVolunteerData = async (volunteerId: number) => {
+  availabilitiesStore.clearVolunteerAvailabilities();
+  await Promise.all([
+    availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
+    userStore.getVolunteerAssignments(volunteerId),
+    userStore.getVolunteerAssignmentStats(volunteerId),
+    assignVolunteerToTaskStore.fetchAllAssignmentsFor(volunteerId),
+    assignVolunteerToTaskStore.fetchBreakPeriodsFor(volunteerId),
+    userStore.getVolunteerTasks(volunteerId),
+  ]);
 };
 
 onMounted(async () => {

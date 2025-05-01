@@ -15,6 +15,7 @@
         v-if="shouldShowAssignmentList"
         :assignments="filteredAssignments"
         class="assignment-list"
+        @refresh-volunteer="propageteRefreshVolunteer"
       />
       <div v-else class="error-message">
         <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
@@ -48,6 +49,11 @@ const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
+
+const emit = defineEmits(["refresh-volunteer"]);
+const propageteRefreshVolunteer = (volunteerId: number) => {
+  emit("refresh-volunteer", volunteerId);
+};
 
 const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
   () =>

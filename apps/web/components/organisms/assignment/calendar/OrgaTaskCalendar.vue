@@ -49,10 +49,6 @@ const props = defineProps({
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
-watch(selectedVolunteer, async (volunteer) => {
-  if (volunteer) await refreshVolunteerData(volunteer.id);
-});
-
 const volunteerName = computed<string>(() =>
   selectedVolunteer.value
     ? buildUserNameWithNickname(selectedVolunteer.value)
@@ -94,18 +90,6 @@ const events = computed<CalendarEvent[]>(() => {
 const stats = computed<AssignmentStat[]>(
   () => userStore.selectedUserAssignmentStats,
 );
-
-const refreshVolunteerData = async (volunteerId: number) => {
-  availabilitiesStore.clearVolunteerAvailabilities();
-  await Promise.all([
-    availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
-    userStore.getVolunteerAssignments(volunteerId),
-    userStore.getVolunteerAssignmentStats(volunteerId),
-    assignVolunteerToTaskStore.fetchAllAssignmentsFor(volunteerId),
-    assignVolunteerToTaskStore.fetchBreakPeriodsFor(volunteerId),
-    userStore.getVolunteerTasks(volunteerId),
-  ]);
-};
 
 const availabilities = computed<IProvidePeriod[]>(
   () => availabilitiesStore.availabilities.list,
