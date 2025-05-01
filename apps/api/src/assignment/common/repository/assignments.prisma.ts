@@ -4,6 +4,7 @@ import {
   AssignmentIdentifier,
   BaseAssigneeForDetails,
   VolunteersForAssignment,
+  WrongTeam,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
@@ -149,6 +150,12 @@ export class PrismaAssignments implements AssignmentRepository {
     assignment: identifier,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
+    for (const { id, as } of volunteers) {
+      const memberOfTeam = await this.prisma.userTeam.count({
+        where: { userId: id, teamCode: as },
+      });
+      if (memberOfTeam === 0) throw new WrongTeam(id, as);
+    }
     const upsert = updateAssigneesOnAssignment(volunteers, identifier);
     const assignment = await this.prisma.assignment.update({
       where: uniqueAssignment(identifier),

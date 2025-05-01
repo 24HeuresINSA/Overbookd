@@ -93,10 +93,7 @@ const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
 );
 
 const emit = defineEmits(["selected-team"]);
-const selectTeam = (teamCode: string) => {
-  if (doesSelectedVolunteerHaveGivenTeam(teamCode))
-    emit("selected-team", teamCode);
-};
+const selectTeam = (teamCode: string) => emit("selected-team", teamCode);
 
 const hasOnlyOneTeamToSelect = computed(() => {
   return props.assignment.teams.length === 1;
