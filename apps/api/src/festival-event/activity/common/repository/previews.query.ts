@@ -62,11 +62,6 @@ export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
   },
 };
 
-export const SHOULD_BE_IN_LOGISTIC_DASHBOARD = {
-  ...IS_NOT_DELETED,
-  inquiries: { some: {} },
-};
-
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   ...SELECT_BASE_PREVIEW,
   teamCode: true,

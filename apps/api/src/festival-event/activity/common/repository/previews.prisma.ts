@@ -14,7 +14,6 @@ import {
   SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD,
   SELECT_PREVIEW_FOR_SIGNA,
   SHOULD_BE_IN_SIGNA_PREVIEW,
-  SHOULD_BE_IN_LOGISTIC_DASHBOARD,
   SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
   DatabasePreviewForLogistic,
 } from "./previews.query";
@@ -22,7 +21,6 @@ import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { PreviewForSigna } from "../../preview/signa-preview";
-import { FilterActivitiesByGearInquiry } from "../logistic/filter-activities-by-gear-inquiry";
 
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}
@@ -41,16 +39,52 @@ export class PrismaPreviews implements Previews {
   async forLogistic(
     searchOptions: ActivityGearSearchOptions,
   ): Promise<PreviewForLogistic[]> {
+    const slugSearch = searchOptions.search
+      ? ({
+          slug: { contains: searchOptions.search, mode: "insensitive" },
+        } as const)
+      : {};
+    const categorySearch = searchOptions.category
+      ? ({
+          catalogItem: {
+            category: {
+              path: { contains: searchOptions.category, mode: "insensitive" },
+            },
+          },
+        } as const)
+      : {};
+    const ownerSearch = searchOptions.owner
+      ? ({
+          catalogItem: {
+            category: {
+              ownerCode: { contains: searchOptions.owner, mode: "insensitive" },
+            },
+          },
+        } as const)
+      : {};
+    const driveSearch = searchOptions.drive
+      ? ({
+          drive: { contains: searchOptions.drive, mode: "insensitive" },
+        } as const)
+      : {};
+
     const fromDatabase: DatabasePreviewForLogistic[] =
       await this.prisma.festivalActivity.findMany({
-        where: SHOULD_BE_IN_LOGISTIC_DASHBOARD,
+        where: {
+          ...IS_NOT_DELETED,
+          inquiries: {
+            some: {
+              ...slugSearch,
+              ...categorySearch,
+              ...ownerSearch,
+              ...driveSearch,
+            },
+          },
+        },
         select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
       });
 
-    const filter = new FilterActivitiesByGearInquiry(fromDatabase);
-    const filteredActivities = filter.apply(searchOptions);
-
-    return filteredActivities.map((activity) => ({
+    return fromDatabase.map((activity) => ({
       id: activity.id,
       name: activity.name,
       status: activity.status,
