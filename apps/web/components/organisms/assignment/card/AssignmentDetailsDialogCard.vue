@@ -100,6 +100,7 @@
                   v-for="friend in item.friends"
                   :key="friend.id"
                   :color="shouldHighlight(friend.id) ? 'secondary' : undefined"
+                  :variant="shouldHighlight(friend.id) ? 'elevated' : undefined"
                 >
                   <v-icon left>mdi-account</v-icon>
                   {{ buildUserName(friend) }}

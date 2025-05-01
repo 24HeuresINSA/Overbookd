@@ -1,5 +1,4 @@
 import { IProvidePeriod } from "@overbookd/time";
-import { HARD, VIEUX, CONFIANCE } from "../../teams.js";
 import {
   Assignment,
   isMemberOf,
@@ -14,6 +13,7 @@ import {
   PlanningEvent,
 } from "./planning.js";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { retrieveImplicitTeams } from "../../candidate-teams.js";
 
 type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
   friends: AssignableVolunteer[];
@@ -126,15 +126,6 @@ function assignableTeamsAccordingToRemainingDemands(
   return implicitTeams.filter((team) =>
     remainingDemands.map(({ team }) => team).includes(team),
   );
-}
-
-function retrieveImplicitTeams(teams: string[]) {
-  const areConfianceByDefault = [HARD, VIEUX];
-  const isConfiance = teams.some((team) =>
-    areConfianceByDefault.includes(team),
-  );
-
-  return isConfiance ? [...teams, CONFIANCE] : teams;
 }
 
 export function isFulfillingDemand(

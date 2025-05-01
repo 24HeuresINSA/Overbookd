@@ -5,6 +5,7 @@ import {
   BaseAssigneeForDetails,
   VolunteersForAssignment,
   WrongTeam,
+  retrieveImplicitTeams,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
@@ -151,10 +152,14 @@ export class PrismaAssignments implements AssignmentRepository {
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
     for (const { id, as } of volunteers) {
-      const memberOfTeam = await this.prisma.userTeam.count({
-        where: { userId: id, teamCode: as },
+      const volunteerTeamCodes = await this.prisma.userTeam.findMany({
+        where: { userId: id },
+        select: { teamCode: true },
       });
-      if (memberOfTeam === 0) throw new WrongTeam(id, as);
+      const volunteerTeams = volunteerTeamCodes.map(({ teamCode }) => teamCode);
+      const withImplicitTeams = retrieveImplicitTeams(volunteerTeams);
+      const memberOfTeam = withImplicitTeams.includes(as);
+      if (!memberOfTeam) throw new WrongTeam(id, as);
     }
     const upsert = updateAssigneesOnAssignment(volunteers, identifier);
     const assignment = await this.prisma.assignment.update({

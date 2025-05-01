@@ -50,7 +50,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import {
+  type VolunteerWithAssignmentDuration,
+  retrieveImplicitTeams,
+} from "@overbookd/assignment";
 import type { AssignmentSummaryWithTask } from "@overbookd/http";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
@@ -67,8 +70,10 @@ const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
 
-const doesSelectedVolunteerHaveGivenTeam = (teamCode: string) =>
-  !!selectedVolunteer.value?.teams.includes(teamCode);
+const doesSelectedVolunteerHaveGivenTeam = (teamCode: string) => {
+  const teams = retrieveImplicitTeams(selectedVolunteer.value?.teams ?? []);
+  return teams.includes(teamCode);
+};
 
 const remaingTeamRequests = computed<{ team: string; missing: number }[]>(
   () => {
