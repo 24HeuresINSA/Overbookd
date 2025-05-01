@@ -137,7 +137,7 @@ const gearFilters = reactive<FilterGear & { drive?: Drive }>({
   drive: undefined,
 });
 
-const fetchActivities = () => {
+const fetchActivities = async () => {
   loading.value = true;
   const options: ActivityGearSearchOptions = {
     search: gearFilters.search.trim() || undefined,
@@ -145,7 +145,8 @@ const fetchActivities = () => {
     owner: gearFilters.team?.code,
     drive: gearFilters.drive,
   };
-  faStore.fetchLogisticPreviews(options).then(() => (loading.value = false));
+  await faStore.fetchLogisticPreviews(options);
+  loading.value = false;
 };
 
 const activities = computed<PreviewForLogistic[]>(

@@ -1,5 +1,6 @@
-type PrimitiveParams = string | number | boolean | Date | null | undefined;
-type SupportedParams = PrimitiveParams | PrimitiveParams[];
+type PrimitiveParams = string | number | boolean | Date;
+type NullablePrimitiveParams = PrimitiveParams | null | undefined;
+type SupportedParams = NullablePrimitiveParams | NullablePrimitiveParams[];
 export type Params = Record<string, SupportedParams>;
 type ParamsEntry = [string, SupportedParams];
 type URLEntry = [string, string];
@@ -13,7 +14,12 @@ export class HttpParams {
 
   private static toUrlQueryFormat([key, value]: ParamsEntry): URLEntry[] {
     if (Array.isArray(value)) {
-      return value.map((item) => [`${key}[]`, HttpParams.toSearchOption(item)]);
+      return value
+        .map((item) => {
+          if (item === null || item === undefined) return undefined;
+          return [`${key}[]`, HttpParams.toSearchOption(item)];
+        })
+        .filter((item): item is URLEntry => item !== undefined);
     }
     if (value === null || value === undefined) return [];
     return [[key, HttpParams.toSearchOption(value)]];

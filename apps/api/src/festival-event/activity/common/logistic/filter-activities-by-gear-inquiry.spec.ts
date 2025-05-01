@@ -5,7 +5,7 @@ import { FilterActivitiesByGearInquiry } from "./filter-activities-by-gear-inqui
 
 const MOBILIER = {
   name: "Mobilier",
-  path: "mobilier",
+  path: "matos->mobilier",
   owner: { name: "Orga Matos", code: "matos" },
 };
 const BARRIERES = {
