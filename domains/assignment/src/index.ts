@@ -39,7 +39,11 @@ export type {
   StoredAssignableVolunteer,
 } from "./assign-task-to-volunteer/assignable-volunteer.js";
 export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to-volunteer.js";
-export { AssignmentError, TaskNotFoundError } from "./assignment.error.js";
+export {
+  AssignmentError,
+  TaskNotFoundError,
+  WrongTeam,
+} from "./assignment.error.js";
 export { CONFIANCE, HARD, VIEUX } from "./teams.js";
 export {
   Candidate,

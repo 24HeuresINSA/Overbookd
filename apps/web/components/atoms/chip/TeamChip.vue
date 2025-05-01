@@ -79,7 +79,9 @@ const color = computed<string>(() => teamMetadata.value?.color ?? "grey");
 const isBde = computed<boolean>(() => team === "bde");
 
 const emit = defineEmits(["click", "close"]);
-const sendEvent = () => emit("click", teamMetadata.value);
+const sendEvent = () => {
+  if (clickable) emit("click", teamMetadata.value);
+};
 const sendCloseEvent = () => emit("close", team);
 </script>
 
