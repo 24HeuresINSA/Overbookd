@@ -1,3 +1,9 @@
+## [3.46.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.0...v3.46.1) (2025-05-01)
+
+### Bug Fixes
+
+* **fa:** add filters on fa logistic dashboard [#2519](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2519) ([241932d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/241932d6d8fbf57c362ba78a44f7f5e0ac90a8c2)), closes [#2528](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2528)
+
 ## [3.46.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.45.1...v3.46.0) (2025-04-30)
 
 ### Features
