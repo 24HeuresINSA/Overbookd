@@ -39,46 +39,12 @@ export class PrismaPreviews implements Previews {
   async forLogistic(
     searchOptions: ActivityGearSearchOptions,
   ): Promise<PreviewForLogistic[]> {
-    const slugSearch = searchOptions.search
-      ? ({
-          slug: { contains: searchOptions.search, mode: "insensitive" },
-        } as const)
-      : {};
-    const categorySearch = searchOptions.category
-      ? ({
-          catalogItem: {
-            category: {
-              path: { contains: searchOptions.category, mode: "insensitive" },
-            },
-          },
-        } as const)
-      : {};
-    const ownerSearch = searchOptions.owner
-      ? ({
-          catalogItem: {
-            category: {
-              ownerCode: { contains: searchOptions.owner, mode: "insensitive" },
-            },
-          },
-        } as const)
-      : {};
-    const driveSearch = searchOptions.drive
-      ? ({
-          drive: { contains: searchOptions.drive, mode: "insensitive" },
-        } as const)
-      : {};
-
     const fromDatabase: DatabasePreviewForLogistic[] =
       await this.prisma.festivalActivity.findMany({
         where: {
           ...IS_NOT_DELETED,
           inquiries: {
-            some: {
-              ...slugSearch,
-              ...categorySearch,
-              ...ownerSearch,
-              ...driveSearch,
-            },
+            some: this.buildSearchCondtionForLogistic(searchOptions),
           },
         },
         select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
@@ -157,5 +123,33 @@ export class PrismaPreviews implements Previews {
         catalogName: signage.catalogItem?.name ?? "",
       })),
     }));
+  }
+
+  private buildSearchCondtionForLogistic({
+    search,
+    category,
+    owner,
+    drive,
+  }: ActivityGearSearchOptions) {
+    const mode = { mode: "insensitive" } as const;
+    const slugSearch = search ? { slug: { contains: search, ...mode } } : {};
+    const categorySearch = category
+      ? { catalogItem: { category: { path: { contains: category, ...mode } } } }
+      : {};
+    const ownerSearch = owner
+      ? {
+          catalogItem: {
+            category: { ownerCode: { contains: owner, ...mode } },
+          },
+        }
+      : {};
+    const driveSearch = drive ? { drive: { contains: drive, ...mode } } : {};
+
+    return {
+      ...slugSearch,
+      ...categorySearch,
+      ...ownerSearch,
+      ...driveSearch,
+    } as const;
   }
 }
