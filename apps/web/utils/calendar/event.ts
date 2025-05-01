@@ -12,6 +12,7 @@ type BaseCalendarEvent = {
   name: string;
   link?: string;
   color?: string;
+  selected?: boolean;
 };
 
 export type CalendarEvent = BaseCalendarEvent & {
