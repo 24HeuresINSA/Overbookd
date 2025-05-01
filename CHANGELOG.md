@@ -1,3 +1,11 @@
+## [3.46.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.4...v3.46.5) (2025-05-01)
+
+### Bug Fixes
+
+* add team elec and CRL B drives ([65b2f94](https://gitlab.com/24-heures-insa/overbookd-mono/commit/65b2f948b0241ddcf9930208c60073e606e7972c))
+* **assignment:** highlight selected assignment in task-orga [#2507](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2507) ([901aef7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/901aef746efa1392eba52480d47b909463457030))
+* **assignment:** highlight selected volunteer in orga-task [#2533](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2533) ([03653cc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03653cceee834af5f59eaff30422816fcb506c03))
+
 ## [3.46.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.3...v3.46.4) (2025-05-01)
 
 ### Bug Fixes
