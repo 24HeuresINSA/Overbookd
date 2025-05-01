@@ -11,7 +11,7 @@
     />
     <FilterableTaskAssignmentList
       class="task-list"
-      @refresh-volunteer="refreshVolunteerData"
+      @volunteer-assigned="refreshVolunteerData"
     />
 
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
@@ -64,8 +64,8 @@ const selectVolunteer = (volunteer: VolunteerWithAssignmentDuration) => {
   assignVolunteerToTaskStore.selectVolunteer(volunteer);
   refreshVolunteerData(volunteer.id);
 };
-const unassignVolunteer = (form: UnassignForm) => {
-  assignVolunteerToTaskStore.unassign(form);
+const unassignVolunteer = async (form: UnassignForm) => {
+  await assignVolunteerToTaskStore.unassign(form);
   refreshVolunteerData(form.assigneeId);
 };
 
