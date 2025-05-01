@@ -41,12 +41,7 @@ export class PrismaPreviews implements Previews {
   ): Promise<PreviewForLogistic[]> {
     const fromDatabase: DatabasePreviewForLogistic[] =
       await this.prisma.festivalActivity.findMany({
-        where: {
-          ...IS_NOT_DELETED,
-          inquiries: {
-            some: this.buildSearchCondtionForLogistic(searchOptions),
-          },
-        },
+        where: ConditionForLogistic.build(searchOptions),
         select: SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
       });
 
@@ -124,32 +119,51 @@ export class PrismaPreviews implements Previews {
       })),
     }));
   }
+}
 
-  private buildSearchCondtionForLogistic({
-    search,
-    category,
-    owner,
-    drive,
-  }: ActivityGearSearchOptions) {
-    const mode = { mode: "insensitive" } as const;
-    const slugSearch = search ? { slug: { contains: search, ...mode } } : {};
-    const categorySearch = category
-      ? { catalogItem: { category: { path: { contains: category, ...mode } } } }
-      : {};
-    const ownerSearch = owner
-      ? {
-          catalogItem: {
-            category: { ownerCode: { contains: owner, ...mode } },
-          },
-        }
-      : {};
-    const driveSearch = drive ? { drive: { contains: drive, ...mode } } : {};
+const INSENSITIVE = { mode: "insensitive" } as const;
+class ConditionForLogistic {
+  private constructor() {}
 
+  static build({ search, category, owner, drive }: ActivityGearSearchOptions) {
     return {
-      ...slugSearch,
-      ...categorySearch,
-      ...ownerSearch,
-      ...driveSearch,
+      ...IS_NOT_DELETED,
+      inquiries: {
+        some: {
+          ...this.inquiriesWithName(search),
+          ...this.inquiriesWithCategory(category),
+          ...this.inquiriesWithOwner(owner),
+          ...this.inquiriesWithDrive(drive),
+        },
+      },
     } as const;
+  }
+
+  private static inquiriesWithName(slug?: string) {
+    if (!slug) return {};
+    return { slug: { contains: slug, ...INSENSITIVE } } as const;
+  }
+
+  private static inquiriesWithCategory(category?: string) {
+    if (!category) return {};
+    return {
+      catalogItem: {
+        category: { path: { contains: category, ...INSENSITIVE } },
+      },
+    } as const;
+  }
+
+  private static inquiriesWithOwner(owner?: string) {
+    if (!owner) return {};
+    return {
+      catalogItem: {
+        category: { ownerCode: { contains: owner, ...INSENSITIVE } },
+      },
+    } as const;
+  }
+
+  private static inquiriesWithDrive(drive?: string) {
+    if (!drive) return {};
+    return { drive: { contains: drive, ...INSENSITIVE } } as const;
   }
 }
