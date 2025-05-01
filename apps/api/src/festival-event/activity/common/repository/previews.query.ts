@@ -10,6 +10,30 @@ const SELECT_BASE_PREVIEW = {
   status: true,
 };
 
+export type DatabasePreviewForLogistic = {
+  id: number;
+  name: string;
+  status: FestivalActivity["status"];
+  teamCode?: string;
+  inquiries: {
+    quantity: number;
+    drive?: string;
+    catalogItem: {
+      slug: string;
+      name: string;
+      isPonctualUsage: boolean;
+      isConsumable: boolean;
+      category?: {
+        path: string;
+        name: string;
+        owner?: {
+          code: string;
+          name: string;
+        };
+      };
+    };
+  }[];
+};
 export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
   ...SELECT_BASE_PREVIEW,
   teamCode: true,
@@ -25,18 +49,17 @@ export const SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD = {
           isConsumable: true,
           category: {
             select: {
-              owner: { select: { name: true } },
+              path: true,
+              name: true,
+              owner: {
+                select: { code: true, name: true },
+              },
             },
           },
         },
       },
     },
   },
-};
-
-export const SHOULD_BE_IN_LOGISTIC_DASHBOARD = {
-  ...IS_NOT_DELETED,
-  inquiries: { some: {} },
 };
 
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {

@@ -16,6 +16,9 @@ class GearInquiryDto implements ActivityGearInquiryForPreview {
   @ApiProperty({ description: "Gear name", type: String })
   name: string;
 
+  @ApiProperty({ description: "Gear category", type: String, required: false })
+  category?: string;
+
   @ApiProperty({ description: "Gear drive", enum: drives, required: false })
   drive?: Drive;
 

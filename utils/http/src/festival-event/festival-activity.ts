@@ -39,6 +39,7 @@ export type PreviewForSecurity = {
 export type ActivityGearInquiryForPreview = BaseInquiryRequest & {
   isPonctualUsage: boolean;
   isConsumable: boolean;
+  category?: string;
   drive?: Drive;
   owner?: string;
 };
@@ -59,4 +60,11 @@ export type PreviewForCommunication = {
   photoLink: FestivalActivity["general"]["photoLink"];
   isFlagship: FestivalActivity["general"]["isFlagship"];
   categories: FestivalActivity["general"]["categories"];
+};
+
+export type ActivityGearSearchOptions = {
+  search?: string;
+  category?: string;
+  owner?: string;
+  drive?: string;
 };

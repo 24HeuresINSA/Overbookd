@@ -36,6 +36,7 @@ import type {
   PublishFeedbackForm,
   ReviewApproval,
   Statistics,
+  ActivityGearSearchOptions,
 } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -51,10 +52,11 @@ export class FestivalActivityRepository {
     return HttpClient.get<PreviewFestivalActivity[]>(`${this.basePath}/mine`);
   }
 
-  static getLogisticPreviews() {
-    return HttpClient.get<PreviewForLogistic[]>(
-      `${this.basePath}/for-logistic`,
-    );
+  static getLogisticPreviews(searchOptions: ActivityGearSearchOptions) {
+    return HttpClient.get<PreviewForLogistic[]>({
+      path: `${this.basePath}/for-logistic`,
+      params: searchOptions,
+    });
   }
 
   static getSecurityPreviews() {

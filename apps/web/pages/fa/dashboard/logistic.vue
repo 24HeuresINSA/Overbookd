@@ -1,82 +1,107 @@
 <template>
   <DesktopPageTitle />
-  <v-card>
-    <v-card-text>
-      <v-data-table
-        :headers="activityHeaders"
-        :items="filteredActivities"
-        no-data-text="Aucune activité avec une demande de matériel"
-        :loading="loading"
-        loading-text="Chargement des fiches activités..."
-        :hover="filteredActivities.length > 0"
-        :mobile="isMobile"
-        density="comfortable"
-        class="fa"
-        show-expand
-        expand-on-click
-      >
-        <template #top>
-          <div class="filters">
-            <v-text-field
-              v-model="search"
-              label="Rechercher une activité"
-              hide-details
-            />
-            <v-btn
-              prepend-icon="mdi-export"
-              text="Exporter les FA affichées"
-              color="secondary"
-              @click="exportCsv"
-            />
-          </div>
-        </template>
 
-        <template #item.id="{ item }">
-          <div class="status">
-            <v-chip :class="item.status.toLowerCase()">
-              {{ item.id }}
-            </v-chip>
-          </div>
-        </template>
-
-        <template #item.team="{ item }">
-          <TeamChip v-if="item.team" :team="item.team" with-name />
-        </template>
-
-        <template #item.link="{ item }">
-          <v-btn
-            icon="mdi-open-in-new"
-            variant="flat"
-            density="comfortable"
-            @click.stop="openPageWithId($event, FA_URL, item.id)"
+  <div class="dashboard">
+    <v-card>
+      <v-card-text class="dashboard__filters">
+        <GearFilter
+          v-model:search="gearFilters.search"
+          v-model:category="gearFilters.category"
+          v-model:team="gearFilters.team"
+          @update:options="fetchActivities"
+        />
+        <div class="dashboard__filters-additional">
+          <v-autocomplete
+            v-model="gearFilters.drive"
+            :items="drives"
+            label="Lieu de stockage"
+            hide-details
+            clearable
+            hide-selected
+            no-data-text="Aucun lieu correspondant"
+            @update:model-value="fetchActivities"
           />
-        </template>
+          <v-text-field
+            v-model="activitySearch"
+            label="Rechercher une activité"
+            hide-details
+          />
+          <v-btn
+            prepend-icon="mdi-export"
+            text="Exporter les FA affichées"
+            color="secondary"
+            @click="exportCsv"
+          />
+        </div>
+      </v-card-text>
+    </v-card>
+    <v-card>
+      <v-card-text>
+        <v-data-table
+          :headers="activityHeaders"
+          :items="filteredActivities"
+          no-data-text="Aucune activité avec une demande de matériel"
+          :loading="loading"
+          loading-text="Chargement des fiches activités..."
+          :hover="filteredActivities.length > 0"
+          :mobile="isMobile"
+          density="comfortable"
+          class="fa"
+          show-expand
+          expand-on-click
+        >
+          <template #item.id="{ item }">
+            <div class="status">
+              <v-chip :class="item.status.toLowerCase()">
+                {{ item.id }}
+              </v-chip>
+            </div>
+          </template>
 
-        <template #expanded-row="{ item }">
-          <td :colspan="activityHeaders.length + 1">
-            <v-data-table
-              :headers="gearHeaders"
-              :items="item.inquiries"
-              no-data-text="Aucun matos demandé"
-              :mobile="isMobile"
-              density="compact"
-              items-per-page="-1"
-              hide-default-footer
+          <template #item.team="{ item }">
+            <TeamChip v-if="item.team" :team="item.team" with-name />
+          </template>
+
+          <template #item.link="{ item }">
+            <v-btn
+              icon="mdi-open-in-new"
+              variant="flat"
+              density="comfortable"
+              @click.stop="openPageWithId($event, FA_URL, item.id)"
             />
-            <v-divider />
-          </td>
-        </template>
-      </v-data-table>
-    </v-card-text>
-  </v-card>
+          </template>
+
+          <template #expanded-row="{ item }">
+            <td :colspan="activityHeaders.length + 1">
+              <v-data-table
+                :headers="gearHeaders"
+                :items="item.inquiries"
+                no-data-text="Aucun matos demandé"
+                :mobile="isMobile"
+                density="compact"
+                items-per-page="-1"
+                hide-default-footer
+              />
+              <v-divider />
+            </td>
+          </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { CSVBuilder } from "@overbookd/csv";
-import type { PreviewForLogistic } from "@overbookd/http";
+import { drives, type Drive } from "@overbookd/festival-event";
+import type {
+  ActivityGearSearchOptions,
+  PreviewForLogistic,
+} from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 import { FA_URL } from "@overbookd/web-page";
 import { downloadCsv } from "~/utils/file/download.utils";
+import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { openPageWithId } from "~/utils/navigation/router.utils";
 import {
   matchingSearchItems,
@@ -98,19 +123,39 @@ const activityHeaders: TableHeaders = [
 ];
 const gearHeaders: TableHeaders = [
   { title: "Responsable", value: "owner", sortable: true },
+  { title: "Catégorie", value: "category", sortable: true },
   { title: "Nom", value: "name", sortable: true },
   { title: "Quantité", value: "quantity", sortable: true },
   { title: "Lieu de stockage", value: "drive", sortable: true },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
+const gearFilters = reactive<FilterGear & { drive?: Drive }>({
+  search: "",
+  category: undefined,
+  team: undefined,
+  drive: undefined,
+});
+
+const fetchActivities = async () => {
+  loading.value = true;
+  const options: ActivityGearSearchOptions = {
+    search: gearFilters.search.trim() || undefined,
+    category: gearFilters.category?.path,
+    owner: gearFilters.team?.code,
+    drive: gearFilters.drive,
+  };
+  await faStore.fetchLogisticPreviews(options);
+  loading.value = false;
+};
+
 const activities = computed<PreviewForLogistic[]>(
   () => faStore.activities.forLogistic,
 );
 const loading = ref<boolean>(activities.value.length === 0);
-faStore.fetchLogisticPreviews().then(() => (loading.value = false));
+fetchActivities();
 
-const search = ref<string>("");
+const activitySearch = ref<string>("");
 
 const searchableActivities = computed<Searchable<PreviewForLogistic>[]>(() =>
   activities.value.map((fa) => ({
@@ -119,7 +164,7 @@ const searchableActivities = computed<Searchable<PreviewForLogistic>[]>(() =>
   })),
 );
 const filteredActivities = computed<PreviewForLogistic[]>(() =>
-  matchingSearchItems(searchableActivities.value, search.value),
+  matchingSearchItems(searchableActivities.value, activitySearch.value),
 );
 
 type CsvItem = {
@@ -128,6 +173,7 @@ type CsvItem = {
   faStatus: string;
   faTeam?: string;
   owner?: string;
+  category?: string;
   name: string;
   quantity: number;
   drive?: string;
@@ -147,6 +193,7 @@ const exportCsv = async () => {
       return inquiries.map((inquiry) => ({
         ...activity,
         owner: inquiry.owner,
+        category: inquiry.category,
         name: inquiry.name,
         quantity: inquiry.quantity,
         drive: inquiry.drive,
@@ -163,6 +210,7 @@ const exportCsv = async () => {
       "faStatus",
       "faTeam",
       "owner",
+      "category",
       "name",
       "quantity",
       "drive",
@@ -175,6 +223,7 @@ const exportCsv = async () => {
       ["faStatus", "Statut FA"],
       ["faTeam", "Equipe"],
       ["owner", "Responsable"],
+      ["category", "Catégorie"],
       ["name", "Nom"],
       ["quantity", "Quantité"],
       ["drive", "Lieu de stockage"],
@@ -187,10 +236,21 @@ const exportCsv = async () => {
 };
 </script>
 
-<style scoped>
-.filters {
+<style lang="scss" scoped>
+.dashboard {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  gap: $card-gap;
+
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &-additional {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+  }
 }
 </style>

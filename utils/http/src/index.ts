@@ -13,6 +13,7 @@ export type {
   PreviewForLogistic,
   PreviewForSecurity,
   PreviewForCommunication,
+  ActivityGearSearchOptions,
 } from "./festival-event/festival-activity.js";
 export type {
   Statistics,
