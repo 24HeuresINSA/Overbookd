@@ -70,3 +70,4 @@ export { countAssigneesInTeam } from "./count-assignees-in-team.js";
 export { AssignVolunteerFunnel } from "./assign-task-to-volunteer/funnel/assign-volunteer-funnel.js";
 export { ReadyToStart } from "./assign-task-to-volunteer/funnel/startup-funnel.js";
 export type { IActAsFunnel } from "./assign-task-to-volunteer/funnel/funnel.js";
+export { retrieveImplicitTeams } from "./candidate-teams.js";
