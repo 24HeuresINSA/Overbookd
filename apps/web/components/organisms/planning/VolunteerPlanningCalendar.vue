@@ -97,30 +97,12 @@
   </v-dialog>
 
   <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
-    <ConfirmationDialogCard
-      confirm-color="error"
-      abort-color="success"
-      @close="cancelBreakRemoval"
+    <DeleteBreakPeriodFialogCard
+      v-if="selectedBreak"
+      :selected-break="selectedBreak"
+      @close="closeBreakDialog"
       @confirm="removeBreak"
-    >
-      <template #title>Supprimer le créneau de pause</template>
-      <template #statement>
-        <div class="delete-statement">
-          <p>Tu vas supprimer la pause de</p>
-          <v-chip
-            color="primary"
-            variant="elevated"
-            class="assignment-metadata__chip"
-          >
-            <v-icon left>mdi-clock</v-icon>
-            <span>{{ selectedBreak?.toString() }}</span>
-          </v-chip>
-        </div>
-      </template>
-      <template #confirm-btn-content>
-        <v-icon left> mdi-delete-empty-outline </v-icon>Supprimer
-      </template>
-    </ConfirmationDialogCard>
+    />
   </v-dialog>
 </template>
 
@@ -290,9 +272,6 @@ const openBreakRemoval = (period: BreakEvent) => {
   selectedBreak.value = Period.init(period);
   isBreakRemovalDialogOpen.value = true;
 };
-const cancelBreakRemoval = () => {
-  isBreakRemovalDialogOpen.value = false;
-};
 
 const removeBreak = async () => {
   if (selectedBreak.value === null) return;
@@ -371,13 +350,5 @@ const removeBreak = async () => {
 
 .contacts > ul {
   padding-left: 2rem;
-}
-
-.delete-statement {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 </style>

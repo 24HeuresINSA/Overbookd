@@ -1,5 +1,5 @@
 <template>
-  <DialogCard @close="close">
+  <DialogCard @close="close" @enter="createBreakPeriod">
     <template #title> Ajouter un temps de pause au bénévole </template>
 
     <template #subtitle>
