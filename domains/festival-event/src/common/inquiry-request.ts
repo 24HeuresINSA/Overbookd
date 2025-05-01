@@ -24,6 +24,7 @@ export const NON_STOCKE = "Non stocké";
 export const QG_ORGA = "QG Orga";
 export const BACKLINE = "Backline";
 export const SALLE_CRLA = "Salle CRL-A Humanités";
+export const SALLE_CRLB = "Salle CRL-B Humanités";
 
 export type Drive =
   | typeof MAGASIN
@@ -51,7 +52,8 @@ export type Drive =
   | typeof NON_STOCKE
   | typeof QG_ORGA
   | typeof BACKLINE
-  | typeof SALLE_CRLA;
+  | typeof SALLE_CRLA
+  | typeof SALLE_CRLB;
 
 export const drives: Drive[] = [
   MAGASIN,
@@ -80,6 +82,7 @@ export const drives: Drive[] = [
   QG_ORGA,
   BACKLINE,
   SALLE_CRLA,
+  SALLE_CRLB,
 ];
 
 export type BaseInquiryRequest = {
