@@ -1,3 +1,9 @@
+## [3.46.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.2...v3.46.3) (2025-05-01)
+
+### Bug Fixes
+
+* **assignment:** prevent volunteer from being assigned to wrong team in orga-task [#2529](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2529) ([9dbffce](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9dbffce92722804e8aaaba7fb00553752557ea8e))
+
 ## [3.46.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.1...v3.46.2) (2025-05-01)
 
 ### Bug Fixes
