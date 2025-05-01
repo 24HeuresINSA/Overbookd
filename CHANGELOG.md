@@ -1,3 +1,9 @@
+## [3.46.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.3...v3.46.4) (2025-05-01)
+
+### Bug Fixes
+
+* **assignment:** takes into account the implicit teams in orga-task ([0ea5874](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0ea58743637895004d81caed3cb5b7f7c4dd547d))
+
 ## [3.46.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.2...v3.46.3) (2025-05-01)
 
 ### Bug Fixes
