@@ -1,5 +1,6 @@
 export const MAGASIN = "Magasin";
 export const LIVRE_PAR_LOGISTIQUE = "Livré par l'équipe logistique";
+export const LIVRE_PAR_TEAM_ELEC = "Livré par l'équipe élec";
 export const LIVRE_PAR_BAR = "Livré par l'équipe bar";
 export const LIVRE_PAR_COM = "Livré par une com";
 export const BENNE_COLLETTE_BESSON = "Benne Collette Besson";
@@ -23,10 +24,12 @@ export const NON_STOCKE = "Non stocké";
 export const QG_ORGA = "QG Orga";
 export const BACKLINE = "Backline";
 export const SALLE_CRLA = "Salle CRL-A Humanités";
+export const SALLE_CRLB = "Salle CRL-B Humanités";
 
 export type Drive =
   | typeof MAGASIN
   | typeof LIVRE_PAR_LOGISTIQUE
+  | typeof LIVRE_PAR_TEAM_ELEC
   | typeof LIVRE_PAR_BAR
   | typeof LIVRE_PAR_COM
   | typeof BENNE_COLLETTE_BESSON
@@ -49,11 +52,13 @@ export type Drive =
   | typeof NON_STOCKE
   | typeof QG_ORGA
   | typeof BACKLINE
-  | typeof SALLE_CRLA;
+  | typeof SALLE_CRLA
+  | typeof SALLE_CRLB;
 
 export const drives: Drive[] = [
   MAGASIN,
   LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_TEAM_ELEC,
   LIVRE_PAR_BAR,
   LIVRE_PAR_COM,
   BENNE_COLLETTE_BESSON,
@@ -77,6 +82,7 @@ export const drives: Drive[] = [
   QG_ORGA,
   BACKLINE,
   SALLE_CRLA,
+  SALLE_CRLB,
 ];
 
 export type BaseInquiryRequest = {
