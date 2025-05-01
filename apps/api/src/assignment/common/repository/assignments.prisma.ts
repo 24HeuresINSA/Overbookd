@@ -65,21 +65,34 @@ export class PrismaAssignments implements AssignmentRepository {
             inChargeInstruction: true,
             appointment: { select: SELECT_LOCATION },
             contacts: { select: { contact: { select: SELECT_CONTACT } } },
+            assignees: {
+              select: {
+                personalData: { select: SELECT_USER_IDENTIFIER },
+                assignment: true,
+              },
+            },
           },
         },
       },
+    });
+    const assignementPeriod = Period.init({
+      start: assignment.start,
+      end: assignment.end,
     });
     return {
       id: assignment.festivalTask.id,
       name: assignment.festivalTask.name,
       status: assignment.festivalTask.status,
       appointment: assignment.festivalTask.appointment,
-      contacts: assignment.festivalTask.contacts.map(({ contact }) => ({
-        id: contact.id,
-        firstname: contact.firstname,
-        lastname: contact.lastname,
-        phone: contact.phone,
-      })),
+      contacts: assignment.festivalTask.contacts.map(({ contact }) => contact),
+      assignees: assignment.festivalTask.assignees
+        .filter((assignee) =>
+          Period.init({
+            start: assignee.assignment.start,
+            end: assignee.assignment.end,
+          }).isOverlapping(assignementPeriod),
+        )
+        .map(({ personalData }) => personalData),
       globalInstructions: assignment.festivalTask.globalInstruction,
       inChargeInstructions: assignment.festivalTask.inChargeInstruction,
       timeWindow: {

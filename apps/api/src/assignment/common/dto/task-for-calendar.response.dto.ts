@@ -15,6 +15,9 @@ export class TaskForCalendarResponseDto implements TaskForCalendar {
   appointment: TaskForCalendar["appointment"];
 
   @ApiProperty({})
+  assignees: TaskForCalendar["assignees"];
+
+  @ApiProperty({})
   contacts: TaskForCalendar["contacts"];
 
   @ApiProperty({})

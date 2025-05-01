@@ -70,6 +70,14 @@
             </li>
           </ul>
         </div>
+        <div class="contacts">
+          <h3>Bénévoles affectés sur le créneau</h3>
+          <ul>
+            <li v-for="user in selectedTask.assignees" :key="user.id">
+              {{ buildUserNameWithNickname(user) }}
+            </li>
+          </ul>
+        </div>
         <div class="instructions">
           <h3>Instructions</h3>
           <div
