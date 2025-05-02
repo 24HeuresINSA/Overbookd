@@ -1,6 +1,12 @@
 <template>
   <v-card class="confirmation">
-    <v-btn class="close-btn" variant="flat" icon="mdi-close" @click="close" />
+    <v-btn
+      class="close-btn"
+      variant="flat"
+      icon="mdi-close"
+      density="compact"
+      @click="close"
+    />
     <v-card-title class="confirmation__title">
       <h2>
         <slot name="title">Confirmation</slot>
@@ -47,7 +53,6 @@ const confirm = () => emit("confirm");
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === "Enter") confirm();
-  if (e.key === "Escape") close();
 };
 
 onMounted(() => window.addEventListener("keydown", handleKeydown));
@@ -72,8 +77,8 @@ onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 
   .close-btn {
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: 8px;
+    right: 8px;
   }
 
   .btn-group {

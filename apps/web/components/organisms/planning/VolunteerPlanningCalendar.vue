@@ -108,7 +108,7 @@
     <DeleteBreakPeriodFialogCard
       v-if="selectedBreak"
       :selected-break="selectedBreak"
-      @close="closeBreakDialog"
+      @close="closeBreakRemovalDialog"
       @confirm="removeBreak"
     />
   </v-dialog>
@@ -280,7 +280,10 @@ const openBreakRemoval = (period: BreakEvent) => {
   selectedBreak.value = Period.init(period);
   isBreakRemovalDialogOpen.value = true;
 };
-
+const closeBreakRemovalDialog = () => {
+  selectedBreak.value = null;
+  isBreakRemovalDialogOpen.value = false;
+};
 const removeBreak = async () => {
   if (selectedBreak.value === null) return;
   const period = selectedBreak.value;
