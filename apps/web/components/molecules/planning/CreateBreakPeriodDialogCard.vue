@@ -17,6 +17,7 @@
           suffix="h"
           :rules="[isNumber, min(1)]"
           @update:model-value="castInDuration"
+          @keydown.enter.prevent="createBreakPeriod"
         />
       </form>
     </template>

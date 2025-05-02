@@ -51,7 +51,6 @@ const close = () => {
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === "Enter") emit("enter");
-  if (e.key === "Escape") emit("close");
 };
 
 onMounted(() => window.addEventListener("keydown", handleKeydown));
