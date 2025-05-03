@@ -1,3 +1,10 @@
+## [3.46.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.5...v3.46.6) (2025-05-03)
+
+### Bug Fixes
+
+* **assignment:** stay on selected volunteer planning when unassigning another volunteer. [#2537](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2537) ([9f86f93](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f86f93ef562bba1b776771c695225ed9cceb19e))
+* **breaks:** repair button, adjust confirmation dialog template and delete useless code [#2535](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2535) ([5838ae2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5838ae2cee2ce3c861616a0acad5874426e61988))
+
 ## [3.46.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.4...v3.46.5) (2025-05-01)
 
 ### Bug Fixes
