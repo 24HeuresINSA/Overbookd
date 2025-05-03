@@ -70,6 +70,10 @@ const unassignVolunteer = async (form: UnassignForm) => {
 };
 
 const refreshVolunteerData = async (volunteerId: number) => {
+  const isNotCurrentlySectedVolunteer =
+    volunteerId !== selectedVolunteer.value?.id;
+  if (isNotCurrentlySectedVolunteer) return;
+
   availabilitiesStore.clearVolunteerAvailabilities();
   await Promise.all([
     availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
