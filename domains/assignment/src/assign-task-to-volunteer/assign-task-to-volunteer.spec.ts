@@ -42,11 +42,7 @@ describe("Assign task to volunteer", () => {
   const assign = new AssignTaskToVolunteer(tasks, volunteers);
 
   describe("when listing all assignable tasks", async () => {
-    const tasks = await assign.tasks();
-
-    it("should return all tasks", () => {
-      expect(tasks).toHaveLength(taskList.length);
-    });
+    const assignableTasks = await assign.assignableTasks();
 
     describe.each`
       taskName                                                      | taskId                                                      | expectedTeams
@@ -59,11 +55,26 @@ describe("Assign task to volunteer", () => {
       "when listing missing assignment tasks with $taskName",
       ({ taskId, expectedTeams }) => {
         it("should contain task with missing teams", () => {
-          const foundTask = tasks.find((t) => t.id === taskId);
+          const foundTask = assignableTasks.find((t) => t.id === taskId);
           expect(foundTask?.teams).toMatchObject(expectedTeams);
         });
       },
     );
+    describe("when listing missing assignment tasks with fully assigned task", () => {
+      it("should not contain task", () => {
+        const foundTask = assignableTasks.find(
+          (task) => task.id === fullyAssignedTask.value.id,
+        );
+        expect(foundTask).toBeUndefined();
+      });
+    });
+  });
+
+  describe("when listing all tasks", async () => {
+    const allTasks = await assign.allTasksForAssignment();
+    it("should return all tasks", () => {
+      expect(allTasks).toHaveLength(taskList.length);
+    });
   });
 
   describe("when selecting a task to assign", () => {

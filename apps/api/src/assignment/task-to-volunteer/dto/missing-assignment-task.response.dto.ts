@@ -3,7 +3,7 @@ import { TaskForAssignment } from "@overbookd/assignment";
 import { Category } from "@overbookd/festival-event-constants";
 import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
 
-export class MissingAssignmentTaskResponseDto
+export class TaskForAssignmentResponseDto
   extends TaskIdentifierResponseDto
   implements TaskForAssignment
 {

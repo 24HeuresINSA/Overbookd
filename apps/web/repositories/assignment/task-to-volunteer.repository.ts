@@ -9,10 +9,15 @@ import { HttpClient } from "~/utils/http/http-client";
 export class TaskToVolunteerRepository {
   private static readonly basePath = "assignments/task-to-volunteer";
 
-  static getTasks() {
+  static getAssignableTasks() {
     return HttpClient.get<TaskForAssignment[]>({
-      path: `${this.basePath}/tasks`,
-      params: { all: true },
+      path: `${this.basePath}/assignableTasks`,
+    });
+  }
+
+  static getAllTasks() {
+    return HttpClient.get<TaskForAssignment[]>({
+      path: `${this.basePath}/allTasks`,
     });
   }
 
