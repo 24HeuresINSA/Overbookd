@@ -1,3 +1,10 @@
+## [3.46.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.6...v3.46.7) (2025-05-03)
+
+### Bug Fixes
+
+* **assignment:** display all teams with all FTs in task-orga [#2539](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2539) ([1f910c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f910c47625a5b5670dd0716a498aade837e981c))
+* **assignment:** propose not seen candidates on funnel task-orga [#2524](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2524) ([3a96efa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3a96efac65332ddb3938c401e514978eec847a6d))
+
 ## [3.46.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.5...v3.46.6) (2025-05-03)
 
 ### Bug Fixes
