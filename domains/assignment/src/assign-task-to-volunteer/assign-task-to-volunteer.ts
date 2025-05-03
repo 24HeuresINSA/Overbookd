@@ -99,12 +99,10 @@ export class AssignTaskToVolunteer {
   }
 
   private computeMissingAssignmentTeams(task: Task): TaskForAssignment {
-    const missingTeamMembers = new Set<string>();
-    task.assignments.forEach((assignment) => {
-      this.filterMissingTeamMembers(assignment).forEach((team) =>
-        missingTeamMembers.add(team),
-      );
-    });
+    const missingTeamMembers = task.assignments.reduce((teams, assignment) => {
+      const missingMembers = this.filterMissingTeamMembers(assignment);
+      return new Set([...teams, ...missingMembers]);
+    }, new Set<string>());
 
     return {
       id: task.id,
@@ -129,10 +127,11 @@ export class AssignTaskToVolunteer {
   }
 
   private computeAssignmentTeams(task: Task): TaskForAssignment {
-    const teams = new Set<string>();
-    task.assignments.forEach((assignment) => {
-      assignment.demands.forEach(({ team }) => teams.add(team));
-    });
+    const teams = new Set<string>(
+      task.assignments.flatMap((assignment) =>
+        assignment.demands.map(({ team }) => team),
+      ),
+    );
 
     return {
       id: task.id,
