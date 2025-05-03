@@ -23,6 +23,7 @@ import {
   collageParcoursF,
   rachid,
   nettoyerEspaceConcessions,
+  maintenanceToilettes,
 } from "./assign-volunteers-funnel.test-utils.js";
 import { CandidateFactory } from "./candidate.js";
 import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
@@ -555,6 +556,9 @@ describe("Assign volunteers funnel", () => {
       });
       it("should have both Ontaine and Tatouin as candidates", () => {
         expect(funnel.candidates).toHaveLength(3);
+        const ids = funnel.candidates.map((candidate) => candidate.id);
+        expect(ids).toContainEqual(ontaine.volunteer.id);
+        expect(ids).toContainEqual(tatouin.volunteer.id);
       });
       it.each`
         volunteerName                 | volunteer
@@ -755,7 +759,7 @@ describe("Assign volunteers funnel", () => {
     All of them are available during Nettoyer l'espace concessions,
     3 benevoles are demanded for Nettoyer l'espace concessions
     Nathan is already assigned as benevole,
-    Ambre is already selected as candidate
+    Bruce is already selected as candidate
   `, () => {
     let funnel: IActAsFunnel;
     beforeAll(async () => {
@@ -794,6 +798,47 @@ describe("Assign volunteers funnel", () => {
           const nextCandidate = await twoCandidatesFunnel.nextCandidate();
           expect(nextCandidate.candidates).not.toContainEqual(lastCandidate);
         });
+      });
+    });
+  });
+  describe(`
+    Given:
+      Bruce is benevole and friend with all Amanda, Léa and Rachid,
+      Amanda is benevole and friend with Bruce,
+      Rachid is benevole and friend with Bruce,
+      Léa is benevole and friend with Bruce,
+      All of them are available during Maintenance Toilettes,
+      3 benevoles are demanded for Maintenance Toilettes
+      Bruce is already selected as candidate
+    `, () => {
+    describe("when Rachid is added as candidate and Amanda is skipped by assigner", () => {
+      it("should propose Léa as next candidate", async () => {
+        const friends = new InMemoryFriends(
+          new Map([
+            [
+              bruce.volunteer.id,
+              [amanda.volunteer, rachid.volunteer, lea.volunteer],
+            ],
+            [amanda.volunteer.id, [bruce.volunteer]],
+            [rachid.volunteer.id, [bruce.volunteer]],
+            [lea.volunteer.id, [bruce.volunteer]],
+          ]),
+        );
+        const candidateFactory = new CandidateFactory(agendas, friends);
+        const assignments = new InMemoryAssignments(initialAssignments);
+        const funnel = await WaitingForVolunteer.init(
+          candidateFactory,
+          assignments,
+          maintenanceToilettes,
+        ).select(bruce.volunteer);
+
+        const withAmanda = await funnel.addCandidate();
+        const skippingAmanda = await withAmanda.nextCandidate();
+        const withRachid = await skippingAmanda.addCandidate();
+
+        expect(withRachid.candidates.at(-1)?.id).toStrictEqual(
+          lea.volunteer.id,
+        );
       });
     });
   });

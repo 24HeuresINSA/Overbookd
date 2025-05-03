@@ -347,10 +347,21 @@ export const collageParcoursF: Assignment = {
 export const nettoyerEspaceConcessions: Assignment = {
   start: sunday02hTo06h.start,
   end: sunday02hTo06h.end,
-  taskId: 7,
+  taskId: 10,
   mobilizationId: sunday02hTo06h.id,
   assignmentId: sunday02hTo06h.id,
   name: "Nettoyer L'espace concessions",
   demands: [{ team: BENEVOLE_CODE, demand: 3 }],
   assignees: [{ as: BENEVOLE_CODE, id: nathan.volunteer.id }],
+};
+
+export const maintenanceToilettes: Assignment = {
+  start: friday22hToSaturday00h.start,
+  end: friday22hToSaturday00h.end,
+  taskId: 11,
+  mobilizationId: friday22hToSaturday00h.id,
+  assignmentId: friday22hToSaturday00h.id,
+  name: "Maintenance Toilettes",
+  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  assignees: [],
 };

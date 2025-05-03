@@ -71,7 +71,21 @@ export abstract class CommonFunnel implements IActAsFunnel {
   }
 
   protected get friendsAbleToFulfillNextDemand(): AssignableVolunteer[] {
-    return this.assignableFriendsFrom(this._candidates);
+    const allAssignableFriends = this.assignableFriendsFrom(this._candidates);
+
+    const hasOnlyOneCandiate = this._candidates.length === 1;
+    if (hasOnlyOneCandiate) return allAssignableFriends;
+
+    const lastCandidate = this._candidates.at(-1);
+    if (lastCandidate === undefined) return allAssignableFriends;
+
+    const candidateIndex = this.friendsAssignableOnLastDemand.findIndex(
+      (friend) => friend.id === lastCandidate.json.id,
+    );
+
+    const notSeenCandidates = allAssignableFriends.slice(candidateIndex);
+    const skippedCandidates = allAssignableFriends.slice(0, candidateIndex);
+    return [...notSeenCandidates, ...skippedCandidates];
   }
 
   protected get friendsAssignableOnLastDemand(): AssignableVolunteer[] {
