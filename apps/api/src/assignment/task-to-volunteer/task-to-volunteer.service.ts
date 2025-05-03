@@ -10,8 +10,12 @@ import {
 export class TaskToVolunteerService {
   constructor(private readonly assign: AssignTaskToVolunteer) {}
 
-  async findTasks(): Promise<TaskForAssignment[]> {
-    return this.assign.tasks();
+  async findAssignableTasks(): Promise<TaskForAssignment[]> {
+    return this.assign.assignableTasks();
+  }
+
+  async findAllTasks(): Promise<TaskForAssignment[]> {
+    return this.assign.allTasksForAssignment();
   }
 
   async selectTask(taskId: TaskIdentifier["id"]) {

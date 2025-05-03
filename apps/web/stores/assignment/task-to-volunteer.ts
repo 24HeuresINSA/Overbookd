@@ -44,11 +44,16 @@ export const useAssignTaskToVolunteerStore = defineStore(
       assignmentDetails: null,
     }),
     actions: {
-      async fetchTasks() {
-        const res = await TaskToVolunteerRepository.getTasks();
+      async fetchAssignableTasks() {
+        const res = await TaskToVolunteerRepository.getAssignableTasks();
         if (isHttpError(res)) return;
-        const toAssign = res.filter((task) => task.teams.length > 0);
-        this.tasks = { all: res, toAssign };
+        this.tasks.toAssign = res;
+      },
+
+      async fetchAllTasks() {
+        const res = await TaskToVolunteerRepository.getAllTasks();
+        if (isHttpError(res)) return;
+        this.tasks.all = res;
       },
 
       async selectTask(taskId: number) {

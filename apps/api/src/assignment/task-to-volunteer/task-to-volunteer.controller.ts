@@ -24,7 +24,7 @@ import {
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { MissingAssignmentTaskResponseDto } from "./dto/missing-assignment-task.response.dto";
+import { TaskForAssignmentResponseDto } from "./dto/missing-assignment-task.response.dto";
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
@@ -44,15 +44,28 @@ export class TaskToVolunteerController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Get("tasks")
+  @Get("assignableTasks")
   @ApiResponse({
     status: 200,
     description: "All tasks with missing assignments",
-    type: MissingAssignmentTaskResponseDto,
+    type: TaskForAssignmentResponseDto,
     isArray: true,
   })
-  findTasks(): Promise<TaskForAssignment[]> {
-    return this.taskToVolunteer.findTasks();
+  findAssignableTasks(): Promise<TaskForAssignment[]> {
+    return this.taskToVolunteer.findAssignableTasks();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Get("allTasks")
+  @ApiResponse({
+    status: 200,
+    description: "All tasks",
+    type: TaskForAssignmentResponseDto,
+    isArray: true,
+  })
+  findAllTasks(): Promise<TaskForAssignment[]> {
+    return this.taskToVolunteer.findAllTasks();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

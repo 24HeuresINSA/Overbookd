@@ -36,15 +36,16 @@ export class AssignTaskToVolunteer {
     private readonly assignableVolunteers: AssignableVolunteers,
   ) {}
 
-  async tasks(): Promise<TaskForAssignment[]> {
+  async assignableTasks(): Promise<TaskForAssignment[]> {
     const tasks = await this.allTasks.findAll();
-
     return tasks
       .map((task) => this.computeMissingAssignmentTeams(task))
-      .map(({ teams, ...task }) => ({
-        ...task,
-        teams: removeDuplicates(teams),
-      }));
+      .filter((task) => task.teams.length > 0);
+  }
+
+  async allTasksForAssignment(): Promise<TaskForAssignment[]> {
+    const tasks = await this.allTasks.findAll();
+    return tasks.map((task) => this.computeAssignmentTeams(task));
   }
 
   async selectTask(
@@ -98,13 +99,10 @@ export class AssignTaskToVolunteer {
   }
 
   private computeMissingAssignmentTeams(task: Task): TaskForAssignment {
-    const missingTeamMembers = task.assignments.reduce(
-      (teams: string[], assignment) => {
-        const missingTeamMembers = this.filterMissingTeamMembers(assignment);
-        return [...teams, ...missingTeamMembers];
-      },
-      [],
-    );
+    const missingTeamMembers = task.assignments.reduce((teams, assignment) => {
+      const missingMembers = this.filterMissingTeamMembers(assignment);
+      return new Set([...teams, ...missingMembers]);
+    }, new Set<string>());
 
     return {
       id: task.id,
@@ -112,7 +110,7 @@ export class AssignTaskToVolunteer {
       topPriority: task.topPriority,
       category: task.category,
       inChargeTeam: task.inChargeTeam,
-      teams: Array.from(new Set(missingTeamMembers)),
+      teams: Array.from(missingTeamMembers),
     };
   }
 
@@ -126,6 +124,23 @@ export class AssignTaskToVolunteer {
         return countAssignees < demands;
       })
       .map(({ team }) => team);
+  }
+
+  private computeAssignmentTeams(task: Task): TaskForAssignment {
+    const teams = new Set<string>(
+      task.assignments.flatMap((assignment) =>
+        assignment.demands.map(({ team }) => team),
+      ),
+    );
+
+    return {
+      id: task.id,
+      name: task.name,
+      topPriority: task.topPriority,
+      category: task.category,
+      inChargeTeam: task.inChargeTeam,
+      teams: Array.from(teams),
+    };
   }
 
   private computeAssignmentsSummary(task: Task): TaskWithAssignmentsSummary {
@@ -153,8 +168,4 @@ export class AssignTaskToVolunteer {
       assignments,
     };
   }
-}
-
-function removeDuplicates(teams: string[]): string[] {
-  return Array.from(new Set(teams));
 }
