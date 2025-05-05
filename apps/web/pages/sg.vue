@@ -84,7 +84,7 @@ const totalConsumersAmount = computed<number>(() =>
   consumers.value.reduce((acc, consumer) => acc + consumer.amount, 0),
 );
 
-const closetStickPrice = ref<number>(60);
+const closetStickPrice = ref<number>(30);
 const caskStickPrice = computed<number>(() =>
   computeUnitPrice(totalPrice.value, totalConsumersAmount.value),
 );
