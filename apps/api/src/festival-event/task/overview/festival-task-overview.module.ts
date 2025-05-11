@@ -3,9 +3,9 @@ import { FestivalTaskOverviewService } from "./festival-task-overview.service";
 import { PrismaAdherents } from "../common/repository/adherents.prisma";
 import {
   CreateFestivalTask,
+  RemoveFestivalTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
-import { PrismaRemoveFestivalTasks } from "../common/repository/remove-festival-tasks.prisma";
 import { PrismaFestivalActivities } from "../common/repository/festival-activities.prisma";
 import { FestivalTaskCommonModule } from "../common/festival-task-common.module";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
@@ -18,7 +18,7 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
       useFactory: (
         create: CreateFestivalTask,
         view: ViewFestivalTask,
-        remove: PrismaRemoveFestivalTasks,
+        remove: RemoveFestivalTask,
         adherents: PrismaAdherents,
         festivalActivities: PrismaFestivalActivities,
         eventStore: DomainEventService,
@@ -31,7 +31,7 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
       inject: [
         CreateFestivalTask,
         ViewFestivalTask,
-        PrismaRemoveFestivalTasks,
+        RemoveFestivalTask,
         PrismaAdherents,
         PrismaFestivalActivities,
         DomainEventService,

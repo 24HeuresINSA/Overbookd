@@ -2,12 +2,12 @@ import { Injectable } from "@nestjs/common";
 import {
   Adherents,
   FestivalActivities,
-  RemoveFestivalTasks,
 } from "../common/festival-task-common.model";
 import {
   CreateFestivalTask,
   FestivalTask,
   FestivalTaskDraft,
+  RemoveFestivalTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
@@ -18,7 +18,7 @@ import { DomainEventService } from "../../../domain-event/domain-event.service";
 type UseCases = {
   create: Readonly<CreateFestivalTask>;
   view: Readonly<ViewFestivalTask>;
-  remove: Readonly<RemoveFestivalTasks>;
+  remove: Readonly<RemoveFestivalTask>;
 };
 
 type Repositories = {

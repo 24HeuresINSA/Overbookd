@@ -73,3 +73,10 @@ export class ForceUpdateError extends FestivalTaskError {
     return new ForceUpdateError(noApprovals);
   }
 }
+
+export class RemoveReadyToAssignError extends FestivalTaskError {
+  constructor(ftId: FestivalTask["id"]) {
+    const message = `Impossible de supprimer la fiche tâche #${ftId} car elle est déjà en cours d'affectation`;
+    super(message);
+  }
+}

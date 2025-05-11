@@ -18,7 +18,3 @@ export type Adherents = {
 export type Inquiries = {
   find(slug: string): Promise<Gear | null>;
 };
-
-export type RemoveFestivalTasks = {
-  apply(id: FestivalTask["id"]): Promise<void>;
-};

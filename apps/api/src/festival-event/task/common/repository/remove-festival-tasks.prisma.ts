@@ -1,18 +1,26 @@
-import { FestivalActivity } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  FestivalTasksForRemoval,
+} from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
-import { RemoveFestivalTasks } from "../festival-task-common.model";
 import { buildFestivalTaskCondition } from "./festival-task.query";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 
-export class PrismaRemoveFestivalTasks implements RemoveFestivalTasks {
+export class PrismaFestivalTasksForRemoval implements FestivalTasksForRemoval {
   constructor(private readonly prisma: PrismaService) {}
 
-  async apply(id: FestivalActivity["id"]): Promise<void> {
+  async findStatus(
+    id: FestivalTask["id"],
+  ): Promise<FestivalTask["status"] | null> {
+    const task = await this.prisma.festivalTask.findUnique({
+      where: buildFestivalTaskCondition(id),
+      select: { status: true },
+    });
+    return task?.status ?? null;
+  }
+
+  async one(id: FestivalTask["id"]): Promise<void> {
     await this.prisma.festivalTask.update({
-      where: {
-        ...buildFestivalTaskCondition(id),
-        NOT: { status: READY_TO_ASSIGN },
-      },
+      where: buildFestivalTaskCondition(id),
       data: { isDeleted: true },
     });
   }
