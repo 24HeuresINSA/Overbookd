@@ -148,15 +148,17 @@ const isMaximumVolunteerLimitReached = computed<boolean>(
 const downloadAllPlanningsInProgress = ref<boolean>(false);
 const downloadAllPlannings = async () => {
   downloadAllPlanningsInProgress.value = true;
-  await planningStore.downloadAllPdfPlannings(displayedVolunteers.value);
-  downloadAllPlanningsInProgress.value = false;
+  await planningStore
+    .downloadAllPdfPlannings(displayedVolunteers.value)
+    .finally(() => (downloadAllPlanningsInProgress.value = false));
 };
 
 const downloadBookletsInProgress = ref<boolean>(false);
 const downloadBooklets = async () => {
   downloadBookletsInProgress.value = true;
-  await planningStore.downloadBookletsPlannings(displayedVolunteers.value);
-  downloadBookletsInProgress.value = false;
+  await planningStore
+    .downloadBookletsPlannings(displayedVolunteers.value)
+    .finally(() => (downloadBookletsInProgress.value = false));
 };
 
 const emit = defineEmits(["close"]);
