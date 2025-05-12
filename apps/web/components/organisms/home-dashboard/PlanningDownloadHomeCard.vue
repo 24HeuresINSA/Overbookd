@@ -50,6 +50,7 @@
       <v-btn
         text="Télécharger mon planning PDF"
         color="secondary"
+        :loading="downloading"
         @click="exportPlanning"
       />
     </v-card-actions>
@@ -70,6 +71,7 @@ const HELP_LINK = {
 
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
+const downloading = ref(false);
 
 onMounted(async () => {
   await planningStore.fetchSubscriptionLink();
@@ -83,7 +85,10 @@ const copyToClipBoard = () => {
 
 const exportPlanning = async () => {
   if (!userStore.can(DOWNLOAD_PLANNING)) return;
-  await planningStore.downloadMyPdfPlanning();
+  downloading.value = true;
+  await planningStore
+    .downloadMyPdfPlanning()
+    .finally(() => (downloading.value = false));
 };
 </script>
 

@@ -36,6 +36,7 @@
           v-if="canDownloadPlanning"
           v-bind="props"
           :text="`Télécharger ${isMe ? 'mon' : 'le'} planning`"
+          :loading="downloading"
           prepend-icon="mdi-download"
           color="secondary"
         />
@@ -74,6 +75,7 @@ import type { User } from "@overbookd/user";
 
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
+const downloading = ref(false);
 
 const loggedUser = computed<User | undefined>(() => userStore.loggedUser);
 const selectedUser = computed<User | undefined>(() => userStore.selectedUser);
@@ -115,18 +117,32 @@ const copySyncLinkToClipboard = async () => {
   sendInfoNotification("Lien copié ✅");
 };
 
+const withLoader = (download: () => Promise<unknown>) => {
+  downloading.value = true;
+  return download().finally(() => (downloading.value = false));
+};
+
 const downloadPdf = () => {
-  if (isMe.value) return planningStore.downloadMyPdfPlanning();
-  return planningStore.downloadAllPdfPlannings([selectedUser.value!]);
+  const users = [selectedUser.value!];
+  const download = isMe.value
+    ? planningStore.downloadMyPdfPlanning()
+    : planningStore.downloadAllPdfPlannings(users);
+
+  return withLoader(() => download);
 };
 const downloadIcal = () => {
-  if (isMe.value) return planningStore.downloadMyIcalPlanning();
-  return planningStore.downloadIcalPlanning(selectedUser.value!.id);
+  const volunteerId = selectedUser.value!.id;
+  const download = isMe.value
+    ? planningStore.downloadMyIcalPlanning()
+    : planningStore.downloadIcalPlanning(volunteerId);
+
+  return withLoader(() => download);
 };
 const downloadBooklet = () => {
   if (!loggedUser.value) return;
+
   const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
-  return planningStore.downloadBookletPlanning(volunteer);
+  return withLoader(() => planningStore.downloadBookletPlanning(volunteer));
 };
 </script>
 
