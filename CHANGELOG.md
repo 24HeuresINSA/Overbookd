@@ -1,3 +1,10 @@
+## [3.46.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.7...v3.46.8) (2025-05-12)
+
+### Bug Fixes
+
+* **ft:** check status in domain for task removal [#2545](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2545) ([3369571](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3369571b46954962d7f2363e5d6b151b1def6998))
+* **sg:** set default stick price to 30 cents ([929a4f6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/929a4f6fdf92934761bdea7cb828d4dd8ba4ac77))
+
 ## [3.46.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.6...v3.46.7) (2025-05-03)
 
 ### Bug Fixes
