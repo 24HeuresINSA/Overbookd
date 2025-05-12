@@ -123,19 +123,24 @@ const safeDownload = (download: () => Promise<unknown>) => {
 };
 
 const downloadPdf = () => {
+  const users = [selectedUser.value!];
   const download = isMe.value
     ? planningStore.downloadMyPdfPlanning()
-    : planningStore.downloadAllPdfPlannings([selectedUser.value!]);
+    : planningStore.downloadAllPdfPlannings(users);
 
   return safeDownload(() => download);
 };
 const downloadIcal = () => {
-  if (isMe.value) return planningStore.downloadMyIcalPlanning();
   const volunteerId = selectedUser.value!.id;
-  return safeDownload(() => planningStore.downloadIcalPlanning(volunteerId));
+  const download = isMe.value
+    ? planningStore.downloadMyIcalPlanning()
+    : planningStore.downloadIcalPlanning(volunteerId);
+
+  return safeDownload(() => download);
 };
 const downloadBooklet = () => {
   if (!loggedUser.value) return;
+
   const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
   return safeDownload(() => planningStore.downloadBookletPlanning(volunteer));
 };
