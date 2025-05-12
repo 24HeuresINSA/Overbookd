@@ -11,10 +11,11 @@ import {
   EnableAssignment,
   FestivalTaskTranslator,
   PrepareFestivalTask,
+  RemoveFestivalTask,
   ReviewTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
-import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.prisma";
+import { PrismaFestivalTasksForRemoval } from "./repository/remove-festival-tasks.prisma";
 import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
 import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prisma";
@@ -145,10 +146,16 @@ import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignm
       ],
     },
     {
-      provide: PrismaRemoveFestivalTasks,
+      provide: PrismaFestivalTasksForRemoval,
       useFactory: (prisma: PrismaService) =>
-        new PrismaRemoveFestivalTasks(prisma),
+        new PrismaFestivalTasksForRemoval(prisma),
       inject: [PrismaService],
+    },
+    {
+      provide: RemoveFestivalTask,
+      useFactory: (remove: PrismaFestivalTasksForRemoval) =>
+        new RemoveFestivalTask(remove),
+      inject: [PrismaFestivalTasksForRemoval],
     },
     {
       provide: PrismaFestivalTasksForReview,
@@ -189,7 +196,7 @@ import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignm
     PrepareFestivalTask,
     ViewFestivalTask,
     AskForReviewTask,
-    PrismaRemoveFestivalTasks,
+    RemoveFestivalTask,
     ReviewTask,
     EnableAssignment,
   ],

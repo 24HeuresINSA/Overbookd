@@ -289,6 +289,8 @@ export {
   canIgnoreFestivalTaskAs,
 } from "./festival-task/review/review.js";
 export type { FestivalTasksForReview } from "./festival-task/review/review.js";
+export { RemoveFestivalTask } from "./festival-task/remove/remove.js";
+export type { FestivalTasksForRemoval } from "./festival-task/remove/remove.js";
 export type {
   ForceInstructions,
   ForceGlobalInstructions,
