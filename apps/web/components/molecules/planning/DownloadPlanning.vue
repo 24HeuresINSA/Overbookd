@@ -123,8 +123,11 @@ const safeDownload = (download: () => Promise<unknown>) => {
 };
 
 const downloadPdf = () => {
-  if (isMe.value) return planningStore.downloadMyPdfPlanning();
-  return safeDownload(planningStore.downloadMyPdfPlanning);
+  const download = isMe.value
+    ? planningStore.downloadMyPdfPlanning()
+    : planningStore.downloadAllPdfPlannings([selectedUser.value!]);
+
+  return safeDownload(() => download);
 };
 const downloadIcal = () => {
   if (isMe.value) return planningStore.downloadMyIcalPlanning();
