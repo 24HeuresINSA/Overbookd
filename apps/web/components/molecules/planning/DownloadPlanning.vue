@@ -117,7 +117,7 @@ const copySyncLinkToClipboard = async () => {
   sendInfoNotification("Lien copié ✅");
 };
 
-const safeDownload = (download: () => Promise<unknown>) => {
+const withLoader = (download: () => Promise<unknown>) => {
   downloading.value = true;
   return download().finally(() => (downloading.value = false));
 };
@@ -128,7 +128,7 @@ const downloadPdf = () => {
     ? planningStore.downloadMyPdfPlanning()
     : planningStore.downloadAllPdfPlannings(users);
 
-  return safeDownload(() => download);
+  return withLoader(() => download);
 };
 const downloadIcal = () => {
   const volunteerId = selectedUser.value!.id;
@@ -136,13 +136,13 @@ const downloadIcal = () => {
     ? planningStore.downloadMyIcalPlanning()
     : planningStore.downloadIcalPlanning(volunteerId);
 
-  return safeDownload(() => download);
+  return withLoader(() => download);
 };
 const downloadBooklet = () => {
   if (!loggedUser.value) return;
 
   const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
-  return safeDownload(() => planningStore.downloadBookletPlanning(volunteer));
+  return withLoader(() => planningStore.downloadBookletPlanning(volunteer));
 };
 </script>
 
