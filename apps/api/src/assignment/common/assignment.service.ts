@@ -16,6 +16,7 @@ import {
 export type AssignmentRepository = Assignments & {
   findOneForCalendar(
     identifier: AssignmentIdentifier,
+    volunteerId: number,
   ): Promise<TaskForCalendar>;
   findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
@@ -34,8 +35,9 @@ export class AssignmentService {
 
   async findOneForCalendar(
     identifier: AssignmentIdentifier,
+    volunteerId: number,
   ): Promise<TaskForCalendar> {
-    return this.assignments.findOneForCalendar(identifier);
+    return this.assignments.findOneForCalendar(identifier, volunteerId);
   }
 
   async findOne<T extends boolean>(

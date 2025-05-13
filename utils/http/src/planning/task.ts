@@ -12,6 +12,6 @@ export type Task = {
 export type TaskForCalendar = Task & {
   contacts: FestivalTask["instructions"]["contacts"];
   assignees: User[];
-  globalInstructions: FestivalTask["instructions"]["global"];
-  inChargeInstructions: FestivalTask["instructions"]["inCharge"]["instruction"];
+  globalInstruction: FestivalTask["instructions"]["global"];
+  inChargeInstruction: FestivalTask["instructions"]["inCharge"]["instruction"];
 };

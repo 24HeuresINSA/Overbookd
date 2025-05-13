@@ -21,10 +21,10 @@ export class TaskForCalendarResponseDto implements TaskForCalendar {
   contacts: TaskForCalendar["contacts"];
 
   @ApiProperty({})
-  globalInstructions: TaskForCalendar["globalInstructions"];
+  globalInstruction: TaskForCalendar["globalInstruction"];
 
   @ApiProperty({})
-  inChargeInstructions: TaskForCalendar["inChargeInstructions"];
+  inChargeInstruction: TaskForCalendar["inChargeInstruction"];
 
   @ApiProperty({})
   timeWindow: TaskForCalendar["timeWindow"];

@@ -46,6 +46,7 @@ export class PrismaAssignments implements AssignmentRepository {
 
   async findOneForCalendar(
     identifier: AssignmentIdentifier,
+    volunteerId: number,
   ): Promise<TaskForCalendar> {
     const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
@@ -65,6 +66,10 @@ export class PrismaAssignments implements AssignmentRepository {
             status: true,
             globalInstruction: true,
             inChargeInstruction: true,
+            inChargeVolunteers: {
+              select: { volunteerId: true },
+              where: { volunteerId },
+            },
             appointment: { select: SELECT_LOCATION },
             contacts: { select: { contact: { select: SELECT_CONTACT } } },
             assignees: {
@@ -77,17 +82,21 @@ export class PrismaAssignments implements AssignmentRepository {
         },
       },
     });
-    const assignementPeriod = Period.init({
-      start: assignment.start,
-      end: assignment.end,
-    });
-    return {
-      id: assignment.festivalTask.id,
-      name: assignment.festivalTask.name,
-      status: assignment.festivalTask.status,
-      appointment: assignment.festivalTask.appointment,
-      contacts: assignment.festivalTask.contacts.map(({ contact }) => contact),
-      assignees: assignment.festivalTask.assignees
+    const { start, end, festivalTask } = assignment;
+    const {
+      id,
+      name,
+      status,
+      appointment,
+      contacts,
+      assignees,
+      globalInstruction,
+      inChargeVolunteers,
+      inChargeInstruction,
+    } = festivalTask;
+    const assignementPeriod = Period.init({ start, end });
+    const uniqueAssignees = new Set(
+      assignees
         .filter((assignee) =>
           Period.init({
             start: assignee.assignment.start,
@@ -95,13 +104,18 @@ export class PrismaAssignments implements AssignmentRepository {
           }).isOverlapping(assignementPeriod),
         )
         .map(({ personalData }) => personalData),
-      globalInstructions: assignment.festivalTask.globalInstruction,
-      inChargeInstructions: assignment.festivalTask.inChargeInstruction,
-      timeWindow: {
-        id: assignment.id,
-        start: assignment.start,
-        end: assignment.end,
-      },
+    );
+    return {
+      id,
+      name,
+      status,
+      appointment,
+      contacts: contacts.map(({ contact }) => contact),
+      assignees: Array.from(uniqueAssignees),
+      globalInstruction,
+      inChargeInstruction:
+        inChargeVolunteers.length > 0 ? inChargeInstruction : null,
+      timeWindow: { id: assignment.id, start, end },
     };
   }
 

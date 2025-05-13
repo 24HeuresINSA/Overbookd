@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request as RequestDecorator,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -33,6 +34,7 @@ import {
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
+import { RequestWithUserPayload } from "../../app.controller";
 import {
   AssignmentResponseDto,
   NamelyDemandedDto,
@@ -89,9 +91,11 @@ export class AssignmentController {
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
+    @RequestDecorator() request: RequestWithUserPayload,
   ): Promise<TaskForCalendar> {
+    const volunteerId = request.user.id;
     const identifier = { taskId, mobilizationId, assignmentId };
-    return this.assignment.findOneForCalendar(identifier);
+    return this.assignment.findOneForCalendar(identifier, volunteerId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
