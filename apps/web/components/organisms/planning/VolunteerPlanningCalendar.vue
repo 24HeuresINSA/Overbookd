@@ -81,14 +81,14 @@
         <div class="instructions">
           <h3>Instructions</h3>
           <div
-            v-html-safe="selectedTask.globalInstructions"
+            v-html-safe="selectedTask.globalInstruction"
             class="instructions__text"
           />
         </div>
-        <div v-if="selectedTask.inChargeInstructions" class="instructions">
+        <div v-if="selectedTask.inChargeInstruction" class="instructions">
           <h3>Instructions pour les responsables</h3>
           <div
-            v-html-safe="selectedTask.inChargeInstructions"
+            v-html-safe="selectedTask.inChargeInstruction"
             class="instructions__text"
           />
         </div>
