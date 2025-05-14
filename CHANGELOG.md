@@ -1,3 +1,10 @@
+## [3.46.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.8...v3.46.9) (2025-05-14)
+
+### Bug Fixes
+
+* **planning:** add loader when downloading planning. [#2546](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2546) ([bce422b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bce422bfbc54ec4d97f1c0ad3d1a389736a10bee))
+* **planning:** fix displayed in charge instructions [#2548](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2548) ([47c727e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/47c727e1e357ee190a48ca625f9ff5a330ce5cc5))
+
 ## [3.46.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.7...v3.46.8) (2025-05-12)
 
 ### Bug Fixes
