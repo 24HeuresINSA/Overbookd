@@ -1,3 +1,9 @@
+## [3.47.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.9...v3.47.0) (2025-05-15)
+
+### Features
+
+* **planning:** add the five D method [#2544](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2544) [#2550](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2550) ([54cb00e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/54cb00ee68592e7be9060279fb96ebdb2b00bb5d))
+
 ## [3.46.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.8...v3.46.9) (2025-05-14)
 
 ### Bug Fixes
