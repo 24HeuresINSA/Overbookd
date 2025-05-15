@@ -212,7 +212,7 @@ const showTooltip = ref<boolean>(false);
 
 const headers = [
   { title: "Actions", value: "actions" },
-  { title: "Date de canidature", value: "candidatedAt", sortable: true },
+  { title: "Date de candidature", value: "candidatedAt", sortable: true },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Nom", value: "name" },
   { title: "Équipes", value: "teams", sortable: true },
