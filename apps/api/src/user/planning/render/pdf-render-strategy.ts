@@ -27,6 +27,7 @@ import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import { GeoCoordinates } from "ics";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
 import { fixEmojis } from "./pdf/fix-emojis";
+import { FiveDMethod } from "./pdf/five-d-method";
 
 class PdfException extends Error {}
 
@@ -234,6 +235,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     const securityPlan = SecurityPlan.generatePage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
     const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
+    const fiveDMethod = this.generateFiveDMethod();
     const talkieFrequencies = this.generateTalkieFrequencies(teams);
     return [
       introductionPage,
@@ -241,7 +243,12 @@ export class PdfRenderStrategy implements RenderStrategy {
       talkieFrequencies,
       ...assignments,
       ...cocktailPurpleWorkflows,
+      ...fiveDMethod,
     ];
+  }
+
+  private generateFiveDMethod(): Content[] {
+    return [...FiveDMethod.generateWorkflow()];
   }
 
   private generatePurpleCocktailWorkflows(): Content[] {
