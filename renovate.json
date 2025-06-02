@@ -16,9 +16,9 @@
     "enabled": true
   },
   "gitlabci": {
-    "fileMatch": [
-      "\\.gitlab-ci\\.ya?ml$",
-      "\\.gitlab/ci/.*\\.gitlab-ci\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.gitlab-ci\\.ya?ml$/",
+      "/\\.gitlab/ci/.*\\.gitlab-ci\\.ya?ml$/"
     ]
   },
   "rangeStrategy": "pin",
@@ -120,10 +120,10 @@
       "customType": "regex",
       "description": "Update pnpm version on gitlabci file",
       "datasourceTemplate": "npm",
-      "fileMatch": [
-        "^\\.gitlab/ci/.*\\.gitlab-ci.ya?ml$",
-        "^apps/.*/[Dd]ockerfile$",
-        "^docker/[Dd]ockerfile$"
+      "managerFilePatterns": [
+        "/^\\.gitlab/ci/.*\\.gitlab-ci.ya?ml$/",
+        "/^apps/.*/[Dd]ockerfile$/",
+        "/^docker/[Dd]ockerfile$/"
       ],
       "matchStrings": [
         "\\s*npm install -g (?<depName>.*?)@(?<currentValue>[^\\s]+)"
