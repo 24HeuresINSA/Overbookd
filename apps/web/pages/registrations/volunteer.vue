@@ -304,8 +304,9 @@ const cancelCandidateRejection = (candidateId: number) => {
 };
 
 const willBeMinorAtEvent = ({ birthdate }: VolunteerCandidate): boolean => {
+  const MAJORITY_AGE = 18;
   const majorityDate = new Date(
-    birthdate.getFullYear() + 18,
+    birthdate.getFullYear() + MAJORITY_AGE,
     birthdate.getMonth(),
     birthdate.getDate(),
   );
