@@ -31,7 +31,7 @@
           color="secondary"
           rounded="pill"
           density="comfortable"
-          @click="exportCSv"
+          @click="exportCSV"
         />
       </v-card-title>
       <v-card-text>
@@ -92,19 +92,17 @@
               <v-btn
                 v-if="!displayRejectedCandidates"
                 icon="mdi-check"
-                size="large"
                 color="success"
                 rounded="pill"
-                density="compact"
+                density="comfortable"
                 @click.stop="enrollCandidate(item)"
               />
               <v-btn
                 v-if="!displayRejectedCandidates"
                 icon="mdi-cancel"
-                size="large"
                 color="error"
                 rounded="pill"
-                density="compact"
+                density="comfortable"
                 @click.stop="rejectCandidate(item.id)"
               />
               <v-btn
@@ -124,7 +122,16 @@
           </template>
 
           <template #item.name="{ item }">
-            {{ buildUserNameWithNickname(item) }}
+            <span class="candidate-name">
+              {{ buildUserNameWithNickname(item) }}
+              <v-icon
+                v-if="willBeMinorAtEvent(item)"
+                v-tooltip:top="'Sera mineur·e à la manif'"
+                icon="mdi-teddy-bear"
+                color="error"
+                size="large"
+              />
+            </span>
           </template>
 
           <template #item.teams="{ item }">
@@ -213,8 +220,8 @@ const showTooltip = ref<boolean>(false);
 const headers = [
   { title: "Actions", value: "actions" },
   { title: "Date de candidature", value: "candidatedAt", sortable: true },
-  { title: "Charisme", value: "charisma", sortable: true },
   { title: "Nom", value: "name" },
+  { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams", sortable: true },
   { title: "Email", value: "email" },
   { title: "Téléphone", value: "phone" },
@@ -296,7 +303,16 @@ const cancelCandidateRejection = (candidateId: number) => {
   closeCandidateInfoDialogue();
 };
 
-const exportCSv = async () => {
+const willBeMinorAtEvent = ({ birthdate }: VolunteerCandidate): boolean => {
+  const majorityDate = new Date(
+    birthdate.getFullYear() + 18,
+    birthdate.getMonth(),
+    birthdate.getDate(),
+  );
+  return majorityDate > configurationStore.eventStartDate;
+};
+
+const exportCSV = async () => {
   if (displayRejectedCandidates.value)
     await membershipApplicationStore.fetchVolunteerCandidates();
   else await membershipApplicationStore.fetchRejectedVolunteerCandidates();
@@ -420,6 +436,12 @@ const handleMouseEnter = () => {
 
 .actions {
   display: flex;
+  gap: 5px;
+}
+
+.candidate-name {
+  display: flex;
+  align-items: center;
   gap: 5px;
 }
 </style>
