@@ -1,4 +1,4 @@
-$divider-bottom-height: 5px;
+$divider-margin-bottom: 4px;
 $navigation-item-margin-horizontal: 5px;
 $navigation-item-unfolded-margin-right: 15px;
 
@@ -35,5 +35,6 @@ $navigation-item-unfolded-margin-right: 15px;
 .divider {
   margin-left: $navigation-item-margin-horizontal;
   margin-right: $navigation-item-margin-horizontal;
-  margin-bottom: 4px;
+  margin-bottom: $divider-margin-bottom;
+  opacity: 0.25;
 }

@@ -14,6 +14,7 @@
     />
     <v-divider
       v-show="favoritePages.length > 0 && nonFavoritePages.length > 0"
+      :thickness="3"
       class="divider"
     />
     <SideNavPageItem
@@ -96,7 +97,8 @@ const propagateClick = () => emit("click");
 
 $navigation-search-height: 63px;
 $navigation-item-height: 50px;
-$help-items-height: $navigation-item-height * 2 + $divider-bottom-height;
+$divider-height: 3px + $divider-margin-bottom;
+$help-items-height: $navigation-item-height * 2 + $divider-height;
 
 .navigation-pages {
   overflow-y: auto !important;
