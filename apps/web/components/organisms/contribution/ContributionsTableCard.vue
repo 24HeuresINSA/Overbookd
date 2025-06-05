@@ -176,12 +176,6 @@ const exportAdherentsToCsv = () => {
   align-items: center;
   gap: 20px;
   margin: 10px 20px;
-  &__input {
-    flex: 1;
-  }
-  &__button {
-    min-width: 250px;
-  }
 
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;

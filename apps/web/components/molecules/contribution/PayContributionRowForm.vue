@@ -4,6 +4,7 @@
       v-model="amount"
       :min="MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS"
       density="compact"
+      class="payment-form__input"
       hide-label
       hide-details
     />
@@ -11,6 +12,7 @@
       text="Valider le paiement"
       color="primary"
       :disabled="isAmountInvalid"
+      class="payment-form__button"
       @click="payContribution"
     />
   </div>
@@ -46,9 +48,15 @@ const payContribution = () => {
 .payment-form {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
+    &__input,
+    &__button {
+      width: 100%;
+    }
   }
 }
 </style>
