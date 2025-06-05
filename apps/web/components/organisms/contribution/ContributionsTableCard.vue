@@ -32,6 +32,14 @@
             color="secondary"
             @click="toggleOutToDateCustomers"
           />
+          <v-btn
+            class="filters__button"
+            text="Exporter les cotisants"
+            prepend-icon="mdi-export"
+            color="tertiary"
+            :loading="validLoading"
+            @click="exportAdherentsToCsv"
+          />
         </div>
       </template>
 
@@ -63,6 +71,9 @@ import {
 import type { Team } from "@overbookd/team";
 import { keepMembersOf } from "~/utils/search/search-team.utils";
 import { HARD_CODE, ORGA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { downloadCsv } from "~/utils/file/download.utils";
+import { CSVBuilder } from "@overbookd/csv";
+import { Money } from "@overbookd/money";
 
 const contributionStore = useContributionStore();
 const layoutStore = useLayoutStore();
@@ -132,6 +143,27 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
     );
   },
 );
+
+const exportAdherentsToCsv = () => {
+  if (validLoading.value) return;
+  const adherentsWithAmountInEuros = contributionStore.validAdherents.map(
+    (adherent) => ({
+      ...adherent,
+      amount: Money.cents(adherent.amount).inEuros,
+    }),
+  );
+  const csv = CSVBuilder.from(adherentsWithAmountInEuros)
+    .select(["firstname", "lastname", "nickname", "amount", "email"])
+    .translate([
+      ["firstname", "Prénom"],
+      ["lastname", "Nom"],
+      ["nickname", "Surnom"],
+      ["amount", "Montant (€)"],
+      ["email", "Email"],
+    ])
+    .build();
+  downloadCsv("cotisants", csv);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -145,6 +177,15 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
   }
   &__button {
     min-width: 250px;
+  }
+
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    gap: 10px;
+    &__input,
+    &__button {
+      width: 100%;
+    }
   }
 }
 </style>

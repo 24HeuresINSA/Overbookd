@@ -47,10 +47,13 @@ const removeContribution = () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .payment-form {
   display: flex;
   align-items: center;
   gap: 1rem;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 </style>
