@@ -46,5 +46,6 @@ const openReportBugDialog = () => emit("report-bug");
   position: fixed;
   bottom: 0;
   width: 100%;
+  padding-top: 2px;
 }
 </style>

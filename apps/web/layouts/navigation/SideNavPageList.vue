@@ -96,9 +96,8 @@ const propagateClick = () => emit("click");
 @use "./side-nav-list.scss" as *;
 
 $navigation-search-height: 63px;
-$navigation-item-height: 50px;
+$help-items-height: 104px;
 $divider-height: 2px + $divider-margin-bottom;
-$help-items-height: $navigation-item-height * 2 + $divider-height;
 
 .navigation-pages {
   overflow-y: auto !important;
