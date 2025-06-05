@@ -107,7 +107,7 @@ const closeDetails = () => {
   display: flex;
   gap: 20px;
   margin-top: 5px;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     gap: 10px;
   }
@@ -115,7 +115,7 @@ const closeDetails = () => {
     display: flex;
     gap: 15px;
     align-items: center;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       flex-direction: column;
       gap: 10px;
       * {

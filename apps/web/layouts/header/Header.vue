@@ -75,7 +75,7 @@ const watermarkTooltipDescription = computed<string>(() =>
 
     .page-title {
       display: none;
-      @media only screen and (max-width: $mobile-max-width) {
+      @media screen and (max-width: $mobile-max-width) {
         display: block;
         font-size: 1.15rem;
         font-weight: 500;
@@ -88,7 +88,7 @@ const watermarkTooltipDescription = computed<string>(() =>
       font-size: 2.8rem;
       font-weight: 500;
       line-height: 1;
-      @media only screen and (max-width: $mobile-max-width) {
+      @media screen and (max-width: $mobile-max-width) {
         display: none;
       }
     }

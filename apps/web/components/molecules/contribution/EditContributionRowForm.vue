@@ -55,18 +55,5 @@ const removeContribution = () => {
 </script>
 
 <style lang="scss" scoped>
-.payment-form {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 5px;
-    &__input,
-    &__button {
-      width: 100%;
-    }
-  }
-}
+@use "./contribution-row-form.scss" as *;
 </style>

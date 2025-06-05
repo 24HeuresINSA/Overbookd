@@ -27,18 +27,18 @@
             hide-details
           />
           <v-btn
-            class="filters__button"
             :text="toggleBtnLabel"
             :prepend-icon="toggleBtnIcon"
             color="secondary"
+            class="filters__button"
             @click="toggleOutToDateCustomers"
           />
           <v-btn
-            class="filters__button"
             text="Exporter les cotisants"
             prepend-icon="mdi-export"
             color="tertiary"
             :loading="validLoading"
+            class="filters__button desktop-only"
             @click="exportAdherentsToCsv"
           />
         </div>

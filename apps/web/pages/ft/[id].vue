@@ -209,7 +209,7 @@ $side-nav-width: calc(350px + $sidebar-margin);
   display: flex;
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .task {
     flex-direction: column;
     overflow-y: scroll;

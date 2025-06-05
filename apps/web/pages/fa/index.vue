@@ -315,7 +315,7 @@ onUnmounted(() => {
   }
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .activity {
     &__listing {
       margin: 0;

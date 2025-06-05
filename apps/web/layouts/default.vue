@@ -131,7 +131,7 @@ $background-color: rgb(var(--v-theme-background));
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     background: $background-color;
   }
 }
@@ -143,7 +143,7 @@ $background-color: rgb(var(--v-theme-background));
   width: 100%;
   height: 100%;
   overflow: hidden;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     padding-bottom: $bottom-nav-height;
   }
 
@@ -164,7 +164,7 @@ $background-color: rgb(var(--v-theme-background));
     border-top: 1px solid $background-color;
     border-left: 1px solid $background-color;
 
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       padding: $mobile-content-padding;
       border-top-right-radius: $main-page-border-radius;
       border-left: none;

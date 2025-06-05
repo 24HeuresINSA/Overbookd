@@ -122,7 +122,7 @@ const hasThirdColumn = computed<boolean>(
   display: flex;
   flex-wrap: wrap;
   gap: $card-gap;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     gap: $card-gap;
   }

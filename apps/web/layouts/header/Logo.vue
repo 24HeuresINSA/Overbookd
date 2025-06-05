@@ -60,7 +60,7 @@ const onClick = () => {
     .logo {
       max-width: 200px;
       max-height: 51px;
-      @media only screen and (max-width: $mobile-max-width) {
+      @media screen and (max-width: $mobile-max-width) {
         max-height: 46px;
       }
     }
@@ -70,7 +70,7 @@ const onClick = () => {
       font-weight: 600;
       font-size: 0.9rem;
       color: rgb(var(--v-theme-on-surface));
-      @media only screen and (max-width: $mobile-max-width) {
+      @media screen and (max-width: $mobile-max-width) {
         display: none;
       }
     }

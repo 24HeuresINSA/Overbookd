@@ -381,7 +381,7 @@ const openCalendar = (volunteerId: number) => {
     max-height: 160px;
     font-size: 120px;
   }
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     .profile-picture {
       max-width: 100px;
       max-height: 100px;

@@ -170,7 +170,7 @@ article {
   flex-grow: 1;
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .activity {
     flex-direction: column;
     overflow-y: scroll;

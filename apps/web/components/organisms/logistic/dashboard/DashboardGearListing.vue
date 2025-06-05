@@ -112,7 +112,7 @@ const closeGearDetails = () => {
     user-select: none;
     z-index: 1;
     opacity: 0.75;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       display: none;
     }
   }

@@ -72,7 +72,7 @@ const isOdd = (num: number): boolean => num % 2 === 1;
     background-color: rgb(var(--v-theme-background));
     border-radius: 0 0 5px 5px;
     padding: 2px;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       &.desktop {
         display: none;
       }

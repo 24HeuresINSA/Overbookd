@@ -234,7 +234,7 @@ const save = async () => {
   .v-text-field {
     flex: 1;
   }
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     gap: 5px;
   }

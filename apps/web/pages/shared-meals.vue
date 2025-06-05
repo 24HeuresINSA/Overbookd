@@ -47,7 +47,7 @@ mealSharingStore.fetchAll();
   display: none;
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .desktop {
     display: none;
   }
