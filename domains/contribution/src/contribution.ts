@@ -27,4 +27,5 @@ export type Adherent = {
   lastname: string;
   nickname?: string;
   email: string;
+  teams: string[];
 };

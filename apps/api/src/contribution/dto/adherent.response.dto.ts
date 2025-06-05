@@ -32,4 +32,11 @@ export class AdherentResponseDto implements Adherent {
     type: String,
   })
   email: string;
+
+  @ApiProperty({
+    description: "Adherent teams",
+    type: String,
+    isArray: true,
+  })
+  teams: string[];
 }

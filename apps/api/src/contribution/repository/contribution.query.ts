@@ -1,5 +1,8 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
+import {
+  SELECT_TEAMS_CODE,
+  SELECT_USER_IDENTIFIER,
+} from "../../common/query/user.query";
 
 export const WHERE_CAN_PAY_CONTRIBUTION = {
   teams: {
@@ -15,5 +18,6 @@ export const WHERE_CAN_PAY_CONTRIBUTION = {
 
 export const SELECT_ADHERENT = {
   ...SELECT_USER_IDENTIFIER,
+  ...SELECT_TEAMS_CODE,
   email: true,
 };
