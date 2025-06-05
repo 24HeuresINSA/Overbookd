@@ -336,12 +336,12 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     width: 100%;
     overflow: hidden;
     padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: 4px;
 
     #name {
       font-size: 1.2rem;
       font-weight: normal;
-      color: rgb(89, 89, 89);
+      opacity: 0.7;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -372,7 +372,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 30px 0 25px 0;
+    margin: 25px 0;
     height: 300;
 
     .icon {
