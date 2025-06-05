@@ -28,7 +28,8 @@
           />
           <v-btn
             class="filters__button"
-            :text="toggleBtnLabbel"
+            :text="toggleBtnLabel"
+            :prepend-icon="toggleBtnIcon"
             color="secondary"
             @click="toggleOutToDateCustomers"
           />
@@ -100,7 +101,10 @@ const displayOutToDateCustomers = ref<boolean>(true);
 const toggleOutToDateCustomers = () => {
   displayOutToDateCustomers.value = !displayOutToDateCustomers.value;
 };
-const toggleBtnLabbel = computed<string>(() =>
+const toggleBtnIcon = computed<string>(() =>
+  displayOutToDateCustomers.value ? "mdi-cash" : "mdi-cash-off",
+);
+const toggleBtnLabel = computed<string>(() =>
   displayOutToDateCustomers.value
     ? "Afficher les cotisants"
     : "Afficher les non cotisants",
