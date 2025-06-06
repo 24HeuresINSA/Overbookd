@@ -1,6 +1,6 @@
 <template>
   <v-list class="navigation-list help-items" density="compact" nav>
-    <v-divider class="divider" />
+    <v-divider class="divider" :thickness="2" />
     <v-list-item
       prepend-icon="mdi-help-circle"
       class="navigation-item"
@@ -46,5 +46,6 @@ const openReportBugDialog = () => emit("report-bug");
   position: fixed;
   bottom: 0;
   width: 100%;
+  padding-top: 2px;
 }
 </style>
