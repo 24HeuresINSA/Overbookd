@@ -5,6 +5,7 @@ import type {
   StaffApplication,
 } from "@overbookd/http";
 import type { CandidateToEnroll } from "@overbookd/registration";
+import type { IProvidePeriod } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class MembershipApplicationRepository {
@@ -99,6 +100,13 @@ export class MembershipApplicationRepository {
   static cancelVolunteerCandidateRejection(candidateId: number) {
     return HttpClient.post<void>(
       `${this.basePath}/volunteers/${candidateId}/cancel-rejection`,
+    );
+  }
+
+  static saveBriefingTimeWindow(period: IProvidePeriod) {
+    return HttpClient.post<void>(
+      `${this.basePath}/briefing-time-window`,
+      period,
     );
   }
 }
