@@ -1,12 +1,6 @@
-import {
-  InitOverDate,
-  Hour,
-  OverDate,
-  ONE_HOUR_IN_MS,
-  Period,
-} from "@overbookd/time";
+import { Hour, OverDate, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 import { SHIFT_HOURS } from "./shift.constant.js";
-import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
+import { Duration } from "@overbookd/time";
 
 export class AvailabilityDate extends OverDate {
   static fromOverDate(date: OverDate): AvailabilityDate {
@@ -17,27 +11,15 @@ export class AvailabilityDate extends OverDate {
     return new AvailabilityDate(definition);
   }
 
-  static init({ date, hour }: InitOverDate) {
-    const isOdd = hour % 2 !== 0;
-    const happenOutsideNightShift = happenOutsidePartyShift(hour);
-    if (isOdd && happenOutsideNightShift) {
-      throw new AvailabilityDateOddHourError();
-    }
-
-    const definition = OverDate.defineFrom({ date, hour });
-
-    return new AvailabilityDate(definition);
-  }
-
   get period(): Period {
     const start = this.date;
-    const end = new Date(this.date.getTime() + this.perdiodDuration);
+    const end = this.plus(this.periodDuration).date;
     return Period.init({ start, end });
   }
 
-  private get perdiodDuration(): number {
+  private get periodDuration(): Duration {
     const durationInHours = happenOutsidePartyShift(this.hour) ? 2 : 1;
-    return durationInHours * ONE_HOUR_IN_MS;
+    return Duration.ms(durationInHours * ONE_HOUR_IN_MS);
   }
 }
 
