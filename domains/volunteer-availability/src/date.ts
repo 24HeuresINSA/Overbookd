@@ -1,5 +1,6 @@
 import { Hour, OverDate, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 import { SHIFT_HOURS } from "./shift.constant.js";
+import { Duration } from "@overbookd/time";
 
 export class AvailabilityDate extends OverDate {
   static fromOverDate(date: OverDate): AvailabilityDate {
@@ -12,13 +13,13 @@ export class AvailabilityDate extends OverDate {
 
   get period(): Period {
     const start = this.date;
-    const end = new Date(this.date.getTime() + this.perdiodDuration);
+    const end = this.plus(this.periodDuration).date;
     return Period.init({ start, end });
   }
 
-  private get perdiodDuration(): number {
+  private get periodDuration(): Duration {
     const durationInHours = happenOutsidePartyShift(this.hour) ? 2 : 1;
-    return durationInHours * ONE_HOUR_IN_MS;
+    return Duration.ms(durationInHours * ONE_HOUR_IN_MS);
   }
 }
 
