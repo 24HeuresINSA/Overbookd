@@ -26,6 +26,7 @@
         </div>
       </template>
     </FestivalEventSidebar>
+
     <article class="container">
       <FtGeneralCard id="general" :disabled="isValidatedOrReadyToAssign" />
       <ParentFaCard id="fa" @open:calendar="openCalendar" />
