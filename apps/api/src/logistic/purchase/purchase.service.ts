@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   CancelPurchase,
   Gear,
@@ -17,7 +17,7 @@ export type Gears = {
 
 export type PurchasesForView = {
   findAll(): Promise<Purchase[]>;
-  findOne(id: Purchase["id"]): Promise<Purchase>;
+  findOne(id: Purchase["id"]): Promise<Purchase | undefined>;
 };
 
 type Repositories = {
@@ -38,33 +38,31 @@ export class PurchaseService {
     private readonly repositories: Repositories,
   ) {}
 
-  async findAll(): Promise<Purchase[]> {
+  findAll(): Promise<Purchase[]> {
     return this.repositories.views.findAll();
   }
 
   async findOne(id: Purchase["id"]): Promise<Purchase> {
-    return this.repositories.views.findOne(id);
+    const purchase = await this.repositories.views.findOne(id);
+    if (!purchase) throw new NotFoundException(`Achat ${id} introuvable`);
+    return purchase;
   }
 
-  async initPurchase(form: InitPurchaseForm): Promise<Purchase> {
+  initPurchase(form: InitPurchaseForm): Promise<Purchase> {
     return this.useCases.init.apply(form);
   }
 
-  async planPurchase(
-    id: Purchase["id"],
-    form: PlanPurchaseForm,
-  ): Promise<Purchase> {
+  planPurchase(id: Purchase["id"], form: PlanPurchaseForm): Promise<Purchase> {
     const seller = form.seller ? { seller: form.seller } : {};
     const availableOn = form.availableOn
       ? { availableOn: form.availableOn }
       : {};
 
     const purchase = { ...seller, ...availableOn };
-
     return this.useCases.plan.update(id, purchase);
   }
 
-  async cancelPurchase(id: Purchase["id"]): Promise<void> {
+  cancelPurchase(id: Purchase["id"]): Promise<void> {
     return this.useCases.cancel.apply(id);
   }
 
@@ -78,10 +76,7 @@ export class PurchaseService {
     return this.useCases.plan.addGear(id, { ...gear, quantity });
   }
 
-  async removeGear(
-    id: Purchase["id"],
-    slug: GearRequest["slug"],
-  ): Promise<Purchase> {
+  removeGear(id: Purchase["id"], slug: GearRequest["slug"]): Promise<Purchase> {
     return this.useCases.plan.removeGear(id, slug);
   }
 }

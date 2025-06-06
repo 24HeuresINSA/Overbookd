@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   Borrow,
   CancelBorrow,
@@ -17,7 +17,7 @@ export type Gears = {
 
 export type BorrowsForView = {
   findAll(): Promise<Borrow[]>;
-  findOne(id: Borrow["id"]): Promise<Borrow>;
+  findOne(id: Borrow["id"]): Promise<Borrow | undefined>;
 };
 
 type UseCases = {
@@ -38,19 +38,21 @@ export class BorrowService {
     private readonly repositories: Repositories,
   ) {}
 
-  async findAll(): Promise<Borrow[]> {
+  findAll(): Promise<Borrow[]> {
     return this.repositories.views.findAll();
   }
 
   async findOne(id: Borrow["id"]): Promise<Borrow> {
-    return this.repositories.views.findOne(id);
+    const borrow = await this.repositories.views.findOne(id);
+    if (!borrow) throw new NotFoundException(`Emprunt ${id} introuvable`);
+    return borrow;
   }
 
-  async initBorrow(form: InitBorrowForm): Promise<Borrow> {
+  initBorrow(form: InitBorrowForm): Promise<Borrow> {
     return this.useCases.init.apply(form);
   }
 
-  async planBorrow(id: Borrow["id"], form: PlanBorrowForm): Promise<Borrow> {
+  planBorrow(id: Borrow["id"], form: PlanBorrowForm): Promise<Borrow> {
     const lender = form.lender ? { lender: form.lender } : {};
     const availableOn = form.availableOn
       ? { availableOn: form.availableOn }
@@ -67,7 +69,7 @@ export class BorrowService {
     return this.useCases.plan.update(id, borrow);
   }
 
-  async cancelBorrow(id: Borrow["id"]): Promise<void> {
+  cancelBorrow(id: Borrow["id"]): Promise<void> {
     return this.useCases.cancel.apply(id);
   }
 
@@ -81,7 +83,7 @@ export class BorrowService {
     return this.useCases.plan.addGear(id, { ...gear, quantity });
   }
 
-  async removeGearRequest(
+  removeGearRequest(
     id: Borrow["id"],
     slug: GearRequest["slug"],
   ): Promise<Borrow> {
