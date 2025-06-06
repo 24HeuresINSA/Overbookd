@@ -79,7 +79,7 @@ const forceSave = () => emit("force-save", modifiedInstructions.value);
   gap: 25px;
   justify-content: right;
 
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     margin: 0 0 10px 0;
     flex-direction: column;
     gap: 5px;

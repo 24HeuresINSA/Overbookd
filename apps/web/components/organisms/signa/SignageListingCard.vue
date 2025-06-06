@@ -219,7 +219,7 @@ const filterSignagesByType = (
     text-align: center;
   }
 
-  @media only screen and (min-width: $mobile-max-width) {
+  @media screen and (min-width: $mobile-max-width) {
     flex-direction: row;
     &__field {
       width: 50%;

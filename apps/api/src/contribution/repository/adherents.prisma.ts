@@ -1,7 +1,7 @@
 import { Adherents } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
 import { Adherent } from "@overbookd/contribution";
-import { SELECT_ADHERENT } from "../contribution.query";
+import { SELECT_ADHERENT } from "./contribution.query";
 
 export class PrismaAdherents implements Adherents {
   constructor(private readonly prisma: PrismaService) {}

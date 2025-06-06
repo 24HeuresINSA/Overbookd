@@ -27,10 +27,19 @@
             hide-details
           />
           <v-btn
-            class="filters__button"
-            :text="toggleBtnLabbel"
+            :text="toggleBtnLabel"
+            :prepend-icon="toggleBtnIcon"
             color="secondary"
+            class="filters__button"
             @click="toggleOutToDateCustomers"
+          />
+          <v-btn
+            text="Exporter les cotisants"
+            prepend-icon="mdi-export"
+            color="tertiary"
+            :loading="validLoading"
+            class="filters__button desktop-only"
+            @click="exportAdherentsToCsv"
           />
         </div>
       </template>
@@ -63,6 +72,9 @@ import {
 import type { Team } from "@overbookd/team";
 import { keepMembersOf } from "~/utils/search/search-team.utils";
 import { HARD_CODE, ORGA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { downloadCsv } from "~/utils/file/download.utils";
+import { CSVBuilder } from "@overbookd/csv";
+import { Money } from "@overbookd/money";
 
 const contributionStore = useContributionStore();
 const layoutStore = useLayoutStore();
@@ -89,7 +101,10 @@ const displayOutToDateCustomers = ref<boolean>(true);
 const toggleOutToDateCustomers = () => {
   displayOutToDateCustomers.value = !displayOutToDateCustomers.value;
 };
-const toggleBtnLabbel = computed<string>(() =>
+const toggleBtnIcon = computed<string>(() =>
+  displayOutToDateCustomers.value ? "mdi-cash" : "mdi-cash-off",
+);
+const toggleBtnLabel = computed<string>(() =>
   displayOutToDateCustomers.value
     ? "Afficher les cotisants"
     : "Afficher les non cotisants",
@@ -132,6 +147,27 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
     );
   },
 );
+
+const exportAdherentsToCsv = () => {
+  if (validLoading.value) return;
+  const adherentsWithAmountInEuros = contributionStore.validAdherents.map(
+    (adherent) => ({
+      ...adherent,
+      amount: Money.cents(adherent.amount).inEuros,
+    }),
+  );
+  const csv = CSVBuilder.from(adherentsWithAmountInEuros)
+    .select(["firstname", "lastname", "nickname", "amount", "email"])
+    .translate([
+      ["firstname", "Prénom"],
+      ["lastname", "Nom"],
+      ["nickname", "Surnom"],
+      ["amount", "Montant (€)"],
+      ["email", "Email"],
+    ])
+    .build();
+  downloadCsv("cotisants", csv);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -140,11 +176,14 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
   align-items: center;
   gap: 20px;
   margin: 10px 20px;
-  &__input {
-    flex: 1;
-  }
-  &__button {
-    min-width: 250px;
+
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    gap: 10px;
+    &__input,
+    &__button {
+      width: 100%;
+    }
   }
 }
 </style>

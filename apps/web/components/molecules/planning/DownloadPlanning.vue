@@ -151,7 +151,7 @@ const downloadBooklet = () => {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     margin: 5px 3% 15px 3%;
   }

@@ -97,7 +97,7 @@ h2 {
   gap: 5px;
   margin-bottom: 15px;
 
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     align-self: flex-start;
     gap: 10px;

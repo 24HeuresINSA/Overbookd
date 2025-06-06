@@ -214,7 +214,7 @@ const saveTransactions = async () => {
   &__consumer-table {
     width: 70%;
   }
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     &__settings,
     &__consumer-table {

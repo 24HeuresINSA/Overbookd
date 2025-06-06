@@ -4,6 +4,7 @@
       v-model="amount"
       :min="MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS"
       density="compact"
+      class="payment-form__input"
       hide-label
       hide-details
     />
@@ -11,9 +12,15 @@
       text="Modifier"
       color="primary"
       :disabled="isAmountInvalid"
+      class="payment-form__button"
       @click="editContribution"
     />
-    <v-btn text="Supprimer" color="tertiary" @click="removeContribution" />
+    <v-btn
+      text="Supprimer"
+      color="tertiary"
+      class="payment-form__button"
+      @click="removeContribution"
+    />
   </div>
 </template>
 
@@ -47,10 +54,6 @@ const removeContribution = () => {
 };
 </script>
 
-<style scoped>
-.payment-form {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+<style lang="scss" scoped>
+@use "./contribution-row-form.scss" as *;
 </style>

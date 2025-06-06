@@ -18,6 +18,7 @@ const lea: Member = {
   nickname: "Shogosse",
   permissions: [PAY_CONTRIBUTION],
   teams: [],
+  email: "lea.mauyno@example.com",
 };
 const noel: Member = {
   id: 2,
@@ -25,6 +26,7 @@ const noel: Member = {
   lastname: "Ertsemud",
   permissions: [PAY_CONTRIBUTION],
   teams: ["hard", "vieux"],
+  email: "noel.ertsemud@example.com",
 };
 const tatouin: Member = {
   id: 3,
@@ -32,6 +34,7 @@ const tatouin: Member = {
   lastname: "Jesoph",
   permissions: [],
   teams: ["vieux"],
+  email: "tatouin.jesoph@example.com",
 };
 const adherents: Member[] = [lea, noel, tatouin];
 

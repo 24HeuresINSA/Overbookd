@@ -335,7 +335,7 @@ onUnmounted(() => {
   }
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .task {
     &__listing {
       margin: 0;

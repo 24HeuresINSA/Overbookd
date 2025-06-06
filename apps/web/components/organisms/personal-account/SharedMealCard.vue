@@ -185,7 +185,7 @@ const toggleShotguns = () => {
     align-items: center;
     font-size: smaller;
   }
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     align-items: start;
     padding-right: unset;
@@ -200,7 +200,7 @@ const toggleShotguns = () => {
   display: flex;
   gap: 15px;
   align-items: center;
-  @media only screen and (max-width: $mobile-max-width) {
+  @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     align-items: center;
     min-width: 100%;

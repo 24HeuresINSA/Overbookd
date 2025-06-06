@@ -434,7 +434,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
   }
 }
 
-@media only screen and (max-width: $mobile-max-width) {
+@media screen and (max-width: $mobile-max-width) {
   .sidebar {
     width: 100%;
     height: fit-content;

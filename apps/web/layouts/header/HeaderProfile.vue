@@ -172,7 +172,7 @@ $header-profile-max-width: 300px;
     max-width: $header-profile-max-width;
     height: 100%;
     cursor: pointer;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       min-width: unset;
       margin-right: 5px;
     }
@@ -186,7 +186,7 @@ $header-profile-max-width: 300px;
   &__information {
     display: flex;
     flex-direction: column;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       display: none;
     }
   }
@@ -202,7 +202,7 @@ $header-profile-max-width: 300px;
   }
   .extend-icon {
     transition: transform 0.3s ease;
-    @media only screen and (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       display: none;
     }
   }

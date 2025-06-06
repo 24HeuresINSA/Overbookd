@@ -218,7 +218,7 @@ const cancel = () => emit("import-done");
 .file-import {
   margin: 15px auto 0 auto;
 
-  @media only screen and (min-width: $mobile-max-width) {
+  @media screen and (min-width: $mobile-max-width) {
     width: 75%;
   }
 }
