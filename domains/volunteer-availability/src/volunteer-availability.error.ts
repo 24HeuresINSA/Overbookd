@@ -35,12 +35,6 @@ export class AvailabilityPeriodsJointError extends AvailabilityError {
   }
 }
 
-export class AvailabilityDateOddHourError extends AvailabilityError {
-  constructor() {
-    super(AVAILABILITY_ERROR_MESSAGES.ODD_HOUR);
-  }
-}
-
 function buildOddHourError() {
   const startShift = displayHour(SHIFT_HOURS.PARTY);
   const endShift = displayHour(SHIFT_HOURS.NIGHT);

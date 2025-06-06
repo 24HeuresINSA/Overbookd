@@ -1,25 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { DateString } from "@overbookd/time";
-import { AvailabilityDateOddHourError } from "./volunteer-availability.error.js";
 import { AvailabilityDate } from "./date.js";
 
 const friday: DateString = "2024-05-17";
 
 describe("AvailabilityDate [Paris based date]", () => {
-  describe("when trying to select odd hour outside party shift", () => {
-    it.each`
-      date      | hour  | shift
-      ${friday} | ${11} | ${"day"}
-      ${friday} | ${7}  | ${"night"}
-    `(
-      "should indicate that we can't select odd hour during $shift shift",
-      ({ date, hour }) => {
-        expect(() => AvailabilityDate.init({ date, hour })).toThrow(
-          AvailabilityDateOddHourError,
-        );
-      },
-    );
-  });
   describe("Generate associated period", () => {
     describe.each`
       date      | hour  | start                      | end
