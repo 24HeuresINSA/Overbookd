@@ -43,6 +43,12 @@ onMounted(() => {
 });
 onBeforeUnmount(() => clearInterval(timer.value));
 
+const currentPositionInPercentage = computed<number>(() => {
+  const startMs = timelineStore.start.getTime();
+  const endMs = startMs + period.value.duration.inMilliseconds;
+  return percentBetween(now.value.getTime(), startMs, endMs);
+});
+
 const markers = computed<string[]>(() => {
   const periodDuration = period.value.duration.inMilliseconds;
   const stepDuration = periodDuration / (NB_MARKERS - 1);
@@ -51,12 +57,6 @@ const markers = computed<string[]>(() => {
     const date = new Date(startMs + i * stepDuration);
     return formatDateWithHoursAndMinutesOnly(date);
   });
-});
-
-const currentPositionInPercentage = computed<number>(() => {
-  const startMs = timelineStore.start.getTime();
-  const endMs = startMs + period.value.duration.inMilliseconds;
-  return percentBetween(Date.now(), startMs, endMs);
 });
 </script>
 
