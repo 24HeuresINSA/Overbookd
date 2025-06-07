@@ -12,8 +12,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -50,15 +48,12 @@ import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -72,11 +67,10 @@ import { FestivalEventErrorFilter } from "../../common/festival-event-error.filt
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":faId/feedbacks")
   @HttpCode(200)
@@ -110,7 +104,6 @@ export class FestivalActivityReviewController {
     return this.reviewService.addFeedback(faId, user, feedback);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":faId/ask-for-review")
   @ApiResponse({
@@ -138,7 +131,6 @@ export class FestivalActivityReviewController {
     return this.reviewService.toReview(faId, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
   @Post(":faId/approve")
   @HttpCode(200)
@@ -172,7 +164,6 @@ export class FestivalActivityReviewController {
     return this.reviewService.approve(faId, jwt, team);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
   @Post(":faId/reject")
   @HttpCode(200)

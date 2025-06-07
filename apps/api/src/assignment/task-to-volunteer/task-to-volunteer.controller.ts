@@ -6,14 +6,7 @@ import {
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TaskToVolunteerService } from "./task-to-volunteer.service";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import {
@@ -28,21 +21,17 @@ import { TaskForAssignmentResponseDto } from "./dto/missing-assignment-task.resp
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("assignments/task-to-volunteer")
 @Controller("assignments/task-to-volunteer")
 @UseFilters(AssignmentErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class TaskToVolunteerController {
   constructor(private readonly taskToVolunteer: TaskToVolunteerService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get("assignableTasks")
   @ApiResponse({
@@ -55,7 +44,6 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.findAssignableTasks();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get("allTasks")
   @ApiResponse({
@@ -68,7 +56,6 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.findAllTasks();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get("tasks/:id")
   @ApiResponse({
@@ -87,7 +74,6 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.selectTask(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignable-volunteers",

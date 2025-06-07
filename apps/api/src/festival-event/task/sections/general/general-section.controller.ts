@@ -10,8 +10,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiBody,
   ApiParam,
   ApiResponse,
@@ -28,21 +26,17 @@ import { FestivalTask } from "@overbookd/festival-event";
 import { GeneralRequestDto } from "./dto/update-general.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Patch(":id/general")
   @ApiResponse({

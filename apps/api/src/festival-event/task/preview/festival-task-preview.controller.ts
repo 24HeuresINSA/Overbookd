@@ -8,8 +8,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -27,15 +25,12 @@ import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-t
 import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-task-refused.response.dto";
 import { PreviewFestivalTaskValidatedResponseDto } from "./dto/preview-festival-task-validated.response.dto";
 import { RequestWithUserPayload } from "../../../app.controller";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-tasks")
 @ApiExtraModels(
   PreviewFestivalTaskDraftResponseDto,
   PreviewFestivalTaskInReviewResponseDto,
@@ -43,11 +38,10 @@ import { RequestWithUserPayload } from "../../../app.controller";
   PreviewFestivalTaskValidatedResponseDto,
 )
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-tasks")
+@ApiSwaggerResponse()
 export class FestivalTaskPreviewController {
   constructor(private readonly previewService: FestivalTaskPreviewService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
   @Get()
   @ApiResponse({
@@ -67,7 +61,6 @@ export class FestivalTaskPreviewController {
     return this.previewService.findForAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
   @Get("mine")
   @ApiResponse({

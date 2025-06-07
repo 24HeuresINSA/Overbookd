@@ -6,14 +6,7 @@ import {
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { VolunteerToTaskService } from "./volunteer-to-task.service";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
@@ -24,21 +17,17 @@ import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentSummaryWithTask } from "@overbookd/http";
 import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("assignments/volunteer-to-task")
 @Controller("assignments/volunteer-to-task")
 @UseFilters(AssignmentErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class VolunteerToTaskController {
   constructor(private readonly volunteerToTask: VolunteerToTaskService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers")
   @ApiResponse({
@@ -51,7 +40,6 @@ export class VolunteerToTaskController {
     return this.volunteerToTask.findVolunteers();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers/:volunteerId/assignments")
   @ApiResponse({

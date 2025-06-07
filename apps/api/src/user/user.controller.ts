@@ -17,15 +17,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiResponse,
-  ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { randomUUID } from "crypto";
 import { diskStorage } from "multer";
 import { join } from "path";
@@ -59,12 +51,12 @@ import { UserIdentifierResponseDto } from "../common/dto/user-identifier.respons
 import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
 import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiTags("users")
 @Controller("users")
-@ApiBadRequestResponse({
-  description: "Bad Request",
-})
+@ApiBearerAuth()
+@ApiSwaggerResponse()
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -73,16 +65,9 @@ export class UserController {
     private readonly teamService: TeamService,
   ) {}
 
+  @Get("volunteers")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(VIEW_VOLUNTEER)
-  @ApiUnauthorizedResponse({
-    description: "User dont have the right to access this route",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
-  @Get("/volunteers")
   @ApiResponse({
     status: 200,
     description: "Get all volunteers",
@@ -95,16 +80,9 @@ export class UserController {
     return this.userService.getVolunteers(new JwtUtil(user));
   }
 
+  @Get("adherents")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(VIEW_VOLUNTEER)
-  @ApiUnauthorizedResponse({
-    description: "User dont have the right to access this route",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
-  @Get("/adherents")
   @ApiResponse({
     status: 200,
     description: "Get all adherents",
@@ -115,9 +93,8 @@ export class UserController {
     return this.userService.getAdherents();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get("me")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get a current user",
@@ -129,9 +106,8 @@ export class UserController {
     return this.userService.getMyInformation(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Patch("me")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Updated current user",
@@ -148,9 +124,8 @@ export class UserController {
     return this.userService.updateMyInformation(req.user, userData);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Post("me/approve-eula")
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -162,10 +137,9 @@ export class UserController {
     return this.userService.approveEndUserLicenceAgreement(req.user);
   }
 
+  @Get("personal-account-consumers")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
-  @ApiBearerAuth()
-  @Get("personal-account-consumers")
   @ApiResponse({
     status: 200,
     description: "Get all consumers",
@@ -176,10 +150,9 @@ export class UserController {
     return this.userService.getAllPersonalAccountConsumers();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
   @Get(":id")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get a user by id",
@@ -192,10 +165,9 @@ export class UserController {
     return this.userService.getById(id, new JwtUtil(user));
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_PLANNING)
   @Get(":id/mobilizations")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Get mobilizations a volunteer is required on",
@@ -208,10 +180,9 @@ export class UserController {
     return this.planningService.getMobilizationsHeIsPartOf(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_PLANNING)
   @Get(":id/assignments")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Get tasks a volunteer is assigned to",
@@ -224,10 +195,9 @@ export class UserController {
     return this.userService.getVolunteerAssignments(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @Get(":id/assignments/stats")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get duration of assignments for a volunteer",
@@ -240,9 +210,8 @@ export class UserController {
     return this.userService.getVolunteerAssignmentStats(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Put(":id")
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     description: "New user information",
     type: UpdateUserRequestDto,
@@ -260,11 +229,10 @@ export class UserController {
     return this.userService.updateUser(targetUserId, user, req.user);
   }
 
-  @UseFilters(ForgetMemberErrorFilter)
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_USERS)
   @Delete(":id")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_USERS)
+  @UseFilters(ForgetMemberErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -277,9 +245,8 @@ export class UserController {
     return this.userService.deleteUser(userId, new JwtUtil(req.user));
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Post("me/profile-picture")
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -312,9 +279,8 @@ export class UserController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get(":userId/profile-picture")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get a user profile picture",
@@ -325,10 +291,9 @@ export class UserController {
     return this.profilePictureService.streamProfilePicture(userId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(AFFECT_TEAM)
   @Patch(":userId/teams")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_TEAM)
   @ApiResponse({
     status: 200,
     description: "User's teams",
@@ -340,7 +305,7 @@ export class UserController {
     type: String,
     isArray: true,
   })
-  async joinTeams(
+  joinTeams(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() teams: string[],
     @RequestDecorator() req: RequestWithUserPayload,
@@ -349,16 +314,15 @@ export class UserController {
     return this.teamService.as(me).user(userId).joins(teams);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(AFFECT_TEAM)
   @Delete(":userId/teams/:teamCode")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_TEAM)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Remove a team from a user",
   })
-  async leaveTeam(
+  leaveTeam(
     @Param("userId", ParseIntPipe) userId: number,
     @Param("teamCode") team: string,
     @RequestDecorator() req: RequestWithUserPayload,

@@ -12,8 +12,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiResponse,
   ApiBody,
   ApiParam,
@@ -47,21 +45,17 @@ import {
   RejectRequestDto,
 } from "./dto/review.request.dto";
 import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class FestivalTaskReviewController {
   constructor(private readonly reviewService: FestivalTaskReviewService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/feedbacks")
   @HttpCode(200)
@@ -93,7 +87,6 @@ export class FestivalTaskReviewController {
     return this.reviewService.publishFeedback(ftId, user, feedback);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/ask-for-review")
   @ApiResponse({
@@ -114,7 +107,6 @@ export class FestivalTaskReviewController {
     return this.reviewService.toReview(ftId, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FT)
   @Post(":ftId/reject")
   @HttpCode(200)
@@ -142,7 +134,6 @@ export class FestivalTaskReviewController {
     return this.reviewService.reject(ftId, jwt, reject);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FT)
   @Post(":ftId/approve")
   @HttpCode(200)
@@ -176,7 +167,6 @@ export class FestivalTaskReviewController {
     return this.reviewService.approve(ftId, jwt, approve);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FT)
   @Post(":ftId/ignore")
   @HttpCode(200)
@@ -210,7 +200,6 @@ export class FestivalTaskReviewController {
     return this.reviewService.ignore(ftId, jwt, ignore);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @Post(":ftId/enable-assignment")
   @HttpCode(200)

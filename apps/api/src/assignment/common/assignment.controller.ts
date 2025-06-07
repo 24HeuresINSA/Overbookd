@@ -15,8 +15,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiBody,
@@ -47,26 +45,22 @@ import { DisplayableAssignmentResponseDto } from "./dto/displayable-assignment.r
 import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
 import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("assignments")
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 @ApiTags("assignments")
-@Controller("assignments")
 @UseFilters(AssignmentErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 @ApiExtraModels(NamelyDemandedDto, TeamMemberDto)
 export class AssignmentController {
   constructor(private readonly assignment: AssignmentService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_PLANNING)
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/for-calendar",
   )
+  @Permission(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Assignment For Calendar",
@@ -98,9 +92,8 @@ export class AssignmentController {
     return this.assignment.findOneForCalendar(identifier, volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
   @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Assignment",
@@ -142,9 +135,8 @@ export class AssignmentController {
     return this.assignment.findOne(identifier, withDetails === "true");
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers/:volunteerId/assignments")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer assignments",
@@ -162,9 +154,8 @@ export class AssignmentController {
     return this.assignment.findAllFor(volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers/:volunteerId/planning")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer planning",
@@ -182,9 +173,8 @@ export class AssignmentController {
     return this.assignment.getPlanning(volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
   @Post()
+  @Permission(AFFECT_VOLUNTEER)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -201,11 +191,10 @@ export class AssignmentController {
     return this.assignment.assign(volunteersForAssignment);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
   @Delete(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignees/:assigneeId",
   )
+  @Permission(AFFECT_VOLUNTEER)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -241,10 +230,8 @@ export class AssignmentController {
     return this.assignment.unassign(identifier, assigneeId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @Get("stats")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get assignments stats for all volunteers",

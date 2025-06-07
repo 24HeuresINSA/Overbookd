@@ -10,8 +10,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -33,15 +31,12 @@ import { FestivalActivityErrorFilter } from "../../common/festival-activity-erro
 import { SecurityRequestDto } from "./dto/update-security.request.dto";
 import { SecuritySectionService } from "./security-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
@@ -49,11 +44,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class SecuritySectionController {
   constructor(private readonly securityService: SecuritySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":id/security")
   @ApiResponse({

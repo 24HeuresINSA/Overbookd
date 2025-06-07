@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -50,15 +48,12 @@ import { RequestWithUserPayload } from "../../../app.controller";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
 import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
@@ -66,7 +61,7 @@ import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-o
   RefusedPreviewFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class FestivalActivityPreviewController {
   constructor(
     private readonly previewService: FestivalActivityPreviewService,
@@ -74,7 +69,6 @@ export class FestivalActivityPreviewController {
 
   private logger = new Logger(FestivalActivityPreviewController.name);
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get()
   @ApiResponse({
@@ -94,7 +88,6 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get("mine")
   @ApiResponse({
@@ -116,7 +109,6 @@ export class FestivalActivityPreviewController {
     return this.previewService.findMine(user.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_FA_GEAR_DASHBOARD)
   @Get("for-logistic")
   @ApiResponse({
@@ -159,7 +151,6 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForLogistic(searchOptions);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_SECURITY_DASHBOARD)
   @Get("for-security")
   @ApiResponse({
@@ -172,7 +163,6 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForSecurity();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_ANIMATION_TO_PUBLISH)
   @Get("for-communication")
   @ApiResponse({
@@ -185,7 +175,6 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForCommunication();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(EXPORT_FOR_SIGNA)
   @Get("for-signa")
   @ApiResponse({

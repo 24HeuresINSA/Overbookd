@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiBody,
   ApiParam,
   ApiResponse,
@@ -45,23 +43,19 @@ import {
   ForceInChargeInstructionsRequestDto,
   ForceInstructionsRequestDto,
 } from "./dto/force-instructions.request.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class InstructionsSectionController {
   constructor(
     private readonly instructionsService: InstructionsSectionService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Patch(":id/instructions")
   @ApiResponse({
@@ -92,7 +86,6 @@ export class InstructionsSectionController {
     return this.instructionsService.update(id, instructions, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(FORCE_WRITE_FT)
   @Patch(":id/force/instructions")
   @ApiResponse({
@@ -135,7 +128,6 @@ export class InstructionsSectionController {
     return this.instructionsService.force(id, instructions, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/instructions/contacts")
   @ApiResponse({
@@ -165,7 +157,6 @@ export class InstructionsSectionController {
     return this.instructionsService.addContact(ftId, contactId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/instructions/contacts/:contactId")
   @ApiResponse({
@@ -197,7 +188,6 @@ export class InstructionsSectionController {
     return this.instructionsService.removeContact(ftId, contactId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge/volunteers")
   @ApiResponse({
@@ -227,7 +217,6 @@ export class InstructionsSectionController {
     return this.instructionsService.addInChargeVolunteer(ftId, volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
   @ApiResponse({
@@ -259,7 +248,6 @@ export class InstructionsSectionController {
     return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge")
   @ApiResponse({
@@ -290,7 +278,6 @@ export class InstructionsSectionController {
     return this.instructionsService.initInCharge(ftId, form, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge")
   @ApiResponse({

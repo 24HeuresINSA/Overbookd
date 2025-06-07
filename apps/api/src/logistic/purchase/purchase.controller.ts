@@ -1,8 +1,6 @@
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -32,19 +30,19 @@ import { InitPurchaseRequestDto } from "./dto/init-purchase.request.dto";
 import { PlanPurchaseRequestDto } from "./dto/plan-purchase.request.dto";
 import { AddGearRequestForm } from "@overbookd/http";
 import { AddGearRequestDto } from "../common/dto/add-gear.request.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("logistic/purchases")
 @Controller("logistic/purchases")
 @UseFilters(LogisticErrorFilter)
-@ApiBadRequestResponse({ description: "Request is not formated as expected" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
+@ApiSwaggerResponse()
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Get()
+  @Permission(PURCHASE_GEARS)
   @ApiResponse({
     status: 200,
     description: "All purchases",
@@ -55,9 +53,8 @@ export class PurchaseController {
     return this.purchaseService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Get(":id")
+  @Permission(PURCHASE_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -72,9 +69,8 @@ export class PurchaseController {
     return this.purchaseService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Post()
+  @Permission(PURCHASE_GEARS)
   @ApiBody({
     description: "Purchase to initialize",
     type: InitPurchaseRequestDto,
@@ -88,9 +84,8 @@ export class PurchaseController {
     return this.purchaseService.initPurchase(purchase);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Patch(":id")
+  @Permission(PURCHASE_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -112,9 +107,8 @@ export class PurchaseController {
     return this.purchaseService.planPurchase(id, purchase);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Delete(":id")
+  @Permission(PURCHASE_GEARS)
   @HttpCode(204)
   @ApiParam({
     name: "id",
@@ -129,9 +123,8 @@ export class PurchaseController {
     return this.purchaseService.cancelPurchase(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Post(":id/gear-requests")
+  @Permission(PURCHASE_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -153,9 +146,8 @@ export class PurchaseController {
     return this.purchaseService.addGear(id, slug, quantity);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(PURCHASE_GEARS)
   @Delete(":id/gear-requests/:slug")
+  @Permission(PURCHASE_GEARS)
   @ApiParam({
     name: "id",
     type: Number,

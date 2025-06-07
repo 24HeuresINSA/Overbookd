@@ -10,11 +10,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -27,32 +24,25 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
 import { PeriodResponseDto } from "../common/dto/period.response.dto";
 import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error.filter";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
 @ApiTags("volunteer-availability")
-@UseFilters(VolunteerAvailabilityErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected.",
-})
-@ApiForbiddenResponse({
-  description: "User is not allowed to access this resource.",
-})
 @Controller("volunteer-availability")
+@UseFilters(VolunteerAvailabilityErrorFilter)
+@ApiSwaggerResponse()
 export class VolunteerAvailabilityController {
   constructor(
     private readonly volunteerAvailabilityService: VolunteerAvailabilityService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post(":userId")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201,
     description: "Volunteer's availability periods successfully created.",
     type: PeriodResponseDto,
     isArray: true,
-  })
-  @ApiNotFoundResponse({
-    description: "User not found.",
   })
   @ApiBody({
     type: AvailabilitiesRequestDto,
@@ -74,8 +64,8 @@ export class VolunteerAvailabilityController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":userId")
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Volunteer's availability periods",
@@ -88,18 +78,15 @@ export class VolunteerAvailabilityController {
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({
-    description: "User not found.",
-  })
   findOne(
     @Param("userId", ParseIntPipe) userId: number,
   ): Promise<PeriodResponseDto[]> {
     return this.volunteerAvailabilityService.findUserAvailabilities(userId);
   }
 
+  @Patch(":userId")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Patch(":userId")
   @ApiParam({
     name: "userId",
     description: "The id of the user to add the availability periods to.",
@@ -115,9 +102,6 @@ export class VolunteerAvailabilityController {
     description: "Volunteer's availability periods successfully created.",
     type: PeriodResponseDto,
     isArray: true,
-  })
-  @ApiNotFoundResponse({
-    description: "User not found.",
   })
   overrideHuman(
     @Param("userId", ParseIntPipe) userId: number,

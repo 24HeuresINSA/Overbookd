@@ -14,14 +14,7 @@ import {
   StreamableFile,
   UploadedFile,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -39,21 +32,17 @@ import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
 import { join } from "path";
 import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("signages")
 @Controller("signages")
 @UseFilters(CatalogSignageErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class CatalogSignageController {
   constructor(private readonly catalogSignageService: CatalogSignageService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_SIGNAGE_CATALOG)
   @Get()
   @ApiResponse({
@@ -66,7 +55,6 @@ export class CatalogSignageController {
     return this.catalogSignageService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
   @Post()
   @ApiBody({
@@ -82,7 +70,6 @@ export class CatalogSignageController {
     return this.catalogSignageService.create(signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
   @Put(":id")
   @ApiBody({
@@ -101,7 +88,6 @@ export class CatalogSignageController {
     return this.catalogSignageService.update(id, signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
   @Delete(":id")
   @HttpCode(204)
@@ -113,7 +99,6 @@ export class CatalogSignageController {
     return this.catalogSignageService.remove(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
   @Post(":id/image")
   @UseInterceptors(
@@ -145,7 +130,6 @@ export class CatalogSignageController {
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_SIGNAGE_CATALOG)
   @Get(":id/image")
   @ApiResponse({

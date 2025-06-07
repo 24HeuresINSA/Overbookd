@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -53,15 +51,12 @@ import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity
 import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -75,14 +70,13 @@ import { FestivalEventErrorFilter } from "../../common/festival-event-error.filt
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class FestivalActivityOverviewController {
   constructor(
     private readonly overviewService: FestivalActivityOverviewService,
     private readonly statistics: StatisticsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get("statistics")
   @ApiResponse({
@@ -95,7 +89,6 @@ export class FestivalActivityOverviewController {
     return this.statistics.festivalActivity;
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get(":id")
   @ApiResponse({
@@ -122,7 +115,6 @@ export class FestivalActivityOverviewController {
     return this.overviewService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get("my-refusals/count")
   @ApiResponse({
@@ -135,7 +127,6 @@ export class FestivalActivityOverviewController {
     return this.statistics.countRefusedActivitiesByUser(user.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post()
   @ApiResponse({
@@ -161,7 +152,6 @@ export class FestivalActivityOverviewController {
     return this.overviewService.create(user, name);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":id")
   @HttpCode(204)

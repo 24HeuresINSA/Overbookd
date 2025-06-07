@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiBody,
   ApiParam,
   ApiResponse,
@@ -39,23 +37,19 @@ import { AddVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { RequestWithUserPayload } from "../../../../app.controller";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class MobilizationSectionController {
   constructor(
     private readonly mobilizationService: MobilizationSectionService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/mobilizations")
   @ApiResponse({
@@ -86,7 +80,6 @@ export class MobilizationSectionController {
     return this.mobilizationService.add(ftId, mobilization, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Patch(":ftId/mobilizations/:mobilizationId")
   @ApiResponse({
@@ -129,7 +122,6 @@ export class MobilizationSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId")
   @ApiResponse({
@@ -162,7 +154,6 @@ export class MobilizationSectionController {
     return this.mobilizationService.remove(ftId, mobilizationId, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/mobilizations/:mobilizationId/volunteers")
   @ApiResponse({
@@ -203,7 +194,6 @@ export class MobilizationSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId/volunteers/:volunteerId")
   @ApiResponse({
@@ -246,7 +236,6 @@ export class MobilizationSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Post(":ftId/mobilizations/:mobilizationId/teams")
   @ApiResponse({
@@ -283,7 +272,6 @@ export class MobilizationSectionController {
     return this.mobilizationService.addTeam(ftId, mobilizationId, team);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId/teams/:teamCode")
   @ApiResponse({

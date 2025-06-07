@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiBody,
   ApiParam,
@@ -39,15 +37,12 @@ import { FestivalActivityErrorFilter } from "../../common/festival-activity-erro
 import { GeneralRequestDto } from "./dto/update-general.request.dto";
 import { GeneralSectionService } from "./general-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
@@ -57,11 +52,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":id/general")
   @ApiResponse({
@@ -93,7 +87,6 @@ export class GeneralSectionController {
     return this.generalService.saveGeneralSection(id, general);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":id/general/time-windows")
   @HttpCode(200)
@@ -126,7 +119,6 @@ export class GeneralSectionController {
     return this.generalService.addGeneralTimeWindow(id, timeWindow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/general/time-windows/:timeWindowId")
   @HttpCode(200)
@@ -165,7 +157,6 @@ export class GeneralSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/general/time-windows/:timeWindowId")
   @HttpCode(200)

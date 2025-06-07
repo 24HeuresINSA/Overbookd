@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   ApiParam,
@@ -67,15 +65,12 @@ import {
   ValidatedReviewsResponseDto,
 } from "../common/dto/reviewable/reviews.response.dto";
 import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-tasks")
 @ApiExtraModels(
   DraftFestivalTaskResponseDto,
   DraftGeneralResponseDto,
@@ -101,14 +96,13 @@ import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/revi
   AssignmentResponseDto,
 )
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-tasks")
+@ApiSwaggerResponse()
 export class FestivalTaskOverviewController {
   constructor(
     private readonly overviewService: FestivalTaskOverviewService,
     private readonly statistics: StatisticsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
   @Get("statistics")
   @ApiResponse({
@@ -121,7 +115,6 @@ export class FestivalTaskOverviewController {
     return this.statistics.festivalTask;
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
   @Get(":id")
   @ApiResponse({
@@ -149,7 +142,6 @@ export class FestivalTaskOverviewController {
     return this.overviewService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)
   @Get("my-refusals/count")
   @ApiResponse({
@@ -181,7 +173,6 @@ export class FestivalTaskOverviewController {
     return this.overviewService.createOne(user, form);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
   @Delete(":id")
   @HttpCode(204)

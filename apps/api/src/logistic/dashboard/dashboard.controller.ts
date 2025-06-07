@@ -11,9 +11,7 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiForbiddenResponse,
   ApiParam,
   ApiProduces,
   ApiQuery,
@@ -30,24 +28,20 @@ import { GearWithDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { CSV, GearPreview, GearWithDetails } from "@overbookd/http";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 import { RequestWithUserPayload } from "../../app.controller";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("logistic/dashboard")
 @Controller("logistic/dashboard")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   private logger = new Logger(DashboardController.name);
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_GEAR_DASHBOARD)
   @Get()
+  @Permission(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Get all gear previews",
@@ -78,9 +72,8 @@ export class DashboardController {
     return this.dashboardService.getSummaries(searchOptions);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_GEAR_DASHBOARD)
   @Get("export")
+  @Permission(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Gear previews in CSV",
@@ -105,9 +98,8 @@ export class DashboardController {
     }
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_GEAR_DASHBOARD)
   @Get(":slug")
+  @Permission(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Get gear",

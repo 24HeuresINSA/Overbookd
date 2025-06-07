@@ -12,15 +12,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CatalogService } from "./catalog.service";
@@ -31,14 +27,13 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 import { CatalogGear } from "@overbookd/http";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@Controller("logistic/gears")
-@ApiTags("logistic/catalog")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiUnauthorizedResponse({
-  description: "User must be authenticated",
-})
+@Controller("logistic/gears")
+@ApiTags("logistic/catalog")
+@ApiSwaggerResponse()
 export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
@@ -79,12 +74,6 @@ export class GearController {
     description: "Get a specific gear",
     type: CatalogGearResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: "id",
     type: Number,
@@ -103,12 +92,6 @@ export class GearController {
     description: "Creating a new gear",
     type: CatalogGearResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
   create(@Body() gearForm: GearFormRequestDto): Promise<CatalogGear> {
     return this.catalogService.add(gearForm);
   }
@@ -119,15 +102,6 @@ export class GearController {
     status: 200,
     description: "Updating a gear",
     type: CatalogGearResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   @ApiParam({
     name: "id",
@@ -148,12 +122,6 @@ export class GearController {
   @ApiResponse({
     status: 204,
     description: "Delete a gear by id",
-  })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   @ApiParam({
     name: "id",

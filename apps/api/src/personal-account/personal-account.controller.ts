@@ -10,15 +10,7 @@ import {
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
   MANAGE_PERSONAL_ACCOUNTS,
   HAVE_PERSONAL_ACCOUNT,
@@ -35,22 +27,21 @@ import {
   SimilarBarrelExistFilter,
 } from "./personal-account-error.filter";
 import { AdjustBarrelOpeningDateRequestDto } from "./dto/adjust-barrel-opening-date.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiTags("personal-account")
 @Controller("personal-account")
-@ApiBadRequestResponse({ description: "Request is not formated as expected" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiNotFoundResponse({ description: "Can't find barrel" })
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
-@UseFilters(new SimilarBarrelExistFilter(), new BarrelNotConfiguredFilter())
+@UseFilters(SimilarBarrelExistFilter, BarrelNotConfiguredFilter)
+@ApiSwaggerResponse()
 export class PersonalAccountController {
   constructor(
     private readonly personalAccountService: PersonalAccountService,
   ) {}
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("barrels")
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @ApiResponse({
     status: 200,
     description: "All configured barrels",
@@ -61,8 +52,8 @@ export class PersonalAccountController {
     return this.personalAccountService.getBarrels();
   }
 
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("barrels")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 201,
     description: "Configured barrel created",
@@ -74,8 +65,8 @@ export class PersonalAccountController {
     return this.personalAccountService.createBarrel(barrel);
   }
 
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Patch("barrels/:slug/price")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Configured barrel updated",
@@ -94,8 +85,8 @@ export class PersonalAccountController {
     return this.personalAccountService.adjustPrice(slug, adjustment.price);
   }
 
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Patch("barrels/:slug/opening")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Configured barrel updated",
@@ -117,8 +108,8 @@ export class PersonalAccountController {
     );
   }
 
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Delete("barrels/:slug")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

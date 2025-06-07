@@ -1,38 +1,23 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { TimelineEventResponseDto } from "./dto/timeline-event.response.dto";
 import { TimelineService } from "./timeline.service";
 import { VIEW_TIMELINE } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("timeline")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@ApiNotFoundResponse({
-  description: "Resource not found",
-})
 @Controller("timeline")
+@ApiSwaggerResponse()
 export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_TIMELINE)
   @Get()
+  @Permission(VIEW_TIMELINE)
   @ApiQuery({
     name: "start",
     required: true,

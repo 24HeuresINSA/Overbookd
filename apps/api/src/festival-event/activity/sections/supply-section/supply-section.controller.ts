@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -38,15 +36,12 @@ import { AddElectricitySupplyRequestDto } from "./dto/add-electricity-supply.req
 import { SupplyRequestDto } from "./dto/update-supply.request.dto";
 import { SupplySectionService } from "./supply-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
@@ -54,11 +49,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class SupplySectionController {
   constructor(private readonly supplyService: SupplySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":id/supply")
   @ApiResponse({
@@ -90,7 +84,6 @@ export class SupplySectionController {
     return this.supplyService.saveSupplySection(id, supply);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":id/supply/electricity")
   @HttpCode(200)
@@ -124,7 +117,6 @@ export class SupplySectionController {
     return this.supplyService.addElectricitySupply(id, electricitySupply);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/supply/electricity/:electricitySupplyId")
   @HttpCode(200)
@@ -170,7 +162,6 @@ export class SupplySectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/supply/electricity/:electricitySupplyId")
   @HttpCode(200)

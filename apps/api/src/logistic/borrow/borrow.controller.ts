@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiResponse,
   ApiBody,
   ApiParam,
@@ -32,17 +30,17 @@ import { Borrow, GearRequest } from "@overbookd/logistic";
 import { AddGearRequestDto } from "../common/dto/add-gear.request.dto";
 import { AddGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("logistic/borrows")
 @Controller("logistic/borrows")
 @UseFilters(LogisticErrorFilter)
-@ApiBadRequestResponse({ description: "Request is not formated as expected" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
+@ApiSwaggerResponse()
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Get()
   @ApiResponse({
@@ -55,7 +53,6 @@ export class BorrowController {
     return this.borrowService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Get(":id")
   @ApiParam({
@@ -72,7 +69,6 @@ export class BorrowController {
     return this.borrowService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Post()
   @ApiBody({
@@ -88,7 +84,6 @@ export class BorrowController {
     return this.borrowService.initBorrow(borrow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Patch(":id")
   @ApiParam({
@@ -112,7 +107,6 @@ export class BorrowController {
     return this.borrowService.planBorrow(id, borrow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Delete(":id")
   @HttpCode(204)
@@ -129,7 +123,6 @@ export class BorrowController {
     return this.borrowService.cancelBorrow(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Post(":id/gear-requests")
   @ApiParam({
@@ -153,7 +146,6 @@ export class BorrowController {
     return this.borrowService.addGearRequest(id, slug, quantity);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(BORROW_GEARS)
   @Delete(":id/gear-requests/:slug")
   @ApiParam({

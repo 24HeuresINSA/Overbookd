@@ -11,11 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -28,15 +25,11 @@ import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @ApiBearerAuth()
 @ApiTags("charisma-periods")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
 @Controller("charisma-periods")
+@ApiSwaggerResponse()
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
 
@@ -66,7 +59,6 @@ export class CharismaPeriodController {
     description: "Charisma Period id",
     type: Number,
   })
-  @ApiNotFoundResponse({ description: "Charisma Period not found" })
   findOne(
     @Param("id", ParseIntPipe) id: number,
   ): Promise<CharismaPeriodResponseDto> {
@@ -109,7 +101,6 @@ export class CharismaPeriodController {
     description: "Charisma Period to update",
     type: UpdateCharismaPeriodRequestDto,
   })
-  @ApiNotFoundResponse({ description: "Charisma Period not found" })
   update(
     @Param("id", ParseIntPipe) id: number,
     @Body() charismaPeriod: UpdateCharismaPeriodRequestDto,
@@ -130,7 +121,6 @@ export class CharismaPeriodController {
     description: "Charisma Period id",
     type: Number,
   })
-  @ApiNotFoundResponse({ description: "Charisma Period not found" })
   remove(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.charismaPeriodService.deleteCharismaPeriod(id);
   }

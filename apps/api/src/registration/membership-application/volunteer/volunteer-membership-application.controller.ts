@@ -1,12 +1,9 @@
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
 import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
@@ -32,23 +29,19 @@ import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.requ
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
 import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/volunteers")
 @Controller("registrations/membership-applications/volunteers")
 @UseFilters(MembershipApplicationErrorFilter)
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User dont have the right to access this route",
-})
+@ApiSwaggerResponse()
 export class VolunteerMembershipApplicationController {
   constructor(
     private readonly applicationService: VolunteerMembershipApplicationService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Post("apply/:email")
   @HttpCode(204)
   @ApiResponse({
@@ -64,7 +57,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Get()
   @ApiResponse({
@@ -78,7 +70,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Get("candidates/count")
   @ApiResponse({
@@ -90,7 +81,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Get("rejected")
   @ApiResponse({
@@ -104,7 +94,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Post("enroll")
   @HttpCode(204)
@@ -122,7 +111,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get(":email")
   @ApiParam({
     name: "email",
@@ -140,7 +128,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Delete(":candidateId")
   @HttpCode(204)
@@ -159,7 +146,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Post(":candidateId/cancel-rejection")
   @HttpCode(204)
@@ -180,7 +166,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Post("briefing-time-window")
   @UseFilters(VolunteerAvailabilityErrorFilter)

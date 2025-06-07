@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -38,15 +36,12 @@ import { AddContractorRequestDto } from "./dto/add-contractor.request.dto";
 import { InChargeRequestDto } from "./dto/update-in-charge.request.dto";
 import { InChargeSectionService } from "./in-charge-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
@@ -54,11 +49,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class InChargeSectionController {
   constructor(private readonly inChargeService: InChargeSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":id/in-charge")
   @ApiResponse({
@@ -90,7 +84,6 @@ export class InChargeSectionController {
     return this.inChargeService.saveInChargeSection(id, inCharge);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":id/in-charge/contractors")
   @HttpCode(200)
@@ -123,7 +116,6 @@ export class InChargeSectionController {
     return this.inChargeService.addContractor(id, contractor);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/in-charge/contractors/:contractorId")
   @HttpCode(200)
@@ -168,7 +160,6 @@ export class InChargeSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/in-charge/contractors/:contractorId")
   @HttpCode(200)

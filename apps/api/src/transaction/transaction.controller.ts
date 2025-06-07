@@ -13,14 +13,11 @@ import {
 } from "@nestjs/common";
 import { TransactionService } from "./transaction.service";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiExtraModels,
-  ApiForbiddenResponse,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -54,25 +51,22 @@ import { CreateDepositRequestDto } from "./dto/create-deposit.request.dto";
 import { CreateBarrelTransactionsRequestDto } from "./dto/create-barrel-transactions.request.dto";
 import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-transactions.request.dto";
 import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
-@UseFilters(TransactionErrorFilter)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("transactions")
 @Controller("transactions")
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User don't have the right to access this route",
-})
+@UseFilters(TransactionErrorFilter)
+@ApiSwaggerResponse()
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
     private readonly transferService: TransferService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Get()
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Get all transactions",
@@ -83,9 +77,8 @@ export class TransactionController {
     return this.transactionService.getAllTransactions();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("me")
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @ApiExtraModels(
     MyDepositTransactionResponseDto,
     MyBarrelTransactionResponseDto,
@@ -118,9 +111,8 @@ export class TransactionController {
     return this.transactionService.getMyTransactions(request.user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Post("transfer")
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @HttpCode(204)
   @ApiBody({
     description: "transfer to create",
@@ -137,9 +129,8 @@ export class TransactionController {
     return this.transferService.send(transfer, request.user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("deposits")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Deposits to create",
@@ -154,9 +145,8 @@ export class TransactionController {
     return this.transactionService.addDeposits(deposits);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("barrels")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Barrel transactions to create",
@@ -175,9 +165,8 @@ export class TransactionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("provisions")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Provisions transactions to create",
@@ -197,9 +186,8 @@ export class TransactionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("external-event")
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "External event transactions to create",
@@ -217,10 +205,9 @@ export class TransactionController {
     return this.transactionService.addExternalEventTransactions(consumptions);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Delete(":id")
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
-  @Delete(":id")
   @ApiResponse({
     status: 204,
     description: "Delete a transaction by id",

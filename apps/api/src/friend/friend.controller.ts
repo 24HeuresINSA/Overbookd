@@ -11,11 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -28,19 +25,12 @@ import { FriendService } from "./friend.service";
 import { MANAGE_USERS } from "@overbookd/permission";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
-@ApiTags("friend")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@ApiNotFoundResponse({
-  description: "Friends not found",
-})
+@ApiTags("friends")
 @Controller("friends")
+@ApiSwaggerResponse()
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 

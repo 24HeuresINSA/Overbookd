@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -51,15 +49,12 @@ import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -69,11 +64,10 @@ import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-requ
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":faId/inquiry")
   @HttpCode(200)
@@ -106,7 +100,6 @@ export class InquirySectionController {
     return this.inquiryService.initInquiry(faId, inquiryInitializer);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/inquiry")
   @HttpCode(200)
@@ -134,7 +127,6 @@ export class InquirySectionController {
     return this.inquiryService.clearInquiry(faId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":faId/inquiry/time-windows")
   @HttpCode(200)
@@ -167,7 +159,6 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryTimeWindow(faId, timeWindow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/inquiry/time-windows/:timeWindowId")
   @HttpCode(200)
@@ -206,7 +197,6 @@ export class InquirySectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/inquiry/time-windows/:timeWindowId")
   @HttpCode(200)
@@ -241,7 +231,6 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryTimeWindow(faId, timeWindowId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":faId/inquiry/requests")
   @HttpCode(200)
@@ -275,7 +264,6 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryRequest(faId, inquiryRequest);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug")
   @HttpCode(200)
@@ -316,7 +304,6 @@ export class InquirySectionController {
     return this.inquiryService.updateInquiryRequest(faId, slug, inquiryRequest);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/inquiry/requests/:inquirySlug")
   @HttpCode(200)
@@ -351,7 +338,6 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryRequest(faId, slug);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug/link-drive")
   @HttpCode(200)

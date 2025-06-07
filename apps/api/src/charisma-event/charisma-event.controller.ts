@@ -12,10 +12,8 @@ import {
   Patch,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -31,21 +29,17 @@ import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-partic
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 import { DateString } from "@overbookd/time";
 import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("charisma-events")
 @Controller("charisma-events")
 @UseFilters(CharismaEventErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("all-participations")
   @ApiResponse({
@@ -58,8 +52,6 @@ export class CharismaEventController {
     return this.charismaEvent.fetchAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("potential-participants")
   @ApiResponse({
@@ -74,8 +66,6 @@ export class CharismaEventController {
     return this.charismaEvent.fetchPotentialParticipants();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(MANAGE_CHARISMA_EVENTS)
   @Post()
   @ApiResponse({
@@ -95,8 +85,6 @@ export class CharismaEventController {
     return this.charismaEvent.addParticipations(event, participants);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(MANAGE_CHARISMA_EVENTS)
   @Patch(":slug/date/:date/participant/:participantId")
   @ApiResponse({
@@ -138,8 +126,6 @@ export class CharismaEventController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
   @Permission(MANAGE_CHARISMA_EVENTS)
   @Delete(":slug/date/:date/participant/:participantId")
   @HttpCode(204)

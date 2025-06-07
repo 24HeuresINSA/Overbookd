@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -46,15 +44,12 @@ import { AddSignageRequestDto } from "./dto/add-signage.request.dto";
 import { UpdateSignaRequestDto } from "./dto/update-signa.request.dto";
 import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@Controller("festival-activities")
 @ApiExtraModels(
   UnlinkedSignageResponseDto,
   LinkedSignageResponseDto,
@@ -64,11 +59,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
+@ApiSwaggerResponse()
 export class SignaSectionController {
   constructor(private readonly signaService: SignaSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":id/signa")
   @ApiResponse({
@@ -100,7 +94,6 @@ export class SignaSectionController {
     return this.signaService.saveSignaSection(id, signa);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":id/signa/signages")
   @HttpCode(200)
@@ -133,7 +126,6 @@ export class SignaSectionController {
     return this.signaService.addSignage(id, signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Patch(":faId/signa/signages/:signageId")
   @HttpCode(200)
@@ -173,7 +165,6 @@ export class SignaSectionController {
     return this.signaService.updateSignage(faId, signageId, signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Delete(":faId/signa/signages/:signageId")
   @HttpCode(200)
@@ -208,7 +199,6 @@ export class SignaSectionController {
     return this.signaService.removeSignage(faId, signageId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
   @Patch(":faId/signa/signages/:signageId/link")
   @HttpCode(200)
