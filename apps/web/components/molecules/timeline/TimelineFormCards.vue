@@ -105,7 +105,7 @@ const refreshToNow = async () => {
     align-items: center;
     padding: 10px;
     @media screen and (max-width: $mobile-max-width) {
-      gap: 5px;
+      gap: 10px;
       flex-direction: column;
       * {
         width: 100%;
