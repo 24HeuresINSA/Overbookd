@@ -32,6 +32,7 @@ import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availabilit
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("registrations/membership-applications/volunteers")
 @Controller("registrations/membership-applications/volunteers")
 @UseFilters(MembershipApplicationErrorFilter)
@@ -42,7 +43,6 @@ export class VolunteerMembershipApplicationController {
   ) {}
 
   @Post("apply/:email")
-  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -57,7 +57,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
   @ApiResponse({
     status: 200,
@@ -70,7 +70,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Get("candidates/count")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
   @ApiResponse({
     status: 200,
@@ -111,7 +111,6 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Get(":email")
-  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: "email",
     type: String,

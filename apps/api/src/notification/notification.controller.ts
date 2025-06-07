@@ -14,6 +14,7 @@ import { NotificationService } from "./notification.service";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("notifications")
 @Controller("notifications")
 @ApiSwaggerResponse()
@@ -21,7 +22,6 @@ export class NotificationController {
   constructor(private readonly notify: NotificationService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Volunteer's notifications",
@@ -32,7 +32,6 @@ export class NotificationController {
   }
 
   @Delete()
-  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

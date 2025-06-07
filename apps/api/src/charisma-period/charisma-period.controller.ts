@@ -26,7 +26,9 @@ import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.req
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("charisma-periods")
 @Controller("charisma-periods")
 @ApiSwaggerResponse()
@@ -34,7 +36,6 @@ export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get all Charisma Period",
@@ -46,7 +47,6 @@ export class CharismaPeriodController {
   }
 
   @Get(":id")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get one Charisma Period",

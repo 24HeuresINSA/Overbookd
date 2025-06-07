@@ -27,6 +27,7 @@ import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("volunteer-availability")
 @Controller("volunteer-availability")
 @UseFilters(VolunteerAvailabilityErrorFilter)
@@ -37,7 +38,6 @@ export class VolunteerAvailabilityController {
   ) {}
 
   @Post(":userId")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201,
     description: "Volunteer's availability periods successfully created.",
@@ -65,7 +65,6 @@ export class VolunteerAvailabilityController {
   }
 
   @Get(":userId")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Volunteer's availability periods",

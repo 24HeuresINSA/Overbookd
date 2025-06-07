@@ -31,6 +31,7 @@ import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("preferences")
 @Controller("preferences")
 @ApiSwaggerResponse()
@@ -38,7 +39,6 @@ export class PreferenceController {
   constructor(private readonly preferenceService: PreferenceService) {}
 
   @Get("me")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "User preferences",
@@ -51,7 +51,6 @@ export class PreferenceController {
   }
 
   @Patch("me/planning")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Updated planning preferences",
@@ -69,7 +68,6 @@ export class PreferenceController {
   }
 
   @Patch("me/assignment")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Updated assignment preference",

@@ -31,6 +31,7 @@ import { HasApplicationResponseDto } from "../common/dto/has-application.respons
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags("registrations/membership-applications/staffs")
 @Controller("registrations/membership-applications/staffs")
 @UseFilters(MembershipApplicationErrorFilter)
@@ -41,7 +42,6 @@ export class StaffMembershipApplicationController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

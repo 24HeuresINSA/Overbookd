@@ -56,6 +56,7 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @ApiTags("users")
 @Controller("users")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class UserController {
   constructor(
@@ -94,7 +95,6 @@ export class UserController {
   }
 
   @Get("me")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get a current user",
@@ -107,7 +107,6 @@ export class UserController {
   }
 
   @Patch("me")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Updated current user",
@@ -125,7 +124,6 @@ export class UserController {
   }
 
   @Post("me/approve-eula")
-  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -211,7 +209,6 @@ export class UserController {
   }
 
   @Put(":id")
-  @UseGuards(JwtAuthGuard)
   @ApiBody({
     description: "New user information",
     type: UpdateUserRequestDto,
@@ -246,7 +243,6 @@ export class UserController {
   }
 
   @Post("me/profile-picture")
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -280,7 +276,6 @@ export class UserController {
   }
 
   @Get(":userId/profile-picture")
-  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get a user profile picture",

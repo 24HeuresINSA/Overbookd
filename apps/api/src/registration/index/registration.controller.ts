@@ -7,7 +7,7 @@ import {
   Post,
   UseFilters,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
 import {
@@ -17,7 +17,6 @@ import {
 import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
 @ApiTags("registration")
 @Controller("registrations")
 @ApiSwaggerResponse()
