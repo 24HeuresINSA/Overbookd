@@ -123,25 +123,23 @@ const withLoader = (download: () => Promise<unknown>) => {
 };
 
 const downloadPdf = () => {
-  const users = [selectedUser.value!];
   const download = isMe.value
     ? planningStore.downloadMyPdfPlanning()
-    : planningStore.downloadAllPdfPlannings(users);
+    : planningStore.downloadAllPdfPlannings([selectedUser.value!]);
 
   return withLoader(() => download);
 };
 const downloadIcal = () => {
-  const volunteerId = selectedUser.value!.id;
   const download = isMe.value
     ? planningStore.downloadMyIcalPlanning()
-    : planningStore.downloadIcalPlanning(volunteerId);
+    : planningStore.downloadIcalPlanning(selectedUser.value!.id);
 
   return withLoader(() => download);
 };
 const downloadBooklet = () => {
   if (!loggedUser.value) return;
-
   const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
+
   return withLoader(() => planningStore.downloadBookletPlanning(volunteer));
 };
 </script>
