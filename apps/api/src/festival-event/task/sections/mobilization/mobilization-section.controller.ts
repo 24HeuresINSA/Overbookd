@@ -50,8 +50,8 @@ export class MobilizationSectionController {
     private readonly mobilizationService: MobilizationSectionService,
   ) {}
 
-  @Permission(WRITE_FT)
   @Post(":ftId/mobilizations")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -80,8 +80,8 @@ export class MobilizationSectionController {
     return this.mobilizationService.add(ftId, mobilization, user);
   }
 
-  @Permission(WRITE_FT)
   @Patch(":ftId/mobilizations/:mobilizationId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -122,8 +122,8 @@ export class MobilizationSectionController {
     );
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -154,8 +154,8 @@ export class MobilizationSectionController {
     return this.mobilizationService.remove(ftId, mobilizationId, user);
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/mobilizations/:mobilizationId/volunteers")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -194,8 +194,8 @@ export class MobilizationSectionController {
     );
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId/volunteers/:volunteerId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -236,8 +236,8 @@ export class MobilizationSectionController {
     );
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/mobilizations/:mobilizationId/teams")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -272,8 +272,8 @@ export class MobilizationSectionController {
     return this.mobilizationService.addTeam(ftId, mobilizationId, team);
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/mobilizations/:mobilizationId/teams/:teamCode")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

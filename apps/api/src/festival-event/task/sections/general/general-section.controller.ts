@@ -37,8 +37,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
-  @Permission(WRITE_FT)
   @Patch(":id/general")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

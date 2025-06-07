@@ -48,8 +48,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class SecuritySectionController {
   constructor(private readonly securityService: SecuritySectionService) {}
 
-  @Permission(WRITE_FA)
   @Patch(":id/security")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",

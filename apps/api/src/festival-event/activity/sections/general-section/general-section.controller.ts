@@ -56,8 +56,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
-  @Permission(WRITE_FA)
   @Patch(":id/general")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -87,8 +87,8 @@ export class GeneralSectionController {
     return this.generalService.saveGeneralSection(id, general);
   }
 
-  @Permission(WRITE_FA)
   @Post(":id/general/time-windows")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -119,8 +119,8 @@ export class GeneralSectionController {
     return this.generalService.addGeneralTimeWindow(id, timeWindow);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/general/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -157,8 +157,8 @@ export class GeneralSectionController {
     );
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/general/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

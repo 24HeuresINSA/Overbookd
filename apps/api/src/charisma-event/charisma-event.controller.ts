@@ -40,8 +40,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
 
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("all-participations")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all charisma event participations",
@@ -52,8 +52,8 @@ export class CharismaEventController {
     return this.charismaEvent.fetchAll();
   }
 
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("potential-participants")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all potential charisma event participants",
@@ -66,8 +66,8 @@ export class CharismaEventController {
     return this.charismaEvent.fetchPotentialParticipants();
   }
 
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Post()
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -85,8 +85,8 @@ export class CharismaEventController {
     return this.charismaEvent.addParticipations(event, participants);
   }
 
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Patch(":slug/date/:date/participant/:participantId")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -126,8 +126,8 @@ export class CharismaEventController {
     });
   }
 
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Delete(":slug/date/:date/participant/:participantId")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -40,8 +40,8 @@ export class StaffMembershipApplicationController {
     private readonly applicationService: StaffMembershipApplicationService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -55,9 +55,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.applyFor(email, token);
   }
 
+  @Get()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Get()
   @ApiResponse({
     status: 200,
     description: "Get all staff candidates",
@@ -68,9 +68,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getCandidates();
   }
 
+  @Get("candidates/count")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Get("candidates/count")
   @ApiResponse({
     status: 200,
     description: "Get the staff candidates count",
@@ -79,9 +79,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.countCandidates();
   }
 
+  @Get("rejected")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Get("rejected")
   @ApiResponse({
     status: 200,
     description: "Get all rejected staff candidates",
@@ -92,9 +92,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getRejectedCandidates();
   }
 
+  @Post("enroll")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Post("enroll")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -108,22 +108,22 @@ export class StaffMembershipApplicationController {
     return this.applicationService.enroll(candidates);
   }
 
+  @Get("invitation-link")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Get("invitation-link")
   getStaffInvitationLink(): Promise<URL | undefined> {
     return this.applicationService.getStaffInvitationLink();
   }
 
+  @Post("invitation-link")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Post("invitation-link")
   generateStaffInvitationLink(): Promise<URL> {
     return this.applicationService.generateStaffInvitationLink();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":email")
+  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: "email",
     type: String,
@@ -139,9 +139,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getCurrentApplication(email);
   }
 
+  @Delete(":candidateId")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Delete(":candidateId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -157,9 +157,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.rejectStaffApplication(candidateId);
   }
 
+  @Post(":candidateId/cancel-rejection")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  @Post(":candidateId/cancel-rejection")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -68,8 +68,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -100,8 +100,8 @@ export class InquirySectionController {
     return this.inquiryService.initInquiry(faId, inquiryInitializer);
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -127,8 +127,8 @@ export class InquirySectionController {
     return this.inquiryService.clearInquiry(faId);
   }
 
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry/time-windows")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -159,8 +159,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryTimeWindow(faId, timeWindow);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/inquiry/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -197,8 +197,8 @@ export class InquirySectionController {
     );
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -231,8 +231,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryTimeWindow(faId, timeWindowId);
   }
 
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry/requests")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -264,8 +264,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryRequest(faId, inquiryRequest);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -304,8 +304,8 @@ export class InquirySectionController {
     return this.inquiryService.updateInquiryRequest(faId, slug, inquiryRequest);
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -338,8 +338,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryRequest(faId, slug);
   }
 
-  @Permission(VALIDATE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug/link-drive")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

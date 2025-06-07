@@ -34,9 +34,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get friends list",
@@ -47,9 +46,8 @@ export class FriendController {
     return this.friendService.findFriends();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get friends of a user",
@@ -68,9 +66,8 @@ export class FriendController {
     return this.friendService.findUserFriends(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
-  @HttpCode(201)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201,
     description: "Create relation between two users",
@@ -87,8 +84,8 @@ export class FriendController {
     return this.friendService.create(req.user.id, friend.id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(":friendId")
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -107,10 +104,10 @@ export class FriendController {
     return this.friendService.delete(req.user.id, friendId);
   }
 
+  @Post(":id")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_USERS)
-  @Post(":id")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -128,10 +125,10 @@ export class FriendController {
     return this.friendService.create(id, friend.id);
   }
 
+  @Delete(":id/:friendId")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_USERS)
-  @Delete(":id/:friendId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

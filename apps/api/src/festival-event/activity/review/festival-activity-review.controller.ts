@@ -71,8 +71,8 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
-  @Permission(WRITE_FA)
   @Post(":faId/feedbacks")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -104,8 +104,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.addFeedback(faId, user, feedback);
   }
 
-  @Permission(WRITE_FA)
   @Post(":faId/ask-for-review")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -131,8 +131,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.toReview(faId, user);
   }
 
-  @Permission(VALIDATE_FA)
   @Post(":faId/approve")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -164,8 +164,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.approve(faId, jwt, team);
   }
 
-  @Permission(VALIDATE_FA)
   @Post(":faId/reject")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

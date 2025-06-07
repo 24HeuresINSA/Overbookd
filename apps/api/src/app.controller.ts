@@ -19,8 +19,6 @@ export type RequestWithUserPayload = Request & {
 };
 
 @Controller()
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class AppController {
   constructor(
@@ -34,6 +32,8 @@ export class AppController {
   }
 
   @Post("mailtest")
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(SEND_MAIL_TEST)
   @ApiBody({
     description: "Route de test pour le service mail",

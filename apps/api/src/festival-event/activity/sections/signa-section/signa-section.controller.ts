@@ -63,8 +63,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class SignaSectionController {
   constructor(private readonly signaService: SignaSectionService) {}
 
-  @Permission(WRITE_FA)
   @Patch(":id/signa")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -94,8 +94,8 @@ export class SignaSectionController {
     return this.signaService.saveSignaSection(id, signa);
   }
 
-  @Permission(WRITE_FA)
   @Post(":id/signa/signages")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -126,8 +126,8 @@ export class SignaSectionController {
     return this.signaService.addSignage(id, signage);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/signa/signages/:signageId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -165,8 +165,8 @@ export class SignaSectionController {
     return this.signaService.updateSignage(faId, signageId, signage);
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/signa/signages/:signageId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -199,8 +199,8 @@ export class SignaSectionController {
     return this.signaService.removeSignage(faId, signageId);
   }
 
-  @Permission(VALIDATE_FA)
   @Patch(":faId/signa/signages/:signageId/link")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -42,8 +42,8 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 export class FestivalTaskPreviewController {
   constructor(private readonly previewService: FestivalTaskPreviewService) {}
 
-  @Permission(READ_FT)
   @Get()
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "All festival tasks",
@@ -61,8 +61,8 @@ export class FestivalTaskPreviewController {
     return this.previewService.findForAll();
   }
 
-  @Permission(READ_FT)
   @Get("mine")
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "My festival tasks",

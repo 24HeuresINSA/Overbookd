@@ -40,8 +40,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
 
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Get("out-to-date-adherents")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -53,8 +53,8 @@ export class ContributionController {
     return this.contributionService.findAdherentsWithContributionOutToDate();
   }
 
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Get("valid-adherents")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -66,8 +66,8 @@ export class ContributionController {
     return this.contributionService.findAdherentsWithValidContribution();
   }
 
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Post()
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -81,8 +81,8 @@ export class ContributionController {
     return this.contributionService.pay(contributionData);
   }
 
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Patch("adherents/:adherentId/editions/:edition")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -110,8 +110,8 @@ export class ContributionController {
     return this.contributionService.edit(adherentId, edition, amount);
   }
 
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Delete("adherents/:adherentId/editions/:edition")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

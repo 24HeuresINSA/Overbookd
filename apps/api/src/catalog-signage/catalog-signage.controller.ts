@@ -43,8 +43,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class CatalogSignageController {
   constructor(private readonly catalogSignageService: CatalogSignageService) {}
 
-  @Permission(READ_SIGNAGE_CATALOG)
   @Get()
+  @Permission(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get all signage items in catalog",
@@ -55,8 +55,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.findAll();
   }
 
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Post()
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to create",
     type: SignageFormRequestDto,
@@ -70,8 +70,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.create(signage);
   }
 
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Put(":id")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to update",
     type: SignageFormRequestDto,
@@ -88,8 +88,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.update(id, signage);
   }
 
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Delete(":id")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -99,8 +99,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.remove(id);
   }
 
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Post(":id/image")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -130,8 +130,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
 
-  @Permission(READ_SIGNAGE_CATALOG)
   @Get(":id/image")
+  @Permission(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get signage image",

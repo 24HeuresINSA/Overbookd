@@ -1,4 +1,11 @@
-import { Controller, Delete, Get, Request, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { RequestWithUserPayload } from "../app.controller";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -13,8 +20,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class NotificationController {
   constructor(private readonly notify: NotificationService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Volunteer's notifications",
@@ -24,8 +31,9 @@ export class NotificationController {
     return this.notify.hasNotifications(user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Volunteer's notifications set as red",

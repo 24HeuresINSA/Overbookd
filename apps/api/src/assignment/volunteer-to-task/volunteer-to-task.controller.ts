@@ -28,8 +28,8 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 export class VolunteerToTaskController {
   constructor(private readonly volunteerToTask: VolunteerToTaskService) {}
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All assignable volunteers with assignment duration",
@@ -40,8 +40,8 @@ export class VolunteerToTaskController {
     return this.volunteerToTask.findVolunteers();
   }
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers/:volunteerId/assignments")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All assignments for volunteer",

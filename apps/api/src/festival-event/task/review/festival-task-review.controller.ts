@@ -56,8 +56,8 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 export class FestivalTaskReviewController {
   constructor(private readonly reviewService: FestivalTaskReviewService) {}
 
-  @Permission(WRITE_FT)
   @Post(":ftId/feedbacks")
+  @Permission(WRITE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -87,8 +87,8 @@ export class FestivalTaskReviewController {
     return this.reviewService.publishFeedback(ftId, user, feedback);
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/ask-for-review")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "Festival task",
@@ -107,8 +107,8 @@ export class FestivalTaskReviewController {
     return this.reviewService.toReview(ftId, user);
   }
 
-  @Permission(VALIDATE_FT)
   @Post(":ftId/reject")
+  @Permission(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -134,8 +134,8 @@ export class FestivalTaskReviewController {
     return this.reviewService.reject(ftId, jwt, reject);
   }
 
-  @Permission(VALIDATE_FT)
   @Post(":ftId/approve")
+  @Permission(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -167,8 +167,8 @@ export class FestivalTaskReviewController {
     return this.reviewService.approve(ftId, jwt, approve);
   }
 
-  @Permission(VALIDATE_FT)
   @Post(":ftId/ignore")
+  @Permission(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -200,8 +200,8 @@ export class FestivalTaskReviewController {
     return this.reviewService.ignore(ftId, jwt, ignore);
   }
 
-  @Permission(AFFECT_VOLUNTEER)
   @Post(":ftId/enable-assignment")
+  @Permission(AFFECT_VOLUNTEER)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

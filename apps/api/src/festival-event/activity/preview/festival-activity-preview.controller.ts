@@ -69,8 +69,8 @@ export class FestivalActivityPreviewController {
 
   private logger = new Logger(FestivalActivityPreviewController.name);
 
-  @Permission(READ_FA)
   @Get()
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "All festival activities",
@@ -88,8 +88,8 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForAll();
   }
 
-  @Permission(READ_FA)
   @Get("mine")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "My festival activities",
@@ -109,8 +109,8 @@ export class FestivalActivityPreviewController {
     return this.previewService.findMine(user.id);
   }
 
-  @Permission(VIEW_FA_GEAR_DASHBOARD)
   @Get("for-logistic")
+  @Permission(VIEW_FA_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Festival activities for logistic",
@@ -151,8 +151,8 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForLogistic(searchOptions);
   }
 
-  @Permission(VIEW_SECURITY_DASHBOARD)
   @Get("for-security")
+  @Permission(VIEW_SECURITY_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Festival activities for security",
@@ -175,8 +175,8 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForCommunication();
   }
 
-  @Permission(EXPORT_FOR_SIGNA)
   @Get("for-signa")
+  @Permission(EXPORT_FOR_SIGNA)
   @ApiResponse({
     status: 200,
     description: "All signages from festival activities",

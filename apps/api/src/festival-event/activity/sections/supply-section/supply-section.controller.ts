@@ -53,8 +53,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class SupplySectionController {
   constructor(private readonly supplyService: SupplySectionService) {}
 
-  @Permission(WRITE_FA)
   @Patch(":id/supply")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -84,8 +84,8 @@ export class SupplySectionController {
     return this.supplyService.saveSupplySection(id, supply);
   }
 
-  @Permission(WRITE_FA)
   @Post(":id/supply/electricity")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -117,8 +117,8 @@ export class SupplySectionController {
     return this.supplyService.addElectricitySupply(id, electricitySupply);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/supply/electricity/:electricitySupplyId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -162,8 +162,8 @@ export class SupplySectionController {
     );
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/supply/electricity/:electricitySupplyId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -33,9 +33,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get all Charisma Period",
@@ -46,9 +45,8 @@ export class CharismaPeriodController {
     return this.charismaPeriodService.findAllCharismaPeriods();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
-  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: "Get one Charisma Period",
@@ -65,9 +63,9 @@ export class CharismaPeriodController {
     return this.charismaPeriodService.findOneCharismaPeriod(id);
   }
 
+  @Post()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Post()
   @ApiResponse({
     status: 201,
     description: "The Charisma Period has been successfully created.",
@@ -83,9 +81,9 @@ export class CharismaPeriodController {
     return this.charismaPeriodService.createCharismaPeriod(charismaPeriod);
   }
 
+  @Put(":id")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Put(":id")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -108,9 +106,9 @@ export class CharismaPeriodController {
     return this.charismaPeriodService.updateCharismaPeriod(id, charismaPeriod);
   }
 
+  @Delete(":id")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

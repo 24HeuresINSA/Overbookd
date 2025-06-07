@@ -41,8 +41,8 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
-  @Permission(BORROW_GEARS)
   @Get()
+  @Permission(BORROW_GEARS)
   @ApiResponse({
     status: 200,
     description: "All borrows",
@@ -53,8 +53,8 @@ export class BorrowController {
     return this.borrowService.findAll();
   }
 
-  @Permission(BORROW_GEARS)
   @Get(":id")
+  @Permission(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -69,8 +69,8 @@ export class BorrowController {
     return this.borrowService.findOne(id);
   }
 
-  @Permission(BORROW_GEARS)
   @Post()
+  @Permission(BORROW_GEARS)
   @ApiBody({
     description: "Borrow to initialize",
     type: InitBorrowRequestDto,
@@ -84,8 +84,8 @@ export class BorrowController {
     return this.borrowService.initBorrow(borrow);
   }
 
-  @Permission(BORROW_GEARS)
   @Patch(":id")
+  @Permission(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -107,8 +107,8 @@ export class BorrowController {
     return this.borrowService.planBorrow(id, borrow);
   }
 
-  @Permission(BORROW_GEARS)
   @Delete(":id")
+  @Permission(BORROW_GEARS)
   @HttpCode(204)
   @ApiParam({
     name: "id",
@@ -123,8 +123,8 @@ export class BorrowController {
     return this.borrowService.cancelBorrow(id);
   }
 
-  @Permission(BORROW_GEARS)
   @Post(":id/gear-requests")
+  @Permission(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -146,8 +146,8 @@ export class BorrowController {
     return this.borrowService.addGearRequest(id, slug, quantity);
   }
 
-  @Permission(BORROW_GEARS)
   @Delete(":id/gear-requests/:slug")
+  @Permission(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,

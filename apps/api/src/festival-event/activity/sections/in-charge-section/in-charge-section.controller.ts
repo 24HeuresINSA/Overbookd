@@ -53,8 +53,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class InChargeSectionController {
   constructor(private readonly inChargeService: InChargeSectionService) {}
 
-  @Permission(WRITE_FA)
   @Patch(":id/in-charge")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -84,8 +84,8 @@ export class InChargeSectionController {
     return this.inChargeService.saveInChargeSection(id, inCharge);
   }
 
-  @Permission(WRITE_FA)
   @Post(":id/in-charge/contractors")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -116,8 +116,8 @@ export class InChargeSectionController {
     return this.inChargeService.addContractor(id, contractor);
   }
 
-  @Permission(WRITE_FA)
   @Patch(":faId/in-charge/contractors/:contractorId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -160,8 +160,8 @@ export class InChargeSectionController {
     );
   }
 
-  @Permission(WRITE_FA)
   @Delete(":faId/in-charge/contractors/:contractorId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

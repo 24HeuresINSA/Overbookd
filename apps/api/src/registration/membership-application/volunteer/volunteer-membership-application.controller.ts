@@ -41,8 +41,8 @@ export class VolunteerMembershipApplicationController {
     private readonly applicationService: VolunteerMembershipApplicationService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post("apply/:email")
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -56,9 +56,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.applyFor(email);
   }
 
+  @Get()
   @UseGuards(JwtAuthGuard)
   @Permission(ENROLL_SOFT)
-  @Get()
   @ApiResponse({
     status: 200,
     description: "Get all volunteer candidates",
@@ -69,9 +69,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.getCandidates();
   }
 
+  @Get("candidates/count")
   @UseGuards(JwtAuthGuard)
   @Permission(ENROLL_SOFT)
-  @Get("candidates/count")
   @ApiResponse({
     status: 200,
     description: "Get the volunteer candidates count",
@@ -80,9 +80,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.countCandidates();
   }
 
+  @Get("rejected")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
-  @Get("rejected")
   @ApiResponse({
     status: 200,
     description: "Get all rejected volunteer candidates",
@@ -93,9 +93,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.getRejectedCandidates();
   }
 
+  @Post("enroll")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
-  @Post("enroll")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -110,8 +110,8 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.enroll(candidates);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":email")
+  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: "email",
     type: String,
@@ -127,9 +127,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.getCurrentApplication(email);
   }
 
+  @Delete(":candidateId")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
-  @Delete(":candidateId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -145,9 +145,9 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.rejectVolunteerApplication(candidateId);
   }
 
+  @Post(":candidateId/cancel-rejection")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
-  @Post(":candidateId/cancel-rejection")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -165,9 +165,9 @@ export class VolunteerMembershipApplicationController {
     );
   }
 
+  @Post("briefing-time-window")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_SOFT)
-  @Post("briefing-time-window")
   @UseFilters(VolunteerAvailabilityErrorFilter)
   @HttpCode(204)
   @ApiResponse({

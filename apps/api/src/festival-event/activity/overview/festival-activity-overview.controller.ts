@@ -77,8 +77,8 @@ export class FestivalActivityOverviewController {
     private readonly statistics: StatisticsService,
   ) {}
 
-  @Permission(READ_FA)
   @Get("statistics")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "Festival activities statistics",
@@ -89,8 +89,8 @@ export class FestivalActivityOverviewController {
     return this.statistics.festivalActivity;
   }
 
-  @Permission(READ_FA)
   @Get(":id")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -115,8 +115,8 @@ export class FestivalActivityOverviewController {
     return this.overviewService.findById(id);
   }
 
-  @Permission(READ_FA)
   @Get("my-refusals/count")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "Number of refused festival activities for the user",
@@ -127,8 +127,8 @@ export class FestivalActivityOverviewController {
     return this.statistics.countRefusedActivitiesByUser(user.id);
   }
 
-  @Permission(WRITE_FA)
   @Post()
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 201,
     description: "A festival activity",
@@ -152,8 +152,8 @@ export class FestivalActivityOverviewController {
     return this.overviewService.create(user, name);
   }
 
-  @Permission(WRITE_FA)
   @Delete(":id")
+  @Permission(WRITE_FA)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

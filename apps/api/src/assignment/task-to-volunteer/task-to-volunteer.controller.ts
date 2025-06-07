@@ -32,8 +32,8 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 export class TaskToVolunteerController {
   constructor(private readonly taskToVolunteer: TaskToVolunteerService) {}
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get("assignableTasks")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All tasks with missing assignments",
@@ -44,8 +44,8 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.findAssignableTasks();
   }
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get("allTasks")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All tasks",
@@ -56,8 +56,8 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.findAllTasks();
   }
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get("tasks/:id")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Selected task with assignments summary",
@@ -74,10 +74,10 @@ export class TaskToVolunteerController {
     return this.taskToVolunteer.selectTask(id);
   }
 
-  @Permission(AFFECT_VOLUNTEER)
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignable-volunteers",
   )
+  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Assignable volunteers for the selected assignment",

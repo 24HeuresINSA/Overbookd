@@ -56,8 +56,8 @@ export class InstructionsSectionController {
     private readonly instructionsService: InstructionsSectionService,
   ) {}
 
-  @Permission(WRITE_FT)
   @Patch(":id/instructions")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -86,8 +86,8 @@ export class InstructionsSectionController {
     return this.instructionsService.update(id, instructions, user);
   }
 
-  @Permission(FORCE_WRITE_FT)
   @Patch(":id/force/instructions")
+  @Permission(FORCE_WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "Festival task",
@@ -128,8 +128,8 @@ export class InstructionsSectionController {
     return this.instructionsService.force(id, instructions, user);
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/contacts")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -157,8 +157,8 @@ export class InstructionsSectionController {
     return this.instructionsService.addContact(ftId, contactId);
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/contacts/:contactId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -188,8 +188,8 @@ export class InstructionsSectionController {
     return this.instructionsService.removeContact(ftId, contactId);
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge/volunteers")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -217,8 +217,8 @@ export class InstructionsSectionController {
     return this.instructionsService.addInChargeVolunteer(ftId, volunteerId);
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -248,8 +248,8 @@ export class InstructionsSectionController {
     return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
   }
 
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -278,8 +278,8 @@ export class InstructionsSectionController {
     return this.instructionsService.initInCharge(ftId, form, user);
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

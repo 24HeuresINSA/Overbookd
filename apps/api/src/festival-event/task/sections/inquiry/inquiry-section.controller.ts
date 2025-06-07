@@ -46,8 +46,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
-  @Permission(WRITE_FT)
   @Post(":ftId/inquiry/requests")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -76,8 +76,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryRequest(ftId, form);
   }
 
-  @Permission(WRITE_FT)
   @Patch(":ftId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -114,8 +114,8 @@ export class InquirySectionController {
     return this.inquiryService.updateInquiryRequest(ftId, slug, inquiryRequest);
   }
 
-  @Permission(WRITE_FT)
   @Delete(":ftId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -146,8 +146,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryRequest(ftId, inquirySlug);
   }
 
-  @Permission(VALIDATE_FT)
   @Patch(":ftId/inquiry/requests/:inquirySlug/link-drive")
+  @Permission(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

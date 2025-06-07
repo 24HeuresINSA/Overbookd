@@ -29,8 +29,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
-  @Permission(MANAGE_LOCATION)
   @Post()
+  @Permission(MANAGE_LOCATION)
   @ApiBody({
     type: CreateLocationRequestDto,
   })
@@ -42,8 +42,8 @@ export class LocationController {
     return this.locationService.create(location);
   }
 
-  @Permission(VIEW_LOCATION)
   @Get()
+  @Permission(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     isArray: true,
@@ -53,8 +53,8 @@ export class LocationController {
     return this.locationService.findAll();
   }
 
-  @Permission(VIEW_LOCATION)
   @Get(":id")
+  @Permission(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -63,8 +63,8 @@ export class LocationController {
     return this.locationService.findOne(id);
   }
 
-  @Permission(MANAGE_LOCATION)
   @Put(":id")
+  @Permission(MANAGE_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -76,8 +76,8 @@ export class LocationController {
     return this.locationService.update(id, location);
   }
 
-  @Permission(MANAGE_LOCATION)
   @Delete(":id")
+  @Permission(MANAGE_LOCATION)
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   remove(@Param("id", ParseIntPipe) id: number) {
