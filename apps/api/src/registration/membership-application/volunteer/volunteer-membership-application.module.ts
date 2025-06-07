@@ -14,6 +14,8 @@ import { PrismaModule } from "../../../prisma.module";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { PrismaMemberships } from "../common/repository/memberships.prisma";
 import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { ConfigurationService } from "../../../configuration/configuration.service";
+import { ConfigurationModule } from "../../../configuration/configuration.module";
 
 @Module({
   controllers: [VolunteerMembershipApplicationController],
@@ -65,10 +67,11 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
         users: PrismaUsers,
         enrollCandidates: PrismaEnrollCandidates,
         enroll: EnrollCandidates,
+        configuration: ConfigurationService,
       ) =>
         new VolunteerMembershipApplicationService(
           { applyFor, reject, enroll },
-          { users, enroll: enrollCandidates },
+          { users, enroll: enrollCandidates, configuration },
         ),
       inject: [
         ApplyFor,
@@ -76,9 +79,10 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
         PrismaUsers,
         PrismaEnrollCandidates,
         EnrollCandidates,
+        ConfigurationService,
       ],
     },
   ],
-  imports: [PrismaModule, DomainEventModule],
+  imports: [PrismaModule, DomainEventModule, ConfigurationModule],
 })
 export class VolunteerMembershipApplicationModule {}

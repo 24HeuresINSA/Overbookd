@@ -30,6 +30,8 @@ import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
+import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
+import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/volunteers")
@@ -175,5 +177,23 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.cancelVolunteerApplicationRejection(
       candidateId,
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_SOFT)
+  @Post("briefing-time-window")
+  @UseFilters(VolunteerAvailabilityErrorFilter)
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Upsert briefing time window",
+  })
+  @ApiBody({
+    description: "Briefing time window",
+    type: PeriodRequestDto,
+  })
+  upsertBriefingTimeWindow(@Body() period: PeriodRequestDto): Promise<void> {
+    return this.applicationService.upsertBriefingTimeWindow(period);
   }
 }

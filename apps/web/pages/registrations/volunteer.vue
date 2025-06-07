@@ -400,10 +400,7 @@ const closeBriefingTimeWindowDialog = () => {
   isBriefingTimeWindowDialogOpen.value = false;
 };
 const saveBriefingTimeWindow = async (period: IProvidePeriod) => {
-  await configurationStore.save({
-    key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-    value: period,
-  });
+  await membershipApplicationStore.saveBriefingTimeWindow(period);
 };
 
 const handleMouseEnter = () => {

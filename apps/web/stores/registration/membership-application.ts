@@ -1,3 +1,4 @@
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 import type {
   HttpStringified,
   StaffApplication,
@@ -6,6 +7,7 @@ import type {
 } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import { STAFF, VOLUNTEER } from "@overbookd/registration";
+import type { IProvidePeriod } from "@overbookd/time";
 import { toStandAloneUser } from "@overbookd/user";
 import { MembershipApplicationRepository } from "~/repositories/registration/membership-application.repository";
 import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
@@ -198,6 +200,15 @@ export const useMembershipApplicationStore = defineStore(
 
         const navigationBadgeStore = useNavigationBadgeStore();
         navigationBadgeStore.fetchVolunteerCandidates();
+      },
+
+      async saveBriefingTimeWindow(period: IProvidePeriod) {
+        const res =
+          await MembershipApplicationRepository.saveBriefingTimeWindow(period);
+        if (isHttpError(res)) return;
+        const configurationStore = useConfigurationStore();
+        configurationStore.fetch(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY);
+        sendSuccessNotification("Le créneau du brief a été enregistré");
       },
 
       async hasCurrentStaffApplication(email: string): Promise<boolean> {

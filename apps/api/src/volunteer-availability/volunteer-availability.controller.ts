@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -25,9 +26,11 @@ import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
 import { PeriodResponseDto } from "../common/dto/period.response.dto";
+import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("volunteer-availability")
+@UseFilters(VolunteerAvailabilityErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected.",
 })
