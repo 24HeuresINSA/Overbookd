@@ -36,7 +36,7 @@ import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availabilit
 @ApiBearerAuth()
 @ApiTags("registrations/membership-applications/volunteers")
 @Controller("registrations/membership-applications/volunteers")
-@UseFilters(MembershipApplicationErrorFilter, VolunteerAvailabilityErrorFilter)
+@UseFilters(MembershipApplicationErrorFilter)
 @ApiBadRequestResponse({ description: "Bad Request" })
 @ApiForbiddenResponse({ description: "User can't access this resource" })
 @ApiUnauthorizedResponse({
@@ -183,6 +183,7 @@ export class VolunteerMembershipApplicationController {
   @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
   @Post("briefing-time-window")
+  @UseFilters(VolunteerAvailabilityErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -105,7 +105,7 @@ export class MembershipApplicationRepository {
 
   static saveBriefingTimeWindow(period: IProvidePeriod) {
     return HttpClient.post<void>(
-      `${this.basePath}/briefing-time-window`,
+      `${this.basePath}/volunteers/briefing-time-window`,
       period,
     );
   }

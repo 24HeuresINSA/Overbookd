@@ -1,3 +1,4 @@
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 import type {
   HttpStringified,
   StaffApplication,
@@ -205,6 +206,8 @@ export const useMembershipApplicationStore = defineStore(
         const res =
           await MembershipApplicationRepository.saveBriefingTimeWindow(period);
         if (isHttpError(res)) return;
+        const configurationStore = useConfigurationStore();
+        configurationStore.fetch(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY);
         sendSuccessNotification("Le créneau du brief a été enregistré");
       },
 
