@@ -67,10 +67,12 @@ import {
 import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@Controller("festival-tasks")
+@ApiTags("festival-tasks")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-tasks")
-@Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalTaskResponseDto,
   DraftGeneralResponseDto,
@@ -95,8 +97,6 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
   ReviewableInstructionsResponseDto,
   AssignmentResponseDto,
 )
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class FestivalTaskOverviewController {
   constructor(
     private readonly overviewService: FestivalTaskOverviewService,

@@ -8,10 +8,10 @@ import { TimelineService } from "./timeline.service";
 import { VIEW_TIMELINE } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("timeline")
+@ApiTags("timeline")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("timeline")
-@Controller("timeline")
 @ApiSwaggerResponse()
 export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}

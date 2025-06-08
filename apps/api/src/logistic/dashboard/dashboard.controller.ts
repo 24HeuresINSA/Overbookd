@@ -30,10 +30,10 @@ import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 import { RequestWithUserPayload } from "../../app.controller";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("logistic/dashboard")
+@ApiTags("logistic/dashboard")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("logistic/dashboard")
-@Controller("logistic/dashboard")
 @ApiSwaggerResponse()
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}

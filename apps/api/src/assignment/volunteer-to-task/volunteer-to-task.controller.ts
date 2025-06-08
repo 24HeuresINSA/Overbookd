@@ -19,10 +19,10 @@ import { AssignmentSummaryWithTask } from "@overbookd/http";
 import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("assignments/volunteer-to-task")
+@ApiTags("assignments/volunteer-to-task")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("assignments/volunteer-to-task")
-@Controller("assignments/volunteer-to-task")
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 export class VolunteerToTaskController {

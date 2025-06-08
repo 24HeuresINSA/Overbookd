@@ -26,10 +26,10 @@ import { InventoryRecordDto } from "./dto/inventory-record.dto";
 import { InventoryService } from "./inventory.service";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller("logistic/inventory")
 @ApiTags("logistic/inventory")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}

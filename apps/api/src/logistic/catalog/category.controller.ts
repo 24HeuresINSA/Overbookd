@@ -30,10 +30,10 @@ import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("logistic/categories")
+@ApiTags("logistic/catalog")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("logistic/catalog")
-@Controller("logistic/categories")
 @ApiSwaggerResponse()
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

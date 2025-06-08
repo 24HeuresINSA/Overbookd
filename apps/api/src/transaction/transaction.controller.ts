@@ -53,10 +53,10 @@ import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-
 import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("transactions")
+@ApiTags("transactions")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("transactions")
-@Controller("transactions")
 @UseFilters(TransactionErrorFilter)
 @ApiSwaggerResponse()
 export class TransactionController {

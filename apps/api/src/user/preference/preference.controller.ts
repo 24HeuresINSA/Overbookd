@@ -30,10 +30,10 @@ import { pagesURL, PageURL } from "@overbookd/web-page";
 import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("preferences")
+@ApiTags("preferences")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("preferences")
-@Controller("preferences")
 @ApiSwaggerResponse()
 export class PreferenceController {
   constructor(private readonly preferenceService: PreferenceService) {}

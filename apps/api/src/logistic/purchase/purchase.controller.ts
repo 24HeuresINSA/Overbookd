@@ -32,10 +32,10 @@ import { AddGearRequestForm } from "@overbookd/http";
 import { AddGearRequestDto } from "../common/dto/add-gear.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("logistic/purchases")
+@ApiTags("logistic/purchases")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("logistic/purchases")
-@Controller("logistic/purchases")
 @UseFilters(LogisticErrorFilter)
 @ApiSwaggerResponse()
 export class PurchaseController {

@@ -29,8 +29,8 @@ import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("configuration")
 @Controller("configuration")
+@ApiTags("configuration")
 @ApiSwaggerResponse()
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}

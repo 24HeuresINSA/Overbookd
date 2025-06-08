@@ -31,10 +31,10 @@ import { DateString } from "@overbookd/time";
 import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("charisma-events")
+@ApiTags("charisma-events")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("charisma-events")
-@Controller("charisma-events")
 @UseFilters(CharismaEventErrorFilter)
 @ApiSwaggerResponse()
 export class CharismaEventController {

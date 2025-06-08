@@ -8,10 +8,10 @@ import { HelpingVolunteerResponseDto } from "./dto/helping-volunteer.response.dt
 import { ASK_FOR_HELP } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("need-help")
+@ApiTags("need-help")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("need-help")
-@Controller("need-help")
 @ApiSwaggerResponse()
 export class NeedHelpController {
   constructor(private readonly needHelpService: NeedHelpService) {}

@@ -29,10 +29,10 @@ import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 import { CatalogGear } from "@overbookd/http";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller("logistic/gears")
 @ApiTags("logistic/catalog")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class GearController {
   constructor(private readonly catalogService: CatalogService) {}

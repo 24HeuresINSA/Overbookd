@@ -31,10 +31,10 @@ import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
 import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("contributions")
+@ApiTags("contributions")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("contributions")
-@Controller("contributions")
 @UseFilters(ContributionErrorFilter)
 @ApiSwaggerResponse()
 export class ContributionController {

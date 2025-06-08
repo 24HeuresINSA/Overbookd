@@ -37,10 +37,10 @@ import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-requ
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
+@Controller("festival-tasks")
+@ApiTags("festival-tasks")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-tasks")
-@Controller("festival-tasks")
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @ApiSwaggerResponse()
 export class InquirySectionController {

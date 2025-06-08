@@ -26,10 +26,10 @@ import { PeriodResponseDto } from "../common/dto/period.response.dto";
 import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("volunteer-availability")
+@ApiTags("volunteer-availability")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("volunteer-availability")
-@Controller("volunteer-availability")
 @UseFilters(VolunteerAvailabilityErrorFilter)
 @ApiSwaggerResponse()
 export class VolunteerAvailabilityController {

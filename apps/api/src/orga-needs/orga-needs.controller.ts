@@ -8,10 +8,10 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("orga-needs")
 @Controller("orga-needs")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("orga-needs")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class OrgaNeedsController {
   constructor(private readonly orgaNeedsService: OrgaNeedsService) {}

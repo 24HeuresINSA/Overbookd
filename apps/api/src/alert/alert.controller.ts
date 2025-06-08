@@ -6,8 +6,8 @@ import { RequestWithUserPayload } from "../app.controller";
 import { AlertsResponseDto } from "./dto/alerts.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("alerts")
 @Controller("alerts")
+@ApiTags("alerts")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()

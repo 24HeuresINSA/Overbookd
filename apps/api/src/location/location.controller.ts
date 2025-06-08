@@ -21,10 +21,10 @@ import { LocationRequestDto } from "./dto/location.request.dto.";
 import { MANAGE_LOCATION, VIEW_LOCATION } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("locations")
+@ApiTags("locations")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("locations")
-@Controller("locations")
 @ApiSwaggerResponse()
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}

@@ -20,8 +20,8 @@ import { UpdateTeamRequestDto } from "./dto/update-team.request";
 import { TeamService } from "./team.service";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("teams")
 @Controller("teams")
+@ApiTags("teams")
 @ApiSwaggerResponse()
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}

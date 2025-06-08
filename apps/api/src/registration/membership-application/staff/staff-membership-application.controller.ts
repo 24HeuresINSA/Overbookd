@@ -30,10 +30,10 @@ import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@Controller("registrations/membership-applications/staffs")
+@ApiTags("registrations/membership-applications/staffs")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("registrations/membership-applications/staffs")
-@Controller("registrations/membership-applications/staffs")
 @UseFilters(MembershipApplicationErrorFilter)
 @ApiSwaggerResponse()
 export class StaffMembershipApplicationController {

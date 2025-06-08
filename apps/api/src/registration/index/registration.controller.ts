@@ -17,8 +17,8 @@ import {
 import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiTags("registration")
 @Controller("registrations")
+@ApiTags("registration")
 @ApiSwaggerResponse()
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}

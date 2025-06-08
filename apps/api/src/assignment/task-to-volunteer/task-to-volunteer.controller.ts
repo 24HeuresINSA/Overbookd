@@ -23,10 +23,10 @@ import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignableVolunteerResponseDto } from "./dto/assignable-volunteer.reponse.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("assignments/task-to-volunteer")
+@ApiTags("assignments/task-to-volunteer")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("assignments/task-to-volunteer")
-@Controller("assignments/task-to-volunteer")
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 export class TaskToVolunteerController {

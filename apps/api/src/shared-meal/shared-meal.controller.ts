@@ -42,13 +42,13 @@ import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("shared-meals")
 @Controller("shared-meals")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("shared-meals")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
-@ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 @ApiSwaggerResponse()
+@ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 export class SharedMealController {
   constructor(private readonly sharedMeal: SharedMealService) {}
 

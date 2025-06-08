@@ -30,10 +30,10 @@ import { PermissionService } from "./permission.service";
 import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("permissions")
 @Controller("permissions")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("permissions")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}

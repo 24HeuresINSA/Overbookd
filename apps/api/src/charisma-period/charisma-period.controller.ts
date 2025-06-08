@@ -27,10 +27,10 @@ import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.req
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("charisma-periods")
+@ApiTags("charisma-periods")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("charisma-periods")
-@Controller("charisma-periods")
 @ApiSwaggerResponse()
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
@@ -84,7 +84,6 @@ export class CharismaPeriodController {
   @Put(":id")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "The Charisma Period has been successfully updated.",

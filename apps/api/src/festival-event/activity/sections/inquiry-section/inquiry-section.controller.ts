@@ -51,10 +51,12 @@ import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.re
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiBearerAuth()
-@ApiTags("festival-activities")
 @Controller("festival-activities")
+@ApiTags("festival-activities")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -63,8 +65,6 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 

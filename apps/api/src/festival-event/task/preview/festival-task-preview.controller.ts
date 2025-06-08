@@ -27,18 +27,18 @@ import { PreviewFestivalTaskValidatedResponseDto } from "./dto/preview-festival-
 import { RequestWithUserPayload } from "../../../app.controller";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@Controller("festival-tasks")
+@ApiTags("festival-tasks")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-tasks")
-@Controller("festival-tasks")
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   PreviewFestivalTaskDraftResponseDto,
   PreviewFestivalTaskInReviewResponseDto,
   PreviewFestivalTaskRefusedResponseDto,
   PreviewFestivalTaskValidatedResponseDto,
 )
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class FestivalTaskPreviewController {
   constructor(private readonly previewService: FestivalTaskPreviewService) {}
 

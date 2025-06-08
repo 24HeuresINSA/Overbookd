@@ -5,8 +5,8 @@ import { Observable } from "rxjs";
 import { LiveNotificationService } from "./live-notification.service";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiTags("live-notifications")
 @Controller("live-notifications")
+@ApiTags("live-notifications")
 @ApiSwaggerResponse()
 export class LiveNotificationController {
   constructor(private readonly live: LiveNotificationService) {}

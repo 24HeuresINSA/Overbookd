@@ -28,10 +28,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
+@Controller("festival-tasks")
+@ApiTags("festival-tasks")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-tasks")
-@Controller("festival-tasks")
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @ApiSwaggerResponse()
 export class GeneralSectionController {

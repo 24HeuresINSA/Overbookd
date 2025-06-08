@@ -39,10 +39,12 @@ import { GeneralSectionService } from "./general-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
+@Controller("festival-activities")
+@ApiTags("festival-activities")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-activities")
-@Controller("festival-activities")
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
@@ -51,8 +53,6 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 

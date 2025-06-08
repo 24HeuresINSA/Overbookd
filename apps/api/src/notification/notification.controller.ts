@@ -13,10 +13,10 @@ import { NotificationsResponseDto } from "./dto/notifications.response.dto";
 import { NotificationService } from "./notification.service";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("notifications")
+@ApiTags("notifications")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("notifications")
-@Controller("notifications")
 @ApiSwaggerResponse()
 export class NotificationController {
   constructor(private readonly notify: NotificationService) {}

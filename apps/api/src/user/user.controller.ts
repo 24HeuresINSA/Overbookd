@@ -53,8 +53,8 @@ import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("users")
 @Controller("users")
+@ApiTags("users")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()

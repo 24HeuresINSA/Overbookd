@@ -50,18 +50,18 @@ import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.respon
 import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiBearerAuth()
-@ApiTags("festival-activities")
 @Controller("festival-activities")
+@ApiTags("festival-activities")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class FestivalActivityPreviewController {
   constructor(
     private readonly previewService: FestivalActivityPreviewService,

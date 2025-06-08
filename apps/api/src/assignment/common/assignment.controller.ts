@@ -48,9 +48,9 @@ import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("assignments")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiBearerAuth()
 @ApiTags("assignments")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 @ApiExtraModels(NamelyDemandedDto, TeamMemberDto)

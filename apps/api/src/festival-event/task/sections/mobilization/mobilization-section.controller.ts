@@ -39,10 +39,10 @@ import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/rev
 import { RequestWithUserPayload } from "../../../../app.controller";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
+@Controller("festival-tasks")
+@ApiTags("festival-tasks")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-tasks")
-@Controller("festival-tasks")
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @ApiSwaggerResponse()
 export class MobilizationSectionController {

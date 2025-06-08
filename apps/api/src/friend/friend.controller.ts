@@ -27,10 +27,10 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("friends")
+@ApiTags("friends")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("friends")
-@Controller("friends")
 @ApiSwaggerResponse()
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}

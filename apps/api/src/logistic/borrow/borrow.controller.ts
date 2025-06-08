@@ -32,10 +32,10 @@ import { AddGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
+@Controller("logistic/borrows")
+@ApiTags("logistic/borrows")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("logistic/borrows")
-@Controller("logistic/borrows")
 @UseFilters(LogisticErrorFilter)
 @ApiSwaggerResponse()
 export class BorrowController {

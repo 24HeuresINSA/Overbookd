@@ -50,10 +50,12 @@ import { FestivalActivityErrorFilter } from "../common/festival-activity-error.f
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@Controller("festival-activities")
+@ApiTags("festival-activities")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("festival-activities")
-@Controller("festival-activities")
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -66,8 +68,6 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@ApiSwaggerResponse()
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 

@@ -52,8 +52,8 @@ import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiTags("planning")
 @Controller("planning")
+@ApiTags("planning")
 @ApiSwaggerResponse()
 export class PlanningController {
   constructor(

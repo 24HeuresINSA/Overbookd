@@ -31,10 +31,10 @@ import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
 import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
+@Controller("registrations/membership-applications/volunteers")
+@ApiTags("registrations/membership-applications/volunteers")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@ApiTags("registrations/membership-applications/volunteers")
-@Controller("registrations/membership-applications/volunteers")
 @UseFilters(MembershipApplicationErrorFilter)
 @ApiSwaggerResponse()
 export class VolunteerMembershipApplicationController {

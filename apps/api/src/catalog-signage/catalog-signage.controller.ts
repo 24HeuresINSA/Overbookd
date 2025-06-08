@@ -34,10 +34,10 @@ import { join } from "path";
 import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("signages")
+@ApiTags("signages")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiTags("signages")
-@Controller("signages")
 @UseFilters(CatalogSignageErrorFilter)
 @ApiSwaggerResponse()
 export class CatalogSignageController {

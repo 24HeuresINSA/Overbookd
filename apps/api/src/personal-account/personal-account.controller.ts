@@ -29,10 +29,10 @@ import {
 import { AdjustBarrelOpeningDateRequestDto } from "./dto/adjust-barrel-opening-date.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("personal-account")
 @Controller("personal-account")
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("personal-account")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(SimilarBarrelExistFilter, BarrelNotConfiguredFilter)
 @ApiSwaggerResponse()
 export class PersonalAccountController {

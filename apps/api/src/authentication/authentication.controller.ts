@@ -17,8 +17,8 @@ import { RefreshAccessRequestDto } from "./dto/refresh-access.request.dto";
 import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/time";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("authentication")
 @Controller()
+@ApiTags("authentication")
 @ApiSwaggerResponse()
 export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
