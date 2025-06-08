@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import {
-  ONE_SECOND_IN_MS,
+  ONE_MINUTE_IN_MS,
   Period,
   formatDateWithHoursAndMinutesOnly,
 } from "@overbookd/time";
@@ -36,10 +36,7 @@ const now = ref(new Date());
 const timer = ref<ReturnType<typeof setInterval>>();
 
 onMounted(() => {
-  timer.value = setInterval(
-    () => (now.value = new Date()),
-    5 * ONE_SECOND_IN_MS,
-  );
+  timer.value = setInterval(() => (now.value = new Date()), ONE_MINUTE_IN_MS);
 });
 onBeforeUnmount(() => clearInterval(timer.value));
 
