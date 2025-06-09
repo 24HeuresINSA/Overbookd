@@ -12,9 +12,7 @@ import {
   Delete,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiForbiddenResponse,
   ApiResponse,
   ApiParam,
   ApiTags,
@@ -42,24 +40,20 @@ import {
 import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("shared-meals")
 @Controller("shared-meals")
-@UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("shared-meals")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 export class SharedMealController {
   constructor(private readonly sharedMeal: SharedMealService) {}
 
-  @Permission(OFFER_SHARED_MEAL)
   @Post()
+  @Permission(OFFER_SHARED_MEAL)
   @ApiResponse({
     status: 201,
     description: "Newly available shared meal",
@@ -73,8 +67,8 @@ export class SharedMealController {
     return this.sharedMeal.offer(meal, user);
   }
 
-  @Permission(SHOTGUN_SHARED_MEAL)
   @Get()
+  @Permission(SHOTGUN_SHARED_MEAL)
   @ApiResponse({
     status: 200,
     description: "Meals available",
@@ -90,8 +84,8 @@ export class SharedMealController {
     return this.sharedMeal.all();
   }
 
-  @Permission(SHOTGUN_SHARED_MEAL)
   @Get(":mealId")
+  @Permission(SHOTGUN_SHARED_MEAL)
   @ApiResponse({
     status: 200,
     description: "Selected meal details",
@@ -106,8 +100,8 @@ export class SharedMealController {
     return this.sharedMeal.find(mealId);
   }
 
-  @Permission(SHOTGUN_SHARED_MEAL)
   @Post(":mealId/shotgun")
+  @Permission(SHOTGUN_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -126,8 +120,8 @@ export class SharedMealController {
     return this.sharedMeal.shotgun(mealId, user.id);
   }
 
-  @Permission(OFFER_SHARED_MEAL)
   @Post(":mealId/expense")
+  @Permission(OFFER_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -148,8 +142,8 @@ export class SharedMealController {
     return this.sharedMeal.recordExpense(mealId, user, expense);
   }
 
-  @Permission(SHOTGUN_SHARED_MEAL)
   @Delete(":mealId/shotgun/:guestId")
+  @Permission(SHOTGUN_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -174,8 +168,8 @@ export class SharedMealController {
     return this.sharedMeal.cancelShotgun(mealId, guestId, user.id);
   }
 
-  @Permission(SHOTGUN_SHARED_MEAL)
   @Delete(":mealId")
+  @Permission(SHOTGUN_SHARED_MEAL)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -192,8 +186,8 @@ export class SharedMealController {
     return this.sharedMeal.cancelMeal(mealId, user.id);
   }
 
-  @Permission(OFFER_SHARED_MEAL)
   @Post(":mealId/close-shotguns")
+  @Permission(OFFER_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -212,8 +206,8 @@ export class SharedMealController {
     return this.sharedMeal.closeShotguns(mealId, user.id);
   }
 
-  @Permission(OFFER_SHARED_MEAL)
   @Post(":mealId/open-shotguns")
+  @Permission(OFFER_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

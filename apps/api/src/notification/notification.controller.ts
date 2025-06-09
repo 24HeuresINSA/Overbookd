@@ -1,27 +1,26 @@
-import { Controller, Delete, Get, Request, UseGuards } from "@nestjs/common";
 import {
-  ApiBadGatewayResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { RequestWithUserPayload } from "../app.controller";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { NotificationsResponseDto } from "./dto/notifications.response.dto";
 import { NotificationService } from "./notification.service";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("notifications")
 @ApiTags("notifications")
 @ApiBearerAuth()
-@ApiBadGatewayResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({
-  description: "User is not allowed to access this resource.",
-})
-@Controller("notifications")
+@UseGuards(JwtAuthGuard)
+@ApiSwaggerResponse()
 export class NotificationController {
   constructor(private readonly notify: NotificationService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiResponse({
     status: 200,
@@ -32,8 +31,8 @@ export class NotificationController {
     return this.notify.hasNotifications(user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete()
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Volunteer's notifications set as red",

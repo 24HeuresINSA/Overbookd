@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiBody,
   ApiParam,
   ApiResponse,
@@ -45,25 +43,21 @@ import {
   ForceInChargeInstructionsRequestDto,
   ForceInstructionsRequestDto,
 } from "./dto/force-instructions.request.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@ApiTags("festival-tasks")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class InstructionsSectionController {
   constructor(
     private readonly instructionsService: InstructionsSectionService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Patch(":id/instructions")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -92,9 +86,8 @@ export class InstructionsSectionController {
     return this.instructionsService.update(id, instructions, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(FORCE_WRITE_FT)
   @Patch(":id/force/instructions")
+  @Permission(FORCE_WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "Festival task",
@@ -135,9 +128,8 @@ export class InstructionsSectionController {
     return this.instructionsService.force(id, instructions, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/contacts")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -165,9 +157,8 @@ export class InstructionsSectionController {
     return this.instructionsService.addContact(ftId, contactId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/contacts/:contactId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -197,9 +188,8 @@ export class InstructionsSectionController {
     return this.instructionsService.removeContact(ftId, contactId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge/volunteers")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -227,9 +217,8 @@ export class InstructionsSectionController {
     return this.instructionsService.addInChargeVolunteer(ftId, volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -259,9 +248,8 @@ export class InstructionsSectionController {
     return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Post(":ftId/instructions/in-charge")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -290,9 +278,8 @@ export class InstructionsSectionController {
     return this.instructionsService.initInCharge(ftId, form, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

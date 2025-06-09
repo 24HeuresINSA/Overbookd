@@ -19,16 +19,18 @@ import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
 import { LocationService } from "./location.service";
 import { LocationRequestDto } from "./dto/location.request.dto.";
 import { MANAGE_LOCATION, VIEW_LOCATION } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("locations")
 @Controller("locations")
+@ApiTags("locations")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiSwaggerResponse()
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_LOCATION)
   @Post()
+  @Permission(MANAGE_LOCATION)
   @ApiBody({
     type: CreateLocationRequestDto,
   })
@@ -40,9 +42,8 @@ export class LocationController {
     return this.locationService.create(location);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_LOCATION)
   @Get()
+  @Permission(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     isArray: true,
@@ -52,9 +53,8 @@ export class LocationController {
     return this.locationService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_LOCATION)
   @Get(":id")
+  @Permission(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -63,9 +63,8 @@ export class LocationController {
     return this.locationService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_LOCATION)
   @Put(":id")
+  @Permission(MANAGE_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -77,9 +76,8 @@ export class LocationController {
     return this.locationService.update(id, location);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_LOCATION)
   @Delete(":id")
+  @Permission(MANAGE_LOCATION)
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   remove(@Param("id", ParseIntPipe) id: number) {

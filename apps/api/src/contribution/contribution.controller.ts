@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiResponse,
   ApiBody,
   ApiParam,
@@ -31,25 +29,19 @@ import { AdherentResponseDto } from "./dto/adherent.response.dto";
 import { ContributionErrorFilter } from "./contribution.filter";
 import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
 import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiBearerAuth()
-@ApiTags("contributions")
-@UseFilters(ContributionErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
 @Controller("contributions")
+@ApiTags("contributions")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(ContributionErrorFilter)
+@ApiSwaggerResponse()
 export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Get("out-to-date-adherents")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -61,10 +53,8 @@ export class ContributionController {
     return this.contributionService.findAdherentsWithContributionOutToDate();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Get("valid-adherents")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -76,10 +66,8 @@ export class ContributionController {
     return this.contributionService.findAdherentsWithValidContribution();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Post()
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -93,10 +81,8 @@ export class ContributionController {
     return this.contributionService.pay(contributionData);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Patch("adherents/:adherentId/editions/:edition")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -124,10 +110,8 @@ export class ContributionController {
     return this.contributionService.edit(adherentId, edition, amount);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
   @Delete("adherents/:adherentId/editions/:edition")
+  @Permission(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

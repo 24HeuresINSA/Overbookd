@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -38,29 +36,25 @@ import { AddElectricitySupplyRequestDto } from "./dto/add-electricity-supply.req
 import { SupplyRequestDto } from "./dto/update-supply.request.dto";
 import { SupplySectionService } from "./supply-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class SupplySectionController {
   constructor(private readonly supplyService: SupplySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":id/supply")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -90,9 +84,8 @@ export class SupplySectionController {
     return this.supplyService.saveSupplySection(id, supply);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":id/supply/electricity")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -124,9 +117,8 @@ export class SupplySectionController {
     return this.supplyService.addElectricitySupply(id, electricitySupply);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":faId/supply/electricity/:electricitySupplyId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -170,9 +162,8 @@ export class SupplySectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/supply/electricity/:electricitySupplyId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

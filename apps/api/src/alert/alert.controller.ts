@@ -1,27 +1,19 @@
 import { Controller, Get, Request, UseGuards } from "@nestjs/common";
-import {
-  ApiBadGatewayResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AlertService } from "./alert.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
 import { AlertsResponseDto } from "./dto/alerts.response.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
+@Controller("alerts")
 @ApiTags("alerts")
 @ApiBearerAuth()
-@ApiBadGatewayResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({
-  description: "User is not allowed to access this resource.",
-})
-@Controller("alerts")
+@UseGuards(JwtAuthGuard)
+@ApiSwaggerResponse()
 export class AlertController {
   constructor(private readonly alert: AlertService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiResponse({
     status: 200,

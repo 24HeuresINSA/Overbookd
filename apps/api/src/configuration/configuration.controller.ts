@@ -27,9 +27,11 @@ import {
 } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("configuration")
 @Controller("configuration")
+@ApiTags("configuration")
+@ApiSwaggerResponse()
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
@@ -54,10 +56,10 @@ export class ConfigurationController {
     return this.configurationService.findOne(key);
   }
 
+  @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_SOFT)
-  @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
   @ApiResponse({
     status: 201,
     description: "Upsert briefing time window",
@@ -76,10 +78,10 @@ export class ConfigurationController {
     });
   }
 
+  @Post(":key")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_CONFIG)
-  @Post(":key")
   @ApiResponse({
     status: 201,
     description: "Upsert configuration",
@@ -96,10 +98,10 @@ export class ConfigurationController {
     return this.configurationService.upsert({ key, value });
   }
 
+  @Delete(":key")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_CONFIG)
-  @Delete(":key")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

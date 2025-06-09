@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   ApiParam,
@@ -67,15 +65,14 @@ import {
   ValidatedReviewsResponseDto,
 } from "../common/dto/reviewable/reviews.response.dto";
 import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalTaskResponseDto,
   DraftGeneralResponseDto,
@@ -100,17 +97,14 @@ import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/revi
   ReviewableInstructionsResponseDto,
   AssignmentResponseDto,
 )
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-tasks")
 export class FestivalTaskOverviewController {
   constructor(
     private readonly overviewService: FestivalTaskOverviewService,
     private readonly statistics: StatisticsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
   @Get("statistics")
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Festival tasks statistics",
@@ -121,9 +115,8 @@ export class FestivalTaskOverviewController {
     return this.statistics.festivalTask;
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
   @Get(":id")
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -149,9 +142,8 @@ export class FestivalTaskOverviewController {
     return this.overviewService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
   @Get("my-refusals/count")
+  @Permission(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Number of refused festival tasks for the user",
@@ -181,9 +173,8 @@ export class FestivalTaskOverviewController {
     return this.overviewService.createOne(user, form);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Delete(":id")
+  @Permission(WRITE_FT)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

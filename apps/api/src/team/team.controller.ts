@@ -18,9 +18,11 @@ import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { UpdateTeamRequestDto } from "./dto/update-team.request";
 import { TeamService } from "./team.service";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("teams")
 @Controller("teams")
+@ApiTags("teams")
+@ApiSwaggerResponse()
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
@@ -94,7 +96,7 @@ export class TeamController {
     description: "Update a team",
     type: TeamResponseDto,
   })
-  async updateTeam(
+  updateTeam(
     @Param("code") code: string,
     @Body() data: UpdateTeamRequestDto,
   ): Promise<TeamResponseDto> {
@@ -110,7 +112,7 @@ export class TeamController {
     status: 204,
     description: "Delete a team",
   })
-  async deleteTeam(@Param("code") code: string): Promise<void> {
+  deleteTeam(@Param("code") code: string): Promise<void> {
     return this.teamService.deleteTeam(code);
   }
 }

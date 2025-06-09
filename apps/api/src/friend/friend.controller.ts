@@ -11,11 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -28,25 +25,17 @@ import { FriendService } from "./friend.service";
 import { MANAGE_USERS } from "@overbookd/permission";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("friend")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@ApiNotFoundResponse({
-  description: "Friends not found",
-})
 @Controller("friends")
+@ApiTags("friends")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@ApiSwaggerResponse()
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get friends list",
@@ -57,9 +46,7 @@ export class FriendController {
     return this.friendService.findFriends();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get friends of a user",
@@ -78,9 +65,7 @@ export class FriendController {
     return this.friendService.findUserFriends(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Create relation between two users",
@@ -97,7 +82,6 @@ export class FriendController {
     return this.friendService.create(req.user.id, friend.id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(":friendId")
   @HttpCode(204)
   @ApiResponse({
@@ -117,10 +101,9 @@ export class FriendController {
     return this.friendService.delete(req.user.id, friendId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_USERS)
   @Post(":id")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_USERS)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -138,10 +121,9 @@ export class FriendController {
     return this.friendService.create(id, friend.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_USERS)
   @Delete(":id/:friendId")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(MANAGE_USERS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -15,9 +15,11 @@ import { UserAccessResponseDto } from "./dto/user-access.response.dto";
 import { Throttle } from "@nestjs/throttler";
 import { RefreshAccessRequestDto } from "./dto/refresh-access.request.dto";
 import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/time";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("authentication")
 @Controller()
+@ApiTags("authentication")
+@ApiSwaggerResponse()
 export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
 
@@ -31,12 +33,7 @@ export class AuthenticationController {
     description: "User access token",
     type: UserAccessResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    description: "Wrong email or password",
-  })
-  @ApiBadRequestResponse({
-    description: "Bad Request",
-  })
+  @ApiUnauthorizedResponse({ description: "Wrong email or password" })
   async login(@Body() userCredentials: LoginRequestDto) {
     return this.authService.login(userCredentials);
   }
@@ -51,7 +48,6 @@ export class AuthenticationController {
     type: UserAccessResponseDto,
   })
   @ApiUnauthorizedResponse({ description: "Wrong refresh token" })
-  @ApiBadRequestResponse({ description: "Bad Request" })
   refresh(@Body() refreshToken: RefreshAccessRequestDto) {
     return this.authService.refresh(refreshToken);
   }

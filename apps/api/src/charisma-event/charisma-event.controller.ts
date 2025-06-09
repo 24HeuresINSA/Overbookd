@@ -12,10 +12,8 @@ import {
   Patch,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -31,23 +29,19 @@ import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-partic
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 import { DateString } from "@overbookd/time";
 import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("charisma-events")
 @Controller("charisma-events")
+@ApiTags("charisma-events")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(CharismaEventErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("all-participations")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all charisma event participations",
@@ -58,10 +52,8 @@ export class CharismaEventController {
     return this.charismaEvent.fetchAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Get("potential-participants")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all potential charisma event participants",
@@ -74,10 +66,8 @@ export class CharismaEventController {
     return this.charismaEvent.fetchPotentialParticipants();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Post()
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -95,10 +85,8 @@ export class CharismaEventController {
     return this.charismaEvent.addParticipations(event, participants);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Patch(":slug/date/:date/participant/:participantId")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -138,10 +126,8 @@ export class CharismaEventController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CHARISMA_EVENTS)
   @Delete(":slug/date/:date/participant/:participantId")
+  @Permission(MANAGE_CHARISMA_EVENTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -1,39 +1,23 @@
-import { Controller, Get, HttpCode, Query, UseGuards } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { NeedHelpService } from "./need-help.service";
 import { HelpingVolunteerResponseDto } from "./dto/helping-volunteer.response.dto";
 import { ASK_FOR_HELP } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("need-help")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@ApiNotFoundResponse({
-  description: "Resource not found",
-})
 @Controller("need-help")
+@ApiTags("need-help")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiSwaggerResponse()
 export class NeedHelpController {
   constructor(private readonly needHelpService: NeedHelpService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ASK_FOR_HELP)
   @Get()
-  @HttpCode(200)
+  @Permission(ASK_FOR_HELP)
   @ApiQuery({
     name: "start",
     required: true,

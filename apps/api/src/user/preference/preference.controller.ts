@@ -12,9 +12,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
-  ApiUnauthorizedResponse,
   ApiResponse,
   ApiBody,
   ApiQuery,
@@ -31,20 +28,16 @@ import { AddPageToFavoritesRequestDto } from "./dto/add-page-to-favorites.reques
 import { PreferenceResponseDto } from "./dto/preference.response.dto";
 import { pagesURL, PageURL } from "@overbookd/web-page";
 import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("preferences")
 @Controller("preferences")
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User dont have the right to access this route",
-})
+@ApiTags("preferences")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@ApiSwaggerResponse()
 export class PreferenceController {
   constructor(private readonly preferenceService: PreferenceService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get("me")
   @ApiResponse({
     status: 200,
@@ -57,8 +50,6 @@ export class PreferenceController {
     return this.preferenceService.findOne(user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Patch("me/planning")
   @ApiResponse({
     status: 200,
@@ -76,8 +67,6 @@ export class PreferenceController {
     return this.preferenceService.updatePlanningPreference(user.id, preference);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Patch("me/assignment")
   @ApiResponse({
     status: 200,
@@ -98,10 +87,9 @@ export class PreferenceController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(SET_FAVORITE_PAGES)
   @Patch("me/favorite-pages")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(SET_FAVORITE_PAGES)
   @ApiResponse({
     status: 200,
     description: "Updated favorite pages",
@@ -118,10 +106,9 @@ export class PreferenceController {
     return this.preferenceService.addPageToFavorites(user.id, page);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(SET_FAVORITE_PAGES)
   @Delete("me/favorite-pages")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(SET_FAVORITE_PAGES)
   @ApiResponse({
     status: 200,
     description: "Updated favorite pages",

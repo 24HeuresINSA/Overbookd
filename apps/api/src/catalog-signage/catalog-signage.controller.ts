@@ -14,14 +14,7 @@ import {
   StreamableFile,
   UploadedFile,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -39,23 +32,19 @@ import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
 import { join } from "path";
 import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("signages")
 @Controller("signages")
+@ApiTags("signages")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(CatalogSignageErrorFilter)
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiSwaggerResponse()
 export class CatalogSignageController {
   constructor(private readonly catalogSignageService: CatalogSignageService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_SIGNAGE_CATALOG)
   @Get()
+  @Permission(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get all signage items in catalog",
@@ -66,9 +55,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Post()
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to create",
     type: SignageFormRequestDto,
@@ -82,9 +70,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.create(signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Put(":id")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to update",
     type: SignageFormRequestDto,
@@ -101,9 +88,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.update(id, signage);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Delete(":id")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -113,9 +99,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.remove(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Permission(WRITE_SIGNAGE_CATALOG)
   @Post(":id/image")
+  @Permission(WRITE_SIGNAGE_CATALOG)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -145,9 +130,8 @@ export class CatalogSignageController {
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_SIGNAGE_CATALOG)
   @Get(":id/image")
+  @Permission(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get signage image",

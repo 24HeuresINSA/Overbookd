@@ -7,15 +7,7 @@ import {
   Post,
   UseFilters,
 } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
+import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
 import {
@@ -23,15 +15,11 @@ import {
   RegistrationErrorFilter,
 } from "./registration-error.filter";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("registration")
 @Controller("registrations")
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User dont have the right to access this route",
-})
+@ApiTags("registration")
+@ApiSwaggerResponse()
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 

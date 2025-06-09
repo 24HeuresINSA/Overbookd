@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiBody,
   ApiParam,
   ApiResponse,
@@ -37,23 +35,19 @@ import {
 import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("festival-tasks")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
+@ApiTags("festival-tasks")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Post(":ftId/inquiry/requests")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -82,9 +76,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryRequest(ftId, form);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Patch(":ftId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -121,9 +114,8 @@ export class InquirySectionController {
     return this.inquiryService.updateInquiryRequest(ftId, slug, inquiryRequest);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Delete(":ftId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -154,9 +146,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryRequest(ftId, inquirySlug);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FT)
   @Patch(":ftId/inquiry/requests/:inquirySlug/link-drive")
+  @Permission(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

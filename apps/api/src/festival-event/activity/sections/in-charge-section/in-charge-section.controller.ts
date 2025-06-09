@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -38,29 +36,25 @@ import { AddContractorRequestDto } from "./dto/add-contractor.request.dto";
 import { InChargeRequestDto } from "./dto/update-in-charge.request.dto";
 import { InChargeSectionService } from "./in-charge-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class InChargeSectionController {
   constructor(private readonly inChargeService: InChargeSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":id/in-charge")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -90,9 +84,8 @@ export class InChargeSectionController {
     return this.inChargeService.saveInChargeSection(id, inCharge);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":id/in-charge/contractors")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -123,9 +116,8 @@ export class InChargeSectionController {
     return this.inChargeService.addContractor(id, contractor);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":faId/in-charge/contractors/:contractorId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -168,9 +160,8 @@ export class InChargeSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/in-charge/contractors/:contractorId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

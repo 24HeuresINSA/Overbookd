@@ -11,11 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -31,25 +28,18 @@ import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
 import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
-@ApiTags("permissions")
 @Controller("permissions")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
-@ApiNotFoundResponse({
-  description: "Can't find a permission resource",
-})
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiTags("permissions")
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@ApiSwaggerResponse()
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
-  @Permission(MANAGE_PERMISSIONS)
   @Get()
+  @Permission(MANAGE_PERMISSIONS)
   @ApiResponse({
     status: 200,
     description: "Get all permissions",
@@ -60,8 +50,8 @@ export class PermissionController {
     return this.permissionService.permission({ orderBy: { name: "asc" } });
   }
 
-  @Permission(MANAGE_PERMISSIONS)
   @Post()
+  @Permission(MANAGE_PERMISSIONS)
   @ApiResponse({
     status: 201,
     description: "Create a permission",
@@ -77,8 +67,8 @@ export class PermissionController {
     return this.permissionService.createPermission(payload);
   }
 
-  @Permission(MANAGE_PERMISSIONS)
   @Patch(":id")
+  @Permission(MANAGE_PERMISSIONS)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -101,8 +91,8 @@ export class PermissionController {
     return this.permissionService.updatePermission(id, payload);
   }
 
-  @Permission(MANAGE_PERMISSIONS)
   @Delete(":id")
+  @Permission(MANAGE_PERMISSIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -117,9 +107,8 @@ export class PermissionController {
     return this.permissionService.deletePermission(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERMISSIONS)
   @Post(":permission/teams")
+  @Permission(MANAGE_PERMISSIONS)
   @ApiBearerAuth()
   @ApiBody({
     description: "team to grant the permission to",
@@ -137,9 +126,8 @@ export class PermissionController {
     await this.permissionService.grant(permission).to(team);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERMISSIONS)
   @Delete(":permission/teams/:code")
+  @Permission(MANAGE_PERMISSIONS)
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({

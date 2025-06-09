@@ -13,15 +13,11 @@ import {
 } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
@@ -32,14 +28,13 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("logistic/catalog")
 @Controller("logistic/categories")
+@ApiTags("logistic/catalog")
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiUnauthorizedResponse({
-  description: "User must be authenticated",
-})
+@ApiSwaggerResponse()
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -69,7 +64,7 @@ export class CategoryController {
     return this.categoryService.search({ name, owner });
   }
 
-  @Get("/tree")
+  @Get("tree")
   @Permission(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
@@ -88,12 +83,6 @@ export class CategoryController {
     description: "Get a specific category",
     type: CategoryResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: "id",
     type: Number,
@@ -111,12 +100,6 @@ export class CategoryController {
     status: 204,
     description: "Delete a category by id",
   })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
   @ApiParam({
     name: "id",
     type: Number,
@@ -129,17 +112,10 @@ export class CategoryController {
 
   @Post()
   @Permission(WRITE_GEAR_CATALOG)
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Creating a new category",
     type: CategoryResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   create(
     @Body() categoryForm: CategoryFormRequestDto,
@@ -154,15 +130,6 @@ export class CategoryController {
     status: 200,
     description: "Updating a category",
     type: CategoryResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: "Request is not formated as expected",
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   @ApiParam({
     name: "id",

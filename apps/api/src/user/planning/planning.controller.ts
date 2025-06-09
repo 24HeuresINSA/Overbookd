@@ -16,16 +16,13 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiProduces,
   ApiQuery,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
@@ -53,24 +50,21 @@ import { PlanningRenderStrategy } from "./render/render-strategy";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiTags("planning")
 @Controller("planning")
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User dont have the right to access this route",
-})
+@ApiTags("planning")
+@ApiSwaggerResponse()
 export class PlanningController {
   constructor(
     private readonly planning: PlanningService,
     private readonly secret: SecretService,
   ) {}
 
+  @Get()
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
-  @Get()
   @ApiResponse({
     status: 200,
     description: "Get current volunteer planning",
@@ -99,10 +93,10 @@ export class PlanningController {
     }
   }
 
+  @Get("volunteers")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Get("volunteers")
   @ApiResponse({
     status: 200,
     description: "Volunteers with assignments",
@@ -113,10 +107,10 @@ export class PlanningController {
     return this.planning.getVolunteers();
   }
 
+  @Get("subscribe")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(SYNC_PLANNING)
   @ApiBearerAuth()
-  @Get("subscribe")
   @ApiResponse({
     status: 200,
     description: "Get current user subscription planning link",
@@ -142,10 +136,10 @@ export class PlanningController {
     return icalRender.render(tasks);
   }
 
+  @Post("booklets")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Post("booklets")
   @ApiResponse({
     status: 200,
     description: "Get volunteers plannings as booklets",
@@ -179,10 +173,10 @@ export class PlanningController {
     }
   }
 
+  @Get("booklets/:volunteerId")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Get("booklets/:volunteerId")
   @ApiResponse({
     status: 200,
     description: "Get volunteer planning as a booklet",
@@ -208,10 +202,10 @@ export class PlanningController {
     }
   }
 
+  @Get(":volunteerId")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Get(":volunteerId")
   @ApiResponse({
     status: 200,
     description: "Get volunteer planning",
@@ -240,10 +234,10 @@ export class PlanningController {
     }
   }
 
+  @Get(":volunteerId/break-periods")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Get(":volunteerId/break-periods")
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
@@ -256,10 +250,10 @@ export class PlanningController {
     return this.planning.getBreakPeriods(volunteerId);
   }
 
+  @Post(":volunteerId/break-periods")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Post(":volunteerId/break-periods")
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
@@ -281,10 +275,10 @@ export class PlanningController {
     });
   }
 
+  @Delete(":volunteerId/break-periods")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
-  @Delete(":volunteerId/break-periods")
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",

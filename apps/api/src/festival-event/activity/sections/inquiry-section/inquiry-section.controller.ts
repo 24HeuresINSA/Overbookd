@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -51,15 +49,14 @@ import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -68,14 +65,11 @@ import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-requ
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -106,9 +100,8 @@ export class InquirySectionController {
     return this.inquiryService.initInquiry(faId, inquiryInitializer);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -134,9 +127,8 @@ export class InquirySectionController {
     return this.inquiryService.clearInquiry(faId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry/time-windows")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -167,9 +159,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryTimeWindow(faId, timeWindow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":faId/inquiry/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -206,9 +197,8 @@ export class InquirySectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -241,9 +231,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryTimeWindow(faId, timeWindowId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":faId/inquiry/requests")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -275,9 +264,8 @@ export class InquirySectionController {
     return this.inquiryService.addInquiryRequest(faId, inquiryRequest);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -316,9 +304,8 @@ export class InquirySectionController {
     return this.inquiryService.updateInquiryRequest(faId, slug, inquiryRequest);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/inquiry/requests/:inquirySlug")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -351,9 +338,8 @@ export class InquirySectionController {
     return this.inquiryService.removeInquiryRequest(faId, slug);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FA)
   @Patch(":faId/inquiry/requests/:inquirySlug/link-drive")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

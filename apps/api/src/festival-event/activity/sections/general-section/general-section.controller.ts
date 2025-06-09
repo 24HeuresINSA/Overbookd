@@ -13,8 +13,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiBody,
   ApiParam,
@@ -39,15 +37,14 @@ import { FestivalActivityErrorFilter } from "../../common/festival-activity-erro
 import { GeneralRequestDto } from "./dto/update-general.request.dto";
 import { GeneralSectionService } from "./general-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
@@ -56,14 +53,11 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":id/general")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -93,9 +87,8 @@ export class GeneralSectionController {
     return this.generalService.saveGeneralSection(id, general);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":id/general/time-windows")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -126,9 +119,8 @@ export class GeneralSectionController {
     return this.generalService.addGeneralTimeWindow(id, timeWindow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Patch(":faId/general/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -165,9 +157,8 @@ export class GeneralSectionController {
     );
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":faId/general/time-windows/:timeWindowId")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

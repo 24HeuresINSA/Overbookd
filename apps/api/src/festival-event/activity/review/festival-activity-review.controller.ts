@@ -12,8 +12,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -50,15 +48,14 @@ import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -71,14 +68,11 @@ import { FestivalEventErrorFilter } from "../../common/festival-event-error.filt
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":faId/feedbacks")
+  @Permission(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -110,9 +104,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.addFeedback(faId, user, feedback);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post(":faId/ask-for-review")
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -138,9 +131,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.toReview(faId, user);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FA)
   @Post(":faId/approve")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -172,9 +164,8 @@ export class FestivalActivityReviewController {
     return this.reviewService.approve(faId, jwt, team);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FA)
   @Post(":faId/reject")
+  @Permission(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

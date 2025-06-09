@@ -1,21 +1,13 @@
 import { Controller, Query, Sse } from "@nestjs/common";
-import {
-  ApiBadGatewayResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { DomainEvent } from "@overbookd/domain-events";
 import { Observable } from "rxjs";
 import { LiveNotificationService } from "./live-notification.service";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
-@ApiTags("notifications")
-@ApiBearerAuth()
-@ApiBadGatewayResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({
-  description: "User is not allowed to access this resource.",
-})
 @Controller("live-notifications")
+@ApiTags("live-notifications")
+@ApiSwaggerResponse()
 export class LiveNotificationController {
   constructor(private readonly live: LiveNotificationService) {}
 

@@ -11,14 +11,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
@@ -31,23 +28,19 @@ import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.requ
 import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
 import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
-@ApiTags("registrations/membership-applications/staffs")
 @Controller("registrations/membership-applications/staffs")
+@ApiTags("registrations/membership-applications/staffs")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @UseFilters(MembershipApplicationErrorFilter)
-@ApiBadRequestResponse({ description: "Bad Request" })
-@ApiForbiddenResponse({ description: "User can't access this resource" })
-@ApiUnauthorizedResponse({
-  description: "User dont have the right to access this route",
-})
+@ApiSwaggerResponse()
 export class StaffMembershipApplicationController {
   constructor(
     private readonly applicationService: StaffMembershipApplicationService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Post()
   @HttpCode(204)
   @ApiResponse({
@@ -62,10 +55,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.applyFor(email, token);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Get()
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get all staff candidates",
@@ -76,10 +68,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getCandidates();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Get("candidates/count")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get the staff candidates count",
@@ -88,10 +79,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.countCandidates();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Get("rejected")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get all rejected staff candidates",
@@ -102,10 +92,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getRejectedCandidates();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Post("enroll")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -119,25 +108,22 @@ export class StaffMembershipApplicationController {
     return this.applicationService.enroll(candidates);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Get("invitation-link")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   getStaffInvitationLink(): Promise<URL | undefined> {
     return this.applicationService.getStaffInvitationLink();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Post("invitation-link")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   generateStaffInvitationLink(): Promise<URL> {
     return this.applicationService.generateStaffInvitationLink();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get(":email")
+  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: "email",
     type: String,
@@ -153,10 +139,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getCurrentApplication(email);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Delete(":candidateId")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -172,10 +157,9 @@ export class StaffMembershipApplicationController {
     return this.applicationService.rejectStaffApplication(candidateId);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_HARD)
   @Post(":candidateId/cancel-rejection")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

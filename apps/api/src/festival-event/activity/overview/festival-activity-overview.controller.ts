@@ -14,8 +14,6 @@ import {
 import {
   ApiBearerAuth,
   ApiTags,
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
   getSchemaPath,
@@ -53,15 +51,14 @@ import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity
 import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@ApiBearerAuth()
+@Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBadRequestResponse({
-  description: "Request is not formated as expected",
-})
-@ApiForbiddenResponse({
-  description: "User can't access this resource",
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
@@ -74,17 +71,14 @@ import { FestivalEventErrorFilter } from "../../common/festival-event-error.filt
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
-@Controller("festival-activities")
 export class FestivalActivityOverviewController {
   constructor(
     private readonly overviewService: FestivalActivityOverviewService,
     private readonly statistics: StatisticsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
   @Get("statistics")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "Festival activities statistics",
@@ -95,9 +89,8 @@ export class FestivalActivityOverviewController {
     return this.statistics.festivalActivity;
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
   @Get(":id")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -122,9 +115,8 @@ export class FestivalActivityOverviewController {
     return this.overviewService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
   @Get("my-refusals/count")
+  @Permission(READ_FA)
   @ApiResponse({
     status: 200,
     description: "Number of refused festival activities for the user",
@@ -135,9 +127,8 @@ export class FestivalActivityOverviewController {
     return this.statistics.countRefusedActivitiesByUser(user.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Post()
+  @Permission(WRITE_FA)
   @ApiResponse({
     status: 201,
     description: "A festival activity",
@@ -161,9 +152,8 @@ export class FestivalActivityOverviewController {
     return this.overviewService.create(user, name);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
   @Delete(":id")
+  @Permission(WRITE_FA)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
