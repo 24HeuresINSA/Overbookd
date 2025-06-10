@@ -1,11 +1,17 @@
 <template>
-  <div class="timeline-axis" :class="{ 'theme--dark': isDarkTheme }">
-    <div class="axis" />
+  <div class="timeline-axis">
+    <div class="axis-container">
+      <div class="axis" />
+      <span
+        class="current-line"
+        :style="{ left: currentPositionInPercentage + '%' }"
+      />
+    </div>
     <div class="markers">
       <span
         v-for="(marker, index) in markers"
         :key="index"
-        :class="{ desktop: isOdd(index) }"
+        :class="{ 'desktop-only': isOdd(index) }"
       >
         {{ marker }}
       </span>
@@ -14,28 +20,41 @@
 </template>
 
 <script lang="ts" setup>
-import { Period, formatDateWithHoursAndMinutesOnly } from "@overbookd/time";
+import {
+  ONE_MINUTE_IN_MS,
+  Period,
+  formatDateWithHoursAndMinutesOnly,
+} from "@overbookd/time";
+import { isOdd, percentBetween } from "~/utils/number.utils";
 
 const timelineStore = useTimelineStore();
-const layoutStore = useLayoutStore();
 
 const NB_MARKERS = 9;
-
 const period = computed<Period>(() => timelineStore.period);
+
+const now = ref(new Date());
+const timer = ref<ReturnType<typeof setInterval>>();
+
+onMounted(() => {
+  timer.value = setInterval(() => (now.value = new Date()), ONE_MINUTE_IN_MS);
+});
+onBeforeUnmount(() => clearInterval(timer.value));
+
+const currentPositionInPercentage = computed<number>(() => {
+  const startMs = timelineStore.start.getTime();
+  const endMs = startMs + period.value.duration.inMilliseconds;
+  return percentBetween(now.value.getTime(), startMs, endMs);
+});
 
 const markers = computed<string[]>(() => {
   const periodDuration = period.value.duration.inMilliseconds;
   const stepDuration = periodDuration / (NB_MARKERS - 1);
-  return new Array(NB_MARKERS).fill(null).map((_, index) => {
-    const startInMs = timelineStore.start.getTime();
-    const stepDate = new Date(startInMs + index * stepDuration);
-    return formatDateWithHoursAndMinutesOnly(stepDate);
+  const startMs = timelineStore.start.getTime();
+  return Array.from({ length: NB_MARKERS }, (_, i) => {
+    const date = new Date(startMs + i * stepDuration);
+    return formatDateWithHoursAndMinutesOnly(date);
   });
 });
-
-const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
-
-const isOdd = (num: number): boolean => num % 2 === 1;
 </script>
 
 <style lang="scss" scoped>
@@ -43,26 +62,27 @@ const isOdd = (num: number): boolean => num % 2 === 1;
   position: sticky;
   top: 0;
   z-index: 1;
-  &.theme--dark {
-    .axis {
-      border-color: white;
-      background-color: hsl(0, 0%, 75%);
-    }
-    .markers span {
-      background-color: black;
-    }
-  }
 }
+
+.axis-container {
+  position: relative;
+  margin: 0 15px;
+}
+
 .axis {
-  min-height: 40px;
-  min-width: calc(100% - 20px);
-  margin-left: 10px;
-  margin-right: 10px;
-  border-color: black;
-  background-color: gray;
-  border-width: 2px;
-  border-left-style: solid;
-  border-right-style: solid;
+  height: 40px;
+  background-color: rgba(var(--v-theme-on-background), 0.4);
+  border-left: 2px solid rgb(var(--v-theme-on-background));
+  border-right: 2px solid rgb(var(--v-theme-on-background));
+}
+
+.current-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: red;
+  transform: translateX(-50%);
 }
 
 .markers {
@@ -72,11 +92,6 @@ const isOdd = (num: number): boolean => num % 2 === 1;
     background-color: rgb(var(--v-theme-background));
     border-radius: 0 0 5px 5px;
     padding: 2px;
-    @media screen and (max-width: $mobile-max-width) {
-      &.desktop {
-        display: none;
-      }
-    }
   }
 }
 </style>
