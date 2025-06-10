@@ -32,16 +32,17 @@ const potentialParticipants = computed<CharismaEventPotentialParticipant[]>(
   () => charismaEventStore.potentialParticipants,
 );
 const potentialParticipantsWithHours = ref<CharismaEventParticipant[]>([]);
-const resetParticipants = () => {
+const loading = ref<boolean>(potentialParticipants.value.length === 0);
+
+const resetParticipants = async () => {
+  await charismaEventStore.fetchPotentialParticipants();
   potentialParticipantsWithHours.value = potentialParticipants.value.map(
     (participant) => ({ ...participant, hours: 0 }),
   );
-};
-const loading = ref<boolean>(potentialParticipants.value.length === 0);
-charismaEventStore.fetchPotentialParticipants().then(() => {
   loading.value = false;
-  resetParticipants();
-});
+};
+resetParticipants();
+
 const participants = computed<CharismaEventParticipant[]>(() =>
   potentialParticipantsWithHours.value.filter(
     (participant) => participant.hours > 0,

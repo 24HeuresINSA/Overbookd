@@ -18,7 +18,7 @@
           />
         </template>
 
-        <template #item.firstname="{ item }">
+        <template #item.name="{ item }">
           {{ buildUserNameWithNickname(item) }}
         </template>
 
@@ -67,9 +67,9 @@ const props = defineProps({
 });
 
 const tableHeaders: TableHeaders = [
-  { title: "Nom", value: "firstname", sortable: true },
+  { title: "Nom", value: "name" },
   { title: "Charisme actuel", value: "charisma", sortable: true },
-  { title: "Charisme à ajouter", value: "newCharisma", sortable: true },
+  { title: "Charisme à ajouter", value: "newCharisma" },
   { title: "Nombre d'heures participées", value: "hours", sortable: true },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
