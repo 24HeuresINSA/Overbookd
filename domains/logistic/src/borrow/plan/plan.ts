@@ -1,6 +1,6 @@
 import { Period } from "@overbookd/time";
 import { Borrow } from "../borrow.js";
-import { BorrowNotFound } from "../borrow.error.js";
+import { BorrowNotFound, NoDuration } from "../borrow.error.js";
 import { GearRequest, GearRequests } from "../../gear-request.js";
 import { NotEnoughQuantity } from "../../logistic.error.js";
 
@@ -23,7 +23,11 @@ export class PlanBorrow {
     if (!borrow) throw new BorrowNotFound(id);
 
     const updated = { ...borrow, ...update };
-    Period.init({ start: updated.availableOn, end: updated.unavailableOn });
+    const period = Period.init({
+      start: updated.availableOn,
+      end: updated.unavailableOn,
+    });
+    if (!period.hasDuration) throw new NoDuration();
 
     return this.borrows.save(updated);
   }

@@ -1,7 +1,8 @@
 export * from "./duration/duration.constant";
 export { Duration } from "./duration/duration";
 
-export { type IProvidePeriod, Period, EndBeforeStart } from "./period/period";
+export { type IProvidePeriod, Period } from "./period/period";
+export { PeriodError, EndBeforeStart } from "./period/period.error";
 
 export {
   type DateString,

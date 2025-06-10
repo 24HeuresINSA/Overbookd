@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { InitBorrow } from "./init.js";
 import { InMemoryBorrows } from "./borrow.inmemory.js";
 import { friday17At12, sunday20At10 } from "../../logistic.test-utils.js";
+import { NoDuration } from "../borrow.error.js";
 
 describe("Init borrow", () => {
   const borrows = new InMemoryBorrows();
@@ -31,6 +32,18 @@ describe("Init borrow", () => {
     });
     it("should generate empty gears", () => {
       expect(initializedBorrow.gears).toEqual([]);
+    });
+  });
+
+  describe("when initializing a borrow with no duration", () => {
+    const form = {
+      lender: "KARNA",
+      availableOn: friday17At12,
+      unavailableOn: friday17At12,
+    };
+
+    it("should throw an error", async () => {
+      await expect(init.apply(form)).rejects.toThrow(NoDuration);
     });
   });
 });
