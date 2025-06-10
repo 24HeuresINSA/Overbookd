@@ -146,7 +146,7 @@ $side-nav-width: calc(350px + $sidebar-margin);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 60vh;
   opacity: 0.5;
 }
 
