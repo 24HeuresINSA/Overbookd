@@ -3,15 +3,25 @@
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="purchases"
+        :items="filteredPurchases"
         :loading="loading"
         loading-text="Chargement des fiches achat..."
         no-data-text="Aucune fiche achat"
-        :hover="purchases.length > 0"
+        :hover="filteredPurchases.length > 0"
         :mobile="isMobile"
         @click:row="openPurchase"
         @auxclick:row="openPurchaseInNewTab"
       >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Chercher un emprunt"
+            hide-details
+            clearable
+            @click:clear="search = ''"
+          />
+        </template>
+
         <template #item.availableOn="{ item }">
           {{ formatDateToHumanReadable(item.availableOn) }}
         </template>
@@ -38,6 +48,11 @@ import {
   openPageWithId,
   openPageWithIdInNewTab,
 } from "~/utils/navigation/router.utils";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  type Searchable,
+  keepMatchingSearchCriteria,
+} from "~/utils/search/search.utils";
 
 const purchaseStore = usePurchaseStore();
 const layoutStore = useLayoutStore();
@@ -52,6 +67,21 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const purchases = computed<Purchase[]>(() => purchaseStore.all);
 const loading = ref<boolean>(purchases.value.length === 0);
 purchaseStore.fetchAll().then(() => (loading.value = false));
+
+const search = ref<string>("");
+
+const searchablePurchases = computed<Searchable<Purchase>[]>(() => {
+  return purchases.value.map((purchase) => ({
+    ...purchase,
+    searchable: SlugifyService.apply(`${purchase.id} ${purchase.seller}`),
+  }));
+});
+const filteredPurchases = computed<Purchase[]>(() => {
+  if (!search.value) return searchablePurchases.value;
+  return searchablePurchases.value.filter((purchase) =>
+    keepMatchingSearchCriteria(search.value)(purchase),
+  );
+});
 
 const removePurchase = async (purchase: Purchase) => {
   await purchaseStore.remove(purchase.id);
