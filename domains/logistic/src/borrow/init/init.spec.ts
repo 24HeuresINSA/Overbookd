@@ -42,7 +42,7 @@ describe("Init borrow", () => {
       unavailableOn: friday17At12,
     };
 
-    it("should throw an error", async () => {
+    it("should indicate that the borrow has no duration", async () => {
       await expect(init.apply(form)).rejects.toThrow(NoDuration);
     });
   });
