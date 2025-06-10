@@ -85,7 +85,7 @@ import {
   type TransactionUser,
   type TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import { buildUserName } from "@overbookd/user";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import { formatDateWithMinutes } from "@overbookd/time";
 import { SlugifyService } from "@overbookd/slugify";
 import {
@@ -125,7 +125,7 @@ const headers: TableHeaders = [
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const formatTransactionUsername = (user?: TransactionUser) => {
-  return user ? buildUserName(user) : "";
+  return user ? buildUserNameWithNickname(user) : "";
 };
 
 const search = ref<string>("");
