@@ -15,7 +15,7 @@
         <template #top>
           <v-text-field
             v-model="search"
-            label="Chercher un emprunt"
+            label="Chercher un achat"
             hide-details
             clearable
             @click:clear="search = ''"
