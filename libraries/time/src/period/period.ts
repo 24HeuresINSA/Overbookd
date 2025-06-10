@@ -1,25 +1,17 @@
 import { OverDate } from "../date/date.js";
 import { ONE_DAY_IN_MS } from "../duration/duration.constant.js";
 import { Duration } from "../duration/duration.js";
+import {
+  EndBeforeStart,
+  END_BEFORE_START_ERROR_MESSAGE,
+  ErrorMessage,
+  NO_DURATION_ERROR_MESSAGE,
+} from "./period.error.js";
 
 export type IProvidePeriod = {
   start: Date;
   end: Date;
 };
-
-export const END_BEFORE_START_ERROR_MESSAGE =
-  "La date de fin doit être après la date de début";
-export const NO_DURATION_ERROR_MESSAGE = "La période doit avoir une durée";
-
-export class EndBeforeStart extends Error {
-  constructor() {
-    super(END_BEFORE_START_ERROR_MESSAGE);
-  }
-}
-
-type ErrorMessage =
-  | typeof END_BEFORE_START_ERROR_MESSAGE
-  | typeof NO_DURATION_ERROR_MESSAGE;
 
 export class Period {
   start: Date;

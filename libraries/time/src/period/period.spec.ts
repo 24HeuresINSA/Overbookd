@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  END_BEFORE_START_ERROR_MESSAGE,
-  EndBeforeStart,
-  NO_DURATION_ERROR_MESSAGE,
-  Period,
-} from "./period";
+import { Period } from "./period";
 import {
   ONE_MINUTE_IN_MS,
   ONE_SECOND_IN_MS,
@@ -45,6 +40,11 @@ import {
   saturday00hToSaturday02h,
 } from "./period.test-utils";
 import { Duration } from "../duration/duration";
+import {
+  END_BEFORE_START_ERROR_MESSAGE,
+  EndBeforeStart,
+  NO_DURATION_ERROR_MESSAGE,
+} from "./period.error";
 
 describe("Create a period", () => {
   describe("when start is before end", () => {

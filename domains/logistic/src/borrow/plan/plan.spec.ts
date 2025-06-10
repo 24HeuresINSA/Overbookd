@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory.js";
 import { PlanBorrow } from "./plan.js";
-import { BorrowNotFound } from "../borrow.error.js";
+import { BorrowNotFound, NoDuration } from "../borrow.error.js";
 import { karnaBorrow } from "../borrow.fake.js";
 import {
   chaise,
@@ -47,6 +47,17 @@ describe("Plan borrow", () => {
       await expect(plan.update(100, { lender: "KLS" })).rejects.toThrowError(
         BorrowNotFound,
       );
+    });
+  });
+
+  describe("when planning a borrow with no duration", () => {
+    it("should indicate that the borrow has no duration", async () => {
+      const borrows = new InMemoryBorrows([karnaBorrow]);
+      const plan = new PlanBorrow(borrows);
+
+      await expect(
+        plan.update(karnaBorrow.id, { unavailableOn: karnaBorrow.availableOn }),
+      ).rejects.toThrowError(NoDuration);
     });
   });
 

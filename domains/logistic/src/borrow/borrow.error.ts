@@ -9,3 +9,10 @@ export class BorrowNotFound extends BorrowError {
     super(message);
   }
 }
+
+export class NoDuration extends BorrowError {
+  constructor() {
+    const message = "Le créneau doit avoir une durée";
+    super(message);
+  }
+}

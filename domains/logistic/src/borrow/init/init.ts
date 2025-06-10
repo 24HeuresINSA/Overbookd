@@ -1,6 +1,7 @@
 import { numberGenerator } from "@overbookd/list";
 import { Borrow } from "../borrow.js";
 import { Period } from "@overbookd/time";
+import { NoDuration } from "../borrow.error.js";
 
 export type InitBorrowForm = Pick<
   Borrow,
@@ -22,7 +23,12 @@ export class InitBorrow {
   }
 
   async apply(form: InitBorrowForm): Promise<Borrow> {
-    Period.init({ start: form.availableOn, end: form.unavailableOn });
+    const period = Period.init({
+      start: form.availableOn,
+      end: form.unavailableOn,
+    });
+    if (!period.hasDuration) throw new NoDuration();
+
     const borrow = {
       ...form,
       id: this.generateId(),
