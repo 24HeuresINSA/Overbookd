@@ -33,7 +33,7 @@ export class TalkieFrequencies {
     const emergencyFrequenciesContent = shouldDisplayAllFrequencies
       ? TalkieFrequencies.generateEmergencyFrequencies(emergencyFrequencies)
       : [];
-    const pageBreak = { text: "", pageBreak: "after" } as Content;
+    const pageBreak: Content = { text: "", pageBreak: "after" };
 
     return [header, ...frequencies, ...emergencyFrequenciesContent, pageBreak];
   }
@@ -42,17 +42,17 @@ export class TalkieFrequencies {
     frequencies: { text: string }[],
   ): Content[] {
     const style = ["frequency"];
-    const margin = [75, 20, 50, 5];
-    return frequencies.map(({ text }) => ({ text, style, margin }) as Content);
+    const margin: [number, number, number, number] = [75, 20, 50, 5];
+    return frequencies.map(({ text }): Content => ({ text, style, margin }));
   }
 
   private static generateEmergencyFrequencies(
     emergencyFrequencies: { text: string }[],
   ): Content[] {
     const style = ["emergencyFrequency"];
-    const margin = [75, 20, 50, 5];
+    const margin: [number, number, number, number] = [75, 20, 50, 5];
     return emergencyFrequencies.map(
-      ({ text }) => ({ text, style, margin }) as Content,
+      ({ text }): Content => ({ text, style, margin }),
     );
   }
 

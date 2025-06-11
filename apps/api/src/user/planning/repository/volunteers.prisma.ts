@@ -1,12 +1,14 @@
 import { VolunteerForPlanning } from "@overbookd/http";
 import { PrismaService } from "../../../prisma.service";
-import { UserNameWithTeams, Volunteers } from "../planning.service";
+import { Volunteers } from "../planning.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { Period } from "@overbookd/time";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
+import { VolunteerWithTeams } from "../domain/task.model";
+import { buildUserNameWithNickname } from "@overbookd/user";
 
 const SELECT_VOLUNTEER = { ...SELECT_USER_IDENTIFIER, ...SELECT_TEAMS_CODE };
 
@@ -32,13 +34,15 @@ export class PrismaVolunteers implements Volunteers {
     });
   }
 
-  async find(id: number): Promise<UserNameWithTeams> {
+  async find(id: number): Promise<VolunteerWithTeams | null> {
     const volunteer = await this.prisma.user.findUnique({
       where: { id },
       select: SELECT_VOLUNTEER,
     });
+    if (!volunteer) return null;
     return {
-      ...volunteer,
+      id: volunteer.id,
+      name: buildUserNameWithNickname(volunteer),
       teams: volunteer.teams.map(({ teamCode }) => teamCode),
     };
   }
