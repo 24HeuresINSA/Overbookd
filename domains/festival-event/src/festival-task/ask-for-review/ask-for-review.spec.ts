@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { IN_REVIEW } from "@overbookd/festival-event-constants";
-import { lea, noel } from "../festival-task.test-util.js";
+import { george, lea, noel } from "../festival-task.test-util.js";
 import {
   guardEscapeGame,
   installPreventionVillage,
@@ -60,7 +60,10 @@ describe("Festival Task - ask for review", () => {
   ];
   beforeEach(() => {
     festivalTasks = new InMemoryAskForReviewTasks(tasks);
-    const reviewers = new InMemoryReviewers([{ adherent: noel, count: 0 }]);
+    const reviewers = new InMemoryReviewers([
+      { adherent: noel, count: 0 },
+      { adherent: george, count: 1 },
+    ]);
     notifications = new InMemoryNotifications<"FT">();
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     translator = new FestivalTaskTranslator(volunteerConflicts);
@@ -104,28 +107,9 @@ describe("Festival Task - ask for review", () => {
             },
           ]);
         });
-        describe.each`
-          humainReviews                                                  | expectedReviewer
-          ${[{ adherent: noel, count: 1 }, { adherent: lea, count: 2 }]} | ${noel}
-          ${[{ adherent: lea, count: 1 }, { adherent: noel, count: 2 }]} | ${lea}
-          ${[{ adherent: lea, count: 1 }, { adherent: noel, count: 1 }]} | ${lea}
-          ${[{ adherent: noel, count: 1 }, { adherent: lea, count: 1 }]} | ${noel}
-        `("humain reviewer", ({ humainReviews, expectedReviewer }) => {
-          beforeEach(() => {
-            const reviewers = new InMemoryReviewers(humainReviews);
-            askForReview = new AskForReview(
-              {
-                tasks: festivalTasks,
-                notifications,
-                reviewers,
-              },
-              translator,
-            );
-          });
-          it("should assign one humain reviewer to task", async () => {
-            const inReview = await askForReview.from(task.id, instigator);
-            expect(inReview.reviewer).toBe(expectedReviewer);
-          });
+        it("should assign one humain reviewer to task", async () => {
+          const inReview = await askForReview.from(task.id, instigator);
+          expect(inReview.reviewer).toBeDefined();
         });
         it("should be stored in task repository", async () => {
           const inReview = await askForReview.from(task.id, instigator);
@@ -229,5 +213,48 @@ describe("Festival Task - ask for review", () => {
         });
       },
     );
+  });
+
+  describe("when asking a review for valid draft task", () => {
+    describe.each`
+      task                        | administrator                                       | humainReviews                                                    | expectedReviewer
+      ${installJustDance}         | ${installJustDance.general.administrator.firstname} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 2 }]} | ${george}
+      ${installPreventionVillage} | ${installJustDance.general.administrator.firstname} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 2 }]} | ${lea}
+      ${installJustDance}         | ${installJustDance.general.administrator.firstname} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 1 }]} | ${lea}
+      ${installPreventionVillage} | ${installJustDance.general.administrator.firstname} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 1 }]} | ${george}
+    `(
+      "when task administrator $administrator is not a humain reviewer",
+      ({ task, humainReviews, expectedReviewer }) => {
+        beforeEach(() => {
+          const reviewers = new InMemoryReviewers(humainReviews);
+          askForReview = new AskForReview(
+            { tasks: festivalTasks, notifications, reviewers },
+            translator,
+          );
+        });
+        it("should assign one humain reviewer to task", async () => {
+          const inReview = await askForReview.from(task.id, noel);
+          expect(inReview.reviewer).toBe(expectedReviewer);
+        });
+      },
+    );
+    describe("when task administrator is a humain reviewer", () => {
+      const humainReviews = [
+        { adherent: noel, count: 0 },
+        { adherent: lea, count: 2 },
+      ];
+      const reviewers = new InMemoryReviewers(humainReviews);
+      it("should assign the task to a human reviewer who is not the task administrator", async () => {
+        askForReview = new AskForReview(
+          { tasks: festivalTasks, notifications, reviewers },
+          translator,
+        );
+        const inReview = await askForReview.from(
+          guardPreventionVillage.id,
+          noel,
+        );
+        expect(inReview.reviewer).toBe(lea);
+      });
+    });
   });
 });

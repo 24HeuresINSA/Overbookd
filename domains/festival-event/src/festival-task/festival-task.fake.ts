@@ -258,7 +258,7 @@ export const installPreventionVillage = factory
 
 export const guardPreventionVillage = factory
   .draft("Guard Prevention Village")
-  .withGeneral({ team: "dd" })
+  .withGeneral({ team: "dd", administrator: noel })
   .withFestivalActivity(preventionVillage)
   .withInstructions({
     appointment: humaGrass,

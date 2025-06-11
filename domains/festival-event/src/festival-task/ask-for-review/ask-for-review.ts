@@ -66,21 +66,31 @@ export class AskForReview {
 
   private async convertInReview(task: Draft | Refused, instigator: Adherent) {
     if (isDraft(task)) {
-      const reviewer = await this.findReviewer();
+      const reviewer = await this.findReviewer(task.general.administrator);
       return InReviewFestivalTask.fromDraft(task, instigator, reviewer);
     }
 
     return InReviewFestivalTask.fromRefused(task, instigator);
   }
 
-  private async findReviewer(): Promise<Adherent> {
+  private async findReviewer(
+    administrator: FestivalTask["general"]["administrator"],
+  ): Promise<Adherent> {
     const reviewers = await this.repositories.reviewers.getAll();
+    const withoutAdministrator = reviewers.filter(
+      ({ adherent }) => adherent.id !== administrator.id,
+    );
 
-    const minReviewsCount = Math.min(...reviewers.map(({ count }) => count));
-    const reviewer = reviewers.find(({ count }) => count === minReviewsCount);
+    const minReviewsCount = Math.min(
+      ...withoutAdministrator.map(({ count }) => count),
+    );
+    const reviewer = withoutAdministrator.find(
+      ({ count }) => count === minReviewsCount,
+    );
 
-    if (!reviewer) throw new FestivalTaskError("Aucun relecteur disponible");
-
+    if (!reviewer) {
+      throw new FestivalTaskError("Aucun relecteur humain disponible");
+    }
     return reviewer.adherent;
   }
 }
