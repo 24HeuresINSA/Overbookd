@@ -66,16 +66,18 @@ export function isMobilePhoneNumber(value: string | null) {
   if (!value) return message;
   const found = findNumbers(value, { defaultRegionCode: "FR" });
   return (
-    (found.length === 1 && found.at(0)?.phoneNumber.typeIsMobile) || message
+    (found.length === 1 &&
+      found.at(0)?.text === value &&
+      found.at(0)?.phoneNumber.typeIsMobile) ||
+    message
   );
 }
 
 export function isPhoneNumber(value: string | null) {
   const message = "Numéro de téléphone non valable";
-  return (
-    (value && findNumbers(value, { defaultRegionCode: "FR" }).length === 1) ||
-    message
-  );
+  if (!value) return message;
+  const found = findNumbers(value, { defaultRegionCode: "FR" });
+  return (found.length === 1 && found.at(0)?.text === value) || message;
 }
 
 // nosemgrep
