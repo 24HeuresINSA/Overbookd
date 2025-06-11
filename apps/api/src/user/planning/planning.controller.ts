@@ -181,10 +181,7 @@ export class PlanningController {
     @Res() response: Response,
   ): Promise<string> {
     try {
-      const pdf = (await this.planning.buildOne(
-        PDF,
-        volunteerId,
-      )) as string;
+      const pdf = (await this.planning.buildOne(PDF, volunteerId)) as string;
       const pdfbook = new PDFBook();
       const booklets = await pdfbook.generateBooklet(pdf);
       response.setHeader("content-type", PDF);
