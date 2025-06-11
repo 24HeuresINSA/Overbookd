@@ -1,63 +1,69 @@
 <template>
-  <div class="ft task">
-    <FestivalEventSidebar
-      festival-event="FT"
-      class="sidebar"
-      @toggle="toggleSidebar"
-    >
-      <template #additional-actions>
-        <v-btn
-          v-if="canEnableAssignment"
-          id="enable-assignment"
-          :disabled="cantStartAssignment"
-          @click="openEnableAssignment"
-        >
-          <v-icon class="mr-2">mdi-human-greeting</v-icon>
-          <p v-show="!isSideBarClosed">Commencer l'affectation</p>
-        </v-btn>
+  <div>
+    <div v-show="loading" class="loader">
+      <v-progress-circular :size="120" :width="10" indeterminate />
+    </div>
 
-        <div v-if="isReadyToAssign(selectedTask)" class="mt-2">
-          <p>
-            Catégorie de la tâche : <strong>{{ taskCategory }}</strong>
-          </p>
-          <p>
-            Tâche prioritaire : <strong>{{ taskPriority }}</strong>
-          </p>
-        </div>
-      </template>
-    </FestivalEventSidebar>
+    <div v-show="!loading" class="ft task">
+      <FestivalEventSidebar
+        festival-event="FT"
+        class="sidebar"
+        @toggle="toggleSidebar"
+      >
+        <template #additional-actions>
+          <v-btn
+            v-if="canEnableAssignment"
+            id="enable-assignment"
+            :disabled="cantStartAssignment"
+            @click="openEnableAssignment"
+          >
+            <v-icon class="mr-2">mdi-human-greeting</v-icon>
+            <p v-show="!isSideBarClosed">Commencer l'affectation</p>
+          </v-btn>
 
-    <article class="container">
-      <FtGeneralCard id="general" :disabled="isValidatedOrReadyToAssign" />
-      <ParentFaCard id="fa" @open:calendar="openCalendar" />
-      <FtInquiryCard id="inquiry" :disabled="isValidatedOrReadyToAssign" />
-      <InstructionsCard
-        id="instructions"
-        :disabled="isValidatedOrReadyToAssign"
+          <div v-if="isReadyToAssign(selectedTask)" class="mt-2">
+            <p>
+              Catégorie de la tâche : <strong>{{ taskCategory }}</strong>
+            </p>
+            <p>
+              Tâche prioritaire : <strong>{{ taskPriority }}</strong>
+            </p>
+          </div>
+        </template>
+      </FestivalEventSidebar>
+
+      <article class="container">
+        <FtGeneralCard id="general" :disabled="isValidatedOrReadyToAssign" />
+        <ParentFaCard id="fa" @open:calendar="openCalendar" />
+        <FtInquiryCard id="inquiry" :disabled="isValidatedOrReadyToAssign" />
+        <InstructionsCard
+          id="instructions"
+          :disabled="isValidatedOrReadyToAssign"
+        />
+        <MobilizationCard
+          id="mobilization"
+          :disabled="isValidatedOrReadyToAssign"
+          @open:calendar="openCalendar"
+        />
+        <FeedbackCard
+          id="feedback"
+          :festival-event="selectedTask"
+          @publish="publishFeedback"
+        />
+      </article>
+    </div>
+
+    <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
+      <FtCalendarDialogCard @close="closeCalendar" />
+    </v-dialog>
+
+    <v-dialog v-model="isEnableAssignmentOpen" width="600">
+      <CategorizeFormCard
+        @close="closeEnableAssignment"
+        @categorized="enableAssignment"
       />
-      <MobilizationCard
-        id="mobilization"
-        :disabled="isValidatedOrReadyToAssign"
-        @open:calendar="openCalendar"
-      />
-      <FeedbackCard
-        id="feedback"
-        :festival-event="selectedTask"
-        @publish="publishFeedback"
-      />
-    </article>
+    </v-dialog>
   </div>
-
-  <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
-    <FtCalendarDialogCard @close="closeCalendar" />
-  </v-dialog>
-
-  <v-dialog v-model="isEnableAssignmentOpen" width="600">
-    <CategorizeFormCard
-      @close="closeEnableAssignment"
-      @categorized="enableAssignment"
-    />
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -96,12 +102,15 @@ const headTitle = computed<string>(() => {
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
 
+const loading = ref<boolean>(true);
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
   if (selectedTask.value.id !== taskIdFromUrl.value) {
     navigateTo(FT_URL);
     return;
   }
+  loading.value = false;
+
   live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
@@ -169,6 +178,14 @@ const closeCalendar = () => (isCalendarDialogOpen.value = false);
 <style lang="scss" scoped>
 $sidebar-margin: calc($card-margin * 2);
 $side-nav-width: calc(350px + $sidebar-margin);
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  opacity: 0.5;
+}
 
 .task {
   display: flex;

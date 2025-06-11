@@ -1,20 +1,26 @@
 <template>
-  <div class="fa activity">
-    <FestivalEventSidebar festival-event="FA" class="sidebar" />
-    <article class="container">
-      <FaGeneralCard id="general" @open:calendar="openCalendar" />
-      <FaInChargeCard id="in-charge" />
-      <SignaCard id="signa" />
-      <SecurityCard id="security" />
-      <SupplyCard id="supply" />
-      <FaInquiryCard id="inquiry" @open:calendar="openCalendar" />
-      <FeedbackCard
-        id="feedback"
-        :festival-event="selectedActivity"
-        @publish="publishFeedback"
-      />
-      <ChildFtCard id="ft" />
-    </article>
+  <div>
+    <div v-show="loading" class="loader">
+      <v-progress-circular :size="120" :width="10" indeterminate />
+    </div>
+
+    <div v-show="!loading" class="fa activity">
+      <FestivalEventSidebar festival-event="FA" class="sidebar" />
+      <article class="container">
+        <FaGeneralCard id="general" @open:calendar="openCalendar" />
+        <FaInChargeCard id="in-charge" />
+        <SignaCard id="signa" />
+        <SecurityCard id="security" />
+        <SupplyCard id="supply" />
+        <FaInquiryCard id="inquiry" @open:calendar="openCalendar" />
+        <FeedbackCard
+          id="feedback"
+          :festival-event="selectedActivity"
+          @publish="publishFeedback"
+        />
+        <ChildFtCard id="ft" />
+      </article>
+    </div>
 
     <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
       <DialogCard without-actions @close="closeCalendar">
@@ -75,12 +81,14 @@ onMounted(async () => {
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
 
+const loading = ref<boolean>(true);
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
   if (selectedActivity.value.id !== activityIdFromUrl.value) {
     navigateTo(FA_URL);
     return;
   }
+  loading.value = false;
 
   const firstTimeWindow = allTimeWindowEvents.value?.at(0);
   if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
@@ -133,6 +141,14 @@ const allTimeWindowEvents = computed<CalendarEvent[]>(() => {
 <style lang="scss" scoped>
 $sidebar-margin: calc($card-margin * 2);
 $side-nav-width: calc(350px + $sidebar-margin);
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  opacity: 0.5;
+}
 
 .activity {
   display: flex;

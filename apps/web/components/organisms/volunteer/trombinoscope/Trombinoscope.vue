@@ -2,7 +2,7 @@
   <div class="trombinoscope">
     <v-progress-circular
       v-show="loading"
-      class="loading"
+      class="loader"
       :size="100"
       :width="10"
       indeterminate
@@ -130,7 +130,7 @@ const propagateClickedVolunteer = (
   gap: 15px;
 }
 
-.loading {
+.loader {
   margin: 50px auto;
   opacity: 0.5;
 }
