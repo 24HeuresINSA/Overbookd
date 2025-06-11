@@ -1,7 +1,8 @@
 <table style="text-align: center">
   <h1>Rejet d'une Fiche Activité</h1>
   <p>
-    Attention la FA <strong><%= activityName %></strong>, dont tu es responsable a été rejetée lors de sa relecture !
+    Attention la FA <strong><%= activityName %></strong>, dont tu es responsable
+    a été rejetée lors de sa relecture !
     <br />
   </p>
   <p>Eh oui selon <%= rejectorName %>: <q><%= reason %></q></p>
@@ -16,15 +17,16 @@
     href="<%= activityLink %>"
     style="
       background-color: #2196f3;
-      padding: 1rem 1rem 1rem 1rem;
+      padding: 1rem;
       border-radius: 0.5rem;
       color: white;
       text-decoration: none;
       display: inline-block;
-      margin: 1rem;
+      margin: 1rem 1rem 1rem 0;
     "
-    >Aller corriger ma FA</a
   >
+    Aller corriger ma FA
+  </a>
   <p>Si le lien ne marche pas, va à cette adresse : <%= activityLink %></p>
 
   <p>
