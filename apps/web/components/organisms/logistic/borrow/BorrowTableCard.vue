@@ -3,18 +3,29 @@
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="borrows"
+        :items="filteredBorrows"
         :loading="loading"
         loading-text="Chargement des fiches emprunts..."
         no-data-text="Aucune fiche emprunt"
-        :hover="borrows.length > 0"
+        :hover="filteredBorrows.length > 0"
         :mobile="isMobile"
         @click:row="openBorrow"
         @auxclick:row="openBorrowInNewTab"
       >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Chercher un emprunt"
+            hide-details
+            clearable
+            @click:clear="search = ''"
+          />
+        </template>
+
         <template #item.availableOn="{ item }">
           {{ formatDateToHumanReadable(item.availableOn) }}
         </template>
+
         <template #item.unavailableOn="{ item }">
           {{ formatDateToHumanReadable(item.unavailableOn) }}
         </template>
@@ -41,6 +52,11 @@ import {
   openPageWithIdInNewTab,
 } from "~/utils/navigation/router.utils";
 import { formatDateToHumanReadable } from "@overbookd/time";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  type Searchable,
+  keepMatchingSearchCriteria,
+} from "~/utils/search/search.utils";
 
 const borrowStore = useBorrowStore();
 const layoutStore = useLayoutStore();
@@ -56,6 +72,21 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const borrows = computed(() => borrowStore.all);
 const loading = ref<boolean>(borrows.value.length === 0);
 borrowStore.fetchAll().then(() => (loading.value = false));
+
+const search = ref<string>("");
+
+const searchableBorrows = computed<Searchable<Borrow>[]>(() => {
+  return borrows.value.map((borrow) => ({
+    ...borrow,
+    searchable: SlugifyService.apply(`${borrow.id} ${borrow.lender}`),
+  }));
+});
+const filteredBorrows = computed<Borrow[]>(() => {
+  if (!search.value) return searchableBorrows.value;
+  return searchableBorrows.value.filter((borrow) =>
+    keepMatchingSearchCriteria(search.value)(borrow),
+  );
+});
 
 const removeBorrow = async (borrow: Borrow) => {
   await borrowStore.remove(borrow.id);
