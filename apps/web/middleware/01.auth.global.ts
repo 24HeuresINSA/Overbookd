@@ -1,15 +1,12 @@
 import { useAuthStore } from "~/stores/auth";
-import { jwtDecode } from "jwt-decode";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
 import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 import { AuthRepository } from "~/repositories/auth.repository";
-
-type Token = { exp: number };
+import { isTokenValid } from "~/utils/user/auth.utils";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore();
-
   const accessToken = useCookie(ACCESS_TOKEN);
   const refreshToken = useCookie(REFRESH_TOKEN);
 
@@ -17,8 +14,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return handleUnauthenticatedRedirect();
   }
 
-  const decodedToken: Token = jwtDecode(accessToken.value);
-  if (isAccessTokenValid(decodedToken)) {
+  if (isTokenValid(accessToken.value)) {
     authStore.authenticated = true;
     if (needToBeLoggedIn(to)) return;
     return { path: HOME_URL, query: to.query };
@@ -36,7 +32,3 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return LOGIN_URL;
   }
 });
-
-function isAccessTokenValid(token: Token): boolean {
-  return token.exp * 1000 > Date.now();
-}
