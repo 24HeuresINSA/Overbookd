@@ -1,8 +1,9 @@
 import { ICAL, JSON, PDF } from "@overbookd/http";
-import { Task, VolunteerWithTeams } from "../domain/task.model";
+import { Task, Volunteer } from "../domain/task.model";
 import { IcalRenderStrategy } from "./ical-render-strategy";
 import { JsonRenderStrategy } from "./json-render-strategy";
 import { PdfRenderStrategy } from "./pdf-render-strategy";
+import { Volunteers } from "../planning.service";
 
 type PlanningAcceptType = typeof JSON | typeof ICAL | typeof PDF;
 
@@ -13,14 +14,16 @@ function isPlanningAcceptType(
 }
 
 export class PlanningRenderStrategy {
-  static get(format: string): RenderStrategy {
+  constructor(private readonly volunteers: Volunteers) {}
+
+  get(format: string): RenderStrategy {
     if (!isPlanningAcceptType(format)) return new JsonRenderStrategy();
     if (format === ICAL) return new IcalRenderStrategy();
-    if (format === PDF) return new PdfRenderStrategy();
+    if (format === PDF) return new PdfRenderStrategy(this.volunteers);
     return new JsonRenderStrategy();
   }
 }
 
 export type RenderStrategy = {
-  render(tasks: Task[], volunteer?: VolunteerWithTeams): Promise<unknown>;
+  render(tasks: Task[], volunteerId?: Volunteer["id"]): Promise<unknown>;
 };

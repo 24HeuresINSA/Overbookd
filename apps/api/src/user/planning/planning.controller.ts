@@ -37,7 +37,6 @@ import { BreakPeriodDuringRequestDto } from "../dto/break-period-during.request.
 import { Duration, Period, Edition } from "@overbookd/time";
 import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
 import { VolunteerForPlanningResponseDto } from "../dto/volunteer-for-planning.response.dto";
-import { IcalRenderStrategy } from "./render/ical-render-strategy";
 import { SecretService } from "./secret.service";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
@@ -45,8 +44,6 @@ import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
 import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
-import { buildUserName } from "@overbookd/user";
-import { PlanningRenderStrategy } from "./render/render-strategy";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
@@ -79,7 +76,7 @@ export class PlanningController {
     const volunteerId = request.user.id;
     const format = request.headers.accept;
     try {
-      const planning = await this.formatPlanning(volunteerId, format);
+      const planning = await this.planning.buildOne(format, volunteerId);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -130,10 +127,8 @@ export class PlanningController {
   })
   @Header("Content-Type", "text/calendar")
   async syncVolunteerPlanning(@Param("secret") secret: string) {
-    const volunteerId = await this.retrieveVolunteerId(secret);
-    const { tasks } = await this.planning.getPlanning(volunteerId);
-    const icalRender = new IcalRenderStrategy();
-    return icalRender.render(tasks);
+    const volunteerId = await this.retrieveVolunteerIdFromSecret(secret);
+    return this.planning.buildOne(ICAL, volunteerId);
   }
 
   @Post("booklets")
@@ -155,7 +150,7 @@ export class PlanningController {
     try {
       const pdfs = await Promise.all(
         volunteerIds.map(
-          (id) => this.formatPlanning(id, PDF) as Promise<string>,
+          (id) => this.planning.buildOne(PDF, id) as Promise<string>,
         ),
       );
       const pdfbook = new PDFBook();
@@ -186,7 +181,10 @@ export class PlanningController {
     @Res() response: Response,
   ): Promise<string> {
     try {
-      const pdf = (await this.formatPlanning(volunteerId, PDF)) as string;
+      const pdf = (await this.planning.buildOne(
+        PDF,
+        volunteerId,
+      )) as string;
       const pdfbook = new PDFBook();
       const booklets = await pdfbook.generateBooklet(pdf);
       response.setHeader("content-type", PDF);
@@ -220,7 +218,7 @@ export class PlanningController {
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
     try {
-      const planning = await this.formatPlanning(volunteerId, format);
+      const planning = await this.planning.buildOne(format, volunteerId);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -313,17 +311,7 @@ export class PlanningController {
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
   }
 
-  private async formatPlanning(volunteerId: number, format: string) {
-    const { tasks, volunteer } = await this.planning.getPlanning(volunteerId);
-    const renderStrategy = PlanningRenderStrategy.get(format);
-    return renderStrategy.render(tasks, {
-      id: volunteerId,
-      name: buildUserName(volunteer),
-      teams: volunteer.teams,
-    });
-  }
-
-  private async retrieveVolunteerId(secret: string): Promise<number> {
+  private async retrieveVolunteerIdFromSecret(secret: string): Promise<number> {
     try {
       const { volunteerId, edition } = await this.secret.checkSecret(secret);
       if (edition !== Edition.current) {

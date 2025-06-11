@@ -11,6 +11,7 @@ import { PrismaTaskRepository } from "./repository/task.repository.prisma";
 import { PrismaVolunteers } from "./repository/volunteers.prisma";
 import { SecretService } from "./secret.service";
 import { SubscriptionService } from "./subscription.service";
+import { PlanningRenderStrategy } from "./render/render-strategy";
 
 @Module({
   providers: [
@@ -40,6 +41,12 @@ import { SubscriptionService } from "./subscription.service";
       inject: [PrismaTaskRepository],
     },
     {
+      provide: PlanningRenderStrategy,
+      useFactory: (volunteers: Volunteers) =>
+        new PlanningRenderStrategy(volunteers),
+      inject: [PrismaVolunteers],
+    },
+    {
       provide: JwtService,
       useFactory: () =>
         new JwtService({
@@ -63,9 +70,21 @@ import { SubscriptionService } from "./subscription.service";
         planning: Planning,
         breaks: BreakPeriods,
         volunteers: Volunteers,
+        renderStrategy: PlanningRenderStrategy,
         subscription: SubscriptionService,
-      ) => new PlanningService(planning, breaks, volunteers, subscription),
-      inject: [Planning, BreakPeriods, PrismaVolunteers, SubscriptionService],
+      ) =>
+        new PlanningService(
+          { planning, breaks, renderStrategy },
+          { volunteers },
+          subscription,
+        ),
+      inject: [
+        Planning,
+        BreakPeriods,
+        PrismaVolunteers,
+        PlanningRenderStrategy,
+        SubscriptionService,
+      ],
     },
   ],
   imports: [PrismaModule],

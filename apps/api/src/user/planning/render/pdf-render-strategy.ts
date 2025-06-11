@@ -28,6 +28,7 @@ import { GeoCoordinates } from "ics";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
 import { fixEmojis } from "./pdf/fix-emojis";
 import { FiveDMethod } from "./pdf/five-d-method";
+import { Volunteers } from "../planning.service";
 
 class PdfException extends Error {}
 
@@ -114,11 +115,12 @@ export class PdfRenderStrategy implements RenderStrategy {
     },
   };
 
-  constructor() {
+  constructor(private readonly volunteers: Volunteers) {
     this.printer = new Printer(this.fonts);
   }
 
-  render(tasks: Task[], volunteer: VolunteerWithTeams): Promise<unknown> {
+  async render(tasks: Task[], volunteerId: Volunteer["id"]): Promise<unknown> {
+    const volunteer = await this.volunteers.find(volunteerId);
     const pdfContent = this.generateContent(tasks, volunteer);
     const pdfContentWithEmojis = fixEmojis(pdfContent);
     const header = this.generateHeader(volunteer);
