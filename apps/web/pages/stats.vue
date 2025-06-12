@@ -167,10 +167,6 @@ const maxTotal = computed<number>(() =>
 const options = computed<ChartOptions<"bar">>(() => {
   const textColor = theme.global.current.value.colors["on-surface"];
   const gridColor = hexToRGBA(textColor, 0.1);
-  const scaleColors = {
-    ticks: { color: textColor },
-    grid: { color: gridColor },
-  };
 
   return {
     responsive: true,
@@ -179,17 +175,21 @@ const options = computed<ChartOptions<"bar">>(() => {
         stacked: true,
         min: 0,
         position: "bottom",
-        ...scaleColors,
+        suggestedMax: maxTotal.value,
+        ticks: { color: textColor },
+        grid: { color: gridColor },
       },
       x1: {
         min: 0,
         position: "top",
         suggestedMax: maxTotal.value,
-        ...scaleColors,
+        ticks: { color: textColor },
+        grid: { color: gridColor },
       },
       y: {
         stacked: true,
-        ...scaleColors,
+        ticks: { autoSkip: false, color: textColor },
+        grid: { color: gridColor },
       },
     },
     plugins: {
