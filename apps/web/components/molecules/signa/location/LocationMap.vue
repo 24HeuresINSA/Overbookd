@@ -51,6 +51,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 const map = ref<MapConfiguration>({ ...defaultMapConfiguration });
 
 const points = computed(() => filterLocation(POINT, props.locations));
