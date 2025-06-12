@@ -9,24 +9,24 @@
       >
         <l-tile-layer :url="map.url" :attribution="map.attribution" />
         <l-marker
-          v-for="(location, index) in points"
-          :key="`point-${index}`"
+          v-for="location in points"
+          :key="location.id"
           :lat-lng="location.geoLocation.coordinates"
           @click="showLocation(location)"
         >
           <l-tooltip>{{ location.name }}</l-tooltip>
         </l-marker>
         <l-polyline
-          v-for="(location, index) in roads"
-          :key="`road-${index}`"
+          v-for="location in roads"
+          :key="location.id"
           :lat-lngs="location.geoLocation.coordinates"
           @click="showLocation(location)"
         >
           <l-tooltip>{{ location.name }}</l-tooltip>
         </l-polyline>
         <l-polygon
-          v-for="(location, index) in areas"
-          :key="`area-${index}`"
+          v-for="location in areas"
+          :key="location.id"
           :lat-lngs="location.geoLocation.coordinates"
           @click="showLocation(location)"
         >
