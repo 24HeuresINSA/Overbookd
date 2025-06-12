@@ -25,7 +25,7 @@ export const MY_PERSONAL_ACCOUNT_PAGE: PageInSummary = {
   canBeFavorite: true,
   hasParam: false,
   keywords: [
-    "mon",
+    "mon-compte-perso",
     "virements",
     "cps",
     "comptes",
@@ -65,7 +65,7 @@ export const VOLUNTEERS_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["benevoles", "orgas", "liste"],
+  keywords: ["liste-des-benevoles", "benevoles", "orgas"],
 };
 
 export const AVAILABILITIES_PAGE: PageInSummary = {
@@ -78,7 +78,7 @@ export const AVAILABILITIES_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["mes dispos", "disponibilites"],
+  keywords: ["mes-dispos", "disponibilites"],
 };
 
 export const MY_PLANNING_PAGE: PageInSummary = {
@@ -91,7 +91,7 @@ export const MY_PLANNING_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["planning", "calendrier", "taches", "affectation"],
+  keywords: ["mon-planning", "calendrier", "taches", "affectation"],
 };
 
 const PLANNING_PAGE: HiddenPage = {

@@ -27,7 +27,7 @@ export const FA_LIST_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["fas", "fiches-activites", "animations"],
+  keywords: ["fiches-activites", "fas", "animations"],
 };
 
 const FA_PAGE: HiddenPage = {
@@ -49,7 +49,7 @@ const FT_LIST_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["fts", "fiche-taches"],
+  keywords: ["fiche-taches", "fts"],
 };
 
 const FT_PAGE: HiddenPage = {

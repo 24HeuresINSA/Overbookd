@@ -46,7 +46,7 @@ const INVENTORY_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["inventaire", "matos", "materiel", "logistique"],
+  keywords: ["inventaire-matos", "materiel", "logistique"],
 };
 
 const GEAR_DASHBOARD_PAGE: PageInSummary = {
@@ -71,7 +71,7 @@ const PURCHASE_GEARS_LIST_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
+  keywords: ["fiches-achats", "materiel", "matos"],
 };
 
 const PURCHASE_GEARS_PAGE: HiddenPage = {
@@ -92,7 +92,7 @@ const BORROW_GEARS_LIST_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["fiches-emprunts", "emprunts", "materiel", "matos", "fiches"],
+  keywords: ["fiches-emprunts", "materiel", "matos"],
 };
 
 const BORROW_GEARS_PAGE: HiddenPage = {
@@ -114,7 +114,13 @@ const LOCATION_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["lieux-signaletique", "localisation", "carte", "plan"],
+  keywords: [
+    "lieux-de-la-signa",
+    "lieux-signaletique",
+    "localisation",
+    "carte",
+    "plan",
+  ],
 };
 
 const SIGNAGE_CATALOG_PAGE: PageInSummary = {

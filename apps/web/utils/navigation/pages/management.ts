@@ -32,7 +32,7 @@ const CONFIGURATION_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["administration", "system", "configuration"],
+  keywords: ["config-systeme", "administration", "configuration"],
 };
 
 const REGISTRATIONS_HARD_PAGE: PageInSummary = {
@@ -46,6 +46,7 @@ const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   canBeFavorite: true,
   hasParam: false,
   keywords: [
+    "admission-organisateurs",
     "nouveaux-arrivants",
     "inscriptions",
     "admissions",
@@ -64,10 +65,10 @@ const REGISTRATIONS_SOFT_PAGE: PageInSummary = {
   canBeFavorite: true,
   hasParam: false,
   keywords: [
+    "admission-benevoles",
     "nouveaux-arrivants",
     "inscriptions",
     "admissions",
-    "benevoles",
     "softs",
   ],
 };
@@ -105,8 +106,6 @@ const SG_PAGE: PageInSummary = {
     "biere",
     "fut",
     "depot",
-    "sg",
-    "secretaire-generale",
   ],
 };
 
@@ -119,7 +118,7 @@ const TRANSACTIONS_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["virements", "compte-perso", "transactions"],
+  keywords: ["transactions", "virements", "compte-perso"],
 };
 
 const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
@@ -132,7 +131,7 @@ const CHARISMA_EVENTS_MANAGE_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["charisme", "evenements"],
+  keywords: ["gestion-du-charisme", "evenements"],
 };
 
 const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
@@ -145,7 +144,7 @@ const CHARISMA_EVENTS_LIST_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["charisme", "evenements", "participations"],
+  keywords: ["evenements-chaismatiques", "charisme", "participations"],
 };
 
 const CHARISMA_PERIODS_PAGE: PageInSummary = {
@@ -158,7 +157,11 @@ const CHARISMA_PERIODS_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["charisme-dispos", "charisme-disponibilites"],
+  keywords: [
+    "charisme-des-dispos",
+    "charisme-dispos",
+    "charisme-disponibilites",
+  ],
 };
 
 const ASSIGNMENT_ORGA_TASK_PAGE: PageInSummary = {
@@ -170,7 +173,7 @@ const ASSIGNMENT_ORGA_TASK_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["orga-tache", "affectation"],
+  keywords: ["affect-orga-tache", "affectation"],
 };
 
 const ASSIGNMENT_TASK_ORGA_PAGE: PageInSummary = {
@@ -182,7 +185,7 @@ const ASSIGNMENT_TASK_ORGA_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["tache-orga", "affectation"],
+  keywords: ["affect-tache-orga", "affectation"],
 };
 
 const ORGA_NEED_PAGE: PageInSummary = {
@@ -195,7 +198,7 @@ const ORGA_NEED_PAGE: PageInSummary = {
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
+  keywords: ["besoin-orgas", "demandes-benevoles", "besoin-benevoles"],
 };
 
 export const MANAGEMENT_SUMMARY_PAGES: PageInSummary[] = [
