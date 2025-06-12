@@ -175,6 +175,7 @@ const options = computed<ChartOptions<"bar">>(() => {
         stacked: true,
         min: 0,
         position: "bottom",
+        suggestedMax: maxTotal.value,
         ticks: { color: textColor },
         grid: { color: gridColor },
       },
