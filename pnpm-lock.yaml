@@ -423,6 +423,9 @@ importers:
       '@vueuse/core':
         specifier: 13.3.0
         version: 13.3.0(vue@3.5.16(typescript@5.8.3))
+      awesome-phonenumber:
+        specifier: 7.5.0
+        version: 7.5.0
       chart.js:
         specifier: 4.4.9
         version: 4.4.9
@@ -3763,6 +3766,10 @@ packages:
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
+
+  awesome-phonenumber@7.5.0:
+    resolution: {integrity: sha512-qWQHCiMHMNVyUsICiCcaPJAYbGL4E4kGnIxnrwkS3YCwcPa8VtQCo11HGKY8AbUpXJloDG10c9Bulhw3xYkC/g==}
+    engines: {node: '>=18'}
 
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
@@ -13300,6 +13307,8 @@ snapshots:
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
+
+  awesome-phonenumber@7.5.0: {}
 
   b4a@1.6.7: {}
 
