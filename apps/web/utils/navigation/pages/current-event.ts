@@ -12,7 +12,7 @@ const TIMELINE_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["activite", "timeline", "actuel", "en-cours"],
+  keywords: ["timeline", "activite", "actuel", "en-cours"],
 };
 
 const NEED_HELP_PAGE: PageInSummary = {
@@ -25,7 +25,7 @@ const NEED_HELP_PAGE: PageInSummary = {
   mobileSupport: true,
   canBeFavorite: true,
   hasParam: false,
-  keywords: ["aide-ponctuelle", "disponible", "besoin d'aide", "a l'aide"],
+  keywords: ["besoin-d-aide", "aide-ponctuelle", "disponible", "a-l-aide"],
 };
 
 export const CURRENT_EVENT_SUMMARY_PAGES: PageInSummary[] = [
