@@ -133,6 +133,7 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 <style lang="scss" scoped>
 .assignment-metadata {
   display: flex;
+  justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
 
