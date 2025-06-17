@@ -34,7 +34,6 @@ export const useSleepStore = defineStore("sleep", {
       return state.beds;
     },
     allSortedBeds(state): OccupiedBed[] {
-      console.log(state.beds);
       return state.beds
         .filter(isOccupied)
         .sort(

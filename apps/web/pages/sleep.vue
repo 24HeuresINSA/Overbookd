@@ -45,8 +45,6 @@ const openModal = computed<boolean>(() => !!selectedBed.value);
 
 watch(
   () => openModal.value,
-  (next) => {
-    openEdit.value = next;
-  },
+  (next) => openEdit.value = next;
 );
 </script>

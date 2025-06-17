@@ -89,11 +89,7 @@ const adherents = computed(() =>
   userStore.adherents
     .map((adherent) => ({
       ...adherent,
-      fullname: buildUserNameWithNickname({
-        firstname: adherent.firstname,
-        lastname: adherent.lastname,
-        nickname: adherent.nickname,
-      }),
+      fullname: buildUserNameWithNickname(adherent),
     }))
     .filter(({ fullname }) => !sleeperNames.value.includes(fullname)),
 );

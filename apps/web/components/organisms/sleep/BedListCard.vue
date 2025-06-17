@@ -51,9 +51,9 @@
           </tr>
         </template>
         <template #[`item.sleeper.wakeupTime`]="{ value }">
-          <span v-if="value">{{
-            formatDateWithHoursAndMinutesOnly(value)
-          }}</span>
+          <span v-if="value">
+            {{ formatDateWithHoursAndMinutesOnly(value) }}
+          </span>
         </template>
         <template #[`item.actions`]="{ item }">
           <BedActionsBtnGroup :bed="item" />
@@ -73,7 +73,7 @@ const beds = computed<Bed[]>(() => sleepStore.allBeds);
 const headers = [
   { title: "Salle", key: "data-table-group" },
   { title: "Lit", key: "bed.label" },
-  { title: "Dormeur-se", key: "sleeper.name" },
+  { title: "Dormeur·euse", key: "sleeper.name" },
   { title: "Réveil", key: "sleeper.wakeupTime" },
   { title: "Note", key: "sleeper.comment" },
   { title: "", key: "actions" },
