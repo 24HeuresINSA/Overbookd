@@ -39,6 +39,7 @@ export const ORGA_NEED_URL = "/orga-need";
 
 export const TIMELINE_URL = "/timeline";
 export const NEED_HELP_URL = "/need-help";
+export const SLEEP_URL = "/sleep";
 
 export const pagesURL = [
   HOME_URL,
@@ -74,6 +75,7 @@ export const pagesURL = [
   ORGA_NEED_URL,
   TIMELINE_URL,
   NEED_HELP_URL,
+  SLEEP_URL,
 ] as const;
 
 export type PageURL = (typeof pagesURL)[number];

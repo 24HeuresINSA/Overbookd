@@ -1,8 +1,17 @@
-import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "../duration/duration.constant";
+import {
+  ONE_DAY_IN_MS,
+  ONE_HOUR_IN_MS,
+  ONE_MINUTE_IN_MS,
+} from "../duration/duration.constant";
 
 export function getHourDiff(start: Date, end: Date): number {
   const diff = end.getTime() - start.getTime();
   return diff / ONE_HOUR_IN_MS;
+}
+
+export function getMinuteDiff(start: Date, end: Date): number {
+  const diff = end.getTime() - start.getTime();
+  return diff / ONE_MINUTE_IN_MS;
 }
 
 export function roundMinutes(date: Date, round: number): Date | null {

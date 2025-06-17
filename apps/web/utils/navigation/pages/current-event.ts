@@ -1,6 +1,10 @@
-import { ASK_FOR_HELP, VIEW_TIMELINE } from "@overbookd/permission";
+import {
+  ASK_FOR_HELP,
+  VIEW_TIMELINE,
+  MANAGE_SLEEP_ROOMS,
+} from "@overbookd/permission";
 import type { PageInSummary } from "./summary-pages";
-import { NEED_HELP_URL, TIMELINE_URL } from "@overbookd/web-page";
+import { NEED_HELP_URL, TIMELINE_URL, SLEEP_URL } from "@overbookd/web-page";
 
 const TIMELINE_PAGE: PageInSummary = {
   icon: "mdi-clock",
@@ -28,7 +32,20 @@ const NEED_HELP_PAGE: PageInSummary = {
   keywords: ["besoin-d-aide", "aide-ponctuelle", "disponible", "a-l-aide"],
 };
 
+const SLEEP_PAGE: PageInSummary = {
+  icon: "mdi-bed-clock",
+  title: "DodoMaker",
+  permission: MANAGE_SLEEP_ROOMS,
+  to: SLEEP_URL,
+  description: "Permet de gérer les salles dodo pendant le festival.",
+  mobileSupport: false,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["salle-dodo", "qg-orga", "sommeil", "lit"],
+};
+
 export const CURRENT_EVENT_SUMMARY_PAGES: PageInSummary[] = [
   TIMELINE_PAGE,
   NEED_HELP_PAGE,
+  SLEEP_PAGE,
 ];

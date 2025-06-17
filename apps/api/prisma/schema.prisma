@@ -870,3 +870,15 @@ model BreakPeriod {
   @@index([start(sort: Asc), end(sort: Asc)])
   @@map("break_period")
 }
+
+model Bed {
+  id          Int       @id
+  roomLabel   String    @map("room_label")
+  bedLabel    String    @map("bed_label")
+  sleeperName String?   @map("sleeper_name")
+  sleeperId   Int?      @map("sleeper_id")
+  comment     String?
+  wakeup      DateTime?
+
+  @@map("bed")
+}

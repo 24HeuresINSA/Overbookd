@@ -50,6 +50,7 @@ export const VIEW_FA_GEAR_DASHBOARD = "view-fa-gear-dashboard";
 export const VIEW_ORGA_MOBILE_NAV = "view-orga-mobile-nav";
 export const EXPORT_FOR_SIGNA = "export-for-signa";
 export const ENTER_EXTENDED_AVAILABILITITES = "enter-extended-availabilities";
+export const MANAGE_SLEEP_ROOMS = "manage-sleep-rooms";
 
 export const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -104,6 +105,7 @@ export const permissions = [
   VIEW_ORGA_MOBILE_NAV,
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,
+  MANAGE_SLEEP_ROOMS,
 ] as const;
 
 export type Permission = (typeof permissions)[number];

@@ -45,6 +45,7 @@ import {
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,
   VIEW_FA_GEAR_DASHBOARD,
+  MANAGE_SLEEP_ROOMS,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -501,6 +502,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: MANAGE_SLEEP_ROOMS,
+    description: "Peut gérer les salles dodo",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "beboo" }],
       },
     },
   },

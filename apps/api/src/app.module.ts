@@ -38,6 +38,7 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
 import { CharismaEventModule } from "./charisma-event/charisma-event.module";
 import { MembershipApplicationModule } from "./registration/membership-application/membership-application.module";
+import { SleepModule } from "./sleep/sleep.module";
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { MembershipApplicationModule } from "./registration/membership-applicati
     LogisticModule,
     FestivalTaskModule,
     PlanningModule,
+    SleepModule,
   ],
   controllers: [AppController],
   providers: [
