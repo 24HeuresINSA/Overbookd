@@ -23,8 +23,11 @@ import { SecurityPlan } from "./pdf/security-plan";
 import { Introduction } from "./pdf/introduction";
 import { RenderStrategy } from "./render-strategy";
 import { updateItemToList } from "@overbookd/list";
-import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
-import { GeoCoordinates } from "ics";
+import {
+  Coordinate,
+  GeoLocation,
+  LocationFactory,
+} from "@overbookd/geo-location";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
 import { fixEmojis } from "./pdf/fix-emojis";
 import { FiveDMethod } from "./pdf/five-d-method";
@@ -387,24 +390,23 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractLocation(location: AppointmentLocation): Content {
-    const { lat, lon } = this.retrieveGeo(location.geoLocation);
+    const { lat, lng } = this.retrieveGeo(location.geoLocation);
     return {
       text: [
         { text: "Lieu de rendez-vous : ", style: ["details", "bold"] },
         {
           text: location.name,
           style: ["details", "link"],
-          link: `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`,
+          link: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
         },
       ],
       margin: [0, 0, 0, 5],
     };
   }
 
-  private retrieveGeo(geoLocation: GeoLocation): GeoCoordinates {
+  private retrieveGeo(geoLocation: GeoLocation): Coordinate {
     const location = LocationFactory.create(geoLocation);
-    const { lat, lng } = location.barycentre.coordinates;
-    return { lat, lon: lng };
+    return location.barycentre.coordinates;
   }
 
   private extractPeriod(period: IProvidePeriod): Content {

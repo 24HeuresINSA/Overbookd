@@ -17,83 +17,12 @@
     />
   </div>
 
-  <v-dialog
-    v-if="selectedTask"
-    v-model="isTaskDetailsDialogOpen"
-    max-width="900"
-  >
-    <DialogCard without-actions @close="isTaskDetailsDialogOpen = false">
-      <template #title>
-        [{{ selectedTask.id }}] {{ selectedTask.name }}
-        <v-icon
-          v-if="canReadFT"
-          icon="mdi-open-in-new"
-          size="x-small"
-          @click="openAssignmentInNewTab"
-        />
-      </template>
-      <template #content>
-        <div class="assignment-details__content">
-          <div class="assignment-metadata">
-            <v-chip
-              color="primary"
-              variant="elevated"
-              class="assignment-metadata__chip"
-            >
-              <v-icon icon="mdi-map-marker" />
-              <span>{{
-                selectedTask.appointment
-                  ? selectedTask.appointment.name
-                  : "Aucun lieu assigné"
-              }}</span>
-            </v-chip>
-            <v-chip
-              color="primary"
-              variant="elevated"
-              class="assignment-metadata__chip"
-            >
-              <v-icon icon="mdi-clock" />
-              <span>
-                {{ formatTimeWindowForCalendar(selectedTask.timeWindow) }}
-              </span>
-            </v-chip>
-          </div>
-        </div>
-        <div class="contacts">
-          <h3>
-            Orga{{ selectedTask.contacts.length > 1 ? "s" : "" }} à contacter
-          </h3>
-          <ul>
-            <li v-for="contact in selectedTask.contacts" :key="contact.phone">
-              {{ buildUserNameWithNickname(contact) }} -
-              {{ formatUserPhone(contact.phone) }}
-            </li>
-          </ul>
-        </div>
-        <div class="contacts">
-          <h3>Bénévoles affectés sur le créneau</h3>
-          <ul>
-            <li v-for="user in selectedTask.assignees" :key="user.id">
-              {{ buildUserNameWithNickname(user) }}
-            </li>
-          </ul>
-        </div>
-        <div class="instructions">
-          <h3>Instructions</h3>
-          <div
-            v-html-safe="selectedTask.globalInstruction"
-            class="instructions__text"
-          />
-        </div>
-        <div v-if="selectedTask.inChargeInstruction" class="instructions">
-          <h3>Instructions pour les responsables</h3>
-          <div
-            v-html-safe="selectedTask.inChargeInstruction"
-            class="instructions__text"
-          />
-        </div>
-      </template>
-    </DialogCard>
+  <v-dialog v-model="isTaskDetailsDialogOpen" max-width="900">
+    <TaskDetailsDialogCard
+      v-if="selectedTask"
+      :selected-task="selectedTask"
+      @close="closeTaskDetailsDialog"
+    />
   </v-dialog>
 
   <v-dialog v-model="isBreakPeriodDialogOpen" max-width="900">
@@ -119,7 +48,6 @@ import type {
   AssignmentEvent,
   AssignmentIdentifier,
 } from "@overbookd/assignment";
-import type { TimeWindow } from "@overbookd/festival-event";
 import type {
   AssignmentStat,
   PlanningTask,
@@ -127,21 +55,16 @@ import type {
 } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
-import { FT_URL } from "@overbookd/web-page";
 import {
   convertToCalendarBreak,
   type BreakEvent,
 } from "~/domain/common/break-events";
-import { formatUserPhone } from "~/utils/user/user.utils";
-import { formatDateToHumanReadable } from "@overbookd/time";
-import { buildUserNameWithNickname } from "@overbookd/user";
 import type { BreakDefinition } from "@overbookd/planning";
 import {
   toCalendarAssignment,
   buildToCalendarTask,
   type CalendarEventForPlanning,
 } from "~/utils/planning/event";
-import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -214,8 +137,6 @@ const events = computed<CalendarEventForPlanning[]>(() => {
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
-const isTaskDetailsDialogOpen = ref<boolean>(false);
-
 const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
   await userStore.getVolunteerAssignmentDetails(identifier);
   isTaskDetailsDialogOpen.value = true;
@@ -248,13 +169,9 @@ const handleEventClicked = (event: CalendarEventForPlanning) => {
   }
 };
 
-const openAssignmentInNewTab = () => {
-  if (!selectedTask.value) return;
-  openPageWithIdInNewTab(FT_URL, selectedTask.value.id);
-};
-
-const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) => {
-  return `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
+const isTaskDetailsDialogOpen = ref<boolean>(false);
+const closeTaskDetailsDialog = () => {
+  isTaskDetailsDialogOpen.value = false;
 };
 
 const isBreakPeriodDialogOpen = ref<boolean>(false);
@@ -292,74 +209,3 @@ const removeBreak = async () => {
   isBreakRemovalDialogOpen.value = false;
 };
 </script>
-
-<style lang="scss" scoped>
-.assignment-metadata {
-  display: flex;
-  gap: 15px;
-  &__chip {
-    .v-icon {
-      margin-right: 5px;
-    }
-  }
-}
-
-.assignment-details {
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    h2 {
-      margin-bottom: 5px;
-    }
-    .friend-list {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-      margin: 4px 0;
-    }
-  }
-}
-
-.assignees {
-  &__assignee-team {
-    margin-left: 4px;
-  }
-  &__actions {
-    display: flex;
-    gap: 5px;
-  }
-}
-
-.volunteer-list {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-.instructions {
-  padding-top: 2rem;
-
-  &__text {
-    margin-left: 1rem;
-  }
-  :deep(h1) {
-    font-size: x-large;
-  }
-  :deep(h2) {
-    font-size: large;
-  }
-  :deep(ul),
-  :deep(ol) {
-    padding-left: 2rem;
-  }
-}
-
-.contacts {
-  padding-top: 2rem;
-}
-
-.contacts > ul {
-  padding-left: 2rem;
-}
-</style>
