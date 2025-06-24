@@ -68,20 +68,18 @@
           color="primary"
           :loading="downloadAllPlanningsInProgress"
           prepend-icon="mdi-download-multiple"
+          :text="`Télécharger ${displayedVolunteers.length} plannings`"
           size="large"
           @click="downloadAllPlannings"
-        >
-          Télécharger {{ displayedVolunteers.length }} plannings
-        </v-btn>
+        />
         <v-btn
           color="primary"
           :loading="downloadBookletsInProgress"
           prepend-icon="mdi-download"
+          :text="`Télécharger ${displayedVolunteers.length} livrets`"
           size="large"
           @click="downloadBooklets"
-        >
-          Télécharger {{ displayedVolunteers.length }} livrets
-        </v-btn>
+        />
       </div>
     </template>
   </DialogCard>

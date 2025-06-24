@@ -5,6 +5,8 @@
         <v-btn
           v-if="canChangeCandidate"
           icon="mdi-chevron-left"
+          aria-label="Bénévole précédent"
+          title="Bénévole précédent"
           variant="flat"
           rounded="pill"
           size="x-small"
@@ -13,6 +15,8 @@
         <v-btn
           v-if="canRevokeCandidate"
           icon="mdi-account-minus"
+          aria-label="Retirer le bénévole"
+          title="Retirer le bénévole"
           color="error"
           rounded="pill"
           size="x-small"
@@ -21,6 +25,8 @@
         <v-btn
           v-if="canChangeCandidate"
           icon="mdi-chevron-right"
+          aria-label="Bénévole suivant"
+          title="Bénévole suivant"
           variant="flat"
           rounded="pill"
           size="x-small"

@@ -38,9 +38,11 @@
     </template>
 
     <template #item.actions="{ item }">
-      <div v-if="currentInquiryUpdate === item">
+      <div v-if="currentInquiryUpdate === item" class="edit-actions">
         <v-btn
           icon="mdi-close"
+          aria-label="Annuler les modifications"
+          title="Annuler les modifications"
           color="error"
           size="small"
           density="comfortable"
@@ -49,6 +51,8 @@
         />
         <v-btn
           icon="mdi-check"
+          aria-label="Valider les modifications"
+          title="Valider les modifications"
           color="success"
           size="small"
           density="comfortable"
@@ -59,12 +63,16 @@
       <div v-else>
         <v-btn
           icon="mdi-pencil"
+          aria-label="Éditer la demande de matos"
+          title="Éditer la demande de matos"
           size="small"
           variant="flat"
           @click="openInquiryUpdateForm(item)"
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer la demande de matos"
+          title="Supprimer la demande de matos"
           size="small"
           variant="flat"
           @click="removeInquiry(item)"
@@ -214,3 +222,9 @@ const selectFirstDrive = (inquiry: InquiryRequest) => {
   document.activeElement.blur();
 };
 </script>
+
+<style>
+.edit-actions .v-btn {
+  margin: 0 6px;
+}
+</style>

@@ -20,12 +20,16 @@
     <template #item.actions="{ item }">
       <v-btn
         icon="mdi-pencil"
+        aria-label="Éditer le créneau"
+        title="Éditer le créneau"
         size="small"
         variant="flat"
         @click="updateAvailability(item)"
       />
       <v-btn
         icon="mdi-trash-can"
+        aria-label="Supprimer le créneau"
+        title="Supprimer le créneau"
         size="small"
         variant="flat"
         @click="deleteAvailability(item)"

@@ -9,6 +9,8 @@
     <div class="arrow-buttons desktop-only">
       <v-btn
         icon="mdi-chevron-left"
+        aria-label="Précédent"
+        title="Précédent"
         variant="plain"
         size="x-large"
         density="compact"
@@ -18,6 +20,8 @@
       />
       <v-btn
         icon="mdi-chevron-right"
+        aria-label="Suivant"
+        title="Suivant"
         variant="plain"
         size="x-large"
         density="compact"

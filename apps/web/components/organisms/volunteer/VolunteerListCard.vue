@@ -32,18 +32,24 @@
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-calendar"
+          aria-label="Ouvrir le planning"
+          title="Ouvrir le planning"
           size="small"
           variant="flat"
           @click.stop="openCalendar(item.id)"
         />
         <v-btn
           icon="mdi-phone"
+          aria-label="Appeler le téléphone"
+          title="Appeler le téléphone"
           size="small"
           variant="flat"
           @click.stop="callVolunteer(item.phone)"
         />
         <v-btn
           icon="mdi-email"
+          aria-label="Envoyer un mail"
+          title="Envoyer un mail"
           size="small"
           variant="flat"
           @click.stop="sendMailTo(item.email)"

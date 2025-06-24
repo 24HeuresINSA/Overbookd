@@ -15,6 +15,8 @@
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer le fût"
+          title="Supprimer le fût"
           size="small"
           color="red"
           class="barrel__action"
@@ -29,6 +31,8 @@
           <MoneyField v-model="price" />
           <v-btn
             icon="mdi-plus"
+            aria-label="Ajouter un fût"
+            title="Ajouter un fût"
             size="small"
             color="primary"
             variant="elevated"

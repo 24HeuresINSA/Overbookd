@@ -13,15 +13,17 @@
       >
         <template #append>
           <v-btn
-            v-tooltip:top="'Copier le lien'"
             icon="mdi-content-copy"
+            aria-label="Copier le lien"
+            title="Copier le lien"
             variant="flat"
             density="comfortable"
             @click="copyToClipBoard"
           />
           <v-btn
-            v-tooltip:top="'Régénérer le lien'"
             icon="mdi-refresh"
+            aria-label="Régénérer le lien"
+            title="Régénérer le lien"
             variant="flat"
             density="comfortable"
             @click="refreshInviteStaffLink"
