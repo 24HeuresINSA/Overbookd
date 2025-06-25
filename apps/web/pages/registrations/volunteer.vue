@@ -28,6 +28,8 @@
         <span>Candidats bénévoles</span>
         <v-btn
           icon="mdi-export"
+          aria-label="Exporter les candidats"
+          title="Exporter les candidats"
           color="secondary"
           rounded="pill"
           density="comfortable"
@@ -92,6 +94,8 @@
               <v-btn
                 v-if="!displayRejectedCandidates"
                 icon="mdi-check"
+                aria-label="Enrôler le candidat"
+                title="Enrôler le candidat"
                 color="success"
                 rounded="pill"
                 density="comfortable"
@@ -100,6 +104,8 @@
               <v-btn
                 v-if="!displayRejectedCandidates"
                 icon="mdi-cancel"
+                aria-label="Rejeter la candidature"
+                title="Rejeter la candidature"
                 color="error"
                 rounded="pill"
                 density="comfortable"
@@ -108,6 +114,8 @@
               <v-btn
                 v-else
                 icon="mdi-undo"
+                aria-label="Restaurer la candidature"
+                title="Restaurer la candidature"
                 size="large"
                 color="warning"
                 rounded="pill"

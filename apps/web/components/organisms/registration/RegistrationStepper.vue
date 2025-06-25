@@ -315,7 +315,7 @@ const registerForm = computed<RegisterForm>(() => {
     .fillPassword(password.value);
   return hasApprovedEULA.value
     ? form.approveEndUserLicenceAgreement()
-    : form.approveEndUserLicenceAgreement();
+    : form.denyEndUserLicenceAgreement();
 });
 
 const birthdayDate = computed<Date>(() => new Date(birthday.value));
