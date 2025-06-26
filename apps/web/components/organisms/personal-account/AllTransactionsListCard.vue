@@ -62,6 +62,8 @@
           <v-btn
             v-if="!item.isDeleted"
             icon="mdi-trash-can"
+            aria-label="Supprimer la transaction"
+            title="Supprimer la transaction"
             size="small"
             variant="flat"
             @click="deleteTransaction(item)"

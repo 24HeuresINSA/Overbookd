@@ -36,6 +36,7 @@
             v-if="item.photoLink"
             v-tooltip:top="item.photoLink"
             icon="mdi-camera"
+            aria-label="Voir la photo de l'activité"
             size="large"
             variant="flat"
             density="comfortable"

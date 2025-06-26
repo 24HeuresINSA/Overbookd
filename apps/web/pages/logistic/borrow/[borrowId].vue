@@ -32,6 +32,8 @@
         <span>Matos à emprunter</span>
         <v-btn
           icon="mdi-export"
+          aria-label="Exporter la fiche emprunt"
+          title="Exporter la fiche emprunt"
           color="secondary"
           rounded="pill"
           density="comfortable"

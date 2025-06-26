@@ -57,12 +57,16 @@
         <template #item.actions="{ item }">
           <v-btn
             icon="mdi-pencil"
+            aria-label="Éditer le matos"
+            title="Éditer le matos"
             size="small"
             variant="flat"
             @click="openUpdateGearDialog(item)"
           />
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer le matos"
+            title="Supprimer le matos"
             size="small"
             variant="flat"
             @click="openDeleteGearDialog(item)"

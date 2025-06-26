@@ -9,7 +9,7 @@
       :key="team"
       :to="`${FT_URL}?team=${team}`"
     >
-      <v-btn variant="outlined" color="primary">FTs de {{ team }}</v-btn>
+      <v-btn :text="`FTs de ${team}`" variant="outlined" color="primary" />
     </nuxt-link>
   </div>
   <main class="task ft">
@@ -52,6 +52,8 @@
         <template #item.removal="{ item }">
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la fiche tâche"
+            title="Supprimer la fiche tâche"
             size="small"
             variant="flat"
             @click.stop="openRemovalDialog(item)"
@@ -63,6 +65,8 @@
 
   <v-btn
     icon="mdi-plus-thick"
+    aria-label="Créer une fiche tâche"
+    title="Créer une fiche tâche"
     size="large"
     color="primary"
     class="btn-plus"

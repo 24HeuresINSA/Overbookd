@@ -3,6 +3,8 @@
     <v-btn
       class="profile__edit-icon"
       icon="mdi-pencil"
+      aria-label="Éditer le profil"
+      title="Éditer le profil"
       variant="text"
       rounded="pill"
       @click="editProfile"

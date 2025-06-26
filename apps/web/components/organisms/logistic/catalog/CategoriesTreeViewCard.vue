@@ -13,6 +13,8 @@
             <v-btn
               v-show="isCatalogWriter"
               icon="mdi-pencil"
+              aria-label="Éditer la catégorie"
+              title="Éditer la catégorie"
               size="small"
               variant="flat"
               @click="openEditCategoryFormDialog(item)"
@@ -20,6 +22,8 @@
             <v-btn
               v-show="isCatalogWriter"
               icon="mdi-trash-can"
+              aria-label="Supprimer la catégorie"
+              title="Supprimer la catégorie"
               size="small"
               variant="flat"
               @click="openCategoryRemovalConfirmationDialog(item)"

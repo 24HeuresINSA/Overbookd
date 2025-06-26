@@ -24,12 +24,16 @@
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-pencil"
+          aria-label="Éditer l'équipe"
+          title="Éditer l'équipe"
           size="small"
           variant="flat"
           @click="openUpdateTeamDialog(item)"
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer l'équipe"
+          title="Supprimer l'équipe"
           size="small"
           variant="flat"
           @click="openDeleteConfirmationDialog(item)"

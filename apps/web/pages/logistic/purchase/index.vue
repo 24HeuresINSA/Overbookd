@@ -4,6 +4,8 @@
 
   <v-btn
     icon="mdi-plus-thick"
+    aria-label="Créer une fiche achat"
+    title="Créer une fiche achat"
     size="large"
     color="primary"
     class="btn-plus"

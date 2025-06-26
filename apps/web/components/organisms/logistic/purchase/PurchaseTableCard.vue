@@ -29,6 +29,8 @@
         <template #item.remove="{ item }">
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la fiche achat"
+            title="Supprimer la fiche achat"
             size="small"
             variant="flat"
             @click.stop="removePurchase(item)"

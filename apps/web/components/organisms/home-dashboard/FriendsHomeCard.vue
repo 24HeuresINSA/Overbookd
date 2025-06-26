@@ -34,6 +34,8 @@
               <v-btn
                 density="compact"
                 icon="mdi-close"
+                aria-label="Retirer l'ami"
+                title="Retirer l'ami :'("
                 variant="flat"
                 color="secondary"
                 @click="removeFriend(friend)"

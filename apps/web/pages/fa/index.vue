@@ -45,6 +45,8 @@
         <template #item.removal="{ item }">
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la fiche activité"
+            title="Supprimer la fiche activité"
             size="small"
             variant="flat"
             @click.stop="openRemovalDialog(item)"
@@ -56,6 +58,8 @@
 
   <v-btn
     icon="mdi-plus-thick"
+    aria-label="Créer une fiche activité"
+    title="Créer une fiche activité"
     size="large"
     color="primary"
     class="btn-plus"

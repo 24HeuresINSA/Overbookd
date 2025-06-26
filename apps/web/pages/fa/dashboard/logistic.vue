@@ -65,6 +65,8 @@
           <template #item.link="{ item }">
             <v-btn
               icon="mdi-open-in-new"
+              aria-label="Ouvrir la fiche activité"
+              title="Ouvrir la fiche activité"
               variant="flat"
               density="comfortable"
               @click.stop="openPageWithId($event, FA_URL, item.id)"

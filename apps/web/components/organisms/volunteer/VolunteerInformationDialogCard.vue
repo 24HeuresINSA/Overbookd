@@ -46,6 +46,8 @@
               />
               <v-btn
                 icon="mdi-plus"
+                aria-label="Ajouter les équipes"
+                title="Ajouter les équipes"
                 :disabled="hasNotNewTeamToAdd"
                 color="primary"
                 @click="addTeams"
