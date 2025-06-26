@@ -13,6 +13,8 @@
         />
         <v-btn
           icon="mdi-plus"
+          aria-label="Ajouter la demande de matos"
+          title="Ajouter la demande de matos"
           color="primary"
           class="inquiry-form__btn"
           :disabled="cantAddInquiry"

@@ -2,7 +2,13 @@
   <DialogCard @close="close">
     <template #title>
       {{ taskTitle }}
-      <v-icon icon="mdi-open-in-new" size="small" @click="openTaskInNewTab" />
+      <v-icon
+        icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
+        size="small"
+        @click="openTaskInNewTab"
+      />
     </template>
     <template #content>
       <OverMultiCalendar

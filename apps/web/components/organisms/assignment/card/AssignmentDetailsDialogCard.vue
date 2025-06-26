@@ -2,7 +2,13 @@
   <DialogCard without-actions @close="close">
     <template #title>
       {{ taskName }}
-      <v-icon icon="mdi-open-in-new" size="x-small" @click="openTaskInNewTab" />
+      <v-icon
+        icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
+        size="x-small"
+        @click="openTaskInNewTab"
+      />
     </template>
 
     <template #content>

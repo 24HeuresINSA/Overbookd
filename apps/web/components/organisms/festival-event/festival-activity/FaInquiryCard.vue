@@ -40,6 +40,8 @@
           <h3>Créneaux des demandes</h3>
           <v-btn
             icon="mdi-calendar-blank"
+            aria-label="Ouvrir le planning"
+            title="Ouvrir le planning"
             color="secondary"
             rounded="pill"
             density="comfortable"
@@ -63,6 +65,8 @@
           />
           <v-btn
             icon="mdi-plus"
+            aria-label="Ajouter la demande de matos"
+            title="Ajouter la demande de matos"
             color="primary"
             class="inquiry-form__btn"
             :disabled="cantAddInquiry"

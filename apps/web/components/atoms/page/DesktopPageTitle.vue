@@ -5,8 +5,9 @@
       <v-icon
         v-show="canBeFavorite"
         :icon="favoriteIcon"
-        color="primary"
+        :aria-label="favoriteIconTitle"
         :title="favoriteIconTitle"
+        color="primary"
         :class="{
           rotating: isRotating && !isShrinking,
           finalizing: isShrinking,

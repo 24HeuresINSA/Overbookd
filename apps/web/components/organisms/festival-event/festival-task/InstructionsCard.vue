@@ -79,6 +79,8 @@
           <template #item.removal="{ item }">
             <v-btn
               icon="mdi-trash-can"
+              aria-label="Retirer l'orga à contacter"
+              title="Retirer l'orga à contacter"
               size="small"
               variant="flat"
               :disabled="disabled"

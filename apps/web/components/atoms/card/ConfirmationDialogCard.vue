@@ -4,6 +4,8 @@
       class="close-btn"
       variant="flat"
       icon="mdi-close"
+      aria-label="Fermer"
+      title="Fermer"
       density="compact"
       @click="close"
     />

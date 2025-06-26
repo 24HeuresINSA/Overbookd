@@ -8,6 +8,8 @@
     <v-btn
       v-if="!isMobile"
       icon="mdi-chevron-left"
+      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la barre latérale`"
+      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la barre latérale`"
       variant="flat"
       density="compact"
       class="btn-close-side-bar"
@@ -37,6 +39,8 @@
       <v-btn
         id="ask-for-review"
         class="review-btn"
+        aria-label="Demande de relecture"
+        :title="isSideBarClosed ? 'Demande de relecture' : ''"
         :disabled="!canAskForReview"
         @click="askForReview"
       >
