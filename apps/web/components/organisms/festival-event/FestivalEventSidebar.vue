@@ -3,7 +3,13 @@
     <v-card-title id="title">{{ titleWithId }}</v-card-title>
     <v-container class="name-container status">
       <span id="name">{{ name }}</span>
-      <span v-show="isSideBarClosed" class="dot mini-dot" :class="status" />
+      <span
+        v-show="isSideBarClosed"
+        class="dot mini-dot"
+        :class="status"
+        :aria-label="statusLabel"
+        :title="statusLabel"
+      />
     </v-container>
     <v-btn
       v-if="!isMobile"
@@ -29,9 +35,13 @@
           class="icon"
           :class="{ closed: isSideBarClosed }"
         >
-          <v-icon :class="getReviewerStatus(reviewer)" size="26">
-            {{ reviewer.icon }}
-          </v-icon>
+          <v-icon
+            :class="getReviewerStatus(reviewer).toLowerCase()"
+            :icon="reviewer.icon"
+            size="26"
+            :aria-label="getReviewerTitle(reviewer)"
+            :title="getReviewerTitle(reviewer)"
+          />
           <span class="icon-detail">{{ reviewer.name }}</span>
         </div>
       </div>
@@ -94,7 +104,6 @@
 
 <script lang="ts" setup>
 import {
-  APPROVED,
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
@@ -103,17 +112,21 @@ import {
   isTaskReviewer,
   isDraft,
   isRefused,
-  NOT_ASKING_TO_REVIEW,
-  REJECTED,
   type Reviewer,
-  WILL_NOT_REVIEW,
   type ReviewStatus,
 } from "@overbookd/festival-event";
 import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import {
+  APPROVED,
   BROUILLON,
+  NOT_ASKING_TO_REVIEW,
+  PAS_DE_RELECTURE,
+  REJECTED,
+  reviewLabels,
   statusLabels,
+  WILL_NOT_REVIEW,
+  type Review,
   type StatusLabel,
 } from "@overbookd/festival-event-constants";
 import {
@@ -211,12 +224,15 @@ const status = computed<string>(() =>
     : selectedTask.value.status.toLowerCase(),
 );
 
-const getReviewerStatus = (reviewer: Team): string => {
+const getReviewerStatus = (reviewer: Team): Review => {
   const status = isActivity.value
     ? getActivityReviewerStatus(selectedActivity.value, reviewer.code)
     : getTaskReviewerStatus(selectedTask.value, reviewer.code);
-  return status.toLowerCase();
+  return status;
 };
+
+const getReviewerTitle = (reviewer: Team): string =>
+  reviewLabels.get(getReviewerStatus(reviewer)) ?? PAS_DE_RELECTURE;
 
 const canAskForReview = computed<boolean>(() =>
   isActivity.value

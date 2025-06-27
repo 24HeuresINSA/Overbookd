@@ -41,6 +41,7 @@
         v-if="assignment.hasFriendsAssigned"
         v-tooltip:top="'Ami(s) déjà assigné(s) sur le créneau'"
         icon="mdi-account-check"
+        aria-label="Ami(s) déjà assigné(s) sur le créneau"
         size="small"
         color="green"
       />

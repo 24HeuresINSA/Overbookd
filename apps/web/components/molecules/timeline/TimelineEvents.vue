@@ -19,9 +19,13 @@
       >
         <h3 @click="openFtInNewTab(task.id)">
           {{ task.name }}
-          <v-icon v-show="task.topPriority" color="tertiary">
-            mdi-alert-circle
-          </v-icon>
+          <v-icon
+            v-show="task.topPriority"
+            icon="mdi-alert-circle"
+            aria-label="Tâche prioritaire"
+            title="Tâche prioritaire"
+            color="tertiary"
+          />
         </h3>
         <div
           v-for="(mobilization, index) in task.mobilizations"

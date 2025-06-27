@@ -10,6 +10,7 @@
     :closable="closable"
     :ripple="clickable"
     variant="elevated"
+    :aria-label="teamText"
     @click.stop="sendEvent"
     @click:close="sendCloseEvent"
   >

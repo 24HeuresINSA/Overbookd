@@ -17,13 +17,16 @@ import {
   validatedBySecu,
   publicApprovedByHumain,
 } from "./preparation.test-utils.js";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import {
   friday11hToFriday15h,
   sunday14hToSunday18h,
 } from "../festival-activity.fake.js";
 import { isDraft } from "../../festival-event.js";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

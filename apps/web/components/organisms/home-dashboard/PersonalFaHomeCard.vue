@@ -14,9 +14,13 @@
         >
           <v-list-item-title class="content-title fa">
             <strong> N° {{ item.id }} - {{ item.name }} </strong>
-            <v-icon class="status-dot" :class="item.status.toLowerCase()">
-              mdi-circle
-            </v-icon>
+            <v-icon
+              class="status-dot"
+              :class="item.status.toLowerCase()"
+              icon="mdi-circle"
+              :aria-label="getStatusLabel(item.status)"
+              :title="getStatusLabel(item.status)"
+            />
           </v-list-item-title>
           <FestivalEventReviewerChips :preview="item" />
         </v-list-item>
@@ -43,10 +47,13 @@
 <script lang="ts" setup>
 import type { PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
+  BROUILLON,
   DRAFT,
   IN_REVIEW,
   REFUSED,
   VALIDATED,
+  statusLabels,
+  type Status,
 } from "@overbookd/festival-event-constants";
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
@@ -74,6 +81,9 @@ const myDisplayedActivities = computed<PreviewFestivalActivity[]>(() => {
     )
     .slice(0, MAX_ACTIVITIES);
 });
+
+const getStatusLabel = (status: Status): string =>
+  statusLabels.get(status) ?? BROUILLON;
 </script>
 
 <style lang="scss" scoped>

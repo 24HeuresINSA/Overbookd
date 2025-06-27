@@ -1,6 +1,9 @@
 import {
+  APPROVED,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   REFUSED,
+  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
@@ -13,8 +16,6 @@ import { isValidatedReviews } from "../../common/review.js";
 import { Reviews } from "../../common/review.js";
 import { isRefusedReviews } from "../../common/review.js";
 import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
   barrieres,
   communication,
   elec,
@@ -23,7 +24,6 @@ import {
   secu,
   signa,
 } from "../../common/review.js";
-import { APPROVED } from "../../common/action.js";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";

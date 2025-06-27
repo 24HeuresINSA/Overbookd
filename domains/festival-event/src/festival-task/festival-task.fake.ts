@@ -1,6 +1,4 @@
 import { BACKLINE, MAGASIN } from "../common/inquiry-request.js";
-import { APPROVED, REJECTED } from "../common/action.js";
-import { REVIEWING, WILL_NOT_REVIEW } from "../common/review.js";
 import {
   escapeGame,
   humaGrass,
@@ -55,6 +53,12 @@ import {
   ValidatedWithConflicts,
   getFactory,
 } from "./festival-task.factory.js";
+import {
+  APPROVED,
+  REJECTED,
+  REVIEWING,
+  WILL_NOT_REVIEW,
+} from "@overbookd/festival-event-constants";
 
 const factory = getFactory();
 

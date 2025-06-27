@@ -1,17 +1,16 @@
-import { IN_REVIEW } from "@overbookd/festival-event-constants";
+import {
+  IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 import {
   FestivalActivity,
   InReview,
   Refused,
   Reviewable,
 } from "../festival-activity.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  InReviewReviews,
-  RefusedReviews,
-} from "../../common/review.js";
-import { REJECTED } from "../../common/action.js";
+import { InReviewReviews, RefusedReviews } from "../../common/review.js";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,

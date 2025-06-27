@@ -4,6 +4,11 @@ import {
   VALIDATED,
   REFUSED,
   READY_TO_ASSIGN,
+  CREATED,
+  COMMENTED,
+  READY_TO_REVIEW,
+  APPROVED,
+  REJECTED,
 } from "@overbookd/festival-event-constants";
 import { DraftInCharge, InCharge } from "./sections/in-charge.js";
 import { DraftGeneral, General } from "./sections/general.js";
@@ -15,8 +20,6 @@ import {
   RefusedReviews,
   ValidatedReviews,
 } from "../common/review.js";
-import { APPROVED, REJECTED } from "../common/action.js";
-import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action.js";
 import { Feedback } from "../common/feedback.js";
 
 type Security = {

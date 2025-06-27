@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DRAFT, IN_REVIEW } from "@overbookd/festival-event-constants";
+import {
+  DRAFT,
+  IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
+  READY_TO_REVIEW,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 import {
   barrieres,
   communication,
@@ -11,8 +17,6 @@ import {
   signa,
 } from "../../common/review.js";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
-import { READY_TO_REVIEW } from "../../common/action.js";
-import { REVIEWING, NOT_ASKING_TO_REVIEW } from "../../common/review.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { Notifications } from "../../common/notifications.js";
 import {

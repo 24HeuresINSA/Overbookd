@@ -7,11 +7,8 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import {
-  APPROVED,
-  NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
   PreviewFestivalTask,
-  REJECTED,
 } from "@overbookd/festival-event";
 import {
   FestivalTaskRejected,
@@ -19,6 +16,11 @@ import {
 } from "@overbookd/domain-events";
 import { nicknameOrName, Profile } from "@overbookd/user";
 import { Membership } from "@overbookd/registration";
+import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+} from "@overbookd/festival-event-constants";
 
 type EmailResetPassword = {
   email: string;

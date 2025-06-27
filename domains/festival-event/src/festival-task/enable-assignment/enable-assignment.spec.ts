@@ -19,8 +19,8 @@ import {
   RELOU,
   STATIQUE,
   READY_TO_ASSIGN,
+  ASSIGNMENT_STARTED,
 } from "@overbookd/festival-event-constants";
-import { ASSIGNMENT_STARTED } from "../../common/action.js";
 import {
   friday18hfriday20h,
   friday20hfriday22h,

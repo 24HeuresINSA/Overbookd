@@ -61,13 +61,18 @@
             v-if="item.isFlagship"
             color="green"
             size="large"
+            icon="mdi-check-circle"
+            aria-label="Animation phare"
             title="Animation phare"
-          >
-            mdi-check-circle
-          </v-icon>
-          <v-icon v-else color="red" size="large" title="Animation non phare">
-            mdi-close-circle
-          </v-icon>
+          />
+          <v-icon
+            v-else
+            color="red"
+            size="large"
+            icon="mdi-close-circle"
+            aria-label="Animation non phare"
+            title="Animation non phare"
+          />
         </template>
 
         <template #item.timeWindows="{ item }">

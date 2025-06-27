@@ -1,12 +1,8 @@
 import {
-  APPROVED,
   type Draft,
   type FestivalActivity,
-  NOT_ASKING_TO_REVIEW,
   type PreviewDraft,
   type PreviewFestivalActivity,
-  REJECTED,
-  REVIEWING,
   type ReviewStatus,
   type Reviewer,
   barrieres,
@@ -23,7 +19,13 @@ import type {
   PreviewForCommunication,
   PreviewForSecurity,
 } from "@overbookd/http";
-import { DRAFT } from "@overbookd/festival-event-constants";
+import {
+  APPROVED,
+  DRAFT,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { CastReviewable } from "./reviewable";
 import { castTimeWindowWithDate } from "../cast-time-windows";
@@ -121,17 +123,14 @@ export function getPreviewReviewStatus(
 export function findActivityReviewerStatusByString(
   status: string,
 ): ReviewStatus<"FA"> | undefined {
-  if (!status) return undefined;
-
   switch (status) {
     case REJECTED:
-      return REJECTED;
     case APPROVED:
-      return APPROVED;
     case REVIEWING:
-      return REVIEWING;
     case NOT_ASKING_TO_REVIEW:
-      return NOT_ASKING_TO_REVIEW;
+      return status;
+    default:
+      return undefined;
   }
 }
 

@@ -21,6 +21,8 @@
             :disabled="!funnel?.canFulfillMoreRemainingDemands"
             color="success"
             icon="mdi-account-multiple-plus"
+            aria-label="Ajouter le bénévole"
+            title="Ajouter le bénévole"
             rounded="pill"
             size="small"
             @click="addCandidate"

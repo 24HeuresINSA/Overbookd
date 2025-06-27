@@ -8,6 +8,7 @@
             v-if="shouldShowNoFriendIcon"
             v-tooltip:top="'N\'a aucun ami'"
             icon="mdi-account-alert"
+            aria-label="N'a aucun ami"
             size="small"
             color="red"
           />
@@ -15,6 +16,7 @@
             v-if="shouldShowFriendAssignedIcon"
             v-tooltip:top="'Ami déjà assigné sur le créneau'"
             icon="mdi-account-check"
+            aria-label="Ami déjà assigné sur le créneau"
             size="small"
             color="green"
           />
@@ -22,24 +24,28 @@
             v-if="shouldShowAvailableFriendsIcon"
             v-tooltip:top="'Amis disponibles sur le même créneau'"
             icon="mdi-account-group"
+            aria-label="Amis disponibles sur le même créneau"
             size="small"
           />
           <v-icon
             v-if="volunteer.note"
             v-tooltip:top="volunteer.note"
             icon="mdi-note"
+            :aria-label="volunteer.note"
             size="small"
           />
           <v-icon
             v-if="volunteer.comment"
             v-tooltip:top="volunteer.comment"
             icon="mdi-comment"
+            :aria-label="volunteer.comment"
             size="small"
           />
           <v-icon
             v-if="shouldShowRequestedOnDraftTaskIcon"
             v-tooltip:top="'Demandé sur une FT non terminée'"
             icon="mdi-alert"
+            aria-label="Demandé sur une FT non terminée"
             size="small"
             color="orange"
           />
@@ -47,6 +53,7 @@
             v-if="preferenceAssignmentIcon"
             v-tooltip:top="preferenceAssignmentIcon.label"
             :icon="preferenceAssignmentIcon.icon"
+            :aria-label="preferenceAssignmentIcon.label"
             size="small"
           />
         </div>

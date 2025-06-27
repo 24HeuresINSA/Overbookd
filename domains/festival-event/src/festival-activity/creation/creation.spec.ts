@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { DRAFT } from "@overbookd/festival-event-constants";
+import { CREATED, DRAFT } from "@overbookd/festival-event-constants";
 import { CreateFestivalActivity } from "./creation.js";
 import { KeyEvent } from "../festival-activity.js";
-import { CREATED } from "../../common/action.js";
 import { Adherent } from "../../common/adherent.js";
 import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory.js";
 

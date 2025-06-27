@@ -67,8 +67,8 @@ import {
   signa,
   type FestivalActivity,
   isDraft,
-  APPROVED,
 } from "@overbookd/festival-event";
+import { APPROVED } from "@overbookd/festival-event-constants";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 

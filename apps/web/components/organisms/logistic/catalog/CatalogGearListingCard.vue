@@ -36,11 +36,21 @@
         :mobile="isMobile"
       >
         <template #item.isPonctualUsage="{ item }">
-          <v-icon v-if="item.isPonctualUsage" icon="mdi-check-circle" />
+          <v-icon
+            v-if="item.isPonctualUsage"
+            icon="mdi-check-circle"
+            aria-label="Est du matos d'appoint"
+            title="Est du matos d'appoint"
+          />
         </template>
 
         <template #item.isConsumable="{ item }">
-          <v-icon v-if="item.isConsumable" icon="mdi-check-circle" />
+          <v-icon
+            v-if="item.isConsumable"
+            icon="mdi-check-circle"
+            aria-label="Est du matos consommable"
+            title="Est du matos consommable"
+          />
         </template>
 
         <template #item.category="{ item }">
@@ -131,8 +141,18 @@ const headers = computed<TableHeaders>(() => {
   const commonHeaders = [
     { title: "Matos", value: "name", sortable: true, width: "30%" },
     { title: "Référence", value: "code", sortable: true, width: "10%" },
-    { title: "Matos d'appoint", value: "isPonctualUsage", sortable: true },
-    { title: "Matos consommable", value: "isConsumable", sortable: true },
+    {
+      title: "Matos d'appoint",
+      value: "isPonctualUsage",
+      align: "center",
+      sortable: true,
+    },
+    {
+      title: "Matos consommable",
+      value: "isConsumable",
+      align: "center",
+      sortable: true,
+    },
     { title: "Catégorie", value: "category", width: "20%" },
   ];
   const actionsHeader = { title: "Actions", value: "actions" };

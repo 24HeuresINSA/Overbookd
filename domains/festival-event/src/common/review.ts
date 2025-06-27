@@ -1,10 +1,12 @@
 import { FestivalEventIdentifier, FA } from "./festival-event.js";
-import { APPROVED, REJECTED } from "./action.js";
 import { Adherent } from "./adherent.js";
-
-export const REVIEWING = "REVIEWING";
-export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
-export const WILL_NOT_REVIEW = "WILL_NOT_REVIEW";
+import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+  WILL_NOT_REVIEW,
+} from "@overbookd/festival-event-constants";
 
 export const communication = "communication";
 export const humain = "humain";

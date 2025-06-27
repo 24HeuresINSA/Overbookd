@@ -1,16 +1,6 @@
 //  **********************
 //  COMMON MODULE
 //  **********************
-export {
-  CREATED,
-  COMMENTED,
-  READY_TO_REVIEW,
-  APPROVED,
-  REJECTED,
-  RESET_REVIEW,
-  ASSIGNMENT_STARTED,
-  FORCED_UPDATE,
-} from "./common/action.js";
 export type { Adherent } from "./common/adherent.js";
 export type { Feedback } from "./common/feedback.js";
 export type { FestivalEventIdentifier } from "./common/festival-event.js";
@@ -59,9 +49,6 @@ export type {
   Notifyee,
 } from "./common/notifications.js";
 export {
-  REVIEWING,
-  NOT_ASKING_TO_REVIEW,
-  WILL_NOT_REVIEW,
   humain,
   communication,
   signa,

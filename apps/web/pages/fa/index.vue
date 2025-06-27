@@ -24,7 +24,11 @@
       >
         <template #item.id="{ item }">
           <v-chip-group id="status">
-            <v-chip :class="item.status.toLowerCase()">
+            <v-chip
+              :class="item.status.toLowerCase()"
+              :aria-label="getStatusLabel(item.status)"
+              :title="getStatusLabel(item.status)"
+            >
               {{ item.id }}
             </v-chip>
           </v-chip-group>
@@ -101,6 +105,11 @@ import type {
   FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-event";
+import {
+  BROUILLON,
+  statusLabels,
+  type Status,
+} from "@overbookd/festival-event-constants";
 import { SlugifyService } from "@overbookd/slugify";
 import { type User, buildUserName } from "@overbookd/user";
 import {
@@ -160,6 +169,9 @@ const activities = computed<PreviewFestivalActivity[]>(
 );
 
 const loading = ref<boolean>(activities.value.length === 0);
+
+const getStatusLabel = (status: Status): string =>
+  statusLabels.get(status) ?? BROUILLON;
 
 const isNewActivityDialogOpen = ref<boolean>(false);
 const openNewActivityDialog = () => (isNewActivityDialogOpen.value = true);

@@ -9,6 +9,8 @@
       />
       <v-btn
         icon="mdi-plus"
+        aria-label="Ajouter le matos"
+        title="Ajouter le matos"
         color="primary"
         class="gear-request-form__btn"
         :disabled="cantAddGearRequest"
@@ -29,6 +31,8 @@
       <template #item.remove="{ item }">
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer le matos"
+          title="Supprimer le matos"
           size="small"
           variant="flat"
           @click="removeGearRequest(item)"

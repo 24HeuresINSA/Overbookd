@@ -1,12 +1,14 @@
 import {
+  APPROVED,
   DRAFT,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   REFUSED,
+  REJECTED,
+  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import { describe, expect, it } from "vitest";
-import { APPROVED, REJECTED } from "../common/action";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import {
   InReviewPreview,
   PreviewDraft,
