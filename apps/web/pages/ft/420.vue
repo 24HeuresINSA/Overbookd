@@ -17,7 +17,7 @@
       </v-card-text>
     </v-card>
 
-    <v-img src="/img/croutard.jpg" />
+    <v-img src="/img/croutard.jpg" alt="Croutard" />
     <v-card>
       <v-card-title>BONSOIR, cher.e orga</v-card-title>
       <v-card-text class="ft-420__content">

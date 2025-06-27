@@ -5,6 +5,7 @@
       <v-img
         max-height="200"
         src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmp1dGthNXE3em44ZjVhdmxsZ3dyZTZuZjRsbnpkZm93cHJ0eTM0dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cO39srN2EUIRaVqaVq/giphy.gif"
+        alt="Nelson des Simpsons qui se moque de toi"
       />
       <p class="my-3">
         Renseigne l'email de ton compte pour recevoir un lien de

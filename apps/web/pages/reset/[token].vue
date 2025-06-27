@@ -2,6 +2,7 @@
   <div class="reset-password-page">
     <v-img
       src="https://live.staticflickr.com/65535/53033819508_78a3ef2495_b.jpg"
+      alt="Arche de la course des 24 heures de l'INSA de nuit en exposition longue avec les trainées des lumières des cyclistes"
       class="background"
       cover
     />

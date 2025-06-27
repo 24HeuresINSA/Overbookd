@@ -1,7 +1,12 @@
 <template>
   <div class="application">
     <nuxt-link class="application__link" :to="HOME_URL">
-      <img class="logo" :src="`/img/logo/${logo}`" @click="onClick" />
+      <img
+        class="logo"
+        :src="`/img/logo/${logo}`"
+        alt="Logo OverBookd"
+        @click="onClick"
+      />
       <span class="version">{{ versionString }}</span>
     </nuxt-link>
   </div>
