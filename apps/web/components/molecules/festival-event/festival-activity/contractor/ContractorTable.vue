@@ -12,12 +12,16 @@
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-pencil"
+          aria-label="Éditer le presta"
+          title="Éditer le presta"
           size="small"
           variant="flat"
           @click="openUpdateContractorDialog(item)"
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer le presta"
+          title="Supprimer le presta"
           size="small"
           variant="flat"
           @click="removeContractor(item)"

@@ -22,6 +22,8 @@
         <h3>Créneaux de l'activité</h3>
         <v-btn
           icon="mdi-calendar-blank"
+          aria-label="Ouvrir le planning"
+          title="Ouvrir le planning"
           color="secondary"
           rounded="pill"
           density="comfortable"
@@ -34,6 +36,8 @@
         <h3>Demandes de matos</h3>
         <v-btn
           icon="mdi-calendar-blank"
+          aria-label="Ouvrir le planning"
+          title="Ouvrir le planning"
           color="secondary"
           rounded="pill"
           density="comfortable"

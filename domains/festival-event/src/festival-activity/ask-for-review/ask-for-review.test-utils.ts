@@ -12,8 +12,11 @@ import {
   local24h,
   george,
 } from "../festival-activity.fake.js";
-import { REVIEWING } from "../../common/review.js";
-import { APPROVED, REJECTED } from "../../common/action.js";
+import {
+  APPROVED,
+  REJECTED,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 
 const factory = getFactory();
 

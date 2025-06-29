@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { IN_REVIEW } from "@overbookd/festival-event-constants";
+import {
+  IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
+  READY_TO_REVIEW,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 import { george, lea, noel } from "../festival-task.test-util.js";
 import {
   guardEscapeGame,
@@ -19,15 +24,8 @@ import {
   approvedByElecRejectedByMatos,
   rejectedByHumainAndIgnoredByMatos,
 } from "../festival-task.fake.js";
-import { READY_TO_REVIEW } from "../../common/action.js";
 import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  elec,
-  humain,
-  matos,
-} from "../../common/review.js";
+import { elec, humain, matos } from "../../common/review.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { InMemoryReviewers } from "./reviewers.inmemory.js";

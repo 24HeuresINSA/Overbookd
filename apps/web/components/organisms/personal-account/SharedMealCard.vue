@@ -34,6 +34,8 @@
                 <v-btn
                   v-if="iAmChef"
                   icon="mdi-exit-run"
+                  aria-label="Annuler le shotgun"
+                  title="Annuler le shotgun"
                   size="x-small"
                   variant="flat"
                   color="tertiary"

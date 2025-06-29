@@ -31,12 +31,16 @@
         <template #item.actions="{ item }">
           <v-btn
             icon="mdi-pencil"
+            aria-label="Éditer la participation"
+            title="Éditer la participation"
             size="small"
             variant="flat"
             @click="openEditDialog(item)"
           />
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la participation"
+            title="Supprimer la participation"
             size="small"
             variant="flat"
             @click="removeParticipation(item)"

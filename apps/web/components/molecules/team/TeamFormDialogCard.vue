@@ -10,14 +10,16 @@
           hide-details
           required
         />
-        <label for="color-picker">Couleur</label>
-        <v-color-picker
-          id="color-picker"
-          v-model="color"
-          :rules="[rules.required]"
-          hide-inputs
-          required
-        />
+        <div class="color-picker">
+          <label for="color-picker">Couleur</label>
+          <v-color-picker
+            id="color-picker"
+            v-model="color"
+            :rules="[rules.required]"
+            hide-inputs
+            required
+          />
+        </div>
         <v-text-field
           v-model="icon"
           label="Icône"
@@ -28,7 +30,7 @@
       </form>
 
       <div class="render">
-        <h3>Aperçu</h3>
+        <h3>Aperçu :</h3>
         <v-chip :color="color" variant="elevated">
           <v-icon> mdi-{{ icon }} </v-icon>
           <span class="name"> {{ name }} </span>
@@ -114,6 +116,14 @@ const createOrUpdateTeam = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  .color-picker {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 }
 
 span.name {
@@ -122,6 +132,7 @@ span.name {
 
 .render {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 </style>

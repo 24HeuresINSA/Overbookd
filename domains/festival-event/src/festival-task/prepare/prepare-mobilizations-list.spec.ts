@@ -54,16 +54,16 @@ import {
   approvedByMatosRejectedByHumainAndElec,
 } from "../festival-task.fake.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
-import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  elec,
-  humain,
-  matos,
-} from "../../common/review.js";
+import { elec, humain, matos } from "../../common/review.js";
 import { AlreadyApprovedBy } from "../../common/review.error.js";
 import { isDraft } from "../../festival-event.js";
+import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  RESET_REVIEW,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;

@@ -15,8 +15,6 @@ import { chaise, ficelle, sacPoubelle } from "../festival-task.test-util.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { onlyApprovedByMatos } from "../festival-task.fake.js";
-import { APPROVED } from "../../common/action.js";
-import { REVIEWING } from "../../common/review.js";
 import { isDraft } from "../../festival-event.js";
 import { PARKING_EIFFEL } from "../../common/inquiry-request.js";
 import {
@@ -24,6 +22,7 @@ import {
   InquiryAlreadyExists,
   InquiryNotFound,
 } from "../../common/inquiry-request.error.js";
+import { APPROVED, REVIEWING } from "@overbookd/festival-event-constants";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;

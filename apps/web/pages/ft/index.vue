@@ -9,7 +9,7 @@
       :key="team"
       :to="`${FT_URL}?team=${team}`"
     >
-      <v-btn variant="outlined" color="primary">FTs de {{ team }}</v-btn>
+      <v-btn :text="`FTs de ${team}`" variant="outlined" color="primary" />
     </nuxt-link>
   </div>
   <main class="task ft">
@@ -31,7 +31,11 @@
       >
         <template #item.id="{ item }">
           <v-chip-group id="status">
-            <v-chip :class="item.status.toLowerCase()">
+            <v-chip
+              :class="item.status.toLowerCase()"
+              :aria-label="getStatusLabel(item.status)"
+              :title="getStatusLabel(item.status)"
+            >
               {{ item.id }}
             </v-chip>
           </v-chip-group>
@@ -52,6 +56,8 @@
         <template #item.removal="{ item }">
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la fiche tâche"
+            title="Supprimer la fiche tâche"
             size="small"
             variant="flat"
             @click.stop="openRemovalDialog(item)"
@@ -63,6 +69,8 @@
 
   <v-btn
     icon="mdi-plus-thick"
+    aria-label="Créer une fiche tâche"
+    title="Créer une fiche tâche"
     size="large"
     color="primary"
     class="btn-plus"
@@ -102,6 +110,11 @@ import type {
   PreviewFestivalTask,
   FestivalTask,
 } from "@overbookd/festival-event";
+import {
+  BROUILLON,
+  statusLabels,
+  type Status,
+} from "@overbookd/festival-event-constants";
 import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
@@ -170,6 +183,9 @@ const teamsWithTasks = computed<Set<string>>(() =>
 );
 
 const loading = ref<boolean>(tasks.value.length === 0);
+
+const getStatusLabel = (status: Status): string =>
+  statusLabels.get(status) ?? BROUILLON;
 
 const isNewTaskDialogOpen = ref<boolean>(false);
 const openNewTaskDialog = () => (isNewTaskDialogOpen.value = true);

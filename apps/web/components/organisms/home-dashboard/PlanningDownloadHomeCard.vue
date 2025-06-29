@@ -46,7 +46,7 @@
         </li>
       </ul>
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions class="home-card__actions">
       <v-btn
         text="Télécharger mon planning PDF"
         color="secondary"
@@ -95,12 +95,19 @@ const exportPlanning = async () => {
 <style lang="scss" scoped>
 @use "./home-dashboard.scss" as *;
 
-.home-card__text {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-top: 10px;
-  padding-bottom: 10px;
+.home-card {
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 li {

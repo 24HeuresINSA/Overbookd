@@ -1,6 +1,12 @@
 <template>
   <v-card class="signage">
-    <v-btn class="close-btn" icon="mdi-close" @click="close" />
+    <v-btn
+      class="close-btn"
+      icon="mdi-close"
+      aria-label="Fermer"
+      title="Fermer"
+      @click="close"
+    />
     <img :src="image" :alt="`${signage.name} image`" />
   </v-card>
 </template>

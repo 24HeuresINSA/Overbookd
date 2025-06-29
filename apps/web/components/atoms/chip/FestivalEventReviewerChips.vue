@@ -3,21 +3,28 @@
     <v-chip
       v-for="reviewer of reviewers"
       :key="reviewer.code"
-      :class="getReviewerStatus(reviewer)"
+      :class="getReviewerStatus(reviewer).toLowerCase()"
+      :aria-label="getReviewerTitle(reviewer)"
+      :title="getReviewerTitle(reviewer)"
       size="small"
     >
-      <v-icon size="small"> {{ reviewer.icon }} </v-icon>
+      <v-icon :icon="reviewer.icon" size="small" />
     </v-chip>
   </v-chip-group>
 </template>
 
 <script lang="ts" setup>
 import {
-  NOT_ASKING_TO_REVIEW,
   type PreviewFestivalActivity,
   type PreviewFestivalTask,
   type Reviewer,
 } from "@overbookd/festival-event";
+import {
+  NOT_ASKING_TO_REVIEW,
+  PAS_DE_RELECTURE,
+  reviewLabels,
+  type Review,
+} from "@overbookd/festival-event-constants";
 import type { Team } from "@overbookd/team";
 import { isDraftPreview as isActivityDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import { isDraftPreview as isTaskDraftPreview } from "~/utils/festival-event/festival-task/festival-task.utils";
@@ -37,7 +44,13 @@ const reviewers = computed<Team[]>(() =>
   isActivity.value ? teamStore.faReviewers : teamStore.ftReviewers,
 );
 
-const getReviewerStatus = (reviewer: Team): string => {
+const getReviewerTitle = (reviewer: Team): string => {
+  const statusLabel: string =
+    reviewLabels.get(getReviewerStatus(reviewer)) ?? PAS_DE_RELECTURE;
+  return `${reviewer.name} : ${statusLabel}`;
+};
+
+const getReviewerStatus = (reviewer: Team): Review => {
   if (isActivity.value) {
     return getActivityReviewerStatus(
       props.preview as PreviewFestivalActivity,
@@ -50,20 +63,19 @@ const getReviewerStatus = (reviewer: Team): string => {
 const getActivityReviewerStatus = (
   activity: PreviewFestivalActivity,
   reviewer: Team,
-): string => {
-  if (isActivityDraftPreview(activity))
-    return NOT_ASKING_TO_REVIEW.toLowerCase();
+): Review => {
+  if (isActivityDraftPreview(activity)) return NOT_ASKING_TO_REVIEW;
   const reviewerCode = reviewer.code as Reviewer<"FA">;
   const status = activity.reviews[`${reviewerCode}`];
-  return status.toLowerCase();
+  return status;
 };
 const getTaskReviewerStatus = (
   task: PreviewFestivalTask,
   reviewer: Team,
-): string => {
-  if (isTaskDraftPreview(task)) return NOT_ASKING_TO_REVIEW.toLowerCase();
+): Review => {
+  if (isTaskDraftPreview(task)) return NOT_ASKING_TO_REVIEW;
   const reviewerCode = reviewer.code as Reviewer<"FT">;
   const status = task.reviews[`${reviewerCode}`];
-  return status.toLowerCase();
+  return status;
 };
 </script>

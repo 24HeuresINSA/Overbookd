@@ -1,15 +1,12 @@
-import { IN_REVIEW } from "@overbookd/festival-event-constants";
-import { REJECTED } from "../../common/action.js";
+import {
+  IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+} from "@overbookd/festival-event-constants";
 import { Adherent } from "../../common/adherent.js";
 import { WaitingForReview } from "../../common/notifications.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  Reviewer,
-  humain,
-  matos,
-  elec,
-} from "../../common/review.js";
+import { Reviewer, humain, matos, elec } from "../../common/review.js";
 import {
   Draft,
   FestivalActivity,

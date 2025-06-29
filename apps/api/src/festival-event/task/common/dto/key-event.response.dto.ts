@@ -1,9 +1,7 @@
-import {
-  CREATED,
-  FestivalTaskKeyEvent as KeyEvent,
-} from "@overbookd/festival-event";
+import { FestivalTaskKeyEvent as KeyEvent } from "@overbookd/festival-event";
 import { ApiProperty } from "@nestjs/swagger";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
+import { CREATED } from "@overbookd/festival-event-constants";
 
 export class KeyEventResponseDto implements KeyEvent {
   @ApiProperty({ enum: [CREATED] })

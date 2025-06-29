@@ -21,6 +21,8 @@
     <template #actions>
       <v-icon
         icon="mdi-close"
+        aria-label="Fermer"
+        title="Fermer"
         variant="flat"
         class="close-icon"
         @click="close"

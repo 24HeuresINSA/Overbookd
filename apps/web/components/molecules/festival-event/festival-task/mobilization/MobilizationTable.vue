@@ -32,6 +32,8 @@
           />
           <v-btn
             icon="mdi-plus-thick"
+            aria-label="Ajouter un bénévole"
+            title="Ajouter un bénévole"
             color="primary"
             size="x-small"
             density="comfortable"
@@ -55,6 +57,8 @@
           />
           <v-btn
             icon="mdi-plus-thick"
+            aria-label="Ajouter une équipe"
+            title="Ajouter une équipe"
             color="primary"
             size="x-small"
             density="comfortable"
@@ -68,6 +72,8 @@
         <div class="mobilizations__actions">
           <v-btn
             icon="mdi-clock-edit"
+            aria-label="Éditer la mobilisation"
+            title="Éditer la mobilisation"
             :disabled="disabled"
             size="small"
             variant="flat"
@@ -75,6 +81,8 @@
           />
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la mobilisation"
+            title="Supprimer la mobilisation"
             :disabled="disabled"
             size="small"
             variant="flat"

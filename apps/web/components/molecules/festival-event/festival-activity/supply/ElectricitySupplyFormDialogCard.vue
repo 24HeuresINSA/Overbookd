@@ -2,7 +2,11 @@
   <DialogCard @close="close">
     <template #title> {{ typeFormLabel }} un besoin en électricité </template>
     <template #content>
-      <v-img src="/img/log/plugs.png" class="supply-img" />
+      <v-img
+        src="/img/logistic/plugs.png"
+        alt="Différents types de prise entre monophasé et triphasé"
+        class="supply-img"
+      />
       <v-select
         v-model="connection"
         type="select"
@@ -162,6 +166,6 @@ const confirmSupply = () => {
   width: 100%;
   max-width: 350px;
   margin: auto;
-  margin-bottom: 15px;
+  margin-bottom: 1.25rem;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <div class="error">
-      <v-img class="error__gif" :src="error.gif" />
+      <v-img class="error__gif" :src="error.gif" :alt="error.alt" />
       <h1>{{ error.comment }}</h1>
       <p class="error__message">{{ error.message }}</p>
     </div>
@@ -22,6 +22,7 @@ const isPageNotFoundError = computed<boolean>(
 type PageError = {
   title: string;
   gif: string;
+  alt: string;
   message: string;
   comment: string;
 };
@@ -30,10 +31,16 @@ const lostGif = "https://media.giphy.com/media/1EmBoG0IL50VIJLWTs/giphy.gif";
 const angryPandaGif =
   "https://media1.giphy.com/media/EtB1yylKGGAUg/giphy.gif?cid=ecf05e47qaynhsxphvtrr3q7u3bskmwj15onszejof9z483h&rid=giphy.gif&ct=g";
 
-const lost = { title: pageNotFound, gif: lostGif, comment: "T'es perdu ?" };
+const lost = {
+  title: pageNotFound,
+  gif: lostGif,
+  alt: "POV : Tu t'es perdu sur OverBookd",
+  comment: "T'es perdu ?",
+};
 const other = {
   title: otherError,
   gif: angryPandaGif,
+  alt: "Un panda qui ravage un bureau",
   comment: "La ComSa be like",
 };
 

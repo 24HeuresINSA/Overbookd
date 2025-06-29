@@ -8,7 +8,6 @@ import {
   DraftWithoutConflicts,
   ReviewStatus,
   Reviewer,
-  NOT_ASKING_TO_REVIEW,
   humain,
   elec,
   matos,
@@ -29,6 +28,7 @@ import {
   REFUSED,
   VALIDATED,
   READY_TO_ASSIGN,
+  NOT_ASKING_TO_REVIEW,
 } from "@overbookd/festival-event-constants";
 import { DatabaseFestivalActivity } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";

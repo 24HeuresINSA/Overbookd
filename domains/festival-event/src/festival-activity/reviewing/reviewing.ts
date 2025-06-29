@@ -1,11 +1,13 @@
 import {
+  APPROVED,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   REFUSED,
+  REJECTED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import { FestivalActivity, Refused, Reviewable } from "../festival-activity.js";
 import {
-  NOT_ASKING_TO_REVIEW,
   barrieres,
   communication,
   elec,
@@ -19,7 +21,6 @@ import {
   Reviewer,
   Rejection,
 } from "../../common/review.js";
-import { APPROVED, REJECTED } from "../../common/action.js";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
 import {

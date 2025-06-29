@@ -1,8 +1,12 @@
 import { numberGenerator } from "@overbookd/list";
 import {
+  APPROVED,
   DRAFT,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   REFUSED,
+  REJECTED,
+  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import {
@@ -13,8 +17,6 @@ import {
   Reviewable,
   Validated,
 } from "./festival-activity.js";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review.js";
-import { APPROVED, REJECTED } from "../common/action.js";
 import { Public } from "./sections/general.js";
 import {
   saturday11hToSaturday18h,

@@ -25,12 +25,16 @@
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-pencil"
+          aria-label="Éditer la signalétique"
+          title="Éditer la signalétique"
           size="small"
           variant="flat"
           @click="openUpdateSignageDialog(item)"
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer la signalétique"
+          title="Supprimer la signalétique"
           size="small"
           variant="flat"
           @click="removeSignage(item)"
@@ -63,8 +67,8 @@ import {
   signa,
   type FestivalActivity,
   isDraft,
-  APPROVED,
 } from "@overbookd/festival-event";
+import { APPROVED } from "@overbookd/festival-event-constants";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 

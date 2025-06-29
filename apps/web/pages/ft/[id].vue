@@ -14,6 +14,8 @@
           <v-btn
             v-if="canEnableAssignment"
             id="enable-assignment"
+            aria-label="Commencer l'affectation"
+            :title="isSideBarClosed ? `Commencer l'affectation` : ''"
             :disabled="cantStartAssignment"
             @click="openEnableAssignment"
           >

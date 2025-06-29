@@ -17,8 +17,7 @@ import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { isDraft } from "../../festival-event.js";
-import { REVIEWING } from "../../common/review.js";
-import { APPROVED } from "../../common/action.js";
+import { APPROVED, REVIEWING } from "@overbookd/festival-event-constants";
 
 describe("Prepare festival task general section", () => {
   let prepare: PrepareFestivalTask;

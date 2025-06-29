@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DRAFT } from "@overbookd/festival-event-constants";
-import { CREATED } from "../../common/action.js";
+import { CREATED, DRAFT } from "@overbookd/festival-event-constants";
 import { CreateFestivalTask } from "./create.js";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
 import { noel, escapeGame } from "../festival-task.test-util.js";

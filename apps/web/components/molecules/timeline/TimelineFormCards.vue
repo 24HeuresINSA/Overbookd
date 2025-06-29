@@ -5,6 +5,8 @@
         Plage horaire
         <v-btn
           icon="mdi-refresh"
+          aria-label="Actualiser"
+          title="Actualiser"
           color="secondary"
           density="comfortable"
           size="small"

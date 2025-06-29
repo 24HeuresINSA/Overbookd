@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { REFUSED, VALIDATED } from "@overbookd/festival-event-constants";
+import {
+  APPROVED,
+  REFUSED,
+  REJECTED,
+  VALIDATED,
+} from "@overbookd/festival-event-constants";
 import { getFactory } from "../festival-activity.factory.js";
 import {
   barrieres,
@@ -10,7 +15,6 @@ import {
   secu,
   signa,
 } from "../../common/review.js";
-import { APPROVED, REJECTED } from "../../common/action.js";
 import {
   BACKLINE,
   CONTENEUR_SCENE_PULSE,

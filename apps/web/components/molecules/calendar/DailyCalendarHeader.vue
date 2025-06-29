@@ -14,6 +14,8 @@
       v-if="displayArrows"
       class="header-day__arrow"
       icon="mdi-chevron-left"
+      aria-label="Précédent"
+      title="Précédent"
       size="large"
       @click.stop="propagatePrevious"
     />
@@ -34,6 +36,8 @@
       v-if="displayArrows"
       class="header-day__arrow"
       icon="mdi-chevron-right"
+      aria-label="Suivant"
+      title="Suivant"
       size="large"
       @click.stop="propagateNext"
     />

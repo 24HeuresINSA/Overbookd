@@ -38,6 +38,8 @@
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer la permission"
+          title="Supprimer la permission"
           size="small"
           variant="flat"
           @click="removePermission(item)"

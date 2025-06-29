@@ -1,8 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  APPROVED,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   REFUSED,
+  REJECTED,
+  REVIEWING,
   VALIDATED,
+  WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
 import {
   deuxTables,
@@ -22,16 +27,7 @@ import {
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import {
-  Approval,
-  elec,
-  humain,
-  matos,
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  WILL_NOT_REVIEW,
-} from "../../common/review.js";
-import { APPROVED, REJECTED } from "../../common/action.js";
+import { Approval, elec, humain, matos } from "../../common/review.js";
 import { NotAskingToReview } from "../../common/review.error.js";
 import { Review } from "./review.js";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";

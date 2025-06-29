@@ -23,6 +23,8 @@
         <div class="assignee-phone">
           <v-btn
             icon="mdi-phone"
+            aria-label="Appeler"
+            title="Appeler"
             :href="formatPhoneLink(item.phone)"
             density="comfortable"
             size="small"

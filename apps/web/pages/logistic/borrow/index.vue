@@ -4,6 +4,8 @@
 
   <v-btn
     icon="mdi-plus-thick"
+    aria-label="Créer une fiche emprunt"
+    title="Créer une fiche emprunt"
     size="large"
     color="primary"
     class="btn-plus"

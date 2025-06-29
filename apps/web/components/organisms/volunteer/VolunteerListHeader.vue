@@ -38,6 +38,8 @@
       <v-btn
         v-if="canManageUsers"
         icon="mdi-export"
+        aria-label="Exporter les bénévoles"
+        title="Exporter les bénévoles"
         variant="flat"
         size="large"
         density="comfortable"
@@ -47,6 +49,8 @@
       <v-btn
         v-if="canAffectVolunteer"
         icon="mdi-download"
+        aria-label="Télécharger les plannings"
+        title="Télécharger les plannings"
         variant="flat"
         size="large"
         density="comfortable"
@@ -61,12 +65,26 @@
         mandatory
         @update:model-value="updateDisplayModeParam"
       >
-        <v-btn :value="TROMBINOSCOPE" icon="mdi-view-grid" :rounded="false" />
-        <v-btn :value="VOLUNTEER_LIST" icon="mdi-view-list" :rounded="false" />
+        <v-btn
+          :value="TROMBINOSCOPE"
+          icon="mdi-view-grid"
+          aria-label="Affichage trombinoscope"
+          title="Affichage trombinoscope"
+          :rounded="false"
+        />
+        <v-btn
+          :value="VOLUNTEER_LIST"
+          icon="mdi-view-list"
+          aria-label="Affichage liste"
+          title="Affichage liste"
+          :rounded="false"
+        />
         <v-btn
           v-if="canAffectVolunteer"
           :value="VOLUNTEER_STATS"
           icon="mdi-chart-bar"
+          aria-label="Affichage statistiques"
+          title="Affichage statistiques"
           :rounded="false"
         />
       </v-btn-toggle>

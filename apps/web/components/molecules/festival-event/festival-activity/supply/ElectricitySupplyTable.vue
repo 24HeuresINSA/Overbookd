@@ -16,12 +16,16 @@
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-pencil"
+          aria-label="Éditer le besoin en élec"
+          title="Éditer le besoin en élec"
           size="small"
           variant="flat"
           @click="openUpdateSupplyDialog(item)"
         />
         <v-btn
           icon="mdi-trash-can"
+          aria-label="Supprimer le besoin en élec"
+          title="Supprimer le besoin en élec"
           size="small"
           variant="flat"
           @click="removeSupply(item)"

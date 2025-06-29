@@ -2,7 +2,13 @@
   <DialogCard @close="close">
     <template #title>
       {{ taskTitle }}
-      <v-icon icon="mdi-open-in-new" size="small" @click="openTaskInNewTab" />
+      <v-icon
+        icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
+        size="small"
+        @click="openTaskInNewTab"
+      />
     </template>
     <template #content>
       <OverMultiCalendar
@@ -15,6 +21,8 @@
             :disabled="!funnel?.canFulfillMoreRemainingDemands"
             color="success"
             icon="mdi-account-multiple-plus"
+            aria-label="Ajouter le bénévole"
+            title="Ajouter le bénévole"
             rounded="pill"
             size="small"
             @click="addCandidate"

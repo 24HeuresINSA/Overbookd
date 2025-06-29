@@ -6,13 +6,18 @@
         <h2>Validée et prête à affectation</h2>
       </v-card-title>
       <v-card-text>
-        <v-icon v-for="team of teams" :key="team.code" color="green">
-          {{ team.icon }}
-        </v-icon>
+        <v-icon
+          v-for="team of teams"
+          :key="team.code"
+          :icon="team.icon"
+          :arial-label="team.name"
+          :title="team.name"
+          color="green"
+        />
       </v-card-text>
     </v-card>
 
-    <v-img src="/img/croutard.jpg" />
+    <v-img src="/img/croutard.jpg" alt="Croutard" />
     <v-card>
       <v-card-title>BONSOIR, cher.e orga</v-card-title>
       <v-card-text class="ft-420__content">

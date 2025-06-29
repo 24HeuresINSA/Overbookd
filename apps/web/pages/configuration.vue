@@ -3,6 +3,7 @@
   <v-img
     height="250"
     src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
+    alt="Un enfant qui utilise un panneau de contrôle"
     class="gif desktop-only"
   />
 

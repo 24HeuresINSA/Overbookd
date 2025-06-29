@@ -1,8 +1,18 @@
 <template>
   <div class="login-page">
-    <v-img :src="image" class="background" cover>
+    <v-img
+      :src="image"
+      alt="Image de présentation du festival des 24 heures de l'INSA"
+      class="background"
+      cover
+    >
       <template #error>
-        <v-img :src="GLASS" class="background" cover />
+        <v-img
+          :src="GLASS"
+          alt="Un verre des 24 heures de l'INSA avec la grande scène floue en arière plan"
+          class="background"
+          cover
+        />
       </template>
     </v-img>
 
@@ -12,6 +22,7 @@
           <v-img
             v-tooltip:bottom="`Version ${version}`"
             src="/img/logo/logo_home.png"
+            alt="Logo OverBookd"
             class="logo"
           />
           <h1 class="login-card__title">Bienvenue aux 24h de l'INSA 👋</h1>

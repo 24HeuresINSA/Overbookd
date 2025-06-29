@@ -4,10 +4,15 @@
     class="profile-picture__photo"
     :class="size"
     :src="user.profilePictureBlob"
+    alt="Photo de profil"
   />
-  <v-icon v-else class="profile-picture__icon" :class="size">
-    mdi-account-circle
-  </v-icon>
+  <v-icon
+    v-else
+    icon="mdi-account-circle"
+    aria-label="Photo de profil"
+    class="profile-picture__icon"
+    :class="size"
+  />
 </template>
 
 <script lang="ts" setup>

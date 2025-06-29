@@ -46,21 +46,26 @@
         <template #item.image="{ item }">
           <v-icon
             v-if="item.image"
+            icon="mdi-image"
+            aria-label="Voir l'image"
+            title="Voir l'image"
             size="x-large"
             @click="openSignageImageDisplayDialog(item)"
-          >
-            mdi-image
-          </v-icon>
+          />
         </template>
         <template #item.actions="{ item }">
           <v-btn
             icon="mdi-pencil"
+            aria-label="Éditer la signalisation"
+            title="Éditer la signalisation"
             size="small"
             variant="flat"
             @click="openUpdateSignageDialog(item)"
           />
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la signalisation"
+            title="Supprimer la signalisation"
             size="small"
             variant="flat"
             @click="openDeleteSignageDialog(item)"

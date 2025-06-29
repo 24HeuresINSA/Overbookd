@@ -39,6 +39,8 @@
         <template #item.action="{ item, index }">
           <v-btn
             icon="mdi-pencil"
+            aria-label="Éditer l'entrée de l'inventaire"
+            title="Éditer l'entrée de l'inventaire"
             size="small"
             color="warning"
             @click="startEditMode(item, index)"

@@ -28,6 +28,8 @@
           <v-btn
             v-show="canManageLocations"
             icon="mdi-circle-edit-outline"
+            aria-label="Éditer le lieu"
+            title="Éditer le lieu"
             size="small"
             variant="flat"
             @click="openEditLocationDialog(item)"
@@ -35,6 +37,8 @@
           <v-btn
             v-show="canManageLocations"
             icon="mdi-trash-can"
+            aria-label="Supprimer le lieu"
+            title="Supprimer le lieu"
             size="small"
             variant="flat"
             @click="openDeleteLocationDialog(item)"
@@ -50,6 +54,8 @@
     class="btn-plus"
     elevation="2"
     icon="mdi-plus-thick"
+    aria-label="Ajouter un lieu"
+    title="Ajouter un lieu"
     size="large"
     rounded="pill"
     @click="openNewLocationDialog"

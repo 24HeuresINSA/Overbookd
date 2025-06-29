@@ -8,7 +8,6 @@ import {
   ReviewableSpecification,
   InquiryRequest,
   MATOS,
-  NOT_ASKING_TO_REVIEW,
   PreviewDraft,
   PreviewFestivalActivity,
   PreviewReviewable,
@@ -26,11 +25,6 @@ import {
   BaseSignage,
   SignageCatalogItem,
   FestivalActivityKeyEvent as KeyEvent,
-  CREATED,
-  APPROVED,
-  COMMENTED,
-  READY_TO_REVIEW,
-  REJECTED,
   FestivalTaskChild,
 } from "@overbookd/festival-event";
 import {
@@ -38,6 +32,12 @@ import {
   IN_REVIEW,
   VALIDATED,
   REFUSED,
+  CREATED,
+  READY_TO_REVIEW,
+  APPROVED,
+  REJECTED,
+  COMMENTED,
+  NOT_ASKING_TO_REVIEW,
 } from "@overbookd/festival-event-constants";
 
 type DatabaseReview = {

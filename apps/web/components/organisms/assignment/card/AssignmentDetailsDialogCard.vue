@@ -2,7 +2,13 @@
   <DialogCard without-actions @close="close">
     <template #title>
       {{ taskName }}
-      <v-icon icon="mdi-open-in-new" size="x-small" @click="openTaskInNewTab" />
+      <v-icon
+        icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
+        size="x-small"
+        @click="openTaskInNewTab"
+      />
     </template>
 
     <template #content>
@@ -69,19 +75,16 @@
                 v-if="item?.note"
                 v-tooltip:top="item?.note"
                 icon="mdi-note"
+                :aria-label="item?.note"
                 size="small"
               />
-              <v-tooltip location="top">
-                <template #activator="activator">
-                  <v-icon
-                    v-if="item?.comment"
-                    v-bind="activator.props"
-                    icon="mdi-comment"
-                    size="small"
-                  />
-                </template>
-                {{ item?.comment }}
-              </v-tooltip>
+              <v-icon
+                v-if="item?.comment"
+                v-tooltip:top="item?.comment"
+                icon="mdi-comment"
+                :aria-label="item?.comment"
+                size="small"
+              />
               <TeamChip
                 v-for="team in item.teams"
                 :key="team"
@@ -116,6 +119,8 @@
               <div class="assignees__actions">
                 <v-btn
                   icon="mdi-calendar"
+                  aria-label="Ouvrir le planning"
+                  title="Ouvrir le planning"
                   size="small"
                   density="comfortable"
                   variant="flat"
@@ -124,6 +129,8 @@
                 <v-btn
                   v-if="canUnassignVolunteer"
                   icon="mdi-close"
+                  aria-label="Retirer l'affectation"
+                  title="Retirer l'affectation"
                   size="small"
                   density="comfortable"
                   variant="flat"

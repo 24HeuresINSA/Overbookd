@@ -1,21 +1,20 @@
 import {
-  APPROVED,
-  REJECTED,
-  REVIEWING,
   type FestivalActivity,
   type FestivalTask,
   type ReviewStatus,
 } from "@overbookd/festival-event";
 import {
+  A_RELIRE,
+  APPROUVEE,
+  APPROVED,
   DRAFT,
   IN_REVIEW,
   REFUSED,
+  REJECTED,
+  REJETEE,
+  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-
-const A_RELIRE = "À relire";
-const REJETEE = "Rejetée";
-const APPROUVEE = "Approuvée";
 
 export type ReviewLabel = typeof A_RELIRE | typeof APPROUVEE | typeof REJETEE;
 

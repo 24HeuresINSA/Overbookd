@@ -2,7 +2,13 @@
   <DialogCard without-actions @close="close">
     <template #title>
       [{{ task.id }}] {{ task.name }}
-      <v-icon size="small" @click="openFtInNewTab">mdi-open-in-new</v-icon>
+      <v-icon
+        icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
+        size="small"
+        @click="openFtInNewTab"
+      />
     </template>
 
     <template #content>
@@ -52,6 +58,8 @@
           <div class="assignee-phone">
             <v-btn
               icon="mdi-phone"
+              aria-label="Appeler"
+              title="Appeler"
               :href="formatPhoneLink(item.phone)"
               variant="text"
               density="compact"

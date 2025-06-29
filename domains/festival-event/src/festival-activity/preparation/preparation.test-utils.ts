@@ -33,7 +33,7 @@ import {
   friday12hToMonday00h,
   george,
 } from "../festival-activity.fake.js";
-import { APPROVED } from "../../common/action.js";
+import { APPROVED } from "@overbookd/festival-event-constants";
 
 const factory = getFactory();
 

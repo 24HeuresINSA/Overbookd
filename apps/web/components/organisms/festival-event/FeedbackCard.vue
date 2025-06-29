@@ -45,19 +45,21 @@
 
 <script lang="ts" setup>
 import {
-  APPROVED,
-  COMMENTED,
-  CREATED,
   type FestivalActivity,
   type FestivalActivityKeyEvent,
   type FestivalTask,
   type FestivalTaskKeyEvent,
+} from "@overbookd/festival-event";
+import {
+  APPROVED,
+  ASSIGNMENT_STARTED,
+  COMMENTED,
+  CREATED,
+  FORCED_UPDATE,
   READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
-  ASSIGNMENT_STARTED,
-  FORCED_UPDATE,
-} from "@overbookd/festival-event";
+} from "@overbookd/festival-event-constants";
 import { formatDateWithMinutes } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { TableHeaders } from "~/utils/vuetify/component-props";

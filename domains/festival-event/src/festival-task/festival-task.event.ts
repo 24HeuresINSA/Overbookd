@@ -7,7 +7,7 @@ import {
   READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
-} from "../common/action.js";
+} from "@overbookd/festival-event-constants";
 import { Adherent } from "../common/adherent.js";
 
 type Action =

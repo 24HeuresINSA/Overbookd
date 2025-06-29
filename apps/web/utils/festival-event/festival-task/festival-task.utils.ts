@@ -5,14 +5,9 @@ import {
   humain,
   matos,
   elec,
-  NOT_ASKING_TO_REVIEW,
   isDraft,
   extractApprovers,
   isRefused,
-  REJECTED,
-  APPROVED,
-  REVIEWING,
-  WILL_NOT_REVIEW,
   type Reviewer,
   type PreviewFestivalTaskDraft,
 } from "@overbookd/festival-event";
@@ -20,7 +15,14 @@ import type {
   DraftWithConflicts as Draft,
   HttpStringified,
 } from "@overbookd/http";
-import { DRAFT } from "@overbookd/festival-event-constants";
+import {
+  APPROVED,
+  DRAFT,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+  WILL_NOT_REVIEW,
+} from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { CastReviewable } from "./reviewable";
 
@@ -95,19 +97,15 @@ export function shouldResetTaskApprovals(task: FestivalTask): boolean {
 export function findTaskReviewerStatusByString(
   status: string,
 ): ReviewStatus<"FT"> | undefined {
-  if (!status) return undefined;
-
   switch (status) {
     case REJECTED:
-      return REJECTED;
     case APPROVED:
-      return APPROVED;
     case REVIEWING:
-      return REVIEWING;
     case NOT_ASKING_TO_REVIEW:
-      return NOT_ASKING_TO_REVIEW;
     case WILL_NOT_REVIEW:
-      return WILL_NOT_REVIEW;
+      return status;
+    default:
+      return undefined;
   }
 }
 

@@ -1,9 +1,13 @@
 import { numberGenerator } from "@overbookd/list";
 import {
+  APPROVED,
   DRAFT,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   READY_TO_ASSIGN,
   REFUSED,
+  REJECTED,
+  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import { isKeyOf } from "../is-key-of.js";
@@ -30,13 +34,11 @@ import {
   noel,
   noelContact,
 } from "./festival-task.test-util.js";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review.js";
 import {
   ReadyToAssignWithConflicts,
   WithConflicts,
 } from "./volunteer-conflicts.js";
 import { isDraft } from "../festival-event.js";
-import { APPROVED, REJECTED } from "../common/action.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
 import { Adherent } from "../common/adherent.js";
 

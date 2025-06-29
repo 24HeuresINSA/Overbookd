@@ -33,6 +33,8 @@
         <template #item.remove="{ item }">
           <v-btn
             icon="mdi-trash-can"
+            aria-label="Supprimer la fiche emprunt"
+            title="Supprimer la fiche emprunt"
             size="small"
             variant="flat"
             @click.stop="removeBorrow(item)"

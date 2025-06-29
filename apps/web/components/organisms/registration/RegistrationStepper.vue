@@ -3,6 +3,7 @@
     <v-img
       class="register-illustration"
       src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
+      alt="Des bénévoles vus de dos devant la grande scène de la 44ème édition des 24 heures de l'INSA"
       cover
     >
       <v-card-title class="register-title">
@@ -315,7 +316,7 @@ const registerForm = computed<RegisterForm>(() => {
     .fillPassword(password.value);
   return hasApprovedEULA.value
     ? form.approveEndUserLicenceAgreement()
-    : form.approveEndUserLicenceAgreement();
+    : form.denyEndUserLicenceAgreement();
 });
 
 const birthdayDate = computed<Date>(() => new Date(birthday.value));

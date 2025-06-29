@@ -5,6 +5,8 @@
       <v-icon
         v-if="canReadFT"
         icon="mdi-open-in-new"
+        aria-label="Ouvrir dans un nouvel onglet"
+        title="Ouvrir dans un nouvel onglet"
         size="x-small"
         @click="openAssignmentInNewTab"
       />

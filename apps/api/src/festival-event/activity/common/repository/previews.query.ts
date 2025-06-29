@@ -1,5 +1,5 @@
-import { APPROVED, FestivalActivity, secu } from "@overbookd/festival-event";
-import { DRAFT } from "@overbookd/festival-event-constants";
+import { FestivalActivity, secu } from "@overbookd/festival-event";
+import { APPROVED, DRAFT } from "@overbookd/festival-event-constants";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_BASE_SIGNAGE } from "./festival-activity.query";

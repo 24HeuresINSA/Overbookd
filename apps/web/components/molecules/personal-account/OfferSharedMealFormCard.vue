@@ -3,11 +3,13 @@
     <v-btn
       v-if="closable"
       icon="mdi-close"
+      aria-label="Fermer"
+      title="Fermer"
       class="close-btn"
       variant="flat"
       @click="close"
     />
-    <v-card-title>Proposer un repas</v-card-title>
+    <v-card-title><h3>Proposer un repas</h3></v-card-title>
     <v-card-text>
       <div class="when">
         <DateField v-model="day" hide-details class="day" />
@@ -80,6 +82,12 @@ const offer = async () => {
 <style lang="scss" scoped>
 .offer-shared-meal {
   min-width: 33%;
+
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 h2 {
