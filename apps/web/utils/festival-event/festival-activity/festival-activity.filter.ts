@@ -172,11 +172,9 @@ export function findStatus(
   if (!status) return undefined;
   switch (status) {
     case IN_REVIEW:
-      return IN_REVIEW;
     case VALIDATED:
-      return VALIDATED;
     case REFUSED:
-      return REFUSED;
+      return status;
     case DRAFT:
     default:
       return DRAFT;

@@ -132,13 +132,10 @@ export function findStatus(status: string): FestivalTask["status"] | undefined {
   if (!status) return undefined;
   switch (status) {
     case IN_REVIEW:
-      return IN_REVIEW;
     case VALIDATED:
-      return VALIDATED;
     case REFUSED:
-      return REFUSED;
     case READY_TO_ASSIGN:
-      return READY_TO_ASSIGN;
+      return status;
     case DRAFT:
     default:
       return DRAFT;

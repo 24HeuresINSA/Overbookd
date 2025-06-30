@@ -33,6 +33,7 @@ import type {
 } from "@overbookd/assignment";
 import { buildUserName } from "@overbookd/user";
 import type { UnassignForm } from "~/utils/assignment/assignment";
+import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
 
 const DEFAULT_TITLE = "Affect Orga-Tâche";
 useHead({ title: DEFAULT_TITLE });
@@ -57,9 +58,6 @@ const title = computed<string>(() => {
 });
 watch(title, (newTitle) => (document.title = newTitle));
 
-const volunteers = computed<VolunteerWithAssignmentDuration[]>(
-  () => assignVolunteerToTaskStore.volunteers,
-);
 const selectVolunteer = (volunteer: VolunteerWithAssignmentDuration) => {
   assignVolunteerToTaskStore.selectVolunteer(volunteer);
   refreshVolunteerData(volunteer.id);
@@ -88,13 +86,9 @@ const refreshVolunteerData = async (volunteerId: number) => {
 onMounted(async () => {
   await assignVolunteerToTaskStore.fetchVolunteers();
 
-  const volunteerId = route.query.volunteer;
-  if (!volunteerId) return;
-  const volunteer = volunteers.value.find(
-    (volunteer) => volunteer.id === +volunteerId,
-  );
+  const volunteer = VolunteerSelectBuilder.getFromRouteQuery(route.query);
   if (!volunteer) return;
-  assignVolunteerToTaskStore.selectVolunteer(volunteer);
+  selectVolunteer(volunteer);
 });
 
 const openAssignmentDetailsDialog = () => {

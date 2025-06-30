@@ -28,6 +28,17 @@
       <template #item.total="{ item }">
         {{ retrieveTotalDuration(item.stats) }}
       </template>
+
+      <template #item.actions="{ item }">
+        <v-btn
+          icon="mdi-human-greeting"
+          aria-label="Ouvrir en affect orga-tâche"
+          title="Ouvrir en affect orga-tâche"
+          size="small"
+          variant="flat"
+          @click.stop="openAssignmentPageInNewTab(item.id)"
+        />
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -46,6 +57,7 @@ import type {
 } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
 import type { UserPersonalData } from "@overbookd/user";
+import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
 import {
   AUCUNE,
   displayableCategories,
@@ -121,6 +133,7 @@ const headers: TableHeaders = [
     sortable: true,
     sortRaw: compareVolunteersOnTotalAssignmentDuration,
   },
+  { title: "Actions", value: "actions" },
 ];
 
 const userStore = useUserStore();
@@ -170,4 +183,8 @@ const retrieveStat = (
 
 const retrieveTotalDuration = (stats: AssignmentStat[]) =>
   sumAssignmentDuration(stats).toString();
+
+const openAssignmentPageInNewTab = (id: number) => {
+  window.open(`${ASSIGNMENT_ORGA_TASK_URL}?volunteer=${id}`);
+};
 </script>
