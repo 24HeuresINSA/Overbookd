@@ -35,7 +35,7 @@
         <div class="stats">
           <span class="stats__value">{{ friendsCount }}</span>
           <span class="stats__label">
-            Ami{{ additionalPlural(friendsCount) }}
+            Ami·e{{ additionalPlural(friendsCount, true) }}
           </span>
         </div>
         <div class="stats">
@@ -125,8 +125,9 @@ const phone = computed<string>(() =>
   loggedUser.value ? formatUserPhone(loggedUser.value.phone) : "",
 );
 
-const additionalPlural = (count: number) => {
-  return count > 1 ? "s" : "";
+const additionalPlural = (count: number, inclusive: boolean = false) => {
+  const plural = count > 1 ? "s" : "";
+  return inclusive ? `·${plural}` : plural;
 };
 
 const wantsPaperPlanning = computed<boolean>(
