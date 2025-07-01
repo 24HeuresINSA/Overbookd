@@ -95,6 +95,7 @@
 <script lang="ts" setup>
 import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
+import { useDebounceFn } from "@vueuse/core";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
   DisplayModeBuilder,
@@ -112,10 +113,10 @@ const displayMode = defineModel<DisplayMode>("displayMode", {
   required: true,
 });
 
-const updateSearchParam = (search?: string) => {
+const updateSearchParam = useDebounceFn((search?: string) => {
   filters.value.search = search;
   updateQueryParams("search", search);
-};
+}, 200);
 const updateTeamsParam = (teams: Team[]) => {
   filters.value.teams = teams;
   const teamsCode = teams.map(({ code }) => code);
@@ -128,8 +129,8 @@ const updateExcludedTeamsParam = (excludedTeams: Team[]) => {
 };
 
 const updateDisplayModeParam = (mode: DisplayMode) => {
-  updateQueryParams("displayMode", mode);
   DisplayModeBuilder.saveToStorage(mode);
+  updateQueryParams("displayMode", mode);
 };
 
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));

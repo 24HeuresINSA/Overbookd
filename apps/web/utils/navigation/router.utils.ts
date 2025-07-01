@@ -6,12 +6,12 @@ export function openPageWithIdInNewTab(path: string, id: number) {
 
 export function openPageWithId(event: PointerEvent, path: string, id: number) {
   if (event.ctrlKey) return openPageWithIdInNewTab(path, id);
-  navigateTo(`${path}/${id}`);
+  return navigateTo(`${path}/${id}`);
 }
 
 export function openPage(event: PointerEvent, path: string) {
   if (event.ctrlKey) return openPageInNewTab(path);
-  navigateTo(path);
+  return navigateTo(path);
 }
 
 export function openPageInNewTab(path: string) {

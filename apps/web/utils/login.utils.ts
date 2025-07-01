@@ -10,9 +10,8 @@ export async function loginAndApplyForMembership(
   const authStore = useAuthStore();
   await authStore.login(credentials);
   if (!authStore.authenticated) return;
-  navigateTo(HOME_URL);
 
-  playJauneAudio();
+  await Promise.all([navigateTo(HOME_URL), playJauneAudio()]);
 
   applyForMembership(credentials.email, token);
 }

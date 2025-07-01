@@ -12,7 +12,7 @@
       <template #title>
         <v-text-field
           ref="searchInput"
-          v-model="searchValue"
+          v-model="searchFieldModel"
           label="Chercher une page"
           density="compact"
           variant="plain"
@@ -27,6 +27,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useDebounceFn } from "@vueuse/core";
+
 defineProps({
   isFolded: {
     type: Boolean,
@@ -34,13 +36,22 @@ defineProps({
   },
 });
 
-const searchValue = defineModel<string | undefined>("searchValue", {
+const searchValue = defineModel<string | null>("searchValue", {
   required: true,
 });
 const searchInput = defineModel<HTMLInputElement | null>("searchInput", {
   required: true,
 });
 const focusOnSearch = () => searchInput.value?.focus();
+
+const searchFieldModel = computed<string | null>({
+  get: () => searchValue.value,
+  set: (value) => updateSearchValue(value),
+});
+
+const updateSearchValue = useDebounceFn((search: string | null) => {
+  searchValue.value = search;
+}, 200);
 </script>
 
 <style lang="scss" scoped>

@@ -1,11 +1,11 @@
 const FLIP_KEY = "flip";
 
-export function shouldFlipContent(search?: string): boolean {
+export function shouldFlipContent(search: string | null): boolean {
   const lowerSearch = search?.toLowerCase() ?? "";
   return lowerSearch.includes("bde");
 }
 
-export function shouldUnflipContent(search?: string): boolean {
+export function shouldUnflipContent(search: string | null): boolean {
   const lowerSearch = search?.toLowerCase() ?? "";
   return lowerSearch.includes("edb");
 }
