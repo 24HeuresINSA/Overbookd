@@ -25,7 +25,9 @@
 import { type User, buildUserName } from "@overbookd/user";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
+
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
+
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
@@ -36,7 +38,9 @@ const title = computed<string>(() => {
   const volunteerName = selectedVolunteer.value?.firstname ?? "...";
   return `Amis de ${volunteerName} :`;
 });
+
 const emit = defineEmits(["select-volunteer"]);
+
 const selectVolunteer = (friend: User) => {
   const volunteer = assignVolunteerToTaskStore.volunteers.find(
     (volunteer) => volunteer.id === friend.id,
@@ -44,6 +48,7 @@ const selectVolunteer = (friend: User) => {
   if (!volunteer) return;
   emit("select-volunteer", volunteer);
 };
+
 const openAssignmentPageInNewTab = (id: number) => {
   window.open(`${ASSIGNMENT_ORGA_TASK_URL}?volunteer=${id}`);
 };
