@@ -17,7 +17,7 @@
       :is-folded="isFolded"
     />
     <SideNavPageList
-      :search="searchValue ?? undefined"
+      :search="searchValue"
       :is-folded="isFolded"
       @click="cleanSearchField"
     />
@@ -54,7 +54,7 @@ onMounted(() => navigationBadgeStore.fetchAll());
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 
 const isFolded = ref<boolean>(true);
-const searchValue = ref<string | null>("");
+const searchValue = ref<string | undefined>();
 const cleanSearchField = () => (searchValue.value = "");
 
 const searchInput = ref<HTMLInputElement | null>(null);
