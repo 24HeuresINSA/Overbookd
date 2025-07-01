@@ -1,115 +1,25 @@
 import {
-  Duration,
   EndBeforeStart,
   OverDate,
-  Period,
   type DateString,
   type Hour,
   type Minute,
 } from "@overbookd/time";
 import { describe, expect, it } from "vitest";
-import { createCalendarEvent, type CalendarEvent } from "./event";
-
-type Bounds = {
-  start: DateString;
-  end: DateString;
-};
-
-type PlacedEvent = CalendarEvent & {
-  topMinutes: number;
-  durationMinutes: number;
-  column: number;
-};
-
-type PlacedEventLayout = {
-  events: PlacedEvent[];
-  totalColumns: number;
-};
-
-class CalendarPresenter {
-  private constructor(
-    public readonly bounds: Period,
-    private readonly events: CalendarEvent[],
-  ) {}
-
-  static init(bounds: Bounds, events: CalendarEvent[] = []): CalendarPresenter {
-    if (bounds.start > bounds.end) throw new EndBeforeStart();
-    const start = OverDate.init({ date: bounds.start, hour: 0 });
-    const end = OverDate.init({ date: bounds.end, hour: 0 }).plus(
-      Duration.ONE_DAY,
-    );
-    const boundsPeriod = Period.init({ start: start.date, end: end.date });
-    return new CalendarPresenter(boundsPeriod, events);
-  }
-
-  get boundedEvents(): CalendarEvent[] {
-    return this.events
-      .map((event) => {
-        const eventPeriod = Period.init(event);
-        const includes = this.bounds.includes(eventPeriod);
-        if (includes) return event;
-
-        const isOverlapping = this.bounds.isOverlapping(eventPeriod);
-        if (!isOverlapping) return null;
-
-        const start =
-          this.bounds.start < eventPeriod.start
-            ? eventPeriod.start
-            : this.bounds.start;
-        const end =
-          this.bounds.end > eventPeriod.end ? eventPeriod.end : this.bounds.end;
-        return { ...event, start, end };
-      })
-      .filter((e): e is CalendarEvent => e !== null);
-  }
-
-  place(): PlacedEventLayout {
-    const sorted = Period.sort(this.boundedEvents);
-    const placed: PlacedEvent[] = [];
-    const columns: CalendarEvent[][] = [];
-
-    for (const event of sorted) {
-      const eventPeriod = Period.init({ start: event.start, end: event.end });
-      let columnIndex = columns.findIndex((col) => {
-        const last = col[col.length - 1];
-        const lastPeriod = Period.init({ start: last.start, end: last.end });
-        return !eventPeriod.isOverlapping(lastPeriod);
-      });
-
-      if (columnIndex === -1) {
-        columnIndex = columns.length;
-        columns.push([]);
-      }
-
-      columns[columnIndex].push(event);
-
-      const startMinutes = Period.init({
-        start: this.bounds.start,
-        end: event.start,
-      }).duration.inMinutes;
-      const endMinutes = Period.init({
-        start: this.bounds.start,
-        end: event.end,
-      }).duration.inMinutes;
-      const durationMinutes = endMinutes - startMinutes;
-
-      placed.push({
-        ...event,
-        topMinutes: startMinutes,
-        durationMinutes,
-        column: columnIndex,
-      });
-    }
-
-    return { events: placed, totalColumns: columns.length };
-  }
-}
+import { createCalendarEvent } from "./event";
+import {
+  boundEvents,
+  CalendarPresenter,
+  type Bounds,
+} from "./calendar.presenter2";
 
 const sunday: DateString = "2025-06-15";
 const monday: DateString = "2025-06-16";
 const tuesday: DateString = "2025-06-17";
+const wednesday: DateString = "2025-06-18";
 
 const mondayToTuesdayBounds: Bounds = { start: monday, end: tuesday };
+const mondayToWednesdayBounds: Bounds = { start: monday, end: wednesday };
 const mondayBounds: Bounds = { start: monday, end: monday };
 
 const monday00h00 = OverDate.init({ date: monday, hour: 0, minute: 0 }).date;
@@ -175,7 +85,8 @@ describe("Calendar Event Presenter", () => {
     ({ bounds, initialEvents, expectedEvents }) => {
       const presenter = CalendarPresenter.init(bounds, initialEvents);
       it("should return the expected events", () => {
-        expect(presenter.boundedEvents).toEqual(expectedEvents);
+        const bounded = boundEvents(presenter.bounds, initialEvents);
+        expect(bounded).toEqual(expectedEvents);
       });
     },
   );
@@ -243,15 +154,110 @@ describe("Calendar Event Presenter", () => {
       expect(placed.durationMinutes).toBe(60);
     });
   });
+
+  describe("splitEventsByDay", () => {
+    it("should not split events that fit entirely in a day", () => {
+      const event = createCalendarEvent({
+        name: "monday morning",
+        start: createDate(monday, 9),
+        end: createDate(monday, 11),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToTuesdayBounds, [event]);
+      const slices = presenter.splitIntoDailySlices;
+
+      expect(slices).toHaveLength(1);
+      expect(slices[0].start).toEqual(event.start);
+      expect(slices[0].end).toEqual(event.end);
+      expect(slices[0].originalId).toBe(event.id);
+      expect(slices[0].sliceIndex).toBe(0);
+    });
+
+    it("should split an event that spans across two days", () => {
+      const event = createCalendarEvent({
+        name: "overnight event",
+        start: createDate(monday, 23),
+        end: createDate(tuesday, 2),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToWednesdayBounds, [
+        event,
+      ]);
+      const slices = presenter.splitIntoDailySlices;
+
+      expect(slices).toHaveLength(2);
+
+      const [slice0, slice1] = slices;
+
+      expect(slice0.originalId).toBe(event.id);
+      expect(slice0.sliceIndex).toBe(0);
+      expect(slice0.start).toEqual(createDate(monday, 23));
+      expect(slice0.end).toEqual(createDate(tuesday, 0));
+
+      expect(slice1.originalId).toBe(event.id);
+      expect(slice1.sliceIndex).toBe(1);
+      expect(slice1.start).toEqual(createDate(tuesday, 0));
+      expect(slice1.end).toEqual(createDate(tuesday, 2));
+    });
+
+    it("should split an event across three days", () => {
+      const event = createCalendarEvent({
+        name: "long event",
+        start: createDate(monday, 20),
+        end: createDate(wednesday, 4),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToWednesdayBounds, [
+        event,
+      ]);
+      const slices = presenter.splitIntoDailySlices;
+
+      expect(slices).toHaveLength(3);
+
+      expect(slices[0]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 0,
+        start: createDate(monday, 20),
+        end: createDate(tuesday, 0),
+      });
+
+      expect(slices[1]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 1,
+        start: createDate(tuesday, 0),
+        end: createDate(wednesday, 0),
+      });
+
+      expect(slices[2]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 2,
+        start: createDate(wednesday, 0),
+        end: createDate(wednesday, 4),
+      });
+    });
+
+    it("should skip events outside the bounds", () => {
+      const event = createCalendarEvent({
+        name: "wednesday event",
+        start: createDate(wednesday, 10),
+        end: createDate(wednesday, 12),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToTuesdayBounds, [event]);
+      const slices = presenter.splitIntoDailySlices;
+
+      expect(slices).toHaveLength(0);
+    });
+  });
 });
 
-const createTime = (hour: Hour, minute: Minute = 0) =>
-  OverDate.init({ date: monday, hour: hour, minute }).date;
+const createDate = (date: DateString, hour: Hour, minute: Minute = 0) =>
+  OverDate.init({ date, hour: hour, minute }).date;
 
 const createEvt = (startHour: Hour, endHour: Hour, id: string) =>
   createCalendarEvent({
     id,
     name: `event-${id}`,
-    start: createTime(startHour),
-    end: createTime(endHour),
+    start: createDate(monday, startHour),
+    end: createDate(monday, endHour),
   });
