@@ -148,7 +148,7 @@ onMounted(() => {
     align-items: center;
     padding: 10px;
 
-    > * {
+    > *:not(.v-btn) {
       flex: 1;
     }
 
