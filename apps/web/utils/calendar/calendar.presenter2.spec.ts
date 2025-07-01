@@ -4,6 +4,8 @@ import {
   OverDate,
   Period,
   type DateString,
+  type Hour,
+  type Minute,
 } from "@overbookd/time";
 import { describe, expect, it } from "vitest";
 import { createCalendarEvent, type CalendarEvent } from "./event";
@@ -11,6 +13,17 @@ import { createCalendarEvent, type CalendarEvent } from "./event";
 type Bounds = {
   start: DateString;
   end: DateString;
+};
+
+type PlacedEvent = CalendarEvent & {
+  topMinutes: number;
+  durationMinutes: number;
+  column: number;
+};
+
+type PlacedEventLayout = {
+  events: PlacedEvent[];
+  totalColumns: number;
 };
 
 class CalendarPresenter {
@@ -49,11 +62,52 @@ class CalendarPresenter {
       })
       .filter((e): e is CalendarEvent => e !== null);
   }
+
+  place(): PlacedEventLayout {
+    const sorted = Period.sort(this.boundedEvents);
+    const placed: PlacedEvent[] = [];
+    const columns: CalendarEvent[][] = [];
+
+    for (const event of sorted) {
+      const eventPeriod = Period.init({ start: event.start, end: event.end });
+      let columnIndex = columns.findIndex((col) => {
+        const last = col[col.length - 1];
+        const lastPeriod = Period.init({ start: last.start, end: last.end });
+        return !eventPeriod.isOverlapping(lastPeriod);
+      });
+
+      if (columnIndex === -1) {
+        columnIndex = columns.length;
+        columns.push([]);
+      }
+
+      columns[columnIndex].push(event);
+
+      const startMinutes = Period.init({
+        start: this.bounds.start,
+        end: event.start,
+      }).duration.inMinutes;
+      const endMinutes = Period.init({
+        start: this.bounds.start,
+        end: event.end,
+      }).duration.inMinutes;
+      const durationMinutes = endMinutes - startMinutes;
+
+      placed.push({
+        ...event,
+        topMinutes: startMinutes,
+        durationMinutes,
+        column: columnIndex,
+      });
+    }
+
+    return { events: placed, totalColumns: columns.length };
+  }
 }
 
-const sunday = "2025-06-15";
-const monday = "2025-06-16";
-const tuesday = "2025-06-17";
+const sunday: DateString = "2025-06-15";
+const monday: DateString = "2025-06-16";
+const tuesday: DateString = "2025-06-17";
 
 const mondayToTuesdayBounds: Bounds = { start: monday, end: tuesday };
 const mondayBounds: Bounds = { start: monday, end: monday };
@@ -125,4 +179,79 @@ describe("Calendar Event Presenter", () => {
       });
     },
   );
+
+  describe("CalendarPresenter.place", () => {
+    it("should place non-overlapping events in the same column", () => {
+      const events = [
+        createEvt(8, 9, "A"),
+        createEvt(9, 10, "B"),
+        createEvt(11, 13, "C"),
+      ];
+      const presenter = CalendarPresenter.init(mondayBounds, events);
+      const placed = presenter.place();
+
+      expect(placed.totalColumns).toBe(1);
+      for (const evt of placed.events) {
+        expect(evt.column).toBe(0);
+      }
+    });
+
+    it("should place fully overlapping events in different columns", () => {
+      const events = [
+        createEvt(8, 10, "A"),
+        createEvt(8, 10, "B"),
+        createEvt(8, 10, "C"),
+      ];
+      const presenter = CalendarPresenter.init(mondayBounds, events);
+      const placed = presenter.place();
+
+      const columns = placed.events.map((e) => e.column);
+      expect(new Set(columns).size).toBe(3);
+
+      expect(placed.totalColumns).toBe(3);
+    });
+
+    it("should allow partial reuse of columns when possible", () => {
+      // A x
+      // A B
+      // C B
+      // C x
+      const events = [
+        createEvt(8, 10, "A"),
+        createEvt(9, 11, "B"),
+        createEvt(10, 12, "C"),
+      ];
+      const presenter = CalendarPresenter.init(mondayBounds, events);
+      const placed = presenter.place();
+
+      const A = placed.events.find((e) => e.id === "A");
+      const B = placed.events.find((e) => e.id === "B");
+      const C = placed.events.find((e) => e.id === "C");
+
+      expect(A?.column).toBe(C?.column);
+      expect(B?.column).not.toBe(A?.column);
+
+      expect(placed.totalColumns).toBe(2);
+    });
+
+    it("should correctly calculate vertical position", () => {
+      const event = createEvt(9, 10, "D");
+      const presenter = CalendarPresenter.init(mondayBounds, [event]);
+      const placed = presenter.place().events[0];
+
+      expect(placed.topMinutes).toBe(9 * 60);
+      expect(placed.durationMinutes).toBe(60);
+    });
+  });
 });
+
+const createTime = (hour: Hour, minute: Minute = 0) =>
+  OverDate.init({ date: monday, hour: hour, minute }).date;
+
+const createEvt = (startHour: Hour, endHour: Hour, id: string) =>
+  createCalendarEvent({
+    id,
+    name: `event-${id}`,
+    start: createTime(startHour),
+    end: createTime(endHour),
+  });
