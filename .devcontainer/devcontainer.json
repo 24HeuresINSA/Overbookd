@@ -22,7 +22,7 @@
     },
     "ghcr.io/devcontainers/features/node:1.6.1": {
       "nodeGypDependencies": true,
-      "version": "22.16.0"
+      "version": "22.17.0"
     }
   },
   "customizations": {
