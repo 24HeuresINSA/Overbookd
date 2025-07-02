@@ -10,6 +10,7 @@ import { createCalendarEvent } from "./event";
 import {
   boundEvents,
   CalendarPresenter,
+  splitIntoDailySlices,
   type Bounds,
 } from "./calendar.presenter2";
 
@@ -91,6 +92,97 @@ describe("Calendar Event Presenter", () => {
     },
   );
 
+  describe("splitEventsByDay", () => {
+    it("should not split events that fit entirely in a day", () => {
+      const event = createCalendarEvent({
+        name: "monday morning",
+        start: createDate(monday, 9),
+        end: createDate(monday, 11),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToTuesdayBounds);
+      const slices = splitIntoDailySlices(presenter.bounds, [event]);
+
+      expect(slices).toHaveLength(1);
+      expect(slices[0].start).toEqual(event.start);
+      expect(slices[0].end).toEqual(event.end);
+      expect(slices[0].originalId).toBe(event.id);
+      expect(slices[0].sliceIndex).toBe(0);
+    });
+
+    it("should split an event that spans across two days", () => {
+      const event = createCalendarEvent({
+        name: "overnight event",
+        start: createDate(monday, 23),
+        end: createDate(tuesday, 2),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToWednesdayBounds);
+      const slices = splitIntoDailySlices(presenter.bounds, [event]);
+
+      expect(slices).toHaveLength(2);
+
+      const [slice0, slice1] = slices;
+
+      expect(slice0.originalId).toBe(event.id);
+      expect(slice0.sliceIndex).toBe(0);
+      expect(slice0.start).toEqual(createDate(monday, 23));
+      expect(slice0.end).toEqual(createDate(tuesday, 0));
+
+      expect(slice1.originalId).toBe(event.id);
+      expect(slice1.sliceIndex).toBe(1);
+      expect(slice1.start).toEqual(createDate(tuesday, 0));
+      expect(slice1.end).toEqual(createDate(tuesday, 2));
+    });
+
+    it("should split an event across three days", () => {
+      const event = createCalendarEvent({
+        name: "long event",
+        start: createDate(monday, 20),
+        end: createDate(wednesday, 4),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToWednesdayBounds);
+      const slices = splitIntoDailySlices(presenter.bounds, [event]);
+
+      expect(slices).toHaveLength(3);
+
+      expect(slices[0]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 0,
+        start: createDate(monday, 20),
+        end: createDate(tuesday, 0),
+      });
+
+      expect(slices[1]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 1,
+        start: createDate(tuesday, 0),
+        end: createDate(wednesday, 0),
+      });
+
+      expect(slices[2]).toMatchObject({
+        originalId: event.id,
+        sliceIndex: 2,
+        start: createDate(wednesday, 0),
+        end: createDate(wednesday, 4),
+      });
+    });
+
+    it("should skip events outside the bounds", () => {
+      const event = createCalendarEvent({
+        name: "wednesday event",
+        start: createDate(wednesday, 10),
+        end: createDate(wednesday, 12),
+      });
+
+      const presenter = CalendarPresenter.init(mondayToTuesdayBounds);
+      const slices = splitIntoDailySlices(presenter.bounds, [event]);
+
+      expect(slices).toHaveLength(0);
+    });
+  });
+
   describe("CalendarPresenter.place", () => {
     it("should place non-overlapping events in the same column", () => {
       const events = [
@@ -152,101 +244,6 @@ describe("Calendar Event Presenter", () => {
 
       expect(placed.topMinutes).toBe(9 * 60);
       expect(placed.durationMinutes).toBe(60);
-    });
-  });
-
-  describe("splitEventsByDay", () => {
-    it("should not split events that fit entirely in a day", () => {
-      const event = createCalendarEvent({
-        name: "monday morning",
-        start: createDate(monday, 9),
-        end: createDate(monday, 11),
-      });
-
-      const presenter = CalendarPresenter.init(mondayToTuesdayBounds, [event]);
-      const slices = presenter.splitIntoDailySlices;
-
-      expect(slices).toHaveLength(1);
-      expect(slices[0].start).toEqual(event.start);
-      expect(slices[0].end).toEqual(event.end);
-      expect(slices[0].originalId).toBe(event.id);
-      expect(slices[0].sliceIndex).toBe(0);
-    });
-
-    it("should split an event that spans across two days", () => {
-      const event = createCalendarEvent({
-        name: "overnight event",
-        start: createDate(monday, 23),
-        end: createDate(tuesday, 2),
-      });
-
-      const presenter = CalendarPresenter.init(mondayToWednesdayBounds, [
-        event,
-      ]);
-      const slices = presenter.splitIntoDailySlices;
-
-      expect(slices).toHaveLength(2);
-
-      const [slice0, slice1] = slices;
-
-      expect(slice0.originalId).toBe(event.id);
-      expect(slice0.sliceIndex).toBe(0);
-      expect(slice0.start).toEqual(createDate(monday, 23));
-      expect(slice0.end).toEqual(createDate(tuesday, 0));
-
-      expect(slice1.originalId).toBe(event.id);
-      expect(slice1.sliceIndex).toBe(1);
-      expect(slice1.start).toEqual(createDate(tuesday, 0));
-      expect(slice1.end).toEqual(createDate(tuesday, 2));
-    });
-
-    it("should split an event across three days", () => {
-      const event = createCalendarEvent({
-        name: "long event",
-        start: createDate(monday, 20),
-        end: createDate(wednesday, 4),
-      });
-
-      const presenter = CalendarPresenter.init(mondayToWednesdayBounds, [
-        event,
-      ]);
-      const slices = presenter.splitIntoDailySlices;
-
-      expect(slices).toHaveLength(3);
-
-      expect(slices[0]).toMatchObject({
-        originalId: event.id,
-        sliceIndex: 0,
-        start: createDate(monday, 20),
-        end: createDate(tuesday, 0),
-      });
-
-      expect(slices[1]).toMatchObject({
-        originalId: event.id,
-        sliceIndex: 1,
-        start: createDate(tuesday, 0),
-        end: createDate(wednesday, 0),
-      });
-
-      expect(slices[2]).toMatchObject({
-        originalId: event.id,
-        sliceIndex: 2,
-        start: createDate(wednesday, 0),
-        end: createDate(wednesday, 4),
-      });
-    });
-
-    it("should skip events outside the bounds", () => {
-      const event = createCalendarEvent({
-        name: "wednesday event",
-        start: createDate(wednesday, 10),
-        end: createDate(wednesday, 12),
-      });
-
-      const presenter = CalendarPresenter.init(mondayToTuesdayBounds, [event]);
-      const slices = presenter.splitIntoDailySlices;
-
-      expect(slices).toHaveLength(0);
     });
   });
 });

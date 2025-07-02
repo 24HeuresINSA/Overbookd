@@ -70,7 +70,7 @@ export class CalendarPresenter {
         columns.push([]);
       }
 
-      columns[columnIndex].push(event);
+      columns.at(columnIndex)?.push(event);
 
       const startMinutes = Period.init({
         start: this.bounds.start,
