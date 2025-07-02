@@ -53,7 +53,7 @@
   ],
   "engines": {
     "node": "22.16.0",
-    "pnpm": "10.11.0"
+    "pnpm": "10.12.4"
   },
   "dependencies": {
     "@overbookd/festival-event-constants": "workspace:*",
