@@ -20,6 +20,7 @@
           hide-details
           single-line
           clearable
+          @click:clear="searchFieldModel = ''"
         />
       </template>
     </v-list-item>
@@ -36,7 +37,7 @@ defineProps({
   },
 });
 
-const searchValue = defineModel<string | undefined>("searchValue", {
+const searchValue = defineModel<string>("searchValue", {
   required: true,
 });
 const searchInput = defineModel<HTMLInputElement | null>("searchInput", {
@@ -44,13 +45,13 @@ const searchInput = defineModel<HTMLInputElement | null>("searchInput", {
 });
 const focusOnSearch = () => searchInput.value?.focus();
 
-const searchFieldModel = computed<string | null>({
-  get: () => searchValue.value ?? null,
+const searchFieldModel = computed<string>({
+  get: () => searchValue.value,
   set: (value) => updateSearchValue(value),
 });
 
-const updateSearchValue = useDebounceFn((search: string | null) => {
-  searchValue.value = search ?? undefined;
+const updateSearchValue = useDebounceFn((search: string) => {
+  searchValue.value = search;
 }, 200);
 </script>
 
