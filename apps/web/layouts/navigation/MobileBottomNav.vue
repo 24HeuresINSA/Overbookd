@@ -93,8 +93,8 @@ const shouldDisplayMenuButton = computed<boolean>(
 );
 
 const isMenuOpen = ref<boolean>(false);
-const navigateAndCloseMenu = (to: string) => {
-  navigateTo(to);
+const navigateAndCloseMenu = async (to: string) => {
+  await navigateTo(to);
   isMenuOpen.value = false;
 };
 

@@ -107,10 +107,8 @@ watch(name, () => (document.title = headTitle.value));
 const loading = ref<boolean>(true);
 onMounted(async () => {
   await ftStore.fetchTask(taskIdFromUrl.value);
-  if (selectedTask.value.id !== taskIdFromUrl.value) {
-    navigateTo(FT_URL);
-    return;
-  }
+  if (selectedTask.value.id !== taskIdFromUrl.value) return navigateTo(FT_URL);
+
   loading.value = false;
 
   live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {

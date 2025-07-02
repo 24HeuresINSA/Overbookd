@@ -75,9 +75,8 @@ const headTitle = computed<string>(() => {
 
 onMounted(async () => {
   await borrowStore.fetchOne(borrowIdFromUrl.value);
-  if (selectedBorrow.value.id !== borrowIdFromUrl.value) {
-    navigateTo(BORROW_GEARS_URL);
-  }
+  if (selectedBorrow.value.id !== borrowIdFromUrl.value)
+    await navigateTo(BORROW_GEARS_URL);
 });
 
 useHead({ title: headTitle.value });

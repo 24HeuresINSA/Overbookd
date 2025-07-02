@@ -27,14 +27,12 @@ export function updateQueryParams(key: string, value: QueryParam) {
 
   const isEmpty = Array.isArray(value) ? value.length === 0 : !value;
   if (isEmpty || value === false) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { [key]: remove, ...remainingQuery } = currentQuery;
-    navigateTo({ path, query: remainingQuery });
-    return;
+    const { [key]: _remove, ...remainingQuery } = currentQuery;
+    return navigateTo({ path, query: remainingQuery });
   }
   const query = {
     ...currentQuery,
     [key]: value === true ? null : value,
   };
-  navigateTo({ path, query });
+  return navigateTo({ path, query });
 }

@@ -54,9 +54,8 @@ const headTitle = computed<string>(() => {
 
 onMounted(async () => {
   await purchaseStore.fetchOne(purchaseIdFromUrl.value);
-  if (selectedPurchase.value.id !== purchaseIdFromUrl.value) {
-    navigateTo(PURCHASE_GEARS_URL);
-  }
+  if (selectedPurchase.value.id !== purchaseIdFromUrl.value)
+    await navigateTo(PURCHASE_GEARS_URL);
 });
 
 useHead({ title: headTitle.value });

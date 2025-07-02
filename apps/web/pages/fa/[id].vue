@@ -68,26 +68,15 @@ const headTitle = computed<string>(() => {
 
 const calendarMarker = ref<Date>(configurationStore.eventStartDate);
 
-onMounted(async () => {
-  await faStore.fetchActivity(activityIdFromUrl.value);
-  if (selectedActivity.value.id !== activityIdFromUrl.value) {
-    navigateTo(FA_URL);
-  }
-
-  const firstTimeWindow = allTimeWindowEvents.value?.at(0);
-  if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
-});
-
 useHead({ title: headTitle.value });
 watch(name, () => (document.title = headTitle.value));
 
 const loading = ref<boolean>(true);
 onMounted(async () => {
   await faStore.fetchActivity(activityIdFromUrl.value);
-  if (selectedActivity.value.id !== activityIdFromUrl.value) {
-    navigateTo(FA_URL);
-    return;
-  }
+  if (selectedActivity.value.id !== activityIdFromUrl.value)
+    return navigateTo(FA_URL);
+
   loading.value = false;
 
   const firstTimeWindow = allTimeWindowEvents.value?.at(0);
