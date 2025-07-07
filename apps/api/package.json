@@ -109,7 +109,7 @@
     "@types/html-to-pdfmake": "2.4.4",
     "@types/jest": "30.0.0",
     "@types/jsonwebtoken": "9.0.10",
-    "@types/multer": "1.4.13",
+    "@types/multer": "2.0.0",
     "@types/node": "24.0.3",
     "@types/passport-jwt": "4.0.1",
     "@types/passport-local": "1.0.38",
