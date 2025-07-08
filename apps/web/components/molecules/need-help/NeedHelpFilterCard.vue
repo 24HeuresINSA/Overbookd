@@ -4,42 +4,38 @@
     <v-card-text class="card-content">
       <div class="time-slot">
         <DateTimeField
-          v-model="period.start"
+          v-model="start"
           label="Début"
-          class="card-field"
           hide-details
-          @enter="fetchVolunteers"
+          @enter="updateNeedHelpPeriod"
         />
         <DateTimeField
-          v-model="period.end"
+          v-model="end"
           label="Fin"
-          class="card-field"
           hide-details
-          @enter="fetchVolunteers"
+          @enter="updateNeedHelpPeriod"
         />
         <v-btn
           text="Appliquer"
           color="secondary"
-          class="card-field"
           :loading="loading"
-          @click="fetchVolunteers"
+          @click="updateNeedHelpPeriod"
         />
       </div>
       <v-divider />
       <div class="filters">
         <v-text-field
-          v-model="search"
+          v-model="searchFieldModel"
           label="Nom du bénévole"
           clear-icon="mdi-close-circle-outline"
-          class="card-field"
           hide-details
           clearable
         />
         <SearchTeams
           v-model="teams"
           label="Filtrer par équipe"
-          class="card-field"
           hide-details
+          @update:model-value="updateTeamsParam"
         />
       </div>
     </v-card-text>
@@ -48,7 +44,14 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import type { IProvidePeriod } from "@overbookd/time";
+import {
+  formatLocalDateTime,
+  Period,
+  type IProvidePeriod,
+} from "@overbookd/time";
+import { useDebounceFn } from "@vueuse/core";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { NeedHelpFilterBuilder } from "~/utils/need-help/need-help.filter";
 
 defineProps({
   loading: {
@@ -59,9 +62,14 @@ defineProps({
 
 const needHelpStore = useNeedHelpStore();
 
-const period = ref<IProvidePeriod>(needHelpStore.period);
+const start = ref<Date>(needHelpStore.start);
+const end = ref<Date>(needHelpStore.end);
 
-const search = computed<string>({
+const period = computed<IProvidePeriod>(() => ({
+  start: start.value,
+  end: end.value,
+}));
+const search = computed<string | null>({
   get: () => needHelpStore.search,
   set: (value: string | null) => {
     needHelpStore.updateSearch(value);
@@ -73,10 +81,45 @@ const teams = computed<Team[]>({
 });
 
 const emit = defineEmits(["fetch"]);
-const fetchVolunteers = () => {
+const updateNeedHelpPeriod = async () => {
+  try {
+    Period.init(period.value);
+  } catch {
+    sendFailureNotification("La plage horaire est invalide");
+    return;
+  }
   needHelpStore.updatePeriod(period.value);
   emit("fetch");
+
+  await updateQueryParams("start", formatLocalDateTime(start.value));
+  await updateQueryParams("end", formatLocalDateTime(end.value));
 };
+
+const searchFieldModel = computed<string | null>({
+  get: () => search.value,
+  set: (value) => updateSearchParam(value),
+});
+
+const updateSearchParam = useDebounceFn((newSearch: string | null) => {
+  search.value = newSearch;
+  updateQueryParams("search", newSearch);
+}, 200);
+const updateTeamsParam = (newTeams: Team[]) => {
+  const teamsCode = newTeams.map(({ code }) => code);
+  updateQueryParams("teams", teamsCode);
+};
+
+const route = useRoute();
+onMounted(() => {
+  const filters = NeedHelpFilterBuilder.getFromRouteQuery(route.query);
+  if (filters.start || filters.end) {
+    if (filters.start) start.value = filters.start;
+    if (filters.end) end.value = filters.end;
+    updateNeedHelpPeriod();
+  }
+  if (filters.search) search.value = filters.search;
+  if (filters.teams) teams.value = filters.teams;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -87,26 +130,23 @@ const fetchVolunteers = () => {
   margin-top: 5px;
 }
 
-.time-slot {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-  }
-}
-
+.time-slot,
 .filters {
   display: flex;
-  gap: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-  }
-}
+  gap: 20px;
+  align-items: center;
+  padding: 10px;
 
-.card-field {
+  > *:not(.v-btn) {
+    flex: 1;
+  }
+
   @media screen and (max-width: $mobile-max-width) {
-    width: 100%;
+    gap: 10px;
+    flex-direction: column;
+    > * {
+      width: 100%;
+    }
   }
 }
 </style>
