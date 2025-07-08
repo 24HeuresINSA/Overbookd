@@ -21,7 +21,7 @@
           text="Appliquer"
           color="primary"
           :loading="loading"
-          @click="updateTimelineFilter"
+          @click="updateTimelinePeriod"
         />
       </v-card-text>
     </v-card>
@@ -82,7 +82,7 @@ const teams = computed<Team[]>({
   set: (value) => timelineStore.updateTeams(value),
 });
 
-const updateTimelineFilter = async () => {
+const updateTimelinePeriod = async () => {
   try {
     Period.init(period.value);
   } catch {
@@ -128,7 +128,7 @@ onMounted(() => {
   if (filters.start || filters.end) {
     if (filters.start) start.value = filters.start;
     if (filters.end) end.value = filters.end;
-    updateTimelineFilter();
+    updateTimelinePeriod();
   }
   if (filters.search) search.value = filters.search;
   if (filters.teams) teams.value = filters.teams;
