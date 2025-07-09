@@ -1,10 +1,10 @@
 <template>
   <DesktopPageTitle />
   <div class="need-help">
-    <NeedHelpFilterCard
-      :loading="loading"
+    <TimelineFormCards
+      v-model:loading="loading"
       class="need-help__item"
-      @fetch="fetchVolunteers"
+      @apply="onApplyFilters"
     />
     <NeedHelpVolunteerListCard
       :volunteers="volunteers"
@@ -62,17 +62,11 @@ const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
   })),
 );
 
-const loading = ref<boolean>(true);
+const loading = ref<boolean>(false);
 
-const fetchVolunteers = async () => {
-  loading.value = true;
-  await needHelpStore.fetchVolunteers();
+const onApplyFilters = () => {
   day.value = needHelpStore.start;
-  loading.value = false;
 };
-
-needHelpStore.resetToDefaultPeriod();
-fetchVolunteers();
 
 const eventToAdd = computed<CalendarEvent>(() => {
   return createCalendarEvent({

@@ -73,8 +73,9 @@ export const useTimelineStore = defineStore("timeline", {
       this.teams = teams;
     },
     async resetToDefaultPeriod() {
-      this.start = defaultPeriod().start;
-      this.end = defaultPeriod().end;
+      const { start, end } = defaultPeriod();
+      this.start = start;
+      this.end = end;
       await this.fetchEvents();
     },
   },

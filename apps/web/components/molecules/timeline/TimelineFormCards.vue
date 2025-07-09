@@ -15,13 +15,23 @@
         />
       </v-card-title>
       <v-card-text class="card-content">
-        <DateTimeField v-model="start" label="Début" hide-details />
-        <DateTimeField v-model="end" label="Fin" hide-details />
+        <DateTimeField
+          v-model="start"
+          label="Début"
+          hide-details
+          @enter="updatePeriod()"
+        />
+        <DateTimeField
+          v-model="end"
+          label="Fin"
+          hide-details
+          @enter="updatePeriod()"
+        />
         <v-btn
           text="Appliquer"
           color="primary"
           :loading="loading"
-          @click="updateTimelinePeriod"
+          @click="updatePeriod"
         />
       </v-card-text>
     </v-card>
@@ -31,7 +41,7 @@
       <v-card-text class="card-content">
         <v-text-field
           v-model="searchFieldModel"
-          label="Nom de la tache"
+          :label="isTimeline ? 'Nom de la tache' : 'Nom du bénévole'"
           clear-icon="mdi-close-circle-outline"
           clearable
           hide-details
@@ -58,31 +68,34 @@ import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { TimelineFilterBuilder } from "~/utils/timeline/timeline.filter";
 import { useDebounceFn } from "@vueuse/core";
+import { isTimelineMode } from "~/utils/timeline/mode";
 
-const timelineStore = useTimelineStore();
+const route = useRoute();
+const isTimeline = isTimelineMode(route.path);
 
-const loading = ref<boolean>(true);
-timelineStore.fetchEvents().then(() => {
-  loading.value = false;
-});
+const store = isTimeline ? useTimelineStore() : useNeedHelpStore();
 
-const start = ref<Date>(timelineStore.start);
-const end = ref<Date>(timelineStore.end);
+const loading = defineModel<boolean>("loading", { default: false });
+
+const start = ref<Date>(store.start);
+const end = ref<Date>(store.end);
 
 const period = computed<IProvidePeriod>(() => ({
   start: start.value,
   end: end.value,
 }));
 const search = computed<string | null>({
-  get: () => timelineStore.search,
-  set: (value) => timelineStore.updateSearch(value),
+  get: () => store.search,
+  set: (value) => store.updateSearch(value),
 });
 const teams = computed<Team[]>({
-  get: () => timelineStore.teams,
-  set: (value) => timelineStore.updateTeams(value),
+  get: () => store.teams,
+  set: (value) => store.updateTeams(value),
 });
 
-const updateTimelinePeriod = async () => {
+const emit = defineEmits(["apply"]);
+
+const updatePeriod = async () => {
   try {
     Period.init(period.value);
   } catch {
@@ -90,18 +103,19 @@ const updateTimelinePeriod = async () => {
     return;
   }
   loading.value = true;
-  await timelineStore.updatePeriod(period.value);
+  await store.updatePeriod(period.value);
+  emit("apply");
   loading.value = false;
 
   await updateQueryParams("start", formatLocalDateTime(start.value));
   await updateQueryParams("end", formatLocalDateTime(end.value));
 };
 const refreshToNow = async () => {
-  start.value = timelineStore.start;
-  end.value = timelineStore.end;
+  start.value = store.start;
+  end.value = store.end;
 
   loading.value = true;
-  await timelineStore.resetToDefaultPeriod();
+  await store.resetToDefaultPeriod();
   loading.value = false;
 
   await updateQueryParams("start", undefined);
@@ -122,13 +136,14 @@ const updateTeamsParam = (newTeams: Team[]) => {
   updateQueryParams("teams", teamsCode);
 };
 
-const route = useRoute();
 onMounted(() => {
   const filters = TimelineFilterBuilder.getFromRouteQuery(route.query);
   if (filters.start || filters.end) {
     if (filters.start) start.value = filters.start;
     if (filters.end) end.value = filters.end;
-    updateTimelinePeriod();
+    updatePeriod();
+  } else {
+    refreshToNow();
   }
   if (filters.search) search.value = filters.search;
   if (filters.teams) teams.value = filters.teams;
