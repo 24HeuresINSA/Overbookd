@@ -50,9 +50,10 @@ export const useNeedHelpStore = defineStore("need-help", {
       if (isHttpError(res)) return;
       this.volunteers = res.map(castVolunteerWithDate);
     },
-    updatePeriod({ start, end }: IProvidePeriod) {
+    async updatePeriod({ start, end }: IProvidePeriod) {
       this.start = start;
       this.end = end;
+      await this.fetchVolunteers();
     },
     updateSearch(search: string | null) {
       this.search = search ?? "";
@@ -60,10 +61,11 @@ export const useNeedHelpStore = defineStore("need-help", {
     updateTeams(teams: Team[]) {
       this.teams = teams;
     },
-    resetToDefaultPeriod() {
+    async resetToDefaultPeriod() {
       const { start, end } = defaultPeriod();
       this.start = start;
       this.end = end;
+      await this.fetchVolunteers();
     },
   },
 });
