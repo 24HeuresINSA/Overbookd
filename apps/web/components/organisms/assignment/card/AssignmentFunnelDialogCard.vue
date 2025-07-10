@@ -35,20 +35,17 @@
             @click="assign"
           />
         </template>
-        <template #volunteer-header>
-          <div v-if="funnel" class="volunteer-headers">
-            <CandidateForAssignmentHeader
-              v-for="candidate in candidatesForCalendar"
-              :key="candidate.id"
-              :candidate="candidate"
-              :funnel="funnel"
-              class="volunteer-header"
-              @revoke="revokeLastCandidate"
-              @next="nextCandidate"
-              @previous="previousCandidate"
-              @temporary-assign="temporaryAssign"
-            />
-          </div>
+        <template #volunteer-header="{ volunteer: candidate }">
+          <CandidateForAssignmentHeader
+            v-if="funnel"
+            :candidate="candidate"
+            :funnel="funnel"
+            class="volunteer-header"
+            @revoke="revokeLastCandidate"
+            @next="nextCandidate"
+            @previous="previousCandidate"
+            @temporary-assign="temporaryAssign"
+          />
         </template>
       </OverMultiCalendar>
     </template>
@@ -203,8 +200,4 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 @use "~/assets/calendar.scss" as *;
-
-.volunteer-headers {
-  display: flex;
-}
 </style>

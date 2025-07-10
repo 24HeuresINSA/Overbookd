@@ -18,10 +18,8 @@
       :event-to-add="eventToAdd"
       class="need-help__item desktop-only"
     >
-      <template #volunteer-header>
+      <template #volunteer-header="{ volunteer }">
         <NeedHelpVolunteerResumeCalendarHeader
-          v-for="volunteer in volunteersForCalendar"
-          :key="volunteer.id"
           :volunteer="volunteer"
           class="volunteer-header"
         />
