@@ -21,22 +21,24 @@
     </template>
 
     <template #content>
-      <div
+      <RecycleScroller
         ref="contentScrollRef"
         class="multi-calendar__scroll"
+        :items="volunteers"
+        :item-size="150"
+        direction="horizontal"
+        key-field="id"
         @scroll="syncScroll(CONTENT)"
       >
-        <div class="multi-calendar__volunteers">
+        <template #default="{ item }">
           <DailyCalendarContent
-            v-for="volunteer in volunteers"
-            :key="volunteer.id"
             :day="day"
-            :events="withEventToAdd(volunteer.assignments)"
-            :availabilities="volunteer.availabilities"
+            :events="withEventToAdd(item.assignments)"
+            :availabilities="item.availabilities"
             class="multi-calendar__volunteer"
           />
-        </div>
-      </div>
+        </template>
+      </RecycleScroller>
     </template>
   </OverCalendar>
 </template>
@@ -47,6 +49,10 @@ import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { DAY_MODE } from "~/utils/calendar/calendar-mode";
+import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+// @ts-expect-error no types
+import { RecycleScroller } from "vue-virtual-scroller";
+import type { VNodeRef } from "vue";
 
 const dayModel = defineModel<Date>({
   default: OverDate.now().date,
@@ -72,7 +78,7 @@ const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
 };
 
 const headerScrollRef = ref<HTMLElement | null>(null);
-const contentScrollRef = ref<HTMLElement | null>(null);
+const contentScrollRef = ref<VNodeRef | null>(null);
 const isSyncingScroll = ref<boolean>(false);
 
 const HEADER = "header";
@@ -83,13 +89,11 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
   isSyncingScroll.value = true;
 
   const sourceEl =
-    source === HEADER ? headerScrollRef.value : contentScrollRef.value;
+    source === HEADER ? headerScrollRef.value : contentScrollRef.value?.$el;
   const targetEl =
-    source === HEADER ? contentScrollRef.value : headerScrollRef.value;
+    source === HEADER ? contentScrollRef.value?.$el : headerScrollRef.value;
 
-  if (sourceEl && targetEl) {
-    targetEl.scrollLeft = sourceEl.scrollLeft;
-  }
+  if (sourceEl && targetEl) targetEl.scrollLeft = sourceEl.scrollLeft;
 
   requestAnimationFrame(() => {
     isSyncingScroll.value = false;
@@ -111,6 +115,7 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
 .multi-calendar__scroll {
   overflow-x: auto;
   width: 100%;
+  height: 100%;
 }
 
 .multi-calendar__volunteers {
