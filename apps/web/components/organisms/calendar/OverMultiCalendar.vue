@@ -16,6 +16,7 @@
       >
         <div class="multi-calendar__volunteers">
           <v-icon
+            v-if="!displayAllVolunteers"
             class="multi-calendar__volunteers__arrow"
             icon="mdi-chevron-left"
             aria-label="Page précédente"
@@ -31,7 +32,8 @@
             :volunteer="volunteer"
           />
           <v-icon
-            class="multi-calendar__volunteers__arrow"
+            v-if="!displayAllVolunteers"
+            class="multi-calendar__volunteers__arrow with-border"
             icon="mdi-chevron-right"
             aria-label="Page suivante"
             title="Page suivante"
@@ -46,10 +48,11 @@
     <template #content>
       <div
         ref="contentScrollRef"
-        class="multi-calendar__scroll multi-calendar__content"
+        class="multi-calendar__scroll"
         @scroll="syncScroll(CONTENT)"
       >
         <div class="multi-calendar__volunteers">
+          <div v-if="!displayAllVolunteers" class="multi-calendar__padding" />
           <DailyCalendarContent
             v-for="volunteer in displayedVolunteers"
             :key="volunteer.id"
@@ -57,6 +60,10 @@
             :events="withEventToAdd(volunteer.assignments)"
             :availabilities="volunteer.availabilities"
             class="multi-calendar__volunteer"
+          />
+          <div
+            v-if="!displayAllVolunteers"
+            class="multi-calendar__padding with-border"
           />
         </div>
       </div>
@@ -79,7 +86,9 @@ const day = computed<DayPresenter>({
   set: (value) => (dayModel.value = value.date.date),
 });
 
-const props = defineProps({
+const page = defineModel<number>("page", { default: 0 });
+
+const { volunteers, eventToAdd, volunteersPerPage } = defineProps({
   volunteers: {
     type: Array as PropType<VolunteerForCalendar[]>,
     default: () => [],
@@ -88,39 +97,42 @@ const props = defineProps({
     type: Object as PropType<CalendarEvent | undefined>,
     default: () => undefined,
   },
-});
-
-const volunteersPage = defineModel<number>("volunteersPage", { default: 0 });
-const volunteersPerPage = defineModel<number>("volunteersPerPage", {
-  default: 10,
+  volunteersPerPage: {
+    type: Number,
+    default: 10,
+  },
 });
 
 const displayedVolunteersStartIndex = computed<number>(
-  () => volunteersPage.value * volunteersPerPage.value,
+  () => page.value * volunteersPerPage,
 );
-
+const displayAllVolunteers = computed<boolean>(() => volunteersPerPage === -1);
 const displayedVolunteers = computed<VolunteerForCalendar[]>(() =>
-  props.volunteers.slice(
-    displayedVolunteersStartIndex.value,
-    displayedVolunteersStartIndex.value + volunteersPerPage.value,
-  ),
+  displayAllVolunteers.value
+    ? volunteers
+    : volunteers.slice(
+        displayedVolunteersStartIndex.value,
+        displayedVolunteersStartIndex.value + volunteersPerPage,
+      ),
 );
 
-const isFirstPage = computed<boolean>(() => volunteersPage.value <= 0);
+const isFirstPage = computed<boolean>(() => page.value <= 0);
 const previousPage = () => {
   if (isFirstPage.value) return;
-  volunteersPage.value -= 1;
+  page.value -= 1;
 };
 const isLastPage = computed<boolean>(
-  () => displayedVolunteersStartIndex.value >= props.volunteers.length,
+  () =>
+    displayedVolunteersStartIndex.value + volunteersPerPage >=
+    volunteers.length,
 );
 const nextPage = () => {
   if (isLastPage.value) return;
-  volunteersPage.value += 1;
+  page.value += 1;
 };
 
 const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
-  return props.eventToAdd ? [...assignments, props.eventToAdd] : assignments;
+  return eventToAdd ? [...assignments, eventToAdd] : assignments;
 };
 
 const headerScrollRef = ref<HTMLElement | null>(null);
@@ -139,9 +151,7 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
   const targetEl =
     source === HEADER ? contentScrollRef.value : headerScrollRef.value;
 
-  if (sourceEl && targetEl) {
-    targetEl.scrollLeft = sourceEl.scrollLeft;
-  }
+  if (sourceEl && targetEl) targetEl.scrollLeft = sourceEl.scrollLeft;
 
   requestAnimationFrame(() => {
     isSyncingScroll.value = false;
@@ -161,23 +171,28 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
 }
 
 .multi-calendar__scroll {
+  display: flex;
+  justify-content: center;
   overflow-x: auto;
-  width: 100%;
-}
-
-.multi-calendar__content {
-  padding: 0 3rem;
 }
 
 .multi-calendar__volunteers {
   display: flex;
   flex-wrap: nowrap;
-  width: fit-content;
+  width: 100%;
 
   &__arrow {
     align-self: center;
     font-size: 3rem;
+    min-width: 3.5rem;
+    width: 100%;
+    height: 100%;
   }
+}
+
+.multi-calendar__padding {
+  min-width: 3.5rem;
+  width: 100%;
 }
 
 .multi-calendar__volunteer {
@@ -189,5 +204,10 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
   &:first-child {
     border-left: none;
   }
+}
+
+.with-border {
+  box-sizing: border-box;
+  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
 }
 </style>

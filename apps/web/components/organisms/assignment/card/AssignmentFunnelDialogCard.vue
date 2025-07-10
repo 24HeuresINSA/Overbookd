@@ -15,6 +15,7 @@
         v-model="day"
         :volunteers="candidatesForCalendar"
         :event-to-add="assignmentAsEvent"
+        :volunteers-per-page="-1"
       >
         <template #additional-actions>
           <v-btn
