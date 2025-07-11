@@ -17,11 +17,3 @@ export const saturday19At16 = OverDate.init({
   date: "2024-05-19",
   hour: 16,
 }).date;
-export const sunday20At10 = OverDate.init({
-  date: "2024-05-20",
-  hour: 10,
-}).date;
-export const monday21At10 = OverDate.init({
-  date: "2024-05-21",
-  hour: 10,
-}).date;
