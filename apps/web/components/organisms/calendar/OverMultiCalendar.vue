@@ -7,6 +7,15 @@
   >
     <template #additional-actions>
       <slot name="additional-actions" />
+      <Pagination
+        v-if="!hidePagination"
+        v-model:page="page"
+        v-model:items-per-page="itemsPerPage"
+        class="multi-calendar__pagination"
+        :items-per-page-options="paginationOptions"
+        :items-length="volunteers.length"
+        hide-navigation
+      />
     </template>
     <template #header>
       <div
@@ -87,8 +96,11 @@ const day = computed<DayPresenter>({
 });
 
 const page = defineModel<number>("page", { default: 0 });
+const itemsPerPage = defineModel<number>("itemsPerPage", {
+  default: -1,
+});
 
-const { volunteers, eventToAdd, volunteersPerPage } = defineProps({
+const { volunteers, eventToAdd } = defineProps({
   volunteers: {
     type: Array as PropType<VolunteerForCalendar[]>,
     default: () => [],
@@ -97,35 +109,47 @@ const { volunteers, eventToAdd, volunteersPerPage } = defineProps({
     type: Object as PropType<CalendarEvent | undefined>,
     default: () => undefined,
   },
-  volunteersPerPage: {
-    type: Number,
-    default: 10,
+  hidePagination: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const displayedVolunteersStartIndex = computed<number>(
-  () => page.value * volunteersPerPage,
+const paginationOptions = [
+  { title: "5", value: 5 },
+  { title: "10", value: 10 },
+  { title: "20", value: 20 },
+  { title: "Tous", value: -1 },
+];
+
+const displayAllVolunteers = computed<boolean>(() => itemsPerPage.value === -1);
+const volunteersStartIndex = computed<number>(() =>
+  displayAllVolunteers.value ? 0 : page.value * itemsPerPage.value,
 );
-const displayAllVolunteers = computed<boolean>(() => volunteersPerPage === -1);
-const displayedVolunteers = computed<VolunteerForCalendar[]>(() =>
+const volunteersEndIndex = computed<number>(() =>
   displayAllVolunteers.value
-    ? volunteers
-    : volunteers.slice(
-        displayedVolunteersStartIndex.value,
-        displayedVolunteersStartIndex.value + volunteersPerPage,
+    ? volunteers.length
+    : Math.min(
+        volunteersStartIndex.value + itemsPerPage.value,
+        volunteers.length,
       ),
+);
+const displayedVolunteers = computed<VolunteerForCalendar[]>(() =>
+  volunteers.slice(volunteersStartIndex.value, volunteersEndIndex.value),
 );
 
 const isFirstPage = computed<boolean>(() => page.value <= 0);
+const lastPage = computed<number>(() =>
+  displayAllVolunteers.value
+    ? 0
+    : Math.ceil(volunteers.length / itemsPerPage.value) - 1,
+);
+const isLastPage = computed<boolean>(() => page.value >= lastPage.value);
+
 const previousPage = () => {
   if (isFirstPage.value) return;
   page.value -= 1;
 };
-const isLastPage = computed<boolean>(
-  () =>
-    displayedVolunteersStartIndex.value + volunteersPerPage >=
-    volunteers.length,
-);
 const nextPage = () => {
   if (isLastPage.value) return;
   page.value += 1;
@@ -168,6 +192,11 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.multi-calendar__pagination {
+  margin-left: auto;
+  margin-right: 16px;
 }
 
 .multi-calendar__scroll {
