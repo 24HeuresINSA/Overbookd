@@ -4,7 +4,7 @@
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
     "vivaxy.vscode-conventional-commits",
-    "ms-azuretools.vscode-docker",
+    "ms-azuretools.vscode-containers",
     "EditorConfig.EditorConfig",
     "usernamehw.errorlens",
     "mhutchie.git-graph",

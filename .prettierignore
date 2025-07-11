@@ -2,5 +2,7 @@
 build
 coverage
 dist
+.nuxt
+generated
 pnpm-lock.yaml
 pnpm-workspace.yaml

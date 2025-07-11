@@ -83,6 +83,7 @@ export default pluginTs.config(
       "apps/web/.nuxt/",
       "apps/web/.output/",
       "**/*.spec.ts",
+      "apps/api/src/prisma/generated/",
     ],
   },
 );

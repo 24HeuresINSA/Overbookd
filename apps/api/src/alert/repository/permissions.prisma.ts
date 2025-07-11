@@ -1,6 +1,6 @@
 import { Permissions } from "@overbookd/contribution";
 import { Permission, isPermission } from "@overbookd/permission";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../prisma/generated/client";
 
 export class PrismaPermissions implements Permissions {
   constructor(private readonly prisma: PrismaClient) {}

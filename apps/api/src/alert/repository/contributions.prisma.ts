@@ -1,6 +1,6 @@
 import { Contributions } from "@overbookd/contribution";
 import { IDefineContribution } from "@overbookd/contribution/src/settle-alerting/settle-alerting";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../prisma/generated/client";
 
 export class PrismaContributions implements Contributions {
   constructor(private readonly prisma: PrismaClient) {}

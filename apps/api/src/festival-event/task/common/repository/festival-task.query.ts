@@ -17,7 +17,7 @@ import {
 } from "@overbookd/festival-event";
 import { SELECT_CONTACT } from "./adherent.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../../../prisma/generated/client";
 import { SELECT_EVENT } from "./event.query";
 import { SELECT_MOBILIZATION } from "./mobilization.query";
 import { SELECT_INQUIRY_REQUEST } from "./inquiry.query";
