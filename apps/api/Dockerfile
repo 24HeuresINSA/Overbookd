@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine AS installer
+FROM node:22.17.0-alpine AS installer
 
 WORKDIR /overbookd
 
@@ -24,7 +24,7 @@ RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
 RUN pnpm install --prod --recursive --offline --filter '@overbookd/api...'
 
-FROM node:22.16.0-alpine
+FROM node:22.17.0-alpine
 
 ARG API_VERSION
 ARG OVERBOOKD_VERSION
