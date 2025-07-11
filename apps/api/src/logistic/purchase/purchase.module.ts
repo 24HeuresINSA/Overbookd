@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { PurchaseController } from "./purchase.controller";
-import { Gears, PurchaseService, PurchasesForView } from "./purchase.service";
+import { PurchaseService, PurchasesForView } from "./purchase.service";
 import {
   CancelPurchase,
   InitPurchase,
@@ -11,7 +11,10 @@ import { PrismaModule } from "../../prisma.module";
 import { PrismaPlanPurchases } from "./repository/plan-purchase.prisma";
 import { PrismaCancelPurchases } from "./repository/cancel-purchase.prisma";
 import { LogisticCommonModule } from "../common/logistic-common.module";
-import { PrismaGears } from "../common/repositories/gears.prisma";
+import {
+  FindGears,
+  PrismaFindGears,
+} from "../common/repositories/find-gears.prisma";
 import { PrismaService } from "../../prisma.service";
 import { PrismaViewPurchases } from "./repository/view-purchases.prisma";
 
@@ -70,14 +73,14 @@ import { PrismaViewPurchases } from "./repository/view-purchases.prisma";
         plan: PlanPurchase,
         cancel: CancelPurchase,
         views: PurchasesForView,
-        gears: Gears,
+        gears: FindGears,
       ) => new PurchaseService({ init, plan, cancel }, { views, gears }),
       inject: [
         InitPurchase,
         PlanPurchase,
         CancelPurchase,
         PrismaViewPurchases,
-        PrismaGears,
+        PrismaFindGears,
       ],
     },
   ],

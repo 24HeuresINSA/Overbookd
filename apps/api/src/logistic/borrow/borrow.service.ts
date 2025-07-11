@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   Borrow,
   CancelBorrow,
-  Gear,
   GearRequest,
   InitBorrow,
   InitBorrowForm,
@@ -10,10 +9,7 @@ import {
   PlanBorrow,
   PlanBorrowForm,
 } from "@overbookd/logistic";
-
-export type Gears = {
-  findOne(slug: Gear["slug"]): Promise<Gear>;
-};
+import { FindGears } from "../common/repositories/find-gears.prisma";
 
 export type BorrowsForView = {
   findAll(): Promise<Borrow[]>;
@@ -28,7 +24,7 @@ type UseCases = {
 
 type Repositories = {
   views: Readonly<BorrowsForView>;
-  gears: Readonly<Gears>;
+  gears: Readonly<FindGears>;
 };
 
 @Injectable()
