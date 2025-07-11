@@ -33,7 +33,6 @@ import {
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
   PURCHASE_GEARS,
-  BORROW_GEARS,
   SYNC_PLANNING,
   MANAGE_CHARISMA_EVENTS,
   READ_INVENTORY,
@@ -175,15 +174,6 @@ export const permissions = [
   {
     name: PURCHASE_GEARS,
     description: "Peut acheter du matos",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "matos" }, { teamCode: "elec" }],
-      },
-    },
-  },
-  {
-    name: BORROW_GEARS,
-    description: "Peut emprunter du matos",
     teams: {
       createMany: {
         data: [{ teamCode: "matos" }, { teamCode: "elec" }],
