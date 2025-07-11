@@ -105,21 +105,21 @@ const updatePeriod = async () => {
   loading.value = true;
   await store.updatePeriod(period.value);
   emit("apply");
-  loading.value = false;
 
   await updateQueryParams("start", formatLocalDateTime(start.value));
   await updateQueryParams("end", formatLocalDateTime(end.value));
+  loading.value = false;
 };
 const refreshToNow = async () => {
-  start.value = store.start;
-  end.value = store.end;
-
   loading.value = true;
   await store.resetToDefaultPeriod();
-  loading.value = false;
+  start.value = store.start;
+  end.value = store.end;
+  emit("apply");
 
   await updateQueryParams("start", undefined);
   await updateQueryParams("end", undefined);
+  loading.value = false;
 };
 
 const searchFieldModel = computed<string | null>({
