@@ -1,4 +1,4 @@
-import { PrismaClient } from "../src/prisma/generated/client";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { categoriesAndGears } from "./seeders/gears";
 import { permissions } from "./seeders/permissions";

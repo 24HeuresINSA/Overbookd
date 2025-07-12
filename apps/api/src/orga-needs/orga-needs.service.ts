@@ -7,7 +7,7 @@ import {
   QUARTER_IN_MS,
 } from "@overbookd/time";
 import { PrismaService } from "../prisma.service";
-import { VolunteerAvailability } from "../prisma/generated/client";
+import { VolunteerAvailability } from "../generated/prisma/client";
 import {
   OrgaNeedDetails,
   OrgaNeedRequest,
