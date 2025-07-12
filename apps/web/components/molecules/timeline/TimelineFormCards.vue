@@ -19,13 +19,13 @@
           v-model="start"
           label="Début"
           hide-details
-          @enter="updatePeriod()"
+          @enter="updatePeriod"
         />
         <DateTimeField
           v-model="end"
           label="Fin"
           hide-details
-          @enter="updatePeriod()"
+          @enter="updatePeriod"
         />
         <v-btn
           text="Appliquer"
@@ -41,7 +41,7 @@
       <v-card-text class="card-content">
         <v-text-field
           v-model="searchFieldModel"
-          :label="isTimeline ? 'Nom de la tache' : 'Nom du bénévole'"
+          :label="isTimeline ? 'Nom de la tâche' : 'Nom du bénévole'"
           clear-icon="mdi-close-circle-outline"
           clearable
           hide-details
