@@ -1,5 +1,4 @@
 import { createVuetify } from "vuetify";
-import { VTreeview } from "vuetify/labs/components";
 import { fr } from "vuetify/locale";
 import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
 import {
@@ -85,7 +84,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       VTextarea: commonFieldDefaultSettings,
       VFileInput: commonFieldDefaultSettings,
     },
-    components: { VTreeview },
   });
 
   nuxtApp.vueApp.use(vuetify);
