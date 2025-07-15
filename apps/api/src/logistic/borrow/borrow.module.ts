@@ -5,8 +5,11 @@ import { PrismaService } from "../../prisma.service";
 import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
 import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
-import { BorrowService, BorrowsForView, Gears } from "./borrow.service";
-import { PrismaGears } from "../common/repositories/gears.prisma";
+import { BorrowService, BorrowsForView } from "./borrow.service";
+import {
+  FindGears,
+  PrismaFindGears,
+} from "../common/repositories/find-gears.prisma";
 import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
 import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
 import { LogisticCommonModule } from "../common/logistic-common.module";
@@ -61,14 +64,14 @@ import { LogisticCommonModule } from "../common/logistic-common.module";
         plan: PlanBorrow,
         cancel: CancelBorrow,
         views: BorrowsForView,
-        gears: Gears,
+        gears: FindGears,
       ) => new BorrowService({ init, plan, cancel }, { views, gears }),
       inject: [
         InitBorrow,
         PlanBorrow,
         CancelBorrow,
         PrismaViewBorrows,
-        PrismaGears,
+        PrismaFindGears,
       ],
     },
   ],

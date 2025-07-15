@@ -1,8 +1,11 @@
 import { Gear } from "@overbookd/logistic";
 import { PrismaService } from "../../../prisma.service";
-import { Gears } from "../../borrow/borrow.service";
 
-export class PrismaGears implements Gears {
+export type FindGears = {
+  findOne(slug: Gear["slug"]): Promise<Gear>;
+};
+
+export class PrismaFindGears implements FindGears {
   constructor(private prisma: PrismaService) {}
 
   async findOne(slug: Gear["slug"]): Promise<Gear | undefined> {

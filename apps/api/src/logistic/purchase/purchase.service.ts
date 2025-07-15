@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   CancelPurchase,
-  Gear,
   GearRequest,
   InitPurchase,
   InitPurchaseForm,
@@ -10,10 +9,7 @@ import {
   PlanPurchaseForm,
   Purchase,
 } from "@overbookd/logistic";
-
-export type Gears = {
-  findOne(slug: Gear["slug"]): Promise<Gear>;
-};
+import { FindGears } from "../common/repositories/find-gears.prisma";
 
 export type PurchasesForView = {
   findAll(): Promise<Purchase[]>;
@@ -22,7 +18,7 @@ export type PurchasesForView = {
 
 type Repositories = {
   views: Readonly<PurchasesForView>;
-  gears: Readonly<Gears>;
+  gears: Readonly<FindGears>;
 };
 
 type UseCases = {
