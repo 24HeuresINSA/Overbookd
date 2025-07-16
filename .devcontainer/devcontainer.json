@@ -29,7 +29,7 @@
     "vscode": {
       "extensions": [
         "vivaxy.vscode-conventional-commits",
-        "ms-azuretools.vscode-docker",
+        "ms-azuretools.vscode-containers",
         "EditorConfig.EditorConfig",
         "usernamehw.errorlens",
         "mhutchie.git-graph",

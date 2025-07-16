@@ -21,5 +21,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "exclude": ["**/dist", "**/node_modules", "**/build"]
+  "exclude": ["**/dist", "**/node_modules", "**/build", "**/generated"]
 }
