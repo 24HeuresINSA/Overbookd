@@ -96,7 +96,7 @@ import {
   type TaskPriority,
 } from "~/utils/assignment/task-priority";
 
-const router = useRouter();
+const route = useRoute();
 
 const props = defineProps({
   type: {
@@ -120,9 +120,7 @@ const hasAssignedFriends = defineModel<boolean>("hasAssignedFriends", {
   default: false,
 });
 
-const isOrgaTask = computed<boolean>(() =>
-  isOrgaTaskMode(router.currentRoute.value.fullPath),
-);
+const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 const categoryItems = computed<string[]>(() => [
   ...Object.values(TaskPriorities),
   ...displayableCategories,

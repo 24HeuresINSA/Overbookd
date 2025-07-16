@@ -1,10 +1,10 @@
 <template>
   <DesktopPageTitle />
   <div class="need-help">
-    <NeedHelpFilterCard
-      :loading="loading"
+    <TimelineFormCards
+      v-model:loading="loading"
       class="need-help__item"
-      @fetch="fetchVolunteers"
+      @apply="onApplyFilters"
     />
     <NeedHelpVolunteerListCard
       :volunteers="volunteers"
@@ -14,14 +14,14 @@
     <OverMultiCalendar
       v-show="!loading && volunteers.length > 0"
       v-model="day"
+      v-model:page="page"
+      v-model:items-per-page="itemsPerPage"
       :volunteers="volunteersForCalendar"
       :event-to-add="eventToAdd"
       class="need-help__item desktop-only"
     >
-      <template #volunteer-header>
+      <template #volunteer-header="{ volunteer }">
         <NeedHelpVolunteerResumeCalendarHeader
-          v-for="volunteer in volunteersForCalendar"
-          :key="volunteer.id"
           :volunteer="volunteer"
           class="volunteer-header"
         />
@@ -43,6 +43,8 @@ import {
   createCalendarEvent,
 } from "~/utils/calendar/event";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { NeedHelpPaginationBuilder } from "~/utils/need-help/need-help.pagination";
 
 useHead({ title: "Besoin d'aide" });
 
@@ -62,17 +64,11 @@ const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
   })),
 );
 
-const loading = ref<boolean>(true);
+const loading = ref<boolean>(false);
 
-const fetchVolunteers = async () => {
-  loading.value = true;
-  await needHelpStore.fetchVolunteers();
+const onApplyFilters = () => {
   day.value = needHelpStore.start;
-  loading.value = false;
 };
-
-needHelpStore.resetToDefaultPeriod();
-fetchVolunteers();
 
 const eventToAdd = computed<CalendarEvent>(() => {
   return createCalendarEvent({
@@ -82,6 +78,19 @@ const eventToAdd = computed<CalendarEvent>(() => {
     color: "tertiary",
   });
 });
+
+const page = ref<number>(0);
+const itemsPerPage = ref<number>(10);
+
+const route = useRoute();
+onMounted(() => {
+  const pagination = NeedHelpPaginationBuilder.getFromRouteQuery(route.query);
+  if (pagination.page) page.value = pagination.page;
+  if (pagination.itemsPerPage) itemsPerPage.value = pagination.itemsPerPage;
+});
+
+watch(page, (p) => updateQueryParams("page", p));
+watch(itemsPerPage, (ipp) => updateQueryParams("itemsPerPage", ipp));
 </script>
 
 <style lang="scss" scoped>

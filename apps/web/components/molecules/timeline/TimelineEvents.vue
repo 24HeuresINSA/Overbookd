@@ -62,7 +62,10 @@
 
 <script lang="ts" setup>
 import type { IProvidePeriod } from "@overbookd/time";
-import { marginPercent, widthPercent } from "~/utils/timeline-placement.utils";
+import {
+  marginPercent,
+  widthPercent,
+} from "~/utils/timeline/timeline-placement.utils";
 import type {
   TimelineAssignment,
   TimelineEvent,
