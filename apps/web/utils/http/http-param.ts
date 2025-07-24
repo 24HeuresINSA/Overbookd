@@ -17,7 +17,7 @@ export class HttpParams {
       return value
         .map((item) => {
           if (item === null || item === undefined) return undefined;
-          return [`${key}[]`, HttpParams.toSearchOption(item)];
+          return [key, HttpParams.toSearchOption(item)];
         })
         .filter((item): item is URLEntry => item !== undefined);
     }

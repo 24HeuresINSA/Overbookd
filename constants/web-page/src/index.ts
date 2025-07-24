@@ -8,6 +8,7 @@ export const SHARED_MEALS_URL = "/shared-meals";
 export const VOLUNTEERS_URL = "/volunteers";
 export const AVAILABILITIES_URL = "/availabilities";
 export const PLANNING_URL = "/planning";
+export const MULTI_PLANNING_URL = "/multi-planning";
 
 export const FA_URL = "/fa";
 export const FT_URL = "/ft";
@@ -47,6 +48,7 @@ export const pagesURL = [
   VOLUNTEERS_URL,
   AVAILABILITIES_URL,
   PLANNING_URL,
+  MULTI_PLANNING_URL,
   FA_URL,
   FT_URL,
   FA_GEAR_DASHBOARD_URL,
