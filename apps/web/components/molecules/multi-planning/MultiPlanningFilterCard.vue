@@ -25,7 +25,12 @@
           closable-chips
           clearable
         />
-        <v-btn text="Appliquer" color="primary" @click="selectVolunteers" />
+        <v-btn
+          text="Appliquer"
+          color="primary"
+          :loading="loading"
+          @click="selectVolunteers"
+        />
       </div>
     </v-card-text>
   </v-card>
@@ -37,7 +42,15 @@ import type { User } from "@overbookd/user";
 
 const userStore = useUserStore();
 
-const volunteers = ref<User[]>([]);
+const volunteers = defineModel<User[]>("volunteers", { default: [] });
+
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const teams = ref<Team[]>([]);
 
 const addVolunteersFromTeams = () => {
@@ -61,9 +74,7 @@ const addVolunteersFromTeams = () => {
 };
 
 const emit = defineEmits(["apply"]);
-const selectVolunteers = () => {
-  emit("apply", volunteers.value);
-};
+const selectVolunteers = () => emit("apply");
 </script>
 
 <style lang="scss" scoped>

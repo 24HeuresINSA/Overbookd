@@ -48,6 +48,9 @@ import { NeedHelpPaginationBuilder } from "~/utils/need-help/need-help.paginatio
 
 useHead({ title: "Besoin d'aide" });
 
+const DEFAULT_PAGE = 0;
+const DEFAULT_ITEMS_PER_PAGE = 10;
+
 const needHelpStore = useNeedHelpStore();
 
 const start = computed<Date>(() => needHelpStore.start);
@@ -79,8 +82,8 @@ const eventToAdd = computed<CalendarEvent>(() => {
   });
 });
 
-const page = ref<number>(0);
-const itemsPerPage = ref<number>(10);
+const page = ref<number>(DEFAULT_PAGE);
+const itemsPerPage = ref<number>(DEFAULT_ITEMS_PER_PAGE);
 
 const route = useRoute();
 onMounted(() => {
@@ -89,8 +92,15 @@ onMounted(() => {
   if (pagination.itemsPerPage) itemsPerPage.value = pagination.itemsPerPage;
 });
 
-watch(page, (p) => updateQueryParams("page", p));
-watch(itemsPerPage, (ipp) => updateQueryParams("itemsPerPage", ipp));
+watch(page, (p) =>
+  updateQueryParams("page", p !== DEFAULT_PAGE ? p : undefined),
+);
+watch(itemsPerPage, (ipp) =>
+  updateQueryParams(
+    "itemsPerPage",
+    ipp !== DEFAULT_ITEMS_PER_PAGE ? ipp : undefined,
+  ),
+);
 </script>
 
 <style lang="scss" scoped>
