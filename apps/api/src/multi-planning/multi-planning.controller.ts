@@ -1,5 +1,6 @@
 import {
   Controller,
+  DefaultValuePipe,
   Get,
   ParseArrayPipe,
   Query,
@@ -38,7 +39,11 @@ export class MultiPlanningController {
     isArray: true,
   })
   getVolunteers(
-    @Query("volunteerIds", new ParseArrayPipe({ items: Number }))
+    @Query(
+      "volunteerIds",
+      new DefaultValuePipe([]),
+      new ParseArrayPipe({ items: Number }),
+    )
     volunteerIds: number[],
   ) {
     return this.multiPlanningService.getVolunteers(volunteerIds);

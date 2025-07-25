@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  ParseArrayPipe,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { OrgaNeedsService } from "./orga-needs.service";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -43,7 +49,7 @@ export class OrgaNeedsController {
   async getOrgaNeeds(
     @Query("start") start: Date,
     @Query("end") end: Date,
-    @Query("teams") teams?: string[],
+    @Query("teams", new ParseArrayPipe({ optional: true })) teams?: string[],
   ): Promise<OrgaNeedDetailsDto[]> {
     const periodAndTeams = {
       start: new Date(start),
