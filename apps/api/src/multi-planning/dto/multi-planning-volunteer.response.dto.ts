@@ -1,11 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IProvidePeriod } from "@overbookd/time";
-import { HelpingVolunteer, HelpingVolunteerAssignment } from "@overbookd/http";
+import {
+  MultiPlanningVolunteer,
+  MultiPlanningVolunteerAssignment,
+} from "@overbookd/http";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
-class HelpingVolunteerAssignmentDto
+class MultiPlanningVolunteerAssignmentDto
   extends PeriodResponseDto
-  implements HelpingVolunteerAssignment
+  implements MultiPlanningVolunteerAssignment
 {
   @ApiProperty({ type: Number })
   id: number;
@@ -14,7 +17,9 @@ class HelpingVolunteerAssignmentDto
   name: string;
 }
 
-export class HelpingVolunteerResponseDto implements HelpingVolunteer {
+export class MultiPlanningVolunteerResponseDto
+  implements MultiPlanningVolunteer
+{
   @ApiProperty({ name: "id", description: "Volunteer id", type: Number })
   id: number;
 
@@ -23,13 +28,6 @@ export class HelpingVolunteerResponseDto implements HelpingVolunteer {
 
   @ApiProperty({ description: "Volunteer lastname", type: String })
   lastname: string;
-
-  @ApiProperty({
-    description: "Volunteer phone number",
-    type: String,
-    example: "0601020304",
-  })
-  phone: string;
 
   @ApiProperty({
     description: "Teams volunteer is member of",
@@ -47,8 +45,8 @@ export class HelpingVolunteerResponseDto implements HelpingVolunteer {
 
   @ApiProperty({
     description: "Volunteer tasks",
-    type: HelpingVolunteerAssignmentDto,
+    type: MultiPlanningVolunteerAssignmentDto,
     isArray: true,
   })
-  assignments: HelpingVolunteerAssignment[];
+  assignments: MultiPlanningVolunteerAssignment[];
 }

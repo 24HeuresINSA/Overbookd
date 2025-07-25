@@ -13,6 +13,7 @@
     :hide-details="hideDetails"
     return-object
     :closable-chips="closableChips"
+    :clearable="clearable"
     :custom-filter="slugifiedFilter"
     no-data-text="Aucun utilisateur correspondant"
     @update:model-value="propagateChange"
@@ -42,6 +43,10 @@ const props = defineProps({
     default: false,
   },
   closableChips: {
+    type: Boolean,
+    default: false,
+  },
+  clearable: {
     type: Boolean,
     default: false,
   },

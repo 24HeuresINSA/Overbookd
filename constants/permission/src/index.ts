@@ -28,6 +28,7 @@ export const ASK_FOR_HELP = "ask-for-help";
 export const VIEW_PLANNING = "view-planning";
 export const DOWNLOAD_PLANNING = "download-planning";
 export const SYNC_PLANNING = "sync-planning";
+export const VIEW_MULTI_PLANNING = "view-multi-planning";
 export const ENROLL_HARD = "enroll-hard";
 export const ENROLL_SOFT = "enroll-soft";
 export const VIEW_VOLUNTEER = "view-volunteer";
@@ -82,6 +83,7 @@ export const permissions = [
   VIEW_PLANNING,
   DOWNLOAD_PLANNING,
   SYNC_PLANNING,
+  VIEW_MULTI_PLANNING,
   ENROLL_HARD,
   ENROLL_SOFT,
   VIEW_VOLUNTEER,

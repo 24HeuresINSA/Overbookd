@@ -1,14 +1,13 @@
 import { IProvidePeriod } from "@overbookd/time";
 import { User } from "@overbookd/user";
 
-export type HelpingVolunteerAssignment = IProvidePeriod & {
+export type MultiPlanningVolunteerAssignment = IProvidePeriod & {
   id: number;
   name: string;
 };
 
-export type HelpingVolunteer = User & {
-  phone: string;
+export type MultiPlanningVolunteer = User & {
   teams: string[];
   availabilities: IProvidePeriod[];
-  assignments: HelpingVolunteerAssignment[];
+  assignments: MultiPlanningVolunteerAssignment[];
 };

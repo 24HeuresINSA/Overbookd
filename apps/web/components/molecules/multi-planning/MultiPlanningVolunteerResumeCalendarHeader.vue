@@ -11,16 +11,12 @@
         size="x-small"
       />
     </div>
-    <a :href="formatPhoneLink(volunteer?.phone ?? '')" class="volunteer-phone">
-      {{ formatUserPhone(volunteer?.phone ?? "") }}
-    </a>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
-import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
 defineProps({
   volunteer: {
@@ -54,12 +50,5 @@ defineProps({
   margin-bottom: 2px;
   text-align: center;
   min-width: 100%;
-}
-
-.volunteer-phone {
-  font-weight: 500;
-  font-size: 0.9rem;
-  text-decoration: none;
-  color: rgb(var(--v-theme-on-surface));
 }
 </style>

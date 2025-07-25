@@ -25,11 +25,11 @@ describe("Generate Http Params", () => {
   );
 
   describe.each`
-    array                                          | expected                                                       | readableExpected
-    ${{ array: [1] }}                              | ${"array%5B%5D=1"}                                             | ${"array[]=1"}
-    ${{ array: ["oui", "non"] }}                   | ${"array%5B%5D=oui&array%5B%5D=non"}                           | ${"array[]=oui&array[]=non"}
-    ${{ array: [true, "oui", 1] }}                 | ${"array%5B%5D=true&array%5B%5D=oui&array%5B%5D=1"}            | ${"array[]=true&array[]=oui&array[]=1"}
-    ${{ array: [new Date("2021-01-01"), "test"] }} | ${"array%5B%5D=2021-01-01T00%3A00%3A00.000Z&array%5B%5D=test"} | ${"array[]=2021-01-01T00:00:00.000Z&array[]=test"}
+    array                                          | expected                                           | readableExpected
+    ${{ array: [1] }}                              | ${"array=1"}                                       | ${"array=1"}
+    ${{ array: ["oui", "non"] }}                   | ${"array=oui&array=non"}                           | ${"array=oui&array=non"}
+    ${{ array: [true, "oui", 1] }}                 | ${"array=true&array=oui&array=1"}                  | ${"array=true&array=oui&array=1"}
+    ${{ array: [new Date("2021-01-01"), "test"] }} | ${"array=2021-01-01T00%3A00%3A00.000Z&array=test"} | ${"array=2021-01-01T00:00:00.000Z&array=test"}
   `(
     `
     When given $array array value`,
@@ -47,9 +47,7 @@ describe("Generate Http Params", () => {
         key: "value",
         array: [1, "test"],
       });
-      expect(result.toString()).toBe(
-        "key=value&array%5B%5D=1&array%5B%5D=test", // key=value&array[]=1&array[]=test
-      );
+      expect(result.toString()).toBe("key=value&array=1&array=test");
     });
   });
 });

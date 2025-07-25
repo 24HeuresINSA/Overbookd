@@ -1,6 +1,7 @@
 import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
+  VIEW_MULTI_PLANNING,
   VIEW_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
@@ -8,6 +9,7 @@ import {
   AVAILABILITIES_URL,
   MY_PERSONAL_ACCOUNT_URL,
   PLANNING_URL,
+  MULTI_PLANNING_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";
@@ -103,12 +105,27 @@ const PLANNING_PAGE: HiddenPage = {
   hasParam: true,
 };
 
+export const MULTI_PLANNING_PAGE: PageInSummary = {
+  icon: "mdi-calendar-multiple",
+  title: "Multi Planning",
+  shortTitle: "Multi Planning",
+  permission: VIEW_MULTI_PLANNING,
+  to: MULTI_PLANNING_URL,
+  description:
+    "Permet d'avoir un apercu de plusieurs plannings sur le festival",
+  mobileSupport: false,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["multi-planning", "calendrier", "taches", "affectation"],
+};
+
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
   VOLUNTEERS_PAGE,
   AVAILABILITIES_PAGE,
   MY_PLANNING_PAGE,
+  MULTI_PLANNING_PAGE,
 ];
 
 export const VOLUNTEER_PAGES: Page[] = [

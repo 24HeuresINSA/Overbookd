@@ -25,6 +25,7 @@
           v-model="teams"
           class="filters__teams"
           hide-details
+          closable-chips
           @update:model-value="updateTeams"
         />
       </v-card-text>
