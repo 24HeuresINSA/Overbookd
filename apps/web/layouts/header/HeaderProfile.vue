@@ -132,7 +132,7 @@ const toggleCurrentTheme = () => {
   layoutStore.toggleTheme();
 
   const currentTheme = theme.global.name.value;
-  theme.global.name.value = pickReverseTheme(currentTheme);
+  theme.change(pickReverseTheme(currentTheme));
 };
 
 const isEULADialogOpen = ref<boolean>(false);
