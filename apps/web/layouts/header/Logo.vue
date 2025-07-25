@@ -49,7 +49,7 @@ const onClick = () => {
   counter.value++;
 
   const currentTheme = theme.global.name.value;
-  theme.global.name.value = pickRandomTheme(currentTheme);
+  theme.change(pickRandomTheme(currentTheme));
 };
 </script>
 

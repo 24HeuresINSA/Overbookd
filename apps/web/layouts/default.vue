@@ -76,7 +76,7 @@ if (isPreProd) favicon.value = "/favicon-preprod.ico";
 if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
 
 onMounted(() => {
-  theme.global.name.value = pickDefaultTheme();
+  theme.change(pickDefaultTheme());
   mine.listen(PERMISSION_GRANTED, () => refreshTokens());
   mine.listen(PERMISSION_REVOKED, () => refreshTokens());
   mine.listen(TEAMS_JOINED, () => refreshTokens());
