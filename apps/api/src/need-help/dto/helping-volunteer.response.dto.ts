@@ -3,18 +3,15 @@ import { IProvidePeriod } from "@overbookd/time";
 import { HelpingVolunteer, HelpingVolunteerAssignment } from "@overbookd/http";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
-class HelpingVolunteerAssignmentDto implements HelpingVolunteerAssignment {
+class HelpingVolunteerAssignmentDto
+  extends PeriodResponseDto
+  implements HelpingVolunteerAssignment
+{
   @ApiProperty({ type: Number })
   id: number;
 
   @ApiProperty({ type: String })
   name: string;
-
-  @ApiProperty({ type: Date })
-  start: Date;
-
-  @ApiProperty({ type: Date })
-  end: Date;
 }
 
 export class HelpingVolunteerResponseDto implements HelpingVolunteer {

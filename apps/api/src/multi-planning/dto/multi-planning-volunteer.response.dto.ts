@@ -7,6 +7,7 @@ import {
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
 class MultiPlanningVolunteerAssignmentDto
+  extends PeriodResponseDto
   implements MultiPlanningVolunteerAssignment
 {
   @ApiProperty({ type: Number })
@@ -14,12 +15,6 @@ class MultiPlanningVolunteerAssignmentDto
 
   @ApiProperty({ type: String })
   name: string;
-
-  @ApiProperty({ type: Date })
-  start: Date;
-
-  @ApiProperty({ type: Date })
-  end: Date;
 }
 
 export class MultiPlanningVolunteerResponseDto

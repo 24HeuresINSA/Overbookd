@@ -1,6 +1,7 @@
 import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
+  VIEW_MULTI_PLANNING,
   VIEW_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
@@ -108,7 +109,7 @@ export const MULTI_PLANNING_PAGE: PageInSummary = {
   icon: "mdi-calendar-multiple",
   title: "Multi Planning",
   shortTitle: "Multi Planning",
-  permission: VIEW_PLANNING,
+  permission: VIEW_MULTI_PLANNING,
   to: MULTI_PLANNING_URL,
   description:
     "Permet d'avoir un apercu de plusieurs plannings sur le festival",

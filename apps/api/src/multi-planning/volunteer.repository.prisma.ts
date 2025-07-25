@@ -10,11 +10,9 @@ import {
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { User } from "@overbookd/user";
 
-type DatabaseVolunteer = {
-  id: number;
-  lastname: string;
-  firstname: string;
+type DatabaseVolunteer = User & {
   teams: { teamCode: string }[];
   availabilities: IProvidePeriod[];
   assigned: {
@@ -72,6 +70,7 @@ function toMultiPlanningVolunteer(
   return {
     id: volunteer.id,
     lastname: volunteer.lastname,
+    nickname: volunteer.nickname,
     firstname: volunteer.firstname,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
     availabilities: volunteer.availabilities,

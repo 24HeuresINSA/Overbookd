@@ -45,6 +45,7 @@ import {
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,
   VIEW_FA_GEAR_DASHBOARD,
+  VIEW_MULTI_PLANNING,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -348,7 +349,7 @@ export const permissions = [
   },
   {
     name: VIEW_PLANNING,
-    description: "Peut voir les planning",
+    description: "Peut voir les plannings",
     teams: {
       createMany: {
         data: [{ teamCode: "benevole" }],
@@ -370,6 +371,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: VIEW_MULTI_PLANNING,
+    description: "Peut accéder aux multi plannings",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },

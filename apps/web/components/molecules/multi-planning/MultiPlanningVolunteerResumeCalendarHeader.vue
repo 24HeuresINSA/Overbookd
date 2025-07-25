@@ -1,6 +1,8 @@
 <template>
   <div class="volunteer-card">
-    <span class="volunteer-name">{{ buildUserName(volunteer) }}</span>
+    <span class="volunteer-name">
+      {{ buildUserNameWithNickname(volunteer) }}
+    </span>
     <div class="teams">
       <TeamChip
         v-for="team of volunteer.teams"
@@ -13,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { buildUserName } from "@overbookd/user";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 
 defineProps({

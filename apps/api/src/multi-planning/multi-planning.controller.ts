@@ -12,7 +12,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { MultiPlanningService } from "./multi-planning.service";
 import { MultiPlanningVolunteerResponseDto } from "./dto/multi-planning-volunteer.response.dto";
-import { VIEW_PLANNING } from "@overbookd/permission";
+import { VIEW_MULTI_PLANNING } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("multi-planning")
@@ -24,7 +24,7 @@ export class MultiPlanningController {
   constructor(private readonly multiPlanningService: MultiPlanningService) {}
 
   @Get()
-  @Permission(VIEW_PLANNING)
+  @Permission(VIEW_MULTI_PLANNING)
   @ApiQuery({
     name: "volunteerIds",
     required: true,
