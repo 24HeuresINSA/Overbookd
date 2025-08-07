@@ -1,9 +1,8 @@
+import { LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
 import type { RouteLocationNormalized } from "vue-router";
 
-export const unauthenticatedPages = ["login", "register", "reset"];
+export const unauthenticatedPages = [LOGIN_URL, REGISTER_URL];
 
-export function needToBeLoggedIn(to: RouteLocationNormalized): boolean {
-  const target = to.name;
-  if (!target) return false;
-  return !unauthenticatedPages.some((page) => target.toString().includes(page));
+export function isUnprotectedRoute(to: RouteLocationNormalized): boolean {
+  return unauthenticatedPages.includes(to.path);
 }

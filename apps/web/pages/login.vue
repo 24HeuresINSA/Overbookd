@@ -28,49 +28,13 @@
           <h1 class="login-card__title">Bienvenue aux 24h de l'INSA 👋</h1>
 
           <div class="login-form">
-            <label for="email" class="login-form__input-label">Email</label>
-            <v-text-field
-              v-model="credentials.email"
-              autocomplete="email"
-              inputmode="email"
-              name="email"
-              class="login-form__input"
-              placeholder="Email"
-              density="compact"
-              autofocus
-              hide-details
-              @keydown.enter="login"
-            />
-
-            <label for="password" class="login-form__input-label">
-              Mot de passe
-            </label>
-            <v-text-field
-              v-model="credentials.password"
-              type="password"
-              name="password"
-              class="login-form__input"
-              placeholder="Mot de passe"
-              density="compact"
-              clearable
-              hide-details
-              @keydown.enter="login"
-            />
-
-            <a
-              text="Mot de passe oublié ?"
-              class="login-form__forgot-label link"
-              @click="openForgotDialog"
-            />
-
             <v-btn
-              text="Connexion"
+              text="Me connecter"
               size="large"
               color="primary"
-              class="login-form__button text-none"
-              :loading="loading"
+              class="text-none"
               flat
-              @click="login"
+              @click="login('zitadel')"
             />
 
             <p class="login-form__not-registered-label">
@@ -82,10 +46,6 @@
       </v-card>
     </div>
   </div>
-
-  <v-dialog v-model="isForgotDialogOpen" max-width="600">
-    <ForgotPasswordDialogCard @close="closeForgotDialog" />
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -93,7 +53,6 @@ import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 definePageMeta({ layout: false });
 
@@ -101,6 +60,7 @@ const config = useRuntimeConfig();
 const version = config.public.version;
 
 const route = useRoute();
+const { login } = useOidcAuth();
 
 const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const register = () => {
@@ -108,32 +68,11 @@ const register = () => {
   navigateTo({ path: REGISTER_URL, query });
 };
 
-const credentials = ref({
-  email: "",
-  password: "",
-});
-const loading = ref<boolean>(false);
 const image = ref<string>(pickRandomBackground());
-
 setInterval(
   () => (image.value = pickRandomBackground(image.value)),
   10 * ONE_SECOND_IN_MS,
 );
-
-const login = async () => {
-  if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
-    return sendFailureNotification(
-      "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
-    );
-  }
-  loading.value = true;
-  await loginAndApplyForMembership(credentials.value, token.value);
-  loading.value = false;
-};
-
-const isForgotDialogOpen = ref<boolean>(false);
-const openForgotDialog = () => (isForgotDialogOpen.value = true);
-const closeForgotDialog = () => (isForgotDialogOpen.value = false);
 </script>
 
 <style lang="scss" scoped>
@@ -215,18 +154,11 @@ $mobile-card-content-width: 80%;
   display: flex;
   flex-direction: column;
   width: $desktop-card-content-width;
+  margin-top: 20px;
   @media screen and (max-width: $mobile-max-width) {
     width: $mobile-card-content-width;
   }
 
-  &__input-label {
-    margin: 20px 0 3px;
-    font-weight: 500;
-  }
-  &__forgot-label {
-    margin: 10px 0 15px;
-    text-align: right;
-  }
   &__not-registered-label {
     margin: 20px 0;
     text-align: center;
