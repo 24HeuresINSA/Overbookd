@@ -58,6 +58,7 @@ export default defineNuxtConfig({
     transpile: ["vuetify"],
   },
   modules: [
+    "nuxt-oidc-auth",
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
     "@vite-pwa/nuxt",
@@ -68,6 +69,15 @@ export default defineNuxtConfig({
       });
     },
   ],
+  nitro: {
+    preset: "node-server",
+    storage: {
+      oidc: {
+        driver: "fs",
+        base: "oidcstorage",
+      },
+    },
+  },
   imports: {
     dirs: ["stores", "stores/**"],
   },
@@ -79,6 +89,31 @@ export default defineNuxtConfig({
         extensions: [".vue"],
       },
     ],
+  },
+  oidc: {
+    defaultProvider: "zitadel",
+    providers: {
+      zitadel: {
+        clientId: process.env.OIDC_CLIENT_ID,
+        clientSecret: "", // Works with PKCE and Code flow, just leave empty for PKCE
+        baseUrl: process.env.ZITADEL_BASE_URL, // For example https://PROJECT.REGION.zitadel.cloud
+        redirectUri: `${process.env.BASE_URL}/auth/zitadel/callback`, // Replace with your domain
+        audience: "", // Specify for id token validation, normally same as clientId
+        logoutRedirectUri: `${process.env.BASE_URL}/`, // Needs to be registered in Zitadel portal
+        scope: ["openid", "profile", "email", "phone", "offline_access"],
+        nonce: false,
+        responseType: "code",
+        exposeAccessToken: true,
+        exposeIdToken: true,
+      },
+    },
+    middleware: {
+      globalMiddlewareEnabled: false,
+      customLoginPage: false,
+    },
+    devMode: {
+      enabled: false,
+    },
   },
   pwa: {
     registerType: "autoUpdate",
