@@ -30,7 +30,7 @@ function generateMineEndpoint() {
 
 function generateEndpoint(notification: string) {
   const config = useRuntimeConfig();
-  const path = `${config.public.baseURL}/live-notifications/${notification}`;
+  const path = `${config.public.apiURL}/live-notifications/${notification}`;
   return new URL(path);
 }
 

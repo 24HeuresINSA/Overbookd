@@ -23,9 +23,7 @@ describe("AppController", () => {
 
   describe("root", () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toContain(
-        "Hello from overbookd backend",
-      );
+      expect(appController.getHello()).toContain("Hello from overbookd api");
     });
   });
 });
