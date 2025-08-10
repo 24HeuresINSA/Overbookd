@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // https://nuxtoidc.cloud/composable
   const oidc = useOidcAuth();
   await oidc.fetch();
-  console.log(process.env.ZITADEL_BASE_URL);
+
   const isLoggedIn = oidc.loggedIn.value;
   const unprotectedRoute = isUnprotectedRoute(to);
 

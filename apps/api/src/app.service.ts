@@ -4,6 +4,6 @@ import { Injectable } from "@nestjs/common";
 export class AppService {
   getHello(): string {
     const version = process.env.OVERBOOKD_VERSION;
-    return `Hello from overbookd backend V${version}!`;
+    return `Hello from overbookd api v${version}!`;
   }
 }
