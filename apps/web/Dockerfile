@@ -21,9 +21,13 @@ RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 FROM installer AS builder
 
 ARG BASE_URL
+ARG ZITADEL_BASE_URL
+ARG OIDC_CLIENT_ID
 ARG OVERBOOKD_VERSION
 
 ENV BASE_URL=$BASE_URL
+ENV ZITADEL_BASE_URL=$ZITADEL_BASE_URL
+ENV OIDC_CLIENT_ID=$OIDC_CLIENT_ID
 ENV OVERBOOKD_VERSION=${OVERBOOKD_VERSION}
 
 COPY tsconfig.cross-modules-import.json ./
