@@ -87,7 +87,7 @@ export class HttpClient {
     const params = this.isString(endpoint) ? undefined : endpoint.params;
 
     const config = useRuntimeConfig();
-    const url = new URL(`${config.public.baseURL}/${path}`);
+    const url = new URL(`${config.public.apiURL}/${path}`);
 
     if (!params) return url;
     const urlParams = HttpParams.generate(params);
