@@ -67,12 +67,13 @@ services:
       SMTP_PORT: 1025
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-back.tls=true"
-      - "traefik.http.routers.dev-back.entrypoints=websecure"
-      - "traefik.http.services.dev-back.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.dev-back.middlewares=api-strip"
-      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.dev-api.tls=true"
+      - "traefik.http.routers.dev-api.entrypoints=websecure"
+      - "traefik.http.services.dev-api.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api/v2`))"
+      - "traefik.http.routers.dev-api.priority=1000"
+      - "traefik.http.routers.dev-api.middlewares=api-strip"
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api/v2"
     command:
       - /bin/sh
       - -c
@@ -131,6 +132,7 @@ services:
       - "traefik.http.routers.dev-adminer.entrypoints=websecure"
       - "traefik.http.services.dev-adminer.loadbalancer.server.port=8080"
       - "traefik.http.routers.dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
+      - "traefik.http.routers.dev-adminer.priority=1000"
       - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
       - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 
@@ -152,11 +154,11 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-front.entrypoints=websecure"
-      - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.services.dev-front.loadbalancer.server.scheme=https"
-      - "traefik.http.routers.dev-front.tls=true"
+      - "traefik.http.routers.dev-web.entrypoints=websecure"
+      - "traefik.http.services.dev-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-web.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.services.dev-web.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.dev-web.tls=true"
     command:
       - /bin/sh
       - -c
