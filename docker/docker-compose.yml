@@ -5,7 +5,7 @@ networks:
 
 services:
   traefik:
-    image: traefik:v3.4.1
+    image: traefik:v3.5.0
     restart: unless-stopped
     command:
       # Docker config
@@ -104,7 +104,7 @@ services:
 
   postgresql:
     container_name: overbookd_postgresql
-    image: postgres:16.9
+    image: postgres:16.10
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
