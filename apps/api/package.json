@@ -85,7 +85,7 @@
     "body-parser": "2.2.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
-    "cpy-cli": "5.0.0",
+    "cpy-cli": "6.0.0",
     "ejs": "3.1.10",
     "express-basic-auth": "1.2.1",
     "html-to-pdfmake": "2.5.28",
