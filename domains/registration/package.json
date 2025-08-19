@@ -50,7 +50,7 @@
   ],
   "engines": {
     "node": "22.18.0",
-    "pnpm": "10.11.0"
+    "pnpm": "10.14.0"
   },
   "dependencies": {
     "@overbookd/event": "workspace:*",
