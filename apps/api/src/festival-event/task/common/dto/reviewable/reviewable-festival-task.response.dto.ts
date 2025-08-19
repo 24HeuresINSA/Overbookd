@@ -31,7 +31,10 @@ import {
 } from "./reviewable-mobilization.response.dto";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
-import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../../../common/dto/inquiry-request.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../../../common/dto/inquiry-request.response.dto";
 
 type InReviewWithConflicts = Extract<ReviewableWithConflicts, InReview>;
 type RefusedWithConflicts = Extract<ReviewableWithConflicts, Refused>;

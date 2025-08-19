@@ -6,7 +6,10 @@ import {
 } from "@overbookd/festival-event";
 import { LocationResponseDto } from "../../../common/dto/location.response.dto";
 import { TimeWindowResponseDto } from "../../../common/dto/time-window.response.dto";
-import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../../common/dto/inquiry-request.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../../common/dto/inquiry-request.response.dto";
 
 type FestivalActivity = FestivalTask["festivalActivity"];
 

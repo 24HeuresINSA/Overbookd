@@ -46,7 +46,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
-import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../../common/dto/inquiry-request.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

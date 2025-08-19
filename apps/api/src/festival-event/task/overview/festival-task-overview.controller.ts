@@ -62,7 +62,10 @@ import {
 } from "../common/dto/reviewable/reviews.response.dto";
 import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../common/dto/inquiry-request.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")

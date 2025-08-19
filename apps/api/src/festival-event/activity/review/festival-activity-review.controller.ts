@@ -39,13 +39,19 @@ import {
   UnlinkedSignageResponseDto,
   LinkedSignageResponseDto,
 } from "../common/dto/signage.response.dto";
-import { ApproveActivityRequestDto, RejectActivityRequestDto } from "./dto/review.request.dto";
+import {
+  ApproveActivityRequestDto,
+  RejectActivityRequestDto,
+} from "./dto/review.request.dto";
 import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../common/dto/inquiry-request.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
