@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
-    "@nuxtjs/leaflet": "1.2.6",
+    "@nuxtjs/leaflet": "1.3.2",
     "@overbookd/access-manager": "workspace:*",
     "@overbookd/alerts": "workspace:*",
     "@overbookd/assignment": "workspace:*",
@@ -64,7 +64,7 @@
     "@overbookd/volunteer-availability": "workspace:*",
     "@overbookd/web-page": "workspace:*",
     "@vite-pwa/nuxt": "1.0.4",
-    "@vueuse/core": "13.5.0",
+    "@vueuse/core": "13.6.0",
     "awesome-phonenumber": "7.5.0",
     "chart.js": "4.5.0",
     "chartjs-adapter-luxon": "1.3.1",
@@ -74,16 +74,16 @@
     "nanoid": "5.1.5",
     "pinia": "3.0.3",
     "quill": "2.0.3",
-    "sass": "1.89.2",
-    "vite-plugin-vuetify": "2.1.1",
+    "sass": "1.90.0",
+    "vite-plugin-vuetify": "2.1.2",
     "vue-chartjs": "5.3.2",
     "vue-html-secure": "1.0.10",
-    "vuetify": "3.9.0"
+    "vuetify": "3.9.5"
   },
   "devDependencies": {
-    "@pinia/nuxt": "0.11.1",
-    "nuxt": "3.17.6",
-    "vue": "3.5.17",
+    "@pinia/nuxt": "0.11.2",
+    "nuxt": "3.18.1",
+    "vue": "3.5.18",
     "vue-router": "4.5.1",
     "vue-tsc": "2.2.12"
   },
