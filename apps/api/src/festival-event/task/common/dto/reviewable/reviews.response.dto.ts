@@ -16,7 +16,7 @@ import {
 
 const reviewStatuses = [NOT_ASKING_TO_REVIEW, REVIEWING];
 
-export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
+export class TaskInReviewReviewsResponseDto implements InReviewReviews<"FT"> {
   @ApiProperty({
     required: true,
     enum: reviewStatuses,
@@ -44,7 +44,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
 
 const rejectedReviewStatuses = [...reviewStatuses, REJECTED];
 
-export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
+export class TaskRefusedReviewsResponseDto implements RefusedReviews<"FT"> {
   @ApiProperty({
     required: true,
     enum: rejectedReviewStatuses,
@@ -70,7 +70,7 @@ export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
   elec: RejectionReviewStatus<"FT">;
 }
 
-export class ValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
+export class TaskValidatedReviewsResponseDto implements ValidatedReviews<"FT"> {
   @ApiProperty({
     required: true,
     enum: [APPROVED],

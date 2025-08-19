@@ -34,7 +34,7 @@ import {
   PrivateReviewableGeneralResponseDto,
 } from "../../common/dto/reviewable/reviewable-general.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
-import { GeneralRequestDto } from "./dto/update-general.request.dto";
+import { GeneralActivityRequestDto } from "./dto/update-general.request.dto";
 import { GeneralSectionService } from "./general-section.service";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
@@ -72,7 +72,7 @@ export class GeneralSectionController {
   })
   @ApiBody({
     description: "General section of festival activity to save",
-    type: GeneralRequestDto,
+    type: GeneralActivityRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -82,7 +82,7 @@ export class GeneralSectionController {
   })
   saveGeneralSection(
     @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() general: GeneralRequestDto,
+    @Body() general: GeneralActivityRequestDto,
   ): Promise<FestivalActivity> {
     return this.generalService.saveGeneralSection(id, general);
   }

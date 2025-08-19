@@ -23,7 +23,7 @@ import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { FestivalTask } from "@overbookd/festival-event";
-import { GeneralRequestDto } from "./dto/update-general.request.dto";
+import { GeneralTaskRequestDto } from "./dto/update-general.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
@@ -51,7 +51,7 @@ export class GeneralSectionController {
   })
   @ApiBody({
     description: "General section of festival task to save",
-    type: GeneralRequestDto,
+    type: GeneralTaskRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -61,7 +61,7 @@ export class GeneralSectionController {
   })
   update(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
-    @Body() general: GeneralRequestDto,
+    @Body() general: GeneralTaskRequestDto,
   ): Promise<FestivalTask> {
     return this.generalService.update(id, general);
   }

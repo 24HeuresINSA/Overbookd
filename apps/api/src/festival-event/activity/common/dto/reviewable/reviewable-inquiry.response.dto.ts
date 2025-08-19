@@ -5,10 +5,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { TimeWindowResponseDto } from "../../../../common/dto/time-window.response.dto";
-import {
-  AssignedInquiryRequestResponseDto,
-  UnassignedInquiryRequestResponseDto,
-} from "../inquiry-request.response.dto";
+import { AssignedInquiryRequestResponseDto, UnassignedInquiryRequestResponseDto } from "../../../../common/dto/inquiry-request.response.dto";
 
 export class ReviewableInquiryResponseDto
   implements InquiryWithPotentialRequests

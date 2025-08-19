@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Adherent } from "@overbookd/contribution";
 
-export class AdherentResponseDto implements Adherent {
+export class ContributionAdherentResponseDto implements Adherent {
   @ApiProperty({
     description: "Adherent id",
     type: Number,

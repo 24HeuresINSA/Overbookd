@@ -1,11 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  BaseInquiryRequest,
-  Drive,
-  InquiryRequest,
-  MAGASIN,
-  drives,
-} from "@overbookd/festival-event";
+import { BaseInquiryRequest, Drive, drives, InquiryRequest, MAGASIN } from "@overbookd/festival-event";
 
 export class UnassignedInquiryRequestResponseDto implements BaseInquiryRequest {
   @ApiProperty({

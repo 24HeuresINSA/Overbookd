@@ -5,7 +5,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { PeriodResponseDto } from "../../../../../common/dto/period.response.dto";
-import { UnassignedInquiryRequestResponseDto } from "../inquiry-request.response.dto";
+import { UnassignedInquiryRequestResponseDto } from "../../../../common/dto/inquiry-request.response.dto";
 
 export class InquiryDto implements InquiryWithPotentialRequests {
   @ApiProperty({

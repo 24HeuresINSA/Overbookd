@@ -9,7 +9,7 @@ import { IsEnum, IsString } from "class-validator";
 
 const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
 
-export class RejectRequestDto implements ReviewRejection<"FT"> {
+export class RejectTaskRequestDto implements ReviewRejection<"FT"> {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
     message: () => `Seuls ${reviewers.join(", ")} peuvent rejeter une FT`,
@@ -24,7 +24,7 @@ export class RejectRequestDto implements ReviewRejection<"FT"> {
   reason: string;
 }
 
-export class ApproveRequestDto implements ReviewApproval<"FT"> {
+export class ApproveTaskRequestDto implements ReviewApproval<"FT"> {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
     message: () => `Seuls ${reviewers.join(", ")} peuvent approuver une FT`,

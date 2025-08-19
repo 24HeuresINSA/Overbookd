@@ -17,9 +17,9 @@ import {
 } from "@overbookd/festival-event-constants";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import {
-  InReviewReviewsResponseDto,
-  RefusedReviewsResponseDto,
-  ValidatedReviewsResponseDto,
+  ActivityInReviewReviewsResponseDto,
+  ActivityRefusedReviewsResponseDto,
+  ActivityValidatedReviewsResponseDto,
 } from "../../../review/dto/reviews.response.dto";
 import {
   PublicReviewableGeneralResponseDto,
@@ -86,7 +86,7 @@ export class RefusedFestivalActivityResponseDto
   @ApiProperty({ required: true, example: REFUSED })
   status: typeof REFUSED;
 
-  @ApiProperty({ required: true, type: RefusedReviewsResponseDto })
+  @ApiProperty({ required: true, type: ActivityRefusedReviewsResponseDto })
   reviews: RefusedReviews<"FA">;
 }
 export class InReviewFestivalActivityResponseDto
@@ -96,7 +96,7 @@ export class InReviewFestivalActivityResponseDto
   @ApiProperty({ required: true, example: IN_REVIEW })
   status: typeof IN_REVIEW;
 
-  @ApiProperty({ required: true, type: InReviewReviewsResponseDto })
+  @ApiProperty({ required: true, type: ActivityInReviewReviewsResponseDto })
   reviews: InReviewReviews<"FA">;
 }
 
@@ -107,6 +107,6 @@ export class ValidatedFestivalActivityResponseDto
   @ApiProperty({ required: true, example: VALIDATED })
   status: typeof VALIDATED;
 
-  @ApiProperty({ required: true, type: ValidatedReviewsResponseDto })
+  @ApiProperty({ required: true, type: ActivityValidatedReviewsResponseDto })
   reviews: ValidatedReviews<"FA">;
 }

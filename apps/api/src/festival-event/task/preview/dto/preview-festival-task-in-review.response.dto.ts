@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PreviewFestivalTaskInReview } from "@overbookd/festival-event";
 import { IN_REVIEW } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
-import { InReviewReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
+import { TaskInReviewReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
 
 export class PreviewFestivalTaskInReviewResponseDto
   implements PreviewFestivalTaskInReview
@@ -41,7 +41,7 @@ export class PreviewFestivalTaskInReviewResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: InReviewReviewsResponseDto,
+    type: TaskInReviewReviewsResponseDto,
   })
   reviews: PreviewFestivalTaskInReview["reviews"];
 

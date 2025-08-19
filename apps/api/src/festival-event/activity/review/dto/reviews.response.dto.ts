@@ -27,7 +27,7 @@ const refusedReviewStatus: RejectionReviewStatus<"FA">[] = [
   ...inReviewReviewStatus,
   REJECTED,
 ];
-export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
+export class ActivityInReviewReviewsResponseDto implements InReviewReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: inReviewReviewStatus,
@@ -84,7 +84,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
   })
   communication: ReviewingStatus<"FA">;
 }
-export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
+export class ActivityValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: validatedReviewStatus,
@@ -141,7 +141,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
   })
   communication: ApprovalReviewStatus<"FA">;
 }
-export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
+export class ActivityRefusedReviewsResponseDto implements RefusedReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: refusedReviewStatus,

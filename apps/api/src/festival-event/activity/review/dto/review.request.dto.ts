@@ -22,7 +22,7 @@ const reviewers: Reviewer<"FA">[] = [
   communication,
 ];
 
-export class ApproveRequestDto {
+export class ApproveActivityRequestDto {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
     message: () => `Seuls ${reviewers.join(", ")} peuvent approuver une FA`,
@@ -30,7 +30,7 @@ export class ApproveRequestDto {
   team: Reviewer<"FA">;
 }
 
-export class RejectRequestDto implements ReviewRejection<"FA"> {
+export class RejectActivityRequestDto implements ReviewRejection<"FA"> {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
     message: () => `Seuls ${reviewers.join(", ")} peuvent rejeter une FA`,

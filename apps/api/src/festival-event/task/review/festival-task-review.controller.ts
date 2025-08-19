@@ -40,9 +40,9 @@ import {
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import {
-  ApproveRequestDto,
+  ApproveTaskRequestDto,
   IgnoreTaskRequestDto,
-  RejectRequestDto,
+  RejectTaskRequestDto,
 } from "./dto/review.request.dto";
 import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
@@ -117,7 +117,7 @@ export class FestivalTaskReviewController {
   })
   @ApiBody({
     description: "Festival task rejection",
-    type: RejectRequestDto,
+    type: RejectTaskRequestDto,
   })
   @ApiParam({
     name: "ftId",
@@ -128,7 +128,7 @@ export class FestivalTaskReviewController {
   reject(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() reject: RejectRequestDto,
+    @Body() reject: RejectTaskRequestDto,
   ): Promise<FestivalTaskRefused> {
     const jwt = new JwtUtil(user);
     return this.reviewService.reject(ftId, jwt, reject);
@@ -150,7 +150,7 @@ export class FestivalTaskReviewController {
   })
   @ApiBody({
     description: "Festival task approval",
-    type: ApproveRequestDto,
+    type: ApproveTaskRequestDto,
   })
   @ApiParam({
     name: "ftId",
@@ -161,7 +161,7 @@ export class FestivalTaskReviewController {
   approve(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() approve: ApproveRequestDto,
+    @Body() approve: ApproveTaskRequestDto,
   ): Promise<FestivalTask> {
     const jwt = new JwtUtil(user);
     return this.reviewService.approve(ftId, jwt, approve);

@@ -25,7 +25,7 @@ import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import { Adherent, AdherentWithContribution } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
-import { AdherentResponseDto } from "./dto/adherent.response.dto";
+import { ContributionAdherentResponseDto } from "./dto/adherent.response.dto";
 import { ContributionErrorFilter } from "./contribution.filter";
 import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
 import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
@@ -46,7 +46,7 @@ export class ContributionController {
     status: 200,
     description:
       "List of adherents with contribution out-to-date for the current edition",
-    type: AdherentResponseDto,
+    type: ContributionAdherentResponseDto,
     isArray: true,
   })
   findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
