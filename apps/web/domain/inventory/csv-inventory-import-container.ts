@@ -56,7 +56,10 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       cast: this.castNumbersForQuantity,
     };
     try {
-      const importRaws = parse(content, parseOptions) as InventoryImportRaw[];
+      const importRaws = parse(
+        content,
+        parseOptions,
+      ) as unknown as InventoryImportRaw[];
       return this.convertImportRawsToManualRecords(importRaws);
     } catch (e) {
       console.error(e);
@@ -68,12 +71,15 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
     header: string[],
   ): (keyof InventoryImportRaw)[] {
     return header.map((column) => {
-      const transalte =
+      const translated =
         CSVInventoryImportContainer.headerTranslation[
           SlugifyService.apply(column)
         ];
-      if (!transalte) console.error(`Don't know column ${column}`);
-      return transalte;
+      if (!translated) {
+        console.error(`Don't know column ${column}`);
+        return "code";
+      }
+      return translated;
     });
   }
 
