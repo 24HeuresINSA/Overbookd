@@ -38,10 +38,6 @@ import {
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import {
-  UnassignedInquiryRequestResponseDto,
-  AssignedInquiryRequestResponseDto,
-} from "../../common/dto/inquiry-request.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
 import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
@@ -50,6 +46,10 @@ import { FestivalEventErrorFilter } from "../../../common/festival-event-error.f
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
 import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

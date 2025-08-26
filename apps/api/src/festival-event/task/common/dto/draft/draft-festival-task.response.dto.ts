@@ -6,12 +6,12 @@ import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
+import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto";
+import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
-} from "../inquiry-request.response.dto";
-import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto";
-import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
+} from "../../../../common/dto/inquiry-request.response.dto";
 
 export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   @ApiProperty()

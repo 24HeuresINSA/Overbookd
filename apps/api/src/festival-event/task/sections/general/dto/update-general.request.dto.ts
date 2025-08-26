@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { UpdateGeneralForm } from "@overbookd/http";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
-export class GeneralRequestDto implements UpdateGeneralForm {
+export class GeneralTaskRequestDto implements UpdateGeneralForm {
   @ApiProperty({
     description: "Festival task name",
     required: false,

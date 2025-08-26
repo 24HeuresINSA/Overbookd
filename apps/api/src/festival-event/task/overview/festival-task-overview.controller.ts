@@ -34,10 +34,6 @@ import { DraftGeneralResponseDto } from "../common/dto/draft/draft-general.respo
 import { DraftInstructionsResponseDto } from "../common/dto/draft/draft-instructions.response.dto";
 import { ContactResponseDto } from "../common/dto/contact.response.dto";
 import { FestivalActivityResponseDto } from "../common/dto/festival-activity.response.dto";
-import {
-  AssignedInquiryRequestResponseDto,
-  UnassignedInquiryRequestResponseDto,
-} from "../common/dto/inquiry-request.response.dto";
 import { StatisticsService } from "../../statistics/statistics.service";
 import { Statistics } from "@overbookd/http";
 import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.dto";
@@ -52,7 +48,7 @@ import {
   ValidatedFestivalTaskResponseDto,
 } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import {
-  AssignmentResponseDto,
+  MobilizationAssignmentResponseDto,
   MobilizationWithAtLeastOneTeamAndAssignmentsDto,
   MobilizationWithAtLeastOneTeamDto,
   MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
@@ -60,12 +56,16 @@ import {
 } from "../common/dto/reviewable/reviewable-mobilization.response.dto";
 import { VolunteerResponseDto } from "../../common/dto/volunteer.response.dto";
 import {
-  InReviewReviewsResponseDto,
-  RefusedReviewsResponseDto,
-  ValidatedReviewsResponseDto,
+  TaskInReviewReviewsResponseDto,
+  TaskRefusedReviewsResponseDto,
+  TaskValidatedReviewsResponseDto,
 } from "../common/dto/reviewable/reviews.response.dto";
 import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
@@ -91,11 +91,11 @@ import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
   MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
   MobilizationWithAtLeastOneVolunteerDto,
   VolunteerResponseDto,
-  RefusedReviewsResponseDto,
-  ValidatedReviewsResponseDto,
-  InReviewReviewsResponseDto,
+  TaskRefusedReviewsResponseDto,
+  TaskValidatedReviewsResponseDto,
+  TaskInReviewReviewsResponseDto,
   ReviewableInstructionsResponseDto,
-  AssignmentResponseDto,
+  MobilizationAssignmentResponseDto,
 )
 export class FestivalTaskOverviewController {
   constructor(

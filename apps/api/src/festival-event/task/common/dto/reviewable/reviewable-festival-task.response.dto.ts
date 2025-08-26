@@ -19,13 +19,9 @@ import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { ReviewableInstructionsResponseDto } from "./reviewable-instructions.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
 import {
-  UnassignedInquiryRequestResponseDto,
-  AssignedInquiryRequestResponseDto,
-} from "../inquiry-request.response.dto";
-import {
-  InReviewReviewsResponseDto,
-  RefusedReviewsResponseDto,
-  ValidatedReviewsResponseDto,
+  TaskInReviewReviewsResponseDto,
+  TaskRefusedReviewsResponseDto,
+  TaskValidatedReviewsResponseDto,
 } from "./reviews.response.dto";
 import {
   MobilizationWithAtLeastOneTeamAndAssignmentsDto,
@@ -35,6 +31,10 @@ import {
 } from "./reviewable-mobilization.response.dto";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../../../common/dto/inquiry-request.response.dto";
 
 type InReviewWithConflicts = Extract<ReviewableWithConflicts, InReview>;
 type RefusedWithConflicts = Extract<ReviewableWithConflicts, Refused>;
@@ -112,7 +112,7 @@ export class InReviewFestivalTaskResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: InReviewReviewsResponseDto,
+    type: TaskInReviewReviewsResponseDto,
   })
   reviews: InReview["reviews"];
 
@@ -136,7 +136,7 @@ export class RefusedFestivalTaskResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: RefusedReviewsResponseDto,
+    type: TaskRefusedReviewsResponseDto,
   })
   reviews: Refused["reviews"];
 
@@ -160,7 +160,7 @@ export class ValidatedFestivalTaskResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: ValidatedReviewsResponseDto,
+    type: TaskValidatedReviewsResponseDto,
   })
   reviews: Validated["reviews"];
 
@@ -184,7 +184,7 @@ export class ReadyToAssignFestivalTaskResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: ValidatedReviewsResponseDto,
+    type: TaskValidatedReviewsResponseDto,
   })
   reviews: ReadyToAssign["reviews"];
 

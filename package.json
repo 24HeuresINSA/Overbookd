@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "3.47.1-rc.31",
+  "version": "3.47.1-rc.32",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -14,6 +14,8 @@
   },
   "scripts": {
     "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
+    "db:reset": "pnpm run db:exec 'prisma migrate reset' && pnpm run db:exec 'prisma db seed'",
+    "db:migrate": "pnpm run db:exec 'prisma migrate dev'",
     "ci:init": "wget -qO- https://bootstrap.pypa.io/get-pip.py | python3 && python3 -m pip install --upgrade pip && python3 -m pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg",
     "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id -g $USER):$(id -u $USER) -v $(pwd):/overbookd overbookd:dev sh --login",
     "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",

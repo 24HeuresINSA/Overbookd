@@ -8,7 +8,7 @@ import { TimeWindowResponseDto } from "../../../../common/dto/time-window.respon
 import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
-} from "../inquiry-request.response.dto";
+} from "../../../../common/dto/inquiry-request.response.dto";
 
 export class ReviewableInquiryResponseDto
   implements InquiryWithPotentialRequests

@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PrepareGeneralUpdate } from "@overbookd/festival-event";
 import { IsOptional, IsString, ValidateIf } from "class-validator";
 
-export class GeneralRequestDto implements PrepareGeneralUpdate {
+export class GeneralActivityRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
     description: "Festival activity name",
     required: false,

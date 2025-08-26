@@ -2,25 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { TimeWindow, Location } from "@overbookd/festival-event";
 import { PlanningTask } from "@overbookd/http";
 import { DRAFT, IN_REVIEW } from "@overbookd/festival-event-constants";
-
-class TimeWindowResponseDto implements TimeWindow {
-  @ApiProperty({
-    description: "Task time window id",
-  })
-  id: string;
-
-  @ApiProperty({
-    description: "Task time window start date",
-    type: Date,
-  })
-  start: Date;
-
-  @ApiProperty({
-    description: "Task time window end date",
-    type: Date,
-  })
-  end: Date;
-}
+import { TimeWindowResponseDto } from "../../../festival-event/common/dto/time-window.response.dto";
 
 class LocationResponseDto implements Location {
   @ApiProperty({ required: true })

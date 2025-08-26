@@ -31,10 +31,6 @@ import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.
 import { StatisticsService } from "../../statistics/statistics.service";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
-  UnassignedInquiryRequestResponseDto,
-  AssignedInquiryRequestResponseDto,
-} from "../common/dto/inquiry-request.response.dto";
-import {
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
@@ -52,6 +48,10 @@ import { FestivalActivityOverviewService } from "./festival-activity-overview.se
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

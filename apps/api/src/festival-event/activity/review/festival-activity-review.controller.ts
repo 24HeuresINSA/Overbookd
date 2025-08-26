@@ -27,10 +27,6 @@ import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
-  UnassignedInquiryRequestResponseDto,
-  AssignedInquiryRequestResponseDto,
-} from "../common/dto/inquiry-request.response.dto";
-import {
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
@@ -43,12 +39,19 @@ import {
   UnlinkedSignageResponseDto,
   LinkedSignageResponseDto,
 } from "../common/dto/signage.response.dto";
-import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
+import {
+  ApproveActivityRequestDto,
+  RejectActivityRequestDto,
+} from "./dto/review.request.dto";
 import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
@@ -147,7 +150,7 @@ export class FestivalActivityReviewController {
   })
   @ApiBody({
     description: "Festival activity approval",
-    type: ApproveRequestDto,
+    type: ApproveActivityRequestDto,
   })
   @ApiParam({
     name: "faId",
@@ -158,7 +161,7 @@ export class FestivalActivityReviewController {
   approve(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() { team }: ApproveRequestDto,
+    @Body() { team }: ApproveActivityRequestDto,
   ): Promise<FestivalActivity> {
     const jwt = new JwtUtil(user);
     return this.reviewService.approve(faId, jwt, team);
@@ -174,7 +177,7 @@ export class FestivalActivityReviewController {
   })
   @ApiBody({
     description: "Festival activity rejection",
-    type: RejectRequestDto,
+    type: RejectActivityRequestDto,
   })
   @ApiParam({
     name: "faId",
@@ -185,7 +188,7 @@ export class FestivalActivityReviewController {
   reject(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() reject: RejectRequestDto,
+    @Body() reject: RejectActivityRequestDto,
   ): Promise<Refused> {
     const jwt = new JwtUtil(user);
     return this.reviewService.reject(faId, jwt, reject);

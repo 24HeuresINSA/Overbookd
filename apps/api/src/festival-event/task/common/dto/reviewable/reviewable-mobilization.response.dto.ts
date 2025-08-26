@@ -37,7 +37,7 @@ export class MobilizationWithAtLeastOneTeamDto
   teams: WithAtLeastOneItem<TeamMobilization>;
 }
 
-export class AssignmentResponseDto
+export class MobilizationAssignmentResponseDto
   extends TimeWindowResponseDto
   implements Assignment
 {
@@ -49,7 +49,7 @@ export class MobilizationWithAtLeastOneTeamAndAssignmentsDto
   extends MobilizationWithAtLeastOneTeamDto
   implements AtLeastOneTeam<{ withConflicts: true; withAssignments: true }>
 {
-  @ApiProperty({ type: AssignmentResponseDto, isArray: true })
+  @ApiProperty({ type: MobilizationAssignmentResponseDto, isArray: true })
   assignments: Assignment[];
 }
 
@@ -57,6 +57,6 @@ export class MobilizationWithAtLeastOneVolunteerAndAssignmentsDto
   extends MobilizationWithAtLeastOneVolunteerDto
   implements AtLeastOneVolunteer<{ withConflicts: true; withAssignments: true }>
 {
-  @ApiProperty({ type: AssignmentResponseDto, isArray: true })
+  @ApiProperty({ type: MobilizationAssignmentResponseDto, isArray: true })
   assignments: Assignment[];
 }
