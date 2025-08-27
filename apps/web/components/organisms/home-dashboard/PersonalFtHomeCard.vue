@@ -37,7 +37,7 @@
         </v-list-item>
       </v-list>
       <span v-else class="no-content-label">
-        Tu n'as aucune FTs 🤔<br />
+        Tu n'as aucune FT 🤔<br />
         J'espère que t'as une bonne excuse !
       </span>
     </v-card-text>
