@@ -1,5 +1,4 @@
 import {
-  BORROW_GEARS,
   PURCHASE_GEARS,
   READ_GEAR_CATALOG,
   READ_INVENTORY,
@@ -9,7 +8,6 @@ import {
 } from "@overbookd/permission";
 import type { Page, HiddenPage, PageInSummary } from "./summary-pages";
 import {
-  BORROW_GEARS_URL,
   GEAR_CATALOG_URL,
   GEAR_DASHBOARD_URL,
   INVENTORY_URL,
@@ -83,27 +81,6 @@ const PURCHASE_GEARS_PAGE: HiddenPage = {
   hasParam: true,
 };
 
-const BORROW_GEARS_LIST_PAGE: PageInSummary = {
-  icon: "mdi-store-clock",
-  title: "Fiches Emprunt",
-  permission: BORROW_GEARS,
-  to: BORROW_GEARS_URL,
-  description: "Permet de gérer les emprunts de matériel",
-  mobileSupport: false,
-  canBeFavorite: true,
-  hasParam: false,
-  keywords: ["fiches-emprunts", "materiel", "matos"],
-};
-
-const BORROW_GEARS_PAGE: HiddenPage = {
-  title: "Fiche Emprunt",
-  permission: BORROW_GEARS,
-  to: BORROW_GEARS_URL,
-  mobileSupport: false,
-  canBeFavorite: false,
-  hasParam: true,
-};
-
 const LOCATION_PAGE: PageInSummary = {
   icon: "mdi-map-marker",
   title: "Lieux de la Signa",
@@ -147,7 +124,6 @@ export const LOGISTIC_SUMMARY_PAGES: PageInSummary[] = [
   INVENTORY_PAGE,
   GEAR_DASHBOARD_PAGE,
   PURCHASE_GEARS_LIST_PAGE,
-  BORROW_GEARS_LIST_PAGE,
   LOCATION_PAGE,
   SIGNAGE_CATALOG_PAGE,
 ];
@@ -155,5 +131,4 @@ export const LOGISTIC_SUMMARY_PAGES: PageInSummary[] = [
 export const LOGISTIC_PAGES: Page[] = [
   ...LOGISTIC_SUMMARY_PAGES,
   PURCHASE_GEARS_PAGE,
-  BORROW_GEARS_PAGE,
 ];
