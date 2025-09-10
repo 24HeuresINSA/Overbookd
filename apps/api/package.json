@@ -40,7 +40,7 @@
     "test:watch": "jest --watch",
     "prisma:generate": "npx prisma generate",
     "database:init": "pnpm prisma:generate && pnpm database:migrate && pnpm database:seed",
-    "database:migrate": "npx prisma migrate deploy --config=prisma.config.ts",
+    "database:migrate": "npx prisma migrate deploy",
     "database:seed": "npx prisma db seed"
   },
   "dependencies": {
