@@ -23,6 +23,9 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       # Enable Dashboard
       - "--api.dashboard=true"
+      # Access Logs
+      - "--accesslog.addinternals=true"
+      - "--accesslog.filepath=/accesslog/access.log"
       # Debug
       - "--log.level=DEBUG"
       # Disable https backend validation
@@ -32,6 +35,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/dev/traefik/accesslog:/accesslog
     networks:
       - traefik-public
     labels:
@@ -70,10 +74,9 @@ services:
       - "traefik.http.routers.dev-api.tls=true"
       - "traefik.http.routers.dev-api.entrypoints=websecure"
       - "traefik.http.services.dev-api.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api/v2`))"
-      - "traefik.http.routers.dev-api.priority=1000"
+      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api-v2`))"
       - "traefik.http.routers.dev-api.middlewares=api-strip"
-      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api/v2"
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api-v2"
     command:
       - /bin/sh
       - -c
@@ -132,7 +135,6 @@ services:
       - "traefik.http.routers.dev-adminer.entrypoints=websecure"
       - "traefik.http.services.dev-adminer.loadbalancer.server.port=8080"
       - "traefik.http.routers.dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
-      - "traefik.http.routers.dev-adminer.priority=1000"
       - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
       - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 

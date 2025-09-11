@@ -83,7 +83,7 @@
   "devDependencies": {
     "@pinia/nuxt": "0.11.2",
     "nuxt": "4.0.3",
-    "nuxt-oidc-auth": "1.0.0-beta.5",
+    "nuxt-oidc-auth": "0.18.0",
     "vue": "3.5.18",
     "vue-router": "4.5.1",
     "vue-tsc": "3.0.5"

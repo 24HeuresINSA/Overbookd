@@ -60,6 +60,9 @@
       "prisma",
       "unrs-resolver",
       "vue-demi"
+    ],
+    "ignoredBuiltDependencies": [
+      "@scarf/scarf"
     ]
   },
   "scarfSettings": {

@@ -15,7 +15,7 @@
       - ${APP_NAME}_installer.tar
     policy: pull-push
   script:
-    - '[[ -f ${APP_NAME}_installer.tar ]] && exit 0'
+    - "[[ -f ${APP_NAME}_installer.tar ]] && exit 0"
     - >
       docker build
       --target installer
@@ -51,6 +51,8 @@
       --build-arg API_VERSION=$VERSION
       --build-arg WEB_VERSION=$VERSION
       --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION
+      --build-arg OIDC_CLIENT_ID=$OIDC_CLIENT_ID
+      --build-arg ZITADEL_BASE_URL=$ZITADEL_BASE_URL
       --file $APP_PATH/Dockerfile .
     - >
       docker save -o ${APP_NAME}.tar
