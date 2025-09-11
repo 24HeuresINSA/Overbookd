@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,
-      apiURL: `${process.env.BASE_URL}/api/v2`,
+      apiURL: `${process.env.BASE_URL}/api-v2`,
       version: process.env.OVERBOOKD_VERSION || "no version",
     },
   },
