@@ -1,3 +1,47 @@
+## [3.48.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.47.0...v3.48.0) (2025-09-26)
+
+### Features
+
+* **contribution:** add csv export to get adherents with their contributions [#2552](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2552) ([86e072b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86e072bad59899783118c60c6d14a310be828db5))
+* **planning:** add multi planning page [#2566](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2566) ([4c55c0a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4c55c0a927f714c4a8c3200b6917682418dcabd2))
+* **planning:** save multi planning params in url [#2567](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2567) ([42c0683](https://gitlab.com/24-heures-insa/overbookd-mono/commit/42c0683d1ed06be2350d060d7cf2ba78dbf9e260))
+* **timeline:** add current time marker [#1080](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1080) ([f00318a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f00318aaba8236e2bacfe4050c95665049b2e95a))
+* **web:** add aria-label and title attributes to icon buttons [#2563](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2563) ([1795ecb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1795ecbac3c57da2f74a30c19a5c3dda36b32297))
+
+### Bug Fixes
+
+* **api:** clean all controllers and add global api response decorator [#757](https://gitlab.com/24-heures-insa/overbookd-mono/issues/757) ([fb03b92](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fb03b9264f0696cd43895ded6528fe4fbf8c3832))
+* **api:** spelling mistakes in e-mails ([1b12ca4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1b12ca457b0f6ea2601e3850df80e1b88e883fda))
+* **assignment:** add a shortcut from volunteers stats to orga-task assignment [#1862](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1862) ([e57986a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e57986a2bd48de0dfc4bce53d6ae0163f2544ed9))
+* **auth:** refresh access token one minute before expiration [#2435](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2435) ([862e4f0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/862e4f0d7419d19d7670b1fcc3b81477361b9e5e))
+* **availabilities:** remove useless init function [#2355](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2355) ([f7e44ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f7e44ea2cad764fcce7b59948e437f5ed886adcc))
+* **borrow:** throw an error if period has no duration [#2415](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2415) ([2f4ee08](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2f4ee0800c98ab17495969f2d5df41774eb18891))
+* **charisma:** update charisma after adding an event [#2248](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2248) ([a7d8fc3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a7d8fc3f90dcc51aff3e7db709ba043eb02d304f))
+* **favicon:** add custom favicon for preprod & ctma [#2328](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2328) ([7b83cd3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7b83cd343da5c1111b9bafe259b4b731b1210f17))
+* **festival-event:** add page loading [#2346](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2346) ([de45c96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/de45c96d5c650d48206b8e5419caf16b7369dd40))
+* **festival-event:** color of name label in sidebar [#2421](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2421) ([30d1fb1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/30d1fb1732897760839820a0e6dc3ae5eed8e800))
+* **festival-task:** prevent task administrator from being a humain reviewer [#2555](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2555) ([c07108b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c07108b12c38b378f49b1e76cc5c2443dd8ec145))
+* **logistic:** add search field on borrow and purchase lists [#2488](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2488) ([d011fbb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d011fbb6224587176c5e23a285fbc4481c8fdee5))
+* **logistic:** remove duplicate gears interface ([aae774d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aae774d4902e9d505a0447f9a853046f2049baa3))
+* **logistic:** throw an error from api if borrow or purchase does not exist [#2457](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2457) ([77e083f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/77e083fef711bd8075ee042cff58cb6fbac4eaf8))
+* **membership-application:** check if briefing time window is valid as availability period [#2440](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2440) ([151ae74](https://gitlab.com/24-heures-insa/overbookd-mono/commit/151ae74626f9a065d8447ff845de9c90f7b6e7d6))
+* **navigation:** increase thickness of page summary divider [#2401](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2401) ([cd0cdb5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cd0cdb52c2297dde63493aa238e8a0f82db2cb20))
+* **phone:** allow international phone number [#2556](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2556) ([c0068bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c0068bbf1cbcd107c3382c0afbe9267f7e4581a1))
+* **planning:** improve task details chips [#2558](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2558) ([10e020b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/10e020b671f912e3095df43930947f3146533003))
+* **planning:** improves code to optimize database calls [#1913](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1913) ([bc0f8b3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bc0f8b363d50ee892c1d7d20b86485e0d7f1abb7))
+* prisma generation in docker [#2487](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2487) ([78bfec1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/78bfec18891794c8ecfcae406bc7826641fdacaa))
+* **prisma:** add prisma config & fix warnings ([d79f28a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d79f28aadf4b4c8729780c201f58ebd67203ab87))
+* **prisma:** copy prisma.config.ts in docker image ([206f2e0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/206f2e02aa289be6d33eb7c293cfd9c5b841e694))
+* **registration:** add icon if candidate will be minor at event [#2551](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2551) ([ed22505](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed22505e283b5820c13e6b7bc5c5986e5f011999))
+* **signa:** fix location map elements click [#2478](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2478) ([d1fc7f3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d1fc7f3a523e0d960403f636b14afb70c27b1be8))
+* **stats:** show the entire y-axis even if the page shrinks and fix x-axis update [#2485](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2485) [#2453](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2453) ([214b1ec](https://gitlab.com/24-heures-insa/overbookd-mono/commit/214b1ec55dae1d3332f65aff663170d8702f76d5))
+* **timeline:** save filters in url [#2559](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2559) ([d2cbb86](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d2cbb8631b71fb938adde6200258baa2cb02ed36))
+* **transactions:** display username with nickname on page with all transactions [#2553](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2553) ([d3b2495](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d3b249530e8066bc34d9cbe8ae718a759449a00e))
+* **web:** add pagination to multi calendar and refactor need-help filters [#2561](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2561) ([864a8fe](https://gitlab.com/24-heures-insa/overbookd-mono/commit/864a8fe479109d384cc0587497ae61ee11986ea5))
+* **web:** fix searchable pages keywords [#2374](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2374) ([1f126be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f126be6c1a2cdbf6b29884fd165d85f7794dec2))
+* **web:** fix vuetify theme warning [#2568](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2568) ([2dad3a4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2dad3a47a79b66cccb294d1b4b97d7aa66e78b31))
+* **web:** spelling mistake [#2573](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2573) ([81a9ef3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/81a9ef3763d281e5950263a0413c463a2f014e2d))
+
 ## [3.47.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.46.9...v3.47.0) (2025-05-15)
 
 ### Features
