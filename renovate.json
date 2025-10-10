@@ -10,7 +10,7 @@
   "schedule": ["after 5pm on monday"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "reviewers": ["LeoMouyna", "titouan-joseph", "LeonDumestre"],
+  "reviewers": ["titouan-joseph", "LeonDumestre", "LucVDH", "polo-diemunsch"],
   "labels": ["Type::Dependencies"],
   "pre-commit": {
     "enabled": true
