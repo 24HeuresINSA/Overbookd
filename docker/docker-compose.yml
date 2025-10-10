@@ -5,7 +5,7 @@ networks:
 
 services:
   traefik:
-    image: traefik:v3.5.0
+    image: traefik:v3.5.3
     restart: unless-stopped
     command:
       # Docker config
