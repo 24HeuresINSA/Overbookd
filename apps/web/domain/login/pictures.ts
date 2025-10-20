@@ -8,7 +8,8 @@ const GROSALIE = "/img/background/grosalie-scaled.jpg";
 const FIREWORKS = "/img/background/feux_artifice-scaled.jpg";
 const DANCE_DAY = "/img/background/danse_journee.jpg";
 const BARRIER_FEN = "/img/background/barrieres_fen-scaled.jpg";
-const ACTIVITIES_DIRECTION_DAY = "/img/background/animation_journee_fleches.jpg";
+const ACTIVITIES_DIRECTION_DAY =
+  "/img/background/animation_journee_fleches.jpg";
 
 const IMAGES = [
   GLASS,
