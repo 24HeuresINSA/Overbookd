@@ -1,3 +1,9 @@
+## [3.48.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.0...v3.48.1) (2025-10-20)
+
+### Refactor
+
+* **renovate:** update default reviewers ([72cde30](https://gitlab.com/24-heures-insa/overbookd-mono/commit/72cde3070df0aa0cf25ee00c05e90188602379cd))
+
 ## [3.48.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.47.0...v3.48.0) (2025-09-26)
 
 ### Features
