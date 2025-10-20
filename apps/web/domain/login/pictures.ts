@@ -1,24 +1,15 @@
-export const GLASS = "/img/login-background.jpg";
-const BIKE_TRACK_NIGHT =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/velo_parcours_nuit-scaled.jpg";
-const BIKE_TRACK_DAY =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/velo_journee.jpg";
-const SLACKLINE =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/slackline-scaled.jpg";
-const SECU_TALKIE =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/secu_talkie-scaled.jpg";
-const SWIM_CRAWL =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/natation_crawl-scaled.jpg";
-const GROSALIE =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/grosalie-scaled.jpg";
-const FIREWORKS =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/feux_artifice-scaled.jpg";
-const DANCE_DAY =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/danse_journee.jpg";
-const BARRIER_FEN =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/barrieres_fen-scaled.jpg";
+export const GLASS = "/img/background/glass.jpg";
+const BIKE_TRACK_NIGHT = "/img/background/velo_parcours_nuit-scaled.jpg";
+const BIKE_TRACK_DAY = "/img/background/velo_journee.jpg";
+const SLACKLINE = "/img/background/slackline-scaled.jpg";
+const SECU_TALKIE = "/img/background/secu_talkie-scaled.jpg";
+const SWIM_CRAWL = "/img/background/natation_crawl-scaled.jpg";
+const GROSALIE = "/img/background/grosalie-scaled.jpg";
+const FIREWORKS = "/img/background/feux_artifice-scaled.jpg";
+const DANCE_DAY = "/img/background/danse_journee.jpg";
+const BARRIER_FEN = "/img/background/barrieres_fen-scaled.jpg";
 const ACTIVITIES_DIRECTION_DAY =
-  "https://wordpress.24heures.org/wp-content/uploads/2024/08/animation_journee_fleches.jpg";
+  "/img/background/animation_journee_fleches.jpg";
 
 const IMAGES = [
   GLASS,
