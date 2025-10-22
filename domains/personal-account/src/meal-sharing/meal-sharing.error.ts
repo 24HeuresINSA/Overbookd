@@ -20,13 +20,6 @@ export class GuestNotFound extends MealSharingError {
     super(`Impossible de trouver l'adhérent #${id} en tant que convive`);
   }
 }
-
-export class AlreadyShotguned extends MealSharingError {
-  constructor({ meal }: SharedMeal) {
-    super(`Tu as déjà shotgun pour le repas du ${meal.date}`);
-  }
-}
-
 export class OnlyChefCan extends MealSharingError {
   private constructor(chef: Adherent, action: string) {
     super(`Seul le.a chef.fe ${chef.name} peut ${action}`);

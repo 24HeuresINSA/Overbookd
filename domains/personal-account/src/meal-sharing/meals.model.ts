@@ -12,13 +12,12 @@ export type OnGoingSharedMeal = {
   meal: AboutMeal;
   chef: Adherent;
   areShotgunsOpen: boolean;
-  shotgunCount: number;
+  portionCount: number;
   shotguns: Shotgun[];
 };
 
 export type PastSharedMeal = OnGoingSharedMeal & {
   expense: Expense;
-  inTimeShotguns: number;
 };
 
 export type SharedMeal = PastSharedMeal | OnGoingSharedMeal;

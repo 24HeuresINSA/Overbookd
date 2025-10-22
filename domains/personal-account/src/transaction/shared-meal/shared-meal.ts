@@ -16,7 +16,7 @@ export class SharedMeal {
   static refound(meal: PastSharedMeal): SharedMealTransaction[] {
     if (meal.expense.amount > MAX_AMOUNT) throw new AmountTooHigh();
 
-    const amount = this.divideAmount(meal.expense.amount, meal.shotgunCount);
+    const amount = this.divideAmount(meal.expense.amount, meal.portionCount);
     const context = `Repas partagé du ${meal.meal.date}`;
     const guests = meal.shotguns.filter(({ id }) => id !== meal.chef.id);
     return guests.map(({ id }) => ({
