@@ -97,7 +97,7 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    shotgunCount: meal.shotgunCount,
+    portionCount: meal.portionCount,
     shotguns: meal.shotguns,
   };
 }
@@ -108,7 +108,7 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    shotgunCount: meal.shotgunCount,
+    portionCount: meal.portionCount,
     shotguns: meal.shotguns,
   };
 

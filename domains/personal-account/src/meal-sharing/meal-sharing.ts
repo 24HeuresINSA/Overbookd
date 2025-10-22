@@ -55,8 +55,8 @@ export abstract class SharedMealBuilder {
     return this._shotguns.all;
   }
 
-  get shotgunCount(): number {
-    return this._shotguns.all.length;
+  get portionCount(): number {
+    return this._shotguns.portionCount;
   }
 
   isChef(adherent: Adherent["id"]): boolean {
@@ -147,7 +147,7 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.recordExpenseFor(meal);
-    if (meal.shotgunCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
+    if (meal.portionCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);
