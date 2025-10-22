@@ -3,7 +3,6 @@ import { Meal } from "./meal.js";
 import { MealDate, SharedMealBuilder } from "./meal-sharing.js";
 import { Adherent, Shotguns } from "./adherent.js";
 import { PastSharedMealBuilder } from "./past-shared-meal.builder.js";
-import { AlreadyShotguned } from "./meal-sharing.error.js";
 
 type InitSharedMeal = {
   id: number;
@@ -12,7 +11,7 @@ type InitSharedMeal = {
   chef: Adherent;
 };
 
-type BuildOnGoingSharedMeal = Omit<OnGoingSharedMeal, "shotgunCount">;
+type BuildOnGoingSharedMeal = Omit<OnGoingSharedMeal, "portionCount">;
 
 export class OnGoingSharedMealBuilder
   extends SharedMealBuilder
@@ -21,8 +20,7 @@ export class OnGoingSharedMealBuilder
   static init(initializer: InitSharedMeal): OnGoingSharedMealBuilder {
     const { id, menu, date, chef } = initializer;
     const meal = Meal.init(menu, date);
-    const firstShotgun = { ...chef, date: new Date() };
-    const shotguns = Shotguns.init().add(firstShotgun);
+    const shotguns = Shotguns.init().addFor(chef);
     return new OnGoingSharedMealBuilder(id, meal, chef, true, shotguns);
   }
 
@@ -38,14 +36,8 @@ export class OnGoingSharedMealBuilder
     );
   }
 
-  hasShotgun(id: Adherent["id"]): boolean {
-    return this.shotguns.some((adherent) => adherent.id === id);
-  }
-
   shotgunFor(adherent: Adherent): OnGoingSharedMealBuilder {
-    if (this.hasShotgun(adherent.id)) throw new AlreadyShotguned(this);
-    const shotgun = { ...adherent, date: new Date() };
-    const shotguns = this._shotguns.add(shotgun);
+    const shotguns = this._shotguns.addFor(adherent);
     return new OnGoingSharedMealBuilder(
       this.id,
       this.meal,
