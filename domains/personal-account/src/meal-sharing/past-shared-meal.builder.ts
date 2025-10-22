@@ -100,8 +100,4 @@ export class PastSharedMealBuilder
   openShotguns(): PastSharedMealBuilder {
     throw PastMealError.openShotguns;
   }
-
-  get inTimeShotguns(): number {
-    return this._shotguns.before(this.expense.date).length;
-  }
 }
