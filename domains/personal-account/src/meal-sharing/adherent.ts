@@ -43,6 +43,22 @@ export class Shotguns {
     return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
   }
 
+  removePortionFor(guest: number): Shotguns {
+    const shotgunIndex = this.shotguns.findIndex((s) => s.id === guest);
+    if (shotgunIndex === -1) return this;
+    const existingShotgun = this.shotguns[shotgunIndex];
+    if (existingShotgun.portion <= 1) {
+      return this.remove(guest);
+    }
+    const updatedShotgun = {
+      ...existingShotgun,
+      portion: existingShotgun.portion - 1,
+    };
+    return new Shotguns(
+      updateItemToList(this.shotguns, shotgunIndex, updatedShotgun),
+    );
+  }
+
   get all(): Shotgun[] {
     return this.shotguns;
   }
