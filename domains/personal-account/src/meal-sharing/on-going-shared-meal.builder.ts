@@ -48,7 +48,7 @@ export class OnGoingSharedMealBuilder
   }
 
   cancelShotgunFor(guest: Adherent["id"]): OnGoingSharedMealBuilder {
-    const shotguns = this._shotguns.remove(guest);
+    const shotguns = this._shotguns.removePortionFor(guest);
     return new OnGoingSharedMealBuilder(
       this.id,
       this.meal,

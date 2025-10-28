@@ -116,13 +116,12 @@ export class MealSharing {
     return this.sharedMeals.addShotgun(updatedMeal);
   }
 
-  async cancelShotgun(
-    { mealId, guestId }: CancelShotgun,
-    instigator: number,
-  ): Promise<OnGoingSharedMeal> {
+  async cancelShotgun({
+    mealId,
+    guestId,
+  }: CancelShotgun): Promise<OnGoingSharedMeal> {
     const meal = await this.sharedMeals.find(mealId);
     if (!meal) throw new MealNotFound(mealId);
-    if (!meal.isChef(instigator)) throw OnlyChefCan.cancelShotgunFor(meal);
 
     const updatedMeal = meal.cancelShotgunFor(guestId);
     return this.sharedMeals.cancelShotgun(updatedMeal);

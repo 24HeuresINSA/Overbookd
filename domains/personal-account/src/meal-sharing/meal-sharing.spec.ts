@@ -36,7 +36,7 @@ const meal = Meal.init("Riz cantonnais", {
 const shotguns = [
   { ...julie, date: new Date("2023-10-12 08:00"), portion: 1 },
   { ...noel, date: new Date("2023-10-12 08:51"), portion: 1 },
-  { ...shogosse, date: new Date("2023-10-12 13:00"), portion: 1 },
+  { ...shogosse, date: new Date("2023-10-12 13:00"), portion: 2 },
 ];
 
 const rizCantonnais = OnGoingSharedMealBuilder.build({
@@ -139,7 +139,7 @@ describe("Meal Sharing", () => {
     describe("when lea shotgun for riz cantonnais", () => {
       it("should add lea as a guest", async () => {
         const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-        expect(meal.portionCount).toBe(4);
+        expect(meal.portionCount).toBe(5);
         expect(meal.shotguns).toContainEqual({
           ...lea,
           date: expect.any(Date),
@@ -150,7 +150,7 @@ describe("Meal Sharing", () => {
         it("should add a portion for lea", async () => {
           await mealSharing.shotgun(rizCantonnais.id, lea.id);
           const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-          expect(meal.portionCount).toBe(5);
+          expect(meal.portionCount).toBe(6);
 
           expect(meal.shotguns).toContainEqual({
             ...lea,
@@ -168,23 +168,25 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     const cancelShotgun = { mealId: rizCantonnais.id, guestId: shogosse.id };
-    describe("when one of the guests tries to cancel their shotgun", () => {
-      it("should indicate only chef can unshotgun", async () => {
-        const instigator = shogosse.id;
-        expect(
-          async () =>
-            await mealSharing.cancelShotgun(cancelShotgun, instigator),
-        ).rejects.toThrow(OnlyChefCan.cancelShotgunFor(rizCantonnais));
+    describe("when one of the guests unshotguns a meal", () => {
+      it("should remove a portion of his shotgun", async () => {
+        const meal = await mealSharing.cancelShotgun(cancelShotgun);
+        expect(meal.portionCount).toBe(3);
+        expect(meal.shotguns).toContainEqual({
+          ...shogosse,
+          date: expect.any(Date),
+          portion: 1,
+        });
       });
     });
     describe("when the chef tries to cancel a shotgun", () => {
-      it("should remove the guest from the list", async () => {
-        const instigator = rizCantonnais.chef.id;
-        const meal = await mealSharing.cancelShotgun(cancelShotgun, instigator);
-        expect(meal.portionCount).toBe(2);
-        expect(meal.shotguns).not.toContainEqual({
+      it("should remove a portion from the guests shotgun", async () => {
+        const meal = await mealSharing.cancelShotgun(cancelShotgun);
+        expect(meal.portionCount).toBe(3);
+        expect(meal.shotguns).toContainEqual({
           ...shogosse,
           date: expect.any(Date),
+          portion: 1,
         });
       });
     });
@@ -197,7 +199,7 @@ describe("Meal Sharing", () => {
     });
     it("should be able to know how many guests shotguned", async () => {
       const { portionCount } = await mealSharing.findById(rizCantonnais.id);
-      expect(portionCount).toBe(3);
+      expect(portionCount).toBe(4);
     });
   });
   describe("Record expense", () => {
@@ -260,7 +262,7 @@ describe("Meal Sharing", () => {
           }).rejects.toThrow(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
         });
         it("should count how many shotguns were done", () => {
-          expect(pastSharedMeal.portionCount).toBe(3);
+          expect(pastSharedMeal.portionCount).toBe(4);
         });
       });
       describe("when no one shotgun for the meal", () => {
@@ -366,7 +368,7 @@ describe("Meal Sharing", () => {
           });
           it("should be possible for lea to shotgun", async () => {
             const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-            expect(meal.portionCount).toBe(4);
+            expect(meal.portionCount).toBe(5);
             expect(meal.shotguns).toContainEqual({
               ...lea,
               date: expect.any(Date),
