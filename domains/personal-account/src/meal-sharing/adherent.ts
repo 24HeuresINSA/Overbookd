@@ -39,16 +39,12 @@ export class Shotguns {
     return new Shotguns([...this.shotguns, shotgun]);
   }
 
-  remove(guest: number): Shotguns {
-    return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
-  }
-
   removePortionFor(guest: number): Shotguns {
     const shotgunIndex = this.shotguns.findIndex((s) => s.id === guest);
     if (shotgunIndex === -1) return this;
     const existingShotgun = this.shotguns[shotgunIndex];
     if (existingShotgun.portion <= 1) {
-      return this.remove(guest);
+      return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
     }
     const updatedShotgun = {
       ...existingShotgun,
