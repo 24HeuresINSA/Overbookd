@@ -25,10 +25,6 @@ export class OnlyChefCan extends MealSharingError {
     super(`Seul le.a chef.fe ${chef.name} peut ${action}`);
   }
 
-  static cancelShotgunFor({ chef }: SharedMeal) {
-    return new OnlyChefCan(chef, "annuler un shotgun");
-  }
-
   static recordExpenseFor({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "renseigner une dépense");
   }
