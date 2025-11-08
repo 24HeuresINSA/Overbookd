@@ -1,2 +1,6 @@
-!/data/**/.gitkeep
-/data/**/*
+data
+!data/
+data/*
+!data/traefik/
+data/traefik/*
+!data/traefik/tls.yml
