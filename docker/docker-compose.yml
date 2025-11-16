@@ -3,7 +3,18 @@ networks:
   traefik-public:
     external: true
 
+volumes:
+  certs:
+
+
 services:
+  certs-downloader:
+    image: alpine
+    command: >
+      sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
+
   traefik:
     image: traefik:v3.5.3
     restart: unless-stopped
@@ -32,13 +43,14 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/ssl/traefik
+      - ./data/traefik/tls.yml:/etc/traefik/tls.yml
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.traefik.tls=true"
-      - "traefik.http.services.traefik.loadbalancer.server.port=888"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
