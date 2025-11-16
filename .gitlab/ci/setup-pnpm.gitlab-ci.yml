@@ -3,6 +3,6 @@
   interruptible: true
   before_script:
     - apk add --no-cache openssl
-    - npm install -g pnpm@10.14.0
+    - npm install -g pnpm@10.22.0
     - pnpm config set store-dir .pnpm-store
     - pnpm --version
