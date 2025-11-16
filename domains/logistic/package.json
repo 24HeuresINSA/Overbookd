@@ -51,7 +51,7 @@
     "purchase"
   ],
   "engines": {
-    "node": "22.20.0",
+    "node": "24.11.1",
     "pnpm": "10.14.0"
   },
   "dependencies": {
