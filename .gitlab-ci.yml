@@ -15,6 +15,11 @@ stages:
   - deploy
   - release
 
+variables:
+  RELEASE:
+    value: "true"
+    description: "Environment variable key flag to create a new release"
+
 include:
   - local: /.gitlab/ci/setup-pnpm.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
