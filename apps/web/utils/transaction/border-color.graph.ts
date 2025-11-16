@@ -5,14 +5,14 @@ import { ERROR, SUCCESS } from "../vuetify/theme/common";
 export function getBorderColorForAmount(
   ctx: ScriptableLineSegmentContext & { chart?: Chart },
 ) {
-  if (ctx.p0.parsed.y * ctx.p1.parsed.y >= 0) {
-    return ctx.p0.parsed.y >= 0 ? SUCCESS : ERROR;
+  if ((ctx.p0.parsed.y ?? 0) * (ctx.p1.parsed.y ?? 0) >= 0) {
+    return (ctx.p0.parsed.y ?? 0) >= 0 ? SUCCESS : ERROR;
   }
   // if the segment changes sign from p0 to p1
-  const x0 = ctx.p0.parsed.x,
-    x1 = ctx.p1.parsed.x,
-    y0 = ctx.p0.parsed.y,
-    y1 = ctx.p1.parsed.y,
+  const x0 = ctx.p0.parsed.x ?? 0,
+    x1 = ctx.p1.parsed.x ?? 0,
+    y0 = ctx.p0.parsed.y ?? 0,
+    y1 = ctx.p1.parsed.y ?? 0,
     //transform values to pixels
     x0px = ctx.chart?.scales["x"].getPixelForValue(x0) ?? 0,
     x1px = ctx.chart?.scales["x"].getPixelForValue(x1) ?? 0,

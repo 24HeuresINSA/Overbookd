@@ -63,8 +63,8 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     async (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
-        config.plugins ||= [];
-        config.plugins.push(vuetify());
+        if (!config.plugins) return;
+        config.plugins.push(vuetify({ autoImport: true }) as never);
       });
     },
   ],
