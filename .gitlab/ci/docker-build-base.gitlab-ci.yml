@@ -15,7 +15,7 @@
       - ${APP_NAME}_installer.tar
     policy: pull-push
   script:
-    - '[[ -f ${APP_NAME}_installer.tar ]] && exit 0'
+    - "[[ -f ${APP_NAME}_installer.tar ]] && exit 0"
     - >
       docker build
       --target installer
