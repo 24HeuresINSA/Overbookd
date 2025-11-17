@@ -46,7 +46,7 @@ export class SharedMealService {
     guestId: Adherent["id"],
     instigatorId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
-    const updated = await this.mealSharing.cancelShotgun(
+    const updated = await this.mealSharing.cancelShotgunAsChef(
       { mealId, guestId },
       instigatorId,
     );

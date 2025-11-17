@@ -40,6 +40,13 @@ export class OnlyChefCan extends MealSharingError {
   static openShotguns({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "ouvrir les shotguns");
   }
+
+  static cancelShotgunFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(
+      chef,
+      "annuler un shotgun quand les shotguns sont fermés",
+    );
+  }
 }
 
 export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
