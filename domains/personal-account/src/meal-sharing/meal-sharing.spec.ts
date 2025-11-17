@@ -179,7 +179,7 @@ describe("Meal Sharing", () => {
         });
       });
     });
-    describe("when the chef tries to cancel a shotgun", () => {
+    describe("when the chef tries to cancel a shotgun with more than one portion", () => {
       it("should remove a portion from the guests shotgun", async () => {
         const meal = await mealSharing.cancelShotgun(cancelShotgun);
         expect(meal.portionCount).toBe(3);
@@ -188,6 +188,17 @@ describe("Meal Sharing", () => {
           date: expect.any(Date),
           portion: 1,
         });
+      });
+    });
+    describe("when the chef tries to cancel a shotgun with only one portion", () => {
+      const cancelShotgunForJulie = {
+        mealId: rizCantonnais.id,
+        guestId: julie.id,
+      };
+      it("should remove the shotgun from the meal", async () => {
+        const meal = await mealSharing.cancelShotgun(cancelShotgunForJulie);
+        expect(meal.portionCount).toBe(3);
+        expect(meal.shotguns.find((s) => s.id === julie.id)).toBeUndefined();
       });
     });
   });
@@ -242,7 +253,7 @@ describe("Meal Sharing", () => {
         it("should indicate shared meal is past for chef trying to cancel shotgun", async () => {
           expect(async () => {
             const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
-            await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
+            await mealSharing.cancelShotgun(cancel);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
@@ -351,9 +362,15 @@ describe("Meal Sharing", () => {
         it("should close the shotguns", async () => {
           expect(sharedMeal.areShotgunsOpen).toBe(false);
         });
-        it("should indicate shotguns are closed for new adherent trying to shotgun", async () => {
+        it("should indicate shotguns are closed for new adherent trying to shotgun or cancel", async () => {
           expect(async () => {
             await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
+          }).rejects.toThrow(ShotgunsClosed);
+          expect(async () => {
+            await mealSharing.cancelShotgun({
+              mealId: rizCantonnais.id,
+              guestId: tatouin.id,
+            });
           }).rejects.toThrow(ShotgunsClosed);
         });
         describe("when chef opens the shotguns again", () => {

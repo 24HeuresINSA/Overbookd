@@ -19,7 +19,7 @@ export class Shotguns {
     return new Shotguns(shotguns);
   }
 
-  addFor(adherent: Adherent): Shotguns {
+  addPortionFor(adherent: Adherent): Shotguns {
     const shotgunIndex = this.shotguns.findIndex((s) => s.id === adherent.id);
     if (shotgunIndex !== -1) {
       const existingShotgun = this.shotguns[shotgunIndex];
