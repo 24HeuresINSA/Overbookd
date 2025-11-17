@@ -122,7 +122,8 @@ export class MealSharing {
   }: CancelShotgun): Promise<OnGoingSharedMeal> {
     const meal = await this.sharedMeals.find(mealId);
     if (!meal) throw new MealNotFound(mealId);
-
+    if (isOnGoingMeal(meal) && !meal.areShotgunsOpen)
+      throw new ShotgunsClosed();
     const updatedMeal = meal.cancelShotgunFor(guestId);
     return this.sharedMeals.cancelShotgun(updatedMeal);
   }
