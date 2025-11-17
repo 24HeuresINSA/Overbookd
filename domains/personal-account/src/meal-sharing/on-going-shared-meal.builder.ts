@@ -20,7 +20,7 @@ export class OnGoingSharedMealBuilder
   static init(initializer: InitSharedMeal): OnGoingSharedMealBuilder {
     const { id, menu, date, chef } = initializer;
     const meal = Meal.init(menu, date);
-    const shotguns = Shotguns.init().addFor(chef);
+    const shotguns = Shotguns.init().addPortionFor(chef);
     return new OnGoingSharedMealBuilder(id, meal, chef, true, shotguns);
   }
 
@@ -37,7 +37,7 @@ export class OnGoingSharedMealBuilder
   }
 
   shotgunFor(adherent: Adherent): OnGoingSharedMealBuilder {
-    const shotguns = this._shotguns.addFor(adherent);
+    const shotguns = this._shotguns.addPortionFor(adherent);
     return new OnGoingSharedMealBuilder(
       this.id,
       this.meal,
