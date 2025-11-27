@@ -22,7 +22,7 @@ export const oldActivities = new Map<string, number>([
   ["scene", 9],
   ["secu", 13],
   ["signa", 10],
-  ["sme", 9],
+  ["rse", 9],
   ["sponso", 14],
   ["sports", 28],
 ]);
@@ -54,7 +54,7 @@ export const oldTasks = new Map<string, number>([
   ["secu", 114],
   ["sg", 2],
   ["signa", 27],
-  ["sme", 37],
+  ["rse", 37],
   ["sponso", 39],
   ["sports", 72],
   ["team-elec", 7],
