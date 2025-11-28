@@ -7,7 +7,6 @@
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"
       :mobile="isMobile"
-      :items-per-page="25"
       density="compact"
       multi-sort
       hover
