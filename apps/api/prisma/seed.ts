@@ -15,7 +15,7 @@ import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({});
 
 async function insertOrUpdateCategory(
   name: string,
