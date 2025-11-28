@@ -21,7 +21,7 @@
       @click:volunteer="propagateClickedVolunteer"
     />
     <TrombinoscopeGroup
-      heading="Adhérents 🤡"
+      heading="Adhérent·es 🤡"
       :volunteers="adherents"
       @click:team="propagateClickedTeam"
       @click:volunteer="propagateClickedVolunteer"
