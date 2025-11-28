@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.all-modules-import.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

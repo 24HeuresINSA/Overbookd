@@ -80,6 +80,7 @@
     "@overbookd/user": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
     "@overbookd/web-page": "workspace:*",
+    "@prisma/adapter-pg": "7.0.1",
     "@prisma/client": "7.0.1",
     "bcrypt": "6.0.0",
     "body-parser": "2.2.0",
