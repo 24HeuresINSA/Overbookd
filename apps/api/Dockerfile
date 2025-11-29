@@ -24,8 +24,6 @@ FROM installer AS builder
 COPY tsconfig.cross-modules-import.json tsconfig.build.json tsconfig.package.json tsconfig.all-modules-import.json tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
-RUN pnpm install --prod --recursive --offline --filter '@overbookd/api...'
-
 FROM node:24.11.1-alpine
 
 ARG API_VERSION

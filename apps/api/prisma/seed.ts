@@ -1,4 +1,5 @@
 import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { categoriesAndGears } from "./seeders/gears";
 import { permissions } from "./seeders/permissions";
@@ -15,7 +16,12 @@ import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
 
-const prisma = new PrismaClient();
+const url = process.env.DATABASE_URL;
+if (!url) {
+  throw new Error("DATABASE_URL is not defined");
+}
+const adapter = new PrismaPg({ connectionString: url });
+const prisma = new PrismaClient({ adapter });
 
 async function insertOrUpdateCategory(
   name: string,
