@@ -51,7 +51,7 @@ import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-inf
 import {
   BUREAU_CODE,
   HARD_CODE,
-  ORGA_CODE,
+  CA_CODE,
   SOFT_CODE,
   VIEUX_CODE,
 } from "@overbookd/team-constants";
@@ -78,14 +78,14 @@ const allVolunteersDisplayed = computed<boolean>(() => {
 
 const caMembers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
-    const isOrga = volunteer.teams.includes(ORGA_CODE);
+    const isOrga = volunteer.teams.includes(CA_CODE);
     const isBureau = volunteer.teams.includes(BUREAU_CODE);
     return isOrga || isBureau;
   }),
 );
 const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
-    const isNotOrga = !volunteer.teams.includes(ORGA_CODE);
+    const isNotOrga = !volunteer.teams.includes(CA_CODE);
     const isNotBureau = !volunteer.teams.includes(BUREAU_CODE);
     const isHard = volunteer.teams.includes(HARD_CODE);
     return isNotOrga && isNotBureau && isHard;

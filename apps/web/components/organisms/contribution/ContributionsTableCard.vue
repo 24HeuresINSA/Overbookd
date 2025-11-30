@@ -71,7 +71,7 @@ import {
 } from "~/utils/search/search.utils";
 import type { Team } from "@overbookd/team";
 import { keepMembersOf } from "~/utils/search/search-team.utils";
-import { HARD_CODE, ORGA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { HARD_CODE, CA_CODE, VIEUX_CODE } from "@overbookd/team-constants";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { CSVBuilder } from "@overbookd/csv";
 import { Money } from "@overbookd/money";
@@ -82,7 +82,7 @@ const teamStore = useTeamStore();
 
 const FILTER_TEAMS = [
   teamStore.getTeamByCode(HARD_CODE),
-  teamStore.getTeamByCode(ORGA_CODE),
+  teamStore.getTeamByCode(CA_CODE),
   teamStore.getTeamByCode(VIEUX_CODE),
 ].filter((team) => !!team);
 

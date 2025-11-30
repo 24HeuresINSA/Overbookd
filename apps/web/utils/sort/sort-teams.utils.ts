@@ -2,14 +2,14 @@ import { moveAtFirstIndex } from "@overbookd/list";
 import {
   ADMIN_CODE,
   HARD_CODE,
-  ORGA_CODE,
+  CA_CODE,
   SOFT_CODE,
   CONFIANCE_CODE,
 } from "@overbookd/team-constants";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter(
-    (team) => team !== ADMIN_CODE && team !== ORGA_CODE,
+    (team) => team !== ADMIN_CODE && team !== CA_CODE,
   );
 
   const confianceIndex = getTeamIndex(sortedTeams, CONFIANCE_CODE);
