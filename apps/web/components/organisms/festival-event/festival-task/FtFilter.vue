@@ -44,13 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type ReviewStatus,
-  type Reviewer,
-  elec,
-  humain,
-  matos,
-} from "@overbookd/festival-event";
+import type { ReviewStatus, Reviewer } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import {
@@ -60,6 +54,7 @@ import {
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { REVIEWER_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 const route = useRoute();
 const teamStore = useTeamStore();
@@ -75,7 +70,7 @@ onMounted(async () => {
 });
 watch(() => route.query, updateFilters);
 
-const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
+const reviewers: Reviewer<"FT">[] = [HUMAIN, LOG_MATOS, LOG_ELEC];
 type ReviewerTeam = Team & { code: Reviewer<"FT"> };
 const reviewerTeams = computed<ReviewerTeam[]>(() => {
   return reviewers
@@ -84,9 +79,9 @@ const reviewerTeams = computed<ReviewerTeam[]>(() => {
 });
 const reviewStatusLabels = [...reviewStatusLabel.entries()];
 
-const isHumainMember = computed<boolean>(() => userStore.isMemberOf(humain));
+const isHumainMember = computed<boolean>(() => userStore.isMemberOf(HUMAIN));
 const assignableReviewers = computed<User[]>(() =>
-  userStore.volunteers.filter(({ teams }) => teams.includes(humain)),
+  userStore.volunteers.filter(({ teams }) => teams.includes(HUMAIN)),
 );
 
 const updateReviewParams = (

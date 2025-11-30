@@ -1,25 +1,15 @@
 import {
-  BARRIERES,
   Draft,
-  LOG_ELEC,
   FestivalActivity,
   FestivalActivityWithoutStatus,
   Reviewable,
   ReviewableSpecification,
   InquiryRequest,
-  MATOS,
   PreviewDraft,
   PreviewFestivalActivity,
   PreviewReviewable,
   ReviewStatus,
   Reviewer,
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  secu,
-  signa,
   isValidatedReviews,
   isRefusedReviews,
   BaseSignage,
@@ -39,6 +29,15 @@ import {
   COMMENTED,
   NOT_ASKING_TO_REVIEW,
 } from "@overbookd/festival-event-constants";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 type DatabaseReview = {
   team: Reviewer<"FA">;
@@ -177,7 +176,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
 
   private static formatInquiry(activity: DatabaseFestivalActivity) {
     const gears = activity.inquiries
-      .filter((req) => req.catalogItem.category.owner.code === MATOS)
+      .filter((req) => req.catalogItem.category.owner.code === LOG_MATOS)
       .map(this.formatInquiryRequest);
 
     const barriers = activity.inquiries
@@ -211,13 +210,13 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   private static formatReviews(reviews: DatabaseReview[]) {
     if (reviews.length === 0) return {};
     return {
-      humain: this.findReviewStatusByTeam(reviews, humain),
-      signa: this.findReviewStatusByTeam(reviews, signa),
-      barrieres: this.findReviewStatusByTeam(reviews, barrieres),
-      communication: this.findReviewStatusByTeam(reviews, communication),
-      elec: this.findReviewStatusByTeam(reviews, elec),
-      matos: this.findReviewStatusByTeam(reviews, matos),
-      secu: this.findReviewStatusByTeam(reviews, secu),
+      humain: this.findReviewStatusByTeam(reviews, HUMAIN),
+      signa: this.findReviewStatusByTeam(reviews, SIGNA),
+      barrieres: this.findReviewStatusByTeam(reviews, BARRIERES),
+      communication: this.findReviewStatusByTeam(reviews, COMMUNICATION),
+      elec: this.findReviewStatusByTeam(reviews, LOG_ELEC),
+      matos: this.findReviewStatusByTeam(reviews, LOG_MATOS),
+      secu: this.findReviewStatusByTeam(reviews, SECU),
     };
   }
 

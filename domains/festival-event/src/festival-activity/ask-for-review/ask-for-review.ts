@@ -1,16 +1,7 @@
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { CantAskForReview } from "../../common/review.error.js";
 import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
-import {
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  Reviewer,
-  secu,
-  signa,
-} from "../../common/review.js";
+import { Reviewer } from "../../common/review.js";
 import {
   Draft,
   FestivalActivity,
@@ -20,6 +11,15 @@ import {
 import { Adherent } from "../../common/adherent.js";
 import { Notifications } from "../../common/notifications.js";
 import { isDraft, isRefused } from "../../festival-event.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -72,7 +72,13 @@ export class AskForReview {
 }
 
 export function isReviewer(team: string): team is Reviewer<"FA"> {
-  return [barrieres, communication, elec, humain, matos, secu, signa].includes(
-    team,
-  );
+  return [
+    BARRIERES,
+    COMMUNICATION,
+    LOG_ELEC,
+    HUMAIN,
+    LOG_MATOS,
+    SECU,
+    SIGNA,
+  ].includes(team);
 }

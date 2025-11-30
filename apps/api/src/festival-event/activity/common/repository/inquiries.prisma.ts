@@ -1,14 +1,10 @@
-import {
-  BARRIERES,
-  LOG_ELEC,
-  InquiryOwner,
-  MATOS,
-} from "@overbookd/festival-event";
+import { InquiryOwner } from "@overbookd/festival-event";
 import { Gear, Inquiries } from "../festival-activity-common.model";
 import { PrismaService } from "../../../../prisma.service";
 import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
-const owners: InquiryOwner[] = [MATOS, BARRIERES, LOG_ELEC];
+const owners: InquiryOwner[] = [LOG_MATOS, BARRIERES, LOG_ELEC];
 
 type DatabaseWithOwner = {
   category: {
@@ -32,5 +28,5 @@ export class PrismaInquiries implements Inquiries {
 }
 
 function retrieveOwner({ category }: DatabaseWithOwner): InquiryOwner {
-  return owners.find((owner) => owner === category.ownerCode) ?? MATOS;
+  return owners.find((owner) => owner === category.ownerCode) ?? LOG_MATOS;
 }

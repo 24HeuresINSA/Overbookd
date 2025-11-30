@@ -1,13 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Reviewer, elec, humain, matos } from "@overbookd/festival-event";
+import { Reviewer } from "@overbookd/festival-event";
 import {
   ReviewApproval,
   ReviewIgnoreTask,
   ReviewRejection,
 } from "@overbookd/http";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 import { IsEnum, IsString } from "class-validator";
 
-const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
+const reviewers: Reviewer<"FT">[] = [HUMAIN, LOG_MATOS, LOG_ELEC];
 
 export class RejectTaskRequestDto implements ReviewRejection<"FT"> {
   @ApiProperty({ required: true, enum: reviewers })
@@ -34,7 +35,7 @@ export class ApproveTaskRequestDto implements ReviewApproval<"FT"> {
 
 export class IgnoreTaskRequestDto implements ReviewIgnoreTask {
   @ApiProperty({ required: true, enum: reviewers })
-  @IsEnum([elec, matos], {
+  @IsEnum([LOG_ELEC, LOG_MATOS], {
     message: () => "Seule les équipes elec et matos peuvent ignorer une FT",
   })
   team: Reviewer<"FT">;

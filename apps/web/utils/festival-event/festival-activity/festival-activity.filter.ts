@@ -1,14 +1,4 @@
-import {
-  barrieres,
-  communication,
-  elec,
-  type FestivalActivity,
-  humain,
-  matos,
-  type ReviewStatus,
-  secu,
-  signa,
-} from "@overbookd/festival-event";
+import type { FestivalActivity, ReviewStatus } from "@overbookd/festival-event";
 import {
   IN_REVIEW,
   VALIDATED,
@@ -28,6 +18,15 @@ import {
   STATUS_QUERY_PARAM,
   TEAM_QUERY_PARAM,
 } from "../festival-event.constant";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 export type ActivityReviewsFilter = {
   humain?: ReviewStatus<"FA">;
@@ -62,15 +61,15 @@ export class ActivityFilterBuilder {
       query,
       ITEMS_PER_PAGE_QUERY_PARAM,
     );
-    const humainReview = this.extractQueryParamsValue(query, humain);
-    const matosReview = this.extractQueryParamsValue(query, matos);
-    const elecReview = this.extractQueryParamsValue(query, elec);
-    const barrieresReview = this.extractQueryParamsValue(query, barrieres);
-    const signaReview = this.extractQueryParamsValue(query, signa);
-    const secuReview = this.extractQueryParamsValue(query, secu);
+    const humainReview = this.extractQueryParamsValue(query, HUMAIN);
+    const matosReview = this.extractQueryParamsValue(query, LOG_MATOS);
+    const elecReview = this.extractQueryParamsValue(query, LOG_ELEC);
+    const barrieresReview = this.extractQueryParamsValue(query, BARRIERES);
+    const signaReview = this.extractQueryParamsValue(query, SIGNA);
+    const secuReview = this.extractQueryParamsValue(query, SECU);
     const communicationReview = this.extractQueryParamsValue(
       query,
-      communication,
+      COMMUNICATION,
     );
 
     return {
@@ -127,37 +126,37 @@ export class ActivityFilterBuilder {
         const isValid = itemsPerPage && !isNaN(+itemsPerPage);
         return isValid ? { itemsPerPage: +itemsPerPage } : {};
       }
-      case humain: {
+      case HUMAIN: {
         const review = stringifyQueryParam(params.humain);
         const humain = findActivityReviewerStatusByString(review);
         return humain ? { humain } : {};
       }
-      case communication: {
+      case COMMUNICATION: {
         const review = stringifyQueryParam(params.communication);
         const communication = findActivityReviewerStatusByString(review);
         return communication ? { communication } : {};
       }
-      case matos: {
+      case LOG_MATOS: {
         const review = stringifyQueryParam(params.matos);
         const matos = findActivityReviewerStatusByString(review);
         return matos ? { matos } : {};
       }
-      case secu: {
+      case SECU: {
         const review = stringifyQueryParam(params.secu);
         const secu = findActivityReviewerStatusByString(review);
         return secu ? { secu } : {};
       }
-      case signa: {
+      case SIGNA: {
         const review = stringifyQueryParam(params.signa);
         const signa = findActivityReviewerStatusByString(review);
         return signa ? { signa } : {};
       }
-      case barrieres: {
+      case BARRIERES: {
         const review = stringifyQueryParam(params.barrieres);
         const barrieres = findActivityReviewerStatusByString(review);
         return barrieres ? { barrieres } : {};
       }
-      case elec: {
+      case LOG_ELEC: {
         const review = stringifyQueryParam(params.elec);
         const elec = findActivityReviewerStatusByString(review);
         return elec ? { elec } : {};

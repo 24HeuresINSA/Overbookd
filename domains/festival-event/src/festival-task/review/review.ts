@@ -8,14 +8,7 @@ import {
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
 import { FestivalTask, Validated } from "../festival-task.js";
-import {
-  Approval,
-  Rejection,
-  Reviewer,
-  elec,
-  humain,
-  matos,
-} from "../../common/review.js";
+import { Approval, Rejection, Reviewer } from "../../common/review.js";
 import { FestivalTaskKeyEvents } from "../festival-task.event.js";
 import {
   FestivalTaskTranslator,
@@ -34,6 +27,7 @@ import {
   NotAskingToReview,
   ShouldAssignDrive,
 } from "../../common/review.error.js";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export type FestivalTasksForReview = {
   findById(
@@ -89,7 +83,7 @@ class Ignore {
     if (!canIgnoreFestivalTaskAs(team)) throw new CannotIgnoreFestivalTask();
     if (task.reviews[`${team}`] === NOT_ASKING_TO_REVIEW) return task;
 
-    if (team === matos && task.inquiries.length > 0) {
+    if (team === LOG_MATOS && task.inquiries.length > 0) {
       throw new CannotIgnoreFestivalTaskWithInquiryRequests();
     }
 
@@ -152,7 +146,7 @@ export class Review {
       throw new AlreadyApproved(task.id, approval.team, "FT");
     }
 
-    if (approval.team === matos) this.checkInquiryDriveAssignment(task);
+    if (approval.team === LOG_MATOS) this.checkInquiryDriveAssignment(task);
 
     const approved = Approve.from(task, approval);
     const saved = await this.tasks.save(approved);
@@ -194,15 +188,15 @@ function getTeamReview(
   team: Reviewer<"FT">,
 ) {
   switch (team) {
-    case humain:
+    case HUMAIN:
       return reviews.humain;
-    case matos:
+    case LOG_MATOS:
       return reviews.matos;
-    case elec:
+    case LOG_ELEC:
       return reviews.elec;
   }
 }
 
 export function canIgnoreFestivalTaskAs(team: Reviewer<"FT">) {
-  return [elec, matos].includes(team);
+  return [LOG_ELEC, LOG_MATOS].includes(team);
 }

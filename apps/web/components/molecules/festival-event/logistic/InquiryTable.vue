@@ -86,8 +86,6 @@
 import {
   type InquiryRequest,
   type InquiryOwner,
-  BARRIERES,
-  LOG_ELEC,
   type Drive,
   drives,
   type TimeWindow,
@@ -95,6 +93,7 @@ import {
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min } from "~/utils/rules/input.rules";
+import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();

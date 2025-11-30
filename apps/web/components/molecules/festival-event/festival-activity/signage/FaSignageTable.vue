@@ -64,12 +64,12 @@
 import {
   type Signage as FaSignage,
   type SignageCatalogItem,
-  signa,
   type FestivalActivity,
   isDraft,
 } from "@overbookd/festival-event";
 import { APPROVED } from "@overbookd/festival-event-constants";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
+import { SIGNA } from "@overbookd/team-constants";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const faStore = useFestivalActivityStore();
@@ -132,7 +132,7 @@ const removeSignage = (signage: FaSignage) => emit("remove", signage);
 
 const cantLinkCatalogItem = computed<boolean>(() => {
   if (isDraft(selectedActivity.value)) return true;
-  const isSignaMember = useUserStore().isMemberOf(signa);
+  const isSignaMember = useUserStore().isMemberOf(SIGNA);
   const isAlreadyApproved = selectedActivity.value.reviews.signa === APPROVED;
   return !isSignaMember || isAlreadyApproved;
 });

@@ -15,7 +15,8 @@ import {
 import { InReviewFestivalTask } from "./in-review-festival-task.js";
 import { isDraft, isRefused } from "../../festival-event.js";
 import { CantAskForReview } from "../../common/review.error.js";
-import { elec, humain, matos, Reviewer } from "../../common/review.js";
+import { Reviewer } from "../../common/review.js";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export type AskForReviewTasks = {
   findById(
@@ -96,5 +97,5 @@ export class AskForReview {
 }
 
 export function isReviewer(team: string): team is Reviewer<"FT"> {
-  return [humain, matos, elec].includes(team);
+  return [HUMAIN, LOG_MATOS, LOG_ELEC].includes(team);
 }

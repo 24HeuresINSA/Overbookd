@@ -1,10 +1,4 @@
-import {
-  elec,
-  type FestivalTask,
-  humain,
-  matos,
-  type ReviewStatus,
-} from "@overbookd/festival-event";
+import type { FestivalTask, ReviewStatus } from "@overbookd/festival-event";
 import {
   IN_REVIEW,
   VALIDATED,
@@ -25,6 +19,7 @@ import {
   STATUS_QUERY_PARAM,
   TEAM_QUERY_PARAM,
 } from "../festival-event.constant";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export type TaskReviewsFilter = {
   humain?: ReviewStatus<"FT">;
@@ -52,9 +47,9 @@ export class TaskFilterBuilder {
       query,
       ITEMS_PER_PAGE_QUERY_PARAM,
     );
-    const humainReview = this.extractQueryParamsValue(query, humain);
-    const matosReview = this.extractQueryParamsValue(query, matos);
-    const elecReview = this.extractQueryParamsValue(query, elec);
+    const humainReview = this.extractQueryParamsValue(query, HUMAIN);
+    const matosReview = this.extractQueryParamsValue(query, LOG_MATOS);
+    const elecReview = this.extractQueryParamsValue(query, LOG_ELEC);
 
     return {
       ...search,
@@ -109,17 +104,17 @@ export class TaskFilterBuilder {
         const isValid = itemsPerPage && !isNaN(+itemsPerPage);
         return isValid ? { itemsPerPage: +itemsPerPage } : {};
       }
-      case humain: {
+      case HUMAIN: {
         const review = stringifyQueryParam(params.humain);
         const humain = findTaskReviewerStatusByString(review);
         return humain ? { humain } : {};
       }
-      case matos: {
+      case LOG_MATOS: {
         const review = stringifyQueryParam(params.matos);
         const matos = findTaskReviewerStatusByString(review);
         return matos ? { matos } : {};
       }
-      case elec: {
+      case LOG_ELEC: {
         const review = stringifyQueryParam(params.elec);
         const elec = findTaskReviewerStatusByString(review);
         return elec ? { elec } : {};

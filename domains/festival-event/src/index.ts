@@ -48,17 +48,7 @@ export type {
   Notifications,
   Notifyee,
 } from "./common/notifications.js";
-export {
-  humain,
-  communication,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
-  isRefusedReviews,
-  isValidatedReviews,
-} from "./common/review.js";
+export { isRefusedReviews, isValidatedReviews } from "./common/review.js";
 export type {
   ReviewStatus,
   Reviewer,
@@ -99,11 +89,6 @@ export type {
   InquiryWithRequests,
   InquiryOwner,
   WithInquiries,
-} from "./festival-activity/sections/inquiry.js";
-export {
-  MATOS,
-  BARRIERES,
-  LOG_ELEC,
 } from "./festival-activity/sections/inquiry.js";
 
 export type {

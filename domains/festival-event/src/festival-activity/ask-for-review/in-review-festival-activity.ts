@@ -25,16 +25,18 @@ import {
   Reviewer,
   PrivateActivityReviewer,
   PublicActivityReviewer,
-  humain,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
-  communication,
 } from "../../common/review.js";
 import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
 import { Adherent } from "../../common/adherent.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;
@@ -97,14 +99,14 @@ export class ReviewableSpecification {
 }
 
 const COMMON_REVIEWERS: Reviewer<"FA">[] = [
-  humain,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
+  HUMAIN,
+  SIGNA,
+  SECU,
+  LOG_MATOS,
+  LOG_ELEC,
+  BARRIERES,
 ];
-const PUBLIC_REVIEWERS: Reviewer<"FA">[] = [...COMMON_REVIEWERS, communication];
+const PUBLIC_REVIEWERS: Reviewer<"FA">[] = [...COMMON_REVIEWERS, COMMUNICATION];
 
 export class InReviewFestivalActivity implements InReview {
   private constructor(
@@ -223,19 +225,19 @@ export class InReviewFestivalActivity implements InReview {
 
   private hasRejected(reviewer: Reviewer<"FA">): boolean {
     switch (reviewer) {
-      case humain:
+      case HUMAIN:
         return this.previousReviews?.humain === REJECTED;
-      case signa:
+      case SIGNA:
         return this.previousReviews?.signa === REJECTED;
-      case secu:
+      case SECU:
         return this.previousReviews?.secu === REJECTED;
-      case matos:
+      case LOG_MATOS:
         return this.previousReviews?.matos === REJECTED;
-      case elec:
+      case LOG_ELEC:
         return this.previousReviews?.elec === REJECTED;
-      case barrieres:
+      case BARRIERES:
         return this.previousReviews?.barrieres === REJECTED;
-      case communication:
+      case COMMUNICATION:
         return this.previousReviews?.communication === REJECTED;
     }
   }
