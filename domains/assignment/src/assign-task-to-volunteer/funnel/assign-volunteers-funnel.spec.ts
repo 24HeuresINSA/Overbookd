@@ -1,5 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { PERSONNE } from "@overbookd/team-constants";
+import {
+  CONDUCTEUR,
+  CONFIANCE,
+  HARD,
+  PERSONNE,
+  VIEUX,
+} from "@overbookd/team-constants";
 import { WaitingForVolunteer } from "./startup-funnel.js";
 import { InMemoryPlanning } from "./planning.inmemory.js";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory.js";
@@ -26,7 +32,6 @@ import {
   maintenanceToilettes,
 } from "./assign-volunteers-funnel.test-utils.js";
 import { CandidateFactory } from "./candidate.js";
-import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
 import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
