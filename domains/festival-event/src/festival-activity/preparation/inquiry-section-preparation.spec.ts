@@ -411,12 +411,12 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to update the quantity of an inquiry request", () => {
     describe.each`
-      activityName               | activityId       | requestName                               | request                                                                  | group
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], quantity: 5, owner: MATOS }}         | ${"gears"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], quantity: 10, owner: BARRIERES }} | ${"barriers"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}    | ${"electricity"}
-      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], quantity: 5, owner: MATOS }}          | ${"gears"}
-      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}     | ${"electricity"}
+      activityName               | activityId       | requestName                               | request                                                                   | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], quantity: 5, owner: MATOS }}          | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], quantity: 10, owner: BARRIERES }}  | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }} | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], quantity: 5, owner: MATOS }}           | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}  | ${"electricity"}
     `(
       "when updating the quantity of $requestName request in $activityName",
       ({ activityId, request, group }) => {

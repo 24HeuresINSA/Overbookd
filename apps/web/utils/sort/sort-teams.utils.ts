@@ -1,16 +1,8 @@
 import { moveAtFirstIndex } from "@overbookd/list";
-import {
-  ADMIN,
-  HARD,
-  CA,
-  SOFT,
-  CONFIANCE,
-} from "@overbookd/team-constants";
+import { ADMIN, HARD, CA, SOFT, CONFIANCE } from "@overbookd/team-constants";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
-  let sortedTeams = teams.filter(
-    (team) => team !== ADMIN && team !== CA,
-  );
+  let sortedTeams = teams.filter((team) => team !== ADMIN && team !== CA);
 
   const confianceIndex = getTeamIndex(sortedTeams, CONFIANCE);
   if (confianceIndex !== -1) {

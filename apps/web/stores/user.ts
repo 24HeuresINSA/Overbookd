@@ -90,8 +90,7 @@ export const useUserStore = defineStore("user", {
       (team: string): boolean => {
         if (!loggedUser) return false;
         return (
-          loggedUser.teams.includes(ADMIN) ||
-          loggedUser.teams.includes(team)
+          loggedUser.teams.includes(ADMIN) || loggedUser.teams.includes(team)
         );
       },
   },

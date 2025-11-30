@@ -24,7 +24,12 @@ import {
   secu,
   signa,
 } from "../../common/review.js";
-import { BARRIERES, LOG_ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import {
+  BARRIERES,
+  LOG_ELEC,
+  InquiryOwner,
+  MATOS,
+} from "../sections/inquiry.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";

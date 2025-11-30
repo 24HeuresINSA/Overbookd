@@ -256,9 +256,7 @@ const assignableTeams = computed<Team[]>(() => {
   return teamsToAdd.filter((team: Team) => team.code !== ADMIN);
 });
 
-const isHard = computed<boolean>(() =>
-  props.volunteer.teams.includes(HARD),
-);
+const isHard = computed<boolean>(() => props.volunteer.teams.includes(HARD));
 const assignmentPreferenceLabel = computed<string>(() => {
   const assignment = props.volunteer.preference?.assignment;
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;

@@ -48,13 +48,7 @@
 
 <script lang="ts" setup>
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import {
-  BUREAU,
-  HARD,
-  CA,
-  SOFT,
-  VIEUX,
-} from "@overbookd/team-constants";
+import { BUREAU, HARD, CA, SOFT, VIEUX } from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 

@@ -96,11 +96,11 @@ describe("Assign volunteers funnel", () => {
   const candidateFactory = new CandidateFactory(agendas, friends);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities            | breakPeriods
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${PERSONNE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${PERSONNE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${PERSONNE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      volunteerName                  | volunteer            | taskName                          | task                         | team          | candidates             | planning            | availabilities            | breakPeriods
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"} | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({
@@ -662,11 +662,11 @@ describe("Assign volunteers funnel", () => {
       expect(funnel.canFulfillMoreRemainingDemands).toBe(false);
     });
     describe.each`
-      volunteerName                  | volunteer            | team             | expectedLeaAssignment | expectedTatouinAssignment
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${PERSONNE} | ${CONDUCTEUR}         | ${PERSONNE}
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR}    | ${PERSONNE}      | ${CONDUCTEUR}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR}    | ${CONDUCTEUR}         | ${PERSONNE}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${PERSONNE} | ${PERSONNE}      | ${CONDUCTEUR}
+      volunteerName                  | volunteer            | team          | expectedLeaAssignment | expectedTatouinAssignment
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${PERSONNE}   | ${CONDUCTEUR}         | ${PERSONNE}
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR} | ${PERSONNE}           | ${CONDUCTEUR}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR} | ${CONDUCTEUR}         | ${PERSONNE}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${PERSONNE}   | ${PERSONNE}           | ${CONDUCTEUR}
     `(
       "when assign $volunteerName as $team",
       ({

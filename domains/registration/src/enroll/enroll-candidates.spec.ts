@@ -56,9 +56,7 @@ describe("Enroll candidates to a joinable team", () => {
     it(`should list all candidates as ${PERSONNE} members`, async () => {
       await enrollCandidates.apply({ candidates, team });
       candidates.every((candidate) =>
-        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(
-          true,
-        ),
+        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(true),
       );
     });
   });
@@ -76,9 +74,7 @@ describe("Enroll candidates to a joinable team", () => {
       });
       const allCandidates = [...hardCandidates, ...softCandidates];
       allCandidates.every((candidate) =>
-        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(
-          true,
-        ),
+        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(true),
       );
     });
   });

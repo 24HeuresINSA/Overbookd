@@ -263,11 +263,11 @@ describe("Register form", () => {
   describe("teams rules", () => {
     const baseForm = validForm().clearTeams();
     describe.each`
-      teams                                       | valid
-      ${[]}                                       | ${true}
-      ${[BDE]}                               | ${true}
-      ${[TENDRESTIVAL_CODE, TECKOS]}         | ${true}
-      ${[STRASBOURG, TECKOS, BDE]} | ${false}
+      teams                          | valid
+      ${[]}                          | ${true}
+      ${[BDE]}                       | ${true}
+      ${[TENDRESTIVAL_CODE, TECKOS]} | ${true}
+      ${[STRASBOURG, TECKOS, BDE]}   | ${false}
     `("when joining $teams", ({ teams, valid }) => {
       const validity = valid ? "valid" : "invalid";
       it(`should indicate that form is ${validity}`, () => {

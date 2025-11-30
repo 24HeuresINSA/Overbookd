@@ -22,7 +22,12 @@ import {
   Rejection,
 } from "../../common/review.js";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
-import { BARRIERES, LOG_ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import {
+  BARRIERES,
+  LOG_ELEC,
+  InquiryOwner,
+  MATOS,
+} from "../sections/inquiry.js";
 import {
   InDraft,
   AlreadyRejected,
