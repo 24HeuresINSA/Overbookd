@@ -1,25 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  Reviewer,
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  secu,
-  signa,
-} from "@overbookd/festival-event";
+import { Reviewer } from "@overbookd/festival-event";
 import { ReviewRejection } from "@overbookd/http";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 import { IsEnum, IsString } from "class-validator";
 
 const reviewers: Reviewer<"FA">[] = [
-  humain,
-  matos,
-  elec,
-  barrieres,
-  secu,
-  signa,
-  communication,
+  HUMAIN,
+  LOG_MATOS,
+  LOG_ELEC,
+  BARRIERES,
+  SECU,
+  SIGNA,
+  COMMUNICATION,
 ];
 
 export class ApproveActivityRequestDto {

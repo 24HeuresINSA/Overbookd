@@ -48,13 +48,7 @@
 
 <script lang="ts" setup>
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import {
-  BUREAU_CODE,
-  HARD_CODE,
-  ORGA_CODE,
-  SOFT_CODE,
-  VIEUX_CODE,
-} from "@overbookd/team-constants";
+import { BUREAU, HARD, CA, SOFT, VIEUX } from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 
@@ -78,26 +72,26 @@ const allVolunteersDisplayed = computed<boolean>(() => {
 
 const caMembers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
-    const isOrga = volunteer.teams.includes(ORGA_CODE);
-    const isBureau = volunteer.teams.includes(BUREAU_CODE);
+    const isOrga = volunteer.teams.includes(CA);
+    const isBureau = volunteer.teams.includes(BUREAU);
     return isOrga || isBureau;
   }),
 );
 const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
-    const isNotOrga = !volunteer.teams.includes(ORGA_CODE);
-    const isNotBureau = !volunteer.teams.includes(BUREAU_CODE);
-    const isHard = volunteer.teams.includes(HARD_CODE);
+    const isNotOrga = !volunteer.teams.includes(CA);
+    const isNotBureau = !volunteer.teams.includes(BUREAU);
+    const isHard = volunteer.teams.includes(HARD);
     return isNotOrga && isNotBureau && isHard;
   }),
 );
 const eventVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
-  props.volunteers.filter((volunteer) => volunteer.teams.includes(SOFT_CODE)),
+  props.volunteers.filter((volunteer) => volunteer.teams.includes(SOFT)),
 );
 const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
-    const notHard = !volunteer.teams.includes(HARD_CODE);
-    const isSenior = volunteer.teams.includes(VIEUX_CODE);
+    const notHard = !volunteer.teams.includes(HARD);
+    const isSenior = volunteer.teams.includes(VIEUX);
     return notHard && isSenior;
   }),
 );

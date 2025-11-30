@@ -1,5 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import {
+  CONDUCTEUR,
+  CONFIANCE,
+  HARD,
+  PERSONNE,
+  VIEUX,
+} from "@overbookd/team-constants";
 import { WaitingForVolunteer } from "./startup-funnel.js";
 import { InMemoryPlanning } from "./planning.inmemory.js";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory.js";
@@ -26,7 +32,6 @@ import {
   maintenanceToilettes,
 } from "./assign-volunteers-funnel.test-utils.js";
 import { CandidateFactory } from "./candidate.js";
-import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
 import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
@@ -96,11 +101,11 @@ describe("Assign volunteers funnel", () => {
   const candidateFactory = new CandidateFactory(agendas, friends);
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
-      volunteerName                  | volunteer            | taskName                          | task                         | team             | candidates             | planning            | availabilities            | breakPeriods
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${BENEVOLE_CODE} | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"}    | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${BENEVOLE_CODE} | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      volunteerName                  | volunteer            | taskName                          | task                         | team          | candidates             | planning            | availabilities            | breakPeriods
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
+      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"} | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
+      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({
@@ -199,7 +204,7 @@ describe("Assign volunteers funnel", () => {
       });
       it("should select benevole as team assignment", () => {
         const [noelCandidate, ..._candidates] = funnel.candidates;
-        expect(noelCandidate.as).toBe(BENEVOLE_CODE);
+        expect(noelCandidate.as).toBe(PERSONNE);
       });
       it("should indicate it can't fulfill more demands (cause there is no assignable friend for fulfilling it)", () => {
         expect(funnel.canFulfillMoreRemainingDemands).toBe(false);
@@ -208,7 +213,7 @@ describe("Assign volunteers funnel", () => {
         it("should save new assignments", async () => {
           const expectedAssignees = [
             ...rendreKangoo.assignees,
-            { id: noel.volunteer.id, as: BENEVOLE_CODE },
+            { id: noel.volunteer.id, as: PERSONNE },
           ];
           await funnel.assign();
 
@@ -240,7 +245,7 @@ describe("Assign volunteers funnel", () => {
       });
       describe.each`
         team
-        ${BENEVOLE_CODE}
+        ${PERSONNE}
         ${CONDUCTEUR}
       `(
         "when defininig $team assignment for selected volunteer",
@@ -392,8 +397,8 @@ describe("Assign volunteers funnel", () => {
           it("should save them as assignees for the task", async () => {
             const expectedAssignees = [
               ...nettoyerLeQgCatering.assignees,
-              { id: ontaine.volunteer.id, as: BENEVOLE_CODE },
-              { id: tatouin.volunteer.id, as: BENEVOLE_CODE },
+              { id: ontaine.volunteer.id, as: PERSONNE },
+              { id: tatouin.volunteer.id, as: PERSONNE },
             ];
             await multipleCandidate.assign();
 
@@ -609,19 +614,19 @@ describe("Assign volunteers funnel", () => {
         beforeAll(async () => {
           withNoel = await leaSelected.addCandidate();
         });
-        it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
-          expect(withNoel.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+        it(`should auto assign ${PERSONNE} to Noel`, () => {
+          expect(withNoel.candidates.at(1)?.as).toBe(PERSONNE);
         });
         it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
           expect(withNoel.candidates.at(0)?.as).toBe(CONDUCTEUR);
         });
       });
-      describe(`when assigning lea as ${BENEVOLE_CODE}`, () => {
+      describe(`when assigning lea as ${PERSONNE}`, () => {
         let leaAsBenevole: IActAsFunnel;
         beforeAll(async () => {
           const leaToBenevole = {
             volunteer: lea.volunteer.id,
-            team: BENEVOLE_CODE,
+            team: PERSONNE,
           };
           leaAsBenevole = leaSelected.fulfillDemand(leaToBenevole);
         });
@@ -662,11 +667,11 @@ describe("Assign volunteers funnel", () => {
       expect(funnel.canFulfillMoreRemainingDemands).toBe(false);
     });
     describe.each`
-      volunteerName                  | volunteer            | team             | expectedLeaAssignment | expectedTatouinAssignment
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${BENEVOLE_CODE} | ${CONDUCTEUR}         | ${BENEVOLE_CODE}
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR}    | ${BENEVOLE_CODE}      | ${CONDUCTEUR}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR}    | ${CONDUCTEUR}         | ${BENEVOLE_CODE}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${BENEVOLE_CODE} | ${BENEVOLE_CODE}      | ${CONDUCTEUR}
+      volunteerName                  | volunteer            | team          | expectedLeaAssignment | expectedTatouinAssignment
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${PERSONNE}   | ${CONDUCTEUR}         | ${PERSONNE}
+      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR} | ${PERSONNE}           | ${CONDUCTEUR}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR} | ${CONDUCTEUR}         | ${PERSONNE}
+      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${PERSONNE}   | ${PERSONNE}           | ${CONDUCTEUR}
     `(
       "when assign $volunteerName as $team",
       ({
@@ -699,17 +704,17 @@ describe("Assign volunteers funnel", () => {
       beforeAll(async () => {
         noelAsLastCandidate = await funnel.nextCandidate();
       });
-      it(`should auto assign ${BENEVOLE_CODE} to Noel`, () => {
-        expect(noelAsLastCandidate.candidates.at(1)?.as).toBe(BENEVOLE_CODE);
+      it(`should auto assign ${PERSONNE} to Noel`, () => {
+        expect(noelAsLastCandidate.candidates.at(1)?.as).toBe(PERSONNE);
       });
       it(`should auto assign ${CONDUCTEUR} to Lea`, () => {
         expect(noelAsLastCandidate.candidates.at(0)?.as).toBe(CONDUCTEUR);
       });
-      describe(`when trying to assign Lea as ${BENEVOLE_CODE}`, () => {
+      describe(`when trying to assign Lea as ${PERSONNE}`, () => {
         it(`should keep her assigned to ${CONDUCTEUR}`, () => {
           const leaAsBenevole = {
             volunteer: lea.volunteer.id,
-            team: BENEVOLE_CODE,
+            team: PERSONNE,
           };
           const tryingToAssignLeaAsBenevole =
             noelAsLastCandidate.fulfillDemand(leaAsBenevole);

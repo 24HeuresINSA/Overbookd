@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HARD_CODE } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-constants";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import { formatUserPhone } from "~/utils/user/user.utils";
@@ -133,7 +133,7 @@ const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,
 );
 
-const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD));
 const assignmentPreferenceLabel = computed<string>(() => {
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;
   return assignmentPreferenceLabels[preferenceStore.myPreferences.assignment];

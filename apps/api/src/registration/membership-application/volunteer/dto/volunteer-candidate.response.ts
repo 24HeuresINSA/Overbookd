@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { VolunteerCandidate } from "@overbookd/http";
-import { RegistrationTeams, TECKOS_CODE } from "@overbookd/registration";
+import { RegistrationTeams } from "@overbookd/registration";
 import type { IProvidePeriod } from "@overbookd/time";
 import { PeriodResponseDto } from "../../../../common/dto/period.response.dto";
+import { TECKOS } from "@overbookd/team-constants";
 
 export class VolunteerCandidateResponseDto implements VolunteerCandidate {
   @ApiProperty({
@@ -37,7 +38,7 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
 
   @ApiProperty({
     required: true,
-    example: [TECKOS_CODE],
+    example: [TECKOS],
   })
   teams: RegistrationTeams;
 

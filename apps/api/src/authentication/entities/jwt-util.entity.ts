@@ -1,5 +1,5 @@
 import { Permission } from "@overbookd/permission";
-import { ADMIN_CODE } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-constants";
 
 export type JwtPayload = {
   id: number;
@@ -30,7 +30,7 @@ export class JwtUtil implements JwtPayload {
   }
 
   private get isAdmin(): boolean {
-    return this.teams.includes(ADMIN_CODE);
+    return this.teams.includes(ADMIN);
   }
 
   can(permission: Permission): boolean {

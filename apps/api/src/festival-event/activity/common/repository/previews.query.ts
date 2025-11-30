@@ -1,8 +1,9 @@
-import { FestivalActivity, secu } from "@overbookd/festival-event";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { APPROVED, DRAFT } from "@overbookd/festival-event-constants";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_BASE_SIGNAGE } from "./festival-activity.query";
+import { SECU } from "@overbookd/team-constants";
 
 const SELECT_BASE_PREVIEW = {
   id: true,
@@ -72,7 +73,7 @@ export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
 
 export const SHOULD_BE_IN_SECURITY_DASHBOARD = {
   ...IS_NOT_DELETED,
-  reviews: { some: { team: secu, status: APPROVED } as const },
+  reviews: { some: { team: SECU, status: APPROVED } as const },
   //                                                ^ Mandatory to match prisma type on review status
   OR: [{ specialNeed: { not: null } }, { freePass: { gt: 0 } }],
 };

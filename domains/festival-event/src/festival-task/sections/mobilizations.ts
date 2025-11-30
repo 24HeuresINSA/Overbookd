@@ -1,37 +1,38 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
+import {
+  PERSONNE,
+  CONFIANCE,
+  VIEUX,
+  CONDUCTEUR,
+  BDE,
+  KARNA,
+  KFET,
+  STRASBOURG,
+  CVL,
+  TECKOS,
+  TEAM_MONTAGE,
+  SOFT,
+  HARD,
+} from "@overbookd/team-constants";
 import { Volunteer } from "./instructions.js";
 import { TimeWindow } from "../../common/time-window.js";
 import { FestivalTask } from "../festival-task.js";
 
-const benevole = "benevole";
-const hard = "hard";
-const confiance = "confiance";
-const vieux = "vieux";
-const conducteur = "conducteur";
-const bde = "bde";
-const karna = "karna";
-const kfet = "kfet";
-const strasbourg = "strasbourg";
-const soft = "soft";
-const cvl = "cvl";
-const teckos = "teckos";
-const montage = "team-montage";
-
 export const requirableTeams = [
-  benevole,
-  hard,
-  confiance,
-  vieux,
-  conducteur,
-  bde,
-  karna,
-  kfet,
-  strasbourg,
-  cvl,
-  teckos,
-  montage,
+  PERSONNE,
+  HARD,
+  CONFIANCE,
+  VIEUX,
+  CONDUCTEUR,
+  BDE,
+  KARNA,
+  KFET,
+  STRASBOURG,
+  CVL,
+  TECKOS,
+  TEAM_MONTAGE,
 ] as const;
-export const requirableTeamsExtended = [...requirableTeams, soft] as const;
+export const requirableTeamsExtended = [...requirableTeams, SOFT] as const;
 
 export type MobilizationOptions = {
   withConflicts: boolean;

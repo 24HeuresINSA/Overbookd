@@ -1,7 +1,7 @@
 import { Period } from "@overbookd/time";
 import { AssignmentSummary, AssignmentTeam } from "../../assignment.js";
 import { AssignableVolunteer } from "../../assignable-volunteer.js";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-constants";
 
 export class AssignmentSummaryFactory {
   private constructor(
@@ -55,7 +55,7 @@ export class AssignmentTeamFactory {
   private constructor(readonly assignmentTeam: AssignmentTeam) {}
 
   static init(assignmentTeam?: Partial<AssignmentTeam>): AssignmentTeamFactory {
-    const team = assignmentTeam?.team ?? BENEVOLE_CODE;
+    const team = assignmentTeam?.team ?? PERSONNE;
     const demand = assignmentTeam?.demand ?? 1;
     const assigned = assignmentTeam?.assigned ?? 0;
     return new AssignmentTeamFactory({ team, demand, assigned });

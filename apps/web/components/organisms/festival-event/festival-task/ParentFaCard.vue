@@ -52,7 +52,7 @@
       <InquiryTable
         :inquiries="activity.inquiry.all"
         :time-windows="activity.inquiry.timeWindows"
-        :owner="MATOS"
+        :owner="LOG_MATOS"
         disabled
         @link-drive="linkDrive"
       />
@@ -61,11 +61,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type AssignDrive,
-  type FestivalTask,
-  MATOS,
-} from "@overbookd/festival-event";
+import type { AssignDrive, FestivalTask } from "@overbookd/festival-event";
+import { LOG_MATOS } from "@overbookd/team-constants";
 import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();

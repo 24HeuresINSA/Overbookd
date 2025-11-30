@@ -86,8 +86,6 @@
 import {
   type InquiryRequest,
   type InquiryOwner,
-  BARRIERES,
-  ELEC,
   type Drive,
   drives,
   type TimeWindow,
@@ -95,6 +93,7 @@ import {
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min } from "~/utils/rules/input.rules";
+import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();
@@ -151,7 +150,7 @@ const noDataMessage = computed<string>(() => {
   switch (props.owner) {
     case BARRIERES:
       return "Aucune demande de barrières";
-    case ELEC:
+    case LOG_ELEC:
       return "Aucune demande d'équipement électrique";
     default:
       return "Aucune demande de matos";

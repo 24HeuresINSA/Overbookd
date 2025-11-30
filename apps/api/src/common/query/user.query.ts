@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-constants";
 
 export const SELECT_USER_IDENTIFIER = {
   id: true,
@@ -14,7 +14,7 @@ export const SELECT_USER_ASSIGNMENT_PREFERENCE = {
   },
 };
 export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
-  teams: { some: { team: { code: BENEVOLE_CODE } } },
+  teams: { some: { team: { code: PERSONNE } } },
 };
 
 export const SELECT_TEAMS_CODE = {

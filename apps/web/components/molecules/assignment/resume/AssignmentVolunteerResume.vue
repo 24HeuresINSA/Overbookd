@@ -74,7 +74,7 @@
 <script lang="ts" setup>
 import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
 import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
-import { SOFT_CODE } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -98,7 +98,7 @@ const props = defineProps({
 type AssignmentPreferenceIcon = { icon: string; label: string };
 const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
   () => {
-    if (!props.volunteer.teams.includes(SOFT_CODE)) return null;
+    if (!props.volunteer.teams.includes(SOFT)) return null;
     switch (props.volunteer.assignmentPreference) {
       case NO_REST:
         return {

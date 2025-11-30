@@ -21,8 +21,6 @@ import {
   approvedByElecWithNoRequestAtAll,
 } from "./preparation.test-utils.js";
 import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
-import { BARRIERES, ELEC, MATOS } from "../sections/inquiry.js";
-import { barrieres } from "../../common/review.js";
 import {
   MAGASIN,
   LOCAL_24H,
@@ -34,7 +32,6 @@ import {
   CantRemoveLastTimeWindow,
   NotYetInitialized,
 } from "./section-aggregates/inquiries.js";
-import { elec, matos } from "../../common/review.js";
 import { WithInquiries } from "../sections/inquiry.js";
 import {
   AssignDriveInDraft,
@@ -54,11 +51,12 @@ import {
   uneMultiprise3Prises,
 } from "../festival-activity.fake.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 const branleCanisse = {
   slug: "branle-canisse",
   name: "Branle canisse",
-  owner: MATOS,
+  owner: LOG_MATOS,
 } as const;
 
 const heras = {
@@ -70,7 +68,7 @@ const heras = {
 const chargeurUsbC = {
   slug: "chargeur-usb-c",
   name: "Chargeur USB-C",
-  owner: ELEC,
+  owner: LOG_ELEC,
 } as const;
 
 describe("Inquiry section of festival activity preparation", () => {
@@ -367,11 +365,11 @@ describe("Inquiry section of festival activity preparation", () => {
 
     describe.each`
       activityName                  | activityId          | requestName                               | request
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: MATOS }}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: LOG_MATOS }}
       ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], owner: BARRIERES }}
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: ELEC }}
-      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: MATOS }}
-      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: ELEC }}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: LOG_ELEC }}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: LOG_MATOS }}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: LOG_ELEC }}
       ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].name} | ${{ ...baladeEnPoney.inquiry.barriers[0], owner: BARRIERES }}
     `(
       "when adding again $requestName on $activityName",
@@ -411,12 +409,12 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to update the quantity of an inquiry request", () => {
     describe.each`
-      activityName               | activityId       | requestName                               | request                                                                  | group
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], quantity: 5, owner: MATOS }}         | ${"gears"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], quantity: 10, owner: BARRIERES }} | ${"barriers"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: ELEC }}    | ${"electricity"}
-      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], quantity: 5, owner: MATOS }}          | ${"gears"}
-      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: ELEC }}     | ${"electricity"}
+      activityName               | activityId       | requestName                               | request                                                                   | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], quantity: 5, owner: LOG_MATOS }}      | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], quantity: 10, owner: BARRIERES }}  | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }} | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], quantity: 5, owner: LOG_MATOS }}       | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}  | ${"electricity"}
     `(
       "when updating the quantity of $requestName request in $activityName",
       ({ activityId, request, group }) => {
@@ -456,12 +454,12 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove an inquiry request", () => {
     describe.each`
-      activityName               | activityId       | requestName                               | request                              | owner          | group
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"matos"}     | ${"gears"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${escapeGame.inquiry.barriers[0]}    | ${"barrieres"} | ${"barriers"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"elec"}      | ${"electricity"}
-      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"matos"}     | ${"gears"}
-      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"elec"}      | ${"electricity"}
+      activityName               | activityId       | requestName                               | request                              | owner        | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${LOG_MATOS} | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${escapeGame.inquiry.barriers[0]}    | ${BARRIERES} | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${LOG_ELEC}  | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${LOG_MATOS} | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${LOG_ELEC}  | ${"electricity"}
     `(
       "when removing $requestName from $activityName",
       ({ activityId, request, group }) => {
@@ -486,7 +484,7 @@ describe("Inquiry section of festival activity preparation", () => {
           async () =>
             await prepareFestivalActivity.removeInquiryRequest(
               baladeEnPoney.id,
-              { slug: requestSlug, owner: barrieres },
+              { slug: requestSlug, owner: BARRIERES },
             ),
         ).rejects.toThrow(CantRemoveLastRequest);
       });
@@ -495,9 +493,9 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe.each`
     activityName                  | activityId          | inquiryRequestSlug                        | drive             | owner
-    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].slug}        | ${MAGASIN}        | ${matos}
-    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].slug}  | ${LOCAL_24H}      | ${elec}
-    ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].slug} | ${PARKING_EIFFEL} | ${barrieres}
+    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].slug}        | ${MAGASIN}        | ${LOG_MATOS}
+    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].slug}  | ${LOCAL_24H}      | ${LOG_ELEC}
+    ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].slug} | ${PARKING_EIFFEL} | ${BARRIERES}
   `(
     "when $owner member want to assign $drive as drive for $inquiryRequestSlug inquiry in $activityName",
     ({ activityId, inquiryRequestSlug, drive, owner }) => {
@@ -529,19 +527,19 @@ describe("Inquiry section of festival activity preparation", () => {
           await prepareFestivalActivity.assignInquiryToDrive(escapeGame.id, {
             slug: vaubanRequest,
             drive: PARKING_EIFFEL,
-            owner: barrieres,
+            owner: BARRIERES,
           }),
       ).rejects.toThrow(AssignDriveInDraft);
     });
   });
 
   describe.each`
-    activityName                                | activity                       | approvedBy                  | gearsAvailable | barriersAvailable | elecAvailable
-    ${approvedByElec.general.name}              | ${approvedByElec}              | ${[elec]}                   | ${true}        | ${true}           | ${false}
-    ${approvedByBarrieres.general.name}         | ${approvedByBarrieres}         | ${[barrieres]}              | ${true}        | ${false}          | ${true}
-    ${approvedByMatos.general.name}             | ${approvedByMatos}             | ${[matos]}                  | ${false}       | ${true}           | ${true}
-    ${approvedByMatosAndBarrieres.general.name} | ${approvedByMatosAndBarrieres} | ${[matos, barrieres]}       | ${false}       | ${false}          | ${true}
-    ${approvedByAllInquiryOwners.general.name}  | ${approvedByAllInquiryOwners}  | ${[matos, barrieres, elec]} | ${false}       | ${false}          | ${false}
+    activityName                                | activity                       | approvedBy                          | gearsAvailable | barriersAvailable | elecAvailable
+    ${approvedByElec.general.name}              | ${approvedByElec}              | ${[LOG_ELEC]}                       | ${true}        | ${true}           | ${false}
+    ${approvedByBarrieres.general.name}         | ${approvedByBarrieres}         | ${[BARRIERES]}                      | ${true}        | ${false}          | ${true}
+    ${approvedByMatos.general.name}             | ${approvedByMatos}             | ${[LOG_MATOS]}                      | ${false}       | ${true}           | ${true}
+    ${approvedByMatosAndBarrieres.general.name} | ${approvedByMatosAndBarrieres} | ${[LOG_MATOS, BARRIERES]}           | ${false}       | ${false}          | ${true}
+    ${approvedByAllInquiryOwners.general.name}  | ${approvedByAllInquiryOwners}  | ${[LOG_MATOS, BARRIERES, LOG_ELEC]} | ${false}       | ${false}          | ${false}
   `(
     "when $activityName is already approved by $approvedBy",
     ({ activity, gearsAvailable, barriersAvailable, elecAvailable }) => {
@@ -586,7 +584,7 @@ describe("Inquiry section of festival activity preparation", () => {
             async () =>
               await prepareFestivalActivity.initInquiry(activity.id, {
                 timeWindow: saturday14hToSaturday18h,
-                request: { ...troisTables, owner: matos },
+                request: { ...troisTables, owner: LOG_MATOS },
               }),
           ).rejects.toThrow(AlreadyInitialized);
         });
@@ -597,7 +595,7 @@ describe("Inquiry section of festival activity preparation", () => {
           it("should add it to the current requests", async () => {
             const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
               activity.id,
-              { ...troisTables, owner: matos },
+              { ...troisTables, owner: LOG_MATOS },
             );
             expect(inquiry.gears).toContainEqual(troisTables);
           });
@@ -607,7 +605,7 @@ describe("Inquiry section of festival activity preparation", () => {
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...troisTables,
-                  owner: matos,
+                  owner: LOG_MATOS,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
           });
@@ -621,7 +619,7 @@ describe("Inquiry section of festival activity preparation", () => {
               await prepareFestivalActivity.updateInquiryRequest(activity.id, {
                 ...activity.inquiry.gears[0],
                 quantity: 5,
-                owner: matos,
+                owner: LOG_MATOS,
               });
             expect(inquiry.gears).toContainEqual({
               ...activity.inquiry.gears[0],
@@ -637,7 +635,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   {
                     ...activity.inquiry.gears[0],
                     quantity: 5,
-                    owner: matos,
+                    owner: LOG_MATOS,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -651,7 +649,7 @@ describe("Inquiry section of festival activity preparation", () => {
             const { inquiry } =
               await prepareFestivalActivity.removeInquiryRequest(activity.id, {
                 slug: deuxMarteaux.slug,
-                owner: matos,
+                owner: LOG_MATOS,
               });
             expect(inquiry.gears).not.toContainEqual(deuxMarteaux);
           });
@@ -663,7 +661,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   activity.id,
                   {
                     slug: deuxMarteaux.slug,
-                    owner: matos,
+                    owner: LOG_MATOS,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -676,7 +674,7 @@ describe("Inquiry section of festival activity preparation", () => {
           it("should add it to the current requests", async () => {
             const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
               activity.id,
-              { ...quatreHeras, owner: barrieres },
+              { ...quatreHeras, owner: BARRIERES },
             );
             expect(inquiry.barriers).toContainEqual(quatreHeras);
           });
@@ -686,7 +684,7 @@ describe("Inquiry section of festival activity preparation", () => {
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...quatreHeras,
-                  owner: barrieres,
+                  owner: BARRIERES,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
           });
@@ -700,7 +698,7 @@ describe("Inquiry section of festival activity preparation", () => {
               await prepareFestivalActivity.updateInquiryRequest(activity.id, {
                 ...activity.inquiry.barriers[0],
                 quantity: 5,
-                owner: barrieres,
+                owner: BARRIERES,
               });
             expect(inquiry.barriers).toContainEqual({
               ...activity.inquiry.barriers[0],
@@ -716,7 +714,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   {
                     ...activity.inquiry.barriers[0],
                     quantity: 5,
-                    owner: barrieres,
+                    owner: BARRIERES,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -730,7 +728,7 @@ describe("Inquiry section of festival activity preparation", () => {
             const { inquiry } =
               await prepareFestivalActivity.removeInquiryRequest(activity.id, {
                 slug: quinzeVaubans.slug,
-                owner: barrieres,
+                owner: BARRIERES,
               });
             expect(inquiry.barriers).not.toContainEqual(quinzeVaubans);
           });
@@ -742,7 +740,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   activity.id,
                   {
                     slug: quinzeVaubans.slug,
-                    owner: barrieres,
+                    owner: BARRIERES,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -755,7 +753,7 @@ describe("Inquiry section of festival activity preparation", () => {
           it("should add it to the current requests", async () => {
             const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
               activity.id,
-              { ...cinqGuirlandeLED, owner: elec },
+              { ...cinqGuirlandeLED, owner: LOG_ELEC },
             );
             expect(inquiry.electricity).toContainEqual(cinqGuirlandeLED);
           });
@@ -765,7 +763,7 @@ describe("Inquiry section of festival activity preparation", () => {
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...cinqGuirlandeLED,
-                  owner: elec,
+                  owner: LOG_ELEC,
                 }),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
           });
@@ -779,7 +777,7 @@ describe("Inquiry section of festival activity preparation", () => {
               await prepareFestivalActivity.updateInquiryRequest(activity.id, {
                 ...activity.inquiry.electricity[0],
                 quantity: 5,
-                owner: elec,
+                owner: LOG_ELEC,
               });
             expect(inquiry.electricity).toContainEqual({
               ...activity.inquiry.electricity[0],
@@ -795,7 +793,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   {
                     ...activity.inquiry.electricity[0],
                     quantity: 5,
-                    owner: elec,
+                    owner: LOG_ELEC,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -809,7 +807,7 @@ describe("Inquiry section of festival activity preparation", () => {
             const { inquiry } =
               await prepareFestivalActivity.removeInquiryRequest(activity.id, {
                 slug: uneMultiprise3Prises.slug,
-                owner: elec,
+                owner: LOG_ELEC,
               });
             expect(inquiry.electricity).not.toContainEqual(
               uneMultiprise3Prises,
@@ -823,7 +821,7 @@ describe("Inquiry section of festival activity preparation", () => {
                   activity.id,
                   {
                     slug: uneMultiprise3Prises.slug,
-                    owner: elec,
+                    owner: LOG_ELEC,
                   },
                 ),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -834,11 +832,11 @@ describe("Inquiry section of festival activity preparation", () => {
   );
 
   describe.each`
-    activityName                                              | activityId                                      | approvedBy            | timeWindow
-    ${approvedByElecWithoutRequests.general.name}             | ${approvedByElecWithoutRequests.id}             | ${[elec]}             | ${saturday14hToSaturday18h}
-    ${approvedByBarrieresWithoutRequests.general.name}        | ${approvedByBarrieresWithoutRequests.id}        | ${[barrieres]}        | ${saturday14hToSaturday18h}
-    ${approvedByMatosWithoutRequests.general.name}            | ${approvedByMatosWithoutRequests.id}            | ${[matos]}            | ${saturday14hToSaturday18h}
-    ${approvedByMatosAndBarrieresWithoutRequest.general.name} | ${approvedByMatosAndBarrieresWithoutRequest.id} | ${[barrieres, matos]} | ${saturday14hToSaturday18h}
+    activityName                                              | activityId                                      | approvedBy                | timeWindow
+    ${approvedByElecWithoutRequests.general.name}             | ${approvedByElecWithoutRequests.id}             | ${[LOG_ELEC]}             | ${saturday14hToSaturday18h}
+    ${approvedByBarrieresWithoutRequests.general.name}        | ${approvedByBarrieresWithoutRequests.id}        | ${[BARRIERES]}            | ${saturday14hToSaturday18h}
+    ${approvedByMatosWithoutRequests.general.name}            | ${approvedByMatosWithoutRequests.id}            | ${[LOG_MATOS]}            | ${saturday14hToSaturday18h}
+    ${approvedByMatosAndBarrieresWithoutRequest.general.name} | ${approvedByMatosAndBarrieresWithoutRequest.id} | ${[BARRIERES, LOG_MATOS]} | ${saturday14hToSaturday18h}
   `(
     "when $activityName is already approved by $approvedBy",
     ({ activityId, timeWindow }) => {

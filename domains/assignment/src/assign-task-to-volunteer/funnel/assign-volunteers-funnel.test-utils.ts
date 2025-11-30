@@ -1,7 +1,12 @@
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import {
+  CONDUCTEUR,
+  CONFIANCE,
+  HARD,
+  PERSONNE,
+  VIEUX,
+} from "@overbookd/team-constants";
 import { IProvidePeriod, Period } from "@overbookd/time";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
-import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
 import { Assignment } from "../assignment.js";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PlanningEvent } from "./planning";
@@ -86,7 +91,7 @@ export const noel: TestHelper = {
     id: 1,
     firstname: "Noel",
     lastname: "Ertsemud",
-    teams: [BENEVOLE_CODE, VIEUX],
+    teams: [PERSONNE, VIEUX],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -109,7 +114,7 @@ export const lea: TestHelper = {
     id: 2,
     firstname: "Lea",
     lastname: "Mauyno",
-    teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
+    teams: [PERSONNE, VIEUX, CONDUCTEUR],
     assignmentPreference: NO_REST,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -123,7 +128,7 @@ export const ontaine: TestHelper = {
     id: 3,
     firstname: "Ontaine",
     lastname: "Porin",
-    teams: [BENEVOLE_CODE, "catering", CONDUCTEUR],
+    teams: [PERSONNE, "catering", CONDUCTEUR],
     assignmentPreference: FRAGMENTED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -140,7 +145,7 @@ export const tatouin: TestHelper = {
     id: 4,
     firstname: "Tatouin",
     lastname: "Jesoph",
-    teams: [BENEVOLE_CODE, VIEUX, CONDUCTEUR],
+    teams: [PERSONNE, VIEUX, CONDUCTEUR],
     assignmentPreference: STACKED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -159,7 +164,7 @@ export const luce: TestHelper = {
     id: 5,
     firstname: "Luce",
     lastname: "Nehgahredanv",
-    teams: [BENEVOLE_CODE, HARD],
+    teams: [PERSONNE, HARD],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -173,7 +178,7 @@ export const nathan: TestHelper = {
     id: 6,
     firstname: "Nathan",
     lastname: "Trice",
-    teams: [BENEVOLE_CODE, VIEUX, HARD],
+    teams: [PERSONNE, VIEUX, HARD],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -187,7 +192,7 @@ export const bruce: TestHelper = {
     id: 7,
     firstname: "Bruce",
     lastname: "Eel",
-    teams: [BENEVOLE_CODE],
+    teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -201,7 +206,7 @@ export const amanda: TestHelper = {
     id: 8,
     firstname: "Amanda",
     lastname: "Lousie",
-    teams: [BENEVOLE_CODE],
+    teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -215,7 +220,7 @@ export const rachid: TestHelper = {
     id: 9,
     firstname: "Rachid",
     lastname: "Datti",
-    teams: [BENEVOLE_CODE],
+    teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
   },
@@ -231,7 +236,7 @@ export const benevolant: Assignment = {
   mobilizationId: friday06hTo18h.id,
   assignmentId: friday08hTo10h.id,
   name: "Benevolant",
-  demands: [{ team: BENEVOLE_CODE, demand: 1 }],
+  demands: [{ team: PERSONNE, demand: 1 }],
   assignees: [],
 };
 
@@ -244,7 +249,7 @@ export const rendreKangoo: Assignment = {
   name: "Rendre les Kangoos",
   demands: [
     { team: CONDUCTEUR, demand: 1 },
-    { team: BENEVOLE_CODE, demand: 2 },
+    { team: PERSONNE, demand: 2 },
   ],
   assignees: [],
 };
@@ -258,11 +263,11 @@ export const couperDesCarottes: Assignment = {
   name: "Couper les carottes",
   demands: [
     { team: "catering", demand: 1 },
-    { team: BENEVOLE_CODE, demand: 2 },
+    { team: PERSONNE, demand: 2 },
   ],
   assignees: [
-    { id: lea.volunteer.id, as: BENEVOLE_CODE },
-    { id: tatouin.volunteer.id, as: BENEVOLE_CODE },
+    { id: lea.volunteer.id, as: PERSONNE },
+    { id: tatouin.volunteer.id, as: PERSONNE },
   ],
 };
 
@@ -286,7 +291,7 @@ export const scannerLesBillets: Assignment = {
   name: "Scanner les billets",
   demands: [
     { team: CONFIANCE, demand: 1 },
-    { team: BENEVOLE_CODE, demand: 5 },
+    { team: PERSONNE, demand: 5 },
   ],
   assignees: [
     { id: nathan.volunteer.id },
@@ -304,7 +309,7 @@ export const demonterLesJeuxGonflables: Assignment = {
   mobilizationId: saturday18hTo20h.id,
   assignmentId: saturday18hTo20h.id,
   name: "Demonter les jeux gonflables",
-  demands: [{ team: BENEVOLE_CODE, demand: 1 }],
+  demands: [{ team: PERSONNE, demand: 1 }],
   assignees: [{ id: luce.volunteer.id }],
 };
 
@@ -315,7 +320,7 @@ export const nettoyerLeQgCatering: Assignment = {
   mobilizationId: nextTuesday18hTo20h.id,
   assignmentId: nextTuesday18hTo20h.id,
   name: "Nettoyer le QG Catering",
-  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  demands: [{ team: PERSONNE, demand: 3 }],
   assignees: [],
 };
 
@@ -326,7 +331,7 @@ export const barmanBarDeLambiance: Assignment = {
   mobilizationId: friday22hToSaturday00h.id,
   assignmentId: friday22hToSaturday00h.id,
   name: "Barman bar de l'Ambiance",
-  demands: [{ team: BENEVOLE_CODE, demand: 7 }],
+  demands: [{ team: PERSONNE, demand: 7 }],
   assignees: [],
 };
 
@@ -338,7 +343,7 @@ export const collageParcoursF: Assignment = {
   assignmentId: monday08hTo10h.id,
   name: "Collage Parcours F",
   demands: [
-    { team: BENEVOLE_CODE, demand: 1 },
+    { team: PERSONNE, demand: 1 },
     { team: CONDUCTEUR, demand: 1 },
   ],
   assignees: [],
@@ -351,8 +356,8 @@ export const nettoyerEspaceConcessions: Assignment = {
   mobilizationId: sunday02hTo06h.id,
   assignmentId: sunday02hTo06h.id,
   name: "Nettoyer L'espace concessions",
-  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
-  assignees: [{ as: BENEVOLE_CODE, id: nathan.volunteer.id }],
+  demands: [{ team: PERSONNE, demand: 3 }],
+  assignees: [{ as: PERSONNE, id: nathan.volunteer.id }],
 };
 
 export const maintenanceToilettes: Assignment = {
@@ -362,6 +367,6 @@ export const maintenanceToilettes: Assignment = {
   mobilizationId: friday22hToSaturday00h.id,
   assignmentId: friday22hToSaturday00h.id,
   name: "Maintenance Toilettes",
-  demands: [{ team: BENEVOLE_CODE, demand: 3 }],
+  demands: [{ team: PERSONNE, demand: 3 }],
   assignees: [],
 };

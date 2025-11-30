@@ -4,6 +4,7 @@ import {
   VolunteerWithAssignments,
   VolunteerWithFriendFilter,
 } from "./assign-volunteer-to-task.js";
+import { HARD, VIEUX } from "@overbookd/team-constants";
 
 const friday08hTo10h = Period.init({
   start: new Date("2022-07-01T08:00:00Z"),
@@ -23,16 +24,18 @@ const noel: VolunteerWithFriendFilter = {
   firstname: "Noel",
   lastname: "Ertsemud",
   charisma: 1000,
-  teams: ["hard", "comsa"],
+  teams: [HARD, "comsa"],
   hasAtLeastOneFriend: false,
+  assignmentPreference: "NO_PREF",
 };
 const lea: VolunteerWithFriendFilter = {
   id: 2,
   firstname: "Lea",
   lastname: "Mouyno",
   charisma: 0,
-  teams: ["vieux"],
+  teams: [VIEUX],
   hasAtLeastOneFriend: false,
+  assignmentPreference: "NO_PREF",
 };
 
 export const noelAssignee: VolunteerWithAssignments = {

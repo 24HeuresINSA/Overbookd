@@ -79,7 +79,7 @@
           <InquiryTable
             :inquiries="inquiry.gears"
             :time-windows="inquiry.timeWindows"
-            :owner="MATOS"
+            :owner="LOG_MATOS"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
             @update="updateInquiry"
@@ -94,7 +94,7 @@
           <InquiryTable
             :inquiries="inquiry.electricity"
             :time-windows="inquiry.timeWindows"
-            :owner="ELEC"
+            :owner="LOG_ELEC"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
             @update="updateInquiry"
@@ -129,14 +129,12 @@
 import {
   type FestivalActivity,
   type InquiryRequest,
-  MATOS,
-  ELEC,
-  BARRIERES,
   type TimeWindow,
   type AssignDrive,
   isDraft,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 import type { IProvidePeriod } from "@overbookd/time";
 
 const faStore = useFestivalActivityStore();

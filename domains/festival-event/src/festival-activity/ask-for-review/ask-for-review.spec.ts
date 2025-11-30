@@ -6,16 +6,7 @@ import {
   READY_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import {
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  Reviewer,
-  secu,
-  signa,
-} from "../../common/review.js";
+import { Reviewer } from "../../common/review.js";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { Notifications } from "../../common/notifications.js";
@@ -39,6 +30,15 @@ import { InMemoryNotifications } from "./notifications.inmemory.js";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import { george, lea } from "../festival-activity.fake.js";
 import { CantAskForReview } from "../../common/review.error.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;
@@ -98,34 +98,37 @@ describe("Festival Activity - ask for review", () => {
           const inReviewFa = await askForReview.from(pcSecurite.id, lea);
 
           const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-          const barrieresNotification = { team: barrieres, event };
+          const barrieresNotification = { team: BARRIERES, event };
 
           expect(notifications.entries).toHaveLength(6);
           expect(notifications.entries).toContainEqual({
-            team: humain,
+            team: HUMAIN,
             event,
           });
           expect(notifications.entries).toContainEqual({
-            team: signa,
+            team: SIGNA,
             event,
           });
-          expect(notifications.entries).toContainEqual({ team: secu, event });
+          expect(notifications.entries).toContainEqual({ team: SECU, event });
           expect(notifications.entries).toContainEqual({
-            team: matos,
+            team: LOG_MATOS,
             event,
           });
-          expect(notifications.entries).toContainEqual({ team: elec, event });
+          expect(notifications.entries).toContainEqual({
+            team: LOG_ELEC,
+            event,
+          });
           expect(notifications.entries).toContainEqual(barrieresNotification);
         });
         it.each`
           team             | status
-          ${communication} | ${NOT_ASKING_TO_REVIEW}
-          ${humain}        | ${REVIEWING}
-          ${signa}         | ${REVIEWING}
-          ${secu}          | ${REVIEWING}
-          ${matos}         | ${REVIEWING}
-          ${elec}          | ${REVIEWING}
-          ${barrieres}     | ${REVIEWING}
+          ${COMMUNICATION} | ${NOT_ASKING_TO_REVIEW}
+          ${HUMAIN}        | ${REVIEWING}
+          ${SIGNA}         | ${REVIEWING}
+          ${SECU}          | ${REVIEWING}
+          ${LOG_MATOS}     | ${REVIEWING}
+          ${LOG_ELEC}      | ${REVIEWING}
+          ${BARRIERES}     | ${REVIEWING}
         `("should explain $team is $status", async ({ team, status }) => {
           const inReviewFa = await askForReview.from(pcSecurite.id, lea);
           if (!isReviewer(team)) throw new Error();
@@ -140,13 +143,13 @@ describe("Festival Activity - ask for review", () => {
               id: inReviewFa.id,
               name: inReviewFa.general.name,
             };
-            const communicationNotification = { team: communication, event };
-            const humainNotification = { team: humain, event };
-            const signaNotification = { team: signa, event };
-            const secuNotification = { team: secu, event };
-            const matosNotification = { team: matos, event };
-            const elecNotification = { team: elec, event };
-            const barrieresNotification = { team: barrieres, event };
+            const communicationNotification = { team: COMMUNICATION, event };
+            const humainNotification = { team: HUMAIN, event };
+            const signaNotification = { team: SIGNA, event };
+            const secuNotification = { team: SECU, event };
+            const matosNotification = { team: LOG_MATOS, event };
+            const elecNotification = { team: LOG_ELEC, event };
+            const barrieresNotification = { team: BARRIERES, event };
 
             expect(notifications.entries).toHaveLength(7);
             expect(notifications.entries).toContainEqual(
@@ -161,13 +164,13 @@ describe("Festival Activity - ask for review", () => {
           });
           it.each`
             team             | status
-            ${communication} | ${REVIEWING}
-            ${humain}        | ${REVIEWING}
-            ${signa}         | ${REVIEWING}
-            ${secu}          | ${REVIEWING}
-            ${matos}         | ${REVIEWING}
-            ${elec}          | ${REVIEWING}
-            ${barrieres}     | ${REVIEWING}
+            ${COMMUNICATION} | ${REVIEWING}
+            ${HUMAIN}        | ${REVIEWING}
+            ${SIGNA}         | ${REVIEWING}
+            ${SECU}          | ${REVIEWING}
+            ${LOG_MATOS}     | ${REVIEWING}
+            ${LOG_ELEC}      | ${REVIEWING}
+            ${BARRIERES}     | ${REVIEWING}
           `(
             "should explain $team is concern with review",
             async ({ team, status }) => {
@@ -189,25 +192,28 @@ describe("Festival Activity - ask for review", () => {
           expect(notifications.entries).toHaveLength(7);
           const event = { id: inReviewFa.id, name: inReviewFa.general.name };
           expect(notifications.entries).toContainEqual({
-            team: communication,
+            team: COMMUNICATION,
             event,
           });
           expect(notifications.entries).toContainEqual({
-            team: humain,
+            team: HUMAIN,
             event,
           });
           expect(notifications.entries).toContainEqual({
-            team: signa,
+            team: SIGNA,
             event,
           });
-          expect(notifications.entries).toContainEqual({ team: secu, event });
+          expect(notifications.entries).toContainEqual({ team: SECU, event });
           expect(notifications.entries).toContainEqual({
-            team: matos,
+            team: LOG_MATOS,
             event,
           });
-          expect(notifications.entries).toContainEqual({ team: elec, event });
           expect(notifications.entries).toContainEqual({
-            team: barrieres,
+            team: LOG_ELEC,
+            event,
+          });
+          expect(notifications.entries).toContainEqual({
+            team: BARRIERES,
             event,
           });
         });
@@ -360,8 +366,8 @@ describe("Festival Activity - ask for review", () => {
   describe("when asking a review for a refused festival activity", () => {
     describe.each`
       activityName               | activity      | rejectors
-      ${escapeGame.general.name} | ${escapeGame} | ${[communication, secu, humain]}
-      ${bubbleFoot.general.name} | ${bubbleFoot} | ${[barrieres, elec]}
+      ${escapeGame.general.name} | ${escapeGame} | ${[COMMUNICATION, SECU, HUMAIN]}
+      ${bubbleFoot.general.name} | ${bubbleFoot} | ${[BARRIERES, LOG_ELEC]}
     `(
       "when $activityName was rejected by $rejectors",
       ({ activity, rejectors }) => {

@@ -54,7 +54,7 @@ import {
 } from "../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
 import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
-import { ADMIN_CODE } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-constants";
 
 @Injectable()
 export class UserService {
@@ -240,7 +240,7 @@ export class UserService {
   }
 
   private canManageAdmins(teams: string[], author: JwtUtil) {
-    return !teams.includes(ADMIN_CODE) || author.can(MANAGE_ADMINS);
+    return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
   }
 
   async getVolunteerAssignmentStats(

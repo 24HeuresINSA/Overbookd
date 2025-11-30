@@ -10,13 +10,13 @@ import {
   PrepareInquiryRequestUpdating,
 } from "../prepare-festival-activity.model.js";
 import { AssignDrive } from "../../../common/inquiry-request.js";
-import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry.js";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
 import { FestivalTaskError } from "../../../festival-task/festival-task.error.js";
 import {
   InquiryAlreadyExists,
   InquiryNotFound,
 } from "../../../common/inquiry-request.error.js";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
@@ -107,7 +107,7 @@ export class Inquiries<
 
   addRequest({ owner, ...request }: PrepareInquiryRequestCreation) {
     switch (owner) {
-      case MATOS:
+      case LOG_MATOS:
         return new Inquiries(
           this.timeWindows,
           this.gears.add(request),
@@ -122,7 +122,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,
@@ -134,7 +134,7 @@ export class Inquiries<
 
   updateRequest({ owner, ...request }: PrepareInquiryRequestUpdating) {
     switch (owner) {
-      case MATOS:
+      case LOG_MATOS:
         return new Inquiries(
           this.timeWindows,
           this.gears.update(request),
@@ -149,7 +149,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,
@@ -197,7 +197,7 @@ export class Inquiries<
 
   assignDrive({ owner, ...assign }: LinkInquiryDrive) {
     switch (owner) {
-      case MATOS:
+      case LOG_MATOS:
         return new Inquiries(
           this.timeWindows,
           this.gears.assignDrive(assign),
@@ -212,7 +212,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,

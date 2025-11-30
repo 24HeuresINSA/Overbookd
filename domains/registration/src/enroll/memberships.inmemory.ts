@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-constants";
 import { Memberships, JoinedTeam, Candidate } from "./enroll-candidates";
 import { JoinableTeam } from "./joinable-team";
 
@@ -7,7 +7,7 @@ export class InMemoryMemberships implements Memberships {
     private readonly memberships: Map<JoinedTeam, Candidate[]> = new Map(),
   ) {}
 
-  join(teams: [JoinableTeam, typeof BENEVOLE_CODE]): {
+  join(teams: [JoinableTeam, typeof PERSONNE]): {
     as: (candidates: Candidate[]) => Promise<void>;
   } {
     return {

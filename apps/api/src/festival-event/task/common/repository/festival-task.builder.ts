@@ -8,9 +8,6 @@ import {
   DraftWithoutConflicts,
   ReviewStatus,
   Reviewer,
-  humain,
-  elec,
-  matos,
   Adherent,
   InReviewSpecification,
   isRefusedReviews,
@@ -35,6 +32,7 @@ import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
 import { DatabaseAssignment, DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry.query";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 type VisualizeFestivalTask<
   Task extends FestivalTaskWithoutConflicts = FestivalTaskWithoutConflicts,
@@ -175,9 +173,9 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
   private static formatReviews(reviews: DatabaseReview[]) {
     if (reviews.length === 0) return {};
     return {
-      humain: this.findReviewStatusByTeam(reviews, humain),
-      elec: this.findReviewStatusByTeam(reviews, elec),
-      matos: this.findReviewStatusByTeam(reviews, matos),
+      humain: this.findReviewStatusByTeam(reviews, HUMAIN),
+      elec: this.findReviewStatusByTeam(reviews, LOG_ELEC),
+      matos: this.findReviewStatusByTeam(reviews, LOG_MATOS),
     };
   }
 

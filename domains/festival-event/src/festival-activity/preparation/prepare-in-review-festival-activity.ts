@@ -15,16 +15,7 @@ import { FestivalActivity, Reviewable } from "../festival-activity.js";
 import { isValidatedReviews } from "../../common/review.js";
 import { Reviews } from "../../common/review.js";
 import { isRefusedReviews } from "../../common/review.js";
-import {
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  secu,
-  signa,
-} from "../../common/review.js";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import { InquiryOwner } from "../sections/inquiry.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";
@@ -63,6 +54,15 @@ import {
 import { LocationIsRequired, Signages } from "./section-aggregates/signages.js";
 import { isPrivate } from "../sections/general.js";
 import { AlreadyApprovedBy } from "../../common/review.error.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {
@@ -90,7 +90,7 @@ export const PrepareError = {
   TimeWindowNotFound,
 };
 
-type GeneralReviewer = typeof humain | typeof communication;
+type GeneralReviewer = typeof HUMAIN | typeof COMMUNICATION;
 
 class General {
   private constructor(private readonly general: Reviewable["general"]) {}
@@ -104,9 +104,9 @@ class General {
     reviews: Reviews<"FA">,
   ): boolean {
     switch (reviewer) {
-      case communication:
+      case COMMUNICATION:
         return reviews.communication === APPROVED;
-      case humain:
+      case HUMAIN:
         return reviews.humain === APPROVED;
     }
   }
@@ -210,7 +210,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
 
   private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {
     const { reviews, general: generalData } = this.activity;
-    const defaultReviewer = generalData.toPublish ? communication : humain;
+    const defaultReviewer = generalData.toPublish ? COMMUNICATION : HUMAIN;
     const reviewer = askingReviewer ?? defaultReviewer;
     const general = General.init(generalData);
 
@@ -220,7 +220,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   addGeneralTimeWindow(period: IProvidePeriod): Reviewable {
-    this.checkIfGeneralAlreadyApproved(humain);
+    this.checkIfGeneralAlreadyApproved(HUMAIN);
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).add(period).entries;
@@ -233,7 +233,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     id: TimeWindow["id"],
     period: IProvidePeriod,
   ): Reviewable {
-    this.checkIfGeneralAlreadyApproved(humain);
+    this.checkIfGeneralAlreadyApproved(HUMAIN);
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).update(id, period).entries;
@@ -243,7 +243,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
-    this.checkIfGeneralAlreadyApproved(humain);
+    this.checkIfGeneralAlreadyApproved(HUMAIN);
 
     const currentGeneral = this.activity.general;
     const timeWindowsAggregate = TimeWindows.build(currentGeneral.timeWindows);
@@ -272,7 +272,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfInChargeAlreadyApproved() {
     const isValidated = this.activity.reviews.humain === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([humain], "FA");
+      throw new AlreadyApprovedBy([HUMAIN], "FA");
     }
   }
 
@@ -316,7 +316,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSignaAlreadyApproved() {
     const isValidated = this.activity.reviews.signa === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([signa], "FA");
+      throw new AlreadyApprovedBy([SIGNA], "FA");
     }
   }
 
@@ -373,7 +373,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSecurityAlreadyApproved() {
     const isValidated = this.activity.reviews.secu === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([secu], "FA");
+      throw new AlreadyApprovedBy([SECU], "FA");
     }
   }
 
@@ -386,7 +386,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSupplyAlreadyApproved() {
     const isValidated = this.activity.reviews.elec === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([elec], "FA");
+      throw new AlreadyApprovedBy([LOG_ELEC], "FA");
     }
   }
 
@@ -472,8 +472,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfHasImpactOnApprovedRequests() {
     type ListAndOwner = [InquiryRequest[], InquiryOwner];
 
-    const elec: ListAndOwner = [this.activity.inquiry.electricity, ELEC];
-    const gear: ListAndOwner = [this.activity.inquiry.gears, MATOS];
+    const elec: ListAndOwner = [this.activity.inquiry.electricity, LOG_ELEC];
+    const gear: ListAndOwner = [this.activity.inquiry.gears, LOG_MATOS];
     const barrier: ListAndOwner = [this.activity.inquiry.barriers, BARRIERES];
 
     const hasImpact = [elec, gear, barrier].some(([request, owner]) => {
@@ -502,15 +502,15 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private isInquiryApprovedBy(owner: InquiryOwner | undefined): ApproveReducer {
     const hasElecApproved: ApproveReducer = {
       approved: this.activity.reviews.elec === APPROVED,
-      teams: [elec],
+      teams: [LOG_ELEC],
     };
     const hasMatosApproved: ApproveReducer = {
       approved: this.activity.reviews.matos === APPROVED,
-      teams: [matos],
+      teams: [LOG_MATOS],
     };
     const hasBarrierersApproved: ApproveReducer = {
       approved: this.activity.reviews.barrieres === APPROVED,
-      teams: [barrieres],
+      teams: [BARRIERES],
     };
     const reviews = [hasBarrierersApproved, hasElecApproved, hasMatosApproved];
     switch (owner) {
@@ -526,11 +526,11 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
           },
           { approved: false, teams: [] },
         );
-      case matos:
+      case LOG_MATOS:
         return hasMatosApproved;
-      case elec:
+      case LOG_ELEC:
         return hasElecApproved;
-      case barrieres:
+      case BARRIERES:
         return hasBarrierersApproved;
     }
   }

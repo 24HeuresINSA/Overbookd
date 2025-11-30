@@ -6,7 +6,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { Adherent } from "../../common/adherent.js";
 import { WaitingForReview } from "../../common/notifications.js";
-import { Reviewer, humain, matos, elec } from "../../common/review.js";
+import { Reviewer } from "../../common/review.js";
 import {
   Draft,
   FestivalActivity,
@@ -20,6 +20,7 @@ import {
   InReviewSpecification,
   WithoutStatus,
 } from "./in-review-specification.js";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 const NO_SUPPLY_REQUEST_TASK_REVIEWS = {
   elec: NOT_ASKING_TO_REVIEW,
@@ -33,8 +34,11 @@ const TASK_WITH_SUPPLY_REQUEST_REVIEWS = {
   humain: REVIEWING,
 } as const;
 
-const COMMON_REVIEWERS: Reviewer<"FT">[] = [humain, matos];
-const SUPPLY_REQUEST_REVIEWERS: Reviewer<"FT">[] = [...COMMON_REVIEWERS, elec];
+const COMMON_REVIEWERS: Reviewer<"FT">[] = [HUMAIN, LOG_MATOS];
+const SUPPLY_REQUEST_REVIEWERS: Reviewer<"FT">[] = [
+  ...COMMON_REVIEWERS,
+  LOG_ELEC,
+];
 
 export class InReviewFestivalTask {
   private constructor(
@@ -107,11 +111,11 @@ export class InReviewFestivalTask {
 
   private hasRefused(reviewer: Reviewer<"FT">) {
     switch (reviewer) {
-      case humain:
+      case HUMAIN:
         return this.previousReview?.humain === REJECTED;
-      case matos:
+      case LOG_MATOS:
         return this.previousReview?.matos === REJECTED;
-      case elec:
+      case LOG_ELEC:
         return this.previousReview?.elec === REJECTED;
     }
   }

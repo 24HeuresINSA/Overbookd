@@ -1,8 +1,8 @@
-import { HARD_CODE, SOFT_CODE } from "@overbookd/team-constants";
+import { HARD, SOFT } from "@overbookd/team-constants";
 
-export type JoinableTeam = typeof SOFT_CODE | typeof HARD_CODE;
+export type JoinableTeam = typeof SOFT | typeof HARD;
 
 export const joinableTeams: Record<string, JoinableTeam> = {
-  SOFT_CODE,
-  HARD_CODE,
+  SOFT,
+  HARD,
 };

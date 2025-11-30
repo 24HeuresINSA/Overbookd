@@ -1,6 +1,7 @@
-import { ReviewerStat, Reviewers, humain } from "@overbookd/festival-event";
+import { ReviewerStat, Reviewers } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
+import { HUMAIN } from "@overbookd/team-constants";
 
 export class PrismaReviewers implements Reviewers {
   constructor(private readonly prisma: PrismaService) {}
@@ -16,7 +17,7 @@ export class PrismaReviewers implements Reviewers {
       where: {
         teams: {
           some: {
-            team: { code: humain },
+            team: { code: HUMAIN },
           },
         },
       },

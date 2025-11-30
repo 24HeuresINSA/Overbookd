@@ -118,7 +118,7 @@ import {
   isAssignmentPreference,
   type AssignmentPreferenceType,
 } from "@overbookd/preference";
-import { HARD_CODE } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-constants";
 import { formatLocalDate } from "@overbookd/time";
 import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preference";
 import {
@@ -172,7 +172,7 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   preferenceStore.updatePlanningPreference({ paperPlanning });
 };
 
-const isHard = computed<boolean>(() => userStore.isMemberOf(HARD_CODE));
+const isHard = computed<boolean>(() => userStore.isMemberOf(HARD));
 const selectableAssignmentPreferenceLabels = computed<
   Record<AssignmentPreferenceType, string>
 >(() => {

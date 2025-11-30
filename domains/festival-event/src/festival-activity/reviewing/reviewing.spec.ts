@@ -7,15 +7,6 @@ import {
 } from "@overbookd/festival-event-constants";
 import { getFactory } from "../festival-activity.factory.js";
 import {
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  secu,
-  signa,
-} from "../../common/review.js";
-import {
   BACKLINE,
   CONTENEUR_SCENE_PULSE,
   LOCAL_24H,
@@ -46,6 +37,15 @@ import {
 } from "../../common/review.error.js";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory.js";
 import { Reviewable } from "../festival-activity.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 const factory = getFactory();
 
@@ -145,23 +145,23 @@ describe("Approve festival activity", () => {
   });
   describe.each`
     team             | festivalActivityName                        | festivalActivityId                | history                                | approver
-    ${secu}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
-    ${secu}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
-    ${matos}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
-    ${matos}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
-    ${matos}         | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${withInvalidBarrierInquiries.history} | ${lea}
-    ${matos}         | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
-    ${humain}        | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
-    ${humain}        | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
-    ${elec}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
-    ${elec}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
-    ${elec}          | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
-    ${barrieres}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
-    ${barrieres}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
-    ${barrieres}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${noel}
-    ${signa}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
-    ${signa}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
-    ${communication} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
+    ${SECU}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
+    ${SECU}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
+    ${LOG_MATOS}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
+    ${LOG_MATOS}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
+    ${LOG_MATOS}     | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${withInvalidBarrierInquiries.history} | ${lea}
+    ${LOG_MATOS}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
+    ${HUMAIN}        | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
+    ${HUMAIN}        | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
+    ${LOG_ELEC}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
+    ${LOG_ELEC}      | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
+    ${LOG_ELEC}      | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
+    ${BARRIERES}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
+    ${BARRIERES}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
+    ${BARRIERES}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${noel}
+    ${SIGNA}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
+    ${SIGNA}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
+    ${COMMUNICATION} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
   `(
     "when approving $festivalActivityName as $team member",
     ({ team, festivalActivityId, history, approver }) => {
@@ -193,10 +193,10 @@ describe("Approve festival activity", () => {
   );
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
-      await reviewing.approve(extremJump.id, secu, noel);
+      await reviewing.approve(extremJump.id, SECU, noel);
       const festivalActivity = await reviewing.approve(
         extremJump.id,
-        communication,
+        COMMUNICATION,
         george,
       );
       expect(festivalActivity.reviews.secu).toBe(APPROVED);
@@ -207,7 +207,7 @@ describe("Approve festival activity", () => {
     it("should indicate activity already approved", async () => {
       expect(
         async () =>
-          await reviewing.approve(alreadyApprovedByHumain.id, humain, george),
+          await reviewing.approve(alreadyApprovedByHumain.id, HUMAIN, george),
       ).rejects.toThrow(AlreadyApproved);
     });
   });
@@ -215,15 +215,15 @@ describe("Approve festival activity", () => {
     it("should indicate that communication is not asking to review it", async () => {
       expect(
         async () =>
-          await reviewing.approve(privateActivity.id, communication, george),
+          await reviewing.approve(privateActivity.id, COMMUNICATION, george),
       ).rejects.toThrow(NotAskingToReview);
     });
   });
   describe.each`
     activityName                                    | activityId                            | reviewer     | approver
-    ${withInvalidGearInquiries.general.name}        | ${withInvalidGearInquiries.id}        | ${matos}     | ${lea}
-    ${withInvalidElectricityInquiries.general.name} | ${withInvalidElectricityInquiries.id} | ${elec}      | ${lea}
-    ${withInvalidBarrierInquiries.general.name}     | ${withInvalidBarrierInquiries.id}     | ${barrieres} | ${noel}
+    ${withInvalidGearInquiries.general.name}        | ${withInvalidGearInquiries.id}        | ${LOG_MATOS} | ${lea}
+    ${withInvalidElectricityInquiries.general.name} | ${withInvalidElectricityInquiries.id} | ${LOG_ELEC}  | ${lea}
+    ${withInvalidBarrierInquiries.general.name}     | ${withInvalidBarrierInquiries.id}     | ${BARRIERES} | ${noel}
   `(
     "when trying to approve $activityName even with not assigned to drive inquiries as $reviewer",
     ({ activityId, reviewer, approver }) => {
@@ -244,7 +244,7 @@ describe("Approve festival activity", () => {
     ({ activityId, approver }) => {
       it("should indicate that signages should been linked to a catalog item", async () => {
         expect(
-          async () => await reviewing.approve(activityId, signa, approver.id),
+          async () => await reviewing.approve(activityId, SIGNA, approver.id),
         ).rejects.toThrow(ShouldLinkCatalogItem);
       });
     },
@@ -252,8 +252,8 @@ describe("Approve festival activity", () => {
 
   describe.each`
     activityName                                             | activityId                                     | reviewer         | approver
-    ${privateWithAllApprovedExceptSecurity.general.name}     | ${privateWithAllApprovedExceptSecurity.id}     | ${secu}          | ${noel}
-    ${publicWithAllApprovedExceptCommunication.general.name} | ${publicWithAllApprovedExceptCommunication.id} | ${communication} | ${george}
+    ${privateWithAllApprovedExceptSecurity.general.name}     | ${privateWithAllApprovedExceptSecurity.id}     | ${SECU}          | ${noel}
+    ${publicWithAllApprovedExceptCommunication.general.name} | ${publicWithAllApprovedExceptCommunication.id} | ${COMMUNICATION} | ${george}
   `(
     "when $secu approved $activityName",
     ({ activityId, reviewer, approver }) => {
@@ -290,19 +290,19 @@ describe("Reject festival activity", () => {
   });
   describe.each`
     team             | festivalActivityName             | festivalActivityId     | history                     | rejector  | reason
-    ${secu}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des AS"}
-    ${secu}          | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des AS"}
-    ${matos}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut du matos"}
-    ${matos}         | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut du matos"}
-    ${humain}        | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Les horaires ne sont pas pendant la manif"}
-    ${humain}        | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Les horaires ne sont pas pendant la manif"}
-    ${elec}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut des multiprises"}
-    ${elec}          | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut des multiprises"}
-    ${barrieres}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des heras"}
-    ${barrieres}     | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des heras"}
-    ${signa}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Ca manque de panneau"}
-    ${signa}         | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Ca manque de panneau"}
-    ${communication} | ${extremJump.general.name}       | ${extremJump.id}       | ${extremJump.history}       | ${george} | ${"Il faut une photo au format paysage"}
+    ${SECU}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des AS"}
+    ${SECU}          | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des AS"}
+    ${LOG_MATOS}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut du matos"}
+    ${LOG_MATOS}     | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut du matos"}
+    ${HUMAIN}        | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${HUMAIN}        | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${LOG_ELEC}      | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut des multiprises"}
+    ${LOG_ELEC}      | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut des multiprises"}
+    ${BARRIERES}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des heras"}
+    ${BARRIERES}     | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des heras"}
+    ${SIGNA}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Ca manque de panneau"}
+    ${SIGNA}         | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Ca manque de panneau"}
+    ${COMMUNICATION} | ${extremJump.general.name}       | ${extremJump.id}       | ${extremJump.history}       | ${george} | ${"Il faut une photo au format paysage"}
   `(
     "when rejecting $festivalActivityName as $team member",
     ({ team, festivalActivityId, rejector, reason, history }) => {
@@ -337,12 +337,12 @@ describe("Reject festival activity", () => {
   describe("when rejecting several times from different teams", () => {
     it("should keep all rejections", async () => {
       await reviewing.reject(extremJump.id, {
-        team: secu,
+        team: SECU,
         rejector: noel,
         reason: "Il faut des AS",
       });
       const festivalActivity = await reviewing.reject(extremJump.id, {
-        team: communication,
+        team: COMMUNICATION,
         rejector: george,
         reason: "Il faut une meilleure description",
       });
@@ -356,7 +356,7 @@ describe("Reject festival activity", () => {
       expect(
         async () =>
           await reviewing.reject(privateActivity.id, {
-            team: communication,
+            team: COMMUNICATION,
             rejector: george,
             reason: "Il faut une meilleure description",
           }),
@@ -369,7 +369,7 @@ describe("Reject festival activity", () => {
       expect(
         async () =>
           await reviewing.reject(alreadyRejectedByHumain.id, {
-            team: humain,
+            team: HUMAIN,
             rejector: george,
             reason: "Il faut une meilleure description",
           }),

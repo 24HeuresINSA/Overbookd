@@ -7,8 +7,8 @@ import {
 } from "@overbookd/permission";
 import {
   FulfilledRegistration,
-  KARNA_CODE,
-  TECKOS_CODE,
+  KARNA,
+  TECKOS,
   Teams,
 } from "./register-form/fulfilled-registration.js";
 import { RegisterNewcomer } from "./register-newcomer.js";
@@ -32,7 +32,7 @@ const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
 const birthdate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
-const teams: Teams = [KARNA_CODE, TECKOS_CODE];
+const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 const firstNewComer: NewcomerRegistered<"STAFF"> = {

@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { StaffCandidate } from "@overbookd/http";
-import { RegistrationTeams, TECKOS_CODE } from "@overbookd/registration";
+import { RegistrationTeams } from "@overbookd/registration";
+import { TECKOS } from "@overbookd/team-constants";
 
 export class StaffCandidateResponseDto implements StaffCandidate {
   @ApiProperty({
@@ -35,7 +36,7 @@ export class StaffCandidateResponseDto implements StaffCandidate {
 
   @ApiProperty({
     required: true,
-    example: [TECKOS_CODE],
+    example: [TECKOS],
   })
   teams: RegistrationTeams;
 }

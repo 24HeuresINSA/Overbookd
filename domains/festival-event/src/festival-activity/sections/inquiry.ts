@@ -1,12 +1,12 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { TimeWindow } from "../../common/time-window.js";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
-export const MATOS = "matos";
-export const BARRIERES = "barrieres";
-export const ELEC = "elec";
-
-export type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
+export type InquiryOwner =
+  | typeof LOG_MATOS
+  | typeof BARRIERES
+  | typeof LOG_ELEC;
 
 export type WithTimeWindows = {
   timeWindows: WithAtLeastOneItem<TimeWindow>;

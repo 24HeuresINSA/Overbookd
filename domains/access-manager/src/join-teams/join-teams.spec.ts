@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { ADMIN } from "../admin.constant";
+import {
+  ADMIN,
+  CONDUCTEUR,
+  CONDUCTEUR_FEN,
+  CONFIANCE,
+  HARD,
+  SOFT,
+} from "@overbookd/team-constants";
 import { InMemoryEvents } from "./events.inmemory";
 import {
   AdminAssignmentError,
@@ -22,11 +29,11 @@ let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
 const initialMembership = (): Map<Team, Member[]> =>
   new Map([
-    ["soft", [shogosse]],
-    ["hard", [noel]],
-    ["confiance", []],
-    ["conducteur", [noel]],
-    ["conducteur FEN", []],
+    [SOFT, [shogosse]],
+    [HARD, [noel]],
+    [CONFIANCE, []],
+    [CONDUCTEUR, [noel]],
+    [CONDUCTEUR_FEN, []],
     [ADMIN, [noel]],
   ]);
 
@@ -37,14 +44,14 @@ describe("Join teams", () => {
     joinTeams = new JoinTeams(memberships, events);
   });
   describe.each([
-    { userName: shogosse.name, userId: shogosse.id, teams: ["confiance"] },
-    { userName: shogosse.name, userId: shogosse.id, teams: ["conducteur"] },
+    { userName: shogosse.name, userId: shogosse.id, teams: [CONFIANCE] },
+    { userName: shogosse.name, userId: shogosse.id, teams: [CONDUCTEUR] },
     {
       userName: shogosse.name,
       userId: shogosse.id,
-      teams: ["confiance", "conducteur"],
+      teams: [CONFIANCE, CONDUCTEUR],
     },
-    { userName: noel.name, userId: noel.id, teams: ["conducteur FEN"] },
+    { userName: noel.name, userId: noel.id, teams: [CONDUCTEUR_FEN] },
   ])(
     "when user $userName is not member of the teams $teams yet",
     ({ userId, userName, teams }) => {
@@ -73,7 +80,7 @@ describe("Join teams", () => {
   describe("when user is already member of all the teams", () => {
     const request = {
       member: shogosse,
-      teams: ["soft"],
+      teams: [SOFT],
       teamManager: standardUser,
     };
     it("should apply without issue", async () => {
@@ -87,14 +94,14 @@ describe("Join teams", () => {
     it("should stay member of the teams", async () => {
       await joinTeams.apply(request);
 
-      expect(memberships.membersOf("soft")).toContainEqual(shogosse);
+      expect(memberships.membersOf(SOFT)).toContainEqual(shogosse);
     });
   });
   describe("when some of the teams do not exist", () => {
     it("should indicate that some of the teams do not exist", async () => {
       const request = {
         member: shogosse,
-        teams: ["unknown", "not existing", "confiance"],
+        teams: ["unknown", "not existing", CONFIANCE],
         teamManager: standardUser,
       };
       await expect(joinTeams.apply(request)).rejects.toThrowError(

@@ -7,31 +7,33 @@ import {
   REVIEWING,
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
-
-export const communication = "communication";
-export const humain = "humain";
-export const signa = "signa";
-export const secu = "secu";
-export const matos = "matos";
-export const elec = "elec";
-export const barrieres = "barrieres";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 export type PrivateActivityReviewer =
-  | typeof humain
-  | typeof signa
-  | typeof secu
-  | typeof matos
-  | typeof elec
-  | typeof barrieres;
+  | typeof HUMAIN
+  | typeof SIGNA
+  | typeof SECU
+  | typeof LOG_MATOS
+  | typeof LOG_ELEC
+  | typeof BARRIERES;
 
 export type PublicActivityReviewer =
   | PrivateActivityReviewer
-  | typeof communication;
+  | typeof COMMUNICATION;
 
-type NoSupplyRequestTaskReviewer = typeof humain | typeof matos;
+type NoSupplyRequestTaskReviewer = typeof HUMAIN | typeof LOG_MATOS;
 
-type TaskWithSupplyRequestReviewer = NoSupplyRequestTaskReviewer | typeof elec;
-
+type TaskWithSupplyRequestReviewer =
+  | NoSupplyRequestTaskReviewer
+  | typeof LOG_ELEC;
 export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
   : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;

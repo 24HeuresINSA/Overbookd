@@ -59,6 +59,7 @@ import {
   REVIEWING,
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
+import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
 
 const factory = getFactory();
 
@@ -137,7 +138,7 @@ export const installJustDance = factory
           conflicts: { tasks: [], availability: true, assignments: [] },
         },
       ],
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
     MobilizationBuilder.init({
       start: saturday10h,
@@ -148,7 +149,7 @@ export const installJustDance = factory
           conflicts: { tasks: [], availability: true, assignments: [] },
         },
       ],
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
   ])
   .build();
@@ -168,8 +169,8 @@ export const guardJustDance = factory
       end: saturday18h,
       volunteers: [],
       teams: [
-        { count: 2, team: "bénévole" },
-        { count: 1, team: "confiance" },
+        { count: 2, team: PERSONNE },
+        { count: 1, team: CONFIANCE },
       ],
     }).mobilization,
   ])
@@ -194,7 +195,7 @@ export const serveWaterOnJustDance = factory
       start: friday11h,
       end: friday18h,
       volunteers: [],
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
     MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday19h,
@@ -209,7 +210,7 @@ export const serveWaterOnJustDance = factory
           conflicts: { tasks: [], availability: true, assignments: [] },
         },
       ],
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
     MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday18h,
@@ -234,7 +235,7 @@ export const flashMobOnJustDance = factory
 const twoVolunteersOnFriday10hToFriday11h = MobilizationBuilder.init({
   start: friday10h,
   end: friday11h,
-  teams: [{ count: 2, team: "bénévole" }],
+  teams: [{ count: 2, team: PERSONNE }],
 });
 
 export const installPreventionVillage = factory
@@ -255,7 +256,7 @@ export const installPreventionVillage = factory
     MobilizationBuilder.init({
       start: saturday10h,
       end: saturday11h,
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
   ])
   .build();
@@ -273,12 +274,12 @@ export const guardPreventionVillage = factory
     MobilizationBuilder.init({
       start: friday11h,
       end: friday18h,
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
     MobilizationBuilder.init({
       start: saturday11h,
       end: saturday18h,
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
   ])
   .build();
@@ -455,7 +456,7 @@ export const installBarbecue = factory
       start: friday10h,
       end: friday18h,
       volunteers: [],
-      teams: [{ count: 20, team: "vieux" }],
+      teams: [{ count: 20, team: VIEUX }],
     }).mobilization,
   ])
   .withReviews({
@@ -469,7 +470,7 @@ const friday09hFriday10hInReviewMobilization =
     start: friday9h,
     end: friday10h,
     volunteers: [],
-    teams: [{ count: 5, team: "hard" }],
+    teams: [{ count: 5, team: HARD }],
   }).mobilization;
 const friday10hFriday18hInReviewMobilization =
   MobilizationBuilder.init<InReviewWithConflicts>({
@@ -486,8 +487,8 @@ const friday10hFriday18hInReviewMobilization =
       },
     ],
     teams: [
-      { count: 2, team: "vieux" },
-      { count: 5, team: "confiance" },
+      { count: 2, team: VIEUX },
+      { count: 5, team: CONFIANCE },
     ],
   }).mobilization;
 
@@ -630,7 +631,7 @@ export const guardPS1 = factory
       start: friday18h,
       end: monday00h,
       durationSplitInHour: 2,
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
   ])
   .withInstructions({ global: "Guard PS1" })
@@ -644,7 +645,7 @@ export const guardPS2 = factory
       start: friday18h,
       end: monday00h,
       durationSplitInHour: 2,
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [{ count: 2, team: PERSONNE }],
     }).mobilization,
   ])
   .withInstructions({ global: "Guard PS2" })
@@ -658,13 +659,13 @@ export const barCashier = factory
       start: friday18h,
       end: saturday04h,
       durationSplitInHour: 2,
-      teams: [{ count: 1, team: "confiance" }],
+      teams: [{ count: 1, team: CONFIANCE }],
     }).mobilization,
     MobilizationBuilder.init<ValidatedWithConflicts>({
       start: saturday18h,
       end: sunday04h,
       durationSplitInHour: 2,
-      teams: [{ count: 1, team: "confiance" }],
+      teams: [{ count: 1, team: CONFIANCE }],
     }).mobilization,
   ])
   .build();
@@ -716,7 +717,7 @@ export const cleanPressConference = factory
           conflicts: { tasks: [], availability: false, assignments: [] },
         },
       ],
-      teams: [{ count: 3, team: "bénévole" }],
+      teams: [{ count: 3, team: PERSONNE }],
       durationSplitInHour: 2,
     }).mobilization,
   ])

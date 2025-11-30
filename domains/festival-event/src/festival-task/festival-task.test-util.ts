@@ -14,6 +14,7 @@ import { Location } from "../common/location.js";
 import { TimeWindow } from "../common/time-window.js";
 import { ValidatedWithConflicts } from "./festival-task.factory.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
+import { PERSONNE, HARD } from "@overbookd/team-constants";
 
 type BuildTimeWindow = {
   date: Date;
@@ -496,7 +497,7 @@ export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   volunteers: [
     { ...noel, conflicts: { tasks: [], availability: false, assignments: [] } },
   ],
-  teams: [{ count: 2, team: "bénévole" }],
+  teams: [{ count: 2, team: PERSONNE }],
 });
 export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   start: saturday18h,
@@ -515,12 +516,12 @@ export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
 export const friday10hfriday11hMobilization = MobilizationBuilder.init({
   start: friday10h,
   end: friday11h,
-  teams: [{ count: 5, team: "bénévole" }],
+  teams: [{ count: 5, team: PERSONNE }],
 });
 export const friday10hfriday18hMobilization = MobilizationBuilder.init({
   start: friday10h,
   end: friday18h,
-  teams: [{ count: 5, team: "hard" }],
+  teams: [{ count: 5, team: HARD }],
 });
 export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
   start: friday18h,

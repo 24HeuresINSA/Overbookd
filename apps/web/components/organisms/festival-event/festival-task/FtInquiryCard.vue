@@ -25,7 +25,7 @@
       <InquiryTable
         :inquiries="inquiries"
         :time-windows="timeWindows"
-        :owner="MATOS"
+        :owner="LOG_MATOS"
         :disabled="disabled"
         @link-drive="linkDrive"
         @update="updateInquiry"
@@ -40,10 +40,10 @@ import {
   type AssignDrive,
   type FestivalTask,
   type InquiryRequest,
-  MATOS,
   type TimeWindow,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
+import { LOG_MATOS } from "@overbookd/team-constants";
 
 const ftStore = useFestivalTaskStore();
 

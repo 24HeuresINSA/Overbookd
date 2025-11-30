@@ -8,13 +8,6 @@ import {
 } from "@overbookd/festival-event-constants";
 import { FestivalActivity, Refused, Reviewable } from "../festival-activity.js";
 import {
-  barrieres,
-  communication,
-  elec,
-  humain,
-  matos,
-  secu,
-  signa,
   isValidatedReviews,
   Reviews,
   isRefusedReviews,
@@ -22,7 +15,7 @@ import {
   Rejection,
 } from "../../common/review.js";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import { InquiryOwner } from "../sections/inquiry.js";
 import {
   InDraft,
   AlreadyRejected,
@@ -37,6 +30,15 @@ import { Adherent } from "../../common/adherent.js";
 import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
 import { isLinkedToCatalogItem } from "../sections/signa.js";
 import { isDraft } from "../../festival-event.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -65,7 +67,7 @@ export class Reviewing {
     if (isInquiryOwner(team)) {
       this.checkInquiryDriveAssignment(festivalActivity, team);
     }
-    if (team === signa) {
+    if (team === SIGNA) {
       this.checkSignageCatalogItemLink(festivalActivity);
     }
 
@@ -141,7 +143,7 @@ export class Reviewing {
     owner: InquiryOwner,
   ) {
     const requests = selectMyInquiryRequests(owner, festivalActivity);
-    const areAllRequestsAssignedToDrive = requests.every((request) =>
+    const areAllRequestsAssignedToDrive = requests?.every((request) =>
       Object.hasOwn(request, "drive"),
     );
     if (!areAllRequestsAssignedToDrive) {
@@ -186,19 +188,19 @@ export class Reviewing {
 
 function getTeamReview(reviews: Reviews<"FA">, team: Reviewer<"FA">) {
   switch (team) {
-    case humain:
+    case HUMAIN:
       return reviews.humain;
-    case signa:
+    case SIGNA:
       return reviews.signa;
-    case secu:
+    case SECU:
       return reviews.secu;
-    case matos:
+    case LOG_MATOS:
       return reviews.matos;
-    case elec:
+    case LOG_ELEC:
       return reviews.elec;
-    case barrieres:
+    case BARRIERES:
       return reviews.barrieres;
-    case communication:
+    case COMMUNICATION:
       return reviews.communication;
   }
 }
@@ -208,11 +210,11 @@ function selectMyInquiryRequests(
   festivalActivity: Reviewable,
 ) {
   switch (owner) {
-    case MATOS:
+    case LOG_MATOS:
       return festivalActivity.inquiry.gears;
     case BARRIERES:
       return festivalActivity.inquiry.barriers;
-    case ELEC:
+    case LOG_ELEC:
       return festivalActivity.inquiry.electricity;
   }
 }
@@ -220,5 +222,5 @@ function selectMyInquiryRequests(
 function isInquiryOwner(
   team: Reviewer<"FA"> | InquiryOwner,
 ): team is InquiryOwner {
-  return [MATOS, ELEC, BARRIERES].includes(team);
+  return [LOG_MATOS, LOG_ELEC, BARRIERES].includes(team);
 }

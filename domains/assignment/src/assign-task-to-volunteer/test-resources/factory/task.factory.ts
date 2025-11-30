@@ -2,6 +2,7 @@ import { numberGenerator } from "@overbookd/list";
 import { Task } from "../../task.js";
 import { Category } from "@overbookd/festival-event-constants";
 import { AssignmentBuilder } from "./assignment.builder.js";
+import { HARD } from "@overbookd/team-constants";
 
 class TaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
@@ -12,7 +13,7 @@ class TaskFactory {
       id,
       name,
       topPriority: false,
-      inChargeTeam: "hard",
+      inChargeTeam: HARD,
       assignments: [],
     };
     return TaskBuilder.init(task);

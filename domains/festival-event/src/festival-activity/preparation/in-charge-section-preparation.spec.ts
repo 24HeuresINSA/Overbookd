@@ -12,6 +12,7 @@ import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities
 import { ContractorNotFound } from "../festival-activity.error.js";
 import { humain } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { VIEUX } from "@overbookd/team-constants";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -34,7 +35,7 @@ describe("In Charge section of festival activity preparation", () => {
     ${"adherent"}          | ${escapeGame.general.name} | ${escapeGame.id} | ${{ adherent: lea }}                    | ${lea}                          | ${escapeGame.inCharge.team} | ${escapeGame.inCharge.contractors}
     ${"adherent"}          | ${justDance.general.name}  | ${justDance.id}  | ${{ adherent: george }}                 | ${george}                       | ${justDance.inCharge.team}  | ${justDance.inCharge.contractors}
     ${"team"}              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "plaizir" }}                  | ${escapeGame.inCharge.adherent} | ${"plaizir"}                | ${escapeGame.inCharge.contractors}
-    ${"team"}              | ${justDance.general.name}  | ${justDance.id}  | ${{ team: "vieux" }}                    | ${justDance.inCharge.adherent}  | ${"vieux"}                  | ${justDance.inCharge.contractors}
+    ${"team"}              | ${justDance.general.name}  | ${justDance.id}  | ${{ team: VIEUX }}                      | ${justDance.inCharge.adherent}  | ${VIEUX}                    | ${justDance.inCharge.contractors}
     ${"adherent and team"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "Qlture", adherent: george }} | ${george}                       | ${"Qlture"}                 | ${escapeGame.inCharge.contractors}
     ${"adherent and team"} | ${justDance.general.name}  | ${justDance.id}  | ${{ team: "culture", adherent: lea }}   | ${lea}                          | ${"culture"}                | ${justDance.inCharge.contractors}
   `(

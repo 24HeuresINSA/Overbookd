@@ -1,6 +1,6 @@
 import { Event } from "@overbookd/event";
 import { AccessManagerError } from "../access-manager.error";
-import { ADMIN } from "../admin.constant";
+import { ADMIN } from "@overbookd/team-constants";
 
 export type Member = { id: number; name: string };
 

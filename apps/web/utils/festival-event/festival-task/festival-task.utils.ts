@@ -2,9 +2,6 @@ import {
   type ReviewStatus,
   type PreviewFestivalTask,
   type FestivalTaskWithConflicts as FestivalTask,
-  humain,
-  matos,
-  elec,
   isDraft,
   extractApprovers,
   isRefused,
@@ -25,6 +22,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { CastReviewable } from "./reviewable";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export function castTaskWithDate(
   task: HttpStringified<FestivalTask>,
@@ -41,11 +39,11 @@ export function getTaskReviewerStatus(
 ): ReviewStatus<"FT"> {
   if (isDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
-    case humain:
+    case HUMAIN:
       return festivalTask.reviews.humain;
-    case matos:
+    case LOG_MATOS:
       return festivalTask.reviews.matos;
-    case elec:
+    case LOG_ELEC:
       return festivalTask.reviews.elec;
     default:
       return NOT_ASKING_TO_REVIEW;
@@ -71,11 +69,11 @@ export function getPreviewReviewerStatus(
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {
-    case humain:
+    case HUMAIN:
       return preview.reviews.humain;
-    case matos:
+    case LOG_MATOS:
       return preview.reviews.matos;
-    case elec:
+    case LOG_ELEC:
       return preview.reviews.elec;
     default:
       return NOT_ASKING_TO_REVIEW;
@@ -116,11 +114,11 @@ export function hasReviewerAlreadyDoneHisTaskReview(
 ) {
   if (isDraft(task)) return true;
   switch (reviewer) {
-    case humain:
+    case HUMAIN:
       return task.reviews.humain === status;
-    case matos:
+    case LOG_MATOS:
       return task.reviews.matos === status;
-    case elec:
+    case LOG_ELEC:
       return task.reviews.elec === status;
     default:
       return false;
