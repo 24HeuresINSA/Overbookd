@@ -1,3 +1,13 @@
+## [3.48.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.2...v3.48.3) (2025-11-30)
+
+### Bug Fixes
+
+* **api:** category name in gears seeder ([c1a8679](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c1a86794d762c87e0bd0da700f88affa0762a0c4))
+
+### Refactor
+
+* orga to CA & benevole to personne ([f1bca67](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f1bca67c8e43ccb521f186f3a281ef31d8d0db7b)), closes [#2587](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2587)
+
 ## [3.48.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.1...v3.48.2) (2025-11-30)
 
 ### Bug Fixes
