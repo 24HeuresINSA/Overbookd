@@ -1,7 +1,12 @@
-import { PERSONNE } from "@overbookd/team-constants";
+import {
+  CONDUCTEUR,
+  CONFIANCE,
+  HARD,
+  PERSONNE,
+  VIEUX,
+} from "@overbookd/team-constants";
 import { IProvidePeriod, Period } from "@overbookd/time";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
-import { CONDUCTEUR, CONFIANCE, HARD, VIEUX } from "../../teams.js";
 import { Assignment } from "../assignment.js";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PlanningEvent } from "./planning";

@@ -21,8 +21,7 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-resources/assign-task-to-volunteer.test.utils.js";
-import { HARD, VIEUX } from "../teams.js";
-import { PERSONNE } from "@overbookd/team-constants";
+import { HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
 
 describe("Assign task to volunteer", () => {
   const taskList = [
