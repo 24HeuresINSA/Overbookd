@@ -27,7 +27,7 @@ import {
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import { Approval, elec, humain, matos } from "../../common/review.js";
+import { Approval } from "../../common/review.js";
 import { NotAskingToReview } from "../../common/review.error.js";
 import { Review } from "./review.js";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";
@@ -43,6 +43,7 @@ import {
 } from "../festival-task.error.js";
 import { PrepareFestivalTask } from "../prepare/prepare.js";
 import { isDraft } from "../../festival-event.js";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 const factory = getFactory();
 
@@ -110,10 +111,10 @@ describe("Approve festival task", () => {
     review = new Review(festivalTasks, translator);
   });
   describe.each`
-    team      | taskName                               | task                      | reviewer
-    ${humain} | ${caissierBar.general.name}            | ${caissierBar}            | ${george}
-    ${matos}  | ${withSomeValidInquiries.general.name} | ${withSomeValidInquiries} | ${noel}
-    ${elec}   | ${withSupplyRequest.general.name}      | ${withSupplyRequest}      | ${lea}
+    team         | taskName                               | task                      | reviewer
+    ${HUMAIN}    | ${caissierBar.general.name}            | ${caissierBar}            | ${george}
+    ${LOG_MATOS} | ${withSomeValidInquiries.general.name} | ${withSomeValidInquiries} | ${noel}
+    ${LOG_ELEC}  | ${withSupplyRequest.general.name}      | ${withSupplyRequest}      | ${lea}
   `("when approving $taskName as $team member", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it(`should indicate ${team} approved it`, async () => {
@@ -143,11 +144,11 @@ describe("Approve festival task", () => {
     });
   });
   describe.each`
-    team      | taskName                                                       | task                                              | reviewer
-    ${matos}  | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
-    ${elec}   | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
-    ${matos}  | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
-    ${humain} | ${withMatosAndElecIgnore.general.name}                         | ${withMatosAndElecIgnore}                         | ${george}
+    team         | taskName                                                       | task                                              | reviewer
+    ${LOG_MATOS} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
+    ${LOG_ELEC}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
+    ${LOG_MATOS} | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
+    ${HUMAIN}    | ${withMatosAndElecIgnore.general.name}                         | ${withMatosAndElecIgnore}                         | ${george}
   `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it("should switch to VALIDATED festival task", async () => {
@@ -157,9 +158,9 @@ describe("Approve festival task", () => {
   });
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
-      await review.approve(caissierBar.id, { team: humain, reviewer: lea });
+      await review.approve(caissierBar.id, { team: HUMAIN, reviewer: lea });
       const festivalTask = await review.approve(caissierBar.id, {
-        team: matos,
+        team: LOG_MATOS,
         reviewer: noel,
       });
       expect(festivalTask.reviews.humain).toBe(APPROVED);
@@ -168,7 +169,7 @@ describe("Approve festival task", () => {
   });
   describe("when trying to approve task even with not assigned to drive inquiries as matos", () => {
     it("should indicate that inquiries should been assigned to a drive", async () => {
-      const approval: Approval<"FT"> = { team: matos, reviewer: noel };
+      const approval: Approval<"FT"> = { team: LOG_MATOS, reviewer: noel };
       expect(
         async () => await review.approve(withInvalidInquiries.id, approval),
       ).rejects.toThrow(new ShouldAssignDrive("FT"));
@@ -176,7 +177,7 @@ describe("Approve festival task", () => {
   });
   describe("when approving task even with not assigned to drive inquiries as humain", () => {
     it("should approve task seamlessly", async () => {
-      const approval: Approval<"FT"> = { team: humain, reviewer: george };
+      const approval: Approval<"FT"> = { team: HUMAIN, reviewer: george };
       const { reviews } = await review.approve(
         withInvalidInquiries.id,
         approval,
@@ -186,7 +187,7 @@ describe("Approve festival task", () => {
   });
   describe("when approving an already approved festival task", () => {
     it("should indicate task already approved", async () => {
-      const approval: Approval<"FT"> = { team: humain, reviewer: george };
+      const approval: Approval<"FT"> = { team: HUMAIN, reviewer: george };
       expect(
         async () => await review.approve(alreadyApprovedByHumain.id, approval),
       ).rejects.toThrow(AlreadyApproved);
@@ -194,7 +195,7 @@ describe("Approve festival task", () => {
   });
   describe("when approving a festival task without supply request as elec", () => {
     it("should indicate that elec is not asking to review it", async () => {
-      const approval: Approval<"FT"> = { team: elec, reviewer: george };
+      const approval: Approval<"FT"> = { team: LOG_ELEC, reviewer: george };
       expect(
         async () => await review.approve(caissierBar.id, approval),
       ).rejects.toThrow(NotAskingToReview);
@@ -216,10 +217,10 @@ describe("Reject festival task", () => {
     review = new Review(festivalTasks, translator);
   });
   describe.each`
-    team      | taskName                              | task                     | rejector  | reason
-    ${humain} | ${guardJustDance.general.name}        | ${guardJustDance}        | ${george} | ${"Il faut que tu demandes moins de monde"}
-    ${matos}  | ${guardJustDance.general.name}        | ${guardJustDance}        | ${noel}   | ${"Il te manque des clous"}
-    ${elec}   | ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${lea}    | ${"Elle arrive comment l'eau ?"}
+    team         | taskName                              | task                     | rejector  | reason
+    ${HUMAIN}    | ${guardJustDance.general.name}        | ${guardJustDance}        | ${george} | ${"Il faut que tu demandes moins de monde"}
+    ${LOG_MATOS} | ${guardJustDance.general.name}        | ${guardJustDance}        | ${noel}   | ${"Il te manque des clous"}
+    ${LOG_ELEC}  | ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${lea}    | ${"Elle arrive comment l'eau ?"}
   `(
     "when rejecting $taskName as $team member",
     ({ team, task, rejector, reason }) => {
@@ -254,12 +255,12 @@ describe("Reject festival task", () => {
   describe("when rejecting several times from different teams", () => {
     it("should keep all rejections", async () => {
       await review.reject(guardJustDance.id, {
-        team: matos,
+        team: LOG_MATOS,
         rejector: noel,
         reason: "Il te manque des clous",
       });
       const { reviews } = await review.reject(guardJustDance.id, {
-        team: elec,
+        team: LOG_ELEC,
         rejector: lea,
         reason: "Elle arrive d'où l'eau ?",
       });
@@ -272,7 +273,7 @@ describe("Reject festival task", () => {
       expect(
         async () =>
           await review.reject(uninstallPreventionVillage.id, {
-            team: elec,
+            team: LOG_ELEC,
             rejector: lea,
             reason: "Elle arrive d'où l'eau ?",
           }),
@@ -303,21 +304,22 @@ describe("Ignore festival task", () => {
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
-    reviewer | taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
-    ${elec}  | ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
-    ${elec}  | ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
-    ${elec}  | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
-    ${matos} | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${REJECTED}    | ${VALIDATED}
-    ${elec}  | ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
-    ${elec}  | ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
-    ${elec}  | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
-    ${matos} | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${IN_REVIEW}
+    reviewer     | taskName                                               | task                                      | reviewerStatus | expectedTaskStatus
+    ${LOG_ELEC}  | ${guardJustDance.general.name}                         | ${guardJustDance}                         | ${REVIEWING}   | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${flashMobOnJustDance.general.name}                    | ${flashMobOnJustDance}                    | ${REJECTED}    | ${REFUSED}
+    ${LOG_ELEC}  | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${APPROVED}    | ${REFUSED}
+    ${LOG_MATOS} | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${REJECTED}    | ${VALIDATED}
+    ${LOG_ELEC}  | ${leadPressConference.general.name}                    | ${leadPressConference}                    | ${APPROVED}    | ${VALIDATED}
+    ${LOG_ELEC}  | ${rejectedByElec.general.name}                         | ${rejectedByElec}                         | ${REJECTED}    | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${VALIDATED}
+    ${LOG_MATOS} | ${approvedByHumainAndMatos.general.name}               | ${approvedByHumainAndMatos}               | ${REVIEWING}   | ${IN_REVIEW}
   `(
     "when ignoring $taskName as $reviewer reviewer with current review status $reviewerStatus",
     ({ reviewer, task, expectedTaskStatus }) => {
       it(`should define the ${reviewer} review as WILL_NOT_REVIEW`, async () => {
         const { reviews } = await review.ignore(task.id, reviewer);
-        const updatedReview = reviews[reviewer as typeof elec | typeof matos];
+        const updatedReview =
+          reviews[reviewer as typeof LOG_ELEC | typeof LOG_MATOS];
         expect(updatedReview).toBe(WILL_NOT_REVIEW);
       });
       it(`should switch to ${expectedTaskStatus} festival task`, async () => {
@@ -330,7 +332,7 @@ describe("Ignore festival task", () => {
     it("should not update elec review status", async () => {
       const { reviews } = await review.ignore(
         withoutSupplyRequestAndAllApprovedExceptMatos.id,
-        elec,
+        LOG_ELEC,
       );
       expect(reviews.elec).toBe(NOT_ASKING_TO_REVIEW);
     });
@@ -338,13 +340,13 @@ describe("Ignore festival task", () => {
   describe("when ignoring a task with inquiry request as matos member", () => {
     it("should indicate that matos cannot ignore task with inquiry request", async () => {
       await expect(
-        review.ignore(withSomeValidInquiries.id, matos),
+        review.ignore(withSomeValidInquiries.id, LOG_MATOS),
       ).rejects.toThrow(CannotIgnoreFestivalTaskWithInquiryRequests);
     });
   });
   describe("when ignoring a task as humain member", () => {
     it("should indicate that only elec and matos can ignore festival task review", async () => {
-      await expect(review.ignore(guardJustDance.id, humain)).rejects.toThrow(
+      await expect(review.ignore(guardJustDance.id, HUMAIN)).rejects.toThrow(
         CannotIgnoreFestivalTask,
       );
     });

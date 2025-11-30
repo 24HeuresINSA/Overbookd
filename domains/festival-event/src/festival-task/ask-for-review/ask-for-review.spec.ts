@@ -25,13 +25,13 @@ import {
   rejectedByHumainAndIgnoredByMatos,
 } from "../festival-task.fake.js";
 import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory.js";
-import { elec, humain, matos } from "../../common/review.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { InMemoryReviewers } from "./reviewers.inmemory.js";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 describe("Festival Task - ask for review", () => {
   let notifications: InMemoryNotifications<"FT">;
@@ -73,9 +73,9 @@ describe("Festival Task - ask for review", () => {
   describe("when asking a review for draft festival task", () => {
     describe.each`
       task                        | instigator | reviewers
-      ${installJustDance}         | ${noel}    | ${[humain, matos, elec]}
-      ${installPreventionVillage} | ${lea}     | ${[humain, matos]}
-      ${guardPreventionVillage}   | ${lea}     | ${[humain, matos]}
+      ${installJustDance}         | ${noel}    | ${[HUMAIN, LOG_MATOS, LOG_ELEC]}
+      ${installPreventionVillage} | ${lea}     | ${[HUMAIN, LOG_MATOS]}
+      ${guardPreventionVillage}   | ${lea}     | ${[HUMAIN, LOG_MATOS]}
     `(
       "when draft festival task fulfilled all requirements (i.e. has team, has appointment location, has global instructions, if there is volunteers in charge provide a list with at least one volunteer and dedicated instructions, has at least one contact, has a least one mobilization with either volunteer or team required)",
       ({ task, instigator, reviewers }) => {
@@ -125,10 +125,10 @@ describe("Festival Task - ask for review", () => {
             );
           });
           it.each`
-            team      | status
-            ${elec}   | ${task.festivalActivity.hasSupplyRequest ? REVIEWING : NOT_ASKING_TO_REVIEW}
-            ${humain} | ${REVIEWING}
-            ${matos}  | ${REVIEWING}
+            team         | status
+            ${LOG_ELEC}  | ${task.festivalActivity.hasSupplyRequest ? REVIEWING : NOT_ASKING_TO_REVIEW}
+            ${HUMAIN}    | ${REVIEWING}
+            ${LOG_MATOS} | ${REVIEWING}
           `("should explain $team is $status", async ({ team, status }) => {
             const inReview = await askForReview.from(task.id, instigator);
             if (!isReviewer(team)) throw new Error();
@@ -163,11 +163,11 @@ describe("Festival Task - ask for review", () => {
   });
   describe("when asking a review for refused festival task", () => {
     describe.each`
-      taskName                                          | task                                 | rejectors         | instigator
-      ${flashMobOnPreventionVillage.general.name}       | ${flashMobOnPreventionVillage}       | ${[humain]}       | ${noel}
-      ${flashMobOnJustDance.general.name}               | ${flashMobOnJustDance}               | ${[humain, elec]} | ${noel}
-      ${approvedByElecRejectedByMatos.general.name}     | ${approvedByElecRejectedByMatos}     | ${[matos]}        | ${noel}
-      ${rejectedByHumainAndIgnoredByMatos.general.name} | ${rejectedByHumainAndIgnoredByMatos} | ${[humain]}       | ${noel}
+      taskName                                          | task                                 | rejectors             | instigator
+      ${flashMobOnPreventionVillage.general.name}       | ${flashMobOnPreventionVillage}       | ${[HUMAIN]}           | ${noel}
+      ${flashMobOnJustDance.general.name}               | ${flashMobOnJustDance}               | ${[HUMAIN, LOG_ELEC]} | ${noel}
+      ${approvedByElecRejectedByMatos.general.name}     | ${approvedByElecRejectedByMatos}     | ${[LOG_MATOS]}        | ${noel}
+      ${rejectedByHumainAndIgnoredByMatos.general.name} | ${rejectedByHumainAndIgnoredByMatos} | ${[HUMAIN]}           | ${noel}
     `(
       "when $taskName was rejected by $rejectors",
       ({ task, instigator, rejectors }) => {
