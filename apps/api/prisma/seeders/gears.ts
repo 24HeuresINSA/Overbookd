@@ -4,7 +4,7 @@ export const categoriesAndGears = [
     gears: ["Rouleau attache-canisses", "Heras 3.5m", "Vauban 2m"],
   },
   {
-    name: "LOG_ELEC",
+    name: "ELEC",
     categories: [
       {
         name: "ALIMENTATION",
