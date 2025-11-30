@@ -1,3 +1,16 @@
+## [3.48.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.1...v3.48.2) (2025-11-30)
+
+### Bug Fixes
+
+* festival event stat [#2580](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2580) ([c7825f1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c7825f135013b45ed258f4c0199918f5bdc9ae23))
+* **festival-event:** update stats for past edition [#2580](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2580) ([fe36a48](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fe36a484c7d9ec4edf4fb0252a806a0884db41dd))
+* **trombinoscope:** inclusive title [#2576](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2576) ([34ce493](https://gitlab.com/24-heures-insa/overbookd-mono/commit/34ce493b7b31a0076427984b4a2749e9a8dbfc5b))
+* **volunteer-stats:** base items per page [#2584](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2584) ([70595ec](https://gitlab.com/24-heures-insa/overbookd-mono/commit/70595ec066e1e713c4d7f1885b9cc7cd1c69ad08))
+
+### CI/CD
+
+* add predefined release variable ([71284b1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/71284b1114d8f91a50b36a25ed6b01e519a1787e))
+
 ## [3.48.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.0...v3.48.1) (2025-10-20)
 
 ### Refactor
