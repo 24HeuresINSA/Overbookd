@@ -41,6 +41,7 @@ import {
 import { isDraft } from "../festival-event.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
 import { Adherent } from "../common/adherent.js";
+import { CONDUCTEUR, PERSONNE } from "@overbookd/team-constants";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -342,13 +343,13 @@ function defaultMobilizations() {
     MobilizationBuilder.init<ReviewableWithConflicts>({
       start: friday11h,
       end: friday17h,
-      teams: [{ count: 3, team: "bénévole" }],
+      teams: [{ count: 3, team: PERSONNE }],
       durationSplitInHour: 2,
     }).mobilization,
     MobilizationBuilder.init<ReviewableWithConflicts>({
       start: friday11h,
       end: friday17h,
-      teams: [{ count: 1, team: "conducteur" }],
+      teams: [{ count: 1, team: CONDUCTEUR }],
     }).mobilization,
   ];
 }

@@ -44,7 +44,6 @@ export {
   TaskNotFoundError,
   WrongTeam,
 } from "./assignment.error.js";
-export { CONFIANCE, HARD, VIEUX } from "./teams.js";
 export {
   Candidate,
   CandidateFactory,

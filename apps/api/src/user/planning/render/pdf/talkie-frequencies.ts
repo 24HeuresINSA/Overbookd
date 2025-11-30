@@ -1,10 +1,10 @@
-import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { HARD, VIEUX } from "@overbookd/team-constants";
 import { Content } from "pdfmake/interfaces";
 
 export class TalkieFrequencies {
   static generateWorkflow(teams: string[]): Content[] {
     const shouldDisplayAllFrequencies =
-      teams.includes(HARD_CODE) || teams.includes(VIEUX_CODE);
+      teams.includes(HARD) || teams.includes(VIEUX);
 
     const headerText = "Guide des fréquences\n- 24 heures de l'INSA -";
     const baseFrequencies = [

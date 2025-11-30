@@ -1,5 +1,5 @@
 import { Membership, STAFF, VOLUNTEER } from "@overbookd/registration";
-import { BENEVOLE_CODE, HARD_CODE } from "@overbookd/team-constants";
+import { PERSONNE, HARD } from "@overbookd/team-constants";
 import { Edition, IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../../common/query/period.query";
 import { SELECT_USER_TEAMS } from "../../../../user/user.query";
@@ -24,7 +24,7 @@ export const SELECT_VOLUNTEER = {
 };
 
 const IS_NOT_HARD = {
-  teams: { none: { team: { code: HARD_CODE } } },
+  teams: { none: { team: { code: HARD } } },
 };
 
 function buildHasMembershipApplicationCondition(membership: Membership) {
@@ -60,7 +60,7 @@ export const IS_REJECTED_STAFF = {
 };
 
 const IS_NOT_VOLUNTEER = {
-  teams: { none: { team: { code: BENEVOLE_CODE } } },
+  teams: { none: { team: { code: PERSONNE } } },
 };
 
 export const IS_ENROLLABLE_VOLUNTEER = {

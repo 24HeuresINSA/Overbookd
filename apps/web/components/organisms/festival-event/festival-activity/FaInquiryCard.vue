@@ -94,7 +94,7 @@
           <InquiryTable
             :inquiries="inquiry.electricity"
             :time-windows="inquiry.timeWindows"
-            :owner="ELEC"
+            :owner="LOG_ELEC"
             :hide-drive="shouldHideDrive"
             @link-drive="linkDrive"
             @update="updateInquiry"
@@ -130,7 +130,7 @@ import {
   type FestivalActivity,
   type InquiryRequest,
   MATOS,
-  ELEC,
+  LOG_ELEC,
   BARRIERES,
   type TimeWindow,
   type AssignDrive,

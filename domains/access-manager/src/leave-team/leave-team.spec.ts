@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { ADMIN } from "../admin.constant";
 import { InMemoryEvents } from "./events.inmemory";
 import {
   AdminUnassignmentError,
@@ -9,6 +8,14 @@ import {
   TEAM_LEFT,
 } from "./leave-team";
 import { InMemoryMemberships } from "./memberships.inmemory";
+import {
+  ADMIN,
+  CONDUCTEUR,
+  CONDUCTEUR_FEN,
+  CONFIANCE,
+  HARD,
+  SOFT,
+} from "@overbookd/team-constants";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
@@ -21,11 +28,11 @@ let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
 const initialMembership = (): Map<Team, Member[]> =>
   new Map([
-    ["soft", [shogosse]],
-    ["confiance", []],
-    ["conducteur", [noel]],
-    ["conducteur FEN", []],
-    ["hard", [noel]],
+    [SOFT, [shogosse]],
+    [CONFIANCE, []],
+    [CONDUCTEUR, [noel]],
+    [CONDUCTEUR_FEN, []],
+    [HARD, [noel]],
     [ADMIN, [noel]],
   ]);
 
@@ -36,9 +43,9 @@ describe("Leave team", () => {
     leaveTeam = new LeaveTeam(memberships, events);
   });
   describe.each([
-    { userName: shogosse.name, userId: shogosse.id, team: "soft" },
-    { userName: noel.name, userId: noel.id, team: "hard" },
-    { userName: noel.name, userId: noel.id, team: "conducteur" },
+    { userName: shogosse.name, userId: shogosse.id, team: SOFT },
+    { userName: noel.name, userId: noel.id, team: HARD },
+    { userName: noel.name, userId: noel.id, team: CONDUCTEUR },
   ])(
     "when user $username is member of the team $team",
     ({ userName, userId, team }) => {
@@ -64,7 +71,7 @@ describe("Leave team", () => {
     },
   );
   describe("when user is not member of the team", () => {
-    const leavingTeam = { member: shogosse, team: "confiance" };
+    const leavingTeam = { member: shogosse, team: CONFIANCE };
     const request = { ...leavingTeam, teamManager: standardUser };
     it("should apply without issue", async () => {
       expect(leaveTeam.apply(request)).resolves.ok;

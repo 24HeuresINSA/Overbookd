@@ -1,4 +1,4 @@
-import { CONFIANCE, HARD, VIEUX } from "./teams";
+import { CONFIANCE, HARD, VIEUX } from "@overbookd/team-constants";
 
 export function retrieveImplicitTeams(teams: string[]) {
   const areConfianceByDefault = [HARD, VIEUX];

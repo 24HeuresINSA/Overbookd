@@ -1,7 +1,7 @@
 import {
   BARRIERES,
   Draft,
-  ELEC,
+  LOG_ELEC,
   FestivalActivity,
   FestivalActivityWithoutStatus,
   Reviewable,
@@ -185,7 +185,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       .map(this.formatInquiryRequest);
 
     const electricity = activity.inquiries
-      .filter((req) => req.catalogItem.category.owner.code === ELEC)
+      .filter((req) => req.catalogItem.category.owner.code === LOG_ELEC)
       .map(this.formatInquiryRequest);
 
     return {

@@ -73,7 +73,7 @@ export const permissions = [
     teams: {
       createMany: {
         data: [
-          { teamCode: "benevole" },
+          { teamCode: "personne" },
           { teamCode: "camion" },
           { teamCode: "voiture" },
           { teamCode: "fen" },
@@ -352,7 +352,7 @@ export const permissions = [
     description: "Peut voir les plannings",
     teams: {
       createMany: {
-        data: [{ teamCode: "benevole" }],
+        data: [{ teamCode: "personne" }],
       },
     },
   },
@@ -361,7 +361,7 @@ export const permissions = [
     description: "Peut télécharger son planning",
     teams: {
       createMany: {
-        data: [{ teamCode: "benevole" }],
+        data: [{ teamCode: "personne" }],
       },
     },
   },
@@ -370,7 +370,7 @@ export const permissions = [
     description: "Peut synchroniser son planning",
     teams: {
       createMany: {
-        data: [{ teamCode: "benevole" }],
+        data: [{ teamCode: "personne" }],
       },
     },
   },
@@ -397,7 +397,7 @@ export const permissions = [
     description: "Peut voir les bénévoles",
     teams: {
       createMany: {
-        data: [{ teamCode: "benevole" }],
+        data: [{ teamCode: "personne" }],
       },
     },
   },

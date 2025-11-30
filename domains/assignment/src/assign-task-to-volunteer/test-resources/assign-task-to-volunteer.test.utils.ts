@@ -10,8 +10,11 @@ import {
   MaybeCategory,
 } from "./factory/assignable-volunteer.factory.js";
 import { BAR } from "@overbookd/festival-event-constants";
-import { HARD } from "../../teams.js";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import {
+  PERSONNE,
+  HARD,
+  VIEUX,
+} from "@overbookd/team-constants";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
@@ -57,7 +60,8 @@ const noel: Volunteer = {
   lastname: "Ertsemud",
   nickname: "Moto",
   charisma: 1000,
-  teams: ["hard", "plaizir"],
+  teams: [HARD, "plaizir"],
+  assignmentPreference: "NO_PREF",
 };
 const lea: Volunteer = {
   id: 2,
@@ -65,9 +69,10 @@ const lea: Volunteer = {
   lastname: "Mauyno",
   nickname: "Shogosse",
   charisma: 1,
-  teams: ["vieux", "benevole"],
+  teams: [VIEUX, PERSONNE],
   comment: "Je suis une bénévole de longue date",
   note: "Elle est vraiment très vieille",
+  assignmentPreference: "NO_PREF",
 };
 
 const defaultAssignmentDurations: Record<MaybeCategory, number> = {
@@ -91,17 +96,17 @@ const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
   noelAsAvailableVolunteer,
 ];
 
-const oneHardDemanded = AssignmentTeamFactory.init().withCode("hard");
+const oneHardDemanded = AssignmentTeamFactory.init().withCode(HARD);
 const oneHardAssignedAndDemanded = oneHardDemanded.withAssigned(1);
 const onePlaizirDemanded = AssignmentTeamFactory.init().withCode("plaizir");
 const twoVieuxDemanded = AssignmentTeamFactory.init()
-  .withCode("vieux")
+  .withCode(VIEUX)
   .withDemands(2);
 const threeHardDemanded = AssignmentTeamFactory.init()
-  .withCode("hard")
+  .withCode(HARD)
   .withDemands(3);
 const twoBenevoleDemanded = AssignmentTeamFactory.init()
-  .withCode("benevole")
+  .withCode(PERSONNE)
   .withDemands(2);
 const threeHardDemandedAndTwoAssigned = threeHardDemanded.withAssigned(2);
 const twoBenevoleDemandedAndOneAssigned = twoBenevoleDemanded.withAssigned(1);
@@ -159,7 +164,7 @@ export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init({
   .withAssignees([
     { as: HARD, id: 102 },
     { as: HARD, id: 103 },
-    { as: BENEVOLE_CODE, id: 104 },
+    { as: PERSONNE, id: 104 },
   ])
   .withRequestedTeams([
     threeHardDemanded.assignmentTeam,

@@ -21,7 +21,7 @@ import {
   approvedByElecWithNoRequestAtAll,
 } from "./preparation.test-utils.js";
 import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
-import { BARRIERES, ELEC, MATOS } from "../sections/inquiry.js";
+import { BARRIERES, LOG_ELEC, MATOS } from "../sections/inquiry.js";
 import { barrieres } from "../../common/review.js";
 import {
   MAGASIN,
@@ -70,7 +70,7 @@ const heras = {
 const chargeurUsbC = {
   slug: "chargeur-usb-c",
   name: "Chargeur USB-C",
-  owner: ELEC,
+  owner: LOG_ELEC,
 } as const;
 
 describe("Inquiry section of festival activity preparation", () => {
@@ -369,9 +369,9 @@ describe("Inquiry section of festival activity preparation", () => {
       activityName                  | activityId          | requestName                               | request
       ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: MATOS }}
       ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], owner: BARRIERES }}
-      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: ELEC }}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: LOG_ELEC }}
       ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: MATOS }}
-      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: ELEC }}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: LOG_ELEC }}
       ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].name} | ${{ ...baladeEnPoney.inquiry.barriers[0], owner: BARRIERES }}
     `(
       "when adding again $requestName on $activityName",
@@ -414,9 +414,9 @@ describe("Inquiry section of festival activity preparation", () => {
       activityName               | activityId       | requestName                               | request                                                                  | group
       ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], quantity: 5, owner: MATOS }}         | ${"gears"}
       ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], quantity: 10, owner: BARRIERES }} | ${"barriers"}
-      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: ELEC }}    | ${"electricity"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}    | ${"electricity"}
       ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], quantity: 5, owner: MATOS }}          | ${"gears"}
-      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: ELEC }}     | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], quantity: 2, owner: LOG_ELEC }}     | ${"electricity"}
     `(
       "when updating the quantity of $requestName request in $activityName",
       ({ activityId, request, group }) => {

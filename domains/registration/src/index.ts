@@ -60,17 +60,7 @@ export type {
   TeamCode as RegistrationTeamCode,
   Teams as RegistrationTeams,
 } from "./register-form/fulfilled-registration.js";
-export {
-  BDE_CODE,
-  CVL_CODE,
-  KARNA_CODE,
-  KFET_CODE,
-  ROUEN_CODE,
-  STRASBOURG_CODE,
-  TEAM_CODES as REGISTRATION_TEAM_CODES,
-  TECKOS_CODE,
-  TENDRESTIVAL_CODE,
-} from "./register-form/fulfilled-registration.js";
+export { TEAM_CODES as REGISTRATION_TEAM_CODES } from "./register-form/fulfilled-registration.js";
 export {
   RegisterForm,
   RegistrationError,

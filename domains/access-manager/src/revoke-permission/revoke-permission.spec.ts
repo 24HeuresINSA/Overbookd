@@ -15,15 +15,16 @@ import {
   Team,
 } from "./revoke-permission";
 import { InMemoryTeams } from "./teams.inmemory";
+import { HARD, LOG_MATOS, SOFT } from "@overbookd/team-constants";
 
 let teams: InMemoryTeams;
 let events: InMemoryEvents;
 let revokePermission: RevokePermission;
 const initialTeamPermissions = (): Map<Team, Permission[]> =>
   new Map([
-    ["hard", [WRITE_FA, READ_FA, READ_GEAR_CATALOG, WRITE_GEAR_CATALOG]],
-    ["soft", [READ_FA]],
-    ["matos", [WRITE_INVENTORY, WRITE_GEAR_CATALOG, AFFECT_TEAM]],
+    [HARD, [WRITE_FA, READ_FA, READ_GEAR_CATALOG, WRITE_GEAR_CATALOG]],
+    [SOFT, [READ_FA]],
+    [LOG_MATOS, [WRITE_INVENTORY, WRITE_GEAR_CATALOG, AFFECT_TEAM]],
   ]);
 
 type TestHelper = { permission: Permission; team: Team };
@@ -35,10 +36,10 @@ describe("Revoke permission", () => {
     revokePermission = new RevokePermission(teams, events);
   });
   describe.each<TestHelper>([
-    { permission: WRITE_FA, team: "hard" },
-    { permission: WRITE_GEAR_CATALOG, team: "hard" },
-    { permission: READ_FA, team: "soft" },
-    { permission: AFFECT_TEAM, team: "matos" },
+    { permission: WRITE_FA, team: HARD },
+    { permission: WRITE_GEAR_CATALOG, team: HARD },
+    { permission: READ_FA, team: SOFT },
+    { permission: AFFECT_TEAM, team: LOG_MATOS },
   ])(
     "when team $team had the permission $permission",
     ({ permission, team }) => {
@@ -65,7 +66,7 @@ describe("Revoke permission", () => {
   );
   describe("when a team does not have the permission", () => {
     const permission = WRITE_FA;
-    const revokingPermission = { permission, from: "soft" } as const;
+    const revokingPermission = { permission, from: SOFT } as const;
     it("should apply without issue", async () => {
       expect(revokePermission.apply(revokingPermission)).resolves.ok;
     });

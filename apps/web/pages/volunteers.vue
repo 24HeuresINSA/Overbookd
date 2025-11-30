@@ -74,7 +74,7 @@ import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-inf
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatDate } from "@overbookd/time";
 import { formatUserPhone } from "~/utils/user/user.utils";
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-constants";
 import {
   DisplayModeBuilder,
   TROMBINOSCOPE,
@@ -153,7 +153,7 @@ const exportCSV = async () => {
   const csv = CSVBuilder.from(
     filteredVolunteers.value.map((volunteer) => {
       const teams = volunteer.teams
-        .filter((team) => team !== BENEVOLE_CODE)
+        .filter((team) => team !== PERSONNE)
         .join(", ");
       const birthdate = formatDate(volunteer.birthdate);
       const phone = formatUserPhone(volunteer.phone);

@@ -103,7 +103,7 @@ export type {
 export {
   MATOS,
   BARRIERES,
-  ELEC,
+  LOG_ELEC,
 } from "./festival-activity/sections/inquiry.js";
 
 export type {

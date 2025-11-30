@@ -22,7 +22,7 @@ import {
   Rejection,
 } from "../../common/review.js";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import { BARRIERES, LOG_ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
 import {
   InDraft,
   AlreadyRejected,
@@ -212,7 +212,7 @@ function selectMyInquiryRequests(
       return festivalActivity.inquiry.gears;
     case BARRIERES:
       return festivalActivity.inquiry.barriers;
-    case ELEC:
+    case LOG_ELEC:
       return festivalActivity.inquiry.electricity;
   }
 }
@@ -220,5 +220,5 @@ function selectMyInquiryRequests(
 function isInquiryOwner(
   team: Reviewer<"FA"> | InquiryOwner,
 ): team is InquiryOwner {
-  return [MATOS, ELEC, BARRIERES].includes(team);
+  return [MATOS, LOG_ELEC, BARRIERES].includes(team);
 }

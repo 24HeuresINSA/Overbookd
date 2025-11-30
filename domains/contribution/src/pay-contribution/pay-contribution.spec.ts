@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { HARD, VIEUX } from "@overbookd/team-constants";
 import { Member, PayContribution } from "./pay-contribution.js";
 import { EXPIRATION_DATE } from "./contribute.js";
 import { InMemoryPayContributions } from "./pay-contributions.inmemory.js";
@@ -25,7 +26,7 @@ const noel: Member = {
   firstname: "Noël",
   lastname: "Ertsemud",
   permissions: [PAY_CONTRIBUTION],
-  teams: ["hard", "vieux"],
+  teams: [HARD, VIEUX],
   email: "noel.ertsemud@example.com",
 };
 const tatouin: Member = {
@@ -33,7 +34,7 @@ const tatouin: Member = {
   firstname: "Tatouin",
   lastname: "Jesoph",
   permissions: [],
-  teams: ["vieux"],
+  teams: [VIEUX],
   email: "tatouin.jesoph@example.com",
 };
 const adherents: Member[] = [lea, noel, tatouin];

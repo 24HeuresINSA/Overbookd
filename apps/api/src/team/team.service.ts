@@ -17,7 +17,7 @@ import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
-import { ADMIN_CODE } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-constants";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -150,6 +150,6 @@ export class TeamService {
   }
 
   private canManageAdmins(teams: string[], author: JwtUtil) {
-    return !teams.includes(ADMIN_CODE) || author.can(MANAGE_ADMINS);
+    return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
   }
 }

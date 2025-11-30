@@ -21,8 +21,8 @@
               tile
               multiple
             >
-              <v-btn :value="HARD_CODE"> Hard</v-btn>
-              <v-btn :value="VIEUX_CODE"> Vieux </v-btn>
+              <v-btn :value="HARD"> Hard</v-btn>
+              <v-btn :value="VIEUX"> Vieux </v-btn>
             </v-btn-toggle>
             <v-text-field
               v-model="searchConsumer"
@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HARD_CODE, VIEUX_CODE } from "@overbookd/team-constants";
+import { HARD, VIEUX } from "@overbookd/team-constants";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
@@ -201,7 +201,7 @@ const searchableConsumers = computed<Searchable<ConsumerWithAmount>[]>(() =>
   consumers.value.map(toSearchable),
 );
 
-const teamFilter = ref<string[]>([HARD_CODE, VIEUX_CODE]);
+const teamFilter = ref<string[]>([HARD, VIEUX]);
 const matchingTeamFilter = (consumerTeams: string[]) => {
   return teamFilter.value.some((team) => consumerTeams.includes(team));
 };

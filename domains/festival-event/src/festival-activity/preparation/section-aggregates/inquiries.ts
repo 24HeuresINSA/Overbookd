@@ -10,7 +10,7 @@ import {
   PrepareInquiryRequestUpdating,
 } from "../prepare-festival-activity.model.js";
 import { AssignDrive } from "../../../common/inquiry-request.js";
-import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry.js";
+import { BARRIERES, LOG_ELEC, MATOS } from "../../sections/inquiry.js";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
 import { FestivalTaskError } from "../../../festival-task/festival-task.error.js";
 import {
@@ -122,7 +122,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,
@@ -149,7 +149,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,
@@ -212,7 +212,7 @@ export class Inquiries<
           this.electricity,
         );
 
-      case ELEC:
+      case LOG_ELEC:
         return new Inquiries(
           this.timeWindows,
           this.gears,

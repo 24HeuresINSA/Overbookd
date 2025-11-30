@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE } from "@overbookd/team-constants";
+import { PERSONNE, HARD, SOFT } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   AlreadyEnrolledError,
@@ -27,15 +27,15 @@ describe("Enroll candidates to a joinable team", () => {
     enrollCandidates = new EnrollCandidates(memberships, events);
   });
   describe.each<EnrollingCandidates & { names: string }>([
-    { team: "hard", candidates: [shogosse], names: shogosse.name },
+    { team: HARD, candidates: [shogosse], names: shogosse.name },
     {
-      team: "hard",
+      team: HARD,
       candidates: [shogosse, noel, antony],
       names: `${shogosse.name}, ${noel.name} and ${antony.name}`,
     },
-    { team: "soft", candidates: [samuel], names: samuel.name },
+    { team: SOFT, candidates: [samuel], names: samuel.name },
     {
-      team: "soft",
+      team: SOFT,
       candidates: [samuel, valerie],
       names: `${samuel.name} and ${valerie.name}`,
     },
@@ -53,10 +53,10 @@ describe("Enroll candidates to a joinable team", () => {
       await enrollCandidates.apply({ candidates, team });
       expect(events.all).toHaveLength(candidates.length);
     });
-    it(`should list all candidates as ${BENEVOLE_CODE} members`, async () => {
+    it(`should list all candidates as ${PERSONNE} members`, async () => {
       await enrollCandidates.apply({ candidates, team });
       candidates.every((candidate) =>
-        expect(memberships.membersOf(BENEVOLE_CODE).includes(candidate)).toBe(
+        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(
           true,
         ),
       );
@@ -68,15 +68,15 @@ describe("Enroll candidates to a joinable team", () => {
       const softCandidates = [samuel, valerie];
       await enrollCandidates.apply({
         candidates: hardCandidates,
-        team: "hard",
+        team: HARD,
       });
       await enrollCandidates.apply({
         candidates: softCandidates,
-        team: "soft",
+        team: SOFT,
       });
       const allCandidates = [...hardCandidates, ...softCandidates];
       allCandidates.every((candidate) =>
-        expect(memberships.membersOf(BENEVOLE_CODE).includes(candidate)).toBe(
+        expect(memberships.membersOf(PERSONNE).includes(candidate)).toBe(
           true,
         ),
       );
@@ -84,12 +84,12 @@ describe("Enroll candidates to a joinable team", () => {
   });
   describe.each<EnrollingCandidates & { alreadyEnrolled: Candidate[] }>([
     {
-      team: "soft",
+      team: SOFT,
       candidates: [valerie, shogosse],
       alreadyEnrolled: [shogosse],
     },
     {
-      team: "hard",
+      team: HARD,
       candidates: [noel, antony, samuel, valerie],
       alreadyEnrolled: [samuel, valerie],
     },
@@ -99,9 +99,9 @@ describe("Enroll candidates to a joinable team", () => {
       beforeEach(() => {
         memberships = new InMemoryMemberships(
           new Map([
-            ["hard", [shogosse]],
-            ["soft", [samuel, valerie]],
-            [BENEVOLE_CODE, [shogosse, samuel, valerie]],
+            [HARD, [shogosse]],
+            [SOFT, [samuel, valerie]],
+            [PERSONNE, [shogosse, samuel, valerie]],
           ]),
         );
         enrollCandidates = new EnrollCandidates(memberships, events);
@@ -117,22 +117,22 @@ describe("Enroll candidates to a joinable team", () => {
     beforeEach(() => {
       memberships = new InMemoryMemberships(
         new Map([
-          ["hard", [shogosse]],
-          ["soft", [samuel, valerie]],
-          [BENEVOLE_CODE, [shogosse, samuel, valerie]],
+          [HARD, [shogosse]],
+          [SOFT, [samuel, valerie]],
+          [PERSONNE, [shogosse, samuel, valerie]],
         ]),
       );
       enrollCandidates = new EnrollCandidates(memberships, events);
     });
     const enrolling: EnrollingCandidates = {
-      team: "hard",
+      team: HARD,
       candidates: [shogosse, noel],
     };
     it("should apply without issue", async () => {
       await expect(enrollCandidates.apply(enrolling)).resolves.ok;
     });
     it("should generate enrolled candidate event only for candidates not already enrolled", async () => {
-      const data = { candidate: noel, team: "hard" };
+      const data = { candidate: noel, team: HARD };
       const expectedEvent = { type: CANDIDATE_ENROLLED, data };
 
       await enrollCandidates.apply(enrolling);
@@ -142,8 +142,8 @@ describe("Enroll candidates to a joinable team", () => {
     });
     it('should list all candidates as "hard" team member', async () => {
       await enrollCandidates.apply(enrolling);
-      expect(memberships.membersOf("hard")).toContainEqual(noel);
-      expect(memberships.membersOf("hard")).toContainEqual(shogosse);
+      expect(memberships.membersOf(HARD)).toContainEqual(noel);
+      expect(memberships.membersOf(HARD)).toContainEqual(shogosse);
     });
   });
 });

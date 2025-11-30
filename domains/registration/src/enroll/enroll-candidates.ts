@@ -1,5 +1,5 @@
 import { Event } from "@overbookd/event";
-import { BENEVOLE_CODE, HARD_CODE, SOFT_CODE } from "@overbookd/team-constants";
+import { PERSONNE, HARD, SOFT } from "@overbookd/team-constants";
 import { JoinableTeam } from "./joinable-team";
 
 export const CANDIDATE_ENROLLED = "candidate-enrolled" as const;
@@ -11,10 +11,10 @@ export type EnrollingCandidates = {
 
 export type Candidate = { id: number; name: string };
 
-export type JoinedTeam = JoinableTeam | typeof BENEVOLE_CODE;
+export type JoinedTeam = JoinableTeam | typeof PERSONNE;
 
 export type Memberships = {
-  join(teams: [JoinableTeam, typeof BENEVOLE_CODE]): {
+  join(teams: [JoinableTeam, typeof PERSONNE]): {
     as: (candidates: Candidate[]) => Promise<void>;
   };
 
@@ -46,7 +46,7 @@ export class EnrollCandidates {
     const toEnrollCandidates = await this.retrieveCandidatesToEnroll(enrolling);
     const { team } = enrolling;
 
-    await this.memberships.join([team, BENEVOLE_CODE]).as(toEnrollCandidates);
+    await this.memberships.join([team, PERSONNE]).as(toEnrollCandidates);
 
     this.generateEvents({ candidates: toEnrollCandidates, team });
   }
@@ -71,7 +71,7 @@ export class EnrollCandidates {
   private async checkEnrolledInOtherTeam(enrolling: EnrollingCandidates) {
     const { team, candidates } = enrolling;
 
-    const otherTeam = team === HARD_CODE ? SOFT_CODE : HARD_CODE;
+    const otherTeam = team === HARD ? SOFT : HARD;
 
     const enrolledInOtherTeam = await this.memberships
       .enrolledIn(otherTeam)

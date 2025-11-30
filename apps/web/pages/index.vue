@@ -46,7 +46,7 @@ import {
 } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
-import { SOFT_CODE } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 
@@ -102,7 +102,7 @@ const canDownloadAndSyncPlanning = computed<boolean>(
 const isOrWantsToBeVolunteer = computed<boolean | undefined>(() => {
   if (!me.value) return;
   const wantToBeVolunteer = me.value.membershipApplication === VOLUNTEER;
-  const isVolunteer = me.value.teams.includes(SOFT_CODE);
+  const isVolunteer = me.value.teams.includes(SOFT);
   return wantToBeVolunteer || isVolunteer;
 });
 const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {

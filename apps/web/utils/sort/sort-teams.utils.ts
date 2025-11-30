@@ -1,26 +1,26 @@
 import { moveAtFirstIndex } from "@overbookd/list";
 import {
-  ADMIN_CODE,
-  HARD_CODE,
-  CA_CODE,
-  SOFT_CODE,
-  CONFIANCE_CODE,
+  ADMIN,
+  HARD,
+  CA,
+  SOFT,
+  CONFIANCE,
 } from "@overbookd/team-constants";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter(
-    (team) => team !== ADMIN_CODE && team !== CA_CODE,
+    (team) => team !== ADMIN && team !== CA,
   );
 
-  const confianceIndex = getTeamIndex(sortedTeams, CONFIANCE_CODE);
+  const confianceIndex = getTeamIndex(sortedTeams, CONFIANCE);
   if (confianceIndex !== -1) {
     sortedTeams = moveAtFirstIndex(sortedTeams, confianceIndex);
   }
 
-  const softIndex = getTeamIndex(sortedTeams, SOFT_CODE);
+  const softIndex = getTeamIndex(sortedTeams, SOFT);
   if (softIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, softIndex);
 
-  const hardIndex = getTeamIndex(sortedTeams, HARD_CODE);
+  const hardIndex = getTeamIndex(sortedTeams, HARD);
   if (hardIndex !== -1) sortedTeams = moveAtFirstIndex(sortedTeams, hardIndex);
 
   return sortedTeams;

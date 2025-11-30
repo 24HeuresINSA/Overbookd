@@ -24,7 +24,7 @@ import {
   secu,
   signa,
 } from "../../common/review.js";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
+import { BARRIERES, LOG_ELEC, InquiryOwner, MATOS } from "../sections/inquiry.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";
@@ -472,7 +472,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfHasImpactOnApprovedRequests() {
     type ListAndOwner = [InquiryRequest[], InquiryOwner];
 
-    const elec: ListAndOwner = [this.activity.inquiry.electricity, ELEC];
+    const elec: ListAndOwner = [this.activity.inquiry.electricity, LOG_ELEC];
     const gear: ListAndOwner = [this.activity.inquiry.gears, MATOS];
     const barrier: ListAndOwner = [this.activity.inquiry.barriers, BARRIERES];
 

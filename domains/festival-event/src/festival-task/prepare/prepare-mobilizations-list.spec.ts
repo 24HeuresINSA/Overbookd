@@ -64,6 +64,7 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { PERSONNE, HARD, VIEUX, CONFIANCE } from "@overbookd/team-constants";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -465,8 +466,8 @@ describe("Prepare festival task mobilizations list", () => {
     describe("when team is not yet part of the mobilization", () => {
       it.each`
         taskName                          | task                 | mobilization                          | team
-        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: "hard", count: 2 }}
-        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: "hard", count: 2 }}
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: HARD, count: 2 }}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: HARD, count: 2 }}
       `(
         "should add team to $taskName mobilization",
         async ({ task, mobilization, team }) => {
@@ -486,9 +487,9 @@ describe("Prepare festival task mobilizations list", () => {
     });
     describe("when team is already part of the mobilization", () => {
       it.each`
-        taskName                          | task                 | mobilization                          | team                               | expectedTeams
-        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: "bénévole", count: 1 }}  | ${[{ team: "bénévole", count: 1 }]}
-        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: "confiance", count: 5 }} | ${[{ count: 2, team: "bénévole" }, { team: "confiance", count: 5 }]}
+        taskName                          | task                 | mobilization                          | team                             | expectedTeams
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: PERSONNE, count: 1 }}  | ${[{ team: PERSONNE, count: 1 }]}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: CONFIANCE, count: 5 }} | ${[{ count: 2, team: PERSONNE }, { team: CONFIANCE, count: 5 }]}
       `(
         "should override team to $taskName mobilization",
         async ({ task, mobilization, team, expectedTeams }) => {
@@ -507,9 +508,9 @@ describe("Prepare festival task mobilizations list", () => {
   describe("Remove team from existing mobilization", () => {
     describe("when team is part of the mobilization", () => {
       it.each`
-        taskName                          | task                 | mobilization                          | team          | expectedTeams
-        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${"bénévole"} | ${[]}
-        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${"bénévole"} | ${[{ team: "confiance", count: 1 }]}
+        taskName                          | task                 | mobilization                          | team        | expectedTeams
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${PERSONNE} | ${[]}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${PERSONNE} | ${[{ team: CONFIANCE, count: 1 }]}
       `(
         "should remove it from $taskName mobilization teams list mobilization",
         async ({ task, mobilization, team, expectedTeams }) => {
@@ -528,8 +529,8 @@ describe("Prepare festival task mobilizations list", () => {
       );
       describe.each`
         taskName                              | taskStatus                      | task                     | mobilization                              | team
-        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]} | ${"bénévole"}
-        ${installBarbecue.general.name}       | ${installBarbecue.status}       | ${installBarbecue}       | ${installBarbecue.mobilizations[1]}       | ${"vieux"}
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]} | ${PERSONNE}
+        ${installBarbecue.general.name}       | ${installBarbecue.status}       | ${installBarbecue}       | ${installBarbecue.mobilizations[1]}       | ${VIEUX}
       `(
         "when removing the last team of a $taskName task with status $taskStatus",
         ({ task, mobilization, team }) => {
@@ -552,12 +553,11 @@ describe("Prepare festival task mobilizations list", () => {
       it("should keep mobilization unchanged", async () => {
         const task = presentEscapeGame;
         const mobilization = task.mobilizations[0];
-        const team = "hard";
 
         const { mobilizations } = await prepare.removeTeamFromMobilization(
           task.id,
           mobilization.id,
-          team,
+          HARD,
         );
 
         expect(mobilizations).toContainEqual(mobilization);

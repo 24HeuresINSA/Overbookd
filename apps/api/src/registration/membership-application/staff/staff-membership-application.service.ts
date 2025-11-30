@@ -12,7 +12,7 @@ import { Users } from "../common/repository/users";
 import { Configurations } from "./repository/configurations";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
-import { HARD_CODE } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-constants";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -87,7 +87,7 @@ export class StaffMembershipApplicationService {
   }
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
-    const enrolling = { candidates, team: HARD_CODE } as const;
+    const enrolling = { candidates, team: HARD } as const;
     return this.useCases.enroll.apply(enrolling);
   }
 }

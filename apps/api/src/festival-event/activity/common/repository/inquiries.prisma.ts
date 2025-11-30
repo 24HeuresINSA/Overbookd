@@ -1,6 +1,6 @@
 import {
   BARRIERES,
-  ELEC,
+  LOG_ELEC,
   InquiryOwner,
   MATOS,
 } from "@overbookd/festival-event";
@@ -8,7 +8,7 @@ import { Gear, Inquiries } from "../festival-activity-common.model";
 import { PrismaService } from "../../../../prisma.service";
 import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";
 
-const owners: InquiryOwner[] = [MATOS, BARRIERES, ELEC];
+const owners: InquiryOwner[] = [MATOS, BARRIERES, LOG_ELEC];
 
 type DatabaseWithOwner = {
   category: {

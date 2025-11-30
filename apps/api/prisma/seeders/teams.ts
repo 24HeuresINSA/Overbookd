@@ -116,7 +116,7 @@ export const teams: Team[] = [
     icon: "mdi-forklift",
   },
   {
-    name: "Hard",
+    name: "Orga",
     code: "hard",
     color: "#969600",
     icon: "mdi-account-hard-hat",
@@ -158,8 +158,8 @@ export const teams: Team[] = [
     icon: "mdi-truck",
   },
   {
-    name: "Orga",
-    code: "orga",
+    name: "CA",
+    code: "ca",
     color: "#e62727",
     icon: "mdi-account-hard-hat",
   },
@@ -200,7 +200,7 @@ export const teams: Team[] = [
     icon: "mdi-sign-direction",
   },
   {
-    name: "Soft",
+    name: "Bénévole",
     code: "soft",
     color: "#2a9d8f",
     icon: "mdi-account-heart",
@@ -248,8 +248,8 @@ export const teams: Team[] = [
     icon: "mdi-forest",
   },
   {
-    name: "Bénévole",
-    code: "benevole",
+    name: "Personne",
+    code: "personne",
     color: "#09A1C4",
     icon: "mdi-account",
   },

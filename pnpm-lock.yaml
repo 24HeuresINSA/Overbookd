@@ -509,6 +509,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
+      '@overbookd/team-constants':
+        specifier: workspace:*
+        version: link:../../constants/team-constants
 
   domains/assignment:
     dependencies:
@@ -548,6 +551,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
+      '@overbookd/team-constants':
+        specifier: workspace:*
+        version: link:../../constants/team-constants
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -563,6 +569,9 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
+      '@overbookd/team-constants':
+        specifier: workspace:*
+        version: link:../../constants/team-constants
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time

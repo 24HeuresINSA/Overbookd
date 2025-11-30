@@ -87,7 +87,7 @@ import {
   type InquiryRequest,
   type InquiryOwner,
   BARRIERES,
-  ELEC,
+  LOG_ELEC,
   type Drive,
   drives,
   type TimeWindow,
@@ -151,7 +151,7 @@ const noDataMessage = computed<string>(() => {
   switch (props.owner) {
     case BARRIERES:
       return "Aucune demande de barrières";
-    case ELEC:
+    case LOG_ELEC:
       return "Aucune demande d'équipement électrique";
     default:
       return "Aucune demande de matos";

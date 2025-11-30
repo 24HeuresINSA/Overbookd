@@ -59,6 +59,7 @@
     "@overbookd/festival-event-constants": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/slugify": "workspace:*",
+    "@overbookd/team-constants": "workspace:*",
     "@overbookd/time": "workspace:*"
   }
 }

@@ -4,9 +4,9 @@ import { TimeWindow } from "../../common/time-window.js";
 
 export const MATOS = "matos";
 export const BARRIERES = "barrieres";
-export const ELEC = "elec";
+export const LOG_ELEC = "elec";
 
-export type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
+export type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof LOG_ELEC;
 
 export type WithTimeWindows = {
   timeWindows: WithAtLeastOneItem<TimeWindow>;

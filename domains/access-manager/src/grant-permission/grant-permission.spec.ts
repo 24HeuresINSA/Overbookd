@@ -9,8 +9,9 @@ import {
   TeamNotFound,
 } from "./grant-permission";
 import { InMemoryTeams } from "./teams.inmemory";
+import { HARD } from "@overbookd/team-constants";
 
-const hard: Team = { code: "hard", permissions: [READ_FA] };
+const hard: Team = { code: HARD, permissions: [READ_FA] };
 let teams: InMemoryTeams;
 let events: InMemoryEvents;
 let grantPermission: GrantPermission;

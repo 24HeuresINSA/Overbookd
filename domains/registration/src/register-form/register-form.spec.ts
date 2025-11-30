@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
 import {
-  BDE_CODE,
+  BDE,
   TENDRESTIVAL_CODE,
-  TECKOS_CODE,
-  STRASBOURG_CODE,
-  KARNA_CODE,
+  TECKOS,
+  STRASBOURG,
+  KARNA,
   Teams,
 } from "./fulfilled-registration.js";
 import { RegisterForm } from "./register-form.js";
@@ -27,7 +27,7 @@ const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
 const birthdate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
-const teams: Teams = [KARNA_CODE, TECKOS_CODE];
+const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 function validForm() {
@@ -265,9 +265,9 @@ describe("Register form", () => {
     describe.each`
       teams                                       | valid
       ${[]}                                       | ${true}
-      ${[BDE_CODE]}                               | ${true}
-      ${[TENDRESTIVAL_CODE, TECKOS_CODE]}         | ${true}
-      ${[STRASBOURG_CODE, TECKOS_CODE, BDE_CODE]} | ${false}
+      ${[BDE]}                               | ${true}
+      ${[TENDRESTIVAL_CODE, TECKOS]}         | ${true}
+      ${[STRASBOURG, TECKOS, BDE]} | ${false}
     `("when joining $teams", ({ teams, valid }) => {
       const validity = valid ? "valid" : "invalid";
       it(`should indicate that form is ${validity}`, () => {

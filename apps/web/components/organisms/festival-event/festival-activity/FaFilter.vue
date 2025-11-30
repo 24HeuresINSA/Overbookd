@@ -112,7 +112,7 @@ import {
   VIEW_SECURITY_DASHBOARD,
   EXPORT_FOR_SIGNA,
 } from "@overbookd/permission";
-import { ELEC_CODE } from "@overbookd/team-constants";
+import { LOG_ELEC } from "@overbookd/team-constants";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { openPage } from "~/utils/navigation/router.utils";
@@ -178,7 +178,7 @@ const openAnimationsToPublish = (event: PointerEvent) => {
 };
 
 const hasLogElecTeam = computed<boolean>(() => {
-  return userStore.isMemberOf(ELEC_CODE);
+  return userStore.isMemberOf(LOG_ELEC);
 });
 const updateNeedSupply = (needSupply: boolean | null) => {
   updateQueryParams(NEED_SUPPLY_QUERY_PARAM, !!needSupply);
