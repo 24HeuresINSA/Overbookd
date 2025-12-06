@@ -14,11 +14,11 @@ Si tu es trop très vieux, et qu'il est difficile pour toi de passer au lokal, j
 Je sais que les comptes persos peuvent compter sur vous alors à très vite !${LINE_BREAK}
 ${LINE_BREAK}
 Des bisous,${LINE_BREAK}
-Thomas Garon${LINE_BREAK}
+Lucas POULHE${LINE_BREAK}
 Secrétaire Général${LINE_BREAK}
 Club des 24 heures de l'INSA${LINE_BREAK}
 ${SG_EMAIL}${LINE_BREAK}
-06.58.62.45.21${LINE_BREAK}
+07.83.96.88.14${LINE_BREAK}
 20, avenue Albert Einstein${LINE_BREAK}
 69621 Villeurbanne Cedex${LINE_BREAK}
 04 72 43 70 00${LINE_BREAK}
