@@ -1,3 +1,9 @@
+## [3.48.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.3...v3.48.4) (2025-12-06)
+
+### Bug Fixes
+
+* festival event stat label [#2592](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2592) ([a8b5611](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a8b56116d4471c9163ba50bd3107a79f39567351))
+
 ## [3.48.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.2...v3.48.3) (2025-11-30)
 
 ### Bug Fixes
