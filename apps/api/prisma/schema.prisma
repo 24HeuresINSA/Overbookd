@@ -812,6 +812,7 @@ model Shotgun {
   mealId  Int        @map("meal_id")
   meal    SharedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
   date    DateTime
+  portion Int        @default(1)
 
   @@id([guestId, mealId])
   @@map("shotgun")
