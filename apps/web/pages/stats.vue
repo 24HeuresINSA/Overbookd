@@ -256,7 +256,7 @@ const additionalTaskDataset = computed(() => ({
 }));
 const pastYearDataset = computed(() => ({
   type: "line" as never,
-  label: "Validée à la 49ème",
+  label: "Validée à la 50ème",
   data: sortedOldEvents.value,
   borderColor: "blue",
   backgroundColor: "rgba(0, 0, 255, 0.6)",
