@@ -26,6 +26,12 @@ export class MealSharingRepository {
     return HttpClient.post<SharedMeal>(`${this.basePath}/${mealId}/shotgun`);
   }
 
+  static removePortionFor(mealId: SharedMeal["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/remove-portion`,
+    );
+  }
+
   static cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
     return HttpClient.delete<SharedMeal>(
       `${this.basePath}/${mealId}/shotgun/${guestId}`,

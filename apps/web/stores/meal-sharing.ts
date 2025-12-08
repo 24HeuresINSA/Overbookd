@@ -57,6 +57,13 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       this._updateMealInsideMeals(sharedMeal);
     },
 
+    async removePortionFor(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.removePortionFor(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
     async cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
       const res = await MealSharingRepository.cancelShotgun(mealId, guestId);
       if (isHttpError(res)) return;
