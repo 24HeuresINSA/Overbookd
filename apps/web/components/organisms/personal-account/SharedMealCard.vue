@@ -53,14 +53,29 @@
             append-icon="mdi-cancel"
             @click="openCancelConfirmationDialog"
           />
-          <v-btn
-            color="primary"
-            size="large"
-            :text="areShotgunsOpen ? 'Shotgun' : 'Les shotguns sont fermés'"
-            append-icon="mdi-account-multiple-plus"
-            :disabled="areShotgunsClose"
-            @click="shotgun"
-          />
+          <div class="d-flex gap-2">
+            <v-btn
+              color="primary"
+              size="large"
+              :text="areShotgunsOpen ? 'Shotgun' : 'Les shotguns sont fermés'"
+              append-icon="mdi-account-multiple-plus"
+              :disabled="areShotgunsClose"
+              @click="shotgun"
+            />
+            <v-btn
+              v-if="hasShotgun && !iAmChef"
+              color="tertiary"
+              size="large"
+              :text="
+                areShotgunsOpen
+                  ? 'Annuler une portion'
+                  : 'Les shotguns sont fermés'
+              "
+              append-icon="mdi-account-multiple-plus"
+              :disabled="areShotgunsClose"
+              @click="removePortionFor"
+            />
+          </div>
           <v-btn
             v-if="iAmChef"
             color="tertiary"
@@ -155,6 +170,10 @@ const closeCancelConfirmationDialog = () =>
 
 const shotgun = () => {
   mealSharingStore.shotgun(shared.id);
+};
+
+const removePortionFor = () => {
+  mealSharingStore.removePortionFor(shared.id);
 };
 
 const cancelShotgun = (guest: Shotgun) => {
