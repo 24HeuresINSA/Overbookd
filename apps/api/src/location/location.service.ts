@@ -43,13 +43,15 @@ export class LocationService {
       });
 
     if (festivalActivities.length > 0 || festivalTasks.length > 0) {
-      const FaBaseUrl = 'https://overbookd.24heures.org/fa/';
-      const FtBaseUrl = 'https://overbookd.24heures.org/ft/';
-      const activitiesTitles = festivalActivities.map(({ id }) => 
-          `<a href="${FaBaseUrl}${id}" target="_blank" style="text-decoration: underline;">FA ${id}</a>`
+      const FaBaseUrl = "https://overbookd.24heures.org/fa/";
+      const FtBaseUrl = "https://overbookd.24heures.org/ft/";
+      const activitiesTitles = festivalActivities.map(
+        ({ id }) =>
+          `<a href="${FaBaseUrl}${id}" target="_blank" style="text-decoration: underline;">FA ${id}</a>`,
       );
-      const tasksTitles = festivalTasks.map(({ id }) => 
-          `<a href="${FtBaseUrl}${id}" target="_blank" style="text-decoration: underline;">FT ${id}</a>`
+      const tasksTitles = festivalTasks.map(
+        ({ id }) =>
+          `<a href="${FtBaseUrl}${id}" target="_blank" style="text-decoration: underline;">FT ${id}</a>`,
       );
       const allLinkedTitles = [...activitiesTitles, ...tasksTitles].join(", ");
       const errorMessage = `Impossible de supprimer le lieu, il est lié à : ${allLinkedTitles}`;
