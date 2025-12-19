@@ -26,6 +26,7 @@
     "enabled": true,
     "schedule": ["after 5pm on the first day of the month"]
   },
+  "abandonmentThreshold": "2 years",
   "packageRules": [
     {
       "description": "Group all dependencies from the api directory",
