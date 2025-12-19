@@ -73,7 +73,7 @@ overbookd/prune:
         - constants/**/*
     - when: never
   before_script:
-    - npm install -g corepack@0.34.4
+    - npm install -g corepack@0.34.5
     - corepack enable
     - corepack prepare pnpm@latest-10 --activate
     - pnpm config set store-dir .pnpm-store
