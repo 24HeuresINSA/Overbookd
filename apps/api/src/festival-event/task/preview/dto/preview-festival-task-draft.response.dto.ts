@@ -3,9 +3,7 @@ import { PreviewFestivalTaskDraft } from "@overbookd/festival-event";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
-export class PreviewFestivalTaskDraftResponseDto
-  implements PreviewFestivalTaskDraft
-{
+export class PreviewFestivalTaskDraftResponseDto implements PreviewFestivalTaskDraft {
   @ApiProperty({
     description: "The festival task id",
     type: Number,

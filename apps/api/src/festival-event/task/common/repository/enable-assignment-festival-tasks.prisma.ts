@@ -16,9 +16,7 @@ import {
   ReadyToReviewBuilder,
 } from "./festival-task.builder";
 
-export class PrimsaEnableAssignmentFestivalTasks
-  implements FestivalTasksForEnableAssignment
-{
+export class PrimsaEnableAssignmentFestivalTasks implements FestivalTasksForEnableAssignment {
   constructor(private readonly prisma: PrismaService) {}
   async findById(
     id: FestivalTask["id"],

@@ -3,9 +3,7 @@ import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
 import { Transform } from "class-transformer";
 import { InventoryRecordSearchOptions } from "@overbookd/http";
 
-export class InventoryGroupedRecordSearchRequestDto
-  implements InventoryRecordSearchOptions
-{
+export class InventoryGroupedRecordSearchRequestDto implements InventoryRecordSearchOptions {
   @ApiProperty({
     required: false,
     description: "Gear name or reference",

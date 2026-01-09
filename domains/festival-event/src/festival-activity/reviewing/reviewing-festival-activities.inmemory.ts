@@ -3,9 +3,7 @@ import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { updateItemToList } from "@overbookd/list";
 import { ReviewingFestivalActivities } from "./reviewing.js";
 
-export class InMemoryReviewingFestivalActivities
-  implements ReviewingFestivalActivities
-{
+export class InMemoryReviewingFestivalActivities implements ReviewingFestivalActivities {
   constructor(private festivalActivities: FestivalActivity[]) {}
 
   findById(id: number): Promise<FestivalActivity | null> {

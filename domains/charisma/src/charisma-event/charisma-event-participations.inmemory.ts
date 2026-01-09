@@ -8,9 +8,7 @@ import {
 } from "./charisma-event";
 import { DateString } from "@overbookd/time";
 
-export class InMemoryCharismaEventParticipations
-  implements CharismaEventParticipations
-{
+export class InMemoryCharismaEventParticipations implements CharismaEventParticipations {
   constructor(
     private participants: User[],
     private participations: Participation[],

@@ -5,9 +5,7 @@ import { CatalogSignageRepository } from "../catalog-signage.service";
 import { SlugifyService } from "@overbookd/slugify";
 import { ForbiddenException, StreamableFile } from "@nestjs/common";
 
-export class PrismaCatalogSignageRepository
-  implements CatalogSignageRepository
-{
+export class PrismaCatalogSignageRepository implements CatalogSignageRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileService: FileService,

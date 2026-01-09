@@ -17,9 +17,7 @@ class MultiPlanningVolunteerAssignmentDto
   name: string;
 }
 
-export class MultiPlanningVolunteerResponseDto
-  implements MultiPlanningVolunteer
-{
+export class MultiPlanningVolunteerResponseDto implements MultiPlanningVolunteer {
   @ApiProperty({ name: "id", description: "Volunteer id", type: Number })
   id: number;
 

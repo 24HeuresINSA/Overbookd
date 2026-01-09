@@ -13,9 +13,7 @@ import {
   buildFestivalActivityCondition,
 } from "./festival-activity.query";
 
-export class PrismaAskForReview
-  implements AskForReviewFestivalActivityRepository
-{
+export class PrismaAskForReview implements AskForReviewFestivalActivityRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: number): Promise<FestivalActivity> {

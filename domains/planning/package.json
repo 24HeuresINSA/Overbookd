@@ -50,7 +50,7 @@
   ],
   "engines": {
     "node": "24.11.1",
-    "pnpm": "10.22.0"
+    "pnpm": "10.27.0"
   },
   "dependencies": {
     "@overbookd/time": "workspace:*"

@@ -4,9 +4,7 @@ import { IN_REVIEW } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 import { TaskInReviewReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
 
-export class PreviewFestivalTaskInReviewResponseDto
-  implements PreviewFestivalTaskInReview
-{
+export class PreviewFestivalTaskInReviewResponseDto implements PreviewFestivalTaskInReview {
   @ApiProperty({
     description: "The festival task id",
     type: Number,

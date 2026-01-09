@@ -21,9 +21,7 @@ class CreateProvisionsTransactionDto implements CreateProvisionsTransaction {
   consumption: number;
 }
 
-export class CreateProvisionsTransactionsRequestDto
-  implements CreateProvisionsTransactionsForm
-{
+export class CreateProvisionsTransactionsRequestDto implements CreateProvisionsTransactionsForm {
   @ApiProperty({
     description: "The stick price",
     example: 60,

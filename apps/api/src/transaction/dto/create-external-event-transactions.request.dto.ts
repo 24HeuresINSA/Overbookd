@@ -8,9 +8,7 @@ import {
   Min,
 } from "class-validator";
 
-export class CreateExternalEventTransactionsRequestDto
-  implements NewExternalEventConsumption
-{
+export class CreateExternalEventTransactionsRequestDto implements NewExternalEventConsumption {
   @ApiProperty({
     description: "External event amount in cents",
     type: Number,

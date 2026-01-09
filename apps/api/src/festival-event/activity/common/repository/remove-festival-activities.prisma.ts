@@ -5,9 +5,7 @@ import { buildFestivalActivityCondition } from "./festival-activity.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { ForbiddenException } from "@nestjs/common";
 
-export class PrismaRemoveFestivalActivities
-  implements RemoveFestivalActivities
-{
+export class PrismaRemoveFestivalActivities implements RemoveFestivalActivities {
   constructor(private readonly prisma: PrismaService) {}
 
   async remove(id: FestivalActivity["id"]): Promise<void> {

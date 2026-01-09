@@ -1,9 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CatalogCategoryIdentifier } from "@overbookd/http";
 
-export class CatalogCategoryIdentifierResponseDto
-  implements CatalogCategoryIdentifier
-{
+export class CatalogCategoryIdentifierResponseDto implements CatalogCategoryIdentifier {
   @ApiProperty()
   id: number;
 

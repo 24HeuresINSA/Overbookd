@@ -19,9 +19,9 @@ class StatusResponseDto implements Record<FestivalEvent["status"], number> {
   READY_TO_ASSIGN: number;
 }
 
-export class StatisticsResponseDto<T extends FestivalEvent>
-  implements Statistics<T>
-{
+export class StatisticsResponseDto<
+  T extends FestivalEvent,
+> implements Statistics<T> {
   @ApiProperty({ description: "team in charge of activities" })
   teamCode: string;
 

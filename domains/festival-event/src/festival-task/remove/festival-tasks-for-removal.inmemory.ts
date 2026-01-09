@@ -2,9 +2,7 @@ import { FestivalTasksForRemoval } from "./remove.js";
 import { FestivalTask } from "../festival-task.js";
 import { WithConflicts } from "../volunteer-conflicts.js";
 
-export class InMemoryFestivalTasksForRemoval
-  implements FestivalTasksForRemoval
-{
+export class InMemoryFestivalTasksForRemoval implements FestivalTasksForRemoval {
   constructor(private tasks: WithConflicts[]) {}
 
   findStatus(id: FestivalTask["id"]): Promise<FestivalTask["status"] | null> {

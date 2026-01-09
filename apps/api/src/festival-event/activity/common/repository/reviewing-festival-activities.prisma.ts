@@ -11,9 +11,7 @@ import {
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { FestivalActivityQueryBuilder } from "./festival-activity.query";
 
-export class PrismaReviewingFestivalActivities
-  implements ReviewingFestivalActivities
-{
+export class PrismaReviewingFestivalActivities implements ReviewingFestivalActivities {
   constructor(private prisma: PrismaService) {}
 
   async findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {

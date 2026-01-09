@@ -13,9 +13,10 @@ class CandidateToEnrollDto implements CandidateToEnroll {
   name: string;
 }
 
-export class EnrollCandidatesRequestDto
-  implements Pick<EnrollCandidatesForm, "candidates">
-{
+export class EnrollCandidatesRequestDto implements Pick<
+  EnrollCandidatesForm,
+  "candidates"
+> {
   @ApiProperty({
     required: true,
     description: "Candidates to enroll",

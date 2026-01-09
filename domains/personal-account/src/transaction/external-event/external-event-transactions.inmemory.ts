@@ -5,9 +5,7 @@ import {
   ExternalEventTransactionForm,
 } from "./create-external-event-transactions";
 
-export class InMemoryExternalEventTransactions
-  implements ExternalEventTransactions
-{
+export class InMemoryExternalEventTransactions implements ExternalEventTransactions {
   constructor(
     private adherents: TransactionUser[],
     private externalEventTransactions: MyTransaction[],

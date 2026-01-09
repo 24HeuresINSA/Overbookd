@@ -12,9 +12,7 @@ import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { FestivalActivityQueryBuilder } from "./festival-activity.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
-export class PrismaPrepareFestivalActivities
-  implements PrepareFestivalActivityRepository
-{
+export class PrismaPrepareFestivalActivities implements PrepareFestivalActivityRepository {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<PreviewFestivalActivity[]> {

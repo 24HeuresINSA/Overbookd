@@ -6,9 +6,7 @@ import {
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
 import { connections } from "./connections";
 
-export class AddElectricitySupplyRequestDto
-  implements PrepareElectricitySupplyCreation
-{
+export class AddElectricitySupplyRequestDto implements PrepareElectricitySupplyCreation {
   @ApiProperty({ required: true, enum: connections })
   @IsEnum(connections, { message: () => "Le type de connexion est invalide" })
   connection: ElectricityConnection;

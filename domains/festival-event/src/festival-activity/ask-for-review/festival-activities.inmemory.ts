@@ -3,9 +3,7 @@ import { FestivalActivity, Reviewable } from "../festival-activity.js";
 import { FestivalActivityNotFound } from "../festival-activity.error.js";
 import { AskForReviewFestivalActivityRepository } from "./ask-for-review.js";
 
-export class InMemoryAskForReviewFestivalActivityRepository
-  implements AskForReviewFestivalActivityRepository
-{
+export class InMemoryAskForReviewFestivalActivityRepository implements AskForReviewFestivalActivityRepository {
   constructor(private festivalActivities: FestivalActivity[]) {}
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {

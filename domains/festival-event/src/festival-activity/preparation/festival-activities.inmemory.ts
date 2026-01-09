@@ -16,9 +16,7 @@ import { isValidatedReviews } from "../../common/review.js";
 import { isRefusedReviews } from "../../common/review.js";
 import { isDraft } from "../../festival-event.js";
 
-export class InMemoryPrepareFestivalActivityRepository
-  implements PrepareFestivalActivityRepository
-{
+export class InMemoryPrepareFestivalActivityRepository implements PrepareFestivalActivityRepository {
   constructor(private festivalActivities: FestivalActivity[] = []) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {

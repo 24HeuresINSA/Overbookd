@@ -13,9 +13,9 @@ const INIT_STATUS_STATISTICS: Statistics<FestivalTask>["status"] = {
   READY_TO_ASSIGN: 0,
 };
 
-export class PrismaFestivalTaskStatistics<T extends FestivalTask = FestivalTask>
-  implements FestivalEventStatistics<T>
-{
+export class PrismaFestivalTaskStatistics<
+  T extends FestivalTask = FestivalTask,
+> implements FestivalEventStatistics<T> {
   constructor(private readonly prisma: PrismaService) {}
 
   async byTeams(): Promise<Statistics<T>[]> {

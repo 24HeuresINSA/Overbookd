@@ -8,9 +8,7 @@ import { SELECT_BASE_TRANSACTION } from "./transaction.query";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 import { ExternalEventTransactions } from "@overbookd/personal-account";
 
-export class PrismaExternalEventTransactions
-  implements ExternalEventTransactions
-{
+export class PrismaExternalEventTransactions implements ExternalEventTransactions {
   constructor(private readonly prisma: PrismaService) {}
 
   async save(

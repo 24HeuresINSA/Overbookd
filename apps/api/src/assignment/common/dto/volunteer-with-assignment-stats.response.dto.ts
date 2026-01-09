@@ -18,9 +18,7 @@ class AssignmentStatResponseDto implements AssignmentStat {
   duration: number;
 }
 
-export class VolunteerWithAssignmentStatsResponseDto
-  implements VolunteerWithAssignmentStats
-{
+export class VolunteerWithAssignmentStatsResponseDto implements VolunteerWithAssignmentStats {
   @ApiProperty({
     required: true,
     description: "volunteer id",
