@@ -10,9 +10,9 @@ type Notification<T extends FestivalEventIdentifier> = {
   event: FestivalActivityToReview;
 };
 
-export class InMemoryNotifications<T extends FestivalEventIdentifier>
-  implements Notifications<T>
-{
+export class InMemoryNotifications<
+  T extends FestivalEventIdentifier,
+> implements Notifications<T> {
   constructor(private _notifications: Notification<T>[] = []) {}
 
   get entries(): Notification<T>[] {

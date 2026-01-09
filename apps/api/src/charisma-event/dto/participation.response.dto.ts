@@ -4,9 +4,7 @@ import { User } from "@overbookd/user";
 import { UserIdentifierResponseDto } from "../../common/dto/user-identifier.response.dto";
 import { DateString } from "@overbookd/time";
 
-export class CharismaEventParticipationResponseDto
-  implements CharismaEventParticipation
-{
+export class CharismaEventParticipationResponseDto implements CharismaEventParticipation {
   @ApiProperty({ example: "comptage-velo-1" })
   slug: string;
 

@@ -48,9 +48,7 @@ type BaseReviewableWithConflicts = Omit<
   "status" | "reviews" | "mobilizations"
 >;
 
-class BaseReviewableWithConflictsResponseDto
-  implements BaseReviewableWithConflicts
-{
+class BaseReviewableWithConflictsResponseDto implements BaseReviewableWithConflicts {
   @ApiProperty()
   id: Reviewable["id"];
 

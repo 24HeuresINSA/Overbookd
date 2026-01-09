@@ -7,9 +7,9 @@ import {
 import { PrismaService } from "../../../prisma.service";
 import { Logger } from "@nestjs/common";
 
-export class PrismaNotifications<T extends FestivalEventIdentifier>
-  implements Notifications<T>
-{
+export class PrismaNotifications<
+  T extends FestivalEventIdentifier,
+> implements Notifications<T> {
   constructor(private readonly prisma: PrismaService) {}
 
   private readonly logger = new Logger(PrismaNotifications.name);

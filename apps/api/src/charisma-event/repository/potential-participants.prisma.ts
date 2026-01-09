@@ -12,9 +12,7 @@ import {
 } from "../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
 
-export class PrismaCharismaEventPotentialParticipants
-  implements PotentialParticipants
-{
+export class PrismaCharismaEventPotentialParticipants implements PotentialParticipants {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<CharismaEventPotentialParticipant[]> {

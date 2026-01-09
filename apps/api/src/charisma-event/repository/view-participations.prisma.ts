@@ -4,9 +4,7 @@ import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 import { ViewParticipations } from "../charisma-event.service";
 import { DateString } from "@overbookd/time";
 
-export class PrismaViewCharismaEventParticipations
-  implements ViewParticipations
-{
+export class PrismaViewCharismaEventParticipations implements ViewParticipations {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<CharismaEventParticipation[]> {

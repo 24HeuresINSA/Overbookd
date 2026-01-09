@@ -9,9 +9,7 @@ import {
 } from "./festival-activity.query";
 import { DraftBuilder } from "./festival-activity.builder";
 
-export class PrismaCreateFestivalActivities
-  implements CreateFestivalActivityRepository
-{
+export class PrismaCreateFestivalActivities implements CreateFestivalActivityRepository {
   constructor(private readonly prisma: PrismaService) {}
   async create(activity: Draft): Promise<Draft> {
     const saved = await this.prisma.festivalActivity.create({

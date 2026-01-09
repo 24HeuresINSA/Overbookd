@@ -32,9 +32,7 @@ class CharismaEventDefinitionDto implements CharismaEventDefinition {
   eventDate: Date;
 }
 
-class ParticipantTakingPartInCharismaEventDto
-  implements ParticipantTakingPartInCharismaEvent
-{
+class ParticipantTakingPartInCharismaEventDto implements ParticipantTakingPartInCharismaEvent {
   @ApiProperty()
   @IsNumber()
   @IsDefined()
@@ -46,9 +44,7 @@ class ParticipantTakingPartInCharismaEventDto
   hours: number;
 }
 
-export class CreateCharismaEventParticipationsRequestDto
-  implements CreateCharismaEventParticipationsForm
-{
+export class CreateCharismaEventParticipationsRequestDto implements CreateCharismaEventParticipationsForm {
   @ApiProperty({ type: CharismaEventDefinitionDto })
   @IsDefined()
   event: CharismaEventDefinition;

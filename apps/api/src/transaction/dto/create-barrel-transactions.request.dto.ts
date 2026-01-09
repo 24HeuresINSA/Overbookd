@@ -21,9 +21,7 @@ class CreateBarrelTransactionDto implements CreateBarrelTransaction {
   consumption: number;
 }
 
-export class CreateBarrelTransactionsRequestDto
-  implements CreateBarrelTransactionsForm
-{
+export class CreateBarrelTransactionsRequestDto implements CreateBarrelTransactionsForm {
   @ApiProperty({
     description: "The barrel slug",
     example: "blonde",

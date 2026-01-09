@@ -11,9 +11,7 @@ import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 import { DateString } from "@overbookd/time";
 
-export class PrismaManageCharismaEventParticipations
-  implements CharismaEventParticipations
-{
+export class PrismaManageCharismaEventParticipations implements CharismaEventParticipations {
   constructor(private readonly prisma: PrismaService) {}
 
   async areAlreadyParticipating(

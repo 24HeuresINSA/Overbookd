@@ -29,9 +29,7 @@ class LiteInventoryRecordDto implements LiteInventoryRecord {
   comment?: string;
 }
 
-export class InventoryGroupedRecordResponseDto
-  implements InventoryGroupedRecord
-{
+export class InventoryGroupedRecordResponseDto implements InventoryGroupedRecord {
   @ApiProperty({
     required: true,
     description: "Gear quantity",

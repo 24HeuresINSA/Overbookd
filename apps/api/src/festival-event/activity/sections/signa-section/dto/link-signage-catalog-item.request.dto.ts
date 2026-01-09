@@ -3,9 +3,7 @@ import { SignageCatalogItem } from "@overbookd/festival-event";
 import { IsNumber } from "class-validator";
 import { LinkSignageCatalogItemForm } from "@overbookd/http";
 
-export class LinkSignageCatalogItemRequestDto
-  implements LinkSignageCatalogItemForm
-{
+export class LinkSignageCatalogItemRequestDto implements LinkSignageCatalogItemForm {
   @ApiProperty({ required: true })
   @IsNumber()
   catalogItemId: SignageCatalogItem["id"];

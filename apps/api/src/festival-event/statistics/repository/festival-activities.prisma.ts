@@ -15,8 +15,7 @@ const INIT_STATUS_STATISTICS: Statistics["status"] = {
 
 export class PrismaFestivalActivityStatistics<
   T extends FestivalActivity = FestivalActivity,
-> implements FestivalEventStatistics<T>
-{
+> implements FestivalEventStatistics<T> {
   constructor(private readonly prisma: PrismaService) {}
 
   async byTeams(): Promise<Statistics<T>[]> {

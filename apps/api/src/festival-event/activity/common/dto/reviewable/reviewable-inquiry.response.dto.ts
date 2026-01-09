@@ -10,9 +10,7 @@ import {
   UnassignedInquiryRequestResponseDto,
 } from "../../../../common/dto/inquiry-request.response.dto";
 
-export class ReviewableInquiryResponseDto
-  implements InquiryWithPotentialRequests
-{
+export class ReviewableInquiryResponseDto implements InquiryWithPotentialRequests {
   @ApiProperty({ required: true, isArray: true, type: TimeWindowResponseDto })
   timeWindows: TimeWindow[];
 

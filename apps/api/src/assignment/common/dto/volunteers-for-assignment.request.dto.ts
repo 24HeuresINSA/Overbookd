@@ -31,9 +31,7 @@ class TeamMemberRequestDto implements TeamMember {
   as: string;
 }
 
-export class VolunteersForAssignmentRequestDto
-  implements VolunteersForAssignment
-{
+export class VolunteersForAssignmentRequestDto implements VolunteersForAssignment {
   @ApiProperty({ type: AssignmentIdentifierRequestDto })
   @Type(() => AssignmentIdentifierRequestDto)
   @ValidateNested()

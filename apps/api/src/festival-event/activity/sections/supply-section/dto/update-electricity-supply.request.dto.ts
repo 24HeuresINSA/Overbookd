@@ -17,9 +17,7 @@ export type UpdateElectricitySupplyRequest = Omit<
   "id"
 >;
 
-export class UpdateElectricitySupplyRequestDto
-  implements UpdateElectricitySupplyRequest
-{
+export class UpdateElectricitySupplyRequestDto implements UpdateElectricitySupplyRequest {
   @ApiProperty({ required: false, enum: connections })
   @IsOptional()
   @IsEnum(connections, { message: () => "Le type de connexion est invalide" })

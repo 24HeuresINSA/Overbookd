@@ -6,9 +6,7 @@ export type VolunteerAssignmentStat = {
   duration: number;
 };
 
-export class VolunteerAssignmentStatResponseDto
-  implements VolunteerAssignmentStat
-{
+export class VolunteerAssignmentStatResponseDto implements VolunteerAssignmentStat {
   @ApiProperty({
     required: true,
     description: "The task category of the stats",

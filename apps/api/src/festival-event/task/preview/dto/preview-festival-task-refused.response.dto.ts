@@ -4,9 +4,7 @@ import { REFUSED } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 import { TaskRefusedReviewsResponseDto } from "../../common/dto/reviewable/reviews.response.dto";
 
-export class PreviewFestivalTaskRefusedResponseDto
-  implements PreviewFestivalTaskRefused
-{
+export class PreviewFestivalTaskRefusedResponseDto implements PreviewFestivalTaskRefused {
   @ApiProperty({
     description: "The festival task id",
     type: Number,
