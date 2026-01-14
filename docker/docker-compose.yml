@@ -30,6 +30,8 @@ services:
       # Entrypoint
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # Dev only
+      - "--entrypoints.websecure.http.encodedCharacters.allowEncodedSlash=true"
       # HTTP -> HTTPS
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       # Enable Dashboard
@@ -77,6 +79,8 @@ services:
       SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
       SMTP_HOST: overbookd_mail_catcher
       SMTP_PORT: 1025
+      HOST: 0.0.0.0
+      PORT: 3000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-back.tls=true"
