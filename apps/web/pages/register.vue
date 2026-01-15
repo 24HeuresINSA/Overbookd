@@ -1,8 +1,8 @@
 <template>
   <div class="background-wrapper">
     <v-img
-      src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg"
-      alt="Les organisateurs de la 46ème édition des 24 heures de l'INSA"
+      src="/registration/volunteers_on_main_stage.jpg"
+      alt="Les organisateurs de la 50ème édition des 24 heures de l'INSA"
       class="background"
       cover
     />
