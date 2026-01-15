@@ -2,8 +2,8 @@
   <v-card class="register-card" theme="loginTheme">
     <v-img
       class="register-illustration"
-      src="https://wordpress.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
-      alt="Des bénévoles vus de dos devant la grande scène de la 44ème édition des 24 heures de l'INSA"
+      src="/registration/volunteer_back_main_stage.jpg"
+      alt="Un bénévole de dos devant la grande scène de la 50ème édition des 24 heures de l'INSA"
       cover
     >
       <v-card-title class="register-title">
