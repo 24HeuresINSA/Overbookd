@@ -140,7 +140,6 @@ const props = defineProps({
   },
   selectedBarrel: {
     type: Object as PropType<ConfiguredBarrel | null>,
-    required: true,
   },
   loading: {
     type: Boolean,
@@ -209,7 +208,11 @@ const filteredConsumers = computed<ConsumerWithAmount[]>(() => {
   const filteredByTeam = searchableConsumers.value.filter((consumer) =>
     matchingTeamFilter(consumer.teams),
   );
-  return matchingSearchItems(filteredByTeam, searchConsumer.value);
+  const results = matchingSearchItems(filteredByTeam, searchConsumer.value);
+  return results.map((c) => ({
+    ...c,
+    recap: computedFinalAmounts.value[c.id],
+  }));
 });
 
 const updateAmount = (consumer: ConsumerWithAmount, value: string | number) => {
