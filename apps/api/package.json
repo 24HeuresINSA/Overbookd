@@ -44,7 +44,6 @@
     "database:seed": "npx prisma db seed"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/common": "11.1.8",
     "@nestjs/core": "11.1.8",
     "@nestjs/jwt": "11.0.1",
