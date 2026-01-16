@@ -1,5 +1,3 @@
-import { MailerModule } from "@nestjs-modules/mailer";
-import { EjsAdapter } from "@nestjs-modules/mailer/dist/adapters/ejs.adapter";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -48,26 +46,7 @@ import { MultiPlanningModule } from "./multi-planning/multi-planning.module";
     TeamModule,
     TransactionModule,
     FestivalActivityModule,
-    MailerModule.forRoot({
-      transport: {
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
-        },
-      },
-      defaults: {
-        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
-      },
-      template: {
-        dir: __dirname + "/mail/templates",
-        adapter: new EjsAdapter(),
-        options: {
-          strict: false,
-        },
-      },
-    }),
+    // MailerModule removed — `MailModule` provides mailing via nodemailer
     ConfigurationModule,
     LocationModule,
     PermissionModule,
