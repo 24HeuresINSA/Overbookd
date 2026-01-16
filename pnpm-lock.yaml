@@ -258,6 +258,15 @@ importers:
         specifier: 2.17.0
         version: 2.17.0
     devDependencies:
+      '@babel/core':
+        specifier: ^7.28.6
+        version: 7.28.6
+      '@babel/preset-env':
+        specifier: ^7.28.6
+        version: 7.28.6(@babel/core@7.28.6)
+      '@babel/preset-typescript':
+        specifier: ^7.28.5
+        version: 7.28.5(@babel/core@7.28.6)
       '@nestjs/cli':
         specifier: 11.0.14
         version: 11.0.14(@types/node@25.0.6)(esbuild@0.27.2)
@@ -300,6 +309,9 @@ importers:
       '@types/supertest':
         specifier: 6.0.3
         version: 6.0.3
+      babel-jest:
+        specifier: ^30.2.0
+        version: 30.2.0(@babel/core@7.28.6)
       jest:
         specifier: 30.2.0
         version: 30.2.0(@types/node@25.0.6)(ts-node@10.9.2(@types/node@25.0.6)(typescript@5.9.3))
@@ -1388,6 +1400,12 @@ packages:
     resolution: {integrity: sha512-HrcgcIESLm9aIR842yhJ5RWan/gebQUJ6E/E5+rf0y9o6oj7w0Br+sWuL6kEQ/o/AdfvR1Je9jG18/gnpwjEyA==}
     peerDependencies:
       '@babel/core': ^7.0.0-0 || ^8.0.0-0 <8.0.0
+
+  '@babel/preset-typescript@7.28.5':
+    resolution: {integrity: sha512-+bQy5WOI2V6LJZpPVxY+yp66XdZ2yifu0Mc1aP5CQKgjn4QM5IN2i5fAZ4xKop47pr8rpVhiAeu+nDQa12C8+g==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
 
   '@babel/runtime@7.28.6':
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
@@ -10607,6 +10625,17 @@ snapshots:
       '@babel/helper-plugin-utils': 7.28.6
       '@babel/types': 7.28.6
       esutils: 2.0.3
+
+  '@babel/preset-typescript@7.28.5(@babel/core@7.28.6)':
+    dependencies:
+      '@babel/core': 7.28.6
+      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-validator-option': 7.27.1
+      '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.28.6)
+      '@babel/plugin-transform-modules-commonjs': 7.28.6(@babel/core@7.28.6)
+      '@babel/plugin-transform-typescript': 7.28.6(@babel/core@7.28.6)
+    transitivePeerDependencies:
+      - supports-color
 
   '@babel/runtime@7.28.6': {}
 
