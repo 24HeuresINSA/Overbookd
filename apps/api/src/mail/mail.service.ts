@@ -212,7 +212,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = await transporter.sendMail({
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Réinitialisation de ton mot de passe Overbookd",
@@ -221,7 +221,7 @@ export class MailService implements OnApplicationBootstrap {
           firstname,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
         }),
-      });
+      };
       await transporter.sendMail(options);
       this.logger.log(`Reset password mail sent to ${email}`);
     } catch (error) {
@@ -244,7 +244,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = {
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Bienvenue sur Overbookd !",
@@ -275,7 +275,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = {
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "[24h de l'INSA] Bienvenue dans l'équipe !",
@@ -308,7 +308,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = {
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} rejetée 🙀`,
@@ -343,7 +343,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = {
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `[FT] ${task.name} rejetée 🙀`,
@@ -377,7 +377,7 @@ export class MailService implements OnApplicationBootstrap {
           pass: process.env.GMAIL_PASS,
         },
       });
-      const options = {
+      const options: SendMailOptions = {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} validée 💫`,
