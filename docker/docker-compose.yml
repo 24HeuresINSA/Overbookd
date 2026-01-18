@@ -18,6 +18,9 @@ services:
   traefik:
     image: traefik:v3.6.8
     restart: unless-stopped
+    depends_on:
+      certs-downloader:
+        condition: service_completed_successfully
     command:
       # Docker config
       - "--providers.docker=true"
@@ -78,6 +81,7 @@ services:
       SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
       SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
       SMTP_HOST: overbookd_mail_catcher
+      NPM_CONFIG_CACHE: /tmp/.npm
       SMTP_PORT: 1025
       HOST: 0.0.0.0
       PORT: 3000
