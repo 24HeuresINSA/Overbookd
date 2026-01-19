@@ -46,7 +46,6 @@ import { MultiPlanningModule } from "./multi-planning/multi-planning.module";
     TeamModule,
     TransactionModule,
     FestivalActivityModule,
-    // MailerModule removed — `MailModule` provides mailing via nodemailer
     ConfigurationModule,
     LocationModule,
     PermissionModule,
