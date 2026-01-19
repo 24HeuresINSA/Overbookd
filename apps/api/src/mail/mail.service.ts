@@ -2,8 +2,8 @@ import {
   Logger,
   InternalServerErrorException,
   OnApplicationBootstrap,
+  Injectable,
 } from "@nestjs/common";
-import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import {
@@ -21,6 +21,9 @@ import {
   NOT_ASKING_TO_REVIEW,
   REJECTED,
 } from "@overbookd/festival-event-constants";
+import { createTransport, SendMailOptions } from "nodemailer";
+import { renderFile } from "ejs";
+import { PrismaMembers } from "./repository/members.prisma";
 
 type EmailResetPassword = {
   email: string;
@@ -76,11 +79,11 @@ export type Members = {
   byId(id: number): Promise<Member | null>;
 };
 
+@Injectable()
 export class MailService implements OnApplicationBootstrap {
   constructor(
-    private readonly mailerService: MailerService,
     private readonly eventStore: DomainEventService,
-    private readonly members: Members,
+    private readonly members: PrismaMembers,
   ) {}
 
   private logger = new Logger("MailService");
@@ -170,16 +173,25 @@ export class MailService implements OnApplicationBootstrap {
 
   async mailTest({ email, username }: MailTestRequestDto): Promise<void> {
     try {
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Mail de test de l'API Overbookd",
         template: "mail-test",
-        context: { username },
-      });
-
-      if (mail) {
-        this.logger.log(`Testing mail sent to ${email}`);
-      }
+        html: await renderFile(__dirname + "/templates/mail-test.ejs", {
+          username,
+        }),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(`Testing mail sent to ${email}`);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException("Can't send testing mail");
@@ -192,19 +204,26 @@ export class MailService implements OnApplicationBootstrap {
     token,
   }: EmailResetPassword): Promise<void> {
     try {
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Réinitialisation de ton mot de passe Overbookd",
         template: "reset-password",
-        context: {
+        html: await renderFile(__dirname + "/templates/reset-password.ejs", {
           firstname,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
-        },
-      });
-
-      if (mail) {
-        this.logger.log(`Reset password mail sent to ${email}`);
-      }
+        }),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(`Reset password mail sent to ${email}`);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException("Can't send reset password mail");
@@ -217,19 +236,30 @@ export class MailService implements OnApplicationBootstrap {
     membership,
   }: WelcomeNewcomer): Promise<void> {
     try {
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Bienvenue sur Overbookd !",
         template: `welcome-${membership.toLowerCase()}`,
-        context: {
-          email,
-          firstname,
-          loginLink: `https://${process.env.DOMAIN}/login`,
-        },
-      });
-      if (mail) {
-        this.logger.log(`Welcome mail sent to ${email}`);
-      }
+        html: await renderFile(
+          __dirname + `/templates/welcome-${membership.toLowerCase()}.ejs`,
+          {
+            email,
+            firstname,
+            loginLink: `https://${process.env.DOMAIN}/login`,
+          },
+        ),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(`Welcome mail sent to ${email}`);
     } catch (error) {
       this.logger.error(error);
     }
@@ -237,15 +267,26 @@ export class MailService implements OnApplicationBootstrap {
 
   async enrollVolunteer({ email, firstname }: EnrollVolunteer): Promise<void> {
     try {
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "[24h de l'INSA] Bienvenue dans l'équipe !",
         template: "volunteer-enrolled",
-        context: { firstname },
-      });
-      if (mail) {
-        this.logger.log(`enrolment mail sent to ${email}`);
-      }
+        html: await renderFile(
+          __dirname + "/templates/volunteer-enrolled.ejs",
+          { firstname },
+        ),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(`enrolment mail sent to ${email}`);
     } catch (error) {
       this.logger.error(error);
     }
@@ -259,22 +300,33 @@ export class MailService implements OnApplicationBootstrap {
   }: ActivityRejected) {
     try {
       const rejectorName = nicknameOrName(rejector);
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} rejetée 🙀`,
         template: "festival-activity-rejected",
-        context: {
-          activityName: activity.name,
-          rejectorName,
-          reason,
-          activityLink: `https://${process.env.DOMAIN}/fa/${activity.id}`,
-        },
-      });
-      if (mail) {
-        this.logger.log(
-          `Festival activity rejected mail sent to ${email} for activity #${activity.id}`,
-        );
-      }
+        html: await renderFile(
+          __dirname + "/templates/festival-activity-rejected.ejs",
+          {
+            activityName: activity.name,
+            rejectorName,
+            reason,
+            activityLink: `https://${process.env.DOMAIN}/fa/${activity.id}`,
+          },
+        ),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(
+        `Festival activity rejected mail sent to ${email} for activity #${activity.id}`,
+      );
     } catch (error) {
       this.logger.error(error);
     }
@@ -283,22 +335,33 @@ export class MailService implements OnApplicationBootstrap {
   async festivalTaskRejected({ email, reason, rejector, task }: TaskRejected) {
     try {
       const rejectorName = nicknameOrName(rejector);
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `[FT] ${task.name} rejetée 🙀`,
         template: "festival-task-rejected",
-        context: {
-          taskName: task.name,
-          rejectorName,
-          reason,
-          taskLink: `https://${process.env.DOMAIN}/ft/${task.id}`,
-        },
-      });
-      if (mail) {
-        this.logger.log(
-          `Festival task rejected mail sent to ${email} for task #${task.id}`,
-        );
-      }
+        html: await renderFile(
+          __dirname + "/templates/festival-task-rejected.ejs",
+          {
+            taskName: task.name,
+            rejectorName,
+            reason,
+            taskLink: `https://${process.env.DOMAIN}/ft/${task.id}`,
+          },
+        ),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(
+        `Festival task rejected mail sent to ${email} for task #${task.id}`,
+      );
     } catch (error) {
       this.logger.error(error);
     }
@@ -306,19 +369,31 @@ export class MailService implements OnApplicationBootstrap {
 
   async festivalActivityValidated({ email, activity }: ActivityValidated) {
     try {
-      const mail = await this.mailerService.sendMail({
+      const transporter = createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const options: SendMailOptions = {
+        from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} validée 💫`,
         template: "festival-activity-validated",
-        context: {
-          activityName: activity.name,
-          statisticsLink: `https://${process.env.DOMAIN}/stats`,
-        },
-      });
-      if (mail) {
-        const logMessage = `Festival activity validated mail sent to ${email} for activity #${activity.id}`;
-        this.logger.log(logMessage);
-      }
+        html: await renderFile(
+          __dirname + "/templates/festival-activity-validated.ejs",
+          {
+            activityName: activity.name,
+            statisticsLink: `https://${process.env.DOMAIN}/stats`,
+          },
+        ),
+      };
+      await transporter.sendMail(options);
+      this.logger.log(
+        `Festival activity validated mail sent to ${email} for activity #${activity.id}`,
+      );
     } catch (error) {
       this.logger.error(error);
     }
