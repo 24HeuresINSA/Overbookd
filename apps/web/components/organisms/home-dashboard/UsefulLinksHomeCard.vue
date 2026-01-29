@@ -1,14 +1,14 @@
 <template>
   <v-card class="home-card">
     <v-card-title class="home-card__title">
-      <v-icon>{{ icon }}</v-icon>
-      <span> {{ title }} </span>
+      <v-icon> mdi-link </v-icon>
+      <span> Liens Utiles </span>
     </v-card-title>
     <v-card-text class="home-card__text">
       <ul>
         <li>
           Le lien du
-          <a :href="WIKI_URL" target="_blank" rel="noopener noreferrer">
+          <a :href="WIKI_URL" target="_blank">
             <strong> Wiki du Club des 24 heures de l'INSA</strong>
           </a>
         </li>
@@ -25,7 +25,7 @@
         </li>
         <li>
           Pour rejoindre le groupe Slack :
-          <a :href="SLACK_URL" target="_blank" rel="noopener noreferrer">
+          <a :href="SLACK_URL" target="_blank">
             <strong> Clique ICI</strong>
           </a>
         </li>
@@ -40,13 +40,8 @@ import { WIKI_URL } from "~/utils/navigation/url.constant";
 import { CALENDAR_URL } from "~/utils/navigation/url.constant";
 import { SLACK_URL } from "~/utils/navigation/url.constant";
 
-const title = computed<string>(() => "Liens Utiles");
-const icon = computed<string>(() => "mdi-link");
-
-const personalLink = computed<string>(() => CALENDAR_URL);
-
 const copyToClipBoard = () => {
-  navigator.clipboard.writeText(personalLink.value);
+  navigator.clipboard.writeText(CALENDAR_URL);
   sendInfoNotification("Lien copié ✅");
 };
 </script>

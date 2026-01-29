@@ -25,12 +25,12 @@
         class="desktop-only"
       />
       <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+      <UsefulLinksHomeCard v-if="canViewUsefulLinks" />
     </v-col>
 
     <v-col v-if="hasThirdColumn" class="home">
       <PersonalFtHomeCard v-if="canWriteFT" />
       <PersonalFaHomeCard v-if="canWriteFA" />
-      <UsefulLinksHomeCard v-if="canWriteFA" />
       <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
     </v-col>
   </v-row>
@@ -44,10 +44,11 @@ import {
   SYNC_PLANNING,
   WRITE_FA,
   WRITE_FT,
+  VIEW_USEFUL_LINKS,
 } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
-import { SOFT } from "@overbookd/team-constants";
+import { SOFT, VIEUX } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 
@@ -109,6 +110,9 @@ const isOrWantsToBeVolunteer = computed<boolean | undefined>(() => {
 const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
   const hasNoPlanning = !canDownloadAndSyncPlanning.value;
   return !!isOrWantsToBeVolunteer.value && hasNoPlanning;
+  const canViewUsefulLinks = computed<boolean>(() =>
+    userStore.can(VIEW_USEFUL_LINKS),
+  );
 });
 
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));

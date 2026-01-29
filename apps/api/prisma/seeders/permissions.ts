@@ -46,6 +46,7 @@ import {
   ENTER_EXTENDED_AVAILABILITITES,
   VIEW_FA_GEAR_DASHBOARD,
   VIEW_MULTI_PLANNING,
+  VIEW_USEFUL_LINKS,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -508,6 +509,15 @@ export const permissions = [
   {
     name: ENTER_EXTENDED_AVAILABILITITES,
     description: "Peut renseigner des disponibilités étendues",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: VIEW_USEFUL_LINKS,
+    description: "Peut voir la carte des liens utiles sur le dashboard",
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
