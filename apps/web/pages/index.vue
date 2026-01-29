@@ -48,7 +48,7 @@ import {
 } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
-import { SOFT, VIEUX } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 
@@ -110,10 +110,11 @@ const isOrWantsToBeVolunteer = computed<boolean | undefined>(() => {
 const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
   const hasNoPlanning = !canDownloadAndSyncPlanning.value;
   return !!isOrWantsToBeVolunteer.value && hasNoPlanning;
-  const canViewUsefulLinks = computed<boolean>(() =>
-    userStore.can(VIEW_USEFUL_LINKS),
-  );
 });
+
+const canViewUsefulLinks = computed<boolean>(() =>
+  userStore.can(VIEW_USEFUL_LINKS),
+);
 
 const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
 const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));

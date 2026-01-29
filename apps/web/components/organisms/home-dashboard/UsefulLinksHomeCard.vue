@@ -16,7 +16,7 @@
           <p>
             Pour ne rater aucun évènement important, tu peux récupérer le lien
             du
-            <a href="#" @click="copyToClipBoard">Google Calandar</a>
+            <a href="#" @click="copyToClipBoard">Google Calendar</a>
             <v-icon size="small" class="ml-1" @click="copyToClipBoard">
               mdi-content-copy
             </v-icon>
