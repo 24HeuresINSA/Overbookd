@@ -30,6 +30,7 @@
     <v-col v-if="hasThirdColumn" class="home">
       <PersonalFtHomeCard v-if="canWriteFT" />
       <PersonalFaHomeCard v-if="canWriteFA" />
+      <UsefulLinksHomeCard v-if="canWriteFA" />
       <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
     </v-col>
   </v-row>
