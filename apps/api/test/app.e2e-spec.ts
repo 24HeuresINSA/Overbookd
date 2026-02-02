@@ -2,10 +2,15 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { AppTestModule } from "./app-test.module";
-import { describe, beforeEach, it, expect } from "vitest";
-import { MailService } from "../src/mail/mail.service";
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { AppService } from "../src/app.service";
-import { DomainEventService } from "../src/domain-event/domain-event.service";
+
+vi.mock("../src/mail/mail.service", () => ({
+  MailService: vi.fn().mockImplementation(() => ({
+    onApplicationBootstrap: vi.fn(),
+    $connect: vi.fn(),
+  })),
+}));
 
 describe("AppController (e2e)", () => {
   let app: INestApplication;
@@ -14,10 +19,6 @@ describe("AppController (e2e)", () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppTestModule],
     })
-      .overrideProvider(MailService)
-      .useValue({ onApplicationBootstrap: () => {}, })
-      .overrideProvider(DomainEventService)
-      .useValue({ staffsRegistered: { subscribe: () => {} }, })
       .overrideProvider(AppService)
       .useValue({ getHello: () => "Hello from overbookd backend", })
       .compile();

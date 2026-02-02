@@ -22,7 +22,7 @@
     "build:ci": "pnpm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "prune": "ts-prune --error --ignore 'index.ts|domains|libraries|generated|prisma.config.ts'",
+    "prune": "ts-prune --error --ignore 'index.ts|domains|libraries|generated|config.ts'",
     "start": "nest start --preserveWatchOutput",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch --preserveWatchOutput",
