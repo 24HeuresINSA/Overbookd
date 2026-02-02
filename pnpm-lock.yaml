@@ -207,8 +207,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0
       ejs:
-        specifier: 3.1.10
-        version: 3.1.10
+        specifier: 4.0.1
+        version: 4.0.1
       express-basic-auth:
         specifier: 1.2.1
         version: 1.2.1
@@ -4756,6 +4756,11 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
+  ejs@4.0.1:
+    resolution: {integrity: sha512-krvQtxc0btwSm/nvnt1UpnaFDFVJpJ0fdckmALpCgShsr/iGYHTnJiUliZTgmzq/UxTX33TtOQVKaNigMQp/6Q==}
+    engines: {node: '>=0.12.18'}
+    hasBin: true
+
   electron-to-chromium@1.5.267:
     resolution: {integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==}
 
@@ -8103,6 +8108,7 @@ packages:
   tar@7.5.2:
     resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp-dir@2.0.0:
     resolution: {integrity: sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg==}
@@ -13813,6 +13819,10 @@ snapshots:
       fast-check: 3.23.2
 
   ejs@3.1.10:
+    dependencies:
+      jake: 10.9.4
+
+  ejs@4.0.1:
     dependencies:
       jake: 10.9.4
 
