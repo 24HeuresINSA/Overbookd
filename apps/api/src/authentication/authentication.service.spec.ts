@@ -4,7 +4,17 @@ import { MailService } from "../mail/mail.service";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { UserService } from "../user/user.service";
 import { AuthenticationService } from "./authentication.service";
-import { PrismaService } from "../prisma.service";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("../prisma.service", () => ({
+  PrismaService: vi.fn().mockImplementation(() => ({
+    user: {
+      update: vi.fn(),
+      findFirst: vi.fn(),
+    },
+    $connect: vi.fn(),
+  })),
+}));
 
 describe("AuthService", () => {
   let service: AuthenticationService;
@@ -16,35 +26,26 @@ describe("AuthService", () => {
         {
           provide: UserService,
           useValue: {
-            getUserPassword: jest.fn(),
-            user: jest.fn(),
+            getUserPassword: vi.fn(),
+            user: vi.fn(),
           },
         },
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn(),
+            sign: vi.fn(),
           },
         },
         {
           provide: HashingUtilsService,
           useValue: {
-            compare: jest.fn(),
+            compare: vi.fn(),
           },
         },
         {
           provide: MailService,
           useValue: {
-            mailResetPassword: jest.fn(),
-          },
-        },
-        {
-          provide: PrismaService,
-          useValue: {
-            user: {
-              update: jest.fn(),
-              findFirst: jest.fn(),
-            },
+            mailResetPassword: vi.fn(),
           },
         },
       ],

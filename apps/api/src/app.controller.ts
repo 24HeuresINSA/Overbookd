@@ -23,7 +23,7 @@ export type RequestWithUserPayload = Request & {
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private mailService: MailService,
+    private readonly mailService: MailService,
   ) {}
 
   @Get()
