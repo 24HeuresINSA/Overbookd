@@ -44,10 +44,10 @@
     "version:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
   },
-  "packageManager": "pnpm@10.27.0",
+  "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": "24.12.0",
-    "pnpm": "10.27.0"
+    "pnpm": "10.28.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
