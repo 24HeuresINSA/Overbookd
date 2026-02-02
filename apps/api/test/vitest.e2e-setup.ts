@@ -8,14 +8,17 @@ vi.mock("../src/mail/mail.service", () => {
 });
 
 vi.mock("../src/domain-event/domain-event.service", () => {
-  class DomainEventService {
-    staffsRegistered = { subscribe() {} };
-    volunteersRegistered = { subscribe() {} };
-    volunteersEnrolled = { subscribe() {} };
-    festivalActivityRejected = { subscribe() {} };
-    festivalTaskRejected = { subscribe() {} };
-    festivalActivityApproved = { subscribe() {} };
-    closedSharedMeal = { subscribe() {} };
-  }
-  return { DomainEventService };
+  return {
+    DomainEventService: {
+      init: () => ({
+        staffsRegistered: { subscribe() {} },
+        volunteersRegistered: { subscribe() {} },
+        volunteersEnrolled: { subscribe() {} },
+        festivalActivityRejected: { subscribe() {} },
+        festivalTaskRejected: { subscribe() {} },
+        festivalActivityApproved: { subscribe() {} },
+        closedSharedMeal: { subscribe() {} },
+      }),
+    },
+  };
 });

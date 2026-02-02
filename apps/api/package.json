@@ -34,7 +34,7 @@
     "test:unit": "vitest --config ../../vitest.config.ts",
     "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false",
     "test:e2e": "vitest --config ./test/vitest.e2e-config.ts",
-    "test:e2e:ci": "vitest --config ./test/vitest-ci.e2e-config.ts --watch=false",
+    "test:e2e:ci": "CI=true vitest --config ./test/vitest.e2e-config.ts --watch=false",
     "prisma:generate": "npx prisma generate",
     "database:init": "pnpm prisma:generate && pnpm database:migrate && pnpm database:seed",
     "database:migrate": "npx prisma migrate deploy",
