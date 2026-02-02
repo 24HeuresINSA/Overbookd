@@ -20,7 +20,7 @@ describe("AppController (e2e)", () => {
       imports: [AppTestModule],
     })
       .overrideProvider(AppService)
-      .useValue({ getHello: () => "Hello from overbookd backend", })
+      .useValue({ getHello: () => "Hello from overbookd backend" })
       .compile();
 
     app = moduleFixture.createNestApplication();
