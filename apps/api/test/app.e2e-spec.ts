@@ -13,7 +13,7 @@ describe("AppController (e2e)", () => {
       imports: [AppModule],
     })
       .overrideProvider(MailService)
-      .useValue({ onApplicationBootstrap: () => {}, })
+      .useValue({ onApplicationBootstrap: () => {} })
       .compile();
 
     app = moduleFixture.createNestApplication();
