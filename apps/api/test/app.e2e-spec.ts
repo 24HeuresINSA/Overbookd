@@ -1,15 +1,15 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { AppTestModule } from "./app-test.module";
-import { describe, beforeEach, it, expect } from "vitest";
 import { AppService } from "../src/app.service";
+import { beforeEach, describe, expect, it } from "vitest";
 
 describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const moduleFixture = await Test.createTestingModule({
       imports: [AppTestModule],
     })
       .overrideProvider(AppService)
