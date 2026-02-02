@@ -3,6 +3,7 @@ import sanitizeHtml from "sanitize-html";
 import htmlToPdfMake from "html-to-pdfmake";
 import { join } from "path";
 import { Content, StyleDictionary } from "pdfmake/interfaces";
+import { JSDOM } from "jsdom";
 import {
   IProvidePeriod,
   Edition,
@@ -34,6 +35,7 @@ import { Volunteers } from "../planning.service";
 
 class PdfException extends Error {}
 
+const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
 const NB_CONTACTS_PER_LINE = 3;
 const MAX_LINES = 5;
@@ -422,6 +424,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractInstructions(instructions: string): Content {
     const sanitizedInstructions = sanitizeHtml(`${instructions}<hr>`);
     return htmlToPdfMake(sanitizedInstructions, {
+      window,
       defaultStyles: this.htmlToPdfDefaultStyle,
     });
   }
