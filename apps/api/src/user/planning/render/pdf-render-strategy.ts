@@ -1,9 +1,8 @@
-import Printer from "pdfmake";
+import PdfPrinter from "pdfmake";
 import sanitizeHtml from "sanitize-html";
 import htmlToPdfMake from "html-to-pdfmake";
 import { join } from "path";
 import { Content, StyleDictionary } from "pdfmake/interfaces";
-import { JSDOM } from "jsdom";
 import {
   IProvidePeriod,
   Edition,
@@ -35,14 +34,13 @@ import { Volunteers } from "../planning.service";
 
 class PdfException extends Error {}
 
-const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
 const NB_CONTACTS_PER_LINE = 3;
 const MAX_LINES = 5;
 const SECURITY_PLAN_PAGE = 2;
 
 export class PdfRenderStrategy implements RenderStrategy {
-  private printer: Printer;
+  private printer: PdfPrinter;
 
   private htmlToPdfDefaultStyle: StyleDictionary = {
     b: { bold: true },
@@ -119,7 +117,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   };
 
   constructor(private readonly volunteers: Volunteers) {
-    this.printer = new Printer(this.fonts);
+    this.printer = new PdfPrinter(this.fonts);
   }
 
   async render(tasks: Task[], volunteerId: Volunteer["id"]): Promise<unknown> {
@@ -424,7 +422,6 @@ export class PdfRenderStrategy implements RenderStrategy {
   private extractInstructions(instructions: string): Content {
     const sanitizedInstructions = sanitizeHtml(`${instructions}<hr>`);
     return htmlToPdfMake(sanitizedInstructions, {
-      window,
       defaultStyles: this.htmlToPdfDefaultStyle,
     });
   }
