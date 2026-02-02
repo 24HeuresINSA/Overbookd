@@ -31,9 +31,7 @@ describe("Teams (e2e)", () => {
 
   it("/teams (POST)", async () => {
     const team = { name: "Test", code: "test", color: "#fff", icon: "mdi" };
-    const res = await request(app.getHttpServer())
-      .post("/teams")
-      .send(team);
+    const res = await request(app.getHttpServer()).post("/teams").send(team);
 
     expect(res.status).toBe(201);
     expect(res.body).toEqual(team);
