@@ -2,15 +2,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { AppTestModule } from "./app-test.module";
-import { describe, beforeEach, it, expect, vi } from "vitest";
+import { describe, beforeEach, it, expect } from "vitest";
 import { AppService } from "../src/app.service";
-
-vi.mock("../src/mail/mail.service", () => ({
-  MailService: vi.fn().mockImplementation(() => ({
-    onApplicationBootstrap: vi.fn(),
-    $connect: vi.fn(),
-  })),
-}));
 
 describe("AppController (e2e)", () => {
   let app: INestApplication;
