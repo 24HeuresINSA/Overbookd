@@ -1,39 +1,81 @@
-import { Test } from "@nestjs/testing";
+import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { TeamTestModule } from "./team-test.module";
-import { TeamService } from "../src/team/team.service";
-import { beforeAll, describe, expect, it } from "vitest";
+import { AppModule } from "../src/app.module";
+import { Team } from "@overbookd/team";
+
+const TEAMS: Team[] = [
+  {
+    name: "Mega admin",
+    code: "super-admin",
+    color: "#ffb703",
+    icon: "mdi-flash",
+  },
+  {
+    name: "Test team",
+    code: "test",
+    color: "#737F49",
+    icon: "mdi-forklift",
+  },
+];
 
 describe("Teams (e2e)", () => {
   let app: INestApplication;
+  let adminToken: string;
 
   beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [TeamTestModule],
-    })
-      .overrideProvider(TeamService)
-      .useValue({
-        findAll: () => [],
-        create: (team) => team,
-      })
-      .compile();
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    // Get token and setup globaly
+    const res = await request(app.getHttpServer())
+      .post("/login")
+      .send({ email: "admin@24h.me", password: "password" });
+
+    const { accessToken } = res.body;
+    adminToken = accessToken;
   });
 
   it("/teams (GET)", async () => {
     const res = await request(app.getHttpServer()).get("/teams");
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body).toEqual(expect.any(Array));
   });
 
-  it("/teams (POST)", async () => {
-    const team = { name: "Test", code: "test", color: "#fff", icon: "mdi" };
-    const res = await request(app.getHttpServer()).post("/teams").send(team);
+  it("/teams/fa-reviewers (GET)", async () => {
+    const res = await request(app.getHttpServer())
+      .get("/teams/fa-reviewers")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(expect.any(Array));
+  });
 
-    expect(res.status).toBe(201);
-    expect(res.body).toEqual(team);
+  it("/teams/ft-reviewers (GET)", async () => {
+    const res = await request(app.getHttpServer())
+      .get("/teams/ft-reviewers")
+      .set("Authorization", `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(expect.any(Array));
+  });
+
+  describe("/teams (POST)", () => {
+    describe.each`
+      code             | data        | expected
+      ${"super-admin"} | ${TEAMS[0]} | ${TEAMS[0]}
+      ${"test"}        | ${TEAMS[1]} | ${TEAMS[1]}
+    `("when #code is creating", ({ code, data, expected }) => {
+      it(`sould return the team of ${code}`, async () => {
+        const res = await request(app.getHttpServer())
+          .post("/teams")
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send(data);
+        expect(res.status).toBe(201);
+        expect(res.body).toEqual(expected);
+      });
+    });
   });
 });
