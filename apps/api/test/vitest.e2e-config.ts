@@ -8,8 +8,6 @@ export default defineConfig({
     include: ["**/*.e2e-spec.ts"],
     reporters: isCI ? ["verbose", "junit"] : ["verbose"],
     outputFile: isCI ? "junit.xml" : undefined,
-    coverage: isCI
-      ? { provider: "v8" }
-      : undefined,
+    coverage: isCI ? { provider: "v8" } : undefined,
   },
 });
