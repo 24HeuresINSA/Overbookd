@@ -55,7 +55,6 @@ defineProps({
 
 const headers: TableHeaders = [
   { title: "Nom", value: "name", sortable: true },
-  { title: "Description", value: "description" },
   { title: "Début", value: "start", sortable: true },
   { title: "Fin", value: "end", sortable: true },
   { title: "Charisme/h", value: "charisma", sortable: true },

@@ -17,13 +17,6 @@ export class CharismaPeriodResponseDto implements SavedCharismaPeriod {
   name: string;
 
   @ApiProperty({
-    required: false,
-    description: "The description of the Charisma Period",
-    type: String,
-  })
-  description?: string;
-
-  @ApiProperty({
     required: true,
     description: "The charisma associated the Charisma Period",
     type: Number,

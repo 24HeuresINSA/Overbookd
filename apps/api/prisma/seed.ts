@@ -201,7 +201,6 @@ async function main() {
     for (let j = 0; j < 12; j += 2) {
       charismaPeriodData.push({
         name: `Charisma ${i} - ${j}`,
-        description: `Charisma ${i} - ${j}`,
         start: new Date(2021, 8, i, j),
         end: new Date(2021, 8, i, j + 2),
         charisma: j % 2 === 0 ? 10 : 5,

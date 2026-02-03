@@ -5,7 +5,6 @@ import {
   IsDefined,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
 } from "class-validator";
 
@@ -18,15 +17,6 @@ export class CreateCharismaPeriodRequestDto implements CharismaPeriod {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    required: false,
-    description: "The description of the Charisma Period",
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  description?: string;
 
   @ApiProperty({
     required: true,

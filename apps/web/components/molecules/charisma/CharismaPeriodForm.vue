@@ -5,7 +5,6 @@
     <template #content>
       <form>
         <v-text-field v-model="name" label="Nom" :rules="[required]" />
-        <v-text-field v-model="description" label="Description" />
         <DateTimeField v-model="start" label="Début" :step="60" />
         <DateTimeField
           v-model="end"
@@ -50,7 +49,6 @@ const props = defineProps({
 });
 
 const name = ref<string>(props.charismaPeriod?.name ?? "");
-const description = ref<string>(props.charismaPeriod?.description ?? "");
 const start = ref<Date>(
   props.charismaPeriod?.start ?? configurationStore.eventStartDate,
 );
@@ -93,7 +91,6 @@ const close = () => emit("close");
 const addCharismaPeriod = () => {
   const charismaPeriod: CharismaPeriod = {
     name: name.value,
-    description: description.value,
     start: start.value,
     end: end.value,
     charisma: +charisma.value,
@@ -104,7 +101,6 @@ const updateCharismaPeriod = () => {
   const charismaPeriod: SavedCharismaPeriod = {
     id: props.charismaPeriod?.id ?? 0,
     name: name.value,
-    description: description.value,
     start: start.value,
     end: end.value,
     charisma: +charisma.value,
