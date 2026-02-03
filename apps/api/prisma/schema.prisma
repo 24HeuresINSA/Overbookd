@@ -268,12 +268,11 @@ model InventoryRecord {
 }
 
 model CharismaPeriod {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?  @db.Text
-  charisma    Int      @default(5)
-  start       DateTime
-  end         DateTime
+  id       Int      @id @default(autoincrement())
+  name     String
+  charisma Int      @default(5)
+  start    DateTime
+  end      DateTime
 
   @@index([start(sort: Asc)])
   @@index([end(sort: Asc)])
