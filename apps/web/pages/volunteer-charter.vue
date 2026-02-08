@@ -1,6 +1,6 @@
 <template>
   <DesktopPageTitle />
-  <div class="volunteer-charter"></div>
+  <div class="volunteer-charter" />
 </template>
 
 <script lang="ts" setup>
