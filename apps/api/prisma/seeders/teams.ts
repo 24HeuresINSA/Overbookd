@@ -224,10 +224,10 @@ export const teams: Team[] = [
     icon: "mdi-hammer-wrench",
   },
   {
-    name: "Tendrestival",
-    code: "tendrestival",
+    name: "Hauts-de-France",
+    code: "hauts-de-france",
     color: "#FF9300",
-    icon: "mdi-balloon",
+    icon: "mdi-unicorn",
   },
   {
     name: "Vieux",

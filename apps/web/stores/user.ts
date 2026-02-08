@@ -129,6 +129,14 @@ export const useUserStore = defineStore("user", {
       this.loggedUser = { ...this.loggedUser, hasApprovedEULA: true };
     },
 
+    async signVolunteerCharter() {
+      const res = await UserRepository.signVolunteerCharter();
+      if (isHttpError(res)) return;
+      sendSuccessNotification("Charte bénévole signée ! 🎉");
+      if (!this.loggedUser) return;
+      this.loggedUser = { ...this.loggedUser, hasSignedVolunteerCharter: true };
+    },
+
     clearLoggedUser() {
       this.loggedUser = undefined;
     },

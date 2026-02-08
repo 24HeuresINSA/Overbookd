@@ -34,6 +34,12 @@ export class MyUserInformationResponseDto
   hasApprovedEULA: boolean;
 
   @ApiProperty({
+    description: "User has signed volunteer charter",
+    type: Boolean,
+  })
+  hasSignedVolunteerCharter: boolean;
+
+  @ApiProperty({
     description: "User membership application",
     type: String,
   })
