@@ -7,10 +7,9 @@ import {
 } from "@overbookd/permission";
 import {
   FulfilledRegistration,
-  KARNA,
-  TECKOS,
   Teams,
 } from "./register-form/fulfilled-registration.js";
+import { KARNA, TECKOS } from "@overbookd/team-constants";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory.js";

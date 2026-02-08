@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
+import { Teams } from "./fulfilled-registration.js";
 import {
   BDE,
-  TENDRESTIVAL_CODE,
+  HAUTS_DE_FRANCE,
   TECKOS,
   STRASBOURG,
   KARNA,
-  Teams,
-} from "./fulfilled-registration.js";
+} from "@overbookd/team-constants";
 import { RegisterForm } from "./register-form.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
@@ -263,11 +263,11 @@ describe("Register form", () => {
   describe("teams rules", () => {
     const baseForm = validForm().clearTeams();
     describe.each`
-      teams                          | valid
-      ${[]}                          | ${true}
-      ${[BDE]}                       | ${true}
-      ${[TENDRESTIVAL_CODE, TECKOS]} | ${true}
-      ${[STRASBOURG, TECKOS, BDE]}   | ${false}
+      teams                        | valid
+      ${[]}                        | ${true}
+      ${[BDE]}                     | ${true}
+      ${[HAUTS_DE_FRANCE, TECKOS]} | ${true}
+      ${[STRASBOURG, TECKOS, BDE]} | ${false}
     `("when joining $teams", ({ teams, valid }) => {
       const validity = valid ? "valid" : "invalid";
       it(`should indicate that form is ${validity}`, () => {

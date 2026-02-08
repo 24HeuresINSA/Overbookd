@@ -37,5 +37,6 @@ export type MyUserInformation = UserPersonalData & {
   permissions: Permission[];
   tasksCount: number;
   hasApprovedEULA: boolean;
+  hasSignedVolunteerCharter: boolean;
   membershipApplication: Membership | null;
 };

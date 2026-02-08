@@ -12,6 +12,7 @@ import {
   MULTI_PLANNING_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
+  VOLUNTEER_CHARTER_URL,
 } from "@overbookd/web-page";
 import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
@@ -105,7 +106,7 @@ const PLANNING_PAGE: HiddenPage = {
   hasParam: true,
 };
 
-export const MULTI_PLANNING_PAGE: PageInSummary = {
+const MULTI_PLANNING_PAGE: PageInSummary = {
   icon: "mdi-calendar-multiple",
   title: "Multi Planning",
   shortTitle: "Multi Planning",
@@ -119,6 +120,17 @@ export const MULTI_PLANNING_PAGE: PageInSummary = {
   keywords: ["multi-planning", "calendrier", "taches", "affectation"],
 };
 
+export const VOLUNTEER_CHARTER_PAGE: PageInSummary = {
+  icon: "mdi-note-edit",
+  title: "Charte bénévole",
+  to: VOLUNTEER_CHARTER_URL,
+  description: "Permet de lire et signer la charte bénévole",
+  mobileSupport: true,
+  canBeFavorite: false,
+  hasParam: false,
+  keywords: ["charte-benevole", "charte", "benevole"],
+};
+
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
@@ -126,6 +138,7 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   AVAILABILITIES_PAGE,
   MY_PLANNING_PAGE,
   MULTI_PLANNING_PAGE,
+  VOLUNTEER_CHARTER_PAGE,
 ];
 
 export const VOLUNTEER_PAGES: Page[] = [

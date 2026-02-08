@@ -135,6 +135,18 @@ export class UserController {
     return this.userService.approveEndUserLicenceAgreement(req.user);
   }
 
+  @Post("me/sign-volunteer-charter")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Sign Volunteer Charter",
+  })
+  async signVolunteerCharter(
+    @RequestDecorator() req: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.userService.signVolunteerCharter(req.user);
+  }
+
   @Get("personal-account-consumers")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)

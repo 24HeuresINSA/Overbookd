@@ -43,7 +43,7 @@ export const KARNA = "karna";
 export const KFET = "kfet";
 export const ROUEN = "rouen";
 export const STRASBOURG = "strasbourg";
-export const TENDRESTIVAL = "tendrestival";
+export const HAUTS_DE_FRANCE = "hauts-de-france";
 
 // Manif teams
 export const CONDUCTEUR = "conducteur";
