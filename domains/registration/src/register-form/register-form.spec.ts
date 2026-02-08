@@ -8,6 +8,7 @@ import {
   KARNA,
 } from "@overbookd/team-constants";
 import { RegisterForm } from "./register-form.js";
+import { STAFF, VOLUNTEER } from "../newcomer.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
   "Il faut au moins 12 caractères dans le mot de passe";
@@ -31,7 +32,7 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 function validForm() {
-  return RegisterForm.init()
+  return RegisterForm.init(VOLUNTEER)
     .fillEmail(email)
     .fillFirstname(firstname)
     .fillLastname(lastname)
@@ -41,7 +42,8 @@ function validForm() {
     .fillBirthdate(birthdate)
     .fillComment(comment)
     .fillTeams(teams)
-    .approveEndUserLicenceAgreement();
+    .approveEndUserLicenceAgreement()
+    .signVolunteerCharter();
 }
 
 describe("Register form", () => {
@@ -64,6 +66,7 @@ describe("Register form", () => {
           email,
           mobilePhone,
           hasApprovedEULA: true,
+          hasSignedVolunteerCharter: true,
         });
       });
     });
@@ -292,6 +295,43 @@ describe("Register form", () => {
       expect(form.reasons).include(
         "Les Condidtions Générales d'Utilisation doivent être approuvées",
       );
+    });
+  });
+  describe("Volunteer Charter rules", () => {
+    const form = validForm().clearTeams().fillTeams([]).signVolunteerCharter();
+    describe("when volunteer is signing the volunteer charter", () => {
+      it("should indicate form is valid", () => {
+        expect(form.isValid).toBe(true);
+      });
+    });
+    describe("when volunteer is not signing the volunteer charter", () => {
+      const unsignedForm = form.clearTeams().fillTeams([]);
+      it("should indicate form is invalid", () => {
+        expect(unsignedForm.isValid).toBe(false);
+      });
+      it("should indicate that signing the volunteer charter is required for volunteers", () => {
+        expect(unsignedForm.reasons).toHaveLength(1);
+        expect(unsignedForm.reasons).include(
+          "La Charte Bénévole doit être approuvée",
+        );
+      });
+    });
+    describe("when staff is not signing the volunteer charter", () => {
+      const unsignedForm = RegisterForm.init(STAFF)
+        .fillEmail(email)
+        .fillFirstname(firstname)
+        .fillLastname(lastname)
+        .fillPassword(password)
+        .fillMobilePhone(mobilePhone)
+        .fillNickname(nickname)
+        .fillBirthdate(birthdate)
+        .fillComment(comment)
+        .fillTeams(teams)
+        .approveEndUserLicenceAgreement()
+        .signVolunteerCharter();
+      it("should indicate form is valid", () => {
+        expect(unsignedForm.isValid).toBe(true);
+      });
     });
   });
 });
