@@ -283,5 +283,5 @@ class NotFulfilledRegistration extends RegistrationError {
 }
 
 export function shouldSignVolunteerCharter(membership: Membership): boolean {
-  return membership === VOLUNTEER
+  return membership === VOLUNTEER;
 }
