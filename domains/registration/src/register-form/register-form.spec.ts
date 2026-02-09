@@ -327,8 +327,7 @@ describe("Register form", () => {
         .fillBirthdate(birthdate)
         .fillComment(comment)
         .fillTeams(teams)
-        .approveEndUserLicenceAgreement()
-        .signVolunteerCharter();
+        .approveEndUserLicenceAgreement();
       it("should indicate form is valid", () => {
         expect(unsignedForm.isValid).toBe(true);
       });

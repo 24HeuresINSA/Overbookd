@@ -62,6 +62,11 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @IsDefined()
   @IsBoolean()
   hasApprovedEULA: boolean;
+
+  @ApiProperty({ example: true })
+  @IsOptional()
+  @IsBoolean()
+  hasSignedVolunteerCharter?: boolean;
 }
 
 export class RegistrationRequestDto {

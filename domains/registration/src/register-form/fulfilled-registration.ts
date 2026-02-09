@@ -43,5 +43,5 @@ export type FulfilledRegistration = {
   comment?: string;
   teams: Teams;
   hasApprovedEULA: boolean;
-  hasSignedVolunteerCharter: boolean;
+  hasSignedVolunteerCharter?: boolean;
 };
