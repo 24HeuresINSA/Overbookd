@@ -1,5 +1,6 @@
 import { Membership, VOLUNTEER } from "../../newcomer.js";
 import { Field } from "./field.js";
+import { shouldSignVolunteerCharter } from "../register-form.js"
 
 export class VolunteerCharterField implements Field<boolean> {
   private constructor(
@@ -12,7 +13,7 @@ export class VolunteerCharterField implements Field<boolean> {
   }
 
   get isValid(): boolean {
-    if (this.membership !== VOLUNTEER) return true;
+    if (!shouldSignVolunteerCharter(this.membership)) return true;
     return this.hasApprovedVolunteerCharter === true;
   }
 

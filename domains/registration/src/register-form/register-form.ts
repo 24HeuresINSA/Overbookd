@@ -210,6 +210,10 @@ export class RegisterForm {
   }
 
   private get currentRegistration(): Partial<FulfilledRegistration> {
+    const volunteerCharter = shouldSignVolunteerCharter(this.membership)
+      ? { hasSignedVolunteerCharter: this.volunteerCharter.value }
+      : {};
+
     return {
       email: this.email.value,
       firstname: this.firstname.value,
@@ -221,7 +225,7 @@ export class RegisterForm {
       comment: this.comment.value,
       teams: this.teams.value,
       hasApprovedEULA: this.EULA.value,
-      hasSignedVolunteerCharter: this.volunteerCharter?.value,
+      ...volunteerCharter,
     };
   }
 
@@ -276,4 +280,8 @@ class NotFulfilledRegistration extends RegistrationError {
   constructor(reasons: string[]) {
     super(reasons, "L'inscription n'est pas complète");
   }
+}
+
+export function shouldSignVolunteerCharter(membership: Membership): boolean {
+  return membership === VOLUNTEER
 }
