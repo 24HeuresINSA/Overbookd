@@ -58,7 +58,7 @@ export class RegisterForm {
     );
   }
 
-  static init(membership: Membership): RegisterForm {
+  static initFor(membership: Membership): RegisterForm {
     return new RegisterForm(membership, {});
   }
 

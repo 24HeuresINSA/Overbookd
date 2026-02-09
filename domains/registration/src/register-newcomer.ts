@@ -53,7 +53,7 @@ export class RegisterNewcomer {
     membership: Membership,
   ) {
     const dataForm = this.commentAction(
-      this.nicknameAction(RegisterForm.init(), form.nickname),
+      this.nicknameAction(RegisterForm.initFor(membership), form.nickname),
       form.comment,
     )
       .fillEmail(form.email ?? "")

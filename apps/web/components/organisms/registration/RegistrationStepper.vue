@@ -7,7 +7,7 @@
       cover
     >
       <v-card-title class="register-title">
-        👋 Inscription {{ membership }} 👋
+        👋 Inscription {{ membershipLabel }} 👋
       </v-card-title>
     </v-img>
     <v-stepper v-model="step">
@@ -242,6 +242,8 @@ import {
   type RegistrationTeams,
   REGISTRATION_TEAM_CODES,
   type RegistrationTeamCode,
+  STAFF,
+  VOLUNTEER,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
 import {
@@ -297,7 +299,7 @@ const cleanComment = computed<string | undefined>(
   () => comment.value?.trim() || undefined,
 );
 
-const membership = computed<string>(() =>
+const membershipLabel = computed<string>(() =>
   isVolunteerRegistration.value ? "Bénévole" : "Organisateur",
 );
 
@@ -306,7 +308,8 @@ const cleanNickname = computed<string | undefined>(
 );
 
 const registerForm = computed<RegisterForm>(() => {
-  const form = commentAction(nicknameAction(RegisterForm.init()))
+  const membership = isVolunteerRegistration.value ? VOLUNTEER : STAFF;
+  const form = commentAction(nicknameAction(RegisterForm.initFor(membership)))
     .fillBirthdate(birthdayDate.value)
     .fillEmail(email.value)
     .fillFirstname(firstname.value)
