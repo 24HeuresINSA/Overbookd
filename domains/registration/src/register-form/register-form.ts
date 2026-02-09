@@ -11,7 +11,7 @@ import { TeamsField } from "./fields/teams-field.js";
 import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
 import { EULAField } from "./fields/EULA-field.js";
 import { VolunteerCharterField } from "./fields/volunteer-charter-field.js";
-import { Membership } from "../newcomer.js";
+import { Membership, VOLUNTEER } from "../newcomer.js";
 
 export class RegisterForm {
   private email: EmailField;
