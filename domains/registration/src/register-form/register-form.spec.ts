@@ -32,7 +32,7 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 function validForm() {
-  return RegisterForm.init(VOLUNTEER)
+  return RegisterForm.initFor(VOLUNTEER)
     .fillEmail(email)
     .fillFirstname(firstname)
     .fillLastname(lastname)
@@ -317,7 +317,7 @@ describe("Register form", () => {
       });
     });
     describe("when staff is not signing the volunteer charter", () => {
-      const unsignedForm = RegisterForm.init(STAFF)
+      const unsignedForm = RegisterForm.initFor(STAFF)
         .fillEmail(email)
         .fillFirstname(firstname)
         .fillLastname(lastname)
