@@ -2,10 +2,11 @@
   <DialogCard no-closable>
     <template #title> Charte Bénévole </template>
     <template #content>
-      Salut, si tu vois ce message, c'est que tu n'as pas encore signé la Charte Bénévole 😱
-      Pour pouvoir être bénévole, tu dois la signer de ce pas !
+      Salut, si tu vois ce message, c'est que tu n'as pas encore signé la Charte
+      Bénévole 😱 Pour pouvoir être bénévole, tu dois la signer de ce pas !
       <br />
-      Si cela ne te convient pas, contacte les responsables bénévoles au plus vite à ce mail 
+      Si cela ne te convient pas, contacte les responsables bénévoles au plus
+      vite à ce mail
       <a :href="`mailto:${HUMAINS_EMAIL}`"> {{ HUMAINS_EMAIL }} </a>.
     </template>
     <template #actions>
@@ -25,7 +26,10 @@
     transition="dialog-bottom-transition"
     fullscreen
   >
-    <VolunteerCharterDialogCard @close="closeCharterDialog" @signed="closeCharterDialog" />
+    <VolunteerCharterDialogCard
+      @close="closeCharterDialog"
+      @signed="closeCharterDialog"
+    />
   </v-dialog>
 </template>
 
