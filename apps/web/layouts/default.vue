@@ -51,6 +51,7 @@ import {
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
+import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
 import { useFavicon } from "@vueuse/core";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
