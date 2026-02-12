@@ -22,6 +22,14 @@
     >
       <ApproveEULADialogCard />
     </v-dialog>
+    <v-dialog
+      v-model="shouldSignVolunteerCharter"
+      transition="dialog-bottom-transition"
+      max-width="600"
+      persistent
+    >
+      <MustSignVolunteerCharterDialogCard />
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -121,6 +129,9 @@ onUnmounted(() => {
 
 const shouldApproveEULA = computed<boolean>(
   () => userStore.loggedUser?.hasApprovedEULA === false,
+);
+const shouldSignVolunteerCharter = computed<boolean>(
+  () => userStore.can(MUST_SIGN_VOLUNTEER_CHARTER) && userStore.loggedUser?.hasApprovedEULA === false,
 );
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());

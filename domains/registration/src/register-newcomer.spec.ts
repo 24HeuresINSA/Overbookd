@@ -58,6 +58,7 @@ const registerForm: FulfilledRegistration = {
   nickname,
   email,
   hasApprovedEULA: true,
+  hasSignedVolunteerCharter: true,
 };
 
 let registerNewcomer: RegisterNewcomer;
