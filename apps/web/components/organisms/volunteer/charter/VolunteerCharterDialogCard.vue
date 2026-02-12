@@ -18,5 +18,5 @@
 <script lang="ts" setup>
 const emit = defineEmits(["close", "signed"]);
 const close = () => emit("close");
-const signed = () => emit("signed")
+const signed = () => emit("signed");
 </script>
