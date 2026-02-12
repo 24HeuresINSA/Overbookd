@@ -298,14 +298,14 @@ describe("Register form", () => {
     });
   });
   describe("Volunteer Charter rules", () => {
-    const form = validForm().clearTeams().fillTeams([]).signVolunteerCharter();
     describe("when volunteer is signing the volunteer charter", () => {
       it("should indicate form is valid", () => {
-        expect(form.isValid).toBe(true);
+        const signedForm = validForm().signVolunteerCharter();
+        expect(validForm().isValid).toBe(true);
       });
     });
     describe("when volunteer is not signing the volunteer charter", () => {
-      const unsignedForm = form.clearTeams().fillTeams([]);
+      const unsignedForm = validForm().denyVolunteerCharter();
       it("should indicate form is invalid", () => {
         expect(unsignedForm.isValid).toBe(false);
       });
