@@ -209,6 +209,14 @@ export class RegisterForm {
     });
   }
 
+  
+  denyVolunteerCharter(): RegisterForm {
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      hasSignedVolunteerCharter: false,
+    });
+  }
+
   private get currentRegistration(): Partial<FulfilledRegistration> {
     const volunteerCharter = shouldSignVolunteerCharter(this.membership)
       ? { hasSignedVolunteerCharter: this.volunteerCharter.value }

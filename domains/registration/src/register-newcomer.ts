@@ -67,7 +67,7 @@ export class RegisterNewcomer {
       ? dataForm.approveEndUserLicenceAgreement()
       : dataForm.denyEndUserLicenceAgreement();
     const withVolunteerCharter = form?.hasApprovedVolunteerCharter
-      ? withEULA.approveVolunteerCharter()
+      ? withEULA.signVolunteerCharter()
       : withEULA.denyVolunteerCharter();
     const fulfilledForm = withVolunteerCharter.complete();
 
