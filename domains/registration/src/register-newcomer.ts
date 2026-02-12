@@ -68,7 +68,7 @@ export class RegisterNewcomer {
       : dataForm.denyEndUserLicenceAgreement();
     const withVolunteerCharter = form?.hasApprovedVolunteerCharter
       ? withEULA.approveVolunteerCharter()
-      : withEULA.denyVolunteerCharter()
+      : withEULA.denyVolunteerCharter();
     const fulfilledForm = withVolunteerCharter.complete();
 
     const isEmailAlreadyUsed = await this.newcomerRepository.isEmailUsed(
