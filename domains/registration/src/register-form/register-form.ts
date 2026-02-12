@@ -209,7 +209,6 @@ export class RegisterForm {
     });
   }
 
-  
   denyVolunteerCharter(): RegisterForm {
     return new RegisterForm(this.membership, {
       ...this.currentRegistration,
