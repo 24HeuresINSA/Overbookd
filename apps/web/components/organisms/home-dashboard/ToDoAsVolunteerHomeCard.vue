@@ -40,7 +40,6 @@
             Lire et signer <strong>la Charte Bénévole</strong>
           </nuxt-link>
         </li>
-        <li />
       </ul>
 
       <p>

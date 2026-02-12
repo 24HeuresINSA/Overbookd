@@ -63,10 +63,13 @@ export class RegisterNewcomer {
       .fillMobilePhone(form.mobilePhone ?? "")
       .fillBirthdate(form.birthdate ?? new Date("1949-12-25"))
       .fillTeams(form.teams ?? []);
-    const dataFormWithEULA = form.hasApprovedEULA
+    const withEULA = form.hasApprovedEULA
       ? dataForm.approveEndUserLicenceAgreement()
       : dataForm.denyEndUserLicenceAgreement();
-    const fulfilledForm = dataFormWithEULA.complete();
+    const withVolunteerCharter = form?.hasApprovedVolunteerCharter
+      ? withEULA.approveVolunteerCharter()
+      : withEULA.denyVolunteerCharter()
+    const fulfilledForm = withVolunteerCharter.complete();
 
     const isEmailAlreadyUsed = await this.newcomerRepository.isEmailUsed(
       fulfilledForm.email,

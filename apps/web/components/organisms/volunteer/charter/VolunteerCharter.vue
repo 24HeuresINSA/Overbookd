@@ -22,7 +22,7 @@ const shouldSign = computed<boolean>(() =>
   userStore.can(MUST_SIGN_VOLUNTEER_CHARTER),
 );
 const hasSigned = computed<boolean>(
-  () => userStore.loggedUser?.hasSignedVolunteerCharter,
+  () => userStore.loggedUser?.hasSignedVolunteerCharter === true,
 );
 
 const signVolunteerCharter = async () => {

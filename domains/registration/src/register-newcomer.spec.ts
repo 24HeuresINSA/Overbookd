@@ -47,7 +47,7 @@ const firstNewComer: NewcomerRegistered<"STAFF"> = {
   membership: STAFF,
 };
 
-const registerForm: FulfilledRegistration = {
+const staffRegisterForm: FulfilledRegistration = {
   lastname,
   firstname,
   mobilePhone,
@@ -58,8 +58,12 @@ const registerForm: FulfilledRegistration = {
   nickname,
   email,
   hasApprovedEULA: true,
-  hasSignedVolunteerCharter: true,
 };
+
+const volunteerRegisterForm: FulfilledRegistration = {
+  ...staffRegisterForm,
+  hasSignedVolunteerCharter: true,
+}
 
 let registerNewcomer: RegisterNewcomer;
 let newcomerRepository: InMemoryNewcomerRepository;
@@ -77,10 +81,10 @@ describe("Register newcomer", () => {
       );
     });
     describe.each`
-      membership
-      ${STAFF}
-      ${VOLUNTEER}
-    `("when receiving a valid $membership registration", ({ membership }) => {
+      membership    | registerForm
+      ${STAFF}      | ${staffRegisterForm}
+      ${VOLUNTEER}  | ${volunteerRegisterForm}
+    `("when receiving a valid $membership registration", ({ membership, registerForm }) => {
       it("should register the associated newcomer", async () => {
         const registree = await registerNewcomer.fromRegisterForm(
           registerForm,
