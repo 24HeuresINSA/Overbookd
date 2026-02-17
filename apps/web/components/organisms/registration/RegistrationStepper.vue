@@ -219,9 +219,11 @@
             :disabled="hasSignedVolunteerCharter"
             @click="openVolunteerCharterDialog"
           >
-            {{ hasSignedVolunteerCharter
-              ? "Charte signée ✔"
-              : "Lire et signer la charte des bénévoles" }}
+            {{
+              hasSignedVolunteerCharter
+                ? "Charte signée ✔"
+                : "Lire et signer la charte des bénévoles"
+            }}
           </v-btn>
 
           <div class="stepper-actions">
@@ -250,7 +252,10 @@
       transition="dialog-bottom-transition"
       fullscreen
     >
-      <VolunteerCharterDialogCard @close="closeVolunteerCharterDialog" @signed="signVolunteerCharter" />
+      <VolunteerCharterDialogCard
+        @close="closeVolunteerCharterDialog"
+        @signed="signVolunteerCharter"
+      />
     </v-dialog>
   </v-card>
 </template>
@@ -336,7 +341,9 @@ const cleanNickname = computed<string | undefined>(
 );
 
 const registerForm = computed<RegisterForm>(() => {
-  const form = commentAction(nicknameAction(RegisterForm.initFor(membership.value)))
+  const form = commentAction(
+    nicknameAction(RegisterForm.initFor(membership.value)),
+  )
     .fillBirthdate(birthdayDate.value)
     .fillEmail(email.value)
     .fillFirstname(firstname.value)
@@ -382,7 +389,10 @@ const securityRules = computed(() => [
   () => step.value <= 3 || rules.required(password.value),
   () => step.value <= 3 || rules.password(password.value),
   () => step.value <= 3 || rules.required(hasApprovedEULA.value),
-  () => step.value <= 3 || !mustSignVolunteerCharter.value || rules.required(hasSignedVolunteerCharter.value)
+  () =>
+    step.value <= 3 ||
+    !mustSignVolunteerCharter.value ||
+    rules.required(hasSignedVolunteerCharter.value),
 ]);
 
 const repeatPasswordRule = computed(() => isSame(password.value));
@@ -427,8 +437,10 @@ const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
 
 const isVolunteerCharterDialogOpen = ref<boolean>(false);
-const openVolunteerCharterDialog = () => (isVolunteerCharterDialogOpen.value = true);
-const closeVolunteerCharterDialog = () => (isVolunteerCharterDialogOpen.value = false);
+const openVolunteerCharterDialog = () =>
+  (isVolunteerCharterDialogOpen.value = true);
+const closeVolunteerCharterDialog = () =>
+  (isVolunteerCharterDialogOpen.value = false);
 const signVolunteerCharter = () => {
   hasSignedVolunteerCharter.value = true;
   closeVolunteerCharterDialog();
