@@ -53,6 +53,25 @@
 
     <v-expansion-panel class="collapse">
       <v-expansion-panel-title>
+        <h2>Date de début de la semaine orga</h2>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <DateField
+          v-model="dateOrgaWeekStart"
+          label="Début de la semaine orga"
+          hide-details
+        />
+        <v-btn
+          text="Enregistrer"
+          color="primary"
+          class="save-btn"
+          @click="saveOrgaWeekStartDate"
+        />
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+
+    <v-expansion-panel class="collapse">
+      <v-expansion-panel-title>
         <h2>Permissions</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
@@ -73,7 +92,11 @@
 </template>
 
 <script lang="ts" setup>
-import { EVENT_DATE_KEY, REGISTER_FORM_KEY } from "@overbookd/configuration";
+import {
+  EVENT_DATE_KEY,
+  ORGA_WEEK_DATE_KEY,
+  REGISTER_FORM_KEY,
+} from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 useHead({ title: "Config admin" });
@@ -85,6 +108,7 @@ onMounted(async () => {
 });
 
 const dateEventStart = ref<Date>(configurationStore.eventStartDate);
+const dateOrgaWeekStart = ref<Date>(configurationStore.orgaWeekStartDate);
 const registerFormDescription = ref<string>(
   configurationStore.registerFormDescription,
 );
@@ -102,6 +126,12 @@ const saveEventStartDate = async () => {
   await configurationStore.save({
     key: EVENT_DATE_KEY,
     value: { start: dateEventStart.value },
+  });
+};
+const saveOrgaWeekStartDate = async () => {
+  await configurationStore.save({
+    key: ORGA_WEEK_DATE_KEY,
+    value: { start: dateOrgaWeekStart.value },
   });
 };
 </script>

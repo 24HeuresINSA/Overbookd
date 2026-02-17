@@ -1,5 +1,6 @@
 import {
   EVENT_DATE_KEY,
+  ORGA_WEEK_DATE_KEY,
   REGISTER_FORM_KEY,
   type Configuration,
 } from "@overbookd/configuration";
@@ -29,6 +30,16 @@ export const useConfigurationStore = defineStore("configuration", {
       if (typeof start !== "string") return now;
       return OverDate.fromLocal(new Date(start)).date;
     },
+
+    orgaWeekStartDate(): Date {
+      const orgaWeekDate = this.get(ORGA_WEEK_DATE_KEY);
+      const now = OverDate.now().date;
+      if (!isObject(orgaWeekDate) || !("start" in orgaWeekDate)) return now;
+      const start = orgaWeekDate.start;
+      if (typeof start !== "string") return now;
+      return OverDate.fromLocal(new Date(start)).date;
+    },
+
     registerFormDescription(): string {
       const registerForm = this.get(REGISTER_FORM_KEY);
       if (!isObject(registerForm) || !("description" in registerForm)) {
