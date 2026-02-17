@@ -1,4 +1,4 @@
-FROM node:24.13.0-alpine AS installer
+FROM node:24.13.1-alpine AS installer
 
 ENV CI=true
 
@@ -24,7 +24,7 @@ FROM installer AS builder
 COPY tsconfig.cross-modules-import.json tsconfig.build.json tsconfig.package.json tsconfig.all-modules-import.json tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
-FROM node:24.13.0-alpine
+FROM node:24.13.1-alpine
 
 ARG API_VERSION
 ARG OVERBOOKD_VERSION
