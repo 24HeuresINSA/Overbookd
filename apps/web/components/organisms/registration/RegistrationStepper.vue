@@ -212,16 +212,17 @@
               </div>
             </template>
           </v-checkbox>
-          <div v-if="shouldSignVolunteerCharter(membership)">
-            <v-btn
-              variant="outlined"
-              color="primary"
-              @click="openVolunteerCharterDialog"
-            >
-              Lire et signer la charte des bénévoles
-            </v-btn>
-            <div v-if="hasSignedVolunteerCharter">✅ Charte bénévole signée</div>
-          </div>
+          <v-btn
+            v-if="mustSignVolunteerCharter"
+            :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
+            :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
+            :disabled="hasSignedVolunteerCharter"
+            @click="openVolunteerCharterDialog"
+          >
+            {{ hasSignedVolunteerCharter
+              ? "Charte signée ✔"
+              : "Lire et signer la charte des bénévoles" }}
+          </v-btn>
 
           <div class="stepper-actions">
             <v-btn
@@ -326,6 +327,9 @@ const membership = computed<Membership>(() =>
 const membershipLabel = computed<string>(() =>
   membership.value === STAFF ? "Organisateur" : "Bénévole",
 );
+const mustSignVolunteerCharter = computed(() =>
+  shouldSignVolunteerCharter(membership.value),
+);
 
 const cleanNickname = computed<string | undefined>(
   () => nickname.value || undefined,
@@ -378,7 +382,7 @@ const securityRules = computed(() => [
   () => step.value <= 3 || rules.required(password.value),
   () => step.value <= 3 || rules.password(password.value),
   () => step.value <= 3 || rules.required(hasApprovedEULA.value),
-  () => step.value <= 3 || !shouldSignVolunteerCharter(membership.value) || rules.required(hasSignedVolunteerCharter.value)
+  () => step.value <= 3 || !mustSignVolunteerCharter.value || rules.required(hasSignedVolunteerCharter.value)
 ]);
 
 const repeatPasswordRule = computed(() => isSame(password.value));

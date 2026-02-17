@@ -261,16 +261,8 @@ export class RegisterForm {
   }
 
   complete(): FulfilledRegistration {
-    if (!this.isFulfilled(this.currentRegistration)) {
-      throw new NotFulfilledRegistration(this.reasons);
-    }
+    if (!this.isValid) throw new NotFulfilledRegistration(this.reasons);
     return this.currentRegistration;
-  }
-
-  private isFulfilled(
-    registration: Partial<FulfilledRegistration>,
-  ): registration is FulfilledRegistration {
-    return this.isValid;
   }
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div>TODO</div>
-  <div v-if="shouldSign">
+  <div v-if="shouldSign" class="charter-actions">
     <v-btn
       text="Signer la Charte Bénévole"
       color="success"
@@ -31,3 +31,10 @@ const signVolunteerCharter = async () => {
   if (hasSigned.value) emit("signed");
 };
 </script>
+
+<style scoped>
+.charter-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
