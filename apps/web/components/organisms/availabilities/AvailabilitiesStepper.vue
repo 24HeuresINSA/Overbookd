@@ -42,6 +42,7 @@ const BASE_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.postManif,
 ];
 const EXTENDED_CALENDAR_STEPS: CalendarStep[] = [
+  ...CalendarEventPeriods.collage,
   CalendarEventPeriods.prePreManif,
   ...BASE_CALENDAR_STEPS,
 ];
