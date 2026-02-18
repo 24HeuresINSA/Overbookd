@@ -41,7 +41,7 @@ export class CalendarEventPeriods {
     const weeklyPeriods = collagePeriod.splitWithInterval(Duration.ONE_WEEK);
 
     return weeklyPeriods.map((period, index) => ({
-      title: `Collage - S.${index + 1}`,
+      title: `Collage - S${index + 1}`,
       period: Period.init({
         start: period.start,
         end:

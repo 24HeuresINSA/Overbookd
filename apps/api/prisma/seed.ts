@@ -82,7 +82,7 @@ async function main() {
 
       const email = `${user}@24h.me`;
 
-      const userData = {
+      const userCreateData = {
         email,
         firstname: user,
         lastname: user,
@@ -95,10 +95,16 @@ async function main() {
         },
       };
 
+      const userUpdateData = {
+        firstname: user,
+        lastname: user,
+        password: hashPassword,
+      };
+
       await prisma.user.upsert({
         where: { email },
-        update: userData,
-        create: userData,
+        update: userUpdateData,
+        create: userCreateData,
       });
 
       console.log(`User ${user} added with teams ${teamNames.split(",")}`);
