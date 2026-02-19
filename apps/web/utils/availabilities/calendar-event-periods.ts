@@ -12,12 +12,8 @@ export class CalendarEventPeriods {
   }
 
   private static get startCollage(): OverDate {
-    return CalendarEventPeriods.removeDays(39);
-    // TODO : Récupérer la bonne valeur pour le début de la semaine orga dans la configuration
-    // J'ai fais ca pour tester que tout fonctionnais bien !
-    //
-    // const configurationStore = useConfigurationStore();
-    // return OverDate.fromLocal(configurationStore.orgaWeekStartDate);
+    const configurationStore = useConfigurationStore();
+    return OverDate.fromLocal(configurationStore.orgaWeekStartDate);
   }
 
   private static addDays(days: number): OverDate {
