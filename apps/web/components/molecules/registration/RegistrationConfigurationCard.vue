@@ -35,8 +35,6 @@
 </template>
 
 <script lang="ts" setup>
-import { InviteStaff } from "@overbookd/registration";
-
 const membershipApplicationStore = useMembershipApplicationStore();
 
 membershipApplicationStore.fetchInviteStaffLink();
@@ -47,7 +45,7 @@ const inviteStaffLink = computed<URL | undefined>(
 const hasInviteStaffLink = computed<boolean>(() => !!inviteStaffLink.value);
 const expirationInviteStaffLinkDate = computed<string>(() => {
   if (!inviteStaffLink.value) return "";
-  return InviteStaff.isLinkExpired(inviteStaffLink.value);
+  return membershipApplicationStore.inviteStaffLinkStatus;
 });
 
 const copyToClipBoard = async () => {

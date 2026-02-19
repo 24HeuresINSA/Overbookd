@@ -19,6 +19,12 @@ export class MembershipApplicationRepository {
     return HttpClient.get<string>(`${this.basePath}/staffs/invitation-link`);
   }
 
+  static fetchStaffLinkStatus() {
+    return HttpClient.get<string>(
+      `${this.basePath}/staffs/invitation-link/status`,
+    );
+  }
+
   static getCurrentStaffApplication(email: string) {
     return HttpClient.get<HasApplication>(`${this.basePath}/staffs/${email}`);
   }

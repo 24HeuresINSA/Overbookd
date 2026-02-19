@@ -5,13 +5,13 @@ import {
   ONE_SECOND_IN_MS,
 } from "@overbookd/time";
 import { LOGIN_URL } from "@overbookd/web-page";
+import { LINK_EXPIRED } from "@overbookd/configuration";
 
 export type WithExpiration = {
   exp: number;
 };
 
 export const TOKEN = "token";
-export const LINK_EXPIRED = "Le lien a expiré";
 
 type LinkGeneration = {
   domain: string;

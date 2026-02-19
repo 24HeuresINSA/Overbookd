@@ -89,6 +89,7 @@
     "ics": "3.8.1",
     "jsdom": "27.0.0",
     "jsonwebtoken": "9.0.3",
+    "jwt-decode": "4.0.0",
     "multer": "2.0.2",
     "nodemailer": "7.0.13",
     "passport": "0.7.0",

@@ -12,19 +12,21 @@
 </template>
 
 <script lang="ts" setup>
-import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
+import { LINK_EXPIRED } from "@overbookd/configuration";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 definePageMeta({ layout: false });
 
 const route = useRoute();
+const membershipApplicationStore = useMembershipApplicationStore();
 
 const token = computed<string>(() => stringifyQueryParam(route.query.token));
 
 const isInvitationExpired = computed<boolean>(() => {
   if (!token.value) return false;
-  const currentUrl = new URL(window.location.href);
-  return InviteStaff.isLinkExpired(currentUrl) === LINK_EXPIRED;
+  const isLinkExpired =
+    membershipApplicationStore.inviteStaffLinkStatus === LINK_EXPIRED;
+  return isLinkExpired;
 });
 </script>
 

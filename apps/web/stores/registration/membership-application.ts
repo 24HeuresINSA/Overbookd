@@ -19,6 +19,7 @@ type State = {
   volunteerCandidates: VolunteerCandidate[];
   rejectedVolunteerCandidates: VolunteerCandidate[];
   inviteStaffLink?: URL;
+  inviteStaffLinkStatus: string;
 };
 
 export const useMembershipApplicationStore = defineStore(
@@ -30,12 +31,20 @@ export const useMembershipApplicationStore = defineStore(
       volunteerCandidates: [],
       rejectedVolunteerCandidates: [],
       inviteStaffLink: undefined,
+      inviteStaffLinkStatus: "",
     }),
     actions: {
       async fetchInviteStaffLink() {
         const res = await MembershipApplicationRepository.fetchStaffLink();
         if (isHttpError(res)) return;
         this.inviteStaffLink = new URL(res);
+      },
+
+      async fetchInviteStaffLinkStatus() {
+        const res =
+          await MembershipApplicationRepository.fetchStaffLinkStatus();
+        if (isHttpError(res)) return;
+        this.inviteStaffLinkStatus = res;
       },
 
       async generateInviteStaffLink() {

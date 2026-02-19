@@ -115,6 +115,12 @@ export class StaffMembershipApplicationController {
     return this.applicationService.getStaffInvitationLink();
   }
 
+  @Get("invitation-link/status")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  getStaffLinkStatus(): Promise<string> {
+    return this.applicationService.getStaffLinkStatus();
+  }
+
   @Post("invitation-link")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)

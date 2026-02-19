@@ -3,7 +3,6 @@ import {
   ApplyFor,
   type CandidateToEnroll,
   EnrollCandidates,
-  InviteStaff,
   RejectMembershipApplication,
   STAFF,
 } from "@overbookd/registration";
@@ -13,6 +12,7 @@ import { Configurations } from "./repository/configurations";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { HARD } from "@overbookd/team-constants";
+import { InviteStaff } from "./invite-staff/invite-staff";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -64,6 +64,12 @@ export class StaffMembershipApplicationService {
   async getStaffInvitationLink(): Promise<URL | undefined> {
     const link = await this.repositories.configurations.getInviteStaffLink();
     return link ? new URL(link) : undefined;
+  }
+
+  async getStaffLinkStatus(): Promise<string> {
+    const link = await this.repositories.configurations.getInviteStaffLink();
+    const status = await InviteStaff.isLinkExpired(new URL(link ?? ""));
+    return status;
   }
 
   async generateStaffInvitationLink(): Promise<URL> {

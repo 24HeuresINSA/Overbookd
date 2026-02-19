@@ -1,6 +1,7 @@
 export const REGISTER_FORM_KEY = "registerForm";
 export const EVENT_DATE_KEY = "eventDate";
 export const INVITE_STAFF_LINK_KEY = "inviteStaffLink";
+export const LINK_EXPIRED = "Le lien a expiré";
 export const INVITE_NEW_ADHERENT_KEY = "inviteNewAdherentLink";
 export const VOLUNTEER_BRIEFING_TIME_WINDOW_KEY = "volunteerBriefingTimeWindow";
 
