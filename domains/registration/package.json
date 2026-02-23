@@ -59,10 +59,6 @@
     "@overbookd/team-constants": "workspace:*",
     "@overbookd/time": "workspace:*",
     "@overbookd/web-page": "workspace:*",
-    "jsonwebtoken": "9.0.3",
     "jwt-decode": "4.0.0"
-  },
-  "devDependencies": {
-    "@types/jsonwebtoken": "9.0.10"
   }
 }

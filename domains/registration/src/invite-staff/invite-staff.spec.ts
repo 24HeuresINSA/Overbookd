@@ -8,32 +8,39 @@ import {
   WithExpiration,
 } from "./invite-staff.js";
 
+function createToken(expirationInMs: number) {
+  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const payload = btoa(
+    JSON.stringify({ exp: Math.floor(expirationInMs / 1000) }),
+  );
+  const signature = "signature";
+  return `${header}.${payload}.${signature}`;
+}
+
 const domain = "test.com";
-const secret = "secret";
 
 describe("Invite staff", () => {
   describe("when inviting staff", () => {
-    it("should expose a link", async () => {
-      const link = await InviteStaff.byLink({ domain, secret });
+    const token = createToken(Date.now() + 30 * ONE_DAY_IN_MS);
+    const link = InviteStaff.byLink({ domain, token });
+    it("should expose a link", () => {
       expect(link instanceof URL).toBe(true);
     });
-    it("should expose url according to given domain", async () => {
-      const link = await InviteStaff.byLink({ domain, secret });
+    it("should expose url according to given domain", () => {
       expect(link.host).toBe(domain);
     });
-    it("should expose a jwt token as parameter", async () => {
-      const link = await InviteStaff.byLink({ domain, secret });
-      const token = link.searchParams.get(TOKEN);
-      expect(() => jwtDecode(token ?? "")).not.toThrow();
+    it("should expose a jwt token as parameter", () => {
+      const tokenFromLink = link.searchParams.get(TOKEN);
+      expect(() => jwtDecode(tokenFromLink ?? "")).not.toThrow();
     });
-    it("should generate a jwt token with a 30 days expiration", async () => {
+    it("should generate a jwt token with a 30 days expiration", () => {
       const now = Date.now();
       const in29Days = now + 29 * ONE_DAY_IN_MS;
       const in31Days = now + 31 * ONE_DAY_IN_MS;
 
-      const link = await InviteStaff.byLink({ domain, secret });
-      const token = link.searchParams.get(TOKEN);
-      const { exp } = jwtDecode<WithExpiration>(token ?? "");
+      const link = InviteStaff.byLink({ domain, token });
+      const tokenFromLink = link.searchParams.get(TOKEN);
+      const { exp } = jwtDecode<WithExpiration>(tokenFromLink ?? "");
       const expirationInMs = exp * ONE_SECOND_IN_MS;
 
       expect(expirationInMs).toBeGreaterThan(in29Days);
@@ -41,8 +48,9 @@ describe("Invite staff", () => {
     });
   });
   describe("when checking link expiration", () => {
-    describe("when link is not expired yet", async () => {
-      const validLink = await InviteStaff.byLink({ domain, secret });
+    describe("when link is not expired yet", () => {
+      const token = createToken(Date.now() + 30 * ONE_DAY_IN_MS);
+      const validLink = InviteStaff.byLink({ domain, token });
       const expireText = new RegExp(
         "Le lien expire le [1-9][0-9]? [a-zéû]+ 2[0-9]{3}",
       );

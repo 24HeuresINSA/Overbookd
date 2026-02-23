@@ -13,13 +13,13 @@ import {
   isVolunteerRegistered,
 } from "@overbookd/registration";
 import { jwtConstants } from "../../authentication/jwt-constants";
-import { InviteStaff } from "@overbookd/registration";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { isString } from "class-validator";
 import {
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
+import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -40,7 +40,9 @@ export class RegistrationService {
     fulfilledRegistration: FulfilledRegistration,
     token?: string,
   ): Promise<void> {
-    const isValidRegistration = this.checkInvitationValidity(token);
+    const isValidRegistration = token
+      ? checkStaffInvitationTokenValidity(token)
+      : true;
 
     if (!isValidRegistration) {
       throw new BadRequestException("Le lien d'invitation a expiré");
@@ -76,15 +78,6 @@ export class RegistrationService {
         data: registree,
       });
     }
-  }
-
-  private checkInvitationValidity(token?: string) {
-    if (!token) return true;
-
-    return InviteStaff.isInvitationValid({
-      token,
-      secret: jwtConstants.secret,
-    });
   }
 
   async forgetMe(credentials: Credentials, token: string) {
