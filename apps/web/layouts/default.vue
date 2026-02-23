@@ -134,7 +134,7 @@ const shouldApproveEULA = computed<boolean>(
 const shouldSignVolunteerCharter = computed<boolean>(
   () =>
     userStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
-    userStore.loggedUser?.hasApprovedEULA === false,
+    userStore.loggedUser?.hasSignedVolunteerCharter === false,
 );
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());

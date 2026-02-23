@@ -4,31 +4,31 @@
     <v-btn
       text="Signer la Charte Bénévole"
       color="success"
-      :disabled="hasSigned"
+      :disabled="props.hasSigned"
       @click="signVolunteerCharter"
     />
-    <p v-if="hasSigned">La Charte Bénévole est signée 🥳</p>
+    <p v-if="props.hasSigned">La Charte Bénévole est signée 🥳</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
+const emit = defineEmits(["sign"]);
 
-const userStore = useUserStore();
-
-const emit = defineEmits(["signed"]);
-
-const shouldSign = computed<boolean>(() =>
-  userStore.can(MUST_SIGN_VOLUNTEER_CHARTER),
-);
-const hasSigned = computed<boolean>(
-  () => userStore.loggedUser?.hasSignedVolunteerCharter === true,
-);
+const props = defineProps({
+  hasSigned: {
+    type: Boolean,
+    required: true,
+  },
+  shouldSign: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+});
 
 const signVolunteerCharter = async () => {
-  if (!shouldSign.value) return;
-  await userStore.signVolunteerCharter();
-  if (hasSigned.value) emit("signed");
+  if (!props.shouldSign) return;
+  emit("sign");
 };
 </script>
 

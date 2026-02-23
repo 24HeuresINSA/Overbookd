@@ -214,6 +214,7 @@
           </v-checkbox>
           <v-btn
             v-if="mustSignVolunteerCharter"
+            class="charter-btn"
             :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
             :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
             :disabled="hasSignedVolunteerCharter"
@@ -253,8 +254,9 @@
       fullscreen
     >
       <VolunteerCharterDialogCard
+        :has-signed="hasSignedVolunteerCharter"
         @close="closeVolunteerCharterDialog"
-        @signed="signVolunteerCharter"
+        @sign="signVolunteerCharter"
       />
     </v-dialog>
   </v-card>
@@ -498,5 +500,10 @@ const signVolunteerCharter = () => {
   color: blue;
   cursor: pointer;
   text-decoration: underline;
+}
+
+.charter-btn {
+  height: calc(var(--v-btn-height) - 10px);
+  padding: 0 10px;
 }
 </style>
