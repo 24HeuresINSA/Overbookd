@@ -6,7 +6,7 @@ export type CalendarStep = {
 };
 
 export class CalendarEventPeriods {
-  private static get start(): OverDate {
+  private static get startManif(): OverDate {
     const configurationStore = useConfigurationStore();
     return OverDate.fromLocal(configurationStore.eventStartDate);
   }
@@ -17,18 +17,18 @@ export class CalendarEventPeriods {
   }
 
   private static addDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.start.date);
+    const result = new Date(CalendarEventPeriods.startManif.date);
     result.setDate(result.getDate() + days);
     return OverDate.from(result);
   }
 
   private static removeDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.start.date);
+    const result = new Date(CalendarEventPeriods.startManif.date);
     result.setDate(result.getDate() - days);
     return OverDate.from(result);
   }
 
-  public static get collage(): CalendarStep[] {
+  public static get collages(): CalendarStep[] {
     const collagePeriod = Period.init({
       start: CalendarEventPeriods.startCollage.date,
       end: CalendarEventPeriods.removeDays(12).date,
@@ -36,16 +36,19 @@ export class CalendarEventPeriods {
 
     const weeklyPeriods = collagePeriod.splitWithInterval(Duration.ONE_WEEK);
 
-    return weeklyPeriods.map((period, index) => ({
-      title: `Collage - S${index + 1}`,
-      period: Period.init({
-        start: period.start,
-        end:
-          index === weeklyPeriods.length - 1
-            ? period.end
-            : OverDate.from(period.end).minus(Duration.ONE_DAY).date,
-      }),
-    }));
+    return weeklyPeriods.map((period, index) => {
+      const isLastCollage = index === weeklyPeriods.length - 1;
+      const fixedEnd = isLastCollage
+        ? period.end
+        : OverDate.from(period.end).minus(Duration.ONE_DAY).date;
+      return {
+        title: `Collage - S${index + 1}`,
+        period: Period.init({
+          start: period.start,
+          end: fixedEnd,
+        }),
+      };
+    });
   }
 
   public static get prePreManif(): CalendarStep {
@@ -72,7 +75,7 @@ export class CalendarEventPeriods {
     return {
       title: "Festival",
       period: Period.init({
-        start: CalendarEventPeriods.start.date,
+        start: CalendarEventPeriods.startManif.date,
         end: CalendarEventPeriods.addDays(2).date,
       }),
     };
