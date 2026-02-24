@@ -52,7 +52,11 @@ export type { AnonymousMember } from "./forget-member/anonymous-member.js";
 export { ForgetMemberError } from "./forget-member/forget-member.error.js";
 
 // Invite Staff
-export { InviteStaff, LINK_EXPIRED } from "./invite-staff/invite-staff.js";
+export {
+  InviteStaff,
+  LINK_EXPIRED,
+  JWT_EXPIRES_IN,
+} from "./invite-staff/invite-staff.js";
 
 // Register Form
 export type {

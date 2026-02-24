@@ -11,6 +11,7 @@ export type WithExpiration = {
 
 export const TOKEN = "token";
 export const LINK_EXPIRED = "Le lien a expiré";
+export const JWT_EXPIRES_IN = "30d" as const;
 
 type LinkGeneration = {
   domain: string;

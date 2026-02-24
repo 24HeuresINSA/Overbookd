@@ -7,6 +7,7 @@ import { signaLocations } from "./seeders/signa-locations";
 import {
   Configuration,
   EVENT_DATE_KEY,
+  ORGA_WEEK_DATE_KEY,
   REGISTER_FORM_KEY,
 } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
@@ -81,7 +82,7 @@ async function main() {
 
       const email = `${user}@24h.me`;
 
-      const userData = {
+      const userCreateData = {
         email,
         firstname: user,
         lastname: user,
@@ -94,10 +95,16 @@ async function main() {
         },
       };
 
+      const userUpdateData = {
+        firstname: user,
+        lastname: user,
+        password: hashPassword,
+      };
+
       await prisma.user.upsert({
         where: { email },
-        update: userData,
-        create: userData,
+        update: userUpdateData,
+        create: userCreateData,
       });
 
       console.log(`User ${user} added with teams ${teamNames.split(",")}`);
@@ -175,6 +182,20 @@ async function main() {
     update: eventDateConfig,
     create: eventDateConfig,
   });
+
+  const orgaWeekDateConfig: Configuration = {
+    key: ORGA_WEEK_DATE_KEY,
+    value: {
+      start: currentDate.toISOString(),
+    },
+  };
+  console.log("Creating of orga week date config");
+  await prisma.configuration.upsert({
+    where: { key: ORGA_WEEK_DATE_KEY },
+    update: orgaWeekDateConfig,
+    create: orgaWeekDateConfig,
+  });
+
   console.log("Creating of register form config");
   const registerFormConfig: Configuration = {
     key: REGISTER_FORM_KEY,
