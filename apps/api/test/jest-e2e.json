@@ -7,6 +7,6 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "transformIgnorePatterns": [
-    "node_modules/(?!(jsdom|html-encoding-sniffer|@exodus/bytes)/)"
-  ]
+  "node_modules/(?!.*(jsdom|html-encoding-sniffer|@exodus/bytes))"
+]
 }
