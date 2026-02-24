@@ -8,5 +8,5 @@ export const loginTheme: ThemeDefinition = {
     primary: "#162D3A",
     "on-primary": WHITE,
     ...lightBackgroundColors,
-    },
+  },
 };

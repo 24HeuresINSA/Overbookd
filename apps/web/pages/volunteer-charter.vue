@@ -32,9 +32,7 @@ const signVolunteerCharter = async () => {
 };
 </script>
 
-
 <style lang="scss" scoped>
-
 .charter-wrapper {
   display: flex;
   justify-content: center;
