@@ -1,6 +1,4 @@
 <template>
-  <v-card rounded="0" class="mx-0 my-0 px-0 py-0">
-    <v-card-text>
       <h1>Festival des 24 heures de l’INSA</h1>
       <p class="subtitle">Charte bénévole - 51ème édition</p>
 
@@ -190,15 +188,14 @@
         En cas d’accident non intentionnel (sans négligence manifeste), la
         responsabilité du·de la bénévole n’est pas engagée.
       </p>
-    </v-card-text>
-  </v-card>
+
 
   <div v-if="shouldSign" class="charter-actions">
     <v-btn
       :text="
         props.hasSigned
-          ? 'Signer la Charte Bénévole'
-          : 'Charte Bénévole signée ✔'
+          ? 'Charte Bénévole signée ✔'
+          : 'Signer la Charte Bénévole'
       "
       color="success"
       :disabled="props.hasSigned"
@@ -228,7 +225,7 @@ const signVolunteerCharter = async () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .charter-actions {
   display: flex;
   justify-content: flex-end;
@@ -275,7 +272,11 @@ ul {
   margin-bottom: 10px;
   font-size: 14px;
   text-align: justify;
+  @media screen and (max-width: $mobile-max-width) {
+    margin-left: 20px;
+  }
 }
+
 li {
   margin-bottom: 3px;
 }

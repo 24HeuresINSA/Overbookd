@@ -9,12 +9,16 @@
       />
       <v-toolbar-title>Charte Bénévole</v-toolbar-title>
     </v-toolbar>
-    <v-card-text>
-      <VolunteerCharter
-        :has-signed="props.hasSigned"
-        @sign="signVolunteerCharter"
-      />
-    </v-card-text>
+    <div class="charter-wrapper">
+      <v-card class="charter-card" >
+        <v-card-text>
+          <VolunteerCharter
+            :has-signed="props.hasSigned"
+            @sign="signVolunteerCharter"
+          />
+        </v-card-text>
+      </v-card>
+    </div>
   </v-card>
 </template>
 
@@ -30,3 +34,19 @@ const emit = defineEmits(["close", "sign"]);
 const close = () => emit("close");
 const signVolunteerCharter = () => emit("sign");
 </script>
+
+<style lang="scss" scoped> 
+.charter-wrapper {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(var(--v-theme-background));
+
+}
+
+.charter-card {
+  width: 80%;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 100%;
+  }
+}
+</style>

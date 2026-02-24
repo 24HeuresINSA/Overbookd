@@ -28,7 +28,7 @@ const isInvitationExpired = computed<boolean>(() => {
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .background-wrapper {
   display: flex;
   flex-direction: column;
