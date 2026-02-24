@@ -195,7 +195,11 @@
 
   <div v-if="shouldSign" class="charter-actions">
     <v-btn
-      :text="props.hasSigned ? 'Signer la Charte Bénévole' : 'Charte Bénévole signée ✔'"
+      :text="
+        props.hasSigned
+          ? 'Signer la Charte Bénévole'
+          : 'Charte Bénévole signée ✔'
+      "
       color="success"
       :disabled="props.hasSigned"
       @click="signVolunteerCharter"

@@ -1,5 +1,9 @@
 <template>
-  <VolunteerCharter :should-sign="shouldSign" :has-signed="hasSigned" @sign="signVolunteerCharter" />
+  <VolunteerCharter
+    :should-sign="shouldSign"
+    :has-signed="hasSigned"
+    @sign="signVolunteerCharter"
+  />
 </template>
 
 <script lang="ts" setup>
