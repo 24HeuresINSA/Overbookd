@@ -1,5 +1,4 @@
 import { jwtDecode } from "jwt-decode";
-import jwt from "jsonwebtoken";
 import {
   formatDateWithExplicitMonthAndDay,
   ONE_SECOND_IN_MS,
@@ -15,29 +14,19 @@ export const LINK_EXPIRED = "Le lien a expiré";
 
 type LinkGeneration = {
   domain: string;
-  secret: string;
-};
-
-type CheckInvitation = {
   token: string;
-  secret: string;
 };
 
 export class InviteStaff {
-  static async byLink({ domain, secret }: LinkGeneration): Promise<URL> {
+  static byLink({ domain, token }: LinkGeneration): URL {
     const baseUrl = new URL(`https://${domain}${LOGIN_URL}`);
-
-    const token = jwt.sign({}, secret, { expiresIn: "30d" });
-
     baseUrl.searchParams.append(TOKEN, token);
     return baseUrl;
   }
 
-  static isLinkExpired(link: URL): string {
-    const token = link.searchParams.get(TOKEN);
-
+  static isTokenExpired(token: string): string {
     try {
-      const { exp } = jwtDecode<WithExpiration>(token ?? "");
+      const { exp } = jwtDecode<WithExpiration>(token);
       const expirationInMs = exp * ONE_SECOND_IN_MS;
 
       if (InviteStaff.isPast(expirationInMs)) return LINK_EXPIRED;
@@ -49,13 +38,10 @@ export class InviteStaff {
     }
   }
 
-  static async isInvitationValid({ token, secret }: CheckInvitation) {
-    try {
-      jwt.verify(token, secret);
-      return true;
-    } catch {
-      return false;
-    }
+  static isLinkExpired(link: URL): string {
+    const token = link.searchParams.get(TOKEN);
+    if (!token) return LINK_EXPIRED;
+    return InviteStaff.isTokenExpired(token);
   }
 
   private static isPast(expirationInMs: number) {

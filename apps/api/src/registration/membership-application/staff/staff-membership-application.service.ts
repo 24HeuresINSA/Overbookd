@@ -7,12 +7,12 @@ import {
   RejectMembershipApplication,
   STAFF,
 } from "@overbookd/registration";
-import { jwtConstants } from "../../../authentication/jwt-constants";
 import { Users } from "../common/repository/users";
 import { Configurations } from "./repository/configurations";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { HARD } from "@overbookd/team-constants";
+import { createStaffInvitationToken } from "./jwt.utils";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -34,10 +34,7 @@ export class StaffMembershipApplicationService {
   ) {}
 
   async applyFor(email: string, token: string): Promise<void> {
-    const isTokenValid = InviteStaff.isInvitationValid({
-      token,
-      secret: jwtConstants.secret,
-    });
+    const isTokenValid = InviteStaff.isTokenExpired(token);
     if (!isTokenValid) {
       throw new BadRequestException("Le lien de candidature a expiré");
     }
@@ -68,8 +65,8 @@ export class StaffMembershipApplicationService {
 
   async generateStaffInvitationLink(): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
-    const secret = jwtConstants.secret;
-    const link = await InviteStaff.byLink({ domain, secret });
+    const token = createStaffInvitationToken();
+    const link = InviteStaff.byLink({ domain, token });
     await this.repositories.configurations.saveInviteStaffLink(link.toString());
     return link;
   }
