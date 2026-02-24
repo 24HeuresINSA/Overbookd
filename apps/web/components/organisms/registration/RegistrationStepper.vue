@@ -217,13 +217,12 @@
             class="charter-btn"
             :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
             :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
-            :disabled="hasSignedVolunteerCharter"
             @click="openVolunteerCharterDialog"
           >
             {{
               hasSignedVolunteerCharter
                 ? "Charte signée ✔"
-                : "Lire et signer la charte des bénévoles"
+                : "Lire et signer la charte bénévole"
             }}
           </v-btn>
 
