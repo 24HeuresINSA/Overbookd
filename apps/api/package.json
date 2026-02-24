@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "pnpm prisma:generate && nest build",
-    "postbuild": "npx cpy-cli \"src/generated/**/*.node\" \"dist/apps/api/src/generated\"",
+    "postbuild": "npx cpy-cli 'src/generated/**/*.node' 'dist/apps/api/src/generated' || true",
     "build:ci": "pnpm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
