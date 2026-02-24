@@ -7,10 +7,12 @@
         title="Fermer"
         @click="close"
       />
-      <v-toolbar-title>Charte Bénévole</v-toolbar-title>
+      <v-toolbar-title>
+        Charte Bénévole (signature en bas de page)
+      </v-toolbar-title>
     </v-toolbar>
     <div class="charter-wrapper">
-      <v-card class="charter-card" >
+      <v-card class="charter-card">
         <v-card-text>
           <VolunteerCharter
             :has-signed="props.hasSigned"
@@ -35,12 +37,11 @@ const close = () => emit("close");
 const signVolunteerCharter = () => emit("sign");
 </script>
 
-<style lang="scss" scoped> 
+<style lang="scss" scoped>
 .charter-wrapper {
   display: flex;
   justify-content: center;
   background-color: rgb(var(--v-theme-background));
-
 }
 
 .charter-card {

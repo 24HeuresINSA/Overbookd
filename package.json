@@ -14,7 +14,7 @@
   },
   "scripts": {
     "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
-    "db:seed": "pnpm run db:exec 'prisma db seed'",
+    "db:seed": "pnpm run db:exec 'prisma generate' && pnpm run db:exec 'prisma db seed'",
     "db:reset": "pnpm run db:exec 'prisma migrate reset' && pnpm run db:seed",
     "db:migrate": "pnpm run db:exec 'prisma migrate dev'",
     "ci:init": "wget -qO- https://bootstrap.pypa.io/get-pip.py | python3 && python3 -m pip install --upgrade pip && python3 -m pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg",
