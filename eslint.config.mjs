@@ -27,6 +27,7 @@ export default pluginTs.config(
       "no-undef": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-expressions": "off",
+      "no-useless-assignment": "off",
       "vue/multi-word-component-names": "off",
       "vue/singleline-html-element-content-newline": "off",
       "vue/html-self-closing": [

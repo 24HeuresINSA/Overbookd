@@ -3,6 +3,8 @@
 </template>
 
 <script lang="ts" setup>
+import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
+
 useHead({ title: "Charte bénévole" });
 
 const userStore = useUserStore();
