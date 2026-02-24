@@ -20,9 +20,20 @@ export class GuestNotFound extends MealSharingError {
     super(`Impossible de trouver l'adhérent #${id} en tant que convive`);
   }
 }
+
+export class AlreadyShotguned extends MealSharingError {
+  constructor({ meal }: SharedMeal) {
+    super(`Tu as déjà shotgun pour le repas du ${meal.date}`);
+  }
+}
+
 export class OnlyChefCan extends MealSharingError {
   private constructor(chef: Adherent, action: string) {
     super(`Seul le.a chef.fe ${chef.name} peut ${action}`);
+  }
+
+  static cancelShotgunFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "annuler un shotgun");
   }
 
   static recordExpenseFor({ chef }: SharedMeal) {
@@ -39,13 +50,6 @@ export class OnlyChefCan extends MealSharingError {
 
   static openShotguns({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "ouvrir les shotguns");
-  }
-
-  static cancelShotgunFor({ chef }: SharedMeal) {
-    return new OnlyChefCan(
-      chef,
-      "annuler un shotgun quand les shotguns sont fermés",
-    );
   }
 }
 

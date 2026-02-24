@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { Adherents, MealSharing, SOIR, MIDI } from "./meal-sharing.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
+  AlreadyShotguned,
   MealNotFound,
   OnlyChefCan,
   RecordExpenseOnNoShotgunedMeal,
@@ -34,9 +35,9 @@ const meal = Meal.init("Riz cantonnais", {
   moment: "MIDI",
 });
 const shotguns = [
-  { ...julie, date: new Date("2023-10-12 08:00"), portion: 1 },
-  { ...noel, date: new Date("2023-10-12 08:51"), portion: 1 },
-  { ...shogosse, date: new Date("2023-10-12 13:00"), portion: 2 },
+  { ...julie, date: new Date("2023-10-12 08:00") },
+  { ...noel, date: new Date("2023-10-12 08:51") },
+  { ...shogosse, date: new Date("2023-10-12 13:00") },
 ];
 
 const rizCantonnais = OnGoingSharedMealBuilder.build({
@@ -120,11 +121,10 @@ describe("Meal Sharing", () => {
             { day, moment },
             expectedChef.id,
           );
-          expect(meal.portionCount).toBe(1);
+          expect(meal.shotgunCount).toBe(1);
           expect(meal.shotguns.at(0)).toEqual({
             ...expectedChef,
             date: expect.any(Date),
-            portion: 1,
           });
         });
       },
@@ -139,25 +139,26 @@ describe("Meal Sharing", () => {
     describe("when lea shotgun for riz cantonnais", () => {
       it("should add lea as a guest", async () => {
         const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-        expect(meal.portionCount).toBe(5);
+        expect(meal.shotgunCount).toBe(4);
         expect(meal.shotguns).toContainEqual({
           ...lea,
           date: expect.any(Date),
-          portion: 1,
         });
       });
-      describe("when lea shotguns again", () => {
-        it("should add a portion for lea", async () => {
+      describe("when lea does it twice", () => {
+        it("should indicate that lea is already a guest", async () => {
           await mealSharing.shotgun(rizCantonnais.id, lea.id);
-          const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-          expect(meal.portionCount).toBe(6);
-
-          expect(meal.shotguns).toContainEqual({
-            ...lea,
-            date: expect.any(Date),
-            portion: 2,
-          });
+          expect(
+            async () => await mealSharing.shotgun(rizCantonnais.id, lea.id),
+          ).rejects.toThrow(AlreadyShotguned);
         });
+      });
+    });
+    describe("when noel shotgun again for riz cantonnais", () => {
+      it("should indicate that noel is already a guest", async () => {
+        expect(
+          async () => await mealSharing.shotgun(rizCantonnais.id, noel.id),
+        ).rejects.toThrow(AlreadyShotguned);
       });
     });
   });
@@ -168,46 +169,24 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     const cancelShotgun = { mealId: rizCantonnais.id, guestId: shogosse.id };
-    describe("when one of the guests unshotguns a meal", () => {
-      it("should remove a portion of his shotgun", async () => {
-        const meal = await mealSharing.cancelShotgunAsChef(
-          cancelShotgun,
-          rizCantonnais.chef.id,
-        );
-        expect(meal.portionCount).toBe(3);
-        expect(meal.shotguns).toContainEqual({
-          ...shogosse,
-          date: expect.any(Date),
-          portion: 1,
-        });
+    describe("when one of the guests tries to cancel their shotgun", () => {
+      it("should indicate only chef can unshotgun", async () => {
+        const instigator = shogosse.id;
+        expect(
+          async () =>
+            await mealSharing.cancelShotgun(cancelShotgun, instigator),
+        ).rejects.toThrow(OnlyChefCan.cancelShotgunFor(rizCantonnais));
       });
     });
-    describe("when the chef tries to cancel a shotgun with more than one portion", () => {
-      it("should remove a portion from the guests shotgun", async () => {
-        const meal = await mealSharing.cancelShotgunAsChef(
-          cancelShotgun,
-          rizCantonnais.chef.id,
-        );
-        expect(meal.portionCount).toBe(3);
-        expect(meal.shotguns).toContainEqual({
+    describe("when the chef tries to cancel a shotgun", () => {
+      it("should remove the guest from the list", async () => {
+        const instigator = rizCantonnais.chef.id;
+        const meal = await mealSharing.cancelShotgun(cancelShotgun, instigator);
+        expect(meal.shotgunCount).toBe(2);
+        expect(meal.shotguns).not.toContainEqual({
           ...shogosse,
           date: expect.any(Date),
-          portion: 1,
         });
-      });
-    });
-    describe("when the chef tries to cancel a shotgun with only one portion", () => {
-      const cancelShotgunForJulie = {
-        mealId: rizCantonnais.id,
-        guestId: julie.id,
-      };
-      it("should remove the shotgun from the meal", async () => {
-        const meal = await mealSharing.cancelShotgunAsChef(
-          cancelShotgunForJulie,
-          rizCantonnais.chef.id,
-        );
-        expect(meal.portionCount).toBe(3);
-        expect(meal.shotguns.find((s) => s.id === julie.id)).toBeUndefined();
       });
     });
   });
@@ -218,8 +197,10 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     it("should be able to know how many guests shotguned", async () => {
-      const { portionCount } = await mealSharing.findById(rizCantonnais.id);
-      expect(portionCount).toBe(4);
+      const { shotgunCount: shotguns } = await mealSharing.findById(
+        rizCantonnais.id,
+      );
+      expect(shotguns).toBe(3);
     });
   });
   describe("Record expense", () => {
@@ -262,10 +243,7 @@ describe("Meal Sharing", () => {
         it("should indicate shared meal is past for chef trying to cancel shotgun", async () => {
           expect(async () => {
             const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
-            await mealSharing.cancelShotgunAsChef(
-              cancel,
-              rizCantonnais.chef.id,
-            );
+            await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
@@ -284,8 +262,11 @@ describe("Meal Sharing", () => {
             );
           }).rejects.toThrow(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
         });
+        it("should count how many shotguns were before the expense", () => {
+          expect(pastSharedMeal.inTimeShotguns).toBe(2);
+        });
         it("should count how many shotguns were done", () => {
-          expect(pastSharedMeal.portionCount).toBe(4);
+          expect(pastSharedMeal.shotgunCount).toBe(3);
         });
       });
       describe("when no one shotgun for the meal", () => {
@@ -379,12 +360,6 @@ describe("Meal Sharing", () => {
             await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
           }).rejects.toThrow(ShotgunsClosed);
         });
-        it("should indicate shotguns are closed for existing adherent trying to remove a portion", async () => {
-          expect(async () => {
-            const cancel = { mealId: rizCantonnais.id, guestId: shogosse.id };
-            await mealSharing.cancelShotgunAsGuest(cancel);
-          }).rejects.toThrow(ShotgunsClosed);
-        });
         describe("when chef opens the shotguns again", () => {
           beforeEach(async () => {
             sharedMeal = await mealSharing.openShotguns(
@@ -397,11 +372,10 @@ describe("Meal Sharing", () => {
           });
           it("should be possible for lea to shotgun", async () => {
             const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-            expect(meal.portionCount).toBe(5);
+            expect(meal.shotgunCount).toBe(4);
             expect(meal.shotguns).toContainEqual({
               ...lea,
               date: expect.any(Date),
-              portion: 1,
             });
           });
         });

@@ -46,7 +46,7 @@ export class SharedMealService {
     guestId: Adherent["id"],
     instigatorId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
-    const updated = await this.mealSharing.cancelShotgunAsChef(
+    const updated = await this.mealSharing.cancelShotgun(
       { mealId, guestId },
       instigatorId,
     );
@@ -97,7 +97,7 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    portionCount: meal.portionCount,
+    shotgunCount: meal.shotgunCount,
     shotguns: meal.shotguns,
   };
 }
@@ -108,7 +108,7 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    portionCount: meal.portionCount,
+    shotgunCount: meal.shotgunCount,
     shotguns: meal.shotguns,
   };
 

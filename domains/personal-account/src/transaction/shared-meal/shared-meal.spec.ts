@@ -15,12 +15,11 @@ describe("Generate all transactions to refound shared meal chef", () => {
     expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
     chef: julie,
     meal: { menu: "Something", date: "dimanche 31 decembre soir" },
-    areShotgunsOpen: true,
     shotguns: [
-      { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-      { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-      { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
-      { ...georges, date: new Date("2023-12-31T21:00+02:00"), portion: 1 },
+      { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+      { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+      { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+      { ...georges, date: new Date("2023-12-31T21:00+02:00") },
     ],
   });
 
@@ -57,11 +56,10 @@ describe("Generate all transactions to refound shared meal chef", () => {
       expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
-      areShotgunsOpen: true,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
       ],
     });
 
@@ -77,11 +75,10 @@ describe("Generate all transactions to refound shared meal chef", () => {
       expense: { amount: 200000, date: new Date("2023-12-31T10:30+02:00") },
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
-      areShotgunsOpen: false,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
       ],
     });
 

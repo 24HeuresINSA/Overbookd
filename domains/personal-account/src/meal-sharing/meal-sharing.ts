@@ -55,8 +55,8 @@ export abstract class SharedMealBuilder {
     return this._shotguns.all;
   }
 
-  get portionCount(): number {
-    return this._shotguns.portionCount;
+  get shotgunCount(): number {
+    return this._shotguns.all.length;
   }
 
   isChef(adherent: Adherent["id"]): boolean {
@@ -116,26 +116,13 @@ export class MealSharing {
     return this.sharedMeals.addShotgun(updatedMeal);
   }
 
-  async cancelShotgunAsChef(
+  async cancelShotgun(
     { mealId, guestId }: CancelShotgun,
-    instigatorId: number,
+    instigator: number,
   ): Promise<OnGoingSharedMeal> {
     const meal = await this.sharedMeals.find(mealId);
     if (!meal) throw new MealNotFound(mealId);
-    if (!meal.isChef(instigatorId)) throw OnlyChefCan.cancelShotgunFor(meal);
-
-    const updatedMeal = meal.cancelShotgunFor(guestId);
-    return this.sharedMeals.cancelShotgun(updatedMeal);
-  }
-
-  async cancelShotgunAsGuest({
-    mealId,
-    guestId,
-  }: CancelShotgun): Promise<OnGoingSharedMeal> {
-    const meal = await this.sharedMeals.find(mealId);
-    if (!meal) throw new MealNotFound(mealId);
-    if (isOnGoingMeal(meal) && !meal.areShotgunsOpen)
-      throw new ShotgunsClosed();
+    if (!meal.isChef(instigator)) throw OnlyChefCan.cancelShotgunFor(meal);
 
     const updatedMeal = meal.cancelShotgunFor(guestId);
     return this.sharedMeals.cancelShotgun(updatedMeal);
@@ -160,7 +147,7 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.recordExpenseFor(meal);
-    if (meal.portionCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
+    if (meal.shotgunCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);

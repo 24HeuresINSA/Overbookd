@@ -25,7 +25,7 @@
         <div class="shotguns">
           <details>
             <summary>
-              {{ shared.portionCount }} {{ portions }}
+              {{ shared.shotgunCount }} {{ guests }}
               <span v-show="hasShotgun"> (dont moi)</span>
             </summary>
             <ul>
@@ -57,7 +57,7 @@
             size="large"
             :text="areShotgunsOpen ? 'Shotgun' : 'Les shotguns sont fermés'"
             append-icon="mdi-account-multiple-plus"
-            :disabled="areShotgunsClose"
+            :disabled="hasShotgun || areShotgunsClose"
             @click="shotgun"
           />
           <v-btn
@@ -131,14 +131,14 @@ const me = computed<Adherent>(() => {
   return { id, name: nicknameOrName(me) };
 });
 const iAmChef = computed<boolean>(() => props.shared.chef.id === me.value.id);
-const portions = computed<string>(() =>
-  props.shared.portionCount > 1 ? "portions" : "portion",
+const guests = computed<string>(() =>
+  props.shared.shotgunCount > 1 ? "convives" : "convive",
 );
 const builder = computed<OnGoingSharedMealBuilder>(() =>
   OnGoingSharedMealBuilder.build(props.shared),
 );
 const hasShotgun = computed<boolean>(() =>
-  props.shared.shotguns.some((adherent) => adherent.id === me.value.id),
+  builder.value.hasShotgun(me.value.id),
 );
 const areShotgunsOpen = computed<boolean>(() => builder.value.areShotgunsOpen);
 const areShotgunsClose = computed<boolean>(() => !areShotgunsOpen.value);
