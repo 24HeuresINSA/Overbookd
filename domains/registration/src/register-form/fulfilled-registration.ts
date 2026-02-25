@@ -6,7 +6,7 @@ import {
   ROUEN,
   STRASBOURG,
   TECKOS,
-  TENDRESTIVAL,
+  HAUTS_DE_FRANCE,
 } from "@overbookd/team-constants";
 
 export const TEAM_CODES: TeamCode[] = [
@@ -15,7 +15,7 @@ export const TEAM_CODES: TeamCode[] = [
   KFET,
   KARNA,
   TECKOS,
-  TENDRESTIVAL,
+  HAUTS_DE_FRANCE,
   CVL,
   ROUEN,
 ];
@@ -27,7 +27,7 @@ export type TeamCode =
   | typeof KARNA
   | typeof TECKOS
   | typeof CVL
-  | typeof TENDRESTIVAL
+  | typeof HAUTS_DE_FRANCE
   | typeof ROUEN;
 
 export type Teams = [] | [TeamCode] | [TeamCode, TeamCode];
@@ -43,4 +43,5 @@ export type FulfilledRegistration = {
   comment?: string;
   teams: Teams;
   hasApprovedEULA: boolean;
+  hasSignedVolunteerCharter?: boolean;
 };

@@ -22,6 +22,14 @@
     >
       <ApproveEULADialogCard />
     </v-dialog>
+    <v-dialog
+      v-model="shouldSignVolunteerCharter"
+      transition="dialog-bottom-transition"
+      max-width="600"
+      persistent
+    >
+      <MustSignVolunteerCharterDialogCard />
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -43,6 +51,7 @@ import {
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
+import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
 import { useFavicon } from "@vueuse/core";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";
@@ -121,6 +130,11 @@ onUnmounted(() => {
 
 const shouldApproveEULA = computed<boolean>(
   () => userStore.loggedUser?.hasApprovedEULA === false,
+);
+const shouldSignVolunteerCharter = computed<boolean>(
+  () =>
+    userStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
+    userStore.loggedUser?.hasSignedVolunteerCharter === false,
 );
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());

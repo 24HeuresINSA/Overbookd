@@ -7,10 +7,9 @@ import {
 } from "@overbookd/permission";
 import {
   FulfilledRegistration,
-  KARNA,
-  TECKOS,
   Teams,
 } from "./register-form/fulfilled-registration.js";
+import { KARNA, TECKOS } from "@overbookd/team-constants";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory.js";
@@ -48,7 +47,7 @@ const firstNewComer: NewcomerRegistered<"STAFF"> = {
   membership: STAFF,
 };
 
-const registerForm: FulfilledRegistration = {
+const staffRegisterForm: FulfilledRegistration = {
   lastname,
   firstname,
   mobilePhone,
@@ -59,6 +58,11 @@ const registerForm: FulfilledRegistration = {
   nickname,
   email,
   hasApprovedEULA: true,
+};
+
+const volunteerRegisterForm: FulfilledRegistration = {
+  ...staffRegisterForm,
+  hasSignedVolunteerCharter: true,
 };
 
 let registerNewcomer: RegisterNewcomer;
@@ -77,102 +81,107 @@ describe("Register newcomer", () => {
       );
     });
     describe.each`
-      membership
-      ${STAFF}
-      ${VOLUNTEER}
-    `("when receiving a valid $membership registration", ({ membership }) => {
-      it("should register the associated newcomer", async () => {
-        const registree = await registerNewcomer.fromRegisterForm(
-          registerForm,
-          membership,
-        );
-        const { password, ...personalData } = registerForm;
-        const expectedRegistree = { ...personalData, id: 1, membership };
-        expect(registree).toStrictEqual(expectedRegistree);
-        expect(newcomerRepository.registrees).toContainEqual(expectedRegistree);
-      });
-      describe("when receiving newcomer with upper chars in email", () => {
-        const SCHLAGOS_PROTONMAIL = "schla.gos@protonmail.com";
-        it.each`
-          registerEmail                 | expectedEmail
-          ${"Schla.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
-          ${"Schla.Gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
-          ${"SchLa.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
-          ${"schla.gos@protonmail.Com"} | ${SCHLAGOS_PROTONMAIL}
-          ${"SCHLA.GOS@PROTONMAIL.COM"} | ${SCHLAGOS_PROTONMAIL}
-        `(
-          "should register $registerEmail new comer with $expectedEmail as email",
-          async ({ registerEmail, expectedEmail }) => {
-            const form = { ...registerForm, email: registerEmail };
-            const { email } = await registerNewcomer.fromRegisterForm(
-              form,
-              membership,
+      membership   | registerForm
+      ${STAFF}     | ${staffRegisterForm}
+      ${VOLUNTEER} | ${volunteerRegisterForm}
+    `(
+      "when receiving a valid $membership registration",
+      ({ membership, registerForm }) => {
+        it("should register the associated newcomer", async () => {
+          const registree = await registerNewcomer.fromRegisterForm(
+            registerForm,
+            membership,
+          );
+          const { password, ...personalData } = registerForm;
+          const expectedRegistree = { ...personalData, id: 1, membership };
+          expect(registree).toStrictEqual(expectedRegistree);
+          expect(newcomerRepository.registrees).toContainEqual(
+            expectedRegistree,
+          );
+        });
+        describe("when receiving newcomer with upper chars in email", () => {
+          const SCHLAGOS_PROTONMAIL = "schla.gos@protonmail.com";
+          it.each`
+            registerEmail                 | expectedEmail
+            ${"Schla.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+            ${"Schla.Gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+            ${"SchLa.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+            ${"schla.gos@protonmail.Com"} | ${SCHLAGOS_PROTONMAIL}
+            ${"SCHLA.GOS@PROTONMAIL.COM"} | ${SCHLAGOS_PROTONMAIL}
+          `(
+            "should register $registerEmail new comer with $expectedEmail as email",
+            async ({ registerEmail, expectedEmail }) => {
+              const form = { ...registerForm, email: registerEmail };
+              const { email } = await registerNewcomer.fromRegisterForm(
+                form,
+                membership,
+              );
+              expect(email).toBe(expectedEmail);
+            },
+          );
+        });
+        describe("when 2 newcomers are received", () => {
+          it("should generate different id for both", async () => {
+            const fistForm = {
+              ...registerForm,
+              email: "le.tchad@protonmail.com",
+            };
+            const secondForm = {
+              ...registerForm,
+              email: "brole@protonmail.com",
+            };
+            const [firstRegistree, secondRegistree] = await Promise.all([
+              registerNewcomer.fromRegisterForm(fistForm, membership),
+              registerNewcomer.fromRegisterForm(secondForm, membership),
+            ]);
+            expect(firstRegistree.id).not.toBe(secondRegistree.id);
+          });
+        });
+        describe("when an existing newcomer has the same email", () => {
+          beforeEach(() => {
+            const newcomerRepository = new InMemoryNewcomerRepository([
+              firstNewComer,
+            ]);
+            const notificationRepository = new InMemoryNotificationRepository(
+              notifyees,
             );
-            expect(email).toBe(expectedEmail);
-          },
-        );
-      });
-      describe("when 2 newcomers are received", () => {
-        it("should generate different id for both", async () => {
-          const fistForm = {
-            ...registerForm,
-            email: "le.tchad@protonmail.com",
-          };
-          const secondForm = {
-            ...registerForm,
-            email: "brole@protonmail.com",
-          };
-          const [firstRegistree, secondRegistree] = await Promise.all([
-            registerNewcomer.fromRegisterForm(fistForm, membership),
-            registerNewcomer.fromRegisterForm(secondForm, membership),
-          ]);
-          expect(firstRegistree.id).not.toBe(secondRegistree.id);
+            registerNewcomer = new RegisterNewcomer(
+              newcomerRepository,
+              notificationRepository,
+            );
+          });
+          it("should indicate that someone is already register with this email", async () => {
+            await expect(async () =>
+              registerNewcomer.fromRegisterForm(registerForm, membership),
+            ).rejects.toThrowError(
+              "Erreur lors de l'inscription:\nL'email est déja utilisé par un autre utilisateur",
+            );
+          });
         });
-      });
-      describe("when an existing newcomer has the same email", () => {
-        beforeEach(() => {
-          const newcomerRepository = new InMemoryNewcomerRepository([
-            firstNewComer,
-          ]);
-          const notificationRepository = new InMemoryNotificationRepository(
-            notifyees,
-          );
-          registerNewcomer = new RegisterNewcomer(
-            newcomerRepository,
-            notificationRepository,
-          );
-        });
-        it("should indicate that someone is already register with this email", async () => {
-          await expect(async () =>
-            registerNewcomer.fromRegisterForm(registerForm, membership),
-          ).rejects.toThrowError(
-            "Erreur lors de l'inscription:\nL'email est déja utilisé par un autre utilisateur",
+        describe("when receiving newcomer with space(s) in email", () => {
+          it.each`
+            registerEmail
+            ${" T adk @gmail.com"}
+            ${"Tadk @gmail.com"}
+            ${"t adk@gmail.com"}
+            ${" takd@gmail.com"}
+            ${" takd@gmail.com"}
+            ${"tadk@gmail.com "}
+          `(
+            "should indicate that $registerEmail is not valid email",
+            async ({ registerEmail }) => {
+              expect(
+                async () =>
+                  await registerNewcomer.fromRegisterForm(
+                    { ...registerForm, email: registerEmail },
+                    STAFF,
+                  ),
+              ).rejects.toThrow(RegistrationError);
+            },
           );
         });
-      });
-      describe("when receiving newcomer with space(s) in email", () => {
-        it.each`
-          registerEmail
-          ${" T adk @gmail.com"}
-          ${"Tadk @gmail.com"}
-          ${"t adk@gmail.com"}
-          ${" takd@gmail.com"}
-          ${" takd@gmail.com"}
-          ${"tadk@gmail.com "}
-        `(
-          "should indicate that $registerEmail is not valid email",
-          async ({ registerEmail }) => {
-            expect(
-              async () =>
-                await registerNewcomer.fromRegisterForm(
-                  { ...registerForm, email: registerEmail },
-                  STAFF,
-                ),
-            ).rejects.toThrow(RegistrationError);
-          },
-        );
-      });
-    });
+      },
+    );
   });
   describe("Notification", () => {
     beforeEach(() => {

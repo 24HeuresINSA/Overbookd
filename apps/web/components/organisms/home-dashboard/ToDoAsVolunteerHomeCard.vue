@@ -35,6 +35,11 @@
           <strong>Compléter tes informations</strong> pour qu'on en sache plus
           sur toi. 🤗
         </li>
+        <li v-if="!isEnrolled">
+          <nuxt-link :to="VOLUNTEER_CHARTER_URL">
+            Lire et signer <strong>la Charte Bénévole</strong>
+          </nuxt-link>
+        </li>
       </ul>
 
       <p>
@@ -47,7 +52,7 @@
 
 <script lang="ts" setup>
 import { BE_AFFECTED } from "@overbookd/permission";
-import { AVAILABILITIES_URL } from "@overbookd/web-page";
+import { AVAILABILITIES_URL, VOLUNTEER_CHARTER_URL } from "@overbookd/web-page";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
 const userStore = useUserStore();

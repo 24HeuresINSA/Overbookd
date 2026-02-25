@@ -10,6 +10,8 @@ import { CommentField } from "./fields/comment-field.js";
 import { TeamsField } from "./fields/teams-field.js";
 import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
 import { EULAField } from "./fields/EULA-field.js";
+import { VolunteerCharterField } from "./fields/volunteer-charter-field.js";
+import { Membership, VOLUNTEER } from "../newcomer.js";
 
 export class RegisterForm {
   private email: EmailField;
@@ -22,19 +24,24 @@ export class RegisterForm {
   private comment: CommentField;
   private teams: TeamsField;
   private EULA: EULAField;
+  private volunteerCharter: VolunteerCharterField;
 
-  private constructor({
-    email,
-    firstname,
-    lastname,
-    password,
-    mobilePhone,
-    nickname,
-    birthdate,
-    comment,
-    teams,
-    hasApprovedEULA,
-  }: Partial<FulfilledRegistration>) {
+  private constructor(
+    private readonly membership: Membership,
+    {
+      email,
+      firstname,
+      lastname,
+      password,
+      mobilePhone,
+      nickname,
+      birthdate,
+      comment,
+      teams,
+      hasApprovedEULA,
+      hasSignedVolunteerCharter,
+    }: Partial<FulfilledRegistration>,
+  ) {
     this.email = EmailField.build(email ?? "");
     this.firstname = FirstnameField.build(firstname ?? "");
     this.lastname = LastnameField.build(lastname ?? "");
@@ -45,120 +52,175 @@ export class RegisterForm {
     this.comment = CommentField.build(comment);
     this.teams = TeamsField.build(teams ?? []);
     this.EULA = EULAField.build(hasApprovedEULA);
+    this.volunteerCharter = VolunteerCharterField.build(
+      membership,
+      hasSignedVolunteerCharter,
+    );
   }
 
-  static init(): RegisterForm {
-    return new RegisterForm({});
+  static initFor(membership: Membership): RegisterForm {
+    return new RegisterForm(membership, {});
   }
 
   fillEmail(email: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, email });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      email,
+    });
   }
 
   clearEmail(): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, email: undefined });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      email: undefined,
+    });
   }
 
-  fillFirstname(firstname: string) {
-    return new RegisterForm({ ...this.currentRegistration, firstname });
+  fillFirstname(firstname: string): RegisterForm {
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      firstname,
+    });
   }
 
   clearFirstname(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       firstname: undefined,
     });
   }
 
   fillLastname(lastname: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, lastname });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      lastname,
+    });
   }
 
   clearLastname(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       lastname: undefined,
     });
   }
 
   fillPassword(password: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, password });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      password,
+    });
   }
 
   clearPassword(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       password: undefined,
     });
   }
 
   fillMobilePhone(mobilePhone: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, mobilePhone });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      mobilePhone,
+    });
   }
 
   clearMobilePhone(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       mobilePhone: undefined,
     });
   }
 
   fillNickname(nickname: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, nickname });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      nickname,
+    });
   }
 
   clearNickname(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       nickname: undefined,
     });
   }
 
   fillBirthdate(birthdate: Date): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, birthdate });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      birthdate,
+    });
   }
 
   clearBirthdate(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       birthdate: undefined,
     });
   }
 
   fillComment(comment: string): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, comment });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      comment,
+    });
   }
 
   clearComment(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       comment: undefined,
     });
   }
 
   fillTeams(teams: Teams): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, teams });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      teams,
+    });
   }
 
   clearTeams(): RegisterForm {
-    return new RegisterForm({ ...this.currentRegistration, teams: [] });
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      teams: [],
+    });
   }
 
   approveEndUserLicenceAgreement(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       hasApprovedEULA: true,
     });
   }
 
   denyEndUserLicenceAgreement(): RegisterForm {
-    return new RegisterForm({
+    return new RegisterForm(this.membership, {
       ...this.currentRegistration,
       hasApprovedEULA: false,
     });
   }
 
+  signVolunteerCharter(): RegisterForm {
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      hasSignedVolunteerCharter: true,
+    });
+  }
+
+  denyVolunteerCharter(): RegisterForm {
+    return new RegisterForm(this.membership, {
+      ...this.currentRegistration,
+      hasSignedVolunteerCharter: false,
+    });
+  }
+
   private get currentRegistration(): Partial<FulfilledRegistration> {
+    const volunteerCharter = shouldSignVolunteerCharter(this.membership)
+      ? { hasSignedVolunteerCharter: this.volunteerCharter.value }
+      : {};
+
     return {
       email: this.email.value,
       firstname: this.firstname.value,
@@ -170,6 +232,7 @@ export class RegisterForm {
       comment: this.comment.value,
       teams: this.teams.value,
       hasApprovedEULA: this.EULA.value,
+      ...volunteerCharter,
     };
   }
 
@@ -185,6 +248,7 @@ export class RegisterForm {
       this.comment,
       this.teams,
       this.EULA,
+      this.volunteerCharter,
     ];
   }
 
@@ -223,4 +287,8 @@ class NotFulfilledRegistration extends RegistrationError {
   constructor(reasons: string[]) {
     super(reasons, "L'inscription n'est pas complète");
   }
+}
+
+export function shouldSignVolunteerCharter(membership: Membership): boolean {
+  return membership === VOLUNTEER;
 }

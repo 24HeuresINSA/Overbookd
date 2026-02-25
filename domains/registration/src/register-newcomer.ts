@@ -53,7 +53,7 @@ export class RegisterNewcomer {
     membership: Membership,
   ) {
     const dataForm = this.commentAction(
-      this.nicknameAction(RegisterForm.init(), form.nickname),
+      this.nicknameAction(RegisterForm.initFor(membership), form.nickname),
       form.comment,
     )
       .fillEmail(form.email ?? "")
@@ -63,10 +63,13 @@ export class RegisterNewcomer {
       .fillMobilePhone(form.mobilePhone ?? "")
       .fillBirthdate(form.birthdate ?? new Date("1949-12-25"))
       .fillTeams(form.teams ?? []);
-    const dataFormWithEULA = form.hasApprovedEULA
+    const withEULA = form.hasApprovedEULA
       ? dataForm.approveEndUserLicenceAgreement()
       : dataForm.denyEndUserLicenceAgreement();
-    const fulfilledForm = dataFormWithEULA.complete();
+    const withVolunteerCharter = form?.hasSignedVolunteerCharter
+      ? withEULA.signVolunteerCharter()
+      : withEULA.denyVolunteerCharter();
+    const fulfilledForm = withVolunteerCharter.complete();
 
     const isEmailAlreadyUsed = await this.newcomerRepository.isEmailUsed(
       fulfilledForm.email,

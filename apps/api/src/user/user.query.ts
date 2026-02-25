@@ -51,6 +51,7 @@ export const SELECT_MY_USER_INFORMATION = {
   ...SELECT_TRANSACTIONS_FOR_BALANCE,
   ...SELECT_CURRENT_MEMBERSHIP_APPLICATION,
   hasApprovedEULA: true,
+  hasSignedVolunteerCharter: true,
 };
 
 export const SELECT_USER_PERSONAL_DATA = {

@@ -52,6 +52,7 @@ export const VIEW_ORGA_MOBILE_NAV = "view-orga-mobile-nav";
 export const EXPORT_FOR_SIGNA = "export-for-signa";
 export const ENTER_EXTENDED_AVAILABILITITES = "enter-extended-availabilities";
 export const VIEW_USEFUL_LINKS = "view-useful-links";
+export const MUST_SIGN_VOLUNTEER_CHARTER = "must-sign-volunteer-charter";
 
 export const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -108,6 +109,7 @@ export const permissions = [
   EXPORT_FOR_SIGNA,
   ENTER_EXTENDED_AVAILABILITITES,
   VIEW_USEFUL_LINKS,
+  MUST_SIGN_VOLUNTEER_CHARTER,
 ] as const;
 
 export type Permission = (typeof permissions)[number];

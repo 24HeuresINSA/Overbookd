@@ -7,7 +7,7 @@
       cover
     >
       <v-card-title class="register-title">
-        👋 Inscription {{ membership }} 👋
+        👋 Inscription {{ membershipLabel }} 👋
       </v-card-title>
     </v-img>
     <v-stepper v-model="step">
@@ -212,6 +212,20 @@
               </div>
             </template>
           </v-checkbox>
+          <v-btn
+            v-if="mustSignVolunteerCharter"
+            class="charter-btn"
+            :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
+            :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
+            @click="openVolunteerCharterDialog"
+          >
+            {{
+              hasSignedVolunteerCharter
+                ? "Charte signée ✔"
+                : "Lire et signer la charte bénévole"
+            }}
+          </v-btn>
+
           <div class="stepper-actions">
             <v-btn
               text="M'inscrire"
@@ -233,6 +247,17 @@
     >
       <EULADialogCard @close="closeEULADialog" />
     </v-dialog>
+    <v-dialog
+      v-model="isVolunteerCharterDialogOpen"
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <VolunteerCharterDialogCard
+        :has-signed="hasSignedVolunteerCharter"
+        @close="closeVolunteerCharterDialog"
+        @sign="signVolunteerCharter"
+      />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -242,6 +267,10 @@ import {
   type RegistrationTeams,
   REGISTRATION_TEAM_CODES,
   type RegistrationTeamCode,
+  type Membership,
+  shouldSignVolunteerCharter,
+  STAFF,
+  VOLUNTEER,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
 import {
@@ -279,6 +308,7 @@ const teams = ref<RegistrationTeams>([]);
 const password = ref<string>("");
 const repeatPassword = ref<string>("");
 const hasApprovedEULA = ref<boolean>(false);
+const hasSignedVolunteerCharter = ref<boolean>(false);
 
 const rules = {
   required,
@@ -297,8 +327,14 @@ const cleanComment = computed<string | undefined>(
   () => comment.value?.trim() || undefined,
 );
 
-const membership = computed<string>(() =>
-  isVolunteerRegistration.value ? "Bénévole" : "Organisateur",
+const membership = computed<Membership>(() =>
+  isVolunteerRegistration.value ? VOLUNTEER : STAFF,
+);
+const membershipLabel = computed<string>(() =>
+  membership.value === STAFF ? "Organisateur" : "Bénévole",
+);
+const mustSignVolunteerCharter = computed(() =>
+  shouldSignVolunteerCharter(membership.value),
 );
 
 const cleanNickname = computed<string | undefined>(
@@ -306,7 +342,9 @@ const cleanNickname = computed<string | undefined>(
 );
 
 const registerForm = computed<RegisterForm>(() => {
-  const form = commentAction(nicknameAction(RegisterForm.init()))
+  const form = commentAction(
+    nicknameAction(RegisterForm.initFor(membership.value)),
+  )
     .fillBirthdate(birthdayDate.value)
     .fillEmail(email.value)
     .fillFirstname(firstname.value)
@@ -314,9 +352,12 @@ const registerForm = computed<RegisterForm>(() => {
     .fillMobilePhone(phone.value)
     .fillTeams(teams.value)
     .fillPassword(password.value);
-  return hasApprovedEULA.value
+  const withEULA = hasApprovedEULA.value
     ? form.approveEndUserLicenceAgreement()
     : form.denyEndUserLicenceAgreement();
+  return hasSignedVolunteerCharter.value
+    ? withEULA.signVolunteerCharter()
+    : withEULA.denyVolunteerCharter();
 });
 
 const birthdayDate = computed<Date>(() => new Date(birthday.value));
@@ -349,6 +390,10 @@ const securityRules = computed(() => [
   () => step.value <= 3 || rules.required(password.value),
   () => step.value <= 3 || rules.password(password.value),
   () => step.value <= 3 || rules.required(hasApprovedEULA.value),
+  () =>
+    step.value <= 3 ||
+    !mustSignVolunteerCharter.value ||
+    rules.required(hasSignedVolunteerCharter.value),
 ]);
 
 const repeatPasswordRule = computed(() => isSame(password.value));
@@ -391,6 +436,16 @@ const register = async () => {
 const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
+
+const isVolunteerCharterDialogOpen = ref<boolean>(false);
+const openVolunteerCharterDialog = () =>
+  (isVolunteerCharterDialogOpen.value = true);
+const closeVolunteerCharterDialog = () =>
+  (isVolunteerCharterDialogOpen.value = false);
+const signVolunteerCharter = () => {
+  hasSignedVolunteerCharter.value = true;
+  closeVolunteerCharterDialog();
+};
 </script>
 
 <style scoped lang="scss">
@@ -444,5 +499,10 @@ const closeEULADialog = () => (isEULADialogOpen.value = false);
   color: blue;
   cursor: pointer;
   text-decoration: underline;
+}
+
+.charter-btn {
+  height: calc(var(--v-btn-height) - 10px);
+  padding: 0 10px;
 }
 </style>

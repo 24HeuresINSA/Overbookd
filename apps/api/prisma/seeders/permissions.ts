@@ -47,6 +47,7 @@ import {
   VIEW_FA_GEAR_DASHBOARD,
   VIEW_MULTI_PLANNING,
   VIEW_USEFUL_LINKS,
+  MUST_SIGN_VOLUNTEER_CHARTER,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -521,6 +522,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: MUST_SIGN_VOLUNTEER_CHARTER,
+    description: "Doit signer la charte bénévole",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "soft" }],
       },
     },
   },

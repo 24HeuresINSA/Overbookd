@@ -124,6 +124,13 @@ export class UserService {
     });
   }
 
+  async signVolunteerCharter({ id }: JwtPayload): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { hasSignedVolunteerCharter: true },
+    });
+  }
+
   async getVolunteers(currentUser?: JwtUtil): Promise<UserPersonalData[]> {
     const select =
       currentUser && currentUser.can(MANAGE_USERS)
@@ -319,6 +326,7 @@ export class UserService {
       transactionsFrom,
       transactionsTo,
       hasApprovedEULA,
+      hasSignedVolunteerCharter,
       membershipApplications,
       ...personalData
     } = user;
@@ -326,6 +334,7 @@ export class UserService {
     return {
       ...this.formatToPersonalData(personalData, charismaPeriods),
       hasApprovedEULA,
+      hasSignedVolunteerCharter,
       permissions: [...retrievePermissions(user.teams)],
       tasksCount: _count.assigned,
       balance: Balance.calculate({ transactionsFrom, transactionsTo }),

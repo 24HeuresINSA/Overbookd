@@ -35,6 +35,10 @@ export class UserRepository {
     return HttpClient.post(`${this.basePath}/me/approve-eula`);
   }
 
+  static signVolunteerCharter() {
+    return HttpClient.post(`${this.basePath}/me/sign-volunteer-charter`);
+  }
+
   static getVolunteers() {
     return HttpClient.get<UserPersonalData[]>(`${this.basePath}/volunteers`);
   }

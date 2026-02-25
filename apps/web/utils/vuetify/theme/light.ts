@@ -16,7 +16,7 @@ export const lightThemes = [
   "redLightTheme",
 ];
 
-const lightBackgroundColors = {
+export const lightBackgroundColors = {
   background: "#F4F4F4",
   "on-background": BLACK,
   surface: WHITE,
