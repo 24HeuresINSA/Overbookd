@@ -1,3 +1,33 @@
+## [3.49.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.4...v3.49.0) (2026-02-25)
+
+### Features
+
+* add volunteer charter [#2610](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2610) ([b2cd482](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b2cd482892ed0870a83c68e40b2ed73e35dbecb2))
+* **availabilities:** add collage periods [#2603](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2603) ([e258d7e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e258d7e9ce1ad08504d685a6746c0352893d3282))
+* **home page:** new card useful links [#2608](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2608) ([786ed64](https://gitlab.com/24-heures-insa/overbookd-mono/commit/786ed64c96a1daceaabc65175981afbf42e72f65))
+
+### Bug Fixes
+
+* **charisma-period:** remove useless description [#2583](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2583) ([d71f49d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d71f49dda82cce77cbe6b7f2104fb3d56411cc95))
+* mail admission bénévoles [#2582](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2582) ([09a9dcc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/09a9dcc3b6a3a4b1900271c551d739764c18320e))
+* **registration:** remove jsonwebtoken from domain ([061b58c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/061b58c9c5fd914fe80dc0d97afa553ca5a7dbc3))
+* **registration:** update pictures [#2454](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2454) ([aaac9ed](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aaac9edcac81a9349ca97f2c10265190a8c6c413))
+* **SG:** remove required prop from selectedBarrel and add recap amounts to filteredConsumers [#2607](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2607) ([f36a3be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f36a3be8086932452c8ed6485359928059be084b))
+* **shared-meal:** revert MR !3556 about multi-shotgun ([00f5c18](https://gitlab.com/24-heures-insa/overbookd-mono/commit/00f5c1891a52c9401934e21fb9552c644d4efe9a))
+* **traefik:** allow encoded slashes in websecure entrypoint for development [#2606](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2606) ([b0ec7e6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b0ec7e63bde9d44aa649ad2bce0e55c47754fe14))
+
+### Pre-Features
+
+* **share-meal:** :building_construction: By shotguning again, adding a portion and adding the logics to remove a portion from the shotgun [#2574](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2574) ([d5d3d96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d5d3d966de0e245b3b1f5f81f030cbbe36f70f2d))
+
+### Refactor
+
+* **mail:** replace nestjs/mailer by nodmailer for security [#2605](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2605) ([29a4b77](https://gitlab.com/24-heures-insa/overbookd-mono/commit/29a4b775312f5c72950c1606445c27d077443c49))
+
+### CI/CD
+
+* **renovate:** configure abandonmentThreshold ([09fc0e0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/09fc0e096ca8f607a10e2581bc36229449dec67d))
+
 ## [3.48.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.3...v3.48.4) (2025-12-06)
 
 ### Bug Fixes
