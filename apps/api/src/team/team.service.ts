@@ -67,6 +67,9 @@ export class TeamService {
   }
 
   async deleteTeam(code: string): Promise<void> {
+    if (code === ADMIN) {
+      throw new UnauthorizedException("Touche pas à l'équipe admin !");
+    }
     await this.prisma.team.delete({ where: { code } });
   }
 
