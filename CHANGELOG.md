@@ -1,3 +1,11 @@
+## [3.49.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.0...v3.49.1) (2026-02-27)
+
+### Bug Fixes
+
+* **ft:** update in charge volunteers [#2618](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2618) ([6ff3c3e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6ff3c3ea7174a14e761ef6f34b44dac690ce4e86))
+* Prevent deletion of the admin team [#2589](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2589) ([3de35d8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3de35d826ce484f307bbcbe0ba41cba7e6b30f46))
+* **volunteer-charter:** inclusive text [#2616](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2616) ([8bd5dc6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8bd5dc6f2f3f2966c9a18f97cfbec412be31ef6e))
+
 ## [3.49.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.48.4...v3.49.0) (2026-02-25)
 
 ### Features
