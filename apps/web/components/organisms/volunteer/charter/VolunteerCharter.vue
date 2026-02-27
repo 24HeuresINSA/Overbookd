@@ -60,8 +60,8 @@
       Respecter le droit au repos du·de la bénévole, notamment :
       <ul>
         <li>
-          Une limite de 6h consécutives sans pause, sauf accord explicite du
-          bénévole concerné,
+          Une limite de 6h consécutives sans pause, sauf accord explicite du·de
+          la bénévole concerné·e,
         </li>
         <li>
           Des pauses suffisantes entre les créneaux (au moins 45 minutes),
