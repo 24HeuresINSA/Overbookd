@@ -58,19 +58,15 @@ const props = defineProps({
 
 const emit = defineEmits(["add", "remove"]);
 
-const lastUsers = ref<User[]>(users.value);
-
 const userList = computed<User[]>(() => props.list ?? userStore.volunteers);
 
-const propagateChange = (selectedUsers: User[]) => {
-  const addedUsers = selectedUsers.filter(
-    (user) => !lastUsers.value.some(({ id }) => id === user.id),
+const propagateChange = (newUsers: User[]) => {
+  const addedUsers = newUsers.filter(
+    (user) => !users.value.some(({ id }) => id === user.id),
   );
-  const removedUsers = lastUsers.value.filter(
-    (user) => !selectedUsers.some(({ id }) => id === user.id),
+  const removedUsers = users.value.filter(
+    (user) => !newUsers.some(({ id }) => id === user.id),
   );
-
-  lastUsers.value = selectedUsers;
 
   addedUsers.forEach((addedUser) => propagateAdd(addedUser));
   removedUsers.forEach((removedUser) => propagateRemove(removedUser));
