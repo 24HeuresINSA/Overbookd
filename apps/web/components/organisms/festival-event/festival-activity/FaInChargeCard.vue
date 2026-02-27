@@ -20,7 +20,7 @@
         @update:model-value="updateAdherent"
       />
       <SearchTeam
-        v-model:team="inChargeTeam"
+        :team="inChargeTeam"
         label="Équipe"
         @update:team="updateTeam"
       />
