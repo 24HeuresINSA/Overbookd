@@ -149,7 +149,7 @@
               item-title="name"
               item-value="code"
               clearable
-              hint="Tu nous rejoins à plusieurs ?"
+              hint="Laisse le champ vide si tu n'es pas dans une équipe 😉"
               persistent-hint
               :rules="[twoTeamsMaximumRule]"
             />
