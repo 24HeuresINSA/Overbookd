@@ -40,11 +40,11 @@
     "version:minor-dependency": "pnpm --recursive --filter '[origin/main]' run version:minor",
     "version:patch-dependency": "pnpm --recursive --filter '[origin/main]' run version:patch",
     "release:major:no-sync": "git fetch -ap && pnpm run version:major-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:major": "pnpm run version:major:no-sync && pnpm run dev:sync-version",
+    "release:major": "pnpm run release:major:no-sync && pnpm run dev:sync-version",
     "release:minor:no-sync": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:minor": "pnpm run version:minor:no-sync && pnpm run dev:sync-version",
+    "release:minor": "pnpm run release:minor:no-sync && pnpm run dev:sync-version",
     "release:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
+    "release:patch": "pnpm run release:patch:no-sync && pnpm run dev:sync-version"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
