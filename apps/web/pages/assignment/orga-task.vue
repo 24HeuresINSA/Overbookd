@@ -41,7 +41,6 @@ useHead({ title: DEFAULT_TITLE });
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
-const userStore = useUserStore();
 const planningStore = usePlanningStore();
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
