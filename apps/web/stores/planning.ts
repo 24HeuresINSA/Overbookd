@@ -8,7 +8,7 @@ import {
 } from "@overbookd/http";
 import type { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
 import { Duration, Edition, Period } from "@overbookd/time";
-import type { User } from "@overbookd/user";
+import type { User, UserWithTeams } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { UserRepository } from "~/repositories/user.repository";
@@ -31,10 +31,7 @@ export type HasAssignment = {
   assignment: Duration;
 };
 
-export type VolunteerForPlanningLeaflet = User &
-  HasAssignment & {
-    teams: string[];
-  };
+export type VolunteerForPlanningLeaflet = UserWithTeams & HasAssignment;
 
 type VolunteerPlanning = {
   volunteer: User;

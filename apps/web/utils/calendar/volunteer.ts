@@ -1,10 +1,8 @@
 import type { IProvidePeriod } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
-import type { User } from "@overbookd/user";
-import type { CalendarEventForPlanning } from "../planning/event";
+import type { UserWithTeams } from "@overbookd/user";
 
-export type VolunteerForCalendar = User & {
-  teams: string[];
+export type VolunteerForCalendar = UserWithTeams & {
   note?: string;
   comment?: string;
   phone?: string;
@@ -13,9 +11,4 @@ export type VolunteerForCalendar = User & {
   charisma?: number;
   assignmentDuration?: number;
   totalAssignmentDuration?: number;
-};
-
-export type MultiCalendarVolunteer = {
-  volunteerId: number;
-  events: CalendarEventForPlanning[];
 };

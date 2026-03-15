@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MultiPlanningVolunteer, PlanningTask } from "@overbookd/http";
-import { PeriodResponseDto } from "../../common/dto/period.response.dto";
+import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 import { IProvidePeriod } from "@overbookd/time";
-import { PlanningTaskResponseDto } from "../planning/dto/planning-task.response.dto";
+import { PlanningTaskResponseDto } from "./planning-task.response.dto";
 import { AssignmentEvent } from "@overbookd/assignment";
-import { AssignmentEventResponseDto } from "../../assignment/common/dto/assignment-event.response.dto";
+import { AssignmentEventResponseDto } from "../../../assignment/common/dto/assignment-event.response.dto";
 
 export class MultiPlanningVolunteerResponseDto implements MultiPlanningVolunteer {
   @ApiProperty({

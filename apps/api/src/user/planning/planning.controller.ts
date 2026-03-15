@@ -36,10 +36,10 @@ import {
 } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
-import { BreakPeriodDuringRequestDto } from "../dto/break-period-during.request.dto";
+import { BreakPeriodDuringRequestDto } from "./dto/break-period-during.request.dto";
 import { Duration, Period, Edition } from "@overbookd/time";
 import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
-import { VolunteerForPlanningLeafletResponseDto } from "../dto/volunteer-for-planning-leaflet.response.dto";
+import { VolunteerForPlanningLeafletResponseDto } from "./dto/volunteer-for-planning-leaflet.response.dto";
 import { SecretService } from "./secret.service";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
@@ -51,7 +51,7 @@ import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
-import { MultiPlanningVolunteerResponseDto } from "../dto/multi-planning-volunteer.response.dto";
+import { MultiPlanningVolunteerResponseDto } from "./dto/multi-planning-volunteer.response.dto";
 
 @Controller("planning")
 @ApiTags("planning")
