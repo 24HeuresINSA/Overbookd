@@ -39,7 +39,7 @@ export function toCalendarAssignment(
   });
 }
 
-export function buildToCalendarTask(permissions: {
+export function toCalendarTask(permissions: {
   canReadFt: boolean;
 }): (task: PlanningTask) => RequestedDuringMobilization {
   return (task: PlanningTask) => {

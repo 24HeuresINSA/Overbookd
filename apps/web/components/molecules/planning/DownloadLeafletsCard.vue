@@ -104,7 +104,7 @@ const MAX_PLANNING_DOWNLOAD_IN_PARALLEL = 50;
 
 const layoutStore = useLayoutStore();
 const planningStore = usePlanningStore();
-planningStore.fetchVolunteers();
+planningStore.fetchVolunteersForLeaflets();
 
 const headers: TableHeaders = [
   {
@@ -127,12 +127,12 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const teams = ref<Team[]>([]);
 const search = ref<string>("");
-const volunteers = computed<Searchable<VolunteerForPlanning>[]>(() =>
-  planningStore.volunteers.map((volunteer) =>
-    toSearchable(volunteer as VolunteerForPlanning),
+const volunteers = computed<Searchable<VolunteerForPlanningLeaflet>[]>(() =>
+  planningStore.leafletVolunteers.map((volunteer) =>
+    toSearchable(volunteer as VolunteerForPlanningLeaflet),
   ),
 );
-const displayedVolunteers = computed<VolunteerForPlanning[]>(() => {
+const displayedVolunteers = computed<VolunteerForPlanningLeaflet[]>(() => {
   const isPartOfTeams = keepMembersOf(teams.value);
   const hasSimilarName = keepMatchingSearchCriteria(search.value);
   return volunteers.value.filter(

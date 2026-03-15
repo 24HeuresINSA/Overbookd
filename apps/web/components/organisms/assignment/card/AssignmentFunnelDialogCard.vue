@@ -62,7 +62,7 @@ import {
   type IDefineCandidate,
 } from "@overbookd/assignment";
 import { FT_URL } from "@overbookd/web-page";
-import { convertToCalendarBreak } from "~/domain/common/break-events";
+import { toCalendarBreak } from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { candidateFactory } from "~/utils/assignment/funnel";
@@ -108,7 +108,7 @@ const candidatesForCalendar = computed<VolunteerForCalendar[]>(() => {
   if (!funnel.value) return [];
   return funnel.value.candidates.map((candidate) => ({
     ...candidate,
-    assignments: [
+    events: [
       ...retreiveCandidateTasksAsEvents(candidate),
       ...retrieveCandidateBreaksAsEvents(candidate),
     ],
@@ -129,7 +129,7 @@ const retreiveCandidateTasksAsEvents = (
 const retrieveCandidateBreaksAsEvents = (
   candidate: IDefineCandidate,
 ): CalendarEvent[] => {
-  return candidate.breakPeriods.map(convertToCalendarBreak);
+  return candidate.breakPeriods.map(toCalendarBreak);
 };
 const assignmentAsEvent = computed<CalendarEvent>(() => {
   return createCalendarEvent({

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { VolunteerForPlanning } from "@overbookd/http";
+import { VolunteerForPlanningLeaflet } from "@overbookd/http";
 
-export class VolunteerForPlanningResponseDto implements VolunteerForPlanning {
+export class VolunteerForPlanningLeafletResponseDto implements VolunteerForPlanningLeaflet {
   @ApiProperty({ type: String })
   firstname: string;
 

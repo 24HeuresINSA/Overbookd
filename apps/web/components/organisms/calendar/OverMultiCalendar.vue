@@ -66,7 +66,7 @@
             v-for="volunteer in displayedVolunteers"
             :key="volunteer.id"
             :day="day"
-            :events="withEventToAdd(volunteer.assignments)"
+            :events="withEventToAdd(volunteer.events)"
             :availabilities="volunteer.availabilities"
             class="multi-calendar__volunteer"
           />

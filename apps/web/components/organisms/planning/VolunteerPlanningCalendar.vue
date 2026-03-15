@@ -44,29 +44,21 @@
 </template>
 
 <script lang="ts" setup>
-import type {
-  AssignmentEvent,
-  AssignmentIdentifier,
-} from "@overbookd/assignment";
-import type {
-  AssignmentStat,
-  PlanningTask,
-  TaskForCalendar,
-} from "@overbookd/http";
+import type { AssignmentIdentifier } from "@overbookd/assignment";
+import type { AssignmentStat, TaskForCalendar } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
-import {
-  convertToCalendarBreak,
-  type BreakEvent,
-} from "~/domain/common/break-events";
+import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
 import type { BreakDefinition } from "@overbookd/planning";
 import {
   toCalendarAssignment,
-  buildToCalendarTask,
+  toCalendarTask,
   type CalendarEventForPlanning,
 } from "~/utils/planning/event";
+import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
 
 const userStore = useUserStore();
+const planningStore = usePlanningStore();
 const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
@@ -87,58 +79,54 @@ const canUseCalendarShortcuts = computed<boolean>(() => {
 });
 
 const selectedTask = computed<TaskForCalendar | undefined>(
-  () => userStore.currentTaskForCalendar,
+  () => planningStore.selectedCalendarTask,
 );
 
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
+const canReadFt = computed<boolean>(() => userStore.can(READ_FT));
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
   () => canAssignVolunteer.value && isDesktop.value,
 );
 
-const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
-
 onMounted(() => {
   availabilityStore.fetchVolunteerAvailabilities(props.volunteerId);
-  userStore.getVolunteerTasks(props.volunteerId);
-  userStore.getVolunteerAssignments(props.volunteerId);
+  planningStore.fetchVolunteerTasks(props.volunteerId);
+  planningStore.fetchVolunteerAssignments(props.volunteerId);
   if (canAssignVolunteer.value) {
-    userStore.getVolunteerBreakPeriods(props.volunteerId);
+    planningStore.fetchVolunteerBreakPeriods(props.volunteerId);
   }
   if (shouldShowStats.value) {
-    userStore.getVolunteerAssignmentStats(props.volunteerId);
+    planningStore.fetchVolunteerAssignmentStats(props.volunteerId);
   }
 });
 
 const calendarMarker = ref<Date>(configurationStore.eventStartDate);
 
 const stats = computed<AssignmentStat[]>(
-  () => userStore.selectedUserAssignmentStats,
+  () => planningStore.selectedVolunteer.assignmentStats,
 );
-const assignments = computed<AssignmentEvent[]>(
-  () => userStore.selectedUserAssignments,
-);
-const tasks = computed<PlanningTask[]>(() => userStore.selectedUserTasks);
-const breakPeriods = computed<IProvidePeriod[]>(
-  () => userStore.selectedUserBreakPeriods,
+const selectedPlanningVolunteer = computed<VolunteerForPlanningCalendar>(
+  () => planningStore.selectedVolunteer as VolunteerForPlanningCalendar,
 );
 const availabilities = computed<IProvidePeriod[]>(
   () => availabilityStore.availabilities.list,
 );
 
-const toCalendarTask = buildToCalendarTask({ canReadFt: canReadFT.value });
-
 const events = computed<CalendarEventForPlanning[]>(() => {
-  const assignmentEvents = assignments.value.map(toCalendarAssignment);
-  const taskEvents = tasks.value.map(toCalendarTask);
-  const breakEvents = breakPeriods.value.map(convertToCalendarBreak);
+  const { assignments, tasks, breakPeriods } = selectedPlanningVolunteer.value;
+  const assignmentEvents = assignments.map(toCalendarAssignment);
+  const taskEvents = tasks.map((task) =>
+    toCalendarTask({ canReadFt: canReadFt.value })(task),
+  );
+  const breakEvents = breakPeriods.map(toCalendarBreak);
   return [...assignmentEvents, ...taskEvents, ...breakEvents];
 });
 
 const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
-  await userStore.getVolunteerAssignmentDetails(identifier);
+  await planningStore.fetchVolunteerAssignmentDetails(identifier);
   isTaskDetailsDialogOpen.value = true;
 };
 
@@ -187,7 +175,10 @@ const closeBreakDialog = () => {
 };
 const saveBreak = (during: BreakDefinition["during"]) => {
   closeBreakDialog();
-  userStore.addVolunteerBreakPeriods({ during, volunteer: props.volunteerId });
+  planningStore.addVolunteerBreakPeriods({
+    during,
+    volunteer: props.volunteerId,
+  });
 };
 
 const selectedBreak = ref<Period | null>(null);
@@ -205,7 +196,7 @@ const removeBreak = async () => {
   if (selectedBreak.value === null) return;
   const period = selectedBreak.value;
   const volunteer = props.volunteerId;
-  await userStore.deleteVolunteerBreakPeriods({ volunteer, period });
+  await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
   isBreakRemovalDialogOpen.value = false;
 };
 </script>

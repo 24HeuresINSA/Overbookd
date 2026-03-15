@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   ForbiddenException,
   Get,
@@ -8,6 +9,7 @@ import {
   HttpException,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Post,
   Query,
@@ -30,13 +32,14 @@ import {
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
   SYNC_PLANNING,
+  VIEW_MULTI_PLANNING,
 } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { BreakPeriodDuringRequestDto } from "../dto/break-period-during.request.dto";
 import { Duration, Period, Edition } from "@overbookd/time";
 import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
-import { VolunteerForPlanningResponseDto } from "../dto/volunteer-for-planning.response.dto";
+import { VolunteerForPlanningLeafletResponseDto } from "../dto/volunteer-for-planning-leaflet.response.dto";
 import { SecretService } from "./secret.service";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
@@ -48,6 +51,7 @@ import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { MultiPlanningVolunteerResponseDto } from "../dto/multi-planning-volunteer.response.dto";
 
 @Controller("planning")
 @ApiTags("planning")
@@ -90,18 +94,47 @@ export class PlanningController {
     }
   }
 
+  @Get("volunteers/multi")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_MULTI_PLANNING)
+  @ApiQuery({
+    name: "volunteerIds",
+    required: true,
+    description: "The volunteers ids",
+    type: Number,
+    isArray: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Volunteers' plannings",
+    type: MultiPlanningVolunteerResponseDto,
+    isArray: true,
+  })
+  getVolunteersForMultiPlanning(
+    @Query(
+      "volunteerIds",
+      new DefaultValuePipe([]),
+      new ParseArrayPipe({ items: Number }),
+    )
+    volunteerIds: number[],
+  ): Promise<MultiPlanningVolunteerResponseDto[]> {
+    return this.planning.getVolunteersForMultiPlanning(volunteerIds);
+  }
+
   @Get("volunteers")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
-    description: "Volunteers with assignments",
-    type: VolunteerForPlanningResponseDto,
+    description: "Volunteers with assignments for planning leaflets",
+    type: VolunteerForPlanningLeafletResponseDto,
     isArray: true,
   })
-  async getVolunteers(): Promise<VolunteerForPlanningResponseDto[]> {
-    return this.planning.getVolunteers();
+  async getVolunteersForLeaflets(): Promise<
+    VolunteerForPlanningLeafletResponseDto[]
+  > {
+    return this.planning.getVolunteersForLeaflets();
   }
 
   @Get("subscribe")

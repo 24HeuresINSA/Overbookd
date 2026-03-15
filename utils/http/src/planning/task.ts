@@ -1,7 +1,7 @@
 import { FestivalTask, TimeWindow } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 
-export type Task = {
+export type PlanningTask = {
   timeWindow: TimeWindow;
   id: FestivalTask["id"];
   name: FestivalTask["general"]["name"];
@@ -9,7 +9,7 @@ export type Task = {
   appointment: FestivalTask["instructions"]["appointment"];
 };
 
-export type TaskForCalendar = Task & {
+export type TaskForCalendar = PlanningTask & {
   contacts: FestivalTask["instructions"]["contacts"];
   assignees: User[];
   globalInstruction: FestivalTask["instructions"]["global"];

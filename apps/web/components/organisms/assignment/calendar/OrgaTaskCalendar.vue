@@ -29,12 +29,12 @@ import type {
   PlanningTask,
 } from "@overbookd/http";
 import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
-import { convertToCalendarBreak } from "~/domain/common/break-events";
+import { toCalendarBreak } from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
 
-const userStore = useUserStore();
+const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
@@ -70,7 +70,7 @@ const alreadyAssignedAssignments = computed<DisplayableAssignment[]>(
   () => assignVolunteerToTaskStore.alreadyAssignedAssignments,
 );
 const notReadyTasks = computed<PlanningTask[]>(
-  () => userStore.selectedUserTasks,
+  () => planningStore.selectedVolunteer.tasks,
 );
 const breaks = computed<IProvidePeriod[]>(
   () => assignVolunteerToTaskStore.breakPeriods,
@@ -83,12 +83,12 @@ const events = computed<CalendarEvent[]>(() => {
   const hoverAssignments = hoverAssignment.value
     ? [formatAssignmentForCalendar(hoverAssignment.value)]
     : [];
-  const calendarBreaks = breaks.value.map(convertToCalendarBreak);
+  const calendarBreaks = breaks.value.map(toCalendarBreak);
   return [...tasks, ...alreadyAssigned, ...hoverAssignments, ...calendarBreaks];
 });
 
 const stats = computed<AssignmentStat[]>(
-  () => userStore.selectedUserAssignmentStats,
+  () => planningStore.selectedVolunteer.assignmentStats,
 );
 
 const availabilities = computed<IProvidePeriod[]>(

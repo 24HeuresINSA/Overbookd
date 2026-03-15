@@ -1,10 +1,9 @@
 import { IProvidePeriod } from "@overbookd/time";
-import { User } from "@overbookd/user";
+import { UserWithTeams } from "@overbookd/user";
 
-export type StaffCandidate = User & {
+export type StaffCandidate = UserWithTeams & {
   email: string;
   candidatedAt: Date;
-  teams: string[];
 };
 
 export type VolunteerCandidate = StaffCandidate & {

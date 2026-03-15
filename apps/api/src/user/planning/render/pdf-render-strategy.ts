@@ -16,7 +16,6 @@ import {
   Contact,
   Task,
   Volunteer,
-  VolunteerWithTeams,
 } from "../domain/task.model";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
@@ -31,7 +30,8 @@ import {
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
 import { fixEmojis } from "./pdf/fix-emojis";
 import { FiveDMethod } from "./pdf/five-d-method";
-import { Volunteers } from "../planning.service";
+import { PlanningVolunteers } from "../planning.service";
+import { buildUserNameWithNickname } from "@overbookd/user";
 
 class PdfException extends Error {}
 
@@ -118,17 +118,21 @@ export class PdfRenderStrategy implements RenderStrategy {
     },
   };
 
-  constructor(private readonly volunteers: Volunteers) {
+  constructor(private readonly volunteers: PlanningVolunteers) {
     this.printer = new PdfPrinter(this.fonts);
   }
 
   async render(tasks: Task[], volunteerId: Volunteer["id"]): Promise<unknown> {
-    const volunteer = await this.volunteers.find(volunteerId);
-    const pdfContent = this.generateContent(tasks, volunteer);
+    const { teams, ...volunteer } = await this.volunteers.findOne(volunteerId);
+    const volunteerWithName = {
+      id: volunteer.id,
+      name: buildUserNameWithNickname(volunteer),
+    };
+    const pdfContent = this.generateContent(tasks, teams);
     const pdfContentWithEmojis = fixEmojis(pdfContent);
-    const header = this.generateHeader(volunteer);
+    const header = this.generateHeader(volunteerWithName);
     const footer = this.generateFooter();
-    const info = this.generateMetadata(volunteer);
+    const info = this.generateMetadata(volunteerWithName);
 
     const pdf = this.printer.createPdfKitDocument({
       info,
@@ -232,10 +236,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     };
   }
 
-  private generateContent(
-    tasks: Task[],
-    { teams }: VolunteerWithTeams,
-  ): Content[] {
+  private generateContent(tasks: Task[], teams: string[]): Content[] {
     const introductionPage = Introduction.generatePage();
     const securityPlan = SecurityPlan.generatePage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
