@@ -11,7 +11,7 @@ import { PreferenceController } from "./preference/preference.controller";
 import { PrismaPreferences } from "./preference/repository/preferences.prisma";
 import { PreferenceService } from "./preference/preference.service";
 import { PrismaBreaks } from "./planning/repository/breaks.prisma";
-import { PrismaVolunteers } from "./planning/repository/volunteers.prisma";
+import { PrismaPlanningVolunteers } from "./planning/repository/planning-volunteers.prisma";
 import { PlanningModule } from "./planning/planning.module";
 import { PlanningController } from "./planning/planning.controller";
 import { TeamService } from "../team/team.service";
@@ -37,8 +37,9 @@ import { AccessManagerModule } from "../access-manager/access-manager.module";
       inject: [PrismaService],
     },
     {
-      provide: PrismaVolunteers,
-      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      provide: PrismaPlanningVolunteers,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaPlanningVolunteers(prisma),
       inject: [PrismaService],
     },
     {

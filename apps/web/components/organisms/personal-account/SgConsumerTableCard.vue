@@ -140,6 +140,7 @@ const props = defineProps({
   },
   selectedBarrel: {
     type: Object as PropType<ConfiguredBarrel | null>,
+    default: null,
   },
   loading: {
     type: Boolean,

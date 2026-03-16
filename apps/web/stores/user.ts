@@ -1,37 +1,19 @@
-import type { BreakIdentifier, BreakDefinition } from "@overbookd/planning";
-import type {
-  AssignmentEvent,
-  AssignmentIdentifier,
-} from "@overbookd/assignment";
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import {
   castConsumerWithDate,
   castMyUserInformationWithDate,
   castUserPersonalDataWithDate,
 } from "~/utils/http/cast-date/user.utils";
-import { castVolunteerPlanningTasksWithDate } from "~/utils/http/cast-date/volunteer-planning.utils";
 import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
 import type { Profile, User, UserPersonalData } from "@overbookd/user";
-import { Period } from "@overbookd/time";
-import type {
-  AssignmentStat,
-  Consumer,
-  VolunteerWithAssignmentStats,
-  PlanningTask,
-  TaskForCalendar,
-} from "@overbookd/http";
+import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
-import {
-  castAssignmentEventsWithDate,
-  UserRepository,
-} from "~/repositories/user.repository";
+import { UserRepository } from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
-import { PlanningRepository } from "~/repositories/planning.repository";
 import type { Membership } from "@overbookd/registration";
 import { ADMIN } from "@overbookd/team-constants";
 
@@ -39,11 +21,6 @@ type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: User[];
-  selectedUserAssignments: AssignmentEvent[];
-  currentTaskForCalendar?: TaskForCalendar;
-  selectedUserBreakPeriods: Period[];
-  selectedUserTasks: PlanningTask[];
-  selectedUserAssignmentStats: AssignmentStat[];
   personalAccountConsumers: Consumer[];
   volunteers: UserDataWithPotentialyProfilePicture[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
@@ -59,11 +36,6 @@ export const useUserStore = defineStore("user", {
     loggedUser: undefined,
     selectedUser: undefined,
     selectedUserFriends: [],
-    selectedUserAssignments: [],
-    currentTaskForCalendar: undefined,
-    selectedUserBreakPeriods: [],
-    selectedUserTasks: [],
-    selectedUserAssignmentStats: [],
     personalAccountConsumers: [],
     volunteers: [],
     volunteersWithAssignmentStats: [],
@@ -323,63 +295,6 @@ export const useUserStore = defineStore("user", {
 
       const updated = { ...user, profilePictureBlob };
       this._updateVolunteerFromList(updated);
-    },
-
-    async getVolunteerTasks(volunteerId: number) {
-      const res =
-        await UserRepository.getMobilizationsVolunteerTakePartOf(volunteerId);
-      if (isHttpError(res)) return;
-      this.selectedUserTasks = castVolunteerPlanningTasksWithDate(res);
-    },
-
-    async getVolunteerAssignments(userId: number) {
-      const res = await UserRepository.getVolunteerAssignments(userId);
-      if (isHttpError(res)) return;
-      this.selectedUserAssignments = castAssignmentEventsWithDate(res);
-    },
-
-    async getVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {
-      const res = await AssignmentsRepository.findOneForCalendar(identifier);
-      if (isHttpError(res)) return;
-      this.currentTaskForCalendar = {
-        ...res,
-        timeWindow: castPeriodWithDate(res.timeWindow),
-      };
-    },
-
-    async getVolunteerAssignmentStats(userId: number) {
-      const res = await UserRepository.getVolunteerAssignmentStats(userId);
-      if (isHttpError(res)) return;
-      this.selectedUserAssignmentStats = res;
-    },
-
-    async getVolunteerBreakPeriods(volunteerId: number) {
-      const res = await PlanningRepository.getBreakPeriods(volunteerId);
-      if (isHttpError(res)) return;
-      this.selectedUserBreakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
-      );
-    },
-
-    async addVolunteerBreakPeriods({
-      volunteer,
-      during: { start, duration },
-    }: BreakDefinition) {
-      const during = { start, durationInHours: duration.inHours };
-      const res = await PlanningRepository.addBreakPeriod(volunteer, during);
-      if (isHttpError(res)) return;
-
-      this.selectedUserBreakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
-      );
-    },
-
-    async deleteVolunteerBreakPeriods({ volunteer, period }: BreakIdentifier) {
-      const res = await PlanningRepository.removeBreakPeriod(volunteer, period);
-      if (isHttpError(res)) return;
-      this.selectedUserBreakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
-      );
     },
 
     setLoggedUserMembershipApplication(application: Membership) {

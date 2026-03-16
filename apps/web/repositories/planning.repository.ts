@@ -1,5 +1,9 @@
 import { ICAL, PDF } from "@overbookd/http";
-import type { DuringBreakPeriods, VolunteerForPlanning } from "@overbookd/http";
+import type {
+  DuringBreakPeriods,
+  MultiPlanningVolunteer,
+  VolunteerForPlanningLeaflet,
+} from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -25,10 +29,17 @@ export class PlanningRepository {
     );
   }
 
-  static getVolunteers() {
-    return HttpClient.get<VolunteerForPlanning[]>(
+  static getVolunteersForLeaflets() {
+    return HttpClient.get<VolunteerForPlanningLeaflet[]>(
       `${this.basePath}/volunteers`,
     );
+  }
+
+  static getVolunteersForMultiPlanning(volunteerIds: number[]) {
+    return HttpClient.get<MultiPlanningVolunteer[]>({
+      path: `${this.basePath}/volunteers/multi`,
+      params: { volunteerIds },
+    });
   }
 
   static getPlanningSubscriptionLink() {

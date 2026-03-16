@@ -10,7 +10,7 @@ export type BreakEvent = CalendarEvent & { kind: "break" };
 
 const BREAK = { name: PAUSE, color: "black", kind: "break" } as const;
 
-export function convertToCalendarBreak(period: IProvidePeriod): BreakEvent {
+export function toCalendarBreak(period: IProvidePeriod): BreakEvent {
   const { start, end } = period;
   return createCalendarEvent({ start, end, ...BREAK });
 }

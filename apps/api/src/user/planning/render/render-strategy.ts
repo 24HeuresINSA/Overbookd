@@ -3,7 +3,7 @@ import { Task, Volunteer } from "../domain/task.model";
 import { IcalRenderStrategy } from "./ical-render-strategy";
 import { JsonRenderStrategy } from "./json-render-strategy";
 import { PdfRenderStrategy } from "./pdf-render-strategy";
-import { Volunteers } from "../planning.service";
+import { PlanningVolunteers } from "../planning.service";
 
 type PlanningAcceptType = typeof JSON | typeof ICAL | typeof PDF;
 
@@ -14,7 +14,7 @@ function isPlanningAcceptType(
 }
 
 export class PlanningRenderStrategy {
-  constructor(private readonly volunteers: Volunteers) {}
+  constructor(private readonly volunteers: PlanningVolunteers) {}
 
   get(format: string): RenderStrategy {
     if (!isPlanningAcceptType(format)) return new JsonRenderStrategy();

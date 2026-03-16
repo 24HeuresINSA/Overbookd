@@ -63,7 +63,7 @@ const volunteers = computed<HelpingVolunteer[]>(
 const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
   volunteers.value.map((volunteer) => ({
     ...volunteer,
-    assignments: volunteer.assignments.map(createCalendarEvent),
+    events: volunteer.assignments.map(createCalendarEvent),
   })),
 );
 

@@ -1,25 +1,37 @@
+import type { AssignmentIdentifier } from "@overbookd/assignment";
 import {
   type HttpStringified,
-  type VolunteerForPlanning as HttpVolunteerForPlanning,
+  type VolunteerForPlanningLeaflet as HttpVolunteerForPlanningLeaflet,
   ICAL,
+  type MultiPlanningVolunteer,
+  type TaskForCalendar,
 } from "@overbookd/http";
-import { Duration, Edition } from "@overbookd/time";
-import type { User } from "@overbookd/user";
+import type { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
+import { Duration, Edition, Period } from "@overbookd/time";
+import type { User, UserWithTeams } from "@overbookd/user";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
+import { UserRepository } from "~/repositories/user.repository";
 import {
   downloadPdfFromBase64,
   downloadPdfPlanning,
 } from "~/utils/file/download-planning.utils";
+import {
+  castPeriodsWithDate,
+  castPeriodWithDate,
+} from "~/utils/http/cast-date/period.utils";
+import {
+  castAssignmentEventsWithDate,
+  castVolunteerPlanningTasksWithDate,
+} from "~/utils/http/cast-date/planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
 
 export type HasAssignment = {
   assignment: Duration;
 };
 
-export type VolunteerForPlanning = User &
-  HasAssignment & {
-    teams: string[];
-  };
+export type VolunteerForPlanningLeaflet = UserWithTeams & HasAssignment;
 
 type VolunteerPlanning = {
   volunteer: User;
@@ -28,13 +40,24 @@ type VolunteerPlanning = {
 
 type State = {
   link: string | null;
-  volunteers: VolunteerForPlanning[];
+  leafletVolunteers: VolunteerForPlanningLeaflet[];
+  multiPlanningVolunteers: MultiPlanningVolunteer[];
+  selectedVolunteer: VolunteerForPlanningCalendar;
+  selectedCalendarTask?: TaskForCalendar;
 };
 
 export const usePlanningStore = defineStore("planning", {
   state: (): State => ({
     link: null,
-    volunteers: [],
+    leafletVolunteers: [],
+    multiPlanningVolunteers: [],
+    selectedVolunteer: {
+      breakPeriods: [],
+      tasks: [],
+      assignmentStats: [],
+      assignments: [],
+    },
+    selectedCalendarTask: undefined,
   }),
   actions: {
     async fetchSubscriptionLink() {
@@ -103,11 +126,87 @@ export const usePlanningStore = defineStore("planning", {
       downloadPdfFromBase64(res, "plannings.pdf");
     },
 
-    async fetchVolunteers() {
-      const res = await PlanningRepository.getVolunteers();
+    async fetchVolunteersForLeaflets() {
+      const res = await PlanningRepository.getVolunteersForLeaflets();
       if (isHttpError(res)) return;
       const volunteers = res.map(castWithAssignmentDuration);
-      this.volunteers = volunteers;
+      this.leafletVolunteers = volunteers;
+    },
+
+    async getVolunteersForMultiPlanning(volunteerIds: number[]) {
+      const res =
+        await PlanningRepository.getVolunteersForMultiPlanning(volunteerIds);
+      if (isHttpError(res)) return;
+      this.multiPlanningVolunteers = res.map((volunteer) => {
+        const assignments = volunteer.assignments.map((assignment) => ({
+          ...assignment,
+          start: new Date(assignment.start),
+          end: new Date(assignment.end),
+        }));
+        const availabilities = castPeriodsWithDate(volunteer.availabilities);
+        const tasks = volunteer.tasks.map((task) => ({
+          ...task,
+          timeWindow: castPeriodWithDate(task.timeWindow),
+        }));
+        return { ...volunteer, assignments, availabilities, tasks };
+      });
+    },
+
+    async fetchVolunteerTasks(volunteerId: number) {
+      const res =
+        await UserRepository.getMobilizationsVolunteerTakePartOf(volunteerId);
+      if (isHttpError(res)) return;
+      this.selectedVolunteer.tasks = castVolunteerPlanningTasksWithDate(res);
+    },
+
+    async fetchVolunteerAssignments(userId: number) {
+      const res = await UserRepository.getVolunteerAssignments(userId);
+      if (isHttpError(res)) return;
+      this.selectedVolunteer.assignments = castAssignmentEventsWithDate(res);
+    },
+
+    async fetchVolunteerAssignmentDetails(identifier: AssignmentIdentifier) {
+      const res = await AssignmentsRepository.findOneForCalendar(identifier);
+      if (isHttpError(res)) return;
+      this.selectedCalendarTask = {
+        ...res,
+        timeWindow: castPeriodWithDate(res.timeWindow),
+      };
+    },
+
+    async fetchVolunteerAssignmentStats(userId: number) {
+      const res = await UserRepository.getVolunteerAssignmentStats(userId);
+      if (isHttpError(res)) return;
+      this.selectedVolunteer.assignmentStats = res;
+    },
+
+    async fetchVolunteerBreakPeriods(volunteerId: number) {
+      const res = await PlanningRepository.getBreakPeriods(volunteerId);
+      if (isHttpError(res)) return;
+      this.selectedVolunteer.breakPeriods = res.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
+    },
+
+    async addVolunteerBreakPeriods({
+      volunteer,
+      during: { start, duration },
+    }: BreakDefinition) {
+      const during = { start, durationInHours: duration.inHours };
+      const res = await PlanningRepository.addBreakPeriod(volunteer, during);
+      if (isHttpError(res)) return;
+
+      this.selectedVolunteer.breakPeriods = res.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
+    },
+
+    async deleteVolunteerBreakPeriods({ volunteer, period }: BreakIdentifier) {
+      const res = await PlanningRepository.removeBreakPeriod(volunteer, period);
+      if (isHttpError(res)) return;
+      this.selectedVolunteer.breakPeriods = res.map((period) =>
+        Period.init(castPeriodWithDate(period)),
+      );
     },
   },
 });
@@ -124,7 +223,7 @@ function downloadIcalFile(content: string) {
 }
 
 function castWithAssignmentDuration(
-  volunteer: HttpStringified<HttpVolunteerForPlanning>,
-): VolunteerForPlanning {
+  volunteer: HttpStringified<HttpVolunteerForPlanningLeaflet>,
+): VolunteerForPlanningLeaflet {
   return { ...volunteer, assignment: Duration.ms(volunteer.assignment) };
 }

@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "3.49.2-rc.0",
+  "version": "3.49.2-rc.1",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -14,7 +14,8 @@
   },
   "scripts": {
     "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
-    "db:seed": "pnpm run db:exec 'prisma generate' && pnpm run db:exec 'prisma db seed'",
+    "db:generate": "pnpm run db:exec 'prisma generate'",
+    "db:seed": "pnpm run db:generate && pnpm run db:exec 'prisma db seed'",
     "db:reset": "pnpm run db:exec 'prisma migrate reset' && pnpm run db:seed",
     "db:migrate": "pnpm run db:exec 'prisma migrate dev'",
     "ci:init": "wget -qO- https://bootstrap.pypa.io/get-pip.py | python3 && python3 -m pip install --upgrade pip && python3 -m pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg",
@@ -22,7 +23,7 @@
     "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
     "dev:clean": "pnpm dev:down && find . -not \\( -path '*/docker/*' -prune \\) -type d \\( -name '.pnpm-store' -o -name 'node_modules' -o -name 'dist' -o -name 'coverage' -o -name '.nuxt' -o -name '.output' -o -name 'generated' \\) -prune -exec rm -r '{}' +  && docker system prune --all",
     "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env down",
-    "dev:init": "docker network create traefik-public && pnpm dev:build",
+    "dev:init": "docker network create traefik-public && pnpm install && pnpm dev:build",
     "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env logs --tail 100 --follow",
     "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env restart",
     "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env up --detach",
@@ -39,11 +40,11 @@
     "version:minor-dependency": "pnpm --recursive --filter '[origin/main]' run version:minor",
     "version:patch-dependency": "pnpm --recursive --filter '[origin/main]' run version:patch",
     "release:major:no-sync": "git fetch -ap && pnpm run version:major-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:major": "pnpm run version:major:no-sync && pnpm run dev:sync-version",
+    "release:major": "pnpm run release:major:no-sync && pnpm run dev:sync-version",
     "release:minor:no-sync": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:minor": "pnpm run version:minor:no-sync && pnpm run dev:sync-version",
+    "release:minor": "pnpm run release:minor:no-sync && pnpm run dev:sync-version",
     "release:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
-    "release:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
+    "release:patch": "pnpm run release:patch:no-sync && pnpm run dev:sync-version"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {

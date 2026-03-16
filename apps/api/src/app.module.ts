@@ -36,7 +36,6 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
 import { CharismaEventModule } from "./charisma-event/charisma-event.module";
 import { MembershipApplicationModule } from "./registration/membership-application/membership-application.module";
-import { MultiPlanningModule } from "./multi-planning/multi-planning.module";
 
 @Module({
   imports: [
@@ -56,7 +55,6 @@ import { MultiPlanningModule } from "./multi-planning/multi-planning.module";
     AssignmentModule,
     OrgaNeedsModule,
     TimelineModule,
-    MultiPlanningModule,
     NeedHelpModule,
     RegistrationModule,
     MembershipApplicationModule,

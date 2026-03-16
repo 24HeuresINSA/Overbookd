@@ -3,7 +3,7 @@
 
   <div class="multi-planning">
     <MultiPlanningFilterCard
-      v-model:volunteers="volunteers"
+      v-model:volunteers="selectedVolunteers"
       :loading="loading"
       @apply="onApplyFilters"
     />
@@ -25,37 +25,47 @@
 </template>
 
 <script lang="ts" setup>
+import { READ_FT } from "@overbookd/permission";
 import { formatLocalDateTime } from "@overbookd/time";
 import type { User } from "@overbookd/user";
-import { createCalendarEvent } from "~/utils/calendar/event";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import { MultiPlanningParamsBuilder } from "~/utils/multi-planning/multi-planning.filter";
+import { toCalendarAssignment, toCalendarTask } from "~/utils/planning/event";
+import { MultiPlanningParamsBuilder } from "~/utils/planning/multi-planning.filter";
 
 useHead({ title: "Multi Planning" });
 
 const DEFAULT_PAGE = 0;
 const DEFAULT_ITEMS_PER_PAGE = 10;
 
-const multiPlanningStore = useMultiPlanningStore();
+const userStore = useUserStore();
+const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();
 
-const volunteers = ref<User[]>([]);
+const selectedVolunteers = ref<User[]>([]);
+
+const canReadFt = computed<boolean>(() => userStore.can(READ_FT));
 
 const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
-  multiPlanningStore.volunteers.map((volunteer) => ({
-    ...volunteer,
-    assignments: volunteer.assignments.map(createCalendarEvent),
-  })),
+  planningStore.multiPlanningVolunteers.map((volunteer) => {
+    const tasks = volunteer.tasks.map((task) =>
+      toCalendarTask({ canReadFt: canReadFt.value })(task),
+    );
+    const assignments = volunteer.assignments.map(toCalendarAssignment);
+    return {
+      ...volunteer,
+      events: [...tasks, ...assignments],
+    };
+  }),
 );
 
 const loading = ref<boolean>(false);
 
 const onApplyFilters = async () => {
   loading.value = true;
-  const volunteerIds = volunteers.value.map(({ id }) => id);
+  const volunteerIds = selectedVolunteers.value.map(({ id }) => id);
   await Promise.all([
-    multiPlanningStore.fetchVolunteers(volunteerIds),
+    planningStore.getVolunteersForMultiPlanning(volunteerIds),
     updateQueryParams("volunteerIds", volunteerIds.map(String)),
   ]);
   loading.value = false;
@@ -72,7 +82,7 @@ onMounted(async () => {
   await useUserStore().fetchVolunteers();
   const params = MultiPlanningParamsBuilder.getFromRouteQuery(route.query);
   if (params.volunteers) {
-    volunteers.value = params.volunteers;
+    selectedVolunteers.value = params.volunteers;
     onApplyFilters();
   }
   if (params.day) day.value = params.day;

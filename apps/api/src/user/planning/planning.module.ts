@@ -5,10 +5,10 @@ import { jwtConstants } from "../../authentication/jwt-constants";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { Planning } from "./domain/planning";
-import { PlanningService, Volunteers } from "./planning.service";
+import { PlanningService, PlanningVolunteers } from "./planning.service";
 import { PrismaBreaks } from "./repository/breaks.prisma";
 import { PrismaTaskRepository } from "./repository/task.repository.prisma";
-import { PrismaVolunteers } from "./repository/volunteers.prisma";
+import { PrismaPlanningVolunteers } from "./repository/planning-volunteers.prisma";
 import { SecretService } from "./secret.service";
 import { SubscriptionService } from "./subscription.service";
 import { PlanningRenderStrategy } from "./render/render-strategy";
@@ -21,8 +21,9 @@ import { PlanningRenderStrategy } from "./render/render-strategy";
       inject: [PrismaService],
     },
     {
-      provide: PrismaVolunteers,
-      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      provide: PrismaPlanningVolunteers,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaPlanningVolunteers(prisma),
       inject: [PrismaService],
     },
     {
@@ -42,9 +43,9 @@ import { PlanningRenderStrategy } from "./render/render-strategy";
     },
     {
       provide: PlanningRenderStrategy,
-      useFactory: (volunteers: Volunteers) =>
+      useFactory: (volunteers: PlanningVolunteers) =>
         new PlanningRenderStrategy(volunteers),
-      inject: [PrismaVolunteers],
+      inject: [PrismaPlanningVolunteers],
     },
     {
       provide: JwtService,
@@ -69,7 +70,7 @@ import { PlanningRenderStrategy } from "./render/render-strategy";
       useFactory: (
         planning: Planning,
         breaks: BreakPeriods,
-        volunteers: Volunteers,
+        volunteers: PlanningVolunteers,
         renderStrategy: PlanningRenderStrategy,
         subscription: SubscriptionService,
       ) =>
@@ -81,7 +82,7 @@ import { PlanningRenderStrategy } from "./render/render-strategy";
       inject: [
         Planning,
         BreakPeriods,
-        PrismaVolunteers,
+        PrismaPlanningVolunteers,
         PlanningRenderStrategy,
         SubscriptionService,
       ],

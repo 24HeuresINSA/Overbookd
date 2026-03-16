@@ -41,7 +41,7 @@ useHead({ title: DEFAULT_TITLE });
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
-const userStore = useUserStore();
+const planningStore = usePlanningStore();
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);
 
@@ -75,11 +75,11 @@ const refreshVolunteerData = async (volunteerId: number) => {
   availabilitiesStore.clearVolunteerAvailabilities();
   await Promise.all([
     availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
-    userStore.getVolunteerAssignments(volunteerId),
-    userStore.getVolunteerAssignmentStats(volunteerId),
+    planningStore.fetchVolunteerAssignments(volunteerId),
+    planningStore.fetchVolunteerAssignmentStats(volunteerId),
     assignVolunteerToTaskStore.fetchAllAssignmentsFor(volunteerId),
     assignVolunteerToTaskStore.fetchBreakPeriodsFor(volunteerId),
-    userStore.getVolunteerTasks(volunteerId),
+    planningStore.fetchVolunteerTasks(volunteerId),
   ]);
 };
 

@@ -76,9 +76,12 @@ export type {
 } from "./logistic/catalog";
 
 // PLANNING
-export type { Task as PlanningTask, TaskForCalendar } from "./planning/task";
+export type { PlanningTask, TaskForCalendar } from "./planning/task";
 export type { During as DuringBreakPeriods } from "./planning/break-periods";
-export type { Volunteer as VolunteerForPlanning } from "./planning/volunteer";
+export type {
+  VolunteerForPlanningLeaflet,
+  MultiPlanningVolunteer,
+} from "./planning/volunteer";
 
 // CHARISMA
 export type {
@@ -126,10 +129,6 @@ export type {
   VolunteerWithAssignmentStats,
   AssignmentStat,
 } from "./assignment";
-export type {
-  MultiPlanningVolunteerAssignment,
-  MultiPlanningVolunteer,
-} from "./multi-planning";
 export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";
 export type { CreatePermissionForm, Permission } from "./permission";
 export type { CreateLocation } from "./location";

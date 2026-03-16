@@ -4,6 +4,7 @@ export type {
   User,
   UserName,
   UserPersonalData,
+  UserWithTeams,
 } from "./user.js";
 export type { UserUpdateForm } from "./user-form.js";
 export {

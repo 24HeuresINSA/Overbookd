@@ -12,6 +12,10 @@ export type User = UserName & {
   id: number;
 };
 
+export type UserWithTeams = User & {
+  teams: string[];
+};
+
 export type Profile = UserName & {
   email: string;
   birthdate: Date;
