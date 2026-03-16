@@ -1,3 +1,10 @@
+## [3.49.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.1...v3.49.2) (2026-03-16)
+
+### Bug Fixes
+
+* **multi-planning:** add mobilizations and refactor some planning code [#2620](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2620) ([dd98d04](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dd98d047881520f5de911ebd2e89d0b6140e3058))
+* **registration:** update hint of team field [#2619](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2619) ([d4c88b2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d4c88b25084cd7cdf2caeb69cf67be76fcafda61))
+
 ## [3.49.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.0...v3.49.1) (2026-02-27)
 
 ### Bug Fixes
