@@ -449,6 +449,7 @@ describe("Prepare festival task mobilizations list", () => {
           const update = {
             start: task.mobilizations[1].start,
             end: task.mobilizations[1].end,
+            durationSplitInHour: null,
           };
           expect(
             async () =>
