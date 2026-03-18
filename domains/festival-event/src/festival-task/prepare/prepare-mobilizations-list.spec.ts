@@ -448,7 +448,7 @@ describe("Prepare festival task mobilizations list", () => {
           const task = guardEscapeGame;
           const update = {
             start: task.mobilizations[1].start,
-            end: task.mobilizations[1].end
+            end: task.mobilizations[1].end,
           };
           expect(
             async () =>
