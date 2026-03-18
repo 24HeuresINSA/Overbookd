@@ -1,3 +1,10 @@
+## [3.49.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.2...v3.49.3) (2026-03-18)
+
+### Bug Fixes
+
+* **ft:** throw an error when updating a mobilization with the same period than an existing one [#2624](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2624) ([5945886](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5945886440d05d2e75cb6acac0a11d4e1b6b9261))
+* **volunteer-list:** nickname update when empty string [#2622](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2622) ([c68a946](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c68a946cc49359d561426c469e353a81b49b321f))
+
 ## [3.49.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.1...v3.49.2) (2026-03-16)
 
 ### Bug Fixes
