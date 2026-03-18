@@ -443,6 +443,24 @@ describe("Prepare festival task mobilizations list", () => {
           },
         );
       });
+      describe("when updating a mobilization with the same period than an existing one", () => {
+        it("should indicate an existing mobilization exist on the same period", async () => {
+          const task = guardEscapeGame;
+          const update = {
+            start: task.mobilizations[1].start,
+            end: task.mobilizations[1].end
+          };
+          expect(
+            async () =>
+              await prepare.updateMobilization(
+                task.id,
+                task.mobilizations[0].id,
+                update,
+                noel,
+              ),
+          ).rejects.toThrow(MobilizationAlreadyExist);
+        });
+      });
     });
     describe("when updating an inexisting mobilization", () => {
       it("should indicate that mobilization is not found", async () => {

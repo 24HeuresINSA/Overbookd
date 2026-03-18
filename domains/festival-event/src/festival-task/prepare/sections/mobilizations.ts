@@ -66,10 +66,13 @@ export class Mobilizations {
     if (index === -1 || !value) throw new MobilizationNotFound();
 
     const builder = MobilizationFactory.build(value);
+    const mobilization = builder.update(update).json;
+    if (this.has(mobilization)) throw new MobilizationAlreadyExist();
+
     const mobilizations = updateItemToList(
       this.mobilizations,
       index,
-      builder.update(update).json,
+      mobilization,
     );
 
     return new Mobilizations(mobilizations);
