@@ -306,14 +306,15 @@ const removeFriend = (friend: User) => {
 };
 
 const updatedVolunteer = computed<UserPersonalData>(() => {
+  const trimmedNickname = nickname.value?.trim() || null;
   const trimmedNote = note.value?.trim() || null;
   const trimmedComment = props.volunteer.comment?.trim() || null;
   return {
     ...props.volunteer,
-    nickname: nickname.value,
+    nickname: trimmedNickname,
     birthdate: new Date(birthday.value),
     phone: phone.value,
-    email: email.value,
+    email: email.value.trim(),
     note: trimmedNote,
     comment: trimmedComment,
   };
