@@ -2,6 +2,7 @@ export const CTMA_URL = "https://cetaitmieuxavant.24heures.org";
 export const CETAITMIEUXAVANT = "cetaitmieuxavant";
 export const PREPROD = "preprod";
 export const WIKI_URL = "https://wiki.24heures.org";
+export const OVERVIEW_URL = "https://overview.24heures.org/";
 export const CALENDAR_URL =
   "https://calendar.google.com/calendar/u/0?cid=Y182NjcyNmU4M2E1ODBiMDlmYThlNDIxOWRkZTUxMjIyMmE3NmFjMzA4YWJjNDMxMWExMGI4MGExYzk1ZDdjZDI1QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20";
 export const SLACK_URL =
