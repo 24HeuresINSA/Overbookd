@@ -15,9 +15,7 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong>
-          </a>,
-          la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
         </li>
         <li>
           <p>
