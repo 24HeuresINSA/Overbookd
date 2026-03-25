@@ -13,11 +13,11 @@
           </a>
         </li>
         <li>
-          Le lien de
+          Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
             <strong> OverView</strong>
-          </a>
-          le street view des 24 heures de l'INSA.
+          </a>,
+          la street view des 24 heures de l'INSA.
         </li>
         <li>
           <p>
