@@ -13,6 +13,13 @@
           </a>
         </li>
         <li>
+          Le lien de
+          <a :href="OVERVIEW_URL" target="_blank">
+            <strong> OVERVIEW</strong>
+          </a>
+          le street view des 24 heures de l'INSA.
+        </li>
+        <li>
           <p>
             Pour ne rater aucun évènement important, tu peux récupérer le lien
             du
@@ -37,6 +44,7 @@
 <script lang="ts" setup>
 import { Edition } from "@overbookd/time";
 import { WIKI_URL } from "~/utils/navigation/url.constant";
+import { OVERVIEW_URL } from "~/utils/navigation/url.constant";
 import { CALENDAR_URL } from "~/utils/navigation/url.constant";
 import { SLACK_URL } from "~/utils/navigation/url.constant";
 
