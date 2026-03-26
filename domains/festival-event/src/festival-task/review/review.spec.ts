@@ -140,7 +140,7 @@ describe("Approve festival task", () => {
           action: APPROVED,
           by: reviewer,
           at: expect.any(Date),
-          description: "FT approuvée",
+          description: `FT approuvée par l'équipe ${team}`,
         },
       ]);
     });
@@ -248,7 +248,7 @@ describe("Reject festival task", () => {
             action: REJECTED,
             by: rejector,
             at: expect.any(Date),
-            description: `FT rejetée pour la raison suivante: ${reason}`,
+            description: `FT rejetée par l'équipe ${team} pour la raison suivante: ${reason}`,
           },
         ]);
       });

@@ -185,7 +185,7 @@ describe("Approve festival activity", () => {
             action: APPROVED,
             by: approver,
             at: expect.any(Date),
-            description: "FA approuvée",
+            description: `FA approuvée par l'équipe ${team}`,
           },
         ]);
       });
@@ -327,7 +327,7 @@ describe("Reject festival activity", () => {
             action: REJECTED,
             by: rejector,
             at: expect.any(Date),
-            description: `FA rejetée pour la raison suivante: ${reason}`,
+            description: `FA rejetée par l'équipe ${team} pour la raison suivante: ${reason}`,
           },
         ]);
       });
