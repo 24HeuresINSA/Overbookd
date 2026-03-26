@@ -13,6 +13,7 @@ import {
   previewOfTask,
   type FestivalTaskDraft,
   type FestivalTaskReviewable,
+  getNameFromReviewer,
 } from "@overbookd/festival-event";
 import type {
   AddInquiryRequestForm,
@@ -373,28 +374,36 @@ export const useFestivalTaskStore = defineStore("festival-task", {
     async rejectBecause(rejection: ReviewRejection<"FT">) {
       const res = await repo.reject(this.selectedTask.id, rejection);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FT rejetée par l'équipe ${rejection.team}`);
+      sendSuccessNotification(
+        `FT rejetée par l'équipe ${getNameFromReviewer(rejection.team)}`,
+      );
       this.selectedTask = castTaskWithDate(res);
     },
 
     async approve(approval: ReviewApproval<"FT">) {
       const res = await repo.approve(this.selectedTask.id, approval);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FT approuvée par l'équipe ${approval.team}`);
+      sendSuccessNotification(
+        `FT approuvée par l'équipe ${getNameFromReviewer(approval.team)}`,
+      );
       this.selectedTask = castTaskWithDate(res);
     },
 
     async ignore(ignore: ReviewIgnoreTask) {
       const res = await repo.ignore(this.selectedTask.id, ignore);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FT ignorée par l'équipe ${ignore.team}`);
+      sendSuccessNotification(
+        `FT ignorée par l'équipe ${getNameFromReviewer(ignore.team)}`,
+      );
       this.selectedTask = castTaskWithDate(res);
     },
 
     async review(review: ReviewIgnoreTask) {
       const res = await repo.review(this.selectedTask.id, review);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FT en relecture par l'équipe ${review.team}`);
+      sendSuccessNotification(
+        `FT en relecture par l'équipe ${getNameFromReviewer(review.team)}`,
+      );
       this.selectedTask = castTaskWithDate(res);
     },
 

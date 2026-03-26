@@ -27,7 +27,11 @@ import {
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import { Approval, Reviewer } from "../../common/review.js";
+import {
+  Approval,
+  Reviewer,
+  getNameFromReviewer,
+} from "../../common/review.js";
 import { NotAskingToReview } from "../../common/review.error.js";
 import { Review } from "./review.js";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";
@@ -140,7 +144,7 @@ describe("Approve festival task", () => {
           action: APPROVED,
           by: reviewer,
           at: expect.any(Date),
-          description: `FT approuvée par l'équipe ${team}`,
+          description: `FT approuvée par l'équipe ${getNameFromReviewer(team)}`,
         },
       ]);
     });
@@ -248,7 +252,7 @@ describe("Reject festival task", () => {
             action: REJECTED,
             by: rejector,
             at: expect.any(Date),
-            description: `FT rejetée par l'équipe ${team} pour la raison suivante: ${reason}`,
+            description: `FT rejetée par l'équipe ${getNameFromReviewer(team)} pour la raison suivante: ${reason}`,
           },
         ]);
       });

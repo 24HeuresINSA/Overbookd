@@ -48,7 +48,11 @@ export type {
   Notifications,
   Notifyee,
 } from "./common/notifications.js";
-export { isRefusedReviews, isValidatedReviews } from "./common/review.js";
+export {
+  isRefusedReviews,
+  isValidatedReviews,
+  getNameFromReviewer,
+} from "./common/review.js";
 export type {
   ReviewStatus,
   Reviewer,

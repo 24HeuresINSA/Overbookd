@@ -9,7 +9,7 @@ import {
   RESET_REVIEW,
 } from "@overbookd/festival-event-constants";
 import { Adherent } from "../common/adherent.js";
-import { Reviewer } from "../common/review.js";
+import { getNameFromReviewer, Reviewer } from "../common/review.js";
 
 type Action =
   | typeof CREATED
@@ -51,14 +51,14 @@ export class FestivalTaskKeyEvents {
     reason: string,
   ): KeyEvent {
     const at = this.computeAt();
-    const description = `FT rejetée par l'équipe ${team} pour la raison suivante: ${reason}`;
+    const description = `FT rejetée par l'équipe ${getNameFromReviewer(team)} pour la raison suivante: ${reason}`;
 
     return { action: REJECTED, by, at, description };
   }
 
   static approved(by: Adherent, team: Reviewer<"FT">): KeyEvent {
     const at = this.computeAt();
-    const description = `FT approuvée par l'équipe ${team}`;
+    const description = `FT approuvée par l'équipe ${getNameFromReviewer(team)}`;
 
     return { action: APPROVED, by, at, description };
   }
