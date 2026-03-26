@@ -52,6 +52,7 @@ export const FEN = "fen";
 export const TEAM_ELEC = "team-elec";
 export const TEAM_MONTAGE = "team-montage";
 export const TECKOS = "teckos";
+export const TEAM_BOUFFE = "team-bouffe";
 
 // 25eme
 export const TEAM_25EME = "25eme";

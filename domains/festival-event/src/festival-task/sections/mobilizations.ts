@@ -13,6 +13,7 @@ import {
   TEAM_MONTAGE,
   SOFT,
   HARD,
+  TEAM_BOUFFE,
 } from "@overbookd/team-constants";
 import { Volunteer } from "./instructions.js";
 import { TimeWindow } from "../../common/time-window.js";
@@ -24,13 +25,14 @@ export const requirableTeams = [
   CONFIANCE,
   VIEUX,
   CONDUCTEUR,
-  BDE,
+  TECKOS,
+  TEAM_MONTAGE,
+  TEAM_BOUFFE,
   KARNA,
+  BDE,
   KFET,
   STRASBOURG,
   CVL,
-  TECKOS,
-  TEAM_MONTAGE,
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, SOFT] as const;
 
