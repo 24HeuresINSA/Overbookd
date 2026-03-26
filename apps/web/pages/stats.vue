@@ -1,16 +1,35 @@
 <template>
   <DesktopPageTitle />
+
   <v-card>
     <v-card-text>
-      <div class="switch">
-        <h2>FA</h2>
-        <v-switch
-          v-model="displayTaskStats"
-          hide-details
-          @update:model-value="updateTitle"
-        />
-        <h2>FT</h2>
+      <div class="display-mode">
+        <v-btn-toggle
+          v-model="displayMode"
+          color="primary"
+          mandatory
+          class="toggle"
+          @update:model-value="updateStatsDisplayModeParam"
+        >
+          <v-btn
+            :value="DISPLAY_FA"
+            aria-label="FA"
+            size="x-large"
+            :rounded="false"
+          >
+            FA
+          </v-btn>
+          <v-btn
+            :value="DISPLAY_FT"
+            aria-label="FT"
+            size="x-large"
+            :rounded="false"
+          >
+            FT
+          </v-btn>
+        </v-btn-toggle>
       </div>
+
       <Bar :options="options" :data="data" />
     </v-card-text>
   </v-card>
@@ -56,17 +75,19 @@ import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 import { FA_URL, FT_URL } from "@overbookd/web-page";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 import { READ_FA, READ_FT } from "@overbookd/permission";
+import {
+  DISPLAY_FA,
+  DISPLAY_FT,
+  StatsDisplayModeBuilder,
+  type StatsDisplayMode,
+} from "~/utils/festival-event/stats.display";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Statistiques des FA" });
 
 const theme = useTheme();
 const router = useRouter();
-
-const displayTaskStats = ref<boolean>(false);
-
-const updateTitle = (value: boolean | null) => {
-  document.title = `Statistiques des ${value ? "FT" : "FA"}`;
-};
+const route = useRoute();
 
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
@@ -75,10 +96,22 @@ const userStore = useUserStore();
 const canReadFA = computed<boolean>(() => userStore.can(READ_FA));
 const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
 
+const displayMode = ref<StatsDisplayMode>(DISPLAY_FA);
+const isDisplayTasksMode = computed<boolean>(
+  () => displayMode.value === DISPLAY_FT,
+);
+
 onMounted(() => {
   if (canReadFA.value) statsStore.fetchActivityStats();
   if (canReadFT.value) statsStore.fetchTaskStats();
+  displayMode.value = StatsDisplayModeBuilder.getFromRouteQuery(route.query);
 });
+
+const updateStatsDisplayModeParam = (mode: StatsDisplayMode) => {
+  document.title = `Statistiques des ${mode === DISPLAY_FT ? "FT" : "FA"}`;
+  StatsDisplayModeBuilder.saveToStorage(mode);
+  updateQueryParams("displayMode", mode);
+};
 
 const activityStats = computed<Statistics<FestivalActivity>[]>(
   () => statsStore.activityStats,
@@ -87,20 +120,20 @@ const taskStats = computed<Statistics<FestivalTask>[]>(
   () => statsStore.taskStats,
 );
 const stats = computed<Statistics[]>(() =>
-  displayTaskStats.value ? taskStats.value : activityStats.value,
+  isDisplayTasksMode.value ? taskStats.value : activityStats.value,
 );
 
 const labels = computed<string[]>(() => {
-  const statsForLabel = displayTaskStats.value ? taskStats : activityStats;
+  const statsForLabel = isDisplayTasksMode.value ? taskStats : activityStats;
   return statsForLabel.value.map(
     ({ teamCode }) => teamStore.getTeamByCode(teamCode)?.name ?? teamCode,
   );
 });
 
 const findByStatus = (status: FestivalEventStatus): number[] => {
-  if (displayTaskStats.value) {
+  if (isDisplayTasksMode.value)
     return taskStats.value.map((stat) => stat.status[`${status}`]);
-  }
+
   if (!isFestivalActivityStatus(status)) return [];
   return activityStats.value.map((stat) => stat.status[`${status}`]);
 };
@@ -114,7 +147,7 @@ const sortedOldTasks = computed<number[]>(() =>
   taskStats.value.map((stat) => oldTasks.get(stat.teamCode)?.valueOf() ?? 0),
 );
 const sortedOldEvents = computed<number[]>(() =>
-  displayTaskStats.value ? sortedOldTasks.value : sortedOldActivities.value,
+  isDisplayTasksMode.value ? sortedOldTasks.value : sortedOldActivities.value,
 );
 
 const handleChartClick = (event: ChartEvent, elements: ActiveElement[]) => {
@@ -133,7 +166,7 @@ const redirectToFestivalEventsPage = (
   team: string,
   status?: FestivalActivity["status"] | FestivalTask["status"],
 ) => {
-  const path = displayTaskStats.value ? FT_URL : FA_URL;
+  const path = isDisplayTasksMode.value ? FT_URL : FA_URL;
   const teamQuery = { [TEAM_QUERY_PARAM]: team };
   const statusQuery = status ? { [STATUS_QUERY_PARAM]: status } : {};
 
@@ -267,13 +300,13 @@ const pastYearDataset = computed(() => ({
   hitRadius: 10,
 }));
 const datasets = computed(() => {
-  if (displayTaskStats.value) {
+  if (isDisplayTasksMode.value)
     return [
       ...commonDatasets.value,
       additionalTaskDataset.value,
       pastYearDataset.value,
     ];
-  }
+
   return [...commonDatasets.value, pastYearDataset.value];
 });
 
@@ -283,13 +316,14 @@ const data = computed<ChartData<"bar">>(() => ({
 }));
 </script>
 
-<style lang="scss" scoped>
-.switch {
+<style scoped>
+.display-mode {
   display: flex;
   justify-content: center;
-  align-items: center;
-  h2 {
-    margin: 0 1rem;
+  margin-bottom: 10px;
+
+  .toggle {
+    border: 1px solid rgba(var(--v-border-color), 0.3);
   }
 }
 </style>
