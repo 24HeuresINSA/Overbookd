@@ -1,3 +1,14 @@
+## [3.50.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.3...v3.50.0) (2026-03-26)
+
+### Features
+
+* **links:** add OVERVIEW link to Useful Links card [#2627](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2627) ([a8e0990](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a8e09905a9a0242f1747e171b7e4b450f569ce17))
+
+### Bug Fixes
+
+* add team-bouffe in mobilizable teams [#2629](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2629) ([5d49da4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5d49da4415ebf19b00bd39239bccab13453d3718))
+* **festival-event:** save stats display mode in url and local storage [#2625](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2625) ([b15422f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b15422fa76232db1164d5ff8e8758eacbcef73c5))
+
 ## [3.49.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.2...v3.49.3) (2026-03-18)
 
 ### Bug Fixes
