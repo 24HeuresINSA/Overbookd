@@ -24,8 +24,9 @@
         @scroll="syncScroll(HEADER)"
       >
         <div class="multi-calendar__volunteers">
+          <div v-if="fitsInOnePage" class="multi-calendar__volunteers__arrow" />
           <v-icon
-            v-if="!displayAllVolunteers"
+            v-else
             class="multi-calendar__volunteers__arrow"
             icon="mdi-chevron-left"
             aria-label="Page précédente"
@@ -40,8 +41,12 @@
             name="volunteer-header"
             :volunteer="volunteer"
           />
+          <div
+            v-if="fitsInOnePage"
+            class="multi-calendar__volunteers__arrow with-border"
+          />
           <v-icon
-            v-if="!displayAllVolunteers"
+            v-else
             class="multi-calendar__volunteers__arrow with-border"
             icon="mdi-chevron-right"
             aria-label="Page suivante"
@@ -61,7 +66,7 @@
         @scroll="syncScroll(CONTENT)"
       >
         <div class="multi-calendar__volunteers">
-          <div v-if="!displayAllVolunteers" class="multi-calendar__padding" />
+          <div class="multi-calendar__padding" />
           <DailyCalendarContent
             v-for="volunteer in displayedVolunteers"
             :key="volunteer.id"
@@ -70,10 +75,7 @@
             :availabilities="volunteer.availabilities"
             class="multi-calendar__volunteer"
           />
-          <div
-            v-if="!displayAllVolunteers"
-            class="multi-calendar__padding with-border"
-          />
+          <div class="multi-calendar__padding with-border" />
         </div>
       </div>
     </template>
@@ -97,7 +99,7 @@ const day = computed<DayPresenter>({
 
 const page = defineModel<number>("page", { default: 0 });
 const itemsPerPage = defineModel<number>("itemsPerPage", {
-  default: -1,
+  default: 10,
 });
 
 const { volunteers, eventToAdd } = defineProps({
@@ -123,6 +125,10 @@ const paginationOptions = [
 ];
 
 const displayAllVolunteers = computed<boolean>(() => itemsPerPage.value === -1);
+const fitsInOnePage = computed<boolean>(
+  () => displayAllVolunteers.value || volunteers.length <= itemsPerPage.value,
+);
+
 const volunteersStartIndex = computed<number>(() =>
   displayAllVolunteers.value ? 0 : page.value * itemsPerPage.value,
 );
