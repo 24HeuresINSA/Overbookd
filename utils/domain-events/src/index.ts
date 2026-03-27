@@ -19,6 +19,7 @@ export type {
   FestivalTaskRejected,
   FestivalTaskApproved,
   FestivalTaskIgnored,
+  FestivalTaskDoReview,
   FestivalTaskReadyToAssign,
 } from "./festival-task.js";
 export {
@@ -28,6 +29,7 @@ export {
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_APPROVED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_DO_REVIEW,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "./festival-task.js";
 export type { SharedMealClosed } from "./shared-meal.js";

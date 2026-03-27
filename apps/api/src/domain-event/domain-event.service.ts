@@ -36,6 +36,8 @@ import {
   EventOf,
   FestivalTaskIgnored,
   FESTIVAL_TASK_IGNORED,
+  FestivalTaskDoReview,
+  FESTIVAL_TASK_DO_REVIEW,
   FestivalTaskReadyToAssign,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
@@ -124,6 +126,10 @@ export class DomainEventService {
 
   get festivalTaskIgnored(): Observable<FestivalTaskIgnored> {
     return this.listen(FESTIVAL_TASK_IGNORED);
+  }
+
+  get festivalTaskDoReview(): Observable<FestivalTaskDoReview> {
+    return this.listen(FESTIVAL_TASK_DO_REVIEW);
   }
 
   get festivalTaskReadyToAssign(): Observable<FestivalTaskReadyToAssign> {
