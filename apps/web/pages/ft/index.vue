@@ -146,6 +146,7 @@ import {
   FESTIVAL_TASK_APPROVED,
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_DO_REVIEW,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 
@@ -301,6 +302,9 @@ onMounted(() => {
     updatePreviousPreview(data.festivalTask);
   });
   festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    updatePreviousPreview(data.festivalTask);
+  });
+  festivalTasks.listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
   festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {

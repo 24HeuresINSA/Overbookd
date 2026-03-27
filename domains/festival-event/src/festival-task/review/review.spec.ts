@@ -27,7 +27,7 @@ import {
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import { Approval } from "../../common/review.js";
+import { Approval, Reviewer } from "../../common/review.js";
 import { NotAskingToReview } from "../../common/review.error.js";
 import { Review } from "./review.js";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";
@@ -80,14 +80,21 @@ const withSupplyRequestAndAllApprovedExceptElec = factory
   .withFestivalActivity({ hasSupplyRequest: true })
   .withReviews({ humain: APPROVED, matos: APPROVED })
   .build();
-const withSupplyRequestAndMatosApprovalAndElecIgnore = factory
-  .inReview("With supply request and matos approval and elec ignore")
+const withSupplyRequestAndHumainApprovalAndElecIgnore = factory
+  .inReview("With supply request and humain approval and elec ignore")
   .withFestivalActivity({ hasSupplyRequest: true })
   .withReviews({ humain: APPROVED, elec: WILL_NOT_REVIEW })
   .build();
 const withMatosAndElecIgnore = factory
   .inReview("With matos and elec ignore")
   .withReviews({ matos: WILL_NOT_REVIEW, elec: WILL_NOT_REVIEW })
+  .build();
+const withAllApprovalsAndElecNotRequested = factory
+  .validated("With all approvals and elec not requested")
+  .build();
+const withMatosRejectionAndElecIgnore = factory
+  .refused("With matos rejection and elec ignore")
+  .withReviews({ matos: REJECTED, elec: WILL_NOT_REVIEW })
   .build();
 
 describe("Approve festival task", () => {
@@ -102,7 +109,7 @@ describe("Approve festival task", () => {
       withSomeValidInquiries,
       withoutSupplyRequestAndAllApprovedExceptMatos,
       withSupplyRequestAndAllApprovedExceptElec,
-      withSupplyRequestAndMatosApprovalAndElecIgnore,
+      withSupplyRequestAndHumainApprovalAndElecIgnore,
       withMatosAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
@@ -144,11 +151,11 @@ describe("Approve festival task", () => {
     });
   });
   describe.each`
-    team         | taskName                                                       | task                                              | reviewer
-    ${LOG_MATOS} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}  | ${withoutSupplyRequestAndAllApprovedExceptMatos}  | ${noel}
-    ${LOG_ELEC}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}      | ${withSupplyRequestAndAllApprovedExceptElec}      | ${lea}
-    ${LOG_MATOS} | ${withSupplyRequestAndMatosApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndMatosApprovalAndElecIgnore} | ${lea}
-    ${HUMAIN}    | ${withMatosAndElecIgnore.general.name}                         | ${withMatosAndElecIgnore}                         | ${george}
+    team         | taskName                                                        | task                                               | reviewer
+    ${LOG_MATOS} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name}   | ${withoutSupplyRequestAndAllApprovedExceptMatos}   | ${noel}
+    ${LOG_ELEC}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}       | ${withSupplyRequestAndAllApprovedExceptElec}       | ${lea}
+    ${LOG_MATOS} | ${withSupplyRequestAndHumainApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndHumainApprovalAndElecIgnore} | ${lea}
+    ${HUMAIN}    | ${withMatosAndElecIgnore.general.name}                          | ${withMatosAndElecIgnore}                          | ${george}
   `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it("should switch to VALIDATED festival task", async () => {
@@ -193,7 +200,7 @@ describe("Approve festival task", () => {
       ).rejects.toThrow(AlreadyApproved);
     });
   });
-  describe("when approving a festival task without supply request as elec", () => {
+  describe("when approving a festival task with no need to be reviewed by elec", () => {
     it("should indicate that elec is not asking to review it", async () => {
       const approval: Approval<"FT"> = { team: LOG_ELEC, reviewer: george };
       expect(
@@ -268,7 +275,7 @@ describe("Reject festival task", () => {
       expect(reviews.matos).toBe(REJECTED);
     });
   });
-  describe("when rejecting a task with no supply request as elec member", () => {
+  describe("when rejecting a task with no need to be reviewed by elec", () => {
     it("should indicate elec is not asking to review it", async () => {
       expect(
         async () =>
@@ -351,7 +358,7 @@ describe("Ignore festival task", () => {
       );
     });
   });
-  describe("when ading an inquiry when matos is ignoring the task", () => {
+  describe("when adding an inquiry when matos is ignoring the task", () => {
     it("should update matos review status to REVIEWING", async () => {
       const updated = await prepare.addInquiry(
         ignoredByMatos.id,
@@ -361,4 +368,50 @@ describe("Ignore festival task", () => {
       expect(updated.reviews.matos).toBe(REVIEWING);
     });
   });
+});
+
+describe("Ignore festival task", () => {
+  let review: Review;
+  beforeEach(() => {
+    const tasks = [
+      guardJustDance,
+      approvedByHumainAndMatos,
+      withSupplyRequestAndHumainApprovalAndElecIgnore,
+      withMatosAndElecIgnore,
+      withoutSupplyRequest,
+      withSupplyRequestAndAllApprovedExceptElec,
+      withAllApprovalsAndElecNotRequested,
+      withMatosRejectionAndElecIgnore,
+    ];
+    const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const translator = new FestivalTaskTranslator(conflicts);
+    review = new Review(festivalTasks, translator);
+  });
+  describe.each`
+    reviewer     | taskName                                                        | task                                               | reviewerStatus          | expectedReviewerStatus | expectedTaskStatus
+    ${LOG_ELEC}  | ${guardJustDance.general.name}                                  | ${guardJustDance}                                  | ${REVIEWING}            | ${REVIEWING}           | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${approvedByHumainAndMatos.general.name}                        | ${approvedByHumainAndMatos}                        | ${REVIEWING}            | ${REVIEWING}           | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${withSupplyRequestAndHumainApprovalAndElecIgnore.general.name} | ${withSupplyRequestAndHumainApprovalAndElecIgnore} | ${WILL_NOT_REVIEW}      | ${REVIEWING}           | ${IN_REVIEW}
+    ${LOG_MATOS} | ${withMatosAndElecIgnore.general.name}                          | ${withMatosAndElecIgnore}                          | ${WILL_NOT_REVIEW}      | ${REVIEWING}           | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${withoutSupplyRequest.general.name}                            | ${withoutSupplyRequest}                            | ${NOT_ASKING_TO_REVIEW} | ${REVIEWING}           | ${IN_REVIEW}
+    ${LOG_MATOS} | ${withSupplyRequestAndAllApprovedExceptElec.general.name}       | ${withSupplyRequestAndAllApprovedExceptElec}       | ${APPROVED}             | ${APPROVED}            | ${IN_REVIEW}
+    ${LOG_ELEC}  | ${withAllApprovalsAndElecNotRequested.general.name}             | ${withAllApprovalsAndElecNotRequested}             | ${NOT_ASKING_TO_REVIEW} | ${REVIEWING}           | ${IN_REVIEW}
+    ${HUMAIN}    | ${withAllApprovalsAndElecNotRequested.general.name}             | ${withAllApprovalsAndElecNotRequested}             | ${APPROVED}             | ${APPROVED}            | ${VALIDATED}
+    ${LOG_ELEC}  | ${withMatosRejectionAndElecIgnore.general.name}                 | ${withMatosRejectionAndElecIgnore}                 | ${WILL_NOT_REVIEW}      | ${REVIEWING}           | ${REFUSED}
+    ${LOG_MATOS} | ${withMatosRejectionAndElecIgnore.general.name}                 | ${withMatosRejectionAndElecIgnore}                 | ${REJECTED}             | ${REJECTED}            | ${REFUSED}
+  `(
+    "when choosing to review $taskName as $reviewer reviewer with current review status $reviewerStatus",
+    ({ reviewer, task, expectedReviewerStatus, expectedTaskStatus }) => {
+      it(`should define the ${reviewer} review as ${expectedReviewerStatus}`, async () => {
+        const { reviews } = await review.review(task.id, reviewer);
+        const updatedReview = reviews[reviewer as Reviewer<"FT">];
+        expect(updatedReview).toBe(expectedReviewerStatus);
+      });
+      it(`should switch to ${expectedTaskStatus} festival task`, async () => {
+        const { status } = await review.review(task.id, reviewer);
+        expect(status).toBe(expectedTaskStatus);
+      });
+    },
+  );
 });

@@ -120,6 +120,22 @@ export class FestivalTaskReviewService {
     return task;
   }
 
+  async review(
+    ftId: FestivalTask["id"],
+    user: JwtUtil,
+    { team }: ReviewIgnoreTask,
+  ): Promise<FestivalTask> {
+    TeamService.checkMembership(user, team);
+
+    const reviewer = await this.repositories.adherents.findOne(user.id);
+    const task = await this.useCases.review.review(ftId, team);
+
+    const event = FestivalTaskEvents.doReview(task, reviewer.id);
+    this.eventStore.publish(event);
+
+    return task;
+  }
+
   async enableAssignment(
     ftId: FestivalTask["id"],
     user: JwtUtil,

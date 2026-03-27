@@ -48,6 +48,7 @@ import {
   FESTIVAL_TASK_READY_TO_REVIEW,
   FESTIVAL_TASK_REJECTED,
   FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_DO_REVIEW,
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED } from "@overbookd/registration";
@@ -116,6 +117,10 @@ onMounted(() => {
     fetchMyRefusedTasks();
   });
   mine.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    ftStore.updateMyPreview(data.festivalTask);
+    fetchMyRefusedTasks();
+  });
+  mine.listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });

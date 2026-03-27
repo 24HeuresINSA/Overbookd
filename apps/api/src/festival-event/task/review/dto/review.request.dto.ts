@@ -40,3 +40,11 @@ export class IgnoreTaskRequestDto implements ReviewIgnoreTask {
   })
   team: Reviewer<"FT">;
 }
+
+export class ReviewTaskRequestDto implements ReviewIgnoreTask {
+  @ApiProperty({ required: true, enum: reviewers })
+  @IsEnum(reviewers, {
+    message: () => `Seuls ${reviewers.join(", ")} peuvent relire une FT`,
+  })
+  team: Reviewer<"FT">;
+}

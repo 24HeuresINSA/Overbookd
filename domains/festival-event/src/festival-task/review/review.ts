@@ -4,6 +4,7 @@ import {
   NOT_ASKING_TO_REVIEW,
   REFUSED,
   REJECTED,
+  REVIEWING,
   VALIDATED,
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
@@ -67,9 +68,8 @@ class Approve {
       FestivalTaskKeyEvents.approved(approval.reviewer),
     ];
 
-    if (hasAllApproved(reviews)) {
+    if (hasAllApproved(reviews))
       return { ...task, reviews, status: VALIDATED, history };
-    }
 
     return { ...task, reviews, history };
   }
@@ -83,18 +83,40 @@ class Ignore {
     if (!canIgnoreFestivalTaskAs(team)) throw new CannotIgnoreFestivalTask();
     if (task.reviews[`${team}`] === NOT_ASKING_TO_REVIEW) return task;
 
-    if (team === LOG_MATOS && task.inquiries.length > 0) {
+    if (team === LOG_MATOS && task.inquiries.length > 0)
       throw new CannotIgnoreFestivalTaskWithInquiryRequests();
-    }
 
     const reviews = { ...task.reviews, [`${team}`]: WILL_NOT_REVIEW } as const;
 
-    if (hasAllApproved(reviews)) {
-      return { ...task, reviews, status: VALIDATED };
-    }
-    if (this.hasNoRejected(reviews)) {
+    if (hasAllApproved(reviews)) return { ...task, reviews, status: VALIDATED };
+
+    if (this.hasNoRejected(reviews))
       return { ...task, reviews, status: IN_REVIEW };
-    }
+
+    return { ...task, reviews };
+  }
+
+  private static hasNoRejected(reviews: ReviewableWithoutConflicts["reviews"]) {
+    return Object.values(reviews).every((review) => review !== REJECTED);
+  }
+}
+
+class DoReview {
+  static from<T extends ReviewableWithoutConflicts>(
+    task: T,
+    team: Reviewer<"FT">,
+  ): T | ReviewableWithoutConflicts | ValidatedWithoutConflicts {
+    if (
+      task.reviews[`${team}`] !== NOT_ASKING_TO_REVIEW &&
+      task.reviews[`${team}`] !== WILL_NOT_REVIEW
+    )
+      return task;
+
+    const reviews = { ...task.reviews, [`${team}`]: REVIEWING } as const;
+
+    if (this.hasNoRejected(reviews))
+      return { ...task, reviews, status: IN_REVIEW };
+
     return { ...task, reviews };
   }
 
@@ -162,6 +184,18 @@ export class Review {
 
     const ignored = Ignore.from(task, team);
     const saved = await this.tasks.save(ignored);
+    return this.translator.translate(saved);
+  }
+
+  async review(
+    taskId: FestivalTask["id"],
+    team: Reviewer<"FT">,
+  ): Promise<ReviewableWithoutConflicts> {
+    const task = await this.tasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const toReview = DoReview.from(task, team);
+    const saved = await this.tasks.save(toReview);
     return this.translator.translate(saved);
   }
 

@@ -13,6 +13,7 @@ export const FESTIVAL_TASK_READY_TO_REVIEW = "festival-task-ready-to-review";
 export const FESTIVAL_TASK_REJECTED = "festival-task-rejected";
 export const FESTIVAL_TASK_APPROVED = "festival-task-approved";
 export const FESTIVAL_TASK_IGNORED = "festival-task-ignored";
+export const FESTIVAL_TASK_DO_REVIEW = "festival-task-do-review";
 export const FESTIVAL_TASK_READY_TO_ASSIGN = "festival-task-ready-to-assign";
 
 type Created = {
@@ -51,6 +52,13 @@ type Ignored = {
   id: Reviewable["id"];
 };
 
+type DoReview = {
+  festivalTask: Reviewable;
+  by: Adherent["id"];
+  at: Date;
+  id: Reviewable["id"];
+};
+
 type ReadyToAssign = {
   festivalTask: ReadyToAssignTask;
   by: Adherent["id"];
@@ -76,6 +84,11 @@ export type FestivalTaskApproved = Event<
 >;
 
 export type FestivalTaskIgnored = Event<typeof FESTIVAL_TASK_IGNORED, Ignored>;
+
+export type FestivalTaskDoReview = Event<
+  typeof FESTIVAL_TASK_DO_REVIEW,
+  DoReview
+>;
 
 export type FestivalTaskReadyToAssign = Event<
   typeof FESTIVAL_TASK_READY_TO_ASSIGN,
@@ -124,6 +137,15 @@ export class FestivalTask {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id };
     return { type: FESTIVAL_TASK_IGNORED, data };
+  }
+
+  static doReview(
+    festivalTask: Reviewable,
+    by: Adherent["id"],
+  ): FestivalTaskDoReview {
+    const at = FestivalTask.computeAt();
+    const data = { festivalTask, by, at, id: festivalTask.id };
+    return { type: FESTIVAL_TASK_DO_REVIEW, data };
   }
 
   static readyToAssign(
