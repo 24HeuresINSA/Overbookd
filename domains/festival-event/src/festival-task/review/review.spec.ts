@@ -81,7 +81,7 @@ const withSupplyRequestAndAllApprovedExceptElec = factory
   .withReviews({ humain: APPROVED, matos: APPROVED })
   .build();
 const withSupplyRequestAndHumainApprovalAndElecIgnore = factory
-  .inReview("With supply request and matos approval and elec ignore")
+  .inReview("With supply request and humain approval and elec ignore")
   .withFestivalActivity({ hasSupplyRequest: true })
   .withReviews({ humain: APPROVED, elec: WILL_NOT_REVIEW })
   .build();
@@ -89,7 +89,9 @@ const withMatosAndElecIgnore = factory
   .inReview("With matos and elec ignore")
   .withReviews({ matos: WILL_NOT_REVIEW, elec: WILL_NOT_REVIEW })
   .build();
-const withAllApprovals = factory.validated("With all approvals").build();
+const withAllApprovalsAndElecNotRequested = factory
+  .validated("With all approvals and elec not requested")
+  .build();
 const withMatosRejectionAndElecIgnore = factory
   .refused("With matos rejection and elec ignore")
   .withReviews({ matos: REJECTED, elec: WILL_NOT_REVIEW })
@@ -378,7 +380,7 @@ describe("Ignore festival task", () => {
       withMatosAndElecIgnore,
       withoutSupplyRequest,
       withSupplyRequestAndAllApprovedExceptElec,
-      withAllApprovals,
+      withAllApprovalsAndElecNotRequested,
       withMatosRejectionAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
@@ -394,7 +396,8 @@ describe("Ignore festival task", () => {
     ${LOG_MATOS} | ${withMatosAndElecIgnore.general.name}                          | ${withMatosAndElecIgnore}                          | ${WILL_NOT_REVIEW}      | ${REVIEWING}           | ${IN_REVIEW}
     ${LOG_ELEC}  | ${withoutSupplyRequest.general.name}                            | ${withoutSupplyRequest}                            | ${NOT_ASKING_TO_REVIEW} | ${REVIEWING}           | ${IN_REVIEW}
     ${LOG_MATOS} | ${withSupplyRequestAndAllApprovedExceptElec.general.name}       | ${withSupplyRequestAndAllApprovedExceptElec}       | ${APPROVED}             | ${APPROVED}            | ${IN_REVIEW}
-    ${HUMAIN}    | ${withAllApprovals.general.name}                                | ${withAllApprovals}                                | ${APPROVED}             | ${APPROVED}            | ${VALIDATED}
+    ${LOG_ELEC}  | ${withAllApprovalsAndElecNotRequested.general.name}             | ${withAllApprovalsAndElecNotRequested}             | ${NOT_ASKING_TO_REVIEW} | ${REVIEWING}           | ${IN_REVIEW}
+    ${HUMAIN}    | ${withAllApprovalsAndElecNotRequested.general.name}             | ${withAllApprovalsAndElecNotRequested}             | ${APPROVED}             | ${APPROVED}            | ${VALIDATED}
     ${LOG_ELEC}  | ${withMatosRejectionAndElecIgnore.general.name}                 | ${withMatosRejectionAndElecIgnore}                 | ${WILL_NOT_REVIEW}      | ${REVIEWING}           | ${REFUSED}
     ${LOG_MATOS} | ${withMatosRejectionAndElecIgnore.general.name}                 | ${withMatosRejectionAndElecIgnore}                 | ${REJECTED}             | ${REJECTED}            | ${REFUSED}
   `(
