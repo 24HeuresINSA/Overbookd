@@ -477,13 +477,16 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
       color: whitesmoke;
       font-weight: bolder;
       margin-bottom: 5px;
+
+      &:first-child {
+        margin-top: 5px;
+      }
     }
     .reject {
       background-color: $refused-color;
     }
     .approve {
       background-color: $validated-color;
-      margin-top: 5px;
     }
     .ignore {
       background-color: $draft-color;
