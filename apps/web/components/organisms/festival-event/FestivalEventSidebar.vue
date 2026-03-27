@@ -81,6 +81,20 @@
             @click="ignore(team.code)"
           />
         </div>
+
+        <div
+          v-for="team in otherReviewers"
+          :key="team.code"
+          class="team-review"
+        >
+          <v-btn
+            v-if="canReview(team)"
+            :text="`Relire pour ${team.name}`"
+            class="review review-btn"
+            size="small"
+            @click="review(team.code)"
+          />
+        </div>
       </div>
 
       <slot name="additional-actions" />
@@ -212,6 +226,21 @@ const myReviewers = computed<Team[]>(() =>
   isActivity.value ? myActivityReviewers.value : myTaskReviewers.value,
 );
 
+const otherTaskReviewers = computed<Team[]>(() => {
+  const task = selectedTask.value;
+  if (isDraft(task)) return [];
+
+  return reviewers.value.filter(({ code }) => {
+    if (!isTaskReviewer(code)) return false;
+    const isReviewer = userStore.isMemberOf(code);
+    const shouldNotReview = !isConcerned(task.reviews[`${code}`]);
+    return isReviewer && shouldNotReview;
+  });
+});
+const otherReviewers = computed<Team[]>(() =>
+  isActivity.value ? [] : otherTaskReviewers.value,
+);
+
 const statusLabel = computed<StatusLabel>(() => {
   const status = isActivity.value
     ? selectedActivity.value.status
@@ -272,6 +301,10 @@ const ignore = (team: string) => {
   if (isActivity.value || !isTaskReviewer(team)) return;
   ftStore.ignore({ team });
 };
+const review = (team: string) => {
+  if (isActivity.value || !isTaskReviewer(team)) return;
+  ftStore.review({ team });
+};
 
 const cantApproveAs = (team: Team): boolean => {
   const isAlreadyApprovedBy = isActivity.value
@@ -309,6 +342,12 @@ const canIgnore = (team: Team): boolean => {
   const cantIgnoreAs = !canIgnoreFestivalTaskAs(team.code);
   if (cantIgnoreAs || isDraft(selectedTask.value)) return false;
   return isConcerned(selectedTask.value.reviews[`${team.code}`]);
+};
+const canReview = (team: Team): boolean => {
+  if (isActivity.value || !isTaskReviewer(team.code)) return false;
+  const cantIgnoreAs = !canIgnoreFestivalTaskAs(team.code);
+  if (cantIgnoreAs || isDraft(selectedTask.value)) return false;
+  return !isConcerned(selectedTask.value.reviews[`${team.code}`]);
 };
 
 const isConcerned = (review: ReviewStatus<"FT">): boolean => {
@@ -434,9 +473,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
   }
 
   .team-review {
-    .reject,
-    .approve,
-    .ignore {
+    .review-btn {
       color: whitesmoke;
       font-weight: bolder;
       margin-bottom: 5px;
@@ -450,6 +487,10 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     }
     .ignore {
       background-color: $draft-color;
+    }
+    .review {
+      background-color: $in-review-color;
+      color: inherit;
     }
   }
 }

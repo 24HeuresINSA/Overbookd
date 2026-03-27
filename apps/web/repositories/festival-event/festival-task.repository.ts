@@ -322,6 +322,16 @@ export class FestivalTaskRepository {
     );
   }
 
+  static review(
+    ftId: FestivalTaskWithConflicts["id"],
+    review: ReviewIgnoreTask,
+  ) {
+    return HttpClient.post<FestivalTaskWithConflicts>(
+      `${this.basePath}/${ftId}/review`,
+      review,
+    );
+  }
+
   static enableAssignment(
     ftId: FestivalTaskWithConflicts["id"],
     categorize: Categorize,

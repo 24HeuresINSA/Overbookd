@@ -391,6 +391,13 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       this.selectedTask = castTaskWithDate(res);
     },
 
+    async review(review: ReviewIgnoreTask) {
+      const res = await repo.review(this.selectedTask.id, review);
+      if (isHttpError(res)) return;
+      sendSuccessNotification(`FT en relecture par l'équipe ${review.team}`);
+      this.selectedTask = castTaskWithDate(res);
+    },
+
     /* ASSIGNMENT */
     async enableAssignment(categorize: Categorize) {
       const res = await repo.enableAssignment(this.selectedTask.id, categorize);
