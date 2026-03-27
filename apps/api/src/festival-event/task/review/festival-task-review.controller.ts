@@ -43,6 +43,7 @@ import {
   ApproveTaskRequestDto,
   IgnoreTaskRequestDto,
   RejectTaskRequestDto,
+  ReviewTaskRequestDto,
 } from "./dto/review.request.dto";
 import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
@@ -198,6 +199,39 @@ export class FestivalTaskReviewController {
   ): Promise<FestivalTask> {
     const jwt = new JwtUtil(user);
     return this.reviewService.ignore(ftId, jwt, ignore);
+  }
+
+  @Post(":ftId/review")
+  @Permission(VALIDATE_FT)
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Festival task review",
+    type: ReviewTaskRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  review(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() review: ReviewTaskRequestDto,
+  ): Promise<FestivalTask> {
+    const jwt = new JwtUtil(user);
+    return this.reviewService.review(ftId, jwt, review);
   }
 
   @Post(":ftId/enable-assignment")
