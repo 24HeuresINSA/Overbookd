@@ -24,8 +24,9 @@
         @scroll="syncScroll(HEADER)"
       >
         <div class="multi-calendar__volunteers">
+          <div v-if="fitsInOnePage" class="multi-calendar__volunteers__arrow" />
           <v-icon
-            v-if="!displayAllVolunteers"
+            v-else-if="!displayAllVolunteers"
             class="multi-calendar__volunteers__arrow"
             icon="mdi-chevron-left"
             aria-label="Page précédente"
@@ -40,8 +41,12 @@
             name="volunteer-header"
             :volunteer="volunteer"
           />
+          <div
+            v-if="fitsInOnePage"
+            class="multi-calendar__volunteers__arrow with-border"
+          />
           <v-icon
-            v-if="!displayAllVolunteers"
+            v-else-if="!displayAllVolunteers"
             class="multi-calendar__volunteers__arrow with-border"
             icon="mdi-chevron-right"
             aria-label="Page suivante"
@@ -97,7 +102,7 @@ const day = computed<DayPresenter>({
 
 const page = defineModel<number>("page", { default: 0 });
 const itemsPerPage = defineModel<number>("itemsPerPage", {
-  default: -1,
+  default: 10,
 });
 
 const { volunteers, eventToAdd } = defineProps({
@@ -123,6 +128,10 @@ const paginationOptions = [
 ];
 
 const displayAllVolunteers = computed<boolean>(() => itemsPerPage.value === -1);
+const fitsInOnePage = computed<boolean>(
+  () => volunteers.length <= itemsPerPage.value,
+);
+
 const volunteersStartIndex = computed<number>(() =>
   displayAllVolunteers.value ? 0 : page.value * itemsPerPage.value,
 );
