@@ -1,3 +1,13 @@
+## [3.51.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.50.0...v3.51.0) (2026-03-27)
+
+### Features
+
+* **festival-task:** allow non-requested ft reviewers to chose to review [#2621](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2621) ([aed3460](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aed346054c0a8a8c01c92a89073d3bd2fe14f46a))
+
+### Bug Fixes
+
+* **planning:** hide multi-planning arrows when there is only one page [#2586](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2586) ([49ef11e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/49ef11e0f4fe15761313dc38b4a092e9161ca642))
+
 ## [3.50.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.49.3...v3.50.0) (2026-03-26)
 
 ### Features
