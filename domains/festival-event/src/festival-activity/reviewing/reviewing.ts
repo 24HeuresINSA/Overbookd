@@ -39,6 +39,7 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { FestivalEventTeams } from "../../common/teams.js";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -48,6 +49,7 @@ export type ReviewingFestivalActivities = {
 export class Reviewing {
   constructor(
     private readonly festivalActivities: ReviewingFestivalActivities,
+    private readonly teams: FestivalEventTeams,
   ) {}
 
   async approve(
@@ -72,9 +74,10 @@ export class Reviewing {
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
+    const teamName = this.teams.findNameByCode(team);
     const history = [
       ...festivalActivity.history,
-      FestivalActivityKeyEvents.approved(approver, team),
+      FestivalActivityKeyEvents.approved(approver, teamName),
     ];
     return this.saveFestivalActivity(festivalActivity, reviews, history);
   }
@@ -94,9 +97,10 @@ export class Reviewing {
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: REJECTED };
+    const teamName = this.teams.findNameByCode(team);
     const history = [
       ...festivalActivity.history,
-      FestivalActivityKeyEvents.rejected(rejector, team, reason),
+      FestivalActivityKeyEvents.rejected(rejector, teamName, reason),
     ];
 
     return this.festivalActivities.save({
