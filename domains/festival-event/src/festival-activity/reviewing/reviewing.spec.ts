@@ -46,6 +46,7 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { getNameFromReviewer } from "../../common/review.js";
 
 const factory = getFactory();
 
@@ -185,7 +186,7 @@ describe("Approve festival activity", () => {
             action: APPROVED,
             by: approver,
             at: expect.any(Date),
-            description: "FA approuvée",
+            description: `FA approuvée par l'équipe ${getNameFromReviewer(team)}`,
           },
         ]);
       });
@@ -327,7 +328,7 @@ describe("Reject festival activity", () => {
             action: REJECTED,
             by: rejector,
             at: expect.any(Date),
-            description: `FA rejetée pour la raison suivante: ${reason}`,
+            description: `FA rejetée par l'équipe ${getNameFromReviewer(team)} pour la raison suivante: ${reason}`,
           },
         ]);
       });

@@ -1,4 +1,4 @@
-import { Reviewer } from "./review.js";
+import { getNameFromReviewer, Reviewer } from "./review.js";
 import { FA, FestivalEventIdentifier } from "./festival-event.js";
 import { FestivalEventError } from "../festival-event.js";
 
@@ -6,7 +6,7 @@ export class NotAskingToReview<
   T extends FestivalEventIdentifier,
 > extends FestivalEventError {
   constructor(eventId: number, team: Reviewer<T>, identifier: T) {
-    const message = `La ${identifier} #${eventId} n'est pas à valider par l'équipe ${team}`;
+    const message = `La ${identifier} #${eventId} n'est pas à valider par l'équipe ${getNameFromReviewer(team)}`;
     super(message);
   }
 }
@@ -31,7 +31,7 @@ export class AlreadyApproved<
   T extends FestivalEventIdentifier,
 > extends FestivalEventError {
   constructor(eventId: number, team: Reviewer<T>, identifier: T) {
-    const message = `La ${identifier} #${eventId} est validée par l'équipe ${team}`;
+    const message = `La ${identifier} #${eventId} est validée par l'équipe ${getNameFromReviewer(team)}`;
     super(message);
   }
 }

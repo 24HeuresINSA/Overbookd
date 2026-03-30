@@ -10,6 +10,14 @@ import {
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import {
+  BARRIERES,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
+import {
   Draft,
   FestivalActivity,
   InReview,
@@ -194,7 +202,7 @@ function defaultInReview(id: number, name: string): InReview {
     },
     inCharge: {
       adherent: lea,
-      team: "secu",
+      team: SECU,
       contractors: [],
     },
     signa: {
@@ -248,7 +256,7 @@ function defaultValidated(id: number, name: string): Validated {
     },
     inCharge: {
       adherent: lea,
-      team: "secu",
+      team: SECU,
       contractors: [],
     },
     signa: {
@@ -282,12 +290,12 @@ function defaultValidated(id: number, name: string): Validated {
     history: [
       FestivalActivityKeyEvents.created(lea),
       FestivalActivityKeyEvents.readyToReview(lea),
-      FestivalActivityKeyEvents.approved(george),
-      FestivalActivityKeyEvents.approved(george),
-      FestivalActivityKeyEvents.approved(noel),
-      FestivalActivityKeyEvents.approved(noel),
-      FestivalActivityKeyEvents.approved(lea),
-      FestivalActivityKeyEvents.approved(lea),
+      FestivalActivityKeyEvents.approved(george, HUMAIN),
+      FestivalActivityKeyEvents.approved(george, SECU),
+      FestivalActivityKeyEvents.approved(noel, LOG_ELEC),
+      FestivalActivityKeyEvents.approved(noel, LOG_MATOS),
+      FestivalActivityKeyEvents.approved(lea, SIGNA),
+      FestivalActivityKeyEvents.approved(lea, BARRIERES),
     ],
     tasks: [],
   };
@@ -308,7 +316,7 @@ function defaultRefused(id: number, name: string): Refused {
     },
     inCharge: {
       adherent: lea,
-      team: "secu",
+      team: SECU,
       contractors: [],
     },
     signa: {
@@ -342,7 +350,7 @@ function defaultRefused(id: number, name: string): Refused {
     history: [
       FestivalActivityKeyEvents.created(lea),
       FestivalActivityKeyEvents.readyToReview(lea),
-      FestivalActivityKeyEvents.rejected(george, "Il manque des info"),
+      FestivalActivityKeyEvents.rejected(george, HUMAIN, "Il manque des info"),
     ],
     tasks: [],
   };

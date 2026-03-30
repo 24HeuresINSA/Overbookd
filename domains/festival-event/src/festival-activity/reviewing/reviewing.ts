@@ -74,7 +74,7 @@ export class Reviewing {
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
     const history = [
       ...festivalActivity.history,
-      FestivalActivityKeyEvents.approved(approver),
+      FestivalActivityKeyEvents.approved(approver, team),
     ];
     return this.saveFestivalActivity(festivalActivity, reviews, history);
   }
@@ -96,7 +96,7 @@ export class Reviewing {
     const reviews = { ...festivalActivity.reviews, [team]: REJECTED };
     const history = [
       ...festivalActivity.history,
-      FestivalActivityKeyEvents.rejected(rejector, reason),
+      FestivalActivityKeyEvents.rejected(rejector, team, reason),
     ];
 
     return this.festivalActivities.save({

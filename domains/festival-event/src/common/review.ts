@@ -135,3 +135,24 @@ export function isValidatedReviews<T extends FestivalEventIdentifier>(
       review === WILL_NOT_REVIEW,
   );
 }
+
+export function getNameFromReviewer<T extends FestivalEventIdentifier>(
+  team: Reviewer<T>,
+): string {
+  switch (team) {
+    case HUMAIN:
+      return "Humain·e";
+    case SIGNA:
+      return "Signa";
+    case SECU:
+      return "Sécu";
+    case LOG_MATOS:
+      return "Matos";
+    case LOG_ELEC:
+      return "Élec";
+    case BARRIERES:
+      return "Barrières";
+    case COMMUNICATION:
+      return "Communication";
+  }
+}

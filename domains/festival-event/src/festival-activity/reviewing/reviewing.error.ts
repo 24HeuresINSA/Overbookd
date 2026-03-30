@@ -1,4 +1,4 @@
-import { Reviewer } from "../../common/review.js";
+import { getNameFromReviewer, Reviewer } from "../../common/review.js";
 import { FestivalActivityError } from "../festival-activity.error.js";
 
 export class InDraft extends FestivalActivityError {
@@ -9,7 +9,7 @@ export class InDraft extends FestivalActivityError {
 }
 export class AlreadyRejected extends FestivalActivityError {
   constructor(festivalActivityId: number, team: Reviewer<"FA">) {
-    const message = `La FA #${festivalActivityId} est refusée par l'équipe ${team}`;
+    const message = `La FA #${festivalActivityId} est refusée par l'équipe ${getNameFromReviewer(team)}`;
     super(message);
   }
 }

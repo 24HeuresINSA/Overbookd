@@ -41,16 +41,16 @@ export type FestivalTasksForReview = {
 class Reject {
   static from(
     task: ReviewableWithoutConflicts,
-    rejection: Rejection<"FT">,
+    { team, rejector, reason }: Rejection<"FT">,
   ): RefusedWithoutConflicts {
     const reviews = {
       ...task.reviews,
-      [rejection.team]: REJECTED,
+      [team]: REJECTED,
     };
     const status = REFUSED;
     const history = [
       ...task.history,
-      FestivalTaskKeyEvents.rejected(rejection.rejector, rejection.reason),
+      FestivalTaskKeyEvents.rejected(rejector, team, reason),
     ];
     return { ...task, reviews, status, history };
   }
@@ -59,13 +59,13 @@ class Reject {
 class Approve {
   static from<T extends ReviewableWithoutConflicts>(
     task: T,
-    approval: Approval<"FT">,
+    { team, reviewer }: Approval<"FT">,
   ): T | ValidatedWithoutConflicts {
-    const reviews = { ...task.reviews, [approval.team]: APPROVED };
+    const reviews = { ...task.reviews, [team]: APPROVED };
 
     const history = [
       ...task.history,
-      FestivalTaskKeyEvents.approved(approval.reviewer),
+      FestivalTaskKeyEvents.approved(reviewer, team),
     ];
 
     if (hasAllApproved(reviews))

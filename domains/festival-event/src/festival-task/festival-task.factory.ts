@@ -10,6 +10,12 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
+import {
+  CONDUCTEUR,
+  HUMAIN,
+  LOG_MATOS,
+  PERSONNE,
+} from "@overbookd/team-constants";
 import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,
@@ -41,7 +47,6 @@ import {
 import { isDraft } from "../festival-event.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
 import { Adherent } from "../common/adherent.js";
-import { CONDUCTEUR, PERSONNE } from "@overbookd/team-constants";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -257,7 +262,7 @@ function defaultRefused(id: number, name: string): RefusedWithConflicts {
     history: [
       FestivalTaskKeyEvents.created(noel),
       FestivalTaskKeyEvents.readyToReview(noel),
-      FestivalTaskKeyEvents.rejected(lea, "Trop de monde demandé"),
+      FestivalTaskKeyEvents.rejected(lea, HUMAIN, "Trop de monde demandé"),
     ],
     feedbacks: [],
     inquiries: [],
@@ -281,8 +286,8 @@ function defaultValidated(id: number, name: string): ValidatedWithConflicts {
     history: [
       FestivalTaskKeyEvents.created(noel),
       FestivalTaskKeyEvents.readyToReview(noel),
-      FestivalTaskKeyEvents.approved(lea),
-      FestivalTaskKeyEvents.approved(george),
+      FestivalTaskKeyEvents.approved(lea, HUMAIN),
+      FestivalTaskKeyEvents.approved(george, LOG_MATOS),
     ],
     feedbacks: [],
     inquiries: [],
@@ -310,8 +315,8 @@ function defaultReadyToAssign(
     history: [
       FestivalTaskKeyEvents.created(noel),
       FestivalTaskKeyEvents.readyToReview(noel),
-      FestivalTaskKeyEvents.approved(lea),
-      FestivalTaskKeyEvents.approved(george),
+      FestivalTaskKeyEvents.approved(lea, HUMAIN),
+      FestivalTaskKeyEvents.approved(george, LOG_MATOS),
       FestivalTaskKeyEvents.readyToReview(lea),
     ],
     feedbacks: [],

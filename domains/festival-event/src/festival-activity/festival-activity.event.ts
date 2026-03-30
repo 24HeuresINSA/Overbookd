@@ -1,5 +1,6 @@
 import { KeyEvent } from "./festival-activity.js";
 import { Adherent } from "../common/adherent.js";
+import { getNameFromReviewer, Reviewer } from "../common/review.js";
 import {
   APPROVED,
   CREATED,
@@ -20,16 +21,20 @@ export class FestivalActivityKeyEvents {
     return { action: READY_TO_REVIEW, by, at, description };
   }
 
-  static approved(by: Adherent): KeyEvent {
+  static approved(by: Adherent, team: Reviewer<"FA">): KeyEvent {
     const at = this.computeAt();
-    const description = "FA approuvée";
+    const description = `FA approuvée par l'équipe ${getNameFromReviewer(team)}`;
 
     return { action: APPROVED, by, at, description };
   }
 
-  static rejected(by: Adherent, reason: string): KeyEvent {
+  static rejected(
+    by: Adherent,
+    team: Reviewer<"FA">,
+    reason: string,
+  ): KeyEvent {
     const at = this.computeAt();
-    const description = `FA rejetée pour la raison suivante: ${reason}`;
+    const description = `FA rejetée par l'équipe ${getNameFromReviewer(team)} pour la raison suivante: ${reason}`;
 
     return { action: REJECTED, by, at, description };
   }

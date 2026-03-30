@@ -21,6 +21,7 @@ import {
   type Draft,
   previewOfActivity,
   type Reviewable,
+  getNameFromReviewer,
 } from "@overbookd/festival-event";
 import type {
   PrepareInChargeForm,
@@ -432,14 +433,18 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
     async approve(reviewer: ReviewApproval<"FA">) {
       const res = await repo.approve(this.selectedActivity.id, reviewer);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FA approuvée par l'équipe ${reviewer.team}`);
+      sendSuccessNotification(
+        `FA approuvée par l'équipe ${getNameFromReviewer(reviewer.team)}`,
+      );
       this.selectedActivity = castActivityWithDate(res);
     },
 
     async rejectBecause(rejection: ReviewRejection<"FA">) {
       const res = await repo.reject(this.selectedActivity.id, rejection);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`FA rejetée par l'équipe ${rejection.team}`);
+      sendSuccessNotification(
+        `FA rejetée par l'équipe ${getNameFromReviewer(rejection.team)}`,
+      );
       this.selectedActivity = castActivityWithDate(res);
     },
   },
