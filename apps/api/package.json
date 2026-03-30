@@ -87,7 +87,7 @@
     "express-basic-auth": "1.2.1",
     "html-to-pdfmake": "2.5.33",
     "ics": "3.11.0",
-    "jsdom": "27.4.0",
+    "jsdom": "27.0.0",
     "jsonwebtoken": "9.0.3",
     "multer": "2.1.1",
     "nodemailer": "7.0.13",
