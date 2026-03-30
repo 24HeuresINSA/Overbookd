@@ -7,8 +7,6 @@ import {
   BDE,
   KARNA,
   KFET,
-  STRASBOURG,
-  CVL,
   TECKOS,
   TEAM_MONTAGE,
   SOFT,
@@ -31,8 +29,6 @@ export const requirableTeams = [
   KARNA,
   BDE,
   KFET,
-  STRASBOURG,
-  CVL,
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, SOFT] as const;
 
