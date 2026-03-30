@@ -1,3 +1,11 @@
+## [3.51.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.0...v3.51.1) (2026-03-30)
+
+### Bug Fixes
+
+* **festival-event:** add reviewer team in approval / rejection historic [#2628](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2628) ([16172fd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/16172fd1fdddcd3e7598e3a4b2ed6e39d320bbf6))
+* **festival-task:** remove some teams from mobilizable teams [#2632](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2632) ([adf5ef2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/adf5ef20a07404d0653ff154163cf2b2064aadb2))
+* **slugify:** add & in special character list to clean [#2631](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2631) ([654e91e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/654e91eaa8124ffdcff87132053974ed3f9ef55a))
+
 ## [3.51.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.50.0...v3.51.0) (2026-03-27)
 
 ### Features
