@@ -149,7 +149,7 @@
     "testEnvironment": "node"
   },
   "engines": {
-    "node": "24.14.0",
+    "node": "24.14.1",
     "pnpm": "10.33.0"
   }
 }
