@@ -68,17 +68,17 @@
     "enabled": false
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.3.4",
+    "@eslint/eslintrc": "3.3.5",
     "@eslint/js": "10.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "13.3.2",
-    "@semantic-release/npm": "13.1.4",
-    "@typescript-eslint/eslint-plugin": "8.56.1",
-    "@typescript-eslint/parser": "8.56.1",
-    "@vitest/coverage-v8": "4.0.18",
-    "conventional-changelog-conventionalcommits": "9.1.0",
-    "eslint": "10.0.2",
+    "@semantic-release/npm": "13.1.5",
+    "@typescript-eslint/eslint-plugin": "8.57.2",
+    "@typescript-eslint/parser": "8.57.2",
+    "@vitest/coverage-v8": "4.1.2",
+    "conventional-changelog-conventionalcommits": "9.3.0",
+    "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-security": "4.0.0",
     "eslint-plugin-unused-imports": "4.4.1",
@@ -88,8 +88,8 @@
     "ts-prune": "0.10.3",
     "tsup": "8.5.1",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.56.1",
-    "vitest": "4.0.18",
+    "typescript-eslint": "8.57.2",
+    "vitest": "4.1.2",
     "vue-eslint-parser": "10.4.0"
   }
 }
