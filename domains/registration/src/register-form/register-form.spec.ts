@@ -4,7 +4,7 @@ import {
   BDE,
   HAUTS_DE_FRANCE,
   TECKOS,
-  STRASBOURG,
+  TEAM_MONTAGE,
   KARNA,
 } from "@overbookd/team-constants";
 import { RegisterForm } from "./register-form.js";
@@ -266,11 +266,11 @@ describe("Register form", () => {
   describe("teams rules", () => {
     const baseForm = validForm().clearTeams();
     describe.each`
-      teams                        | valid
-      ${[]}                        | ${true}
-      ${[BDE]}                     | ${true}
-      ${[HAUTS_DE_FRANCE, TECKOS]} | ${true}
-      ${[STRASBOURG, TECKOS, BDE]} | ${false}
+      teams                          | valid
+      ${[]}                          | ${true}
+      ${[BDE]}                       | ${true}
+      ${[HAUTS_DE_FRANCE, TECKOS]}   | ${true}
+      ${[TEAM_MONTAGE, TECKOS, BDE]} | ${false}
     `("when joining $teams", ({ teams, valid }) => {
       const validity = valid ? "valid" : "invalid";
       it(`should indicate that form is ${validity}`, () => {
