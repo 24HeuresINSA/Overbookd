@@ -7,6 +7,7 @@ describe("slugify service", () => {
     ${"Bonjour"}                    | ${"bonjour"}
     ${"Léo Mouyna"}                 | ${"leo-mouyna"}
     ${"Ça m'énerve"}                | ${"ca-m-enerve"}
+    ${"Ça m'énerve encore plus"}    | ${"ca-m-enerve-encore-plus"}
     ${"Cœur"}                       | ${"coeur"}
     ${"Œil"}                        | ${"oeil"}
     ${"vis Ø12mm"}                  | ${"vis-o12mm"}

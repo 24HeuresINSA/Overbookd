@@ -35,6 +35,7 @@ export class SlugifyService {
     );
     return sentence
       .toLowerCase()
+      .normalize("NFC")
       .replace(nonStandardChar, (char) => this.convert.get(char) ?? char)
       .replace(newWordDelimiter, SLUG_SEPARATOR)
       .replace(startOrEndWithSeparator, "");
