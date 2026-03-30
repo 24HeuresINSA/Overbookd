@@ -2,7 +2,7 @@ FROM node:24.14.0-alpine AS installer
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@10.30.3
+RUN npm install -g pnpm@10.33.0
 COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
