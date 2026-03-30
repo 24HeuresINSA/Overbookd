@@ -1,3 +1,9 @@
+## [3.51.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.1...v3.51.2) (2026-03-30)
+
+### Bug Fixes
+
+* **festival-task:** add team elec to mobilizable teams [#2634](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2634) ([d9697d1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d9697d177b16a01898ce667a54e1427f520dd04e))
+
 ## [3.51.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.0...v3.51.1) (2026-03-30)
 
 ### Bug Fixes
