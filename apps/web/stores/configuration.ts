@@ -31,6 +31,12 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
 
+    mondayBeforeEventDate(): Date {
+      const result = new Date(this.eventStartDate);
+      result.setDate(result.getDate() - 4);
+      return OverDate.from(result);
+    },
+
     orgaWeekStartDate(): Date {
       const orgaWeekDate = this.get(ORGA_WEEK_DATE_KEY);
       const now = OverDate.now().date;

@@ -11,6 +11,11 @@ export class CalendarEventPeriods {
     return OverDate.fromLocal(configurationStore.eventStartDate);
   }
 
+  private static get startPreManif(): OverDate {
+    const configurationStore = useConfigurationStore();
+    return OverDate.fromLocal(configurationStore.mondayBeforeEventDate);
+  }
+
   private static get startCollage(): OverDate {
     const configurationStore = useConfigurationStore();
     return OverDate.fromLocal(configurationStore.orgaWeekStartDate);
@@ -65,7 +70,7 @@ export class CalendarEventPeriods {
     return {
       title: "Pré-festival",
       period: Period.init({
-        start: CalendarEventPeriods.removeDays(4).date,
+        start: CalendarEventPeriods.startPreManif.date,
         end: CalendarEventPeriods.removeDays(1).date,
       }),
     };
