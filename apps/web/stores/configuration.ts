@@ -34,7 +34,7 @@ export const useConfigurationStore = defineStore("configuration", {
     mondayBeforeEventDate(): Date {
       const result = new Date(this.eventStartDate);
       result.setDate(result.getDate() - 4);
-      return OverDate.from(result);
+      return OverDate.from(result).date;
     },
 
     orgaWeekStartDate(): Date {
