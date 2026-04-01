@@ -185,17 +185,16 @@ describe("Register form", () => {
   describe("mobilePhone rules", () => {
     const baseForm = validForm().clearMobilePhone();
     const invalidMobilePhone = "Numéro de téléphone mobile non valable";
-    const internationalFormatNotSupported =
-      "Nous ne supportons pas les numéros au format international";
     describe.each`
       mobilePhone           | valid    | reasons
       ${""}                 | ${false} | ${[invalidMobilePhone]}
       ${"0621361323812735"} | ${false} | ${[invalidMobilePhone]}
       ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
       ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
-      ${"+33601020103"}     | ${false} | ${[internationalFormatNotSupported]}
+      ${"+33601020103"}     | ${true}  | ${[]}
+      ${"+51987654321"}     | ${true}  | ${[]}
       ${"0601020103"}       | ${true}  | ${[]}
-      ${"0701020103"}       | ${true}  | ${[]}
+      ${"07 87 65 43 21"}   | ${true}  | ${[]}
     `(
       "when mobile phone is filled with $mobilePhone",
       ({ mobilePhone, valid, reasons }) => {
