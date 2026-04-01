@@ -59,6 +59,7 @@
     "@overbookd/team-constants": "workspace:*",
     "@overbookd/time": "workspace:*",
     "@overbookd/web-page": "workspace:*",
+    "awesome-phonenumber": "7.8.0",
     "jwt-decode": "4.0.0"
   }
 }
