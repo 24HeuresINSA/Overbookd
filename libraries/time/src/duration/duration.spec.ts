@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Duration } from "./duration";
+import { ONE_DAY_IN_MS, ONE_SECOND_IN_MS } from "./duration.constant";
 
 describe("Duration", () => {
   describe.each`
@@ -16,6 +17,20 @@ describe("Duration", () => {
       it(`should convert to ${expectedSeconds} seconds`, () => {
         const seconds = Duration.ms(milliseconds).inSeconds;
         expect(seconds).toBe(expectedSeconds);
+      });
+    },
+  );
+
+  describe.each`
+    milliseconds        | multiplier | expectedMilliseconds
+    ${ONE_SECOND_IN_MS} | ${24}      | ${24 * ONE_SECOND_IN_MS}
+    ${ONE_DAY_IN_MS}    | ${10}      | ${10 * ONE_DAY_IN_MS}
+  `(
+    "When multiplying $milliseconds ms by $multiplier",
+    ({ milliseconds, multiplier, expectedMilliseconds }) => {
+      it(`should return a duration of ${expectedMilliseconds} ms`, () => {
+        const result = Duration.ms(milliseconds).times(multiplier);
+        expect(result.inMilliseconds).toBe(expectedMilliseconds);
       });
     },
   );

@@ -11,21 +11,24 @@ export class CalendarEventPeriods {
     return OverDate.fromLocal(configurationStore.eventStartDate);
   }
 
+  private static get startPreManif(): OverDate {
+    const configurationStore = useConfigurationStore();
+    return OverDate.fromLocal(configurationStore.mondayBeforeEventDate);
+  }
+
   private static get startCollage(): OverDate {
     const configurationStore = useConfigurationStore();
     return OverDate.fromLocal(configurationStore.orgaWeekStartDate);
   }
 
   private static addDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.startManif.date);
-    result.setDate(result.getDate() + days);
-    return OverDate.from(result);
+    const duration = Duration.ONE_DAY.times(days);
+    return CalendarEventPeriods.startManif.plus(duration);
   }
 
   private static removeDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.startManif.date);
-    result.setDate(result.getDate() - days);
-    return OverDate.from(result);
+    const duration = Duration.ONE_DAY.times(days);
+    return CalendarEventPeriods.startManif.minus(duration);
   }
 
   public static get collages(): CalendarStep[] {
@@ -65,7 +68,7 @@ export class CalendarEventPeriods {
     return {
       title: "Pré-festival",
       period: Period.init({
-        start: CalendarEventPeriods.removeDays(4).date,
+        start: CalendarEventPeriods.startPreManif.date,
         end: CalendarEventPeriods.removeDays(1).date,
       }),
     };

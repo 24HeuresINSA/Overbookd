@@ -318,7 +318,7 @@ const willBeMinorAtEvent = ({ birthdate }: VolunteerCandidate): boolean => {
     birthdate.getMonth(),
     birthdate.getDate(),
   );
-  return majorityDate > configurationStore.eventStartDate;
+  return majorityDate > configurationStore.mondayBeforeEventDate;
 };
 
 const exportCSV = async () => {

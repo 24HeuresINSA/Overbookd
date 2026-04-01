@@ -46,6 +46,10 @@ export class Duration {
     return this.milliseconds;
   }
 
+  times(multiplier: number): Duration {
+    return new Duration(this.milliseconds * multiplier);
+  }
+
   canBeDividedBy(divider: Duration): boolean {
     return this.milliseconds % divider.milliseconds === 0;
   }
