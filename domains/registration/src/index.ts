@@ -71,6 +71,7 @@ export {
   shouldSignVolunteerCharter,
 } from "./register-form/register-form.js";
 export { SPECIAL_CHARS_REGEX_PATERN } from "./register-form/fields/password-field.js";
+export { isMobilePhoneNumberValid } from "./register-form/phone-number/phone-number.js";
 
 // Membership Application
 export type {
