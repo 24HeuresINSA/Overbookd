@@ -22,15 +22,13 @@ export class CalendarEventPeriods {
   }
 
   private static addDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.startManif.date);
-    result.setDate(result.getDate() + days);
-    return OverDate.from(result);
+    const duration = Duration.ONE_DAY.times(days);
+    return CalendarEventPeriods.startManif.plus(duration);
   }
 
   private static removeDays(days: number): OverDate {
-    const result = new Date(CalendarEventPeriods.startManif.date);
-    result.setDate(result.getDate() - days);
-    return OverDate.from(result);
+    const duration = Duration.ONE_DAY.times(days);
+    return CalendarEventPeriods.startManif.minus(duration);
   }
 
   public static get collages(): CalendarStep[] {

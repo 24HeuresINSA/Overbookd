@@ -6,7 +6,7 @@ import {
 } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
-import { OverDate } from "@overbookd/time";
+import { Duration, OverDate } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
@@ -32,9 +32,8 @@ export const useConfigurationStore = defineStore("configuration", {
     },
 
     mondayBeforeEventDate(): Date {
-      const result = new Date(this.eventStartDate);
-      result.setDate(result.getDate() - 4);
-      return OverDate.from(result).date;
+      const duration = Duration.ONE_DAY.times(4);
+      return OverDate.from(this.eventStartDate).minus(duration).date;
     },
 
     orgaWeekStartDate(): Date {
