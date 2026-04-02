@@ -1,4 +1,4 @@
-import { isMobilePhoneNumberValid } from "../phone-number/phone-number.js";
+import { isMobilePhoneNumberValid } from "../../phone-number/phone-number.js";
 import { Field } from "./field.js";
 
 export class MobilePhoneField implements Field<string> {

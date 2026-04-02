@@ -192,12 +192,11 @@ describe("Register form", () => {
       });
     });
     describe("when mobile phone is invalid", () => {
+      const form = baseForm.fillMobilePhone("0201020103");
       it("should indicate form is invalid", () => {
-        const form = baseForm.fillMobilePhone("0201020103");
         expect(form.isValid).toBe(false);
       });
       it("should indicate that mobile phone is invalid", () => {
-        const form = baseForm.fillMobilePhone("0201020103");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Numéro de téléphone mobile non valable");
       });
