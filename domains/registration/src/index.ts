@@ -72,6 +72,12 @@ export {
 } from "./register-form/register-form.js";
 export { SPECIAL_CHARS_REGEX_PATERN } from "./register-form/fields/password-field.js";
 
+// Phone Number
+export {
+  isMobilePhoneNumberValid,
+  isPhoneNumberValid,
+} from "./phone-number/phone-number.js";
+
 // Membership Application
 export type {
   Candidate,

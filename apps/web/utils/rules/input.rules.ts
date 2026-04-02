@@ -1,5 +1,8 @@
 import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
-import { findNumbers } from "awesome-phonenumber";
+import {
+  isMobilePhoneNumberValid,
+  isPhoneNumberValid,
+} from "@overbookd/registration";
 
 export function isNumber(value: string | null): boolean | string {
   const message = "La valeur doit être un nombre";
@@ -64,20 +67,13 @@ export function isInsaEmail(value: string | null) {
 export function isMobilePhoneNumber(value: string | null) {
   const message = "Numéro de téléphone mobile non valable";
   if (!value) return message;
-  const found = findNumbers(value, { defaultRegionCode: "FR" });
-  return (
-    (found.length === 1 &&
-      found.at(0)?.text === value &&
-      found.at(0)?.phoneNumber.typeIsMobile) ||
-    message
-  );
+  return isMobilePhoneNumberValid(value) || message;
 }
 
 export function isPhoneNumber(value: string | null) {
   const message = "Numéro de téléphone non valable";
   if (!value) return message;
-  const found = findNumbers(value, { defaultRegionCode: "FR" });
-  return (found.length === 1 && found.at(0)?.text === value) || message;
+  return isPhoneNumberValid(value) || message;
 }
 
 // nosemgrep

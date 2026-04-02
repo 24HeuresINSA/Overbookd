@@ -184,31 +184,23 @@ describe("Register form", () => {
   });
   describe("mobilePhone rules", () => {
     const baseForm = validForm().clearMobilePhone();
-    const invalidMobilePhone = "Numéro de téléphone mobile non valable";
-    const internationalFormatNotSupported =
-      "Nous ne supportons pas les numéros au format international";
-    describe.each`
-      mobilePhone           | valid    | reasons
-      ${""}                 | ${false} | ${[invalidMobilePhone]}
-      ${"0621361323812735"} | ${false} | ${[invalidMobilePhone]}
-      ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
-      ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
-      ${"+33601020103"}     | ${false} | ${[internationalFormatNotSupported]}
-      ${"0601020103"}       | ${true}  | ${[]}
-      ${"0701020103"}       | ${true}  | ${[]}
-    `(
-      "when mobile phone is filled with $mobilePhone",
-      ({ mobilePhone, valid, reasons }) => {
-        const validity = valid ? "valid" : "invalid";
-        it(`should indicate that mobile phone is ${validity}`, () => {
-          const form = baseForm.fillMobilePhone(mobilePhone);
-          expect(form.isValid).toBe(valid);
-          if (valid) return;
-          expect(form.reasons).toHaveLength(reasons.length);
-          expect(form.reasons).toMatchObject(reasons);
-        });
-      },
-    );
+    describe("when mobile phone is valid", () => {
+      it("should indicate form is valid", () => {
+        const form = baseForm.fillMobilePhone(mobilePhone);
+        expect(form.isValid).toBe(true);
+        expect(form.reasons).toHaveLength(0);
+      });
+    });
+    describe("when mobile phone is invalid", () => {
+      const form = baseForm.fillMobilePhone("0201020103");
+      it("should indicate form is invalid", () => {
+        expect(form.isValid).toBe(false);
+      });
+      it("should indicate that mobile phone is invalid", () => {
+        expect(form.reasons).toHaveLength(1);
+        expect(form.reasons).include("Numéro de téléphone mobile non valable");
+      });
+    });
   });
   describe("nickname rules", () => {
     const baseForm = validForm().clearNickname();
