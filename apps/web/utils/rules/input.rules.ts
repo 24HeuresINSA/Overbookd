@@ -1,5 +1,8 @@
 import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
-import { isMobilePhoneNumberValid, isPhoneNumberValid } from "@overbookd/registration";
+import {
+  isMobilePhoneNumberValid,
+  isPhoneNumberValid,
+} from "@overbookd/registration";
 
 export function isNumber(value: string | null): boolean | string {
   const message = "La valeur doit être un nombre";
