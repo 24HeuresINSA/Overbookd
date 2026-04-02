@@ -12,8 +12,6 @@ export const VOLUNTEER_CHARTER_PAGE: PageInSummary = {
   keywords: ["charte-benevole", "charte", "benevole"],
 };
 
-export const CHARTER_SUMMARY_PAGES: PageInSummary[] = [
-  VOLUNTEER_CHARTER_PAGE,
-];
+export const CHARTER_SUMMARY_PAGES: PageInSummary[] = [VOLUNTEER_CHARTER_PAGE];
 
 export const CHARTER_PAGES: Page[] = CHARTER_SUMMARY_PAGES;
