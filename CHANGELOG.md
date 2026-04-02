@@ -1,3 +1,13 @@
+## [3.51.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.2...v3.51.3) (2026-04-02)
+
+### Bug Fixes
+
+* **admission:** check whether the volunteer is a minor starting on the Monday of the manif ([a475eb4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a475eb4882b61ed120672aa957fd6ca413753526)), closes [#2637](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2637)
+* **mail:** update volunteer admission mail template [#2636](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2636) ([9d0a632](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9d0a63283f6ba24a185dc855fbee2e1936138206))
+* normalize string in slugify to prevent decomposed chars [#2635](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2635) ([aea9d0d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aea9d0dcbb4560baad626f2d7a4f3045a2c58f66))
+* **registration:** fix mobile phone field validation [#2564](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2564) ([7777105](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7777105a89e27ebcc3ec39e10657701b117d1207))
+* **summary:** move volunteer charter page to the bottom [#2639](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2639) ([47afec1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/47afec143f7cd1e306d5637f7dd89a6f78965a17))
+
 ## [3.51.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.1...v3.51.2) (2026-03-30)
 
 ### Bug Fixes
