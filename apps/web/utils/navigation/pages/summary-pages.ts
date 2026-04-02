@@ -1,11 +1,15 @@
 import type { Permission } from "@overbookd/permission";
 import { HOME_URL } from "@overbookd/web-page";
 import {
+  CHARTER_PAGES,
+  CHARTER_SUMMARY_PAGES,
+  VOLUNTEER_CHARTER_PAGE,
+} from "./charter";
+import {
   AVAILABILITIES_PAGE,
   MY_PERSONAL_ACCOUNT_PAGE,
   MY_PLANNING_PAGE,
   SHARED_MEALS_PAGE,
-  VOLUNTEER_CHARTER_PAGE,
   VOLUNTEER_PAGES,
   VOLUNTEER_SUMMARY_PAGES,
   VOLUNTEERS_PAGE,
@@ -57,6 +61,7 @@ export const ALL_PAGES: Page[] = [
   ...MANAGEMENT_SUMMARY_PAGES,
   ...CURRENT_EVENT_SUMMARY_PAGES,
   ...LOGISTIC_PAGES,
+  ...CHARTER_PAGES,
 ];
 
 export const SUMMARY_PAGES: PageInSummary[] = [
@@ -66,6 +71,7 @@ export const SUMMARY_PAGES: PageInSummary[] = [
   ...MANAGEMENT_SUMMARY_PAGES,
   ...CURRENT_EVENT_SUMMARY_PAGES,
   ...LOGISTIC_SUMMARY_PAGES,
+  ...CHARTER_SUMMARY_PAGES,
 ];
 
 export const VOLUNTEER_MOBILE_SUMMARY = [
