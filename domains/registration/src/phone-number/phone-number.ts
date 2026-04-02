@@ -11,5 +11,5 @@ export function isMobilePhoneNumberValid(phoneNumber: string): boolean {
 
 export function isPhoneNumberValid(phoneNumber: string): boolean {
   const found = findNumbers(phoneNumber, { defaultRegionCode: "FR" });
-  return (found.length === 1 && found.at(0)?.text === phoneNumber) || false;
+  return found.length === 1 && found.at(0)?.text === phoneNumber;
 }
