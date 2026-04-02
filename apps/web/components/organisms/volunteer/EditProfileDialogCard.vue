@@ -2,15 +2,15 @@
   <DialogCard @close="close">
     <template #title>Modifier mon profil</template>
     <template #content>
-      <v-file-input
-        v-model="profilePicture"
-        :rules="[isImage, isSupportedImageFile, isImageSizeWithinLimit]"
-        label="Photo de profil"
-        prepend-icon="mdi-camera"
-        accept="image/png, image/jpeg, image/gif"
-        show-size
-      />
       <v-form v-model="isFormValid" class="profile-form">
+        <v-file-input
+          v-model="profilePicture"
+          :rules="[isSupportedImageFile, isImageSizeWithinLimit]"
+          label="Photo de profil"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg, image/gif"
+          show-size
+        />
         <div class="profile-row">
           <v-text-field
             v-model="firstname"
@@ -124,7 +124,6 @@ import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preferenc
 import {
   required,
   isMobilePhoneNumber,
-  isImage,
   isImageSizeWithinLimit,
   isSupportedImageFile,
   minDate,
@@ -137,7 +136,7 @@ const preferenceStore = usePreferenceStore();
 
 const loggedUser = computed(() => userStore.loggedUser);
 
-const profilePicture = ref<File | undefined>();
+const profilePicture = ref<File | null>(null);
 
 const firstname = ref<string>(loggedUser.value?.firstname ?? "");
 const lastname = ref<string>(loggedUser.value?.lastname ?? "");
@@ -205,13 +204,10 @@ const save = async () => {
   };
   await userStore.updateMyProfile(newProfileData);
 
-  if (profilePicture.value !== undefined) {
+  const image = profilePicture.value;
+  if (image) {
     const profilePictureForm = new FormData();
-    profilePictureForm.append(
-      "file",
-      profilePicture.value,
-      profilePicture.value.name,
-    );
+    profilePictureForm.append("file", image, image.name);
     await userStore.addProfilePicture(profilePictureForm);
     userStore.setMyProfilePicture();
   }

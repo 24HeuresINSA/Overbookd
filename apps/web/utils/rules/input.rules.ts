@@ -98,23 +98,16 @@ export function required(value: unknown) {
   return Boolean(value) || "Ce champ est requis";
 }
 
-export function isImage(value?: File[] | null): true | string {
-  const message = "Une photo vide n'est pas une photo";
-  return (!!value && value.length > 0) || message;
-}
-
-export function isImageSizeWithinLimit(value?: File[] | null): true | string {
+export function isImageSizeWithinLimit(value?: File | null): true | string {
   const MAX_SIZE = 1024 * 1024 * 2;
   const message = "Moins de 2 Mo s'il te plaît 🙏";
-  return !value || !value.length || value[0].size < MAX_SIZE || message;
+  return !value || value.size < MAX_SIZE || message;
 }
 
-export function isSupportedImageFile(value?: File[] | null): true | string {
+export function isSupportedImageFile(value?: File | null): true | string {
   const extensions = ["image/png", "image/jpeg", "image/gif"];
   const message = "Seulement des images (png, jpeg ou gif)";
-  const isSupportedFile =
-    !!value && value.length && extensions.includes(value[0].type);
-  return isSupportedFile || message;
+  return !value || extensions.includes(value.type) || message;
 }
 export type InputRulesData = {
   rules: Record<string, (value: string | null) => string | boolean>;

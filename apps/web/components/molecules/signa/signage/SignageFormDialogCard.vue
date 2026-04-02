@@ -2,39 +2,41 @@
   <DialogCard @close="close">
     <template #title> Signalisation </template>
     <template #content>
-      <v-text-field
-        v-model="name"
-        append-icon="mdi-hammer-screwdriver"
-        label="Nom de la signalisation"
-        clearable
-        outlined
-        clear-icon="mdi-close-circle-outline"
-        counter
-        :rules="[rules.nameMinLength]"
-      />
-      <v-select
-        v-model="type"
-        type="select"
-        label="Type de la signatlisation"
-        :items="signageTypeValues"
-        :rules="[rules.typeRequired]"
-      />
-      <v-file-input
-        v-model="uploadedImage"
-        :rules="imageRules"
-        label="Image pour la signalisation"
-        prepend-icon="mdi-camera"
-        accept="image/png, image/jpeg, image/gif"
-        show-size
-        multiple
-      />
+      <v-form v-model="isFormValid">
+        <v-text-field
+          v-model="name"
+          append-icon="mdi-hammer-screwdriver"
+          label="Nom de la signalisation"
+          clearable
+          outlined
+          clear-icon="mdi-close-circle-outline"
+          counter
+          :rules="[minLength(NAME_MIN_LENGTH)]"
+        />
+        <v-select
+          v-model="type"
+          type="select"
+          label="Type de la signatlisation"
+          :items="signageTypeValues"
+          :rules="[required]"
+        />
+        <v-file-input
+          v-model="uploadedImage"
+          :rules="[isImageSizeWithinLimit, isSupportedImageFile]"
+          label="Image pour la signalisation"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg, image/gif"
+          show-size
+        />
+      </v-form>
     </template>
     <template #actions>
       <v-btn
         prepend-icon="mdi-checkbox-marked-circle-outline"
         text="Sauvegarder la signalisation"
         size="large"
-        :disabled="cantCreateOrUpdateSignage"
+        :loading="loading"
+        :disabled="!isFormValid"
         @click="createOrUpdateSignage"
       />
     </template>
@@ -58,11 +60,6 @@ import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 const catalogSignageStore = useCatalogSignageStore();
 
 const NAME_MIN_LENGTH = 3;
-const rules = {
-  nameMinLength: minLength(NAME_MIN_LENGTH),
-  typeRequired: required,
-};
-const imageRules = [isImageSizeWithinLimit, isSupportedImageFile];
 const signageTypeValues = Object.values(signageTypes);
 
 const props = defineProps({
@@ -77,19 +74,7 @@ const props = defineProps({
 
 const name = ref<string>(props.signage.name);
 const type = ref<SignageType>(props.signage.type);
-const uploadedImage = ref<File[]>([]);
-
-const cantCreateOrUpdateSignage = computed<boolean>(() => {
-  const isNameValid = name.value.length >= NAME_MIN_LENGTH;
-  const isTypeValid = type.value !== undefined;
-  const isUploadValid =
-    uploadedImage.value.length > 0 ? isImageValid.value : true;
-
-  return !isNameValid || !isTypeValid || !isUploadValid;
-});
-const isImageValid = computed<boolean>(() =>
-  imageRules.every((rule) => rule(uploadedImage.value) === true),
-);
+const uploadedImage = ref<File | null>(null);
 
 watch(
   () => props.signage,
@@ -102,21 +87,27 @@ watch(
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
+const isFormValid = ref<boolean>(false);
+const loading = ref<boolean>(false);
+
 const createOrUpdateSignage = async () => {
-  if (!name.value || !type.value) return;
+  if (!isFormValid.value) return;
+  loading.value = true;
+
+  await upsertSignage();
+  await updateImage();
+
+  loading.value = false;
+  close();
+  name.value = "";
+  type.value = signageTypes.AFFICHE;
+};
+const upsertSignage = () => {
   const signage: SignageForm = {
     name: name.value,
     type: type.value,
   };
 
-  await upsertSignage(signage);
-  await updateImage();
-
-  close();
-  name.value = "";
-  type.value = signageTypes.AFFICHE;
-};
-const upsertSignage = (signage: SignageForm) => {
   if (props.signage.id)
     return catalogSignageStore.updateSignage({
       ...signage,
@@ -126,15 +117,12 @@ const upsertSignage = (signage: SignageForm) => {
   return catalogSignageStore.createSignage(signage);
 };
 const updateImage = () => {
-  if (!uploadedImage.value || !uploadedImage.value.length) return;
+  const image = uploadedImage.value;
+  if (!image) return;
 
-  const signageId = props.signage.id
-    ? props.signage.id
-    : catalogSignageStore.signage?.id;
-
+  const signageId = props.signage.id || catalogSignageStore.signage?.id;
   if (signageId === undefined) return;
 
-  const image = uploadedImage.value[0];
   const signaImageForm = new FormData();
   signaImageForm.append("file", image, image.name);
   return catalogSignageStore.uploadSignageImage(signageId, signaImageForm);
