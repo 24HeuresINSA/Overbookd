@@ -116,7 +116,7 @@ const callVolunteer = (phone: string) => {
   window.location.href = formatPhoneLink(phone);
 };
 const sendMailTo = (email: string) => {
-  window.location.href = formatEmailLink(email)
+  window.location.href = formatEmailLink(email);
 };
 </script>
 
