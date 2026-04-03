@@ -8,7 +8,7 @@
           :rules="[isSupportedImageFile, isImageSizeWithinLimit]"
           label="Photo de profil"
           prepend-icon="mdi-camera"
-          accept="image/png, image/jpeg, image/gif"
+          :accept="IMAGE_EXTENSIONS"
           show-size
         />
         <div class="profile-row">
@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Preference } from "@overbookd/http";
+import { IMAGE_EXTENSIONS, type Preference } from "@overbookd/http";
 import {
   assignmentPreferences,
   NO_PREF,

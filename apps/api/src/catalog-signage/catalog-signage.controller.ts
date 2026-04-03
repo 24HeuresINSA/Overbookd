@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   StreamableFile,
   UploadedFile,
+  ParseFilePipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -23,16 +24,13 @@ import {
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
-import { diskStorage } from "multer";
-import { randomUUID } from "crypto";
 import { SignageResponseDto } from "./dto/signage.response";
 import { Signage } from "@overbookd/signa";
 import { SignageFormRequestDto } from "./dto/signage-form.request";
 import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
-import { FileInterceptor } from "@nestjs/platform-express/multer";
-import { join } from "path";
 import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { ImageInterceptor } from "../utils/image.interceptor";
 
 @Controller("signages")
 @ApiTags("signages")
@@ -101,19 +99,7 @@ export class CatalogSignageController {
 
   @Post(":id/image")
   @Permission(WRITE_SIGNAGE_CATALOG)
-  @UseInterceptors(
-    FileInterceptor("file", {
-      storage: diskStorage({
-        destination: join(process.cwd(), "public"),
-        filename: (_req, file, cb) => {
-          const uuid = randomUUID();
-          const filenameFragments = file.originalname.split(".");
-          const extension = filenameFragments.at(-1) ?? "jpg";
-          cb(null, `${uuid}.${extension}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(ImageInterceptor("file"))
   @ApiResponse({
     status: 201,
     description: "Add an image to a signage",
@@ -125,7 +111,8 @@ export class CatalogSignageController {
   })
   defineSignageImage(
     @Param("id", ParseIntPipe) id: number,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
+    file: Express.Multer.File,
   ): Promise<Signage> {
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
