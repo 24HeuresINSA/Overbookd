@@ -1,3 +1,4 @@
+import { IMAGE_MAX_SIZE, image_extensions } from "@overbookd/http";
 import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
 import {
   isMobilePhoneNumberValid,
@@ -99,15 +100,13 @@ export function required(value: unknown) {
 }
 
 export function isImageSizeWithinLimit(value?: File | null): true | string {
-  const MAX_SIZE = 1024 * 1024 * 2;
   const message = "Moins de 2 Mo s'il te plaît 🙏";
-  return !value || value.size < MAX_SIZE || message;
+  return !value || value.size < IMAGE_MAX_SIZE || message;
 }
 
 export function isSupportedImageFile(value?: File | null): true | string {
-  const extensions = ["image/png", "image/jpeg", "image/gif"];
   const message = "Seulement des images (png, jpeg ou gif)";
-  return !value || extensions.includes(value.type) || message;
+  return !value || image_extensions.includes(value.type) || message;
 }
 export type InputRulesData = {
   rules: Record<string, (value: string | null) => string | boolean>;

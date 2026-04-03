@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -16,11 +17,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express/multer";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { randomUUID } from "crypto";
-import { diskStorage } from "multer";
-import { join } from "path";
 import { RequestWithUserPayload } from "../../src/app.controller";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -52,6 +49,7 @@ import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.d
 import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { ImageInterceptor } from "../utils/image.interceptor";
 
 @Controller("users")
 @ApiTags("users")
@@ -255,19 +253,7 @@ export class UserController {
   }
 
   @Post("me/profile-picture")
-  @UseInterceptors(
-    FileInterceptor("file", {
-      storage: diskStorage({
-        destination: join(process.cwd(), "public"),
-        filename: (_req, file, cb) => {
-          const uuid = randomUUID();
-          const filenameFragments = file.originalname.split(".");
-          const extension = filenameFragments.at(-1) ?? "jpg";
-          cb(null, `${uuid}.${extension}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(ImageInterceptor("file"))
   @ApiResponse({
     status: 201,
     description: "Add a profile picture to a user",
@@ -279,7 +265,8 @@ export class UserController {
   })
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
+    file: Express.Multer.File,
   ): Promise<MyUserInformation> {
     return this.profilePictureService.updateProfilePicture(
       req.user.id,
