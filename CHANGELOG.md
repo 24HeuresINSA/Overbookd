@@ -1,3 +1,10 @@
+## [3.51.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.3...v3.51.4) (2026-04-03)
+
+### Bug Fixes
+
+* **api:** prevent from uploading files that are too big or not images [#2640](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2640) ([ef8ab70](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ef8ab70edf638cd36f5e53d8094aa3893878ce32))
+* **web:** picture rules [#2593](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2593) ([3b30c0f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3b30c0fc78a3c88df096373865b4d660b7b5e2c1))
+
 ## [3.51.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.2...v3.51.3) (2026-04-02)
 
 ### Bug Fixes
