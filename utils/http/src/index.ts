@@ -134,4 +134,4 @@ export type { CreatePermissionForm, Permission } from "./permission";
 export type { CreateLocation } from "./location";
 export type { UserAccess, UserCredentials } from "./auth";
 export type { HttpStringified } from "./http-stringified";
-export { IMAGE_MAX_SIZE, image_extensions } from "./image";
+export { IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "./image";

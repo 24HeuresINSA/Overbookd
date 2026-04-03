@@ -25,7 +25,7 @@
           :rules="[isImageSizeWithinLimit, isSupportedImageFile]"
           label="Image pour la signalisation"
           prepend-icon="mdi-camera"
-          :accept="image_extensions"
+          :accept="IMAGE_EXTENSIONS"
           show-size
         />
       </v-form>
@@ -56,7 +56,7 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
-import { image_extensions } from "@overbookd/http";
+import { IMAGE_EXTENSIONS } from "@overbookd/http";
 
 const catalogSignageStore = useCatalogSignageStore();
 
