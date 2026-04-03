@@ -64,7 +64,7 @@
               variant="text"
               density="compact"
             />
-            <h3>{{ formatUserPhone(item.phone) }}</h3>
+            <h3>{{ formatPhoneNumber(item.phone) }}</h3>
           </div>
         </template>
       </v-data-table>
@@ -78,8 +78,8 @@ import { formatDateToHumanReadable } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
+import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 
 const layoutStore = useLayoutStore();
 

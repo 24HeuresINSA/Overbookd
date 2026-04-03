@@ -73,7 +73,6 @@ import { updateQueryParams } from "~/utils/http/url-params.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatDate } from "@overbookd/time";
-import { formatUserPhone } from "~/utils/user/user.utils";
 import { PERSONNE } from "@overbookd/team-constants";
 import {
   DisplayModeBuilder,
@@ -83,6 +82,7 @@ import {
   type DisplayMode,
 } from "~/utils/user/volunteer.display";
 import { CSVBuilder } from "@overbookd/csv";
+import { formatPhoneNumber } from "@overbookd/registration";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -156,7 +156,7 @@ const exportCSV = async () => {
         .filter((team) => team !== PERSONNE)
         .join(", ");
       const birthdate = formatDate(volunteer.birthdate);
-      const phone = formatUserPhone(volunteer.phone);
+      const phone = formatPhoneNumber(volunteer.phone);
       return { ...volunteer, teams, phone, birthdate };
     }),
   )

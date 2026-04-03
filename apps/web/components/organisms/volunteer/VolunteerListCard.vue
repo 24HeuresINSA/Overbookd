@@ -60,7 +60,6 @@
 </template>
 
 <script lang="ts" setup>
-import { formatPhoneLink } from "~/utils/user/user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import {
   type UserPersonalData,
@@ -70,6 +69,7 @@ import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { PLANNING_URL } from "@overbookd/web-page";
+import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
 
 defineProps({
   volunteers: {
@@ -116,7 +116,7 @@ const callVolunteer = (phone: string) => {
   window.location.href = formatPhoneLink(phone);
 };
 const sendMailTo = (email: string) => {
-  window.location.href = `mailto:${email}`;
+  window.location.href = formatEmailLink(email)
 };
 </script>
 
