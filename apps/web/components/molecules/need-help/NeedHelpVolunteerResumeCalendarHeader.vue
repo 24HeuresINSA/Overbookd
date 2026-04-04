@@ -12,15 +12,15 @@
       />
     </div>
     <a :href="formatPhoneLink(volunteer?.phone ?? '')" class="volunteer-phone">
-      {{ formatUserPhone(volunteer?.phone ?? "") }}
+      {{ formatPhoneNumber(volunteer?.phone ?? "") }}
     </a>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
-import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
 defineProps({
   volunteer: {

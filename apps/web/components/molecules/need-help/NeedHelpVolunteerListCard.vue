@@ -30,7 +30,7 @@
             size="small"
             rounded="pill"
           />
-          <h3>{{ formatUserPhone(item.phone) }}</h3>
+          <h3>{{ formatPhoneNumber(item.phone) }}</h3>
         </div>
       </template>
     </v-data-table>
@@ -39,9 +39,9 @@
 
 <script lang="ts" setup>
 import type { HelpingVolunteer } from "@overbookd/http";
+import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
-import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();

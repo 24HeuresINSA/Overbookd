@@ -76,6 +76,9 @@ export { SPECIAL_CHARS_REGEX_PATERN } from "./register-form/fields/password-fiel
 export {
   isMobilePhoneNumberValid,
   isPhoneNumberValid,
+  formatPhoneNumber,
+  formatPhoneLink,
+  formatEmailLink,
 } from "./phone-number/phone-number.js";
 
 // Membership Application

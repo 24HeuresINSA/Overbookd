@@ -195,12 +195,12 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { formatPhoneLink } from "~/utils/user/user.utils";
 import { formatLocalDate } from "@overbookd/time";
 import { ADMIN, HARD } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import type { AssignmentPreferenceType } from "@overbookd/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
+import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();
@@ -332,7 +332,7 @@ const deleteVolunteer = async () => {
 };
 
 const sendEmail = () => {
-  window.location.href = `mailto:${props.volunteer.email}`;
+  window.location.href = formatEmailLink(props.volunteer.email);
 };
 const callPhoneNumber = () => {
   window.location.href = formatPhoneLink(props.volunteer.phone);

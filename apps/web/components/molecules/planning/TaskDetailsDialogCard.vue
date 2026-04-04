@@ -48,7 +48,7 @@
         <ul>
           <li v-for="contact in selectedTask.contacts" :key="contact.id">
             {{ buildUserNameWithNickname(contact) }} -
-            {{ formatUserPhone(contact.phone) }}
+            {{ formatPhoneNumber(contact.phone) }}
           </li>
         </ul>
       </div>
@@ -87,11 +87,11 @@ import {
 } from "@overbookd/geo-location";
 import type { TaskForCalendar } from "@overbookd/http";
 import { READ_FT } from "@overbookd/permission";
+import { formatPhoneNumber } from "@overbookd/registration";
 import { formatDateToHumanReadable } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
-import { formatUserPhone } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 const locationStore = useLocationStore();

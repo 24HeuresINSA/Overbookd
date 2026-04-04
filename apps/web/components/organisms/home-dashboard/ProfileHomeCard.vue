@@ -96,10 +96,10 @@
 </template>
 
 <script lang="ts" setup>
+import { formatPhoneNumber } from "@overbookd/registration";
 import { HARD } from "@overbookd/team-constants";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
-import { formatUserPhone } from "~/utils/user/user.utils";
 
 const userStore = useUserStore();
 userStore.fetchMyFriends();
@@ -122,7 +122,7 @@ const tasksCount = computed<number>(() =>
   loggedUser.value ? loggedUser.value.tasksCount : 0,
 );
 const phone = computed<string>(() =>
-  loggedUser.value ? formatUserPhone(loggedUser.value.phone) : "",
+  loggedUser.value ? formatPhoneNumber(loggedUser.value.phone) : "",
 );
 
 const additionalPlural = (count: number) => {

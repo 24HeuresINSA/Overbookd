@@ -145,6 +145,10 @@
           <template #item.teams="{ item }">
             <TeamChip v-for="team of item.teams" :key="team" :team="team" />
           </template>
+
+          <template #item.phone="{ item }">
+            {{ formatPhoneNumber(item.mobilePhone) }}
+          </template>
         </v-data-table>
       </v-card-text>
     </v-card>
@@ -216,6 +220,7 @@ import { buildUserNameWithNickname } from "@overbookd/user";
 import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registrations/volunteer-candidates.utils";
 import { CSVBuilder } from "@overbookd/csv";
 import { downloadCsv } from "~/utils/file/download.utils";
+import { formatPhoneNumber } from "@overbookd/registration";
 
 useHead({ title: "Admissions bénévoles" });
 
