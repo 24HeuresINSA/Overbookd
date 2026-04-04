@@ -9,6 +9,10 @@
       disable-pagination
       hide-default-footer
     >
+      <template #item.phone="{ item }">
+        {{ formatPhoneNumber(item.phone) }}
+      </template>
+
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-pencil"
@@ -52,6 +56,7 @@ import type {
   Contractor,
   PrepareContractorCreation,
 } from "@overbookd/festival-event";
+import { formatPhoneNumber } from "@overbookd/registration";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();

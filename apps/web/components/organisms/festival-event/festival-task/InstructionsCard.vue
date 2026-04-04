@@ -76,6 +76,10 @@
             {{ buildUserNameWithNickname(item) }}
           </template>
 
+          <template #item.phone="{ item }">
+            {{ formatPhoneNumber(item.phone) }}
+          </template>
+
           <template #item.removal="{ item }">
             <v-btn
               icon="mdi-trash-can"
@@ -130,6 +134,7 @@ import {
   hasTaskApprovals,
   shouldResetTaskApprovals,
 } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { formatPhoneNumber } from "@overbookd/registration";
 
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
