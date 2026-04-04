@@ -1,3 +1,9 @@
+## [3.51.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.4...v3.51.5) (2026-04-04)
+
+### Bug Fixes
+
+* **web:** fix display and call link to international phone numbers [#2641](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2641) ([03f9cf4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03f9cf48cd851308bba2c2785b76632c4957e49c))
+
 ## [3.51.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.3...v3.51.4) (2026-04-03)
 
 ### Bug Fixes
