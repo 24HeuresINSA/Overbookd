@@ -57,7 +57,7 @@ const addVolunteersFromTeams = () => {
   if (teams.value.length === 0) return;
 
   const volunteersFromTeam = userStore.volunteers.filter((volunteer) =>
-    teams.value.some(({ code }) => volunteer.teams.includes(code)),
+    teams.value.every(({ code }) => volunteer.teams.includes(code)),
   );
 
   const uniqueVolunteersFromTeam = volunteersFromTeam.filter(
