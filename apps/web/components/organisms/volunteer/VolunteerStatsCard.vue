@@ -21,7 +21,7 @@
         #[`item.${category}`]="{ item }"
         :key="category"
       >
-        {{ taskCategoryEmojis[category as DisplayableCategory] }}
+        {{ taskCategoryEmojis[category] }}
         {{ retrieveStat(item.stats, category) }}
       </template>
 
