@@ -1,3 +1,10 @@
+## [3.51.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.5...v3.51.6) (2026-04-05)
+
+### Bug Fixes
+
+* **festival-task:** add collage category [#2643](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2643) ([f1c22af](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f1c22af93716cd0f7aa84c22a0f73f226c48dd57))
+* **planning:** add users being part of all of the selected teams instead of any of them in multi planning [#2642](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2642) ([9f99f81](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f99f817a2f79e596864936cc0024d5eb2412240))
+
 ## [3.51.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.4...v3.51.5) (2026-04-04)
 
 ### Bug Fixes
