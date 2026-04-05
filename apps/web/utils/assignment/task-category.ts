@@ -5,16 +5,17 @@ import {
   MANUTENTION,
   RELOU,
   STATIQUE,
-  categories,
+  COLLAGE,
+  taskCategories,
 } from "@overbookd/festival-event-constants";
 
 export const AUCUNE = "AUCUNE";
 
-export const displayableCategories = [...categories, AUCUNE] as const;
+export const displayableCategories = [...taskCategories, AUCUNE] as const;
 
 export type DisplayableCategory = Category | typeof AUCUNE;
 
-export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
+export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🩹" | "🤷‍♂️";
 
 export const taskCategoryEmojis: Record<
   DisplayableCategory,
@@ -25,6 +26,7 @@ export const taskCategoryEmojis: Record<
   MANUTENTION: "👷",
   FUN: "😂",
   RELOU: "🥱",
+  COLLAGE: "🩹",
   AUCUNE: "🤷‍♂️",
 };
 
@@ -35,5 +37,6 @@ export const taskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
     [MANUTENTION, taskCategoryEmojis.MANUTENTION],
     [FUN, taskCategoryEmojis.FUN],
     [RELOU, taskCategoryEmojis.RELOU],
-    ["AUCUNE", taskCategoryEmojis.AUCUNE],
+    [COLLAGE, taskCategoryEmojis.COLLAGE],
+    [AUCUNE, taskCategoryEmojis.AUCUNE],
   ]);

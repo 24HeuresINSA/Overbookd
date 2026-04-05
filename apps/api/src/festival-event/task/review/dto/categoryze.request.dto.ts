@@ -3,7 +3,7 @@ import {
   Categorize,
   FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
-import { categories } from "@overbookd/festival-event-constants";
+import { taskCategories } from "@overbookd/festival-event-constants";
 import {
   IsEnum,
   ValidationArguments,
@@ -13,11 +13,11 @@ import {
 } from "class-validator";
 
 export class CategorizeTaskRequestDto implements Categorize {
-  @ApiProperty({ enum: categories, required: false })
+  @ApiProperty({ enum: taskCategories, required: false })
   @IsOptional()
-  @IsEnum(categories, {
+  @IsEnum(taskCategories, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(categories)}`,
+      `${va.property} must be one of ${Object.values(taskCategories)}`,
   })
   category?: FestivalTaskReadyToAssign["category"];
 

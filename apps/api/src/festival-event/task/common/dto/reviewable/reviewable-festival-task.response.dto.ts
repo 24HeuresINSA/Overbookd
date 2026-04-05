@@ -6,7 +6,7 @@ import {
   FestivalTaskValidated as Validated,
   FestivalTaskReadyToAssign as ReadyToAssign,
 } from "@overbookd/festival-event";
-import { categories } from "@overbookd/festival-event-constants";
+import { taskCategories } from "@overbookd/festival-event-constants";
 import { ReviewableWithConflicts } from "@overbookd/http";
 import {
   IN_REVIEW,
@@ -186,7 +186,7 @@ export class ReadyToAssignFestivalTaskResponseDto
   })
   reviews: ReadyToAssign["reviews"];
 
-  @ApiProperty({ enum: categories })
+  @ApiProperty({ enum: taskCategories })
   category?: ReadyToAssign["category"];
 
   @ApiProperty({ description: "Indicate task is top priority to assign" })

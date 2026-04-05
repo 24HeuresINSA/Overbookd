@@ -1,5 +1,13 @@
 export type { Category } from "./category";
-export { STATIQUE, BAR, MANUTENTION, FUN, RELOU, categories } from "./category";
+export {
+  STATIQUE,
+  BAR,
+  MANUTENTION,
+  FUN,
+  RELOU,
+  COLLAGE,
+  taskCategories,
+} from "./category";
 export {
   CREATED,
   COMMENTED,

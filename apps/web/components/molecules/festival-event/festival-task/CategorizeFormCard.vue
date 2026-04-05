@@ -8,7 +8,7 @@
       <v-select
         v-model="category"
         label="Type de créneau"
-        :items="categories"
+        :items="taskCategories"
         clearable
       />
       <v-switch
@@ -31,15 +31,9 @@
 <script lang="ts" setup>
 import type { Categorize } from "@overbookd/festival-event";
 import {
-  BAR,
-  FUN,
-  MANUTENTION,
-  RELOU,
-  STATIQUE,
+  taskCategories,
   type Category,
 } from "@overbookd/festival-event-constants";
-
-const categories = [BAR, RELOU, STATIQUE, MANUTENTION, FUN];
 
 const category = ref<Category | undefined>(undefined);
 const topPriority = ref<boolean>(false);

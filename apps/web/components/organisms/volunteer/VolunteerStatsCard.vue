@@ -19,6 +19,7 @@
       <template
         v-for="category in displayableCategories"
         #[`item.${category}`]="{ item }"
+        :key="category"
       >
         {{ taskCategoryEmojis[category] }}
         {{ retrieveStat(item.stats, category) }}
@@ -45,6 +46,7 @@
 <script lang="ts" setup>
 import {
   BAR,
+  COLLAGE,
   FUN,
   MANUTENTION,
   RELOU,
@@ -119,6 +121,12 @@ const headers: TableHeaders = [
     value: RELOU,
     sortable: true,
     sortRaw: compareVolunteersOnTaskCategoryAssignmentDuration(RELOU),
+  },
+  {
+    title: "Créneaux collage",
+    value: COLLAGE,
+    sortable: true,
+    sortRaw: compareVolunteersOnTaskCategoryAssignmentDuration(COLLAGE),
   },
   {
     title: "Créneaux indéterminés",

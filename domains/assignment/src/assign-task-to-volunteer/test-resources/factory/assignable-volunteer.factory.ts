@@ -8,6 +8,7 @@ import {
 import {
   BAR,
   Category,
+  COLLAGE,
   FUN,
   MANUTENTION,
   RELOU,
@@ -46,6 +47,7 @@ export class AssignableVolunteerFactory {
       [FUN]: assignable,
       [MANUTENTION]: assignable,
       [RELOU]: assignable,
+      [COLLAGE]: assignable,
       ["undefined"]: assignable,
     };
 
@@ -92,6 +94,13 @@ export class AssignableVolunteerFactory {
           assignments.map((period) => Period.init(period)),
         ),
       },
+      [COLLAGE]: {
+        ...this.expected.COLLAGE,
+        assignmentDuration: duration.COLLAGE,
+        totalAssignmentDuration: FormatVolunteer.computeAssignmentDuration(
+          assignments.map((period) => Period.init(period)),
+        ),
+      },
       ["undefined"]: {
         ...this.expected["undefined"],
         assignmentDuration: duration["undefined"],
@@ -116,6 +125,7 @@ export class AssignableVolunteerFactory {
       [FUN]: { ...this.expected.FUN, isRequestedOnSamePeriod },
       [MANUTENTION]: { ...this.expected.MANUTENTION, isRequestedOnSamePeriod },
       [RELOU]: { ...this.expected.RELOU, isRequestedOnSamePeriod },
+      [COLLAGE]: { ...this.expected.COLLAGE, isRequestedOnSamePeriod },
       ["undefined"]: { ...this.expected["undefined"], isRequestedOnSamePeriod },
     };
     return new AssignableVolunteerFactory(
