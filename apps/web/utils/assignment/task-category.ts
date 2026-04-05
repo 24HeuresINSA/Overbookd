@@ -38,5 +38,5 @@ export const taskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
     [FUN, taskCategoryEmojis.FUN],
     [RELOU, taskCategoryEmojis.RELOU],
     [COLLAGE, taskCategoryEmojis.COLLAGE],
-    ["AUCUNE", taskCategoryEmojis.AUCUNE],
+    [AUCUNE, taskCategoryEmojis.AUCUNE],
   ]);
