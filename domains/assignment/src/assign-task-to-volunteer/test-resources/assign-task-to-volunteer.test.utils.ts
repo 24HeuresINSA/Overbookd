@@ -77,6 +77,7 @@ const defaultAssignmentDurations: Record<MaybeCategory, number> = {
   MANUTENTION: 0,
   RELOU: 0,
   STATIQUE: 0,
+  COLLAGE: 0,
   undefined: 0,
 };
 

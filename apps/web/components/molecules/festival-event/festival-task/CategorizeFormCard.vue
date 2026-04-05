@@ -30,16 +30,7 @@
 
 <script lang="ts" setup>
 import type { Categorize } from "@overbookd/festival-event";
-import {
-  BAR,
-  FUN,
-  MANUTENTION,
-  RELOU,
-  STATIQUE,
-  type Category,
-} from "@overbookd/festival-event-constants";
-
-const categories = [BAR, RELOU, STATIQUE, MANUTENTION, FUN];
+import { categories, type Category } from "@overbookd/festival-event-constants";
 
 const category = ref<Category | undefined>(undefined);
 const topPriority = ref<boolean>(false);

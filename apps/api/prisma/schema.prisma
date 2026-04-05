@@ -564,6 +564,7 @@ enum FestivalTaskCategory {
   RELOU
   STATIQUE
   FUN
+  COLLAGE
 }
 
 model FestivalTask {
