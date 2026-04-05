@@ -19,8 +19,9 @@
       <template
         v-for="category in displayableCategories"
         #[`item.${category}`]="{ item }"
+        :key="category"
       >
-        {{ taskCategoryEmojis[category] }}
+        {{ taskCategoryEmojis[category as DisplayableCategory] }}
         {{ retrieveStat(item.stats, category) }}
       </template>
 

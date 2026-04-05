@@ -6,12 +6,12 @@ import {
   RELOU,
   STATIQUE,
   COLLAGE,
-  categories,
+  taskCategories,
 } from "@overbookd/festival-event-constants";
 
 export const AUCUNE = "AUCUNE";
 
-export const displayableCategories = [...categories, AUCUNE] as const;
+export const displayableCategories = [...taskCategories, AUCUNE] as const;
 
 export type DisplayableCategory = Category | typeof AUCUNE;
 

@@ -13,7 +13,7 @@ export type Category =
   | typeof RELOU
   | typeof COLLAGE;
 
-export const categories = [
+export const taskCategories = [
   STATIQUE,
   BAR,
   MANUTENTION,

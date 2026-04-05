@@ -6,7 +6,7 @@ export {
   FUN,
   RELOU,
   COLLAGE,
-  categories,
+  taskCategories,
 } from "./category";
 export {
   CREATED,
