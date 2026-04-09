@@ -127,11 +127,11 @@
 
 <script lang="ts" setup>
 import {
+  type AssignDrive,
   type FestivalActivity,
   type InquiryRequest,
-  type TimeWindow,
-  type AssignDrive,
   isDraft,
+  type TimeWindow,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
 import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";

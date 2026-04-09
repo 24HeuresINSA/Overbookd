@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
-import { PrismaService } from "../../src/prisma.service";
 import { User } from "@overbookd/user";
-import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import { PrismaService } from "../../src/prisma.service";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 
 @Injectable()
 export class FriendService {

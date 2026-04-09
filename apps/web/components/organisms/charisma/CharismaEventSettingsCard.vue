@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import type { CharismaEventParticipant } from "~/utils/charisma/charisma-event";
-import { required, isInteger, isNumber, min } from "~/utils/rules/input.rules";
+import { isInteger, isNumber, min, required } from "~/utils/rules/input.rules";
 
 const name = defineModel<string>("name", { required: true });
 const date = defineModel<Date>("date", { required: true });

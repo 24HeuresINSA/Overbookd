@@ -1,10 +1,10 @@
 import { GearDetails } from "@overbookd/http";
+import { Period } from "@overbookd/time";
 import {
   DatabaseActivityInquiry,
   DatabaseDashboardGear,
   DatabaseTaskInquiry,
 } from "../repository/dashboard.model";
-import { Period } from "@overbookd/time";
 import { sumQuantity } from "./sum-quantity";
 
 export class DashboardGearInquiry {

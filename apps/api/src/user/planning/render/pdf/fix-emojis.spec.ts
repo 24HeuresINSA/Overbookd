@@ -1,6 +1,6 @@
 import { Content } from "pdfmake/interfaces";
-import { fixEmojis, splitTextWithEmojis } from "./fix-emojis";
 import { describe, expect, it } from "vitest";
+import { fixEmojis, splitTextWithEmojis } from "./fix-emojis";
 
 const font = "NotoEmoji";
 

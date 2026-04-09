@@ -1,24 +1,24 @@
-import jwt from "jsonwebtoken";
 import { BadRequestException } from "@nestjs/common";
-import {
-  FulfilledRegistration,
-  RegisterNewcomer,
-  VOLUNTEER,
-  STAFF,
-  Credentials,
-  ForgetMember,
-  Membership,
-  NewcomerRegistered,
-  isStaffRegistered,
-  isVolunteerRegistered,
-} from "@overbookd/registration";
-import { jwtConstants } from "../../authentication/jwt-constants";
-import { DomainEventService } from "../../domain-event/domain-event.service";
-import { isString } from "class-validator";
 import {
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
+import {
+  Credentials,
+  ForgetMember,
+  FulfilledRegistration,
+  Membership,
+  NewcomerRegistered,
+  RegisterNewcomer,
+  STAFF,
+  VOLUNTEER,
+  isStaffRegistered,
+  isVolunteerRegistered,
+} from "@overbookd/registration";
+import { isString } from "class-validator";
+import jwt from "jsonwebtoken";
+import { jwtConstants } from "../../authentication/jwt-constants";
+import { DomainEventService } from "../../domain-event/domain-event.service";
 import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
 
 type Member = {

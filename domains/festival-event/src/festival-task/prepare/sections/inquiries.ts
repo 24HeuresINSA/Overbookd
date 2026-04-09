@@ -4,9 +4,9 @@ import {
   InquiryNotFound,
 } from "../../../common/inquiry-request.error.js";
 import {
-  InquiryRequest,
-  BaseInquiryRequest,
   AssignDrive,
+  BaseInquiryRequest,
+  InquiryRequest,
 } from "../../../common/inquiry-request.js";
 
 export class Inquiries {

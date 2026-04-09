@@ -1,28 +1,28 @@
 import {
-  Logger,
-  InternalServerErrorException,
-  OnApplicationBootstrap,
   Injectable,
+  InternalServerErrorException,
+  Logger,
+  OnApplicationBootstrap,
 } from "@nestjs/common";
-import { MailTestRequestDto } from "./dto/mail-test.request.dto";
-import { DomainEventService } from "../domain-event/domain-event.service";
+import {
+  FestivalActivityRejected,
+  FestivalTaskRejected,
+} from "@overbookd/domain-events";
 import {
   PreviewFestivalActivity,
   PreviewFestivalTask,
 } from "@overbookd/festival-event";
 import {
-  FestivalTaskRejected,
-  FestivalActivityRejected,
-} from "@overbookd/domain-events";
-import { nicknameOrName, Profile } from "@overbookd/user";
-import { Membership } from "@overbookd/registration";
-import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
   REJECTED,
 } from "@overbookd/festival-event-constants";
-import { createTransport, SendMailOptions } from "nodemailer";
+import { Membership } from "@overbookd/registration";
+import { nicknameOrName, Profile } from "@overbookd/user";
 import { renderFile } from "ejs";
+import { createTransport, SendMailOptions } from "nodemailer";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { PrismaMembers } from "./repository/members.prisma";
 
 type EmailResetPassword = {

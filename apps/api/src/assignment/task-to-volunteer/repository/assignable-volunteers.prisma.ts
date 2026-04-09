@@ -4,31 +4,31 @@ import {
   AssignmentSpecification,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
-import { IProvidePeriod, Period } from "@overbookd/time";
-import { PrismaService } from "../../../prisma.service";
-import {
-  DatabaseStoredAssignableVolunteer,
-  SELECT_VOLUNTEER,
-} from "./assignable-volunteer.query";
-import {
-  SELECT_PERIOD,
-  overlapPeriodCondition,
-  includePeriodCondition,
-} from "../../../common/query/period.query";
-import {
-  COUNT_FRIENDS,
-  hasAtLeastOneFriend,
-} from "../../common/repository/friend.query";
-import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
-import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
-import { extendOneOfTeams } from "../../common/extend-teams";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { Charisma } from "@overbookd/charisma";
+import { NO_PREF } from "@overbookd/preference";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
-import { NO_PREF } from "@overbookd/preference";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import {
+  SELECT_PERIOD,
+  includePeriodCondition,
+  overlapPeriodCondition,
+} from "../../../common/query/period.query";
+import { PrismaService } from "../../../prisma.service";
+import { extendOneOfTeams } from "../../common/extend-teams";
+import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
+import {
+  COUNT_FRIENDS,
+  hasAtLeastOneFriend,
+} from "../../common/repository/friend.query";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
+import {
+  DatabaseStoredAssignableVolunteer,
+  SELECT_VOLUNTEER,
+} from "./assignable-volunteer.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}

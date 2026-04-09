@@ -1,10 +1,10 @@
+import { CatalogCategory, CategoryOwner } from "@overbookd/http";
+import { beforeEach, describe, expect, it } from "vitest";
+import { CategoryService } from "./category.service";
 import {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,
 } from "./repositories/in-memory";
-import { CategoryService } from "./category.service";
-import { CatalogCategory, CategoryOwner } from "@overbookd/http";
-import { beforeEach, describe, expect, it } from "vitest";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamSigna = { name: "Orga Signaletique", code: "signa" };

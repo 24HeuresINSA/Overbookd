@@ -36,11 +36,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { ChartData, ChartOptions } from "chart.js";
-import { Line } from "vue-chartjs";
-import "chartjs-adapter-luxon";
-import type { MyTransaction } from "@overbookd/personal-account";
 import { Money } from "@overbookd/money";
+import type { MyTransaction } from "@overbookd/personal-account";
+import type { ChartData, ChartOptions } from "chart.js";
+import "chartjs-adapter-luxon";
+import { Line } from "vue-chartjs";
 import { calculateBalanceByDates } from "~/utils/transaction/balance.graph";
 import { getBorderColorForAmount } from "~/utils/transaction/border-color.graph";
 

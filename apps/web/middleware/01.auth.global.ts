@@ -1,8 +1,8 @@
+import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
+import { AuthRepository } from "~/repositories/auth.repository";
 import { useAuthStore } from "~/stores/auth";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
-import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
-import { AuthRepository } from "~/repositories/auth.repository";
 import { isTokenValid } from "~/utils/user/auth.utils";
 
 export default defineNuxtRouteMiddleware(async (to) => {

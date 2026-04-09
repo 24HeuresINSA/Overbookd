@@ -3,13 +3,19 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
+import { AssignmentEvent } from "@overbookd/assignment";
+import { Charisma } from "@overbookd/charisma";
+import { Category } from "@overbookd/festival-event-constants";
 import {
-  JwtPayload,
-  JwtUtil,
-} from "../authentication/entities/jwt-util.entity";
-import { PrismaService } from "../prisma.service";
-import { retrievePermissions } from "../team/utils/permissions";
-import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
+  BE_AFFECTED,
+  HAVE_PERSONAL_ACCOUNT,
+  MANAGE_ADMINS,
+  MANAGE_USERS,
+  PAY_CONTRIBUTION,
+} from "@overbookd/permission";
+import { Balance } from "@overbookd/personal-account";
+import { ADMIN } from "@overbookd/team-constants";
+import { Period } from "@overbookd/time";
 import {
   MyUserInformation,
   Profile,
@@ -17,6 +23,23 @@ import {
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
+import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
+import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
+import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
+import {
+  JwtPayload,
+  JwtUtil,
+} from "../authentication/entities/jwt-util.entity";
+import {
+  MinimalCharismaPeriod,
+  SELECT_CHARISMA_PERIOD,
+} from "../common/query/charisma.query";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import { PrismaService } from "../prisma.service";
+import { retrievePermissions } from "../team/utils/permissions";
+import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
 import {
   Consumer,
   DatabaseConsumer,
@@ -32,29 +55,6 @@ import {
   SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER,
   hasPermission,
 } from "./user.query";
-import { Category } from "@overbookd/festival-event-constants";
-import {
-  BE_AFFECTED,
-  HAVE_PERSONAL_ACCOUNT,
-  MANAGE_ADMINS,
-  MANAGE_USERS,
-  PAY_CONTRIBUTION,
-} from "@overbookd/permission";
-import { AssignmentEvent } from "@overbookd/assignment";
-import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
-import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
-import { Period } from "@overbookd/time";
-import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
-import { Balance } from "@overbookd/personal-account";
-import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
-import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
-import {
-  MinimalCharismaPeriod,
-  SELECT_CHARISMA_PERIOD,
-} from "../common/query/charisma.query";
-import { Charisma } from "@overbookd/charisma";
-import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
-import { ADMIN } from "@overbookd/team-constants";
 
 @Injectable()
 export class UserService {

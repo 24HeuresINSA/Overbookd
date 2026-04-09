@@ -4,18 +4,18 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CategoryNotFoundException } from "./category.service";
-import {
-  CategoryRepository,
-  GearRepository,
-} from "./repositories/catalog-repositories";
-import { SlugifyService } from "@overbookd/slugify";
 import {
   CatalogCategory,
   CatalogGear,
   CatalogGearForm,
   GearSearchOptions,
 } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
+import { CategoryNotFoundException } from "./category.service";
+import {
+  CategoryRepository,
+  GearRepository,
+} from "./repositories/catalog-repositories";
 
 type GearUpdateForm = CatalogGearForm & {
   id: number;

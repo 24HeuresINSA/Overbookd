@@ -1,12 +1,12 @@
 import {
   BDE,
   CVL,
+  HAUTS_DE_FRANCE,
   KARNA,
   KFET,
   ROUEN,
   STRASBOURG,
   TECKOS,
-  HAUTS_DE_FRANCE,
 } from "@overbookd/team-constants";
 
 export const TEAM_CODES: TeamCode[] = [

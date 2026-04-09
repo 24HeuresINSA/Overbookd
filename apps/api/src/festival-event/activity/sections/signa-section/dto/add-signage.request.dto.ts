@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  PrepareSignageCreation,
   SignageType,
   signageTypes,
-  PrepareSignageCreation,
 } from "@overbookd/festival-event";
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
 

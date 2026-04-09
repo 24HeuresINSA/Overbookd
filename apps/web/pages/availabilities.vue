@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { EVIL_CHARISMA, EVIL, COOL } from "~/utils/easter-egg/evil-charisma";
+import { COOL, EVIL, EVIL_CHARISMA } from "~/utils/easter-egg/evil-charisma";
 
 useHead({ title: "Mes dispos" });
 

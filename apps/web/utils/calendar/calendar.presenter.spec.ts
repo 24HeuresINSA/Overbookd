@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { MINUTES_IN_HOUR, OverDate } from "@overbookd/time";
-import { createCalendarEvent } from "./event";
+import { describe, expect, it } from "vitest";
 import {
   CalendarEventPresenter,
   HORIZONTAL_MARGIN_IN_PERCENTAGE,
@@ -8,6 +7,7 @@ import {
   VERTICAL_MARGIN_IN_PIXELS,
 } from "./calendar.presenter";
 import { DayPresenter } from "./day.presenter";
+import { createCalendarEvent } from "./event";
 
 const sunday = "2024-12-29";
 const monday = "2024-12-30";

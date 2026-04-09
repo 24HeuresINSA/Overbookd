@@ -47,18 +47,18 @@
 
 <script lang="ts" setup>
 import type { Borrow } from "@overbookd/logistic";
+import { SlugifyService } from "@overbookd/slugify";
+import { formatDateToHumanReadable } from "@overbookd/time";
 import { BORROW_GEARS_URL } from "@overbookd/web-page";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   openPageWithId,
   openPageWithIdInNewTab,
 } from "~/utils/navigation/router.utils";
-import { formatDateToHumanReadable } from "@overbookd/time";
-import { SlugifyService } from "@overbookd/slugify";
 import {
   type Searchable,
   keepMatchingSearchCriteria,
 } from "~/utils/search/search.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const borrowStore = useBorrowStore();
 const layoutStore = useLayoutStore();

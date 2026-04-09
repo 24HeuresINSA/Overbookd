@@ -1,16 +1,16 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import {
-  CategoryRepository,
-  TeamRepository,
-} from "./repositories/catalog-repositories";
-import { SlugifyService } from "@overbookd/slugify";
-import {
   CatalogCategory,
   CatalogCategoryTree,
   CategoryForm,
   CategoryOwner,
   CategorySearchOptions,
 } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  CategoryRepository,
+  TeamRepository,
+} from "./repositories/catalog-repositories";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {

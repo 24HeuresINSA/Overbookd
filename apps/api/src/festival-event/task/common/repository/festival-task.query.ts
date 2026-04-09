@@ -15,19 +15,19 @@ import {
   isAssignedToDrive,
   isDraft,
 } from "@overbookd/festival-event";
-import { SELECT_CONTACT } from "./adherent.query";
-import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
-import { Prisma } from "../../../../generated/prisma/client";
-import { SELECT_EVENT } from "./event.query";
-import { SELECT_MOBILIZATION } from "./mobilization.query";
-import { SELECT_INQUIRY_REQUEST } from "./inquiry.query";
-import { SELECT_FEEDBACKS } from "./feedback.query";
-import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
-import { SELECT_LOCATION } from "../../../common/repository/location.query";
-import { Item } from "@overbookd/list";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { Item } from "@overbookd/list";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { ORDER_BY_PERIOD } from "../../../../common/query/period.query";
+import { Prisma } from "../../../../generated/prisma/client";
+import { SELECT_LOCATION } from "../../../common/repository/location.query";
+import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
+import { SELECT_CONTACT } from "./adherent.query";
+import { SELECT_EVENT } from "./event.query";
+import { SELECT_FEEDBACKS } from "./feedback.query";
+import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
+import { SELECT_INQUIRY_REQUEST } from "./inquiry.query";
+import { SELECT_MOBILIZATION } from "./mobilization.query";
 
 const SELECT_REVIEWS = {
   reviews: {

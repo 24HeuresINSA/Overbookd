@@ -37,6 +37,11 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { FA_URL } from "@overbookd/web-page";
 import { useLiveNotification } from "~/composable/useLiveNotification";
@@ -44,11 +49,6 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
-import {
-  FESTIVAL_ACTIVITY_APPROVED,
-  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
-  FESTIVAL_ACTIVITY_REJECTED,
-} from "@overbookd/domain-events";
 
 const route = useRoute();
 const faStore = useFestivalActivityStore();

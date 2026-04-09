@@ -43,30 +43,30 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type {
   FestivalActivity,
-  FestivalTask,
   FestivalEventIdentifier,
+  FestivalTask,
 } from "@overbookd/festival-event";
 import {
-  type FaStatusLabel,
-  faStatusLabels,
-} from "~/utils/festival-event/festival-activity/festival-activity.model";
+  statusLabels as ftStatusLabels,
+  type StatusLabel as FtStatusLabel,
+} from "@overbookd/festival-event-constants";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
-import type { FestivalEventStatus } from "~/utils/festival-event/festival-event.utils";
-import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { useDebounceFn } from "@vueuse/core";
+import {
+  faStatusLabels,
+  type FaStatusLabel,
+} from "~/utils/festival-event/festival-activity/festival-activity.model";
 import {
   ADHERENT_QUERY_PARAM,
   SEARCH_QUERY_PARAM,
   STATUS_QUERY_PARAM,
   TEAM_QUERY_PARAM,
 } from "~/utils/festival-event/festival-event.constant";
-import {
-  statusLabels as ftStatusLabels,
-  type StatusLabel as FtStatusLabel,
-} from "@overbookd/festival-event-constants";
+import type { FestivalEventStatus } from "~/utils/festival-event/festival-event.utils";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 const userStore = useUserStore();
 

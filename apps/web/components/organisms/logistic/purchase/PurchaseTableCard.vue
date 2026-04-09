@@ -42,19 +42,19 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDateToHumanReadable } from "@overbookd/time";
 import type { Purchase } from "@overbookd/logistic";
+import { SlugifyService } from "@overbookd/slugify";
+import { formatDateToHumanReadable } from "@overbookd/time";
 import { PURCHASE_GEARS_URL } from "@overbookd/web-page";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   openPageWithId,
   openPageWithIdInNewTab,
 } from "~/utils/navigation/router.utils";
-import { SlugifyService } from "@overbookd/slugify";
 import {
   type Searchable,
   keepMatchingSearchCriteria,
 } from "~/utils/search/search.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const purchaseStore = usePurchaseStore();
 const layoutStore = useLayoutStore();

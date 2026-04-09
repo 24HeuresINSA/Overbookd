@@ -60,16 +60,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
+import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
+import type { Team } from "@overbookd/team";
 import {
   type UserPersonalData,
   buildUserNameWithNickname,
 } from "@overbookd/user";
-import type { Team } from "@overbookd/team";
-import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { PLANNING_URL } from "@overbookd/web-page";
-import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 defineProps({
   volunteers: {

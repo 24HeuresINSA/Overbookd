@@ -78,14 +78,14 @@
 </template>
 
 <script lang="ts" setup>
+import { SlugifyService } from "@overbookd/slugify";
 import type { Team } from "@overbookd/team";
-import { nextSortDirection, Sort } from "~/utils/sort/sort.utils";
-import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
   type FriendFilter,
   friendFilterLabel,
 } from "~/utils/assignment/assignment.utils";
-import { SlugifyService } from "@overbookd/slugify";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import { nextSortDirection, Sort } from "~/utils/sort/sort.utils";
 
 const route = useRoute();
 

@@ -63,8 +63,8 @@ import type { MyTransaction } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
 import { MY_PERSONAL_ACCOUNT_URL } from "@overbookd/web-page";
 import {
-  getTransactionIcon,
   formatAmount,
+  getTransactionIcon,
   getTransferMessage,
   isDebit,
 } from "~/utils/transaction/transaction.utils";

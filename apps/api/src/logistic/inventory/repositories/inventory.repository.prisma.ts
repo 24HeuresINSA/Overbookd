@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { convertGearToApiContract } from "../../catalog/repositories/prisma/gear.repository.prisma";
-import { InventoryRepository } from "../inventory.service";
-import { PrismaService } from "../../../prisma.service";
 import {
   InventoryGroupedRecord,
   InventoryRecord,
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
+import { PrismaService } from "../../../prisma.service";
+import { convertGearToApiContract } from "../../catalog/repositories/prisma/gear.repository.prisma";
 import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder";
 import { GroupInventoryRecord } from "../inventory-grouped-record";
+import { InventoryRepository } from "../inventory.service";
 
 @Injectable()
 export class PrismaInventoryRepository implements InventoryRepository {

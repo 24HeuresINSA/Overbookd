@@ -1,21 +1,21 @@
+import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
 import type { Permission } from "@overbookd/permission";
-import { isHttpError } from "~/utils/http/http-error.utils";
+import type { Membership } from "@overbookd/registration";
+import { ADMIN } from "@overbookd/team-constants";
+import type { Profile, User, UserPersonalData } from "@overbookd/user";
+import { jwtDecode } from "jwt-decode";
+import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
+import { UserRepository } from "~/repositories/user.repository";
 import {
   castConsumerWithDate,
   castMyUserInformationWithDate,
   castUserPersonalDataWithDate,
 } from "~/utils/http/cast-date/user.utils";
+import { isHttpError } from "~/utils/http/http-error.utils";
 import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import type { Profile, User, UserPersonalData } from "@overbookd/user";
-import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
-import { jwtDecode } from "jwt-decode";
-import { UserRepository } from "~/repositories/user.repository";
-import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
-import type { Membership } from "@overbookd/registration";
-import { ADMIN } from "@overbookd/team-constants";
 
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;

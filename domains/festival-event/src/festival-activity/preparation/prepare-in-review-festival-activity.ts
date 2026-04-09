@@ -6,54 +6,7 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
-import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
-import { Contractors } from "./section-aggregates/contractors.js";
-import { TimeWindows } from "./section-aggregates/time-windows.js";
-import { IProvidePeriod } from "@overbookd/time";
-import { FestivalActivity, Reviewable } from "../festival-activity.js";
-import { isValidatedReviews } from "../../common/review.js";
-import { Reviews } from "../../common/review.js";
-import { isRefusedReviews } from "../../common/review.js";
-import { InquiryOwner } from "../sections/inquiry.js";
-import { InquiryRequest } from "../../common/inquiry-request.js";
-import { ElectricitySupply } from "../sections/supply.js";
-import { Signage } from "../sections/signa.js";
-import { Contractor } from "../sections/in-charge.js";
-import { TimeWindow } from "../../common/time-window.js";
-import {
-  PrepareGeneralUpdate,
-  PrepareInChargeUpdate,
-  PrepareSignaUpdate,
-  PrepareSupplyUpdate,
-  PrepareContractorCreation,
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-  PrepareContractorUpdate,
-  PrepareInquiryRequestCreation,
-  PrepareSignageCreation,
-  PrepareSignageUpdate,
-  LinkInquiryDrive,
-  LinkSignageCatalogItem,
-  PrepareSecurityUpdate,
-  PrepareInquiryRequestRemoving,
-  PrepareInquiryRequestUpdating,
-} from "./prepare-festival-activity.model.js";
-import {
-  FestivalActivityError,
-  FreePassMustBePositive,
-} from "../festival-activity.error.js";
 import { hasAtLeastOneItem } from "@overbookd/list";
-import {
-  AlreadyInitialized,
-  CantRemoveLastRequest,
-  CantRemoveLastTimeWindow,
-  Inquiries,
-  NotYetInitialized,
-} from "./section-aggregates/inquiries.js";
-import { LocationIsRequired, Signages } from "./section-aggregates/signages.js";
-import { isPrivate } from "../sections/general.js";
-import { AlreadyApprovedBy } from "../../common/review.error.js";
 import {
   BARRIERES,
   COMMUNICATION,
@@ -63,6 +16,55 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { IProvidePeriod } from "@overbookd/time";
+import { InquiryRequest } from "../../common/inquiry-request.js";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import {
+  isRefusedReviews,
+  isValidatedReviews,
+  Reviews,
+} from "../../common/review.js";
+import { TimeWindow } from "../../common/time-window.js";
+import {
+  FestivalActivityError,
+  FreePassMustBePositive,
+} from "../festival-activity.error.js";
+import { FestivalActivity, Reviewable } from "../festival-activity.js";
+import { isPrivate } from "../sections/general.js";
+import { Contractor } from "../sections/in-charge.js";
+import { InquiryOwner } from "../sections/inquiry.js";
+import { Signage } from "../sections/signa.js";
+import { ElectricitySupply } from "../sections/supply.js";
+import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
+import {
+  LinkInquiryDrive,
+  LinkSignageCatalogItem,
+  PrepareContractorCreation,
+  PrepareContractorUpdate,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
+  PrepareInquiryRequestCreation,
+  PrepareInquiryRequestRemoving,
+  PrepareInquiryRequestUpdating,
+  PrepareSecurityUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
+  PrepareSignaUpdate,
+  PrepareSupplyUpdate,
+} from "./prepare-festival-activity.model.js";
+import { Contractors } from "./section-aggregates/contractors.js";
+import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
+import {
+  AlreadyInitialized,
+  CantRemoveLastRequest,
+  CantRemoveLastTimeWindow,
+  Inquiries,
+  NotYetInitialized,
+} from "./section-aggregates/inquiries.js";
+import { LocationIsRequired, Signages } from "./section-aggregates/signages.js";
+import { TimeWindows } from "./section-aggregates/time-windows.js";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {

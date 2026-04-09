@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty } from "class-validator";
 import {
   Configuration,
   ConfigurationKey,
   configurationKeys,
 } from "@overbookd/configuration";
+import { IsEnum, IsNotEmpty } from "class-validator";
 
 export class ConfigurationResponseDto implements Configuration {
   @ApiProperty({

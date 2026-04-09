@@ -3,7 +3,7 @@ import {
   BarrelNotConfigured,
   SimilarBarrelExist,
 } from "@overbookd/personal-account";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { RouteLogger } from "../route-logger";
 
 @Catch(BarrelNotConfigured)

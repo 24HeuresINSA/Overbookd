@@ -6,15 +6,15 @@ import {
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
-import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 import {
-  FA_URL,
-  FT_URL,
   FA_GEAR_DASHBOARD_URL,
   FA_TO_PUBLISH_URL,
-  STATS_URL,
+  FA_URL,
+  FT_URL,
   SECURITY_DASHBOARD_URL,
+  STATS_URL,
 } from "@overbookd/web-page";
+import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
 export const FA_LIST_PAGE: PageInSummary = {
   icon: "mdi-chart-bubble",

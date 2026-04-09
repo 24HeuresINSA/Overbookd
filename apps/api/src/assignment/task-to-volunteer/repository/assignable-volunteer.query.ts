@@ -1,17 +1,17 @@
 import { Category } from "@overbookd/festival-event-constants";
+import { AssignmentPreferenceType } from "@overbookd/preference";
 import { IProvidePeriod } from "@overbookd/time";
-import { DatabaseFriendCount } from "../../common/repository/friend.query";
+import { User } from "@overbookd/user";
+import {
+  SELECT_USER_DATA_FOR_CHARISMA,
+  UserDataForCharisma,
+} from "../../../common/query/charisma.query";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_ASSIGNMENT_PREFERENCE,
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
-import {
-  SELECT_USER_DATA_FOR_CHARISMA,
-  UserDataForCharisma,
-} from "../../../common/query/charisma.query";
-import { User } from "@overbookd/user";
-import { AssignmentPreferenceType } from "@overbookd/preference";
+import { DatabaseFriendCount } from "../../common/repository/friend.query";
 
 type DatabaseFriend = {
   id: number;

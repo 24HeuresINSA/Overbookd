@@ -1,15 +1,15 @@
 import {
-  Controller,
-  UseGuards,
-  UseFilters,
-  Post,
   Body,
-  Get,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   ParseIntPipe,
   Patch,
+  Post,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -18,18 +18,18 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { CharismaEventService } from "./charisma-event.service";
-import { CharismaEventErrorFilter } from "./charisma-event-error.filter";
 import { MANAGE_CHARISMA_EVENTS } from "@overbookd/permission";
-import { CharismaEventParticipationResponseDto } from "./dto/participation.response.dto";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
-import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 import { DateString } from "@overbookd/time";
-import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { CharismaEventErrorFilter } from "./charisma-event-error.filter";
+import { CharismaEventService } from "./charisma-event.service";
+import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
+import { EditCharismaEventParticipationRequestDto } from "./dto/edit-participation.request.dto";
+import { CharismaEventParticipationResponseDto } from "./dto/participation.response.dto";
+import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 
 @Controller("charisma-events")
 @ApiTags("charisma-events")

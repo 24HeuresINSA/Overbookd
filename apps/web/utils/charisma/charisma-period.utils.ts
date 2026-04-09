@@ -1,5 +1,5 @@
-import { Period } from "@overbookd/time";
 import type { SavedCharismaPeriod } from "@overbookd/http";
+import { Period } from "@overbookd/time";
 import { BLUE_24_RGB } from "../vuetify/theme/common";
 
 // TODO: should need more test with period have parts of it in several charismaPeriod

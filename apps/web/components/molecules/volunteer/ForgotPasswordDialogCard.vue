@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { required, isEmail, isInsaEmail } from "~/utils/rules/input.rules";
+import { isEmail, isInsaEmail, required } from "~/utils/rules/input.rules";
 
 const email = ref<string>("");
 

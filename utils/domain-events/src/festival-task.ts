@@ -3,9 +3,9 @@ import {
   Adherent,
   FestivalTaskDraft as Draft,
   FestivalTaskInReview as InReview,
+  FestivalTaskReadyToAssign as ReadyToAssignTask,
   FestivalTaskRefused as Refused,
   FestivalTaskReviewable as Reviewable,
-  FestivalTaskReadyToAssign as ReadyToAssignTask,
 } from "@overbookd/festival-event";
 
 export const FESTIVAL_TASK_CREATED = "festival-task-created";

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { PrismaModule } from "../../prisma.module";
-import { StatisticsService } from "./statistics.service";
-import { PrismaFestivalActivityStatistics } from "./repository/festival-activities.prisma";
 import { PrismaService } from "../../prisma.service";
+import { PrismaFestivalActivityStatistics } from "./repository/festival-activities.prisma";
 import { PrismaFestivalTaskStatistics } from "./repository/festival-tasks.prisma";
+import { StatisticsService } from "./statistics.service";
 @Module({
   providers: [
     {

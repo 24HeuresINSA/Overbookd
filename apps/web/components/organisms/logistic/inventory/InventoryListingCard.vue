@@ -71,8 +71,8 @@ import {
   type InventoryRecordSearchOptions,
 } from "@overbookd/http";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { slugifiedFilter } from "~/utils/search/search.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const inventoryStore = useInventoryStore();
 const layoutStore = useLayoutStore();

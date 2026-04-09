@@ -24,10 +24,10 @@
 </template>
 
 <script lang="ts" setup>
-import Logo from "./Logo.vue";
-import HeaderProfile from "./HeaderProfile.vue";
 import { findPage } from "~/utils/navigation/find-page.utils";
 import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
+import HeaderProfile from "./HeaderProfile.vue";
+import Logo from "./Logo.vue";
 
 const PREPROD_TOOLTIP_TITLE =
   "Tu es sur la version de pré-production d'Overbookd.";

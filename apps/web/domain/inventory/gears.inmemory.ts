@@ -1,5 +1,5 @@
-import type { Gears } from "./gears";
 import type { CatalogGear } from "@overbookd/http";
+import type { Gears } from "./gears";
 
 export class InMemoryGears implements Gears {
   constructor(private gears: CatalogGear[]) {}

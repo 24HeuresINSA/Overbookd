@@ -2,8 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Alerts } from "@overbookd/alerts";
 import { IAlertAboutContribution } from "@overbookd/contribution";
 import { IAlertAboutPersonalAccount } from "@overbookd/personal-account";
-import { PersonalAccountResponseDto } from "./personal-account.response.dto";
 import { ContributionResponseDto } from "./contribution.response.dto";
+import { PersonalAccountResponseDto } from "./personal-account.response.dto";
 
 export class AlertsResponseDto implements Alerts {
   @ApiProperty({

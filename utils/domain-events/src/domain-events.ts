@@ -17,11 +17,11 @@ import type {
 import {
   FestivalTaskApproved,
   FestivalTaskCreated,
+  FestivalTaskDoReview,
   FestivalTaskIgnored,
+  FestivalTaskReadyToAssign,
   FestivalTaskReadyToReview,
   FestivalTaskRejected,
-  FestivalTaskReadyToAssign,
-  FestivalTaskDoReview,
 } from "./festival-task.js";
 import {
   StaffRegisteredEvent,

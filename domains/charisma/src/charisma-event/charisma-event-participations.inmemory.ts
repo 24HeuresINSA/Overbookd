@@ -1,12 +1,12 @@
+import { DateString } from "@overbookd/time";
 import { User } from "@overbookd/user";
 import {
-  Participation,
   CharismaEventParticipations,
   CreateParticipation,
-  ParticipantTakingPart,
   EditParticipation,
+  ParticipantTakingPart,
+  Participation,
 } from "./charisma-event";
-import { DateString } from "@overbookd/time";
 
 export class InMemoryCharismaEventParticipations implements CharismaEventParticipations {
   constructor(

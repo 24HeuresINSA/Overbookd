@@ -5,30 +5,6 @@ import {
   REVIEWING,
 } from "@overbookd/festival-event-constants";
 import {
-  FestivalActivity,
-  InReview,
-  Refused,
-  Reviewable,
-} from "../festival-activity.js";
-import { InReviewReviews, RefusedReviews } from "../../common/review.js";
-import {
-  PublicActivityGeneralSpecification,
-  ActivityGeneralSpecification,
-  PublicGeneral,
-} from "./specifications/general-section-specification.js";
-import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification.js";
-import { ActivitySignaSpecification } from "./specifications/signa-section-specification.js";
-import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification.js";
-import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
-import { WaitingForReview } from "../../common/notifications.js";
-import {
-  Reviewer,
-  PrivateActivityReviewer,
-  PublicActivityReviewer,
-} from "../../common/review.js";
-import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
-import { Adherent } from "../../common/adherent.js";
-import {
   BARRIERES,
   COMMUNICATION,
   HUMAIN,
@@ -37,6 +13,31 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { Adherent } from "../../common/adherent.js";
+import { WaitingForReview } from "../../common/notifications.js";
+import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
+import {
+  InReviewReviews,
+  PrivateActivityReviewer,
+  PublicActivityReviewer,
+  RefusedReviews,
+  Reviewer,
+} from "../../common/review.js";
+import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
+import {
+  FestivalActivity,
+  InReview,
+  Refused,
+  Reviewable,
+} from "../festival-activity.js";
+import {
+  ActivityGeneralSpecification,
+  PublicActivityGeneralSpecification,
+  PublicGeneral,
+} from "./specifications/general-section-specification.js";
+import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification.js";
+import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification.js";
+import { ActivitySignaSpecification } from "./specifications/signa-section-specification.js";
 
 type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;

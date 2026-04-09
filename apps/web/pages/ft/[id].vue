@@ -70,21 +70,21 @@
 
 <script lang="ts" setup>
 import {
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+} from "@overbookd/domain-events";
+import {
   type Categorize,
   type FestivalTask,
-  isValidated,
   isReadyToAssign,
+  isValidated,
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { FT_URL } from "@overbookd/web-page";
 import { useLiveNotification } from "~/composable/useLiveNotification";
-import {
-  FESTIVAL_TASK_APPROVED,
-  FESTIVAL_TASK_READY_TO_REVIEW,
-  FESTIVAL_TASK_REJECTED,
-  FESTIVAL_TASK_IGNORED,
-  FESTIVAL_TASK_READY_TO_ASSIGN,
-} from "@overbookd/domain-events";
 import { AUCUNE } from "~/utils/assignment/task-category";
 
 const route = useRoute();

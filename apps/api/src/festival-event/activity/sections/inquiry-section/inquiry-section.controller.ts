@@ -1,55 +1,55 @@
 import {
-  UseFilters,
+  Body,
   Controller,
-  Request,
-  UseGuards,
-  Post,
+  Delete,
   HttpCode,
   Param,
   ParseIntPipe,
-  Body,
-  Delete,
   Patch,
+  Post,
+  Request,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
   ApiBody,
+  ApiExtraModels,
   ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import {
   FestivalActivity,
   InquiryRequest,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
+import { VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import { RequestWithUserPayload } from "../../../../app.controller";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
-import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
-import {
-  InReviewFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
-  RefusedFestivalActivityResponseDto,
-} from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
-import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
-import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
-import { InquirySectionService } from "./inquiry-section.service";
-import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { AddInquiryRequestDto } from "../../../common/dto/add-inquiry-request.request.dto";
-import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../../../common/dto/inquiry-request.response.dto";
+import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
+import { UpdateInquiryRequestDto } from "../../../common/dto/update-inquiry-request.request.dto";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
+import {
+  InReviewFestivalActivityResponseDto,
+  RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
+} from "../../common/dto/reviewable/reviewable-festival-activity.dto";
+import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
+import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
+import { InquirySectionService } from "./inquiry-section.service";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

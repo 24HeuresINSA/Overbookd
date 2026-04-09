@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   TimelineActivity,
+  TimelineAssignee,
+  TimelineAssignment,
+  TimelineEvent,
   TimelineMobilization,
   TimelineTask,
-  TimelineEvent,
-  TimelineAssignment,
-  TimelineAssignee,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
 

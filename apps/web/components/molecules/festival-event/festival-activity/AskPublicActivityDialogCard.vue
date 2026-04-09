@@ -44,9 +44,9 @@
 
 <script lang="ts" setup>
 import type { FestivalActivity } from "@overbookd/festival-event";
-import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { type IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 import { hasAtLeastOneItem } from "@overbookd/list";
+import { type IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
+import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 const faStore = useFestivalActivityStore();
 const configurationStore = useConfigurationStore();

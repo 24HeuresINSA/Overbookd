@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { CharismaEventController } from "./charisma-event.controller";
+import { CharismaEvent } from "@overbookd/charisma";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
+import { CharismaEventController } from "./charisma-event.controller";
 import { CharismaEventService } from "./charisma-event.service";
 import { PrismaManageCharismaEventParticipations } from "./repository/manage-participations.prisma";
-import { CharismaEvent } from "@overbookd/charisma";
 import { PrismaCharismaEventPotentialParticipants } from "./repository/potential-participants.prisma";
 import { PrismaViewCharismaEventParticipations } from "./repository/view-participations.prisma";
 

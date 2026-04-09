@@ -1,6 +1,6 @@
+import type { CreateLocation } from "@overbookd/http";
 import type { SignaLocation } from "@overbookd/signa";
 import { LocationRepository } from "~/repositories/location.repository";
-import type { CreateLocation } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {

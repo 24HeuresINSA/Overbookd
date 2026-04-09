@@ -1,8 +1,8 @@
-import { IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "@overbookd/http";
-import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
+import { IMAGE_EXTENSIONS, IMAGE_MAX_SIZE } from "@overbookd/http";
 import {
   isMobilePhoneNumberValid,
   isPhoneNumberValid,
+  SPECIAL_CHARS_REGEX_PATERN,
 } from "@overbookd/registration";
 
 export function isNumber(value: string | null): boolean | string {

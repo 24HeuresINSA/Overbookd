@@ -98,7 +98,7 @@
 <script lang="ts" setup>
 import { formatPhoneNumber } from "@overbookd/registration";
 import { HARD } from "@overbookd/team-constants";
-import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
+import { buildUserName, nicknameOrFirstName } from "@overbookd/user";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 
 const userStore = useUserStore();

@@ -3,9 +3,10 @@
 </template>
 
 <script lang="ts" setup>
-import { Line } from "vue-chartjs";
 import type { GearDetails, GearWithDetails } from "@overbookd/http";
 import { formatDateWithMinutes } from "@overbookd/time";
+import type { ActiveElement, ChartEvent } from "chart.js";
+import { Line } from "vue-chartjs";
 import {
   type ChartData,
   type Dataset,
@@ -15,7 +16,6 @@ import {
   isConsumable,
   listStockAndInquiriesSources,
 } from "~/utils/logistic/dashboard-graph";
-import type { ActiveElement, ChartEvent } from "chart.js";
 
 const dashboardStore = useLogisticDashboardStore();
 

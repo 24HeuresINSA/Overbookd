@@ -1,5 +1,8 @@
-import { AssignmentIdentifier } from "@overbookd/assignment";
-import { AssignmentSummary, TaskCategorized } from "@overbookd/assignment";
+import {
+  AssignmentIdentifier,
+  AssignmentSummary,
+  TaskCategorized,
+} from "@overbookd/assignment";
 import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/time";
 

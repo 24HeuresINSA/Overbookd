@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { FestivalTaskReviewService } from "./festival-task-review.service";
 import {
   AskForReviewTask,
   EnableAssignment,
@@ -7,9 +6,10 @@ import {
   ReviewTask,
 } from "@overbookd/festival-event";
 import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { FestivalTaskCommonModule } from "../common/festival-task-common.module";
 import { PrismaAdherents } from "../common/repository/adherents.prisma";
-import { DomainEventService } from "../../../domain-event/domain-event.service";
+import { FestivalTaskReviewService } from "./festival-task-review.service";
 
 @Module({
   providers: [

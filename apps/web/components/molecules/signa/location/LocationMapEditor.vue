@@ -51,16 +51,16 @@
 
 <script lang="ts" setup>
 import {
-  type GeoLocation,
   type Coordinate,
-  POINT,
-  ROAD,
+  type GeoLocation,
+  type ManageLocation,
   AREA,
   Line,
+  LocationFactory,
+  POINT,
   Point,
   Polygon,
-  type ManageLocation,
-  LocationFactory,
+  ROAD,
 } from "@overbookd/geo-location";
 import { isPointLocation } from "@overbookd/signa";
 import { defaultMapConfiguration } from "~/utils/map.config";

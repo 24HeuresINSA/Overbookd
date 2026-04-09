@@ -1,5 +1,5 @@
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { LocationQuery } from "vue-router";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 export const DISPLAY_FA = "fa";
 export const DISPLAY_FT = "ft";

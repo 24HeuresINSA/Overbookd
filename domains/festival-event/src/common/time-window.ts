@@ -1,4 +1,4 @@
-import { OverDate, IProvidePeriod, ONE_MINUTE_IN_MS } from "@overbookd/time";
+import { IProvidePeriod, ONE_MINUTE_IN_MS, OverDate } from "@overbookd/time";
 
 export type TimeWindow = IProvidePeriod & {
   id: string;

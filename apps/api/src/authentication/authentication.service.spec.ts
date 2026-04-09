@@ -1,10 +1,10 @@
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
-import { MailService } from "../mail/mail.service";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailService } from "../mail/mail.service";
 import { UserService } from "../user/user.service";
 import { AuthenticationService } from "./authentication.service";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../prisma.service", () => ({
   PrismaService: vi.fn().mockImplementation(() => ({

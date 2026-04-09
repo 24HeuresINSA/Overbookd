@@ -1,8 +1,8 @@
 import type {
   HasApplication,
+  StaffApplication,
   StaffCandidate,
   VolunteerCandidate,
-  StaffApplication,
 } from "@overbookd/http";
 import type { CandidateToEnroll } from "@overbookd/registration";
 import type { IProvidePeriod } from "@overbookd/time";

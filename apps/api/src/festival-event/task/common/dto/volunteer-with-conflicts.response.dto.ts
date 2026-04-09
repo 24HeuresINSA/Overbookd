@@ -1,9 +1,9 @@
+import { ApiProperty } from "@nestjs/swagger";
 import {
   Conflicts,
   FestivalTaskLink,
   VolunteerWithConflicts,
 } from "@overbookd/festival-event";
-import { ApiProperty } from "@nestjs/swagger";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
 class FestivalTaskLinkDto implements FestivalTaskLink {

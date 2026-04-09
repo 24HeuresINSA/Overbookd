@@ -30,12 +30,12 @@
 
 <script lang="ts" setup>
 import { Duration, OverDate, Period } from "@overbookd/time";
-import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import {
   ALL_HOURS,
   type AvailabilityEvent,
 } from "~/utils/availabilities/availabilities";
 import { findCharismaPerHour } from "~/utils/availabilities/availability-grid.utils";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 const charismaPeriodStore = useCharismaPeriodStore();

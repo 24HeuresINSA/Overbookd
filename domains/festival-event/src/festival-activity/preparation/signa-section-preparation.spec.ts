@@ -1,31 +1,35 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import { signa } from "../../common/review.js";
 import {
-  baladeEnPoney,
-  escapeGame,
-  justDance,
-  pcSecurite,
-  qgOrga,
-  approvedBySigna,
-} from "./preparation.test-utils.js";
-import { PrepareSignageUpdate } from "./prepare-festival-activity.model.js";
+  SignageAlreadyExists,
+  SignageNotFound,
+} from "../festival-activity.error.js";
+import {
+  afficheJustDanceA2,
+  agora,
+  creuxCgu,
+  local24h,
+} from "../festival-activity.fake.js";
 import {
   AFFICHE,
   BACHE,
   PANNEAU,
   SignageCatalogItem,
 } from "../sections/signa.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
-  SignageAlreadyExists,
-  SignageNotFound,
-} from "../festival-activity.error.js";
-import { LocationIsRequired } from "./section-aggregates/signages.js";
-import { signa } from "../../common/review.js";
-import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { afficheJustDanceA2 } from "../festival-activity.fake.js";
-import { agora, creuxCgu, local24h } from "../festival-activity.fake.js";
+  approvedBySigna,
+  baladeEnPoney,
+  escapeGame,
+  justDance,
+  pcSecurite,
+  qgOrga,
+} from "./preparation.test-utils.js";
 import { AssignCatalogItemInDraftActivity } from "./prepare-draft-festival-activity.js";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { PrepareSignageUpdate } from "./prepare-festival-activity.model.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
+import { LocationIsRequired } from "./section-aggregates/signages.js";
 
 const panneauEscapeGameInCatalog: SignageCatalogItem = {
   id: 1,

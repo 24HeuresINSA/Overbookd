@@ -1,10 +1,10 @@
-import {
-  stringifyQueryParam,
-  stringifyArrayQueryParam,
-} from "~/utils/http/url-params.utils";
 import type { Team } from "@overbookd/team";
-import type { LocationQuery } from "vue-router";
 import { OverDate } from "@overbookd/time";
+import type { LocationQuery } from "vue-router";
+import {
+  stringifyArrayQueryParam,
+  stringifyQueryParam,
+} from "~/utils/http/url-params.utils";
 
 export type TimelineFilters = {
   start?: Date;

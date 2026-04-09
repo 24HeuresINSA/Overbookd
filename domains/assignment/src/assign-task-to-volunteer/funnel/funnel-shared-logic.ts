@@ -7,9 +7,9 @@ import {
   isFulfillingDemand,
 } from "./candidate.js";
 import {
+  FulfillDemand,
   FunnelRepositories,
   IActAsFunnel,
-  FulfillDemand,
   IStartupFunnel,
 } from "./funnel.js";
 

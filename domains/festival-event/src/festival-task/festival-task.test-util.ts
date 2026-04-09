@@ -1,5 +1,11 @@
-import { Item } from "@overbookd/list";
 import { VALIDATED } from "@overbookd/festival-event-constants";
+import { Item } from "@overbookd/list";
+import { HARD, PERSONNE } from "@overbookd/team-constants";
+import { InquiryRequest } from "../common/inquiry-request.js";
+import { Location } from "../common/location.js";
+import { TimeWindow } from "../common/time-window.js";
+import { Assignments } from "./enable-assignment/enable-assignment.js";
+import { ValidatedWithConflicts } from "./festival-task.factory.js";
 import { FestivalActivity } from "./festival-task.js";
 import { AddMobilization } from "./prepare/prepare.js";
 import { Contact, Volunteer } from "./sections/instructions.js";
@@ -9,12 +15,6 @@ import {
   VolunteerAvailabilities,
   WithConflicts,
 } from "./volunteer-conflicts.js";
-import { InquiryRequest } from "../common/inquiry-request.js";
-import { Location } from "../common/location.js";
-import { TimeWindow } from "../common/time-window.js";
-import { ValidatedWithConflicts } from "./festival-task.factory.js";
-import { Assignments } from "./enable-assignment/enable-assignment.js";
-import { PERSONNE, HARD } from "@overbookd/team-constants";
 
 type BuildTimeWindow = {
   date: Date;

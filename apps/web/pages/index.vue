@@ -37,18 +37,18 @@
 </template>
 
 <script lang="ts" setup>
-import { nicknameOrFirstName } from "@overbookd/user";
 import {
   DOWNLOAD_PLANNING,
   HAVE_PERSONAL_ACCOUNT,
   SYNC_PLANNING,
+  VIEW_USEFUL_LINKS,
   WRITE_FA,
   WRITE_FT,
-  VIEW_USEFUL_LINKS,
 } from "@overbookd/permission";
-import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
 import { SOFT } from "@overbookd/team-constants";
+import { OverDate } from "@overbookd/time";
+import { nicknameOrFirstName } from "@overbookd/user";
 
 const userStore = useUserStore();
 

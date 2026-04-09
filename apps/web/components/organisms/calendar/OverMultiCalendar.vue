@@ -84,10 +84,10 @@
 
 <script lang="ts" setup>
 import { OverDate } from "@overbookd/time";
-import { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
-import type { CalendarEvent } from "~/utils/calendar/event";
 import { DAY_MODE } from "~/utils/calendar/calendar-mode";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { CalendarEvent } from "~/utils/calendar/event";
+import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 
 const dayModel = defineModel<Date>({
   default: OverDate.now().date,

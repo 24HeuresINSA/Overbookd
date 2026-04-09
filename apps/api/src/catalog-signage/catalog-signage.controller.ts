@@ -1,36 +1,36 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Post,
   Put,
-  Delete,
-  UseGuards,
-  UseFilters,
-  UseInterceptors,
   StreamableFile,
   UploadedFile,
-  ParseFilePipe,
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { CatalogSignageService } from "./catalog-signage.service";
 import {
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
-import { SignageResponseDto } from "./dto/signage.response";
 import { Signage } from "@overbookd/signa";
-import { SignageFormRequestDto } from "./dto/signage-form.request";
-import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
-import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 import { ImageInterceptor } from "../utils/image.interceptor";
+import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
+import { CatalogSignageService } from "./catalog-signage.service";
+import { SignageFormRequestDto } from "./dto/signage-form.request";
+import { SignageResponseDto } from "./dto/signage.response";
 
 @Controller("signages")
 @ApiTags("signages")

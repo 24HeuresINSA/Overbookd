@@ -5,18 +5,18 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { UserAccess, UserCredentials } from "@overbookd/http";
+import { ONE_HOUR_IN_MS } from "@overbookd/time";
+import { buildUserName } from "@overbookd/user";
 import { randomBytes, timingSafeEqual } from "crypto";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { UserService } from "../user/user.service";
 import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
+import { UserService } from "../user/user.service";
 import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
-import { ONE_HOUR_IN_MS } from "@overbookd/time";
-import { UserAccess, UserCredentials } from "@overbookd/http";
-import { buildUserName } from "@overbookd/user";
 
 type UserEmail = { email: string };
 export type RefreshAccessRequest = { refreshToken: string };

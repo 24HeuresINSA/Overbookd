@@ -1,10 +1,10 @@
+import { updateItemToList } from "@overbookd/list";
+import { FestivalTaskNotFound } from "../festival-task.error.js";
 import { FestivalTask, ReadyToAssign } from "../festival-task.js";
 import {
   ReadyToAssignWithoutConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts.js";
-import { FestivalTaskNotFound } from "../festival-task.error.js";
-import { updateItemToList } from "@overbookd/list";
 import { FestivalTasksForEnableAssignment } from "./enable-assignment.js";
 
 export class InMemoryFestivalTasksForEnableAssignment implements FestivalTasksForEnableAssignment {

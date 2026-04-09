@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 import { PrismaService } from "../prisma.service";
 import { CreateLocationRequestDto } from "./dto/create-location.request.dto";
 import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
-import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 const SELECT_FESTIVAL_EVENT = {
   select: { id: true },

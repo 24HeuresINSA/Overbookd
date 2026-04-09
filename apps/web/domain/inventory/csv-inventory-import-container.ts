@@ -1,15 +1,15 @@
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  type CastingContext,
+  type Options,
+  parse,
+} from "csv-parse/browser/esm/sync";
 import type { Gears } from "./gears";
 import {
   InventoryImportContainer,
   type InventoryImportRaw,
 } from "./inventory-import";
 import { ManualInventoryRecord } from "./manual-inventory-record";
-import {
-  type Options,
-  type CastingContext,
-  parse,
-} from "csv-parse/browser/esm/sync";
-import { SlugifyService } from "@overbookd/slugify";
 
 const CODE = "code";
 const GEAR = "gear";

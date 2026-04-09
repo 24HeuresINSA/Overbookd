@@ -7,9 +7,9 @@ import {
   Volunteer,
 } from "@overbookd/festival-event";
 import { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
-import { Adherents } from "../../common/festival-task-common.model";
-import { Locations } from "../../../common/repository/locations.prisma";
 import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
+import { Locations } from "../../../common/repository/locations.prisma";
+import { Adherents } from "../../common/festival-task-common.model";
 
 @Injectable()
 export class InstructionsSectionService {

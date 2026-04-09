@@ -1,7 +1,7 @@
+import { Duration, Period, QUARTER_IN_MS } from "@overbookd/time";
 import { DatabaseDashboardGear } from "../repository/dashboard.model";
-import { Period, Duration, QUARTER_IN_MS } from "@overbookd/time";
-import { DashboardGearStock } from "./dashboard-gear-stock";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
+import { DashboardGearStock } from "./dashboard-gear-stock";
 
 type StockDiscrepancy = {
   date?: Date;

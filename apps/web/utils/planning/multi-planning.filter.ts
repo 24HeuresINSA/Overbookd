@@ -1,10 +1,10 @@
+import { OverDate } from "@overbookd/time";
+import type { User } from "@overbookd/user";
+import type { LocationQuery } from "vue-router";
 import {
   stringifyArrayQueryParam,
   stringifyQueryParam,
 } from "~/utils/http/url-params.utils";
-import type { LocationQuery } from "vue-router";
-import { OverDate } from "@overbookd/time";
-import type { User } from "@overbookd/user";
 
 export type MultiPlanningParams = {
   volunteers?: User[];

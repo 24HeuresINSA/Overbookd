@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsPositive, IsString } from "class-validator";
 import { AddInquiryRequestForm } from "@overbookd/http";
+import { IsPositive, IsString } from "class-validator";
 
 export class AddInquiryRequestDto implements AddInquiryRequestForm {
   @ApiProperty({ required: true })

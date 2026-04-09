@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  Adherent,
-  OnGoingSharedMeal,
   AboutMeal,
-  Shotgun,
-  PastSharedMeal,
+  Adherent,
   Expense,
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  Shotgun,
 } from "@overbookd/personal-account";
 
 class AboutMealResponseDto implements AboutMeal {

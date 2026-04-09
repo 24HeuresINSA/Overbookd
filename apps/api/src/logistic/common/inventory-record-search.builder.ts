@@ -1,5 +1,5 @@
-import { SlugifyService } from "@overbookd/slugify";
 import { InventoryRecord } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 import { GearSearchBuilder } from "./gear-search.builder";
 
 export class InventoryRecordSearchBuilder {

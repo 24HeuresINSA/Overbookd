@@ -18,17 +18,17 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
-import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
-import { StaffMembershipApplicationService } from "./staff-membership-application.service";
+import { ENROLL_HARD } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { ENROLL_HARD } from "@overbookd/permission";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
-import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
-import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
-import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
+import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
+import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
+import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 
 @Controller("registrations/membership-applications/staffs")
 @ApiTags("registrations/membership-applications/staffs")

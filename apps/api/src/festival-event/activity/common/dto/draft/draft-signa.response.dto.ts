@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, Signage, Location } from "@overbookd/festival-event";
-import { UnlinkedSignageResponseDto } from "../signage.response.dto";
+import { Draft, Location, Signage } from "@overbookd/festival-event";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
+import { UnlinkedSignageResponseDto } from "../signage.response.dto";
 
 export type Signa = Draft["signa"];
 export class SignaDto implements Signa {

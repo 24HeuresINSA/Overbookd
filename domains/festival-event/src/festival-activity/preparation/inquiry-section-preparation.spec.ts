@@ -1,43 +1,17 @@
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 import { Duration, EndBeforeStart } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
-import { TimeWindowAlreadyExists } from "../festival-activity.error.js";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
-import {
-  baladeEnPoney,
-  escapeGame,
-  justDance,
-  pcSecurite,
-  qgOrga,
-  approvedByAllInquiryOwners,
-  approvedByAllInquiryOwnersWithoutRequest,
-  approvedByBarrieres,
-  approvedByBarrieresWithoutRequests,
-  approvedByElec,
-  approvedByElecWithoutRequests,
-  approvedByMatos,
-  approvedByMatosAndBarrieres,
-  approvedByMatosAndBarrieresWithoutRequest,
-  approvedByMatosWithoutRequests,
-  approvedByElecWithNoRequestAtAll,
-} from "./preparation.test-utils.js";
-import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
-import {
-  MAGASIN,
-  LOCAL_24H,
-  PARKING_EIFFEL,
-} from "../../common/inquiry-request.js";
-import {
-  AlreadyInitialized,
-  CantRemoveLastRequest,
-  CantRemoveLastTimeWindow,
-  NotYetInitialized,
-} from "./section-aggregates/inquiries.js";
-import { WithInquiries } from "../sections/inquiry.js";
 import {
   AssignDriveInDraft,
   InquiryAlreadyExists,
   InquiryNotFound,
 } from "../../common/inquiry-request.error.js";
+import {
+  LOCAL_24H,
+  MAGASIN,
+  PARKING_EIFFEL,
+} from "../../common/inquiry-request.js";
+import { TimeWindowAlreadyExists } from "../festival-activity.error.js";
 import {
   cinqGuirlandeLED,
   deuxMarteaux,
@@ -50,8 +24,34 @@ import {
   troisTables,
   uneMultiprise3Prises,
 } from "../festival-activity.fake.js";
+import { WithInquiries } from "../sections/inquiry.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import {
+  approvedByAllInquiryOwners,
+  approvedByAllInquiryOwnersWithoutRequest,
+  approvedByBarrieres,
+  approvedByBarrieresWithoutRequests,
+  approvedByElec,
+  approvedByElecWithNoRequestAtAll,
+  approvedByElecWithoutRequests,
+  approvedByMatos,
+  approvedByMatosAndBarrieres,
+  approvedByMatosAndBarrieresWithoutRequest,
+  approvedByMatosWithoutRequests,
+  baladeEnPoney,
+  escapeGame,
+  justDance,
+  pcSecurite,
+  qgOrga,
+} from "./preparation.test-utils.js";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import {
+  AlreadyInitialized,
+  CantRemoveLastRequest,
+  CantRemoveLastTimeWindow,
+  NotYetInitialized,
+} from "./section-aggregates/inquiries.js";
 
 const branleCanisse = {
   slug: "branle-canisse",

@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
-import { BorrowController } from "./borrow.controller";
+import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
-import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
-import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
-import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
-import { BorrowService, BorrowsForView } from "./borrow.service";
+import { LogisticCommonModule } from "../common/logistic-common.module";
 import {
   FindGears,
   PrismaFindGears,
 } from "../common/repositories/find-gears.prisma";
-import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
+import { BorrowController } from "./borrow.controller";
+import { BorrowService, BorrowsForView } from "./borrow.service";
 import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
-import { LogisticCommonModule } from "../common/logistic-common.module";
+import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
+import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
+import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
 
 @Module({
   controllers: [BorrowController],

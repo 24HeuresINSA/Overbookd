@@ -1,16 +1,16 @@
+import { updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";
-import { Signage } from "../../sections/signa.js";
 import {
   FestivalActivityError,
   SignageAlreadyExists,
   SignageNotFound,
 } from "../../festival-activity.error.js";
+import { Signage } from "../../sections/signa.js";
 import {
   LinkSignageCatalogItem,
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "../prepare-festival-activity.model.js";
-import { updateItemToList } from "@overbookd/list";
 
 export class LocationIsRequired extends FestivalActivityError {
   constructor() {

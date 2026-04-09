@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
-import { Response, Request } from "express";
-import { RouteLogger } from "../route-logger";
 import { AssignmentError } from "@overbookd/assignment";
+import { Request, Response } from "express";
+import { RouteLogger } from "../route-logger";
 
 @Catch(AssignmentError)
 export class AssignmentErrorFilter implements ExceptionFilter {

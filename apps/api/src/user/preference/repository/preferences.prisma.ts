@@ -5,9 +5,9 @@ import {
   PlanningPreference,
   Preference,
 } from "@overbookd/http";
+import { isPageURL, PageURL } from "@overbookd/web-page";
 import { PrismaService } from "../../../prisma.service";
 import { Preferences } from "../preference.service";
-import { isPageURL, PageURL } from "@overbookd/web-page";
 
 export class PrismaPreferences implements Preferences {
   constructor(private readonly prisma: PrismaService) {}

@@ -1,46 +1,46 @@
 import {
-  Controller,
-  UseGuards,
-  Post,
   Body,
-  Request,
+  Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
+  Post,
+  Request,
   UseFilters,
-  HttpCode,
-  Delete,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiResponse,
-  ApiParam,
-  ApiTags,
   ApiBody,
-  getSchemaPath,
   ApiExtraModels,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
 import { OFFER_SHARED_MEAL, SHOTGUN_SHARED_MEAL } from "@overbookd/permission";
-import { SharedMealService } from "./shared-meal.service";
-import { RequestWithUserPayload } from "../app.controller";
-import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
-import {
-  OnGoingSharedMealResponseDto,
-  PastSharedMealResponseDto,
-} from "./dto/shared-meal.response.dto";
 import {
   Adherent,
   PastSharedMeal,
   SharedMeal,
 } from "@overbookd/personal-account";
-import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
-import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
-import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../app.controller";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
+import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
+import {
+  OnGoingSharedMealResponseDto,
+  PastSharedMealResponseDto,
+} from "./dto/shared-meal.response.dto";
+import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
+import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
+import { SharedMealService } from "./shared-meal.service";
 
 @Controller("shared-meals")
 @ApiTags("shared-meals")

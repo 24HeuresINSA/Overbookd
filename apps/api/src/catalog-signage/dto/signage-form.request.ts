@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { SignageForm, SignageType, signageTypes } from "@overbookd/signa";
 import {
   IsDefined,
   IsEnum,
@@ -6,7 +7,6 @@ import {
   IsString,
   ValidationArguments,
 } from "class-validator";
-import { SignageForm, signageTypes, SignageType } from "@overbookd/signa";
 
 export class SignageFormRequestDto implements SignageForm {
   @ApiProperty({

@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  transactionTypes,
   TransactionType,
+  transactionTypes,
   TransactionUser,
   TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 import { BaseTransactionResponseDto } from "./base-transaction.response.dto";
+import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 
 export class TransactionResponseDto
   extends BaseTransactionResponseDto

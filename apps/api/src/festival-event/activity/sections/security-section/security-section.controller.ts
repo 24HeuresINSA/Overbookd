@@ -1,37 +1,37 @@
 import {
-  UseFilters,
+  Body,
   Controller,
-  UseGuards,
-  Patch,
   Param,
   ParseIntPipe,
-  Body,
+  Patch,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
   ApiBody,
+  ApiExtraModels,
   ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { SecurityRequestDto } from "./dto/update-security.request.dto";
 import { SecuritySectionService } from "./security-section.service";
-import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

@@ -38,11 +38,11 @@ import {
   statusLabels,
   type StatusLabel,
 } from "@overbookd/festival-event-constants";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
   openTaskFromDataTable,
   openTaskInNewTabFromDataTable,
 } from "~/utils/festival-event/open-page";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const faStore = useFestivalActivityStore();
 const layoutStore = useLayoutStore();

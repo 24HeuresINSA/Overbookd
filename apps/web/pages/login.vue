@@ -91,7 +91,7 @@
 <script lang="ts" setup>
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
-import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
+import { GLASS, pickRandomBackground } from "~/domain/login/pictures";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { loginAndApplyForMembership } from "~/utils/login.utils";
 

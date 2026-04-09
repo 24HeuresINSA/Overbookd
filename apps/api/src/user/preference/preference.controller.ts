@@ -11,24 +11,24 @@ import {
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiResponse,
   ApiBody,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from "@nestjs/swagger";
-import { PreferenceService } from "./preference.service";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PlanningPreferenceDto } from "./dto/planning-preference.dto";
-import { RequestWithUserPayload } from "../../app.controller";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
 import { SET_FAVORITE_PAGES } from "@overbookd/permission";
-import { PagesPreferenceResponseDto } from "./dto/pages-preference.response.dto";
-import { AddPageToFavoritesRequestDto } from "./dto/add-page-to-favorites.request.dto";
-import { PreferenceResponseDto } from "./dto/preference.response.dto";
 import { pagesURL, PageURL } from "@overbookd/web-page";
-import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../app.controller";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { AddPageToFavoritesRequestDto } from "./dto/add-page-to-favorites.request.dto";
+import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
+import { PagesPreferenceResponseDto } from "./dto/pages-preference.response.dto";
+import { PlanningPreferenceDto } from "./dto/planning-preference.dto";
+import { PreferenceResponseDto } from "./dto/preference.response.dto";
+import { PreferenceService } from "./preference.service";
 
 @Controller("preferences")
 @ApiTags("preferences")

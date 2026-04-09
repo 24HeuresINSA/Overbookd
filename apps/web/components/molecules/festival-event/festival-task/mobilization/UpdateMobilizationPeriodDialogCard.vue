@@ -28,11 +28,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Period, formatDate } from "@overbookd/time";
 import type {
   Mobilization,
   UpdateMobilization,
 } from "@overbookd/festival-event";
+import { Period, formatDate } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 

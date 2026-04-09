@@ -1,4 +1,4 @@
-import { PERSONNE, HARD, SOFT } from "@overbookd/team-constants";
+import { HARD, PERSONNE, SOFT } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   AlreadyEnrolledError,
@@ -7,8 +7,8 @@ import {
   EnrollCandidates,
   EnrollingCandidates,
 } from "./enroll-candidates.js";
-import { InMemoryMemberships } from "./memberships.inmemory.js";
 import { InMemoryEvents } from "./events.inmemory.js";
+import { InMemoryMemberships } from "./memberships.inmemory.js";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };

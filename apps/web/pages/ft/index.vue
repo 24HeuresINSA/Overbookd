@@ -106,49 +106,51 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_CREATED,
+  FESTIVAL_TASK_DO_REVIEW,
+  FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
+  FESTIVAL_TASK_READY_TO_REVIEW,
+  FESTIVAL_TASK_REJECTED,
+} from "@overbookd/domain-events";
 import type {
-  PreviewFestivalTask,
   FestivalTask,
+  PreviewFestivalTask,
 } from "@overbookd/festival-event";
 import {
   BROUILLON,
   statusLabels,
   type Status,
 } from "@overbookd/festival-event-constants";
-import type { Team } from "@overbookd/team";
 import { WRITE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
+import type { Team } from "@overbookd/team";
 import type { User, UserPersonalData } from "@overbookd/user";
+import { buildUserName } from "@overbookd/user";
+import { FT_URL } from "@overbookd/web-page";
+import { useLiveNotification } from "~/composable/useLiveNotification";
+import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
+import {
+  type TaskFilters,
+  type TaskReviewsFilter,
+} from "~/utils/festival-event/festival-task/festival-task.filter";
+import {
+  getPreviewReviewerStatus,
+  isDraftPreview,
+} from "~/utils/festival-event/festival-task/festival-task.utils";
+import {
+  openTaskFromDataTable,
+  openTaskInNewTabFromDataTable,
+} from "~/utils/festival-event/open-page";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { buildUserName } from "@overbookd/user";
-import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.utils";
-import {
-  openTaskFromDataTable,
-  openTaskInNewTabFromDataTable,
-} from "~/utils/festival-event/open-page";
-import {
-  type TaskFilters,
-  type TaskReviewsFilter,
-} from "~/utils/festival-event/festival-task/festival-task.filter";
-import { getPreviewReviewerStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
-import { FT_URL } from "@overbookd/web-page";
 import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
-import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
-import { updateQueryParams } from "~/utils/http/url-params.utils";
-import { useLiveNotification } from "~/composable/useLiveNotification";
-import {
-  FESTIVAL_TASK_CREATED,
-  FESTIVAL_TASK_READY_TO_REVIEW,
-  FESTIVAL_TASK_APPROVED,
-  FESTIVAL_TASK_REJECTED,
-  FESTIVAL_TASK_IGNORED,
-  FESTIVAL_TASK_DO_REVIEW,
-  FESTIVAL_TASK_READY_TO_ASSIGN,
-} from "@overbookd/domain-events";
 
 useHead({ title: "Fiches Tâches" });
 

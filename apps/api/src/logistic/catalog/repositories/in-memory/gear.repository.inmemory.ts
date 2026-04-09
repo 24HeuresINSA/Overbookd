@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { GearReferenceCodeService } from "../../gear-reference-code.service";
-import { GearLinkedItems, GearNotFoundException } from "../../catalog.service";
-import { GearRepository } from "../catalog-repositories";
-import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";
 import { GearSearchBuilder } from "../../../common/gear-search.builder";
+import { GearAlreadyExists } from "../../catalog.error";
+import { GearLinkedItems, GearNotFoundException } from "../../catalog.service";
+import { GearReferenceCodeService } from "../../gear-reference-code.service";
+import { GearRepository } from "../catalog-repositories";
 
 export type CatalogGearWithLinkedItems = CatalogGear & GearLinkedItems;
 

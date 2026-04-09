@@ -4,12 +4,12 @@ import {
   ReviewingFestivalActivities,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
+import { FestivalActivityBuilder } from "./festival-activity.builder";
 import {
+  FestivalActivityQueryBuilder,
   SELECT_FESTIVAL_ACTIVITY,
   buildFestivalActivityCondition,
 } from "./festival-activity.query";
-import { FestivalActivityBuilder } from "./festival-activity.builder";
-import { FestivalActivityQueryBuilder } from "./festival-activity.query";
 
 export class PrismaReviewingFestivalActivities implements ReviewingFestivalActivities {
   constructor(private prisma: PrismaService) {}

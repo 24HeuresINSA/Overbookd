@@ -5,13 +5,13 @@ import {
   isValidated,
 } from "../festival-event.js";
 import {
+  Preview,
   PreviewDraft,
   PreviewInReview,
   PreviewReadyToAssign,
   PreviewRefused,
   PreviewValidated,
 } from "./festival-task.js";
-import { Preview } from "./festival-task.js";
 import {
   DraftWithoutConflicts,
   InReviewWithoutConflicts,

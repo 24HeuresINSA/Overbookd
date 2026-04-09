@@ -1,8 +1,8 @@
 import type { HttpStringified } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
 import type {
-  AdjustPrice,
   AdjustOpeningDate,
+  AdjustPrice,
   ConfiguredBarrel,
   NewBarrel,
 } from "@overbookd/personal-account";

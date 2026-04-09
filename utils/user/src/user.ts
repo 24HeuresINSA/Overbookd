@@ -1,6 +1,6 @@
 import { Permission } from "@overbookd/permission";
-import { Membership } from "@overbookd/registration";
 import { AssignmentPreferenceType } from "@overbookd/preference";
+import { Membership } from "@overbookd/registration";
 
 export type UserName = {
   firstname: string;

@@ -45,12 +45,12 @@
 
 <script lang="ts" setup>
 import { HOME_URL } from "@overbookd/web-page";
-import {
-  required,
-  password as passwordRule,
-  isSame,
-} from "~/utils/rules/input.rules";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import {
+  isSame,
+  password as passwordRule,
+  required,
+} from "~/utils/rules/input.rules";
 
 definePageMeta({ layout: false });
 

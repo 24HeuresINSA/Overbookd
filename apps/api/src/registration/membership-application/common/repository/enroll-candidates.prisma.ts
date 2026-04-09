@@ -1,23 +1,23 @@
-import { STAFF, VOLUNTEER } from "@overbookd/registration";
+import { Charisma } from "@overbookd/charisma";
 import { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
-import { EnrollCandidatesRepository } from "./enroll-candidates";
-import { PrismaService } from "../../../../prisma.service";
-import {
-  DatabaseStaffCandidate,
-  DatabaseEnrollableVolunteer,
-  IS_ENROLLABLE_STAFF,
-  IS_ENROLLABLE_VOLUNTEER,
-  IS_REJECTED_STAFF,
-  SELECT_STAFF,
-  SELECT_VOLUNTEER,
-  IS_REJECTED_VOLUNTEER,
-} from "./enroll-candidates.query";
+import { STAFF, VOLUNTEER } from "@overbookd/registration";
+import { Edition } from "@overbookd/time";
 import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../../../../common/query/charisma.query";
-import { Charisma } from "@overbookd/charisma";
-import { Edition } from "@overbookd/time";
+import { PrismaService } from "../../../../prisma.service";
+import { EnrollCandidatesRepository } from "./enroll-candidates";
+import {
+  DatabaseEnrollableVolunteer,
+  DatabaseStaffCandidate,
+  IS_ENROLLABLE_STAFF,
+  IS_ENROLLABLE_VOLUNTEER,
+  IS_REJECTED_STAFF,
+  IS_REJECTED_VOLUNTEER,
+  SELECT_STAFF,
+  SELECT_VOLUNTEER,
+} from "./enroll-candidates.query";
 
 export class PrismaEnrollCandidates implements EnrollCandidatesRepository {
   constructor(private readonly prisma: PrismaService) {}

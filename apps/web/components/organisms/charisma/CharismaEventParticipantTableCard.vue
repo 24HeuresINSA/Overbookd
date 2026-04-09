@@ -45,13 +45,13 @@
 <script lang="ts" setup>
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CharismaEventParticipant } from "~/utils/charisma/charisma-event";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
-import { toSearchable } from "~/utils/search/searchable-user.utils";
+import { isInteger, isNumber, min } from "~/utils/rules/input.rules";
 import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();
 

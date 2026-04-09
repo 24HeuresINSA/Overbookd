@@ -1,4 +1,4 @@
-import { IProvidePeriod, Period, Duration } from "@overbookd/time";
+import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 
 export type BreakDefinition = {
   volunteer: number;

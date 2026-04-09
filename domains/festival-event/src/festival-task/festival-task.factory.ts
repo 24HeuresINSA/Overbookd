@@ -1,4 +1,3 @@
-import { numberGenerator } from "@overbookd/list";
 import {
   APPROVED,
   DRAFT,
@@ -10,13 +9,18 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
+import { numberGenerator } from "@overbookd/list";
 import {
   CONDUCTEUR,
   HUMAIN,
   LOG_MATOS,
   PERSONNE,
 } from "@overbookd/team-constants";
+import { Adherent } from "../common/adherent.js";
+import { isDraft } from "../festival-event.js";
 import { isKeyOf } from "../is-key-of.js";
+import { Assignments } from "./enable-assignment/enable-assignment.js";
+import { FestivalTaskKeyEvents } from "./festival-task.event.js";
 import {
   Draft,
   FestivalActivity,
@@ -26,7 +30,6 @@ import {
   Reviewable,
   Validated,
 } from "./festival-task.js";
-import { FestivalTaskKeyEvents } from "./festival-task.event.js";
 import {
   MobilizationBuilder,
   deuxTables,
@@ -44,9 +47,6 @@ import {
   ReadyToAssignWithConflicts,
   WithConflicts,
 } from "./volunteer-conflicts.js";
-import { isDraft } from "../festival-event.js";
-import { Assignments } from "./enable-assignment/enable-assignment.js";
-import { Adherent } from "../common/adherent.js";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -195,6 +195,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return Object.keys(current).reduce<T>((acc: T, key: string) => {
       if (!isKeyOf(current, key)) return acc;
 
+      // eslint-disable-next-line security/detect-object-injection
       const updated = update[key];
       if (updated === undefined) return acc;
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TimeWindow, Location } from "@overbookd/festival-event";
-import { PlanningTask } from "@overbookd/http";
+import { Location, TimeWindow } from "@overbookd/festival-event";
 import { DRAFT, IN_REVIEW } from "@overbookd/festival-event-constants";
+import { PlanningTask } from "@overbookd/http";
 import { TimeWindowResponseDto } from "../../../festival-event/common/dto/time-window.response.dto";
 
 class LocationResponseDto implements Location {

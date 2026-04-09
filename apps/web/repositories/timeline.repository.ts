@@ -1,5 +1,5 @@
-import type { IProvidePeriod } from "@overbookd/time";
 import type { TimelineEvent } from "@overbookd/http";
+import type { IProvidePeriod } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class TimelineRepository {

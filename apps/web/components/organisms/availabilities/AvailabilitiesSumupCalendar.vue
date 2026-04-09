@@ -26,9 +26,9 @@
 
 <script lang="ts" setup>
 import { Duration, OverDate, Period } from "@overbookd/time";
-import { DayPresenter } from "~/utils/calendar/day.presenter";
-import { ALL_HOURS } from "~/utils/availabilities/availabilities";
 import { Availabilities } from "@overbookd/volunteer-availability";
+import { ALL_HOURS } from "~/utils/availabilities/availabilities";
+import { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const availabilityStore = useVolunteerAvailabilityStore();
 const configurationStore = useConfigurationStore();

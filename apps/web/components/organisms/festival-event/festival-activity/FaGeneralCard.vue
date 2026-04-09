@@ -89,18 +89,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import {
   type FestivalActivity,
   type TimeWindow,
   isDraft,
 } from "@overbookd/festival-event";
 import type { IProvidePeriod } from "@overbookd/time";
+import { useDebounceFn } from "@vueuse/core";
 import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import {
   COMMUNICATION_EMAIL,
-  HUMAINS_EMAIL,
   CTMA_EMAIL,
+  HUMAINS_EMAIL,
 } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 

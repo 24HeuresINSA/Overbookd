@@ -1,6 +1,6 @@
+import { CSVBuilder } from "@overbookd/csv";
 import { BaseSignage, FestivalActivity } from "@overbookd/festival-event";
 import { statusLabels } from "@overbookd/festival-event-constants";
-import { CSVBuilder } from "@overbookd/csv";
 
 export type PreviewForSigna = {
   id: FestivalActivity["id"];

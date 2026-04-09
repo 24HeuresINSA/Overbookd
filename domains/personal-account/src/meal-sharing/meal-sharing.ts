@@ -1,23 +1,23 @@
+import { DateString } from "@overbookd/time";
 import { Adherent, Shotgun, Shotguns } from "./adherent.js";
 import {
+  ChefNotFound,
+  GuestNotFound,
+  MealNotFound,
+  OnlyChefCan,
+  RecordExpenseOnNoShotgunedMeal,
+  ShotgunsAlreadyClosed,
+  ShotgunsAlreadyOpened,
+  ShotgunsClosed,
+} from "./meal-sharing.error.js";
+import {
   AboutMeal,
+  Expense,
   isOnGoingMeal,
   OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
 } from "./meals.model.js";
-import {
-  ChefNotFound,
-  MealNotFound,
-  GuestNotFound,
-  RecordExpenseOnNoShotgunedMeal,
-  OnlyChefCan,
-  ShotgunsAlreadyClosed,
-  ShotgunsAlreadyOpened,
-  ShotgunsClosed,
-} from "./meal-sharing.error.js";
-import { Expense } from "./meals.model.js";
-import { DateString } from "@overbookd/time";
 
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";

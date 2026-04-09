@@ -1,4 +1,5 @@
 import { CatalogCategory, CatalogGear } from "@overbookd/http";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { CatalogService } from "./catalog.service";
 import {
   InMemoryCategoryRepository,
@@ -8,7 +9,6 @@ import {
   CatalogGearWithLinkedItems,
   EMPTY_GEAR_LINKED_ITEMS,
 } from "./repositories/in-memory/gear.repository.inmemory";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamBarriere = { name: "Orga Logistique et Securite", code: "barrieres" };

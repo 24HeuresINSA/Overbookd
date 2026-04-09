@@ -1,5 +1,5 @@
-import { Contribution } from "../contribution.js";
 import { BASE_EDITION_STARTS, Edition } from "@overbookd/time";
+import { Contribution } from "../contribution.js";
 
 const AUGUST = 7;
 

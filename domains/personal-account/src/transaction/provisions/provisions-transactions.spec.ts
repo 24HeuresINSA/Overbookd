@@ -1,11 +1,11 @@
-import { beforeEach, describe, it, expect } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { PROVISIONS, TransactionUser } from "../transaction";
-import { InMemoryProvisionsTransactions } from "./provisions-transactions.inmemory";
-import { CreateProvisionsTransactions } from "./create-provisions-transactions";
 import {
   AtLeastOneInsufficientConsumption,
   NoConsumer,
 } from "../transaction.error";
+import { CreateProvisionsTransactions } from "./create-provisions-transactions";
+import { InMemoryProvisionsTransactions } from "./provisions-transactions.inmemory";
 import { InsufficientStickPrice } from "./provisions.error";
 
 const drapsag: TransactionUser = {

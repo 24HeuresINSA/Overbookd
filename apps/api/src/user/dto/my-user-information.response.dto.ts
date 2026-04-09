@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserPersonalDataResponseDto } from "./user-personal-data.response.dto";
-import { MyUserInformation } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 import { Membership } from "@overbookd/registration";
+import { MyUserInformation } from "@overbookd/user";
+import { UserPersonalDataResponseDto } from "./user-personal-data.response.dto";
 
 export class MyUserInformationResponseDto
   extends UserPersonalDataResponseDto

@@ -1,12 +1,11 @@
-import { AFFICHE, BACHE, PANNEAU } from "./sections/signa.js";
+import { Contractor } from "./sections/in-charge.js";
+import { AFFICHE, BACHE, PANNEAU, Signage } from "./sections/signa.js";
 import {
   ElectricitySupply,
   P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
 } from "./sections/supply.js";
-import { Signage } from "./sections/signa.js";
-import { Contractor } from "./sections/in-charge.js";
 
 export const noel = {
   id: 1,

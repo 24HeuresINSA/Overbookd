@@ -1,6 +1,6 @@
+import { SlugifyService } from "@overbookd/slugify";
 import type { UserName } from "@overbookd/user";
 import type { Searchable } from "./search.utils";
-import { SlugifyService } from "@overbookd/slugify";
 
 type SearchedUser = UserName & {
   mobilePhone?: string;

@@ -3,11 +3,11 @@ import {
   Draft,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
+import { DraftBuilder } from "./festival-activity.builder";
 import {
   FestivalActivityQueryBuilder,
   SELECT_FESTIVAL_ACTIVITY,
 } from "./festival-activity.query";
-import { DraftBuilder } from "./festival-activity.builder";
 
 export class PrismaCreateFestivalActivities implements CreateFestivalActivityRepository {
   constructor(private readonly prisma: PrismaService) {}

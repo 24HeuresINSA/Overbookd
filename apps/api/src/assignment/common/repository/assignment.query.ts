@@ -4,13 +4,13 @@ import {
   BaseAssigneeForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
-import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod } from "@overbookd/time";
+import { User } from "@overbookd/user";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
-import { User } from "@overbookd/user";
 
 export type DatabaseAssignee = {
   teamCode: string;

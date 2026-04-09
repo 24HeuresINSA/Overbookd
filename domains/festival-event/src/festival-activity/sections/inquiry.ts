@@ -1,7 +1,7 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { TimeWindow } from "../../common/time-window.js";
-import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export type InquiryOwner =
   | typeof LOG_MATOS

@@ -1,6 +1,6 @@
+import { JWT_EXPIRES_IN } from "@overbookd/registration";
 import jwt from "jsonwebtoken";
 import { jwtConstants } from "../../../authentication/jwt-constants";
-import { JWT_EXPIRES_IN } from "@overbookd/registration";
 
 export function checkStaffInvitationTokenValidity(token: string): boolean {
   try {

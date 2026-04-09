@@ -22,8 +22,8 @@
   </v-card>
 </template>
 <script lang="ts" setup>
-import { type User, buildUserName } from "@overbookd/user";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import { type User, buildUserName } from "@overbookd/user";
 import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();

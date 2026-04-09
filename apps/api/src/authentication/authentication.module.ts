@@ -3,13 +3,13 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { HashingUtilsModule } from "../hashing-utils/hashing-utils.module";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailModule } from "../mail/mail.module";
+import { PrismaModule } from "../prisma.module";
 import { UserModule } from "../user/user.module";
 import { AuthenticationController } from "./authentication.controller";
 import { AuthenticationService } from "./authentication.service";
 import { jwtConstants } from "./jwt-constants";
 import { JwtStrategy } from "./jwt.strategy";
-import { MailModule } from "../mail/mail.module";
-import { PrismaModule } from "../prisma.module";
 
 @Module({
   imports: [

@@ -6,30 +6,6 @@ import {
   REJECTED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { FestivalActivity, Refused, Reviewable } from "../festival-activity.js";
-import {
-  isValidatedReviews,
-  Reviews,
-  isRefusedReviews,
-  Reviewer,
-  Rejection,
-} from "../../common/review.js";
-import { FestivalActivityNotFound } from "../festival-activity.error.js";
-import { InquiryOwner } from "../sections/inquiry.js";
-import {
-  InDraft,
-  AlreadyRejected,
-  ShouldLinkCatalogItem,
-} from "./reviewing.error.js";
-import {
-  AlreadyApproved,
-  NotAskingToReview,
-  ShouldAssignDrive,
-} from "../../common/review.error.js";
-import { Adherent } from "../../common/adherent.js";
-import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
-import { isLinkedToCatalogItem } from "../sections/signa.js";
-import { isDraft } from "../../festival-event.js";
 import {
   BARRIERES,
   COMMUNICATION,
@@ -39,6 +15,30 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { Adherent } from "../../common/adherent.js";
+import {
+  AlreadyApproved,
+  NotAskingToReview,
+  ShouldAssignDrive,
+} from "../../common/review.error.js";
+import {
+  isRefusedReviews,
+  isValidatedReviews,
+  Rejection,
+  Reviewer,
+  Reviews,
+} from "../../common/review.js";
+import { isDraft } from "../../festival-event.js";
+import { FestivalActivityNotFound } from "../festival-activity.error.js";
+import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
+import { FestivalActivity, Refused, Reviewable } from "../festival-activity.js";
+import { InquiryOwner } from "../sections/inquiry.js";
+import { isLinkedToCatalogItem } from "../sections/signa.js";
+import {
+  AlreadyRejected,
+  InDraft,
+  ShouldLinkCatalogItem,
+} from "./reviewing.error.js";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;

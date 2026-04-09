@@ -1,5 +1,5 @@
-import { Period } from "@overbookd/time";
 import { AssignmentPreferenceType } from "@overbookd/preference";
+import { Period } from "@overbookd/time";
 
 export type Volunteer = {
   id: number;

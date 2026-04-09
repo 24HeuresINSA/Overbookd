@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { FestivalTaskDraft } from "@overbookd/festival-event";
-import { ContactResponseDto } from "../contact.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
+import { ContactResponseDto } from "../contact.response.dto";
 
 type DraftInstructions = FestivalTaskDraft["instructions"];
 type InCharge = DraftInstructions["inCharge"];

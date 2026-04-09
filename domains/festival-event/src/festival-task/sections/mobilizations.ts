@@ -1,22 +1,22 @@
 import { WithAtLeastOneItem } from "@overbookd/list";
 import {
-  PERSONNE,
-  CONFIANCE,
-  VIEUX,
-  CONDUCTEUR,
   BDE,
+  CONDUCTEUR,
+  CONFIANCE,
+  HARD,
   KARNA,
   KFET,
-  TECKOS,
-  TEAM_MONTAGE,
+  PERSONNE,
   SOFT,
-  HARD,
   TEAM_BOUFFE,
   TEAM_ELEC,
+  TEAM_MONTAGE,
+  TECKOS,
+  VIEUX,
 } from "@overbookd/team-constants";
-import { Volunteer } from "./instructions.js";
 import { TimeWindow } from "../../common/time-window.js";
 import { FestivalTask } from "../festival-task.js";
+import { Volunteer } from "./instructions.js";
 
 export const requirableTeams = [
   PERSONNE,

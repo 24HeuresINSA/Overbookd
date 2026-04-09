@@ -1,12 +1,12 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import basicAuth from "express-basic-auth";
 import { ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { json, urlencoded } from "body-parser";
-import { RouteLoggerInterceptor } from "./route-logger.interceptor";
+import basicAuth from "express-basic-auth";
+import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./http-exception.filter";
 import { PeriodErrorFilter } from "./period.filter";
+import { RouteLoggerInterceptor } from "./route-logger.interceptor";
 
 const SWAGGER_PROTECT_DOMAINS = [
   "overbookd.24heures.org",

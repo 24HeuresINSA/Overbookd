@@ -1,6 +1,6 @@
-import { AssignmentStat, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { ApiProperty } from "@nestjs/swagger";
 import { Category } from "@overbookd/festival-event-constants";
+import { AssignmentStat, VolunteerWithAssignmentStats } from "@overbookd/http";
 
 class AssignmentStatResponseDto implements AssignmentStat {
   @ApiProperty({

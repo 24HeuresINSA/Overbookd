@@ -45,9 +45,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ONE_DAY_IN_MS, Period } from "@overbookd/time";
 import type { OrgaNeedDetails } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
+import { ONE_DAY_IN_MS, Period } from "@overbookd/time";
 
 useHead({ title: "Besoin orgas" });
 

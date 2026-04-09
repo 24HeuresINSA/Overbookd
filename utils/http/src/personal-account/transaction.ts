@@ -1,5 +1,7 @@
-import { CreateBarrelTransaction } from "@overbookd/personal-account";
-import { CreateProvisionsTransaction } from "@overbookd/personal-account";
+import {
+  CreateBarrelTransaction,
+  CreateProvisionsTransaction,
+} from "@overbookd/personal-account";
 
 export type CreateBarrelTransactionsForm = {
   barrelSlug: string;

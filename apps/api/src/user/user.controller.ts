@@ -18,18 +18,6 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { RequestWithUserPayload } from "../../src/app.controller";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
-import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import { VolunteerAssignmentStatResponseDto } from "./dto/assignment-stat.response.dto";
-import { ProfilePictureService } from "./profile-picture.service";
-import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
-import { UserService } from "./user.service";
-import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
-import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import {
   AFFECT_TEAM,
   AFFECT_VOLUNTEER,
@@ -38,18 +26,30 @@ import {
   VIEW_PLANNING,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
-import { TeamService } from "../team/team.service";
+import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
+import { RequestWithUserPayload } from "../../src/app.controller";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
-import { Consumer } from "./user.model";
-import { ConsumerResponseDto } from "./dto/consumer.response.dto";
-import { ForgetMemberErrorFilter } from "../registration/index/registration-error.filter";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { UserIdentifierResponseDto } from "../common/dto/user-identifier.response.dto";
+import { ForgetMemberErrorFilter } from "../registration/index/registration-error.filter";
+import { TeamService } from "../team/team.service";
+import { ImageInterceptor } from "../utils/image.interceptor";
+import { VolunteerAssignmentStatResponseDto } from "./dto/assignment-stat.response.dto";
+import { ConsumerResponseDto } from "./dto/consumer.response.dto";
+import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
+import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
+import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
+import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
+import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
 import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.dto";
 import { PlanningService } from "./planning/planning.service";
-import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
-import { ImageInterceptor } from "../utils/image.interceptor";
+import { ProfilePictureService } from "./profile-picture.service";
+import { Consumer } from "./user.model";
+import { UserService } from "./user.service";
 
 @Controller("users")
 @ApiTags("users")

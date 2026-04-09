@@ -1,6 +1,6 @@
 import type { IProvidePeriod } from "@overbookd/time";
-import type { CalendarEvent } from "./event";
 import type { UserWithTeams } from "@overbookd/user";
+import type { CalendarEvent } from "./event";
 
 export type VolunteerForCalendar = UserWithTeams & {
   note?: string;

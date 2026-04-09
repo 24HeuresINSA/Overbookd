@@ -1,49 +1,49 @@
 import {
-  UseFilters,
-  Controller,
   Body,
+  Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Patch,
-  UseGuards,
   Post,
-  Delete,
   Request,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
   ApiBody,
   ApiParam,
   ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { InstructionsSectionService } from "./instructions-section.service";
-import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
-import { FORCE_WRITE_FT, WRITE_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
-import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
-import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { Contact, FestivalTask, Volunteer } from "@overbookd/festival-event";
-import { AddContactRequestDto } from "./dto/add-contact.request.dto";
-import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
+import { FORCE_WRITE_FT, WRITE_FT } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../../../app.controller";
+import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
+import { Permission } from "../../../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import {
   InReviewFestivalTaskResponseDto,
   ReadyToAssignFestivalTaskResponseDto,
   RefusedFestivalTaskResponseDto,
   ValidatedFestivalTaskResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
-import { RequestWithUserPayload } from "../../../../app.controller";
-import { InitInChargeRequestDto } from "./dto/init-in-charge.request.dto";
+import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
+import { AddContactRequestDto } from "./dto/add-contact.request.dto";
+import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 import {
   ForceGlobalInstructionsRequestDto,
   ForceInChargeInstructionsRequestDto,
   ForceInstructionsRequestDto,
 } from "./dto/force-instructions.request.dto";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { InitInChargeRequestDto } from "./dto/init-in-charge.request.dto";
+import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
+import { InstructionsSectionService } from "./instructions-section.service";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")

@@ -21,14 +21,14 @@ import {
   Permission as AvailablePermission,
   MANAGE_PERMISSIONS,
 } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
-import { GrantPermissionRequestDto } from "./dto/grant-permission.request.dto";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("permissions")
 @ApiTags("permissions")

@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
 import {
   AreaLocation,
   PointLocation,
   RoadLocation,
 } from "@overbookd/geo-location";
 import { CreateLocation } from "@overbookd/http";
+import { IsNotEmpty, IsObject, IsString } from "class-validator";
 
 export class CreateLocationRequestDto implements CreateLocation {
   @ApiProperty({

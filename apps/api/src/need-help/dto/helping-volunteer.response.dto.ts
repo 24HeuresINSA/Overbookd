@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IProvidePeriod } from "@overbookd/time";
 import { HelpingVolunteer, HelpingVolunteerAssignment } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/time";
 import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 
 class HelpingVolunteerAssignmentDto

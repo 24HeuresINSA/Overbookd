@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { chaise, saturday19At16, table } from "../../logistic.test-utils.js";
 import { NotEnoughQuantity } from "../../logistic.error.js";
-import { InMemoryPurchases } from "./purchase.inmemory.js";
-import { PlanPurchase } from "./plan.js";
+import { chaise, saturday19At16, table } from "../../logistic.test-utils.js";
 import { PurchaseNotFound } from "../purchase.error.js";
 import { leroyMerlinPurchase } from "../purchase.fake.js";
+import { PlanPurchase } from "./plan.js";
+import { InMemoryPurchases } from "./purchase.inmemory.js";
 
 describe("Plan purchase", () => {
   let purchases: InMemoryPurchases;

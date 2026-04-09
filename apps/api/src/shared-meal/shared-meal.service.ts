@@ -1,3 +1,4 @@
+import { SHARED_MEAL_CLOSED } from "@overbookd/domain-events";
 import { OfferMeal } from "@overbookd/http";
 import {
   Adherent,
@@ -10,7 +11,6 @@ import {
 } from "@overbookd/personal-account";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { SHARED_MEAL_CLOSED } from "@overbookd/domain-events";
 
 export class SharedMealService {
   constructor(

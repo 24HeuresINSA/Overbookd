@@ -49,29 +49,29 @@
 </template>
 
 <script lang="ts" setup>
+import type { Assignment } from "@overbookd/assignment";
 import type { Team } from "@overbookd/team";
-import { Sort } from "~/utils/sort/sort.utils";
-import {
-  keepMatchingSearchCriteria,
-  type Searchable,
-} from "~/utils/search/search.utils";
 import {
   type AssignmentVolunteer,
   isAssignableVolunteer,
 } from "~/utils/assignment/assignment-volunteer";
-import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
   AMIS_DEJA_AFFECTES,
   AMIS_DISPONIBLES,
   AUCUN_AMI,
   type FriendFilter,
 } from "~/utils/assignment/assignment.utils";
-import { toSearchable } from "~/utils/search/searchable-user.utils";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
   excludeMembersOf,
   keepMembersOf,
 } from "~/utils/search/search-team.utils";
-import type { Assignment } from "@overbookd/assignment";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
+import { Sort } from "~/utils/sort/sort.utils";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();

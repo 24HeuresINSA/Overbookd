@@ -1,8 +1,8 @@
 import type { Alerts } from "@overbookd/alerts";
-import { PersonalAccountAlerting } from "@overbookd/personal-account";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { SettleAlerting } from "@overbookd/contribution";
+import { PersonalAccountAlerting } from "@overbookd/personal-account";
 import { User } from "@overbookd/user";
+import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
 export type ProfilePictureAlerting = {
   for(id: User["id"]): Promise<boolean>;

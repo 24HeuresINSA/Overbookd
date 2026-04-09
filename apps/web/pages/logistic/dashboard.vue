@@ -40,10 +40,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { FilterGear } from "~/utils/logistic/filter-gear";
-import { ONE_DAY_IN_MS } from "@overbookd/time";
 import type { GearSearchOptions } from "@overbookd/http";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 import { downloadCsv } from "~/utils/file/download.utils";
+import type { FilterGear } from "~/utils/logistic/filter-gear";
 
 useHead({ title: "Récap Matos" });
 

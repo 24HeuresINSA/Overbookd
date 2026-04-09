@@ -1,11 +1,11 @@
 import type {
-  CategoryForm,
-  CategorySearchOptions,
-  CatalogGear,
-  GearSearchOptions,
   CatalogCategory,
   CatalogCategoryTree,
+  CatalogGear,
   CatalogGearForm,
+  CategoryForm,
+  CategorySearchOptions,
+  GearSearchOptions,
 } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 

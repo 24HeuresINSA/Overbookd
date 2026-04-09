@@ -1,5 +1,5 @@
 import { Event } from "@overbookd/event";
-import { PERSONNE, HARD, SOFT } from "@overbookd/team-constants";
+import { HARD, PERSONNE, SOFT } from "@overbookd/team-constants";
 import { JoinableTeam } from "./joinable-team";
 
 export const CANDIDATE_ENROLLED = "candidate-enrolled" as const;

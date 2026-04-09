@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
-import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
-import { PrismaAdherents } from "../common/repository/adherents.prisma";
 import {
   CreateFestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-event";
-import { DomainEventService } from "../../../domain-event/domain-event.service";
-import { PrismaRemoveFestivalActivities } from "../common/repository/remove-festival-activities.prisma";
-import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";
 import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
+import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";
+import { PrismaAdherents } from "../common/repository/adherents.prisma";
+import { PrismaRemoveFestivalActivities } from "../common/repository/remove-festival-activities.prisma";
+import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
 
 @Module({
   providers: [

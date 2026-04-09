@@ -2,8 +2,8 @@ import { Controller, Query, Sse } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { DomainEvent } from "@overbookd/domain-events";
 import { Observable } from "rxjs";
-import { LiveNotificationService } from "./live-notification.service";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { LiveNotificationService } from "./live-notification.service";
 
 @Controller("live-notifications")
 @ApiTags("live-notifications")

@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { SHARED_MEAL } from "../transaction.js";
-import { SharedMeal } from "./shared-meal.js";
+import { describe, expect, it } from "vitest";
 import { PastSharedMealBuilder } from "../../meal-sharing/past-shared-meal.builder.js";
+import { SHARED_MEAL } from "../transaction.js";
 import { AmountTooHigh } from "./shared-meal.error.js";
+import { SharedMeal } from "./shared-meal.js";
 
 const julie = { id: 1, name: "Julie" };
 const lea = { id: 2, name: "Lea" };

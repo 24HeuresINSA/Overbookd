@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { LogisticError } from "@overbookd/logistic";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { RouteLogger } from "../route-logger";
 
 @Catch(LogisticError)

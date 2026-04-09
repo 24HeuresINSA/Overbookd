@@ -4,8 +4,8 @@ import {
   DepositTransaction,
   DepositTransactionForm,
 } from "@overbookd/personal-account";
-import { PrismaService } from "../../prisma.service";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
+import { PrismaService } from "../../prisma.service";
 
 export class PrismaDeposits implements Deposits {
   constructor(private readonly prisma: PrismaService) {}

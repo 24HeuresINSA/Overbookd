@@ -1,9 +1,9 @@
+import { InsufficientAmount } from "../contribution.error.js";
 import {
   Adherent,
   Contribution,
   MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
 } from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
 import { NotFoundContribution } from "./edit-contribution.error.js";
 
 export type AdherentWithContribution = Adherent & {

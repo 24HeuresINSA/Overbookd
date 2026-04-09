@@ -53,8 +53,8 @@
 
 <script lang="ts" setup>
 import type {
-  ElectricitySupply,
   ElectricityConnection,
+  ElectricitySupply,
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
 import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";

@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Drive, drives } from "@overbookd/festival-event";
 import {
   ActivityGearInquiryForPreview,
   PreviewForLogistic,
 } from "@overbookd/http";
 import { BasePreviewForDashboardResponseDto } from "./base-preview-for-dashboard.response.dto";
-import { Drive, drives } from "@overbookd/festival-event";
 
 class GearInquiryDto implements ActivityGearInquiryForPreview {
   @ApiProperty({ description: "Gear slug", type: String })

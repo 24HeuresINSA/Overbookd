@@ -1,15 +1,17 @@
+import { Adherent } from "../../common/adherent.js";
+import {
+  AssignDrive,
+  BaseInquiryRequest,
+} from "../../common/inquiry-request.js";
+import { Location } from "../../common/location.js";
+import { Contractor } from "../sections/in-charge.js";
 import { InquiryOwner } from "../sections/inquiry.js";
+import { Signage, SignageCatalogItem, SignageType } from "../sections/signa.js";
 import {
   ElectricityConnection,
   ElectricitySupply,
   Supply,
 } from "../sections/supply.js";
-import { Signage, SignageCatalogItem, SignageType } from "../sections/signa.js";
-import { Location } from "../../common/location.js";
-import { BaseInquiryRequest } from "../../common/inquiry-request.js";
-import { Contractor } from "../sections/in-charge.js";
-import { Adherent } from "../../common/adherent.js";
-import { AssignDrive } from "../../common/inquiry-request.js";
 
 export type PrepareGeneralUpdate = {
   name?: string;

@@ -1,12 +1,11 @@
 import {
-  StaffRegistered,
   FilterNotifyees,
   NotificationRepository,
   Notifyee,
+  StaffRegistered,
 } from "@overbookd/registration";
 import { PrismaService } from "../../../prisma.service";
-import { SELECT_NOTIFYEE } from "./notification.query";
-import { HAS_PERMISSION } from "./notification.query";
+import { HAS_PERMISSION, SELECT_NOTIFYEE } from "./notification.query";
 
 export class PrismaNotificationRepository implements NotificationRepository {
   constructor(private readonly prisma: PrismaService) {}

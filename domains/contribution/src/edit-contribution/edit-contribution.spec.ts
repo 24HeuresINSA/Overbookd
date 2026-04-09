@@ -1,13 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { InsufficientAmount } from "../contribution.error.js";
+import { Adherent, Contribution } from "../contribution.js";
+import { InMemoryAdherents } from "./adherents.inmemory.js";
+import { NotFoundContribution } from "./edit-contribution.error.js";
+import { InMemoryEditContributions } from "./edit-contribution.inmemory.js";
 import {
   AdherentWithContribution,
   EditContribution,
 } from "./edit-contribution.js";
-import { InMemoryEditContributions } from "./edit-contribution.inmemory.js";
-import { Adherent, Contribution } from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
-import { InMemoryAdherents } from "./adherents.inmemory.js";
-import { NotFoundContribution } from "./edit-contribution.error.js";
 
 const VALID_AMOUNT = 500;
 const INVALID_AMOUNT = 90;

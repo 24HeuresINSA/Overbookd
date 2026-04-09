@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import { NeedHelpController } from "./need-help.controller";
-import { PrismaHelpingVolunteers } from "./volunteer.repository.prisma";
 import { NeedHelpService } from "./need-help.service";
-import { PrismaModule } from "../prisma.module";
+import { PrismaHelpingVolunteers } from "./volunteer.repository.prisma";
 
 @Module({
   controllers: [NeedHelpController],

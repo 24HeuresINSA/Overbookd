@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useTheme } from "vuetify";
 import { HOME_URL } from "@overbookd/web-page";
-import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
+import { useTheme } from "vuetify";
 import { playJauneAudio } from "~/utils/easter-egg/jaune-audio";
+import { pickRandomTheme } from "~/utils/vuetify/theme/theme.utils";
 
 const TWENTY_FOUR = 24;
 const FIFTY_ONE = 51;

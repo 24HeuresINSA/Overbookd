@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import {
   FestivalEventIdentifier,
   Notifications,
@@ -5,7 +6,6 @@ import {
   WaitingForReview,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
-import { Logger } from "@nestjs/common";
 
 export class PrismaNotifications<
   T extends FestivalEventIdentifier,

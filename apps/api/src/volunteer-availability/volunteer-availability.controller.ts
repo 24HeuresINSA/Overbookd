@@ -16,15 +16,15 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { VolunteerAvailabilityService } from "./volunteer-availability.service";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
 import { PeriodResponseDto } from "../common/dto/period.response.dto";
+import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
 import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error.filter";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 
 @Controller("volunteer-availability")
 @ApiTags("volunteer-availability")

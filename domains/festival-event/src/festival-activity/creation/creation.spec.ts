@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
 import { CREATED, DRAFT } from "@overbookd/festival-event-constants";
-import { CreateFestivalActivity } from "./creation.js";
-import { KeyEvent } from "../festival-activity.js";
+import { describe, expect, it } from "vitest";
 import { Adherent } from "../../common/adherent.js";
+import { KeyEvent } from "../festival-activity.js";
+import { CreateFestivalActivity } from "./creation.js";
 import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory.js";
 
 const noel: Adherent = {

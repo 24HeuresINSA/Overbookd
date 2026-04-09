@@ -1,13 +1,36 @@
 import {
-  TeamMemberForDetails,
   Assignment,
   AssignmentIdentifier,
   BaseAssigneeForDetails,
+  TeamMemberForDetails,
   VolunteersForAssignment,
   WrongTeam,
   retrieveImplicitTeams,
 } from "@overbookd/assignment";
+import { Charisma } from "@overbookd/charisma";
+import {
+  DisplayableAssignment,
+  TaskForCalendar,
+  VolunteerWithAssignmentStats,
+} from "@overbookd/http";
+import { MISSING_ITEM_INDEX } from "@overbookd/list";
+import { BE_AFFECTED } from "@overbookd/permission";
+import { Period } from "@overbookd/time";
+import {
+  SELECT_CHARISMA_PERIOD,
+  SELECT_USER_DATA_FOR_CHARISMA,
+} from "../../../common/query/charisma.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
+import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
+import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
+import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { PrismaService } from "../../../prisma.service";
+import {
+  SELECT_PERIOD_AND_CATEGORY,
+  hasPermission,
+} from "../../../user/user.query";
+import { UserService } from "../../../user/user.service";
 import { AssignmentRepository } from "../assignment.service";
 import {
   DatabaseAssignee,
@@ -16,30 +39,7 @@ import {
   uniqueAssignment,
   updateAssigneesOnAssignment,
 } from "./assignment.query";
-import { MISSING_ITEM_INDEX } from "@overbookd/list";
-import {
-  VolunteerWithAssignmentStats,
-  DisplayableAssignment,
-  TaskForCalendar,
-} from "@overbookd/http";
-import {
-  SELECT_PERIOD_AND_CATEGORY,
-  hasPermission,
-} from "../../../user/user.query";
-import { UserService } from "../../../user/user.service";
-import { BE_AFFECTED } from "@overbookd/permission";
 import { HAS_AVAILABILITIES } from "./availabilities.query";
-import { Period } from "@overbookd/time";
-import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
-import {
-  SELECT_CHARISMA_PERIOD,
-  SELECT_USER_DATA_FOR_CHARISMA,
-} from "../../../common/query/charisma.query";
-import { Charisma } from "@overbookd/charisma";
-import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
-import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
-import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}

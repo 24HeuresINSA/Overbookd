@@ -78,13 +78,13 @@
 </template>
 
 <script lang="ts" setup>
-import { nicknameOrFirstName } from "@overbookd/user";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { navigateTo } from "#app";
 import { Money } from "@overbookd/money";
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { nicknameOrFirstName } from "@overbookd/user";
+import { LOGIN_URL } from "@overbookd/web-page";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
-import { navigateTo } from "#app";
-import { LOGIN_URL } from "@overbookd/web-page";
 
 const theme = useTheme();
 const layoutStore = useLayoutStore();

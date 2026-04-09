@@ -2,10 +2,10 @@ import {
   requirableTeams,
   requirableTeamsExtended,
 } from "@overbookd/festival-event";
-import type { Team } from "@overbookd/team";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { isHttpError } from "~/utils/http/http-error.utils";
+import type { Team } from "@overbookd/team";
 import { TeamRepository } from "~/repositories/team.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   teams: Team[];

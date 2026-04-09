@@ -1,11 +1,19 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import {
   APPROVED,
   REFUSED,
   REJECTED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { getFactory } from "../festival-activity.factory.js";
+import {
+  BARRIERES,
+  COMMUNICATION,
+  HUMAIN,
+  LOG_ELEC,
+  LOG_MATOS,
+  SECU,
+  SIGNA,
+} from "@overbookd/team-constants";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
   BACKLINE,
   CONTENEUR_SCENE_PULSE,
@@ -13,6 +21,13 @@ import {
   MAGASIN,
   PARKING_EIFFEL,
 } from "../../common/inquiry-request.js";
+import {
+  AlreadyApproved,
+  NotAskingToReview,
+  ShouldAssignDrive,
+} from "../../common/review.error.js";
+import { getNameFromReviewer } from "../../common/review.js";
+import { getFactory } from "../festival-activity.factory.js";
 import {
   afficheJustDanceA2,
   bacheBienvenue10m,
@@ -28,25 +43,10 @@ import {
   uneMultiprise,
   uneMultiprise3Prises,
 } from "../festival-activity.fake.js";
-import { Reviewing } from "./reviewing.js";
-import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error.js";
-import {
-  AlreadyApproved,
-  NotAskingToReview,
-  ShouldAssignDrive,
-} from "../../common/review.error.js";
-import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory.js";
 import { Reviewable } from "../festival-activity.js";
-import {
-  BARRIERES,
-  COMMUNICATION,
-  HUMAIN,
-  LOG_ELEC,
-  LOG_MATOS,
-  SECU,
-  SIGNA,
-} from "@overbookd/team-constants";
-import { getNameFromReviewer } from "../../common/review.js";
+import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory.js";
+import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error.js";
+import { Reviewing } from "./reviewing.js";
 
 const factory = getFactory();
 

@@ -1,13 +1,13 @@
-import { AssignmentSummaryWithTask } from "@overbookd/http";
-import { AvailableAssignments } from "../volunteer-to-task.service";
-import { PrismaService } from "../../../prisma.service";
-import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { IProvidePeriod, Period } from "@overbookd/time";
-import { Category } from "@overbookd/festival-event-constants";
 import { countAssigneesInTeam } from "@overbookd/assignment";
-import { extendOneOfTeams } from "../../common/extend-teams";
+import { Category } from "@overbookd/festival-event-constants";
+import { AssignmentSummaryWithTask } from "@overbookd/http";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
+import { PrismaService } from "../../../prisma.service";
+import { extendOneOfTeams } from "../../common/extend-teams";
+import { AvailableAssignments } from "../volunteer-to-task.service";
 
 type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
   id: string;

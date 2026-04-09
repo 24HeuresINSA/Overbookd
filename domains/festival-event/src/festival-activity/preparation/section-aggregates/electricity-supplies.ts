@@ -1,17 +1,17 @@
+import { updateItemToList } from "@overbookd/list";
+import { SlugifyService } from "@overbookd/slugify";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
 } from "../../festival-activity.error.js";
 import {
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-} from "../prepare-festival-activity.model.js";
-import {
   ElectricityConnection,
   ElectricitySupply,
 } from "../../sections/supply.js";
-import { updateItemToList } from "@overbookd/list";
-import { SlugifyService } from "@overbookd/slugify";
+import {
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+} from "../prepare-festival-activity.model.js";
 
 export class ElectricitySupplies {
   private constructor(

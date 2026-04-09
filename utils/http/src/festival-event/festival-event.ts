@@ -1,6 +1,9 @@
-import { Reviewer } from "@overbookd/festival-event";
-import { FestivalEventIdentifier } from "@overbookd/festival-event";
-import { FestivalActivity, FestivalEvent } from "@overbookd/festival-event";
+import {
+  FestivalActivity,
+  FestivalEvent,
+  FestivalEventIdentifier,
+  Reviewer,
+} from "@overbookd/festival-event";
 
 export type Statistics<T extends FestivalEvent = FestivalActivity> = {
   teamCode: string;

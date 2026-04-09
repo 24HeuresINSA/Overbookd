@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { GeneralSectionService } from "./general-section.service";
-import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
 import { PrepareFestivalTask } from "@overbookd/festival-event";
+import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
 import { PrismaAdherents } from "../../common/repository/adherents.prisma";
+import { GeneralSectionService } from "./general-section.service";
 
 @Module({
   providers: [

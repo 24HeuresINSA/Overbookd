@@ -1,11 +1,11 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { PayContributions, Member } from "./pay-contribution.js";
 import {
   Adherent,
   Contribution,
   ContributionIdentity,
   areSameContributions,
 } from "../contribution.js";
+import { Member, PayContributions } from "./pay-contribution.js";
 
 export class InMemoryPayContributions implements PayContributions {
   constructor(

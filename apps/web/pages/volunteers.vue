@@ -51,29 +51,27 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/team";
+import { CSVBuilder } from "@overbookd/csv";
 import {
-  VIEW_VOLUNTEER_DETAILS,
   AFFECT_VOLUNTEER,
+  VIEW_VOLUNTEER_DETAILS,
 } from "@overbookd/permission";
+import { formatPhoneNumber } from "@overbookd/registration";
+import type { Team } from "@overbookd/team";
+import { PERSONNE } from "@overbookd/team-constants";
+import { formatDate } from "@overbookd/time";
+import { downloadCsv } from "~/utils/file/download.utils";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
-  keepMembersOf,
   excludeMembersOf,
+  keepMembersOf,
 } from "~/utils/search/search-team.utils";
-import { toSearchable } from "~/utils/search/searchable-user.utils";
 import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
-import {
-  VolunteerFilterBuilder,
-  type VolunteerFilters,
-} from "~/utils/user/volunteer.filter";
-import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { downloadCsv } from "~/utils/file/download.utils";
-import { formatDate } from "@overbookd/time";
-import { PERSONNE } from "@overbookd/team-constants";
 import {
   DisplayModeBuilder,
   TROMBINOSCOPE,
@@ -81,8 +79,10 @@ import {
   VOLUNTEER_STATS,
   type DisplayMode,
 } from "~/utils/user/volunteer.display";
-import { CSVBuilder } from "@overbookd/csv";
-import { formatPhoneNumber } from "@overbookd/registration";
+import {
+  VolunteerFilterBuilder,
+  type VolunteerFilters,
+} from "~/utils/user/volunteer.filter";
 
 useHead({ title: "Liste des bénévoles" });
 

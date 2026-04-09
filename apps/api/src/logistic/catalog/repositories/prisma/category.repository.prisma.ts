@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../../../prisma.service";
-import { CategoryRepository } from "../catalog-repositories";
-import { CategoryAlreadyExists } from "../../catalog.error";
 import {
   CatalogCategory,
   CatalogCategoryTree,
   CategorySearchOptions,
 } from "@overbookd/http";
+import { PrismaService } from "../../../../prisma.service";
+import { CategoryAlreadyExists } from "../../catalog.error";
+import { CategoryRepository } from "../catalog-repositories";
 
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepository {

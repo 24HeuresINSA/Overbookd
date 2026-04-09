@@ -1,16 +1,16 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { PAY_CONTRIBUTION } from "@overbookd/permission";
 import { HARD, VIEUX } from "@overbookd/team-constants";
-import { Member, PayContribution } from "./pay-contribution.js";
+import { Edition, ONE_YEAR_IN_MS } from "@overbookd/time";
+import { beforeEach, describe, expect, it } from "vitest";
+import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
+import { Contribution } from "../contribution.js";
 import { EXPIRATION_DATE } from "./contribute.js";
-import { InMemoryPayContributions } from "./pay-contributions.inmemory.js";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE,
 } from "./pay-contribution.error.js";
-import { Edition, ONE_YEAR_IN_MS } from "@overbookd/time";
-import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { Contribution } from "../contribution.js";
-import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
+import { Member, PayContribution } from "./pay-contribution.js";
+import { InMemoryPayContributions } from "./pay-contributions.inmemory.js";
 
 const lea: Member = {
   id: 1,

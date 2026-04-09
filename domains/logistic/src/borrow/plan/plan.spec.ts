@@ -1,15 +1,15 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { InMemoryBorrows } from "./borrow.inmemory.js";
-import { PlanBorrow } from "./plan.js";
-import { BorrowNotFound, NoDuration } from "../borrow.error.js";
-import { karnaBorrow } from "../borrow.fake.js";
+import { beforeEach, describe, expect, it } from "vitest";
+import { NotEnoughQuantity } from "../../logistic.error.js";
 import {
   chaise,
   monday21At10,
   saturday19At16,
   table,
 } from "../../logistic.test-utils.js";
-import { NotEnoughQuantity } from "../../logistic.error.js";
+import { BorrowNotFound, NoDuration } from "../borrow.error.js";
+import { karnaBorrow } from "../borrow.fake.js";
+import { InMemoryBorrows } from "./borrow.inmemory.js";
+import { PlanBorrow } from "./plan.js";
 
 describe("Plan borrow", () => {
   let borrows: InMemoryBorrows;

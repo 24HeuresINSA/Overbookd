@@ -1,43 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import {
-  george,
-  humaGrass,
-  lea,
-  leaContact,
-  noel,
-  noelContact,
-  mdeHall,
-} from "../festival-task.test-util.js";
-import {
-  gabIsAssignedTo,
-  installEscapeGame,
-  parcoursCollageTrajetA,
-  uninstallEscapeGame,
-} from "../festival-task.fake.js";
-import {
-  installBarbecue,
-  guardJustDance,
-  presentEscapeGame,
-  serveWaterOnJustDance,
-  onlyApprovedByHumain,
-  approvedByHumainRejectedByMatos,
-  approvedByHumainAndElecRejectedByMatos,
-  approvedByElecRejectedByMatos,
-  approvedByMatosRejectedByHumainAndElec,
-  onlyApprovedByMatos,
-  uninstallBarbecue,
-} from "../festival-task.fake.js";
-import { PrepareFestivalTask } from "./prepare.js";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
-import {
-  FestivalTaskNotFound,
-  ForceUpdateError,
-} from "../festival-task.error.js";
-import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
-import { AlreadyApprovedBy } from "../../common/review.error.js";
-import { isDraft } from "../../festival-event.js";
-import { elec, humain, matos } from "../../common/review.js";
 import {
   APPROVED,
   FORCED_UPDATE,
@@ -46,6 +6,44 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { beforeEach, describe, expect, it } from "vitest";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import { elec, humain, matos } from "../../common/review.js";
+import { isDraft } from "../../festival-event.js";
+import {
+  FestivalTaskNotFound,
+  ForceUpdateError,
+} from "../festival-task.error.js";
+import {
+  approvedByElecRejectedByMatos,
+  approvedByHumainAndElecRejectedByMatos,
+  approvedByHumainRejectedByMatos,
+  approvedByMatosRejectedByHumainAndElec,
+  gabIsAssignedTo,
+  guardJustDance,
+  installBarbecue,
+  installEscapeGame,
+  onlyApprovedByHumain,
+  onlyApprovedByMatos,
+  parcoursCollageTrajetA,
+  presentEscapeGame,
+  serveWaterOnJustDance,
+  uninstallBarbecue,
+  uninstallEscapeGame,
+} from "../festival-task.fake.js";
+import {
+  george,
+  humaGrass,
+  lea,
+  leaContact,
+  mdeHall,
+  noel,
+  noelContact,
+} from "../festival-task.test-util.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PrepareFestivalTask } from "./prepare.js";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;

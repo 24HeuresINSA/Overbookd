@@ -125,16 +125,16 @@ import {
   type FestivalTaskWithConflicts,
   isDraft,
 } from "@overbookd/festival-event";
-import type { SignaLocation } from "@overbookd/signa";
-import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import type { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { FORCE_WRITE_FT } from "@overbookd/permission";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { formatPhoneNumber } from "@overbookd/registration";
+import type { SignaLocation } from "@overbookd/signa";
+import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import {
   hasTaskApprovals,
   shouldResetTaskApprovals,
 } from "~/utils/festival-event/festival-task/festival-task.utils";
-import { formatPhoneNumber } from "@overbookd/registration";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();

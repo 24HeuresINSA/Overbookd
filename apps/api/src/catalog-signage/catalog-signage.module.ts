@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
+import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
+import { FileService } from "../utils/file.service";
 import { CatalogSignageController } from "./catalog-signage.controller";
 import { CatalogSignageService } from "./catalog-signage.service";
-import { PrismaModule } from "../prisma.module";
 import { PrismaCatalogSignageRepository } from "./repository/catalog-signage-repository.prisma";
-import { FileService } from "../utils/file.service";
 
 @Module({
   controllers: [CatalogSignageController],

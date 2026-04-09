@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
-import { Response, Request } from "express";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { SignageError } from "@overbookd/signa";
+import { Request, Response } from "express";
 import { RouteLogger } from "../route-logger";
 
 @Catch(SignageError)

@@ -200,15 +200,20 @@
 </template>
 
 <script lang="ts" setup>
-import type { VolunteerCandidate } from "@overbookd/http";
 import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { CSVBuilder } from "@overbookd/csv";
+import type { VolunteerCandidate } from "@overbookd/http";
+import { formatPhoneNumber } from "@overbookd/registration";
+import type { Team } from "@overbookd/team";
 import {
   formatDate,
   formatDateWithMinutes,
   type IProvidePeriod,
 } from "@overbookd/time";
-import type { Team } from "@overbookd/team";
+import { buildUserNameWithNickname } from "@overbookd/user";
+import { downloadCsv } from "~/utils/file/download.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registrations/volunteer-candidates.utils";
 import {
   matchingSearchItems,
   type Searchable,
@@ -216,11 +221,6 @@ import {
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
-import { buildUserNameWithNickname } from "@overbookd/user";
-import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registrations/volunteer-candidates.utils";
-import { CSVBuilder } from "@overbookd/csv";
-import { downloadCsv } from "~/utils/file/download.utils";
-import { formatPhoneNumber } from "@overbookd/registration";
 
 useHead({ title: "Admissions bénévoles" });
 

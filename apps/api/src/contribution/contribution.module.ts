@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
+import { EditContribution, PayContribution } from "@overbookd/contribution";
+import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import { ContributionController } from "./contribution.controller";
-import { PrismaPayContributions } from "./repository/pay-contributions.prisma";
-import { PrismaModule } from "../prisma.module";
 import { ContributionService } from "./contribution.service";
-import { EditContribution, PayContribution } from "@overbookd/contribution";
-import { PrismaEditContributions } from "./repository/edit-contributions.prisma";
 import { PrismaAdherents } from "./repository/adherents.prisma";
+import { PrismaEditContributions } from "./repository/edit-contributions.prisma";
+import { PrismaPayContributions } from "./repository/pay-contributions.prisma";
 
 @Module({
   controllers: [ContributionController],

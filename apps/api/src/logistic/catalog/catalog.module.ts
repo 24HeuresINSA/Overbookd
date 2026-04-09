@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { CatalogService } from "./catalog.service";
-import { CategoryService } from "./category.service";
-import { CategoryController } from "./category.controller";
-import { GearController } from "./gear.controller";
 import { PrismaService } from "../../prisma.service";
+import { CatalogService } from "./catalog.service";
+import { CategoryController } from "./category.controller";
+import { CategoryService } from "./category.service";
+import { GearController } from "./gear.controller";
 import {
   PrismaCategoryRepository,
   PrismaGearRepository,

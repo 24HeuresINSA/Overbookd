@@ -74,12 +74,12 @@
 
 <script lang="ts" setup>
 import type { TimelineAssignment, TimelineTask } from "@overbookd/http";
+import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 import { formatDateToHumanReadable } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
-import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();
 

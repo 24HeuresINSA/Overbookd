@@ -91,10 +91,10 @@ import {
   Period,
   type IProvidePeriod,
 } from "@overbookd/time";
-import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
-import type { CalendarEvent } from "~/utils/calendar/event";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
+import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { CalendarEvent } from "~/utils/calendar/event";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();

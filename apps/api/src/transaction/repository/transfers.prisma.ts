@@ -1,11 +1,11 @@
 import {
-  TransferForm,
-  Transfers,
-  TransferResponse,
   Balance,
+  TransferForm,
+  TransferResponse,
+  Transfers,
 } from "@overbookd/personal-account";
-import { PrismaService } from "../../prisma.service";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../common/query/transaction.query";
+import { PrismaService } from "../../prisma.service";
 
 const SELECT_TRANFER_PARTICIPANT = {
   id: true,

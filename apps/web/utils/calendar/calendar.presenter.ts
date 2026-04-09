@@ -1,4 +1,4 @@
-import { Period, OverDate, MINUTES_IN_DAY, Duration } from "@overbookd/time";
+import { Duration, MINUTES_IN_DAY, OverDate, Period } from "@overbookd/time";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import type { DayPresenter } from "./day.presenter";
 

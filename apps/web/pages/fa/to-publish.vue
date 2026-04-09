@@ -92,9 +92,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { PreviewForCommunication } from "@overbookd/http";
 import type { TimeWindow } from "@overbookd/festival-event";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
+import type { PreviewForCommunication } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 import { Period, formatDateWithMinutes } from "@overbookd/time";
 import {
   openActivityFromDataTable,
@@ -104,7 +104,7 @@ import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
-import { SlugifyService } from "@overbookd/slugify";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 useHead({ title: "Animations à publier" });
 

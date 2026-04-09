@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, ValidateIf } from "class-validator";
 import { PrepareSignaForm } from "@overbookd/http";
+import { IsNumber, ValidateIf } from "class-validator";
 
 export class UpdateSignaRequestDto implements PrepareSignaForm {
   @ApiProperty({

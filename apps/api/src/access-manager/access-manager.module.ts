@@ -9,9 +9,9 @@ import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
-import { PrismaTeamsGranting } from "./repository/teams-granting.prisma";
 import { PrismaMembershipsJoining } from "./repository/memberships-joining.prisma";
 import { PrismaMembershipsLeaving } from "./repository/memberships-leaving.prisma";
+import { PrismaTeamsGranting } from "./repository/teams-granting.prisma";
 import { PrismaTeamsRevoking } from "./repository/teams-revoking.prisma";
 
 @Module({

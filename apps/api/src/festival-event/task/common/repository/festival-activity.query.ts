@@ -1,9 +1,9 @@
 import { FestivalTask } from "@overbookd/festival-event";
-import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import {
-  SELECT_PERIOD_WITH_ID,
   ORDER_BY_PERIOD,
+  SELECT_PERIOD_WITH_ID,
 } from "../../../../common/query/period.query";
+import { SELECT_LOCATION } from "../../../common/repository/location.query";
 
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,

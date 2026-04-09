@@ -1,4 +1,3 @@
-import { numberGenerator } from "@overbookd/list";
 import {
   APPROVED,
   DRAFT,
@@ -9,6 +8,7 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
+import { numberGenerator } from "@overbookd/list";
 import {
   BARRIERES,
   HUMAIN,
@@ -17,6 +17,17 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { isDraft } from "../festival-event.js";
+import { isKeyOf } from "../is-key-of.js";
+import { FestivalActivityKeyEvents } from "./festival-activity.event.js";
+import {
+  friday18hToMonday00h,
+  george,
+  lea,
+  local24h,
+  noel,
+  saturday11hToSaturday18h,
+} from "./festival-activity.fake.js";
 import {
   Draft,
   FestivalActivity,
@@ -26,17 +37,6 @@ import {
   Validated,
 } from "./festival-activity.js";
 import { Public } from "./sections/general.js";
-import {
-  saturday11hToSaturday18h,
-  friday18hToMonday00h,
-  lea,
-  local24h,
-  george,
-  noel,
-} from "./festival-activity.fake.js";
-import { FestivalActivityKeyEvents } from "./festival-activity.event.js";
-import { isKeyOf } from "../is-key-of.js";
-import { isDraft } from "../festival-event.js";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]

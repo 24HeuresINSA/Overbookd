@@ -7,11 +7,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { NotificationsResponseDto } from "./dto/notifications.response.dto";
 import { NotificationService } from "./notification.service";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("notifications")
 @ApiTags("notifications")

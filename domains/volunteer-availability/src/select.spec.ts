@@ -1,7 +1,7 @@
+import { DateString, OverDate, Period } from "@overbookd/time";
 import { describe, expect, it } from "vitest";
-import { Period, DateString, OverDate } from "@overbookd/time";
-import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 import { Availabilities } from "./availabilities.js";
+import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error.js";
 
 const festivalStartDate: DateString = "2024-05-17";
 

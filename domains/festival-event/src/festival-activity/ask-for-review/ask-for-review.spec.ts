@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import {
   DRAFT,
   IN_REVIEW,
@@ -6,30 +5,6 @@ import {
   READY_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import { Reviewer } from "../../common/review.js";
-import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
-import { AskForReview, isReviewer } from "./ask-for-review.js";
-import { Notifications } from "../../common/notifications.js";
-import {
-  pcSecurite,
-  finaleEsport,
-  internalWithoutDescription,
-  publicWithoutPhoto,
-  publicWithoutCategory,
-  publicWithoutTimeWindows,
-  internalWithoutTeamInCharge,
-  internalWithoutLocation,
-  internalWithoutInquiries,
-  internalWithoutInquiryTimeWindows,
-  justCreated,
-  escapeGame,
-  bubbleFoot,
-} from "./ask-for-review.test-utils.js";
-import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
-import { InMemoryNotifications } from "./notifications.inmemory.js";
-import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory.js";
-import { george, lea } from "../festival-activity.fake.js";
-import { CantAskForReview } from "../../common/review.error.js";
 import {
   BARRIERES,
   COMMUNICATION,
@@ -39,6 +14,31 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { beforeEach, describe, expect, it } from "vitest";
+import { Notifications } from "../../common/notifications.js";
+import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
+import { CantAskForReview } from "../../common/review.error.js";
+import { Reviewer } from "../../common/review.js";
+import { george, lea } from "../festival-activity.fake.js";
+import { AskForReview, isReviewer } from "./ask-for-review.js";
+import {
+  bubbleFoot,
+  escapeGame,
+  finaleEsport,
+  internalWithoutDescription,
+  internalWithoutInquiries,
+  internalWithoutInquiryTimeWindows,
+  internalWithoutLocation,
+  internalWithoutTeamInCharge,
+  justCreated,
+  pcSecurite,
+  publicWithoutCategory,
+  publicWithoutPhoto,
+  publicWithoutTimeWindows,
+} from "./ask-for-review.test-utils.js";
+import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
+import { InMemoryNotifications } from "./notifications.inmemory.js";
 
 describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
+import { DomainEventModule } from "../domain-event/domain-event.module";
+import { PrismaModule } from "../prisma.module";
+import { PrismaService } from "../prisma.service";
 import { MailService } from "./mail.service";
 import { PrismaMembers } from "./repository/members.prisma";
-import { PrismaService } from "../prisma.service";
-import { PrismaModule } from "../prisma.module";
-import { DomainEventModule } from "../domain-event/domain-event.module";
 
 @Module({
   imports: [PrismaModule, DomainEventModule],

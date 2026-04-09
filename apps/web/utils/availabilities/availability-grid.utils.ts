@@ -1,3 +1,4 @@
+import type { SavedCharismaPeriod } from "@overbookd/http";
 import {
   HOURS_IN_DAY,
   OverDate,
@@ -7,7 +8,6 @@ import {
 } from "@overbookd/time";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 import { isPartyShift } from "../shift.utils";
-import type { SavedCharismaPeriod } from "@overbookd/http";
 
 const TWO_HOURS_CELL_COUNT = (SHIFT_HOURS.PARTY - SHIFT_HOURS.NIGHT) / 2;
 const ONE_HOUR_CELL_COUNT = HOURS_IN_DAY - TWO_HOURS_CELL_COUNT * 2;

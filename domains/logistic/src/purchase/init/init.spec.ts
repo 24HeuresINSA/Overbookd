@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { friday17At12 } from "../../logistic.test-utils.js";
-import { InMemoryPurchases } from "./purchase.inmemory.js";
 import { InitPurchase, InitPurchaseForm } from "./init.js";
+import { InMemoryPurchases } from "./purchase.inmemory.js";
 
 describe("Init purchase", () => {
   const purchases = new InMemoryPurchases();

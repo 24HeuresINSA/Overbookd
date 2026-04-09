@@ -1,17 +1,16 @@
 import {
   Body,
   Controller,
-  Get,
-  Param,
-  Post,
   Delete,
-  UseGuards,
+  Get,
   HttpCode,
-  Put,
+  Param,
   ParseIntPipe,
+  Post,
+  Put,
   Query,
+  UseGuards,
 } from "@nestjs/common";
-import { CategoryService } from "./category.service";
 import {
   ApiBearerAuth,
   ApiParam,
@@ -19,16 +18,17 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
+import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
-import { CategoryResponseDto } from "./dto/category.response.dto";
-import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
-import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
-import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { CategoryService } from "./category.service";
+import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
+import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
+import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
+import { CategoryResponseDto } from "./dto/category.response.dto";
 
 @Controller("logistic/categories")
 @ApiTags("logistic/catalog")

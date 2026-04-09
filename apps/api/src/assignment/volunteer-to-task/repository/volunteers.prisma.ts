@@ -1,20 +1,20 @@
-import { Period } from "@overbookd/time";
-import { PrismaService } from "../../../prisma.service";
-import {
-  DatabaseAssigneeWithAssignments,
-  SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
-} from "./volunteer.query";
 import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
-import { hasAtLeastOneFriend } from "../../common/repository/friend.query";
-import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
-import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { Charisma } from "@overbookd/charisma";
+import { NO_PREF } from "@overbookd/preference";
+import { Period } from "@overbookd/time";
 import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
-import { Charisma } from "@overbookd/charisma";
-import { NO_PREF } from "@overbookd/preference";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
+import { PrismaService } from "../../../prisma.service";
+import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
+import { hasAtLeastOneFriend } from "../../common/repository/friend.query";
+import {
+  DatabaseAssigneeWithAssignments,
+  SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
+} from "./volunteer.query";
 
 export class PrismaVolunteers implements Volunteers {
   constructor(private readonly prisma: PrismaService) {}

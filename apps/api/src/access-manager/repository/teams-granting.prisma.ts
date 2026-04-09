@@ -1,4 +1,4 @@
-import type { TeamsGranting, TeamGranting } from "@overbookd/access-manager";
+import type { TeamGranting, TeamsGranting } from "@overbookd/access-manager";
 import { isPermission } from "@overbookd/permission";
 import { PrismaService } from "../../prisma.service";
 

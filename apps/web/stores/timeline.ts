@@ -1,10 +1,3 @@
-import {
-  type IProvidePeriod,
-  TWO_HOURS_IN_MS,
-  QUARTER_IN_MS,
-  Period,
-} from "@overbookd/time";
-import { SlugifyService } from "@overbookd/slugify";
 import type {
   HttpStringified,
   TimelineAssignment,
@@ -12,10 +5,17 @@ import type {
   TimelineMobilization,
   TimelineTask,
 } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 import type { Team } from "@overbookd/team";
+import {
+  type IProvidePeriod,
+  Period,
+  QUARTER_IN_MS,
+  TWO_HOURS_IN_MS,
+} from "@overbookd/time";
+import { TimelineRepository } from "~/repositories/timeline.repository";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { TimelineRepository } from "~/repositories/timeline.repository";
 
 type WithName = {
   name: string;

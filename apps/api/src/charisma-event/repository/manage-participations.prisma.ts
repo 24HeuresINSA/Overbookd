@@ -1,15 +1,15 @@
 import {
+  CharismaEventParticipation,
   CharismaEventParticipations,
   CreateCharismaEventParticipation,
-  CharismaEventParticipation,
-  ParticipantTakingPartInCharismaEvent,
   EditCharismaEventParticipation,
+  ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
-import { PrismaService } from "../../prisma.service";
-import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
+import { DateString } from "@overbookd/time";
 import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
-import { DateString } from "@overbookd/time";
+import { PrismaService } from "../../prisma.service";
+import { SELECT_CHARISMA_EVENT_PARTICIPATION } from "./participation.query";
 
 export class PrismaManageCharismaEventParticipations implements CharismaEventParticipations {
   constructor(private readonly prisma: PrismaService) {}

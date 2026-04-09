@@ -10,9 +10,9 @@ import type {
   TaskForCalendar,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/http-error.utils";
-import { HttpClient } from "~/utils/http/http-client";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
+import { HttpClient } from "~/utils/http/http-client";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 export class AssignmentsRepository implements Assignments {
   private static readonly basePath = "assignments";

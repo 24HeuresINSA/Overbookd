@@ -11,15 +11,15 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { MANAGE_LOCATION, VIEW_LOCATION } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateLocationRequestDto } from "./dto/create-location.request.dto";
+import { LocationRequestDto } from "./dto/location.request.dto.";
 import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
 import { LocationService } from "./location.service";
-import { LocationRequestDto } from "./dto/location.request.dto.";
-import { MANAGE_LOCATION, VIEW_LOCATION } from "@overbookd/permission";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("locations")
 @ApiTags("locations")

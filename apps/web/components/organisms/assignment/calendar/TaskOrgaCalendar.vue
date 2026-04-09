@@ -20,13 +20,13 @@ import type {
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
 import {
-  createCalendarEvent,
-  type CalendarEvent,
-} from "~/utils/calendar/event";
-import {
   hasAssignmentIdentifier,
   type CalendarEventWithIdentifier,
 } from "~/utils/assignment/calendar-event";
+import {
+  createCalendarEvent,
+  type CalendarEvent,
+} from "~/utils/calendar/event";
 
 const props = defineProps({
   canUseCalendarShortcuts: {

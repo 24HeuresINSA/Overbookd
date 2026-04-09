@@ -5,8 +5,8 @@ import {
   EditCharismaEventParticipation,
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
-import { DateString } from "@overbookd/time";
 import { CharismaEventPotentialParticipant } from "@overbookd/http";
+import { DateString } from "@overbookd/time";
 
 export type PotentialParticipants = {
   findAll: () => Promise<CharismaEventPotentialParticipant[]>;

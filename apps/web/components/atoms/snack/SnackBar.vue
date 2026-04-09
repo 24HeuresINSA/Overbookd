@@ -36,9 +36,9 @@ import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import {
   type SnackNotification,
   DEFAULT_SNACK_TIMEOUT,
-  SUCCESS,
   FAILURE,
   INFO,
+  SUCCESS,
 } from "~/utils/snack-notification";
 
 const layoutStore = useLayoutStore();

@@ -1,4 +1,4 @@
-import { Events, CandidateEnrolledEvent } from "./enroll-candidates";
+import { CandidateEnrolledEvent, Events } from "./enroll-candidates";
 
 export class InMemoryEvents implements Events {
   constructor(private events: CandidateEnrolledEvent[] = []) {}

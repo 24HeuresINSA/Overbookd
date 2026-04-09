@@ -25,12 +25,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type {
-  FestivalActivity,
   ElectricitySupply,
+  FestivalActivity,
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
+import { useDebounceFn } from "@vueuse/core";
 import { LOG_ELEC_EMAIL } from "~/utils/mail/mail.constant";
 
 const faStore = useFestivalActivityStore();

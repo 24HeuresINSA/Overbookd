@@ -87,21 +87,21 @@ import {
   type TransactionUser,
   type TransactionWithSenderAndReceiver,
 } from "@overbookd/personal-account";
-import { buildUserNameWithNickname } from "@overbookd/user";
-import { formatDateWithMinutes } from "@overbookd/time";
 import { SlugifyService } from "@overbookd/slugify";
+import { formatDateWithMinutes } from "@overbookd/time";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
 import {
-  VIREMENT,
   DEPOT,
-  FUT,
-  PLACARD,
-  INITIALISATION,
-  REPAS_PARTAGE,
   EVENEMENT,
+  FUT,
+  INITIALISATION,
+  PLACARD,
+  REPAS_PARTAGE,
+  VIREMENT,
 } from "~/utils/transaction/transaction.constants";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 

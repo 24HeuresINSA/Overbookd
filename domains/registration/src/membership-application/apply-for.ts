@@ -1,7 +1,7 @@
 import { Edition } from "@overbookd/time";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
-import { Rejected, AlreadyCandidate } from "./candidature.error.js";
 import { Candidate, Candidates, Email } from "./candidates.js";
+import { AlreadyCandidate, Rejected } from "./candidature.error.js";
 
 export class ApplyFor {
   constructor(private readonly candidates: Candidates) {}

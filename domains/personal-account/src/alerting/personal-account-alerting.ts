@@ -1,6 +1,6 @@
-import { Adherents } from "./adherents.js";
 import { CurrentBalanceAlert } from "../balance/current-balance-alert.js";
 import { InDebtAlert } from "../in-debt/in-debt-alert.js";
+import { Adherents } from "./adherents.js";
 
 export class PersonalAccountAlerting {
   constructor(private readonly adherents: Adherents) {}

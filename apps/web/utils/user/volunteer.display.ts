@@ -1,5 +1,5 @@
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import type { LocationQuery } from "vue-router";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 export const TROMBINOSCOPE = "trombinoscope";
 export const VOLUNTEER_LIST = "volunteer-list";

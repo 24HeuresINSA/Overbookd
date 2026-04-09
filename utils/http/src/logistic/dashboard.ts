@@ -1,6 +1,5 @@
 import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
-import { Purchase } from "@overbookd/logistic";
-import { Borrow } from "@overbookd/logistic";
+import { Borrow, Purchase } from "@overbookd/logistic";
 
 export type GearPreview = {
   id: number;

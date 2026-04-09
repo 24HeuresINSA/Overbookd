@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { CategoryOwner } from "@overbookd/http";
 import { PrismaService } from "../../../../prisma.service";
 import { TeamRepository } from "../catalog-repositories";
-import { CategoryOwner } from "@overbookd/http";
 
 @Injectable()
 export class PrismaTeamRepository implements TeamRepository {

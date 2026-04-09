@@ -1,7 +1,7 @@
-import { IProvidePeriod, Period } from "@overbookd/time";
-import { TimeWindowAlreadyExists } from "../../festival-activity.error.js";
-import { TimeWindow } from "../../../common/time-window.js";
 import { WithAtLeastOneItem } from "@overbookd/list";
+import { IProvidePeriod, Period } from "@overbookd/time";
+import { TimeWindow } from "../../../common/time-window.js";
+import { TimeWindowAlreadyExists } from "../../festival-activity.error.js";
 import { PrepareError } from "../prepare-in-review-festival-activity.js";
 
 export class TimeWindows<T extends TimeWindow[]> {

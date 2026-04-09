@@ -153,13 +153,13 @@ import {
   type TeamMemberForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
-import { isOrgaTaskMode } from "~/utils/assignment/mode";
-import { buildUserName } from "@overbookd/user";
-import { Duration, formatDateToHumanReadable } from "@overbookd/time";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
-import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { Duration, formatDateToHumanReadable } from "@overbookd/time";
+import { buildUserName } from "@overbookd/user";
+import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
+import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();

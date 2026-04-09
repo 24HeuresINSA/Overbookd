@@ -1,23 +1,23 @@
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import {
+  ConfiguredBarrel,
+  CreateBarrelTransaction,
+  CreateBarrelTransactions,
+  CreateDepositForm,
+  CreateExternalEventTransactions,
+  CreateProvisionsTransaction,
+  CreateProvisionsTransactions,
+  Deposit,
+  MyTransaction,
+  NewExternalEventConsumption,
   PastSharedMeal,
   SharedMealPayment,
   SharedMealTransaction,
-  MyTransaction,
   TransactionWithSenderAndReceiver,
-  CreateDepositForm,
-  Deposit,
-  CreateBarrelTransaction,
-  CreateBarrelTransactions,
-  ConfiguredBarrel,
-  CreateProvisionsTransactions,
-  CreateProvisionsTransaction,
 } from "@overbookd/personal-account";
-import { PrismaTransactions } from "./repository/transactions.prisma";
+import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { NewExternalEventConsumption } from "@overbookd/personal-account";
-import { CreateExternalEventTransactions } from "@overbookd/personal-account";
+import { PrismaTransactions } from "./repository/transactions.prisma";
 
 export type Barrels = {
   findBySlug: (slug: string) => Promise<ConfiguredBarrel>;

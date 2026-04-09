@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
+import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { PrismaFindGears } from "./repositories/find-gears.prisma";
-import { PrismaModule } from "../../prisma.module";
 
 @Module({
   providers: [

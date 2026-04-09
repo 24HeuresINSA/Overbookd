@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, expect } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Availability } from "./volunteer-availability.js";
 import { AvailabilityRegistery } from "./volunteer-availability.registery.js";
 

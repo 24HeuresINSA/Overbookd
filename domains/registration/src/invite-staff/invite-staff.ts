@@ -1,9 +1,9 @@
-import { jwtDecode } from "jwt-decode";
 import {
   formatDateWithExplicitMonthAndDay,
   ONE_SECOND_IN_MS,
 } from "@overbookd/time";
 import { LOGIN_URL } from "@overbookd/web-page";
+import { jwtDecode } from "jwt-decode";
 
 export type WithExpiration = {
   exp: number;

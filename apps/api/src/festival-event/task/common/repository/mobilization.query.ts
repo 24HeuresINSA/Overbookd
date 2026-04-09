@@ -1,6 +1,6 @@
 import { Volunteer } from "@overbookd/festival-event";
-import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
+import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 
 const SELECT_TEAM = {
   count: true,

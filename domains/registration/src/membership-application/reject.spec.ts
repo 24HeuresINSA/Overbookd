@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryCandidates } from "./candidates.inmemory.js";
+import { STAFF, VOLUNTEER } from "../newcomer.js";
 import {
   dnamra,
   lea,
@@ -12,9 +12,9 @@ import {
   rejectedOlopStaffCandidate,
   rejectedOlopVolunteerCandidate,
 } from "./candidate.test-utils.js";
-import { RejectMembershipApplication } from "./reject.js";
+import { InMemoryCandidates } from "./candidates.inmemory.js";
 import { AlreadyRejected, NotRejected } from "./candidature.error.js";
-import { STAFF, VOLUNTEER } from "../newcomer.js";
+import { RejectMembershipApplication } from "./reject.js";
 
 describe("Reject one membership application", () => {
   describe("when a candidate has applied for staff membership for the current edition", () => {

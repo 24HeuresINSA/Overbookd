@@ -1,6 +1,6 @@
 import { Membership } from "../../newcomer.js";
-import { Field } from "./field.js";
 import { shouldSignVolunteerCharter } from "../register-form.js";
+import { Field } from "./field.js";
 
 export class VolunteerCharterField implements Field<boolean> {
   private constructor(

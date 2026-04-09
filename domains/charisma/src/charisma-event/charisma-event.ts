@@ -1,16 +1,16 @@
 import { SlugifyService } from "@overbookd/slugify";
+import { DateString, OverDate } from "@overbookd/time";
 import { User } from "@overbookd/user";
 import {
-  InvalidName,
-  InsufficientCharismaPerHour,
-  IntegerCharismaPerHour,
-  NoParticipant,
-  InvalidParticipantHours,
-  SameParticipantMultipleTimes,
   AlreadyExists,
   InexistentParticipation,
+  InsufficientCharismaPerHour,
+  IntegerCharismaPerHour,
+  InvalidName,
+  InvalidParticipantHours,
+  NoParticipant,
+  SameParticipantMultipleTimes,
 } from "./charisma-event.error";
-import { DateString, OverDate } from "@overbookd/time";
 
 export type Participation = {
   slug: string;

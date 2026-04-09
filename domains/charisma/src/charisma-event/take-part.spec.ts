@@ -1,4 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { User } from "@overbookd/user";
+import { beforeEach, describe, expect, it } from "vitest";
+import { CharismaEvent } from "./charisma-event";
+import { InMemoryCharismaEventParticipations } from "./charisma-event-participations.inmemory";
 import {
   InsufficientCharismaPerHour,
   IntegerCharismaPerHour,
@@ -7,9 +10,6 @@ import {
   NoParticipant,
   SameParticipantMultipleTimes,
 } from "./charisma-event.error";
-import { CharismaEvent } from "./charisma-event";
-import { User } from "@overbookd/user";
-import { InMemoryCharismaEventParticipations } from "./charisma-event-participations.inmemory";
 
 const lea: User = {
   id: 1,

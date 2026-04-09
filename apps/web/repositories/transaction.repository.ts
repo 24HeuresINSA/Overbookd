@@ -1,14 +1,14 @@
 import type {
-  CreateDepositForm,
-  CreateTransferForm,
-  MyTransaction,
-  TransactionWithSenderAndReceiver,
-  NewExternalEventConsumption,
-} from "@overbookd/personal-account";
-import type {
   CreateBarrelTransactionsForm,
   CreateProvisionsTransactionsForm,
 } from "@overbookd/http";
+import type {
+  CreateDepositForm,
+  CreateTransferForm,
+  MyTransaction,
+  NewExternalEventConsumption,
+  TransactionWithSenderAndReceiver,
+} from "@overbookd/personal-account";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class TransactionRepository {

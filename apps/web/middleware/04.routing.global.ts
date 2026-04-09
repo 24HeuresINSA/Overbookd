@@ -1,5 +1,5 @@
-import { findPage } from "~/utils/navigation/find-page.utils";
 import { HOME_URL } from "@overbookd/web-page";
+import { findPage } from "~/utils/navigation/find-page.utils";
 
 export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore();

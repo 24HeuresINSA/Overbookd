@@ -1,10 +1,3 @@
-import { Period } from "@overbookd/time";
-import { FormatVolunteer, Volunteer } from "../../../volunteer.js";
-import {
-  AssignableVolunteer,
-  StoredAssignableVolunteer,
-  StoredAssignment,
-} from "../../assignable-volunteer.js";
 import {
   BAR,
   Category,
@@ -14,6 +7,13 @@ import {
   RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
+import { Period } from "@overbookd/time";
+import { FormatVolunteer, Volunteer } from "../../../volunteer.js";
+import {
+  AssignableVolunteer,
+  StoredAssignableVolunteer,
+  StoredAssignment,
+} from "../../assignable-volunteer.js";
 
 export type MaybeCategory = Category | "undefined";
 

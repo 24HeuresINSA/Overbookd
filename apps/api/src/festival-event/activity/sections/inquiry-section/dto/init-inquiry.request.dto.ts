@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ValidateNested } from "class-validator";
 import { AddInquiryRequestForm, InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
-import { PeriodRequestDto } from "../../../../../common/dto/period.request.dto";
 import { Type } from "class-transformer";
+import { ValidateNested } from "class-validator";
+import { PeriodRequestDto } from "../../../../../common/dto/period.request.dto";
 import { AddInquiryRequestDto } from "../../../../common/dto/add-inquiry-request.request.dto";
 
 export class InitInquiryRequestDto implements InitInquiryRequest {

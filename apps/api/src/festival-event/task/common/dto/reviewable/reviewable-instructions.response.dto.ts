@@ -1,13 +1,13 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
+  FestivalTaskInReview as InReview,
   WithInChargeInstructions,
   WithoutInChargeInstructions,
-  FestivalTaskInReview as InReview,
 } from "@overbookd/festival-event";
-import { ContactResponseDto } from "../contact.response.dto";
 import {} from "@overbookd/http";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
+import { ContactResponseDto } from "../contact.response.dto";
 
 type Instructions = InReview["instructions"];
 

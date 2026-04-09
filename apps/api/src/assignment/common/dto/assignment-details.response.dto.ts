@@ -1,9 +1,9 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
-  TeamMemberForDetails,
   Assignment,
   BaseAssigneeForDetails,
   TeamDemanded,
+  TeamMemberForDetails,
 } from "@overbookd/assignment";
 import { AssignmentIdentifierResponseDto } from "./assignment-identifier.response.dto";
 import { TeamDemandedResponseDto } from "./team-demanded.response.dto";

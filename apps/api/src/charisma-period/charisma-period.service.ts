@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { ORDER_BY_PERIOD } from "../common/query/period.query";
 import { PrismaService } from "../prisma.service";
 import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
-import { ORDER_BY_PERIOD } from "../common/query/period.query";
 
 @Injectable()
 export class CharismaPeriodService {

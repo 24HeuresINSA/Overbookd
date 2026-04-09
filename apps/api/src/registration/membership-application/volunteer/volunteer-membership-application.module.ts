@@ -1,21 +1,21 @@
 import { Module } from "@nestjs/common";
-import { VolunteerMembershipApplicationController } from "./volunteer-membership-application.controller";
-import { PrismaCandidates } from "../common/repository/candidates.prisma";
-import { PrismaService } from "../../../prisma.service";
-import { PrismaUsers } from "../common/repository/users.prisma";
-import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
 import {
   ApplyFor,
   EnrollCandidates,
   RejectMembershipApplication,
 } from "@overbookd/registration";
-import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
-import { PrismaModule } from "../../../prisma.module";
-import { DomainEventService } from "../../../domain-event/domain-event.service";
-import { PrismaMemberships } from "../common/repository/memberships.prisma";
-import { DomainEventModule } from "../../../domain-event/domain-event.module";
-import { ConfigurationService } from "../../../configuration/configuration.service";
 import { ConfigurationModule } from "../../../configuration/configuration.module";
+import { ConfigurationService } from "../../../configuration/configuration.service";
+import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
+import { PrismaModule } from "../../../prisma.module";
+import { PrismaService } from "../../../prisma.service";
+import { PrismaCandidates } from "../common/repository/candidates.prisma";
+import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
+import { PrismaMemberships } from "../common/repository/memberships.prisma";
+import { PrismaUsers } from "../common/repository/users.prisma";
+import { VolunteerMembershipApplicationController } from "./volunteer-membership-application.controller";
+import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
 
 @Module({
   controllers: [VolunteerMembershipApplicationController],

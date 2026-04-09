@@ -4,27 +4,27 @@ import {
   READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
+  type Category,
 } from "@overbookd/festival-event-constants";
-import { PreviewFestivalActivity } from "../festival-activity/festival-activity.js";
+import { Adherent } from "../common/adherent.js";
 import { Feedback } from "../common/feedback.js";
-import { TimeWindow } from "../common/time-window.js";
 import { InquiryRequest } from "../common/inquiry-request.js";
 import { Location } from "../common/location.js";
-import { KeyEvent } from "./festival-task.event.js";
-import { DraftGeneral, General } from "./sections/general.js";
-import {
-  Mobilization,
-  MobilizationOptions,
-  ReviewableMobilization,
-} from "./sections/mobilizations.js";
-import { DraftInstructions, Instructions } from "./sections/instructions.js";
 import {
   InReviewReviews,
   RefusedReviews,
   ValidatedReviews,
 } from "../common/review.js";
-import { Adherent } from "../common/adherent.js";
-import { type Category } from "@overbookd/festival-event-constants";
+import { TimeWindow } from "../common/time-window.js";
+import { PreviewFestivalActivity } from "../festival-activity/festival-activity.js";
+import { KeyEvent } from "./festival-task.event.js";
+import { DraftGeneral, General } from "./sections/general.js";
+import { DraftInstructions, Instructions } from "./sections/instructions.js";
+import {
+  Mobilization,
+  MobilizationOptions,
+  ReviewableMobilization,
+} from "./sections/mobilizations.js";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];

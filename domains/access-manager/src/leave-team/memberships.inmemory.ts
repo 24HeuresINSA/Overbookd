@@ -1,4 +1,4 @@
-import { Memberships, Team, Member } from "./leave-team";
+import { Member, Memberships, Team } from "./leave-team";
 
 export class InMemoryMemberships implements Memberships {
   constructor(private membership: Map<Team, Member[]> = new Map()) {}

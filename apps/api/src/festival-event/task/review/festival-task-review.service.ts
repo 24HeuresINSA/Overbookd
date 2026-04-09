@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import {
   AskForReviewTask,
   Categorize,
@@ -9,7 +10,6 @@ import {
   PrepareFestivalTask,
   ReviewTask,
 } from "@overbookd/festival-event";
-import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import {
   PublishFeedbackForm,
   ReviewApproval,
@@ -20,9 +20,9 @@ import {
   JwtPayload,
   JwtUtil,
 } from "../../../authentication/entities/jwt-util.entity";
-import { Adherents } from "../common/festival-task-common.model";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { TeamService } from "../../../team/team.service";
+import { Adherents } from "../common/festival-task-common.model";
 
 type UseCases = {
   prepare: Readonly<PrepareFestivalTask>;

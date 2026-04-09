@@ -17,15 +17,15 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { CharismaPeriodService } from "./charisma-period.service";
 import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("charisma-periods")
 @ApiTags("charisma-periods")

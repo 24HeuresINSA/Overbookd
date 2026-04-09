@@ -1,16 +1,16 @@
 import {
+  BarElement,
+  CategoryScale,
   Chart,
+  Filler,
+  Legend,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  TimeScale,
   Title,
   Tooltip,
-  Legend,
-  BarElement,
-  PointElement,
-  LineElement,
-  LineController,
-  CategoryScale,
-  LinearScale,
-  Filler,
-  TimeScale,
 } from "chart.js";
 
 export default defineNuxtPlugin(() => {

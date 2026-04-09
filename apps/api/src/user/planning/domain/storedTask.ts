@@ -1,5 +1,5 @@
-import { IProvidePeriod, Period } from "@overbookd/time";
 import { removeItemAtIndex } from "@overbookd/list";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { Assignment, Task, Volunteer } from "./task.model";
 
 type Assignee = { period: IProvidePeriod; id: number; name: string };

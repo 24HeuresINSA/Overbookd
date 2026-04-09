@@ -1,6 +1,6 @@
 import { TeamRevoking, TeamsRevoking } from "@overbookd/access-manager";
-import { PrismaService } from "../../prisma.service";
 import { Permission } from "@overbookd/permission";
+import { PrismaService } from "../../prisma.service";
 
 export class PrismaTeamsRevoking implements TeamsRevoking {
   constructor(private prisma: PrismaService) {}

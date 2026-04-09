@@ -18,16 +18,16 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { CatalogGear } from "@overbookd/http";
+import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { CatalogService } from "./catalog.service";
-import { GearFormRequestDto } from "./dto/gear-form.request.dto";
-import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
-import { CatalogGear } from "@overbookd/http";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { CatalogService } from "./catalog.service";
+import { GearFormRequestDto } from "./dto/gear-form.request.dto";
 
 @Controller("logistic/gears")
 @ApiTags("logistic/catalog")

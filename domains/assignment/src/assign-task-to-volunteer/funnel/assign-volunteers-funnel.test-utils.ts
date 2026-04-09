@@ -1,3 +1,5 @@
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/preference";
 import {
   CONDUCTEUR,
   CONFIANCE,
@@ -6,12 +8,10 @@ import {
   VIEUX,
 } from "@overbookd/team-constants";
 import { IProvidePeriod, Period } from "@overbookd/time";
-import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
-import { Assignment } from "../assignment.js";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import { PlanningEvent } from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
-import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/preference";
+import { Assignment } from "../assignment.js";
+import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
+import { PlanningEvent } from "./planning";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
 const friday22h = new Date("2024-05-17T22:00+02:00");

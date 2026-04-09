@@ -1,10 +1,10 @@
 import type { FestivalEvent } from "@overbookd/festival-event";
 import {
   DRAFT,
-  REFUSED,
   IN_REVIEW,
-  VALIDATED,
   READY_TO_ASSIGN,
+  REFUSED,
+  VALIDATED,
 } from "@overbookd/festival-event-constants";
 
 const GREY = "grey";

@@ -14,38 +14,38 @@ import {
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiParam,
-  ApiResponse,
   ApiBody,
   ApiExtraModels,
+  ApiParam,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { AssignmentErrorFilter } from "../assignment.filter";
-import { AssignmentService } from "./assignment.service";
+import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
 import {
   AFFECT_VOLUNTEER,
   READ_FT,
   VIEW_PLANNING,
 } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { RequestWithUserPayload } from "../../app.controller";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { AssignmentErrorFilter } from "../assignment.filter";
+import { AssignmentService } from "./assignment.service";
+import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
 import {
   AssignmentResponseDto,
   NamelyDemandedDto,
   TeamMemberDto,
 } from "./dto/assignment.response.dto";
-import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
-import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
-import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
 import { DisplayableAssignmentResponseDto } from "./dto/displayable-assignment.response.dto";
-import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
-import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
+import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
+import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 
 @Controller("assignments")
 @ApiTags("assignments")

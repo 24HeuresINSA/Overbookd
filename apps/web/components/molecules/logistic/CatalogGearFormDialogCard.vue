@@ -46,12 +46,12 @@
 </template>
 
 <script lang="ts" setup>
-import { minLength } from "~/utils/rules/input.rules";
 import type {
   CatalogCategory,
   CatalogGear,
   CatalogGearForm,
 } from "@overbookd/http";
+import { minLength } from "~/utils/rules/input.rules";
 
 const catalogGearStore = useCatalogGearStore();
 

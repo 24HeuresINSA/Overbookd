@@ -1,7 +1,7 @@
 import { SlugifyService as Slugify } from "@overbookd/slugify";
 import {
-  SimilarBarrelExist,
   BarrelNotConfigured,
+  SimilarBarrelExist,
 } from "./define-barrel-price.error.js";
 
 export type NewBarrel = {

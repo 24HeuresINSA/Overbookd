@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
 import {
+  AskForReview,
   CreateFestivalActivity,
   PrepareFestivalActivity,
-  AskForReview,
   Reviewing,
 } from "@overbookd/festival-event";
 import { PrismaModule } from "../../../prisma.module";
 import { PrismaService } from "../../../prisma.service";
+import { PrismaLocations } from "../../common/repository/locations.prisma";
+import { PrismaNotifications } from "../../common/repository/notifications.prisma";
 import { StatisticsModule } from "../../statistics/statistics.module";
 import { PrismaAdherents } from "./repository/adherents.prisma";
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
 import { PrismaCreateFestivalActivities } from "./repository/create-festival-activities.prisma";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
-import { PrismaLocations } from "../../common/repository/locations.prisma";
-import { PrismaNotifications } from "../../common/repository/notifications.prisma";
 import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activities.prisma";
 import { PrismaPreviews } from "./repository/previews.prisma";
 import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-activities.prisma";

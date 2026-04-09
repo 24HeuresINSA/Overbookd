@@ -7,11 +7,11 @@ import type {
   PrepareFestivalActivity,
 } from "@overbookd/festival-event";
 import { JwtPayload } from "../../../authentication/entities/jwt-util.entity";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
 import {
   Adherents,
   RemoveFestivalActivities,
 } from "../common/festival-activity-common.model";
-import { DomainEventService } from "../../../domain-event/domain-event.service";
 
 @Injectable()
 export class FestivalActivityOverviewService {

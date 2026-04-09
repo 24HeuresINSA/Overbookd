@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { IDefineCandidate, IActAsFunnel } from "@overbookd/assignment";
+import type { IActAsFunnel, IDefineCandidate } from "@overbookd/assignment";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 
 const props = defineProps({

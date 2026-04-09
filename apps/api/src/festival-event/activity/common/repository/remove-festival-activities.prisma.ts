@@ -1,9 +1,9 @@
+import { ForbiddenException } from "@nestjs/common";
 import { FestivalActivity } from "@overbookd/festival-event";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { PrismaService } from "../../../../prisma.service";
 import { RemoveFestivalActivities } from "../festival-activity-common.model";
 import { buildFestivalActivityCondition } from "./festival-activity.query";
-import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
-import { ForbiddenException } from "@nestjs/common";
 
 export class PrismaRemoveFestivalActivities implements RemoveFestivalActivities {
   constructor(private readonly prisma: PrismaService) {}

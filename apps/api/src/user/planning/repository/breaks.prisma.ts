@@ -1,7 +1,7 @@
 import { Breaks } from "@overbookd/planning";
-import { PrismaService } from "../../../prisma.service";
 import { Period } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
+import { PrismaService } from "../../../prisma.service";
 
 export class PrismaBreaks implements Breaks {
   constructor(private readonly prisma: PrismaService) {}

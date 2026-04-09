@@ -1,5 +1,5 @@
 import { Membership, STAFF, VOLUNTEER } from "../newcomer.js";
-import { Candidates, Candidate } from "./candidates.js";
+import { Candidate, Candidates } from "./candidates.js";
 
 export class InMemoryCandidates implements Candidates {
   constructor(private candidates: Candidate[]) {}

@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
-import { Prisma } from "../generated/prisma/client";
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { VOLUNTEER } from "@overbookd/registration";
 import {
   Edition,
   IProvidePeriod,
@@ -10,11 +11,10 @@ import {
   PeriodOrchestrator,
   PeriodWithError,
 } from "@overbookd/volunteer-availability";
-import { PrismaService } from "../prisma.service";
 import { SELECT_PERIOD } from "../common/query/period.query";
-import { VOLUNTEER } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { Prisma } from "../generated/prisma/client";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class VolunteerAvailabilityService {

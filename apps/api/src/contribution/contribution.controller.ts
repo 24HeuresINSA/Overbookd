@@ -1,35 +1,35 @@
 import {
-  UseGuards,
-  Controller,
-  Get,
-  Post,
   Body,
-  UseFilters,
-  Patch,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
   Param,
   ParseIntPipe,
-  Delete,
-  HttpCode,
+  Patch,
+  Post,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiResponse,
   ApiBody,
   ApiParam,
+  ApiResponse,
+  ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { ContributionService } from "./contribution.service";
-import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import { Adherent, AdherentWithContribution } from "@overbookd/contribution";
-import { Permission } from "../authentication/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
-import { ContributionAdherentResponseDto } from "./dto/adherent.response.dto";
-import { ContributionErrorFilter } from "./contribution.filter";
-import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
-import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { ContributionErrorFilter } from "./contribution.filter";
+import { ContributionService } from "./contribution.service";
+import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
+import { ContributionAdherentResponseDto } from "./dto/adherent.response.dto";
+import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
+import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 
 @Controller("contributions")
 @ApiTags("contributions")

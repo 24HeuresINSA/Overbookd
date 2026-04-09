@@ -1,6 +1,6 @@
 import { User } from "@overbookd/user";
-import { ProfilePictureAlerting } from "../alert.service";
 import { PrismaService } from "../../prisma.service";
+import { ProfilePictureAlerting } from "../alert.service";
 
 export class PrismaProfilePictureAlerting implements ProfilePictureAlerting {
   constructor(private readonly prisma: PrismaService) {}

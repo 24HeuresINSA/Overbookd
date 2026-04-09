@@ -1,7 +1,7 @@
 import { numberGenerator } from "@overbookd/list";
-import { Borrow } from "../borrow.js";
 import { Period } from "@overbookd/time";
 import { NoDuration } from "../borrow.error.js";
+import { Borrow } from "../borrow.js";
 
 export type InitBorrowForm = Pick<
   Borrow,

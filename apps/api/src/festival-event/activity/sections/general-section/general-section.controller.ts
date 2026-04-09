@@ -1,43 +1,45 @@
 import {
-  UseFilters,
-  Controller,
   Body,
+  Controller,
   Delete,
   HttpCode,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
   ApiBody,
+  ApiExtraModels,
   ApiParam,
   ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
-import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
-import { RefusedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import { ValidatedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import { InReviewFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
-  PublicReviewableGeneralResponseDto,
+  InReviewFestivalActivityResponseDto,
+  RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
+} from "../../common/dto/reviewable/reviewable-festival-activity.dto";
+import {
   PrivateReviewableGeneralResponseDto,
+  PublicReviewableGeneralResponseDto,
 } from "../../common/dto/reviewable/reviewable-general.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { GeneralActivityRequestDto } from "./dto/update-general.request.dto";
 import { GeneralSectionService } from "./general-section.service";
-import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

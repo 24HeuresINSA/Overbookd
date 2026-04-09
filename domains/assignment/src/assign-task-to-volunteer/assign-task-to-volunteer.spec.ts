@@ -1,18 +1,9 @@
+import { HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
 import { beforeAll, describe, expect, it } from "vitest";
-import {
-  fullyAssignedTask,
-  missingOnePlaizirTask,
-  missingTwoVieuxTask,
-  missingOneHardAndOneBenevoleTask,
-  missingOneAssigneeThenOneHardAndOneBenevoleTask,
-  missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
-  missingTwoVieuxDuring19hto20h,
-  fulfillAssignmentThenMissingOneHardTask,
-} from "./test-resources/task.fake.js";
-import { InMemoryTasks } from "./repositories/tasks.inmemory.js";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer.js";
 import { AssignableVolunteer } from "./assignable-volunteer.js";
 import { InMemoryAssignableVolunteers } from "./repositories/assignable-volunteers.inmemory.js";
+import { InMemoryTasks } from "./repositories/tasks.inmemory.js";
 import {
   fulfilledAssignment,
   leaAsAvailableVolunteer,
@@ -21,7 +12,16 @@ import {
   missingTwoVieuxAssignment,
   noelAsAvailableVolunteer,
 } from "./test-resources/assign-task-to-volunteer.test.utils.js";
-import { HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
+import {
+  fulfillAssignmentThenMissingOneHardTask,
+  fullyAssignedTask,
+  missingOneAssigneeThenOneHardAndOneBenevoleTask,
+  missingOneHardAndOneBenevoleTask,
+  missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
+  missingOnePlaizirTask,
+  missingTwoVieuxDuring19hto20h,
+  missingTwoVieuxTask,
+} from "./test-resources/task.fake.js";
 
 describe("Assign task to volunteer", () => {
   const taskList = [

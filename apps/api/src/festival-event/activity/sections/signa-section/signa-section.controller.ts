@@ -1,50 +1,50 @@
 import {
-  UseFilters,
+  Body,
   Controller,
-  UseGuards,
-  Patch,
+  Delete,
+  HttpCode,
   Param,
   ParseIntPipe,
-  Body,
+  Patch,
   Post,
-  HttpCode,
-  Delete,
   Request,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
   ApiBody,
+  ApiExtraModels,
   ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalActivity, Signage } from "@overbookd/festival-event";
-import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
+import { VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import { RequestWithUserPayload } from "../../../../app.controller";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import {
-  UnlinkedSignageResponseDto,
   LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
 } from "../../common/dto/signage.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
-import { SignaSectionService } from "./signa-section.service";
-import { LinkSignageCatalogItemRequestDto } from "./dto/link-signage-catalog-item.request.dto";
 import { AddSignageRequestDto } from "./dto/add-signage.request.dto";
+import { LinkSignageCatalogItemRequestDto } from "./dto/link-signage-catalog-item.request.dto";
 import { UpdateSignaRequestDto } from "./dto/update-signa.request.dto";
 import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
-import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { SignaSectionService } from "./signa-section.service";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

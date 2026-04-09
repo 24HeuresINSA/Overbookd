@@ -1,8 +1,8 @@
-import { DatabaseDashboardGear } from "../repository/dashboard.model";
-import { Period } from "@overbookd/time";
-import { sumQuantity } from "./sum-quantity";
-import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
 import { GearBorrow, GearPurchase } from "@overbookd/http";
+import { Period } from "@overbookd/time";
+import { DatabaseDashboardGear } from "../repository/dashboard.model";
+import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
+import { sumQuantity } from "./sum-quantity";
 
 export class DashboardGearStock {
   private constructor() {}

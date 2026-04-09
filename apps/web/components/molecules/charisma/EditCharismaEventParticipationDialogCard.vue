@@ -5,7 +5,8 @@
     <template #subtitle>
       Participation de
       <strong>{{ participation.participant.firstname }}</strong> à l'événement
-      "<strong>{{ participation.name }}</strong>" le <strong>{{ formattedDate }}</strong> pour
+      "<strong>{{ participation.name }}</strong> " le
+      <strong>{{ formattedDate }}</strong> pour
       <strong>{{ participation.charisma }}</strong> de charisme
     </template>
 
@@ -34,7 +35,7 @@
 <script lang="ts" setup>
 import type { CharismaEventParticipation } from "@overbookd/charisma";
 import { formatDate } from "@overbookd/time";
-import { required, min, isNumber, isInteger } from "~/utils/rules/input.rules";
+import { isInteger, isNumber, min, required } from "~/utils/rules/input.rules";
 
 const { participation } = defineProps({
   participation: {

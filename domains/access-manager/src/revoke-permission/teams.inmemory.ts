@@ -1,5 +1,5 @@
 import { Permission } from "@overbookd/permission";
-import { Teams, Team } from "./revoke-permission";
+import { Team, Teams } from "./revoke-permission";
 
 export class InMemoryTeams implements Teams {
   constructor(private teamPermissions: Map<Team, Permission[]> = new Map()) {}

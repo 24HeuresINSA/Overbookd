@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import { buildUserNameWithNickname } from "@overbookd/user";
-import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
+import type { Team } from "@overbookd/team";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const props = defineProps({

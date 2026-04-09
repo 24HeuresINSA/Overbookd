@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { Adherents, MealSharing, SOIR, MIDI } from "./meal-sharing.js";
-import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
+import { beforeEach, describe, expect, it } from "vitest";
+import { InMemoryAdherents } from "./adherents.inmemory.js";
 import {
   AlreadyShotguned,
   MealNotFound,
@@ -11,10 +10,10 @@ import {
   ShotgunsAlreadyOpened,
   ShotgunsClosed,
 } from "./meal-sharing.error.js";
-import { OnGoingSharedMeal, PastSharedMeal } from "./meals.model.js";
+import { Adherents, MealSharing, MIDI, SOIR } from "./meal-sharing.js";
 import { Meal } from "./meal.js";
-import { InMemorySharedMeals } from "./shared-meals.inmemory.js";
-import { InMemoryAdherents } from "./adherents.inmemory.js";
+import { OnGoingSharedMeal, PastSharedMeal } from "./meals.model.js";
+import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
   CANCEL_SHOTGUN_PAST_MEAL_ERROR,
   CLOSE_SHOTGUNS_PAST_MEAL_ERROR,
@@ -22,6 +21,7 @@ import {
   PastSharedMealBuilder,
   SHOTGUN_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
+import { InMemorySharedMeals } from "./shared-meals.inmemory.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
 const lea = { id: 2, name: "Lea Mauyno" };

@@ -1,5 +1,3 @@
-import { FestivalEventIdentifier, FA } from "./festival-event.js";
-import { Adherent } from "./adherent.js";
 import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
@@ -16,6 +14,8 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { Adherent } from "./adherent.js";
+import { FA, FestivalEventIdentifier } from "./festival-event.js";
 
 export type PrivateActivityReviewer =
   | typeof HUMAIN

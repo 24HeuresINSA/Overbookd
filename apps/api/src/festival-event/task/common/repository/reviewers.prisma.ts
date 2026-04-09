@@ -1,7 +1,7 @@
 import { ReviewerStat, Reviewers } from "@overbookd/festival-event";
+import { HUMAIN } from "@overbookd/team-constants";
 import { PrismaService } from "../../../../prisma.service";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
-import { HUMAIN } from "@overbookd/team-constants";
 
 export class PrismaReviewers implements Reviewers {
   constructor(private readonly prisma: PrismaService) {}

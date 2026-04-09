@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { CalendarEvent } from "~/utils/calendar/event";
 import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { CalendarEvent } from "~/utils/calendar/event";
 
 const props = defineProps({
   event: {

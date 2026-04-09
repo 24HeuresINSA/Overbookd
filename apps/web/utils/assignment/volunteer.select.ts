@@ -1,6 +1,6 @@
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import type { LocationQuery } from "vue-router";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
+import type { LocationQuery } from "vue-router";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 export class VolunteerSelectBuilder {
   static getFromRouteQuery(

@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { CategoryRepository } from "../catalog-repositories";
-import { CategoryAlreadyExists } from "../../catalog.error";
 import {
   CatalogCategory,
   CatalogCategoryTree,
   CategorySearchOptions,
 } from "@overbookd/http";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { CategoryAlreadyExists } from "../../catalog.error";
+import { CategoryRepository } from "../catalog-repositories";
 
 class CategorySearchBuilder {
   private ownerCondition = true;

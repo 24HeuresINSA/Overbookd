@@ -1,9 +1,9 @@
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { Assignment } from "../assignment.js";
 import { Assignments } from "../repositories/assignments.js";
-import { CandidateFactory, IDefineCandidate } from "./candidate.js";
-import { IActAsFunnel, FunnelError, FunnelRepositories } from "./funnel.js";
 import { AssignVolunteerFunnel } from "./assign-volunteer-funnel.js";
-import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { CandidateFactory, IDefineCandidate } from "./candidate.js";
+import { FunnelError, FunnelRepositories, IActAsFunnel } from "./funnel.js";
 
 abstract class InactiveFunnel implements IActAsFunnel {
   candidates: IDefineCandidate[] = [];

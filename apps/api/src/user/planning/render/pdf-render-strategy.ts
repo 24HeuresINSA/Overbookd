@@ -1,15 +1,22 @@
-import PdfPrinter from "pdfmake";
-import sanitizeHtml from "sanitize-html";
-import htmlToPdfMake from "html-to-pdfmake";
-import { join } from "path";
-import { Content, StyleDictionary } from "pdfmake/interfaces";
-import { JSDOM } from "jsdom";
 import {
-  IProvidePeriod,
+  Coordinate,
+  GeoLocation,
+  LocationFactory,
+} from "@overbookd/geo-location";
+import { updateItemToList } from "@overbookd/list";
+import {
   Edition,
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
+  IProvidePeriod,
 } from "@overbookd/time";
+import { buildUserNameWithNickname } from "@overbookd/user";
+import htmlToPdfMake from "html-to-pdfmake";
+import { JSDOM } from "jsdom";
+import { join } from "path";
+import PdfPrinter from "pdfmake";
+import { Content, StyleDictionary } from "pdfmake/interfaces";
+import sanitizeHtml from "sanitize-html";
 import {
   AppointmentLocation,
   Assignment,
@@ -17,21 +24,14 @@ import {
   Task,
   Volunteer,
 } from "../domain/task.model";
+import { PlanningVolunteers } from "../planning.service";
+import { FiveDMethod } from "./pdf/five-d-method";
+import { fixEmojis } from "./pdf/fix-emojis";
+import { Introduction } from "./pdf/introduction";
 import { PurpleCocktail } from "./pdf/purple-cocktail";
 import { SecurityPlan } from "./pdf/security-plan";
-import { Introduction } from "./pdf/introduction";
-import { RenderStrategy } from "./render-strategy";
-import { updateItemToList } from "@overbookd/list";
-import {
-  Coordinate,
-  GeoLocation,
-  LocationFactory,
-} from "@overbookd/geo-location";
 import { TalkieFrequencies } from "./pdf/talkie-frequencies";
-import { fixEmojis } from "./pdf/fix-emojis";
-import { FiveDMethod } from "./pdf/five-d-method";
-import { PlanningVolunteers } from "../planning.service";
-import { buildUserNameWithNickname } from "@overbookd/user";
+import { RenderStrategy } from "./render-strategy";
 
 class PdfException extends Error {}
 

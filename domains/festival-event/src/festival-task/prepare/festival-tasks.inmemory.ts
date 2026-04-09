@@ -1,5 +1,5 @@
-import { FestivalTasksForPrepare } from "./prepare.js";
 import { WithoutConflicts } from "../volunteer-conflicts.js";
+import { FestivalTasksForPrepare } from "./prepare.js";
 
 export class InMemoryFestivalTasks implements FestivalTasksForPrepare {
   constructor(private tasks: WithoutConflicts[]) {}

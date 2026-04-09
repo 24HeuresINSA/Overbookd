@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import {
-  IProvidePeriod,
-  Period,
-  Duration,
-  QUARTER_IN_MS,
-} from "@overbookd/time";
-import { PrismaService } from "../prisma.service";
-import { VolunteerAvailability } from "../generated/prisma/client";
-import {
   OrgaNeedDetails,
   OrgaNeedRequest,
   OrgaNeedTask,
 } from "@overbookd/http";
-import { SELECT_PERIOD } from "../common/query/period.query";
+import {
+  Duration,
+  IProvidePeriod,
+  Period,
+  QUARTER_IN_MS,
+} from "@overbookd/time";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { SELECT_PERIOD } from "../common/query/period.query";
+import { VolunteerAvailability } from "../generated/prisma/client";
+import { PrismaService } from "../prisma.service";
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;

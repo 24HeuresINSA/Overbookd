@@ -7,12 +7,12 @@ import {
   SignageCatalogItem,
 } from "@overbookd/festival-event";
 import { PrepareSignaForm } from "@overbookd/http";
+import { SIGNA } from "@overbookd/team-constants";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { TeamService } from "../../../../team/team.service";
-import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
+import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { UpdateSignageRequest } from "./dto/update-signage.request.dto";
-import { SIGNA } from "@overbookd/team-constants";
 
 type LinkSignageToCatalogItem = {
   activityId: FestivalActivity["id"];

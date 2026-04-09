@@ -8,14 +8,14 @@ import {
   UseFilters,
 } from "@nestjs/common";
 import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
-import { RegistrationService } from "./registration.service";
 import {
   ForgetMemberErrorFilter,
   RegistrationErrorFilter,
 } from "./registration-error.filter";
-import { ForgetRequestDto } from "./dto/forget.request.dto";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { RegistrationService } from "./registration.service";
 
 @Controller("registrations")
 @ApiTags("registration")

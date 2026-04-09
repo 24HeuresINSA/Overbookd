@@ -1,11 +1,11 @@
-import { beforeEach, describe, it, expect } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { DEPOSIT, TransactionUser } from "../transaction";
-import { InMemoryDeposits } from "./deposits.inmemory";
 import { Deposit } from "./deposit";
 import {
   AtLeastOneInsufficientAmount,
   InsufficientAmount,
 } from "./deposit.error";
+import { InMemoryDeposits } from "./deposits.inmemory";
 
 const olop: TransactionUser = {
   id: 1,

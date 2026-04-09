@@ -1,9 +1,9 @@
 import { ICAL, JSON, PDF } from "@overbookd/http";
 import { Task, Volunteer } from "../domain/task.model";
+import { PlanningVolunteers } from "../planning.service";
 import { IcalRenderStrategy } from "./ical-render-strategy";
 import { JsonRenderStrategy } from "./json-render-strategy";
 import { PdfRenderStrategy } from "./pdf-render-strategy";
-import { PlanningVolunteers } from "../planning.service";
 
 type PlanningAcceptType = typeof JSON | typeof ICAL | typeof PDF;
 

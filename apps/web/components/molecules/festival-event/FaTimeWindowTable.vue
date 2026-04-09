@@ -58,8 +58,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type IProvidePeriod, formatDateWithMinutes } from "@overbookd/time";
 import type { TimeWindow } from "@overbookd/festival-event";
+import { type IProvidePeriod, formatDateWithMinutes } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();

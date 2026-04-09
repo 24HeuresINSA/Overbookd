@@ -4,15 +4,15 @@ import {
   GearDetails,
   GearPurchase,
 } from "@overbookd/http";
-import {
-  DatabaseDashboardGear,
-  DatabaseActivityInquiry,
-  InventoryRecord,
-  DatabaseTaskInquiry,
-  DatabaseBorrow,
-  DatabasePurchase,
-} from "../repository/dashboard.model";
 import { GearRequirementForCsv } from "../dashboard.service";
+import {
+  DatabaseActivityInquiry,
+  DatabaseBorrow,
+  DatabaseDashboardGear,
+  DatabasePurchase,
+  DatabaseTaskInquiry,
+  InventoryRecord,
+} from "../repository/dashboard.model";
 
 const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),

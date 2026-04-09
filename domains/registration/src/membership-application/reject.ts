@@ -1,7 +1,7 @@
 import { Edition } from "@overbookd/time";
+import { Membership } from "../newcomer.js";
 import { Candidates, Email } from "./candidates.js";
 import { AlreadyRejected, NotRejected } from "./candidature.error.js";
-import { Membership } from "../newcomer.js";
 
 export class RejectMembershipApplication {
   constructor(private readonly candidates: Candidates) {}

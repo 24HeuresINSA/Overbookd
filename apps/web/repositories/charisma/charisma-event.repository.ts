@@ -4,8 +4,8 @@ import type {
   EditCharismaEventParticipation,
   ParticipantTakingPartInCharismaEvent,
 } from "@overbookd/charisma";
-import type { DateString } from "@overbookd/time";
 import type { CharismaEventPotentialParticipant } from "@overbookd/http";
+import type { DateString } from "@overbookd/time";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class CharismaEventRepository {

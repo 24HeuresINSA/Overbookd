@@ -1,26 +1,26 @@
 import {
+  APPROVED,
+  COMMENTED,
+  CREATED,
   DRAFT,
   IN_REVIEW,
-  VALIDATED,
-  REFUSED,
   READY_TO_ASSIGN,
-  CREATED,
-  COMMENTED,
   READY_TO_REVIEW,
-  APPROVED,
+  REFUSED,
   REJECTED,
+  VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { DraftInCharge, InCharge } from "./sections/in-charge.js";
-import { DraftGeneral, General } from "./sections/general.js";
-import { DraftSigna, Signa } from "./sections/signa.js";
-import { Supply } from "./sections/supply.js";
-import { Inquiry } from "./sections/inquiry.js";
+import { Feedback } from "../common/feedback.js";
 import {
   InReviewReviews,
   RefusedReviews,
   ValidatedReviews,
 } from "../common/review.js";
-import { Feedback } from "../common/feedback.js";
+import { DraftGeneral, General } from "./sections/general.js";
+import { DraftInCharge, InCharge } from "./sections/in-charge.js";
+import { Inquiry } from "./sections/inquiry.js";
+import { DraftSigna, Signa } from "./sections/signa.js";
+import { Supply } from "./sections/supply.js";
 
 type Security = {
   specialNeed: string | null;

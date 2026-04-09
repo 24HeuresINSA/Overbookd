@@ -1,23 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   BARREL,
-  MyBarrelTransaction,
   DEPOSIT,
+  EXTERNAL_EVENT,
+  INITIALIZATION,
+  MyBarrelTransaction,
   MyDepositTransaction,
-  PROVISIONS,
+  MyExternalEventTransaction,
+  MyNegativeInitializationTransaction,
+  MyPositiveInitializationTransaction,
   MyProvisionsTransaction,
+  PROVISIONS,
   TRANSFER,
   TransactionUser,
   TransferIReceiveTransaction,
   TransferISendTransaction,
-  MyPositiveInitializationTransaction,
-  INITIALIZATION,
-  MyNegativeInitializationTransaction,
-  EXTERNAL_EVENT,
 } from "@overbookd/personal-account";
-import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 import { BaseTransactionResponseDto } from "./base-transaction.response.dto";
-import { MyExternalEventTransaction } from "@overbookd/personal-account";
+import { TransactionUserResponseDto } from "./transaction-user.response.dto";
 
 export class MyDepositTransactionResponseDto
   extends BaseTransactionResponseDto

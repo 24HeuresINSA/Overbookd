@@ -4,9 +4,9 @@ import type {
 } from "@overbookd/assignment";
 import type { PlanningTask } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
+import type { BreakEvent } from "~/domain/common/break-events";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { createCalendarEvent, type CalendarEvent } from "../calendar/event";
-import type { BreakEvent } from "~/domain/common/break-events";
 
 type RequestedDuringMobilization = CalendarEvent & {
   taskId: number;

@@ -1,15 +1,15 @@
 import { Money } from "@overbookd/money";
 import {
   type MyTransaction,
+  type TransactionType,
   BARREL,
-  PROVISIONS,
   DEPOSIT,
   EXTERNAL_EVENT,
-  TRANSFER,
-  SHARED_MEAL,
   INITIALIZATION,
+  PROVISIONS,
+  SHARED_MEAL,
+  TRANSFER,
   doIReceive,
-  type TransactionType,
   isCredit,
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";

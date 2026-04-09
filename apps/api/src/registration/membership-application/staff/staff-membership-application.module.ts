@@ -4,17 +4,17 @@ import {
   EnrollCandidates,
   RejectMembershipApplication,
 } from "@overbookd/registration";
-import { StaffMembershipApplicationController } from "./staff-membership-application.controller";
+import { DomainEventModule } from "../../../domain-event/domain-event.module";
+import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { PrismaModule } from "../../../prisma.module";
 import { PrismaService } from "../../../prisma.service";
 import { PrismaCandidates } from "../common/repository/candidates.prisma";
-import { PrismaUsers } from "../common/repository/users.prisma";
-import { StaffMembershipApplicationService } from "./staff-membership-application.service";
-import { PrismaConfigurations } from "./repository/configurations.prisma";
 import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
-import { DomainEventModule } from "../../../domain-event/domain-event.module";
-import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { PrismaMemberships } from "../common/repository/memberships.prisma";
+import { PrismaUsers } from "../common/repository/users.prisma";
+import { PrismaConfigurations } from "./repository/configurations.prisma";
+import { StaffMembershipApplicationController } from "./staff-membership-application.controller";
+import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 
 @Module({
   controllers: [StaffMembershipApplicationController],

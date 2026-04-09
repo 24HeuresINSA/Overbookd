@@ -113,10 +113,10 @@
 import type { GearDetails } from "@overbookd/http";
 import { formatDateToHumanReadable } from "@overbookd/time";
 import {
+  BORROW_GEARS_URL,
   FA_URL,
   FT_URL,
   PURCHASE_GEARS_URL,
-  BORROW_GEARS_URL,
 } from "@overbookd/web-page";
 import { sumQuantities } from "~/utils/logistic/quantity";
 

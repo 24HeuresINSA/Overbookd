@@ -7,14 +7,14 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import {
-  InitInquiryRequest,
   AddInquiryRequestForm,
+  InitInquiryRequest,
   UpdateInquiryRequestForm,
 } from "@overbookd/http";
-import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
-import { Inquiries } from "../../common/festival-activity-common.model";
-import { TeamService } from "../../../../team/team.service";
 import { IProvidePeriod } from "@overbookd/time";
+import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
+import { TeamService } from "../../../../team/team.service";
+import { Inquiries } from "../../common/festival-activity-common.model";
 
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];

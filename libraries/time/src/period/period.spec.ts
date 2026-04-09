@@ -1,50 +1,50 @@
 import { describe, expect, it } from "vitest";
-import { Period } from "./period";
+import { Duration } from "../duration/duration";
 import {
   ONE_MINUTE_IN_MS,
   ONE_SECOND_IN_MS,
 } from "../duration/duration.constant";
-import {
-  friday08hto09h,
-  friday08hto08h15,
-  friday08h15to08h30,
-  friday08h30to08h45,
-  friday08h45To09h,
-  friday23h59m50toSaturday00h00m02,
-  friday23h59m50to23h59m55,
-  friday23h59m55toSaturday00h,
-  saturday00hTo00h00m02,
-  friday09h30to10h,
-  friday09htoSaturday01h,
-  friday08hto08h30,
-  friday07hto08h30,
-  friday08h45to09h30,
-  friday08h45to10h,
-  friday08hto08h45,
-  friday08hto10h,
-  friday08h30to09h30,
-  friday08hto09h30,
-  friday08h30to09h,
-  friday08h15to09h,
-  thursday20hToFriday04h,
-  saturday02hTo04h,
-  monday10hto12h,
-  monday10hto14h,
-  monday12hto14h,
-  tuesday15h30to15h31,
-  tuesday15h30to15h33,
-  tuesday15h31to15h32,
-  tuesday15h32to15h33,
-  thursday02hToSunday02h,
-  thursday22hToFriday00h,
-  saturday00hToSaturday02h,
-} from "./period.test-utils";
-import { Duration } from "../duration/duration";
+import { Period } from "./period";
 import {
   END_BEFORE_START_ERROR_MESSAGE,
   EndBeforeStart,
   NO_DURATION_ERROR_MESSAGE,
 } from "./period.error";
+import {
+  friday07hto08h30,
+  friday08h15to08h30,
+  friday08h15to09h,
+  friday08h30to08h45,
+  friday08h30to09h,
+  friday08h30to09h30,
+  friday08h45To09h,
+  friday08h45to09h30,
+  friday08h45to10h,
+  friday08hto08h15,
+  friday08hto08h30,
+  friday08hto08h45,
+  friday08hto09h,
+  friday08hto09h30,
+  friday08hto10h,
+  friday09h30to10h,
+  friday09htoSaturday01h,
+  friday23h59m50to23h59m55,
+  friday23h59m50toSaturday00h00m02,
+  friday23h59m55toSaturday00h,
+  monday10hto12h,
+  monday10hto14h,
+  monday12hto14h,
+  saturday00hTo00h00m02,
+  saturday00hToSaturday02h,
+  saturday02hTo04h,
+  thursday02hToSunday02h,
+  thursday20hToFriday04h,
+  thursday22hToFriday00h,
+  tuesday15h30to15h31,
+  tuesday15h30to15h33,
+  tuesday15h31to15h32,
+  tuesday15h32to15h33,
+} from "./period.test-utils";
 
 describe("Create a period", () => {
   describe("when start is before end", () => {

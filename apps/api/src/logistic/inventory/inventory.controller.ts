@@ -17,14 +17,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { READ_INVENTORY, WRITE_INVENTORY } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { InventoryGroupedRecordResponseDto } from "./dto/inventory-grouped-record.response.dto";
 import { InventoryGroupedRecordSearchRequestDto } from "./dto/inventory-grouped-record-search.request.dto";
+import { InventoryGroupedRecordResponseDto } from "./dto/inventory-grouped-record.response.dto";
 import { InventoryRecordDto } from "./dto/inventory-record.dto";
 import { InventoryService } from "./inventory.service";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/inventory")
 @ApiTags("logistic/inventory")

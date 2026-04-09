@@ -1,5 +1,5 @@
-import { PrismaService } from "../../prisma.service";
 import { Contribution, EditContributions } from "@overbookd/contribution";
+import { PrismaService } from "../../prisma.service";
 
 export class PrismaEditContributions implements EditContributions {
   constructor(private readonly prisma: PrismaService) {}

@@ -1,9 +1,9 @@
 import { Permission } from "@overbookd/permission";
+import { Edition } from "@overbookd/time";
+import { SELECT_USER_DATA_FOR_CHARISMA } from "../common/query/charisma.query";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
-import { SELECT_USER_DATA_FOR_CHARISMA } from "../common/query/charisma.query";
-import { Edition } from "@overbookd/time";
 
 const SELECT_USER = {
   ...SELECT_USER_IDENTIFIER,

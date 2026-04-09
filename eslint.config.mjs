@@ -1,13 +1,13 @@
+import pulginJs from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import pluginSecurity from "eslint-plugin-security";
 import unusedImports from "eslint-plugin-unused-imports";
 import pluginVue from "eslint-plugin-vue";
-import pluginSecurity from "eslint-plugin-security";
-import pulginJs from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import pluginTs from "typescript-eslint";
-import eslintConfigPrettier from "eslint-config-prettier";
 import vueParser from "vue-eslint-parser";
-import typescriptParser from "@typescript-eslint/parser";
 
-export default pluginTs.config(
+export default defineConfig([
   pulginJs.configs.recommended,
   ...pluginTs.configs.recommended,
   pluginSecurity.configs["recommended"],
@@ -17,15 +17,15 @@ export default pluginTs.config(
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: typescriptParser,
+        parser: pluginTs.parser,
         sourceType: "module",
       },
     },
   },
   {
+    files: ["**/*.vue"],
     rules: {
       "no-undef": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-expressions": "off",
       "no-useless-assignment": "off",
       "vue/multi-word-component-names": "off",
@@ -58,7 +58,6 @@ export default pluginTs.config(
         },
       ],
     },
-    files: ["**/*.vue"],
   },
   {
     plugins: {
@@ -87,4 +86,4 @@ export default pluginTs.config(
       "apps/api/src/generated/",
     ],
   },
-);
+]);

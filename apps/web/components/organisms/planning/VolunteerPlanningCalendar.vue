@@ -47,9 +47,9 @@
 import type { AssignmentIdentifier } from "@overbookd/assignment";
 import type { AssignmentStat, TaskForCalendar } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
+import type { BreakDefinition } from "@overbookd/planning";
 import { Period, type IProvidePeriod } from "@overbookd/time";
 import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
-import type { BreakDefinition } from "@overbookd/planning";
 import {
   toCalendarAssignment,
   toCalendarTask,

@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { GearReferenceCodeService } from "../../gear-reference-code.service";
-import { PrismaService } from "../../../../prisma.service";
-import { GearRepository } from "../catalog-repositories";
-import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
-import { GearFilter } from "../../../common/gear.filter";
+import { PrismaService } from "../../../../prisma.service";
 import { DatabaseGear, SELECT_GEAR } from "../../../common/dto/gear.query";
+import { GearFilter } from "../../../common/gear.filter";
+import { GearAlreadyExists } from "../../catalog.error";
 import { GearLinkedItems } from "../../catalog.service";
+import { GearReferenceCodeService } from "../../gear-reference-code.service";
+import { GearRepository } from "../catalog-repositories";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
   const baseGear = {

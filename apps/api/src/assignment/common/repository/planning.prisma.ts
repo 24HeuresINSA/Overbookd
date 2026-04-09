@@ -4,11 +4,11 @@ import {
   PlanningEvent,
   PlanningTask,
 } from "@overbookd/assignment";
-import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
-import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
+import { PrismaService } from "../../../prisma.service";
 import { SELECT_PLANNING_EVENT, SELECT_TASK } from "./planning.query";
+import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   id: string;

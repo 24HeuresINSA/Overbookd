@@ -1,21 +1,21 @@
 import { Module } from "@nestjs/common";
 import { BreakPeriods } from "@overbookd/planning";
+import { AccessManagerModule } from "../access-manager/access-manager.module";
+import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
+import { RegistrationModule } from "../registration/index/registration.module";
+import { TeamService } from "../team/team.service";
 import { FileService } from "../utils/file.service";
+import { PlanningController } from "./planning/planning.controller";
+import { PlanningModule } from "./planning/planning.module";
+import { PrismaBreaks } from "./planning/repository/breaks.prisma";
+import { PrismaPlanningVolunteers } from "./planning/repository/planning-volunteers.prisma";
+import { PreferenceController } from "./preference/preference.controller";
+import { PreferenceService } from "./preference/preference.service";
+import { PrismaPreferences } from "./preference/repository/preferences.prisma";
 import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
-import { RegistrationModule } from "../registration/index/registration.module";
-import { PrismaModule } from "../prisma.module";
-import { PreferenceController } from "./preference/preference.controller";
-import { PrismaPreferences } from "./preference/repository/preferences.prisma";
-import { PreferenceService } from "./preference/preference.service";
-import { PrismaBreaks } from "./planning/repository/breaks.prisma";
-import { PrismaPlanningVolunteers } from "./planning/repository/planning-volunteers.prisma";
-import { PlanningModule } from "./planning/planning.module";
-import { PlanningController } from "./planning/planning.controller";
-import { TeamService } from "../team/team.service";
-import { AccessManagerModule } from "../access-manager/access-manager.module";
 
 @Module({
   imports: [

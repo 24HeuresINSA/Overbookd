@@ -1,9 +1,9 @@
 import { Membership, STAFF, VOLUNTEER } from "@overbookd/registration";
-import { PERSONNE, HARD } from "@overbookd/team-constants";
+import { HARD, PERSONNE } from "@overbookd/team-constants";
 import { Edition, IProvidePeriod } from "@overbookd/time";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_PERIOD } from "../../../../common/query/period.query";
 import { SELECT_USER_TEAMS } from "../../../../user/user.query";
-import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export const SELECT_STAFF = {
   id: true,

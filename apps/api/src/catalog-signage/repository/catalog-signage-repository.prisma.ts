@@ -1,9 +1,9 @@
-import { Signage, SignageError, SignageForm } from "@overbookd/signa";
-import { FileService } from "../../utils/file.service";
-import { PrismaService } from "../../prisma.service";
-import { CatalogSignageRepository } from "../catalog-signage.service";
-import { SlugifyService } from "@overbookd/slugify";
 import { ForbiddenException, StreamableFile } from "@nestjs/common";
+import { Signage, SignageError, SignageForm } from "@overbookd/signa";
+import { SlugifyService } from "@overbookd/slugify";
+import { PrismaService } from "../../prisma.service";
+import { FileService } from "../../utils/file.service";
+import { CatalogSignageRepository } from "../catalog-signage.service";
 
 export class PrismaCatalogSignageRepository implements CatalogSignageRepository {
   constructor(

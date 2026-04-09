@@ -1,10 +1,10 @@
 import { Purchase, PurchasesForInit } from "@overbookd/logistic";
+import { PrismaService } from "../../../prisma.service";
 import {
   PurchaseQueryBuilder,
   SELECT_PURCHASE,
   toPurchase,
 } from "./purchase.query";
-import { PrismaService } from "../../../prisma.service";
 
 export class PrismaInitPurchases implements PurchasesForInit {
   constructor(private prisma: PrismaService) {}

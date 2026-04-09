@@ -36,52 +36,52 @@
 </template>
 
 <script lang="ts" setup>
-import { Bar } from "vue-chartjs";
-import type {
-  ChartData,
-  ChartOptions,
-  ChartEvent,
-  ActiveElement,
-} from "chart.js";
-import type { Statistics } from "@overbookd/http";
-import { useTheme } from "vuetify";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import {
+  BROUILLON,
   DRAFT,
   IN_REVIEW,
-  REFUSED,
-  VALIDATED,
-  READY_TO_ASSIGN,
-  BROUILLON,
-  RELECTURE_EN_COURS,
-  REFUSEE,
-  VALIDEE,
   PRETE_POUR_AFFECTATION,
+  READY_TO_ASSIGN,
+  REFUSED,
+  REFUSEE,
+  RELECTURE_EN_COURS,
+  VALIDATED,
+  VALIDEE,
 } from "@overbookd/festival-event-constants";
+import type { Statistics } from "@overbookd/http";
+import { READ_FA, READ_FT } from "@overbookd/permission";
+import { FA_URL, FT_URL } from "@overbookd/web-page";
+import type {
+  ActiveElement,
+  ChartData,
+  ChartEvent,
+  ChartOptions,
+} from "chart.js";
+import { Bar } from "vue-chartjs";
+import { useTheme } from "vuetify";
 import {
-  TEAM_QUERY_PARAM,
   findStatusByLabel,
   STATUS_QUERY_PARAM,
+  TEAM_QUERY_PARAM,
 } from "~/utils/festival-event/festival-event.constant";
 import {
-  type FestivalEventStatus,
   isFestivalActivityStatus,
+  type FestivalEventStatus,
 } from "~/utils/festival-event/festival-event.utils";
 import {
   oldActivities,
   oldTasks,
 } from "~/utils/festival-event/past-year.constant";
-import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
-import { FA_URL, FT_URL } from "@overbookd/web-page";
-import { CTMA_URL } from "~/utils/navigation/url.constant";
-import { READ_FA, READ_FT } from "@overbookd/permission";
 import {
   DISPLAY_FA,
   DISPLAY_FT,
   StatsDisplayModeBuilder,
   type StatsDisplayMode,
 } from "~/utils/festival-event/stats.display";
+import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { CTMA_URL } from "~/utils/navigation/url.constant";
 
 useHead({ title: "Statistiques des FA" });
 

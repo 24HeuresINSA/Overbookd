@@ -122,13 +122,13 @@
 </template>
 
 <script lang="ts" setup>
+import { CSVBuilder } from "@overbookd/csv";
 import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
-import type { FilterGear } from "~/utils/logistic/filter-gear";
-import { downloadCsv } from "~/utils/file/download.utils";
 import { booleanToReadableString } from "~/utils/file/csv.utils";
-import { CSVBuilder } from "@overbookd/csv";
+import { downloadCsv } from "~/utils/file/download.utils";
+import type { FilterGear } from "~/utils/logistic/filter-gear";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const catalogGearStore = useCatalogGearStore();
 const userStore = useUserStore();

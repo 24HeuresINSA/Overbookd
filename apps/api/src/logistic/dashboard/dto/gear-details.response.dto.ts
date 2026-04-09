@@ -1,13 +1,13 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-event";
 import {
-  Inquiry,
-  GearDetails,
-  GearWithDetails,
   BaseGearDetails,
   ConsumableGearDetails,
   GearBorrow,
+  GearDetails,
   GearPurchase,
+  GearWithDetails,
+  Inquiry,
 } from "@overbookd/http";
 
 class InquiryResponseDto implements Inquiry {

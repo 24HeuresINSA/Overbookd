@@ -1,16 +1,16 @@
 import {
-  FestivalTask,
   Draft,
+  FestivalTask,
   InReview,
-  ReadyToAssign,
-  Refused,
-  Validated,
   Preview,
   PreviewDraft,
   PreviewInReview,
-  PreviewValidated,
-  PreviewRefused,
   PreviewReadyToAssign,
+  PreviewRefused,
+  PreviewValidated,
+  ReadyToAssign,
+  Refused,
+  Validated,
 } from "./festival-task";
 
 type FestivalTaskOf<Status extends FestivalTask["status"]> = Extract<

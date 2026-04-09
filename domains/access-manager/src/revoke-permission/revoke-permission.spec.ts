@@ -7,6 +7,7 @@ import {
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
 } from "@overbookd/permission";
+import { HARD, LOG_MATOS, SOFT } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryEvents } from "./events.inmemory";
 import {
@@ -15,7 +16,6 @@ import {
   Team,
 } from "./revoke-permission";
 import { InMemoryTeams } from "./teams.inmemory";
-import { HARD, LOG_MATOS, SOFT } from "@overbookd/team-constants";
 
 let teams: InMemoryTeams;
 let events: InMemoryEvents;

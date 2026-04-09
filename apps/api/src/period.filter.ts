@@ -1,7 +1,7 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
-import { Response, Request } from "express";
-import { RouteLogger } from "./route-logger";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { PeriodError } from "@overbookd/time";
+import { Request, Response } from "express";
+import { RouteLogger } from "./route-logger";
 
 @Catch(PeriodError)
 export class PeriodErrorFilter implements ExceptionFilter {

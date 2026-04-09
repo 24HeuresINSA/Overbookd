@@ -1,3 +1,11 @@
+import {
+  ADMIN,
+  CONDUCTEUR,
+  CONDUCTEUR_FEN,
+  CONFIANCE,
+  HARD,
+  SOFT,
+} from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryEvents } from "./events.inmemory";
 import {
@@ -8,14 +16,6 @@ import {
   TEAM_LEFT,
 } from "./leave-team";
 import { InMemoryMemberships } from "./memberships.inmemory";
-import {
-  ADMIN,
-  CONDUCTEUR,
-  CONDUCTEUR_FEN,
-  CONFIANCE,
-  HARD,
-  SOFT,
-} from "@overbookd/team-constants";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };

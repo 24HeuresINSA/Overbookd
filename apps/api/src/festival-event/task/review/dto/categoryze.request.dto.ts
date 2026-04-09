@@ -5,11 +5,11 @@ import {
 } from "@overbookd/festival-event";
 import { taskCategories } from "@overbookd/festival-event-constants";
 import {
-  IsEnum,
-  ValidationArguments,
-  IsOptional,
-  IsDefined,
   IsBoolean,
+  IsDefined,
+  IsEnum,
+  IsOptional,
+  ValidationArguments,
 } from "class-validator";
 
 export class CategorizeTaskRequestDto implements Categorize {

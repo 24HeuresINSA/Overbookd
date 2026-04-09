@@ -1,57 +1,57 @@
 import {
-  UseGuards,
+  Body,
+  Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
-  Body,
-  Delete,
-  HttpCode,
   Request,
-  Controller,
   UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
-  ApiParam,
   ApiBody,
+  ApiExtraModels,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
-import { Statistics } from "@overbookd/http";
 import { FestivalActivity } from "@overbookd/festival-event";
+import { Statistics } from "@overbookd/http";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 import { RequestWithUserPayload } from "../../../app.controller";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../../common/dto/inquiry-request.response.dto";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.dto";
 import { StatisticsService } from "../../statistics/statistics.service";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
 } from "../common/dto/reviewable/reviewable-festival-activity.dto";
 import {
-  PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
+  PublicReviewableGeneralResponseDto,
 } from "../common/dto/reviewable/reviewable-general.response.dto";
 import {
-  UnlinkedSignageResponseDto,
   LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
 } from "../common/dto/signage.response.dto";
+import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
-import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
-import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
-import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import {
-  AssignedInquiryRequestResponseDto,
-  UnassignedInquiryRequestResponseDto,
-} from "../../common/dto/inquiry-request.response.dto";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

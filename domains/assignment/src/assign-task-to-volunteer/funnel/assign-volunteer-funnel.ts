@@ -1,17 +1,17 @@
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { Assignment } from "../assignment.js";
-import { ReadyToStart } from "./startup-funnel.js";
 import { Candidate, isFulfillingDemand } from "./candidate.js";
 import {
   CommonFunnel,
   areEveryCandidateFulfillingDemand,
 } from "./funnel-shared-logic.js";
 import {
+  FulfillDemand,
+  FunnelError,
   FunnelRepositories,
   IActAsFunnel,
-  FunnelError,
-  FulfillDemand,
 } from "./funnel.js";
-import { AssignableVolunteer } from "../assignable-volunteer.js";
+import { ReadyToStart } from "./startup-funnel.js";
 
 type ActiveFunnelInitializer = [Candidate[], FunnelRepositories, Assignment];
 

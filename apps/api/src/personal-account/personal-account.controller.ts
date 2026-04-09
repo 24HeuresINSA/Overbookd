@@ -12,22 +12,22 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
-  MANAGE_PERSONAL_ACCOUNTS,
   HAVE_PERSONAL_ACCOUNT,
+  MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
-import { PersonalAccountService } from "./personal-account.service";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { BarrelResponseDto } from "./dto/barrel.response.dto";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { AdjustBarrelOpeningDateRequestDto } from "./dto/adjust-barrel-opening-date.request.dto";
 import { AdjustBarrelPriceRequestDto } from "./dto/adjust-barrel-price.request.dto";
+import { BarrelResponseDto } from "./dto/barrel.response.dto";
 import { CreateBarrelRequestDto } from "./dto/create-barrel.request.dto";
 import {
   BarrelNotConfiguredFilter,
   SimilarBarrelExistFilter,
 } from "./personal-account-error.filter";
-import { AdjustBarrelOpeningDateRequestDto } from "./dto/adjust-barrel-opening-date.request.dto";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { PersonalAccountService } from "./personal-account.service";
 
 @Controller("personal-account")
 @ApiTags("personal-account")

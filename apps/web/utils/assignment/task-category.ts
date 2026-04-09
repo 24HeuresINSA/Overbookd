@@ -1,11 +1,11 @@
 import {
   BAR,
   type Category,
+  COLLAGE,
   FUN,
   MANUTENTION,
   RELOU,
   STATIQUE,
-  COLLAGE,
   taskCategories,
 } from "@overbookd/festival-event-constants";
 

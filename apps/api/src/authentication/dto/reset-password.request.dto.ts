@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  IsNotEmpty,
   IsDefined,
+  IsNotEmpty,
   IsString,
-  MinLength,
   Matches,
+  MinLength,
   ValidationArguments,
 } from "class-validator";
 import { OneNumber, upperCaseCharacter } from "../../user/dto/common";

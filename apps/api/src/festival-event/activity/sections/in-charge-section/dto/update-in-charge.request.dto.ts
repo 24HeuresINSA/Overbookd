@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
 import { PrepareInChargeForm } from "@overbookd/http";
+import { IsOptional } from "class-validator";
 
 export class InChargeRequestDto implements PrepareInChargeForm {
   @ApiProperty({

@@ -1,5 +1,5 @@
-import { IProvidePeriod } from "@overbookd/time";
 import { GeoLocation } from "@overbookd/geo-location";
+import { IProvidePeriod } from "@overbookd/time";
 
 export type Volunteer = {
   id: number;

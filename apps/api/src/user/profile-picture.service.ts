@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
+import { MyUserInformation } from "@overbookd/user";
+import { SELECT_CHARISMA_PERIOD } from "../common/query/charisma.query";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "../utils/file.service";
 import { SELECT_MY_USER_INFORMATION } from "./user.query";
 import { UserService } from "./user.service";
-import { MyUserInformation } from "@overbookd/user";
-import { SELECT_CHARISMA_PERIOD } from "../common/query/charisma.query";
 
 @Injectable()
 export class ProfilePictureService {

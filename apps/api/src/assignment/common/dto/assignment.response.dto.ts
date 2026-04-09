@@ -1,6 +1,6 @@
+import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { Assignee, Assignment, TeamDemanded } from "@overbookd/assignment";
 import { AssignmentIdentifierResponseDto } from "./assignment-identifier.response.dto";
-import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { TeamDemandedResponseDto } from "./team-demanded.response.dto";
 
 type TeamMember = Extract<Assignee, { as: string }>;

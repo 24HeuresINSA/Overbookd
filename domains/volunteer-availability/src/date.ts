@@ -1,6 +1,11 @@
-import { Hour, OverDate, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
+import {
+  Duration,
+  Hour,
+  ONE_HOUR_IN_MS,
+  OverDate,
+  Period,
+} from "@overbookd/time";
 import { SHIFT_HOURS } from "./shift.constant.js";
-import { Duration } from "@overbookd/time";
 
 export class AvailabilityDate extends OverDate {
   static fromOverDate(date: OverDate): AvailabilityDate {

@@ -1,14 +1,14 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { GeoLocation } from "@overbookd/geo-location";
 import { IProvidePeriod } from "@overbookd/time";
+import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 import {
+  AppointmentLocation,
   Assignment,
   Contact,
   Task,
   Volunteer,
-  AppointmentLocation,
 } from "../domain/task.model";
-import { ApiProperty } from "@nestjs/swagger";
-import { GeoLocation } from "@overbookd/geo-location";
-import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({

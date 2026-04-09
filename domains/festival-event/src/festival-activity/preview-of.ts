@@ -1,14 +1,14 @@
 import {
-  FestivalActivity,
-  PreviewFestivalActivity,
   Draft,
-  PreviewDraft,
+  FestivalActivity,
   InReview,
   InReviewPreview,
-  Validated,
-  ValidatedPreview,
+  PreviewDraft,
+  PreviewFestivalActivity,
   Refused,
   RefusedPreview,
+  Validated,
+  ValidatedPreview,
 } from "./festival-activity";
 
 type FestivalActivityOf<Status extends FestivalActivity["status"]> = Extract<

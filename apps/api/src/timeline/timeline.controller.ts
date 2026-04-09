@@ -1,12 +1,12 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { VIEW_TIMELINE } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { TimelineEventResponseDto } from "./dto/timeline-event.response.dto";
 import { TimelineService } from "./timeline.service";
-import { VIEW_TIMELINE } from "@overbookd/permission";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("timeline")
 @ApiTags("timeline")

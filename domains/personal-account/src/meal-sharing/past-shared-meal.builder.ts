@@ -1,11 +1,11 @@
 import type { Adherent, Shotgun } from "./adherent.js";
 import { Shotguns } from "./adherent.js";
-import type { PastSharedMeal, AboutMeal, Expense } from "./meals.model.js";
 import {
   MealSharingError,
   RecordExpenseOnPastMeal,
 } from "./meal-sharing.error.js";
 import { SharedMealBuilder } from "./meal-sharing.js";
+import type { AboutMeal, Expense, PastSharedMeal } from "./meals.model.js";
 
 export const SHOTGUN_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de le shotgun";

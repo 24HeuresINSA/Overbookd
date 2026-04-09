@@ -80,12 +80,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Period, formatDate } from "@overbookd/time";
 import type { TeamMobilization } from "@overbookd/festival-event";
 import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
-import { isNumber, min } from "~/utils/rules/input.rules";
+import { Period, formatDate } from "@overbookd/time";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
+import { isNumber, min } from "~/utils/rules/input.rules";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();

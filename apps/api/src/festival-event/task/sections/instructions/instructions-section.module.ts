@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
-import { InstructionsSectionService } from "./instructions-section.service";
 import { PrepareFestivalTask } from "@overbookd/festival-event";
-import { PrismaAdherents } from "../../common/repository/adherents.prisma";
 import { PrismaLocations } from "../../../common/repository/locations.prisma";
+import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
+import { PrismaAdherents } from "../../common/repository/adherents.prisma";
+import { InstructionsSectionService } from "./instructions-section.service";
 
 @Module({
   providers: [

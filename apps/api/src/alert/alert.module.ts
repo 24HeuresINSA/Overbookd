@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
-import { AlertController } from "./alert.controller";
-import { PrismaModule } from "../prisma.module";
-import { PrismaAdherents } from "./repository/adherents.prisma";
-import { PrismaService } from "../prisma.service";
-import { PersonalAccountAlerting } from "@overbookd/personal-account";
-import { AlertService } from "./alert.service";
 import { SettleAlerting } from "@overbookd/contribution";
-import { PrismaPermissions } from "./repository/permissions.prisma";
+import { PersonalAccountAlerting } from "@overbookd/personal-account";
+import { PrismaModule } from "../prisma.module";
+import { PrismaService } from "../prisma.service";
+import { AlertController } from "./alert.controller";
+import { AlertService } from "./alert.service";
+import { PrismaAdherents } from "./repository/adherents.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
-import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
 import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
 import { PrismaNotYetVolunteerAlerting } from "./repository/not-yet-volunteer-alerting.prisma";
+import { PrismaPermissions } from "./repository/permissions.prisma";
+import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
 
 @Module({
   controllers: [AlertController],

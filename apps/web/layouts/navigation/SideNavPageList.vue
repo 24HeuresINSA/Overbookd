@@ -28,17 +28,17 @@
 
 <script lang="ts" setup>
 import {
-  SUMMARY_PAGES,
-  type PageInSummary,
-} from "~/utils/navigation/pages/summary-pages";
-import SideNavPageItem from "./SideNavPageItem.vue";
-import {
   FA_URL,
   FT_URL,
   REGISTRATIONS_STAFF_URL,
   REGISTRATIONS_VOLUNTEER_URL,
 } from "@overbookd/web-page";
 import { PageFilter } from "~/utils/navigation/page.filter";
+import {
+  SUMMARY_PAGES,
+  type PageInSummary,
+} from "~/utils/navigation/pages/summary-pages";
+import SideNavPageItem from "./SideNavPageItem.vue";
 
 const navigationBadgeStore = useNavigationBadgeStore();
 

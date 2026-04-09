@@ -1,17 +1,19 @@
+import { numberGenerator } from "@overbookd/list";
 import type {
+  Expense,
   OnGoingSharedMeal,
+  PastSharedMeal,
   SharedMeal,
-  SharedMeals,
   SharedMealBuilder,
   SharedMealCreation,
-  PastSharedMeal,
-  Expense,
+  SharedMeals,
 } from "@overbookd/personal-account";
-import { OnGoingSharedMealBuilder } from "@overbookd/personal-account";
-import { PastSharedMealBuilder } from "@overbookd/personal-account";
-import { numberGenerator } from "@overbookd/list";
-import { PrismaService } from "../../prisma.service";
+import {
+  OnGoingSharedMealBuilder,
+  PastSharedMealBuilder,
+} from "@overbookd/personal-account";
 import { buildUserNameWithNickname } from "@overbookd/user";
+import { PrismaService } from "../../prisma.service";
 
 const SELECT_ADHERENT = {
   id: true,

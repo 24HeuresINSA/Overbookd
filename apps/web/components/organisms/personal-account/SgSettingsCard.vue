@@ -125,8 +125,10 @@
 
 <script lang="ts" setup>
 import type { ConfiguredBarrel } from "@overbookd/personal-account";
+import { formatDate } from "@overbookd/time";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
+import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
   CASK_MODE,
   CLOSET_MODE,
@@ -134,14 +136,12 @@ import {
   EXTERNAL_EVENT_MODE,
   type SgMode,
 } from "~/utils/transaction/sg-mode";
-import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
-  FUT,
-  PLACARD,
   DEPOT,
   EVENEMENT,
+  FUT,
+  PLACARD,
 } from "~/utils/transaction/transaction.constants";
-import { formatDate } from "@overbookd/time";
 
 const personalAccountStore = usePersonalAccountStore();
 

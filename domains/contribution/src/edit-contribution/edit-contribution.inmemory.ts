@@ -1,7 +1,7 @@
-import { Contribution, areSameContributions } from "../contribution.js";
-import { EditContributions } from "./edit-contribution.js";
-import { NotFoundContribution } from "./edit-contribution.error.js";
 import { updateItemToList } from "@overbookd/list";
+import { Contribution, areSameContributions } from "../contribution.js";
+import { NotFoundContribution } from "./edit-contribution.error.js";
+import { EditContributions } from "./edit-contribution.js";
 
 export class InMemoryEditContributions implements EditContributions {
   constructor(private contributions: Contribution[] = []) {}

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { SignageType, Signage } from "@overbookd/signa";
+import type { Signage, SignageType } from "@overbookd/signa";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { Density } from "~/utils/vuetify/component-props";
 

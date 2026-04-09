@@ -1,12 +1,12 @@
-import { KeyEvent } from "./festival-activity.js";
-import { Adherent } from "../common/adherent.js";
-import { getNameFromReviewer, Reviewer } from "../common/review.js";
 import {
   APPROVED,
   CREATED,
   READY_TO_REVIEW,
   REJECTED,
 } from "@overbookd/festival-event-constants";
+import { Adherent } from "../common/adherent.js";
+import { getNameFromReviewer, Reviewer } from "../common/review.js";
+import { KeyEvent } from "./festival-activity.js";
 
 export class FestivalActivityKeyEvents {
   static created(by: Adherent): KeyEvent {

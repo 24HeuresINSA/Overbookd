@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined, IsNumber } from "class-validator";
 import { PayContributionForm } from "@overbookd/contribution";
+import { IsDefined, IsNumber } from "class-validator";
 
 export class PayContributionRequestDto implements PayContributionForm {
   @ApiProperty({

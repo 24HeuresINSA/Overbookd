@@ -1,6 +1,6 @@
 import type { Signage, SignageForm } from "@overbookd/signa";
-import { ImageRepository } from "~/utils/http/image.repository";
 import { HttpClient } from "~/utils/http/http-client";
+import { ImageRepository } from "~/utils/http/image.repository";
 
 export class CatalogSignageRepository {
   private static readonly basePath = "signages";

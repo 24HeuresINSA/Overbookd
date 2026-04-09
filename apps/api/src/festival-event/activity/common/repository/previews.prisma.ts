@@ -5,22 +5,22 @@ import {
   PreviewForLogistic,
   PreviewForSecurity,
 } from "@overbookd/http";
-import { Previews } from "../festival-activity-common.model";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { PrismaService } from "../../../../prisma.service";
+import { PreviewForSigna } from "../../preview/signa-preview";
+import { Previews } from "../festival-activity-common.model";
+import { FestivalActivityBuilder } from "./festival-activity.builder";
+import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import {
-  SHOULD_BE_IN_SECURITY_DASHBOARD,
-  SELECT_PREVIEW_FOR_SECURITY_DASHBOARD,
+  DatabasePreviewForLogistic,
   IS_PUBLIC,
   SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD,
-  SELECT_PREVIEW_FOR_SIGNA,
-  SHOULD_BE_IN_SIGNA_PREVIEW,
   SELECT_PREVIEW_FOR_LOGISTIC_DASHBOARD,
-  DatabasePreviewForLogistic,
+  SELECT_PREVIEW_FOR_SECURITY_DASHBOARD,
+  SELECT_PREVIEW_FOR_SIGNA,
+  SHOULD_BE_IN_SECURITY_DASHBOARD,
+  SHOULD_BE_IN_SIGNA_PREVIEW,
 } from "./previews.query";
-import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
-import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
-import { FestivalActivityBuilder } from "./festival-activity.builder";
-import { PreviewForSigna } from "../../preview/signa-preview";
 
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}

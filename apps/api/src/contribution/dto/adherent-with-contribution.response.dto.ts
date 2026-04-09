@@ -1,6 +1,6 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { AdherentWithContribution } from "@overbookd/contribution";
 import { ContributionAdherentResponseDto } from "./adherent.response.dto";
-import { ApiProperty } from "@nestjs/swagger";
 
 export class AdherentWithContributionResponseDto
   extends ContributionAdherentResponseDto

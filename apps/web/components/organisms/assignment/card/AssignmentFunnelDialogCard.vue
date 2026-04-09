@@ -55,11 +55,11 @@
 
 <script lang="ts" setup>
 import {
-  type IActAsFunnel,
-  ReadyToStart,
   type AssignableVolunteer,
   type Assignment,
+  type IActAsFunnel,
   type IDefineCandidate,
+  ReadyToStart,
 } from "@overbookd/assignment";
 import { FT_URL } from "@overbookd/web-page";
 import { toCalendarBreak } from "~/domain/common/break-events";

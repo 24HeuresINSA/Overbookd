@@ -84,16 +84,16 @@
 
 <script lang="ts" setup>
 import {
-  type InquiryRequest,
-  type InquiryOwner,
   type Drive,
   drives,
+  type InquiryOwner,
+  type InquiryRequest,
   type TimeWindow,
 } from "@overbookd/festival-event";
+import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
+import { isNumber, min } from "~/utils/rules/input.rules";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { isNumber, min } from "~/utils/rules/input.rules";
-import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
 
 const userStore = useUserStore();
 const catalogGearStore = useCatalogGearStore();

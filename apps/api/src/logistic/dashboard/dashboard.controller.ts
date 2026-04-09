@@ -9,7 +9,6 @@ import {
   Res,
   UseGuards,
 } from "@nestjs/common";
-import { Response } from "express";
 import {
   ApiBearerAuth,
   ApiParam,
@@ -18,17 +17,18 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { DashboardService } from "./dashboard.service";
-import { VIEW_GEAR_DASHBOARD } from "@overbookd/permission";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
-import { GearWithDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { CSV, GearPreview, GearWithDetails } from "@overbookd/http";
-import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
-import { RequestWithUserPayload } from "../../app.controller";
+import { VIEW_GEAR_DASHBOARD } from "@overbookd/permission";
+import { Response } from "express";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../app.controller";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
+import { DashboardService } from "./dashboard.service";
+import { GearWithDetailsResponseDto } from "./dto/gear-details.response.dto";
+import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
 
 @Controller("logistic/dashboard")
 @ApiTags("logistic/dashboard")

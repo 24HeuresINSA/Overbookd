@@ -1,16 +1,16 @@
+import { BAR } from "@overbookd/festival-event-constants";
+import { HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
 import { ONE_HOUR_IN_MS, Period } from "@overbookd/time";
-import { AssignmentBuilder } from "./factory/assignment.builder.js";
-import {
-  AssignmentSummaryFactory,
-  AssignmentTeamFactory,
-} from "./factory/assignment-summary.factory.js";
 import { Volunteer } from "../../volunteer.js";
 import {
   AssignableVolunteerFactory,
   MaybeCategory,
 } from "./factory/assignable-volunteer.factory.js";
-import { BAR } from "@overbookd/festival-event-constants";
-import { PERSONNE, HARD, VIEUX } from "@overbookd/team-constants";
+import {
+  AssignmentSummaryFactory,
+  AssignmentTeamFactory,
+} from "./factory/assignment-summary.factory.js";
+import { AssignmentBuilder } from "./factory/assignment.builder.js";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),

@@ -1,5 +1,5 @@
 import { PERSONNE } from "@overbookd/team-constants";
-import { Memberships, JoinedTeam, Candidate } from "./enroll-candidates";
+import { Candidate, JoinedTeam, Memberships } from "./enroll-candidates";
 import { JoinableTeam } from "./joinable-team";
 
 export class InMemoryMemberships implements Memberships {

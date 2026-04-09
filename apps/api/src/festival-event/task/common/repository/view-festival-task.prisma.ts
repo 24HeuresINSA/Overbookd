@@ -3,13 +3,13 @@ import {
   FestivalTasksForView,
   PreviewFestivalTask,
 } from "@overbookd/festival-event";
+import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
+import { PrismaService } from "../../../../prisma.service";
+import { FestivalTaskBuilder } from "./festival-task.builder";
 import {
   SELECT_FESTIVAL_TASK,
   buildFestivalTaskCondition,
 } from "./festival-task.query";
-import { PrismaService } from "../../../../prisma.service";
-import { FestivalTaskBuilder } from "./festival-task.builder";
-import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export class PrismaViewFestivalTasks implements FestivalTasksForView {
   constructor(private readonly prisma: PrismaService) {}

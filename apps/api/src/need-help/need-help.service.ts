@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { IProvidePeriod } from "@overbookd/time";
 import { HelpingVolunteer } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/time";
 
 export type HelpingVolunteers = {
   findAvailableOnPeriod(period: IProvidePeriod): Promise<HelpingVolunteer[]>;

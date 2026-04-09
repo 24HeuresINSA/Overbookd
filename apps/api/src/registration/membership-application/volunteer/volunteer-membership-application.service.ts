@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import {
   ApplyFor,
   CandidateToEnroll,
@@ -6,14 +8,12 @@ import {
   RejectMembershipApplication,
   VOLUNTEER,
 } from "@overbookd/registration";
-import { Users } from "../common/repository/users";
-import { HasApplication, VolunteerCandidate } from "@overbookd/http";
-import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { SOFT } from "@overbookd/team-constants";
 import { IProvidePeriod } from "@overbookd/time";
-import { ConfigurationService } from "../../../configuration/configuration.service";
 import { Availability } from "@overbookd/volunteer-availability";
-import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { ConfigurationService } from "../../../configuration/configuration.service";
+import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
+import { Users } from "../common/repository/users";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;

@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { HasApplication, StaffCandidate } from "@overbookd/http";
 import {
   ApplyFor,
   type CandidateToEnroll,
@@ -7,12 +8,11 @@ import {
   RejectMembershipApplication,
   STAFF,
 } from "@overbookd/registration";
-import { Users } from "../common/repository/users";
-import { Configurations } from "./repository/configurations";
-import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
-import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { HARD } from "@overbookd/team-constants";
+import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
+import { Users } from "../common/repository/users";
 import { createStaffInvitationToken } from "./jwt.utils";
+import { Configurations } from "./repository/configurations";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;

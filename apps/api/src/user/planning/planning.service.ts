@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
+import { AssignmentEvent } from "@overbookd/assignment";
 import {
   MultiPlanningVolunteer,
   PlanningTask,
   VolunteerForPlanningLeaflet,
 } from "@overbookd/http";
-import { IProvidePeriod, Period } from "@overbookd/time";
 import { BreakDefinition, BreakPeriods } from "@overbookd/planning";
-import { Planning } from "./domain/planning";
-import { SubscriptionService } from "./subscription.service";
-import { PlanningRenderStrategy } from "./render/render-strategy";
-import { AssignmentEvent } from "@overbookd/assignment";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { UserWithTeams } from "@overbookd/user";
+import { Planning } from "./domain/planning";
+import { PlanningRenderStrategy } from "./render/render-strategy";
+import { SubscriptionService } from "./subscription.service";
 
 export type PlanningVolunteers = {
   allForLeaflets(): Promise<VolunteerForPlanningLeaflet[]>;

@@ -114,21 +114,21 @@
 import { IMAGE_EXTENSIONS, type Preference } from "@overbookd/http";
 import {
   assignmentPreferences,
-  NO_PREF,
   isAssignmentPreference,
+  NO_PREF,
   type AssignmentPreferenceType,
 } from "@overbookd/preference";
 import { HARD } from "@overbookd/team-constants";
 import { formatLocalDate } from "@overbookd/time";
 import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preference";
 import {
-  required,
-  isMobilePhoneNumber,
   isImageSizeWithinLimit,
+  isMobilePhoneNumber,
   isSupportedImageFile,
-  minDate,
   maxDate,
   maxLength,
+  minDate,
+  required,
 } from "~/utils/rules/input.rules";
 
 const userStore = useUserStore();

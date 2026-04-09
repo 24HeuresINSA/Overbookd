@@ -14,14 +14,14 @@ import {
   PC16_Prise_classique,
 } from "@overbookd/festival-event";
 import {
+  BROUILLON,
   DRAFT,
   IN_REVIEW,
-  VALIDATED,
   REFUSED,
-  BROUILLON,
-  RELECTURE_EN_COURS,
-  VALIDEE,
   REFUSEE,
+  RELECTURE_EN_COURS,
+  VALIDATED,
+  VALIDEE,
 } from "@overbookd/festival-event-constants";
 
 export type FaStatusLabel =

@@ -28,20 +28,20 @@
 <script lang="ts" setup>
 import {
   BARREL,
-  PROVISIONS,
   DEPOSIT,
   EXTERNAL_EVENT,
+  PROVISIONS,
   type ConfiguredBarrel,
 } from "@overbookd/personal-account";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { isInteger } from "~/utils/rules/input.rules";
 import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
-  type SgMode,
   CASK_MODE,
   CLOSET_MODE,
   DEPOSIT_MODE,
   EXTERNAL_EVENT_MODE,
+  type SgMode,
 } from "~/utils/transaction/sg-mode";
 
 useHead({ title: "SG" });

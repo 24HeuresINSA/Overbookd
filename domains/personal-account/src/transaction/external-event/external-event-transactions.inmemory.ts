@@ -1,8 +1,8 @@
 import { MyTransaction, TransactionUser } from "../transaction";
 import {
-  ExternalEventTransactions,
   ExternalEventTransaction,
   ExternalEventTransactionForm,
+  ExternalEventTransactions,
 } from "./create-external-event-transactions";
 
 export class InMemoryExternalEventTransactions implements ExternalEventTransactions {

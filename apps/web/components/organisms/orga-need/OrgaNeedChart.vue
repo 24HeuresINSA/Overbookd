@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Line } from "vue-chartjs";
 import type { OrgaNeedDetails } from "@overbookd/http";
-import type { ChartData, Dataset } from "~/utils/chartjs-graph";
 import type { ActiveElement, ChartEvent } from "chart.js";
+import { Line } from "vue-chartjs";
 import { useTheme } from "vuetify";
+import type { ChartData, Dataset } from "~/utils/chartjs-graph";
 import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 
 const orgaNeedStore = useOrgaNeedStore();

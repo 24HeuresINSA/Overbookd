@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { TeamRepository } from "../catalog-repositories";
 import { CategoryOwner } from "@overbookd/http";
+import { TeamRepository } from "../catalog-repositories";
 
 @Injectable()
 export class InMemoryTeamRepository implements TeamRepository {

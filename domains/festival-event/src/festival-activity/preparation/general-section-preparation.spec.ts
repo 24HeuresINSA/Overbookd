@@ -1,32 +1,32 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
-import {
-  FestivalActivityError,
-  TimeWindowAlreadyExists,
-} from "../festival-activity.error.js";
-import { EndBeforeStart } from "@overbookd/time";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
-import {
-  baladeEnPoney,
-  escapeGame,
-  justDance,
-  pcSecurite,
-  qgOrga,
-  approvedByHumain,
-  approvedByCommunication,
-  validatedBySecu,
-  publicApprovedByHumain,
-} from "./preparation.test-utils.js";
-import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import {
-  friday11hToFriday15h,
-  sunday14hToSunday18h,
-} from "../festival-activity.fake.js";
-import { isDraft } from "../../festival-event.js";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { EndBeforeStart } from "@overbookd/time";
+import { beforeEach, describe, expect, it } from "vitest";
+import { isDraft } from "../../festival-event.js";
+import {
+  FestivalActivityError,
+  TimeWindowAlreadyExists,
+} from "../festival-activity.error.js";
+import {
+  friday11hToFriday15h,
+  sunday14hToSunday18h,
+} from "../festival-activity.fake.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
+import {
+  approvedByCommunication,
+  approvedByHumain,
+  baladeEnPoney,
+  escapeGame,
+  justDance,
+  pcSecurite,
+  publicApprovedByHumain,
+  qgOrga,
+  validatedBySecu,
+} from "./preparation.test-utils.js";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { PrepareError } from "./prepare-in-review-festival-activity.js";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

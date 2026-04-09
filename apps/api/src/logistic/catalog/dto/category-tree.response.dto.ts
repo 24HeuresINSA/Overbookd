@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CategoryResponseDto } from "./category.response.dto";
 import { CatalogCategoryTree } from "@overbookd/http";
+import { CategoryResponseDto } from "./category.response.dto";
 
 export class CategoryTreeResponseDto extends CategoryResponseDto {
   @ApiProperty({

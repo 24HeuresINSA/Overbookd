@@ -1,5 +1,5 @@
-import { Balance } from "@overbookd/personal-account";
 import {
+  Balance,
   isCredit,
   type MyTransaction,
   type TransactionsForBalance,

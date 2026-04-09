@@ -1,6 +1,6 @@
+import { Period } from "@overbookd/time";
 import { Assignee, Assignment, TeamDemanded } from "../../assignment.js";
 import { AssignmentSummaryFactory } from "./assignment-summary.factory.js";
-import { Period } from "@overbookd/time";
 
 type InitAssignment = {
   assignmentPeriod: Period;

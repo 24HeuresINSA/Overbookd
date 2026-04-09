@@ -1,6 +1,5 @@
-import { FestivalTask } from "../festival-task.js";
 import { FestivalTaskNotFound } from "../festival-task.error.js";
-import { Preview } from "../festival-task.js";
+import { FestivalTask, Preview } from "../festival-task.js";
 import {
   FestivalTaskTranslator,
   WithoutConflicts,

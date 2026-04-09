@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { IProvidePeriod } from "@overbookd/time";
-import { PrismaService } from "../../src/prisma.service";
 import {
   TimelineAssignment,
   TimelineEvent,
   TimelineMobilization,
   TimelineTask,
 } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/time";
+import { PrismaService } from "../../src/prisma.service";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TEAMS_CODE } from "../common/query/user.query";
 

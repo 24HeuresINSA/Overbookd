@@ -1,7 +1,7 @@
 import type { VolunteerWithAssignmentStats } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
-import { AUCUNE, type DisplayableCategory } from "../assignment/task-category";
 import type { UserName } from "@overbookd/user";
+import { AUCUNE, type DisplayableCategory } from "../assignment/task-category";
 import type { DisplayableAssignmentStat } from "../user/user-information";
 
 export function compareVolunteersOnNames(a: UserName, b: UserName) {

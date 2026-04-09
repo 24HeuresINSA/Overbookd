@@ -47,10 +47,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { BUREAU, HARD, CA, SOFT, VIEUX } from "@overbookd/team-constants";
-import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
+import { BUREAU, CA, HARD, SOFT, VIEUX } from "@overbookd/team-constants";
+import { OverDate } from "@overbookd/time";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const props = defineProps({
   volunteers: {

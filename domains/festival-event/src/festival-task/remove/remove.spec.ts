@@ -1,6 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { RemoveFestivalTask } from "./remove";
-import { InMemoryFestivalTasksForRemoval } from "./festival-tasks-for-removal.inmemory";
 import {
   DRAFT,
   IN_REVIEW,
@@ -8,6 +5,8 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
+import { beforeEach, describe, expect, it } from "vitest";
+import { RemoveReadyToAssignError } from "../festival-task.error";
 import {
   barCashier,
   guardJustDance,
@@ -16,7 +15,8 @@ import {
   serveWaterOnJustDance,
   uninstallBarbecue,
 } from "../festival-task.fake";
-import { RemoveReadyToAssignError } from "../festival-task.error";
+import { InMemoryFestivalTasksForRemoval } from "./festival-tasks-for-removal.inmemory";
+import { RemoveFestivalTask } from "./remove";
 
 const initTasks = [
   installEscapeGame,

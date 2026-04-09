@@ -1,5 +1,5 @@
 import { updateItemToList } from "@overbookd/list";
-import { Teams, Team } from "./grant-permission";
+import { Team, Teams } from "./grant-permission";
 
 export class InMemoryTeams implements Teams {
   constructor(private teams: readonly Team[] = []) {}

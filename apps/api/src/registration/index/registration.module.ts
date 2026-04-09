@@ -1,15 +1,14 @@
 import { Module } from "@nestjs/common";
-import { RegistrationController } from "./registration.controller";
-import { RegistrationService } from "./registration.service";
-import { RegisterNewcomer } from "@overbookd/registration";
-import { PrismaService } from "../../prisma.service";
-import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
-import { PrismaModule } from "../../prisma.module";
-import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
+import { ForgetMember, RegisterNewcomer } from "@overbookd/registration";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
+import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
+import { PrismaModule } from "../../prisma.module";
+import { PrismaService } from "../../prisma.service";
+import { RegistrationController } from "./registration.controller";
+import { RegistrationService } from "./registration.service";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
-import { ForgetMember } from "@overbookd/registration";
+import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
 import { PrismaNotificationRepository } from "./repository/notification-repository.prisma";
 
 @Module({

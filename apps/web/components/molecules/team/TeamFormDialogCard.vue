@@ -49,9 +49,9 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "~/utils/rules/input.rules";
 import { SlugifyService } from "@overbookd/slugify";
 import type { Team } from "@overbookd/team";
+import { required } from "~/utils/rules/input.rules";
 
 const { team } = defineProps({
   team: {

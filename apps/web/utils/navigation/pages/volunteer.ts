@@ -7,9 +7,9 @@ import {
 } from "@overbookd/permission";
 import {
   AVAILABILITIES_URL,
+  MULTI_PLANNING_URL,
   MY_PERSONAL_ACCOUNT_URL,
   PLANNING_URL,
-  MULTI_PLANNING_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
 } from "@overbookd/web-page";

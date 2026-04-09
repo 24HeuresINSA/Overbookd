@@ -1,10 +1,4 @@
 import { Module } from "@nestjs/common";
-import { PrismaModule } from "../../../prisma.module";
-import { PrismaCreateFestivalTasks } from "./repository/create-festival-tasks.prisma";
-import { PrismaService } from "../../../prisma.service";
-import { PrismaPrepareFestivalTasks } from "./repository/prepare-festival-tasks.prisma";
-import { PrismaAdherents } from "./repository/adherents.prisma";
-import { PrismaFestivalActivities } from "./repository/festival-activities.prisma";
 import {
   AskForReviewTask,
   CreateFestivalTask,
@@ -15,16 +9,22 @@ import {
   ReviewTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
-import { PrismaFestivalTasksForRemoval } from "./repository/remove-festival-tasks.prisma";
-import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
-import { PrismaInquiries } from "./repository/inquiries.prisma";
-import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prisma";
-import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
-import { PrismaReviewers } from "./repository/reviewers.prisma";
+import { PrismaModule } from "../../../prisma.module";
+import { PrismaService } from "../../../prisma.service";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
 import { PrismaNotifications } from "../../common/repository/notifications.prisma";
-import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
+import { PrismaAdherents } from "./repository/adherents.prisma";
+import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
+import { PrismaCreateFestivalTasks } from "./repository/create-festival-tasks.prisma";
 import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignment-festival-tasks.prisma";
+import { PrismaFestivalActivities } from "./repository/festival-activities.prisma";
+import { PrismaInquiries } from "./repository/inquiries.prisma";
+import { PrismaPrepareFestivalTasks } from "./repository/prepare-festival-tasks.prisma";
+import { PrismaFestivalTasksForRemoval } from "./repository/remove-festival-tasks.prisma";
+import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
+import { PrismaReviewers } from "./repository/reviewers.prisma";
+import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
+import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prisma";
 
 @Module({
   providers: [

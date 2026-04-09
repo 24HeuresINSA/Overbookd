@@ -114,11 +114,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableHeaders } from "~/utils/vuetify/component-props";
-import { type Signage, type SignageType, signageTypes } from "@overbookd/signa";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import { type Signage, type SignageType, signageTypes } from "@overbookd/signa";
 import { SlugifyService } from "@overbookd/slugify";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const userStore = useUserStore();
 const catalogSignageStore = useCatalogSignageStore();

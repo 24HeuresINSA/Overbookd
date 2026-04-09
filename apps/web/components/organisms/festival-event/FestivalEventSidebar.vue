@@ -118,19 +118,17 @@
 
 <script lang="ts" setup>
 import {
+  canIgnoreFestivalTaskAs,
+  isActivityReviewer,
+  isDraft,
+  isRefused,
+  isTaskReviewer,
   type FestivalActivity,
   type FestivalEventIdentifier,
   type FestivalTaskWithConflicts as FestivalTask,
-  canIgnoreFestivalTaskAs,
-  isActivityReviewer,
-  isTaskReviewer,
-  isDraft,
-  isRefused,
   type Reviewer,
   type ReviewStatus,
 } from "@overbookd/festival-event";
-import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
-import type { Team } from "@overbookd/team";
 import {
   APPROVED,
   BROUILLON,
@@ -143,6 +141,8 @@ import {
   type Review,
   type StatusLabel,
 } from "@overbookd/festival-event-constants";
+import type { ReviewApproval, ReviewRejection } from "@overbookd/http";
+import type { Team } from "@overbookd/team";
 import {
   getActivityReviewerStatus,
   hasReviewerAlreadyDoneHisActivityReview,

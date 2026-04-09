@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  AreaLocation,
   PointLocation,
   RoadLocation,
-  AreaLocation,
 } from "@overbookd/geo-location";
 import {
-  ValidateIf,
   IsNotEmpty,
   IsObject,
-  IsString,
   IsOptional,
+  IsString,
+  ValidateIf,
 } from "class-validator";
 
 export class UpdateLocationRequestDto {

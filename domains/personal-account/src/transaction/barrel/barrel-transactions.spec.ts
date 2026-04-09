@@ -1,12 +1,12 @@
-import { beforeEach, describe, it, expect } from "vitest";
-import { BARREL, TransactionUser } from "../transaction";
-import { InMemoryBarrelTransactions } from "./barrel-transactions.inmemory";
-import { CreateBarrelTransactions } from "./create-barrel-transactions";
+import { beforeEach, describe, expect, it } from "vitest";
 import { ConfiguredBarrel } from "../../barrel-prices/define-barrel-price";
+import { BARREL, TransactionUser } from "../transaction";
 import {
   AtLeastOneInsufficientConsumption,
   NoConsumer,
 } from "../transaction.error";
+import { InMemoryBarrelTransactions } from "./barrel-transactions.inmemory";
+import { CreateBarrelTransactions } from "./create-barrel-transactions";
 
 const ambree: ConfiguredBarrel = {
   slug: "ambree",

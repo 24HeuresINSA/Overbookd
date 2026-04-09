@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { Adherents } from "./adherents.js";
-import { PersonalAccountAlerting } from "./personal-account-alerting.js";
-import { InMemoryAdhrents } from "./adherents.in-memory.js";
+import { beforeAll, describe, expect, it } from "vitest";
 import { CURRENT_BALANCE_MESSAGE } from "../balance/current-balance.constant.js";
 import { NEGATIVE_BALANCE } from "../in-debt/in-debt-alerting.constant.js";
+import { InMemoryAdhrents } from "./adherents.in-memory.js";
+import { Adherents } from "./adherents.js";
+import { PersonalAccountAlerting } from "./personal-account-alerting.js";
 
 const adherentWithCredit = { id: 1, balance: 13 };
 const adherentWithEmptyAccount = { id: 2, balance: 0 };

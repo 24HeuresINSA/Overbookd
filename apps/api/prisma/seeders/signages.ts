@@ -1,4 +1,4 @@
-import { AFFICHE, PANNEAU, BACHE, Signage } from "@overbookd/signa";
+import { AFFICHE, BACHE, PANNEAU, Signage } from "@overbookd/signa";
 
 type CreateSignage = Omit<Signage, "id">;
 

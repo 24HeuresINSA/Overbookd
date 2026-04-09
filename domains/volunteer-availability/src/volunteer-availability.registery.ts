@@ -1,7 +1,7 @@
-import { IProvidePeriod } from "@overbookd/time";
 import { updateItemToList } from "@overbookd/list";
-import { Availability } from "./volunteer-availability.js";
+import { IProvidePeriod } from "@overbookd/time";
 import { AvailabilityError } from "./volunteer-availability.error.js";
+import { Availability } from "./volunteer-availability.js";
 
 export class AvailabilityRegistery {
   private _availabilities: Availability[] = [];

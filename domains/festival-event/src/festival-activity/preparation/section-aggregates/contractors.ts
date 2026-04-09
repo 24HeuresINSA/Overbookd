@@ -1,10 +1,10 @@
+import { updateItemToList } from "@overbookd/list";
 import { ContractorNotFound } from "../../festival-activity.error.js";
+import { Contractor } from "../../sections/in-charge.js";
 import {
   PrepareContractorCreation,
   PrepareContractorUpdate,
 } from "../prepare-festival-activity.model.js";
-import { Contractor } from "../../sections/in-charge.js";
-import { updateItemToList } from "@overbookd/list";
 
 export class Contractors {
   private constructor(private readonly contractors: Contractor[]) {}

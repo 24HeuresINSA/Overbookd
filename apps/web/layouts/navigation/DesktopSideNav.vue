@@ -38,13 +38,13 @@
 </template>
 
 <script lang="ts" setup>
-import SideNavSearchField from "./SideNavSearchField.vue";
-import SideNavPageList from "./SideNavPageList.vue";
-import SideNavHelpItemList from "./SideNavHelpItemList.vue";
 import {
   shouldFlipContent,
   shouldUnflipContent,
 } from "~/utils/easter-egg/flip-content";
+import SideNavHelpItemList from "./SideNavHelpItemList.vue";
+import SideNavPageList from "./SideNavPageList.vue";
+import SideNavSearchField from "./SideNavSearchField.vue";
 
 const navigationBadgeStore = useNavigationBadgeStore();
 const layoutStore = useLayoutStore();

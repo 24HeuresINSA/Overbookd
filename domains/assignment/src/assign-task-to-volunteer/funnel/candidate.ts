@@ -1,4 +1,6 @@
 import { IProvidePeriod } from "@overbookd/time";
+import { retrieveImplicitTeams } from "../../candidate-teams.js";
+import { AssignableVolunteer } from "../assignable-volunteer.js";
 import {
   Assignment,
   isMemberOf,
@@ -12,8 +14,6 @@ import {
   Planning,
   PlanningEvent,
 } from "./planning.js";
-import { AssignableVolunteer } from "../assignable-volunteer.js";
-import { retrieveImplicitTeams } from "../../candidate-teams.js";
 
 type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
   friends: AssignableVolunteer[];

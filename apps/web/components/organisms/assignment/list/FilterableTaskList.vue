@@ -28,18 +28,18 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type TaskPriority,
-  TaskPriorities,
-} from "~/utils/assignment/task-priority";
+import type { TaskForAssignment } from "@overbookd/assignment";
 import { SlugifyService } from "@overbookd/slugify";
 import type { Team } from "@overbookd/team";
 import type { DisplayableCategory } from "~/utils/assignment/task-category";
 import {
+  TaskPriorities,
+  type TaskPriority,
+} from "~/utils/assignment/task-priority";
+import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
-import type { TaskForAssignment } from "@overbookd/assignment";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 

@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import {
   Adherent,
+  AdherentWithContribution,
   Contribution,
   EditContribution,
   PayContribution,
   PayContributionForm,
-  AdherentWithContribution,
 } from "@overbookd/contribution";
 import { Edition } from "@overbookd/time";
 

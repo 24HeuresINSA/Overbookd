@@ -6,12 +6,12 @@ import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { Planning } from "./domain/planning";
 import { PlanningService, PlanningVolunteers } from "./planning.service";
+import { PlanningRenderStrategy } from "./render/render-strategy";
 import { PrismaBreaks } from "./repository/breaks.prisma";
-import { PrismaTaskRepository } from "./repository/task.repository.prisma";
 import { PrismaPlanningVolunteers } from "./repository/planning-volunteers.prisma";
+import { PrismaTaskRepository } from "./repository/task.repository.prisma";
 import { SecretService } from "./secret.service";
 import { SubscriptionService } from "./subscription.service";
-import { PlanningRenderStrategy } from "./render/render-strategy";
 
 @Module({
   providers: [

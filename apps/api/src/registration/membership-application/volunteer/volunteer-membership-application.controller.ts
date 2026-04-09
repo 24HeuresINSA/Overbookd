@@ -1,13 +1,4 @@
 import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
-import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
-import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
-import {
   Body,
   Controller,
   Delete,
@@ -19,17 +10,26 @@ import {
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
+import { HasApplication, VolunteerCandidate } from "@overbookd/http";
+import { ENROLL_SOFT } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
-import { ENROLL_SOFT } from "@overbookd/permission";
-import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
-import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
-import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
 import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
-import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
+import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
+import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
+import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
+import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
 
 @Controller("registrations/membership-applications/volunteers")
 @ApiTags("registrations/membership-applications/volunteers")

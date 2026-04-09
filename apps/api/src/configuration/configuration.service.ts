@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
 import { Configuration, ConfigurationKey } from "@overbookd/configuration";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class ConfigurationService {

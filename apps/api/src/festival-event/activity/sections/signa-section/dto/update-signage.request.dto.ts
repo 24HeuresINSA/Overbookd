@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  PrepareSignageUpdate,
   SignageType,
   signageTypes,
-  PrepareSignageUpdate,
 } from "@overbookd/festival-event";
 import {
   IsEnum,

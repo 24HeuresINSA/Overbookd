@@ -1,26 +1,26 @@
 import { Module } from "@nestjs/common";
 import {
   CreateBarrelTransactions,
+  CreateExternalEventTransactions,
   CreateProvisionsTransactions,
   Deposit,
   Transfer,
 } from "@overbookd/personal-account";
-import { TransactionService } from "./transaction.service";
-import { TransactionController } from "./transaction.controller";
-import { PrismaService } from "../prisma.service";
-import { PrismaModule } from "../prisma.module";
-import { PrismaTransfers } from "./repository/transfers.prisma";
-import { PrismaTransferMembers } from "./repository/transfer-members.prisma";
-import { TransferService } from "./transfer.service";
-import { PrismaTransactions } from "./repository/transactions.prisma";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { PrismaDeposits } from "./repository/deposits.prisma";
-import { PrismaBarrels } from "./repository/barrels.prisma";
+import { PrismaModule } from "../prisma.module";
+import { PrismaService } from "../prisma.service";
 import { PrismaBarrelTransactions } from "./repository/barrel-transactions.prisma";
-import { PrismaProvisionsTransactions } from "./repository/provisions-transactions.prisma";
+import { PrismaBarrels } from "./repository/barrels.prisma";
+import { PrismaDeposits } from "./repository/deposits.prisma";
 import { PrismaExternalEventTransactions } from "./repository/external-event-transactions.prisma";
-import { CreateExternalEventTransactions } from "@overbookd/personal-account";
+import { PrismaProvisionsTransactions } from "./repository/provisions-transactions.prisma";
+import { PrismaTransactions } from "./repository/transactions.prisma";
+import { PrismaTransferMembers } from "./repository/transfer-members.prisma";
+import { PrismaTransfers } from "./repository/transfers.prisma";
+import { TransactionController } from "./transaction.controller";
+import { TransactionService } from "./transaction.service";
+import { TransferService } from "./transfer.service";
 
 @Module({
   controllers: [TransactionController],

@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { PersonalAccountController } from "./personal-account.controller";
-import { PrismaService } from "../prisma.service";
+import { DefineBarrelPrice } from "@overbookd/personal-account";
 import { PrismaModule } from "../prisma.module";
+import { PrismaService } from "../prisma.service";
+import { PersonalAccountController } from "./personal-account.controller";
 import { PersonalAccountService } from "./personal-account.service";
 import { PrismaBarrels } from "./repository/barrels.prisma";
-import { DefineBarrelPrice } from "@overbookd/personal-account";
 
 @Module({
   controllers: [PersonalAccountController],

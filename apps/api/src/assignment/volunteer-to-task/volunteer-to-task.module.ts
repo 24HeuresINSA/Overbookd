@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { AssignVolunteerToTask } from "@overbookd/assignment";
+import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
+import { PrismaAvailableAssignments } from "./repository/available-assignments.prisma";
 import { PrismaVolunteers } from "./repository/volunteers.prisma";
 import { VolunteerToTaskService } from "./volunteer-to-task.service";
-import { PrismaModule } from "../../prisma.module";
-import { PrismaAvailableAssignments } from "./repository/available-assignments.prisma";
 
 @Module({
   providers: [

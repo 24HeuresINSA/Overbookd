@@ -1,62 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { EndBeforeStart } from "@overbookd/time";
-import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
-import { PrepareFestivalTask } from "./prepare.js";
-import {
-  MobilizationAlreadyExist,
-  MobilizationNotFound,
-  SplitDurationIsNotPeriodDivider,
-} from "../festival-task.error.js";
-import {
-  friday11hfriday18hMobilization,
-  saturday11hsaturday18hMobilization,
-  noel,
-  saturday19h,
-  saturday10h,
-  friday19h,
-  saturday11h,
-  friday18hsaturday10hMobilization,
-  saturday18hsaturday19hMobilization,
-  friday10hfriday18hMobilization,
-  lea,
-  saturday08hsaturday11hMobilization,
-  saturday12h,
-  saturday09h,
-  saturday07h,
-  saturday08h,
-  leaAvailabilities,
-  noelAvailabilities,
-  george,
-  friday10hfriday11hMobilization,
-  friday9h,
-  requestGabMobilization,
-  gab,
-  saturday14h,
-} from "../festival-task.test-util.js";
-import {
-  gabIsAssignedTo,
-  installEscapeGame,
-  uninstallEscapeGame,
-} from "../festival-task.fake.js";
-import {
-  presentEscapeGame,
-  guardEscapeGame,
-  guardJustDance,
-  serveWaterOnJustDance,
-  installBarbecue,
-  uninstallBarbecue,
-  onlyApprovedByHumain,
-  onlyApprovedByMatos,
-  approvedByHumainRejectedByMatos,
-  approvedByHumainAndElecRejectedByMatos,
-  approvedByElecRejectedByMatos,
-  approvedByMatosRejectedByHumainAndElec,
-} from "../festival-task.fake.js";
-import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
-import { elec, humain, matos } from "../../common/review.js";
-import { AlreadyApprovedBy } from "../../common/review.error.js";
-import { isDraft } from "../../festival-event.js";
 import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
@@ -64,7 +5,64 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import { PERSONNE, HARD, VIEUX, CONFIANCE } from "@overbookd/team-constants";
+import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
+import { EndBeforeStart } from "@overbookd/time";
+import { beforeEach, describe, expect, it } from "vitest";
+import { AlreadyApprovedBy } from "../../common/review.error.js";
+import { elec, humain, matos } from "../../common/review.js";
+import { isDraft } from "../../festival-event.js";
+import {
+  MobilizationAlreadyExist,
+  MobilizationNotFound,
+  SplitDurationIsNotPeriodDivider,
+} from "../festival-task.error.js";
+import {
+  approvedByElecRejectedByMatos,
+  approvedByHumainAndElecRejectedByMatos,
+  approvedByHumainRejectedByMatos,
+  approvedByMatosRejectedByHumainAndElec,
+  gabIsAssignedTo,
+  guardEscapeGame,
+  guardJustDance,
+  installBarbecue,
+  installEscapeGame,
+  onlyApprovedByHumain,
+  onlyApprovedByMatos,
+  presentEscapeGame,
+  serveWaterOnJustDance,
+  uninstallBarbecue,
+  uninstallEscapeGame,
+} from "../festival-task.fake.js";
+import {
+  friday10hfriday11hMobilization,
+  friday10hfriday18hMobilization,
+  friday11hfriday18hMobilization,
+  friday18hsaturday10hMobilization,
+  friday19h,
+  friday9h,
+  gab,
+  george,
+  lea,
+  leaAvailabilities,
+  noel,
+  noelAvailabilities,
+  requestGabMobilization,
+  saturday07h,
+  saturday08h,
+  saturday08hsaturday11hMobilization,
+  saturday09h,
+  saturday10h,
+  saturday11h,
+  saturday11hsaturday18hMobilization,
+  saturday12h,
+  saturday14h,
+  saturday18hsaturday19hMobilization,
+  saturday19h,
+} from "../festival-task.test-util.js";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
+import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PrepareFestivalTask } from "./prepare.js";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;

@@ -7,9 +7,9 @@ import {
   UpdateMobilization,
   Volunteer,
 } from "@overbookd/festival-event";
-import { Adherents } from "../../common/festival-task-common.model";
 import { AddMobilizationForm } from "@overbookd/http";
 import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
+import { Adherents } from "../../common/festival-task-common.model";
 
 @Injectable()
 export class MobilizationSectionService {

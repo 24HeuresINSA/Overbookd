@@ -1,14 +1,14 @@
-import { PrismaService } from "../../../prisma.service";
-import { DashboardGears, GearRequirementForCsv } from "../dashboard.service";
-import { SELECT_DASHBOARD_GEAR } from "./dashboard.query";
-import { DashboardGear } from "../domain/dashboard-gear";
-import { Period } from "@overbookd/time";
 import {
   GearPreview,
   GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
+import { Period } from "@overbookd/time";
+import { PrismaService } from "../../../prisma.service";
 import { GearFilter } from "../../common/gear.filter";
+import { DashboardGears, GearRequirementForCsv } from "../dashboard.service";
+import { DashboardGear } from "../domain/dashboard-gear";
+import { SELECT_DASHBOARD_GEAR } from "./dashboard.query";
 
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}

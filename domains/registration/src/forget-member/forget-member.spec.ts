@@ -1,10 +1,5 @@
 import { ONE_DAY_IN_MS } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
-import { ForgetMember } from "./forget-member.js";
-import {
-  StoredMember,
-  InMemoryMemberRepository,
-} from "./member-repository.inmemory.js";
 import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member.js";
 import {
   ALREADY_HAVE_TRANSACTIONS,
@@ -14,6 +9,11 @@ import {
   I_M_IN_DEBT_ERROR_MESSAGE,
   WRONG_CREDENTIALS_ERROR_MESSAGE,
 } from "./forget-member.error.js";
+import { ForgetMember } from "./forget-member.js";
+import {
+  InMemoryMemberRepository,
+  StoredMember,
+} from "./member-repository.inmemory.js";
 
 const withTaskMember: StoredMember = {
   id: 1,

@@ -7,14 +7,14 @@ import {
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import {
+  FestivalTaskBuilder,
+  ReadyToReviewBuilder,
+} from "./festival-task.builder";
+import {
   FestivalTaskQueryBuilder,
   SELECT_FESTIVAL_TASK,
   buildFestivalTaskCondition,
 } from "./festival-task.query";
-import {
-  FestivalTaskBuilder,
-  ReadyToReviewBuilder,
-} from "./festival-task.builder";
 
 export class PrimsaEnableAssignmentFestivalTasks implements FestivalTasksForEnableAssignment {
   constructor(private readonly prisma: PrismaService) {}

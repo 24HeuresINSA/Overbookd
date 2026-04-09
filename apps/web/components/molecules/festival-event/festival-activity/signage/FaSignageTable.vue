@@ -63,9 +63,9 @@
 <script lang="ts" setup>
 import {
   type Signage as FaSignage,
-  type SignageCatalogItem,
   type FestivalActivity,
   isDraft,
+  type SignageCatalogItem,
 } from "@overbookd/festival-event";
 import { APPROVED } from "@overbookd/festival-event-constants";
 import type { Signage as CatalogSignage } from "@overbookd/signa";

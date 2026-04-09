@@ -5,8 +5,8 @@ import {
   NewcomerRepository,
   RegistrationTeamCode,
 } from "@overbookd/registration";
-import { PrismaService } from "../../../prisma.service";
 import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
+import { PrismaService } from "../../../prisma.service";
 
 export class PrismaNewcomerRepository implements NewcomerRepository {
   constructor(

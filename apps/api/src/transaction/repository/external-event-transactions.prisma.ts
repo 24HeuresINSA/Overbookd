@@ -2,11 +2,11 @@ import {
   EXTERNAL_EVENT,
   ExternalEventTransaction,
   ExternalEventTransactionForm,
+  ExternalEventTransactions,
 } from "@overbookd/personal-account";
+import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_BASE_TRANSACTION } from "./transaction.query";
-import { SELECT_USER_IDENTIFIER } from "../../common/query/user.query";
-import { ExternalEventTransactions } from "@overbookd/personal-account";
 
 export class PrismaExternalEventTransactions implements ExternalEventTransactions {
   constructor(private readonly prisma: PrismaService) {}

@@ -4,12 +4,12 @@ import {
   FestivalTasksForPrepare,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
+import { FestivalTaskBuilder } from "./festival-task.builder";
 import {
   FestivalTaskQueryBuilder,
   SELECT_FESTIVAL_TASK,
   buildFestivalTaskCondition,
 } from "./festival-task.query";
-import { FestivalTaskBuilder } from "./festival-task.builder";
 
 export class PrismaPrepareFestivalTasks implements FestivalTasksForPrepare {
   constructor(private prisma: PrismaService) {}

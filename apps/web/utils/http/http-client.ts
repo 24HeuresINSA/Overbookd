@@ -1,5 +1,5 @@
 import { JSON } from "@overbookd/http";
-import type { RequestGeneral, RequestOptions, HttpResponse } from "./api-fetch";
+import type { HttpResponse, RequestGeneral, RequestOptions } from "./api-fetch";
 import { apiFetch } from "./api-fetch";
 import { HttpParams, type Params } from "./http-param";
 

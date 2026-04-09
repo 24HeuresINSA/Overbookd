@@ -1,42 +1,42 @@
 import {
-  UseFilters,
+  Body,
   Controller,
-  UseGuards,
-  Patch,
+  Delete,
+  HttpCode,
   Param,
   ParseIntPipe,
-  Body,
+  Patch,
   Post,
-  HttpCode,
-  Delete,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
-  ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
   ApiBody,
+  ApiExtraModels,
   ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { ElectricitySupply, FestivalActivity } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
+import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
-import { UpdateElectricitySupplyRequestDto } from "./dto/update-electricity-supply.request.dto";
 import { AddElectricitySupplyRequestDto } from "./dto/add-electricity-supply.request.dto";
+import { UpdateElectricitySupplyRequestDto } from "./dto/update-electricity-supply.request.dto";
 import { SupplyRequestDto } from "./dto/update-supply.request.dto";
 import { SupplySectionService } from "./supply-section.service";
-import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

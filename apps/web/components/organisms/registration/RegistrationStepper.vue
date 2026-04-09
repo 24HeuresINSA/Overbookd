@@ -262,32 +262,32 @@
 </template>
 
 <script lang="ts" setup>
+import { navigateTo } from "#app";
 import {
+  type Membership,
   RegisterForm,
-  type RegistrationTeams,
   REGISTRATION_TEAM_CODES,
   type RegistrationTeamCode,
-  type Membership,
+  type RegistrationTeams,
   shouldSignVolunteerCharter,
   STAFF,
   VOLUNTEER,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
+import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import { loginAndApplyForMembership } from "~/utils/login.utils";
+import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import {
-  required,
-  minDate,
-  maxDate,
   isEmail,
   isInsaEmail,
   isMobilePhoneNumber,
-  password as passwordRule,
   isSame,
+  maxDate,
   maxLength,
+  minDate,
+  password as passwordRule,
+  required,
 } from "~/utils/rules/input.rules";
-import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
-import { navigateTo } from "#app";
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();

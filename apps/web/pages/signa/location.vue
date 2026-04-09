@@ -99,8 +99,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { SignaLocation } from "@overbookd/signa";
 import { MANAGE_LOCATION } from "@overbookd/permission";
+import type { SignaLocation } from "@overbookd/signa";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   type Searchable,

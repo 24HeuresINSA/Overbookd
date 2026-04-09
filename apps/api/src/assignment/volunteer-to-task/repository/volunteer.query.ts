@@ -1,8 +1,10 @@
+import { AssignmentPreferenceType } from "@overbookd/preference";
 import { IProvidePeriod } from "@overbookd/time";
+import { User } from "@overbookd/user";
 import {
-  COUNT_FRIENDS,
-  DatabaseFriendCount,
-} from "../../common/repository/friend.query";
+  SELECT_USER_DATA_FOR_CHARISMA,
+  UserDataForCharisma,
+} from "../../../common/query/charisma.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import {
   SELECT_TEAMS_CODE,
@@ -10,11 +12,9 @@ import {
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
 import {
-  SELECT_USER_DATA_FOR_CHARISMA,
-  UserDataForCharisma,
-} from "../../../common/query/charisma.query";
-import { User } from "@overbookd/user";
-import { AssignmentPreferenceType } from "@overbookd/preference";
+  COUNT_FRIENDS,
+  DatabaseFriendCount,
+} from "../../common/repository/friend.query";
 
 const SELECT_VOLUNTEER = {
   ...SELECT_USER_IDENTIFIER,

@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { MembershipApplicationError } from "@overbookd/registration";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { RouteLogger } from "../../../route-logger";
 
 @Catch(MembershipApplicationError)

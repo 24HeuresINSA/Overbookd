@@ -44,19 +44,19 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  minLength,
-  required,
-  isImageSizeWithinLimit,
-  isSupportedImageFile,
-} from "~/utils/rules/input.rules";
+import { IMAGE_EXTENSIONS } from "@overbookd/http";
 import {
   type SignageForm,
   type SignageType,
   signageTypes,
 } from "@overbookd/signa";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
-import { IMAGE_EXTENSIONS } from "@overbookd/http";
+import {
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
+  minLength,
+  required,
+} from "~/utils/rules/input.rules";
 
 const catalogSignageStore = useCatalogSignageStore();
 

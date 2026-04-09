@@ -1,6 +1,6 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { DisplayableAssignment } from "@overbookd/http";
 import { AssignmentIdentifierResponseDto } from "./assignment-identifier.response.dto";
-import { ApiProperty } from "@nestjs/swagger";
 
 export class DisplayableAssignmentResponseDto
   extends AssignmentIdentifierResponseDto

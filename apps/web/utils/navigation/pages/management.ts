@@ -7,7 +7,6 @@ import {
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
-import type { PageInSummary } from "./summary-pages";
 import {
   ASSIGNMENT_ORGA_TASK_URL,
   ASSIGNMENT_TASK_ORGA_URL,
@@ -22,6 +21,7 @@ import {
   SG_URL,
   TRANSACTIONS_URL,
 } from "@overbookd/web-page";
+import type { PageInSummary } from "./summary-pages";
 
 const CONFIGURATION_PAGE: PageInSummary = {
   icon: "mdi-cog",

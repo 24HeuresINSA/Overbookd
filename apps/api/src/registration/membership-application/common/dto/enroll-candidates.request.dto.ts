@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDefined } from "class-validator";
 import {
-  EnrollCandidatesForm,
   CandidateToEnroll,
+  EnrollCandidatesForm,
 } from "@overbookd/registration";
+import { IsArray, IsDefined } from "class-validator";
 
 class CandidateToEnrollDto implements CandidateToEnroll {
   @ApiProperty({ required: true })

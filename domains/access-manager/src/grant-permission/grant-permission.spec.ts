@@ -1,4 +1,5 @@
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
+import { HARD } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryEvents } from "./events.inmemory";
 import {
@@ -9,7 +10,6 @@ import {
   TeamNotFound,
 } from "./grant-permission";
 import { InMemoryTeams } from "./teams.inmemory";
-import { HARD } from "@overbookd/team-constants";
 
 const hard: Team = { code: HARD, permissions: [READ_FA] };
 let teams: InMemoryTeams;

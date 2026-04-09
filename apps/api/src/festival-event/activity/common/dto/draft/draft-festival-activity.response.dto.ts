@@ -1,20 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   Draft,
-  InquiryWithPotentialRequests,
   Feedback,
+  InquiryWithPotentialRequests,
   FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
-import { KeyEventResponseDto } from "../key-event.response.dto";
-import { GeneralDto, General } from "./draft-general.response.dto";
-import { InChargeDto, InCharge } from "./draft-in-charge.response.dto";
-import { SignaDto, Signa } from "./draft-signa.response.dto";
-import { SecurityDto, Security } from "./draft-security.response.dto";
-import { SupplyDto, Supply } from "./draft-supply.response.dto";
-import { InquiryDto } from "./draft-inquiry.response.dto";
 import { FestivalTaskResponseDto } from "../festival-task.response.dto";
+import { KeyEventResponseDto } from "../key-event.response.dto";
+import { General, GeneralDto } from "./draft-general.response.dto";
+import { InCharge, InChargeDto } from "./draft-in-charge.response.dto";
+import { InquiryDto } from "./draft-inquiry.response.dto";
+import { Security, SecurityDto } from "./draft-security.response.dto";
+import { Signa, SignaDto } from "./draft-signa.response.dto";
+import { Supply, SupplyDto } from "./draft-supply.response.dto";
 
 export class DraftFestivalActivityResponseDto implements Draft {
   @ApiProperty()

@@ -63,13 +63,13 @@
 <script lang="ts" setup>
 import type { CharismaEventParticipation } from "@overbookd/charisma";
 import { SlugifyService } from "@overbookd/slugify";
-import { buildUserNameWithNickname } from "@overbookd/user";
 import { formatDate } from "@overbookd/time";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { buildUserNameWithNickname } from "@overbookd/user";
 import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const charismaEventStore = useCharismaEventStore();
 const layoutStore = useLayoutStore();

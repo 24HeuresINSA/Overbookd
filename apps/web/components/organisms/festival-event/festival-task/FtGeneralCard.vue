@@ -37,10 +37,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
+import type { FestivalTask } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
-import type { FestivalTask } from "@overbookd/festival-event";
+import { useDebounceFn } from "@vueuse/core";
 import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 

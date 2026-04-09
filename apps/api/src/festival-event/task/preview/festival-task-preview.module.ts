@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { FestivalTaskPreviewService } from "./festival-task-preview.service";
 import { ViewFestivalTask } from "@overbookd/festival-event";
 import { FestivalTaskCommonModule } from "../common/festival-task-common.module";
+import { FestivalTaskPreviewService } from "./festival-task-preview.service";
 
 @Module({
   providers: [

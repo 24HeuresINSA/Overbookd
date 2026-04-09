@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  AreaLocation,
   PointLocation,
   RoadLocation,
-  AreaLocation,
 } from "@overbookd/geo-location";
 import { SignaLocation } from "@overbookd/signa";
 

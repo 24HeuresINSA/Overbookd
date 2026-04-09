@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { POINT, ROAD, AREA } from "@overbookd/geo-location";
+import { AREA, POINT, ROAD } from "@overbookd/geo-location";
 import { type SignaLocation, filterLocation } from "@overbookd/signa";
 import {
   type MapConfiguration,

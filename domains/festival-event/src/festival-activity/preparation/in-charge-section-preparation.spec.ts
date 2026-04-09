@@ -1,18 +1,18 @@
+import { VIEUX } from "@overbookd/team-constants";
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
+import { humain } from "../../common/review.js";
+import { ContractorNotFound } from "../festival-activity.error.js";
+import { lea } from "../festival-activity.fake";
+import { george, lafarge } from "../festival-activity.fake.js";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import {
+  approvedByHumain,
   escapeGame,
   justDance,
   pcSecurite,
-  approvedByHumain,
 } from "./preparation.test-utils.js";
-import { george, lafarge } from "../festival-activity.fake.js";
-import { lea } from "../festival-activity.fake";
-import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
-import { ContractorNotFound } from "../festival-activity.error.js";
-import { humain } from "../../common/review.js";
+import { PrepareFestivalActivity } from "./prepare-festival-activity.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { VIEUX } from "@overbookd/team-constants";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

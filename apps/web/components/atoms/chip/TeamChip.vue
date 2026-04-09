@@ -31,8 +31,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PERSONNE } from "@overbookd/team-constants";
 import type { Team } from "@overbookd/team";
+import { PERSONNE } from "@overbookd/team-constants";
 
 const { team, size, withName, showHidden, closable, clickable, prefix } =
   defineProps({

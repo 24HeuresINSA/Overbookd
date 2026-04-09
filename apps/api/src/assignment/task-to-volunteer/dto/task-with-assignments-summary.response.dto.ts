@@ -1,12 +1,12 @@
+import { ApiProperty } from "@nestjs/swagger";
 import {
   AssignmentSummary,
   AssignmentTeam,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
-import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
-import { ApiProperty } from "@nestjs/swagger";
 import { AssignmentIdentifierResponseDto } from "../../common/dto/assignment-identifier.response.dto";
 import { AssignmentTeamResponseDto } from "../../common/dto/assignment-team.response.dto";
+import { TaskIdentifierResponseDto } from "./task-identifier.response.dto";
 
 class AssignmentSummaryResponseDto
   extends AssignmentIdentifierResponseDto

@@ -1,8 +1,8 @@
-import { MyUserInformation, UserPersonalData } from "@overbookd/user";
-import { TeamWithNestedPermissions } from "../team/utils/permissions";
-import { WithTransactionsForBalance } from "../common/query/transaction.query";
-import { UserDataForCharisma } from "../common/query/charisma.query";
 import { Membership } from "@overbookd/registration";
+import { MyUserInformation, UserPersonalData } from "@overbookd/user";
+import { UserDataForCharisma } from "../common/query/charisma.query";
+import { WithTransactionsForBalance } from "../common/query/transaction.query";
+import { TeamWithNestedPermissions } from "../team/utils/permissions";
 
 export type UserPasswordOnly = {
   password: string;

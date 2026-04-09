@@ -1,4 +1,4 @@
-import type { UserCredentials, UserAccess } from "@overbookd/http";
+import type { UserAccess, UserCredentials } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class AuthRepository {

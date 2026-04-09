@@ -1,22 +1,22 @@
-import { Draft } from "../festival-activity.js";
-import { getFactory } from "../festival-activity.factory.js";
-import {
-  friday09hToMonday08h,
-  saturday19hToSunday01h,
-  robocop,
-  dixCadenasPompier,
-  uneBouilloire,
-  faker,
-  uneMultiprise,
-  agora,
-  local24h,
-  george,
-} from "../festival-activity.fake.js";
 import {
   APPROVED,
   REJECTED,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { getFactory } from "../festival-activity.factory.js";
+import {
+  agora,
+  dixCadenasPompier,
+  faker,
+  friday09hToMonday08h,
+  george,
+  local24h,
+  robocop,
+  saturday19hToSunday01h,
+  uneBouilloire,
+  uneMultiprise,
+} from "../festival-activity.fake.js";
+import { Draft } from "../festival-activity.js";
 
 const factory = getFactory();
 

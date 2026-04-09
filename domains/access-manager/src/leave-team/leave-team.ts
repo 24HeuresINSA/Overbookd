@@ -1,6 +1,6 @@
 import { Event } from "@overbookd/event";
-import { AccessManagerError } from "../access-manager.error";
 import { ADMIN } from "@overbookd/team-constants";
+import { AccessManagerError } from "../access-manager.error";
 
 export class AdminUnassignmentError extends AccessManagerError {
   constructor() {

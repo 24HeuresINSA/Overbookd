@@ -1,5 +1,6 @@
 import { Item } from "@overbookd/list";
 import { IProvidePeriod } from "@overbookd/time";
+import { FestivalTaskError } from "./festival-task.error.js";
 import {
   Draft,
   FestivalTask,
@@ -11,7 +12,6 @@ import {
 } from "./festival-task.js";
 import { Volunteer } from "./sections/instructions.js";
 import { Conflicts } from "./sections/mobilizations.js";
-import { FestivalTaskError } from "./festival-task.error.js";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;

@@ -3,16 +3,16 @@ import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { GeoLocation } from "@overbookd/geo-location";
 import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
-import { PrismaService } from "../../../prisma.service";
 import { buildUserName } from "@overbookd/user";
-import { TaskRepository } from "../domain/planning";
-import { JsonStoredTask } from "../domain/storedTask";
-import { JsonValue } from "../../../generated/prisma/internal/prismaNamespace";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import {
   SELECT_PERIOD,
   SELECT_PERIOD_WITH_ID,
 } from "../../../common/query/period.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { JsonValue } from "../../../generated/prisma/internal/prismaNamespace";
+import { PrismaService } from "../../../prisma.service";
+import { TaskRepository } from "../domain/planning";
+import { JsonStoredTask } from "../domain/storedTask";
 
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {

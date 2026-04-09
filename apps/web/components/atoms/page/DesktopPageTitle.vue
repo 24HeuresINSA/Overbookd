@@ -23,8 +23,8 @@
 
 <script lang="ts" setup>
 import { isPageURL } from "@overbookd/web-page";
-import { type Page, HOME_PAGE } from "~/utils/navigation/pages/summary-pages";
 import { findPage } from "~/utils/navigation/find-page.utils";
+import { type Page, HOME_PAGE } from "~/utils/navigation/pages/summary-pages";
 
 const route = useRoute();
 const preferenceStore = usePreferenceStore();

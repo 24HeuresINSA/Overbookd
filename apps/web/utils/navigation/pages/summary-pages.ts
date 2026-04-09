@@ -5,6 +5,13 @@ import {
   CHARTER_SUMMARY_PAGES,
   VOLUNTEER_CHARTER_PAGE,
 } from "./charter";
+import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
+import {
+  FESTIVAL_EVENT_PAGES,
+  FESTIVAL_EVENT_SUMMARY_PAGES,
+} from "./festival-event";
+import { LOGISTIC_PAGES, LOGISTIC_SUMMARY_PAGES } from "./logistic";
+import { MANAGEMENT_SUMMARY_PAGES } from "./management";
 import {
   AVAILABILITIES_PAGE,
   MY_PERSONAL_ACCOUNT_PAGE,
@@ -14,13 +21,6 @@ import {
   VOLUNTEER_SUMMARY_PAGES,
   VOLUNTEERS_PAGE,
 } from "./volunteer";
-import {
-  FESTIVAL_EVENT_PAGES,
-  FESTIVAL_EVENT_SUMMARY_PAGES,
-} from "./festival-event";
-import { MANAGEMENT_SUMMARY_PAGES } from "./management";
-import { LOGISTIC_PAGES, LOGISTIC_SUMMARY_PAGES } from "./logistic";
-import { CURRENT_EVENT_SUMMARY_PAGES } from "./current-event";
 
 export type PageInSummary = {
   icon: string;

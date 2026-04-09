@@ -37,13 +37,13 @@
 </template>
 
 <script lang="ts" setup>
-import { OverDate } from "@overbookd/time";
 import {
   MIDI,
   SOIR,
-  type Moment,
   type MealDate,
+  type Moment,
 } from "@overbookd/personal-account";
+import { OverDate } from "@overbookd/time";
 
 const mealSharingStore = useMealSharingStore();
 

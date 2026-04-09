@@ -94,11 +94,11 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
-  compareVolunteersOnNames,
   compareVolunteersOnAssignment,
+  compareVolunteersOnNames,
 } from "~/utils/sort/sort-stats.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const MAX_PLANNING_DOWNLOAD_IN_PARALLEL = 50;
 

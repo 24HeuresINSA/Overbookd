@@ -1,11 +1,11 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { SlugifyService as Slugify } from "@overbookd/slugify";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { InMemoryBarrels } from "./barrels.inmemory";
 import { ConfiguredBarrel, DefineBarrelPrice } from "./define-barrel-price";
 import {
   BarrelNotConfigured,
   SimilarBarrelExist,
 } from "./define-barrel-price.error";
-import { InMemoryBarrels } from "./barrels.inmemory";
 
 const ambree = {
   drink: "Ambrée",

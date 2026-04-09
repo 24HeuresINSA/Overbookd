@@ -99,8 +99,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/team";
-import { WRITE_FA } from "@overbookd/permission";
+import {
+  FESTIVAL_ACTIVITY_APPROVED,
+  FESTIVAL_ACTIVITY_CREATED,
+  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
+} from "@overbookd/domain-events";
 import type {
   FestivalActivity,
   PreviewFestivalActivity,
@@ -110,34 +114,32 @@ import {
   statusLabels,
   type Status,
 } from "@overbookd/festival-event-constants";
+import { WRITE_FA } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
-import { type User, buildUserName } from "@overbookd/user";
+import type { Team } from "@overbookd/team";
+import { buildUserName, type User } from "@overbookd/user";
+import { FA_URL } from "@overbookd/web-page";
+import { useLiveNotification } from "~/composable/useLiveNotification";
 import {
   type ActivityFilters,
   type ActivityReviewsFilter,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
-import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.utils";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
 import {
-  keepMatchingSearchCriteria,
-  type Searchable,
-} from "~/utils/search/search.utils";
-import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+  getPreviewReviewStatus,
+  isDraftPreview,
+} from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import {
   openActivityFromDataTable,
   openActivityInNewTabFromDataTable,
 } from "~/utils/festival-event/open-page";
-import { useLiveNotification } from "~/composable/useLiveNotification";
-import {
-  FESTIVAL_ACTIVITY_CREATED,
-  FESTIVAL_ACTIVITY_READY_TO_REVIEW,
-  FESTIVAL_ACTIVITY_APPROVED,
-  FESTIVAL_ACTIVITY_REJECTED,
-} from "@overbookd/domain-events";
-import { FA_URL } from "@overbookd/web-page";
-import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
-import { ITEMS_PER_PAGE_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import {
+  keepMatchingSearchCriteria,
+  type Searchable,
+} from "~/utils/search/search.utils";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { DEFAULT_ITEMS_PER_PAGE } from "~/utils/vuetify/component-props";
 
 useHead({ title: "Fiches Activités" });
 

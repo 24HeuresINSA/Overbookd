@@ -1,11 +1,11 @@
-import { updateItemToList } from "@overbookd/list";
-import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import type {
   InventoryGroupedRecord,
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
-import { isHttpError } from "~/utils/http/http-error.utils";
+import { updateItemToList } from "@overbookd/list";
+import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
   groupedRecords: InventoryGroupedRecord[];

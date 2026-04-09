@@ -1,30 +1,29 @@
-import { Response } from "express";
 import {
-  UseFilters,
   Controller,
-  UseGuards,
   Get,
-  Res,
-  Logger,
   HttpException,
-  Request,
+  Logger,
   Query,
+  Request,
+  Res,
+  UseFilters,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiTags,
   ApiExtraModels,
-  ApiResponse,
-  getSchemaPath,
   ApiProduces,
   ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
-  PreviewForSecurity,
-  PreviewForCommunication,
   CSV,
+  PreviewForCommunication,
   PreviewForLogistic,
+  PreviewForSecurity,
 } from "@overbookd/http";
 import {
   EXPORT_FOR_SIGNA,
@@ -33,22 +32,23 @@ import {
   VIEW_FA_GEAR_DASHBOARD,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
+import { Response } from "express";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../../app.controller";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { PreviewForCommunicationResponseDto } from "./dto/for-communication-preview.response.dto";
+import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
 import { PreviewForSecurityResponseDto } from "./dto/for-security-preview.response.dto";
+import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
+import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft.response.dto";
+import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-review.response.dto";
 import { RefusedPreviewFestivalActivityResponseDto } from "./dto/preview-refused.response.dto";
 import { ValidatedPreviewFestivalActivityResponseDto } from "./dto/preview-validated.response.dto";
-import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-review.response.dto";
-import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft.response.dto";
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
-import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
-import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
-import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")

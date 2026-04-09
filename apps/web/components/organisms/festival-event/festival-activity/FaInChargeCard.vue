@@ -40,12 +40,12 @@
 
 <script lang="ts" setup>
 import type {
+  Contractor,
   FestivalActivity,
   PrepareContractorCreation,
-  Contractor,
 } from "@overbookd/festival-event";
-import type { User } from "@overbookd/user";
 import type { Team } from "@overbookd/team";
+import type { User } from "@overbookd/user";
 import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 

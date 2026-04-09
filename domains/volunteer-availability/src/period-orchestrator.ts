@@ -1,5 +1,5 @@
-import { IProvidePeriod, Period } from "@overbookd/time";
 import { updateItemToList } from "@overbookd/list";
+import { IProvidePeriod, Period } from "@overbookd/time";
 import { Availability } from "./volunteer-availability.js";
 
 export type PeriodWithError = IProvidePeriod & {

@@ -2,8 +2,8 @@ import { OverDate } from "../date/date.js";
 import { ONE_DAY_IN_MS } from "../duration/duration.constant.js";
 import { Duration } from "../duration/duration.js";
 import {
-  EndBeforeStart,
   END_BEFORE_START_ERROR_MESSAGE,
+  EndBeforeStart,
   ErrorMessage,
   NO_DURATION_ERROR_MESSAGE,
 } from "./period.error.js";

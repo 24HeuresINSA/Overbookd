@@ -28,9 +28,9 @@
 <script lang="ts" setup>
 import {
   type FestivalActivity,
-  type Signage,
   type Location,
   type PrepareSignageCreation,
+  type Signage,
 } from "@overbookd/festival-event";
 import { SIGNALETIQUE_EMAIL } from "~/utils/mail/mail.constant";
 

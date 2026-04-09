@@ -1,6 +1,6 @@
-import { AboutMeal } from "./meals.model.js";
-import { MealDate } from "./meal-sharing.js";
 import { OverDate, formatDateDayToHumanReadable } from "@overbookd/time";
+import { MealDate } from "./meal-sharing.js";
+import { AboutMeal } from "./meals.model.js";
 
 export class Meal implements AboutMeal {
   private constructor(

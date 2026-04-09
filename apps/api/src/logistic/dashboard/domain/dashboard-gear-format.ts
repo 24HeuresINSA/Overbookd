@@ -1,6 +1,6 @@
 import { CSVBuilder } from "@overbookd/csv";
-import { GearRequirementForCsv } from "../dashboard.service";
 import { formatDateWithMinutes } from "@overbookd/time";
+import { GearRequirementForCsv } from "../dashboard.service";
 
 export class DashboardGearFormat {
   private constructor() {}

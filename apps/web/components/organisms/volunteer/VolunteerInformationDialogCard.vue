@@ -171,19 +171,25 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/team";
 import {
   AFFECT_VOLUNTEER,
   MANAGE_ADMINS,
   MANAGE_USERS,
   VIEW_PLANNING,
 } from "@overbookd/permission";
+import type { AssignmentPreferenceType } from "@overbookd/preference";
+import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
+import type { Team } from "@overbookd/team";
+import { ADMIN, HARD } from "@overbookd/team-constants";
+import { formatLocalDate } from "@overbookd/time";
 import {
   type User,
   type UserPersonalData,
   buildUserName,
   buildUserNameWithNickname,
 } from "@overbookd/user";
+import { PLANNING_URL } from "@overbookd/web-page";
+import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import {
   isEmail,
   isInsaEmail,
@@ -195,12 +201,6 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { formatLocalDate } from "@overbookd/time";
-import { ADMIN, HARD } from "@overbookd/team-constants";
-import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
-import type { AssignmentPreferenceType } from "@overbookd/preference";
-import { PLANNING_URL } from "@overbookd/web-page";
-import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
 
 const userStore = useUserStore();
 const teamStore = useTeamStore();

@@ -16,11 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { IProvidePeriod } from "@overbookd/time";
-import {
-  createCalendarEvent,
-  type CalendarEvent,
-} from "~/utils/calendar/event";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import type {
   AssignmentStat,
@@ -28,11 +23,16 @@ import type {
   DisplayableAssignment,
   PlanningTask,
 } from "@overbookd/http";
-import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
-import { toCalendarBreak } from "~/domain/common/break-events";
+import type { IProvidePeriod } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
+import { toCalendarBreak } from "~/domain/common/break-events";
+import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
+import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
+import {
+  createCalendarEvent,
+  type CalendarEvent,
+} from "~/utils/calendar/event";
 
 const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();

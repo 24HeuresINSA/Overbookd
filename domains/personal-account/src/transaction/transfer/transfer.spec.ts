@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { InMemoryTransfers } from "./transfers.inmemory.js";
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
+import { beforeEach, describe, expect, it } from "vitest";
+import { Payor } from "./payor.js";
+import { InMemoryTransferMembers } from "./transfer-members.inmemory.js";
 import {
   AmountTooHigh,
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
@@ -10,9 +11,8 @@ import {
   PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
 } from "./transfer.error.js";
-import { Payor } from "./payor.js";
-import { InMemoryTransferMembers } from "./transfer-members.inmemory.js";
 import { Transfer } from "./transfer.js";
+import { InMemoryTransfers } from "./transfers.inmemory.js";
 
 const lea = {
   id: 1,

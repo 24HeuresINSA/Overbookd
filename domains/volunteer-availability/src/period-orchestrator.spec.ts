@@ -1,6 +1,6 @@
+import { Period } from "@overbookd/time";
 import { beforeEach, describe, expect, it } from "vitest";
 import { PeriodOrchestrator } from "./period-orchestrator.js";
-import { Period } from "@overbookd/time";
 
 describe("Period orchestrator", () => {
   describe("when there is no existing period", () => {

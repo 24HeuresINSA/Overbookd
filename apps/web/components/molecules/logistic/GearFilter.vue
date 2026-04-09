@@ -21,9 +21,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type { CatalogCategory, GearSearchOptions } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
+import { useDebounceFn } from "@vueuse/core";
 
 const emit = defineEmits(["update:search", "update:options"]);
 

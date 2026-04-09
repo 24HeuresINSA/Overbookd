@@ -1,16 +1,16 @@
 import { GearDetails, GearPreview } from "@overbookd/http";
-import { DatabaseDashboardGear } from "../repository/dashboard.model";
 import {
-  IProvidePeriod,
-  Period,
   Duration,
-  QUARTER_IN_MS,
+  IProvidePeriod,
   OverDate,
+  Period,
+  QUARTER_IN_MS,
 } from "@overbookd/time";
-import { DashboardGearStock } from "./dashboard-gear-stock";
-import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
-import { DashboardGearStockDiscrepancy } from "./dashboard-gear-stock-discrepancy";
 import { GearRequirementForCsv } from "../dashboard.service";
+import { DatabaseDashboardGear } from "../repository/dashboard.model";
+import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
+import { DashboardGearStock } from "./dashboard-gear-stock";
+import { DashboardGearStockDiscrepancy } from "./dashboard-gear-stock-discrepancy";
 
 export class DashboardGear {
   private constructor() {}

@@ -1,8 +1,8 @@
 import { InquiryOwner } from "@overbookd/festival-event";
-import { Gear, Inquiries } from "../festival-activity-common.model";
-import { PrismaService } from "../../../../prisma.service";
-import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";
 import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { PrismaService } from "../../../../prisma.service";
+import { Gear, Inquiries } from "../festival-activity-common.model";
+import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";
 
 const owners: InquiryOwner[] = [LOG_MATOS, BARRIERES, LOG_ELEC];
 

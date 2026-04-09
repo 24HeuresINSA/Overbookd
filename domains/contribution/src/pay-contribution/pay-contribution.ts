@@ -1,13 +1,13 @@
 import { Permission } from "@overbookd/permission";
-import { Contribute } from "./contribute.js";
-import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error.js";
 import { Edition } from "@overbookd/time";
+import { InsufficientAmount } from "../contribution.error.js";
 import {
   Adherent,
   Contribution,
   MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
 } from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
+import { Contribute } from "./contribute.js";
+import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error.js";
 
 type WithPermission = {
   permissions: Permission[];

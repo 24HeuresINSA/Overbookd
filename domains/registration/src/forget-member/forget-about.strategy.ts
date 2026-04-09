@@ -1,7 +1,7 @@
 import {
-  AnonymousMember,
   ANONYMOUS,
   ANONYMOUS_MOBILE_PHONE,
+  AnonymousMember,
 } from "./anonymous-member.js";
 import { MemberRepository } from "./forget-member.js";
 

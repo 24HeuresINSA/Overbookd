@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalTask } from "./prepare.js";
-import { lea, noel } from "../festival-task.test-util.js";
 import {
   installEscapeGame,
+  presentEscapeGame,
   uninstallEscapeGame,
 } from "../festival-task.fake.js";
-import { presentEscapeGame } from "../festival-task.fake.js";
-import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { lea, noel } from "../festival-task.test-util.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
+import { PrepareFestivalTask } from "./prepare.js";
 
 describe("Prepare festival task feedbacks section", () => {
   let prepare: PrepareFestivalTask;

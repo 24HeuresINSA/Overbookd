@@ -1,5 +1,5 @@
-import { PrismaService } from "../../prisma.service";
 import { User } from "@overbookd/user";
+import { PrismaService } from "../../prisma.service";
 import { FriendsAlerting } from "../alert.service";
 
 export class PrismaFriendsAlerting implements FriendsAlerting {

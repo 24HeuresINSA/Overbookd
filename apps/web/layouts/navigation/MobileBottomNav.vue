@@ -52,7 +52,9 @@
 </template>
 
 <script lang="ts" setup>
-import SideNavPageItem from "./SideNavPageItem.vue";
+import { VIEW_ORGA_MOBILE_NAV, VIEW_PLANNING } from "@overbookd/permission";
+import { findPage } from "~/utils/navigation/find-page.utils";
+import { PageFilter } from "~/utils/navigation/page.filter";
 import {
   ORGA_MOBILE_SUMMARY_WITHOUT_PLANNING,
   ORGA_MOBILE_SUMMARY_WITH_PLANNING,
@@ -60,10 +62,8 @@ import {
   VOLUNTEER_MOBILE_SUMMARY,
   type PageInSummary,
 } from "~/utils/navigation/pages/summary-pages";
-import { findPage } from "~/utils/navigation/find-page.utils";
-import { VIEW_ORGA_MOBILE_NAV, VIEW_PLANNING } from "@overbookd/permission";
-import { PageFilter } from "~/utils/navigation/page.filter";
 import { MY_PLANNING_PAGE } from "~/utils/navigation/pages/volunteer";
+import SideNavPageItem from "./SideNavPageItem.vue";
 
 const route = useRoute();
 const userStore = useUserStore();

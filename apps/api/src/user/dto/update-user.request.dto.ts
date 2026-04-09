@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { UserUpdateForm } from "@overbookd/user";
 import {
   IsEmail,
   IsMobilePhone,
@@ -6,7 +7,6 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { UserUpdateForm } from "@overbookd/user";
 
 export class UpdateUserRequestDto implements UserUpdateForm {
   @ApiProperty({

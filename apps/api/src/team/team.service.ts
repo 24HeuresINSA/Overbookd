@@ -9,6 +9,7 @@ import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
+import { ADMIN } from "@overbookd/team-constants";
 import { toStandAloneUser } from "@overbookd/user";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
@@ -17,7 +18,6 @@ import {
   SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
-import { ADMIN } from "@overbookd/team-constants";
 
 export type UpdateTeamForm = {
   name?: string;

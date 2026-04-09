@@ -59,16 +59,16 @@
 </template>
 
 <script lang="ts" setup>
+import type { Team } from "@overbookd/team";
 import {
   formatLocalDateTime,
   Period,
   type IProvidePeriod,
 } from "@overbookd/time";
-import type { Team } from "@overbookd/team";
-import { updateQueryParams } from "~/utils/http/url-params.utils";
-import { TimelineFilterBuilder } from "~/utils/timeline/timeline.filter";
 import { useDebounceFn } from "@vueuse/core";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { isTimelineMode } from "~/utils/timeline/mode";
+import { TimelineFilterBuilder } from "~/utils/timeline/timeline.filter";
 
 const route = useRoute();
 const isTimeline = isTimelineMode(route.path);

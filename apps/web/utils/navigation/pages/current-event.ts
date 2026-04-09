@@ -1,6 +1,6 @@
 import { ASK_FOR_HELP, VIEW_TIMELINE } from "@overbookd/permission";
-import type { PageInSummary } from "./summary-pages";
 import { NEED_HELP_URL, TIMELINE_URL } from "@overbookd/web-page";
+import type { PageInSummary } from "./summary-pages";
 
 const TIMELINE_PAGE: PageInSummary = {
   icon: "mdi-clock",

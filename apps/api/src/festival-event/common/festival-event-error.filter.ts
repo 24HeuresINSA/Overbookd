@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { FestivalEventError } from "@overbookd/festival-event";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { RouteLogger } from "../../route-logger";
 
 @Catch(FestivalEventError)

@@ -1,5 +1,5 @@
-import type { IProvidePeriod } from "@overbookd/time";
 import type { AssignableVolunteer, Friends } from "@overbookd/assignment";
+import type { IProvidePeriod } from "@overbookd/time";
 import { useAssignTaskToVolunteerStore } from "~/stores/assignment/task-to-volunteer";
 
 export class FriendsRepository implements Friends {

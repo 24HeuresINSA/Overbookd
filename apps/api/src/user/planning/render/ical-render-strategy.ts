@@ -1,10 +1,10 @@
-import { DateArray, EventAttributes, GeoCoordinates, createEvents } from "ics";
 import { GeoLocation, LocationFactory } from "@overbookd/geo-location";
 import {
-  IProvidePeriod,
   Edition,
+  IProvidePeriod,
   formatDateWithHoursAndMinutesOnly,
 } from "@overbookd/time";
+import { DateArray, EventAttributes, GeoCoordinates, createEvents } from "ics";
 import { Assignment, Contact, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
 

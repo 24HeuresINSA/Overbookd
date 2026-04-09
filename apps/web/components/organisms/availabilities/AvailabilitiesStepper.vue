@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Duration, OverDate } from "@overbookd/time";
 import { ENTER_EXTENDED_AVAILABILITITES } from "@overbookd/permission";
+import { Duration, OverDate } from "@overbookd/time";
 import {
   CalendarEventPeriods,
   type CalendarStep,

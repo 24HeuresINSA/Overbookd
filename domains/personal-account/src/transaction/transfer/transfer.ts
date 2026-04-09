@@ -1,3 +1,5 @@
+import { ONE_EURO_IN_CENTS } from "../transaction.js";
+import { TransferForm } from "./payor.js";
 import {
   AmountTooHigh,
   InsufficientAmount,
@@ -7,8 +9,6 @@ import {
   PayorNotHavePersonalAccount,
   TransferToYourself,
 } from "./transfer.error.js";
-import { TransferForm } from "./payor.js";
-import { ONE_EURO_IN_CENTS } from "../transaction.js";
 
 type NonAdherent = {
   havePersonalAccount: false;

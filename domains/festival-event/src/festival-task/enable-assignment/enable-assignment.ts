@@ -1,25 +1,27 @@
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
-import {
-  Categorize,
-  FestivalTask,
-  ReadyToAssign,
-  isReadyToAssign,
-} from "../festival-task.js";
 import { Adherent } from "../../common/adherent.js";
-import { FestivalTaskKeyEvents } from "../festival-task.event.js";
-import {
-  FestivalTaskTranslator,
-  ReadyToAssignWithConflicts,
-  ReadyToAssignWithoutConflicts,
-  WithoutConflicts,
-} from "../volunteer-conflicts.js";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
   FestivalTaskNotValidated,
   ReadyToAssignError,
 } from "../festival-task.error.js";
+import { FestivalTaskKeyEvents } from "../festival-task.event.js";
+import {
+  Categorize,
+  FestivalTask,
+  ReadyToAssign,
+  isReadyToAssign,
+} from "../festival-task.js";
+import {
+  FestivalTaskTranslator,
+  ReadyToAssignWithConflicts,
+  ReadyToAssignWithoutConflicts,
+  WithoutConflicts,
+} from "../volunteer-conflicts.js";
 
+import { Item } from "@overbookd/list";
+import { Duration, Period } from "@overbookd/time";
 import { isValidated } from "../../festival-event.js";
 import { ValidatedWithConflicts } from "../festival-task.factory.js";
 import {
@@ -27,8 +29,6 @@ import {
   ReviewableMobilization,
   VolunteerWithConflicts,
 } from "../sections/mobilizations.js";
-import { Item } from "@overbookd/list";
-import { Period, Duration } from "@overbookd/time";
 
 export type FestivalTasksForEnableAssignment = {
   findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null>;

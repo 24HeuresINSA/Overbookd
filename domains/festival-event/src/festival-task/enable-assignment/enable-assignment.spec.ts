@@ -1,4 +1,18 @@
+import {
+  ASSIGNMENT_STARTED,
+  BAR,
+  FUN,
+  MANUTENTION,
+  READY_TO_ASSIGN,
+  RELOU,
+  STATIQUE,
+} from "@overbookd/festival-event-constants";
 import { beforeEach, describe, expect, it } from "vitest";
+import {
+  FestivalTaskNotFound,
+  FestivalTaskNotValidated,
+  ReadyToAssignError,
+} from "../festival-task.error.js";
 import {
   barCashier,
   cleanPressConference,
@@ -12,15 +26,6 @@ import {
   preparePressConference,
   uninstallPreventionVillage,
 } from "../festival-task.fake.js";
-import {
-  BAR,
-  FUN,
-  MANUTENTION,
-  RELOU,
-  STATIQUE,
-  READY_TO_ASSIGN,
-  ASSIGNMENT_STARTED,
-} from "@overbookd/festival-event-constants";
 import {
   friday18hfriday20h,
   friday20hfriday22h,
@@ -56,15 +61,10 @@ import {
   sunday22hmonday00h,
   valery,
 } from "../festival-task.test-util.js";
-import { EnableAssignment } from "./enable-assignment.js";
-import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory.js";
-import {
-  FestivalTaskNotFound,
-  FestivalTaskNotValidated,
-  ReadyToAssignError,
-} from "../festival-task.error.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { EnableAssignment } from "./enable-assignment.js";
+import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory.js";
 
 const expectedGuardPsAssignments = [
   { ...friday18hfriday20h, assignees: [] },

@@ -7,11 +7,6 @@ import {
   type Reviewer,
   isDraft,
 } from "@overbookd/festival-event";
-import type {
-  HttpStringified,
-  PreviewForCommunication,
-  PreviewForSecurity,
-} from "@overbookd/http";
 import {
   APPROVED,
   DRAFT,
@@ -19,9 +14,11 @@ import {
   REJECTED,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import { CastDraft } from "./draft";
-import { CastReviewable } from "./reviewable";
-import { castTimeWindowWithDate } from "../cast-time-windows";
+import type {
+  HttpStringified,
+  PreviewForCommunication,
+  PreviewForSecurity,
+} from "@overbookd/http";
 import {
   BARRIERES,
   COMMUNICATION,
@@ -31,6 +28,9 @@ import {
   SECU,
   SIGNA,
 } from "@overbookd/team-constants";
+import { castTimeWindowWithDate } from "../cast-time-windows";
+import { CastDraft } from "./draft";
+import { CastReviewable } from "./reviewable";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,

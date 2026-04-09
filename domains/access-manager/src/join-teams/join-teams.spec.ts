@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import {
   ADMIN,
   CONDUCTEUR,
@@ -7,6 +6,7 @@ import {
   HARD,
   SOFT,
 } from "@overbookd/team-constants";
+import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryEvents } from "./events.inmemory";
 import {
   AdminAssignmentError,

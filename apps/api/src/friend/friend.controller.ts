@@ -17,15 +17,15 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { MANAGE_USERS } from "@overbookd/permission";
 import { RequestWithUserPayload } from "../../src/app.controller";
+import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateFriendRequestDto } from "./dto/create-friend.request.dto";
 import { FriendResponseDto } from "./dto/friend.response.dto";
 import { FriendService } from "./friend.service";
-import { MANAGE_USERS } from "@overbookd/permission";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("friends")
 @ApiTags("friends")

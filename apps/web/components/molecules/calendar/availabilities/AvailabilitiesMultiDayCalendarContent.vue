@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import {
   type AvailabilityCellWithCharisma,
   cellDurationClass,
@@ -22,6 +21,7 @@ import {
   CELLS_IN_DAY,
   generateAvailabilityCellsWithCharisma,
 } from "~/utils/availabilities/availability-grid.utils";
+import type { DayPresenter } from "~/utils/calendar/day.presenter";
 
 const charismaPeriodStore = useCharismaPeriodStore();
 const availabilityStore = useVolunteerAvailabilityStore();

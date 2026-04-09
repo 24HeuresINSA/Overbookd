@@ -1,10 +1,10 @@
 import { ENROLL_HARD, ENROLL_SOFT, Permission } from "@overbookd/permission";
 import {
-  StaffRegistered,
+  MemberRegistered,
   Membership,
   NewcomerRegistered,
+  StaffRegistered,
   VolunteerRegistered,
-  MemberRegistered,
 } from "./newcomer.js";
 import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
 import {

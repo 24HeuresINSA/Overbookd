@@ -30,9 +30,9 @@
 
 <script lang="ts" setup>
 import type {
-  AssignmentWithDetails,
   AssignableVolunteer,
   Assignment,
+  AssignmentWithDetails,
 } from "@overbookd/assignment";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 

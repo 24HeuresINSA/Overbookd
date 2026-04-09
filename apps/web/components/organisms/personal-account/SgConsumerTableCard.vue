@@ -103,9 +103,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { ConfiguredBarrel } from "@overbookd/personal-account";
 import { HARD, VIEUX } from "@overbookd/team-constants";
 import { buildUserNameWithNickname } from "@overbookd/user";
+import { isInteger, isNumber, min } from "~/utils/rules/input.rules";
+import type { Searchable } from "~/utils/search/search.utils";
 import { matchingSearchItems } from "~/utils/search/search.utils";
+import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { ConsumerWithAmount } from "~/utils/transaction/consumer";
 import {
   type SgMode,
@@ -114,11 +118,7 @@ import {
   DEPOSIT_MODE,
   EXTERNAL_EVENT_MODE,
 } from "~/utils/transaction/sg-mode";
-import type { Searchable } from "~/utils/search/search.utils";
-import { isNumber, min, isInteger } from "~/utils/rules/input.rules";
-import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
-import type { ConfiguredBarrel } from "@overbookd/personal-account";
 
 const layoutStore = useLayoutStore();
 

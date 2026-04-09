@@ -1,9 +1,3 @@
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
-import { categoriesAndGears } from "./seeders/gears";
-import { permissions } from "./seeders/permissions";
-import { signaLocations } from "./seeders/signa-locations";
 import {
   Configuration,
   EVENT_DATE_KEY,
@@ -12,11 +6,17 @@ import {
 } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
-import { teams } from "./seeders/teams";
-import { userTeamTuples } from "./seeders/users";
-import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
 import { ONE_DAY_IN_MS } from "@overbookd/time";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../src/generated/prisma/client";
+import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
+import { categoriesAndGears } from "./seeders/gears";
+import { permissions } from "./seeders/permissions";
+import { signaLocations } from "./seeders/signa-locations";
+import { signages } from "./seeders/signages";
+import { teams } from "./seeders/teams";
+import { userTeamTuples } from "./seeders/users";
 
 const url = process.env.DATABASE_URL;
 if (!url) {

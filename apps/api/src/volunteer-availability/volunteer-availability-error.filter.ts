@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { AvailabilityError } from "@overbookd/volunteer-availability";
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { RouteLogger } from "../route-logger";
 
 @Catch(AvailabilityError)

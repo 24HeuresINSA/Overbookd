@@ -1,5 +1,3 @@
-import { InventoryRepository } from "../inventory.service";
-import { GroupInventoryRecord } from "../inventory-grouped-record";
 import {
   InventoryGroupedRecord,
   InventoryRecord,
@@ -7,6 +5,8 @@ import {
 } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 import { InventoryRecordSearchBuilder } from "../../common/inventory-record-search.builder";
+import { GroupInventoryRecord } from "../inventory-grouped-record";
+import { InventoryRepository } from "../inventory.service";
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];

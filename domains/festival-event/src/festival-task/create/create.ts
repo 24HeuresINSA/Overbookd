@@ -1,6 +1,8 @@
-import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "@overbookd/festival-event-constants";
+import { numberGenerator } from "@overbookd/list";
 import { Adherent } from "../../common/adherent.js";
+import { isDraft } from "../../festival-event.js";
+import { FestivalTaskError } from "../festival-task.error.js";
 import { FestivalTaskKeyEvents } from "../festival-task.event.js";
 import { FestivalActivity } from "../festival-task.js";
 import {
@@ -8,8 +10,6 @@ import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
 } from "../volunteer-conflicts.js";
-import { isDraft } from "../../festival-event.js";
-import { FestivalTaskError } from "../festival-task.error.js";
 
 const FT_420 = 420;
 

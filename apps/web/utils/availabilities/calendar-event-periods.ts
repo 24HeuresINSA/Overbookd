@@ -1,4 +1,4 @@
-import { OverDate, Period, Duration } from "@overbookd/time";
+import { Duration, OverDate, Period } from "@overbookd/time";
 
 export type CalendarStep = {
   title: string;

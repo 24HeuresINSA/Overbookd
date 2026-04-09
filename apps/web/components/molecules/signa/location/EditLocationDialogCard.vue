@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { SignaLocation } from "@overbookd/signa";
 import type { GeoLocation } from "@overbookd/geo-location";
+import type { SignaLocation } from "@overbookd/signa";
 
 const locationStore = useLocationStore();
 

@@ -38,10 +38,10 @@
 import { type MyTransaction, isCredit } from "@overbookd/personal-account";
 import { formatDateWithExplicitMonthAndDay } from "@overbookd/time";
 import {
-  isDebit,
-  getTransactionIcon,
   formatAmount,
+  getTransactionIcon,
   getTransferMessage,
+  isDebit,
 } from "~/utils/transaction/transaction.utils";
 
 const transactionStore = useTransactionStore();

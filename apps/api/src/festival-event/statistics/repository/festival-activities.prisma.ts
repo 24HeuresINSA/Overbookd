@@ -1,10 +1,10 @@
 import { FestivalActivity } from "@overbookd/festival-event";
-import { Statistics } from "@overbookd/http";
-import { FestivalEventStatistics } from "../statistics.service";
-import { PrismaService } from "../../../prisma.service";
-import { FestivalEventStatisticsBuilder } from "./festival-event-statistics.builder";
 import { REFUSED } from "@overbookd/festival-event-constants";
+import { Statistics } from "@overbookd/http";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { PrismaService } from "../../../prisma.service";
+import { FestivalEventStatistics } from "../statistics.service";
+import { FestivalEventStatisticsBuilder } from "./festival-event-statistics.builder";
 
 const INIT_STATUS_STATISTICS: Statistics["status"] = {
   DRAFT: 0,

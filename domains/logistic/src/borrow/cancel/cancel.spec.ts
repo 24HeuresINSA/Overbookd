@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { karnaBorrow } from "../borrow.fake.js";
 import { InMemoryBorrows } from "./borrow.inmemory.js";
 import { CancelBorrow } from "./cancel.js";
-import { karnaBorrow } from "../borrow.fake.js";
 
 describe("Cancel borrow", () => {
   describe("when cancelling borrow from KARNA", async () => {

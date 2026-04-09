@@ -1,14 +1,14 @@
-import { describe, it, expect } from "vitest";
-import { Teams } from "./fulfilled-registration.js";
 import {
   BDE,
   HAUTS_DE_FRANCE,
-  TECKOS,
-  TEAM_MONTAGE,
   KARNA,
+  TEAM_MONTAGE,
+  TECKOS,
 } from "@overbookd/team-constants";
-import { RegisterForm } from "./register-form.js";
+import { describe, expect, it } from "vitest";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
+import { Teams } from "./fulfilled-registration.js";
+import { RegisterForm } from "./register-form.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
   "Il faut au moins 12 caractères dans le mot de passe";

@@ -1,7 +1,7 @@
+import { NotFoundException } from "@nestjs/common";
 import { ConfiguredBarrel } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
 import { Barrels } from "../transaction.service";
-import { NotFoundException } from "@nestjs/common";
 
 export class PrismaBarrels implements Barrels {
   constructor(private readonly prisma: PrismaService) {}

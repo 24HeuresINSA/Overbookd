@@ -1,23 +1,23 @@
-import { describe, expect, it } from "vitest";
 import { Edition } from "@overbookd/time";
+import { describe, expect, it } from "vitest";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
-import { InMemoryCandidates } from "./candidates.inmemory.js";
 import { ApplyFor } from "./apply-for.js";
-import { AlreadyCandidate, Rejected } from "./candidature.error.js";
 import {
-  rejectedOlopStaffCandidate,
+  cul,
+  culCandidate,
+  dnamra,
   lea,
   leaStaffCandidate,
   noel,
   noelCandidate,
-  olop,
-  oelCandidate,
-  culCandidate,
-  cul,
-  rejectedDnamraCandidate,
   oel,
-  dnamra,
+  oelCandidate,
+  olop,
+  rejectedDnamraCandidate,
+  rejectedOlopStaffCandidate,
 } from "./candidate.test-utils.js";
+import { InMemoryCandidates } from "./candidates.inmemory.js";
+import { AlreadyCandidate, Rejected } from "./candidature.error.js";
 
 describe("Apply for staff membership", () => {
   describe("when someone is applying for staff membership", () => {

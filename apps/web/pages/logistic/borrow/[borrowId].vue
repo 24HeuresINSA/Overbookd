@@ -53,9 +53,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { GearRequest, Borrow } from "@overbookd/logistic";
-import { BORROW_GEARS_URL } from "@overbookd/web-page";
 import { CSVBuilder } from "@overbookd/csv";
+import type { Borrow, GearRequest } from "@overbookd/logistic";
+import { BORROW_GEARS_URL } from "@overbookd/web-page";
 import { downloadCsv } from "~/utils/file/download.utils";
 
 const route = useRoute();

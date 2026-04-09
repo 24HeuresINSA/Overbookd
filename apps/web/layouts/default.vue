@@ -45,14 +45,14 @@ import {
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
   FESTIVAL_TASK_APPROVED,
+  FESTIVAL_TASK_DO_REVIEW,
+  FESTIVAL_TASK_IGNORED,
+  FESTIVAL_TASK_READY_TO_ASSIGN,
   FESTIVAL_TASK_READY_TO_REVIEW,
   FESTIVAL_TASK_REJECTED,
-  FESTIVAL_TASK_IGNORED,
-  FESTIVAL_TASK_DO_REVIEW,
-  FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
-import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
+import { CANDIDATE_ENROLLED } from "@overbookd/registration";
 import { useFavicon } from "@vueuse/core";
 import { useTheme } from "vuetify";
 import { useLiveNotification } from "~/composable/useLiveNotification";

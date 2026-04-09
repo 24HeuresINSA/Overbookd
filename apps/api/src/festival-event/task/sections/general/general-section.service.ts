@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
-import { Adherents } from "../../common/festival-task-common.model";
 import { UpdateGeneralForm } from "@overbookd/http";
+import { Adherents } from "../../common/festival-task-common.model";
 
 @Injectable()
 export class GeneralSectionService {

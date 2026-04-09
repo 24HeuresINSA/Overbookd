@@ -7,17 +7,17 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { VolunteerToTaskService } from "./volunteer-to-task.service";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
-import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
-import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentSummaryWithTask } from "@overbookd/http";
-import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { AssignmentErrorFilter } from "../assignment.filter";
+import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
+import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
+import { VolunteerToTaskService } from "./volunteer-to-task.service";
 
 @Controller("assignments/volunteer-to-task")
 @ApiTags("assignments/volunteer-to-task")

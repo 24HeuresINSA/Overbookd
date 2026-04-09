@@ -1,7 +1,7 @@
-import { type Membership, RegisterForm } from "@overbookd/registration";
 import type { Credentials } from "@overbookd/registration";
-import { isHttpError } from "~/utils/http/http-error.utils";
+import { type Membership, RegisterForm } from "@overbookd/registration";
 import { RegistrationRepository } from "~/repositories/registration/registration.repository";
+import { isHttpError } from "~/utils/http/http-error.utils";
 
 export const useRegistrationStore = defineStore("registration", {
   actions: {

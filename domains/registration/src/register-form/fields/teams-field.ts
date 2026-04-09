@@ -1,5 +1,5 @@
-import { Field } from "./field.js";
 import { Teams } from "../fulfilled-registration.js";
+import { Field } from "./field.js";
 
 export class TeamsField implements Field<Teams> {
   private constructor(private readonly teams: Teams) {}

@@ -1,8 +1,8 @@
+import { updateItemToList } from "@overbookd/list";
 import type { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { CatalogSignageRepository } from "~/repositories/logistic/catalog-signage.repository";
-import { updateItemToList } from "@overbookd/list";
-import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 type State = {
   signages: SignageWithPotentialImage[];

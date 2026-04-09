@@ -12,15 +12,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { Availabilities } from "@overbookd/volunteer-availability";
 import { computed } from "vue";
 import {
-  generateAvailabilityCells,
-  cellGridStyle,
   cellDurationClass,
+  cellGridStyle,
+  generateAvailabilityCells,
   type AvailabilityCell,
 } from "~/utils/availabilities/availability-grid.utils";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
-import type { Availabilities } from "@overbookd/volunteer-availability";
 
 const props = defineProps({
   day: {

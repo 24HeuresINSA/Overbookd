@@ -1,7 +1,7 @@
-import { Period } from "@overbookd/time";
-import { AssignmentSummary, AssignmentTeam } from "../../assignment.js";
-import { AssignableVolunteer } from "../../assignable-volunteer.js";
 import { PERSONNE } from "@overbookd/team-constants";
+import { Period } from "@overbookd/time";
+import { AssignableVolunteer } from "../../assignable-volunteer.js";
+import { AssignmentSummary, AssignmentTeam } from "../../assignment.js";
 
 export class AssignmentSummaryFactory {
   private constructor(

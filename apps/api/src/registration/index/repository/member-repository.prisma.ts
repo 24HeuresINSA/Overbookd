@@ -1,14 +1,14 @@
+import { Balance } from "@overbookd/personal-account";
 import {
   AnonymousMember,
   Credentials,
   Member,
   MemberRepository,
 } from "@overbookd/registration";
-import { PrismaService } from "../../../prisma.service";
-import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
-import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../../common/query/transaction.query";
-import { Balance } from "@overbookd/personal-account";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../../common/query/transaction.query";
+import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
+import { PrismaService } from "../../../prisma.service";
 
 export class PrismaMemberRepository implements MemberRepository {
   constructor(

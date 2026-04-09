@@ -7,7 +7,6 @@ import {
   VIEW_GEAR_DASHBOARD,
   VIEW_LOCATION,
 } from "@overbookd/permission";
-import type { Page, HiddenPage, PageInSummary } from "./summary-pages";
 import {
   BORROW_GEARS_URL,
   GEAR_CATALOG_URL,
@@ -17,6 +16,7 @@ import {
   PURCHASE_GEARS_URL,
   SIGNAGE_CATALOG_URL,
 } from "@overbookd/web-page";
+import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
 const GEAR_CATALOG_PAGE: PageInSummary = {
   icon: "mdi-bookshelf",

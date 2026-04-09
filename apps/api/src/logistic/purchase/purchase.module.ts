@@ -1,21 +1,21 @@
 import { Module } from "@nestjs/common";
-import { PurchaseController } from "./purchase.controller";
-import { PurchaseService, PurchasesForView } from "./purchase.service";
 import {
   CancelPurchase,
   InitPurchase,
   PlanPurchase,
 } from "@overbookd/logistic";
-import { PrismaInitPurchases } from "./repository/init-purchase.prisma";
 import { PrismaModule } from "../../prisma.module";
-import { PrismaPlanPurchases } from "./repository/plan-purchase.prisma";
-import { PrismaCancelPurchases } from "./repository/cancel-purchase.prisma";
+import { PrismaService } from "../../prisma.service";
 import { LogisticCommonModule } from "../common/logistic-common.module";
 import {
   FindGears,
   PrismaFindGears,
 } from "../common/repositories/find-gears.prisma";
-import { PrismaService } from "../../prisma.service";
+import { PurchaseController } from "./purchase.controller";
+import { PurchaseService, PurchasesForView } from "./purchase.service";
+import { PrismaCancelPurchases } from "./repository/cancel-purchase.prisma";
+import { PrismaInitPurchases } from "./repository/init-purchase.prisma";
+import { PrismaPlanPurchases } from "./repository/plan-purchase.prisma";
 import { PrismaViewPurchases } from "./repository/view-purchases.prisma";
 
 @Module({

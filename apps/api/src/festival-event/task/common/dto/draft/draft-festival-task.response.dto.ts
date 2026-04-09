@@ -1,17 +1,17 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { FestivalTaskDraft as Draft } from "@overbookd/festival-event";
-import { DraftWithConflicts } from "@overbookd/http";
 import { DRAFT } from "@overbookd/festival-event-constants";
-import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
-import { DraftGeneralResponseDto } from "./draft-general.response.dto";
-import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
-import { KeyEventResponseDto } from "../key-event.response.dto";
-import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto";
+import { DraftWithConflicts } from "@overbookd/http";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../../../../common/dto/inquiry-request.response.dto";
+import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
+import { KeyEventResponseDto } from "../key-event.response.dto";
+import { DraftGeneralResponseDto } from "./draft-general.response.dto";
+import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
+import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto";
 
 export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   @ApiProperty()

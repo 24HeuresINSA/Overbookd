@@ -8,9 +8,9 @@ import {
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import {
-  VolunteerWithAssignmentStats,
   DisplayableAssignment,
   TaskForCalendar,
+  VolunteerWithAssignmentStats,
 } from "@overbookd/http";
 
 export type AssignmentRepository = Assignments & {

@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { jwtDecode } from "jwt-decode";
 import { ONE_DAY_IN_MS, ONE_SECOND_IN_MS } from "@overbookd/time";
+import { jwtDecode } from "jwt-decode";
+import { describe, expect, it } from "vitest";
 import {
   InviteStaff,
   LINK_EXPIRED,

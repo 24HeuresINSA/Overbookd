@@ -5,7 +5,7 @@
     class="file-import"
     truncate-length="50"
     accept="text/csv"
-    label="Import"
+    label="import"
     show-size
     @update:model-value="extractInventoryRecords"
   />
@@ -96,17 +96,17 @@
 </template>
 
 <script lang="ts" setup>
+import type { CatalogGear } from "@overbookd/http";
 import { removeItemAtIndex } from "@overbookd/list";
 import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
-import { InventoryRecord } from "~/domain/inventory/inventory-record";
+import type { Gears } from "~/domain/inventory/gears";
 import { InventoryImport } from "~/domain/inventory/inventory-import";
-import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
-import type { CatalogGear } from "@overbookd/http";
-import type { Gears } from "~/domain/inventory/gears";
+import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const catalogGearStore = useCatalogGearStore();
 const inventoryStore = useInventoryStore();

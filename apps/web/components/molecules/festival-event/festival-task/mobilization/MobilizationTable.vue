@@ -138,14 +138,14 @@
 
 <script lang="ts" setup>
 import type {
-  Mobilization,
-  UpdateMobilization,
-  TeamMobilization,
-  Volunteer,
   FestivalTaskWithConflicts,
+  Mobilization,
+  TeamMobilization,
+  UpdateMobilization,
+  Volunteer,
 } from "@overbookd/festival-event";
-import { formatDateWithMinutes } from "@overbookd/time";
 import type { AddMobilizationForm } from "@overbookd/http";
+import { formatDateWithMinutes } from "@overbookd/time";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const ftStore = useFestivalTaskStore();

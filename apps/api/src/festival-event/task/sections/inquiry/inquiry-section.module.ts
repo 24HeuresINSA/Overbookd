@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
-import { InquirySectionService } from "./inquiry-section.service";
 import { PrepareFestivalTask } from "@overbookd/festival-event";
+import { FestivalTaskCommonModule } from "../../common/festival-task-common.module";
 import { PrismaInquiries } from "../../common/repository/inquiries.prisma";
+import { InquirySectionService } from "./inquiry-section.service";
 
 @Module({
   providers: [

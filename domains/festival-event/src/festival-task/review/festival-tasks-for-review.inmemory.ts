@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
-import { ReviewableWithoutConflicts } from "../volunteer-conflicts.js";
 import { FestivalTaskNotFound } from "../festival-task.error.js";
+import { ReviewableWithoutConflicts } from "../volunteer-conflicts.js";
 import { FestivalTasksForReview } from "./review.js";
 
 export class InMemoryFestivalTasksForReview implements FestivalTasksForReview {

@@ -1,6 +1,6 @@
 import { Duration } from "@overbookd/time";
-import { FestivalTask } from "./festival-task.js";
 import { FestivalEventError } from "../festival-event.js";
+import { FestivalTask } from "./festival-task.js";
 
 export class FestivalTaskError extends FestivalEventError {}
 

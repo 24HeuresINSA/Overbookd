@@ -1,39 +1,37 @@
-import { Reviewable } from "../festival-activity.js";
+import { APPROVED } from "@overbookd/festival-event-constants";
 import { getFactory } from "../festival-activity.factory.js";
 import {
-  friday18hToMonday00h,
-  lafarge,
-  uneBouilloire,
-  pelouseHumas,
-  agora,
-  creuxCgu,
-} from "../festival-activity.fake.js";
-import {
-  friday12hToFriday14h,
-  noel,
-  neverEscape,
-  panneauEscapeGame4x3,
-  bacheBienvenue10m,
-  friday11hToFriday15h,
-  deuxMarteaux,
-  unePriseMurale,
-  quinzeVaubans,
-  lumiere,
-  enceinte,
-  videoGameCollectif,
-  afficheJustDanceA2,
   afficheJustDance10x3,
+  afficheJustDanceA2,
+  agora,
+  bacheBienvenue10m,
+  creuxCgu,
+  deuxMarteaux,
+  enceinte,
+  friday11hToFriday15h,
+  friday12hToFriday14h,
+  friday12hToMonday00h,
+  friday18hToMonday00h,
+  george,
+  lafarge,
+  lumiere,
+  neverEscape,
   nintendoSwitchSupply,
+  noel,
+  panneauEscapeGame4x3,
+  pelouseHumas,
+  quinzeVaubans,
   saturday11hToSaturday15h,
-  unPlateauDeDance,
-  uneMultiprise3Prises,
-  uneNintendoSwitch,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
-  friday12hToMonday00h,
-  george,
+  unPlateauDeDance,
+  uneBouilloire,
+  uneMultiprise3Prises,
+  uneNintendoSwitch,
+  unePriseMurale,
+  videoGameCollectif,
 } from "../festival-activity.fake.js";
-import { APPROVED } from "@overbookd/festival-event-constants";
+import { Reviewable } from "../festival-activity.js";
 
 const factory = getFactory();
 
