@@ -252,7 +252,7 @@ const negativeBalanceMailLink = computed<string>(() => {
 
   &__text {
     text-align: center;
-    color: red;
+    color: rgb(var(--v-theme-error));
     font-weight: 500;
     hyphens: auto;
     text-align: center;
