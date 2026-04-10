@@ -5,8 +5,8 @@
   >
     <v-btn
       icon="mdi-chevron-right"
-      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de tâches`"
-      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de tâches`"
+      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de créneaux`"
+      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de créneaux`"
       variant="flat"
       density="compact"
       class="btn-close-side-bar"

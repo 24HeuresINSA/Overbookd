@@ -1,6 +1,17 @@
 <template>
-  <v-card class="filterable-task-list">
-    <v-card-text class="filterable-task-list__text">
+  <v-card class="filterable-task-list" :class="{ closed: isSideBarClosed }">
+    <v-btn
+      icon="mdi-chevron-right"
+      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de tâches`"
+      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de tâches`"
+      variant="flat"
+      density="compact"
+      class="btn-close-side-bar"
+      :class="{ 'rotate-180': isSideBarClosed }"
+      @click="toggleSideBar"
+    />
+
+    <v-card-text class="filterable-task-list__text" v-if="!isSideBarClosed">
       <TaskFilters
         v-model:search="searchedTaskName"
         v-model:required-teams="searchedRequiredTeams"
@@ -37,6 +48,11 @@ const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const displayCompleted = ref<boolean>(false);
+
+const isSideBarClosed = ref<boolean>(false);
+const toggleSideBar = () => {
+  isSideBarClosed.value = !isSideBarClosed.value;
+};
 
 const toSearchableTask = (
   task: TaskForAssignment,
@@ -123,16 +139,37 @@ $list-height: calc(
 );
 
 .filterable-task-list {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
   &__text {
     padding: 0;
   }
-}
 
-.task-list {
   padding: 0 5px;
   height: $list-height;
+  min-height: 100%;
+
+  width: 420px;
+  transition: width 0.3s ease;
+
+  &.closed {
+    width: 30px;
+    min-height: unset;
+  }
+}
+
+.btn-close-side-bar {
+  position: absolute;
+  top: 16px;
+  left: -3px;
+
+  &.rotate-180 {
+    left: 0;
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 </style>
