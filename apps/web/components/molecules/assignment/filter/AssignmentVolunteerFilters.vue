@@ -25,31 +25,30 @@
       hide-details
     />
 
-    <div class="friend-filter__categoy-sort">
-      <div>
-        <v-btn-toggle
-          v-show="isTaskOrga"
-          v-model="friendFilter"
-          color="secondary"
-          density="compact"
-          size="small"
-          tile
-        >
-          <v-btn
-            v-for="label of friendFilterLabel"
-            :id="`friend-filter-${stringify(label)}`"
-            :key="label"
-            :value="label"
-            size="x-small"
-          >
-            {{ label }}
-          </v-btn>
-        </v-btn-toggle>
-        <p class="stats">
-          Nombre de bénévoles dans la liste :
-          <span class="font-weight-bold">{{ listLength }}</span>
-        </p>
-      </div>
+    <v-btn-toggle
+      v-show="isTaskOrga"
+      v-model="friendFilter"
+      class="friend-filter"
+      color="secondary"
+      density="compact"
+      tile
+    >
+      <v-btn
+        v-for="label of friendFilterLabel"
+        :id="`friend-filter-${stringify(label)}`"
+        :key="label"
+        :value="label"
+        size="x-small"
+      >
+        {{ label }}
+      </v-btn>
+    </v-btn-toggle>
+
+    <div class="categoy-sort">
+      <p>
+        Nombre de bénévoles dans la liste :
+        <span class="font-weight-bold">{{ listLength }}</span>
+      </p>
       <div class="sort__category" @click="updateSort">
         <v-tooltip location="top" text="Trier par tâche">
           <template #activator="activator">
@@ -130,27 +129,22 @@ const stringify = (label: string) => SlugifyService.apply(label);
   }
 }
 
-.stats {
+.friend-filter {
+  justify-content: space-around;
+}
+
+.categoy-sort {
+  width: 100%;
+  gap: 5px;
   margin-bottom: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .sort__category {
   cursor: pointer;
-  position: absolute;
-  right: 0px;
-  top: 0px;
-}
-
-.friend-filter__categoy-sort {
-  width: 100%;
-  gap: 5px;
-  margin-bottom: 5px;
-  display: block;
-  position: relative;
-}
-
-#friend-filter-aucun-ami {
-  margin-left: -4px;
+  margin-left: auto;
+  margin-right: 5px;
 }
 
 #friend-filter-aucun-ami,

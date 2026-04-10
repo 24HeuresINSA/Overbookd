@@ -1,15 +1,12 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList
-      class="volunteer-list"
-      @select-volunteer="selectVolunteer"
-    />
+    <FilterableVolunteerList @select-volunteer="selectVolunteer" />
     <TaskOrgaCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @open-assignment-details="openAssignmentDetailsDialog"
     />
-    <FilterableTaskList class="task-list" />
+    <FilterableTaskList />
   </div>
 
   <v-dialog v-model="openFunnelDialog" width="1000px">
@@ -89,20 +86,11 @@ $layout-padding: 15px;
 
 .assignment {
   display: flex;
-  height: calc(100vh - $header-height - $layout-padding * 2);
-  overflow-y: scroll;
+  height: calc(100vh - $header-height - $layout-padding * 2 - 1px);
 }
 
 .calendar {
   flex-grow: 10;
   overflow-y: scroll;
-}
-
-.volunteer-list {
-  width: 420px;
-}
-
-.task-list {
-  width: 420px;
 }
 </style>

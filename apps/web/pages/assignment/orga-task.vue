@@ -1,18 +1,12 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList
-      class="volunteer-list"
-      @select-volunteer="selectVolunteer"
-    />
+    <FilterableVolunteerList @select-volunteer="selectVolunteer" />
     <OrgaTaskCalendar
       class="calendar"
       :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
     />
-    <FilterableTaskAssignmentList
-      class="task-list"
-      @volunteer-assigned="refreshVolunteerData"
-    />
+    <FilterableTaskAssignmentList @volunteer-assigned="refreshVolunteerData" />
 
     <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <AssignmentDetailsDialogCard
@@ -104,20 +98,11 @@ $layout-padding: 15px;
 
 .assignment {
   display: flex;
-  height: calc(100vh - $header-height - $layout-padding * 2);
-  overflow-y: scroll;
+  height: calc(100vh - $header-height - $layout-padding * 2 - 1px);
 }
 
 .calendar {
   flex-grow: 10;
   overflow-y: scroll;
-}
-
-.volunteer-list {
-  width: 420px;
-}
-
-.task-list {
-  width: 420px;
 }
 </style>

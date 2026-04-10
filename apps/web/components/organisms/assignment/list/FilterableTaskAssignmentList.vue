@@ -1,6 +1,23 @@
 <template>
-  <v-card class="filterable-assignment-list">
-    <v-card-text class="filterable-assignment-list__text">
+  <v-card
+    class="filterable-assignment-list"
+    :class="{ closed: isSideBarClosed }"
+  >
+    <v-btn
+      icon="mdi-chevron-right"
+      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de créneaux`"
+      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de créneaux`"
+      variant="flat"
+      density="compact"
+      class="btn-close-side-bar"
+      :class="{ 'rotate-180': isSideBarClosed }"
+      @click="toggleSideBar"
+    />
+
+    <v-card-text
+      v-if="!isSideBarClosed"
+      class="filterable-assignment-list__text"
+    >
       <TaskFilters
         v-model:search="searchedTaskName"
         v-model:required-teams="searchedRequiredTeams"
@@ -49,6 +66,11 @@ const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
+
+const isSideBarClosed = ref<boolean>(false);
+const toggleSideBar = () => {
+  isSideBarClosed.value = !isSideBarClosed.value;
+};
 
 const emit = defineEmits(["volunteer-assigned"]);
 const propageteVolunteerAssigned = (volunteerId: number) => {
@@ -147,17 +169,38 @@ $list-height: calc(
 );
 
 .filterable-assignment-list {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
   &__text {
     padding: 0;
   }
-}
 
-.assignment-list {
   padding: 0 5px;
   height: $list-height;
+  min-height: 100%;
+
+  width: 420px;
+  transition: width 0.3s ease;
+
+  &.closed {
+    width: 30px;
+    min-height: unset;
+  }
+}
+
+.btn-close-side-bar {
+  position: absolute;
+  top: 16px;
+  left: -3px;
+
+  &.rotate-180 {
+    left: 0;
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
 .error-message {
