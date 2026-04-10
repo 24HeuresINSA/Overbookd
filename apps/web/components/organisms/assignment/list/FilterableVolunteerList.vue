@@ -1,6 +1,23 @@
 <template>
-  <v-card class="filterable-volunteer-list">
-    <v-card-text class="filterable-volunteer-list__text">
+  <v-card
+    class="filterable-volunteer-list"
+    :class="{ closed: isSideBarClosed }"
+  >
+    <v-btn
+      icon="mdi-chevron-left"
+      :aria-label="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de bénévoles`"
+      :title="`${isSideBarClosed ? 'Ouvrir' : 'Fermer'} la liste de bénévoles`"
+      variant="flat"
+      density="compact"
+      class="btn-close-side-bar"
+      :class="{ 'rotate-180': isSideBarClosed }"
+      @click="toggleSideBar"
+    />
+
+    <v-card-text
+      class="filterable-volunteer-list__text"
+      v-if="!isSideBarClosed"
+    >
       <AssignmentVolunteerFilters
         v-model:search="searchVolunteer"
         v-model:teams="teams"
@@ -15,7 +32,7 @@
         v-if="shouldShowVolunteerList"
         :volunteers="displayedVolunteers"
         class="volunteer-list"
-        :class="isOrgaTask ? 'volunteer-list--with-friend-list' : ''"
+        :class="isOrgaTask ? 'filterable-volunteer-list--with-friend-list' : ''"
         @select-volunteer="selectVolunteer"
       />
       <div v-else class="error-message">
@@ -65,6 +82,11 @@ const excludedTeams = ref<Team[]>([]);
 const searchVolunteer = ref<string>("");
 const sort = ref<number>(Sort.NONE);
 const friendFilter = ref<FriendFilter | undefined>();
+
+const isSideBarClosed = ref<boolean>(false);
+const toggleSideBar = () => {
+  isSideBarClosed.value = !isSideBarClosed.value;
+};
 
 const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
@@ -145,26 +167,48 @@ $filters-height: $volunteer-list-filters-height;
 $friends-height: $volunteer-list-friends-card-height;
 $page-content-padding: $desktop-content-vertical-padding * 2;
 $card-paddings: $card-margin * 2;
+$base-list-height: calc(
+  100vh - $header-height - $filters-height - $card-paddings -
+    $page-content-padding
+);
 
 .filterable-volunteer-list {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
   &__text {
     padding: 0;
   }
-}
 
-$base-list-height: calc(
-  100vh - $header-height - $filters-height - $card-paddings -
-    $page-content-padding
-);
-.volunteer-list {
   padding: 0 5px;
   height: $base-list-height;
+  min-height: 100%;
+
+  width: 420px;
+  transition: width 0.3s ease;
+
+  &.closed {
+    width: 30px;
+    min-height: unset;
+  }
+
   &--with-friend-list {
     max-height: calc($base-list-height - $friends-height);
   }
+}
+
+.btn-close-side-bar {
+  position: absolute;
+  top: 16px;
+  right: -3px;
+
+  &.rotate-180 {
+    right: 0;
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
 .error-message {

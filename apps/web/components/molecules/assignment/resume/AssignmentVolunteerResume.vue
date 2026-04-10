@@ -139,9 +139,9 @@ const category = computed<string>(() => {
 const assignmentStats = computed<string>(() => {
   const duration = Duration.ms(props.volunteer.assignmentDuration).toString();
   const displayedTotalDuration = isAssignableVolunteer(props.volunteer)
-    ? ` • total: ${Duration.ms(props.volunteer.totalAssignmentDuration).toString()}`
+    ? ` • total : ${Duration.ms(props.volunteer.totalAssignmentDuration).toString()}`
     : "";
-  return `${category.value.toLowerCase()}: ${duration}${displayedTotalDuration}`;
+  return `${category.value.toLowerCase()} : ${duration}${displayedTotalDuration}`;
 });
 
 const shouldShowNoFriendIcon = computed<boolean>(
@@ -172,7 +172,7 @@ const openPlanning = (): void => {
 <style lang="scss" scoped>
 .volunteer-card {
   width: 100%;
-  height: 80px;
+  min-height: 80px;
   display: flex;
   flex-direction: column;
 }
@@ -195,6 +195,7 @@ const openPlanning = (): void => {
   &__icons {
     display: flex;
     gap: 5px;
+    margin-top: 5px;
   }
 }
 
