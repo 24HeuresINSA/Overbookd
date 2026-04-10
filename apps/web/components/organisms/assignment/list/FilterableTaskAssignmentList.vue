@@ -15,8 +15,8 @@
     />
 
     <v-card-text
-      class="filterable-assignment-list__text"
       v-if="!isSideBarClosed"
+      class="filterable-assignment-list__text"
     >
       <TaskFilters
         v-model:search="searchedTaskName"

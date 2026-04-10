@@ -11,7 +11,7 @@
       @click="toggleSideBar"
     />
 
-    <v-card-text class="filterable-task-list__text" v-if="!isSideBarClosed">
+    <v-card-text v-if="!isSideBarClosed" class="filterable-task-list__text">
       <TaskFilters
         v-model:search="searchedTaskName"
         v-model:required-teams="searchedRequiredTeams"

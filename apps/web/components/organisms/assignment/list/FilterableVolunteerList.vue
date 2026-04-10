@@ -15,8 +15,8 @@
     />
 
     <v-card-text
-      class="filterable-volunteer-list__text"
       v-if="!isSideBarClosed"
+      class="filterable-volunteer-list__text"
     >
       <AssignmentVolunteerFilters
         v-model:search="searchVolunteer"
