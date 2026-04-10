@@ -1,20 +1,20 @@
-export * from "./duration/duration.constant";
 export { Duration } from "./duration/duration";
+export * from "./duration/duration.constant";
 
-export { type IProvidePeriod, Period } from "./period/period";
-export { PeriodError, EndBeforeStart } from "./period/period.error";
+export { Period, type IProvidePeriod } from "./period/period";
+export { EndBeforeStart, PeriodError } from "./period/period.error";
 
 export {
-  type DateString,
-  type Hour,
-  type Minute,
-  type InitOverDate,
-  OverDate,
   isDateString,
   isHour,
   isMinute,
+  OverDate,
+  type DateString,
+  type Hour,
+  type InitOverDate,
+  type Minute,
 } from "./date/date";
-export * from "./date/format-date.utils";
 export * from "./date/date.utils";
+export * from "./date/format-date.utils";
 
-export { Edition, BASE_EDITION_STARTS } from "./edition/edition";
+export { BASE_EDITION_STARTS, Edition } from "./edition/edition";

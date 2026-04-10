@@ -1,6 +1,6 @@
 export { BreakPeriods } from "./break-periods.js";
 export type {
-  Breaks,
   BreakDefinition,
   BreakIdentifier,
+  Breaks,
 } from "./break-periods.js";

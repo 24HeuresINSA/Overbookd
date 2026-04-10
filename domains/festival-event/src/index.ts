@@ -5,134 +5,134 @@ export type { Adherent } from "./common/adherent.js";
 export type { Feedback } from "./common/feedback.js";
 export type { FestivalEventIdentifier } from "./common/festival-event.js";
 export {
-  isAssignedToDrive,
+  BACKLINE,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
-  PARKING_EIFFEL,
-  CREUX_GCU,
-  CREUX_GM,
-  CAVE_E,
   CAVE_BIKERS,
+  CAVE_E,
   CLUB_ROCK,
-  CONTENUR_24H,
   CONTENEUR_KARNA,
   CONTENEUR_PARKING_K_FET,
   CONTENEUR_SCENE_PULSE,
+  CONTENUR_24H,
+  CREUX_GCU,
+  CREUX_GM,
+  drives,
   HALL_DES_HUMANITES,
+  isAssignedToDrive,
+  LIVRE_PAR_BAR,
+  LIVRE_PAR_COM,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_TEAM_ELEC,
   LOCAL_24H,
   MAGASIN,
   MDE,
-  SALLE_MONTREAL,
-  SALLE_RENE_CHAR,
   NON_STOCKE,
+  PARKING_EIFFEL,
   QG_ORGA,
-  BACKLINE,
   SALLE_CRLA,
   SALLE_CRLB,
-  LIVRE_PAR_LOGISTIQUE,
-  LIVRE_PAR_TEAM_ELEC,
-  LIVRE_PAR_COM,
-  LIVRE_PAR_BAR,
-  drives,
+  SALLE_MONTREAL,
+  SALLE_RENE_CHAR,
 } from "./common/inquiry-request.js";
 export type {
-  InquiryRequestAssigned,
-  InquiryRequest,
+  AssignDrive,
   BaseInquiryRequest,
   Drive,
-  AssignDrive,
+  InquiryRequest,
+  InquiryRequestAssigned,
 } from "./common/inquiry-request.js";
 export type { Location } from "./common/location.js";
 export type {
-  WaitingForReview,
   Notifications,
   Notifyee,
+  WaitingForReview,
 } from "./common/notifications.js";
 export {
+  getNameFromReviewer,
   isRefusedReviews,
   isValidatedReviews,
-  getNameFromReviewer,
 } from "./common/review.js";
 export type {
-  ReviewStatus,
-  Reviewer,
-  InReviewReviews,
-  ValidatedReviews,
-  RefusedReviews,
   ApprovalReviewStatus,
+  InReviewReviews,
+  RefusedReviews,
   RejectionReviewStatus,
+  Reviewer,
   ReviewingStatus,
+  ReviewStatus,
+  ValidatedReviews,
 } from "./common/review.js";
 export type { TimeWindow } from "./common/time-window.js";
 
 //  **********************
 //  FESTIVAL ACTIVITY MODULE
 //  **********************
-export type {
-  Draft,
-  Reviewable,
-  InReview,
-  Validated,
-  Refused,
-  FestivalActivity,
-  CreateFestivalActivityForm,
-  KeyEvent as FestivalActivityKeyEvent,
-  PreviewDraft,
-  PreviewReviewable,
-  PreviewFestivalActivity,
-  FestivalTaskChild,
-} from "./festival-activity/festival-activity.js";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error.js";
+export type {
+  CreateFestivalActivityForm,
+  Draft,
+  FestivalActivity,
+  KeyEvent as FestivalActivityKeyEvent,
+  FestivalTaskChild,
+  InReview,
+  PreviewDraft,
+  PreviewFestivalActivity,
+  PreviewReviewable,
+  Refused,
+  Reviewable,
+  Validated,
+} from "./festival-activity/festival-activity.js";
 export { previewOf as previewOfActivity } from "./festival-activity/preview-of";
 
 export type { Contractor } from "./festival-activity/sections/in-charge.js";
 
 // INQUIRY
 export type {
+  InquiryOwner,
   InquiryWithPotentialRequests,
   InquiryWithRequests,
-  InquiryOwner,
   WithInquiries,
 } from "./festival-activity/sections/inquiry.js";
 
-export type {
-  ElectricitySupply,
-  ElectricityConnection,
-} from "./festival-activity/sections/supply.js";
 export {
-  PC16_Prise_classique,
-  P17_16A_MONO,
-  P17_16A_TRI,
-  P17_16A_TETRA,
-  P17_32A_MONO,
-  P17_32A_TRI,
-  P17_32A_TETRA,
-  P17_63A_MONO,
-  P17_63A_TRI,
-  P17_63A_TETRA,
   P17_125A_TETRA,
+  P17_16A_MONO,
+  P17_16A_TETRA,
+  P17_16A_TRI,
+  P17_32A_MONO,
+  P17_32A_TETRA,
+  P17_32A_TRI,
+  P17_63A_MONO,
+  P17_63A_TETRA,
+  P17_63A_TRI,
+  PC16_Prise_classique,
+} from "./festival-activity/sections/supply.js";
+export type {
+  ElectricityConnection,
+  ElectricitySupply,
 } from "./festival-activity/sections/supply.js";
 
 export type { Public as PublicGeneral } from "./festival-activity/sections/general.js";
-export type {
-  Signage,
-  SignageType,
-  BaseSignage,
-  SignageCatalogItem,
-} from "./festival-activity/sections/signa.js";
 export {
-  BACHE,
-  PANNEAU,
   AFFICHE,
-  signageTypes,
+  BACHE,
   isLinkedToCatalogItem,
+  PANNEAU,
+  signageTypes,
+} from "./festival-activity/sections/signa.js";
+export type {
+  BaseSignage,
+  Signage,
+  SignageCatalogItem,
+  SignageType,
 } from "./festival-activity/sections/signa.js";
 
 // CREATION
 export { CreateFestivalActivity } from "./festival-activity/creation/creation.js";
 export type {
-  FestivalActivityCreationForm,
   CreateFestivalActivityRepository,
+  FestivalActivityCreationForm,
 } from "./festival-activity/creation/creation.js";
 export { InMemoryCreateFestivalActivityRepository } from "./festival-activity/creation/festival-activities.inmemory.js";
 export { defaultDraft } from "./festival-activity/festival-activity.factory.js";
@@ -140,34 +140,36 @@ export { defaultDraft } from "./festival-activity/festival-activity.factory.js";
 // PREPARATION
 export { PrepareFestivalActivity } from "./festival-activity/preparation/prepare-festival-activity.js";
 export type {
-  PrepareFestivalActivityRepository,
   InitInquiry,
+  PrepareFestivalActivityRepository,
 } from "./festival-activity/preparation/prepare-festival-activity.js";
 export type {
-  PrepareGeneralUpdate,
-  PrepareInChargeUpdate,
-  PrepareSignaUpdate,
-  PrepareSupplyUpdate,
-  PrepareSignageCreation,
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-  PrepareSignageUpdate,
   PrepareContractorCreation,
   PrepareContractorUpdate,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
+  PrepareSignaUpdate,
+  PrepareSupplyUpdate,
 } from "./festival-activity/preparation/prepare-festival-activity.model.js";
 
 //ASK FOR REVIEW
+export {
+  AskForReview,
+  isReviewer as isActivityReviewer,
+} from "./festival-activity/ask-for-review/ask-for-review.js";
+export type { AskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/ask-for-review.js";
 export { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/festival-activities.inmemory.js";
+export { ReviewableSpecification } from "./festival-activity/ask-for-review/in-review-festival-activity.js";
 export type {
   FestivalActivityWithoutStatus,
   InReviewWithoutStatus,
 } from "./festival-activity/ask-for-review/in-review-festival-activity.js";
-export { ReviewableSpecification } from "./festival-activity/ask-for-review/in-review-festival-activity.js";
-export { AskForReview } from "./festival-activity/ask-for-review/ask-for-review.js";
-export type { AskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/ask-for-review.js";
-export { isReviewer as isActivityReviewer } from "./festival-activity/ask-for-review/ask-for-review.js";
 
 // Reviewing
 export { Reviewing } from "./festival-activity/reviewing/reviewing.js";
@@ -176,107 +178,106 @@ export type { ReviewingFestivalActivities } from "./festival-activity/reviewing/
 //  **********************
 //  FESTIVAL TASK MODULE
 //  **********************
-export { FestivalTaskError } from "./festival-task/festival-task.error.js";
-export type { FestivalTasksForCreate } from "./festival-task/create/create.js";
-export { CreateFestivalTask } from "./festival-task/create/create.js";
+export {
+  AskForReview as AskForReviewTask,
+  isReviewer as isTaskReviewer,
+} from "./festival-task/ask-for-review/ask-for-review.js";
 export type {
   AskForReviewTasks,
   Reviewers,
   ReviewerStat,
 } from "./festival-task/ask-for-review/ask-for-review.js";
 export {
-  AskForReview as AskForReviewTask,
-  isReviewer as isTaskReviewer,
-} from "./festival-task/ask-for-review/ask-for-review.js";
-export {
-  InReviewSpecification,
   InChargeInstructionsSpecification,
+  InReviewSpecification,
 } from "./festival-task/ask-for-review/in-review-specification.js";
-export type {
-  FestivalTasksForPrepare,
-  UpdateGeneral,
-  UpdateInstructions,
-  AddMobilization,
-  UpdateMobilization,
-} from "./festival-task/prepare/prepare.js";
-export {
-  PrepareFestivalTask,
-  extractApprovers,
-} from "./festival-task/prepare/prepare.js";
-export type { FestivalTasksForView } from "./festival-task/view/view.js";
-export { ViewFestivalTask } from "./festival-task/view/view.js";
+export { CreateFestivalTask } from "./festival-task/create/create.js";
+export type { FestivalTasksForCreate } from "./festival-task/create/create.js";
 export { EnableAssignment } from "./festival-task/enable-assignment/enable-assignment.js";
 export type { FestivalTasksForEnableAssignment } from "./festival-task/enable-assignment/enable-assignment.js";
+export { FestivalTaskError } from "./festival-task/festival-task.error.js";
+export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event.js";
+export { isReadyToAssign } from "./festival-task/festival-task.js";
 export type {
+  Categorize,
   FestivalTask,
   Draft as FestivalTaskDraft,
   InReview as FestivalTaskInReview,
-  Refused as FestivalTaskRefused,
-  Validated as FestivalTaskValidated,
   ReadyToAssign as FestivalTaskReadyToAssign,
+  Refused as FestivalTaskRefused,
   Reviewable as FestivalTaskReviewable,
+  Validated as FestivalTaskValidated,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
-  PreviewRefused as PreviewFestivalTaskRefused,
-  PreviewValidated as PreviewFestivalTaskValidated,
   PreviewReadyToAssign as PreviewFestivalTaskReadyToAssign,
+  PreviewRefused as PreviewFestivalTaskRefused,
   PreviewReviewable as PreviewFestivalTaskReviewable,
-  Categorize,
+  PreviewValidated as PreviewFestivalTaskValidated,
 } from "./festival-task/festival-task.js";
-export { isReadyToAssign } from "./festival-task/festival-task.js";
+export {
+  extractApprovers,
+  PrepareFestivalTask,
+} from "./festival-task/prepare/prepare.js";
+export type {
+  AddMobilization,
+  FestivalTasksForPrepare,
+  UpdateGeneral,
+  UpdateInstructions,
+  UpdateMobilization,
+} from "./festival-task/prepare/prepare.js";
+export type {
+  ForceGlobalInstructions,
+  ForceInChargeInstructions,
+  ForceInstructions,
+} from "./festival-task/prepare/sections/instructions.js";
 export { previewOf as previewOfTask } from "./festival-task/preview-of";
+export { RemoveFestivalTask } from "./festival-task/remove/remove.js";
+export type { FestivalTasksForRemoval } from "./festival-task/remove/remove.js";
+export {
+  canIgnoreFestivalTaskAs,
+  Review as ReviewTask,
+} from "./festival-task/review/review.js";
+export type { FestivalTasksForReview } from "./festival-task/review/review.js";
 export type {
-  Volunteer,
   Contact,
-  WithoutInChargeInstructions,
+  Volunteer,
   WithInChargeInstructions,
+  WithoutInChargeInstructions,
 } from "./festival-task/sections/instructions.js";
-export type {
-  Mobilization,
-  ReviewableMobilization,
-  Conflicts,
-  TeamMobilization,
-  FestivalTaskLink,
-  VolunteerWithConflicts,
-  AtLeastOneVolunteer,
-  AtLeastOneTeam,
-  Assignment,
-  MobilizationOptions,
-} from "./festival-task/sections/mobilizations.js";
 export {
   requirableTeams,
   requirableTeamsExtended,
 } from "./festival-task/sections/mobilizations.js";
-export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event.js";
 export type {
-  VolunteerConflicts,
+  Assignment,
+  AtLeastOneTeam,
+  AtLeastOneVolunteer,
+  Conflicts,
+  FestivalTaskLink,
+  Mobilization,
+  MobilizationOptions,
+  ReviewableMobilization,
+  TeamMobilization,
+  VolunteerWithConflicts,
+} from "./festival-task/sections/mobilizations.js";
+export { ViewFestivalTask } from "./festival-task/view/view.js";
+export type { FestivalTasksForView } from "./festival-task/view/view.js";
+export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts.js";
+export type {
+  DraftWithoutConflicts,
   WithConflicts as FestivalTaskWithConflicts,
   WithoutConflicts as FestivalTaskWithoutConflicts,
-  DraftWithoutConflicts,
+  ReadyToAssignWithConflicts,
+  ReadyToAssignWithoutConflicts,
   RefusedWithoutConflicts,
   ReviewableWithoutConflicts,
-  ReadyToAssignWithoutConflicts,
-  ReadyToAssignWithConflicts,
+  VolunteerConflicts,
 } from "./festival-task/volunteer-conflicts.js";
-export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts.js";
-export {
-  Review as ReviewTask,
-  canIgnoreFestivalTaskAs,
-} from "./festival-task/review/review.js";
-export type { FestivalTasksForReview } from "./festival-task/review/review.js";
-export { RemoveFestivalTask } from "./festival-task/remove/remove.js";
-export type { FestivalTasksForRemoval } from "./festival-task/remove/remove.js";
-export type {
-  ForceInstructions,
-  ForceGlobalInstructions,
-  ForceInChargeInstructions,
-} from "./festival-task/prepare/sections/instructions.js";
 
 //  **********************
 //  FESTIVAL EVENT MODULE
 //  **********************
-export type { FestivalEvent } from "./festival-event.js";
 export {
   FestivalEventError,
   isDraft,
@@ -284,3 +285,4 @@ export {
   isRefused,
   isValidated,
 } from "./festival-event.js";
+export type { FestivalEvent } from "./festival-event.js";

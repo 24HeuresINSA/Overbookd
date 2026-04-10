@@ -1,3 +1,4 @@
+export type { UserUpdateForm } from "./user-form.js";
 export type {
   MyUserInformation,
   Profile,
@@ -6,11 +7,10 @@ export type {
   UserPersonalData,
   UserWithTeams,
 } from "./user.js";
-export type { UserUpdateForm } from "./user-form.js";
 export {
   buildUserName,
+  buildUserNameWithNickname,
   nicknameOrFirstName,
   nicknameOrName,
-  buildUserNameWithNickname,
   toStandAloneUser,
 } from "./user.utils.js";

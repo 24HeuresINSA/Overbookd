@@ -1,46 +1,46 @@
-export type { Category } from "./category";
 export {
-  STATIQUE,
-  BAR,
-  MANUTENTION,
-  FUN,
-  RELOU,
-  COLLAGE,
-  taskCategories,
-} from "./category";
-export {
-  CREATED,
-  COMMENTED,
-  READY_TO_REVIEW,
   APPROVED,
+  ASSIGNMENT_STARTED,
+  COMMENTED,
+  CREATED,
+  FORCED_UPDATE,
+  READY_TO_REVIEW,
   REJECTED,
   RESET_REVIEW,
-  ASSIGNMENT_STARTED,
-  FORCED_UPDATE,
 } from "./action";
 export {
-  REVIEWING,
-  NOT_ASKING_TO_REVIEW,
-  WILL_NOT_REVIEW,
-  APPROUVEE,
-  REJETEE,
+  BAR,
+  COLLAGE,
+  FUN,
+  MANUTENTION,
+  RELOU,
+  STATIQUE,
+  taskCategories,
+} from "./category";
+export type { Category } from "./category";
+export {
   A_RELIRE,
-  PAS_DE_RELECTURE,
+  APPROUVEE,
   NE_VA_PAS_RELIRE,
+  NOT_ASKING_TO_REVIEW,
+  PAS_DE_RELECTURE,
+  REJETEE,
+  REVIEWING,
   reviewLabels,
+  WILL_NOT_REVIEW,
 } from "./review";
 export type { Review, ReviewLabel } from "./review";
 export {
+  BROUILLON,
   DRAFT,
   IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-  READY_TO_ASSIGN,
-  BROUILLON,
-  RELECTURE_EN_COURS,
-  REFUSEE,
-  VALIDEE,
   PRETE_POUR_AFFECTATION,
+  READY_TO_ASSIGN,
+  REFUSED,
+  REFUSEE,
+  RELECTURE_EN_COURS,
   statusLabels,
+  VALIDATED,
+  VALIDEE,
 } from "./status";
 export type { Status, StatusLabel } from "./status";
