@@ -141,12 +141,6 @@ $list-height: calc(
 .filterable-task-list {
   display: flex;
   flex-direction: column;
-  &__text {
-    padding: 0;
-  }
-
-  padding: 0 5px;
-  height: $list-height;
   min-height: 100%;
 
   width: 420px;
@@ -154,8 +148,16 @@ $list-height: calc(
 
   &.closed {
     width: 30px;
-    min-height: unset;
   }
+
+  &__text {
+    padding: 0;
+  }
+}
+
+.task-list {
+  padding: 0 5px;
+  height: $list-height;
 }
 
 .btn-close-side-bar {
