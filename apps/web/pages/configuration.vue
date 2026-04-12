@@ -37,35 +37,28 @@
         <h2>Date de début de la manif</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <DateField
-          v-model="dateEventStart"
-          label="Début de la manif"
-          hide-details
-        />
+        <div class="event-date">
+          <DateField
+            v-model="dateOrgaWeekStart"
+            label="Début de la semaine orga"
+            hide-details
+          />
+          <DateField
+            v-model="dateEventStart"
+            label="Début de la manif"
+            hide-details
+          />
+        </div>
+        <p v-if="isEventStartDateInvalid" class="error">
+          La date de début de la semaine orga doit être avant la date de début
+          de la manif.
+        </p>
         <v-btn
           text="Enregistrer"
           color="primary"
           class="save-btn"
+          :disabled="isEventStartDateInvalid"
           @click="saveEventStartDate"
-        />
-      </v-expansion-panel-text>
-    </v-expansion-panel>
-
-    <v-expansion-panel class="collapse">
-      <v-expansion-panel-title>
-        <h2>Date de début de la semaine orga</h2>
-      </v-expansion-panel-title>
-      <v-expansion-panel-text>
-        <DateField
-          v-model="dateOrgaWeekStart"
-          label="Début de la semaine orga"
-          hide-details
-        />
-        <v-btn
-          text="Enregistrer"
-          color="primary"
-          class="save-btn"
-          @click="saveOrgaWeekStartDate"
         />
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -122,17 +115,23 @@ const saveRegisterFormDescription = async () => {
     value: { description: registerFormDescription.value },
   });
 };
+
+const isEventStartDateInvalid = computed<boolean>(
+  () => dateOrgaWeekStart.value >= dateEventStart.value,
+);
 const saveEventStartDate = async () => {
-  await configurationStore.save({
-    key: EVENT_DATE_KEY,
-    value: { start: dateEventStart.value },
-  });
-};
-const saveOrgaWeekStartDate = async () => {
-  await configurationStore.save({
-    key: ORGA_WEEK_DATE_KEY,
-    value: { start: dateOrgaWeekStart.value },
-  });
+  if (isEventStartDateInvalid.value) return;
+
+  await Promise.all([
+    configurationStore.save({
+      key: EVENT_DATE_KEY,
+      value: { start: dateEventStart.value },
+    }),
+    configurationStore.save({
+      key: ORGA_WEEK_DATE_KEY,
+      value: { start: dateOrgaWeekStart.value },
+    }),
+  ]);
 };
 </script>
 
@@ -156,6 +155,18 @@ const saveOrgaWeekStartDate = async () => {
 
 .save-btn {
   margin-top: 12px;
+}
+
+.event-date {
+  display: flex;
+  gap: 15px;
+}
+
+.error {
+  color: rgb(var(--v-theme-error));
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 15px;
 }
 
 .white-menu-item {

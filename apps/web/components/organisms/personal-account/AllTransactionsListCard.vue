@@ -201,7 +201,7 @@ const deleteTransaction = (transaction: TransactionWithSenderAndReceiver) => {
 
 <style lang="scss" scoped>
 .deleted {
-  color: red;
+  color: rgb(var(--v-theme-error));
   text-decoration: line-through;
 }
 

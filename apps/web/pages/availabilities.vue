@@ -65,7 +65,7 @@ availabilitiyStore.fetchVolunteerAvailabilities(volunteerId.value);
 }
 
 .warning {
-  color: red;
+  color: rgb(var(--v-theme-error));
   font-weight: bold;
 }
 

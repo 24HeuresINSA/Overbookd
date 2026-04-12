@@ -16,6 +16,7 @@ import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
+import { ONE_DAY_IN_MS } from "@overbookd/time";
 
 const url = process.env.DATABASE_URL;
 if (!url) {
@@ -172,9 +173,7 @@ async function main() {
   currentDate.setHours(0, 0, 0, 0);
   const eventDateConfig: Configuration = {
     key: EVENT_DATE_KEY,
-    value: {
-      start: currentDate.toISOString(),
-    },
+    value: { start: currentDate.toISOString() },
   };
   console.log("Creating of event date config");
   await prisma.configuration.upsert({
@@ -183,11 +182,12 @@ async function main() {
     create: eventDateConfig,
   });
 
+  const lastMonth = new Date(
+    currentDate.getMilliseconds() - 33 * ONE_DAY_IN_MS,
+  );
   const orgaWeekDateConfig: Configuration = {
     key: ORGA_WEEK_DATE_KEY,
-    value: {
-      start: currentDate.toISOString(),
-    },
+    value: { start: lastMonth.toISOString() },
   };
   console.log("Creating of orga week date config");
   await prisma.configuration.upsert({
