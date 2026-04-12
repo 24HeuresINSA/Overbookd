@@ -1,3 +1,9 @@
+## [3.51.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.7...v3.51.8) (2026-04-12)
+
+### Bug Fixes
+
+* **web:** scroll in affect lists  [#2650](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2650) ([4a9f69e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4a9f69e5e26599cba47531a8de8e5c109f75baf4))
+
 ## [3.51.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.6...v3.51.7) (2026-04-12)
 
 ### Bug Fixes
