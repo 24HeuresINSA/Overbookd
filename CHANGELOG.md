@@ -1,3 +1,10 @@
+## [3.51.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.6...v3.51.7) (2026-04-12)
+
+### Bug Fixes
+
+* **configuration:** prevent orga week start from being equal or after event start [#2649](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2649) ([1adac14](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1adac14b8983f373ac45dd23f3d72cc862425331))
+* **web:** can reduce size of sidebars for assignment and improve ui [#2647](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2647) [#2648](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2648) ([8bf47db](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8bf47dbbf9b5cc4c1b32fe884d0976caac9b7bb7))
+
 ## [3.51.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.5...v3.51.6) (2026-04-05)
 
 ### Bug Fixes
