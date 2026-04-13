@@ -207,7 +207,9 @@ export class PdfRenderStrategy implements RenderStrategy {
   private generateHeader(volunteer: Volunteer) {
     return function (currentPage: number): Content {
       const headerTitle =
-        currentPage === SECURITY_PLAN_PAGE ? "Plan Sécu" : volunteer.name;
+        currentPage === SECURITY_PLAN_PAGE
+          ? "Plan du Festival"
+          : volunteer.name;
       return {
         columns: [
           {
