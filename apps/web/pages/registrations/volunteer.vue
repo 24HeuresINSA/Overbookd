@@ -306,6 +306,7 @@ const toggleRejectedCandidates = () => {
 
 const enrollCandidate = (candidate: VolunteerCandidate) => {
   membershipApplicationStore.enrollNewVolunteers([candidate]);
+  closeCandidateInfoDialogue();
 };
 const rejectCandidate = (candidateId: number) => {
   membershipApplicationStore.rejectVolunteerCandidate(candidateId);
