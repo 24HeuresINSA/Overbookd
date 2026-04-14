@@ -91,7 +91,6 @@ describe("Date presenter", () => {
       it(`should generate ${expected}`, () => {
         const displayableDate = new DayPresenter(OverDate.from(date))
           .displayableDate;
-        console.log(OverDate.from(date).date);
         expect(displayableDate).toBe(expected);
       });
     });
