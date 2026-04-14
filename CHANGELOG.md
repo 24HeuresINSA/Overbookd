@@ -1,3 +1,10 @@
+## [3.51.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.8...v3.51.9) (2026-04-14)
+
+### Bug Fixes
+
+* **planning:** display weekday in multi planning [#2653](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2653) ([70675d6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/70675d6813d81f1c784f2496f32585ce62504046))
+* **web:** close dialog after enrolling volunteer [#2651](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2651) ([296d575](https://gitlab.com/24-heures-insa/overbookd-mono/commit/296d57578dc24c7bccfc7f8fb3347a9950e4cf05))
+
 ## [3.51.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.7...v3.51.8) (2026-04-12)
 
 ### Bug Fixes
