@@ -14,6 +14,18 @@ export type CalendarDay = {
   date: OverDate;
 };
 
+const locales = "fr-FR";
+const monthYearFormatOptions: Intl.DateTimeFormatOptions = {
+  timeZone: "Europe/Paris",
+  month: "long",
+  year: "numeric",
+};
+const dateFormatOptions: Intl.DateTimeFormatOptions = {
+  ...monthYearFormatOptions,
+  weekday: "long",
+  day: "2-digit",
+};
+
 export class DayPresenter {
   constructor(public readonly date: OverDate) {}
 
@@ -51,14 +63,19 @@ export class DayPresenter {
   }
 
   get displayableDate(): string {
-    const day = this.date.date.toLocaleDateString("fr-FR", { day: "2-digit" });
-    const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
-    return `${day} ${month} ${this.date.year}`;
+    const displayableDate = this.date.date.toLocaleDateString(
+      locales,
+      dateFormatOptions,
+    );
+    return displayableDate;
   }
 
   get displayableMonthWithYear(): string {
-    const month = this.date.date.toLocaleDateString("fr-FR", { month: "long" });
-    return `${month} ${this.date.year}`;
+    const displayableMonthWithYear = this.date.date.toLocaleDateString(
+      locales,
+      monthYearFormatOptions,
+    );
+    return displayableMonthWithYear;
   }
 
   isSameDayThan(other: OverDate): boolean {
