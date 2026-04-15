@@ -94,7 +94,7 @@ export class CalendarEventPresenter {
         return a.start.getTime() - b.start.getTime();
       }
       if (a.end.getTime() !== b.end.getTime()) {
-        return a.end.getTime() - b.end.getTime();
+        return b.end.getTime() - a.end.getTime();
       }
       return a.id.localeCompare(b.id);
     });
