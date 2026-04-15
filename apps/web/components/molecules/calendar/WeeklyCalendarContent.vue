@@ -22,10 +22,11 @@
 import type { IProvidePeriod, Period } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
+import type { DisplayableCalendarEvent } from "~/utils/calendar/calendar.organizer";
 
 defineProps({
   events: {
-    type: Array as PropType<CalendarEvent[]>,
+    type: Array as PropType<DisplayableCalendarEvent[]>,
     required: true,
   },
   day: {

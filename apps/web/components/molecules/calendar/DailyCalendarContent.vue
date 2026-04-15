@@ -5,7 +5,6 @@
       :key="event.id"
       :event="event"
       :day="day"
-      :among="eventsToDisplayWithout(event)"
       :clickable="clickableEvents"
       @click="propagateEventClick"
       @click-right="propagateEventRightClick"
@@ -34,10 +33,11 @@ import {
 } from "@overbookd/time";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { CalendarEvent } from "~/utils/calendar/event";
+import type { DisplayableCalendarEvent } from "~/utils/calendar/calendar.organizer";
 
 const props = defineProps({
   events: {
-    type: Array as PropType<CalendarEvent[]>,
+    type: Array as PropType<DisplayableCalendarEvent[]>,
     required: true,
   },
   day: {
@@ -54,7 +54,7 @@ const props = defineProps({
   },
 });
 
-const eventsToDisplay = computed<CalendarEvent[]>(() =>
+const eventsToDisplay = computed<DisplayableCalendarEvent[]>(() =>
   props.day.eventsOccuringThatDayAmong(props.events),
 );
 
@@ -79,10 +79,6 @@ const isAvailable = (hour: number): boolean => {
     hour: hour as Hour,
   });
   return date.isIncludedBy(props.availabilities);
-};
-
-const eventsToDisplayWithout = (event: CalendarEvent): CalendarEvent[] => {
-  return eventsToDisplay.value.filter((e) => e.id !== event.id);
 };
 </script>
 

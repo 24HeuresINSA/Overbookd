@@ -6,7 +6,7 @@ import {
   OverDate,
   Period,
 } from "@overbookd/time";
-import type { CalendarEvent } from "./event";
+import type { DisplayableCalendarEvent } from "./calendar.organizer";
 
 export type CalendarDay = {
   name: string;
@@ -92,7 +92,9 @@ export class DayPresenter {
     return week.isIncluding(other.date);
   }
 
-  eventsOccuringThatDayAmong(events: CalendarEvent[]): CalendarEvent[] {
+  eventsOccuringThatDayAmong(
+    events: DisplayableCalendarEvent[],
+  ): DisplayableCalendarEvent[] {
     return events.filter((event) => Period.init(event).isInDay(this.date.date));
   }
 

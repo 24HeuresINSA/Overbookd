@@ -1,12 +1,10 @@
 import { Period, OverDate, MINUTES_IN_DAY, Duration } from "@overbookd/time";
-import type { CalendarEvent } from "~/utils/calendar/event";
 import type { DayPresenter } from "./day.presenter";
+import type { DisplayableCalendarEvent } from "./calendar.organizer";
 
 export const PIXELS_PER_MINUTE = 0.75;
 export const VERTICAL_MARGIN_IN_PIXELS = 1;
 export const HORIZONTAL_MARGIN_IN_PERCENTAGE = 1;
-
-type CalendarEventWithPeriod = CalendarEvent & { period: Period };
 
 class Pixel {
   constructor(public readonly value: number) {}
@@ -26,12 +24,10 @@ class Percentage {
 
 export class CalendarEventPresenter {
   private _minutesBetweenDayStartAndEventStart?: number;
-  private _simultaneousEventCount?: number;
 
   constructor(
-    private readonly event: CalendarEvent,
+    private readonly event: DisplayableCalendarEvent,
     private readonly day: DayPresenter,
-    private readonly among: CalendarEvent[] = [],
   ) {}
 
   private get minutesBetweenDayStartAndEventStart(): number {
@@ -72,54 +68,16 @@ export class CalendarEventPresenter {
     return new Pixel(displayedDuration * PIXELS_PER_MINUTE - verticalMargin);
   }
 
-  private get simultaneousEvents(): CalendarEvent[] {
-    const event: CalendarEventWithPeriod = {
-      ...this.event,
-      period: Period.init({ start: this.event.start, end: this.event.end }),
-    };
-    const overlappingEvents: CalendarEventWithPeriod[] = this.among
-      .map((other) => ({ ...other, period: Period.init(other) }))
-      .filter((other) => event.period.isOverlapping(other.period));
-
-    const allEvents = [event, ...overlappingEvents];
-    const resultSet = allEvents.reduce((set, evt) => {
-      if ([...set].every((e) => evt.period.isOverlapping(e.period))) {
-        set.add(evt);
-      }
-      return set;
-    }, new Set<CalendarEventWithPeriod>());
-
-    return [...resultSet].sort((a, b) => {
-      if (a.start.getTime() !== b.start.getTime()) {
-        return a.start.getTime() - b.start.getTime();
-      }
-      if (a.end.getTime() !== b.end.getTime()) {
-        return b.end.getTime() - a.end.getTime();
-      }
-      return a.id.localeCompare(b.id);
-    });
-  }
-
-  get simultaneousEventCount(): number {
-    if (this._simultaneousEventCount === undefined) {
-      this._simultaneousEventCount = this.simultaneousEvents.length;
-    }
-    return this._simultaneousEventCount;
-  }
-
   get width(): Percentage {
     const horizontalMargin = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
-    const baseWidth = 100 / this.simultaneousEventCount;
+    const baseWidth =
+      (100 / this.event.columnCount) *
+      (this.event.endColumn - this.event.startColumn);
     return new Percentage(baseWidth - horizontalMargin);
   }
 
   get left(): Percentage {
-    const index = this.simultaneousEvents.findIndex(
-      (simultaneous) => this.event.id === simultaneous.id,
-    );
-    if (index === -1) throw new Error("Event not found in simultaneousEvents");
-
-    const baseLeft = (100 / this.simultaneousEventCount) * index;
+    const baseLeft = (100 / this.event.columnCount) * this.event.startColumn;
     return new Percentage(baseLeft + HORIZONTAL_MARGIN_IN_PERCENTAGE);
   }
 

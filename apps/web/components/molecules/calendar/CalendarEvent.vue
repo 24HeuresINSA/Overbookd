@@ -17,21 +17,17 @@
 </template>
 
 <script lang="ts" setup>
-import type { CalendarEvent } from "~/utils/calendar/event";
 import { CalendarEventPresenter } from "~/utils/calendar/calendar.presenter";
 import type { DayPresenter } from "~/utils/calendar/day.presenter";
+import type { DisplayableCalendarEvent } from "~/utils/calendar/calendar.organizer";
 
 const props = defineProps({
   event: {
-    type: Object as PropType<CalendarEvent>,
+    type: Object as PropType<DisplayableCalendarEvent>,
     required: true,
   },
   day: {
     type: Object as PropType<DayPresenter>,
-    required: true,
-  },
-  among: {
-    type: Object as PropType<CalendarEvent[]>,
     required: true,
   },
   clickable: {
@@ -49,7 +45,7 @@ const propagateRightClick = () => {
 };
 
 const presenter = computed<CalendarEventPresenter>(() => {
-  return new CalendarEventPresenter(props.event, props.day, props.among);
+  return new CalendarEventPresenter(props.event, props.day);
 });
 </script>
 

@@ -58,7 +58,7 @@
         <slot name="content">
           <DailyCalendarContent
             v-if="isDayMode"
-            :events="events"
+            :events="displayableEvents"
             :day="day"
             :clickable-events="clickableEvents"
             :availabilities="availabilities"
@@ -68,7 +68,7 @@
           />
           <WeeklyCalendarContent
             v-else
-            :events="events"
+            :events="displayableEvents"
             :day="day"
             :clickable-events="clickableEvents"
             :availabilities="availabilities"
@@ -95,11 +95,15 @@ import { DAY_MODE, type CalendarMode } from "~/utils/calendar/calendar-mode";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
+import {
+  CalendarEventOrganizer,
+  type DisplayableCalendarEvent,
+} from "~/utils/calendar/calendar.organizer";
 
 const publicHolidayStore = usePublicHolidayStore();
 const layoutStore = useLayoutStore();
 
-const props = defineProps({
+const { events, mode } = defineProps({
   events: {
     type: Array as PropType<CalendarEvent[]>,
     default: () => [],
@@ -134,8 +138,13 @@ const day = computed<DayPresenter>({
   set: (value) => (dayModel.value = value.date.date),
 });
 const isDayMode = computed<boolean>(() =>
-  props.mode ? props.mode === DAY_MODE : layoutStore.isMobile,
+  mode ? mode === DAY_MODE : layoutStore.isMobile,
 );
+
+const displayableEvents = computed<DisplayableCalendarEvent[]>(() => {
+  const calendarEventOrganizer = new CalendarEventOrganizer(events);
+  return calendarEventOrganizer.displayableEvents;
+});
 
 const shiftDelimiterMap = new Map<number, string>([
   [SHIFT_HOURS.DAY + 1, "day-start"],
