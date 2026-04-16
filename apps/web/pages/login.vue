@@ -89,6 +89,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Credentials } from "@overbookd/registration";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
@@ -108,10 +109,15 @@ const register = () => {
   navigateTo({ path: REGISTER_URL, query });
 };
 
-const credentials = ref({
+const credentials = ref<Credentials>({
   email: "",
   password: "",
 });
+const cleanedCredentials = computed<Credentials>(() => ({
+  email: credentials.value.email.trim().toLowerCase(),
+  password: credentials.value.password.trim(),
+}));
+
 const loading = ref<boolean>(false);
 const image = ref<string>(pickRandomBackground());
 
@@ -121,13 +127,13 @@ setInterval(
 );
 
 const login = async () => {
-  if (!credentials.value.email.trim() || !credentials.value.password.trim()) {
+  if (!cleanedCredentials.value.email || !cleanedCredentials.value.password) {
     return sendFailureNotification(
       "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
     );
   }
   loading.value = true;
-  await loginAndApplyForMembership(credentials.value, token.value);
+  await loginAndApplyForMembership(cleanedCredentials.value, token.value);
   loading.value = false;
 };
 
