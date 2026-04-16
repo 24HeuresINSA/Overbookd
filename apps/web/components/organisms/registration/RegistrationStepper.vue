@@ -428,7 +428,10 @@ const register = async () => {
     return;
   }
 
-  const credentials = { email: email.value, password: password.value };
+  const credentials = {
+    email: email.value.trim().toLowerCase(),
+    password: password.value,
+  };
   await loginAndApplyForMembership(credentials, token.value);
   loading.value = false;
 };
