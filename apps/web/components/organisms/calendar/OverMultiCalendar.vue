@@ -88,6 +88,10 @@ import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import type { CalendarEvent } from "~/utils/calendar/event";
 import { DAY_MODE } from "~/utils/calendar/calendar-mode";
+import {
+  CalendarEventOrganizer,
+  type DisplayableCalendarEvent,
+} from "~/utils/calendar/calendar.organizer";
 
 const dayModel = defineModel<Date>({
   default: OverDate.now().date,
@@ -161,8 +165,17 @@ const nextPage = () => {
   page.value += 1;
 };
 
-const withEventToAdd = (assignments: CalendarEvent[]): CalendarEvent[] => {
-  return eventToAdd ? [...assignments, eventToAdd] : assignments;
+const withEventToAdd = (
+  assignments: CalendarEvent[],
+): DisplayableCalendarEvent[] => {
+  const assignmentsWithMaybeEvent = eventToAdd
+    ? [...assignments, eventToAdd]
+    : assignments;
+
+  const calendarEventOrganizer = new CalendarEventOrganizer(
+    assignmentsWithMaybeEvent,
+  );
+  return calendarEventOrganizer.displayableEvents;
 };
 
 const headerScrollRef = ref<HTMLElement | null>(null);
