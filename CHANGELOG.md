@@ -1,3 +1,9 @@
+## [3.51.12](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.11...v3.51.12) (2026-04-16)
+
+### Bug Fixes
+
+* **assignment:** only display accepted volunteers in task-orga [#2657](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2657) ([5225dca](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5225dcae29a056febe74306a778226e13006c86c))
+
 ## [3.51.11](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.10...v3.51.11) (2026-04-16)
 
 ### Bug Fixes
