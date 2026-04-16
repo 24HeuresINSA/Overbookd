@@ -19,7 +19,6 @@ import {
   COUNT_FRIENDS,
   hasAtLeastOneFriend,
 } from "../../common/repository/friend.query";
-import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
@@ -29,6 +28,7 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../../../common/query/charisma.query";
 import { NO_PREF } from "@overbookd/preference";
+import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -205,7 +205,6 @@ function toStoredAssignableVolunteer(
 function isAssignableOn(oneOfTheTeams: string[], period: Period) {
   return {
     ...IS_NOT_DELETED,
-    ...HAS_AVAILABILITIES,
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
     breaks: { none: overlapPeriodCondition(period) },
@@ -235,7 +234,12 @@ function buildHasAvailabilityCondition(
   period: IProvidePeriod,
 ) {
   return {
-    teams: { some: { teamCode: { in: extendOneOfTeams(oneOfTheTeams) } } },
+    AND: [
+      IS_MEMBER_OF_VOLUNTEER_TEAM,
+      {
+        teams: { some: { teamCode: { in: extendOneOfTeams(oneOfTheTeams) } } },
+      },
+    ],
     availabilities: { some: includePeriodCondition(period) },
   };
 }
