@@ -115,7 +115,7 @@ const credentials = ref<Credentials>({
 });
 const cleanedCredentials = computed<Credentials>(() => ({
   email: credentials.value.email.trim().toLowerCase(),
-  password: credentials.value.password.trim(),
+  password: credentials.value.password,
 }));
 
 const loading = ref<boolean>(false);
