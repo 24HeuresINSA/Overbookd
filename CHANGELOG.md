@@ -1,3 +1,9 @@
+## [3.51.11](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.10...v3.51.11) (2026-04-16)
+
+### Bug Fixes
+
+* **web:** properly fix calendar overlapping events [#2434](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2434) ([4388289](https://gitlab.com/24-heures-insa/overbookd-mono/commit/43882894e61718ff493815f7c18ffb801a6d885c))
+
 ## [3.51.10](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.9...v3.51.10) (2026-04-15)
 
 ### Bug Fixes
