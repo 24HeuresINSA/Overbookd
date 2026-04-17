@@ -62,6 +62,7 @@ import {
   VIEUX,
   FEN,
   CAMION,
+  VOITURE,
 } from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
@@ -111,9 +112,10 @@ const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
 );
 const vehicles = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   props.volunteers.filter((volunteer) => {
+    const isVoiture = volunteer.teams.includes(VOITURE);
     const isCamion = volunteer.teams.includes(CAMION);
     const isFen = volunteer.teams.includes(FEN);
-    return isCamion || isFen;
+    return isVoiture || isCamion || isFen;
   }),
 );
 

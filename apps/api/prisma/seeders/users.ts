@@ -27,9 +27,9 @@ export const userTeamTuples: string[][] = [
   ["plaizir", "personne,hard,plaizir"],
   ["sponso", "personne,hard,sponso"],
   ["sports", "personne,hard,sports"],
-  ["fen", "hard,fen"],
-  ["voiture", "hard,voiture"],
-  ["camion", "hard,camion"],
+  ["fen", "fen"],
+  ["voiture", "voiture"],
+  ["camion", "camion"],
   ["accueil-artiste", "personne,hard,orga,accueil-artiste"],
   ["newcomer", ""],
 ];
