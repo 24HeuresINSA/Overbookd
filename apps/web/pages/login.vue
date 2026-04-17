@@ -113,11 +113,6 @@ const credentials = ref<Credentials>({
   email: "",
   password: "",
 });
-const cleanedCredentials = computed<Credentials>(() => ({
-  email: credentials.value.email.trim().toLowerCase(),
-  password: credentials.value.password,
-}));
-
 const loading = ref<boolean>(false);
 const image = ref<string>(pickRandomBackground());
 
