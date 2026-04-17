@@ -127,13 +127,17 @@ setInterval(
 );
 
 const login = async () => {
-  if (!cleanedCredentials.value.email || !cleanedCredentials.value.password) {
+  const cleanedCredentials: Credentials = {
+    email: credentials.value.email.trim().toLowerCase(),
+    password: credentials.value.password,
+  };
+  if (!cleanedCredentials.email || !cleanedCredentials.password) {
     return sendFailureNotification(
       "Hmmm, t'aurais pas oublié de remplir quelque chose ?",
     );
   }
   loading.value = true;
-  await loginAndApplyForMembership(cleanedCredentials.value, token.value);
+  await loginAndApplyForMembership(cleanedCredentials, token.value);
   loading.value = false;
 };
 
