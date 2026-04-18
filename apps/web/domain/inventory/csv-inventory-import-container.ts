@@ -86,9 +86,10 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       (column) => !(column in firstRow),
     );
     if (missingColumns.length > 0) {
-      console.error(`Missing required columns: ${missingColumns.join(", ")}`);
+      const joinedColumns = missingColumns.join(", ");
+      console.error(`Missing required columns: ${joinedColumns}`);
       sendFailureNotification(
-        `Colonnes requises manquantes: ${missingColumns.join(", ")}.`,
+        `Colonnes requises manquantes: ${joinedColumns}.`,
       );
       return false;
     }
@@ -108,7 +109,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
 
   private convertFileHeaderToRecordKeys(
     header: string[],
-  ): (keyof InventoryImportRaw)[] {
+  ): (keyof InventoryImportRaw | undefined)[] {
     return header.map((column) => {
       const translated =
         CSVInventoryImportContainer.headerTranslation[
@@ -116,7 +117,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
         ];
       if (!translated) {
         console.error(`Don't know column ${column}`);
-        return undefined as unknown as keyof InventoryImportRaw;
+        return undefined;
       }
       return translated;
     });
