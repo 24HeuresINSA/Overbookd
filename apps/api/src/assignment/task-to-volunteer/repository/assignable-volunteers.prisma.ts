@@ -129,6 +129,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
             { requestor: isAssignableOn(oneOfTheTeams, period) },
             { requestor: isAssignedOn(assignmentIdentifier) },
           ],
+          requestor: IS_NOT_DELETED,
         },
       },
       friendRequestors: {
@@ -138,6 +139,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
             { friend: isAssignableOn(oneOfTheTeams, period) },
             { friend: isAssignedOn(assignmentIdentifier) },
           ],
+          friend: IS_NOT_DELETED,
         },
       },
     };

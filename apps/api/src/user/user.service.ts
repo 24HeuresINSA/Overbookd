@@ -27,6 +27,7 @@ import {
 import {
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
+  SELECT_USER_FRIENDS,
   SELECT_USER_PERSONAL_DATA,
   SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER,
   hasPermission,
@@ -270,10 +271,7 @@ export class UserService {
       }),
       this.prisma.user.findUnique({
         where: { id: volunteerId },
-        select: {
-          friends: { select: { requestorId: true } },
-          friendRequestors: { select: { friendId: true } },
-        },
+        select: SELECT_USER_FRIENDS,
       }),
     ]);
 

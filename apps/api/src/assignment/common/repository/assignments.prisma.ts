@@ -25,6 +25,7 @@ import {
 } from "@overbookd/http";
 import {
   SELECT_PERIOD_AND_CATEGORY,
+  SELECT_USER_FRIENDS,
   hasPermission,
 } from "../../../user/user.query";
 import { UserService } from "../../../user/user.service";
@@ -225,8 +226,7 @@ export class PrismaAssignments implements AssignmentRepository {
               },
             },
           },
-          friends: { select: { requestorId: true } },
-          friendRequestors: { select: { friendId: true } },
+          ...SELECT_USER_FRIENDS,
         },
         orderBy: { id: "asc" },
       }),
