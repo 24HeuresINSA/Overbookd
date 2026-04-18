@@ -60,7 +60,9 @@ const day = ref<Date>(start.value);
 const volunteers = computed<HelpingVolunteer[]>(
   () => needHelpStore.filteredVolunteers,
 );
-const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
+
+type HelpingVolunteerForCalendar = VolunteerForCalendar & HelpingVolunteer;
+const volunteersForCalendar = computed<HelpingVolunteerForCalendar[]>(() =>
   volunteers.value.map((volunteer) => ({
     ...volunteer,
     events: volunteer.assignments.map(createCalendarEvent),

@@ -130,13 +130,13 @@
                   {{ buildUserName(friend) }}
                 </v-chip>
                 <span v-show="selectedVolunteerFriends.length === 0">
-                  Aucun ami
+                  Aucun·e ami·e
                 </span>
               </div>
               <SearchFriend
                 v-show="canManageUsers"
                 v-model="newFriend"
-                title="Ajouter un ami"
+                title="Ajouter un·e ami·e"
                 class="friends__input"
                 hide-details
                 @update:model-value="sendFriendRequest"

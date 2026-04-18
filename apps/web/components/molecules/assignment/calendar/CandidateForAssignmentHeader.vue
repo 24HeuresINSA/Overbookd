@@ -58,12 +58,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { IDefineCandidate, IActAsFunnel } from "@overbookd/assignment";
-import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
+import type {
+  IDefineCandidate,
+  IActAsFunnel,
+  AssignableVolunteer,
+} from "@overbookd/assignment";
 
-const props = defineProps({
+const { candidate, funnel } = defineProps({
   candidate: {
-    type: Object as PropType<VolunteerForCalendar>,
+    type: Object as PropType<AssignableVolunteer>,
     required: true,
   },
   funnel: {
@@ -73,20 +76,18 @@ const props = defineProps({
 });
 
 const isLastCandidate = computed<boolean>(() => {
-  const lastCandidate = props.funnel.candidates.at(-1);
-  return lastCandidate?.id === props.candidate.id;
+  const lastCandidate = funnel.candidates.at(-1);
+  return lastCandidate?.id === candidate.id;
 });
 const canRevokeCandidate = computed<boolean>(
-  () => props.funnel.canRevokeLastCandidate && isLastCandidate.value,
+  () => funnel.canRevokeLastCandidate && isLastCandidate.value,
 );
 const canChangeCandidate = computed<boolean>(
-  () => props.funnel.canChangeLastCandidate && isLastCandidate.value,
+  () => funnel.canChangeLastCandidate && isLastCandidate.value,
 );
 
 const funnelCandidate = computed<IDefineCandidate | undefined>(() => {
-  return props.funnel.candidates.find(
-    (candidate) => candidate.id === props.candidate.id,
-  );
+  return funnel.candidates.find((candidate) => candidate.id === candidate.id);
 });
 const assignableTeams = computed<string[]>(() => {
   if (!funnelCandidate.value) return [];
@@ -100,7 +101,7 @@ const emit = defineEmits(["revoke", "next", "previous", "temporary-assign"]);
 const revokeCandidate = () => emit("revoke");
 const previousCandidate = () => emit("previous");
 const nextCandidate = () => emit("next");
-const temporaryAssign = (team: string, candidate: VolunteerForCalendar) => {
+const temporaryAssign = (team: string, candidate: AssignableVolunteer) => {
   emit("temporary-assign", team, candidate);
 };
 </script>

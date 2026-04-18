@@ -11,20 +11,22 @@
         size="x-small"
       />
     </div>
-    <a :href="formatPhoneLink(volunteer?.phone ?? '')" class="volunteer-phone">
-      {{ formatPhoneNumber(volunteer?.phone ?? "") }}
+    <a :href="formatPhoneLink(volunteer.phone)" class="volunteer-phone">
+      {{ formatPhoneNumber(volunteer.phone) }}
     </a>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { HelpingVolunteer } from "@overbookd/http";
 import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 
+type HelpingVolunteerForCalendar = VolunteerForCalendar & HelpingVolunteer;
 defineProps({
   volunteer: {
-    type: Object as PropType<VolunteerForCalendar>,
+    type: Object as PropType<HelpingVolunteerForCalendar>,
     required: true,
   },
 });

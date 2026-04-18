@@ -96,14 +96,14 @@ export class PrismaAssignments implements AssignmentRepository {
       inChargeVolunteers,
       inChargeInstruction,
     } = festivalTask;
-    const assignementPeriod = Period.init({ start, end });
+    const assignmentPeriod = Period.init({ start, end });
     const uniqueAssignees = new Set(
       assignees
         .filter((assignee) =>
           Period.init({
             start: assignee.assignment.start,
             end: assignee.assignment.end,
-          }).isOverlapping(assignementPeriod),
+          }).isOverlapping(assignmentPeriod),
         )
         .map(({ personalData }) => personalData),
     );

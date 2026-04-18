@@ -40,3 +40,16 @@ export const taskCategoryEmojiMap: Map<DisplayableCategory, TaskCategoryEmoji> =
     [COLLAGE, taskCategoryEmojis.COLLAGE],
     [AUCUNE, taskCategoryEmojis.AUCUNE],
   ]);
+
+export function getStatCategoryEmoji(
+  category: DisplayableCategory | null,
+): string {
+  if (category === null) return taskCategoryEmojis.AUCUNE;
+  return taskCategoryEmojiMap.get(category) ?? taskCategoryEmojis.AUCUNE;
+}
+
+export function getStatCategoryName(
+  category: DisplayableCategory | null,
+): string {
+  return capitalizeFirstLetter(category?.toLowerCase() ?? "indeterminé");
+}

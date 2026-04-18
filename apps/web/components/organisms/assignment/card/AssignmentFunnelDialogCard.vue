@@ -73,7 +73,7 @@ import {
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
-const props = defineProps({
+const { assignment, volunteer } = defineProps({
   assignment: {
     type: Object as PropType<Assignment>,
     required: true,
@@ -90,21 +90,23 @@ onMounted(async () => {
     candidateFactory(),
     new AssignmentsRepository(),
   )
-    .select(props.assignment)
-    .select(props.volunteer);
+    .select(assignment)
+    .select(volunteer);
 });
 
-const day = ref<Date>(props.assignment.start);
+const day = ref<Date>(assignment.start);
 
 const taskTitle = computed(() => {
-  const { taskId, name } = props.assignment;
+  const { taskId, name } = assignment;
   return `[${taskId}] ${name}`;
 });
 const openTaskInNewTab = () => {
-  openPageWithIdInNewTab(FT_URL, props.assignment.taskId);
+  openPageWithIdInNewTab(FT_URL, assignment.taskId);
 };
 
-const candidatesForCalendar = computed<VolunteerForCalendar[]>(() => {
+type AssignableVolunteerForCalendar = VolunteerForCalendar &
+  AssignableVolunteer;
+const candidatesForCalendar = computed<AssignableVolunteerForCalendar[]>(() => {
   if (!funnel.value) return [];
   return funnel.value.candidates.map((candidate) => ({
     ...candidate,
@@ -133,9 +135,9 @@ const retrieveCandidateBreaksAsEvents = (
 };
 const assignmentAsEvent = computed<CalendarEvent>(() => {
   return createCalendarEvent({
-    start: props.assignment.start,
-    end: props.assignment.end,
-    name: props.assignment.name,
+    start: assignment.start,
+    end: assignment.end,
+    name: assignment.name,
   });
 });
 
@@ -155,7 +157,7 @@ const previousCandidate = async () => {
   if (!funnel.value?.canChangeLastCandidate) return;
   funnel.value = await funnel.value.previousCandidate();
 };
-const temporaryAssign = (team: string, candidate: VolunteerForCalendar) => {
+const temporaryAssign = (team: string, candidate: AssignableVolunteer) => {
   if (!funnel.value) return;
   funnel.value = funnel.value.fulfillDemand({
     volunteer: candidate.id,
@@ -167,7 +169,7 @@ const emit = defineEmits(["volunteers-assigned", "close"]);
 const assign = async () => {
   if (!funnel.value || !funnel.value.canAssign) return;
   await funnel.value.assign();
-  emit("volunteers-assigned", props.assignment);
+  emit("volunteers-assigned", assignment);
   close();
 };
 const close = () => emit("close");

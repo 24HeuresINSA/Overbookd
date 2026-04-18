@@ -16,7 +16,8 @@
           🫂 {{ getDisplayedDuration(stats.withFriendsAssignmentDuration) }}
         </span>
       </template>
-      <span>Avec des ami·e·s
+      <span>
+        Avec des ami·e·s
         <br />
         {{ stats.friendsCount }} ami·e
         {{ stats.friendsCount !== 1 ? "·s" : "" }} au total
@@ -30,10 +31,9 @@ import type { AssignmentStats } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
 import {
   AUCUNE,
-  type DisplayableCategory,
   displayableCategories,
-  taskCategoryEmojiMap,
-  taskCategoryEmojis,
+  getStatCategoryEmoji,
+  getStatCategoryName,
 } from "~/utils/assignment/task-category";
 import { sumAssignmentDuration } from "~/utils/sort/sort-stats.utils";
 import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
@@ -63,13 +63,6 @@ const displayedTotalDuration = computed<string>(() => {
   return sumAssignmentDuration(sortedStats.value).toString();
 });
 
-const getStatCategoryEmoji = (category: DisplayableCategory | null): string => {
-  if (category === null) return taskCategoryEmojis.AUCUNE;
-  return taskCategoryEmojiMap.get(category) ?? taskCategoryEmojis.AUCUNE;
-};
-const getStatCategoryName = (category: DisplayableCategory | null): string => {
-  return capitalizeFirstLetter(category?.toLowerCase() ?? "indeterminé");
-};
 const getDisplayedDuration = (duration: number): string => {
   return Duration.ms(duration).toString();
 };

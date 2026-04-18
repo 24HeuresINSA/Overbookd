@@ -11,50 +11,48 @@
         size="x-small"
       />
     </div>
-    <p class="stat">{{ assignmentStat }}</p>
-    <p class="stat">{{ totalAssignmentStat }}</p>
+    <AssignmentVolunteerIcons :volunteer />
+    <p class="stat">
+      {{ getStatCategoryName(assignmentCategory) }} :
+      {{ getDisplayedDuration(volunteer.assignmentDuration) }}
+    </p>
+    <p class="stat">
+      Total : {{ getDisplayedDuration(volunteer.totalAssignmentDuration) }}
+    </p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
+import type { AssignableVolunteer } from "@overbookd/assignment";
+import type { Category } from "@overbookd/festival-event-constants";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
-import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
+import { getStatCategoryName } from "~/utils/assignment/task-category";
 import { sortTeamsForAssignment } from "~/utils/sort/sort-teams.utils";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
-const props = defineProps({
+const { volunteer } = defineProps({
   volunteer: {
-    type: Object as PropType<VolunteerForCalendar>,
+    type: Object as PropType<AssignableVolunteer>,
     required: true,
   },
 });
 
 const displayableVolunteerNameWithCharisma = computed(() => {
-  const formatedName = buildUserName(props.volunteer);
-  return `${formatedName} | ${props.volunteer.charisma}`;
+  const formatedName = buildUserName(volunteer);
+  return `${formatedName} | ${volunteer.charisma}`;
 });
 const sortedVolunteerTeams = computed<string[]>(() =>
-  sortTeamsForAssignment(props.volunteer.teams),
+  sortTeamsForAssignment(volunteer.teams),
 );
-const assignmentStat = computed<string>(() => {
-  const duration = Duration.ms(props.volunteer.assignmentDuration ?? 0);
-  return `${category.value.toLowerCase()} : ${duration.toString()}`;
-});
-const totalAssignmentStat = computed<string>(() => {
-  const duration = Duration.ms(props.volunteer.totalAssignmentDuration ?? 0);
-  return `total : ${duration.toString()}`;
-});
+const assignmentCategory = computed<Category | null>(
+  () => assignTaskToVolunteerStore.selectedTask?.category ?? null,
+);
 
-const selectedTask = computed<TaskWithAssignmentsSummary | null>(
-  () => assignTaskToVolunteerStore.selectedTask,
-);
-const category = computed<string>(() => {
-  if (!selectedTask) return "affectées";
-  return selectedTask.value?.category ?? "indéterminées";
-});
+const getDisplayedDuration = (duration: number): string => {
+  return Duration.ms(duration).toString();
+};
 </script>
 
 <style lang="scss" scoped>

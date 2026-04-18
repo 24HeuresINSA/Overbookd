@@ -1,6 +1,6 @@
-export const AUCUN_AMI = "Aucun ami";
-export const AMIS_DISPONIBLES = "Amis disponibles";
-export const AMIS_DEJA_AFFECTES = "Amis déjà affectés";
+export const AUCUN_AMI = "Aucun·e ami·e";
+export const AMIS_DISPONIBLES = "Ami·e·s disponibles";
+export const AMIS_DEJA_AFFECTES = "Ami·e·s déjà affectés";
 
 export type FriendFilter =
   | typeof AUCUN_AMI

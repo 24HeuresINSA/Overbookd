@@ -3,60 +3,7 @@
     <div class="volunteer-card-data" @contextmenu.prevent="openPlanning">
       <div class="info-row">
         <span class="info-row__title">{{ formattedUserInformations }}</span>
-        <div class="info-row__icons">
-          <v-icon
-            v-if="shouldShowNoFriendIcon"
-            v-tooltip:top="'N\'a aucun ami'"
-            icon="mdi-account-alert"
-            aria-label="N'a aucun ami"
-            size="small"
-            color="red"
-          />
-          <v-icon
-            v-if="shouldShowFriendAssignedIcon"
-            v-tooltip:top="'Ami déjà assigné sur le créneau'"
-            icon="mdi-account-check"
-            aria-label="Ami déjà assigné sur le créneau"
-            size="small"
-            color="green"
-          />
-          <v-icon
-            v-if="shouldShowAvailableFriendsIcon"
-            v-tooltip:top="'Amis disponibles sur le même créneau'"
-            icon="mdi-account-group"
-            aria-label="Amis disponibles sur le même créneau"
-            size="small"
-          />
-          <v-icon
-            v-if="volunteer.note"
-            v-tooltip:top="volunteer.note"
-            icon="mdi-note"
-            :aria-label="volunteer.note"
-            size="small"
-          />
-          <v-icon
-            v-if="volunteer.comment"
-            v-tooltip:top="volunteer.comment"
-            icon="mdi-comment"
-            :aria-label="volunteer.comment"
-            size="small"
-          />
-          <v-icon
-            v-if="shouldShowRequestedOnDraftTaskIcon"
-            v-tooltip:top="'Demandé sur une FT non terminée'"
-            icon="mdi-alert"
-            aria-label="Demandé sur une FT non terminée"
-            size="small"
-            color="orange"
-          />
-          <v-icon
-            v-if="preferenceAssignmentIcon"
-            v-tooltip:top="preferenceAssignmentIcon.label"
-            :icon="preferenceAssignmentIcon.icon"
-            :aria-label="preferenceAssignmentIcon.label"
-            size="small"
-          />
-        </div>
+        <AssignmentVolunteerIcons :volunteer class="info-row__icons" />
       </div>
       <div>
         <TeamChip
@@ -73,8 +20,6 @@
 
 <script lang="ts" setup>
 import type { TaskWithAssignmentsSummary } from "@overbookd/assignment";
-import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
-import { SOFT } from "@overbookd/team-constants";
 import { Duration } from "@overbookd/time";
 import { buildUserName } from "@overbookd/user";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -83,49 +28,24 @@ import {
   isAssignableVolunteer,
 } from "~/utils/assignment/assignment-volunteer";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
+import { getStatCategoryName } from "~/utils/assignment/task-category";
 import { sortTeamsForAssignment } from "~/utils/sort/sort-teams.utils";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 const route = useRoute();
 
-const props = defineProps({
+const { volunteer } = defineProps({
   volunteer: {
     type: Object as PropType<AssignmentVolunteer>,
     required: true,
   },
 });
 
-type AssignmentPreferenceIcon = { icon: string; label: string };
-const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
-  () => {
-    if (!props.volunteer.teams.includes(SOFT)) return null;
-    switch (props.volunteer.assignmentPreference) {
-      case NO_REST:
-        return {
-          icon: "mdi-menu",
-          label: "Pas de repos !",
-        };
-      case STACKED:
-        return {
-          icon: "mdi-format-vertical-align-center",
-          label: "Des créneaux régroupés",
-        };
-      case FRAGMENTED:
-        return {
-          icon: "mdi-align-vertical-distribute",
-          label: "Des créneaux éparpillés",
-        };
-      default:
-        return null;
-    }
-  },
-);
-
 const sortedVolunteerTeams = computed<string[]>(() =>
-  sortTeamsForAssignment(props.volunteer.teams),
+  sortTeamsForAssignment(volunteer.teams),
 );
 const formattedUserInformations = computed<string>(
-  () => `${buildUserName(props.volunteer)} | ${props.volunteer.charisma}`,
+  () => `${buildUserName(volunteer)} | ${volunteer.charisma}`,
 );
 const selectedTask = computed<TaskWithAssignmentsSummary | null>(
   () => assignTaskToVolunteerStore.selectedTask,
@@ -133,39 +53,23 @@ const selectedTask = computed<TaskWithAssignmentsSummary | null>(
 
 const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 const category = computed<string>(() => {
-  if (isOrgaTask.value) return "affecté";
-  return selectedTask.value?.category ?? "indéterminé";
-});
-const assignmentStats = computed<string>(() => {
-  const duration = Duration.ms(props.volunteer.assignmentDuration).toString();
-  const displayedTotalDuration = isAssignableVolunteer(props.volunteer)
-    ? ` • total : ${Duration.ms(props.volunteer.totalAssignmentDuration).toString()}`
-    : "";
-  return `${category.value.toLowerCase()} : ${duration}${displayedTotalDuration}`;
+  if (isOrgaTask.value) return "Affecté";
+  return getStatCategoryName(selectedTask.value?.category ?? null);
 });
 
-const shouldShowNoFriendIcon = computed<boolean>(
-  () =>
-    isAssignableVolunteer(props.volunteer) &&
-    !props.volunteer.hasAtLeastOneFriend,
-);
-const shouldShowFriendAssignedIcon = computed<boolean>(
-  () =>
-    isAssignableVolunteer(props.volunteer) && props.volunteer.hasFriendAssigned,
-);
-const shouldShowAvailableFriendsIcon = computed<boolean>(
-  () =>
-    isAssignableVolunteer(props.volunteer) &&
-    props.volunteer.assignableFriendsIds.length > 0,
-);
-const shouldShowRequestedOnDraftTaskIcon = computed<boolean>(
-  () =>
-    isAssignableVolunteer(props.volunteer) &&
-    props.volunteer.isRequestedOnSamePeriod,
-);
+const getDisplayedDuration = (duration: number): string => {
+  return Duration.ms(duration).toString();
+};
+const assignmentStats = computed<string>(() => {
+  const duration = getDisplayedDuration(volunteer.assignmentDuration);
+  const displayedTotalDuration = isAssignableVolunteer(volunteer)
+    ? ` • Total : ${getDisplayedDuration(volunteer.totalAssignmentDuration)}`
+    : "";
+  return `${category.value} : ${duration}${displayedTotalDuration}`;
+});
 
 const openPlanning = (): void => {
-  window.open(`${PLANNING_URL}/${props.volunteer.id}`);
+  window.open(`${PLANNING_URL}/${volunteer.id}`);
 };
 </script>
 
@@ -193,8 +97,6 @@ const openPlanning = (): void => {
   }
 
   &__icons {
-    display: flex;
-    gap: 5px;
     margin-top: 5px;
   }
 }
