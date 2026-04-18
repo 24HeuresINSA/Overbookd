@@ -137,6 +137,8 @@ const hasThirdColumn = computed<boolean>(
   align-self: flex-start;
 }
 @media screen and (max-width: $mobile-max-width) {
-  .v-col.home { display: block; }
+  .v-col.home {
+    display: block;
+  }
 }
 </style>
