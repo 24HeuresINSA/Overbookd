@@ -70,19 +70,19 @@
     "csv-parse": "6.2.1",
     "jwt-decode": "4.0.0",
     "luxon": "3.7.2",
-    "nanoid": "5.1.7",
+    "nanoid": "5.1.9",
     "pinia": "3.0.4",
     "quill": "2.0.3",
-    "sass": "1.98.0",
+    "sass": "1.99.0",
     "vite-plugin-vuetify": "2.1.3",
     "vue-chartjs": "5.3.3",
     "vue-html-secure": "1.0.10",
-    "vuetify": "3.12.4"
+    "vuetify": "3.12.5"
   },
   "devDependencies": {
     "@pinia/nuxt": "0.11.3",
     "nuxt": "4.4.2",
-    "vue": "3.5.31",
+    "vue": "3.5.32",
     "vue-router": "5.0.4",
     "vue-tsc": "3.2.6"
   },
