@@ -82,7 +82,7 @@
   </OverCalendar>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends VolunteerForCalendar">
 import { OverDate } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
@@ -108,7 +108,7 @@ const itemsPerPage = defineModel<number>("itemsPerPage", {
 
 const { volunteers, eventToAdd } = defineProps({
   volunteers: {
-    type: Array as PropType<VolunteerForCalendar[]>,
+    type: Array as PropType<T[]>,
     default: () => [],
   },
   eventToAdd: {
@@ -144,7 +144,7 @@ const volunteersEndIndex = computed<number>(() =>
         volunteers.length,
       ),
 );
-const displayedVolunteers = computed<VolunteerForCalendar[]>(() =>
+const displayedVolunteers = computed<T[]>(() =>
   volunteers.slice(volunteersStartIndex.value, volunteersEndIndex.value),
 );
 

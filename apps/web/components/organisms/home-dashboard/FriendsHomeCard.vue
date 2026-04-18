@@ -34,8 +34,8 @@
               <v-btn
                 density="compact"
                 icon="mdi-close"
-                aria-label="Retirer l'ami"
-                title="Retirer l'ami :'("
+                aria-label="Retirer l'ami·e"
+                title="Retirer l'ami·e :'("
                 variant="flat"
                 color="secondary"
                 @click="removeFriend(friend)"
@@ -62,7 +62,7 @@ type Image = {
 
 const alone: Image = {
   link: "https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif",
-  description: "Sans aucun amis",
+  description: "Sans aucun·e ami·e",
 };
 
 const friendship: Image = {

@@ -16,7 +16,7 @@
         v-if="selectedVolunteerFriends.length === 0"
         class="friend-item"
       >
-        Aucun ami 😭
+        Aucun·e ami·e 😭
       </v-list-item>
     </v-card-text>
   </v-card>

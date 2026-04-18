@@ -35,7 +35,7 @@
         <div class="stats">
           <span class="stats__value">{{ friendsCount }}</span>
           <span class="stats__label">
-            Ami{{ additionalPlural(friendsCount) }}
+            Ami·e{{ friendsCount !== 0 ? "·s" : "" }}
           </span>
         </div>
         <div class="stats">
