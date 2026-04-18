@@ -1,3 +1,9 @@
+## [3.51.14](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.13...v3.51.14) (2026-04-18)
+
+### Bug Fixes
+
+* **inventory:** find delimiter and remove empty records [#2659](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2659) [#2658](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2658) ([d0de3a0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d0de3a0cd051111df0256615fe31ab7707f44320))
+
 ## [3.51.13](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.12...v3.51.13) (2026-04-18)
 
 ### Bug Fixes
