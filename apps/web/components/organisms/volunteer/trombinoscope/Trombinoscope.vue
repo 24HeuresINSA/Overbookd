@@ -38,6 +38,12 @@
       @click:team="propagateClickedTeam"
       @click:volunteer="propagateClickedVolunteer"
     />
+    <TrombinoscopeGroup
+      heading="Véhicules 🚙"
+      :volunteers="vehicles"
+      @click:team="propagateClickedTeam"
+      @click:volunteer="propagateClickedVolunteer"
+    />
 
     <h3 v-show="allVolunteersDisplayed" class="easter-egg">
       🥵 Wow, t'as vraiment descendu toute la liste ! Tu cherches ton crush ou
@@ -48,7 +54,16 @@
 
 <script lang="ts" setup>
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-import { BUREAU, HARD, CA, SOFT, VIEUX } from "@overbookd/team-constants";
+import {
+  BUREAU,
+  HARD,
+  CA,
+  SOFT,
+  VIEUX,
+  FEN,
+  CAMION,
+  VOITURE,
+} from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 
@@ -93,6 +108,14 @@ const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
     const notHard = !volunteer.teams.includes(HARD);
     const isSenior = volunteer.teams.includes(VIEUX);
     return notHard && isSenior;
+  }),
+);
+const vehicles = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+  props.volunteers.filter((volunteer) => {
+    const isVoiture = volunteer.teams.includes(VOITURE);
+    const isCamion = volunteer.teams.includes(CAMION);
+    const isFen = volunteer.teams.includes(FEN);
+    return isVoiture || isCamion || isFen;
   }),
 );
 

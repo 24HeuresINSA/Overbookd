@@ -48,6 +48,8 @@ export const HAUTS_DE_FRANCE = "hauts-de-france";
 // Manif teams
 export const CONDUCTEUR = "conducteur";
 export const CONDUCTEUR_FEN = "conducteur-fen";
+export const VOITURE = "voiture";
+export const CAMION = "camion";
 export const FEN = "fen";
 export const TEAM_ELEC = "team-elec";
 export const TEAM_MONTAGE = "team-montage";

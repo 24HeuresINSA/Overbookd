@@ -20,7 +20,7 @@
     <template #actions>
       <v-btn
         text="Commencer l'affectation"
-        prepend-icon="di-format-list-checkbox"
+        prepend-icon="mdi-format-list-checkbox"
         size="large"
         @click="categorize"
       />
