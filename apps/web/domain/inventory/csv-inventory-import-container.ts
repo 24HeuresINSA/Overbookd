@@ -24,6 +24,8 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
   > = {
     code: CODE,
     reference: CODE,
+    ref: CODE,
+    id: CODE,
     matos: GEAR,
     materiel: GEAR,
     nom: GEAR,
@@ -47,29 +49,67 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
 
   async extractManualRecords(): Promise<ManualInventoryRecord[]> {
     const content = await this.file.text();
+    const delimiter = this.findDelimiter(content);
     const parseOptions: Options = {
       trim: true,
       skip_empty_lines: true,
       skip_records_with_empty_values: true,
-      delimiter: ";",
+      delimiter,
       columns: this.convertFileHeaderToRecordKeys,
       cast: this.castNumbersForQuantity,
     };
+
     try {
       const importRaws = parse(
         content,
         parseOptions,
       ) as unknown as InventoryImportRaw[];
+      if (!this.checkRequiredColumns(importRaws)) {
+        return [];
+      }
       return this.convertImportRawsToManualRecords(importRaws);
     } catch (e) {
       console.error(e);
+      sendFailureNotification("Erreur lors de l'importation du fichier CSV.");
       return [];
     }
   }
 
+  private checkRequiredColumns(rows: InventoryImportRaw[]): boolean {
+    const requiredColumns: (keyof InventoryImportRaw)[] = [
+      CODE,
+      STORAGE,
+      QUANTITY,
+    ];
+    const firstRow = rows[0];
+    const missingColumns = requiredColumns.filter(
+      (column) => !(column in firstRow),
+    );
+    if (missingColumns.length > 0) {
+      const joinedColumns = missingColumns.join(", ");
+      console.error(`Missing required columns: ${joinedColumns}`);
+      sendFailureNotification(
+        `Colonnes requises manquantes: ${joinedColumns}.`,
+      );
+      return false;
+    }
+    return true;
+  }
+
+  private findDelimiter(content: string): string {
+    const delimiters = [",", ";"];
+    const firstLine = content.split("\n")[0];
+    const delimiterCounts = delimiters.map((delimiter) => ({
+      delimiter,
+      count: firstLine.split(delimiter).length - 1,
+    }));
+    delimiterCounts.sort((a, b) => b.count - a.count);
+    return delimiterCounts[0].delimiter;
+  }
+
   private convertFileHeaderToRecordKeys(
     header: string[],
-  ): (keyof InventoryImportRaw)[] {
+  ): (keyof InventoryImportRaw | undefined)[] {
     return header.map((column) => {
       const translated =
         CSVInventoryImportContainer.headerTranslation[
@@ -77,7 +117,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
         ];
       if (!translated) {
         console.error(`Don't know column ${column}`);
-        return "code";
+        return undefined;
       }
       return translated;
     });
