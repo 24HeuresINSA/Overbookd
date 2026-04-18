@@ -101,6 +101,13 @@ const propagatePrevious = () => emit("previous");
 const propagateNext = () => emit("next");
 
 const handleKeydown = (event: KeyboardEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target.isContentEditable
+  )
+    return;
   if (!props.canUseCalendarShortcuts) return;
   if (event.key === "ArrowRight") propagateNext();
   if (event.key === "ArrowLeft") propagatePrevious();
