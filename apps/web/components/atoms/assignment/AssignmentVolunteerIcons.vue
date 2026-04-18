@@ -2,8 +2,8 @@
   <div class="icons">
     <v-icon
       v-if="shouldShowNoFriendIcon"
-      icon="mdi-account-alert"
       v-tooltip:top="'N\'a aucun·e ami·e'"
+      icon="mdi-account-alert"
       aria-label="N'a aucun·e ami·e"
       size="small"
       color="red"
