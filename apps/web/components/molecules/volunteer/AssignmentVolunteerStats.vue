@@ -1,19 +1,26 @@
 <template>
   <div class="volunteer-stats">
-    <div v-for="stat in sortedStats" :key="stat.category" class="stat">
-      <span v-tooltip:bottom="getStatCategoryName(stat.category)">
-        {{ getDisplayedStat(stat) }}
-      </span>
-    </div>
-    <span class="dot">•</span>
-    <span v-tooltip:bottom="'Total'">
-      Total: {{ displayedTotalDuration }}
+    <span
+      v-for="stat in sortedStats"
+      :key="stat.category"
+      v-tooltip:bottom="getStatCategoryName(stat.category)"
+    >
+      {{ getDisplayedStat(stat) }}
+    </span>
+    <span>•</span>
+    <span> Total : {{ displayedTotalDuration }} </span>
+    <span>•</span>
+    <span>
+      Avec des amis : {{ Duration.ms(stats.withFriendsAssignmentDuration) }} ({{
+        stats.friendsCount
+      }}
+      ami{{ stats.friendsCount !== 1 ? "s" : "" }})
     </span>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { AssignmentStat } from "@overbookd/http";
+import type { AssignmentStats } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
 import {
   AUCUNE,
@@ -25,9 +32,9 @@ import {
 import { sumAssignmentDuration } from "~/utils/sort/sort-stats.utils";
 import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
-const props = defineProps({
+const { stats } = defineProps({
   stats: {
-    type: Array as PropType<AssignmentStat[]>,
+    type: Object as PropType<AssignmentStats>,
     required: true,
   },
 });
@@ -35,7 +42,7 @@ const props = defineProps({
 const sortedStats = computed<DisplayableAssignmentStat[]>(() => {
   return displayableCategories
     .map((displayableCategory) => {
-      const categoryStat = props.stats.find(
+      const categoryStat = stats.stats.find(
         ({ category }) => (category ?? AUCUNE) === displayableCategory,
       );
       return categoryStat ?? { category: displayableCategory, duration: 0 };
@@ -71,12 +78,6 @@ const getDisplayedStat = (stat: DisplayableAssignmentStat): string => {
 .volunteer-stats {
   display: flex;
   flex-wrap: wrap;
-}
-
-.stat,
-.dot {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
+  gap: 10px;
 }
 </style>

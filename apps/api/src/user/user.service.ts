@@ -9,7 +9,6 @@ import {
 } from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
-import { VolunteerAssignmentStat } from "./dto/assignment-stat.response.dto";
 import {
   MyUserInformation,
   Profile,
@@ -53,8 +52,13 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
-import { DatabaseVolunteerAssignmentStat } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
+import {
+  DatabaseVolunteerAssignmentStat,
+  DatabaseVolunteerAssignmentStatWithAssignees,
+} from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
 import { ADMIN } from "@overbookd/team-constants";
+import { AssignmentStat, AssignmentStats } from "@overbookd/http";
+import { SELECT_ASSIGNEE } from "../assignment/common/repository/assignment.query";
 
 @Injectable()
 export class UserService {
@@ -252,18 +256,41 @@ export class UserService {
 
   async getVolunteerAssignmentStats(
     volunteerId: number,
-  ): Promise<VolunteerAssignmentStat[]> {
-    const assignments = await this.prisma.assignment.findMany({
-      where: {
-        assignees: { some: { userId: volunteerId } },
-        festivalTask: IS_NOT_DELETED,
-      },
-      select: SELECT_PERIOD_AND_CATEGORY,
-    });
-    return UserService.formatAssignmentStats(assignments);
+  ): Promise<AssignmentStats> {
+    const [assignments, { friends, friendRequestors }] = await Promise.all([
+      this.prisma.assignment.findMany({
+        where: {
+          assignees: { some: { userId: volunteerId } },
+          festivalTask: IS_NOT_DELETED,
+        },
+        select: {
+          ...SELECT_PERIOD_AND_CATEGORY,
+          assignees: { select: SELECT_ASSIGNEE },
+        },
+      }),
+      this.prisma.user.findUnique({
+        where: { id: volunteerId },
+        select: {
+          friends: { select: { requestorId: true } },
+          friendRequestors: { select: { friendId: true } },
+        },
+      }),
+    ]);
+
+    const stats = UserService.formatAssignmentStats(assignments);
+    const withFriendsAssignmentDuration =
+      UserService.computeAssignmentWithFriendsDuration(
+        volunteerId,
+        assignments,
+      );
+    const friendsCount = UserService.getFriendCount(friends, friendRequestors);
+
+    return { stats, withFriendsAssignmentDuration, friendsCount };
   }
 
-  static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
+  static formatAssignmentStats(
+    assignments: DatabaseVolunteerAssignmentStat[],
+  ): AssignmentStat[] {
     const stats = assignments.reduce(
       (stats, { festivalTask, ...assignment }) => {
         const { category } = festivalTask;
@@ -273,9 +300,48 @@ export class UserService {
         stats.set(category, { category, duration });
         return stats;
       },
-      new Map<Category, VolunteerAssignmentStat>(),
+      new Map<Category, AssignmentStat>(),
     );
     return [...stats.values()];
+  }
+
+  static computeAssignmentWithFriendsDuration(
+    volunteerId: number,
+    assignments: DatabaseVolunteerAssignmentStatWithAssignees[],
+  ): number {
+    const assignmentWithFriendsDuration = assignments.reduce(
+      (duration, assignment) => {
+        const hasFriendsAssigned = assignment.assignees.some(
+          ({ personalData }) => {
+            const isFriend = personalData.friends.some(
+              ({ requestor }) => requestor.id === volunteerId,
+            );
+            const isFriendRequestor = personalData.friendRequestors.some(
+              ({ friend }) => friend.id === volunteerId,
+            );
+            return isFriend || isFriendRequestor;
+          },
+        );
+
+        const durationToAdd = hasFriendsAssigned
+          ? Period.init(assignment).duration.inMilliseconds
+          : 0;
+        return duration + durationToAdd;
+      },
+      0,
+    );
+    return assignmentWithFriendsDuration;
+  }
+
+  static getFriendCount(
+    friends: { requestorId: number }[],
+    friendRequestors: { friendId: number }[],
+  ): number {
+    const uniqueFriends = new Set<number>([
+      ...friends.map(({ requestorId }) => requestorId),
+      ...friendRequestors.map(({ friendId }) => friendId),
+    ]);
+    return uniqueFriends.size;
   }
 
   static formatToPersonalData(

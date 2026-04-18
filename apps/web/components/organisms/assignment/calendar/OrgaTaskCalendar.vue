@@ -2,7 +2,11 @@
   <div class="orga-task-calendar">
     <div v-show="selectedVolunteer" class="title">
       <h1 class="title__name">{{ volunteerName }}</h1>
-      <AssignmentVolunteerStats :stats="stats" class="title__stats" />
+      <AssignmentVolunteerStats
+        v-if="stats"
+        :stats="stats"
+        class="title__stats"
+      />
     </div>
     <OverCalendar
       v-model="calendarMarker"
@@ -23,7 +27,7 @@ import {
 } from "~/utils/calendar/event";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import type {
-  AssignmentStat,
+  AssignmentStats,
   AssignmentSummaryWithTask,
   DisplayableAssignment,
   PlanningTask,
@@ -87,7 +91,7 @@ const events = computed<CalendarEvent[]>(() => {
   return [...tasks, ...alreadyAssigned, ...hoverAssignments, ...calendarBreaks];
 });
 
-const stats = computed<AssignmentStat[]>(
+const stats = computed<AssignmentStats | undefined>(
   () => planningStore.selectedVolunteer.assignmentStats,
 );
 

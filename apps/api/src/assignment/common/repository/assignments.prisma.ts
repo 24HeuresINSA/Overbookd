@@ -12,6 +12,7 @@ import { AssignmentRepository } from "../assignment.service";
 import {
   DatabaseAssignee,
   DatabaseAssignment,
+  SELECT_ASSIGNEE,
   SELECT_ASSIGNMENT,
   uniqueAssignment,
   updateAssigneesOnAssignment,
@@ -215,8 +216,17 @@ export class PrismaAssignments implements AssignmentRepository {
           ...SELECT_USER_IDENTIFIER,
           ...SELECT_USER_DATA_FOR_CHARISMA,
           assigned: {
-            select: { assignment: { select: SELECT_PERIOD_AND_CATEGORY } },
+            select: {
+              assignment: {
+                select: {
+                  ...SELECT_PERIOD_AND_CATEGORY,
+                  assignees: { select: SELECT_ASSIGNEE },
+                },
+              },
+            },
           },
+          friends: { select: { requestorId: true } },
+          friendRequestors: { select: { friendId: true } },
         },
         orderBy: { id: "asc" },
       }),
@@ -227,16 +237,32 @@ export class PrismaAssignments implements AssignmentRepository {
         assigned,
         charismaEventParticipations,
         availabilities,
+        friends,
+        friendRequestors,
         ...volunteer
       }) => {
-        const stats = UserService.formatAssignmentStats(
-          assigned.map(({ assignment }) => assignment),
+        const assignments = assigned.map(({ assignment }) => assignment);
+        const stats = UserService.formatAssignmentStats(assignments);
+        const withFriendsAssignmentDuration =
+          UserService.computeAssignmentWithFriendsDuration(
+            volunteer.id,
+            assignments,
+          );
+        const friendsCount = UserService.getFriendCount(
+          friends,
+          friendRequestors,
         );
         const charisma = Charisma.init()
           .addEvents(charismaEventParticipations)
           .addAvailabilities(availabilities, charismaPeriods)
           .calculate();
-        return { ...volunteer, charisma, stats };
+        return {
+          ...volunteer,
+          charisma,
+          stats,
+          withFriendsAssignmentDuration,
+          friendsCount,
+        };
       },
     );
   }

@@ -3,6 +3,7 @@ import { PrismaService } from "../../src/prisma.service";
 import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { CAMION, FEN, VOITURE } from "@overbookd/team-constants";
 
 @Injectable()
 export class FriendService {
@@ -17,7 +18,7 @@ export class FriendService {
   }
 
   async findFriends(): Promise<User[]> {
-    const nonFriendableTeams = ["fen", "voiture", "camion"];
+    const nonFriendableTeams = [FEN, VOITURE, CAMION];
 
     return this.prisma.user.findMany({
       select: SELECT_USER_IDENTIFIER,

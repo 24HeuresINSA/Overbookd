@@ -12,6 +12,7 @@ import {
 } from "../../../common/query/charisma.query";
 import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
+import { DatabaseAssignee } from "../../common/repository/assignment.query";
 
 type DatabaseFriend = {
   id: number;
@@ -26,6 +27,11 @@ type DatabaseFriend = {
 
 export type DatabaseVolunteerAssignmentStat = IProvidePeriod & {
   festivalTask: { category: Category };
+};
+
+export type DatabaseVolunteerAssignmentStatWithAssignees = IProvidePeriod & {
+  festivalTask: { category: Category };
+  assignees: DatabaseAssignee[];
 };
 
 export type DatabaseStoredAssignableVolunteer = User &

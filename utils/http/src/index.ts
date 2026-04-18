@@ -128,6 +128,7 @@ export type {
   DisplayableAssignment,
   VolunteerWithAssignmentStats,
   AssignmentStat,
+  AssignmentStats,
 } from "./assignment";
 export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";
 export type { CreatePermissionForm, Permission } from "./permission";

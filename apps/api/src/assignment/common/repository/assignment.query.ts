@@ -47,7 +47,7 @@ const SELECT_ASSIGNEE_PERSONAL_DATA = {
   assigned: { select: { assignment: { select: SELECT_PERIOD } } },
 };
 
-const SELECT_ASSIGNEE = {
+export const SELECT_ASSIGNEE = {
   teamCode: true,
   personalData: { select: SELECT_ASSIGNEE_PERSONAL_DATA },
 };
