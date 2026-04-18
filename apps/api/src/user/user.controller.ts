@@ -24,7 +24,6 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import { VolunteerAssignmentStatResponseDto } from "./dto/assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
 import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
@@ -50,6 +49,7 @@ import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { ImageInterceptor } from "../utils/image.interceptor";
+import { AssignmentStatsResponseDto } from "../assignment/common/dto/volunteer-with-assignment-stats.response.dto";
 
 @Controller("users")
 @ApiTags("users")
@@ -209,12 +209,11 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get duration of assignments for a volunteer",
-    isArray: true,
-    type: VolunteerAssignmentStatResponseDto,
+    type: AssignmentStatsResponseDto,
   })
   async getVolunteerAssignmentStats(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<VolunteerAssignmentStatResponseDto[]> {
+  ): Promise<AssignmentStatsResponseDto> {
     return this.userService.getVolunteerAssignmentStats(id);
   }
 

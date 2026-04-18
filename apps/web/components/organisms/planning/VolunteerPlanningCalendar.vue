@@ -2,6 +2,7 @@
   <div>
     <DownloadPlanning />
     <AssignmentVolunteerStats
+      v-if="stats"
       v-show="shouldShowStats"
       :stats="stats"
       class="mb-2"
@@ -45,7 +46,7 @@
 
 <script lang="ts" setup>
 import type { AssignmentIdentifier } from "@overbookd/assignment";
-import type { AssignmentStat, TaskForCalendar } from "@overbookd/http";
+import type { AssignmentStats, TaskForCalendar } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
 import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
@@ -105,7 +106,7 @@ onMounted(() => {
 
 const calendarMarker = ref<Date>(configurationStore.eventStartDate);
 
-const stats = computed<AssignmentStat[]>(
+const stats = computed<AssignmentStats | undefined>(
   () => planningStore.selectedVolunteer.assignmentStats,
 );
 const selectedPlanningVolunteer = computed<VolunteerForPlanningCalendar>(

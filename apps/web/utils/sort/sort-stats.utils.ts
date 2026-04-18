@@ -47,3 +47,10 @@ export function compareVolunteersOnTotalAssignmentDuration(
   ).inMilliseconds;
   return aTotalAssignmentDuration - bTotalAssignmentDuration;
 }
+
+export function compareVolunteersOnWithFriendsAssignmentDuration(
+  a: VolunteerWithAssignmentStats,
+  b: VolunteerWithAssignmentStats,
+) {
+  return a.withFriendsAssignmentDuration - b.withFriendsAssignmentDuration;
+}

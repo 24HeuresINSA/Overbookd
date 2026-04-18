@@ -126,7 +126,7 @@ const phone = computed<string>(() =>
 );
 
 const additionalPlural = (count: number) => {
-  return count > 1 ? "s" : "";
+  return count !== 1 ? "s" : "";
 };
 
 const wantsPaperPlanning = computed<boolean>(

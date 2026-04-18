@@ -54,7 +54,7 @@ export const usePlanningStore = defineStore("planning", {
     selectedVolunteer: {
       breakPeriods: [],
       tasks: [],
-      assignmentStats: [],
+      assignmentStats: undefined,
       assignments: [],
     },
     selectedCalendarTask: undefined,

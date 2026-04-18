@@ -29,6 +29,10 @@
         {{ retrieveTotalDuration(item.stats) }}
       </template>
 
+      <template #item.withFriends="{ item }">
+        {{ Duration.ms(item.withFriendsAssignmentDuration) }}
+      </template>
+
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-human-greeting"
@@ -69,6 +73,7 @@ import {
   compareVolunteersOnNames,
   compareVolunteersOnTaskCategoryAssignmentDuration,
   compareVolunteersOnTotalAssignmentDuration,
+  compareVolunteersOnWithFriendsAssignmentDuration,
   sumAssignmentDuration,
 } from "~/utils/sort/sort-stats.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
@@ -135,11 +140,18 @@ const headers: TableHeaders = [
     sortRaw: compareVolunteersOnTaskCategoryAssignmentDuration(AUCUNE),
   },
   {
-    title: "Totaux",
+    title: "Total",
     value: "total",
     sortable: true,
     sortRaw: compareVolunteersOnTotalAssignmentDuration,
   },
+  {
+    title: "Créneaux avec des amis",
+    value: "withFriends",
+    sortable: true,
+    sortRaw: compareVolunteersOnWithFriendsAssignmentDuration,
+  },
+  { title: "Nombre d'amis", value: "friendsCount", sortable: true },
   { title: "Actions", value: "actions" },
 ];
 

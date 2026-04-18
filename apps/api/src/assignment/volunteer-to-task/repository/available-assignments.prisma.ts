@@ -75,10 +75,18 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
               where: {
                 personalData: {
                   OR: [
-                    { friends: { some: { requestor: { id: volunteerId } } } },
+                    {
+                      friends: {
+                        some: {
+                          requestor: { id: volunteerId, ...IS_NOT_DELETED },
+                        },
+                      },
+                    },
                     {
                       friendRequestors: {
-                        some: { friend: { id: volunteerId } },
+                        some: {
+                          friend: { id: volunteerId, ...IS_NOT_DELETED },
+                        },
                       },
                     },
                   ],

@@ -18,10 +18,15 @@ export type AssignmentStat = {
   duration: number;
 };
 
+export type AssignmentStats = {
+  stats: AssignmentStat[];
+  withFriendsAssignmentDuration: number;
+  friendsCount: number;
+};
+
 export type VolunteerWithAssignmentStats = {
   id: number;
   firstname: string;
   lastname: string;
   charisma: number;
-  stats: AssignmentStat[];
-};
+} & AssignmentStats;
