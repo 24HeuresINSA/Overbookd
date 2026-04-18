@@ -10,12 +10,19 @@
     <span>•</span>
     <span> Total : {{ displayedTotalDuration }} </span>
     <span>•</span>
-    <span>
-      Avec des amis : {{ Duration.ms(stats.withFriendsAssignmentDuration) }} ({{
-        stats.friendsCount
-      }}
-      ami{{ stats.friendsCount !== 1 ? "s" : "" }})
-    </span>
+    <v-tooltip location="bottom">
+      <template v-slot:activator="{ props }">
+        <span v-bind="props">
+          🫂 {{ getDisplayedDuration(stats.withFriendsAssignmentDuration) }}
+        </span>
+      </template>
+      <span
+        >Avec des ami·e·s
+        <br />
+        {{ stats.friendsCount }} ami·e
+        {{ stats.friendsCount !== 1 ? "·s" : "" }} au total
+      </span>
+    </v-tooltip>
   </div>
 </template>
 
