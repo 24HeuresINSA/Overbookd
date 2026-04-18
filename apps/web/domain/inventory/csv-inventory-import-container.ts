@@ -24,6 +24,8 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
   > = {
     code: CODE,
     reference: CODE,
+    ref: CODE,
+    id: CODE,
     matos: GEAR,
     materiel: GEAR,
     nom: GEAR,
