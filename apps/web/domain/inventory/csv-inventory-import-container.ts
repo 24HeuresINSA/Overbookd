@@ -47,11 +47,12 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
 
   async extractManualRecords(): Promise<ManualInventoryRecord[]> {
     const content = await this.file.text();
+    const delimiter = this.findDelimiter(content);
     const parseOptions: Options = {
       trim: true,
       skip_empty_lines: true,
       skip_records_with_empty_values: true,
-      delimiter: ";",
+      delimiter,
       columns: this.convertFileHeaderToRecordKeys,
       cast: this.castNumbersForQuantity,
     };
@@ -65,6 +66,17 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       console.error(e);
       return [];
     }
+  }
+
+  private findDelimiter(content: string): string {
+    const delimiters = [",", ";"];
+    const firstLine = content.split("\n")[0];
+    const delimiterCounts = delimiters.map((delimiter) => ({
+      delimiter,
+      count: firstLine.split(delimiter).length - 1,
+    }));
+    delimiterCounts.sort((a, b) => b.count - a.count);
+    return delimiterCounts[0].delimiter;
   }
 
   private convertFileHeaderToRecordKeys(

@@ -15,7 +15,9 @@ export type InventoryImportRaw = {
 
 export abstract class InventoryImportContainer {
   constructor(protected readonly gearRepository: Gears) {}
+
   abstract extractManualRecords(): Promise<ManualInventoryRecord[]>;
+
   protected convertImportRawsToManualRecords(
     raws: InventoryImportRaw[],
   ): ManualInventoryRecord[] {
@@ -45,7 +47,7 @@ export class InventoryImport {
 
     const records = this.deduplicateRecords(
       inventoryRecords.filter(isInventoryRecord()),
-    );
+    ).filter((record) => record.quantity > 0);
     const errors = inventoryRecords.filter(isRecordError());
     return { records, errors };
   }
