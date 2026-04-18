@@ -56,16 +56,41 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       columns: this.convertFileHeaderToRecordKeys,
       cast: this.castNumbersForQuantity,
     };
+
     try {
       const importRaws = parse(
         content,
         parseOptions,
       ) as unknown as InventoryImportRaw[];
+      if (!this.checkRequiredColumns(importRaws)) {
+        return [];
+      }
       return this.convertImportRawsToManualRecords(importRaws);
     } catch (e) {
       console.error(e);
+      sendFailureNotification("Erreur lors de l'importation du fichier CSV.");
       return [];
     }
+  }
+
+  private checkRequiredColumns(rows: InventoryImportRaw[]): boolean {
+    const requiredColumns: (keyof InventoryImportRaw)[] = [
+      CODE,
+      STORAGE,
+      QUANTITY,
+    ];
+    const firstRow = rows[0];
+    const missingColumns = requiredColumns.filter(
+      (column) => !(column in firstRow),
+    );
+    if (missingColumns.length > 0) {
+      console.error(`Missing required columns: ${missingColumns.join(", ")}`);
+      sendFailureNotification(
+        `Colonnes requises manquantes: ${missingColumns.join(", ")}.`,
+      );
+      return false;
+    }
+    return true;
   }
 
   private findDelimiter(content: string): string {
@@ -89,7 +114,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
         ];
       if (!translated) {
         console.error(`Don't know column ${column}`);
-        return "code";
+        return undefined as unknown as keyof InventoryImportRaw;
       }
       return translated;
     });
