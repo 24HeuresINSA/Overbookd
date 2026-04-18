@@ -136,4 +136,7 @@ const hasThirdColumn = computed<boolean>(
 .v-col {
   align-self: flex-start;
 }
+@media screen and (max-width: $mobile-max-width) {
+  .v-col.home { flex-wrap: nowrap; }
+}
 </style>
