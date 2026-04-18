@@ -1,3 +1,13 @@
+## [3.51.13](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.12...v3.51.13) (2026-04-18)
+
+### Bug Fixes
+
+* **assignement:** add assignment icons in funnel [#2664](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2664) ([0989ca7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0989ca717b6c9eee8339518954de4d29c4106b5c))
+* **assignment:** add assignment with friends stat [#2662](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2662) ([8a6cf9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8a6cf9b645e58a6463870cdde4d76ae1e34aac14))
+* **membership-application:** lower email before application [#2543](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2543) ([5b9f851](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5b9f8514a8d2c12aecf0f85ff5c4f1e798675286))
+* **web:** display vehicles in trombi [#2660](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2660) ([bd417d2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bd417d240bcbd10fa7fbbf4ab9caa7709df1d76b))
+* **web:** prevent calendar shorcuts from firing when filling inputs [#2666](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2666) ([b702c3d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b702c3d01ca1f0d913029503626b7ac4b1c801f8))
+
 ## [3.51.12](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.11...v3.51.12) (2026-04-16)
 
 ### Bug Fixes
