@@ -1,12 +1,12 @@
 import type {
   Assignment,
+  AssignmentEvent,
   AssignmentIdentifier,
   TeamMember,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
 import type {
   AssignmentSummaryWithTask,
-  DisplayableAssignment,
   HttpStringified,
 } from "@overbookd/http";
 import type { IProvidePeriod } from "@overbookd/time";
@@ -24,15 +24,16 @@ import {
   castPeriodWithDate,
   castPeriodsWithDate,
 } from "~/utils/http/cast-date/period.utils";
+import { castAssignmentEventsWithDate } from "~/utils/http/cast-date/planning.utils";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];
   selectedVolunteer: VolunteerWithAssignmentDuration | null;
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
-  alreadyAssignedAssignments: DisplayableAssignment[];
+  alreadyAssignedAssignments: AssignmentEvent[];
   breakPeriods: IProvidePeriod[];
-  hoverAssignment: AssignmentSummaryWithTask | null;
+  hoverAssignment: AssignmentEvent | null;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
 
@@ -67,12 +68,9 @@ export const useAssignVolunteerToTaskStore = defineStore(
       },
 
       async fetchAllAssignmentsFor(volunteerId: number) {
-        const res = await AssignmentsRepository.findAllFor(volunteerId);
+        const res = await UserRepository.getVolunteerAssignments(volunteerId);
         if (isHttpError(res)) return;
-
-        this.alreadyAssignedAssignments = res.map(
-          castDisplayableAssignmentWithDate,
-        );
+        this.alreadyAssignedAssignments = castAssignmentEventsWithDate(res);
       },
 
       async fetchBreakPeriodsFor(volunteerId: number) {
@@ -118,7 +116,7 @@ export const useAssignVolunteerToTaskStore = defineStore(
         this.fetchPotentialAssignmentsFor(this.selectedVolunteer.id);
       },
 
-      setHoverAssignment(assignment: AssignmentSummaryWithTask | null) {
+      setHoverAssignment(assignment: AssignmentEvent | null) {
         this.hoverAssignment = assignment;
       },
 
@@ -138,15 +136,6 @@ export const useAssignVolunteerToTaskStore = defineStore(
 function castAssignmentSummaryWithTaskWithDate(
   assignment: HttpStringified<AssignmentSummaryWithTask>,
 ): AssignmentSummaryWithTask {
-  return {
-    ...assignment,
-    ...castPeriodWithDate(assignment),
-  };
-}
-
-function castDisplayableAssignmentWithDate(
-  assignment: HttpStringified<DisplayableAssignment>,
-): DisplayableAssignment {
   return {
     ...assignment,
     ...castPeriodWithDate(assignment),

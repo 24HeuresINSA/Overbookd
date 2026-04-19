@@ -4,6 +4,7 @@
       <h1 class="title__name">{{ volunteerName }}</h1>
       <AssignmentVolunteerStats
         v-if="stats"
+        v-model:selected-category="selectedCategory"
         :stats="stats"
         class="title__stats"
       />
@@ -13,7 +14,7 @@
       :events="events"
       :availabilities="availabilities"
       clickable-events
-      :can-use-calendar-shortcuts="props.canUseCalendarShortcuts"
+      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @click:event="selectAssignmentToDisplayDetails"
     />
   </div>
@@ -25,30 +26,32 @@ import {
   createCalendarEvent,
   type CalendarEvent,
 } from "~/utils/calendar/event";
-import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import type {
-  AssignmentStats,
-  AssignmentSummaryWithTask,
-  DisplayableAssignment,
-  PlanningTask,
-} from "@overbookd/http";
+  AssignmentEvent,
+  VolunteerWithAssignmentDuration,
+} from "@overbookd/assignment";
+import type { AssignmentStats, PlanningTask } from "@overbookd/http";
 import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
 import { toCalendarBreak } from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
+import type { SelectableCategory } from "~/utils/assignment/task-category";
+import { shouldBeHighlighted } from "~/utils/planning/event";
 
 const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
 
-const props = defineProps({
+defineProps({
   canUseCalendarShortcuts: {
     type: Boolean,
     default: true,
   },
 });
+
+const selectedCategory = ref<SelectableCategory | undefined>(undefined);
 
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
@@ -63,33 +66,42 @@ const calendarMarker = ref<Date>(new Date());
 const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 onMounted(() => (calendarMarker.value = eventStartDate.value));
 
-const hoverAssignment = computed<AssignmentSummaryWithTask | null>(
+const hoverAssignment = computed<AssignmentEvent | null>(
   () => assignVolunteerToTaskStore.hoverAssignment,
 );
 watch(hoverAssignment, () => {
   if (hoverAssignment.value) calendarMarker.value = hoverAssignment.value.start;
 });
 
-const alreadyAssignedAssignments = computed<DisplayableAssignment[]>(
-  () => assignVolunteerToTaskStore.alreadyAssignedAssignments,
+const alreadyAssignedEvents = computed<CalendarEvent[]>(() =>
+  assignVolunteerToTaskStore.alreadyAssignedAssignments.map((assignment) => {
+    const event = formatAssignmentForCalendar(assignment, PURPLE);
+    const selected = shouldBeHighlighted(
+      selectedCategory.value,
+      assignment.task,
+    );
+    return { ...event, selected };
+  }),
 );
-const notReadyTasks = computed<PlanningTask[]>(
-  () => planningStore.selectedVolunteer.tasks,
-);
-const breaks = computed<IProvidePeriod[]>(
-  () => assignVolunteerToTaskStore.breakPeriods,
-);
-const events = computed<CalendarEvent[]>(() => {
-  const tasks = notReadyTasks.value.map((task) => formatTaskForCalendar(task));
-  const alreadyAssigned = [...alreadyAssignedAssignments.value].map(
-    (assignment) => formatAssignmentForCalendar(assignment, PURPLE),
-  );
-  const hoverAssignments = hoverAssignment.value
-    ? [formatAssignmentForCalendar(hoverAssignment.value)]
-    : [];
-  const calendarBreaks = breaks.value.map(toCalendarBreak);
-  return [...tasks, ...alreadyAssigned, ...hoverAssignments, ...calendarBreaks];
+const hoverAssignmentsEvents = computed<CalendarEvent[]>(() => {
+  const assignment = hoverAssignment.value;
+  if (!assignment) return [];
+  const event = formatAssignmentForCalendar(assignment);
+  const selected = shouldBeHighlighted(selectedCategory.value, assignment.task);
+  return [{ ...event, selected }];
 });
+const taskEvents = computed<CalendarEvent[]>(() =>
+  planningStore.selectedVolunteer.tasks.map(formatTaskForCalendar),
+);
+const breakEvents = computed<CalendarEvent[]>(() =>
+  assignVolunteerToTaskStore.breakPeriods.map(toCalendarBreak),
+);
+const events = computed<CalendarEvent[]>(() => [
+  ...taskEvents.value,
+  ...alreadyAssignedEvents.value,
+  ...hoverAssignmentsEvents.value,
+  ...breakEvents.value,
+]);
 
 const stats = computed<AssignmentStats | undefined>(
   () => planningStore.selectedVolunteer.assignmentStats,
@@ -109,18 +121,18 @@ const selectAssignmentToDisplayDetails = (
 };
 
 const formatAssignmentForCalendar = (
-  assignment: DisplayableAssignment,
+  assignment: AssignmentEvent,
   color?: string,
 ): CalendarEventWithIdentifier => {
   return createCalendarEvent({
     start: assignment.start,
     end: assignment.end,
     color,
-    name: `[${assignment.taskId}] ${assignment.name}`,
+    name: `[${assignment.task.id}] ${assignment.task.name}`,
     identifier: {
       assignmentId: assignment.assignmentId,
       mobilizationId: assignment.mobilizationId,
-      taskId: assignment.taskId,
+      taskId: assignment.task.id,
     },
   });
 };

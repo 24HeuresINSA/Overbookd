@@ -1,17 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PlanningTask } from "@overbookd/assignment";
+import { PlanningEventTask } from "@overbookd/assignment";
 import { Status } from "@overbookd/festival-event-constants";
 
-export class PlanningTaskResponseDto implements PlanningTask {
+export class PlanningTaskResponseDto implements PlanningEventTask {
   @ApiProperty({ type: Number })
   id: number;
 
   @ApiProperty({ type: String })
   name: string;
 
-  @ApiProperty({ type: Boolean })
-  hasFriendsAssigned: boolean;
-
   @ApiProperty({ type: String })
   status: Status;
+
+  @ApiProperty({ type: Boolean })
+  hasFriendsAssigned: boolean;
 }

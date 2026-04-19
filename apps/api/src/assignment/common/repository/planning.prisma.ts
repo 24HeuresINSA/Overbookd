@@ -2,7 +2,7 @@ import {
   AssignmentEvent,
   Planning,
   PlanningEvent,
-  PlanningTask,
+  PlanningEventTask,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/time";
@@ -14,13 +14,13 @@ import { friendAssigneesCount } from "./assignment.query";
 type DatabaseAssignment = IProvidePeriod & {
   id: string;
   mobilizationId: string;
-  festivalTask: Omit<PlanningTask, "hasFriendsAssigned">;
+  festivalTask: Omit<PlanningEventTask, "hasFriendsAssigned">;
   _count: { assignees: number };
 };
 
 type DatabaseMobilization = IProvidePeriod & {
   id: string;
-  ft: Omit<PlanningTask, "hasFriendsAssigned">;
+  ft: Omit<PlanningEventTask, "hasFriendsAssigned">;
   _count: { assignees: number };
 };
 
@@ -56,9 +56,9 @@ export class PrismaPlanning implements Planning {
 }
 
 export function toPlanningEventFromAssignment(
-  assignement: DatabaseAssignment,
+  assignment: DatabaseAssignment,
 ): AssignmentEvent {
-  const { start, end, id, mobilizationId, festivalTask, _count } = assignement;
+  const { start, end, id, mobilizationId, festivalTask, _count } = assignment;
   return {
     start,
     end,
@@ -69,9 +69,9 @@ export function toPlanningEventFromAssignment(
 }
 
 function toPlanningEventFromMobilization(
-  event: DatabaseMobilization,
+  mobilization: DatabaseMobilization,
 ): PlanningEvent {
-  const { start, end, ft, _count } = event;
+  const { start, end, ft, _count } = mobilization;
   return {
     start,
     end,

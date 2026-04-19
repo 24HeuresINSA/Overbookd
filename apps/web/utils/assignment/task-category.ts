@@ -53,3 +53,7 @@ export function getStatCategoryName(
 ): string {
   return capitalizeFirstLetter(category?.toLowerCase() ?? "indeterminé");
 }
+
+export const FRIENDS = "FRIENDS";
+
+export type SelectableCategory = DisplayableCategory | typeof FRIENDS;

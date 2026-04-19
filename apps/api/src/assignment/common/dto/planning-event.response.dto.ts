@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PlanningEvent, PlanningTask } from "@overbookd/assignment";
+import { PlanningEvent, PlanningEventTask } from "@overbookd/assignment";
 import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 import { PlanningTaskResponseDto } from "./planning-task.response.dto";
 
@@ -8,7 +8,7 @@ export class PlanningEventResponseDto
   implements PlanningEvent
 {
   @ApiProperty({ type: PlanningTaskResponseDto })
-  task: PlanningTask;
+  task: PlanningEventTask;
 
   @ApiProperty({ type: String, required: false })
   assignmentId?: PlanningEvent["assignmentId"];

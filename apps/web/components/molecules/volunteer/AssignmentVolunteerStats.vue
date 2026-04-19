@@ -13,7 +13,7 @@
     <span>•</span>
     <v-tooltip location="bottom">
       <template #activator="{ props }">
-        <button v-bind="props" @click="selectWithFriends">
+        <button v-bind="props" @click="() => selectCategory(FRIENDS)">
           🫂 {{ getDisplayedDuration(stats.withFriendsAssignmentDuration) }}
         </button>
       </template>
@@ -28,26 +28,23 @@
 </template>
 
 <script lang="ts" setup>
-import type { Category } from "@overbookd/festival-event-constants";
 import type { AssignmentStats } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
 import {
   AUCUNE,
   displayableCategories,
+  FRIENDS,
   getStatCategoryEmoji,
   getStatCategoryName,
-  type DisplayableCategory,
+  type SelectableCategory,
 } from "~/utils/assignment/task-category";
 import { sumAssignmentDuration } from "~/utils/sort/sort-stats.utils";
 import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
 
-const selectedCategory = defineModel<Category | null | undefined>(
+const selectedCategory = defineModel<SelectableCategory | undefined>(
   "selectedCategory",
   { default: undefined },
 );
-const selectedWithFriends = defineModel<boolean>("selectedWithFriends", {
-  default: undefined,
-});
 
 const { stats } = defineProps({
   stats: {
@@ -83,15 +80,11 @@ const getDisplayedStat = (stat: DisplayableAssignmentStat): string => {
   return `${emoji} ${duration}`;
 };
 
-const selectCategory = (category: DisplayableCategory | undefined) => {
-  selectedCategory.value = category === AUCUNE ? null : category;
-};
-const selectWithFriends = () => {
-  selectedWithFriends.value = true;
+const selectCategory = (category: SelectableCategory | undefined) => {
+  selectedCategory.value = category;
 };
 const resetSelected = () => {
   selectedCategory.value = undefined;
-  selectedWithFriends.value = false;
 };
 </script>
 
