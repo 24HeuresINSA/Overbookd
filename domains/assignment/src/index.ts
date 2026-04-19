@@ -31,6 +31,7 @@ export type {
   Task,
   TaskForAssignment,
   TaskCategorized,
+  TaskCategorizedWithMaybeFriendsAssigned,
   TaskIdentifier,
   TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/task.js";

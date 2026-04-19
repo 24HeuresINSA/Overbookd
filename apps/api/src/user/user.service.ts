@@ -59,7 +59,10 @@ import {
 } from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
 import { ADMIN } from "@overbookd/team-constants";
 import { AssignmentStat, AssignmentStats } from "@overbookd/http";
-import { SELECT_ASSIGNEE } from "../assignment/common/repository/assignment.query";
+import {
+  friendAssigneesCount,
+  SELECT_ASSIGNEE,
+} from "../assignment/common/repository/assignment.query";
 
 @Injectable()
 export class UserService {
@@ -186,7 +189,10 @@ export class UserService {
         assignees: { some: { userId: volunteerId } },
         festivalTask: IS_NOT_DELETED,
       },
-      select: SELECT_PLANNING_EVENT,
+      select: {
+        ...SELECT_PLANNING_EVENT,
+        ...friendAssigneesCount(volunteerId),
+      },
     });
 
     return assignments.map(toPlanningEventFromAssignment);

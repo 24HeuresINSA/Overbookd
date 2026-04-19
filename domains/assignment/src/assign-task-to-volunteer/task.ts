@@ -12,6 +12,10 @@ export type TaskCategorized = TaskIdentifier & {
   inChargeTeam: string;
 };
 
+export type TaskCategorizedWithMaybeFriendsAssigned = TaskCategorized & {
+  hasFriendsAssigned: boolean;
+};
+
 export type TaskWithAssignmentsSummary = Omit<
   TaskCategorized,
   "topPriority" | "inChargeTeam"

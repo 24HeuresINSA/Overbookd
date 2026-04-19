@@ -2,8 +2,9 @@
   <div>
     <DownloadPlanning />
     <AssignmentVolunteerStats
-      v-if="stats"
-      v-show="shouldShowStats"
+      v-if="shouldShowStats && stats"
+      v-model:selected-category="selectedCategory"
+      v-model:selected-with-friends="selectedWithfriends"
       :stats="stats"
       class="mb-2"
     />
@@ -45,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { AssignmentIdentifier } from "@overbookd/assignment";
+import type { AssignmentIdentifier, PlanningTask } from "@overbookd/assignment";
 import type { AssignmentStats, TaskForCalendar } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
@@ -57,6 +58,7 @@ import {
   type CalendarEventForPlanning,
 } from "~/utils/planning/event";
 import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
+import type { Category } from "@overbookd/festival-event-constants";
 
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
@@ -70,6 +72,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const selectedCategory = ref<Category | null | undefined>(undefined);
+const selectedWithfriends = ref<boolean>(false);
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
   return (
@@ -116,14 +121,30 @@ const availabilities = computed<IProvidePeriod[]>(
   () => availabilityStore.availabilities.list,
 );
 
-const events = computed<CalendarEventForPlanning[]>(() => {
-  const { assignments, tasks, breakPeriods } = selectedPlanningVolunteer.value;
-  const assignmentEvents = assignments.map(toCalendarAssignment);
-  const taskEvents = tasks.map((task) =>
+const shouldBeHighlighted = (task: PlanningTask) => {
+  const isSelectedCategory = task.category === selectedCategory.value;
+  const isSelectedWithFriends =
+    selectedWithfriends.value && task.hasFriendsAssigned;
+  return isSelectedCategory || isSelectedWithFriends;
+};
+
+const assignmentEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.assignments.map((assignement) => {
+    const event = toCalendarAssignment(assignement);
+    const selected = shouldBeHighlighted(assignement.task);
+    return { ...event, selected };
+  }),
+);
+const taskEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.tasks.map((task) =>
     toCalendarTask({ canReadFt: canReadFt.value })(task),
-  );
-  const breakEvents = breakPeriods.map(toCalendarBreak);
-  return [...assignmentEvents, ...taskEvents, ...breakEvents];
+  ),
+);
+const breakEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.breakPeriods.map(toCalendarBreak),
+);
+const events = computed<CalendarEventForPlanning[]>(() => {
+  return [...assignmentEvents.value, ...taskEvents.value, ...breakEvents.value];
 });
 
 const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {

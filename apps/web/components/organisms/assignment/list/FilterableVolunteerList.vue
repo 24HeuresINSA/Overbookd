@@ -32,7 +32,10 @@
         v-if="shouldShowVolunteerList"
         :volunteers="displayedVolunteers"
         class="volunteer-list"
-        :class="{ 'filterable-volunteer-list--with-friend-list': isOrgaTask }"
+        :class="{
+          'volunteer-list--with-friend-list': isOrgaTask,
+          'volunteer-list--with-friends-filter': !isOrgaTask,
+        }"
         @select-volunteer="selectVolunteer"
       />
       <div v-else class="error-message">
@@ -165,6 +168,7 @@ const shouldShowVolunteerList = computed<boolean>(() => {
 
 $filters-height: $volunteer-list-filters-height;
 $friends-height: $volunteer-list-friends-card-height;
+$friends-filter-height: $volunteer-list-friends-filter-height;
 $page-content-padding: $desktop-content-vertical-padding * 2;
 $card-paddings: $card-margin * 2;
 $base-list-height: calc(
@@ -187,15 +191,19 @@ $base-list-height: calc(
   &__text {
     padding: 0;
   }
-
-  &--with-friend-list {
-    max-height: calc($base-list-height - $friends-height);
-  }
 }
 
 .volunteer-list {
   padding: 0 5px;
   height: $base-list-height;
+
+  &--with-friend-list {
+    max-height: calc($base-list-height - $friends-height);
+  }
+
+  &--with-friends-filter {
+    max-height: calc($base-list-height - $friends-filter-height);
+  }
 }
 
 .btn-close-side-bar {

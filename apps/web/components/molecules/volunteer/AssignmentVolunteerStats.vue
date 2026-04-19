@@ -1,20 +1,21 @@
 <template>
   <div class="volunteer-stats">
-    <span
+    <button
       v-for="stat in sortedStats"
       :key="stat.category"
       v-tooltip:bottom="getStatCategoryName(stat.category)"
+      @click="() => selectCategory(stat.category)"
     >
       {{ getDisplayedStat(stat) }}
-    </span>
+    </button>
     <span>•</span>
-    <span> Total : {{ displayedTotalDuration }} </span>
+    <button @click="resetSelected">Total : {{ displayedTotalDuration }}</button>
     <span>•</span>
     <v-tooltip location="bottom">
       <template #activator="{ props }">
-        <span v-bind="props">
+        <button v-bind="props" @click="selectWithFriends">
           🫂 {{ getDisplayedDuration(stats.withFriendsAssignmentDuration) }}
-        </span>
+        </button>
       </template>
       <span>
         Avec des ami·e·s
@@ -27,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Category } from "@overbookd/festival-event-constants";
 import type { AssignmentStats } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
 import {
@@ -34,9 +36,18 @@ import {
   displayableCategories,
   getStatCategoryEmoji,
   getStatCategoryName,
+  type DisplayableCategory,
 } from "~/utils/assignment/task-category";
 import { sumAssignmentDuration } from "~/utils/sort/sort-stats.utils";
 import type { DisplayableAssignmentStat } from "~/utils/user/user-information";
+
+const selectedCategory = defineModel<Category | null | undefined>(
+  "selectedCategory",
+  { default: undefined },
+);
+const selectedWithFriends = defineModel<boolean>("selectedWithFriends", {
+  default: undefined,
+});
 
 const { stats } = defineProps({
   stats: {
@@ -70,6 +81,17 @@ const getDisplayedStat = (stat: DisplayableAssignmentStat): string => {
   const emoji = getStatCategoryEmoji(stat.category);
   const duration = getDisplayedDuration(stat.duration);
   return `${emoji} ${duration}`;
+};
+
+const selectCategory = (category: DisplayableCategory | undefined) => {
+  selectedCategory.value = category === AUCUNE ? null : category;
+};
+const selectWithFriends = () => {
+  selectedWithFriends.value = true;
+};
+const resetSelected = () => {
+  selectedCategory.value = undefined;
+  selectedWithFriends.value = false;
 };
 </script>
 

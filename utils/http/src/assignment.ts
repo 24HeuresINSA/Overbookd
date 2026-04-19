@@ -1,12 +1,13 @@
-import { AssignmentIdentifier } from "@overbookd/assignment";
-import { AssignmentSummary, TaskCategorized } from "@overbookd/assignment";
-import { Category } from "@overbookd/festival-event-constants";
-import { IProvidePeriod } from "@overbookd/time";
+import type {
+  AssignmentIdentifier,
+  TaskCategorizedWithMaybeFriendsAssigned,
+  AssignmentSummary,
+} from "@overbookd/assignment";
+import type { Category } from "@overbookd/festival-event-constants";
+import type { IProvidePeriod } from "@overbookd/time";
 
 export type AssignmentSummaryWithTask = AssignmentSummary &
-  Omit<TaskCategorized, "id"> & {
-    hasFriendsAssigned: boolean;
-  };
+  Omit<TaskCategorizedWithMaybeFriendsAssigned, "id">;
 
 export type DisplayableAssignment = AssignmentIdentifier &
   IProvidePeriod & {

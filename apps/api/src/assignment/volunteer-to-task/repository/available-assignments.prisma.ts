@@ -8,6 +8,7 @@ import { countAssigneesInTeam } from "@overbookd/assignment";
 import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
+import { friendAssigneesCount } from "../../common/repository/assignment.query";
 
 type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
   id: string;
@@ -69,32 +70,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
         assignees: {
           select: { userId: true, as: { select: { teamCode: true } } },
         },
-        _count: {
-          select: {
-            assignees: {
-              where: {
-                personalData: {
-                  OR: [
-                    {
-                      friends: {
-                        some: {
-                          requestor: { id: volunteerId, ...IS_NOT_DELETED },
-                        },
-                      },
-                    },
-                    {
-                      friendRequestors: {
-                        some: {
-                          friend: { id: volunteerId, ...IS_NOT_DELETED },
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
+        ...friendAssigneesCount(volunteerId),
       },
       orderBy: [{ start: "asc" }, { end: "asc" }, { festivalTaskId: "asc" }],
     });

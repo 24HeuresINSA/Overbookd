@@ -9,16 +9,19 @@ import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
 import { SELECT_PLANNING_EVENT, SELECT_TASK } from "./planning.query";
+import { friendAssigneesCount } from "./assignment.query";
 
 type DatabaseAssignment = IProvidePeriod & {
   id: string;
   mobilizationId: string;
-  festivalTask: PlanningTask;
+  festivalTask: Omit<PlanningTask, "hasFriendsAssigned">;
+  _count: { assignees: number };
 };
 
 type DatabaseMobilization = IProvidePeriod & {
   id: string;
-  ft: PlanningTask;
+  ft: Omit<PlanningTask, "hasFriendsAssigned">;
+  _count: { assignees: number };
 };
 
 export class PrismaPlanning implements Planning {
@@ -28,14 +31,21 @@ export class PrismaPlanning implements Planning {
     const [dbAssignments, dbMobilizations] = await Promise.all([
       this.prisma.assignment.findMany({
         where: { assignees: { some: { userId: volunteerId } } },
-        select: SELECT_PLANNING_EVENT,
+        select: {
+          ...SELECT_PLANNING_EVENT,
+          ...friendAssigneesCount(volunteerId),
+        },
       }),
       this.prisma.festivalTaskMobilization.findMany({
         where: {
           volunteers: { some: { volunteerId } },
           ft: EXISTS_AND_NOT_READY_TO_ASSIGN,
         },
-        select: { ...SELECT_PERIOD_WITH_ID, ft: { select: SELECT_TASK } },
+        select: {
+          ...SELECT_PERIOD_WITH_ID,
+          ft: { select: SELECT_TASK },
+          ...friendAssigneesCount(volunteerId),
+        },
       }),
     ]);
 
@@ -46,13 +56,13 @@ export class PrismaPlanning implements Planning {
 }
 
 export function toPlanningEventFromAssignment(
-  event: DatabaseAssignment,
+  assignement: DatabaseAssignment,
 ): AssignmentEvent {
-  const { start, end, id, mobilizationId, festivalTask } = event;
+  const { start, end, id, mobilizationId, festivalTask, _count } = assignement;
   return {
     start,
     end,
-    task: festivalTask,
+    task: { ...festivalTask, hasFriendsAssigned: _count.assignees > 0 },
     mobilizationId,
     assignmentId: id,
   };
@@ -61,10 +71,10 @@ export function toPlanningEventFromAssignment(
 function toPlanningEventFromMobilization(
   event: DatabaseMobilization,
 ): PlanningEvent {
-  const { start, end, ft } = event;
+  const { start, end, ft, _count } = event;
   return {
     start,
     end,
-    task: ft,
+    task: { ...ft, hasFriendsAssigned: _count.assignees > 0 },
   };
 }
