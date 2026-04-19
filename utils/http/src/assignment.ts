@@ -1,19 +1,12 @@
 import type {
-  AssignmentIdentifier,
   TaskCategorizedForPlanning,
   AssignmentSummary,
 } from "@overbookd/assignment";
 import type { Category } from "@overbookd/festival-event-constants";
-import type { IProvidePeriod } from "@overbookd/time";
 
 export type AssignmentSummaryWithTask = AssignmentSummary & {
   task: TaskCategorizedForPlanning;
 };
-
-export type DisplayableAssignment = AssignmentIdentifier &
-  IProvidePeriod & {
-    name: string;
-  };
 
 export type AssignmentStat = {
   category: Category;
