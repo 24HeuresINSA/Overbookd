@@ -80,7 +80,7 @@ const getDisplayedStat = (stat: DisplayableAssignmentStat): string => {
   return `${emoji} ${duration}`;
 };
 
-const selectCategory = (category: SelectableCategory | undefined) => {
+const selectCategory = (category: SelectableCategory) => {
   selectedCategory.value = category;
 };
 const resetSelected = () => {
