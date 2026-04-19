@@ -158,10 +158,20 @@ export class PlanningController {
     status: 200,
     description: "Ical format volunteer planning",
   })
+  @ApiQuery({
+    name: "plaintext",
+    required: false,
+    type: Boolean,
+    description: "Strip HTML from descriptions (for Apple Calendar)",
+  })
   @Header("Content-Type", "text/calendar")
-  async syncVolunteerPlanning(@Param("secret") secret: string) {
+  async syncVolunteerPlanning(
+    @Param("secret") secret: string,
+    @Query("plaintext") plaintext?: string,
+  ) {
     const volunteerId = await this.retrieveVolunteerIdFromSecret(secret);
-    return this.planning.buildOne(ICAL, volunteerId);
+    const isPlainText = plaintext === "true";
+    return this.planning.buildOne(ICAL, volunteerId, isPlainText);
   }
 
   @Post("booklets")
