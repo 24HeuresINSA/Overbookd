@@ -8,7 +8,7 @@ import { AssignmentIdentifierResponseDto } from "../../common/dto/assignment-ide
 import { ApiProperty } from "@nestjs/swagger";
 import { AssignmentTeamResponseDto } from "../../common/dto/assignment-team.response.dto";
 
-export class TaskCategorizedForPlanningDto implements TaskCategorizedForPlanning {
+class TaskCategorizedForPlanningDto implements TaskCategorizedForPlanning {
   @ApiProperty({ type: Number })
   id: number;
 
