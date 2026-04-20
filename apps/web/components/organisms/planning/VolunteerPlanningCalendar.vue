@@ -1,6 +1,15 @@
 <template>
   <div>
-    <DownloadPlanning />
+    <div class="actions">
+      <DownloadPlanning />
+      <v-btn
+        v-if="canViewVolunteerDetails"
+        text="Voir le profil"
+        prepend-icon="mdi-account"
+        color="primary"
+        @click="openVolunteerInfoDialog"
+      />
+    </div>
     <AssignmentVolunteerStats
       v-if="shouldShowStats && stats"
       v-model:selected-category="selectedCategory"
@@ -17,6 +26,18 @@
       @click:period="askForBreak"
     />
   </div>
+
+  <v-dialog
+    v-model="isVolunteerInfoDialogOpen"
+    :width="canAssignVolunteer ? 1400 : 700"
+  >
+    <VolunteerInformationDialogCard
+      v-if="selectedVolunteer"
+      :volunteer="selectedVolunteer"
+      @updated="closeVolunteerInfoDialog"
+      @close="closeVolunteerInfoDialog"
+    />
+  </v-dialog>
 
   <v-dialog v-model="isTaskDetailsDialogOpen" max-width="900">
     <TaskDetailsDialogCard
@@ -51,7 +72,11 @@ import type {
   BreakPeriod,
 } from "@overbookd/assignment";
 import type { AssignmentStats, TaskForCalendar } from "@overbookd/http";
-import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
+import {
+  AFFECT_VOLUNTEER,
+  READ_FT,
+  VIEW_VOLUNTEER_DETAILS,
+} from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
 import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
 import {
@@ -62,6 +87,7 @@ import {
 } from "~/utils/planning/event";
 import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
 import type { SelectableCategory } from "~/utils/assignment/task-category";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
@@ -69,7 +95,7 @@ const layoutStore = useLayoutStore();
 const configurationStore = useConfigurationStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
-const props = defineProps({
+const { volunteerId } = defineProps({
   volunteerId: {
     type: Number,
     required: true,
@@ -86,10 +112,16 @@ const canUseCalendarShortcuts = computed<boolean>(() => {
   );
 });
 
+const selectedVolunteer = computed<
+  UserDataWithPotentialyProfilePicture | undefined
+>(() => userStore.selectedUser);
 const selectedTask = computed<TaskForCalendar | undefined>(
   () => planningStore.selectedCalendarTask,
 );
 
+const canViewVolunteerDetails = computed<boolean>(() =>
+  userStore.can(VIEW_VOLUNTEER_DETAILS),
+);
 const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
@@ -100,14 +132,17 @@ const shouldShowStats = computed<boolean>(
 );
 
 onMounted(() => {
-  availabilityStore.fetchVolunteerAvailabilities(props.volunteerId);
-  planningStore.fetchVolunteerTasks(props.volunteerId);
-  planningStore.fetchVolunteerAssignments(props.volunteerId);
+  availabilityStore.fetchVolunteerAvailabilities(volunteerId);
+  planningStore.fetchVolunteerTasks(volunteerId);
+  planningStore.fetchVolunteerAssignments(volunteerId);
+  if (canViewVolunteerDetails) {
+    userStore.findUserById(volunteerId);
+  }
   if (canAssignVolunteer.value) {
-    planningStore.fetchVolunteerBreakPeriods(props.volunteerId);
+    planningStore.fetchVolunteerBreakPeriods(volunteerId);
   }
   if (shouldShowStats.value) {
-    planningStore.fetchVolunteerAssignmentStats(props.volunteerId);
+    planningStore.fetchVolunteerAssignmentStats(volunteerId);
   }
 });
 
@@ -147,9 +182,59 @@ const events = computed<CalendarEventForPlanning[]>(() => [
   ...breakEvents.value,
 ]);
 
+const isVolunteerInfoDialogOpen = ref<boolean>(false);
+const openVolunteerInfoDialog = () => {
+  if (!canViewVolunteerDetails.value) return;
+  isVolunteerInfoDialogOpen.value = true;
+};
+const closeVolunteerInfoDialog = () => {
+  isVolunteerInfoDialogOpen.value = false;
+};
+
+const isTaskDetailsDialogOpen = ref<boolean>(false);
 const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
   await planningStore.fetchVolunteerAssignmentDetails(identifier);
   isTaskDetailsDialogOpen.value = true;
+};
+const closeTaskDetailsDialog = () => {
+  isTaskDetailsDialogOpen.value = false;
+};
+
+const isBreakPeriodDialogOpen = ref<boolean>(false);
+const breakPeriodStart = ref<Date>(new Date());
+const askForBreak = (period: Period) => {
+  if (!canAssignVolunteer.value) return;
+  breakPeriodStart.value = period.start;
+  isBreakPeriodDialogOpen.value = true;
+};
+const closeBreakDialog = () => {
+  isBreakPeriodDialogOpen.value = false;
+};
+const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
+  closeBreakDialog();
+  planningStore.addVolunteerBreakPeriods({
+    ...breakPeriod,
+    volunteer: volunteerId,
+  });
+};
+
+const selectedBreak = ref<BreakPeriod | null>(null);
+const isBreakRemovalDialogOpen = ref<boolean>(false);
+const openBreakRemoval = (breakEvent: BreakEvent) => {
+  if (!canAssignVolunteer.value) return;
+  selectedBreak.value = breakEvent;
+  isBreakRemovalDialogOpen.value = true;
+};
+const closeBreakRemovalDialog = () => {
+  selectedBreak.value = null;
+  isBreakRemovalDialogOpen.value = false;
+};
+const removeBreak = async () => {
+  if (selectedBreak.value === null) return;
+  const period = selectedBreak.value;
+  const volunteer = volunteerId;
+  await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
+  isBreakRemovalDialogOpen.value = false;
 };
 
 const CLICK_ON_EVENT: {
@@ -178,47 +263,16 @@ const handleEventClicked = (event: CalendarEventForPlanning) => {
       return CLICK_ON_EVENT.break(event);
   }
 };
-
-const isTaskDetailsDialogOpen = ref<boolean>(false);
-const closeTaskDetailsDialog = () => {
-  isTaskDetailsDialogOpen.value = false;
-};
-
-const isBreakPeriodDialogOpen = ref<boolean>(false);
-const breakPeriodStart = ref<Date>(new Date());
-
-const askForBreak = (period: Period) => {
-  if (!canAssignVolunteer.value) return;
-  breakPeriodStart.value = period.start;
-  isBreakPeriodDialogOpen.value = true;
-};
-const closeBreakDialog = () => {
-  isBreakPeriodDialogOpen.value = false;
-};
-const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
-  closeBreakDialog();
-  planningStore.addVolunteerBreakPeriods({
-    ...breakPeriod,
-    volunteer: props.volunteerId,
-  });
-};
-
-const selectedBreak = ref<BreakPeriod | null>(null);
-const isBreakRemovalDialogOpen = ref<boolean>(false);
-const openBreakRemoval = (breakEvent: BreakEvent) => {
-  if (!canAssignVolunteer.value) return;
-  selectedBreak.value = breakEvent;
-  isBreakRemovalDialogOpen.value = true;
-};
-const closeBreakRemovalDialog = () => {
-  selectedBreak.value = null;
-  isBreakRemovalDialogOpen.value = false;
-};
-const removeBreak = async () => {
-  if (selectedBreak.value === null) return;
-  const period = selectedBreak.value;
-  const volunteer = props.volunteerId;
-  await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
-  isBreakRemovalDialogOpen.value = false;
-};
 </script>
+
+<style lang="scss" scoped>
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    margin: 5px 3% 15px 3%;
+  }
+}
+</style>

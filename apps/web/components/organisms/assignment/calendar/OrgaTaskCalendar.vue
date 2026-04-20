@@ -1,12 +1,20 @@
 <template>
   <div class="orga-task-calendar">
-    <div v-show="selectedVolunteer" class="title">
-      <h1 class="title__name">{{ volunteerName }}</h1>
-      <AssignmentVolunteerStats
-        v-if="stats"
-        v-model:selected-category="selectedCategory"
-        :stats="stats"
-        class="title__stats"
+    <div v-show="selectedVolunteer" class="header">
+      <div class="title">
+        <h1 class="title__name">{{ volunteerName }}</h1>
+        <AssignmentVolunteerStats
+          v-if="stats"
+          v-model:selected-category="selectedCategory"
+          :stats="stats"
+          class="title__stats"
+        />
+      </div>
+      <v-btn
+        text="Voir le profil"
+        prepend-icon="mdi-account"
+        color="primary"
+        @click="displayVolunteerDetails"
       />
     </div>
     <OverCalendar
@@ -111,7 +119,11 @@ const availabilities = computed<IProvidePeriod[]>(
   () => availabilitiesStore.availabilities.list,
 );
 
-const emit = defineEmits(["display-assignment-details"]);
+const emit = defineEmits([
+  "display-volunteer-details",
+  "display-assignment-details",
+]);
+const displayVolunteerDetails = () => emit("display-volunteer-details");
 const selectAssignmentToDisplayDetails = (
   event: CalendarEventWithIdentifier | CalendarEvent,
 ) => {
@@ -153,11 +165,17 @@ const formatTaskForCalendar = ({
 </script>
 
 <style lang="scss" scoped>
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0 4px;
+}
+
 .title {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 4px;
   margin-bottom: 8px;
   &__name {
     font-size: 1.4rem;
