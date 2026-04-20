@@ -1,4 +1,8 @@
-import type { AssignmentIdentifier } from "@overbookd/assignment";
+import type {
+  AssignmentIdentifier,
+  BreakDefinition,
+  BreakIdentifier,
+} from "@overbookd/assignment";
 import {
   type HttpStringified,
   type VolunteerForPlanningLeaflet as HttpVolunteerForPlanningLeaflet,
@@ -6,8 +10,7 @@ import {
   type MultiPlanningVolunteer,
   type TaskForCalendar,
 } from "@overbookd/http";
-import type { BreakDefinition, BreakIdentifier } from "@overbookd/planning";
-import { Duration, Edition, Period } from "@overbookd/time";
+import { Duration, Edition } from "@overbookd/time";
 import type { User, UserWithTeams } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
@@ -22,6 +25,7 @@ import {
 } from "~/utils/http/cast-date/period.utils";
 import {
   castAssignmentEventsWithDate,
+  castBreakPeriodWithDate,
   castVolunteerPlanningTasksWithDate,
 } from "~/utils/http/cast-date/planning.utils";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -183,29 +187,31 @@ export const usePlanningStore = defineStore("planning", {
     async fetchVolunteerBreakPeriods(volunteerId: number) {
       const res = await PlanningRepository.getBreakPeriods(volunteerId);
       if (isHttpError(res)) return;
-      this.selectedVolunteer.breakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
+      this.selectedVolunteer.breakPeriods = res.map((breakPeriod) =>
+        castBreakPeriodWithDate(breakPeriod),
       );
     },
 
     async addVolunteerBreakPeriods({
       volunteer,
+      name,
       during: { start, duration },
     }: BreakDefinition) {
       const during = { start, durationInHours: duration.inHours };
-      const res = await PlanningRepository.addBreakPeriod(volunteer, during);
+      const newBreak = { name, ...during };
+      const res = await PlanningRepository.addBreakPeriod(volunteer, newBreak);
       if (isHttpError(res)) return;
 
-      this.selectedVolunteer.breakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
+      this.selectedVolunteer.breakPeriods = res.map((breakPeriod) =>
+        castBreakPeriodWithDate(breakPeriod),
       );
     },
 
     async deleteVolunteerBreakPeriods({ volunteer, period }: BreakIdentifier) {
       const res = await PlanningRepository.removeBreakPeriod(volunteer, period);
       if (isHttpError(res)) return;
-      this.selectedVolunteer.breakPeriods = res.map((period) =>
-        Period.init(castPeriodWithDate(period)),
+      this.selectedVolunteer.breakPeriods = res.map((breakPeriod) =>
+        castBreakPeriodWithDate(breakPeriod),
       );
     },
   },

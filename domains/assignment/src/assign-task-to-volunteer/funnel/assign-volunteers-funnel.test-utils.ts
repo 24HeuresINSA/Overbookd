@@ -12,6 +12,7 @@ import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { PlanningEvent } from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/preference";
+import { BreakPeriod } from "../../break-periods/break-periods.js";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
 const friday22h = new Date("2024-05-17T22:00+02:00");
@@ -73,7 +74,7 @@ type TestHelper = {
   volunteer: AssignableVolunteer;
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
-  breakPeriods: IProvidePeriod[];
+  breakPeriods: BreakPeriod[];
 };
 
 const BOILERPLATE_ASSIGNMENT_STATS = {
@@ -98,7 +99,12 @@ export const noel: TestHelper = {
   planning: [
     {
       ...friday08hTo09h,
-      task: { name: "Accueillir INSA CVL", id: 200, status: READY_TO_ASSIGN },
+      task: {
+        name: "Accueillir INSA CVL",
+        id: 200,
+        status: READY_TO_ASSIGN,
+        hasFriendsAssigned: false,
+      },
     },
   ],
   availabilities: [
@@ -106,7 +112,7 @@ export const noel: TestHelper = {
     { start: nextMonday18h, end: nextWednesday02h },
     { start: nextWednesday18h, end: nextThursday10h },
   ],
-  breakPeriods: [sunday02hTo06h],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
 };
 
 export const lea: TestHelper = {
@@ -120,7 +126,7 @@ export const lea: TestHelper = {
   },
   planning: [],
   availabilities: [monday08hTo10h, { start: friday06h, end: sunday20h }],
-  breakPeriods: [sunday02hTo06h],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
 };
 
 export const ontaine: TestHelper = {
@@ -137,7 +143,7 @@ export const ontaine: TestHelper = {
     { start: monday10h, end: nextTuesday02h },
     { start: nextTuesday18h, end: nextThursday10h },
   ],
-  breakPeriods: [sunday06hTo12h],
+  breakPeriods: [{ name: "Pause", ...sunday06hTo12h }],
 };
 
 export const tatouin: TestHelper = {
@@ -170,7 +176,7 @@ export const luce: TestHelper = {
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
-  breakPeriods: [sunday02hTo06h],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
 };
 
 export const nathan: TestHelper = {
@@ -184,7 +190,7 @@ export const nathan: TestHelper = {
   },
   planning: [],
   availabilities: [{ start: monday10h, end: nextTuesday02h }],
-  breakPeriods: [sunday06hTo12h],
+  breakPeriods: [{ name: "Pause", ...sunday06hTo12h }],
 };
 
 export const bruce: TestHelper = {
@@ -198,7 +204,7 @@ export const bruce: TestHelper = {
   },
   planning: [],
   availabilities: [{ start: friday06h, end: sunday20h }],
-  breakPeriods: [sunday06hTo12h],
+  breakPeriods: [{ name: "Pause", ...sunday06hTo12h }],
 };
 
 export const amanda: TestHelper = {
@@ -212,7 +218,7 @@ export const amanda: TestHelper = {
   },
   planning: [],
   availabilities: [{ start: friday06h, end: sunday20h }],
-  breakPeriods: [sunday06hTo12h],
+  breakPeriods: [{ name: "Pause", ...sunday06hTo12h }],
 };
 
 export const rachid: TestHelper = {
@@ -226,7 +232,7 @@ export const rachid: TestHelper = {
   },
   planning: [],
   availabilities: [{ start: friday06h, end: sunday20h }],
-  breakPeriods: [sunday02hTo06h],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
 };
 
 export const benevolant: Assignment = {

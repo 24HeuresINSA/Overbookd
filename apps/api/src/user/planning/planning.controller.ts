@@ -36,7 +36,7 @@ import {
 } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
-import { BreakPeriodDuringRequestDto } from "./dto/break-period-during.request.dto";
+import { CreateBreakPeriodRequestDto } from "./dto/create-break-period.request.dto";
 import { Duration, Period, Edition } from "@overbookd/time";
 import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
 import { VolunteerForPlanningLeafletResponseDto } from "./dto/volunteer-for-planning-leaflet.response.dto";
@@ -290,15 +290,16 @@ export class PlanningController {
   })
   @ApiBody({
     description: "Break period during",
-    type: BreakPeriodDuringRequestDto,
+    type: CreateBreakPeriodRequestDto,
   })
   async addVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteer: number,
-    @Body() { start, durationInHours }: BreakPeriodDuringRequestDto,
+    @Body() { name, start, durationInHours }: CreateBreakPeriodRequestDto,
   ): Promise<PeriodResponseDto[]> {
     const duration = Duration.hours(durationInHours);
     return this.planning.addBreakPeriod({
       volunteer,
+      name,
       during: { start, duration },
     });
   }

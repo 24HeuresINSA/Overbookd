@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { Period, Duration } from "@overbookd/time";
-import { BreakPeriods } from "./break-periods.js";
+import { Duration } from "@overbookd/time";
+import { BreakPeriod, BreakPeriods } from "./break-periods.js";
 import { InMemoryBreakRepository } from "./break-repository.inmemory.js";
 
 const saturday02h = new Date("2024-05-18T02:00+02:00");
@@ -12,8 +12,16 @@ const saturday14h = new Date("2024-05-18T14:00+02:00");
 const sunday04h = new Date("2024-05-19T04:00+02:00");
 const sunday10h = new Date("2024-05-19T10:00+02:00");
 const sixHours = Duration.hours(6);
-const saturday02hTo06h = Period.init({ start: saturday02h, end: saturday06h });
-const sunday04hTo10h = Period.init({ start: sunday04h, end: sunday10h });
+const saturday02hTo06h: BreakPeriod = {
+  name: "Pause 1",
+  start: saturday02h,
+  end: saturday06h,
+};
+const sunday04hTo10h: BreakPeriod = {
+  name: "Pause 2",
+  start: sunday04h,
+  end: sunday10h,
+};
 
 const noel = { id: 1 };
 const lea = { id: 2, breaks: [saturday02hTo06h] };
@@ -31,18 +39,19 @@ describe("Add break period to volunteer", () => {
     breakPeriods = new BreakPeriods(breaks);
   });
   describe.each`
-    volunteer | start          | duration               | expectedBreaks
-    ${noel}   | ${saturday04h} | ${sixHours}            | ${[Period.init({ start: saturday04h, end: saturday10h })]}
-    ${noel}   | ${saturday02h} | ${Duration.hours(2)}   | ${[Period.init({ start: saturday02h, end: saturday04h })]}
-    ${noel}   | ${saturday06h} | ${Duration.hours(8)}   | ${[Period.init({ start: saturday06h, end: saturday14h })]}
-    ${noel}   | ${saturday06h} | ${Duration.hours(5.5)} | ${[Period.init({ start: saturday06h, end: saturday11h30 })]}
+    volunteer | name          | start          | duration               | expectedBreaks
+    ${noel}   | ${"Pause"}    | ${saturday04h} | ${sixHours}            | ${[{ name: "Pause", start: saturday04h, end: saturday10h }]}
+    ${noel}   | ${"Dejeuner"} | ${saturday02h} | ${Duration.hours(2)}   | ${[{ name: "Dejeuner", start: saturday02h, end: saturday04h }]}
+    ${noel}   | ${"Dodo"}     | ${saturday06h} | ${Duration.hours(8)}   | ${[{ name: "Dodo", start: saturday06h, end: saturday14h }]}
+    ${noel}   | ${"Pause"}    | ${saturday06h} | ${Duration.hours(5.5)} | ${[{ name: "Pause", start: saturday06h, end: saturday11h30 }]}
   `(
     "when add a break from $start during $duration",
-    ({ volunteer, start, duration, expectedBreaks }) => {
-      let generatedBreaks: Period[];
+    ({ volunteer, name, start, duration, expectedBreaks }) => {
+      let generatedBreaks: BreakPeriod[];
       beforeEach(async () => {
         generatedBreaks = await breakPeriods.for({
           volunteer: volunteer.id,
+          name,
           during: { start, duration },
         });
       });
@@ -61,11 +70,12 @@ describe("Add break period to volunteer", () => {
       const duration = sixHours;
       const generatedBreaks = await breakPeriods.for({
         volunteer: lea.id,
+        name: "Concert",
         during: { start, duration },
       });
       const expectedBreaks = [
         saturday02hTo06h,
-        Period.init({ start: sunday04h, end: sunday10h }),
+        { name: "Concert", start: sunday04h, end: sunday10h },
       ];
       expect(generatedBreaks).toStrictEqual(expectedBreaks);
     });
@@ -91,7 +101,7 @@ describe("Remove break period", () => {
   `(
     "when removing an existing break from $volunteer",
     ({ volunteer, breakToRemove, expectedRemainingBreaks }) => {
-      let remainingBreaks: Period[];
+      let remainingBreaks: BreakPeriod[];
       beforeEach(async () => {
         const breakIdentifier = { volunteer, period: breakToRemove };
         remainingBreaks = await breakPeriods.remove(breakIdentifier);

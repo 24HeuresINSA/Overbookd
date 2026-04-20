@@ -14,12 +14,13 @@ import {
 } from "./planning.js";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { retrieveImplicitTeams } from "../../candidate-teams.js";
+import { BreakPeriod } from "../../break-periods/break-periods.js";
 
 type NotYetFulfillingDemandCandidate = AssignableVolunteer & {
   friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
-  breakPeriods: IProvidePeriod[];
+  breakPeriods: BreakPeriod[];
   assignableTeams: string[];
   as: undefined;
 };
@@ -28,7 +29,7 @@ export type CandidateFulfillingDemand = AssignableVolunteer & {
   friends: AssignableVolunteer[];
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
-  breakPeriods: IProvidePeriod[];
+  breakPeriods: BreakPeriod[];
   assignableTeams: string[];
   as: string;
 };
@@ -40,7 +41,7 @@ export type IDefineCandidate =
 type Agenda = {
   planning: PlanningEvent[];
   availabilities: IProvidePeriod[];
-  breakPeriods: IProvidePeriod[];
+  breakPeriods: BreakPeriod[];
 };
 
 type RelationShip = {

@@ -52,7 +52,6 @@
     "@overbookd/money": "workspace:*",
     "@overbookd/permission": "workspace:*",
     "@overbookd/personal-account": "workspace:*",
-    "@overbookd/planning": "workspace:*",
     "@overbookd/preference": "workspace:*",
     "@overbookd/registration": "workspace:*",
     "@overbookd/signa": "workspace:*",

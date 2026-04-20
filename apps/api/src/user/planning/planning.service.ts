@@ -5,11 +5,14 @@ import {
   VolunteerForPlanningLeaflet,
 } from "@overbookd/http";
 import { IProvidePeriod, Period } from "@overbookd/time";
-import { BreakDefinition, BreakPeriods } from "@overbookd/planning";
+import {
+  AssignmentEvent,
+  BreakDefinition,
+  BreakPeriods,
+} from "@overbookd/assignment";
 import { Planning } from "./domain/planning";
 import { SubscriptionService } from "./subscription.service";
 import { PlanningRenderStrategy } from "./render/render-strategy";
-import { AssignmentEvent } from "@overbookd/assignment";
 import { UserWithTeams } from "@overbookd/user";
 
 export type PlanningVolunteers = {

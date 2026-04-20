@@ -1,4 +1,4 @@
-import type { AssignmentEvent } from "@overbookd/assignment";
+import type { AssignmentEvent, BreakPeriod } from "@overbookd/assignment";
 import type { HttpStringified, PlanningTask } from "@overbookd/http";
 import { castPeriodWithDate } from "./period.utils";
 
@@ -22,4 +22,13 @@ export function castVolunteerPlanningTasksWithDate(
       end: new Date(timeWindow.end),
     },
   }));
+}
+
+export function castBreakPeriodWithDate(
+  breakPeriod: HttpStringified<BreakPeriod>,
+): BreakPeriod {
+  return {
+    name: breakPeriod.name,
+    ...castPeriodWithDate(breakPeriod),
+  };
 }

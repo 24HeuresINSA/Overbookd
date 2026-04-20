@@ -36,14 +36,13 @@ import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
 import { BreakPeriods } from "./planning.js";
-import { IProvidePeriod } from "@overbookd/time";
 import { Volunteer } from "../../volunteer.js";
-import { AssignVolunteerFunnel } from "./assign-volunteer-funnel.js";
+import { BreakPeriod } from "../../break-periods/break-periods.js";
 
 class InMemoryBreakPeriods implements BreakPeriods {
-  constructor(private breakPeriods: Map<Volunteer["id"], IProvidePeriod[]>) {}
+  constructor(private breakPeriods: Map<Volunteer["id"], BreakPeriod[]>) {}
 
-  for(volunteer: Volunteer["id"]): Promise<IProvidePeriod[]> {
+  for(volunteer: Volunteer["id"]): Promise<BreakPeriod[]> {
     return Promise.resolve(this.breakPeriods.get(volunteer) ?? []);
   }
 }

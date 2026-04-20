@@ -9,16 +9,23 @@
 
     <template #content>
       <form>
-        <DateTimeField :model-value="start" disabled />
         <v-text-field
-          :model-value="duration.inHours"
-          type="number"
-          label="Durée en heures"
-          suffix="h"
-          :rules="[isNumber, min(1)]"
-          @update:model-value="castInDuration"
+          v-model="name"
+          label="Nom de la pause"
           @keydown.enter.prevent="createBreakPeriod"
         />
+        <div class="duration-form">
+          <DateTimeField :model-value="start" disabled />
+          <v-text-field
+            :model-value="duration.inHours"
+            type="number"
+            label="Durée en heures"
+            suffix="h"
+            :rules="[isNumber, min(1)]"
+            @update:model-value="castInDuration"
+            @keydown.enter.prevent="createBreakPeriod"
+          />
+        </div>
       </form>
     </template>
 
@@ -46,6 +53,7 @@ const props = defineProps({
   },
 });
 
+const name = ref<string>("Pause");
 const duration = ref<Duration>(Duration.hours(2));
 const castInDuration = (hours: string) => {
   duration.value = Duration.hours(+hours);
@@ -55,18 +63,30 @@ const emit = defineEmits(["close", "create"]);
 const close = () => emit("close");
 
 const canCreateBreakPeriod = computed<boolean>(
-  () => duration.value.inHours >= 1,
+  () => duration.value.inHours >= 1 && name.value.trim() !== "",
 );
 const createBreakPeriod = () => {
   if (!canCreateBreakPeriod.value) return;
-  const during = { start: props.start, duration: duration.value };
-  emit("create", during);
+  const breakPeriod = {
+    name: name.value.trim(),
+    during: {
+      start: props.start,
+      duration: duration.value,
+    },
+  };
+  emit("create", breakPeriod);
   close();
 };
 </script>
 
 <style lang="scss" scoped>
 form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.duration-form {
   display: flex;
   gap: 10px;
   @media screen and (max-width: $mobile-max-width) {

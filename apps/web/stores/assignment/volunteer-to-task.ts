@@ -2,6 +2,7 @@ import type {
   Assignment,
   AssignmentEvent,
   AssignmentIdentifier,
+  BreakPeriod,
   TeamMember,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
@@ -9,7 +10,6 @@ import type {
   AssignmentSummaryWithTask,
   HttpStringified,
 } from "@overbookd/http";
-import type { IProvidePeriod } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
@@ -20,11 +20,11 @@ import {
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
+import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import {
-  castPeriodWithDate,
-  castPeriodsWithDate,
-} from "~/utils/http/cast-date/period.utils";
-import { castAssignmentEventsWithDate } from "~/utils/http/cast-date/planning.utils";
+  castAssignmentEventsWithDate,
+  castBreakPeriodWithDate,
+} from "~/utils/http/cast-date/planning.utils";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];
@@ -32,7 +32,7 @@ type State = {
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
   alreadyAssignedAssignments: AssignmentEvent[];
-  breakPeriods: IProvidePeriod[];
+  breakPeriods: BreakPeriod[];
   hoverAssignment: AssignmentEvent | null;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
@@ -77,7 +77,7 @@ export const useAssignVolunteerToTaskStore = defineStore(
         const res = await PlanningRepository.getBreakPeriods(volunteerId);
         if (isHttpError(res)) return;
 
-        this.breakPeriods = castPeriodsWithDate(res);
+        this.breakPeriods = res.map(castBreakPeriodWithDate);
       },
 
       async fetchPotentialAssignmentsFor(volunteerId: number) {

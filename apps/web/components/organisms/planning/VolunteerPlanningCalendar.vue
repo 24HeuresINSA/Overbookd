@@ -45,12 +45,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { AssignmentIdentifier } from "@overbookd/assignment";
+import type {
+  AssignmentIdentifier,
+  BreakDefinition,
+  BreakPeriod,
+} from "@overbookd/assignment";
 import type { AssignmentStats, TaskForCalendar } from "@overbookd/http";
 import { AFFECT_VOLUNTEER, READ_FT } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
 import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
-import type { BreakDefinition } from "@overbookd/planning";
 import {
   shouldBeHighlighted,
   toCalendarAssignment,
@@ -192,19 +195,20 @@ const askForBreak = (period: Period) => {
 const closeBreakDialog = () => {
   isBreakPeriodDialogOpen.value = false;
 };
-const saveBreak = (during: BreakDefinition["during"]) => {
+const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
   closeBreakDialog();
   planningStore.addVolunteerBreakPeriods({
-    during,
+    ...breakPeriod,
     volunteer: props.volunteerId,
   });
 };
 
-const selectedBreak = ref<Period | null>(null);
+const selectedBreak = ref<BreakPeriod | null>(null);
 const isBreakRemovalDialogOpen = ref<boolean>(false);
-const openBreakRemoval = (period: BreakEvent) => {
+const openBreakRemoval = (breakEvent: BreakEvent) => {
   if (!canAssignVolunteer.value) return;
-  selectedBreak.value = Period.init(period);
+  console.log("Break event clicked", breakEvent);
+  selectedBreak.value = breakEvent;
   isBreakRemovalDialogOpen.value = true;
 };
 const closeBreakRemovalDialog = () => {

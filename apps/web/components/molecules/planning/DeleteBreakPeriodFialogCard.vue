@@ -8,14 +8,17 @@
     <template #title>Supprimer le créneau de pause</template>
     <template #statement>
       <div class="delete-statement">
-        <p>Tu vas supprimer la pause de</p>
+        <p>
+          Tu vas supprimer la pause
+          <strong>"{{ selectedBreak.name }}"</strong> de
+        </p>
         <v-chip
           color="primary"
           variant="elevated"
           class="assignment-metadata__chip"
         >
           <v-icon left>mdi-clock</v-icon>
-          <span>{{ pauseLabel }}</span>
+          <span>{{ pausePeriod }}</span>
         </v-chip>
       </div>
     </template>
@@ -24,17 +27,22 @@
     </template>
   </ConfirmationDialogCard>
 </template>
-<script lang="ts" setup>
-import type { IProvidePeriod } from "@overbookd/time";
 
-const props = defineProps({
+<script lang="ts" setup>
+import type { BreakPeriod } from "@overbookd/assignment";
+import { Period } from "@overbookd/time";
+
+const { selectedBreak } = defineProps({
   selectedBreak: {
-    type: Object as PropType<IProvidePeriod>,
+    type: Object as PropType<BreakPeriod>,
     required: true,
   },
 });
+console.log("Selected break for deletion", selectedBreak);
 
-const pauseLabel = computed<string>(() => props.selectedBreak.toString());
+const pausePeriod = computed<string>(() =>
+  Period.init(selectedBreak).toString(),
+);
 
 const emit = defineEmits(["close", "confirm"]);
 const close = () => emit("close");
