@@ -1,39 +1,41 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
-  <v-row class="home" no-gutters>
-    <v-col class="home">
-      <ToDoAsVolunteerHomeCard
-        v-if="shouldDisplayInstructionsForVolunteer"
-        class="mobile-only"
-      />
-      <PlanningDownloadHomeCard
-        v-if="canDownloadAndSyncPlanning"
-        class="mobile-only"
-      />
+  <v-container fluid class="pa-0">
+    <v-row class="home" no-gutters>
+      <v-col class="home">
+        <ToDoAsVolunteerHomeCard
+          v-if="shouldDisplayInstructionsForVolunteer"
+          class="mobile-only"
+        />
+        <PlanningDownloadHomeCard
+          v-if="canDownloadAndSyncPlanning"
+          class="mobile-only"
+        />
 
-      <ProfileHomeCard />
-      <FriendsHomeCard v-if="isOrWantsToBeVolunteer === false" />
-    </v-col>
+        <ProfileHomeCard />
+        <FriendsHomeCard v-if="isOrWantsToBeVolunteer === false" />
+      </v-col>
 
-    <v-col class="home">
-      <PlanningDownloadHomeCard
-        v-if="canDownloadAndSyncPlanning"
-        class="desktop-only"
-      />
-      <ToDoAsVolunteerHomeCard
-        v-if="shouldDisplayInstructionsForVolunteer"
-        class="desktop-only"
-      />
-      <PersonalAccountHomeCard v-if="hasPersonalAccount" />
-      <UsefulLinksHomeCard v-if="canViewUsefulLinks" />
-    </v-col>
+      <v-col class="home">
+        <PlanningDownloadHomeCard
+          v-if="canDownloadAndSyncPlanning"
+          class="desktop-only"
+        />
+        <ToDoAsVolunteerHomeCard
+          v-if="shouldDisplayInstructionsForVolunteer"
+          class="desktop-only"
+        />
+        <PersonalAccountHomeCard v-if="hasPersonalAccount" />
+        <UsefulLinksHomeCard v-if="canViewUsefulLinks" />
+      </v-col>
 
-    <v-col v-if="hasThirdColumn" class="home">
-      <PersonalFtHomeCard v-if="canWriteFT" />
-      <PersonalFaHomeCard v-if="canWriteFA" />
-      <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
-    </v-col>
-  </v-row>
+      <v-col v-if="hasThirdColumn" class="home">
+        <PersonalFtHomeCard v-if="canWriteFT" />
+        <PersonalFaHomeCard v-if="canWriteFA" />
+        <FriendsHomeCard v-if="isOrWantsToBeVolunteer" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
@@ -128,15 +130,10 @@ const hasThirdColumn = computed<boolean>(
   display: flex;
   flex-wrap: wrap;
   gap: $card-gap;
+  align-self: flex-start;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
-    gap: $card-gap;
+    flex-wrap: nowrap;
   }
-}
-.v-col {
-  align-self: flex-start;
-}
-@media screen and (max-width: $mobile-max-width) {
-  .v-col.home { flex-wrap: nowrap; }
 }
 </style>
