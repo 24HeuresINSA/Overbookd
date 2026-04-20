@@ -1,5 +1,12 @@
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+
 export const COUNT_FRIENDS = {
-  _count: { select: { friends: true, friendRequestors: true } },
+  _count: {
+    select: {
+      friends: { where: { friend: IS_NOT_DELETED } },
+      friendRequestors: { where: { requestor: IS_NOT_DELETED } },
+    },
+  },
 };
 
 export type DatabaseFriendCount = {

@@ -10,7 +10,7 @@
     >
       <div class="assignment-details">
         <div class="assignment-name">
-          <span>{{ assignment.taskId }} - {{ assignment.name }}</span>
+          <span>{{ assignment.taskId }} - {{ assignment.task.name }}</span>
         </div>
         <div class="assignment-remaining-team-requests">
           <span v-for="request in remaingTeamRequests" :key="request.team">
@@ -38,7 +38,7 @@
     </div>
     <div class="has-friends-assigned">
       <v-icon
-        v-if="assignment.hasFriendsAssigned"
+        v-if="assignment.task.hasFriendsAssigned"
         v-tooltip:top="'Ami·e·s déjà assigné·e·s sur le créneau'"
         icon="mdi-account-check"
         aria-label="Ami·e·s déjà assigné·e·s sur le créneau"

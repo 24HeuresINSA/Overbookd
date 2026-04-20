@@ -11,6 +11,7 @@ import {
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
 import { User } from "@overbookd/user";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export type DatabaseAssignee = {
   teamCode: string;
@@ -100,4 +101,37 @@ export function updateAssigneesOnAssignment(
     update: { teamCode: as },
     create: { userId: id, teamCode: as },
   }));
+}
+
+export function friendAssigneesCount(volunteerId: number) {
+  return {
+    _count: {
+      select: {
+        assignees: {
+          where: {
+            personalData: {
+              OR: [
+                {
+                  friends: {
+                    some: {
+                      requestorId: volunteerId,
+                      friend: IS_NOT_DELETED,
+                    },
+                  },
+                },
+                {
+                  friendRequestors: {
+                    some: {
+                      friendId: volunteerId,
+                      requestor: IS_NOT_DELETED,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  };
 }

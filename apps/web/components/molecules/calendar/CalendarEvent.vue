@@ -54,9 +54,15 @@ const presenter = computed<CalendarEventPresenter>(() => {
   position: absolute;
   margin: 0 !important;
   border-radius: 6px !important;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .event-selected {
-  border: 2px solid rgba(var(--v-theme-on-surface), 0.7);
+  border: 3px solid rgba(var(--v-theme-on-surface));
+  opacity: 1;
 }
 </style>

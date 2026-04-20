@@ -31,6 +31,7 @@ export type {
   Task,
   TaskForAssignment,
   TaskCategorized,
+  TaskCategorizedForPlanning,
   TaskIdentifier,
   TaskWithAssignmentsSummary,
 } from "./assign-task-to-volunteer/task.js";
@@ -56,7 +57,7 @@ export type {
   Planning,
   PlanningEvent,
   AssignmentEvent,
-  Task as PlanningTask,
+  PlanningEventTask,
   Availabilities,
   Friends,
   BreakPeriods,

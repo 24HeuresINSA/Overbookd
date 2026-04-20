@@ -268,8 +268,8 @@ export class RegisterForm {
   }
 
   private isFulfilled(
-    registration: Partial<FulfilledRegistration>,
-  ): registration is FulfilledRegistration {
+    _registration: Partial<FulfilledRegistration>,
+  ): _registration is FulfilledRegistration {
     return this.isValid;
   }
 }

@@ -7,11 +7,7 @@ import {
   PlanningEvent,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
-import {
-  VolunteerWithAssignmentStats,
-  DisplayableAssignment,
-  TaskForCalendar,
-} from "@overbookd/http";
+import { VolunteerWithAssignmentStats, TaskForCalendar } from "@overbookd/http";
 
 export type AssignmentRepository = Assignments & {
   findOneForCalendar(
@@ -22,7 +18,6 @@ export type AssignmentRepository = Assignments & {
     identifier: AssignmentIdentifier,
     withDetails: T,
   ): Promise<Assignment<{ withDetails: T }>>;
-  findAllFor(volunteerId: number): Promise<DisplayableAssignment[]>;
   getVolunteersAssignmentStats(): Promise<VolunteerWithAssignmentStats[]>;
 };
 
@@ -45,10 +40,6 @@ export class AssignmentService {
     withDetails: T,
   ): Promise<Assignment<{ withDetails: T }>> {
     return this.assignments.findOne<T>(identifier, withDetails);
-  }
-
-  async findAllFor(volunteerId: number): Promise<DisplayableAssignment[]> {
-    return this.assignments.findAllFor(volunteerId);
   }
 
   async getPlanning(volunteerId: number): Promise<PlanningEvent[]> {

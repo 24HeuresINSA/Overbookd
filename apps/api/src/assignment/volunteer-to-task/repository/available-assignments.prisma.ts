@@ -3,11 +3,12 @@ import { AvailableAssignments } from "../volunteer-to-task.service";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod, Period } from "@overbookd/time";
-import { Category } from "@overbookd/festival-event-constants";
+import { Category, Status } from "@overbookd/festival-event-constants";
 import { countAssigneesInTeam } from "@overbookd/assignment";
 import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
+import { friendAssigneesCount } from "../../common/repository/assignment.query";
 
 type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
   id: string;
@@ -16,6 +17,7 @@ type DatabaseAssignmentSummaryWithTask = IProvidePeriod & {
     id: number;
     name: string;
     category: Category;
+    status: Status;
     topPriority: boolean;
     teamCode: string;
   };
@@ -59,6 +61,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
             id: true,
             name: true,
             category: true,
+            status: true,
             topPriority: true,
             teamCode: true,
           },
@@ -69,32 +72,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
         assignees: {
           select: { userId: true, as: { select: { teamCode: true } } },
         },
-        _count: {
-          select: {
-            assignees: {
-              where: {
-                personalData: {
-                  OR: [
-                    {
-                      friends: {
-                        some: {
-                          requestor: { id: volunteerId, ...IS_NOT_DELETED },
-                        },
-                      },
-                    },
-                    {
-                      friendRequestors: {
-                        some: {
-                          friend: { id: volunteerId, ...IS_NOT_DELETED },
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
+        ...friendAssigneesCount(volunteerId),
       },
       orderBy: [{ start: "asc" }, { end: "asc" }, { festivalTaskId: "asc" }],
     });
@@ -145,11 +123,11 @@ function toAssignmentSummaryWithTask(
     start: assignment.start,
     end: assignment.end,
     taskId: assignment.festivalTask.id,
-    name: assignment.festivalTask.name,
-    category: assignment.festivalTask.category,
-    topPriority: assignment.festivalTask.topPriority,
-    inChargeTeam: assignment.festivalTask.teamCode,
+    task: {
+      ...assignment.festivalTask,
+      inChargeTeam: assignment.festivalTask.teamCode,
+      hasFriendsAssigned,
+    },
     teams,
-    hasFriendsAssigned,
   };
 }

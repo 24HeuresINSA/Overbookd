@@ -41,7 +41,6 @@ import {
 import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
-import { DisplayableAssignmentResponseDto } from "./dto/displayable-assignment.response.dto";
 import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
 import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
@@ -133,25 +132,6 @@ export class AssignmentController {
   ): Promise<AssignmentResponseDto | AssignmentWithDetailsResponseDto> {
     const identifier = { taskId, mobilizationId, assignmentId };
     return this.assignment.findOne(identifier, withDetails === "true");
-  }
-
-  @Get("volunteers/:volunteerId/assignments")
-  @Permission(AFFECT_VOLUNTEER)
-  @ApiResponse({
-    status: 200,
-    description: "Volunteer assignments",
-    type: DisplayableAssignmentResponseDto,
-    isArray: true,
-  })
-  @ApiParam({
-    name: "volunteerId",
-    description: "Volunteer id",
-    type: Number,
-  })
-  findAllFor(
-    @Param("volunteerId", ParseIntPipe) volunteerId: number,
-  ): Promise<DisplayableAssignmentResponseDto[]> {
-    return this.assignment.findAllFor(volunteerId);
   }
 
   @Get("volunteers/:volunteerId/planning")

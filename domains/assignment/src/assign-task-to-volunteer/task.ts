@@ -1,4 +1,4 @@
-import { Category } from "@overbookd/festival-event-constants";
+import { Category, Status } from "@overbookd/festival-event-constants";
 import { AssignmentSummary, Assignment } from "./assignment.js";
 
 export type TaskIdentifier = {
@@ -10,6 +10,11 @@ export type TaskCategorized = TaskIdentifier & {
   topPriority: boolean;
   category?: Category;
   inChargeTeam: string;
+};
+
+export type TaskCategorizedForPlanning = TaskCategorized & {
+  status: Status;
+  hasFriendsAssigned: boolean;
 };
 
 export type TaskWithAssignmentsSummary = Omit<

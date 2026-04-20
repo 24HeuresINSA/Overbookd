@@ -125,7 +125,6 @@ export type {
 } from "./timeline";
 export type {
   AssignmentSummaryWithTask,
-  DisplayableAssignment,
   VolunteerWithAssignmentStats,
   AssignmentStat,
   AssignmentStats,

@@ -12,6 +12,7 @@ import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_PLANNING_EVENT } from "../../../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../../../assignment/common/repository/planning.prisma";
 import { UserWithTeams } from "@overbookd/user";
+import { friendAssigneesCount } from "../../../assignment/common/repository/assignment.query";
 
 const SELECT_VOLUNTEER = { ...SELECT_USER_IDENTIFIER, ...SELECT_TEAMS_CODE };
 
@@ -55,7 +56,10 @@ export class PrismaPlanningVolunteers implements PlanningVolunteers {
         assignees: { some: { userId: volunteerId } },
         festivalTask: IS_NOT_DELETED,
       },
-      select: SELECT_PLANNING_EVENT,
+      select: {
+        ...SELECT_PLANNING_EVENT,
+        ...friendAssigneesCount(volunteerId),
+      },
     });
 
     return assignments.map(toPlanningEventFromAssignment);

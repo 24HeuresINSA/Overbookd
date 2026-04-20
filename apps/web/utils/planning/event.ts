@@ -1,12 +1,18 @@
 import type {
   AssignmentEvent,
   AssignmentIdentifier,
+  PlanningEventTask,
 } from "@overbookd/assignment";
 import type { PlanningTask } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { createCalendarEvent, type CalendarEvent } from "../calendar/event";
 import type { BreakEvent } from "~/domain/common/break-events";
+import {
+  AUCUNE,
+  FRIENDS,
+  type SelectableCategory,
+} from "../assignment/task-category";
 
 type RequestedDuringMobilization = CalendarEvent & {
   taskId: number;
@@ -56,4 +62,16 @@ export function toCalendarTask(permissions: {
       kind: "mobilization",
     });
   };
+}
+
+export function shouldBeHighlighted(
+  selectedCategory: SelectableCategory | undefined,
+  task: PlanningEventTask,
+): boolean {
+  const isSelectedCategory = selectedCategory === task.category;
+  const isSelectedAucune =
+    selectedCategory === AUCUNE && task.category === null;
+  const isSelectedWithFriends =
+    selectedCategory === FRIENDS && task.hasFriendsAssigned;
+  return isSelectedCategory || isSelectedAucune || isSelectedWithFriends;
 }

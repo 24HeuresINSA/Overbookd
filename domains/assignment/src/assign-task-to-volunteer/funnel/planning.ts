@@ -1,15 +1,18 @@
 import { IProvidePeriod } from "@overbookd/time";
-import { Status } from "@overbookd/festival-event-constants";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { AssignmentIdentifier } from "../assignment.js";
+import { TaskCategorizedForPlanning } from "../task.js";
 
-export type Task = { name: string; id: number; status: Status };
+export type PlanningEventTask = Omit<
+  TaskCategorizedForPlanning,
+  "topPriority" | "inChargeTeam"
+>;
 
 type AssignmentIdentifierWithoutTaskId = Omit<AssignmentIdentifier, "taskId">;
 
 export type PlanningEvent = IProvidePeriod &
   Partial<AssignmentIdentifierWithoutTaskId> & {
-    task: Task;
+    task: PlanningEventTask;
   };
 
 export type AssignmentEvent = Required<PlanningEvent>;

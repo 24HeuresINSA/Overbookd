@@ -383,7 +383,7 @@ export class FestivalActivityQueryBuilder {
 
   private static upsertReviews(activity: Reviewable) {
     const reviews = Object.entries(activity.reviews)
-      .filter((entry): entry is [Reviewer<"FA">, ReviewStatus<"FA">] => true)
+      .filter((_entry): _entry is [Reviewer<"FA">, ReviewStatus<"FA">] => true)
       .map(([team, status]) => ({ team, status }));
 
     return {

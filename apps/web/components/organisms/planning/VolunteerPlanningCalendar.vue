@@ -2,8 +2,8 @@
   <div>
     <DownloadPlanning />
     <AssignmentVolunteerStats
-      v-if="stats"
-      v-show="shouldShowStats"
+      v-if="shouldShowStats && stats"
+      v-model:selected-category="selectedCategory"
       :stats="stats"
       class="mb-2"
     />
@@ -52,11 +52,13 @@ import { Period, type IProvidePeriod } from "@overbookd/time";
 import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
 import type { BreakDefinition } from "@overbookd/planning";
 import {
+  shouldBeHighlighted,
   toCalendarAssignment,
   toCalendarTask,
   type CalendarEventForPlanning,
 } from "~/utils/planning/event";
 import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
+import type { SelectableCategory } from "~/utils/assignment/task-category";
 
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
@@ -70,6 +72,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const selectedCategory = ref<SelectableCategory | undefined>(undefined);
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
   return (
@@ -116,15 +120,29 @@ const availabilities = computed<IProvidePeriod[]>(
   () => availabilityStore.availabilities.list,
 );
 
-const events = computed<CalendarEventForPlanning[]>(() => {
-  const { assignments, tasks, breakPeriods } = selectedPlanningVolunteer.value;
-  const assignmentEvents = assignments.map(toCalendarAssignment);
-  const taskEvents = tasks.map((task) =>
+const assignmentEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.assignments.map((assignment) => {
+    const event = toCalendarAssignment(assignment);
+    const selected = shouldBeHighlighted(
+      selectedCategory.value,
+      assignment.task,
+    );
+    return { ...event, selected };
+  }),
+);
+const taskEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.tasks.map((task) =>
     toCalendarTask({ canReadFt: canReadFt.value })(task),
-  );
-  const breakEvents = breakPeriods.map(toCalendarBreak);
-  return [...assignmentEvents, ...taskEvents, ...breakEvents];
-});
+  ),
+);
+const breakEvents = computed<CalendarEventForPlanning[]>(() =>
+  selectedPlanningVolunteer.value.breakPeriods.map(toCalendarBreak),
+);
+const events = computed<CalendarEventForPlanning[]>(() => [
+  ...assignmentEvents.value,
+  ...taskEvents.value,
+  ...breakEvents.value,
+]);
 
 const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
   await planningStore.fetchVolunteerAssignmentDetails(identifier);
