@@ -207,7 +207,6 @@ const selectedBreak = ref<BreakPeriod | null>(null);
 const isBreakRemovalDialogOpen = ref<boolean>(false);
 const openBreakRemoval = (breakEvent: BreakEvent) => {
   if (!canAssignVolunteer.value) return;
-  console.log("Break event clicked", breakEvent);
   selectedBreak.value = breakEvent;
   isBreakRemovalDialogOpen.value = true;
 };

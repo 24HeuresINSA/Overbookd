@@ -38,7 +38,6 @@ const { selectedBreak } = defineProps({
     required: true,
   },
 });
-console.log("Selected break for deletion", selectedBreak);
 
 const pausePeriod = computed<string>(() =>
   Period.init(selectedBreak).toString(),
