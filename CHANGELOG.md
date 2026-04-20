@@ -1,3 +1,9 @@
+## [3.52.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.14...v3.52.0) (2026-04-20)
+
+### Features
+
+* **planning:** can highlight assignments by category [#2661](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2661) ([a29cad8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a29cad8cce9625d4968a7c61d4123faa9be2a0b5))
+
 ## [3.51.14](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.13...v3.51.14) (2026-04-18)
 
 ### Bug Fixes
