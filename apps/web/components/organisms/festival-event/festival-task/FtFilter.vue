@@ -11,7 +11,7 @@
         v-if="isHumainMember"
         v-model="filters.reviewer"
         :list="assignableReviewers"
-        label="Relecteur"
+        label="Relecteur·rice"
         clearable
         hide-details
         @update:model-value="updateReviewerParam"
