@@ -24,6 +24,11 @@
             <span class="desktop-only">Avec</span> Microsoft Outlook
           </template>
         </v-list-item>
+        <v-list-item prepend-icon="mdi-apple" @click="syncWithApple">
+          <template #title>
+            <span class="desktop-only">Avec</span> Apple Calendar
+          </template>
+        </v-list-item>
         <v-list-item prepend-icon="mdi-link" @click="copySyncLinkToClipboard">
           <template #title> Obtenir le lien </template>
         </v-list-item>
@@ -110,6 +115,11 @@ const syncWithMicrosoft = () => {
   const link = `https://outlook.live.com/calendar/addcalendar?name=24%20Heures%20de%20l%27INSA%20-%20${Edition.current}e&url=${syncLink.value}`;
   window.open(link);
 };
+const syncWithApple = () => {
+  if (!syncLink.value) return;
+  const plainTextLink = `${syncLink.value}?plaintext=true`;
+  window.location.href = plainTextLink;
+};
 
 const copySyncLinkToClipboard = async () => {
   if (!syncLink.value) return;
@@ -123,25 +133,23 @@ const withLoader = (download: () => Promise<unknown>) => {
 };
 
 const downloadPdf = () => {
-  const users = [selectedUser.value!];
   const download = isMe.value
     ? planningStore.downloadMyPdfPlanning()
-    : planningStore.downloadAllPdfPlannings(users);
+    : planningStore.downloadAllPdfPlannings([selectedUser.value!]);
 
   return withLoader(() => download);
 };
 const downloadIcal = () => {
-  const volunteerId = selectedUser.value!.id;
   const download = isMe.value
     ? planningStore.downloadMyIcalPlanning()
-    : planningStore.downloadIcalPlanning(volunteerId);
+    : planningStore.downloadIcalPlanning(selectedUser.value!.id);
 
   return withLoader(() => download);
 };
 const downloadBooklet = () => {
   if (!loggedUser.value) return;
-
   const volunteer = isMe.value ? loggedUser.value : selectedUser.value!;
+
   return withLoader(() => planningStore.downloadBookletPlanning(volunteer));
 };
 </script>

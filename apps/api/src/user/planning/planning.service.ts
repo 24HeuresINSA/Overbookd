@@ -56,10 +56,10 @@ export class PlanningService {
     return this.repositories.volunteers.allForLeaflets();
   }
 
-  async buildOne(format: string, volunteerId: number) {
+  async buildOne(format: string, volunteerId: number, plainText = false) {
     const tasks =
       await this.useCases.planning.generateForVolunteer(volunteerId);
-    const renderStrategy = this.useCases.renderStrategy.get(format);
+    const renderStrategy = this.useCases.renderStrategy.get(format, plainText);
     return renderStrategy.render(tasks, volunteerId);
   }
 

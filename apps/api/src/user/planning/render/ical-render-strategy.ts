@@ -24,7 +24,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     });
   }
 
-  private buildIcalEvent(task: Task): EventAttributes {
+  protected buildIcalEvent(task: Task): EventAttributes {
     const start = toDateArray(task.period.start);
     const end = toDateArray(task.period.end);
     const assignments = this.buildAssignmentsDescription(task.assignments);
@@ -89,6 +89,17 @@ export class IcalRenderStrategy implements RenderStrategy {
   }
 }
 
+export class IcalPlainTextRenderStrategy extends IcalRenderStrategy {
+  protected override buildIcalEvent(task: Task): EventAttributes {
+    const event = super.buildIcalEvent(task);
+    return {
+      ...event,
+      description: htmlToPlainText(event.description),
+      htmlContent: undefined,
+    };
+  }
+}
+
 function toDateArray(date: string | Date): DateArray {
   const d = new Date(date);
   return [
@@ -98,4 +109,29 @@ function toDateArray(date: string | Date): DateArray {
     d.getHours(),
     d.getMinutes(),
   ];
+}
+
+function htmlToPlainText(html: string): string {
+  let text = html;
+  text = text.replace(/<hr\s*\/?>/gi, "\n---\n");
+  text = text.replace(/<\/?(h[1-6])[^>]*>/gi, "\n");
+  text = text.replace(/<br\s*\/?>/gi, "\n");
+  text = text.replace(/<\/p>/gi, "\n");
+  text = text.replace(/<p[^>]*>/gi, "");
+  text = text.replace(/<li[^>]*>/gi, "- ");
+  text = text.replace(/<\/li>/gi, "\n");
+  text = text.replace(/<\/?(ul|ol)[^>]*>/gi, "\n");
+  text = text.replace(/<strong[^>]*>(.*?)<\/strong>/gi, "$1");
+  text = text.replace(/<b[^>]*>(.*?)<\/b>/gi, "$1");
+  text = text.replace(/<em[^>]*>(.*?)<\/em>/gi, "$1");
+  text = text.replace(/<[^>]+>/g, "");
+  text = text.replace(/&nbsp;/gi, " ");
+  text = text.replace(/&amp;/gi, "&");
+  text = text.replace(/&lt;/gi, "<");
+  text = text.replace(/&gt;/gi, ">");
+  text = text.replace(/&quot;/gi, '"');
+  text = text.replace(/&#39;/gi, "'");
+  text = text.replace(/\n{3,}/g, "\n\n");
+  text = text.trim();
+  return text;
 }
