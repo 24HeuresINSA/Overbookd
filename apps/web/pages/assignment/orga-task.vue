@@ -57,7 +57,7 @@ import type {
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
 import { buildUserName } from "@overbookd/user";
-import { Period } from "@overbookd/time";
+import type { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
@@ -102,9 +102,8 @@ const refreshVolunteerData = async (
   volunteerId: number,
   isUnassign?: boolean,
 ) => {
-  const isNotCurrentlySectedVolunteer =
-    volunteerId !== selectedVolunteer.value?.id;
-  if (isNotCurrentlySectedVolunteer) return;
+  const isNotSelectedVolunteer = volunteerId !== selectedVolunteer.value?.id;
+  if (isNotSelectedVolunteer) return;
 
   const otherFetch = isUnassign
     ? []
