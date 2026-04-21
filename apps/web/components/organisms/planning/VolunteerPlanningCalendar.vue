@@ -39,7 +39,7 @@
     />
   </v-dialog>
 
-  <v-dialog v-model="isTaskDetailsDialogOpen" max-width="900">
+  <v-dialog v-model="isTaskDetailsDialogOpen" max-width="900px">
     <TaskDetailsDialogCard
       v-if="selectedTask"
       :selected-task="selectedTask"
@@ -47,7 +47,7 @@
     />
   </v-dialog>
 
-  <v-dialog v-model="isBreakPeriodDialogOpen" max-width="900">
+  <v-dialog v-model="isBreakCreationDialogOpen" max-width="800px">
     <CreateBreakPeriodDialogCard
       :start="breakPeriodStart"
       @create="saveBreak"
@@ -55,7 +55,7 @@
     />
   </v-dialog>
 
-  <v-dialog v-model="isBreakRemovalDialogOpen" max-width="900">
+  <v-dialog v-model="isBreakRemovalDialogOpen" max-width="800px">
     <DeleteBreakPeriodFialogCard
       v-if="selectedBreak"
       :selected-break="selectedBreak"
@@ -107,7 +107,7 @@ const selectedCategory = ref<SelectableCategory | undefined>(undefined);
 const canUseCalendarShortcuts = computed<boolean>(() => {
   return (
     !isTaskDetailsDialogOpen.value &&
-    !isBreakPeriodDialogOpen.value &&
+    !isBreakCreationDialogOpen.value &&
     !isBreakRemovalDialogOpen.value
   );
 });
@@ -200,15 +200,15 @@ const closeTaskDetailsDialog = () => {
   isTaskDetailsDialogOpen.value = false;
 };
 
-const isBreakPeriodDialogOpen = ref<boolean>(false);
+const isBreakCreationDialogOpen = ref<boolean>(false);
 const breakPeriodStart = ref<Date>(new Date());
 const askForBreak = (period: Period) => {
   if (!canAssignVolunteer.value) return;
   breakPeriodStart.value = period.start;
-  isBreakPeriodDialogOpen.value = true;
+  isBreakCreationDialogOpen.value = true;
 };
 const closeBreakDialog = () => {
-  isBreakPeriodDialogOpen.value = false;
+  isBreakCreationDialogOpen.value = false;
 };
 const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
   closeBreakDialog();

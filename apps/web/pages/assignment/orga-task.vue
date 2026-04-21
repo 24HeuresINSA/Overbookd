@@ -6,6 +6,8 @@
       :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
       @display-volunteer-details="openVolunteerInfoDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
+      @ask-for-break="askForBreak"
+      @remove-break="openBreakRemoval"
     />
     <FilterableTaskAssignmentList @volunteer-assigned="refreshVolunteerData" />
 
@@ -27,18 +29,39 @@
         @unassign="unassignVolunteer"
       />
     </v-dialog>
+
+    <v-dialog v-model="isBreakCreationDialogOpen" max-width="800px">
+      <CreateBreakPeriodDialogCard
+        :start="breakPeriodStart"
+        @create="saveBreak"
+        @close="closeBreakDialog"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isBreakRemovalDialogOpen" max-width="800px">
+      <DeleteBreakPeriodFialogCard
+        v-if="selectedBreak"
+        :selected-break="selectedBreak"
+        @close="closeBreakRemovalDialog"
+        @confirm="removeBreak"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type {
   AssignmentWithDetails,
+  BreakDefinition,
+  BreakPeriod,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
 import { buildUserName } from "@overbookd/user";
+import { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { BreakEvent } from "~/domain/common/break-events";
 
 const DEFAULT_TITLE = "Affect Orga-Tâche";
 useHead({ title: DEFAULT_TITLE });
@@ -115,6 +138,45 @@ const openAssignmentDetailsDialog = () => {
 };
 const closeAssignmentDetailsDialog = () => {
   displayAssignmentDetailsDialog.value = false;
+};
+
+const isBreakCreationDialogOpen = ref<boolean>(false);
+const breakPeriodStart = ref<Date>(new Date());
+
+const askForBreak = (period: Period) => {
+  if (!selectedVolunteer.value) return;
+  breakPeriodStart.value = period.start;
+  isBreakCreationDialogOpen.value = true;
+};
+const closeBreakDialog = () => {
+  isBreakCreationDialogOpen.value = false;
+};
+const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
+  closeBreakDialog();
+  if (!selectedVolunteer.value) return;
+  planningStore.addVolunteerBreakPeriods({
+    ...breakPeriod,
+    volunteer: selectedVolunteer.value.id,
+  });
+};
+
+const selectedBreak = ref<BreakPeriod | null>(null);
+const isBreakRemovalDialogOpen = ref<boolean>(false);
+const openBreakRemoval = (breakEvent: BreakEvent) => {
+  if (!selectedVolunteer.value) return;
+  selectedBreak.value = breakEvent;
+  isBreakRemovalDialogOpen.value = true;
+};
+const closeBreakRemovalDialog = () => {
+  selectedBreak.value = null;
+  isBreakRemovalDialogOpen.value = false;
+};
+const removeBreak = async () => {
+  if (selectedBreak.value === null || !selectedVolunteer.value) return;
+  const period = selectedBreak.value;
+  const volunteer = selectedVolunteer.value.id;
+  await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
+  isBreakRemovalDialogOpen.value = false;
 };
 </script>
 

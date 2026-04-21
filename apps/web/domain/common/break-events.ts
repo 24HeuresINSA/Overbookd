@@ -4,8 +4,13 @@ import {
   type CalendarEvent,
 } from "~/utils/calendar/event";
 
-export type BreakEvent = CalendarEvent & { kind: "break" };
+const BREAK = "break";
+export type BreakEvent = CalendarEvent & { kind: BREAK };
 
 export function toCalendarBreak(breakPeriod: BreakPeriod): BreakEvent {
-  return createCalendarEvent({ ...breakPeriod, color: "black", kind: "break" });
+  return createCalendarEvent({ ...breakPeriod, color: "black", kind: BREAK });
+}
+
+export function isBreakEvent(event: CalendarEvent): event is BreakEvent {
+  return "kind" in event && event.kind === BREAK;
 }
