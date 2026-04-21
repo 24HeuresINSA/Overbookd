@@ -30,23 +30,43 @@
       </p>
       <ul>
         <li>
-          <a :href="HELP_LINK.google" target="_blank"> Google </a>
-          <span>(section 'Use a link to add a public calendar')</span>
+          <span class="row">
+            <a :href="HELP_LINK.google" target="_blank"> Google </a>
+            <span>(section 'Use a link to add a public calendar')</span>
+          </span>
+          <span class="row">
+            <span> Ou directement : </span>
+            <a :href="googleLink" target="_blank">
+              Synchroniser avec Google Calendar
+            </a>
+          </span>
         </li>
         <li>
-          <a href="#" @click.prevent="syncWithApple"> Apple </a>
-          <span>(ouvre directement dans Calendrier)</span>
+          <span class="row">
+            <a :href="appleLink"> Apple </a>
+            <span>(ouvre directement dans Calendrier)</span>
+          </span>
         </li>
         <li>
           <a :href="HELP_LINK.proton" target="_blank"> Proton </a>
         </li>
         <li>
-          <a :href="HELP_LINK.outlook" target="_blank"> Outlook </a>
-          <span>(section 'Subscribe to a calendar')</span>
+          <span class="row">
+            <a :href="HELP_LINK.outlook" target="_blank"> Outlook </a>
+            <span>(section 'Subscribe to a calendar')</span>
+          </span>
+          <span class="row">
+            <span> Ou directement : </span>
+            <a :href="outlookLink" target="_blank">
+              Synchroniser avec Microsoft Outlook
+            </a>
+          </span>
         </li>
         <li>
-          <a :href="HELP_LINK.mozilla" target="_blank"> Mozilla </a>
-          <span>(section 'Subscribe to it on the internet')</span>
+          <span class="row">
+            <a :href="HELP_LINK.mozilla" target="_blank"> Mozilla </a>
+            <span>(section 'Subscribe to it on the internet')</span>
+          </span>
         </li>
       </ul>
     </v-card-text>
@@ -63,6 +83,7 @@
 
 <script lang="ts" setup>
 import { DOWNLOAD_PLANNING } from "@overbookd/permission";
+import { Edition } from "@overbookd/time";
 
 const HELP_LINK = {
   google: "https://support.google.com/calendar/answer/37100",
@@ -82,14 +103,22 @@ onMounted(async () => {
 });
 const personalLink = computed<string>(() => planningStore.link ?? "");
 
+const googleLink = computed<string>(() => {
+  if (!personalLink.value) return "#";
+  return `https://www.google.com/calendar/render?cid=${personalLink.value}`;
+});
+const appleLink = computed<string>(() => {
+  if (!personalLink.value) return "#";
+  return `${personalLink.value}?plaintext=true`;
+});
+const outlookLink = computed<string>(() => {
+  if (!personalLink.value) return "#";
+  return `https://outlook.live.com/calendar/addcalendar?name=24%20Heures%20de%20l%27INSA%20-%20${Edition.current}e&url=${personalLink.value}`;
+});
+
 const copyToClipBoard = () => {
   navigator.clipboard.writeText(personalLink.value);
   sendInfoNotification("Lien copié ✅");
-};
-
-const syncWithApple = () => {
-  if (!personalLink.value) return;
-  window.location.href = `${personalLink.value}?plaintext=true`;
 };
 
 const exportPlanning = async () => {
@@ -121,5 +150,15 @@ const exportPlanning = async () => {
 
 li {
   margin-left: 20px;
+
+  &:not(:first-child) {
+    margin-top: 5px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
 </style>
