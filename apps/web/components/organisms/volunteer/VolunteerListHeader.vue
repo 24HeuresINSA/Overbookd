@@ -47,7 +47,7 @@
         @click="exportCSV"
       />
       <v-btn
-        v-if="canAffectVolunteer"
+        v-if="canAssignVolunteer"
         icon="mdi-download"
         aria-label="Télécharger les plannings"
         title="Télécharger les plannings"
@@ -80,7 +80,7 @@
           :rounded="false"
         />
         <v-btn
-          v-if="canAffectVolunteer"
+          v-if="canAssignVolunteer"
           :value="VOLUNTEER_STATS"
           icon="mdi-chart-bar"
           aria-label="Affichage statistiques"
@@ -134,12 +134,12 @@ const updateDisplayModeParam = (mode: DisplayMode) => {
 };
 
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
-const canAffectVolunteer = computed<boolean>(() =>
+const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
 
 const canFilterByExcludedTeams = computed<boolean>(
-  () => canAffectVolunteer.value || filters.value.excludedTeams?.length !== 0,
+  () => canAssignVolunteer.value || filters.value.excludedTeams?.length !== 0,
 );
 
 const emit = defineEmits(["export-csv", "download-leaflets"]);
@@ -148,7 +148,7 @@ const exportCSV = () => {
   emit("export-csv");
 };
 const downloadLeaflets = () => {
-  if (!canAffectVolunteer.value) return;
+  if (!canAssignVolunteer.value) return;
   emit("download-leaflets");
 };
 </script>

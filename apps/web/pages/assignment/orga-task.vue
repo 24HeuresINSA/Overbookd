@@ -4,11 +4,21 @@
     <OrgaTaskCalendar
       class="calendar"
       :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
+      @display-volunteer-details="openVolunteerInfoDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
     />
     <FilterableTaskAssignmentList @volunteer-assigned="refreshVolunteerData" />
 
-    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
+    <v-dialog v-model="isVolunteerInfoDialogOpen" width="1400">
+      <VolunteerInformationDialogCard
+        v-if="selectedUser"
+        :volunteer="selectedUser"
+        @updated="closeVolunteerInfoDialog"
+        @close="closeVolunteerInfoDialog"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000">
       <AssignmentDetailsDialogCard
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
@@ -28,16 +38,20 @@ import type {
 import { buildUserName } from "@overbookd/user";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const DEFAULT_TITLE = "Affect Orga-Tâche";
 useHead({ title: DEFAULT_TITLE });
 
 const route = useRoute();
+const userStore = useUserStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
 const planningStore = usePlanningStore();
 
-const displayAssignmentDetailsDialog = ref<boolean>(false);
+const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
+  () => userStore.selectedUser,
+);
 
 const assignmentDetails = computed<AssignmentWithDetails | null>(
   () => assignVolunteerToTaskStore.assignmentDetails,
@@ -85,6 +99,17 @@ onMounted(async () => {
   selectVolunteer(volunteer);
 });
 
+const isVolunteerInfoDialogOpen = ref<boolean>(false);
+const openVolunteerInfoDialog = () => {
+  if (!selectedVolunteer.value) return;
+  userStore.findUserById(selectedVolunteer.value.id);
+  isVolunteerInfoDialogOpen.value = true;
+};
+const closeVolunteerInfoDialog = () => {
+  isVolunteerInfoDialogOpen.value = false;
+};
+
+const displayAssignmentDetailsDialog = ref<boolean>(false);
 const openAssignmentDetailsDialog = () => {
   displayAssignmentDetailsDialog.value = true;
 };

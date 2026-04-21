@@ -1,72 +1,70 @@
 <template>
-  <div class="sync-download-planning">
-    <v-menu>
-      <template #activator="{ props }">
-        <v-btn
-          v-if="canSyncPlanning"
-          v-bind="props"
-          :text="`Synchroniser ${isMe ? 'mon' : 'l\''} agenda`"
-          prepend-icon="mdi-sync"
-          color="secondary"
-        />
-      </template>
-      <v-list>
-        <v-list-item prepend-icon="mdi-google" @click="syncWithGoogle">
-          <template #title>
-            <span class="desktop-only">Avec</span> Google Calendar
-          </template>
-        </v-list-item>
-        <v-list-item
-          prepend-icon="mdi-microsoft-outlook"
-          @click="syncWithMicrosoft"
-        >
-          <template #title>
-            <span class="desktop-only">Avec</span> Microsoft Outlook
-          </template>
-        </v-list-item>
-        <v-list-item prepend-icon="mdi-apple" @click="syncWithApple">
-          <template #title>
-            <span class="desktop-only">Avec</span> Apple Calendar
-          </template>
-        </v-list-item>
-        <v-list-item prepend-icon="mdi-link" @click="copySyncLinkToClipboard">
-          <template #title> Obtenir le lien </template>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-btn
+        v-if="canSyncPlanning"
+        v-bind="props"
+        :text="`Synchroniser ${isMe ? 'mon' : 'l\''} agenda`"
+        prepend-icon="mdi-sync"
+        color="secondary"
+      />
+    </template>
+    <v-list>
+      <v-list-item prepend-icon="mdi-google" @click="syncWithGoogle">
+        <template #title>
+          <span class="desktop-only">Avec</span> Google Calendar
+        </template>
+      </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-microsoft-outlook"
+        @click="syncWithMicrosoft"
+      >
+        <template #title>
+          <span class="desktop-only">Avec</span> Microsoft Outlook
+        </template>
+      </v-list-item>
+      <v-list-item prepend-icon="mdi-apple" @click="syncWithApple">
+        <template #title>
+          <span class="desktop-only">Avec</span> Apple Calendar
+        </template>
+      </v-list-item>
+      <v-list-item prepend-icon="mdi-link" @click="copySyncLinkToClipboard">
+        <template #title> Obtenir le lien </template>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 
-    <v-menu>
-      <template #activator="{ props }">
-        <v-btn
-          v-if="canDownloadPlanning"
-          v-bind="props"
-          :text="`Télécharger ${isMe ? 'mon' : 'le'} planning`"
-          :loading="downloading"
-          prepend-icon="mdi-download"
-          color="secondary"
-        />
-      </template>
-      <v-list>
-        <v-list-item prepend-icon="mdi-file-pdf-box" @click="downloadPdf">
-          <template #title> Au format PDF </template>
-        </v-list-item>
-        <v-list-item
-          prepend-icon="mdi-calendar-multiselect"
-          @click="downloadIcal"
-        >
-          <template #title> Au format ICal </template>
-        </v-list-item>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-btn
+        v-if="canDownloadPlanning"
+        v-bind="props"
+        :text="`Télécharger ${isMe ? 'mon' : 'le'} planning`"
+        :loading="downloading"
+        prepend-icon="mdi-download"
+        color="secondary"
+      />
+    </template>
+    <v-list>
+      <v-list-item prepend-icon="mdi-file-pdf-box" @click="downloadPdf">
+        <template #title> Au format PDF </template>
+      </v-list-item>
+      <v-list-item
+        prepend-icon="mdi-calendar-multiselect"
+        @click="downloadIcal"
+      >
+        <template #title> Au format ICal </template>
+      </v-list-item>
 
-        <v-list-item
-          v-if="canAffectVolunteer"
-          prepend-icon="mdi-book-open-variant-outline"
-          @click="downloadBooklet"
-        >
-          <template #title> Sous forme de livret </template>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </div>
+      <v-list-item
+        v-if="canAssignVolunteer"
+        prepend-icon="mdi-book-open-variant-outline"
+        @click="downloadBooklet"
+      >
+        <template #title> Sous forme de livret </template>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 
 <script lang="ts" setup>
@@ -92,7 +90,7 @@ const canDownloadPlanning = computed<boolean>(() =>
   userStore.can(isMe.value ? DOWNLOAD_PLANNING : AFFECT_VOLUNTEER),
 );
 
-const canAffectVolunteer = computed<boolean>(() =>
+const canAssignVolunteer = computed<boolean>(() =>
   userStore.can(AFFECT_VOLUNTEER),
 );
 
@@ -153,15 +151,3 @@ const downloadBooklet = () => {
   return withLoader(() => planningStore.downloadBookletPlanning(volunteer));
 };
 </script>
-
-<style lang="scss" scoped>
-.sync-download-planning {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-    margin: 5px 3% 15px 3%;
-  }
-}
-</style>
