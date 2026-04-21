@@ -104,14 +104,6 @@ const { volunteerId } = defineProps({
 
 const selectedCategory = ref<SelectableCategory | undefined>(undefined);
 
-const canUseCalendarShortcuts = computed<boolean>(() => {
-  return (
-    !isTaskDetailsDialogOpen.value &&
-    !isBreakCreationDialogOpen.value &&
-    !isBreakRemovalDialogOpen.value
-  );
-});
-
 const selectedVolunteer = computed<
   UserDataWithPotentialyProfilePicture | undefined
 >(() => userStore.selectedUser);
@@ -181,6 +173,15 @@ const events = computed<CalendarEventForPlanning[]>(() => [
   ...taskEvents.value,
   ...breakEvents.value,
 ]);
+
+const canUseCalendarShortcuts = computed<boolean>(() => {
+  return (
+    !isVolunteerInfoDialogOpen &&
+    !isTaskDetailsDialogOpen.value &&
+    !isBreakCreationDialogOpen.value &&
+    !isBreakRemovalDialogOpen.value
+  );
+});
 
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
 const openVolunteerInfoDialog = () => {

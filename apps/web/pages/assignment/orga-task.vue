@@ -3,7 +3,7 @@
     <FilterableVolunteerList @select-volunteer="selectVolunteer" />
     <OrgaTaskCalendar
       class="calendar"
-      :can-use-calendar-shortcuts="!displayAssignmentDetailsDialog"
+      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @display-volunteer-details="openVolunteerInfoDialog"
       @display-assignment-details="openAssignmentDetailsDialog"
       @ask-for-break="askForBreak"
@@ -122,6 +122,15 @@ onMounted(async () => {
   selectVolunteer(volunteer);
 });
 
+const canUseCalendarShortcuts = computed<boolean>(() => {
+  return (
+    !isVolunteerInfoDialogOpen &&
+    !displayAssignmentDetailsDialog.value &&
+    !isBreakCreationDialogOpen.value &&
+    !isBreakRemovalDialogOpen.value
+  );
+});
+
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
 const openVolunteerInfoDialog = () => {
   if (!selectedVolunteer.value) return;
@@ -142,7 +151,6 @@ const closeAssignmentDetailsDialog = () => {
 
 const isBreakCreationDialogOpen = ref<boolean>(false);
 const breakPeriodStart = ref<Date>(new Date());
-
 const askForBreak = (period: Period) => {
   if (!selectedVolunteer.value) return;
   breakPeriodStart.value = period.start;

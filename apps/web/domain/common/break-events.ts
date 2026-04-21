@@ -5,7 +5,7 @@ import {
 } from "~/utils/calendar/event";
 
 const BREAK = "break";
-export type BreakEvent = CalendarEvent & { kind: BREAK };
+export type BreakEvent = CalendarEvent & { kind: typeof BREAK };
 
 export function toCalendarBreak(breakPeriod: BreakPeriod): BreakEvent {
   return createCalendarEvent({ ...breakPeriod, color: "black", kind: BREAK });
