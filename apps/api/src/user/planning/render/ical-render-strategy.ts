@@ -51,7 +51,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     return { lat, lon: lng };
   }
 
-  protected buildAssignmentsDescription(assignments: Assignment[]) {
+  private buildAssignmentsDescription(assignments: Assignment[]) {
     if (assignments.length === 0) return "";
 
     const header = "<h2>Affectés avec toi</h2>";
@@ -64,7 +64,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     return `${header}<ul>${listing}</ul>`;
   }
 
-  protected buildContacts(contacts: Contact[]) {
+  private buildContacts(contacts: Contact[]) {
     if (contacts.length === 0) return "";
 
     const header = "<h2>Personne(s) à contacter en cas de problème</h2>";
