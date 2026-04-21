@@ -165,7 +165,7 @@ const tableHeaders = computed<TableHeaders>(() => {
     { title: "Statut", value: "id", sortable: true },
     { title: "Validations", value: "reviews" },
     { title: "Nom", value: "name", sortable: true },
-    { title: "Equipe", value: "team", sortable: true },
+    { title: "Équipe", value: "team", sortable: true },
     { title: "Gestionnaire", value: "administrator" },
   ];
   const removalHeader = { title: "Suppression", value: "removal" };
