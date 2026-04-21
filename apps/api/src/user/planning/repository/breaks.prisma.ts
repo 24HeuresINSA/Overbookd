@@ -2,7 +2,7 @@ import { Breaks, BreakPeriod } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 
-export const SELECT_BREAK_PERIOD = {
+const SELECT_BREAK_PERIOD = {
   name: true,
   ...SELECT_PERIOD,
 };
