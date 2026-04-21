@@ -177,9 +177,9 @@ export class PdfRenderStrategy implements RenderStrategy {
           {
             stack: [
               { text: "Responsables Bénévoles", style: ["bold"] },
-              "Alix : 06 40 95 34 29",
-              "Candice : 07 82 62 70 50",
-              "Gaëlle : 06 51 82 66 25",
+              "Jade : 06 13 66 06 74",
+              "Guillaume : 07 49 13 00 75",
+              "Margot : 06 51 06 78 75",
             ],
             width: 150,
           },
@@ -207,7 +207,9 @@ export class PdfRenderStrategy implements RenderStrategy {
   private generateHeader(volunteer: Volunteer) {
     return function (currentPage: number): Content {
       const headerTitle =
-        currentPage === SECURITY_PLAN_PAGE ? "Plan Sécu" : volunteer.name;
+        currentPage === SECURITY_PLAN_PAGE
+          ? "Plan du Festival"
+          : volunteer.name;
       return {
         columns: [
           {
