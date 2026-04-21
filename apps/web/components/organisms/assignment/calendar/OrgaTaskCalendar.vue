@@ -3,18 +3,18 @@
     <div v-show="selectedVolunteer" class="header">
       <div class="title">
         <h1 class="title__name">{{ volunteerName }}</h1>
-        <AssignmentVolunteerStats
-          v-if="stats"
-          v-model:selected-category="selectedCategory"
-          :stats="stats"
-          class="title__stats"
+        <v-btn
+          text="Voir le profil"
+          prepend-icon="mdi-account"
+          color="primary"
+          density="comfortable"
+          @click="displayVolunteerDetails"
         />
       </div>
-      <v-btn
-        text="Voir le profil"
-        prepend-icon="mdi-account"
-        color="primary"
-        @click="displayVolunteerDetails"
+      <AssignmentVolunteerStats
+        v-if="stats"
+        v-model:selected-category="selectedCategory"
+        :stats="stats"
       />
     </div>
     <OverCalendar
@@ -167,22 +167,20 @@ const formatTaskForCalendar = ({
 <style lang="scss" scoped>
 .header {
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
   margin: 0 4px;
+  margin-bottom: 8px;
+  gap: 2px;
 }
 
 .title {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 20px;
   &__name {
     font-size: 1.4rem;
     font-weight: 500;
-  }
-  &__stats {
-    margin-top: 2px;
   }
 }
 </style>
