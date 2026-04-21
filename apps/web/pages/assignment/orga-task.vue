@@ -38,6 +38,7 @@ import type {
 import { buildUserName } from "@overbookd/user";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
+import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
 const DEFAULT_TITLE = "Affect Orga-Tâche";
 useHead({ title: DEFAULT_TITLE });
@@ -48,7 +49,9 @@ const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
 const planningStore = usePlanningStore();
 
-const selectedUser = computed(() => userStore.selectedUser);
+const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
+  () => userStore.selectedUser,
+);
 
 const assignmentDetails = computed<AssignmentWithDetails | null>(
   () => assignVolunteerToTaskStore.assignmentDetails,
