@@ -1,32 +1,40 @@
-import { Breaks } from "@overbookd/planning";
+import { Breaks, BreakPeriod } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
-import { Period } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
+
+const SELECT_BREAK_PERIOD = {
+  name: true,
+  ...SELECT_PERIOD,
+};
 
 export class PrismaBreaks implements Breaks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async of(volunteerId: number): Promise<Period[]> {
-    const breaks = await this.prisma.breakPeriod.findMany({
+  async of(volunteerId: number): Promise<BreakPeriod[]> {
+    return this.prisma.breakPeriod.findMany({
       where: { volunteerId },
-      select: SELECT_PERIOD,
+      select: SELECT_BREAK_PERIOD,
     });
-    return breaks.map(Period.init);
   }
 
-  async save(volunteerId: number, breaks: Period[]): Promise<Period[]> {
+  async save(
+    volunteerId: number,
+    breaks: BreakPeriod[],
+  ): Promise<BreakPeriod[]> {
     await this.prisma.breakPeriod.createMany({
-      data: breaks.map(({ start, end }) => ({ start, end, volunteerId })),
+      data: breaks.map((breaks) => ({ ...breaks, volunteerId })),
       skipDuplicates: true,
     });
-
     return breaks;
   }
 
-  async remove(volunteerId: number, { start, end }: Period): Promise<Period[]> {
+  async remove(
+    volunteerId: number,
+    { start, end }: BreakPeriod,
+  ): Promise<BreakPeriod[]> {
     await this.prisma.breakPeriod.delete({
       where: { volunteerId_start_end: { volunteerId, start, end } },
-      select: SELECT_PERIOD,
+      select: SELECT_BREAK_PERIOD,
     });
     return this.of(volunteerId);
   }

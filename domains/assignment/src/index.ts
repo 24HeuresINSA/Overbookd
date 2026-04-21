@@ -60,7 +60,7 @@ export type {
   PlanningEventTask,
   Availabilities,
   Friends,
-  BreakPeriods,
+  BreakPeriods as AssignmentBreakPeriods,
 } from "./assign-task-to-volunteer/funnel/planning.js";
 export type {
   Assignments,
@@ -71,3 +71,10 @@ export { AssignVolunteerFunnel } from "./assign-task-to-volunteer/funnel/assign-
 export { ReadyToStart } from "./assign-task-to-volunteer/funnel/startup-funnel.js";
 export type { IActAsFunnel } from "./assign-task-to-volunteer/funnel/funnel.js";
 export { retrieveImplicitTeams } from "./candidate-teams.js";
+export { BreakPeriods } from "./break-periods/break-periods.js";
+export type {
+  Breaks,
+  BreakPeriod,
+  BreakDefinition,
+  BreakIdentifier,
+} from "./break-periods/break-periods.js";

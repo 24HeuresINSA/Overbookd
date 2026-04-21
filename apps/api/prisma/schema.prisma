@@ -861,10 +861,11 @@ model PurchaseGearRequest {
 }
 
 model BreakPeriod {
-  volunteer   User     @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
-  volunteerId Int      @map("volunteer_id")
+  name        String   @default("Pause")
   start       DateTime
   end         DateTime
+  volunteer   User     @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  volunteerId Int      @map("volunteer_id")
 
   @@unique([volunteerId, start, end])
   @@index([start(sort: Asc)])

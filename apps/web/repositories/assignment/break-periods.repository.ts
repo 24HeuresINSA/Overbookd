@@ -1,14 +1,15 @@
-import type { BreakPeriods } from "@overbookd/assignment";
-import type { IProvidePeriod } from "@overbookd/time";
-import { castPeriodsWithDate } from "~/utils/http/cast-date/period.utils";
+import type {
+  AssignmentBreakPeriods,
+  BreakPeriod,
+} from "@overbookd/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { PlanningRepository } from "../planning.repository";
+import { castBreakPeriodWithDate } from "~/utils/http/cast-date/planning.utils";
 
-export class BreakPeriodsRepository implements BreakPeriods {
-  async for(volunteer: number): Promise<IProvidePeriod[]> {
+export class BreakPeriodsRepository implements AssignmentBreakPeriods {
+  async for(volunteer: number): Promise<BreakPeriod[]> {
     const res = await PlanningRepository.getBreakPeriods(volunteer);
-
     if (isHttpError(res)) throw res;
-    return castPeriodsWithDate(res);
+    return res.map(castBreakPeriodWithDate);
   }
 }

@@ -1,6 +1,7 @@
+import type { BreakPeriod } from "@overbookd/assignment";
 import { ICAL, PDF } from "@overbookd/http";
 import type {
-  DuringBreakPeriods,
+  CreateBreakPeriodForm,
   MultiPlanningVolunteer,
   VolunteerForPlanningLeaflet,
 } from "@overbookd/http";
@@ -11,20 +12,20 @@ export class PlanningRepository {
   private static readonly basePath = "planning";
 
   static getBreakPeriods(volunteer: number) {
-    return HttpClient.get<IProvidePeriod[]>(
+    return HttpClient.get<BreakPeriod[]>(
       `${this.basePath}/${volunteer}/break-periods`,
     );
   }
 
-  static addBreakPeriod(volunteer: number, during: DuringBreakPeriods) {
-    return HttpClient.post<IProvidePeriod[]>(
+  static addBreakPeriod(volunteer: number, breakPeriod: CreateBreakPeriodForm) {
+    return HttpClient.post<BreakPeriod[]>(
       `${this.basePath}/${volunteer}/break-periods`,
-      { ...during },
+      breakPeriod,
     );
   }
 
   static removeBreakPeriod(volunteer: number, { start, end }: IProvidePeriod) {
-    return HttpClient.delete<IProvidePeriod[]>(
+    return HttpClient.delete<BreakPeriod[]>(
       `${this.basePath}/${volunteer}/break-periods?start=${start.toISOString()}&end=${end.toISOString()}`,
     );
   }

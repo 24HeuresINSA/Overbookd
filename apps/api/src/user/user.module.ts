@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { BreakPeriods } from "@overbookd/planning";
+import { BreakPeriods } from "@overbookd/assignment";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "../utils/file.service";
 import { ProfilePictureService } from "./profile-picture.service";

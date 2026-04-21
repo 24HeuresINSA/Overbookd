@@ -79,7 +79,7 @@ const itemsPerPage = ref<number>(DEFAULT_ITEMS_PER_PAGE);
 
 const route = useRoute();
 onMounted(async () => {
-  await useUserStore().fetchVolunteers();
+  await userStore.fetchVolunteers();
   const params = MultiPlanningParamsBuilder.getFromRouteQuery(route.query);
   if (params.volunteers) {
     selectedVolunteers.value = params.volunteers;

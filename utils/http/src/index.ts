@@ -77,7 +77,7 @@ export type {
 
 // PLANNING
 export type { PlanningTask, TaskForCalendar } from "./planning/task";
-export type { During as DuringBreakPeriods } from "./planning/break-periods";
+export type { CreateBreakPeriodForm } from "./planning/break-periods";
 export type {
   VolunteerForPlanningLeaflet,
   MultiPlanningVolunteer,

@@ -2,6 +2,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { AssignmentIdentifier } from "../assignment.js";
 import { TaskCategorizedForPlanning } from "../task.js";
+import { BreakPeriod } from "../../break-periods/break-periods.js";
 
 export type PlanningEventTask = Omit<
   TaskCategorizedForPlanning,
@@ -26,7 +27,7 @@ export type Availabilities = {
 };
 
 export type BreakPeriods = {
-  for(volunteer: AssignableVolunteer["id"]): Promise<IProvidePeriod[]>;
+  for(volunteer: AssignableVolunteer["id"]): Promise<BreakPeriod[]>;
 };
 
 export type Friends = {
