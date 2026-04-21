@@ -34,6 +34,10 @@
           <span>(section 'Use a link to add a public calendar')</span>
         </li>
         <li>
+          <a href="#" @click.prevent="syncWithApple"> Apple </a>
+          <span>(ouvre directement dans Calendrier)</span>
+        </li>
+        <li>
           <a :href="HELP_LINK.proton" target="_blank"> Proton </a>
         </li>
         <li>
@@ -81,6 +85,11 @@ const personalLink = computed<string>(() => planningStore.link ?? "");
 const copyToClipBoard = () => {
   navigator.clipboard.writeText(personalLink.value);
   sendInfoNotification("Lien copié ✅");
+};
+
+const syncWithApple = () => {
+  if (!personalLink.value) return;
+  window.location.href = `${personalLink.value}?plaintext=true`;
 };
 
 const exportPlanning = async () => {
