@@ -156,6 +156,13 @@ export const usePlanningStore = defineStore("planning", {
       });
     },
 
+    clearSelectedVolunteer() {
+      this.selectedVolunteer.breakPeriods = [];
+      this.selectedVolunteer.tasks = [];
+      this.selectedVolunteer.assignmentStats = undefined;
+      this.selectedVolunteer.assignments = [];
+    },
+
     async fetchVolunteerTasks(volunteerId: number) {
       const res =
         await UserRepository.getMobilizationsVolunteerTakePartOf(volunteerId);

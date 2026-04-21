@@ -2,7 +2,6 @@ import type {
   Assignment,
   AssignmentEvent,
   AssignmentIdentifier,
-  BreakPeriod,
   TeamMember,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
@@ -13,7 +12,6 @@ import type {
 import type { User } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
-import { PlanningRepository } from "~/repositories/planning.repository";
 import { UserRepository } from "~/repositories/user.repository";
 import {
   type UnassignForm,
@@ -21,10 +19,7 @@ import {
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
-import {
-  castAssignmentEventsWithDate,
-  castBreakPeriodWithDate,
-} from "~/utils/http/cast-date/planning.utils";
+import { castAssignmentEventsWithDate } from "~/utils/http/cast-date/planning.utils";
 
 type State = {
   volunteers: VolunteerWithAssignmentDuration[];
@@ -32,7 +27,6 @@ type State = {
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
   alreadyAssignedAssignments: AssignmentEvent[];
-  breakPeriods: BreakPeriod[];
   hoverAssignment: AssignmentEvent | null;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
@@ -46,7 +40,6 @@ export const useAssignVolunteerToTaskStore = defineStore(
       selectedVolunteerFriends: [],
       assignments: [],
       alreadyAssignedAssignments: [],
-      breakPeriods: [],
       hoverAssignment: null,
       assignmentDetails: null,
     }),
@@ -71,13 +64,6 @@ export const useAssignVolunteerToTaskStore = defineStore(
         const res = await UserRepository.getVolunteerAssignments(volunteerId);
         if (isHttpError(res)) return;
         this.alreadyAssignedAssignments = castAssignmentEventsWithDate(res);
-      },
-
-      async fetchBreakPeriodsFor(volunteerId: number) {
-        const res = await PlanningRepository.getBreakPeriods(volunteerId);
-        if (isHttpError(res)) return;
-
-        this.breakPeriods = res.map(castBreakPeriodWithDate);
       },
 
       async fetchPotentialAssignmentsFor(volunteerId: number) {

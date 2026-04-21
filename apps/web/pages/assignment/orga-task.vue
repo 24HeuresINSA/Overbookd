@@ -95,22 +95,30 @@ const selectVolunteer = (volunteer: VolunteerWithAssignmentDuration) => {
 };
 const unassignVolunteer = async (form: UnassignForm) => {
   await assignVolunteerToTaskStore.unassign(form);
-  refreshVolunteerData(form.assigneeId);
+  refreshVolunteerData(form.assigneeId, true);
 };
 
-const refreshVolunteerData = async (volunteerId: number) => {
+const refreshVolunteerData = async (
+  volunteerId: number,
+  isUnassign?: boolean,
+) => {
   const isNotCurrentlySectedVolunteer =
     volunteerId !== selectedVolunteer.value?.id;
   if (isNotCurrentlySectedVolunteer) return;
 
-  availabilitiesStore.clearVolunteerAvailabilities();
+  const otherFetch = isUnassign
+    ? []
+    : [
+        availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
+        planningStore.fetchVolunteerBreakPeriods(volunteerId),
+        planningStore.fetchVolunteerTasks(volunteerId),
+      ];
+
   await Promise.all([
-    availabilitiesStore.fetchVolunteerAvailabilities(volunteerId),
     planningStore.fetchVolunteerAssignments(volunteerId),
     planningStore.fetchVolunteerAssignmentStats(volunteerId),
     assignVolunteerToTaskStore.fetchAllAssignmentsFor(volunteerId),
-    assignVolunteerToTaskStore.fetchBreakPeriodsFor(volunteerId),
-    planningStore.fetchVolunteerTasks(volunteerId),
+    ...otherFetch,
   ]);
 };
 
@@ -118,7 +126,10 @@ onMounted(async () => {
   await assignVolunteerToTaskStore.fetchVolunteers();
 
   const volunteer = VolunteerSelectBuilder.getFromRouteQuery(route.query);
-  if (!volunteer) return;
+  if (!volunteer) {
+    planningStore.clearSelectedVolunteer();
+    return;
+  }
   selectVolunteer(volunteer);
 });
 

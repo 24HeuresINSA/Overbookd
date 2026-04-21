@@ -47,7 +47,6 @@ import {
   isBreakEvent,
 } from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import { Period } from "@overbookd/time";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
 import type { SelectableCategory } from "~/utils/assignment/task-category";
@@ -108,7 +107,7 @@ const taskEvents = computed<CalendarEvent[]>(() =>
   planningStore.selectedVolunteer.tasks.map(formatTaskForCalendar),
 );
 const breakEvents = computed<BreakEvent[]>(() =>
-  assignVolunteerToTaskStore.breakPeriods.map(toCalendarBreak),
+  planningStore.selectedVolunteer.breakPeriods.map(toCalendarBreak),
 );
 const events = computed<(CalendarEvent | BreakEvent)[]>(() => [
   ...taskEvents.value,
