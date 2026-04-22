@@ -1,3 +1,9 @@
+## [3.53.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.0...v3.53.1) (2026-04-22)
+
+### Bug Fixes
+
+* **web:** fix calendar shortcuts condition [#2682](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2682) ([d2748aa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d2748aa0b284eb7fcb8649e03af5d1ef3b1dcc59))
+
 ## [3.53.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.52.0...v3.53.0) (2026-04-22)
 
 ### Features
