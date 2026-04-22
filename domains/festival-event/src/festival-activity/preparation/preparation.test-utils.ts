@@ -76,7 +76,7 @@ export const pcSecurite: Reviewable = factory
 export const justDance = factory
   .inReview("Just Dance")
   .withGeneral({
-    description: "Viens t'amuser en defiant tes amis en battle de dance",
+    description: "Viens t'amuser en defiant tes ami·e·s en battle de dance",
   })
   .asPublic({
     categories: ["Culture"],

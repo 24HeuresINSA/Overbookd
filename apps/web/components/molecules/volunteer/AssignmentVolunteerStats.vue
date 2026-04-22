@@ -20,8 +20,13 @@
       <span>
         Avec des ami·e·s
         <br />
-        {{ stats.friendsCount }} ami·e
-        {{ stats.friendsCount !== 1 ? "·s" : "" }} au total
+        {{ stats.friendCount.volunteerCount }} ami·e
+        {{ stats.friendCount.volunteerCount !== 1 ? "·s" : "" }} bénévoles
+        <span v-if="stats.friendCount.candidateCount">
+          <br />
+          {{ stats.friendCount.candidateCount }} ami·e
+          {{ stats.friendCount.candidateCount !== 1 ? "·s" : "" }} candidats
+        </span>
       </span>
     </v-tooltip>
   </div>

@@ -21,7 +21,6 @@ import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import { VolunteerWithAssignmentStats, TaskForCalendar } from "@overbookd/http";
 import {
   SELECT_PERIOD_AND_CATEGORY,
-  SELECT_USER_FRIENDS,
   hasPermission,
 } from "../../../user/user.query";
 import { UserService } from "../../../user/user.service";
@@ -38,6 +37,7 @@ import { Charisma } from "@overbookd/charisma";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
+import { getFriendCount, SELECT_USER_FRIENDS } from "./friend.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -226,10 +226,10 @@ export class PrismaAssignments implements AssignmentRepository {
             volunteer.id,
             assignments,
           );
-        const friendsCount = UserService.getFriendCount(
+        const friendCount = getFriendCount({
           friends,
           friendRequestors,
-        );
+        });
         const charisma = Charisma.init()
           .addEvents(charismaEventParticipations)
           .addAvailabilities(availabilities, charismaPeriods)
@@ -239,7 +239,7 @@ export class PrismaAssignments implements AssignmentRepository {
           charisma,
           stats,
           withFriendsAssignmentDuration,
-          friendsCount,
+          friendCount,
         };
       },
     );

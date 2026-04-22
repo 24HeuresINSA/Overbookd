@@ -36,7 +36,9 @@ export class FriendService {
       where: { requestorId, friendId },
     });
     if (isAlreadyFriend) {
-      throw new ForbiddenException("Cette personne fait déjà partie des amis");
+      throw new ForbiddenException(
+        "Cette personne fait déjà partie des ami·e·s",
+      );
     }
 
     const { friend } = await this.prisma.friend.create({

@@ -67,7 +67,7 @@ const alone: Image = {
 
 const friendship: Image = {
   link: "https://media2.giphy.com/media/BIA2rRLTq0ibe/giphy.gif?cid=ecf05e472yvzffzma8wziiay5p05ow11knrlj7ecwvzdckyg&ep=v1_gifs_related&rid=giphy.gif&ct=g",
-  description: "Avec quelques amis",
+  description: "Avec quelques ami·e·s",
 };
 
 const howToMakeFriends =

@@ -148,7 +148,9 @@ export const useUserStore = defineStore("user", {
     async addFriend(friend: User) {
       const res = await UserRepository.addFriend(friend.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`${friend.firstname} a été ajouté à tes amis 🎉`);
+      sendSuccessNotification(
+        `${friend.firstname} a été ajouté à tes ami·e·s 🎉`,
+      );
       this.myFriends = [...this.myFriends, friend];
     },
 
@@ -156,7 +158,7 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.removeFriend(friend.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `${friend.firstname} a été supprimé de tes amis 😯`,
+        `${friend.firstname} a été supprimé de tes ami·e·s 😯`,
       );
       this.myFriends = this.myFriends.filter((f) => f.id !== friend.id);
     },
@@ -164,7 +166,7 @@ export const useUserStore = defineStore("user", {
     async addFriendToUser(userId: number, friend: User) {
       const res = await UserRepository.addFriendToUser(userId, friend.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`${friend.firstname} a été ajouté à ses amis 🎉`);
+      sendSuccessNotification(`${friend.firstname} a été ajouté à ses ·e·s 🎉`);
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = [...this.selectedUserFriends, res];
       }
@@ -174,7 +176,7 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.removeFriendFromUser(userId, friend.id);
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `${friend.firstname} a été supprimé de ses amis😢`,
+        `${friend.firstname} a été supprimé de ses ami·e·s 😢`,
       );
 
       if (this.selectedUser?.id === userId) {

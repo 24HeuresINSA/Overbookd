@@ -33,9 +33,9 @@
           </span>
         </div>
         <div class="stats">
-          <span class="stats__value">{{ friendsCount }}</span>
+          <span class="stats__value">{{ friendCount }}</span>
           <span class="stats__label">
-            Ami·e{{ friendsCount !== 0 ? "·s" : "" }}
+            Ami·e{{ friendCount !== 0 ? "·s" : "" }}
           </span>
         </div>
         <div class="stats">
@@ -117,7 +117,7 @@ const teams = computed<string[]>(() => loggedUser.value?.teams ?? []);
 const charisma = computed<number>(() =>
   loggedUser.value ? loggedUser.value.charisma : 0,
 );
-const friendsCount = computed<number>(() => userStore.myFriends.length);
+const friendCount = computed<number>(() => userStore.myFriends.length);
 const tasksCount = computed<number>(() =>
   loggedUser.value ? loggedUser.value.tasksCount : 0,
 );
