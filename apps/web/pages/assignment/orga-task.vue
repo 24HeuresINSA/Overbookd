@@ -11,7 +11,7 @@
     />
     <FilterableTaskAssignmentList @volunteer-assigned="refreshVolunteerData" />
 
-    <v-dialog v-model="isVolunteerInfoDialogOpen" width="1400">
+    <v-dialog v-model="isVolunteerInfoDialogOpen" width="1400px">
       <VolunteerInformationDialogCard
         v-if="selectedUser"
         :volunteer="selectedUser"
@@ -20,7 +20,7 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000">
+    <v-dialog v-model="displayAssignmentDetailsDialog" width="1000px">
       <AssignmentDetailsDialogCard
         v-if="assignmentDetails"
         :assignment-details="assignmentDetails"
@@ -134,7 +134,7 @@ onMounted(async () => {
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
   return (
-    !isVolunteerInfoDialogOpen &&
+    !isVolunteerInfoDialogOpen.value &&
     !displayAssignmentDetailsDialog.value &&
     !isBreakCreationDialogOpen.value &&
     !isBreakRemovalDialogOpen.value

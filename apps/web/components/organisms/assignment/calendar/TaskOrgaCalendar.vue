@@ -6,7 +6,7 @@
       :events="assignments"
       clickable-events
       class="task-orga-calendar__calendar"
-      :can-use-calendar-shortcuts="props.canUseCalendarShortcuts"
+      :can-use-calendar-shortcuts="canUseCalendarShortcuts"
       @click:event="selectAssignment"
       @click-right:event="openAssignmentDetails"
     />
@@ -28,7 +28,7 @@ import {
   type CalendarEventWithIdentifier,
 } from "~/utils/assignment/calendar-event";
 
-const props = defineProps({
+defineProps({
   canUseCalendarShortcuts: {
     type: Boolean,
     default: true,

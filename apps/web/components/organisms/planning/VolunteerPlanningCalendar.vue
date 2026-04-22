@@ -29,7 +29,7 @@
 
   <v-dialog
     v-model="isVolunteerInfoDialogOpen"
-    :width="canAssignVolunteer ? 1400 : 700"
+    :width="canAssignVolunteer ? '1400px' : '700px'"
   >
     <VolunteerInformationDialogCard
       v-if="selectedVolunteer"
@@ -176,7 +176,7 @@ const events = computed<CalendarEventForPlanning[]>(() => [
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
   return (
-    !isVolunteerInfoDialogOpen &&
+    !isVolunteerInfoDialogOpen.value &&
     !isTaskDetailsDialogOpen.value &&
     !isBreakCreationDialogOpen.value &&
     !isBreakRemovalDialogOpen.value
