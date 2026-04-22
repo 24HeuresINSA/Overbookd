@@ -1,3 +1,19 @@
+## [3.53.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.52.0...v3.53.0) (2026-04-22)
+
+### Features
+
+* **break-period:** add name to break periods [#2674](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2674) ([0790493](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0790493ee887a42bcdeb9add22fd9b0d678d50a2))
+* **orga-task:** allow break periods to be added and removed [#2560](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2560) ([4c3320e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4c3320ee6d6a51ddd4ea9a71ae91cea15a339287))
+* **planning:** add apple calendar sync link on home page [#2681](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2681) ([9b8d215](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9b8d215d80faec9c25301665a2c553c263f5e51c))
+* **web:** add profile dialog in planning and orga-task [#2676](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2676) [#2675](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2675) ([eca3e7c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eca3e7ca36eddb631658c1b42e3f9d8f4cb3ddf6))
+
+### Bug Fixes
+
+* **festival-task:** add inclusive labels [#2680](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2680) ([e26fcf9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e26fcf907f6e240f404d8b4479e63fb7f0d04035))
+* **planning:** strip html from ical description for apple calendar [#584](https://gitlab.com/24-heures-insa/overbookd-mono/issues/584) ([e52a04f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e52a04fba430e72a2419dc93c35ac7e22b46b590))
+* update festival map for paper planning [#2652](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2652) ([0e8cc47](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0e8cc47a87837e0416f457539f5512c251f2cf56))
+* **web:** fix layout stacking on mobile iOS [#2678](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2678) ([e3a5419](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e3a541961430a2869b42008681aad0db7ff97195))
+
 ## [3.52.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.51.14...v3.52.0) (2026-04-20)
 
 ### Features
