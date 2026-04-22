@@ -23,13 +23,14 @@
       :availabilities="availabilities"
       clickable-events
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
-      @click:event="selectAssignmentToDisplayDetails"
+      @click:event="selectEvent"
+      @click:period="selectPeriod"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { IProvidePeriod } from "@overbookd/time";
+import type { IProvidePeriod, Period } from "@overbookd/time";
 import {
   createCalendarEvent,
   type CalendarEvent,
@@ -40,7 +41,11 @@ import type {
 } from "@overbookd/assignment";
 import type { AssignmentStats, PlanningTask } from "@overbookd/http";
 import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
-import { toCalendarBreak } from "~/domain/common/break-events";
+import {
+  toCalendarBreak,
+  type BreakEvent,
+  isBreakEvent,
+} from "~/domain/common/break-events";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
@@ -101,10 +106,10 @@ const hoverAssignmentsEvents = computed<CalendarEvent[]>(() => {
 const taskEvents = computed<CalendarEvent[]>(() =>
   planningStore.selectedVolunteer.tasks.map(formatTaskForCalendar),
 );
-const breakEvents = computed<CalendarEvent[]>(() =>
-  assignVolunteerToTaskStore.breakPeriods.map(toCalendarBreak),
+const breakEvents = computed<BreakEvent[]>(() =>
+  planningStore.selectedVolunteer.breakPeriods.map(toCalendarBreak),
 );
-const events = computed<CalendarEvent[]>(() => [
+const events = computed<(CalendarEvent | BreakEvent)[]>(() => [
   ...taskEvents.value,
   ...alreadyAssignedEvents.value,
   ...hoverAssignmentsEvents.value,
@@ -122,15 +127,20 @@ const availabilities = computed<IProvidePeriod[]>(
 const emit = defineEmits([
   "display-volunteer-details",
   "display-assignment-details",
+  "ask-for-break",
+  "remove-break",
 ]);
 const displayVolunteerDetails = () => emit("display-volunteer-details");
-const selectAssignmentToDisplayDetails = (
-  event: CalendarEventWithIdentifier | CalendarEvent,
-) => {
+const selectEvent = (event: CalendarEventWithIdentifier | CalendarEvent) => {
+  if (isBreakEvent(event)) {
+    emit("remove-break", event);
+    return;
+  }
   if (!("identifier" in event)) return;
   assignVolunteerToTaskStore.fetchAssignmentDetails(event.identifier);
   emit("display-assignment-details");
 };
+const selectPeriod = (period: Period) => emit("ask-for-break", period);
 
 const formatAssignmentForCalendar = (
   assignment: AssignmentEvent,
