@@ -1,7 +1,7 @@
 <template>
   <div class="icons">
     <v-icon
-      v-if="shouldShowNoFriendIcon"
+      v-if="!volunteer.friendCount.volunteerCount"
       v-tooltip:top="getNoFriendLabel(volunteer.friendCount.candidateCount)"
       icon="mdi-account-alert"
       :aria-label="getNoFriendLabel(volunteer.friendCount.candidateCount)"
@@ -102,10 +102,6 @@ const getNoFriendLabel = (candidateFriendCount: number): string => {
   return `${noFriendsLabel} bénévole mais a ${candidateFriendCount} ami·e${candidateFriendCount !== 1 ? "·s" : ""} candidat${candidateFriendCount !== 1 ? "s" : ""} `;
 };
 
-const shouldShowNoFriendIcon = computed<boolean>(
-  () =>
-    isAssignableVolunteer(volunteer) && !volunteer.friendCount.volunteerCount,
-);
 const shouldShowFriendAssignedIcon = computed<boolean>(
   () => isAssignableVolunteer(volunteer) && volunteer.hasFriendAssigned,
 );

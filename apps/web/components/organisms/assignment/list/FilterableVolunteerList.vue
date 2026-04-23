@@ -95,7 +95,7 @@ const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const volunteers = computed<AssignmentVolunteer[]>(() =>
   isOrgaTask.value
-    ? assignVolunteerToTaskStore.volunteers
+    ? [...assignVolunteerToTaskStore.volunteers.values()]
     : assignTaskToVolunteerStore.assignableVolunteers,
 );
 const searchableVolunteers = computed<Searchable<AssignmentVolunteer>[]>(() =>

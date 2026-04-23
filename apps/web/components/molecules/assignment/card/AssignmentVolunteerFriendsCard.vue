@@ -7,6 +7,8 @@
         :key="friend.id"
         class="friend-item"
         :value="friend.id"
+        active
+        :color="assignableVolunteers.has(friend.id) ? undefined : 'warning'"
         @click="selectVolunteer(friend)"
         @contextmenu.prevent="openAssignmentPageInNewTab(friend.id)"
       >
@@ -28,6 +30,9 @@ import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
+const assignableVolunteers = computed<
+  Map<number, VolunteerWithAssignmentDuration>
+>(() => assignVolunteerToTaskStore.volunteers);
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
@@ -42,14 +47,14 @@ const title = computed<string>(() => {
 const emit = defineEmits(["select-volunteer"]);
 
 const selectVolunteer = (friend: User) => {
-  const volunteer = assignVolunteerToTaskStore.volunteers.find(
-    (volunteer) => volunteer.id === friend.id,
-  );
+  const volunteer = assignableVolunteers.value.get(friend.id);
   if (!volunteer) return;
   emit("select-volunteer", volunteer);
 };
 
 const openAssignmentPageInNewTab = (id: number) => {
+  const isAssignableVolunteer = assignableVolunteers.value.has(id);
+  if (!isAssignableVolunteer) return;
   window.open(`${ASSIGNMENT_ORGA_TASK_URL}?volunteer=${id}`);
 };
 </script>

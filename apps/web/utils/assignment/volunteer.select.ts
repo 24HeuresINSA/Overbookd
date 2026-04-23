@@ -9,9 +9,7 @@ export class VolunteerSelectBuilder {
     const volunteerId = +stringifyQueryParam(query.volunteer);
     if (isNaN(volunteerId)) return undefined;
     const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
-    const volunteer = assignVolunteerToTaskStore.volunteers.find(
-      ({ id }) => id === volunteerId,
-    );
+    const volunteer = assignVolunteerToTaskStore.volunteers.get(volunteerId);
     return volunteer;
   }
 }
