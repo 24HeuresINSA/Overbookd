@@ -2,6 +2,7 @@ import {
   AssignableVolunteers,
   AssignmentIdentifier,
   AssignmentSpecification,
+  extendOneOfTeams,
   StoredAssignableVolunteer,
 } from "@overbookd/assignment";
 import { IProvidePeriod, Period } from "@overbookd/time";
@@ -20,7 +21,6 @@ import {
   hasAtLeastOneFriend,
 } from "../../common/repository/friend.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
-import { extendOneOfTeams } from "../../common/extend-teams";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { Charisma } from "@overbookd/charisma";
 import {
