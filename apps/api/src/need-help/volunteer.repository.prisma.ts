@@ -6,7 +6,7 @@ import { HelpingVolunteer } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import {
   IS_MEMBER_OF_VOLUNTEER_TEAM,
-  SELECT_TEAMS_CODE,
+  SELECT_TEAM_CODES,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
@@ -36,7 +36,7 @@ const SELECT_ASSIGNEES = {
 
 const SELECT_VOLUNTEER = {
   ...SELECT_USER_IDENTIFIER,
-  ...SELECT_TEAMS_CODE,
+  ...SELECT_TEAM_CODES,
   ...SELECT_ASSIGNEES,
   phone: true,
   availabilities: { select: SELECT_PERIOD },

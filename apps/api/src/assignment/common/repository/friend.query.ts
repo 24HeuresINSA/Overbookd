@@ -1,5 +1,5 @@
 import { FriendCount } from "@overbookd/assignment";
-import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
+import { SELECT_TEAM_CODES } from "../../../common/query/user.query";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 import { PERSONNE } from "@overbookd/team-constants";
 
@@ -7,7 +7,7 @@ export const SELECT_USER_FRIENDS_FOR_COUNT = {
   friends: {
     select: {
       requestor: {
-        select: { id: true, ...SELECT_TEAMS_CODE },
+        select: { id: true, ...SELECT_TEAM_CODES },
       },
     },
     where: {
@@ -16,7 +16,7 @@ export const SELECT_USER_FRIENDS_FOR_COUNT = {
   },
   friendRequestors: {
     select: {
-      friend: { select: { id: true, ...SELECT_TEAMS_CODE } },
+      friend: { select: { id: true, ...SELECT_TEAM_CODES } },
     },
     where: {
       friend: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,

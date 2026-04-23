@@ -9,7 +9,12 @@ import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import type { Profile, User, UserPersonalData } from "@overbookd/user";
+import type {
+  Profile,
+  User,
+  UserPersonalData,
+  UserWithTeams,
+} from "@overbookd/user";
 import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
 import { UserRepository } from "~/repositories/user.repository";
@@ -20,7 +25,7 @@ import { ADMIN } from "@overbookd/team-constants";
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   selectedUser?: UserDataWithPotentialyProfilePicture;
-  selectedUserFriends: User[];
+  selectedUserFriends: UserWithTeams[];
   personalAccountConsumers: Consumer[];
   volunteers: UserDataWithPotentialyProfilePicture[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];

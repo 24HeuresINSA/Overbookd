@@ -1,6 +1,6 @@
 <template>
   <v-chip
-    v-show="showTeam"
+    v-if="showTeam"
     :size="size"
     :color="color"
     :class="{

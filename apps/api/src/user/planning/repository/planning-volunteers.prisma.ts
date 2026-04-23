@@ -3,18 +3,13 @@ import { PrismaService } from "../../../prisma.service";
 import { PlanningVolunteers } from "../planning.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod, Period } from "@overbookd/time";
-import {
-  SELECT_TEAMS_CODE,
-  SELECT_USER_IDENTIFIER,
-} from "../../../common/query/user.query";
+import { SELECT_USER_WITH_TEAM_CODES } from "../../../common/query/user.query";
 import { AssignmentEvent } from "@overbookd/assignment";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_PLANNING_EVENT } from "../../../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../../../assignment/common/repository/planning.prisma";
 import { UserWithTeams } from "@overbookd/user";
 import { friendAssigneesCount } from "../../../assignment/common/repository/assignment.query";
-
-const SELECT_VOLUNTEER = { ...SELECT_USER_IDENTIFIER, ...SELECT_TEAMS_CODE };
 
 export class PrismaPlanningVolunteers implements PlanningVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -23,7 +18,7 @@ export class PrismaPlanningVolunteers implements PlanningVolunteers {
     const volunteers = await this.prisma.user.findMany({
       where: { assigned: { some: {} }, preference: { paperPlanning: true } },
       select: {
-        ...SELECT_VOLUNTEER,
+        ...SELECT_USER_WITH_TEAM_CODES,
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
       },
     });
@@ -41,7 +36,7 @@ export class PrismaPlanningVolunteers implements PlanningVolunteers {
   async findOne(id: number): Promise<UserWithTeams | null> {
     const volunteer = await this.prisma.user.findUnique({
       where: { id },
-      select: SELECT_VOLUNTEER,
+      select: SELECT_USER_WITH_TEAM_CODES,
     });
     if (!volunteer) return null;
     return {
