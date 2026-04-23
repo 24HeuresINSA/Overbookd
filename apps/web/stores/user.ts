@@ -166,7 +166,9 @@ export const useUserStore = defineStore("user", {
     async addFriendToUser(userId: number, friend: User) {
       const res = await UserRepository.addFriendToUser(userId, friend.id);
       if (isHttpError(res)) return;
-      sendSuccessNotification(`${friend.firstname} a été ajouté à ses ·e·s 🎉`);
+      sendSuccessNotification(
+        `${friend.firstname} a été ajouté à ses ami·e·s 🎉`,
+      );
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = [...this.selectedUserFriends, res];
       }
