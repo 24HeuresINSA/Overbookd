@@ -29,19 +29,19 @@
         <div class="stats">
           <span class="stats__value">{{ charisma }}</span>
           <span class="stats__label">
-            Charisme{{ additionalPlural(charisma) }}
+            {{ pluralize("Charisme", charisma) }}
           </span>
         </div>
         <div class="stats">
           <span class="stats__value">{{ friendCount }}</span>
           <span class="stats__label">
-            Ami·e{{ friendCount !== 0 ? "·s" : "" }}
+            {{ pluralize("Ami·e", friendCount, "·s") }}
           </span>
         </div>
         <div class="stats">
           <span class="stats__value">{{ tasksCount }}</span>
           <span class="stats__label">
-            Tâche{{ additionalPlural(tasksCount) }}
+            {{ pluralize("Tâche", tasksCount) }}
           </span>
         </div>
       </div>
@@ -124,10 +124,6 @@ const tasksCount = computed<number>(() =>
 const phone = computed<string>(() =>
   loggedUser.value ? formatPhoneNumber(loggedUser.value.phone) : "",
 );
-
-const additionalPlural = (count: number) => {
-  return count !== 1 ? "s" : "";
-};
 
 const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,

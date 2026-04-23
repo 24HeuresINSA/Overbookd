@@ -42,10 +42,10 @@
       >
         <div v-if="!volunteerCount && !candidateCount">0</div>
         <div v-if="volunteerCount">
-          {{ volunteerCount }} bénévole{{ volunteerCount !== 1 ? "s" : "" }}
+          {{ volunteerCount }} {{ pluralize("bénévole", volunteerCount) }}
         </div>
         <div v-if="candidateCount">
-          {{ candidateCount }} candidat{{ candidateCount !== 1 ? "s" : "" }}
+          {{ candidateCount }} {{ pluralize("candidat", candidateCount) }}
         </div>
       </template>
 

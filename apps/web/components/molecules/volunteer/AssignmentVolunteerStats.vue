@@ -20,12 +20,14 @@
       <span>
         Avec des ami·e·s
         <br />
-        {{ stats.friendCount.volunteerCount }} ami·e
-        {{ stats.friendCount.volunteerCount !== 1 ? "·s" : "" }} bénévoles
+        {{ stats.friendCount.volunteerCount }}
+        {{ pluralize("ami·e", stats.friendCount.volunteerCount, "·s") }}
+        {{ pluralize("bénévole", stats.friendCount.volunteerCount) }}
         <span v-if="stats.friendCount.candidateCount">
           <br />
-          {{ stats.friendCount.candidateCount }} ami·e
-          {{ stats.friendCount.candidateCount !== 1 ? "·s" : "" }} candidats
+          {{ stats.friendCount.candidateCount }}
+          {{ pluralize("ami·e", stats.friendCount.candidateCount, "·s") }}
+          {{ pluralize("candidat", stats.friendCount.candidateCount) }}
         </span>
       </span>
     </v-tooltip>
