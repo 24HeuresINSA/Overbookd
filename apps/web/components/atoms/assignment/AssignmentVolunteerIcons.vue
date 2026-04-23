@@ -97,8 +97,9 @@ const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
 );
 
 const getNoFriendLabel = (candidateFriendCount: number): string => {
-  if (!candidateFriendCount) return "N'a aucun·e ami·e";
-  return `A ${candidateFriendCount} ami·e${candidateFriendCount !== 1 ? "·s" : ""} candidat${candidateFriendCount !== 1 ? "s" : ""} `;
+  const noFriendsLabel = "N'a aucun·e ami·e";
+  if (!candidateFriendCount) return noFriendsLabel;
+  return `${noFriendsLabel} bénévole mais a ${candidateFriendCount} ami·e${candidateFriendCount !== 1 ? "·s" : ""} candidat${candidateFriendCount !== 1 ? "s" : ""} `;
 };
 
 const shouldShowNoFriendIcon = computed<boolean>(
