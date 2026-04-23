@@ -1,3 +1,10 @@
+## [3.53.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.1...v3.53.2) (2026-04-23)
+
+### Bug Fixes
+
+* **assignment:** don't consider users with no membership application for the current edition in assignment stats & split between volunteer and candidate friends [#2683](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2683) ([6d6b55b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d6b55bac7d995fe8496f47d7812be2f2cdb0235))
+* **orga-task:** display confiance assignments for vieux and orga [#2688](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2688) ([625c389](https://gitlab.com/24-heures-insa/overbookd-mono/commit/625c389a661b3fd4e9c147080b33817f57da2e8c))
+
 ## [3.53.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.0...v3.53.1) (2026-04-22)
 
 ### Bug Fixes
