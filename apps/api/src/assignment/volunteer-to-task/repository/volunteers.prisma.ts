@@ -5,7 +5,7 @@ import {
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
 import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
-import { hasAtLeastOneFriend } from "../../common/repository/friend.query";
+import { getFriendCount } from "../../common/repository/friend.query";
 import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
@@ -61,7 +61,7 @@ function toVolunteerWithAssignments(
     charisma,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
     assignmentPreference: volunteer.preference?.assignment || NO_PREF,
-    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
+    friendCount: getFriendCount(volunteer),
     assignments,
   };
 }

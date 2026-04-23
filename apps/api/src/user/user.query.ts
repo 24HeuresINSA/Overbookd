@@ -4,6 +4,7 @@ import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.que
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 import { SELECT_USER_DATA_FOR_CHARISMA } from "../common/query/charisma.query";
 import { Edition } from "@overbookd/time";
+import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 
 const SELECT_USER = {
   ...SELECT_USER_IDENTIFIER,
@@ -37,10 +38,15 @@ const SELECT_USER_TASKS_COUNT = {
   _count: { select: { assigned: true } },
 };
 
-export const HAS_CURRENT_MEMBERSHIP_APPLICATION = {
+const HAS_CURRENT_MEMBERSHIP_APPLICATION = {
   membershipApplications: {
     some: { edition: Edition.current },
   },
+};
+
+export const IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER = {
+  ...IS_NOT_DELETED,
+  ...HAS_CURRENT_MEMBERSHIP_APPLICATION,
 };
 
 const SELECT_CURRENT_MEMBERSHIP_APPLICATION = {

@@ -17,8 +17,9 @@ import {
   includePeriodCondition,
 } from "../../../common/query/period.query";
 import {
-  COUNT_FRIENDS,
-  hasAtLeastOneFriend,
+  DatabaseFriendCount,
+  getFriendCount,
+  SELECT_USER_FRIENDS_FOR_COUNT,
 } from "../../common/repository/friend.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
@@ -29,6 +30,7 @@ import {
 } from "../../../common/query/charisma.query";
 import { NO_PREF } from "@overbookd/preference";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
+import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -39,7 +41,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
   ): Promise<StoredAssignableVolunteer[]> {
     const { oneOfTheTeams, period } = assignmentSpecification;
 
-    const [volunteers, charismaPeriods] = await Promise.all([
+    const [volunteers, charismaPeriods, volunteerFriends] = await Promise.all([
       this.prisma.user.findMany({
         where: isAssignableOn(oneOfTheTeams, period),
         select: {
@@ -50,19 +52,34 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
             assignmentIdentifier,
             assignmentSpecification,
           ),
-          ...COUNT_FRIENDS,
         },
       }),
       this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+      this.prisma.user.findMany({
+        where: isAssignableOn(oneOfTheTeams, period),
+        select: { id: true, ...SELECT_USER_FRIENDS_FOR_COUNT },
+      }),
     ]);
 
-    return volunteers.map((volunteer) =>
-      toStoredAssignableVolunteer(
+    const volunteerFriendsMap = new Map<number, DatabaseFriendCount>(
+      volunteerFriends.map(({ id, ...friends }) => [id, friends]),
+    );
+
+    return volunteers.map((volunteer) => {
+      const friendsForCount: DatabaseFriendCount = volunteerFriendsMap.get(
+        volunteer.id,
+      ) ?? {
+        friends: [],
+        friendRequestors: [],
+      };
+
+      return toStoredAssignableVolunteer(
         volunteer,
         assignmentIdentifier,
         charismaPeriods,
-      ),
-    );
+        friendsForCount,
+      );
+    });
   }
 
   private buildFestivalTaskMobilizationSelection(period: Period) {
@@ -129,7 +146,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
             { requestor: isAssignableOn(oneOfTheTeams, period) },
             { requestor: isAssignedOn(assignmentIdentifier) },
           ],
-          requestor: IS_NOT_DELETED,
+          requestor: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
         },
       },
       friendRequestors: {
@@ -139,7 +156,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
             { friend: isAssignableOn(oneOfTheTeams, period) },
             { friend: isAssignedOn(assignmentIdentifier) },
           ],
-          friend: IS_NOT_DELETED,
+          friend: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
         },
       },
     };
@@ -150,6 +167,7 @@ function toStoredAssignableVolunteer(
   volunteer: DatabaseStoredAssignableVolunteer,
   { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
   charismaPeriods: MinimalCharismaPeriod[],
+  friendsForCount: DatabaseFriendCount,
 ): StoredAssignableVolunteer {
   const assignments = volunteer.assigned.flatMap(({ assignment }) => ({
     start: assignment.start,
@@ -199,7 +217,7 @@ function toStoredAssignableVolunteer(
     requestedDuring,
     assignableFriendsIds: Array.from(new Set(assignableFriendsIds)),
     hasFriendAssigned: assignedFriends.length > 0,
-    hasAtLeastOneFriend: hasAtLeastOneFriend(volunteer),
+    friendCount: getFriendCount(friendsForCount),
     assignmentPreference: volunteer.preference?.assignment || NO_PREF,
   };
 }

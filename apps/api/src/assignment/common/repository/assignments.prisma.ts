@@ -37,7 +37,7 @@ import { Charisma } from "@overbookd/charisma";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
-import { getFriendCount, SELECT_USER_FRIENDS } from "./friend.query";
+import { getFriendCount, SELECT_USER_FRIENDS_FOR_COUNT } from "./friend.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -204,7 +204,7 @@ export class PrismaAssignments implements AssignmentRepository {
               },
             },
           },
-          ...SELECT_USER_FRIENDS,
+          ...SELECT_USER_FRIENDS_FOR_COUNT,
         },
         orderBy: { id: "asc" },
       }),

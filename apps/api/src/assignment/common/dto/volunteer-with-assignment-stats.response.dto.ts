@@ -1,11 +1,12 @@
 import {
   AssignmentStat,
   AssignmentStats,
-  FriendCount,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
 import { ApiProperty } from "@nestjs/swagger";
 import { Category } from "@overbookd/festival-event-constants";
+import { FriendCountResponseDto } from "./friend-count.response.dto";
+import { FriendCount } from "@overbookd/assignment";
 
 class AssignmentStatResponseDto implements AssignmentStat {
   @ApiProperty({
@@ -21,22 +22,6 @@ class AssignmentStatResponseDto implements AssignmentStat {
     type: Number,
   })
   duration: number;
-}
-
-class FriendCountResponseDto implements FriendCount {
-  @ApiProperty({
-    required: true,
-    description: "volunteer count",
-    type: Number,
-  })
-  volunteerCount: number;
-
-  @ApiProperty({
-    required: true,
-    description: "candidate count",
-    type: Number,
-  })
-  candidateCount: number;
 }
 
 export class AssignmentStatsResponseDto implements AssignmentStats {

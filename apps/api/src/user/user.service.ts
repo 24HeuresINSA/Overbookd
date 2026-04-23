@@ -64,7 +64,7 @@ import {
 } from "../assignment/common/repository/assignment.query";
 import {
   getFriendCount,
-  SELECT_USER_FRIENDS,
+  SELECT_USER_FRIENDS_FOR_COUNT,
 } from "../assignment/common/repository/friend.query";
 
 @Injectable()
@@ -280,7 +280,7 @@ export class UserService {
       }),
       this.prisma.user.findUnique({
         where: { id: volunteerId },
-        select: SELECT_USER_FRIENDS,
+        select: SELECT_USER_FRIENDS_FOR_COUNT,
       }),
     ]);
 

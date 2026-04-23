@@ -1,6 +1,5 @@
 import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/time";
-import { DatabaseFriendCount } from "../../common/repository/friend.query";
 import {
   SELECT_TEAMS_CODE,
   SELECT_USER_ASSIGNMENT_PREFERENCE,
@@ -35,8 +34,7 @@ export type DatabaseVolunteerAssignmentStatWithAssignees = IProvidePeriod & {
 };
 
 export type DatabaseStoredAssignableVolunteer = User &
-  UserDataForCharisma &
-  DatabaseFriendCount & {
+  UserDataForCharisma & {
     comment: string;
     note: string;
     teams: { teamCode: string }[];

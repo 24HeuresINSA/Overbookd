@@ -1,32 +1,9 @@
-import { FriendCount } from "@overbookd/http";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { FriendCount } from "@overbookd/assignment";
 import { SELECT_TEAMS_CODE } from "../../../common/query/user.query";
-import { HAS_CURRENT_MEMBERSHIP_APPLICATION } from "../../../user/user.query";
+import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 import { PERSONNE } from "@overbookd/team-constants";
 
-export const COUNT_FRIENDS = {
-  _count: {
-    select: {
-      friends: { where: { friend: IS_NOT_DELETED } },
-      friendRequestors: { where: { requestor: IS_NOT_DELETED } },
-    },
-  },
-};
-
-export type DatabaseFriendCount = {
-  _count: {
-    friends: number;
-    friendRequestors: number;
-  };
-};
-
-export function hasAtLeastOneFriend({
-  _count: { friends, friendRequestors },
-}: DatabaseFriendCount): boolean {
-  return friends > 0 || friendRequestors > 0;
-}
-
-export const SELECT_USER_FRIENDS = {
+export const SELECT_USER_FRIENDS_FOR_COUNT = {
   friends: {
     select: {
       requestor: {
@@ -34,10 +11,7 @@ export const SELECT_USER_FRIENDS = {
       },
     },
     where: {
-      requestor: {
-        ...IS_NOT_DELETED,
-        ...HAS_CURRENT_MEMBERSHIP_APPLICATION,
-      },
+      requestor: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
     },
   },
   friendRequestors: {
@@ -45,15 +19,12 @@ export const SELECT_USER_FRIENDS = {
       friend: { select: { id: true, ...SELECT_TEAMS_CODE } },
     },
     where: {
-      friend: {
-        ...IS_NOT_DELETED,
-        ...HAS_CURRENT_MEMBERSHIP_APPLICATION,
-      },
+      friend: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
     },
   },
 };
 
-export type DatabaseFriends = {
+export type DatabaseFriendCount = {
   friends: { requestor: { id: number; teams: { teamCode: string }[] } }[];
   friendRequestors: { friend: { id: number; teams: { teamCode: string }[] } }[];
 };
@@ -69,7 +40,7 @@ function isEnrolledVolunteer({
 export function getFriendCount({
   friends,
   friendRequestors,
-}: DatabaseFriends): FriendCount {
+}: DatabaseFriendCount): FriendCount {
   const uniqueFriends = new Map<number, boolean>([
     ...friends.map(
       ({ requestor }) =>

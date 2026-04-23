@@ -134,7 +134,7 @@ const filterVolunteerByFriendCondition = (
 ): ((volunteer: AssignmentVolunteer) => boolean) => {
   switch (friendFilter) {
     case AUCUN_AMI:
-      return (volunteer) => !volunteer.hasAtLeastOneFriend;
+      return (volunteer) => !volunteer.friendCount.volunteerCount;
     case AMIS_DISPONIBLES:
       return (volunteer) =>
         isAssignableVolunteer(volunteer) &&
