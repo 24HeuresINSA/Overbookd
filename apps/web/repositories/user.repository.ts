@@ -6,6 +6,7 @@ import type {
   User,
   UserPersonalData,
   UserUpdateForm,
+  UserWithTeams,
 } from "@overbookd/user";
 import { HttpClient } from "~/utils/http/http-client";
 import { ImageRepository } from "~/utils/http/image.repository";
@@ -70,16 +71,16 @@ export class UserRepository {
     return HttpClient.delete(`${this.basePath}/${userId}`);
   }
 
-  static getFriends() {
-    return HttpClient.get<User[]>("friends");
+  static getFriendsFor(userId: number) {
+    return HttpClient.get<UserWithTeams[]>(`friends/for/${userId}`);
   }
 
   static getUserFriends(userId: number) {
-    return HttpClient.get<User[]>(`friends/${userId}`);
+    return HttpClient.get<UserWithTeams[]>(`friends/${userId}`);
   }
 
   static addFriend(friendId: number) {
-    return HttpClient.post<User>("friends", { id: friendId });
+    return HttpClient.post<UserWithTeams>("friends", { id: friendId });
   }
 
   static removeFriend(friendId: number) {
@@ -87,7 +88,9 @@ export class UserRepository {
   }
 
   static addFriendToUser(userId: number, friendId: number) {
-    return HttpClient.post<User>(`friends/${userId}`, { id: friendId });
+    return HttpClient.post<UserWithTeams>(`friends/${userId}`, {
+      id: friendId,
+    });
   }
 
   static removeFriendFromUser(userId: number, friendId: number) {

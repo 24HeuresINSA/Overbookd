@@ -23,11 +23,14 @@ const userStore = useUserStore();
 
 const friends = computed<User[]>(() => userStore.friends);
 const loading = ref<boolean>(friends.value.length === 0);
-userStore.fetchFriends().then(() => (loading.value = false));
 
 const friend = defineModel<User | null>({ required: true });
 
-defineProps({
+const { volunteer } = defineProps({
+  volunteer: {
+    type: Object as PropType<User>,
+    required: true,
+  },
   label: {
     type: String,
     default: "Chercher un bénévole",
@@ -41,4 +44,13 @@ defineProps({
     default: false,
   },
 });
+
+watch(
+  () => volunteer,
+  ({ id }) => {
+    loading.value = true;
+    userStore.fetchFriendsFor(id).then(() => (loading.value = false));
+  },
+  { immediate: true },
+);
 </script>

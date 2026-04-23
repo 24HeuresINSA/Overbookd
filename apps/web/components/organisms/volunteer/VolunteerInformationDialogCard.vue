@@ -140,6 +140,7 @@
               <SearchFriend
                 v-if="canManageUsers"
                 v-model="newFriend"
+                :volunteer="volunteer"
                 title="Ajouter un·e ami·e"
                 class="friends__input"
                 hide-details

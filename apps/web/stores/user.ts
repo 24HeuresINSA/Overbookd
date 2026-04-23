@@ -137,8 +137,8 @@ export const useUserStore = defineStore("user", {
       this.volunteersWithAssignmentStats = res;
     },
 
-    async fetchFriends() {
-      const res = await UserRepository.getFriends();
+    async fetchFriendsFor(userId: number) {
+      const res = await UserRepository.getFriendsFor(userId);
       if (isHttpError(res)) return;
       this.friends = res;
     },
@@ -156,7 +156,8 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été ajouté à tes ami·e·s 🎉`,
       );
-      this.myFriends = [...this.myFriends, friend];
+      this.myFriends = [...this.myFriends, res];
+      this.friends = this.friends.filter(({ id }) => id !== res.id);
     },
 
     async removeFriend(friend: User) {
@@ -165,7 +166,8 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été supprimé de tes ami·e·s 😯`,
       );
-      this.myFriends = this.myFriends.filter((f) => f.id !== friend.id);
+      this.myFriends = this.myFriends.filter(({ id }) => id !== friend.id);
+      this.friends = [...this.friends, friend];
     },
 
     async addFriendToUser(userId: number, friend: User) {
@@ -176,6 +178,7 @@ export const useUserStore = defineStore("user", {
       );
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = [...this.selectedUserFriends, res];
+        this.friends = this.friends.filter(({ id }) => id !== res.id);
       }
     },
 
@@ -188,8 +191,9 @@ export const useUserStore = defineStore("user", {
 
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = this.selectedUserFriends.filter(
-          (f) => f.id !== friend.id,
+          ({ id }) => id !== friend.id,
         );
+        this.friends = [...this.friends, friend];
       }
     },
 

@@ -11,17 +11,7 @@ type DatabaseFriend = User & { teams: { teamCode: string }[] };
 export class FriendService {
   constructor(private prisma: PrismaService) {}
 
-  async findUserFriends(id: number): Promise<UserWithTeams[]> {
-    const friends = await this.prisma.friend.findMany({
-      where: {
-        requestor: { id, ...IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER },
-      },
-      select: { friend: { select: SELECT_USER_WITH_TEAM_CODES } },
-    });
-    return friends.map(({ friend }) => FriendService.formatToFriend(friend));
-  }
-
-  async findFriends(): Promise<UserWithTeams[]> {
+  async findFriendsFor(id: number): Promise<UserWithTeams[]> {
     const nonFriendableTeams = [FEN, VOITURE, CAMION];
 
     const friends = await this.prisma.user.findMany({
@@ -30,10 +20,21 @@ export class FriendService {
         teams: {
           none: { team: { code: { in: nonFriendableTeams } } },
         },
+        friends: { none: { requestorId: id } },
         ...IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
       },
     });
     return friends.map(FriendService.formatToFriend);
+  }
+
+  async findUserFriends(id: number): Promise<UserWithTeams[]> {
+    const friends = await this.prisma.friend.findMany({
+      where: {
+        requestor: { id, ...IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER },
+      },
+      select: { friend: { select: SELECT_USER_WITH_TEAM_CODES } },
+    });
+    return friends.map(({ friend }) => FriendService.formatToFriend(friend));
   }
 
   async create(requestorId: number, friendId: number): Promise<UserWithTeams> {
