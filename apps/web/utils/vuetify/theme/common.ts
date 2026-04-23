@@ -6,6 +6,7 @@ export const BLUE_24_RGB = [65, 197, 229];
 
 export const SUCCESS = "#6CCF1B";
 export const ERROR = "#ED1D45";
+export const WARNING = "#FF9900";
 
 export const WHITE = "#FFFFFF";
 export const BLACK = "#2A2A2A";
@@ -29,7 +30,7 @@ export const statusColors = {
   "on-success": WHITE,
   "success-lighten": "#E8FFD7",
   "on-success-lighten": SUCCESS,
-  warning: YELLOW_24,
+  warning: WARNING,
   "on-warning": BLACK,
   error: ERROR,
   "on-error": WHITE,
