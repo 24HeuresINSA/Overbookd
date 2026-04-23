@@ -33,6 +33,22 @@
         {{ Duration.ms(item.withFriendsAssignmentDuration) }}
       </template>
 
+      <template
+        #item.friendCount="{
+          item: {
+            friendCount: { volunteerCount, candidateCount },
+          },
+        }"
+      >
+        <div v-if="!volunteerCount && !candidateCount">0</div>
+        <div v-if="volunteerCount">
+          {{ volunteerCount }} {{ pluralize("bénévole", volunteerCount) }}
+        </div>
+        <div v-if="candidateCount">
+          {{ candidateCount }} {{ pluralize("candidat", candidateCount) }}
+        </div>
+      </template>
+
       <template #item.actions="{ item }">
         <v-btn
           icon="mdi-human-greeting"
@@ -70,6 +86,7 @@ import {
   type DisplayableCategory,
 } from "~/utils/assignment/task-category";
 import {
+  compareVolunteersOnFriendCount,
   compareVolunteersOnNames,
   compareVolunteersOnTaskCategoryAssignmentDuration,
   compareVolunteersOnTotalAssignmentDuration,
@@ -146,12 +163,17 @@ const headers: TableHeaders = [
     sortRaw: compareVolunteersOnTotalAssignmentDuration,
   },
   {
-    title: "Créneaux avec des amis",
+    title: "Créneaux avec des ami·e·s",
     value: "withFriends",
     sortable: true,
     sortRaw: compareVolunteersOnWithFriendsAssignmentDuration,
   },
-  { title: "Nombre d'amis", value: "friendsCount", sortable: true },
+  {
+    title: "Nombre d'ami·e·s",
+    value: "friendCount",
+    sortable: true,
+    sortRaw: compareVolunteersOnFriendCount,
+  },
   { title: "Actions", value: "actions" },
 ];
 

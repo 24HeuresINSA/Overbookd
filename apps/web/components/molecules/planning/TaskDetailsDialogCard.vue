@@ -43,7 +43,7 @@
       </div>
       <div class="contacts">
         <h3>
-          Orga{{ selectedTask.contacts.length > 1 ? "s" : "" }} à contacter
+          {{ pluralize("Orga", selectedTask.contacts.length) }} à contacter
         </h3>
         <ul>
           <li v-for="contact in selectedTask.contacts" :key="contact.id">

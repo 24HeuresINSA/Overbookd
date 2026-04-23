@@ -168,7 +168,7 @@ const findTeamName = (code: string): string => {
 
 .has-friends-assigned {
   position: absolute;
-  top: 0px;
+  top: 5px;
   left: 0px;
 }
 </style>

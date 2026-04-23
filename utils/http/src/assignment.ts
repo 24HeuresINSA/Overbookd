@@ -1,6 +1,7 @@
 import type {
   TaskCategorizedForPlanning,
   AssignmentSummary,
+  FriendCount,
 } from "@overbookd/assignment";
 import type { Category } from "@overbookd/festival-event-constants";
 
@@ -16,7 +17,7 @@ export type AssignmentStat = {
 export type AssignmentStats = {
   stats: AssignmentStat[];
   withFriendsAssignmentDuration: number;
-  friendsCount: number;
+  friendCount: FriendCount;
 };
 
 export type VolunteerWithAssignmentStats = {

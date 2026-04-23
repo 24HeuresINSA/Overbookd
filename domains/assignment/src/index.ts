@@ -78,3 +78,4 @@ export type {
   BreakDefinition,
   BreakIdentifier,
 } from "./break-periods/break-periods.js";
+export type { FriendCount } from "./friends.js";

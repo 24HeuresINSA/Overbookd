@@ -25,7 +25,8 @@
         <div class="shotguns">
           <details>
             <summary>
-              {{ shared.shotgunCount }} {{ guests }}
+              {{ shared.shotgunCount }}
+              {{ pluralize("convive", shared.shotgunCount) }}
               <span v-show="hasShotgun"> (dont moi)</span>
             </summary>
             <ul>
@@ -117,7 +118,7 @@ import { nicknameOrName } from "@overbookd/user";
 const userStore = useUserStore();
 const mealSharingStore = useMealSharingStore();
 
-const props = defineProps({
+const { shared } = defineProps({
   shared: {
     type: Object as PropType<SharedMeal>,
     required: true,
@@ -130,12 +131,9 @@ const me = computed<Adherent>(() => {
   const { id, ...me } = loggedUser;
   return { id, name: nicknameOrName(me) };
 });
-const iAmChef = computed<boolean>(() => props.shared.chef.id === me.value.id);
-const guests = computed<string>(() =>
-  props.shared.shotgunCount > 1 ? "convives" : "convive",
-);
+const iAmChef = computed<boolean>(() => shared.chef.id === me.value.id);
 const builder = computed<OnGoingSharedMealBuilder>(() =>
-  OnGoingSharedMealBuilder.build(props.shared),
+  OnGoingSharedMealBuilder.build(shared),
 );
 const hasShotgun = computed<boolean>(() =>
   builder.value.hasShotgun(me.value.id),
@@ -155,22 +153,22 @@ const closeCancelConfirmationDialog = () =>
   (isCancelConfirmationDialogOpen.value = false);
 
 const shotgun = () => {
-  mealSharingStore.shotgun(props.shared.id);
+  mealSharingStore.shotgun(shared.id);
 };
 
 const cancelShotgun = (guest: Shotgun) => {
-  mealSharingStore.cancelShotgun(props.shared.id, guest.id);
+  mealSharingStore.cancelShotgun(shared.id, guest.id);
 };
 
 const cancelMeal = () => {
-  mealSharingStore.cancelMeal(props.shared.id);
+  mealSharingStore.cancelMeal(shared.id);
   closeCancelConfirmationDialog();
 };
 
 const toggleShotguns = () => {
   areShotgunsOpen.value
-    ? mealSharingStore.closeShotguns(props.shared.id)
-    : mealSharingStore.openShotguns(props.shared.id);
+    ? mealSharingStore.closeShotguns(shared.id)
+    : mealSharingStore.openShotguns(shared.id);
 };
 </script>
 

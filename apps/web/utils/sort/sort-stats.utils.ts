@@ -54,3 +54,14 @@ export function compareVolunteersOnWithFriendsAssignmentDuration(
 ) {
   return a.withFriendsAssignmentDuration - b.withFriendsAssignmentDuration;
 }
+
+export function compareVolunteersOnFriendCount(
+  a: VolunteerWithAssignmentStats,
+  b: VolunteerWithAssignmentStats,
+) {
+  const volunteerFriendDifference =
+    a.friendCount.volunteerCount - b.friendCount.volunteerCount;
+  return volunteerFriendDifference === 0
+    ? a.friendCount.candidateCount - b.friendCount.candidateCount
+    : volunteerFriendDifference;
+}

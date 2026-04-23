@@ -56,7 +56,7 @@ export class CreateProvisionsTransactions {
   }
 
   private defineContext(consumption: number) {
-    const stickWord = consumption > 1 ? "bâtons" : "bâton";
+    const stickWord = consumption !== 1 ? "bâtons" : "bâton";
     return `Conso placard: ${consumption} ${stickWord}`;
   }
 }

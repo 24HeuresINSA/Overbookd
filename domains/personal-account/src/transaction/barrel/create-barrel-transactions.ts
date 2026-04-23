@@ -69,7 +69,7 @@ export class CreateBarrelTransactions {
   }
 
   private defineContext(consumption: number, barrel: ConfiguredBarrel): string {
-    const stickWord = consumption > 1 ? "bâtons" : "bâton";
+    const stickWord = consumption !== 1 ? "bâtons" : "bâton";
     const openedOn = this.formatDate(barrel.openedOn);
     return `Fût de ${barrel.drink} du ${openedOn}: ${consumption} ${stickWord}`;
   }

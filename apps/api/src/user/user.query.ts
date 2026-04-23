@@ -1,7 +1,10 @@
 import { Permission } from "@overbookd/permission";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
-import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import {
+  IS_MEMBER_OF_VOLUNTEER_TEAM,
+  SELECT_USER_IDENTIFIER,
+} from "../common/query/user.query";
 import { SELECT_USER_DATA_FOR_CHARISMA } from "../common/query/charisma.query";
 import { Edition } from "@overbookd/time";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
@@ -36,6 +39,17 @@ export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
 
 const SELECT_USER_TASKS_COUNT = {
   _count: { select: { assigned: true } },
+};
+
+const HAS_CURRENT_MEMBERSHIP_APPLICATION = {
+  membershipApplications: {
+    some: { edition: Edition.current },
+  },
+};
+
+export const IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER = {
+  ...IS_NOT_DELETED,
+  OR: [HAS_CURRENT_MEMBERSHIP_APPLICATION, IS_MEMBER_OF_VOLUNTEER_TEAM],
 };
 
 const SELECT_CURRENT_MEMBERSHIP_APPLICATION = {
@@ -73,17 +87,6 @@ export const SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER = {
 export const SELECT_PERIOD_AND_CATEGORY = {
   ...SELECT_PERIOD,
   festivalTask: { select: { category: true } },
-};
-
-export const SELECT_USER_FRIENDS = {
-  friends: {
-    select: { requestorId: true },
-    where: { requestor: IS_NOT_DELETED },
-  },
-  friendRequestors: {
-    select: { friendId: true },
-    where: { friend: IS_NOT_DELETED },
-  },
 };
 
 export function hasPermission(permission: Permission) {

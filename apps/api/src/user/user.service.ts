@@ -27,7 +27,6 @@ import {
 import {
   SELECT_MY_USER_INFORMATION,
   SELECT_PERIOD_AND_CATEGORY,
-  SELECT_USER_FRIENDS,
   SELECT_USER_PERSONAL_DATA,
   SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER,
   hasPermission,
@@ -63,6 +62,10 @@ import {
   friendAssigneesCount,
   SELECT_ASSIGNEE,
 } from "../assignment/common/repository/assignment.query";
+import {
+  getFriendCount,
+  SELECT_USER_FRIENDS_FOR_COUNT,
+} from "../assignment/common/repository/friend.query";
 
 @Injectable()
 export class UserService {
@@ -264,7 +267,7 @@ export class UserService {
   async getVolunteerAssignmentStats(
     volunteerId: number,
   ): Promise<AssignmentStats> {
-    const [assignments, { friends, friendRequestors }] = await Promise.all([
+    const [assignments, friends] = await Promise.all([
       this.prisma.assignment.findMany({
         where: {
           assignees: { some: { userId: volunteerId } },
@@ -277,7 +280,7 @@ export class UserService {
       }),
       this.prisma.user.findUnique({
         where: { id: volunteerId },
-        select: SELECT_USER_FRIENDS,
+        select: SELECT_USER_FRIENDS_FOR_COUNT,
       }),
     ]);
 
@@ -287,9 +290,9 @@ export class UserService {
         volunteerId,
         assignments,
       );
-    const friendsCount = UserService.getFriendCount(friends, friendRequestors);
+    const friendCount = getFriendCount(friends);
 
-    return { stats, withFriendsAssignmentDuration, friendsCount };
+    return { stats, withFriendsAssignmentDuration, friendCount };
   }
 
   static formatAssignmentStats(
@@ -335,17 +338,6 @@ export class UserService {
       0,
     );
     return assignmentWithFriendsDuration;
-  }
-
-  static getFriendCount(
-    friends: { requestorId: number }[],
-    friendRequestors: { friendId: number }[],
-  ): number {
-    const uniqueFriends = new Set<number>([
-      ...friends.map(({ requestorId }) => requestorId),
-      ...friendRequestors.map(({ friendId }) => friendId),
-    ]);
-    return uniqueFriends.size;
   }
 
   static formatToPersonalData(

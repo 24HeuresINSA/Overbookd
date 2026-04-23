@@ -10,7 +10,7 @@
           closable-chips
         />
         <v-btn
-          :text="`Ajouter les membres de ${teams.length} équipe${teams.length > 1 ? 's' : ''}`"
+          :text="`Ajouter les membres de ${teams.length} ${pluralize('équipe', teams.length)}`"
           color="primary"
           :disabled="teams.length === 0"
           @click="addVolunteersFromTeams"

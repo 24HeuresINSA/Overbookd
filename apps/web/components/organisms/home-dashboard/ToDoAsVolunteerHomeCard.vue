@@ -30,7 +30,7 @@
             Renseigner <strong>tes disponibilités</strong>
           </nuxt-link>
         </li>
-        <li>Nous donner le <strong>nom de tes amis</strong></li>
+        <li>Nous donner le <strong>nom de tes ami·e·s</strong></li>
         <li>
           <strong>Compléter tes informations</strong> pour qu'on en sache plus
           sur toi. 🤗

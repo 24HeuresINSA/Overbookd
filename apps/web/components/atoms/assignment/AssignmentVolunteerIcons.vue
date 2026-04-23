@@ -1,12 +1,12 @@
 <template>
   <div class="icons">
     <v-icon
-      v-if="shouldShowNoFriendIcon"
-      v-tooltip:top="'N\'a aucun·e ami·e'"
+      v-if="!volunteer.friendCount.volunteerCount"
+      v-tooltip:top="getNoFriendLabel(volunteer.friendCount.candidateCount)"
       icon="mdi-account-alert"
-      aria-label="N'a aucun·e ami·e"
+      :aria-label="getNoFriendLabel(volunteer.friendCount.candidateCount)"
       size="small"
-      color="red"
+      :color="volunteer.friendCount.candidateCount ? 'warning' : 'error'"
     />
     <v-icon
       v-if="shouldShowFriendAssignedIcon"
@@ -14,7 +14,7 @@
       icon="mdi-account-check"
       aria-label="Ami·e·s déjà assigné·e·s sur le créneau"
       size="small"
-      color="green"
+      color="success"
     />
     <v-icon
       v-if="shouldShowAvailableFriendsIcon"
@@ -43,7 +43,7 @@
       icon="mdi-alert"
       aria-label="Demandé sur une FT non terminée"
       size="small"
-      color="orange"
+      color="warning"
     />
     <v-icon
       v-if="preferenceAssignmentIcon"
@@ -96,9 +96,12 @@ const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
   },
 );
 
-const shouldShowNoFriendIcon = computed<boolean>(
-  () => isAssignableVolunteer(volunteer) && !volunteer.hasAtLeastOneFriend,
-);
+const getNoFriendLabel = (candidateFriendCount: number): string => {
+  const noFriendsLabel = "N'a aucun·e ami·e";
+  if (!candidateFriendCount) return noFriendsLabel;
+  return `${noFriendsLabel} bénévole mais a ${candidateFriendCount} ${pluralize("ami·e", candidateFriendCount, "·s")} ${pluralize("candidat", candidateFriendCount)} `;
+};
+
 const shouldShowFriendAssignedIcon = computed<boolean>(
   () => isAssignableVolunteer(volunteer) && volunteer.hasFriendAssigned,
 );

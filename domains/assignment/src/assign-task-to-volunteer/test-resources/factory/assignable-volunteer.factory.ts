@@ -14,6 +14,7 @@ import {
   RELOU,
   STATIQUE,
 } from "@overbookd/festival-event-constants";
+import { defaultFriendCount } from "../../../friends.js";
 
 export type MaybeCategory = Category | "undefined";
 
@@ -28,7 +29,7 @@ export class AssignableVolunteerFactory {
       ...volunteer,
       hasFriendAssigned: false,
       assignableFriendsIds: [],
-      hasAtLeastOneFriend: false,
+      friendCount: defaultFriendCount,
       requestedDuring: [],
       assignments: [],
     };
@@ -39,7 +40,7 @@ export class AssignableVolunteerFactory {
       isRequestedOnSamePeriod: false,
       hasFriendAssigned: false,
       assignableFriendsIds: [],
-      hasAtLeastOneFriend: false,
+      friendCount: defaultFriendCount,
     };
     const expected: Record<MaybeCategory, AssignableVolunteer> = {
       [BAR]: assignable,

@@ -2,8 +2,8 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../src/prisma.service";
 import { User } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
-import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 import { CAMION, FEN, VOITURE } from "@overbookd/team-constants";
+import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../user/user.query";
 
 @Injectable()
 export class FriendService {
@@ -11,7 +11,9 @@ export class FriendService {
 
   async findUserFriends(id: number): Promise<User[]> {
     const friends = await this.prisma.friend.findMany({
-      where: { requestorId: id },
+      where: {
+        requestor: { id, ...IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER },
+      },
       select: { friend: { select: SELECT_USER_IDENTIFIER } },
     });
     return friends.map(({ friend }) => friend);
@@ -26,7 +28,7 @@ export class FriendService {
         teams: {
           none: { team: { code: { in: nonFriendableTeams } } },
         },
-        ...IS_NOT_DELETED,
+        ...IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
       },
     });
   }
@@ -36,7 +38,9 @@ export class FriendService {
       where: { requestorId, friendId },
     });
     if (isAlreadyFriend) {
-      throw new ForbiddenException("Cette personne fait déjà partie des amis");
+      throw new ForbiddenException(
+        "Cette personne fait déjà partie des ami·e·s",
+      );
     }
 
     const { friend } = await this.prisma.friend.create({

@@ -22,7 +22,7 @@ import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 import { castAssignmentEventsWithDate } from "~/utils/http/cast-date/planning.utils";
 
 type State = {
-  volunteers: VolunteerWithAssignmentDuration[];
+  volunteers: Map<number, VolunteerWithAssignmentDuration>;
   selectedVolunteer: VolunteerWithAssignmentDuration | null;
   selectedVolunteerFriends: User[];
   assignments: AssignmentSummaryWithTask[];
@@ -35,7 +35,7 @@ export const useAssignVolunteerToTaskStore = defineStore(
   "assign-volunteer-to-task",
   {
     state: (): State => ({
-      volunteers: [],
+      volunteers: new Map<number, VolunteerWithAssignmentDuration>(),
       selectedVolunteer: null,
       selectedVolunteerFriends: [],
       assignments: [],
@@ -47,7 +47,9 @@ export const useAssignVolunteerToTaskStore = defineStore(
       async fetchVolunteers() {
         const res = await VolunteerToTaskRepository.getVolunteers();
         if (isHttpError(res)) return;
-        this.volunteers = res;
+        this.volunteers = new Map<number, VolunteerWithAssignmentDuration>(
+          res.map((volunteer) => [volunteer.id, volunteer]),
+        );
       },
 
       async selectVolunteer(volunteer: VolunteerWithAssignmentDuration) {

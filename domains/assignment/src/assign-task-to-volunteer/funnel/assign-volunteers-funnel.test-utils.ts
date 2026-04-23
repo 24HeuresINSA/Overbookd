@@ -13,6 +13,7 @@ import { PlanningEvent } from "./planning";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 import { FRAGMENTED, NO_PREF, NO_REST, STACKED } from "@overbookd/preference";
 import { BreakPeriod } from "../../break-periods/break-periods.js";
+import { defaultFriendCount } from "../../friends.js";
 
 const friday06h = new Date("2024-05-17T06:00+02:00");
 const friday22h = new Date("2024-05-17T22:00+02:00");
@@ -83,7 +84,7 @@ const BOILERPLATE_ASSIGNMENT_STATS = {
   totalAssignmentDuration: 1000000,
   isRequestedOnSamePeriod: false,
   hasFriendAssigned: false,
-  hasAtLeastOneFriend: false,
+  friendCount: defaultFriendCount,
   assignableFriendsIds: [],
 };
 

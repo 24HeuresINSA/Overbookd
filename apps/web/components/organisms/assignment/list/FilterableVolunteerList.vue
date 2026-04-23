@@ -95,7 +95,7 @@ const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const volunteers = computed<AssignmentVolunteer[]>(() =>
   isOrgaTask.value
-    ? assignVolunteerToTaskStore.volunteers
+    ? [...assignVolunteerToTaskStore.volunteers.values()]
     : assignTaskToVolunteerStore.assignableVolunteers,
 );
 const searchableVolunteers = computed<Searchable<AssignmentVolunteer>[]>(() =>
@@ -134,7 +134,7 @@ const filterVolunteerByFriendCondition = (
 ): ((volunteer: AssignmentVolunteer) => boolean) => {
   switch (friendFilter) {
     case AUCUN_AMI:
-      return (volunteer) => !volunteer.hasAtLeastOneFriend;
+      return (volunteer) => !volunteer.friendCount.volunteerCount;
     case AMIS_DISPONIBLES:
       return (volunteer) =>
         isAssignableVolunteer(volunteer) &&

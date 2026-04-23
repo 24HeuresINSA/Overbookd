@@ -1,9 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AssignableVolunteer } from "@overbookd/assignment";
+import { AssignableVolunteer, FriendCount } from "@overbookd/assignment";
 import {
   assignmentPreferences,
   AssignmentPreferenceType,
 } from "@overbookd/preference";
+import { FriendCountResponseDto } from "../../common/dto/friend-count.response.dto";
 
 export class AssignableVolunteerResponseDto implements AssignableVolunteer {
   @ApiProperty({ enum: assignmentPreferences })
@@ -45,8 +46,8 @@ export class AssignableVolunteerResponseDto implements AssignableVolunteer {
   @ApiProperty({ type: Boolean })
   hasFriendAssigned: boolean;
 
-  @ApiProperty({ type: Boolean })
-  hasAtLeastOneFriend: boolean;
+  @ApiProperty({ type: FriendCountResponseDto })
+  friendCount: FriendCount;
 
   @ApiProperty({ type: Number, isArray: true })
   assignableFriendsIds: number[];

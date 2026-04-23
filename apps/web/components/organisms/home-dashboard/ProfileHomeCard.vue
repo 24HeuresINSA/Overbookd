@@ -29,19 +29,19 @@
         <div class="stats">
           <span class="stats__value">{{ charisma }}</span>
           <span class="stats__label">
-            Charisme{{ additionalPlural(charisma) }}
+            {{ pluralize("Charisme", charisma) }}
           </span>
         </div>
         <div class="stats">
-          <span class="stats__value">{{ friendsCount }}</span>
+          <span class="stats__value">{{ friendCount }}</span>
           <span class="stats__label">
-            Ami·e{{ friendsCount !== 0 ? "·s" : "" }}
+            {{ pluralize("Ami·e", friendCount, "·s") }}
           </span>
         </div>
         <div class="stats">
           <span class="stats__value">{{ tasksCount }}</span>
           <span class="stats__label">
-            Tâche{{ additionalPlural(tasksCount) }}
+            {{ pluralize("Tâche", tasksCount) }}
           </span>
         </div>
       </div>
@@ -117,17 +117,13 @@ const teams = computed<string[]>(() => loggedUser.value?.teams ?? []);
 const charisma = computed<number>(() =>
   loggedUser.value ? loggedUser.value.charisma : 0,
 );
-const friendsCount = computed<number>(() => userStore.myFriends.length);
+const friendCount = computed<number>(() => userStore.myFriends.length);
 const tasksCount = computed<number>(() =>
   loggedUser.value ? loggedUser.value.tasksCount : 0,
 );
 const phone = computed<string>(() =>
   loggedUser.value ? formatPhoneNumber(loggedUser.value.phone) : "",
 );
-
-const additionalPlural = (count: number) => {
-  return count !== 1 ? "s" : "";
-};
 
 const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,
