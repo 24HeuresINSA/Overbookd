@@ -11,7 +11,7 @@ import {
   SELECT_USER_IDENTIFIER,
 } from "../../../common/query/user.query";
 import { User } from "@overbookd/user";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 
 export type DatabaseAssignee = {
   teamCode: string;
@@ -115,7 +115,7 @@ export function friendAssigneesCount(volunteerId: number) {
                   friends: {
                     some: {
                       requestorId: volunteerId,
-                      friend: IS_NOT_DELETED,
+                      friend: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
                     },
                   },
                 },
@@ -123,7 +123,7 @@ export function friendAssigneesCount(volunteerId: number) {
                   friendRequestors: {
                     some: {
                       friendId: volunteerId,
-                      requestor: IS_NOT_DELETED,
+                      requestor: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
                     },
                   },
                 },
