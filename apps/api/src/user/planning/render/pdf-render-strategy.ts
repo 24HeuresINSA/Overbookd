@@ -251,7 +251,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       securityPlan,
       talkieFrequencies,
       ...assignments,
-      ...cocktailPurple,
+      cocktailPurple,
       ...fiveDMethod,
     ];
   }
