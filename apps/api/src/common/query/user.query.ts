@@ -17,6 +17,11 @@ export const IS_MEMBER_OF_VOLUNTEER_TEAM = {
   teams: { some: { team: { code: PERSONNE } } },
 };
 
-export const SELECT_TEAMS_CODE = {
+export const SELECT_TEAM_CODES = {
   teams: { select: { teamCode: true } },
+};
+
+export const SELECT_USER_WITH_TEAM_CODES = {
+  ...SELECT_USER_IDENTIFIER,
+  ...SELECT_TEAM_CODES,
 };

@@ -55,11 +55,10 @@
             </div>
 
             <v-text-field
-              v-show="canManageUsers"
+              v-if="canManageUsers"
               v-model="nickname"
               label="Surnom"
               :rules="[rules.maxLength(30)]"
-              :readonly="!canManageUsers"
               prepend-icon="mdi-account"
               hide-details
               clearable
@@ -111,7 +110,7 @@
             </div>
 
             <v-textarea
-              v-show="canManageUsers"
+              v-if="canManageUsers"
               v-model="note"
               label="Note des humains"
               rows="3"
@@ -124,18 +123,29 @@
                 <v-chip
                   v-for="friend in selectedVolunteerFriends"
                   :key="friend.id"
+                  v-tooltip:top="
+                    canManageUsers && isCandidate(friend)
+                      ? 'N\'est pas encore enrolé·e'
+                      : ''
+                  "
                   :closable="canManageUsers"
+                  :color="
+                    canManageUsers && isCandidate(friend)
+                      ? 'warning'
+                      : undefined
+                  "
                   @click:close="removeFriend(friend)"
                 >
                   {{ buildUserName(friend) }}
                 </v-chip>
-                <span v-show="selectedVolunteerFriends.length === 0">
+                <span v-if="selectedVolunteerFriends.length === 0">
                   Aucun·e ami·e
                 </span>
               </div>
               <SearchFriend
-                v-show="canManageUsers"
+                v-if="canManageUsers"
                 v-model="newFriend"
+                :volunteer="volunteer"
                 title="Ajouter un·e ami·e"
                 class="friends__input"
                 hide-details
@@ -181,6 +191,7 @@ import {
 import {
   type User,
   type UserPersonalData,
+  type UserWithTeams,
   buildUserName,
   buildUserNameWithNickname,
 } from "@overbookd/user";
@@ -196,7 +207,7 @@ import {
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatLocalDate } from "@overbookd/time";
-import { ADMIN, HARD } from "@overbookd/team-constants";
+import { ADMIN, HARD, PERSONNE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import type { AssignmentPreferenceType } from "@overbookd/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -236,7 +247,7 @@ const rules = {
   maxDate: maxDate(),
 };
 
-const selectedVolunteerFriends = computed<User[]>(
+const selectedVolunteerFriends = computed<UserWithTeams[]>(
   () => userStore.selectedUserFriends,
 );
 const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
@@ -340,6 +351,9 @@ const callPhoneNumber = () => {
 const openCalendar = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);
 };
+
+const isCandidate = (volunteer: UserWithTeams) =>
+  !volunteer.teams.includes(PERSONNE);
 </script>
 
 <style lang="scss" scoped>

@@ -5,9 +5,8 @@ import {
 } from "../../common/repository/friend.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import {
-  SELECT_TEAMS_CODE,
   SELECT_USER_ASSIGNMENT_PREFERENCE,
-  SELECT_USER_IDENTIFIER,
+  SELECT_USER_WITH_TEAM_CODES,
 } from "../../../common/query/user.query";
 import {
   SELECT_USER_DATA_FOR_CHARISMA,
@@ -17,10 +16,9 @@ import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
 
 const SELECT_VOLUNTEER = {
-  ...SELECT_USER_IDENTIFIER,
+  ...SELECT_USER_WITH_TEAM_CODES,
   ...SELECT_USER_ASSIGNMENT_PREFERENCE,
   ...SELECT_USER_DATA_FOR_CHARISMA,
-  ...SELECT_TEAMS_CODE,
   comment: true,
   note: true,
 };

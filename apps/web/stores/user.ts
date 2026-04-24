@@ -9,7 +9,12 @@ import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import type { Profile, User, UserPersonalData } from "@overbookd/user";
+import type {
+  Profile,
+  User,
+  UserPersonalData,
+  UserWithTeams,
+} from "@overbookd/user";
 import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { jwtDecode } from "jwt-decode";
 import { UserRepository } from "~/repositories/user.repository";
@@ -20,12 +25,12 @@ import { ADMIN } from "@overbookd/team-constants";
 type State = {
   loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   selectedUser?: UserDataWithPotentialyProfilePicture;
-  selectedUserFriends: User[];
+  selectedUserFriends: UserWithTeams[];
   personalAccountConsumers: Consumer[];
   volunteers: UserDataWithPotentialyProfilePicture[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
-  friends: User[];
+  potentialFriends: User[];
   myFriends: User[];
 };
 
@@ -40,7 +45,7 @@ export const useUserStore = defineStore("user", {
     volunteers: [],
     volunteersWithAssignmentStats: [],
     adherents: [],
-    friends: [],
+    potentialFriends: [],
     myFriends: [],
   }),
   getters: {
@@ -132,10 +137,10 @@ export const useUserStore = defineStore("user", {
       this.volunteersWithAssignmentStats = res;
     },
 
-    async fetchFriends() {
-      const res = await UserRepository.getFriends();
+    async fetchFriendsFor(userId: number) {
+      const res = await UserRepository.getFriendsFor(userId);
       if (isHttpError(res)) return;
-      this.friends = res;
+      this.potentialFriends = res;
     },
 
     async fetchMyFriends() {
@@ -151,7 +156,10 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été ajouté à tes ami·e·s 🎉`,
       );
-      this.myFriends = [...this.myFriends, friend];
+      this.myFriends = [...this.myFriends, res];
+      this.potentialFriends = this.potentialFriends.filter(
+        ({ id }) => id !== res.id,
+      );
     },
 
     async removeFriend(friend: User) {
@@ -160,7 +168,8 @@ export const useUserStore = defineStore("user", {
       sendSuccessNotification(
         `${friend.firstname} a été supprimé de tes ami·e·s 😯`,
       );
-      this.myFriends = this.myFriends.filter((f) => f.id !== friend.id);
+      this.myFriends = this.myFriends.filter(({ id }) => id !== friend.id);
+      this.potentialFriends = [...this.potentialFriends, friend];
     },
 
     async addFriendToUser(userId: number, friend: User) {
@@ -171,6 +180,9 @@ export const useUserStore = defineStore("user", {
       );
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = [...this.selectedUserFriends, res];
+        this.potentialFriends = this.potentialFriends.filter(
+          ({ id }) => id !== res.id,
+        );
       }
     },
 
@@ -183,8 +195,9 @@ export const useUserStore = defineStore("user", {
 
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = this.selectedUserFriends.filter(
-          (f) => f.id !== friend.id,
+          ({ id }) => id !== friend.id,
         );
+        this.potentialFriends = [...this.potentialFriends, friend];
       }
     },
 

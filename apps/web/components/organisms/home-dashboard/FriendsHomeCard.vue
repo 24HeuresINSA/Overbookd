@@ -17,7 +17,9 @@
         <v-col cols="auto" class="cols">
           <div class="friends">
             <SearchFriend
+              v-if="loggedUser"
               v-model="newFriend"
+              :volunteer="loggedUser"
               class="friends-list__search"
               hide-details
               @update:model-value="sendFriendRequest"
@@ -79,7 +81,7 @@ const loggedUser = computed(() => userStore.loggedUser);
 const myFriends = computed(() => userStore.myFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
 
-const sendFriendRequest = async () => {
+const sendFriendRequest = () => {
   if (newFriend.value === null) return;
   const isAskingHimSelf = loggedUser.value?.id === newFriend.value.id;
   if (isAskingHimSelf) {

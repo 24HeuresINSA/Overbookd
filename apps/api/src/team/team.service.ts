@@ -14,7 +14,7 @@ import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import {
-  SELECT_TEAMS_CODE,
+  SELECT_TEAM_CODES,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
 import { ADMIN } from "@overbookd/team-constants";
@@ -104,7 +104,7 @@ export class TeamService {
   private async listTeamsFor(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: SELECT_TEAMS_CODE,
+      select: SELECT_TEAM_CODES,
     });
     return user.teams.map((t) => t.teamCode);
   }

@@ -1,9 +1,8 @@
 import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/time";
 import {
-  SELECT_TEAMS_CODE,
   SELECT_USER_ASSIGNMENT_PREFERENCE,
-  SELECT_USER_IDENTIFIER,
+  SELECT_USER_WITH_TEAM_CODES,
 } from "../../../common/query/user.query";
 import {
   SELECT_USER_DATA_FOR_CHARISMA,
@@ -49,9 +48,8 @@ export type DatabaseStoredAssignableVolunteer = User &
 
 export const SELECT_VOLUNTEER = {
   ...SELECT_USER_ASSIGNMENT_PREFERENCE,
-  ...SELECT_USER_IDENTIFIER,
+  ...SELECT_USER_WITH_TEAM_CODES,
   ...SELECT_USER_DATA_FOR_CHARISMA,
-  ...SELECT_TEAMS_CODE,
   comment: true,
   note: true,
 };

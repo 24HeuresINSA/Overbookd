@@ -7,8 +7,8 @@ import {
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import { IProvidePeriod } from "@overbookd/time";
 import {
-  SELECT_TEAMS_CODE,
   SELECT_USER_IDENTIFIER,
+  SELECT_USER_WITH_TEAM_CODES,
 } from "../../../common/query/user.query";
 import { User } from "@overbookd/user";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
@@ -37,8 +37,7 @@ export type DatabaseAssignment = IProvidePeriod & {
 };
 
 const SELECT_ASSIGNEE_PERSONAL_DATA = {
-  ...SELECT_USER_IDENTIFIER,
-  ...SELECT_TEAMS_CODE,
+  ...SELECT_USER_WITH_TEAM_CODES,
   comment: true,
   note: true,
   friends: { select: { requestor: { select: SELECT_USER_IDENTIFIER } } },

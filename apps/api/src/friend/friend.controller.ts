@@ -35,15 +35,23 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
-  @Get()
+  @Get("for/:id")
   @ApiResponse({
     status: 200,
-    description: "Get friends list",
+    description: "Get potential friends for a user",
     isArray: true,
     type: FriendResponseDto,
   })
-  getFriends(): Promise<FriendResponseDto[]> {
-    return this.friendService.findFriends();
+  @ApiParam({
+    name: "id",
+    description: "User id",
+    type: Number,
+    required: true,
+  })
+  getFriendsFor(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<FriendResponseDto[]> {
+    return this.friendService.findFriendsFor(id);
   }
 
   @Get(":id")
