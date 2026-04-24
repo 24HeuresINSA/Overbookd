@@ -50,6 +50,7 @@ import {
   BROUILLON,
   DRAFT,
   IN_REVIEW,
+  READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
   statusLabels,
@@ -72,7 +73,7 @@ const MAX_TASKS = 5;
 const myTasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.mine);
 
 const myDisplayedTasks = computed<PreviewFestivalTask[]>(() => {
-  const statusOrder = [REFUSED, IN_REVIEW, DRAFT, VALIDATED];
+  const statusOrder = [REFUSED, DRAFT, IN_REVIEW, VALIDATED, READY_TO_ASSIGN];
   return myTasks.value
     .sort(
       (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),

@@ -74,7 +74,7 @@ const myActivities = computed<PreviewFestivalActivity[]>(
 );
 
 const myDisplayedActivities = computed<PreviewFestivalActivity[]>(() => {
-  const statusOrder = [REFUSED, IN_REVIEW, DRAFT, VALIDATED];
+  const statusOrder = [REFUSED, DRAFT, IN_REVIEW, VALIDATED];
   return myActivities.value
     .sort(
       (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),
