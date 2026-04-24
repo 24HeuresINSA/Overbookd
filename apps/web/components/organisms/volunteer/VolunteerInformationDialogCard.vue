@@ -123,16 +123,16 @@
                 <v-chip
                   v-for="friend in selectedVolunteerFriends"
                   :key="friend.id"
+                  v-tooltip:top="
+                    canManageUsers && isCandidate(friend)
+                      ? 'N\'est pas encore enrolé·e'
+                      : ''
+                  "
                   :closable="canManageUsers"
                   :color="
                     canManageUsers && isCandidate(friend)
                       ? 'warning'
                       : undefined
-                  "
-                  v-tooltip:top="
-                    canManageUsers && isCandidate(friend)
-                      ? 'N\'est pas encore enrolé·e'
-                      : ''
                   "
                   @click:close="removeFriend(friend)"
                 >
