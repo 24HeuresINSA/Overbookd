@@ -31,7 +31,6 @@
       <TaskAssignmentList
         v-if="shouldShowAssignmentList"
         :assignments="filteredAssignments"
-        class="assignment-list"
         @volunteer-assigned="propageteVolunteerAssigned"
       />
       <div v-else class="error-message">
@@ -159,18 +158,7 @@ const filterByHasAssignedFriends = (
 </script>
 
 <style lang="scss" scoped>
-@use "~/assets/assignment.scss" as *;
-
-$filters-height: $task-list-filters-height;
-$layout-padding: $card-margin * 2;
-$column-margins: 30px;
-$list-height: calc(
-  100vh - $filters-height - $header-height - $layout-padding - $column-margins
-);
-
 .filterable-assignment-list {
-  display: flex;
-  flex-direction: column;
   min-height: 100%;
 
   width: 420px;
@@ -181,13 +169,12 @@ $list-height: calc(
   }
 
   &__text {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     padding: 0;
   }
-}
-
-.assignment-list {
-  padding: 0 5px;
-  height: $list-height;
 }
 
 .btn-close-side-bar {
@@ -205,11 +192,15 @@ $list-height: calc(
   transition: transform 0.3s ease;
 }
 
+.filters {
+  flex-shrink: 0;
+}
+
 .error-message {
   align-items: center;
   justify-content: center;
   display: flex;
-  height: $list-height;
+  height: 100%;
   margin: 0 5%;
 
   p {

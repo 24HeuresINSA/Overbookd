@@ -22,7 +22,10 @@
         class="filters"
       />
       <v-divider />
-      <TaskList :tasks="filteredTasks" class="task-list" />
+      <TaskList v-if="shouldShowTaskList" :tasks="filteredTasks" />
+      <div v-else class="error-message">
+        <p>Aucune tâche à affecter</p>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -80,6 +83,10 @@ const filteredTasks = computed<TaskForAssignment[]>(() =>
   }),
 );
 
+const shouldShowTaskList = computed<boolean>(
+  () => filteredTasks.value.length > 0,
+);
+
 const filterByRequiredTeams = (
   searchedTeams: Team[],
 ): ((task: TaskForAssignment) => boolean) => {
@@ -129,18 +136,7 @@ const filterByPriority = (
 </script>
 
 <style lang="scss" scoped>
-@use "~/assets/assignment.scss" as *;
-
-$filters-height: $task-list-filters-height;
-$layout-padding: $card-margin * 2;
-$column-margins: 30px;
-$list-height: calc(
-  100vh - $filters-height - $header-height - $layout-padding - $column-margins
-);
-
 .filterable-task-list {
-  display: flex;
-  flex-direction: column;
   min-height: 100%;
 
   width: 420px;
@@ -151,13 +147,12 @@ $list-height: calc(
   }
 
   &__text {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     padding: 0;
   }
-}
-
-.task-list {
-  padding: 0 5px;
-  height: $list-height;
 }
 
 .btn-close-side-bar {
@@ -173,5 +168,24 @@ $list-height: calc(
 .rotate-180 {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
+}
+
+.filters {
+  flex-shrink: 0;
+}
+
+.error-message {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 100%;
+  margin: 0 5%;
+
+  p {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    opacity: 0.6;
+  }
 }
 </style>

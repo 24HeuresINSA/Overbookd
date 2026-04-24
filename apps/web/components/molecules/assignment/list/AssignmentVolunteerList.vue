@@ -4,13 +4,13 @@
       <v-list-item
         :key="item.id"
         :value="item"
-        class="list"
+        class="list-item"
         @click="selectVolunteer(item)"
       >
         <AssignmentVolunteerResume
           :volunteer="item"
           :class="{ 'is-selected': isSelected(item.id) }"
-          class="list__volunteer"
+          class="list-item__volunteer"
         />
       </v-list-item>
     </template>
@@ -44,10 +44,10 @@ const selectVolunteer = (volunteer: AssignmentVolunteer): void => {
 <style lang="scss" scoped>
 .virtual-scroll {
   height: 100%;
-  margin-top: 4px;
+  padding: 0 5px;
 }
 
-.list {
+.list-item {
   padding: 0;
   &__volunteer {
     padding: 0 16px;
