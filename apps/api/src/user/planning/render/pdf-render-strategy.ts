@@ -242,7 +242,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     const introductionPage = Introduction.generatePage();
     const securityPlan = SecurityPlan.generatePage();
     const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
-    const cocktailPurpleWorkflows = this.generatePurpleCocktailWorkflows();
+    const cocktailPurple = PurpleCocktail.generatePage();
+
     const fiveDMethod = this.generateFiveDMethod();
     const talkieFrequencies = this.generateTalkieFrequencies(teams);
     return [
@@ -250,17 +251,13 @@ export class PdfRenderStrategy implements RenderStrategy {
       securityPlan,
       talkieFrequencies,
       ...assignments,
-      ...cocktailPurpleWorkflows,
+      cocktailPurple,
       ...fiveDMethod,
     ];
   }
 
   private generateFiveDMethod(): Content[] {
     return [...FiveDMethod.generateWorkflow()];
-  }
-
-  private generatePurpleCocktailWorkflows(): Content[] {
-    return [...PurpleCocktail.generateWorkflow()];
   }
 
   private generateTalkieFrequencies(teams: string[]): Content[] {
