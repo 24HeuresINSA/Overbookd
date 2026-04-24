@@ -1,3 +1,8 @@
+export const defaultGeoLocation = {
+  type: "POINT",
+  coordinates: { lat: 45.784, lng: 4.8768 },
+};
+
 export const signaLocations = [
   { name: "1er étage GCU" },
   { name: "Gymnase C" },

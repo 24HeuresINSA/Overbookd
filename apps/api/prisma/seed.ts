@@ -3,7 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { categoriesAndGears } from "./seeders/gears";
 import { permissions } from "./seeders/permissions";
-import { signaLocations } from "./seeders/signa-locations";
+import { defaultGeoLocation, signaLocations } from "./seeders/signa-locations";
 import {
   Configuration,
   EVENT_DATE_KEY,
@@ -211,7 +211,9 @@ async function main() {
 
   const locations = await Promise.all(
     signaLocations.map(({ name }) =>
-      prisma.signaLocation.create({ data: { name } }),
+      prisma.signaLocation.create({
+        data: { name, geoLocation: defaultGeoLocation },
+      }),
     ),
   );
 
