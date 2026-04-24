@@ -125,9 +125,14 @@
                   :key="friend.id"
                   :closable="canManageUsers"
                   :color="
-                    canManageUsers && !friend.teams.includes(PERSONNE)
+                    canManageUsers && isCandidate(friend)
                       ? 'warning'
                       : undefined
+                  "
+                  v-tooltip:top="
+                    canManageUsers && isCandidate(friend)
+                      ? 'N\'est pas encore enrolé·e'
+                      : ''
                   "
                   @click:close="removeFriend(friend)"
                 >
@@ -346,6 +351,9 @@ const callPhoneNumber = () => {
 const openCalendar = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);
 };
+
+const isCandidate = (volunteer: UserWithTeams) =>
+  !volunteer.teams.includes(PERSONNE);
 </script>
 
 <style lang="scss" scoped>

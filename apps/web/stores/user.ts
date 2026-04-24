@@ -30,7 +30,7 @@ type State = {
   volunteers: UserDataWithPotentialyProfilePicture[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
-  friends: User[];
+  potentialFriends: User[];
   myFriends: User[];
 };
 
@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", {
     volunteers: [],
     volunteersWithAssignmentStats: [],
     adherents: [],
-    friends: [],
+    potentialFriends: [],
     myFriends: [],
   }),
   getters: {
@@ -140,7 +140,7 @@ export const useUserStore = defineStore("user", {
     async fetchFriendsFor(userId: number) {
       const res = await UserRepository.getFriendsFor(userId);
       if (isHttpError(res)) return;
-      this.friends = res;
+      this.potentialFriends = res;
     },
 
     async fetchMyFriends() {
@@ -157,7 +157,9 @@ export const useUserStore = defineStore("user", {
         `${friend.firstname} a été ajouté à tes ami·e·s 🎉`,
       );
       this.myFriends = [...this.myFriends, res];
-      this.friends = this.friends.filter(({ id }) => id !== res.id);
+      this.potentialFriends = this.potentialFriends.filter(
+        ({ id }) => id !== res.id,
+      );
     },
 
     async removeFriend(friend: User) {
@@ -167,7 +169,7 @@ export const useUserStore = defineStore("user", {
         `${friend.firstname} a été supprimé de tes ami·e·s 😯`,
       );
       this.myFriends = this.myFriends.filter(({ id }) => id !== friend.id);
-      this.friends = [...this.friends, friend];
+      this.potentialFriends = [...this.potentialFriends, friend];
     },
 
     async addFriendToUser(userId: number, friend: User) {
@@ -178,7 +180,9 @@ export const useUserStore = defineStore("user", {
       );
       if (this.selectedUser?.id === userId) {
         this.selectedUserFriends = [...this.selectedUserFriends, res];
-        this.friends = this.friends.filter(({ id }) => id !== res.id);
+        this.potentialFriends = this.potentialFriends.filter(
+          ({ id }) => id !== res.id,
+        );
       }
     },
 
@@ -193,7 +197,7 @@ export const useUserStore = defineStore("user", {
         this.selectedUserFriends = this.selectedUserFriends.filter(
           ({ id }) => id !== friend.id,
         );
-        this.friends = [...this.friends, friend];
+        this.potentialFriends = [...this.potentialFriends, friend];
       }
     },
 
