@@ -24,9 +24,14 @@ export const SELECT_USER_FRIENDS_FOR_COUNT = {
   },
 };
 
+export type DatabaseFriendForCount = {
+  id: number;
+  teams: { teamCode: string }[];
+};
+
 export type DatabaseFriendCount = {
-  friends: { requestor: { id: number; teams: { teamCode: string }[] } }[];
-  friendRequestors: { friend: { id: number; teams: { teamCode: string }[] } }[];
+  friends: { requestor: DatabaseFriendForCount }[];
+  friendRequestors: { friend: DatabaseFriendForCount }[];
 };
 
 function isEnrolledVolunteer({

@@ -73,6 +73,13 @@ export class VolunteerWithAssignmentStatsResponseDto
   lastname: string;
 
   @ApiProperty({
+    required: false,
+    description: "volunteer nickname",
+    type: String,
+  })
+  nickname: string;
+
+  @ApiProperty({
     required: true,
     description: "volunteer charisma",
     type: Number,

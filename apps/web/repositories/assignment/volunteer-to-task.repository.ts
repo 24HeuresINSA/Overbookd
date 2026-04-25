@@ -1,5 +1,8 @@
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
-import type { AssignmentSummaryWithTask } from "@overbookd/http";
+import type {
+  AssignmentSummaryWithTask,
+  AssignmentFriend,
+} from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class VolunteerToTaskRepository {
@@ -14,6 +17,12 @@ export class VolunteerToTaskRepository {
   static fetchPotentialAssignmentsFor(volunteerId: number) {
     return HttpClient.get<AssignmentSummaryWithTask[]>(
       `${this.basePath}/volunteers/${volunteerId}/assignments`,
+    );
+  }
+
+  static fetchFriendsFor(volunteerId: number) {
+    return HttpClient.get<AssignmentFriend[]>(
+      `${this.basePath}/volunteers/${volunteerId}/friends`,
     );
   }
 }

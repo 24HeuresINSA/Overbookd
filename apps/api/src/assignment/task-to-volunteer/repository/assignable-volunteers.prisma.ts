@@ -8,6 +8,7 @@ import {
 import { IProvidePeriod, Period } from "@overbookd/time";
 import { PrismaService } from "../../../prisma.service";
 import {
+  DatabaseFriend,
   DatabaseStoredAssignableVolunteer,
   SELECT_VOLUNTEER,
 } from "./assignable-volunteer.query";
@@ -179,24 +180,34 @@ function toStoredAssignableVolunteer(
     ({ mobilization }) => Period.init(mobilization),
   );
 
-  const friends = [
-    ...volunteer.friends.map(({ requestor }) => requestor),
-    ...volunteer.friendRequestors.map(({ friend }) => friend),
+  const uniqueFriends = [
+    ...new Map<number, DatabaseFriend>([
+      ...volunteer.friends.map(
+        ({ requestor }) => [requestor.id, requestor] as const,
+      ),
+      ...volunteer.friendRequestors.map(
+        ({ friend }) => [friend.id, friend] as const,
+      ),
+    ]).values(),
   ];
 
-  const assignedFriends = friends.filter((friend) =>
-    friend.assigned.some(
-      ({ assignment }) =>
-        assignment.festivalTaskId === taskId &&
-        assignment.mobilizationId === mobilizationId &&
-        assignment.id === assignmentId,
-    ),
+  const assignedFriendIds = new Set<number>(
+    uniqueFriends
+      .filter((friend) =>
+        friend.assigned.some(
+          ({ assignment }) =>
+            assignment.festivalTaskId === taskId &&
+            assignment.mobilizationId === mobilizationId &&
+            assignment.id === assignmentId,
+        ),
+      )
+      .map(({ id }) => id),
   );
 
-  const assignableFriendsIds = friends
+  const assignableFriendsIds = uniqueFriends
     .filter(({ id }) => {
-      const friend = friends.find((friend) => friend.id === id);
-      return !assignedFriends.includes(friend);
+      const isFriendAlreadyAssigned = assignedFriendIds.has(id);
+      return !isFriendAlreadyAssigned;
     })
     .map(({ id }) => id);
 
@@ -215,8 +226,8 @@ function toStoredAssignableVolunteer(
     teams: volunteer.teams.map((team) => team.teamCode),
     assignments,
     requestedDuring,
-    assignableFriendsIds: Array.from(new Set(assignableFriendsIds)),
-    hasFriendAssigned: assignedFriends.length > 0,
+    assignableFriendsIds: assignableFriendsIds,
+    hasFriendAssigned: assignedFriendIds.size > 0,
     friendCount: getFriendCount(friendsForCount),
     assignmentPreference: volunteer.preference?.assignment || NO_PREF,
   };

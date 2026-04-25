@@ -8,11 +8,24 @@
         class="friend-item"
         :value="friend.id"
         active
-        :color="assignableVolunteers.has(friend.id) ? undefined : 'warning'"
+        :color="getFriendColor(friend)"
         @click="selectVolunteer(friend)"
         @contextmenu.prevent="openAssignmentPageInNewTab(friend.id)"
       >
-        {{ buildUserName(friend) }}
+        <v-tooltip
+          location="top"
+          :disabled="isAssignable(friend) && isDirectFriend(friend)"
+        >
+          <template #activator="{ props }">
+            <span v-bind="props">
+              {{ buildUserName(friend) }}
+            </span>
+          </template>
+          <div v-if="!isAssignable(friend)">Non affectable</div>
+          <div v-if="!isDirectFriend(friend)">
+            N'est pas dans sa liste d'ami·e·s direct·e·s
+          </div>
+        </v-tooltip>
       </v-list-item>
       <v-list-item
         v-if="selectedVolunteerFriends.length === 0"
@@ -27,6 +40,7 @@
 import { type User, buildUserName } from "@overbookd/user";
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
+import type { AssignmentFriend } from "@overbookd/http";
 
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
@@ -36,13 +50,33 @@ const assignableVolunteers = computed<
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
-const selectedVolunteerFriends = computed<User[]>(
-  () => assignVolunteerToTaskStore.selectedVolunteerFriends,
-);
 const title = computed<string>(() => {
   const volunteerName = selectedVolunteer.value?.firstname ?? "...";
   return `Amis de ${volunteerName} :`;
 });
+
+const isAssignable = (friend: AssignmentFriend): boolean =>
+  assignableVolunteers.value.has(friend.id);
+const isDirectFriend = (friend: AssignmentFriend): boolean =>
+  friend.isDirectFriend;
+const getFriendPriority = (friend: AssignmentFriend): number => {
+  const nonAssignableScore = isAssignable(friend) ? 0 : 2;
+  const nonDirectFriendScore = isDirectFriend(friend) ? 0 : 1;
+  return nonAssignableScore + nonDirectFriendScore;
+};
+const getFriendColor = (friend: AssignmentFriend): string | undefined => {
+  const isNotAssignable = !isAssignable(friend);
+  const isNotDirectFriend = !isDirectFriend(friend);
+  if (isNotAssignable && isNotDirectFriend) return "error";
+  if (isNotAssignable) return "warning";
+  if (isNotDirectFriend) return "blue";
+  return undefined;
+};
+const selectedVolunteerFriends = computed<AssignmentFriend[]>(() =>
+  assignVolunteerToTaskStore.selectedVolunteerFriends.sort(
+    (a, b) => getFriendPriority(a) - getFriendPriority(b),
+  ),
+);
 
 const emit = defineEmits(["select-volunteer"]);
 
@@ -74,7 +108,7 @@ const openAssignmentPageInNewTab = (id: number) => {
   &__list {
     overflow-y: scroll;
     .friend-item {
-      min-height: 36px;
+      min-height: 32px;
     }
   }
 }
