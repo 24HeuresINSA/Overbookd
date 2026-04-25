@@ -13,7 +13,7 @@
       @click:row="propagateClickedVolunteer"
     >
       <template #item.volunteer="{ item }">
-        {{ item.firstname }} {{ item.lastname }}
+        {{ buildUserNameWithNickname(item) }}
       </template>
 
       <template
@@ -77,7 +77,10 @@ import type {
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
 import { Duration } from "@overbookd/time";
-import type { UserPersonalData } from "@overbookd/user";
+import {
+  buildUserNameWithNickname,
+  type UserPersonalData,
+} from "@overbookd/user";
 import { ASSIGNMENT_ORGA_TASK_URL } from "@overbookd/web-page";
 import {
   AUCUNE,
