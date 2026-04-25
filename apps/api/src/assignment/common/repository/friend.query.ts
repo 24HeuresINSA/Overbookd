@@ -24,7 +24,7 @@ export const SELECT_USER_FRIENDS_FOR_COUNT = {
   },
 };
 
-export type DatabaseFriendForCount = {
+type DatabaseFriendForCount = {
   id: number;
   teams: { teamCode: string }[];
 };
