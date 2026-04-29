@@ -80,7 +80,7 @@ const max = computed<number>(() => {
 });
 
 const options = computed(() => {
-  const textColor = theme.global.current.value.colors["on-surface"];
+  const textColor = theme.global.current.value.colors["on-surface"] as string;
   const gridColor = hexToRGBA(textColor, 0.1);
 
   return {

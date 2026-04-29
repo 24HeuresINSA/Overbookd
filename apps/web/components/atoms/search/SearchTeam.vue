@@ -15,7 +15,7 @@
     no-data-text="Aucune équipe correspondante"
   >
     <template #selection="{ item }">
-      <TeamChip :team="item.value" with-name show-hidden />
+      <TeamChip :team="item.code" with-name show-hidden />
     </template>
   </v-autocomplete>
 </template>
