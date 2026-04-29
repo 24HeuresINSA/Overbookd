@@ -1,3 +1,15 @@
+## [3.53.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.2...v3.53.3) (2026-04-29)
+
+### Bug Fixes
+
+* **api:** add default location to signe locations from seeder [#2694](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2694) ([5d6a8d6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5d6a8d6d49d66f5d4b314e60fbaed9a88ea91b11))
+* **orga-task:** display all friends for selected volunteer [#2690](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2690) ([54a14fb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/54a14fb684ffd0f520bb647f74dec15875285408))
+* **planning:** cleaner task separator & remove blank page after purple cocktail [#2695](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2695) ([9fee037](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9fee037567706d4dba138c494fb1469f37feadc7))
+* update coocktail purple in paper planning [#2687](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2687) ([34d9e14](https://gitlab.com/24-heures-insa/overbookd-mono/commit/34d9e14099e952cce9c34df39d716bcd46c911ef))
+* **web:** display candidate friends in a different color for user managers [#2689](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2689) ([11fdcea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/11fdceafcaf38c8eb81738287832b4b38b94b3eb))
+* **web:** display fa / ft that needs to be fixed or finished first on homepage [#2696](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2696) ([1a077e2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1a077e23c0ae64fdeb2780a5b99cbf1b8d8af936))
+* **web:** improve custom slugified filter for search fields [#2590](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2590) ([a90edb9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a90edb9f388d182dfa80bacac3f3e69a9e1f93cf))
+
 ## [3.53.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.1...v3.53.2) (2026-04-23)
 
 ### Bug Fixes
