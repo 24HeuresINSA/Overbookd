@@ -3,10 +3,11 @@ import {
   AssignmentStats,
   VolunteerWithAssignmentStats,
 } from "@overbookd/http";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, IntersectionType } from "@nestjs/swagger";
 import { Category } from "@overbookd/festival-event-constants";
 import { FriendCountResponseDto } from "./friend-count.response.dto";
 import { FriendCount } from "@overbookd/assignment";
+import { UserIdentifierResponseDto } from "../../../common/dto/user-identifier.response.dto";
 
 class AssignmentStatResponseDto implements AssignmentStat {
   @ApiProperty({
@@ -48,37 +49,12 @@ export class AssignmentStatsResponseDto implements AssignmentStats {
 }
 
 export class VolunteerWithAssignmentStatsResponseDto
-  extends AssignmentStatsResponseDto
+  extends IntersectionType(
+    AssignmentStatsResponseDto,
+    UserIdentifierResponseDto,
+  )
   implements VolunteerWithAssignmentStats
 {
-  @ApiProperty({
-    required: true,
-    description: "volunteer id",
-    type: Number,
-  })
-  id: number;
-
-  @ApiProperty({
-    required: true,
-    description: "volunteer firstname",
-    type: String,
-  })
-  firstname: string;
-
-  @ApiProperty({
-    required: true,
-    description: "volunteer lastname",
-    type: String,
-  })
-  lastname: string;
-
-  @ApiProperty({
-    required: false,
-    description: "volunteer nickname",
-    type: String,
-  })
-  nickname: string;
-
   @ApiProperty({
     required: true,
     description: "volunteer charisma",
