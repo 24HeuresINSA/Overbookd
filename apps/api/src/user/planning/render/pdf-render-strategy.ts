@@ -73,7 +73,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     link: { color: "blue" },
     period: { fontSize: 12, bold: true, marginBottom: 3, marginTop: 3 },
     contact: { fontSize: 14, bold: true, marginBottom: 2 },
-    assign: { fontSize: 14, bold: true, marginTop: 15 },
+    assign: { fontSize: 14, bold: true, marginTop: 10 },
     header: {
       fontSize: 18,
       marginTop: 20,
@@ -241,11 +241,11 @@ export class PdfRenderStrategy implements RenderStrategy {
   private generateContent(tasks: Task[], teams: string[]): Content[] {
     const introductionPage = Introduction.generatePage();
     const securityPlan = SecurityPlan.generatePage();
-    const assignments = tasks.flatMap((task) => this.generateTaskContent(task));
-    const cocktailPurple = PurpleCocktail.generatePage();
-
-    const fiveDMethod = this.generateFiveDMethod();
     const talkieFrequencies = this.generateTalkieFrequencies(teams);
+    const assignments = this.generateAssignments(tasks);
+    const cocktailPurple = PurpleCocktail.generatePage();
+    const fiveDMethod = this.generateFiveDMethod();
+
     return [
       introductionPage,
       securityPlan,
@@ -264,14 +264,17 @@ export class PdfRenderStrategy implements RenderStrategy {
     return [...TalkieFrequencies.generateWorkflow(teams)];
   }
 
-  private generateTaskContent({
-    name,
-    period,
-    location,
-    instructions,
-    assignments,
-    contacts,
-  }: Task): Content[] {
+  private generateAssignments(tasks: Task[]): Content[] {
+    const assignments = tasks.flatMap((task, index) =>
+      this.generateTaskContent(task, index < tasks.length - 1),
+    );
+    return assignments;
+  }
+
+  private generateTaskContent(
+    { name, period, location, instructions, assignments, contacts }: Task,
+    shouldIncludeSeparator: boolean,
+  ): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
     const displayName = { text: name, style: ["task"] };
@@ -279,11 +282,18 @@ export class PdfRenderStrategy implements RenderStrategy {
     const displayContacts = this.extractContacts(contacts);
     const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = {
-      table: {
-        widths: ["*"],
-        body: [[{ text: "", fillColor: "#000" }]],
-      },
-      margin: [0, 5, 0, 15],
+      canvas: [
+        {
+          type: "line",
+          x1: 0,
+          y1: 0,
+          x2: 515,
+          y2: 0,
+          lineWidth: 3,
+          lineColor: "#000",
+        },
+      ],
+      margin: [0, 15, 0, 15],
     };
 
     return [
@@ -293,7 +303,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       displayInstructions,
       displayContacts,
       displayAssignment,
-      taskSeparator,
+      ...(shouldIncludeSeparator ? [taskSeparator] : []),
     ];
   }
 

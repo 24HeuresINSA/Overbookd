@@ -175,6 +175,13 @@ const assign = async () => {
 const close = () => emit("close");
 
 const handleKeydown = (event: KeyboardEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target.isContentEditable
+  )
+    return;
   switch (event.key) {
     case "Backspace":
     case "Delete":

@@ -91,7 +91,6 @@ export class FiveDMethod {
     return {
       text: headerText,
       style: ["header", "bold"],
-      pageBreak: "before",
     };
   }
 }

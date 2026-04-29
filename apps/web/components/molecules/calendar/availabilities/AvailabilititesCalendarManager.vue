@@ -68,6 +68,13 @@ const propagateValidation = () => {
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target.isContentEditable
+  )
+    return;
   if (event.key === "ArrowLeft") propagatePrevious();
   if (event.key === "ArrowRight") propagateNext();
 };
