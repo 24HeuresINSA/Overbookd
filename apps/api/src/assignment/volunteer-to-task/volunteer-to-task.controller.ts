@@ -15,9 +15,10 @@ import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
-import { AssignmentSummaryWithTask } from "@overbookd/http";
+import { AssignmentFriend, AssignmentSummaryWithTask } from "@overbookd/http";
 import { AssignmentSummaryWithTaskResponseDto } from "./dto/assignment-summary-with-task.response.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { AssignmentFriendResponseDto } from "./dto/assignment-friend.response.dto";
 
 @Controller("assignments/volunteer-to-task")
 @ApiTags("assignments/volunteer-to-task")
@@ -57,5 +58,24 @@ export class VolunteerToTaskController {
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
   ): Promise<AssignmentSummaryWithTask[]> {
     return this.volunteerToTask.findAssignmentsFor(volunteerId);
+  }
+
+  @Get("volunteers/:volunteerId/friends")
+  @Permission(AFFECT_VOLUNTEER)
+  @ApiResponse({
+    status: 200,
+    description: "All friends for volunteer",
+    type: AssignmentFriendResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    description: "Volunteer id",
+    type: Number,
+  })
+  findFriends(
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
+  ): Promise<AssignmentFriend[]> {
+    return this.volunteerToTask.findFriendsFor(volunteerId);
   }
 }

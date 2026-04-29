@@ -7,9 +7,9 @@ import type {
 } from "@overbookd/assignment";
 import type {
   AssignmentSummaryWithTask,
+  AssignmentFriend,
   HttpStringified,
 } from "@overbookd/http";
-import type { User } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { VolunteerToTaskRepository } from "~/repositories/assignment/volunteer-to-task.repository";
 import { UserRepository } from "~/repositories/user.repository";
@@ -24,7 +24,7 @@ import { castAssignmentEventsWithDate } from "~/utils/http/cast-date/planning.ut
 type State = {
   volunteers: Map<number, VolunteerWithAssignmentDuration>;
   selectedVolunteer: VolunteerWithAssignmentDuration | null;
-  selectedVolunteerFriends: User[];
+  selectedVolunteerFriends: AssignmentFriend[];
   assignments: AssignmentSummaryWithTask[];
   alreadyAssignedAssignments: AssignmentEvent[];
   hoverAssignment: AssignmentEvent | null;
@@ -55,11 +55,13 @@ export const useAssignVolunteerToTaskStore = defineStore(
       async selectVolunteer(volunteer: VolunteerWithAssignmentDuration) {
         this.selectedVolunteer = volunteer;
 
-        const res = await UserRepository.getUserFriends(volunteer.id);
+        this.fetchPotentialAssignmentsFor(volunteer.id);
+
+        const res = await VolunteerToTaskRepository.fetchFriendsFor(
+          volunteer.id,
+        );
         if (isHttpError(res)) return;
         this.selectedVolunteerFriends = res;
-
-        this.fetchPotentialAssignmentsFor(volunteer.id);
       },
 
       async fetchAllAssignmentsFor(volunteerId: number) {

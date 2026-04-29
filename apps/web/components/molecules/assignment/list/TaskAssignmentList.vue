@@ -1,24 +1,24 @@
 <template>
-  <div class="assignment-list" @mouseleave="hoverAssignment(null)">
-    <v-virtual-scroll
-      :items="assignments"
-      item-height="70"
-      class="virtual-scroll"
-    >
-      <template #default="{ item }">
-        <v-list-item
-          :key="`${item.taskId}-${item.mobilizationId}-${item.assignmentId}`"
-          @mouseover="hoverAssignment(item)"
-        >
-          <AssignmentResume
-            :assignment="item"
-            class="assignment-list__item"
-            @selected-team="assign(item, $event)"
-          />
-        </v-list-item>
-      </template>
-    </v-virtual-scroll>
-  </div>
+  <v-virtual-scroll
+    :items="assignments"
+    item-height="70"
+    class="virtual-scroll"
+    @mouseleave="hoverAssignment(null)"
+  >
+    <template #default="{ item }">
+      <v-list-item
+        :key="`${item.taskId}-${item.mobilizationId}-${item.assignmentId}`"
+        class="list-item"
+        @mouseover="hoverAssignment(item)"
+      >
+        <AssignmentResume
+          :assignment="item"
+          class="list-item__assignment"
+          @selected-team="assign(item, $event)"
+        />
+      </v-list-item>
+    </template>
+  </v-virtual-scroll>
 </template>
 
 <script lang="ts" setup>
@@ -55,12 +55,15 @@ const assign = async (
 </script>
 
 <style lang="scss" scoped>
-.assignment-list {
-  width: 100%;
+.virtual-scroll {
   height: 100%;
-  overflow: auto;
-  &__item {
-    cursor: pointer;
+  padding: 0 5px;
+}
+
+.list-item {
+  padding: 0;
+  &__volunteer {
+    padding: 0 16px;
   }
 }
 </style>

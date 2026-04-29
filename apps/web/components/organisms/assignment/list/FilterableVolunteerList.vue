@@ -31,11 +31,6 @@
       <AssignmentVolunteerList
         v-if="shouldShowVolunteerList"
         :volunteers="displayedVolunteers"
-        class="volunteer-list"
-        :class="{
-          'volunteer-list--with-friend-list': isOrgaTask,
-          'volunteer-list--with-friends-filter': !isOrgaTask,
-        }"
         @select-volunteer="selectVolunteer"
       />
       <div v-else class="error-message">
@@ -164,21 +159,7 @@ const shouldShowVolunteerList = computed<boolean>(() => {
 </script>
 
 <style lang="scss" scoped>
-@use "~/assets/assignment.scss" as *;
-
-$filters-height: $volunteer-list-filters-height;
-$friends-height: $volunteer-list-friends-card-height;
-$friends-filter-height: $volunteer-list-friends-filter-height;
-$page-content-padding: $desktop-content-vertical-padding * 2;
-$card-paddings: $card-margin * 2;
-$base-list-height: calc(
-  100vh - $header-height - $filters-height - $card-paddings -
-    $page-content-padding
-);
-
 .filterable-volunteer-list {
-  display: flex;
-  flex-direction: column;
   min-height: 100%;
 
   width: 420px;
@@ -189,20 +170,11 @@ $base-list-height: calc(
   }
 
   &__text {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     padding: 0;
-  }
-}
-
-.volunteer-list {
-  padding: 0 5px;
-  height: $base-list-height;
-
-  &--with-friend-list {
-    max-height: calc($base-list-height - $friends-height);
-  }
-
-  &--with-friends-filter {
-    max-height: calc($base-list-height - $friends-filter-height);
   }
 }
 
@@ -221,11 +193,15 @@ $base-list-height: calc(
   transition: transform 0.3s ease;
 }
 
+.filters {
+  flex-shrink: 0;
+}
+
 .error-message {
   align-items: center;
   justify-content: center;
   display: flex;
-  height: $base-list-height;
+  height: 100%;
   margin: 0 5%;
 
   p {
@@ -237,7 +213,6 @@ $base-list-height: calc(
 }
 
 .friend-list {
-  margin-top: 5px;
-  height: $friends-height;
+  flex-shrink: 0;
 }
 </style>

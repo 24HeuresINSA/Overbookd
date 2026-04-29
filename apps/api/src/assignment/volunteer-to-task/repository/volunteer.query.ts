@@ -6,6 +6,7 @@ import {
 import { SELECT_PERIOD } from "../../../common/query/period.query";
 import {
   SELECT_USER_ASSIGNMENT_PREFERENCE,
+  SELECT_USER_IDENTIFIER,
   SELECT_USER_WITH_TEAM_CODES,
 } from "../../../common/query/user.query";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../../../common/query/charisma.query";
 import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
+import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 
 const SELECT_VOLUNTEER = {
   ...SELECT_USER_WITH_TEAM_CODES,
@@ -42,3 +44,24 @@ export type DatabaseAssigneeWithAssignments = User &
     preference: { assignment: AssignmentPreferenceType };
     assigned: { assignment: IProvidePeriod }[];
   };
+
+export const SELECT_VOLUNTEER_ASSIGNMENT_FRIENDS = {
+  friends: {
+    select: {
+      requestor: {
+        select: { id: true, ...SELECT_USER_IDENTIFIER },
+      },
+    },
+    where: {
+      requestor: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
+    },
+  },
+  friendRequestors: {
+    select: {
+      friend: { select: { id: true, ...SELECT_USER_IDENTIFIER } },
+    },
+    where: {
+      friend: IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER,
+    },
+  },
+};

@@ -3,10 +3,14 @@ import {
   AssignVolunteerToTask,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
-import { AssignmentSummaryWithTask } from "@overbookd/http";
+import { AssignmentFriend, AssignmentSummaryWithTask } from "@overbookd/http";
 
 export type AvailableAssignments = {
   findAssignableFor(volunteerId: number): Promise<AssignmentSummaryWithTask[]>;
+};
+
+export type AssignmentFriends = {
+  findFriendsFor(volunteerId: number): Promise<AssignmentFriend[]>;
 };
 
 @Injectable()
@@ -14,6 +18,7 @@ export class VolunteerToTaskService {
   constructor(
     private readonly assign: AssignVolunteerToTask,
     private readonly assignments: AvailableAssignments,
+    private readonly friends: AssignmentFriends,
   ) {}
 
   async findVolunteers(): Promise<VolunteerWithAssignmentDuration[]> {
@@ -24,5 +29,9 @@ export class VolunteerToTaskService {
     volunteerId: number,
   ): Promise<AssignmentSummaryWithTask[]> {
     return this.assignments.findAssignableFor(volunteerId);
+  }
+
+  async findFriendsFor(volunteerId: number): Promise<AssignmentFriend[]> {
+    return this.friends.findFriendsFor(volunteerId);
   }
 }

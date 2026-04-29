@@ -4,6 +4,7 @@ import type {
   FriendCount,
 } from "@overbookd/assignment";
 import type { Category } from "@overbookd/festival-event-constants";
+import { User } from "@overbookd/user";
 
 export type AssignmentSummaryWithTask = AssignmentSummary & {
   task: TaskCategorizedForPlanning;
@@ -20,9 +21,8 @@ export type AssignmentStats = {
   friendCount: FriendCount;
 };
 
-export type VolunteerWithAssignmentStats = {
-  id: number;
-  firstname: string;
-  lastname: string;
+export type VolunteerWithAssignmentStats = User & {
   charisma: number;
 } & AssignmentStats;
+
+export type AssignmentFriend = User & { isDirectFriend: boolean };

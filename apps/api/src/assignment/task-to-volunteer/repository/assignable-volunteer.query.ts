@@ -12,7 +12,7 @@ import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
 import { DatabaseAssignee } from "../../common/repository/assignment.query";
 
-type DatabaseFriend = {
+export type DatabaseFriend = {
   id: number;
   assigned: {
     assignment: IProvidePeriod & {
