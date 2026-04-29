@@ -14,7 +14,7 @@
     @keydown.enter="propagateEnter"
   >
     <template #item="{ props, item }">
-      <v-list-item v-bind="props" :subtitle="item.raw.category?.path || ''" />
+      <v-list-item v-bind="props" :subtitle="item.category?.path || ''" />
     </template>
   </v-autocomplete>
 </template>

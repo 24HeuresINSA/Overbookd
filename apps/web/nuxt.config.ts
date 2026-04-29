@@ -1,5 +1,5 @@
 import { defineNuxtConfig } from "nuxt/config";
-import vuetify from "vite-plugin-vuetify";
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -53,21 +53,17 @@ export default defineNuxtConfig({
         },
       },
     },
+    plugins: [vuetify({ autoImport: true })],
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
+    },
   },
   build: {
     transpile: ["vuetify"],
   },
-  modules: [
-    "@pinia/nuxt",
-    "@nuxtjs/leaflet",
-    "@vite-pwa/nuxt",
-    async (_options, nuxt) => {
-      nuxt.hooks.hook("vite:extendConfig", (config) => {
-        if (!config.plugins) return;
-        config.plugins.push(vuetify({ autoImport: true }) as never);
-      });
-    },
-  ],
+  modules: ["@pinia/nuxt", "@nuxtjs/leaflet", "@vite-pwa/nuxt"],
   imports: {
     dirs: ["stores", "stores/**"],
   },
