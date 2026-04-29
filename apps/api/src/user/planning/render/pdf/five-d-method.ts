@@ -38,7 +38,7 @@ export class FiveDMethod {
         ],
       },
     ];
-    const sourceLinkText = "handsaway.fr/temoin-harcelement-agir";
+    const sourceLinkText = "consentis.info/etre-bienveillant-e-en-soiree";
 
     const header = this.generateHeader(headerText);
     const description = this.generateDescription(descriptionText);
