@@ -3,22 +3,18 @@
     v-model="category"
     :items="categories"
     :loading="loading"
-    loading-text="Chargement des categories..."
+    loading-text="Chargement des catégories..."
     item-title="name"
     :label="label"
     :hide-details="hideDetails"
     chips
     clearable
     return-object
-    no-data-text="Aucune categorie correspondante"
+    no-data-text="Aucune catégorie correspondante"
     @update:search-input="searchCategory"
   >
     <template #item="{ props, item }">
-      <v-list-item
-        v-bind="props"
-        :title="item.raw.name"
-        :subtitle="item.raw.path"
-      />
+      <v-list-item v-bind="props" :title="item.name" :subtitle="item.path" />
     </template>
   </v-autocomplete>
 </template>
