@@ -291,6 +291,15 @@ watch(props.volunteer, async () => await updateVolunteerInformations(), {
   immediate: true,
 });
 
+const emit = defineEmits([
+  "close",
+  "update-teams",
+  "update-friends",
+  "updated",
+]);
+
+const close = () => emit("close");
+
 const hasNotNewTeamToAdd = computed<boolean>(() => newTeams.value.length === 0);
 const addTeams = async () => {
   if (hasNotNewTeamToAdd.value) return;
@@ -298,11 +307,13 @@ const addTeams = async () => {
   await userStore.addTeamsToUser(volunteerId.value, teams);
   await updateVolunteerInformations();
   newTeams.value = [];
+  emit("update-teams");
 };
 
 const removeTeam = async (team: string) => {
   await userStore.removeTeamFromUser(volunteerId.value, team);
   await updateVolunteerInformations();
+  emit("update-teams");
 };
 
 const sendFriendRequest = () => {
@@ -311,9 +322,11 @@ const sendFriendRequest = () => {
   }
   userStore.addFriendToUser(volunteerId.value, newFriend.value);
   newFriend.value = null;
+  emit("update-friends");
 };
 const removeFriend = (friend: User) => {
   userStore.removeFriendFromUser(volunteerId.value, friend);
+  emit("update-friends");
 };
 
 const updatedVolunteer = computed<UserPersonalData>(() => {
@@ -331,8 +344,6 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
   };
 });
 
-const emit = defineEmits(["close", "updated"]);
-const close = () => emit("close");
 const savePersonalData = async () => {
   await userStore.updateUser(volunteerId.value, updatedVolunteer.value);
   emit("updated");
