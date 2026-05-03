@@ -56,10 +56,12 @@ export const useAssignVolunteerToTaskStore = defineStore(
         this.selectedVolunteer = volunteer;
 
         this.fetchPotentialAssignmentsFor(volunteer.id);
+        this.fetchFriendsFor(volunteer.id);
+      },
 
-        const res = await VolunteerToTaskRepository.fetchFriendsFor(
-          volunteer.id,
-        );
+      async fetchFriendsFor(volunteerId: number) {
+        const res =
+          await VolunteerToTaskRepository.fetchFriendsFor(volunteerId);
         if (isHttpError(res)) return;
         this.selectedVolunteerFriends = res;
       },

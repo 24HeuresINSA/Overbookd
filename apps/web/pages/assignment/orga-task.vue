@@ -15,7 +15,9 @@
       <VolunteerInformationDialogCard
         v-if="selectedUser"
         :volunteer="selectedUser"
-        @updated="closeVolunteerInfoDialog"
+        @updated="onUpdateSelectedVolunteer"
+        @update-teams="onUpdateSelectedVolunteerTeams"
+        @update-friends="onUpdateSelectedVolunteerFriends"
         @close="closeVolunteerInfoDialog"
       />
     </v-dialog>
@@ -142,10 +144,24 @@ const canUseCalendarShortcuts = computed<boolean>(() => {
 });
 
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const openVolunteerInfoDialog = () => {
+const openVolunteerInfoDialog = async () => {
   if (!selectedVolunteer.value) return;
-  userStore.findUserById(selectedVolunteer.value.id);
+  await userStore.findUserById(selectedVolunteer.value.id);
   isVolunteerInfoDialogOpen.value = true;
+};
+const onUpdateSelectedVolunteer = () => {
+  assignVolunteerToTaskStore.fetchVolunteers();
+  closeVolunteerInfoDialog();
+};
+const onUpdateSelectedVolunteerTeams = () => {
+  assignVolunteerToTaskStore.fetchVolunteers();
+};
+const onUpdateSelectedVolunteerFriends = () => {
+  assignVolunteerToTaskStore.fetchVolunteers();
+  const selectedVolunteerId = selectedVolunteer.value?.id;
+  if (!selectedVolunteerId) return;
+  assignVolunteerToTaskStore.fetchFriendsFor(selectedVolunteerId);
+  planningStore.fetchVolunteerAssignmentStats(selectedVolunteerId);
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
