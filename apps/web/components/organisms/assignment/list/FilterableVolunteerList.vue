@@ -47,7 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/team";
 import { Sort } from "~/utils/sort/sort.utils";
 import {
   keepMatchingSearchCriteria,
@@ -77,14 +76,15 @@ const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const route = useRoute();
 
 const sort = ref<number>(Sort.NONE);
-const filters = defineModel<AssignmentVolunteersFilters>("filters", { required: true });
+const filters = defineModel<AssignmentVolunteersFilters>("filters", {
+  required: true,
+});
 const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
   isSideBarClosed.value = !isSideBarClosed.value;
 };
-
 
 const volunteers = computed<AssignmentVolunteer[]>(() =>
   isOrgaTask.value
@@ -95,9 +95,15 @@ const searchableVolunteers = computed<Searchable<AssignmentVolunteer>[]>(() =>
   volunteers.value.map(toSearchable),
 );
 const displayedVolunteers = computed<AssignmentVolunteer[]>(() => {
-  const isPartOfIncludedTeams = keepMembersOf(filters.value.includedTeams || []);
-  const isNotPartOfExcludedTeams = excludeMembersOf(filters.value.excludedTeams || []);
-  const hasSimilarName = keepMatchingSearchCriteria(filters.value.searchVolunteer || "");
+  const isPartOfIncludedTeams = keepMembersOf(
+    filters.value.includedTeams || [],
+  );
+  const isNotPartOfExcludedTeams = excludeMembersOf(
+    filters.value.excludedTeams || [],
+  );
+  const hasSimilarName = keepMatchingSearchCriteria(
+    filters.value.searchVolunteer || "",
+  );
   const isMatchingFriendCondition = filterVolunteerByFriendCondition(
     filters.value.friend,
   );

@@ -92,7 +92,11 @@ import {
 import { SlugifyService } from "@overbookd/slugify";
 import { useDebounceFn } from "@vueuse/core";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import { EXCLUDED_TEAMS_QUERY_PARAM, INCLUDED_TEAMS_QUERY_PARAM, SEARCH_VOLUNTEER_QUERY_PARAM } from "~/utils/assignment/filters/assignment-filters.constant";
+import {
+  EXCLUDED_TEAMS_QUERY_PARAM,
+  INCLUDED_TEAMS_QUERY_PARAM,
+  SEARCH_VOLUNTEER_QUERY_PARAM,
+} from "~/utils/assignment/filters/assignment-filters.constant";
 
 const route = useRoute();
 
@@ -123,15 +127,17 @@ const updateSearchParam = useDebounceFn((newSearch: string) => {
 }, 200);
 const updateIncludedTeamsParam = (teams: Team[]) => {
   console.log("includedTeams", teams);
-  const teamCodes = teams.map(({code}) => code);
+  const teamCodes = teams.map(({ code }) => code);
   updateQueryParams(INCLUDED_TEAMS_QUERY_PARAM, teamCodes);
 };
 const updateExcludedTeamsParam = (teams: Team[]) => {
   console.log("excludedTeams", teams);
-  const teamCodes = teams.map(({code}) => code);
+  const teamCodes = teams.map(({ code }) => code);
   updateQueryParams(EXCLUDED_TEAMS_QUERY_PARAM, teamCodes);
 };
-const updateFriendFilterParam = (friendFilterKey: FriendFilterKey | undefined) => {
+const updateFriendFilterParam = (
+  friendFilterKey: FriendFilterKey | undefined,
+) => {
   updateQueryParams("friend", friendFilterKey);
 };
 </script>

@@ -1,6 +1,9 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList v-model:filters="filters" @select-volunteer="selectVolunteer" />
+    <FilterableVolunteerList
+      v-model:filters="filters"
+      @select-volunteer="selectVolunteer"
+    />
     <OrgaTaskCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
@@ -64,7 +67,10 @@ import type { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { BreakEvent } from "~/domain/common/break-events";
-import { OrgaTaskFilterBuilder, type OrgaTaskFilters } from "~/utils/assignment/filters/orga-task.filter";
+import {
+  OrgaTaskFilterBuilder,
+  type OrgaTaskFilters,
+} from "~/utils/assignment/filters/orga-task.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { SELECTED_VOLUNTEER_QUERY_PARAM } from "~/utils/assignment/filters/assignment-filters.constant";
 

@@ -1,6 +1,9 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList v-model:filters="filters" @select-volunteer="selectVolunteer" />
+    <FilterableVolunteerList
+      v-model:filters="filters"
+      @select-volunteer="selectVolunteer"
+    />
     <TaskOrgaCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
@@ -36,7 +39,10 @@ import type {
   Assignment,
 } from "@overbookd/assignment";
 import type { UnassignForm } from "~/utils/assignment/assignment";
-import { TaskOrgaFilterBuilder, type TaskOrgaFilters } from "~/utils/assignment/filters/task-orga.filter";
+import {
+  TaskOrgaFilterBuilder,
+  type TaskOrgaFilters,
+} from "~/utils/assignment/filters/task-orga.filter";
 
 useHead({ title: "Affect Tâche-Orga" });
 
