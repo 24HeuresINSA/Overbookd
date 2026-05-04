@@ -101,9 +101,9 @@ const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
 const allVolunteersLoading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (allVolunteersLoading.value = false));
 
-const assignmentStatsLoading = ref<boolean>(false);
+const assignmentStatsLoading = ref<boolean>(userStore.volunteersWithAssignmentStats.length === 0);
 const fetchAssignmentStatsIfNeeded = () => {
-  if (!canAssignVolunteer.value || displayMode.value !== VOLUNTEER_STATS)
+  if (!canAssignVolunteer.value || displayMode.value !== VOLUNTEER_STATS || userStore.volunteersWithAssignmentStats.length > 0)
     return;
   assignmentStatsLoading.value = true;
   userStore
