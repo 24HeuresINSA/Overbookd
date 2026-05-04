@@ -70,10 +70,14 @@
           <DailyCalendarContent
             v-for="volunteer in displayedVolunteers"
             :key="volunteer.id"
-            :day="day"
+            :day
             :events="withEventToAdd(volunteer.events)"
             :availabilities="volunteer.availabilities"
+            :clickable-events
             class="multi-calendar__volunteer"
+            @click:event="propagateEventClick"
+            @click-right:event="propagateEventRightClick"
+            @click:period="propagatePeriodClick"
           />
           <div class="multi-calendar__padding with-border" />
         </div>
@@ -83,7 +87,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends VolunteerForCalendar">
-import { OverDate } from "@overbookd/time";
+import { OverDate, type Period } from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import type { CalendarEvent } from "~/utils/calendar/event";
@@ -116,6 +120,10 @@ const { volunteers, eventToAdd } = defineProps({
     default: () => undefined,
   },
   hidePagination: {
+    type: Boolean,
+    default: false,
+  },
+  clickableEvents: {
     type: Boolean,
     default: false,
   },
@@ -199,6 +207,17 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
   requestAnimationFrame(() => {
     isSyncingScroll.value = false;
   });
+};
+
+const emit = defineEmits(["click:event", "click:period", "click-right:event"]);
+const propagateEventClick = (event: CalendarEvent) => {
+  emit("click:event", event);
+};
+const propagateEventRightClick = (event: CalendarEvent) => {
+  emit("click-right:event", event);
+};
+const propagatePeriodClick = (period: Period) => {
+  emit("click:period", period);
 };
 </script>
 

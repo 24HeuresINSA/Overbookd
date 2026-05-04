@@ -78,8 +78,14 @@ import {
   VIEW_VOLUNTEER_DETAILS,
 } from "@overbookd/permission";
 import { Period, type IProvidePeriod } from "@overbookd/time";
-import { toCalendarBreak, type BreakEvent } from "~/domain/common/break-events";
 import {
+  toCalendarBreak,
+  type BreakEvent,
+  BREAK,
+} from "~/domain/common/break-events";
+import {
+  ASSIGNMENT,
+  MOBILIZATION,
   shouldBeHighlighted,
   toCalendarAssignment,
   toCalendarTask,
@@ -238,30 +244,14 @@ const removeBreak = async () => {
   isBreakRemovalDialogOpen.value = false;
 };
 
-const CLICK_ON_EVENT: {
-  [kind in CalendarEventForPlanning["kind"]]: (
-    event: Extract<CalendarEventForPlanning, { kind: kind }>,
-  ) => void | Promise<void>;
-} = {
-  mobilization: () => {
-    console.debug("redirection is already handled by the calendar");
-  },
-  assignment: async (taskAssigned) => {
-    openAssignmentDetails(taskAssigned.identifier);
-  },
-  break: (period) => {
-    openBreakRemoval(period);
-  },
-};
-
 const handleEventClicked = (event: CalendarEventForPlanning) => {
   switch (event.kind) {
-    case "mobilization":
-      return CLICK_ON_EVENT.mobilization(event);
-    case "assignment":
-      return CLICK_ON_EVENT.assignment(event);
-    case "break":
-      return CLICK_ON_EVENT.break(event);
+    case MOBILIZATION:
+      return console.debug("redirection is already handled by the calendar");
+    case ASSIGNMENT:
+      return openAssignmentDetails(event.identifier);
+    case BREAK:
+      return openBreakRemoval(event);
   }
 };
 </script>
