@@ -1,6 +1,6 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList @select-volunteer="selectVolunteer" />
+    <FilterableVolunteerList v-model:filters="filters" @select-volunteer="selectVolunteer" />
     <TaskOrgaCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
@@ -36,13 +36,21 @@ import type {
   Assignment,
 } from "@overbookd/assignment";
 import type { UnassignForm } from "~/utils/assignment/assignment";
+import { TaskOrgaFilterBuilder, type TaskOrgaFilters } from "~/utils/assignment/filters/task-orga.filter";
 
 useHead({ title: "Affect Tâche-Orga" });
 
+const route = useRoute();
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 
 assignTaskToVolunteerStore.fetchAssignableTasks();
 assignTaskToVolunteerStore.fetchAllTasks();
+
+const filters = ref<TaskOrgaFilters>({});
+const updateFilters = () => {
+  filters.value = TaskOrgaFilterBuilder.getFromRouteQuery(route.query);
+};
+watch(() => route.query, updateFilters, { immediate: true });
 
 const volunteer = computed<AssignableVolunteer | null>(
   () => assignTaskToVolunteerStore.selectedVolunteer,
