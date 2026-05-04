@@ -6,6 +6,9 @@ import {
   VolunteersForAssignment,
   WrongTeam,
   retrieveImplicitTeams,
+  HasBreak,
+  AlreadyAssigned,
+  Unavailable,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
@@ -34,7 +37,10 @@ import {
   SELECT_USER_DATA_FOR_CHARISMA,
 } from "../../../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
-import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
+import {
+  SELECT_PERIOD,
+  SELECT_PERIOD_WITH_ID,
+} from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
 import { getFriendCount, SELECT_USER_FRIENDS_FOR_COUNT } from "./friend.query";
@@ -145,6 +151,19 @@ export class PrismaAssignments implements AssignmentRepository {
     assignment: identifier,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
+    const { assignmentId, mobilizationId, taskId } = identifier;
+    const assignment = await this.prisma.assignment.findUnique({
+      where: {
+        id_mobilizationId_festivalTaskId: {
+          festivalTaskId: taskId,
+          id: assignmentId,
+          mobilizationId,
+        },
+      },
+      select: SELECT_PERIOD,
+    });
+    const assignmentPeriod = Period.init(assignment);
+
     for (const { id, as } of volunteers) {
       const volunteerTeamCodes = await this.prisma.userTeam.findMany({
         where: { userId: id },
@@ -154,15 +173,40 @@ export class PrismaAssignments implements AssignmentRepository {
       const withImplicitTeams = retrieveImplicitTeams(volunteerTeams);
       const memberOfTeam = withImplicitTeams.includes(as);
       if (!memberOfTeam) throw new WrongTeam(id, as);
+
+      const { availabilities, assigned, breaks } =
+        await this.prisma.user.findUnique({
+          where: { id, ...IS_NOT_DELETED },
+          select: {
+            availabilities: { select: SELECT_PERIOD },
+            assigned: { select: { assignment: { select: SELECT_PERIOD } } },
+            breaks: { select: SELECT_PERIOD },
+          },
+        });
+
+      const isAvailable = availabilities.some((availability) =>
+        Period.init(availability).includes(assignmentPeriod),
+      );
+      if (!isAvailable) throw new Unavailable(id, assignmentPeriod);
+
+      const isAssigned = assigned.some(({ assignment }) =>
+        Period.init(assignment).isOverlapping(assignmentPeriod),
+      );
+      if (isAssigned) throw new AlreadyAssigned(id, assignmentPeriod);
+
+      const isInBreakPeriod = breaks.some((breakPeriod) =>
+        Period.init(breakPeriod).isOverlapping(assignmentPeriod),
+      );
+      if (isInBreakPeriod) throw new HasBreak(id, assignmentPeriod);
     }
     const upsert = updateAssigneesOnAssignment(volunteers, identifier);
-    const assignment = await this.prisma.assignment.update({
+    const updatedAssignment = await this.prisma.assignment.update({
       where: uniqueAssignment(identifier),
       data: { assignees: { upsert } },
       select: SELECT_ASSIGNMENT,
     });
 
-    return toAssignment(assignment, identifier);
+    return toAssignment(updatedAssignment, identifier);
   }
 
   async unassign(

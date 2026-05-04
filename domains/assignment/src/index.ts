@@ -44,6 +44,9 @@ export {
   AssignmentError,
   TaskNotFoundError,
   WrongTeam,
+  Unavailable,
+  AlreadyAssigned,
+  HasBreak,
 } from "./assignment.error.js";
 export {
   Candidate,

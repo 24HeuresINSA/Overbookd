@@ -215,13 +215,15 @@ const askForBreak = (period: Period) => {
 const closeBreakDialog = () => {
   isBreakCreationDialogOpen.value = false;
 };
-const saveBreak = (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
+const saveBreak = async (breakPeriod: Omit<BreakDefinition, "volunteer">) => {
   closeBreakDialog();
   if (!selectedVolunteer.value) return;
-  planningStore.addVolunteerBreakPeriods({
+  const volunteer = selectedVolunteer.value.id;
+  await planningStore.addVolunteerBreakPeriods({
     ...breakPeriod,
-    volunteer: selectedVolunteer.value.id,
+    volunteer,
   });
+  await assignVolunteerToTaskStore.fetchPotentialAssignmentsFor(volunteer);
 };
 
 const selectedBreak = ref<BreakPeriod | null>(null);
@@ -240,6 +242,7 @@ const removeBreak = async () => {
   const period = selectedBreak.value;
   const volunteer = selectedVolunteer.value.id;
   await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
+  await assignVolunteerToTaskStore.fetchPotentialAssignmentsFor(volunteer);
   isBreakRemovalDialogOpen.value = false;
 };
 </script>
