@@ -3,7 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="displayedVolunteers"
-      :loading="mergeLoading"
+      :loading
       loading-text="Chargement des bénévoles..."
       no-data-text="Aucun bénévole trouvé"
       :mobile="isMobile"
@@ -98,7 +98,7 @@ import {
 } from "~/utils/sort/sort-stats.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
-const props = defineProps({
+const { volunteers } = defineProps({
   volunteers: {
     type: Array as PropType<UserPersonalData[]>,
     required: true,
@@ -192,28 +192,17 @@ const propagateClickedVolunteer = (
 ) =>
   emit(
     "click:volunteer",
-    props.volunteers.find((volunteer) => volunteer.id === id),
+    volunteers.find((volunteer) => volunteer.id === id),
   );
 
 const displayedVolunteers = computed<VolunteerWithAssignmentStats[]>(() => {
   const displayedVolunteersIds = new Set<number>(
-    props.volunteers.map(({ id }) => id),
+    volunteers.map(({ id }) => id),
   );
   return userStore.volunteersWithAssignmentStats.filter(({ id }) =>
     displayedVolunteersIds.has(id),
   );
 });
-
-const assignmentStatsLoading = ref<boolean>(
-  userStore.volunteersWithAssignmentStats.length === 0,
-);
-userStore
-  .fetchVolunteersWithAssignmentStats()
-  .then(() => (assignmentStatsLoading.value = false));
-
-const mergeLoading = computed<boolean>(
-  () => props.loading || assignmentStatsLoading.value,
-);
 
 const retrieveStat = (
   stats: AssignmentStat[],

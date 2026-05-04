@@ -4,6 +4,7 @@
     <VolunteerListHeader
       v-model:filters="filters"
       v-model:display-mode="displayMode"
+      @update:display-mode="fetchAssignmentStatsIfNeeded"
       @export-csv="exportCSV"
       @download-leaflets="openDownloadLeafletsDialog"
     />
@@ -11,7 +12,7 @@
     <Trombinoscope
       v-show="displayMode === TROMBINOSCOPE"
       :volunteers="filteredVolunteers"
-      :loading="loading"
+      :loading="allVolunteersLoading"
       @click:team="addTeamInFilters"
       @click:volunteer="openVolunteerInfoDialog"
     />
@@ -19,7 +20,7 @@
     <VolunteerListCard
       v-show="displayMode === VOLUNTEER_LIST"
       :volunteers="filteredVolunteers"
-      :loading="loading"
+      :loading="allVolunteersLoading"
       @click:team="addTeamInFilters"
       @click:volunteer="openVolunteerInfoDialog"
     />
@@ -28,7 +29,7 @@
       v-if="canAssignVolunteer"
       v-show="displayMode === VOLUNTEER_STATS"
       :volunteers="filteredVolunteers"
-      :loading="loading"
+      :loading="allVolunteersLoading || assignmentStatsLoading"
       @click:volunteer="openVolunteerInfoDialog"
     />
 
@@ -90,17 +91,31 @@ const route = useRoute();
 const userStore = useUserStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
+const canAssignVolunteer = computed<boolean>(() =>
+  userStore.can(AFFECT_VOLUNTEER),
+);
+
 const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
   () => userStore.volunteers,
 );
-const loading = ref<boolean>(volunteers.value.length === 0);
-userStore.fetchVolunteers().then(() => (loading.value = false));
+const allVolunteersLoading = ref<boolean>(volunteers.value.length === 0);
+userStore.fetchVolunteers().then(() => (allVolunteersLoading.value = false));
+
+const assignmentStatsLoading  = ref<boolean>(false);
+const fetchAssignmentStatsIfNeeded = () => {
+  if (!canAssignVolunteer.value || displayMode.value !== VOLUNTEER_STATS) return;
+  assignmentStatsLoading.value = true;
+  userStore
+    .fetchVolunteersWithAssignmentStats()
+    .then(() => (assignmentStatsLoading.value = false));
+}
 
 const filters = ref<VolunteerFilters>({});
 const displayMode = ref<DisplayMode>(TROMBINOSCOPE);
 onMounted(() => {
   filters.value = VolunteerFilterBuilder.getFromRouteQuery(route.query);
   displayMode.value = DisplayModeBuilder.getFromRouteQuery(route.query);
+  fetchAssignmentStatsIfNeeded();
 });
 
 const searchableVolunteers = computed<
@@ -132,9 +147,7 @@ const addTeamInFilters = (team: Team) => {
 
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
-const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
-);
+
 const openVolunteerInfoDialog = (
   volunteer: UserDataWithPotentialyProfilePicture,
 ) => {
