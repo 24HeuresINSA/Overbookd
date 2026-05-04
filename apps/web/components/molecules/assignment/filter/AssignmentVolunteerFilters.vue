@@ -121,11 +121,23 @@ const stringify = (label: string) => SlugifyService.apply(label);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: auto;
 
   &__field {
     width: 100%;
-    overflow: visible;
+
+    :deep(.v-field__input) {
+      margin-inline: var(--v-field-padding-start) var(--v-field-padding-end);
+      margin-top: var(--v-field-input-padding-top);
+      margin-bottom: var(--v-field-input-padding-bottom);
+      padding: 0;
+      min-height: calc(
+        var(--v-input-control-height) - var(--v-field-input-padding-top) - var(
+            --v-field-input-padding-bottom
+          )
+      );
+      max-height: calc(var(--v-input-control-height) * 2);
+      overflow-y: auto;
+    }
   }
 }
 
