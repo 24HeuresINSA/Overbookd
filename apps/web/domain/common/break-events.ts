@@ -4,7 +4,7 @@ import {
   type CalendarEvent,
 } from "~/utils/calendar/event";
 
-const BREAK = "break";
+export const BREAK = "break";
 export type BreakEvent = CalendarEvent & { kind: typeof BREAK };
 
 export function toCalendarBreak(breakPeriod: BreakPeriod): BreakEvent {

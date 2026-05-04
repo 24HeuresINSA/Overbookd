@@ -14,14 +14,16 @@ import {
   type SelectableCategory,
 } from "../assignment/task-category";
 
+export const MOBILIZATION = "mobilization";
 type RequestedDuringMobilization = CalendarEvent & {
   taskId: number;
-  kind: "mobilization";
+  kind: typeof MOBILIZATION;
 };
 
+export const ASSIGNMENT = "assignment";
 type AssignedToTask = CalendarEvent & {
   identifier: AssignmentIdentifier;
-  kind: "assignment";
+  kind: typeof ASSIGNMENT;
 };
 
 export type CalendarEventForPlanning =
@@ -41,7 +43,7 @@ export function toCalendarAssignment(
     name: `[${task.id}] ${task.name}`,
     color: getColorByStatus(task.status),
     identifier,
-    kind: "assignment",
+    kind: ASSIGNMENT,
   });
 }
 
@@ -59,7 +61,7 @@ export function toCalendarTask(permissions: {
       name: `[${id}] ${name}`,
       color: getColorByStatus(status),
       link: permissions.canReadFt ? `${FT_URL}/${id}` : undefined,
-      kind: "mobilization",
+      kind: MOBILIZATION,
     });
   };
 }

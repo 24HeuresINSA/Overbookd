@@ -13,6 +13,8 @@
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
       :volunteers="volunteersForCalendar"
+      clickable-events
+      @click:event="handleEventClicked"
     >
       <template #volunteer-header="{ volunteer }">
         <MultiPlanningVolunteerResumeCalendarHeader
@@ -22,15 +24,31 @@
       </template>
     </OverMultiCalendar>
   </div>
+
+  <v-dialog v-model="isTaskDetailsDialogOpen" max-width="900px">
+    <TaskDetailsDialogCard
+      v-if="selectedTask"
+      :selected-task="selectedTask"
+      @close="closeTaskDetailsDialog"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
+import type { AssignmentIdentifier } from "@overbookd/assignment";
+import type { TaskForCalendar } from "@overbookd/http";
 import { READ_FT } from "@overbookd/permission";
 import { formatLocalDateTime } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import { toCalendarAssignment, toCalendarTask } from "~/utils/planning/event";
+import {
+  ASSIGNMENT,
+  MOBILIZATION,
+  toCalendarAssignment,
+  toCalendarTask,
+  type CalendarEventForPlanning,
+} from "~/utils/planning/event";
 import { MultiPlanningParamsBuilder } from "~/utils/planning/multi-planning.filter";
 
 useHead({ title: "Multi Planning" });
@@ -57,6 +75,10 @@ const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
       events: [...tasks, ...assignments],
     };
   }),
+);
+
+const selectedTask = computed<TaskForCalendar | undefined>(
+  () => planningStore.selectedCalendarTask,
 );
 
 const loading = ref<boolean>(false);
@@ -107,6 +129,24 @@ watch(itemsPerPage, (ipp) =>
     ipp !== DEFAULT_ITEMS_PER_PAGE ? ipp : undefined,
   ),
 );
+
+const isTaskDetailsDialogOpen = ref<boolean>(false);
+const openAssignmentDetails = async (identifier: AssignmentIdentifier) => {
+  await planningStore.fetchVolunteerAssignmentDetails(identifier);
+  isTaskDetailsDialogOpen.value = true;
+};
+const closeTaskDetailsDialog = () => {
+  isTaskDetailsDialogOpen.value = false;
+};
+
+const handleEventClicked = (event: CalendarEventForPlanning) => {
+  switch (event.kind) {
+    case MOBILIZATION:
+      return console.debug("redirection is already handled by the calendar");
+    case ASSIGNMENT:
+      return openAssignmentDetails(event.identifier);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
