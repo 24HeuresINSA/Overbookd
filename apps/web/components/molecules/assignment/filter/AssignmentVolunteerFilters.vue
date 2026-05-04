@@ -135,7 +135,12 @@ const stringify = (label: string) => SlugifyService.apply(label);
             --v-field-input-padding-bottom
           )
       );
-      max-height: calc(var(--v-input-control-height) * 2);
+      max-height: calc(
+        var(--v-input-control-height) *
+          2 - var(--v-field-input-padding-top) - var(
+            --v-field-input-padding-bottom
+          )
+      );
       overflow-y: auto;
     }
   }
