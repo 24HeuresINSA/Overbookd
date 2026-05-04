@@ -316,16 +316,16 @@ const removeTeam = async (team: string) => {
   emit("update-teams");
 };
 
-const sendFriendRequest = () => {
+const sendFriendRequest = async () => {
   if (newFriend.value === null || volunteerId.value === newFriend.value.id) {
     return;
   }
-  userStore.addFriendToUser(volunteerId.value, newFriend.value);
+  await userStore.addFriendToUser(volunteerId.value, newFriend.value);
   newFriend.value = null;
   emit("update-friends");
 };
-const removeFriend = (friend: User) => {
-  userStore.removeFriendFromUser(volunteerId.value, friend);
+const removeFriend = async (friend: User) => {
+  await userStore.removeFriendFromUser(volunteerId.value, friend);
   emit("update-friends");
 };
 
