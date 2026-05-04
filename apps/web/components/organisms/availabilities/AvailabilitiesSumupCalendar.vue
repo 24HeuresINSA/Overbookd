@@ -3,6 +3,7 @@
     <template #manager>
       <AvailabilititesCalendarManager
         :day="day as DayPresenter"
+        :loading
         @previous="propagatePrevious"
         @next="propagateNext"
         @validate="saveAvailabilities"
@@ -42,6 +43,8 @@ const props = defineProps({
 
 const availabilitiesAggregate = ref<Availabilities>(Availabilities.init());
 
+const loading = ref<boolean>(false);
+
 const eventStartDate = computed<OverDate>(() =>
   OverDate.from(configurationStore.eventStartDate),
 );
@@ -50,6 +53,7 @@ const day = ref<DayPresenter>(new DayPresenter(eventStartDate.value));
 watch(
   () => props.volunteerId,
   async (volunteerId) => {
+    loading.value = true;
     availabilityStore.clearVolunteerAvailabilities();
     day.value = new DayPresenter(eventStartDate.value);
 
@@ -58,6 +62,7 @@ watch(
       selected: availabilityStore.availabilities.list as Period[],
       recorded: [],
     });
+    loading.value = false;
   },
   { immediate: true },
 );
@@ -92,11 +97,16 @@ const selectOrUnselectDay = (day: DayPresenter) => {
   });
 };
 
+const emit = defineEmits(["validate"]);
+
 const saveAvailabilities = async () => {
+  loading.value = true;
   await availabilityStore.overrideVolunteerAvailabilities(
     props.volunteerId,
     selected.value,
   );
+  emit("validate");
+  loading.value = false;
 };
 
 const propagatePrevious = () => {
