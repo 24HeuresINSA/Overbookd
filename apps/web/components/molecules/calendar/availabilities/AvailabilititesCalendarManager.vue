@@ -4,6 +4,7 @@
       text="Valider les disponibilités"
       color="success"
       :disabled="cantValidate"
+      :loading
       @click="propagateValidation"
     />
     <div class="arrow-buttons desktop-only">
@@ -51,6 +52,10 @@ const props = defineProps({
     default: false,
   },
   cantValidate: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },

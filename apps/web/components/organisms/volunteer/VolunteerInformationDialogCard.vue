@@ -174,6 +174,7 @@
           v-if="canManageAvailabilities"
           :volunteer-id="volunteer.id"
           class="availabilitites desktop-only"
+          @validate="updateAvailabilities"
         />
       </div>
     </template>
@@ -295,6 +296,7 @@ const emit = defineEmits([
   "close",
   "update-teams",
   "update-friends",
+  "update-availabilities",
   "updated",
 ]);
 
@@ -328,6 +330,8 @@ const removeFriend = async (friend: User) => {
   await userStore.removeFriendFromUser(volunteerId.value, friend);
   emit("update-friends");
 };
+
+const updateAvailabilities = () => emit("update-availabilities");
 
 const updatedVolunteer = computed<UserPersonalData>(() => {
   const trimmedNickname = nickname.value?.trim() || null;

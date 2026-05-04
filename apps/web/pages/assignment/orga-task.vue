@@ -18,6 +18,7 @@
         @updated="onUpdateSelectedVolunteer"
         @update-teams="onUpdateSelectedVolunteerTeams"
         @update-friends="onUpdateSelectedVolunteerFriends"
+        @update-availabilities="onUpdateSelectedVolunteerAvailabilities"
         @close="closeVolunteerInfoDialog"
       />
     </v-dialog>
@@ -155,6 +156,10 @@ const onUpdateSelectedVolunteer = () => {
 };
 const onUpdateSelectedVolunteerTeams = () => {
   assignVolunteerToTaskStore.fetchVolunteers();
+  if (!selectedVolunteer.value) return;
+  assignVolunteerToTaskStore.fetchPotentialAssignmentsFor(
+    selectedVolunteer.value.id,
+  );
 };
 const onUpdateSelectedVolunteerFriends = () => {
   assignVolunteerToTaskStore.fetchVolunteers();
@@ -162,6 +167,12 @@ const onUpdateSelectedVolunteerFriends = () => {
   if (!selectedVolunteerId) return;
   assignVolunteerToTaskStore.fetchFriendsFor(selectedVolunteerId);
   planningStore.fetchVolunteerAssignmentStats(selectedVolunteerId);
+};
+const onUpdateSelectedVolunteerAvailabilities = () => {
+  if (!selectedVolunteer.value) return;
+  assignVolunteerToTaskStore.fetchPotentialAssignmentsFor(
+    selectedVolunteer.value.id,
+  );
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
