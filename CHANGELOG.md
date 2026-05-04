@@ -1,3 +1,11 @@
+## [3.53.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.3...v3.53.4) (2026-05-04)
+
+### Bug Fixes
+
+* **orga-task:** fix profile friends update [#2703](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2703) ([b23f8cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b23f8cf15a74550775bf18683e17a5c7af016e8f))
+* **orga-task:** fix volunteer profile update issues [#2702](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2702) [#2703](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2703) ([76438e9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/76438e9e2917d0331953edc43b27d8a215b2c5d5))
+* **volunteer-availability:** add loading state to update volunteer availabilities [#2708](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2708) ([6218134](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6218134ac5d3ef72039c05268cb8d8d4d61b8810))
+
 ## [3.53.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.2...v3.53.3) (2026-04-29)
 
 ### Bug Fixes
