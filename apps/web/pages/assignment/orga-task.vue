@@ -1,6 +1,9 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList @select-volunteer="selectVolunteer" />
+    <FilterableVolunteerList
+      v-model:filters="filters"
+      @select-volunteer="selectVolunteer"
+    />
     <OrgaTaskCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
@@ -62,9 +65,14 @@ import type {
 import { buildUserName } from "@overbookd/user";
 import type { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
-import { VolunteerSelectBuilder } from "~/utils/assignment/volunteer.select";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { BreakEvent } from "~/domain/common/break-events";
+import {
+  OrgaTaskFilterBuilder,
+  type OrgaTaskFilters,
+} from "~/utils/assignment/filters/orga-task.filter";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { SELECTED_VOLUNTEER_QUERY_PARAM } from "~/utils/assignment/filters/assignment-filters.constant";
 
 const DEFAULT_TITLE = "Affect Orga-Tâche";
 useHead({ title: DEFAULT_TITLE });
@@ -94,6 +102,7 @@ watch(title, (newTitle) => (document.title = newTitle));
 
 const selectVolunteer = (volunteer: VolunteerWithAssignmentDuration) => {
   assignVolunteerToTaskStore.selectVolunteer(volunteer);
+  updateQueryParams(SELECTED_VOLUNTEER_QUERY_PARAM, volunteer.id);
   refreshVolunteerData(volunteer.id);
 };
 const unassignVolunteer = async (form: UnassignForm) => {
@@ -124,15 +133,25 @@ const refreshVolunteerData = async (
   ]);
 };
 
+const filters = ref<OrgaTaskFilters>({});
+const updateFilters = () => {
+  filters.value = OrgaTaskFilterBuilder.getFromRouteQuery(route.query);
+  if (filters.value.selectedVolunteer) {
+    refreshVolunteerData(filters.value.selectedVolunteer);
+  }
+};
+
 onMounted(async () => {
   await assignVolunteerToTaskStore.fetchVolunteers();
 
-  const volunteer = VolunteerSelectBuilder.getFromRouteQuery(route.query);
-  if (!volunteer) {
+  updateFilters();
+  const volunteerId = filters.value.selectedVolunteer;
+  if (!volunteerId) {
     planningStore.clearSelectedVolunteer();
     return;
   }
-  selectVolunteer(volunteer);
+  const volunteer = assignVolunteerToTaskStore.volunteers.get(volunteerId);
+  if (volunteer) selectVolunteer(volunteer);
 });
 
 const canUseCalendarShortcuts = computed<boolean>(() => {

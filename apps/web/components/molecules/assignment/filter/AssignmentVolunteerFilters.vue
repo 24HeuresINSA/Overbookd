@@ -8,13 +8,15 @@
       hide-details
       clearable
       @click:clear="search = ''"
+      @update:model-value="updateSearchParam"
     />
     <SearchTeams
-      v-model="teams"
+      v-model="includedTeams"
       class="filters__field"
       density="compact"
       closable-chips
       hide-details
+      @update:model-value="updateIncludedTeamsParam"
     />
     <SearchTeams
       v-model="excludedTeams"
@@ -23,6 +25,7 @@
       density="compact"
       closable-chips
       hide-details
+      @update:model-value="updateExcludedTeamsParam"
     />
 
     <v-btn-toggle
@@ -32,15 +35,16 @@
       color="secondary"
       density="compact"
       tile
+      @update:model-value="updateFriendFilterParam"
     >
       <v-btn
-        v-for="label of friendFilterLabel"
-        :id="`friend-filter-${stringify(label)}`"
-        :key="label"
-        :value="label"
+        v-for="filter of friendFilters"
+        :id="`friend-filter-${stringify(filter.label)}`"
+        :key="filter.key"
+        :value="filter.key"
         size="x-small"
       >
-        {{ label }}
+        {{ filter.label }}
       </v-btn>
     </v-btn-toggle>
 
@@ -82,10 +86,17 @@ import type { Team } from "@overbookd/team";
 import { nextSortDirection, Sort } from "~/utils/sort/sort.utils";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
 import {
-  type FriendFilter,
-  friendFilterLabel,
-} from "~/utils/assignment/assignment.utils";
+  type FriendFilterKey,
+  friendFilters,
+} from "~/utils/assignment/filters/friend-filter.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { useDebounceFn } from "@vueuse/core";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import {
+  EXCLUDED_TEAMS_QUERY_PARAM,
+  INCLUDED_TEAMS_QUERY_PARAM,
+  SEARCH_VOLUNTEER_QUERY_PARAM,
+} from "~/utils/assignment/filters/assignment-filters.constant";
 
 const route = useRoute();
 
@@ -97,10 +108,10 @@ defineProps({
 });
 
 const search = defineModel<string>("search", { default: "" });
-const teams = defineModel<Team[]>("teams", { default: [] });
+const includedTeams = defineModel<Team[]>("includedTeams", { default: [] });
 const excludedTeams = defineModel<Team[]>("excludedTeams", { default: [] });
 const sort = defineModel<number>("sort", { default: Sort.NONE });
-const friendFilter = defineModel<FriendFilter | undefined>("friendFilter", {
+const friendFilter = defineModel<FriendFilterKey | undefined>("friendFilter", {
   default: undefined,
 });
 
@@ -109,6 +120,24 @@ const isTaskOrga = computed<boolean>(() => !isOrgaTaskMode(route.path));
 const updateSort = () => (sort.value = nextSortDirection(sort.value));
 
 const stringify = (label: string) => SlugifyService.apply(label);
+
+const updateSearchParam = useDebounceFn((newSearch: string) => {
+  search.value = newSearch;
+  updateQueryParams(SEARCH_VOLUNTEER_QUERY_PARAM, newSearch);
+}, 200);
+const updateIncludedTeamsParam = (teams: Team[]) => {
+  const teamCodes = teams.map(({ code }) => code);
+  updateQueryParams(INCLUDED_TEAMS_QUERY_PARAM, teamCodes);
+};
+const updateExcludedTeamsParam = (teams: Team[]) => {
+  const teamCodes = teams.map(({ code }) => code);
+  updateQueryParams(EXCLUDED_TEAMS_QUERY_PARAM, teamCodes);
+};
+const updateFriendFilterParam = (
+  friendFilterKey: FriendFilterKey | undefined,
+) => {
+  updateQueryParams("friend", friendFilterKey);
+};
 </script>
 
 <style lang="scss" scoped>

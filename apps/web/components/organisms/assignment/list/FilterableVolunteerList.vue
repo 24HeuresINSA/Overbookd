@@ -19,11 +19,11 @@
       class="filterable-volunteer-list__text"
     >
       <AssignmentVolunteerFilters
-        v-model:search="searchVolunteer"
-        v-model:teams="teams"
-        v-model:excluded-teams="excludedTeams"
+        v-model:search="filters.searchVolunteer"
+        v-model:included-teams="filters.includedTeams"
+        v-model:excluded-teams="filters.excludedTeams"
+        v-model:friend-filter="filters.friend"
         v-model:sort="sort"
-        v-model:friend-filter="friendFilter"
         :list-length="displayedVolunteers.length"
         class="filters"
       />
@@ -47,7 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { Team } from "@overbookd/team";
 import { Sort } from "~/utils/sort/sort.utils";
 import {
   keepMatchingSearchCriteria,
@@ -62,31 +61,30 @@ import {
   AMIS_DEJA_AFFECTES,
   AMIS_DISPONIBLES,
   AUCUN_AMI,
-  type FriendFilter,
-} from "~/utils/assignment/assignment.utils";
+  type FriendFilterKey,
+} from "~/utils/assignment/filters/friend-filter.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 import {
   excludeMembersOf,
   keepMembersOf,
 } from "~/utils/search/search-team.utils";
 import type { Assignment } from "@overbookd/assignment";
+import type { AssignmentVolunteersFilters } from "~/utils/assignment/filters/assignment-volunteers.filter";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const route = useRoute();
 
-const teams = ref<Team[]>([]);
-const excludedTeams = ref<Team[]>([]);
-const searchVolunteer = ref<string>("");
 const sort = ref<number>(Sort.NONE);
-const friendFilter = ref<FriendFilter | undefined>();
+const filters = defineModel<AssignmentVolunteersFilters>("filters", {
+  required: true,
+});
+const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
   isSideBarClosed.value = !isSideBarClosed.value;
 };
-
-const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const volunteers = computed<AssignmentVolunteer[]>(() =>
   isOrgaTask.value
@@ -97,11 +95,17 @@ const searchableVolunteers = computed<Searchable<AssignmentVolunteer>[]>(() =>
   volunteers.value.map(toSearchable),
 );
 const displayedVolunteers = computed<AssignmentVolunteer[]>(() => {
-  const isPartOfIncludedTeams = keepMembersOf(teams.value);
-  const isNotPartOfExcludedTeams = excludeMembersOf(excludedTeams.value);
-  const hasSimilarName = keepMatchingSearchCriteria(searchVolunteer.value);
+  const isPartOfIncludedTeams = keepMembersOf(
+    filters.value.includedTeams || [],
+  );
+  const isNotPartOfExcludedTeams = excludeMembersOf(
+    filters.value.excludedTeams || [],
+  );
+  const hasSimilarName = keepMatchingSearchCriteria(
+    filters.value.searchVolunteer || "",
+  );
   const isMatchingFriendCondition = filterVolunteerByFriendCondition(
-    friendFilter.value,
+    filters.value.friend,
   );
   const filteredVolunteers = searchableVolunteers.value.filter((volunteer) => {
     return (
@@ -125,16 +129,16 @@ const sortVolunteers = (volunteers: AssignmentVolunteer[]) => {
   });
 };
 const filterVolunteerByFriendCondition = (
-  friendFilter: FriendFilter | undefined,
+  friendFilter: FriendFilterKey | undefined,
 ): ((volunteer: AssignmentVolunteer) => boolean) => {
   switch (friendFilter) {
-    case AUCUN_AMI:
+    case AUCUN_AMI.key:
       return (volunteer) => !volunteer.friendCount.volunteerCount;
-    case AMIS_DISPONIBLES:
+    case AMIS_DISPONIBLES.key:
       return (volunteer) =>
         isAssignableVolunteer(volunteer) &&
         volunteer.assignableFriendsIds.length > 0;
-    case AMIS_DEJA_AFFECTES:
+    case AMIS_DEJA_AFFECTES.key:
       return (volunteer) =>
         isAssignableVolunteer(volunteer) && volunteer.hasFriendAssigned;
     case undefined:
