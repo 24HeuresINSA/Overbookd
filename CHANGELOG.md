@@ -1,3 +1,12 @@
+## [3.53.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.4...v3.53.5) (2026-05-05)
+
+### Bug Fixes
+
+* **assignment:** save volunteer list filters in url [#2713](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2713) ([ddd240c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ddd240cb77083de8f16d2832b03faadd4ca4cf16))
+* **orga-task:** add max height and scroll to team filters [#2712](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2712) ([e461dbc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e461dbcc4d2315d4df7b5df9ebc73f0d22745696))
+* **planning:** make multiplanning events clickable [#2698](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2698) [#2707](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2707) [#2710](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2710) ([3b69fc6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3b69fc65f44e873ab900f40c90de636becf777c4))
+* **volunteers:** load volunteers with assignment stats if needed [#2709](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2709) ([8c1ae96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8c1ae96466d31eb69bd9eb0f7a071984b21640c9))
+
 ## [3.53.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.3...v3.53.4) (2026-05-04)
 
 ### Bug Fixes
