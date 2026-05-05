@@ -56,7 +56,7 @@ const filters = ref<TaskOrgaFilters>({});
 const updateFilters = () => {
   filters.value = TaskOrgaFilterBuilder.getFromRouteQuery(route.query);
 };
-watch(() => route.query, updateFilters, { immediate: true });
+onMounted(() => updateFilters);
 
 const volunteer = computed<AssignableVolunteer | null>(
   () => assignTaskToVolunteerStore.selectedVolunteer,

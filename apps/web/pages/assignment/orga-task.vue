@@ -140,7 +140,6 @@ const updateFilters = () => {
     refreshVolunteerData(filters.value.selectedVolunteer);
   }
 };
-watch(() => route.query, updateFilters);
 
 onMounted(async () => {
   await assignVolunteerToTaskStore.fetchVolunteers();
