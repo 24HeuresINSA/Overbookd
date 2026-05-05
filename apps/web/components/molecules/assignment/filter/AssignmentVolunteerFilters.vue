@@ -126,12 +126,10 @@ const updateSearchParam = useDebounceFn((newSearch: string) => {
   updateQueryParams(SEARCH_VOLUNTEER_QUERY_PARAM, newSearch);
 }, 200);
 const updateIncludedTeamsParam = (teams: Team[]) => {
-  console.log("includedTeams", teams);
   const teamCodes = teams.map(({ code }) => code);
   updateQueryParams(INCLUDED_TEAMS_QUERY_PARAM, teamCodes);
 };
 const updateExcludedTeamsParam = (teams: Team[]) => {
-  console.log("excludedTeams", teams);
   const teamCodes = teams.map(({ code }) => code);
   updateQueryParams(EXCLUDED_TEAMS_QUERY_PARAM, teamCodes);
 };
