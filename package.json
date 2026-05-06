@@ -87,7 +87,7 @@
     "semantic-release": "25.0.3",
     "ts-prune": "0.10.3",
     "tsup": "8.5.1",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.59.1",
     "vitest": "4.1.5",
     "vue-eslint-parser": "10.4.0"
