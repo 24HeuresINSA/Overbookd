@@ -23,4 +23,4 @@
 
 ---
 
-_Last reviewed: not yet — placeholder_
+_Last reviewed: 2026-05 — domain pages are DRAFT, see [glossary.md](./glossary.md)_

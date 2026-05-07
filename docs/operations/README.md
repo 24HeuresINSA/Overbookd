@@ -12,4 +12,4 @@
 
 ---
 
-_Last reviewed: not yet — placeholder_
+_Last reviewed: 2026-05_
