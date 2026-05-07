@@ -1,5 +1,7 @@
 # Constants
 
+> **English deep-dive:** [`docs/architecture/dependency-hierarchy.md`](../docs/architecture/dependency-hierarchy.md)
+
 On y range des modules qui expose uniquement des constantes (et les types associés si nécessaire) pour différent contextes de l'application.
 
 De cette manière il est possible d'avoir plusieurs constantes avec le même nom dans différents modules et c'est le contexte de l'application qui permettra de savoir depuis quel module on souhaite récupérer la constante.

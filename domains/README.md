@@ -1,5 +1,7 @@
 # Domains
 
+> **English deep-dive:** [`docs/architecture/domain-driven-layout.md`](../docs/architecture/domain-driven-layout.md) · [`docs/business/`](../docs/business/README.md)
+
 C'est **le dossier le plus important** de l'application. On y range les modules qui s'occupent de traiter la logique métier de l'application (i.e. la logique spécifique à l'application et à notre manière de travailler).
 
 On découpe les modules en fonctions du contexte de l'application pour éviter les quiproquo sur le nom de certains éléments, par exemple un bénévole ne veut pas dire la même chose lorsque l'on gère les inscriptions et lorsque l'on réalise l'affectation. Les modules du [domains](./README.md) sont donc **indépendant les uns des autres**.

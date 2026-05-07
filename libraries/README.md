@@ -1,5 +1,7 @@
 # Libraries
 
+> **English deep-dive:** [`docs/architecture/dependency-hierarchy.md`](../docs/architecture/dependency-hierarchy.md)
+
 On y range des modules avec une logique qui peut être utilisée dans plusieurs modules.
 
 Ils sont cependant indépendant et tout comme les [constants](../constants/README.md) définissent un socle sur lequel se reposent les modules [apps](../apps/README.md) et [domains](../domains/README.md).

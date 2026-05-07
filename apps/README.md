@@ -1,5 +1,7 @@
 # Apps
 
+> **English deep-dive:** [`docs/architecture/api-anatomy.md`](../docs/architecture/api-anatomy.md) · [`docs/architecture/web-anatomy.md`](../docs/architecture/web-anatomy.md)
+
 On y range tous les modules qui sont amenés à être exposés à des utilisateurs finaux. Que ça soit les membres de l'association, les bénévoles ou même les développeurs et administrateurs des outils informatiques.
 
 Aucun module ne peut se référer à une app, elles sont à la fin de la chaine de développement et par conséquent aucun autre module ne doit en dépendre.
