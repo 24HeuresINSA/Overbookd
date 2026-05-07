@@ -1,6 +1,6 @@
 # Domains
 
-> **English deep-dive:** [`docs/architecture/domain-driven-layout.md`](../docs/architecture/domain-driven-layout.md) · [`docs/business/`](../docs/business/README.md)
+> **English deep-dive:** [`docs/02-architecture/domain-driven-layout.md`](../docs/02-architecture/domain-driven-layout.md) · [`docs/03-business/`](../docs/03-business/README.md)
 
 C'est **le dossier le plus important** de l'application. On y range les modules qui s'occupent de traiter la logique métier de l'application (i.e. la logique spécifique à l'application et à notre manière de travailler).
 

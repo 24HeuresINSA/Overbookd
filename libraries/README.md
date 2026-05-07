@@ -1,6 +1,6 @@
 # Libraries
 
-> **English deep-dive:** [`docs/architecture/dependency-hierarchy.md`](../docs/architecture/dependency-hierarchy.md)
+> **English deep-dive:** [`docs/02-architecture/dependency-hierarchy.md`](../docs/02-architecture/dependency-hierarchy.md)
 
 On y range des modules avec une logique qui peut être utilisée dans plusieurs modules.
 

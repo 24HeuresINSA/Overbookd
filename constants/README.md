@@ -1,6 +1,6 @@
 # Constants
 
-> **English deep-dive:** [`docs/architecture/dependency-hierarchy.md`](../docs/architecture/dependency-hierarchy.md)
+> **English deep-dive:** [`docs/02-architecture/dependency-hierarchy.md`](../docs/02-architecture/dependency-hierarchy.md)
 
 On y range des modules qui expose uniquement des constantes (et les types associés si nécessaire) pour différent contextes de l'application.
 

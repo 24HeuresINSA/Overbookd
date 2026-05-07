@@ -1,6 +1,6 @@
 # Docker pour Overbookd
 
-> **English deep-dive:** [`docs/start-here/02-local-setup.md`](../docs/start-here/02-local-setup.md) · [`docs/operations/local-dev-gotchas.md`](../docs/operations/local-dev-gotchas.md)
+> **English deep-dive:** [`docs/01-start-here/02-local-setup.md`](../docs/01-start-here/02-local-setup.md) · [`docs/05-operations/local-dev-gotchas.md`](../docs/05-operations/local-dev-gotchas.md)
 
 Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev avec Docker.
 

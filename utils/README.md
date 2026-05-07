@@ -1,6 +1,6 @@
 # Utils
 
-> **English deep-dive:** [`docs/architecture/dependency-hierarchy.md`](../docs/architecture/dependency-hierarchy.md)
+> **English deep-dive:** [`docs/02-architecture/dependency-hierarchy.md`](../docs/02-architecture/dependency-hierarchy.md)
 
 On y range tous les modules qui peuvent être utilisés (i.e. import) par n'importe quelle [apps](../apps/README.md) (i.e. web et api actuellement) et qui peuvent se référer (i.e. import) n'importe quel module venant de [constants](../constants/README.md), [libraries](../libraries/README.md) ou [domains](../domains/README.md)
 

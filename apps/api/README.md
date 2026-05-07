@@ -2,7 +2,7 @@
 
 NestJS backend for Overbookd. Exposes domain logic over HTTP and persists data via Prisma + PostgreSQL.
 
-> **English deep-dive:** [`docs/architecture/api-anatomy.md`](../../docs/architecture/api-anatomy.md) · [`docs/architecture/data-model.md`](../../docs/architecture/data-model.md)
+> **English deep-dive:** [`docs/02-architecture/api-anatomy.md`](../../docs/02-architecture/api-anatomy.md) · [`docs/02-architecture/data-model.md`](../../docs/02-architecture/data-model.md)
 
 ## Common commands
 
@@ -18,7 +18,7 @@ Swagger UI is served at [https://overbookd.traefik.me/api/swagger](https://overb
 
 ## See also
 
-- [`docs/start-here/02-local-setup.md`](../../docs/start-here/02-local-setup.md) — booting the API locally
-- [`docs/conventions/adding-an-api-endpoint.md`](../../docs/conventions/adding-an-api-endpoint.md) — recipe for new endpoints
-- [`docs/conventions/testing.md`](../../docs/conventions/testing.md) — UT vs e2e test conventions
+- [`docs/01-start-here/02-local-setup.md`](../../docs/01-start-here/02-local-setup.md) — booting the API locally
+- [`docs/04-conventions/adding-an-api-endpoint.md`](../../docs/04-conventions/adding-an-api-endpoint.md) — recipe for new endpoints
+- [`docs/04-conventions/testing.md`](../../docs/04-conventions/testing.md) — UT vs e2e test conventions
 - [NestJS documentation](https://docs.nestjs.com/) — upstream framework docs
