@@ -15,6 +15,7 @@
     "Vue.volar",
     "rohit-gohri.format-code-action",
     "DavidAnson.vscode-markdownlint",
+    "bierner.markdown-mermaid",
     "esbenp.prettier-vscode",
     "ms-python.python",
     "ms-python.autopep8"

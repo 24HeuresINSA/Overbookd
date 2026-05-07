@@ -54,7 +54,7 @@ Each doc page ends with a `Last reviewed: YYYY-MM` line so newcomers can spot st
 ## Conventions used in this folder
 
 - **Language:** English. (Folder-level READMEs in the rest of the repo remain in French — they predate this folder. They link here for the long-form content.)
-- **Diagrams:** Mermaid, rendered natively by GitLab. No PNGs.
+- **Diagrams:** Mermaid, rendered natively by GitLab. No PNGs. To read them inside VS Code or WebStorm you need a plugin — see [`01-start-here/01-prerequisites.md` → Mermaid plugin](./01-start-here/01-prerequisites.md#mermaid-plugin-required-to-read-these-docs).
 - **Cross-links:** repo-relative paths (`../02-architecture/...`) so they work both on GitLab and in local previews.
 - **Page length:** 1–3 pages. Anything longer gets split.
 - **Drafts:** content awaiting validation is wrapped in `<!-- DRAFT — needs validation -->` comments.
