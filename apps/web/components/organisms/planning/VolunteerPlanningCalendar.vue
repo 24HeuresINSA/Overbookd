@@ -237,9 +237,9 @@ const closeBreakRemovalDialog = () => {
   isBreakRemovalDialogOpen.value = false;
 };
 const removeBreak = async () => {
-  if (selectedBreak.value === null) return;
   const period = selectedBreak.value;
   const volunteer = volunteerId;
+  if (!period) return;
   await planningStore.deleteVolunteerBreakPeriods({ volunteer, period });
   isBreakRemovalDialogOpen.value = false;
 };
