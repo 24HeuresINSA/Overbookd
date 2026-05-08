@@ -174,16 +174,17 @@ const tableHeaders = computed<TableHeaders>(() => {
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
-const teamsWithTasks = computed<Set<Team>>(() =>
-  tasks.value.reduce((teams: Set<Team>, task) => {
+const teamsWithTasks = computed<Team[]>(() => {
+  const tasksId = tasks.value.reduce((teams: Set<string>, task) => {
     const { team } = task;
     if (team === null) return teams;
     if (!me.value?.teams.includes(team)) return teams;
-    const teamObj = teamStore.getTeamByCode(team);
-    if (!teamObj) return teams;
-    return teams.add(teamObj);
-  }, new Set<Team>()),
-);
+    return teams.add(team);
+  }, new Set<string>());
+  return [...tasksId]
+    .map((teamCode) => teamStore.getTeamByCode(teamCode))
+    .filter((team): team is Team => team !== undefined);
+});
 
 const loading = ref<boolean>(tasks.value.length === 0);
 
