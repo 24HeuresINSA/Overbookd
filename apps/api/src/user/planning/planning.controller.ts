@@ -47,11 +47,12 @@ import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
 import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
-import { PeriodResponseDto } from "../../common/dto/period.response.dto";
 import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { MultiPlanningVolunteerResponseDto } from "./dto/multi-planning-volunteer.response.dto";
+import { JwtUtil } from "../../authentication/entities/jwt-util.entity";
+import { BreakPeriodResponseDto } from "../../assignment/common/dto/break-period.response.dto";
 
 @Controller("planning")
 @ApiTags("planning")
@@ -117,8 +118,14 @@ export class PlanningController {
       new ParseArrayPipe({ items: Number }),
     )
     volunteerIds: number[],
+    @RequestDecorator() { user }: RequestWithUserPayload,
   ): Promise<MultiPlanningVolunteerResponseDto[]> {
-    return this.planning.getVolunteersForMultiPlanning(volunteerIds);
+    const jwt = new JwtUtil(user);
+    const withBreakPeriods = jwt.can(AFFECT_VOLUNTEER);
+    return this.planning.getVolunteersForMultiPlanning(
+      volunteerIds,
+      withBreakPeriods,
+    );
   }
 
   @Get("volunteers")
@@ -279,12 +286,12 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodResponseDto,
+    type: BreakPeriodResponseDto,
     isArray: true,
   })
   async getVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
-  ): Promise<PeriodResponseDto[]> {
+  ): Promise<BreakPeriodResponseDto[]> {
     return this.planning.getBreakPeriods(volunteerId);
   }
 
@@ -295,7 +302,7 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodResponseDto,
+    type: BreakPeriodResponseDto,
     isArray: true,
   })
   @ApiBody({
@@ -305,7 +312,7 @@ export class PlanningController {
   async addVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteer: number,
     @Body() { name, start, durationInHours }: CreateBreakPeriodRequestDto,
-  ): Promise<PeriodResponseDto[]> {
+  ): Promise<BreakPeriodResponseDto[]> {
     const duration = Duration.hours(durationInHours);
     return this.planning.addBreakPeriod({
       volunteer,
@@ -321,7 +328,7 @@ export class PlanningController {
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
-    type: PeriodResponseDto,
+    type: BreakPeriodResponseDto,
     isArray: true,
   })
   @ApiBody({
@@ -347,7 +354,7 @@ export class PlanningController {
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
     @Query("start", ParseDatePipe) start: Date,
     @Query("end", ParseDatePipe) end: Date,
-  ): Promise<PeriodResponseDto[]> {
+  ): Promise<BreakPeriodResponseDto[]> {
     const breakPeriod = Period.init({ start, end });
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);
   }

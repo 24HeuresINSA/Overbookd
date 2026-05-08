@@ -40,6 +40,7 @@ import type { TaskForCalendar } from "@overbookd/http";
 import { READ_FT } from "@overbookd/permission";
 import { formatLocalDateTime } from "@overbookd/time";
 import type { User } from "@overbookd/user";
+import { toCalendarBreak } from "~/domain/common/break-events";
 import type { VolunteerForCalendar } from "~/utils/calendar/volunteer";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
@@ -70,9 +71,10 @@ const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>
       toCalendarTask({ canReadFt: canReadFt.value })(task),
     );
     const assignments = volunteer.assignments.map(toCalendarAssignment);
+    const breaks = volunteer.breaks?.map(toCalendarBreak) ?? [];
     return {
       ...volunteer,
-      events: [...tasks, ...assignments],
+      events: [...tasks, ...assignments, ...breaks],
     };
   }),
 );

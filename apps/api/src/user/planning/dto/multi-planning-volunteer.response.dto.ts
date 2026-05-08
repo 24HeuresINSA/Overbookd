@@ -3,8 +3,9 @@ import { MultiPlanningVolunteer, PlanningTask } from "@overbookd/http";
 import { PeriodResponseDto } from "../../../common/dto/period.response.dto";
 import { IProvidePeriod } from "@overbookd/time";
 import { PlanningTaskResponseDto } from "./planning-task.response.dto";
-import { AssignmentEvent } from "@overbookd/assignment";
+import { AssignmentEvent, BreakPeriod } from "@overbookd/assignment";
 import { AssignmentEventResponseDto } from "../../../assignment/common/dto/assignment-event.response.dto";
+import { BreakPeriodResponseDto } from "../../../assignment/common/dto/break-period.response.dto";
 
 export class MultiPlanningVolunteerResponseDto implements MultiPlanningVolunteer {
   @ApiProperty({
@@ -51,4 +52,12 @@ export class MultiPlanningVolunteerResponseDto implements MultiPlanningVolunteer
     isArray: true,
   })
   tasks: PlanningTask[];
+
+  @ApiProperty({
+    description: "The volunteer's break periods",
+    type: BreakPeriodResponseDto,
+    isArray: true,
+    required: false,
+  })
+  breaks?: BreakPeriod[];
 }
