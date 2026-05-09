@@ -3,18 +3,7 @@ networks:
   traefik-public:
     external: true
 
-volumes:
-  certs:
-
-
 services:
-  certs-downloader:
-    image: alpine
-    command: >
-      sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
-    volumes:
-      - certs:/etc/ssl/traefik
-
   traefik:
     image: traefik:v3.6.15
     restart: unless-stopped
@@ -24,16 +13,8 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik-public"
-      # Additional config with files
-      - "--providers.file=true"
-      - "--providers.file.directory=/etc/traefik"
       # Entrypoint
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      # Dev only
-      - "--entrypoints.websecure.http.encodedCharacters.allowEncodedSlash=true"
-      # HTTP -> HTTPS
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       # Enable Dashboard
       - "--api.dashboard=true"
       # Debug
@@ -45,16 +26,13 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/ssl/traefik
-      - ./data/traefik/tls.yml:/etc/traefik/tls.yml
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
-      - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
@@ -83,8 +61,7 @@ services:
       PORT: 3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-back.tls=true"
-      - "traefik.http.routers.dev-back.entrypoints=websecure"
+      - "traefik.http.routers.dev-back.entrypoints=web"
       - "traefik.http.services.dev-back.loadbalancer.server.port=3000"
       - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
       - "traefik.http.routers.dev-back.middlewares=api-strip"
@@ -113,8 +90,7 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-overbookd-mail-catcher.tls=true"
-      - "traefik.http.routers.dev-overbookd-mail-catcher.entrypoints=websecure"
+      - "traefik.http.routers.dev-overbookd-mail-catcher.entrypoints=web"
       - "traefik.http.services.dev-overbookd-mail-catcher.loadbalancer.server.port=1080"
       - "traefik.http.routers.dev-overbookd-mail-catcher.rule=Host(`mail.${DOMAIN}`)"
 
@@ -143,8 +119,7 @@ services:
       ADMINER_DEFAULT_SERVER: overbookd_postgresql
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-adminer.tls=true"
-      - "traefik.http.routers.dev-adminer.entrypoints=websecure"
+      - "traefik.http.routers.dev-adminer.entrypoints=web"
       - "traefik.http.services.dev-adminer.loadbalancer.server.port=8080"
       - "traefik.http.routers.dev-adminer.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/adminer`))"
       - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
@@ -157,18 +132,17 @@ services:
     volumes:
       - ../:/overbookd
     environment:
-      - BASE_URL
-      - HOST=0.0.0.0
+      BASE_URL: ${BASE_URL}
+      HOST: 0.0.0.0
     restart: unless-stopped
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-front.entrypoints=websecure"
+      - "traefik.http.routers.dev-front.entrypoints=web"
       - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
       - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.services.dev-front.loadbalancer.server.scheme=https"
-      - "traefik.http.routers.dev-front.tls=true"
+      - "traefik.http.services.dev-front.loadbalancer.server.scheme=http"
     command:
       - /bin/sh
       - -c
@@ -188,22 +162,17 @@ services:
     build:
       context: ../.devcontainer
       dockerfile: Dockerfile
-
     hostname: overbookd-dev
-
     volumes:
       # Forwards the local Docker socket to the container.
       - /var/run/docker.sock:/var/run/docker-host.sock
       # Update this to wherever you want VS Code to mount the folder of your project
       - ../:/overbookd:cached
       - ./aliases:/home/vscode/.bash_aliases
-
     environment:
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
-
     networks:
       - overbookd_net-api
-
     # Overrides default command so things don't shut down after the process ends.
     entrypoint: /usr/local/share/docker-init.sh
     command: sleep infinity
@@ -212,6 +181,5 @@ services:
     #  - SYS_PTRACE
     # security_opt:
     #   - seccomp:unconfined
-
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
