@@ -183,7 +183,7 @@ const teamsWithTasks = computed<Team[]>(() => {
   }, new Set<string>());
   return [...tasksId]
     .map((teamCode) => teamStore.getTeamByCode(teamCode))
-    .filter((team): team is Team => team !== undefined);
+    .filter((team): team is Team => !!team);
 });
 
 const loading = ref<boolean>(tasks.value.length === 0);
