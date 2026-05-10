@@ -55,7 +55,7 @@
     "pnpm-autocompletion-zsh": "pnpm completion zsh > ~/completion-for-pnpm.zsh && echo 'source ~/completion-for-pnpm.zsh' >> ~/.zshrc"
   },
   "postStartCommand": {
-    "adding-api-ip-in-etc-hosts": "grep overbookd /etc/hosts || echo \"$(docker inspect overbookd_api | jq '  .[] | .NetworkSettings | .Networks | .\"overbookd_overbookd_net-api\" | .IPAddress ' | sed -z 's/\"//g') overbookd.traefik.me\" | sudo tee -a /etc/hosts"
+    "adding-api-ip-in-etc-hosts": "grep overbookd /etc/hosts || echo \"$(docker inspect overbookd_api | jq '  .[] | .NetworkSettings | .Networks | .\"overbookd_overbookd_net-api\" | .IPAddress ' | sed -z 's/\"//g') overbookd.24h.localhost\" | sudo tee -a /etc/hosts"
   },
   "postAttachCommand": {
     "delete-my-uid-and-gid-in-dot-env": "sed -i '/^MY_\\(U\\|G\\)ID=[0-9]\\+/d' ./docker/.env"
