@@ -285,38 +285,34 @@ const updateItemsPerPage = (itemsPerPage: number) => {
   updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
 };
 
-const { festivalTasks } = useLiveNotification();
+const { listen } = useLiveNotification();
 const { fetchAllTasks, addTaskToPreviews, updatePreviousPreview } = ftStore;
 
 fetchAllTasks().then(() => (loading.value = false));
 if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();
 
 onMounted(() => {
-  festivalTasks.listen(FESTIVAL_TASK_CREATED, ({ data }) => {
+  listen(FESTIVAL_TASK_CREATED, ({ data }) => {
     addTaskToPreviews(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+  listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+  listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+  listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-  festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
+  listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
     updatePreviousPreview(data.festivalTask);
   });
-});
-
-onUnmounted(() => {
-  festivalTasks.stopListening();
 });
 </script>
 

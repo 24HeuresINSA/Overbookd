@@ -267,7 +267,7 @@ const updateItemsPerPage = (itemsPerPage: number) => {
   updateQueryParams(ITEMS_PER_PAGE_QUERY_PARAM, itemsPerPage);
 };
 
-const { festivalActivities } = useLiveNotification();
+const { listen } = useLiveNotification();
 const { fetchAllActivities, addActivityToPreviews, updatePreviousPreview } =
   faStore;
 
@@ -275,22 +275,18 @@ fetchAllActivities().then(() => (loading.value = false));
 if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();
 
 onMounted(() => {
-  festivalActivities.listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_CREATED, ({ data }) => {
     addActivityToPreviews(data.festivalActivity);
   });
-  festivalActivities.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
     updatePreviousPreview(data.festivalActivity);
   });
-  festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
     updatePreviousPreview(data.festivalActivity);
   });
-  festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
     updatePreviousPreview(data.festivalActivity);
   });
-});
-
-onUnmounted(() => {
-  festivalActivities.stopListening();
 });
 </script>
 

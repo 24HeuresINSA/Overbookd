@@ -37,7 +37,7 @@ type Rejected = {
   festivalActivity: Refused;
   by: Adherent["id"];
   at: Date;
-  id: Reviewable["id"];
+  id: Refused["id"];
   reason: string;
 };
 
