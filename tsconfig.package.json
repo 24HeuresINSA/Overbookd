@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "target": "ES2022",
     "module": "CommonJS",
     "lib": ["ES2020", "ES2022", "dom", "dom.iterable"],
