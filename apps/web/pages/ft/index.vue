@@ -6,10 +6,10 @@
     </nuxt-link>
     <nuxt-link
       v-for="team in teamsWithTasks"
-      :key="team"
-      :to="`${FT_URL}?team=${team}`"
+      :key="team.code"
+      :to="`${FT_URL}?team=${team.code}`"
     >
-      <v-btn :text="`FTs de ${team}`" variant="outlined" color="primary" />
+      <v-btn :text="`FTs de ${team.name}`" variant="outlined" color="primary" />
     </nuxt-link>
   </div>
   <main class="task ft">
@@ -174,14 +174,17 @@ const tableHeaders = computed<TableHeaders>(() => {
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
 const tasks = computed<PreviewFestivalTask[]>(() => ftStore.tasks.forAll);
-const teamsWithTasks = computed<Set<string>>(() =>
-  tasks.value.reduce((teams: Set<string>, task) => {
+const teamsWithTasks = computed<Team[]>(() => {
+  const tasksId = tasks.value.reduce((teams: Set<string>, task) => {
     const { team } = task;
     if (team === null) return teams;
     if (!me.value?.teams.includes(team)) return teams;
     return teams.add(team);
-  }, new Set<string>()),
-);
+  }, new Set<string>());
+  return [...tasksId]
+    .map((teamCode) => teamStore.getTeamByCode(teamCode))
+    .filter((team): team is Team => !!team);
+});
 
 const loading = ref<boolean>(tasks.value.length === 0);
 
