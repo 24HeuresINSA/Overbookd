@@ -28,7 +28,7 @@ Contient toutes les variables d'environnement nécessaires pour le dev. Il est f
 ### Le fichier `assets/traefik/tls.yml`
 
 Contient les certificats TLS pour le dev. Il est fourni dans se repo.
-Sans lui, le domaine `traefik.me` ne sera pas de confiance.
+Sans lui, le domaine `24h.localhost` ne sera pas de confiance.
 Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.
 
 ### Le dossier `data`
@@ -50,18 +50,19 @@ Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo 
 ## Traefik
 
 Nous utilisons Traefik comme reverse proxy pour gérer les certificats SSL et le routage des requêtes vers les différents services Docker.
-Nous utilisons aussi le domaine `traefik.me` qui est géré par ce repo github : <https://github.com/pyrou/traefik.me> qui nous permet d'avoir des sous-domaines dynamiques en `*.traefik.me` pointant vers notre IP locale (127.0.0.1). Cependant pour que le HTTPS puisse fonctionner correctement, il est nécessaire d'avoir un certificat SSL valide pour le domaine `*.traefik.me`. Pour cela, nous utilisons une autorité de certification locale (CA) qui signe les certificats SSL pour les sous-domaines utilisés. Les certificats de cette CA sont stockés dans notre repo infra <https://gitlab.com/24-heures-insa/infra/-/tree/main/data/traefik/certs?ref_type=heads>.
+
+Nous utilisons aussi les domaines en `*.24h.localhost` pointant vers notre IP locale (127.0.0.1). Cependant pour que le HTTPS puisse fonctionner correctement, il est nécessaire d'avoir un certificat SSL valide pour le domaine `*.24h.localhost`. Pour cela, nous utilisons une autorité de certification locale (CA) qui signe les certificats SSL pour les sous-domaines utilisés. Les certificats de cette CA sont stockés dans notre repo infra <https://gitlab.com/24-heures-insa/infra/-/tree/main/data/traefik/certs?ref_type=heads>.
 Les certificats signés par cette CA sont ensuite ajoutés aux magasins de certificats de confiance des navigateurs et systèmes utilisés pour accéder aux services hébergés derrière Traefik.
 Référe toi à la section suivante qui correspond à ton cas pour ajouter la CA aux certificats de confiance.
 
 ### Linux
 
 ```bash
-sudo wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/rootCA.pem -O /usr/local/share/ca-certificates/traefik.me-root-CA-local.crt
+sudo wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/rootCA.pem -O /usr/local/share/ca-certificates/24h.localhost-root-CA-local.crt
 sudo update-ca-certificates
 sudo apt update
 sudo apt install -y libnss3-tools
-certutil -d sql:$HOME/.pki/nssdb/ -A -t "C,," -n "traefik-local-ca" -i /usr/local/share/ca-certificates/traefik.me-root-CA-local.crt
+certutil -d sql:$HOME/.pki/nssdb/ -A -t "C,," -n "traefik-local-ca" -i /usr/local/share/ca-certificates/24h.localhost-root-CA-local.crt
 ```
 
 ### Windows
@@ -93,9 +94,9 @@ Un tuto pour t'aider : <https://docs.redhat.com/fr/documentation/red_hat_enterpr
 
 ## Les liens utiles
 
-### Avec le domaine traefik.me
+### Avec le domaine 24h.localhost
 
-- Le front : <https://overbookd.traefik.me>
-- Le back : <https://overbookd.traefik.me/api>
-- Swagger : <https://overbookd.traefik.me/api/swagger>
-- Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>
+- Le front : <https://overbookd.24h.localhost>
+- Le back : <https://overbookd.24h.localhost/api>
+- Swagger : <https://overbookd.24h.localhost/api/swagger>
+- Adminer : <https://overbookd.24h.localhost/adminer/>, petit lien magique pour autofill <https://overbookd.24h.localhost/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>
