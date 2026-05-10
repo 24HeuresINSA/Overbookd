@@ -142,7 +142,7 @@ const gearFilters = reactive<FilterGear & { drive?: Drive }>({
 const fetchActivities = async () => {
   loading.value = true;
   const options: ActivityGearSearchOptions = {
-    search: gearFilters.search.trim() || undefined,
+    search: SlugifyService.apply(gearFilters.search.trim()) || undefined,
     category: gearFilters.category?.path,
     owner: gearFilters.team?.code,
     drive: gearFilters.drive,
