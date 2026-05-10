@@ -3,6 +3,7 @@
     v-model="dayModel"
     :mode="DAY_MODE"
     class="multi-calendar"
+    :can-use-calendar-shortcuts
     display-day-in-manager
   >
     <template #additional-actions>
@@ -75,9 +76,11 @@
             :availabilities="volunteer.availabilities"
             :clickable-events
             class="multi-calendar__volunteer"
-            @click:event="propagateEventClick"
-            @click-right:event="propagateEventRightClick"
-            @click:period="propagatePeriodClick"
+            @click:event="(event) => propagateEventClick(event, volunteer.id)"
+            @click-right:event="
+              (event) => propagateEventRightClick(event, volunteer.id)
+            "
+            @click:period="(event) => propagatePeriodClick(event, volunteer.id)"
           />
           <div class="multi-calendar__padding with-border" />
         </div>
@@ -126,6 +129,10 @@ const { volunteers, eventToAdd } = defineProps({
   clickableEvents: {
     type: Boolean,
     default: false,
+  },
+  canUseCalendarShortcuts: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -210,14 +217,17 @@ const syncScroll = (source: typeof HEADER | typeof CONTENT) => {
 };
 
 const emit = defineEmits(["click:event", "click:period", "click-right:event"]);
-const propagateEventClick = (event: CalendarEvent) => {
-  emit("click:event", event);
+const propagateEventClick = (event: CalendarEvent, volunteerId: number) => {
+  emit("click:event", event, volunteerId);
 };
-const propagateEventRightClick = (event: CalendarEvent) => {
-  emit("click-right:event", event);
+const propagateEventRightClick = (
+  event: CalendarEvent,
+  volunteerId: number,
+) => {
+  emit("click-right:event", event, volunteerId);
 };
-const propagatePeriodClick = (period: Period) => {
-  emit("click:period", period);
+const propagatePeriodClick = (period: Period, volunteerId: number) => {
+  emit("click:period", period, volunteerId);
 };
 </script>
 

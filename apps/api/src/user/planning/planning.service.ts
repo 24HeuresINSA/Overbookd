@@ -73,18 +73,26 @@ export class PlanningService {
 
   async getVolunteersForMultiPlanning(
     volunteerIds: number[],
+    withBreakPeriods: boolean = false,
   ): Promise<MultiPlanningVolunteer[]> {
     const volunteers = await Promise.all(
       volunteerIds.map(async (id) => {
         const volunteer = await this.repositories.volunteers.findOne(id);
         if (!volunteer) return null;
         const tasks = await this.getMobilizationsHeIsPartOf(id);
+        const assignments =
+          await this.repositories.volunteers.assignmentsFor(id);
+        const availabilities =
+          await this.repositories.volunteers.availabilitiesFor(id);
+        const breaks = withBreakPeriods
+          ? await this.getBreakPeriods(id)
+          : undefined;
         return {
           ...volunteer,
           tasks,
-          assignments: await this.repositories.volunteers.assignmentsFor(id),
-          availabilities:
-            await this.repositories.volunteers.availabilitiesFor(id),
+          assignments,
+          availabilities,
+          breaks,
         };
       }),
     );

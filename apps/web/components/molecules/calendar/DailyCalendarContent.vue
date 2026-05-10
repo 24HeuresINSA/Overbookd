@@ -9,15 +9,13 @@
       @click="propagateEventClick"
       @click-right="propagateEventRightClick"
     />
-    <div v-if="availabilities.length > 0" class="availabilities">
-      <div
-        v-for="hour in HOURS_IN_DAY"
-        :key="hour"
-        class="availability"
-        :class="{ available: isAvailable(hour - 1) }"
-        @click="propagatePeriodClick(hour - 1)"
-      />
-    </div>
+    <div
+      v-for="hour in HOURS_IN_DAY"
+      :key="hour"
+      class="availability"
+      :class="{ available: isAvailable(hour - 1) }"
+      @click="propagatePeriodClick(hour - 1)"
+    />
   </div>
 </template>
 

@@ -152,7 +152,8 @@ export const usePlanningStore = defineStore("planning", {
           ...task,
           timeWindow: castPeriodWithDate(task.timeWindow),
         }));
-        return { ...volunteer, assignments, availabilities, tasks };
+        const breaks = volunteer.breaks?.map(castBreakPeriodWithDate);
+        return { ...volunteer, assignments, availabilities, tasks, breaks };
       });
     },
 
