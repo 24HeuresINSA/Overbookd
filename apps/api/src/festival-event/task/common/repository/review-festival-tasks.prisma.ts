@@ -3,7 +3,7 @@ import {
   FestivalTasksForReview,
   isDraft,
 } from "@overbookd/festival-event";
-import { ReviewableWithoutConflicts } from "@overbookd/festival-event/src/festival-task/volunteer-conflicts";
+import { ReviewableWithoutConflicts } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import {
   FestivalTaskQueryBuilder,

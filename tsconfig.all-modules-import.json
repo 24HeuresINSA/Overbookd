@@ -1,39 +1,43 @@
 {
   "compilerOptions": {
     "paths": {
-      "@overbookd/access-manager": ["./domains/access-manager/src"],
-      "@overbookd/alerts": ["./utils/alerts/src"],
-      "@overbookd/assignment": ["./domains/assignment/src"],
-      "@overbookd/charisma": ["./domains/charisma/src"],
-      "@overbookd/contribution": ["./domains/contribution/src"],
-      "@overbookd/configuration": ["./utils/configuration/src"],
-      "@overbookd/csv": ["./libraries/csv/src"],
-      "@overbookd/domain-events": ["./utils/domain-events/src"],
-      "@overbookd/event": ["./libraries/event/src"],
-      "@overbookd/festival-event": ["./domains/festival-event/src"],
+      "@overbookd/access-manager": ["${configDir}/domains/access-manager/src"],
+      "@overbookd/alerts": ["${configDir}/utils/alerts/src"],
+      "@overbookd/assignment": ["${configDir}/domains/assignment/src"],
+      "@overbookd/charisma": ["${configDir}/domains/charisma/src"],
+      "@overbookd/contribution": ["${configDir}/domains/contribution/src"],
+      "@overbookd/configuration": ["${configDir}/utils/configuration/src"],
+      "@overbookd/csv": ["${configDir}/libraries/csv/src"],
+      "@overbookd/domain-events": ["${configDir}/utils/domain-events/src"],
+      "@overbookd/event": ["${configDir}/libraries/event/src"],
+      "@overbookd/festival-event": ["${configDir}/domains/festival-event/src"],
       "@overbookd/festival-event-constants": [
-        "./constants/festival-event-constants/src"
+        "${configDir}/constants/festival-event-constants/src"
       ],
-      "@overbookd/geo-location": ["./libraries/geo-location/src"],
-      "@overbookd/http": ["./utils/http/src"],
-      "@overbookd/list": ["./libraries/list/src"],
-      "@overbookd/logistic": ["./domains/logistic/src"],
-      "@overbookd/money": ["./libraries/money/src"],
-      "@overbookd/pdf-book": ["./libraries/pdf-book/src"],
-      "@overbookd/permission": ["./constants/permission/src"],
-      "@overbookd/personal-account": ["./domains/personal-account/src"],
-      "@overbookd/preference": ["./constants/preference/src"],
-      "@overbookd/registration": ["./domains/registration/src"],
-      "@overbookd/signa": ["./domains/signa/src"],
-      "@overbookd/slugify": ["./libraries/slugify/src"],
-      "@overbookd/team": ["./utils/team/src"],
-      "@overbookd/team-constants": ["./constants/team-constants/src"],
-      "@overbookd/time": ["./libraries/time/src"],
-      "@overbookd/user": ["./utils/user/src"],
+      "@overbookd/geo-location": ["${configDir}/libraries/geo-location/src"],
+      "@overbookd/http": ["${configDir}/utils/http/src"],
+      "@overbookd/list": ["${configDir}/libraries/list/src"],
+      "@overbookd/logistic": ["${configDir}/domains/logistic/src"],
+      "@overbookd/money": ["${configDir}/libraries/money/src"],
+      "@overbookd/pdf-book": ["${configDir}/libraries/pdf-book/src"],
+      "@overbookd/permission": ["${configDir}/constants/permission/src"],
+      "@overbookd/personal-account": [
+        "${configDir}/domains/personal-account/src"
+      ],
+      "@overbookd/preference": ["${configDir}/constants/preference/src"],
+      "@overbookd/registration": ["${configDir}/domains/registration/src"],
+      "@overbookd/signa": ["${configDir}/domains/signa/src"],
+      "@overbookd/slugify": ["${configDir}/libraries/slugify/src"],
+      "@overbookd/team": ["${configDir}/utils/team/src"],
+      "@overbookd/team-constants": [
+        "${configDir}/constants/team-constants/src"
+      ],
+      "@overbookd/time": ["${configDir}/libraries/time/src"],
+      "@overbookd/user": ["${configDir}/utils/user/src"],
       "@overbookd/volunteer-availability": [
-        "./domains/volunteer-availability/src"
+        "${configDir}/domains/volunteer-availability/src"
       ],
-      "@overbookd/web-page": ["./constants/web-page/src"]
+      "@overbookd/web-page": ["${configDir}/constants/web-page/src"]
     }
   }
 }
