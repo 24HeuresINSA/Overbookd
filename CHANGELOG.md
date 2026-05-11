@@ -1,3 +1,14 @@
+## [3.53.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.5...v3.53.6) (2026-05-11)
+
+### Bug Fixes
+
+* **fa:** fix logistic dashboard slug search [#2733](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2733) ([3f98e2e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3f98e2e385e906730d6d38264b9bd8a5476194c1))
+* **festival-task:** display team name instead of team code in filter buttons [#2701](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2701) ([4b7571c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4b7571caa40e20db7a06434b530cec5bbf69a7a8))
+* Lien 5D planing Papier / PDF ([ef3797a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ef3797a58f8f673c4db40bbaa56948efae2b474d)), closes [#2700](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2700)
+* **live-notification:** use only one source from api [#2737](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2737) ([e58a847](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e58a84736ebc5c6c5aa2916129c030073a4a6f11))
+* **planning:** add break periods to multiplanning [#2729](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2729) [#2731](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2731) ([7c2d8e3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7c2d8e3bd1f25646a79244660764bf17b8c24899))
+* remove useless e2e tests and jest package [#2738](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2738) ([2ca49fa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2ca49fae2e87fa43f8027231dbea453624c517bc))
+
 ## [3.53.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.4...v3.53.5) (2026-05-05)
 
 ### Bug Fixes
