@@ -1,3 +1,9 @@
+## [3.53.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.6...v3.53.7) (2026-05-11)
+
+### Bug Fixes
+
+* save user's last login [#2739](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2739) ([6d87488](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d874884b2fa0852041947f0331fdf44db501380))
+
 ## [3.53.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.5...v3.53.6) (2026-05-11)
 
 ### Bug Fixes
