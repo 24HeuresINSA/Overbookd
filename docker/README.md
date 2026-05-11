@@ -99,4 +99,4 @@ Un tuto pour t'aider : <https://docs.redhat.com/fr/documentation/red_hat_enterpr
 - Le front : <https://overbookd.24h.localhost>
 - Le back : <https://overbookd.24h.localhost/api>
 - Swagger : <https://overbookd.24h.localhost/api/swagger>
-- Adminer : <https://overbookd.24h.localhost/adminer/>, petit lien magique pour autofill <https://overbookd.24h.localhost/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>
+- Adminer : <https://overbookd.24h.localhost/adminer/>, petit lien magique pour autofill <https://overbookd.24h.localhost/adminer/?pgsql=overbookd-postgresql&username=overbookd&db=overbookd-local&ns=public>
