@@ -12,32 +12,17 @@ import { AssignmentRepository } from "../assignment.service";
 import {
   DatabaseAssignee,
   DatabaseAssignment,
-  SELECT_ASSIGNEE,
   SELECT_ASSIGNMENT,
   uniqueAssignment,
   updateAssigneesOnAssignment,
 } from "./assignment.query";
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
-import { VolunteerWithAssignmentStats, TaskForCalendar } from "@overbookd/http";
-import {
-  SELECT_PERIOD_AND_CATEGORY,
-  hasPermission,
-} from "../../../user/user.query";
-import { UserService } from "../../../user/user.service";
-import { BE_AFFECTED } from "@overbookd/permission";
-import { HAS_AVAILABILITIES } from "./availabilities.query";
+import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
 import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
-import {
-  SELECT_CHARISMA_PERIOD,
-  SELECT_USER_DATA_FOR_CHARISMA,
-} from "../../../common/query/charisma.query";
-import { Charisma } from "@overbookd/charisma";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
-import { getFriendCount, SELECT_USER_FRIENDS_FOR_COUNT } from "./friend.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -180,70 +165,6 @@ export class PrismaAssignments implements AssignmentRepository {
       },
     });
   }
-
-  async getVolunteersAssignmentStats(): Promise<
-    VolunteerWithAssignmentStats[]
-  > {
-    const [volunteers, charismaPeriods] = await Promise.all([
-      this.prisma.user.findMany({
-        where: {
-          ...IS_NOT_DELETED,
-          ...hasPermission(BE_AFFECTED),
-          ...HAS_AVAILABILITIES,
-        },
-        select: {
-          ...SELECT_USER_IDENTIFIER,
-          ...SELECT_USER_DATA_FOR_CHARISMA,
-          assigned: {
-            select: {
-              assignment: {
-                select: {
-                  ...SELECT_PERIOD_AND_CATEGORY,
-                  assignees: { select: SELECT_ASSIGNEE },
-                },
-              },
-            },
-          },
-          ...SELECT_USER_FRIENDS_FOR_COUNT,
-        },
-        orderBy: { id: "asc" },
-      }),
-      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
-    ]);
-    return volunteers.map(
-      ({
-        assigned,
-        charismaEventParticipations,
-        availabilities,
-        friends,
-        friendRequestors,
-        ...volunteer
-      }) => {
-        const assignments = assigned.map(({ assignment }) => assignment);
-        const stats = UserService.formatAssignmentStats(assignments);
-        const withFriendsAssignmentDuration =
-          UserService.computeAssignmentWithFriendsDuration(
-            volunteer.id,
-            assignments,
-          );
-        const friendCount = getFriendCount({
-          friends,
-          friendRequestors,
-        });
-        const charisma = Charisma.init()
-          .addEvents(charismaEventParticipations)
-          .addAvailabilities(availabilities, charismaPeriods)
-          .calculate();
-        return {
-          ...volunteer,
-          charisma,
-          stats,
-          withFriendsAssignmentDuration,
-          friendCount,
-        };
-      },
-    );
-  }
 }
 
 function toAssignment(
@@ -303,12 +224,13 @@ function toAssigneeForDetails(
   };
   if (!assignee.teamCode) return baseAssignee;
 
+  const assignedIds = new Set(
+    assignees.map(({ personalData }) => personalData.id),
+  );
   const allFriendsAssigned = [
     ...assignee.personalData.friendRequestors.map(({ friend }) => friend),
     ...assignee.personalData.friends.map(({ requestor }) => requestor),
-  ].filter(({ id }) =>
-    assignees.some(({ personalData }) => personalData.id === id),
-  );
+  ].filter(({ id }) => assignedIds.has(id));
 
   const friends = allFriendsAssigned.reduce(
     (friends: BaseAssigneeForDetails[], friend) => {

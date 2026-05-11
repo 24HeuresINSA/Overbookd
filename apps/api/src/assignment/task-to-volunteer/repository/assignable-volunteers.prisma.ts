@@ -32,6 +32,7 @@ import {
 import { NO_PREF } from "@overbookd/preference";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
+import { SELECT_PERIOD_AND_TASK_CATEGORY } from "../../common/repository/assignment-stats.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -47,7 +48,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
         where: isAssignableOn(oneOfTheTeams, period),
         select: {
           ...SELECT_VOLUNTEER,
-          ...this.buildVolunteerAssignmentSelection(),
+          ...SELECT_VOLUNTEER_ASSIGNMENTS,
           ...this.buildFestivalTaskMobilizationSelection(period),
           ...this.buildAssignableFriendSelection(
             assignmentIdentifier,
@@ -93,21 +94,6 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
       festivalTaskMobilizations: {
         where: { mobilization: mobilizationIncludedNotYetReadyToAssign },
         select: { mobilization: { select: SELECT_PERIOD } },
-      },
-    };
-  }
-
-  private buildVolunteerAssignmentSelection() {
-    return {
-      assigned: {
-        select: {
-          assignment: {
-            select: {
-              ...SELECT_PERIOD,
-              festivalTask: { select: { category: true } },
-            },
-          },
-        },
       },
     };
   }
@@ -274,3 +260,11 @@ function buildHasAvailabilityCondition(
     availabilities: { some: includePeriodCondition(period) },
   };
 }
+
+const SELECT_VOLUNTEER_ASSIGNMENTS = {
+  assigned: {
+    select: {
+      assignment: { select: SELECT_PERIOD_AND_TASK_CATEGORY },
+    },
+  },
+};

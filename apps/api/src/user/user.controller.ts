@@ -31,7 +31,6 @@ import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.d
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import {
   AFFECT_TEAM,
-  AFFECT_VOLUNTEER,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
   VIEW_PLANNING,
@@ -49,7 +48,6 @@ import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { ImageInterceptor } from "../utils/image.interceptor";
-import { AssignmentStatsResponseDto } from "../assignment/common/dto/volunteer-with-assignment-stats.response.dto";
 
 @Controller("users")
 @ApiTags("users")
@@ -201,20 +199,6 @@ export class UserController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<AssignmentEventResponseDto[]> {
     return this.userService.getVolunteerAssignments(id);
-  }
-
-  @Get(":id/assignments/stats")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
-  @ApiResponse({
-    status: 200,
-    description: "Get duration of assignments for a volunteer",
-    type: AssignmentStatsResponseDto,
-  })
-  async getVolunteerAssignmentStats(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<AssignmentStatsResponseDto> {
-    return this.userService.getVolunteerAssignmentStats(id);
   }
 
   @Put(":id")

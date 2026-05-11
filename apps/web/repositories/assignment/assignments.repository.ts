@@ -5,6 +5,7 @@ import type {
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import type {
+  AssignmentStats,
   HttpStringified,
   TaskForCalendar,
   VolunteerWithAssignmentStats,
@@ -56,10 +57,14 @@ export class AssignmentsRepository implements Assignments {
     );
   }
 
-  static fetchVolunteersWithAssignmentStats() {
+  static fetchAllVolunteersWithAssignmentStats() {
     return HttpClient.get<VolunteerWithAssignmentStats[]>(
       `${this.basePath}/stats`,
     );
+  }
+
+  static fetchOneVolunteerAssignmentStats(userId: number) {
+    return HttpClient.get<AssignmentStats>(`${this.basePath}/stats/${userId}`);
   }
 }
 

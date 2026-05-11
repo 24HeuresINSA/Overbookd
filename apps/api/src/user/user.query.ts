@@ -1,5 +1,4 @@
 import { Permission } from "@overbookd/permission";
-import { SELECT_PERIOD } from "../common/query/period.query";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import {
   IS_MEMBER_OF_VOLUNTEER_TEAM,
@@ -82,11 +81,6 @@ export const SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER = {
       assignment: true,
     },
   },
-};
-
-export const SELECT_PERIOD_AND_CATEGORY = {
-  ...SELECT_PERIOD,
-  festivalTask: { select: { category: true } },
 };
 
 export function hasPermission(permission: Permission) {
