@@ -18,28 +18,16 @@ export class LiveNotificationService {
     private readonly jwt: JwtService,
   ) {}
 
-  mine(token: string): Observable<DomainEvent> {
+  all(token: string): Observable<DomainEvent> {
     const { permissions, teams, id } = this.jwt.verify<JwtPayload>(token);
 
     return merge(
       ...this.myPermissionBasedNotifications(permissions),
       ...this.myAccessManagmentNotifications({ teams, id }),
-      ...this.myFestivalActivityNotifications(id),
-      ...this.myFestivalTaskNotifications(id),
-    );
-  }
-
-  festivalActivities(): Observable<DomainEvent> {
-    return merge(
       this.eventStore.festivalActivityCreated,
       this.eventStore.festivalActivityReadyToReview,
       this.eventStore.festivalActivityRejected,
       this.eventStore.festivalActivityApproved,
-    );
-  }
-
-  festivalTasks(): Observable<DomainEvent> {
-    return merge(
       this.eventStore.festivalTaskCreated,
       this.eventStore.festivalTaskReadyToReview,
       this.eventStore.festivalTaskRejected,
@@ -68,60 +56,6 @@ export class LiveNotificationService {
       ),
       this.eventStore.candidateEnrolled.pipe(
         filter(({ data: { candidate } }) => candidate.id === id),
-      ),
-    ];
-  }
-
-  private myFestivalActivityNotifications(
-    userId: number,
-  ): Observable<DomainEvent>[] {
-    return [
-      this.eventStore.festivalActivityRejected.pipe(
-        filter(({ data: { festivalActivity } }) => {
-          return festivalActivity.inCharge.adherent.id === userId;
-        }),
-      ),
-      this.eventStore.festivalActivityApproved.pipe(
-        filter(({ data: { festivalActivity } }) => {
-          return festivalActivity.inCharge.adherent.id === userId;
-        }),
-      ),
-      this.eventStore.festivalActivityReadyToReview.pipe(
-        filter(({ data: { festivalActivity } }) => {
-          return festivalActivity.inCharge.adherent.id === userId;
-        }),
-      ),
-    ];
-  }
-
-  private myFestivalTaskNotifications(
-    userId: number,
-  ): Observable<DomainEvent>[] {
-    return [
-      this.eventStore.festivalTaskRejected.pipe(
-        filter(({ data: { festivalTask } }) => {
-          return festivalTask.general.administrator.id === userId;
-        }),
-      ),
-      this.eventStore.festivalTaskApproved.pipe(
-        filter(({ data: { festivalTask } }) => {
-          return festivalTask.general.administrator.id === userId;
-        }),
-      ),
-      this.eventStore.festivalTaskReadyToReview.pipe(
-        filter(({ data: { festivalTask } }) => {
-          return festivalTask.general.administrator.id === userId;
-        }),
-      ),
-      this.eventStore.festivalTaskIgnored.pipe(
-        filter(({ data: { festivalTask } }) => {
-          return festivalTask.general.administrator.id === userId;
-        }),
-      ),
-      this.eventStore.festivalTaskReadyToAssign.pipe(
-        filter(({ data: { festivalTask } }) => {
-          return festivalTask.general.administrator.id === userId;
-        }),
       ),
     ];
   }

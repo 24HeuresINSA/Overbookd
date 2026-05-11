@@ -11,18 +11,8 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 export class LiveNotificationController {
   constructor(private readonly live: LiveNotificationService) {}
 
-  @Sse("mine")
+  @Sse("stream")
   mine(@Query() { token }: { token: string }): Observable<DomainEvent> {
-    return this.live.mine(token);
-  }
-
-  @Sse("festival-activities")
-  festivalActivities(): Observable<DomainEvent> {
-    return this.live.festivalActivities();
-  }
-
-  @Sse("festival-tasks")
-  festivalTasks(): Observable<DomainEvent> {
-    return this.live.festivalTasks();
+    return this.live.all(token);
   }
 }

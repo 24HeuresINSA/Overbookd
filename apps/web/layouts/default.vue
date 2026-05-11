@@ -66,9 +66,10 @@ import {
 } from "~/utils/easter-egg/flip-content";
 import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
 import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
+import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 
 const theme = useTheme();
-const { mine } = useLiveNotification();
+const { listen, stopListening } = useLiveNotification();
 const userStore = useUserStore();
 const { refreshTokens } = useAuthStore();
 const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
@@ -85,52 +86,66 @@ const isCetaitMieuxAvant: boolean = url.includes(CETAITMIEUXAVANT);
 if (isPreProd) favicon.value = "/favicon-preprod.ico";
 if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
 
+const isMyFestivalActivity = (activity: FestivalActivity): boolean =>
+  activity.inCharge.adherent.id === userStore.loggedUser?.id;
+const isMyFestivalTask = (task: FestivalTask): boolean =>
+  task.general.administrator.id === userStore.loggedUser?.id;
+
 onMounted(() => {
   theme.change(pickDefaultTheme());
-  mine.listen(PERMISSION_GRANTED, () => refreshTokens());
-  mine.listen(PERMISSION_REVOKED, () => refreshTokens());
-  mine.listen(TEAMS_JOINED, () => refreshTokens());
-  mine.listen(TEAM_LEFT, () => refreshTokens());
-  mine.listen(CANDIDATE_ENROLLED, () => refreshTokens());
-  mine.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+  listen(PERMISSION_GRANTED, () => refreshTokens());
+  listen(PERMISSION_REVOKED, () => refreshTokens());
+  listen(TEAMS_JOINED, () => refreshTokens());
+  listen(TEAM_LEFT, () => refreshTokens());
+  listen(CANDIDATE_ENROLLED, () => refreshTokens());
+  listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    if (!isMyFestivalActivity(data.festivalActivity)) return;
     faStore.updateMyPreview(data.festivalActivity);
     fetchMyRefusedActivities();
   });
-  mine.listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
+    if (!isMyFestivalActivity(data.festivalActivity)) return;
     faStore.updateMyPreview(data.festivalActivity);
     fetchMyRefusedActivities();
   });
-  mine.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    if (!isMyFestivalActivity(data.festivalActivity)) return;
     faStore.updateMyPreview(data.festivalActivity);
     fetchMyRefusedActivities();
   });
-  mine.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+  listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });
-  mine.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });
-  mine.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+  listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });
-  mine.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+  listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });
-  mine.listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_TASK_DO_REVIEW, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
     ftStore.updateMyPreview(data.festivalTask);
     fetchMyRefusedTasks();
   });
-  mine.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) =>
-    ftStore.updateMyPreview(data.festivalTask),
-  );
+  listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
+    if (!isMyFestivalTask(data.festivalTask)) return;
+    ftStore.updateMyPreview(data.festivalTask);
+  });
 });
 
 onUnmounted(() => {
-  mine.stopListening();
+  stopListening();
 });
 
 const shouldApproveEULA = computed<boolean>(

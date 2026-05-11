@@ -53,7 +53,7 @@ import {
 const route = useRoute();
 const faStore = useFestivalActivityStore();
 const configurationStore = useConfigurationStore();
-const live = useLiveNotification();
+const { listen } = useLiveNotification();
 const teamStore = useTeamStore();
 
 const selectedActivity = computed<FestivalActivity>(
@@ -82,22 +82,16 @@ onMounted(async () => {
   const firstTimeWindow = allTimeWindowEvents.value?.at(0);
   if (firstTimeWindow) calendarMarker.value = firstTimeWindow.start;
 
-  live.festivalActivities.listen(
-    FESTIVAL_ACTIVITY_READY_TO_REVIEW,
-    ({ data }) => {
-      faStore.updateSelectedActivityStatus(data.festivalActivity);
-    },
-  );
-  live.festivalActivities.listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+  listen(FESTIVAL_ACTIVITY_READY_TO_REVIEW, ({ data }) => {
     faStore.updateSelectedActivityStatus(data.festivalActivity);
   });
-  live.festivalActivities.listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
-    faStore.updateSelectedActivityStatus(data.festivalActivity);
-  });
-});
 
-onUnmounted(() => {
-  live.festivalActivities.stopListening();
+  listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
+    faStore.updateSelectedActivityStatus(data.festivalActivity);
+  });
+  listen(FESTIVAL_ACTIVITY_APPROVED, ({ data }) => {
+    faStore.updateSelectedActivityStatus(data.festivalActivity);
+  });
 });
 
 if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();

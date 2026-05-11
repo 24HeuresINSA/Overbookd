@@ -90,7 +90,7 @@ import { AUCUNE } from "~/utils/assignment/task-category";
 const route = useRoute();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
-const live = useLiveNotification();
+const { listen } = useLiveNotification();
 const teamStore = useTeamStore();
 
 const selectedTask = computed<FestivalTask>(() => ftStore.selectedTask);
@@ -111,25 +111,21 @@ onMounted(async () => {
 
   loading.value = false;
 
-  live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
+  listen(FESTIVAL_TASK_READY_TO_REVIEW, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
-  live.festivalTasks.listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
+  listen(FESTIVAL_TASK_REJECTED, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
-  live.festivalTasks.listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
+  listen(FESTIVAL_TASK_APPROVED, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
-  live.festivalTasks.listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
+  listen(FESTIVAL_TASK_IGNORED, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
-  live.festivalTasks.listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
+  listen(FESTIVAL_TASK_READY_TO_ASSIGN, ({ data }) => {
     ftStore.updateSelectedTaskStatus(data.festivalTask);
   });
-});
-
-onUnmounted(() => {
-  live.festivalTasks.stopListening();
 });
 
 if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();
