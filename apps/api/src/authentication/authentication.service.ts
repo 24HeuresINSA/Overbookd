@@ -38,10 +38,7 @@ export class AuthenticationService {
 
   async login({ email, password }: UserCredentials): Promise<UserAccess> {
     const jwtPayload = await this.validateUser(email, password);
-    await this.prisma.user.update({
-      where: { email },
-      data: { lastLogin: new Date() },
-    });
+    await saveLastLogin(jwtPayload.id);
     const refreshPayload = { id: jwtPayload.id, email };
     return {
       accessToken: this.jwtService.sign(jwtPayload),
@@ -52,6 +49,7 @@ export class AuthenticationService {
   async refresh({ refreshToken }: RefreshAccessRequest): Promise<UserAccess> {
     const { email } = this.jwtService.verify<RefreshJwt>(refreshToken);
     const user = await this.buildJwtUser({ email });
+    await saveLastLogin(user.id);
     return {
       accessToken: this.jwtService.sign(user),
       refreshToken,
@@ -72,6 +70,13 @@ export class AuthenticationService {
     }
 
     return this.buildJwtUser({ email });
+  }
+
+  private async saveLastLogin(userId: int) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { lastLogin: new Date() },
+    });
   }
 
   private async buildJwtUser(where: UserEmail) {
