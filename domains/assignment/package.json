@@ -51,7 +51,7 @@
   ],
   "engines": {
     "node": "24.15.0",
-    "pnpm": "10.33.2"
+    "pnpm": "10.33.4"
   },
   "dependencies": {
     "@overbookd/preference": "workspace:*",
