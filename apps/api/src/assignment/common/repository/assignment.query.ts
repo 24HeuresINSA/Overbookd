@@ -47,17 +47,17 @@ const SELECT_ASSIGNEE_PERSONAL_DATA = {
   assigned: { select: { assignment: { select: SELECT_PERIOD } } },
 };
 
-export const SELECT_ASSIGNEE = {
-  teamCode: true,
-  personalData: { select: SELECT_ASSIGNEE_PERSONAL_DATA },
-};
-
 const SELECT_TEAM_DEMANDS = { teamCode: true, count: true };
 
 const SELECT_TASK = {
   id: true,
   name: true,
   appointment: { select: { name: true } },
+};
+
+const SELECT_ASSIGNEE = {
+  teamCode: true,
+  personalData: { select: SELECT_ASSIGNEE_PERSONAL_DATA },
 };
 
 const SELECT_MOBILIZATION = {
