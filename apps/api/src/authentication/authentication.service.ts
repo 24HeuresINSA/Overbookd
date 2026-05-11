@@ -51,9 +51,7 @@ export class AuthenticationService {
 
   async refresh({ refreshToken }: RefreshAccessRequest): Promise<UserAccess> {
     const { email } = this.jwtService.verify<RefreshJwt>(refreshToken);
-
     const user = await this.buildJwtUser({ email });
-
     return {
       accessToken: this.jwtService.sign(user),
       refreshToken,
