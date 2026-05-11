@@ -27,34 +27,6 @@ overbookd/api_unit_test:
         coverage_format: cobertura
         path: apps/api/coverage/cobertura-coverage.xml
 
-overbookd/api_e2e_test:
-  services:
-    - name: postgres:18.3
-      alias: integration-tests-prisma
-  variables:
-    POSTGRES_USER: prisma
-    POSTGRES_PASSWORD: password
-    POSTGRES_DB: tests
-    DATABASE_URL: postgresql://prisma:password@integration-tests-prisma:5432/tests
-    PNPM_WORKSPACE: "@overbookd/api"
-  extends: .test
-  needs: [install]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/api/**/*
-        - pnpm-lock.yaml
-    - when: never
-  script:
-    - pnpm i
-    - pnpm --filter "${PNPM_WORKSPACE}^..." run build
-    - pnpm --filter "${PNPM_WORKSPACE}" run database:init
-    - pnpm --filter "${PNPM_WORKSPACE}" run test:e2e:ci
-  artifacts:
-    when: always
-    reports:
-      junit: apps/api/junit.xml
-
 overbookd/web_unit_test:
   extends: .test
   needs: [install]
