@@ -36,6 +36,26 @@ export class AuthenticationService {
     private prisma: PrismaService,
   ) {}
 
+  async login({ email, password }: UserCredentials): Promise<UserAccess> {
+    const jwtPayload = await this.validateUser(email, password);
+    await this.saveLastLogin(jwtPayload.id);
+    const refreshPayload = { id: jwtPayload.id, email };
+    return {
+      accessToken: this.jwtService.sign(jwtPayload),
+      refreshToken: this.jwtService.sign(refreshPayload, { expiresIn: "7d" }),
+    };
+  }
+
+  async refresh({ refreshToken }: RefreshAccessRequest): Promise<UserAccess> {
+    const { email } = this.jwtService.verify<RefreshJwt>(refreshToken);
+    const user = await this.buildJwtUser({ email });
+    await this.saveLastLogin(user.id);
+    return {
+      accessToken: this.jwtService.sign(user),
+      refreshToken,
+    };
+  }
+
   async validateUser(email: string, password: string): Promise<JwtPayload> {
     const isDeleted = await this.userService.isDeleted(email);
     const user = await this.userService.getUserPassword(email);
@@ -50,6 +70,13 @@ export class AuthenticationService {
     }
 
     return this.buildJwtUser({ email });
+  }
+
+  private async saveLastLogin(userId: number) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { lastLogin: new Date() },
+    });
   }
 
   private async buildJwtUser(where: UserEmail) {
@@ -75,26 +102,6 @@ export class AuthenticationService {
 
   private async isSamePassword(userPassword: string, existingPassword: string) {
     return this.hashingUtilsService.compare(existingPassword, userPassword);
-  }
-
-  async login({ email, password }: UserCredentials): Promise<UserAccess> {
-    const jwtPayload = await this.validateUser(email, password);
-    const refreshPayload = { id: jwtPayload.id, email };
-    return {
-      accessToken: this.jwtService.sign(jwtPayload),
-      refreshToken: this.jwtService.sign(refreshPayload, { expiresIn: "7d" }),
-    };
-  }
-
-  async refresh({ refreshToken }: RefreshAccessRequest): Promise<UserAccess> {
-    const { email } = this.jwtService.verify<RefreshJwt>(refreshToken);
-
-    const user = await this.buildJwtUser({ email });
-
-    return {
-      accessToken: this.jwtService.sign(user),
-      refreshToken,
-    };
   }
 
   async forgot({ email }: UserEmail): Promise<void> {
