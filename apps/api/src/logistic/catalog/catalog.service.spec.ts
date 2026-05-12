@@ -67,7 +67,6 @@ const PERCEUSE: CatalogGearWithLinkedItems = {
   isConsumable: false,
   ...EMPTY_GEAR_LINKED_ITEMS,
   tasks: [2],
-  purchases: [4],
 };
 
 const CHAISE = {
@@ -336,7 +335,7 @@ describe("Catalog", () => {
     });
     describe.each`
       toDeleteGearId | expectedError
-      ${PERCEUSE.id} | ${`Impossible de supprimer le matériel, il est lié à : FT 2, Fiche Achat 4`}
+      ${PERCEUSE.id} | ${`Impossible de supprimer le matériel, il est lié à : FT 2`}
       ${TIREUSE.id}  | ${`Impossible de supprimer le matériel, il est lié à : FA 1, FA 5, Fiche Emprunt 3`}
     `(
       "When gear #$toDeleteGearId is used in linked items",

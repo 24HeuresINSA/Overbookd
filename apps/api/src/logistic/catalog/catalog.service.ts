@@ -25,7 +25,6 @@ export type GearLinkedItems = {
   tasks: number[];
   actitivities: number[];
   borrows: number[];
-  purchases: number[];
 };
 
 export class GearNotFoundException extends NotFoundException {
@@ -86,19 +85,16 @@ export class CatalogService {
     const hasLinkedItems =
       linked?.actitivities.length ||
       linked?.tasks.length ||
-      linked?.borrows.length ||
-      linked?.purchases.length;
+      linked?.borrows.length;
 
     if (hasLinkedItems) {
       const actitivities = linked.actitivities.map((id) => `FA ${id}`);
       const tasks = linked.tasks.map((id) => `FT ${id}`);
       const borrows = linked.borrows.map((id) => `Fiche Emprunt ${id}`);
-      const purchases = linked.purchases.map((id) => `Fiche Achat ${id}`);
       const allLinkedItems = [
         ...actitivities,
         ...tasks,
         ...borrows,
-        ...purchases,
       ];
       const errorMessage = `Impossible de supprimer le matériel, il est lié à : ${allLinkedItems.join(", ")}`;
       throw new ForbiddenException(errorMessage);
