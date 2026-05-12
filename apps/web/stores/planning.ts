@@ -15,6 +15,7 @@ import type { User, UserWithTeams } from "@overbookd/user";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 import { PlanningRepository } from "~/repositories/planning.repository";
 import { UserRepository } from "~/repositories/user.repository";
+import { CalendarEventPeriods } from "~/utils/availabilities/calendar-event-periods";
 import {
   downloadPdfFromBase64,
   downloadPdfPlanning,
@@ -71,7 +72,8 @@ export const usePlanningStore = defineStore("planning", {
     },
 
     async downloadMyPdfPlanning() {
-      const res = await PlanningRepository.getMyPdf();
+      const prePreManifStart = CalendarEventPeriods.prePreManif.period.start;
+      const res = await PlanningRepository.getMyPdf(prePreManifStart);
       if (isHttpError(res)) return;
 
       const userStore = useUserStore();
@@ -95,13 +97,17 @@ export const usePlanningStore = defineStore("planning", {
     },
 
     async downloadAllPdfPlannings(volunteers: User[]) {
+      const prePreManifStart = CalendarEventPeriods.prePreManif.period.start;
       const maxRequests = 5;
 
       for (let i = 0; i < volunteers.length; i += maxRequests) {
         const chunk = volunteers.slice(i, i + maxRequests);
         const plannings = await Promise.all(
           chunk.map(async ({ id, firstname, lastname }) => {
-            const res = await PlanningRepository.getVolunteerPdf(id);
+            const res = await PlanningRepository.getVolunteerPdf(
+              id,
+              prePreManifStart,
+            );
             if (isHttpError(res)) return undefined;
             const volunteer = { firstname, lastname, id };
             const planningBase64Data = `${res}`;
@@ -117,14 +123,20 @@ export const usePlanningStore = defineStore("planning", {
     },
 
     async downloadBookletPlanning(volunteer: User) {
-      const res = await PlanningRepository.getVolunteerBooklet(volunteer.id);
+      const prePreManifStart = CalendarEventPeriods.prePreManif.period.start;
+      const res = await PlanningRepository.getVolunteerBooklet(
+        volunteer.id,
+        prePreManifStart,
+      );
       if (isHttpError(res)) return;
       downloadPdfPlanning(res, volunteer);
     },
 
     async downloadBookletsPlannings(volunteers: User[]) {
+      const prePreManifStart = CalendarEventPeriods.prePreManif.period.start;
       const res = await PlanningRepository.getVolunteersBooklets(
         volunteers.map(({ id }) => id),
+        prePreManifStart,
       );
       if (isHttpError(res)) return;
       downloadPdfFromBase64(res, "plannings.pdf");

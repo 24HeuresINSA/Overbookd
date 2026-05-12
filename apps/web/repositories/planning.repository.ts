@@ -25,9 +25,10 @@ export class PlanningRepository {
   }
 
   static removeBreakPeriod(volunteer: number, { start, end }: IProvidePeriod) {
-    return HttpClient.delete<BreakPeriod[]>(
-      `${this.basePath}/${volunteer}/break-periods?start=${start.toISOString()}&end=${end.toISOString()}`,
-    );
+    return HttpClient.delete<BreakPeriod[]>({
+      path: `${this.basePath}/${volunteer}/break-periods`,
+      params: { start, end },
+    });
   }
 
   static getVolunteersForLeaflets() {
@@ -47,18 +48,22 @@ export class PlanningRepository {
     return HttpClient.get<{ link: string }>(`${this.basePath}/subscribe`);
   }
 
-  static getMyPdf() {
-    return HttpClient.get<string>(`${this.basePath}`, { acceptedType: PDF });
+  static getMyPdf(after?: Date) {
+    return HttpClient.get<string>(
+      { path: `${this.basePath}`, params: { after } },
+      { acceptedType: PDF },
+    );
   }
 
   static getMyIcal() {
     return HttpClient.get<string>(`${this.basePath}`, { acceptedType: ICAL });
   }
 
-  static getVolunteerPdf(volunteerId: number) {
-    return HttpClient.get<string>(`${this.basePath}/${volunteerId}`, {
-      acceptedType: PDF,
-    });
+  static getVolunteerPdf(volunteerId: number, after?: Date) {
+    return HttpClient.get<string>(
+      { path: `${this.basePath}/${volunteerId}`, params: { after } },
+      { acceptedType: PDF },
+    );
   }
 
   static getVolunteerIcal(volunteerId: number) {
@@ -67,15 +72,18 @@ export class PlanningRepository {
     });
   }
 
-  static getVolunteerBooklet(volunteerId: number) {
-    return HttpClient.get<string>(`${this.basePath}/booklets/${volunteerId}`, {
-      acceptedType: PDF,
-    });
+  static getVolunteerBooklet(volunteerId: number, after?: Date) {
+    return HttpClient.get<string>(
+      { path: `${this.basePath}/booklets/${volunteerId}`, params: { after } },
+      { acceptedType: PDF },
+    );
   }
 
-  static getVolunteersBooklets(volunteerIds: number[]) {
-    return HttpClient.post<string>(`${this.basePath}/booklets`, volunteerIds, {
-      acceptedType: PDF,
-    });
+  static getVolunteersBooklets(volunteerIds: number[], after?: Date) {
+    return HttpClient.post<string>(
+      { path: `${this.basePath}/booklets`, params: { after } },
+      volunteerIds,
+      { acceptedType: PDF },
+    );
   }
 }

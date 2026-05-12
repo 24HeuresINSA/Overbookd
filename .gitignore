@@ -42,6 +42,7 @@ npm-debug.log
 !.vscode/extensions.json
 .dist
 .idea
+devcontainer-lock.json
 
 ## Old files
 

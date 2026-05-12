@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  ParseDatePipe,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -36,7 +42,10 @@ export class NeedHelpController {
     type: HelpingVolunteerResponseDto,
     isArray: true,
   })
-  getAvailableVolunteers(@Query("start") start: Date, @Query("end") end: Date) {
+  getAvailableVolunteers(
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
+  ) {
     return this.needHelpService.getAvailableVolunteers({ start, end });
   }
 }

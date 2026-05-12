@@ -4,6 +4,7 @@ import {
   HttpException,
   Logger,
   Param,
+  ParseDatePipe,
   Query,
   Request,
   Res,
@@ -123,8 +124,8 @@ export class DashboardController {
   })
   getDetails(
     @Param("slug") slug: string,
-    @Query("start") start: Date,
-    @Query("end") end: Date,
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
   ): Promise<GearWithDetails> {
     return this.dashboardService.getDetails(slug, start, end);
   }

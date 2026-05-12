@@ -10,6 +10,7 @@ import {
   NotFoundException,
   Param,
   ParseArrayPipe,
+  ParseDatePipe,
   ParseIntPipe,
   Post,
   Query,
@@ -38,7 +39,6 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { CreateBreakPeriodRequestDto } from "./dto/create-break-period.request.dto";
 import { Duration, Period, Edition } from "@overbookd/time";
-import { ParseDatePipe } from "../../common/pipes/parse-date.pipe";
 import { VolunteerForPlanningLeafletResponseDto } from "./dto/volunteer-for-planning-leaflet.response.dto";
 import { SecretService } from "./secret.service";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
@@ -47,7 +47,6 @@ import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
 import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
-import { PeriodRequestDto } from "../../common/dto/period.request.dto";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { MultiPlanningVolunteerResponseDto } from "./dto/multi-planning-volunteer.response.dto";
@@ -73,15 +72,21 @@ export class PlanningController {
     isArray: true,
     type: TaskResponseDto,
   })
+  @ApiQuery({
+    name: "after",
+    required: false,
+    type: Date,
+  })
   @ApiProduces(JSON, ICAL, PDF)
   async getCurrentVolunteerPlanning(
     @RequestDecorator() request: RequestWithUserPayload,
     @Res() response: Response,
+    @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<TaskResponseDto[]> {
     const volunteerId = request.user.id;
     const format = request.headers.accept;
     try {
-      const planning = await this.planning.buildOne(format, volunteerId);
+      const planning = await this.planning.buildOne(format, volunteerId, after);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -166,6 +171,11 @@ export class PlanningController {
     description: "Ical format volunteer planning",
   })
   @ApiQuery({
+    name: "after",
+    required: false,
+    type: Date,
+  })
+  @ApiQuery({
     name: "plaintext",
     required: false,
     type: Boolean,
@@ -174,11 +184,12 @@ export class PlanningController {
   @Header("Content-Type", "text/calendar")
   async syncVolunteerPlanning(
     @Param("secret") secret: string,
+    @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
     @Query("plaintext") plaintext?: string,
   ) {
     const volunteerId = await this.retrieveVolunteerIdFromSecret(secret);
     const isPlainText = plaintext === "true";
-    return this.planning.buildOne(ICAL, volunteerId, isPlainText);
+    return this.planning.buildOne(ICAL, volunteerId, after, isPlainText);
   }
 
   @Post("booklets")
@@ -193,14 +204,20 @@ export class PlanningController {
     description: "Volunteer ids",
     type: [Number],
   })
+  @ApiQuery({
+    name: "after",
+    required: false,
+    type: Date,
+  })
   async getBooklets(
     @Body() volunteerIds: number[],
     @Res() response: Response,
+    @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<string> {
     try {
       const pdfs = await Promise.all(
         volunteerIds.map(
-          (id) => this.planning.buildOne(PDF, id) as Promise<string>,
+          (id) => this.planning.buildOne(PDF, id, after) as Promise<string>,
         ),
       );
       const pdfbook = new PDFBook();
@@ -226,12 +243,22 @@ export class PlanningController {
     status: 200,
     description: "Get volunteer planning as a booklet",
   })
+  @ApiQuery({
+    name: "after",
+    required: false,
+    type: Date,
+  })
   async getVolunteerBooklet(
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
     @Res() response: Response,
+    @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<string> {
     try {
-      const pdf = (await this.planning.buildOne(PDF, volunteerId)) as string;
+      const pdf = (await this.planning.buildOne(
+        PDF,
+        volunteerId,
+        after,
+      )) as string;
       const pdfbook = new PDFBook();
       const booklets = await pdfbook.generateBooklet(pdf);
       response.setHeader("content-type", PDF);
@@ -257,15 +284,21 @@ export class PlanningController {
     isArray: true,
     type: TaskResponseDto,
   })
+  @ApiQuery({
+    name: "after",
+    required: false,
+    type: Date,
+  })
   @ApiProduces(JSON, ICAL, PDF)
   async getVolunteerPlanning(
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
     @Res() response: Response,
+    @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
     try {
-      const planning = await this.planning.buildOne(format, volunteerId);
+      const planning = await this.planning.buildOne(format, volunteerId, after);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -331,10 +364,6 @@ export class PlanningController {
     type: BreakPeriodResponseDto,
     isArray: true,
   })
-  @ApiBody({
-    description: "Period to remove break from",
-    type: PeriodRequestDto,
-  })
   @ApiParam({
     name: "volunteerId",
     type: Number,
@@ -352,8 +381,8 @@ export class PlanningController {
   })
   async removeVolunteerBreakPeriod(
     @Param("volunteerId", ParseIntPipe) volunteerId: number,
-    @Query("start", ParseDatePipe) start: Date,
-    @Query("end", ParseDatePipe) end: Date,
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
   ): Promise<BreakPeriodResponseDto[]> {
     const breakPeriod = Period.init({ start, end });
     return this.planning.removeBreakPeriod(volunteerId, breakPeriod);

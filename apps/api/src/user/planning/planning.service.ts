@@ -56,9 +56,16 @@ export class PlanningService {
     return this.repositories.volunteers.allForLeaflets();
   }
 
-  async buildOne(format: string, volunteerId: number, plainText = false) {
-    const tasks =
-      await this.useCases.planning.generateForVolunteer(volunteerId);
+  async buildOne(
+    format: string,
+    volunteerId: number,
+    after?: Date,
+    plainText: boolean = false,
+  ) {
+    const tasks = await this.useCases.planning.generateForVolunteer(
+      volunteerId,
+      after,
+    );
     const renderStrategy = this.useCases.renderStrategy.get(format, plainText);
     return renderStrategy.render(tasks, volunteerId);
   }

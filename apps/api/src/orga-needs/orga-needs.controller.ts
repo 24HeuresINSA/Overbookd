@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   ParseArrayPipe,
+  ParseDatePipe,
   Query,
   UseGuards,
 } from "@nestjs/common";
@@ -47,15 +48,11 @@ export class OrgaNeedsController {
     isArray: true,
   })
   async getOrgaNeeds(
-    @Query("start") start: Date,
-    @Query("end") end: Date,
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
     @Query("teams", new ParseArrayPipe({ optional: true })) teams?: string[],
   ): Promise<OrgaNeedDetailsDto[]> {
-    const periodAndTeams = {
-      start: new Date(start),
-      end: new Date(end),
-      teams: teams ?? [],
-    };
+    const periodAndTeams = { start, end, teams: teams ?? [] };
     return this.orgaNeedsService.computeOrgaStats(periodAndTeams);
   }
 }
