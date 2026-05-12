@@ -91,11 +91,7 @@ export class CatalogService {
       const actitivities = linked.actitivities.map((id) => `FA ${id}`);
       const tasks = linked.tasks.map((id) => `FT ${id}`);
       const borrows = linked.borrows.map((id) => `Fiche Emprunt ${id}`);
-      const allLinkedItems = [
-        ...actitivities,
-        ...tasks,
-        ...borrows,
-      ];
+      const allLinkedItems = [...actitivities, ...tasks, ...borrows];
       const errorMessage = `Impossible de supprimer le matériel, il est lié à : ${allLinkedItems.join(", ")}`;
       throw new ForbiddenException(errorMessage);
     }
