@@ -1,5 +1,5 @@
 import type { AssignmentEvent } from "@overbookd/assignment";
-import type { AssignmentStats, Consumer, PlanningTask } from "@overbookd/http";
+import type { Consumer, PlanningTask } from "@overbookd/http";
 import type {
   MyUserInformation,
   Profile,
@@ -106,12 +106,6 @@ export class UserRepository {
   static getVolunteerAssignments(userId: number) {
     return HttpClient.get<AssignmentEvent[]>(
       `${this.basePath}/${userId}/assignments`,
-    );
-  }
-
-  static getVolunteerAssignmentStats(userId: number) {
-    return HttpClient.get<AssignmentStats>(
-      `${this.basePath}/${userId}/assignments/stats`,
     );
   }
 

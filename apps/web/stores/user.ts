@@ -130,9 +130,9 @@ export const useUserStore = defineStore("user", {
       this.adherents = res;
     },
 
-    async fetchVolunteersWithAssignmentStats() {
+    async fetchAllVolunteersWithAssignmentStats() {
       const res =
-        await AssignmentsRepository.fetchVolunteersWithAssignmentStats();
+        await AssignmentsRepository.fetchAllVolunteersWithAssignmentStats();
       if (isHttpError(res)) return;
       this.volunteersWithAssignmentStats = res;
     },

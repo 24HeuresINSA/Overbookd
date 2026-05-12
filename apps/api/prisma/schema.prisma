@@ -302,6 +302,8 @@ model Friend {
   friendId    Int  @map("friend_id")
 
   @@id([requestorId, friendId])
+  @@index([requestorId])
+  @@index([friendId])
   @@map("friend")
 }
 
@@ -707,6 +709,9 @@ model Assignee {
   teamCode       String?                       @map("team_code")
 
   @@id([userId, assignmentId, mobilizationId, festivalTaskId])
+  @@index([userId])
+  @@index([festivalTaskId])
+  @@index([assignmentId])
   @@map("assignee")
 }
 

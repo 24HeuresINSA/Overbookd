@@ -41,7 +41,10 @@ import {
 import { PlanningEventResponseDto } from "./dto/planning-event.response.dto";
 import { VolunteersForAssignmentRequestDto } from "./dto/volunteers-for-assignment.request.dto";
 import { AssignmentWithDetailsResponseDto } from "./dto/assignment-details.response.dto";
-import { VolunteerWithAssignmentStatsResponseDto } from "./dto/volunteer-with-assignment-stats.response.dto";
+import {
+  AssignmentStatsResponseDto,
+  VolunteerWithAssignmentStatsResponseDto,
+} from "./dto/volunteer-with-assignment-stats.response.dto";
 import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
@@ -218,7 +221,21 @@ export class AssignmentController {
     isArray: true,
     type: VolunteerWithAssignmentStatsResponseDto,
   })
-  async getVolunteerAssignmentStats(): Promise<VolunteerWithAssignmentStats[]> {
-    return this.assignment.getVolunteersAssignmentStats();
+  async getAllVolunteersStats(): Promise<VolunteerWithAssignmentStats[]> {
+    return this.assignment.getAllVolunteersStats();
+  }
+
+  @Get("stats/:id")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @ApiResponse({
+    status: 200,
+    description: "Get duration of assignments for a volunteer",
+    type: AssignmentStatsResponseDto,
+  })
+  async getOneVolunteerStats(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<AssignmentStatsResponseDto> {
+    return this.assignment.getOneVolunteerStats(id);
   }
 }

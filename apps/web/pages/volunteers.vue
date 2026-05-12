@@ -113,7 +113,7 @@ const fetchAssignmentStatsIfNeeded = () => {
     return;
   assignmentStatsLoading.value = true;
   userStore
-    .fetchVolunteersWithAssignmentStats()
+    .fetchAllVolunteersWithAssignmentStats()
     .then(() => (assignmentStatsLoading.value = false));
 };
 

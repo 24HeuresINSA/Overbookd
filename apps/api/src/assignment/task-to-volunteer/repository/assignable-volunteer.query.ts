@@ -1,4 +1,3 @@
-import { Category } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/time";
 import {
   SELECT_USER_ASSIGNMENT_PREFERENCE,
@@ -10,7 +9,7 @@ import {
 } from "../../../common/query/charisma.query";
 import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
-import { DatabaseAssignee } from "../../common/repository/assignment.query";
+import { DatabaseAssignmentWithTaskCategory } from "../../common/repository/assignment-stats.query";
 
 export type DatabaseFriend = {
   id: number;
@@ -23,23 +22,12 @@ export type DatabaseFriend = {
   }[];
 };
 
-export type DatabaseVolunteerAssignmentStat = IProvidePeriod & {
-  festivalTask: { category: Category };
-};
-
-export type DatabaseVolunteerAssignmentStatWithAssignees = IProvidePeriod & {
-  festivalTask: { category: Category };
-  assignees: DatabaseAssignee[];
-};
-
 export type DatabaseStoredAssignableVolunteer = User &
   UserDataForCharisma & {
     comment: string;
     note: string;
     teams: { teamCode: string }[];
-    assigned: {
-      assignment: DatabaseVolunteerAssignmentStat;
-    }[];
+    assigned: { assignment: DatabaseAssignmentWithTaskCategory }[];
     preference?: { assignment: AssignmentPreferenceType };
     festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
     friends: { requestor: DatabaseFriend }[];

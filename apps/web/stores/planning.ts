@@ -187,7 +187,8 @@ export const usePlanningStore = defineStore("planning", {
     },
 
     async fetchVolunteerAssignmentStats(userId: number) {
-      const res = await UserRepository.getVolunteerAssignmentStats(userId);
+      const res =
+        await AssignmentsRepository.fetchOneVolunteerAssignmentStats(userId);
       if (isHttpError(res)) return;
       this.selectedVolunteer.assignmentStats = res;
     },

@@ -26,12 +26,10 @@ import {
 } from "./user.model";
 import {
   SELECT_MY_USER_INFORMATION,
-  SELECT_PERIOD_AND_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
   SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER,
   hasPermission,
 } from "./user.query";
-import { Category } from "@overbookd/festival-event-constants";
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
@@ -42,7 +40,6 @@ import {
 import { AssignmentEvent } from "@overbookd/assignment";
 import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
-import { Period } from "@overbookd/time";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
@@ -52,20 +49,8 @@ import {
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
 import { Charisma } from "@overbookd/charisma";
-import {
-  DatabaseVolunteerAssignmentStat,
-  DatabaseVolunteerAssignmentStatWithAssignees,
-} from "../assignment/task-to-volunteer/repository/assignable-volunteer.query";
 import { ADMIN } from "@overbookd/team-constants";
-import { AssignmentStat, AssignmentStats } from "@overbookd/http";
-import {
-  friendAssigneesCount,
-  SELECT_ASSIGNEE,
-} from "../assignment/common/repository/assignment.query";
-import {
-  getFriendCount,
-  SELECT_USER_FRIENDS_FOR_COUNT,
-} from "../assignment/common/repository/friend.query";
+import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
 
 @Injectable()
 export class UserService {
@@ -262,82 +247,6 @@ export class UserService {
 
   private canManageAdmins(teams: string[], author: JwtUtil) {
     return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
-  }
-
-  async getVolunteerAssignmentStats(
-    volunteerId: number,
-  ): Promise<AssignmentStats> {
-    const [assignments, friends] = await Promise.all([
-      this.prisma.assignment.findMany({
-        where: {
-          assignees: { some: { userId: volunteerId } },
-          festivalTask: IS_NOT_DELETED,
-        },
-        select: {
-          ...SELECT_PERIOD_AND_CATEGORY,
-          assignees: { select: SELECT_ASSIGNEE },
-        },
-      }),
-      this.prisma.user.findUnique({
-        where: { id: volunteerId },
-        select: SELECT_USER_FRIENDS_FOR_COUNT,
-      }),
-    ]);
-
-    const stats = UserService.formatAssignmentStats(assignments);
-    const withFriendsAssignmentDuration =
-      UserService.computeAssignmentWithFriendsDuration(
-        volunteerId,
-        assignments,
-      );
-    const friendCount = getFriendCount(friends);
-
-    return { stats, withFriendsAssignmentDuration, friendCount };
-  }
-
-  static formatAssignmentStats(
-    assignments: DatabaseVolunteerAssignmentStat[],
-  ): AssignmentStat[] {
-    const stats = assignments.reduce(
-      (stats, { festivalTask, ...assignment }) => {
-        const { category } = festivalTask;
-        const durationToAdd = Period.init(assignment).duration.inMilliseconds;
-        const previousDuration = stats.get(category)?.duration ?? 0;
-        const duration = previousDuration + durationToAdd;
-        stats.set(category, { category, duration });
-        return stats;
-      },
-      new Map<Category, AssignmentStat>(),
-    );
-    return [...stats.values()];
-  }
-
-  static computeAssignmentWithFriendsDuration(
-    volunteerId: number,
-    assignments: DatabaseVolunteerAssignmentStatWithAssignees[],
-  ): number {
-    const assignmentWithFriendsDuration = assignments.reduce(
-      (duration, assignment) => {
-        const hasFriendsAssigned = assignment.assignees.some(
-          ({ personalData }) => {
-            const isFriend = personalData.friends.some(
-              ({ requestor }) => requestor.id === volunteerId,
-            );
-            const isFriendRequestor = personalData.friendRequestors.some(
-              ({ friend }) => friend.id === volunteerId,
-            );
-            return isFriend || isFriendRequestor;
-          },
-        );
-
-        const durationToAdd = hasFriendsAssigned
-          ? Period.init(assignment).duration.inMilliseconds
-          : 0;
-        return duration + durationToAdd;
-      },
-      0,
-    );
-    return assignmentWithFriendsDuration;
   }
 
   static formatToPersonalData(

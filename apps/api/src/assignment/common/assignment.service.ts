@@ -7,7 +7,11 @@ import {
   PlanningEvent,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
-import { VolunteerWithAssignmentStats, TaskForCalendar } from "@overbookd/http";
+import {
+  VolunteerWithAssignmentStats,
+  TaskForCalendar,
+  AssignmentStats,
+} from "@overbookd/http";
 
 export type AssignmentRepository = Assignments & {
   findOneForCalendar(
@@ -18,13 +22,18 @@ export type AssignmentRepository = Assignments & {
     identifier: AssignmentIdentifier,
     withDetails: T,
   ): Promise<Assignment<{ withDetails: T }>>;
-  getVolunteersAssignmentStats(): Promise<VolunteerWithAssignmentStats[]>;
+};
+
+export type AssignmentStatsRepository = {
+  getForAll(): Promise<VolunteerWithAssignmentStats[]>;
+  getForOne(volunteerId: number): Promise<AssignmentStats>;
 };
 
 @Injectable()
 export class AssignmentService {
   constructor(
     private readonly assignments: AssignmentRepository,
+    private readonly stats: AssignmentStatsRepository,
     private readonly planning: Planning,
   ) {}
 
@@ -59,9 +68,11 @@ export class AssignmentService {
     return this.assignments.unassign(assignment, assigneeId);
   }
 
-  async getVolunteersAssignmentStats(): Promise<
-    VolunteerWithAssignmentStats[]
-  > {
-    return this.assignments.getVolunteersAssignmentStats();
+  async getAllVolunteersStats(): Promise<VolunteerWithAssignmentStats[]> {
+    return this.stats.getForAll();
+  }
+
+  async getOneVolunteerStats(volunteerId: number): Promise<AssignmentStats> {
+    return this.stats.getForOne(volunteerId);
   }
 }
