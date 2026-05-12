@@ -607,7 +607,6 @@ export const consumableGearWithOneInquiryAndOneBorrowForGraph: GearDetails[] = [
   },
 ];
 
-
 export const gearWithTwoInquiriesAndTwoInventoryRecordsForCsv: GearRequirementForCsv =
   {
     name: "gear with two inquiries and two inventory records",

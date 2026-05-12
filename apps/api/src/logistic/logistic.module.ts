@@ -5,11 +5,6 @@ import { InventoryModule } from "./inventory/inventory.module";
 import { BorrowModule } from "./borrow/borrow.module";
 
 @Module({
-  imports: [
-    DashboardModule,
-    CatalogModule,
-    InventoryModule,
-    BorrowModule,
-  ],
+  imports: [DashboardModule, CatalogModule, InventoryModule, BorrowModule],
 })
 export class LogisticModule {}

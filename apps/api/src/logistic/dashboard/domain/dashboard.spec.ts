@@ -101,9 +101,9 @@ describe("Summarize gear as requirement for CSV", () => {
     });
   });
   describe.each`
-    explaination                                   | gear
-    ${"has no entries"}                            | ${gearWithNoInquiry}
-    ${"has one inventory record and one borrow"}   | ${gearWithOneInventoryRecordAndOneBorrow}
+    explaination                                 | gear
+    ${"has no entries"}                          | ${gearWithNoInquiry}
+    ${"has one inventory record and one borrow"} | ${gearWithOneInventoryRecordAndOneBorrow}
   `("when gear without stock discrepancy $explaination", ({ gear }) => {
     it("should return null", () => {
       const requirement = DashboardGear.generateRequirementForCsv(gear);

@@ -94,11 +94,7 @@
 <script lang="ts" setup>
 import type { GearDetails } from "@overbookd/http";
 import { formatDateToHumanReadable } from "@overbookd/time";
-import {
-  FA_URL,
-  FT_URL,
-  BORROW_GEARS_URL,
-} from "@overbookd/web-page";
+import { FA_URL, FT_URL, BORROW_GEARS_URL } from "@overbookd/web-page";
 import { sumQuantities } from "~/utils/logistic/quantity";
 
 type GearDetailsWithName = GearDetails & { name: string };

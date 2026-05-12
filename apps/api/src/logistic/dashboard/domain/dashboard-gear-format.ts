@@ -56,9 +56,6 @@ export class DashboardGearFormat {
     const formattedBorrows = borrows.map((b) => `${b.lender} - ${b.quantity}`);
     const formattedInventory =
       inventory > 0 ? [`Inventaire - ${inventory}`] : [];
-    return [
-      ...formattedInventory,
-      ...formattedBorrows,
-    ].join("\n");
+    return [...formattedInventory, ...formattedBorrows].join("\n");
   }
 }

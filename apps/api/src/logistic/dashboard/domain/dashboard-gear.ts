@@ -104,8 +104,10 @@ export class DashboardGear {
   ): GearDetails {
     const { inquiry, tasks, activities } =
       DashboardGearInquiry.computeGearInquiries(gear, start);
-    const { stock, inventory, borrows } =
-      DashboardGearStock.computeGearStock(gear, start);
+    const { stock, inventory, borrows } = DashboardGearStock.computeGearStock(
+      gear,
+      start,
+    );
     return {
       start,
       end,
