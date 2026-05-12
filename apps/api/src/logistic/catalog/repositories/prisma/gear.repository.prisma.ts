@@ -5,7 +5,7 @@ import { GearRepository } from "../catalog-repositories";
 import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { GearFilter } from "../../../common/gear.filter";
-import { DatabaseGear, SELECT_GEAR } from "../../../common/dto/gear.query";
+import { DatabaseGear, SELECT_GEAR } from "../../../common/repositories/gear.query";
 import { GearLinkedItems } from "../../catalog.service";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
@@ -90,14 +90,12 @@ export class PrismaGearRepository implements GearRepository {
         festivalActivityInquiries: { select: { faId: true } },
         festivalTaskInquiries: { select: { ftId: true } },
         borrows: { select: { borrowId: true } },
-        purchases: { select: { purchaseId: true } },
       },
     });
     return {
       actitivities: gear.festivalActivityInquiries.map(({ faId }) => faId),
       tasks: gear.festivalTaskInquiries.map(({ ftId }) => ftId),
       borrows: gear.borrows.map(({ borrowId }) => borrowId),
-      purchases: gear.purchases.map(({ purchaseId }) => purchaseId),
     };
   }
 
