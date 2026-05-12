@@ -6,9 +6,9 @@ networks:
 volumes:
   certs:
 
-
 services:
   certs-downloader:
+    container_name: overbookd-certs-downloader
     image: alpine
     command: >
       sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
@@ -16,6 +16,7 @@ services:
       - certs:/etc/ssl/traefik
 
   traefik:
+    container_name: overbookd-traefik
     image: traefik:v3.7.0
     restart: unless-stopped
     command:
@@ -60,7 +61,7 @@ services:
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
 
   api:
-    container_name: overbookd_api
+    container_name: overbookd-api
     user: ${MY_UID}:${MY_GID}
     image: overbookd:dev
     restart: unless-stopped
@@ -71,13 +72,13 @@ services:
       - ../:/overbookd
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
-      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
+      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd-postgresql:5432/${OVERBOOKD_DATABASE_NAME}
       GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
       GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
       JWT_SECRET: ${OVERBOOKD_JWT_SECRET}
       SWAGGER_USER: ${OVERBOOKD_SWAGGER_USER}
       SWAGGER_PASSWORD: ${OVERBOOKD_SWAGGER_PASSWORD}
-      SMTP_HOST: overbookd_mail_catcher
+      SMTP_HOST: overbookd-mail-catcher
       SMTP_PORT: 1025
       HOST: 0.0.0.0
       PORT: 3000
@@ -105,7 +106,7 @@ services:
         pnpm --recursive --filter '@overbookd/api' run start:dev
 
   mail_catcher:
-    container_name: overbookd_mail_catcher
+    container_name: overbookd-mail-catcher
     image: sj26/mailcatcher:v0.10.0
     restart: unless-stopped
     networks:
@@ -119,7 +120,7 @@ services:
       - "traefik.http.routers.dev-overbookd-mail-catcher.rule=Host(`mail.${DOMAIN}`)"
 
   postgresql:
-    container_name: overbookd_postgresql
+    container_name: overbookd-postgresql
     image: postgres:16.13
     restart: unless-stopped
     environment:
@@ -134,13 +135,14 @@ services:
       - ./data/dev/postgresql:/var/lib/postgresql/data
 
   adminer:
+    container_name: overbookd-adminer
     image: adminer:4.17.1
     restart: unless-stopped
     networks:
       - overbookd_net-api
       - traefik-public
     environment:
-      ADMINER_DEFAULT_SERVER: overbookd_postgresql
+      ADMINER_DEFAULT_SERVER: overbookd-postgresql
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-adminer.tls=true"
@@ -151,7 +153,7 @@ services:
       - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 
   web:
-    container_name: overbookd_web
+    container_name: overbookd-web
     user: ${MY_UID}:${MY_GID}
     image: overbookd:dev
     volumes:
@@ -185,6 +187,7 @@ services:
         pnpm --recursive --filter '@overbookd/web' run dev
 
   bash:
+    container_name: overbookd-bash
     build:
       context: ../.devcontainer
       dockerfile: Dockerfile
@@ -199,7 +202,7 @@ services:
       - ./aliases:/home/vscode/.bash_aliases
 
     environment:
-      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
+      DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd-postgresql:5432/${OVERBOOKD_DATABASE_NAME}
 
     networks:
       - overbookd_net-api

@@ -28,7 +28,7 @@
     "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env restart",
     "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env up --detach",
     "dev:stop": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env stop",
-    "dev:sync-version": " echo 'Restarting docker containers if running to sync overbookd version' && ((docker restart overbookd_web overbookd_api || true) &)",
+    "dev:sync-version": " echo 'Restarting docker containers if running to sync overbookd version' && ((docker restart overbookd-web overbookd-api || true) &)",
     "format": "pnpm --recursive run format",
     "lint": "pnpm --recursive run lint",
     "prune": "pnpm --recursive run prune",
