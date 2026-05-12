@@ -5,7 +5,10 @@ import { GearRepository } from "../catalog-repositories";
 import { GearAlreadyExists } from "../../catalog.error";
 import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { GearFilter } from "../../../common/gear.filter";
-import { DatabaseGear, SELECT_GEAR } from "../../../common/repositories/gear.query";
+import {
+  DatabaseGear,
+  SELECT_GEAR,
+} from "../../../common/repositories/gear.query";
 import { GearLinkedItems } from "../../catalog.service";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
