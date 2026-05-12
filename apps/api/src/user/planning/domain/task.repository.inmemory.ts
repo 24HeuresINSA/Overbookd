@@ -15,7 +15,7 @@ export class InMemoryTaskRepository implements TaskRepository {
         .filter(
           ({ assignees, period }) =>
             assignees.some(({ id }) => id === volunteerId) &&
-            period.start >= after,
+            (!after || period.start >= after),
         )
         .map((task) => {
           const assignees = this.findAllOtherAssignees(task, volunteerId);
