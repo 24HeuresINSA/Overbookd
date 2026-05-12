@@ -3,7 +3,6 @@ import {
   GearBorrow,
   GearDetailsInquiry,
   GearPreview,
-  GearPurchase,
   GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
@@ -17,7 +16,6 @@ export type GearRequirementForCsv = {
   stock: {
     inventory: number;
     borrows: GearBorrow[];
-    purchases: GearPurchase[];
     total: number;
   };
   inquiries: {

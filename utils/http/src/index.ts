@@ -49,7 +49,6 @@ export type {
   BaseGearDetails,
   ConsumableGearDetails,
   GearBorrow,
-  GearPurchase,
   GearDetails,
   GearPreview,
   GearWithDetails,

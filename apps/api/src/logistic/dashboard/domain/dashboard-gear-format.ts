@@ -52,17 +52,13 @@ export class DashboardGearFormat {
   private static formatStockDetailsForCsv(
     requirement: GearRequirementForCsv,
   ): string {
-    const { inventory, borrows, purchases } = requirement.stock;
+    const { inventory, borrows } = requirement.stock;
     const formattedBorrows = borrows.map((b) => `${b.lender} - ${b.quantity}`);
-    const formattedPurchases = purchases.map(
-      (p) => `${p.seller} - ${p.quantity}`,
-    );
     const formattedInventory =
       inventory > 0 ? [`Inventaire - ${inventory}`] : [];
     return [
       ...formattedInventory,
       ...formattedBorrows,
-      ...formattedPurchases,
     ].join("\n");
   }
 }

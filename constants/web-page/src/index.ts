@@ -21,7 +21,6 @@ export const STATS_URL = "/stats";
 export const GEAR_CATALOG_URL = "/logistic/catalog";
 export const INVENTORY_URL = "/logistic/inventory";
 export const GEAR_DASHBOARD_URL = "/logistic/dashboard";
-export const PURCHASE_GEARS_URL = "/logistic/purchase";
 export const BORROW_GEARS_URL = "/logistic/borrow";
 export const LOCATION_URL = "/signa/location";
 export const SIGNAGE_CATALOG_URL = "/signa/catalog";
@@ -59,7 +58,6 @@ export const pagesURL = [
   GEAR_CATALOG_URL,
   INVENTORY_URL,
   GEAR_DASHBOARD_URL,
-  PURCHASE_GEARS_URL,
   BORROW_GEARS_URL,
   LOCATION_URL,
   SIGNAGE_CATALOG_URL,

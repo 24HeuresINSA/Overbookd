@@ -7,7 +7,6 @@ import {
   BaseGearDetails,
   ConsumableGearDetails,
   GearBorrow,
-  GearPurchase,
 } from "@overbookd/http";
 
 class InquiryResponseDto implements Inquiry {
@@ -30,17 +29,6 @@ class BorrowResponseDto implements GearBorrow {
 
   @ApiProperty({ type: Number })
   quantity: GearBorrow["quantity"];
-}
-
-class PurchaseResponseDto implements GearPurchase {
-  @ApiProperty({ type: Number })
-  id: GearPurchase["id"];
-
-  @ApiProperty({ type: String })
-  seller: GearPurchase["seller"];
-
-  @ApiProperty({ type: Number })
-  quantity: GearPurchase["quantity"];
 }
 
 class BaseGearDetailsResponseDto implements BaseGearDetails {
@@ -76,12 +64,6 @@ class BaseGearDetailsResponseDto implements BaseGearDetails {
     isArray: true,
   })
   borrows: GearBorrow[];
-
-  @ApiProperty({
-    type: PurchaseResponseDto,
-    isArray: true,
-  })
-  purchases: GearPurchase[];
 }
 
 class ConsumableGearDetailsResponseDto

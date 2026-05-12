@@ -32,7 +32,6 @@ import {
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
-  PURCHASE_GEARS,
   BORROW_GEARS,
   SYNC_PLANNING,
   MANAGE_CHARISMA_EVENTS,
@@ -169,15 +168,6 @@ export const permissions = [
   {
     name: WRITE_INVENTORY,
     description: "Peut éditer l'inventaire",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "matos" }, { teamCode: "elec" }],
-      },
-    },
-  },
-  {
-    name: PURCHASE_GEARS,
-    description: "Peut acheter du matos",
     teams: {
       createMany: {
         data: [{ teamCode: "matos" }, { teamCode: "elec" }],

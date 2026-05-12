@@ -21,12 +21,6 @@ import {
   consumableGearWithOneInquiryAndOneBorrow,
   gearWithOneInventoryRecordAndOneBorrowForGraph,
   consumableGearWithOneInquiryAndOneBorrowForGraph,
-  gearWithOneInventoryRecordAndOnePurchase,
-  gearWithOneInquiryAndOnePurchase,
-  consumableGearWithOneInquiryAndOnePurchase,
-  gearWithOneInventoryRecordAndOnePurchaseForGraph,
-  consumableGearWithOneInquiryAndOnePurchaseForGraph,
-  gearWithOneInquiryAndOnePurchaseForCsv,
   gearWithTwoInquiriesAndTwoInventoryRecordsForCsv,
   gearWithOneInquiryAndOneBorrowForCsv,
 } from "./dashboard-gear.test-utils";
@@ -50,9 +44,6 @@ describe("Summarize gear as preview", () => {
     ${"has one inventory record and one borrow"}                          | ${gearWithOneInventoryRecordAndOneBorrow}                     | ${25}
     ${"has one inquiry and one borrow"}                                   | ${gearWithOneInquiryAndOneBorrow}                             | ${-5}
     ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${-15}
-    ${"has one inventory record and one purchase"}                        | ${gearWithOneInventoryRecordAndOnePurchase}                   | ${25}
-    ${"has one inquiry and one purchase"}                                 | ${gearWithOneInquiryAndOnePurchase}                           | ${-5}
-    ${"is consumable and has one inquiry and one purchase"}               | ${consumableGearWithOneInquiryAndOnePurchase}                 | ${-15}
   `("when gear $explaination", ({ gear, expectedStockDiscrepancy }) => {
     it(`should return preview with ${expectedStockDiscrepancy} as stock discrepancy`, () => {
       const preview = DashboardGear.generatePreview(gear);
@@ -79,8 +70,6 @@ describe("Summarize gear for graph", () => {
     ${"is consumable and has two inquiries and one inventory record"}     | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
     ${"has one inventory record and one borrow"}                          | ${gearWithOneInventoryRecordAndOneBorrow}                     | ${friday08hto09h30} | ${gearWithOneInventoryRecordAndOneBorrowForGraph}
     ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${friday08hto09h30} | ${consumableGearWithOneInquiryAndOneBorrowForGraph}
-    ${"has one inventory record and one purchase"}                        | ${gearWithOneInventoryRecordAndOnePurchase}                   | ${friday08hto09h30} | ${gearWithOneInventoryRecordAndOnePurchaseForGraph}
-    ${"is consumable and has one inquiry and one purchase"}               | ${consumableGearWithOneInquiryAndOnePurchase}                 | ${friday08hto09h30} | ${consumableGearWithOneInquiryAndOnePurchaseForGraph}
   `("when gear $explaination", ({ gear, period, expectedData }) => {
     it(`should return gear for graph with ${expectedData.length} periods`, () => {
       const gearForGraph = DashboardGear.generateDetails(
@@ -96,7 +85,6 @@ describe("Summarize gear as requirement for CSV", () => {
   describe.each`
     explaination                                      | gear                                          | expected
     ${"has two inquiries with two inventory records"} | ${gearWithTwoInquiriesAndTwoInventoryRecords} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForCsv}
-    ${"has one inquiry and one purchase"}             | ${gearWithOneInquiryAndOnePurchase}           | ${gearWithOneInquiryAndOnePurchaseForCsv}
     ${"has one inquiry and one borrow"}               | ${gearWithOneInquiryAndOneBorrow}             | ${gearWithOneInquiryAndOneBorrowForCsv}
   `("when gear $explaination", ({ gear, expected }) => {
     it(`should return requirement for CSV`, () => {
@@ -106,7 +94,7 @@ describe("Summarize gear as requirement for CSV", () => {
   });
   describe("when gear is consumable", () => {
     it("should return null", () => {
-      const consumableGear = consumableGearWithOneInquiryAndOnePurchase;
+      const consumableGear = consumableGearWithOneInquiryAndOneBorrow;
       const requirement =
         DashboardGear.generateRequirementForCsv(consumableGear);
       expect(requirement).toBeNull();
@@ -116,7 +104,6 @@ describe("Summarize gear as requirement for CSV", () => {
     explaination                                   | gear
     ${"has no entries"}                            | ${gearWithNoInquiry}
     ${"has one inventory record and one borrow"}   | ${gearWithOneInventoryRecordAndOneBorrow}
-    ${"has one inventory record and one purchase"} | ${gearWithOneInventoryRecordAndOnePurchase}
   `("when gear without stock discrepancy $explaination", ({ gear }) => {
     it("should return null", () => {
       const requirement = DashboardGear.generateRequirementForCsv(gear);
