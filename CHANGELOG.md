@@ -1,3 +1,9 @@
+## [3.53.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.7...v3.53.8) (2026-05-12)
+
+### Bug Fixes
+
+* **volunteers:** improve perf of stats request [#2741](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2741) ([792cbe1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/792cbe12bc48e587ce5a6cf2a510d89fd3784548))
+
 ## [3.53.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.6...v3.53.7) (2026-05-11)
 
 ### Bug Fixes
