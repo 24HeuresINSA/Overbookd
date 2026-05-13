@@ -256,28 +256,28 @@ describe("Planning", () => {
     describe("when volunteer is assigned to 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00", () => {
       it("should retrieve 'Debarierrage Avenue des Arts' in tasks list", async () => {
         const tasks = await planning.generateForVolunteer(vincent.id);
-        const { assignees, id, ...barrierageAvenueDesArtShift } =
+        const { assignees, id, ...barrierageAvenueDesArtsShift } =
           debarrierageAvenueDesArtsOn12hTo14hMay15;
-        expect(tasks).toMatchObject([barrierageAvenueDesArtShift]);
+        expect(tasks).toMatchObject([barrierageAvenueDesArtsShift]);
       });
     });
     describe("when volunteer is assigned to both 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00 and from 2023-05-15 14:00 to 2023-05-15 16:00 and is contact", () => {
       it("should retrieve 'Debarierrage Avenue des Arts' in tasks list", async () => {
         const tasks = await planning.generateForVolunteer(antonin.id);
-        const { assignees, id, ...debarrierageAvenueDesArtShift } =
+        const { assignees, id, ...debarrierageAvenueDesArtsShift } =
           debarrierageAvenueDesArtsOn12hTo14hMay15;
-        const globalDebarrierageAvenueDesArtShift = {
-          ...debarrierageAvenueDesArtShift,
+        const globalDebarrierageAvenueDesArtsShift = {
+          ...debarrierageAvenueDesArtsShift,
           contacts: [],
           period: {
             start: shift12hTo14hMay15.start,
             end: shift14hTo16hMay15.end,
           },
         };
-        expect(tasks).toMatchObject([globalDebarrierageAvenueDesArtShift]);
+        expect(tasks).toMatchObject([globalDebarrierageAvenueDesArtsShift]);
       });
     });
-    describe("when volunteer is assigned to different tasks from 2023-05-12 20:00 to 2023-05-12 22:00 and from 2023-05-12 22:00 to 2023-05-13 00:00", () => {
+    describe("when volunteer is assigned to different tasks from 2023-05-12 20:00 to 2023-05-12 22:00 and from 2023-05-15 14:00 to 2023-05-15 16:00", () => {
       it("should retrieve both in tasks list", async () => {
         const tasks = await planning.generateForVolunteer(valerie.id);
         const expectedShifts = [
@@ -285,6 +285,17 @@ describe("Planning", () => {
           debarrierageAvenueDesArtsOn14hTo16hMay15,
         ].map(({ assignees, id, ...task }) => task);
         expect(tasks).toMatchObject(expectedShifts);
+      });
+    });
+    describe("when volunteer is assigned to different tasks from 2023-05-12 20:00 to 2023-05-12 22:00 and from 2023-05-15 14:00 to 2023-05-15 16:00 but we only want tasks after 2023-05-13 00:00", () => {
+      it("should retrieve only the tasks taking place after 2023-05-13 00:00", async () => {
+        const tasks = await planning.generateForVolunteer(
+          valerie.id,
+          shift00hTo02hMay13.start,
+        );
+        const { assignees, id, ...debarrierageAvenueDesArtsShift } =
+          debarrierageAvenueDesArtsOn14hTo16hMay15;
+        expect(tasks).toMatchObject([debarrierageAvenueDesArtsShift]);
       });
     });
     describe("when volunteer is assigned to various tasks, including some similar", () => {
