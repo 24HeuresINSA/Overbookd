@@ -19,7 +19,7 @@ function isPlanningAcceptType(
 export class PlanningRenderStrategy {
   constructor(private readonly volunteers: PlanningVolunteers) {}
 
-  get(format: string, plainText = false): RenderStrategy {
+  get(format: string, plainText: boolean = false): RenderStrategy {
     if (!isPlanningAcceptType(format)) return new JsonRenderStrategy();
     if (format === ICAL) {
       return plainText

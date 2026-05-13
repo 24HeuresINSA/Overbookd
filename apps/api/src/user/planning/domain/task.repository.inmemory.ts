@@ -8,11 +8,14 @@ export class InMemoryTaskRepository implements TaskRepository {
 
   getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
+    after?: Date,
   ): Promise<JsonStoredTask[]> {
     return Promise.resolve(
       this.tasks
-        .filter(({ assignees }) =>
-          assignees.some(({ id }) => id === volunteerId),
+        .filter(
+          ({ assignees, period }) =>
+            assignees.some(({ id }) => id === volunteerId) &&
+            (!after || period.start >= after),
         )
         .map((task) => {
           const assignees = this.findAllOtherAssignees(task, volunteerId);

@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  ParseDatePipe,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -37,10 +43,9 @@ export class TimelineController {
     isArray: true,
   })
   async getTimelines(
-    @Query("start") start: Date,
-    @Query("end") end: Date,
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
   ): Promise<TimelineEventResponseDto[]> {
-    const period = { start: new Date(start), end: new Date(end) };
-    return this.timelineService.getTimelines(period);
+    return this.timelineService.getTimelines({ start, end });
   }
 }

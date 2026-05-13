@@ -45,7 +45,7 @@ export class DashboardService {
     start: Date,
     end: Date,
   ): Promise<GearWithDetails> {
-    const period = Period.init({ start: new Date(start), end: new Date(end) });
+    const period = Period.init({ start, end });
     return this.dashboardGears.getDetails(slug, period);
   }
 

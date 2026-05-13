@@ -6,6 +6,7 @@ import { Task } from "./task.model";
 export type TaskRepository = {
   getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
+    after?: Date,
   ): Promise<JsonStoredTask[]>;
 
   getVolunteerTasksHeIsPartOf(volunteerId: number): Promise<PlanningTask[]>;
@@ -14,10 +15,14 @@ export type TaskRepository = {
 export class Planning {
   constructor(private readonly taskRepository: TaskRepository) {}
 
-  async generateForVolunteer(volunteerId: number): Promise<Task[]> {
+  async generateForVolunteer(
+    volunteerId: number,
+    after?: Date,
+  ): Promise<Task[]> {
     const tasks =
       await this.taskRepository.getVolunteerTasksInChronologicalOrder(
         volunteerId,
+        after,
       );
     const groupedTasks = tasks.reduce(
       (groupedTasks, task) => this.groupTasks(groupedTasks, task),

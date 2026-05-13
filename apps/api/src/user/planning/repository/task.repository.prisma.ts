@@ -68,11 +68,13 @@ export class PrismaTaskRepository implements TaskRepository {
 
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
+    after?: Date,
   ): Promise<JsonStoredTask[]> {
     const volunteerAssignments = await this.prisma.assignment.findMany({
       where: {
         assignees: { some: { userId: volunteerId } },
         festivalTask: IS_NOT_DELETED,
+        ...this.buildAfterGivenDateCondition(after),
       },
       select: this.buildAssignmentWithTaskSelection(volunteerId),
       orderBy: { start: "asc" },
@@ -111,6 +113,10 @@ export class PrismaTaskRepository implements TaskRepository {
     return mobilizations.map(({ ft, ...timeWindow }) => {
       return { ...ft, timeWindow };
     });
+  }
+
+  private buildAfterGivenDateCondition(after?: Date) {
+    return after ? { start: { gte: after } } : {};
   }
 
   private buildAssignmentWithTaskSelection(volunteerId: number) {
