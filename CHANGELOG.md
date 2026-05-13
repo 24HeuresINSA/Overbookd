@@ -1,3 +1,9 @@
+## [3.53.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.8...v3.53.9) (2026-05-13)
+
+### Bug Fixes
+
+* **planning:** remove tasks before pre pre manif from pdf plannings [#2725](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2725) ([ebbfc74](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ebbfc74acf7bcac06e374bedaa85279af6d7e118))
+
 ## [3.53.8](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.7...v3.53.8) (2026-05-12)
 
 ### Bug Fixes
