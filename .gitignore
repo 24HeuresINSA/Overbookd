@@ -56,6 +56,10 @@ dist
 .pnpm-store
 **/.output
 
+# Turborepo
+.turbo
+**/.turbo
+
 *.sql
 !migration.sql
 *.db

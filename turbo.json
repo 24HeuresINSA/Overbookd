@@ -1,0 +1,141 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "tsconfig.build.json",
+    "tsconfig.package.json",
+    "eslint.config.mjs",
+    "vitest.config.ts",
+    "vitest-ci.config.ts"
+  ],
+  "globalPassThroughEnv": ["CI", "NODE_ENV"],
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "inputs": [
+        "src/**",
+        "tsup.config.json",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "package.json"
+      ]
+    },
+    "build:ci": {
+      "dependsOn": ["^build:ci"],
+      "outputs": ["dist/**"],
+      "inputs": [
+        "src/**",
+        "tsup.config.json",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "package.json"
+      ]
+    },
+    "@overbookd/api#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "src/generated/**"],
+      "inputs": [
+        "src/**",
+        "prisma/**",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "nest-cli.json",
+        "package.json"
+      ]
+    },
+    "@overbookd/api#build:ci": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "src/generated/**"],
+      "inputs": [
+        "src/**",
+        "prisma/**",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "nest-cli.json",
+        "package.json"
+      ]
+    },
+    "@overbookd/web#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".output/**", ".nuxt/**"],
+      "inputs": [
+        "**/*.ts",
+        "**/*.vue",
+        "**/*.scss",
+        "**/*.css",
+        "**/*.json",
+        "nuxt.config.ts",
+        "tsconfig.json",
+        "package.json",
+        "!.nuxt/**",
+        "!.output/**",
+        "!node_modules/**",
+        "!dist/**"
+      ]
+    },
+    "@overbookd/web#build:ci": {
+      "dependsOn": ["^build"],
+      "outputs": [".output/**", ".nuxt/**"],
+      "inputs": [
+        "**/*.ts",
+        "**/*.vue",
+        "**/*.scss",
+        "**/*.css",
+        "**/*.json",
+        "nuxt.config.ts",
+        "tsconfig.json",
+        "package.json",
+        "!.nuxt/**",
+        "!.output/**",
+        "!node_modules/**",
+        "!dist/**"
+      ],
+      "env": ["CI"]
+    },
+    "lint": {
+      "dependsOn": [],
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "**/*.ts",
+        "**/*.vue",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "eslint.config.*",
+        "package.json",
+        "!**/dist/**",
+        "!**/.output/**",
+        "!**/.nuxt/**",
+        "!node_modules/**"
+      ]
+    },
+    "format": {
+      "cache": false
+    },
+    "prune": {
+      "dependsOn": [],
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "package.json"
+      ]
+    },
+    "test:unit:ci": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**", "junit.xml"],
+      "inputs": [
+        "src/**",
+        "tsconfig.json",
+        "tsconfig.build.json",
+        "vitest.config.ts",
+        "package.json"
+      ]
+    }
+  }
+}

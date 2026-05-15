@@ -5,3 +5,7 @@ packages:
   - apps/**
   - utils/**
   - '!**/dist/**'
+  - '!**/.output/**'
+  - '!**/.nuxt/**'
+  - '!**/.turbo/**'
+  - '!**/node_modules/**'
