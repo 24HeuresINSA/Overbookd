@@ -7,35 +7,40 @@ export class TalkieFrequencies {
       teams.includes(HARD) || teams.includes(VIEUX);
 
     const headerText = "Guide des fréquences\n- 24 heures de l'INSA -";
-    const baseFrequencies = [
-      { text: "1 : Général" },
-      { text: "2 : Points d'accès véhicules" },
-    ];
+
+    const baseFrequencies = [{ text: "1 : Général" }];
     const allFrequencies = [
       ...baseFrequencies,
-      { text: "3 : Sécurité (Organisateurs, Protection Civile, STAFF, SSSI)" },
+      { text: "2 : Points d'accès véhicules" },
+      { text: "3 : Sécurité (Organisateurs, Protection Civile, STAFF, S3SI)" },
       { text: "4 : Courses" },
       { text: "5 : Electriciens" },
       { text: "6 : Concerts" },
-    ];
-    const emergencyFrequencies = [
-      { text: "Si coupure de courant (1-2-3-4 en panne) :" },
-      { text: "5 : Sécurité" },
-      { text: "6 : Général" },
     ];
     const frequenciesToDisplay = shouldDisplayAllFrequencies
       ? allFrequencies
       : baseFrequencies;
 
+    const emergencyFrequencies = [
+      { text: "Si coupure de courant (1-2-3-4 en panne) :" },
+      { text: "5 : Sécurité" },
+      { text: "6 : Général" },
+    ];
+    const doNotUseOtherFrequencies = [
+      { text: "Veuillez ne pas utiliser les autres fréquences." },
+    ];
+    const otherFrequencies = shouldDisplayAllFrequencies
+      ? emergencyFrequencies
+      : doNotUseOtherFrequencies;
+
     const header = TalkieFrequencies.generateHeader(headerText);
     const frequencies: Content[] =
       TalkieFrequencies.generateFrequencies(frequenciesToDisplay);
-    const emergencyFrequenciesContent = shouldDisplayAllFrequencies
-      ? TalkieFrequencies.generateEmergencyFrequencies(emergencyFrequencies)
-      : [];
+    const otherFrequenciesContent =
+      TalkieFrequencies.generateOtherFrequencies(otherFrequencies);
     const pageBreak: Content = { text: "", pageBreak: "after" };
 
-    return [header, ...frequencies, ...emergencyFrequenciesContent, pageBreak];
+    return [header, ...frequencies, ...otherFrequenciesContent, pageBreak];
   }
 
   private static generateFrequencies(
@@ -46,12 +51,12 @@ export class TalkieFrequencies {
     return frequencies.map(({ text }): Content => ({ text, style, margin }));
   }
 
-  private static generateEmergencyFrequencies(
-    emergencyFrequencies: { text: string }[],
+  private static generateOtherFrequencies(
+    otherFrequencies: { text: string }[],
   ): Content[] {
-    const style = ["emergencyFrequency"];
+    const style = ["otherFrequency"];
     const margin: [number, number, number, number] = [75, 20, 50, 5];
-    return emergencyFrequencies.map(
+    return otherFrequencies.map(
       ({ text }): Content => ({ text, style, margin }),
     );
   }

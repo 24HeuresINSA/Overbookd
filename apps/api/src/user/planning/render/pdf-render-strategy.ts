@@ -92,7 +92,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     edition: { fontSize: 12, marginBottom: 10, marginTop: 10 },
     volunteer: { fontSize: 22 },
     frequency: { fontSize: 16, marginBottom: 10 },
-    emergencyFrequency: { fontSize: 12, marginBottom: 10 },
+    otherFrequency: { fontSize: 12, marginBottom: 10 },
   };
 
   private fonts = {
