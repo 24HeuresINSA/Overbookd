@@ -8,10 +8,12 @@ export class TalkieFrequencies {
 
     const headerText = "Guide des fréquences\n- 24 heures de l'INSA -";
 
-    const baseFrequencies = [{ text: "1 : Général" }];
+    const baseFrequencies = [
+      { text: "1 : Général" },
+      { text: "2 : Points d'accès véhicules" },
+    ];
     const allFrequencies = [
       ...baseFrequencies,
-      { text: "2 : Points d'accès véhicules" },
       { text: "3 : Sécurité (Organisateurs, Protection Civile, STAFF, S3SI)" },
       { text: "4 : Courses" },
       { text: "5 : Electriciens" },
