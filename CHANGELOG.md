@@ -1,3 +1,10 @@
+## [3.53.10](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.9...v3.53.10) (2026-05-18)
+
+### Bug Fixes
+
+* **planning:** add frequency 2 for PS [#2746](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2746) ([7be5d7b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7be5d7b78577be71fdba198ea09a0292c0f228ea))
+* **planning:** update talkie frequencies for volunteers [#2746](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2746) ([59ab5cd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/59ab5cddcacfe15413ad01e21663ad74eb73166d))
+
 ## [3.53.9](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.8...v3.53.9) (2026-05-13)
 
 ### Bug Fixes
