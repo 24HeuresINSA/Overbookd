@@ -10,7 +10,7 @@
           {{ displayableBalance }}
         </span>
       </v-card-text>
-      <v-card-action class="balance-cards__actions">
+      <v-card-actions class="balance-cards__actions">
         <v-btn
           text="Faire un virement"
           size="x-large"
@@ -19,7 +19,7 @@
           rounded
           @click="isTransferDialogOpen = true"
         />
-      </v-card-action>
+      </v-card-actions>
     </v-card>
 
     <v-card>

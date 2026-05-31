@@ -1,6 +1,5 @@
 <template>
   <NuxtLayout>
-    <NuxtPwaManifest />
     <NuxtPage />
     <SnackBar />
   </NuxtLayout>
