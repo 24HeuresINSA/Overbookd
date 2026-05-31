@@ -28,24 +28,6 @@
 
         <details>
           <summary>
-            Venant des Fiches Achats
-            <v-chip color="tertiary" size="x-small" variant="flat">
-              {{ sumQuantities(gearDetails.purchases) }}
-            </v-chip>
-          </summary>
-          <ul v-if="gearDetails.purchases.length">
-            <li v-for="purchase in gearDetails.purchases" :key="purchase.id">
-              <nuxt-link :to="`${PURCHASE_GEARS_URL}/${purchase.id}`">
-                Achat #{{ purchase.id }} - {{ purchase.seller }}:
-                <strong>{{ purchase.quantity }}</strong>
-              </nuxt-link>
-            </li>
-          </ul>
-          <p v-else>Aucun achat</p>
-        </details>
-
-        <details>
-          <summary>
             Venant des Fiches Emprunts
             <v-chip color="tertiary" size="x-small" variant="flat">
               {{ sumQuantities(gearDetails.borrows) }}
@@ -112,12 +94,7 @@
 <script lang="ts" setup>
 import type { GearDetails } from "@overbookd/http";
 import { formatDateToHumanReadable } from "@overbookd/time";
-import {
-  FA_URL,
-  FT_URL,
-  PURCHASE_GEARS_URL,
-  BORROW_GEARS_URL,
-} from "@overbookd/web-page";
+import { FA_URL, FT_URL, BORROW_GEARS_URL } from "@overbookd/web-page";
 import { sumQuantities } from "~/utils/logistic/quantity";
 
 type GearDetailsWithName = GearDetails & { name: string };

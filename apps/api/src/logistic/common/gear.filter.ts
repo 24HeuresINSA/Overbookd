@@ -1,7 +1,7 @@
 import { GearSearchOptions } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
 import { GearReferenceCodeService } from "../catalog/gear-reference-code.service";
-import { DatabaseGear } from "./dto/gear.query";
+import { DatabaseGear } from "./repositories/gear.query";
 
 export class GearFilter {
   static apply<T extends DatabaseGear>(

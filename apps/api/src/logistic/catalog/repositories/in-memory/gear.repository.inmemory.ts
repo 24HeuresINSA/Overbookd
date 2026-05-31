@@ -14,7 +14,6 @@ export const EMPTY_GEAR_LINKED_ITEMS = {
   tasks: [],
   actitivities: [],
   borrows: [],
-  purchases: [],
 };
 
 @Injectable()

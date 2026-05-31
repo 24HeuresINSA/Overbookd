@@ -2,7 +2,7 @@ import { DatabaseDashboardGear } from "../repository/dashboard.model";
 import { Period } from "@overbookd/time";
 import { sumQuantity } from "./sum-quantity";
 import { DashboardGearInquiry } from "./dashboard-gear-inquiry";
-import { GearBorrow, GearPurchase } from "@overbookd/http";
+import { GearBorrow } from "@overbookd/http";
 
 export class DashboardGearStock {
   private constructor() {}
@@ -21,11 +21,8 @@ export class DashboardGearStock {
       });
     const borrowed = sumQuantity(borrows);
 
-    const purchases = DashboardGearStock.findPurchasesAt(gear.purchases, date);
-    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
-
-    const stock = inventory + borrowed + purchased;
-    return { stock, inventory, borrows, purchases };
+    const stock = inventory + borrowed;
+    return { stock, inventory, borrows };
   }
 
   static computeConsumableStock(gear: DatabaseDashboardGear, date: Date) {
@@ -40,11 +37,8 @@ export class DashboardGearStock {
     );
     const borrowed = DashboardGearStock.findBorrowedQuantityByDate(gear, date);
 
-    const purchases = DashboardGearStock.findPurchasesAt(gear.purchases, date);
-    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
-
-    const stock = inventory + borrowed + purchased - consumed;
-    return { stock, inventory, consumed, borrows, purchases };
+    const stock = inventory + borrowed - consumed;
+    return { stock, inventory, consumed, borrows };
   }
 
   private static findBorrowsGivingConsumableAt(
@@ -62,26 +56,10 @@ export class DashboardGearStock {
     }, []);
   }
 
-  private static findPurchasesAt(
-    purchases: DatabaseDashboardGear["purchases"],
-    date: Date,
-  ): GearPurchase[] {
-    return purchases.reduce((purchases, { purchase, quantity }) => {
-      const isStartingAt = +purchase.availableOn === +date;
-
-      if (!isStartingAt) return purchases;
-
-      const { id, seller } = purchase;
-      const purchaseDetails = { id, seller, quantity };
-      return [...purchases, purchaseDetails];
-    }, []);
-  }
-
   static findStockByDate(gear: DatabaseDashboardGear, date: Date): number {
     const inventory = DashboardGearStock.findInventoryQuantity(gear);
     const borrowed = DashboardGearStock.findBorrowedQuantityByDate(gear, date);
-    const purchased = DashboardGearStock.findPurchaseQuantityByDate(gear, date);
-    return inventory + borrowed + purchased;
+    return inventory + borrowed;
   }
 
   private static findBorrowedQuantityByDate(
@@ -96,16 +74,6 @@ export class DashboardGearStock {
         : period.isIncluding(date);
     });
     return sumQuantity(borrows);
-  }
-
-  private static findPurchaseQuantityByDate(
-    gear: DatabaseDashboardGear,
-    date: Date,
-  ): number {
-    const purchases = gear.purchases.filter(({ purchase }) => {
-      return +purchase.availableOn <= +date;
-    });
-    return sumQuantity(purchases);
   }
 
   static findInventoryQuantity(gear: DatabaseDashboardGear): number {

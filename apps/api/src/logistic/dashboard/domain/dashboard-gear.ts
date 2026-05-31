@@ -46,7 +46,6 @@ export class DashboardGear {
       stock: {
         inventory: details.inventory,
         borrows: details.borrows,
-        purchases: details.purchases,
         total: details.stock,
       },
       inquiries: {
@@ -83,7 +82,7 @@ export class DashboardGear {
   ): GearDetails {
     const { inquiry, activities, tasks } =
       DashboardGearInquiry.computeConsumableInquiries(gear, start);
-    const { stock, inventory, consumed, borrows, purchases } =
+    const { stock, inventory, consumed, borrows } =
       DashboardGearStock.computeConsumableStock(gear, start);
 
     return {
@@ -96,7 +95,6 @@ export class DashboardGear {
       inventory,
       consumed,
       borrows,
-      purchases,
     };
   }
 
@@ -106,8 +104,10 @@ export class DashboardGear {
   ): GearDetails {
     const { inquiry, tasks, activities } =
       DashboardGearInquiry.computeGearInquiries(gear, start);
-    const { stock, inventory, borrows, purchases } =
-      DashboardGearStock.computeGearStock(gear, start);
+    const { stock, inventory, borrows } = DashboardGearStock.computeGearStock(
+      gear,
+      start,
+    );
     return {
       start,
       end,
@@ -117,7 +117,6 @@ export class DashboardGear {
       activities,
       inventory,
       borrows,
-      purchases,
     };
   }
 }

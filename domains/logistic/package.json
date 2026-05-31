@@ -1,7 +1,7 @@
 {
   "name": "@overbookd/logistic",
-  "version": "1.1.20",
-  "description": "Gestion de la logistique pour overbookd",
+  "version": "1.2.0",
+  "description": "Gestion de la logistique matériel pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -47,8 +47,7 @@
   },
   "keywords": [
     "logistic",
-    "borrow",
-    "purchase"
+    "borrow"
   ],
   "engines": {
     "node": "24.16.0",
