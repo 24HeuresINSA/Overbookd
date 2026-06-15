@@ -121,7 +121,7 @@ services:
 
   postgresql:
     container_name: overbookd-postgresql
-    image: postgres:16.14
+    image: postgres:18.4
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
@@ -132,7 +132,7 @@ services:
     networks:
       - overbookd_net-api
     volumes:
-      - ./data/dev/postgresql:/var/lib/postgresql/data
+      - ./data/dev/postgresql:/var/lib/postgresql
 
   adminer:
     container_name: overbookd-adminer
