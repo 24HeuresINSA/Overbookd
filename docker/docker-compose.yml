@@ -17,7 +17,7 @@ services:
 
   traefik:
     container_name: overbookd-traefik
-    image: traefik:v3.7.4
+    image: traefik:v3.7.5
     restart: unless-stopped
     command:
       # Docker config
