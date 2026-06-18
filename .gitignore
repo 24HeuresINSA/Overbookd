@@ -62,4 +62,4 @@ dist
 
 .npm/
 .cache/
-.config/pnpm/rc
+.config/
