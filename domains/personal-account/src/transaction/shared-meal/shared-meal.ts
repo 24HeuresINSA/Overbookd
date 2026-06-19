@@ -28,13 +28,8 @@ export class SharedMeal {
     }));
   }
 
-  private static INDIVIDUAL_AMOUNT_STEP = 5;
-
   private static divideAmount(totalAmount: number, guests: number) {
-    const individualAmount = totalAmount / guests;
-    const individualAmountSteps = Math.ceil(
-      individualAmount / this.INDIVIDUAL_AMOUNT_STEP,
-    );
-    return individualAmountSteps * this.INDIVIDUAL_AMOUNT_STEP;
+    const individualAmount = Math.ceil(totalAmount / guests);
+    return individualAmount;
   }
 }
