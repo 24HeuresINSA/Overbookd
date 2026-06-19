@@ -12,6 +12,7 @@ export type OnGoingSharedMeal = {
   meal: AboutMeal;
   chef: Adherent;
   areShotgunsOpen: boolean;
+  areMultipleShotgunsAllowed: boolean;
   portionCount: number;
   shotguns: Shotgun[];
 };
@@ -29,3 +30,5 @@ export function isPastMeal(meal: SharedMeal): meal is PastSharedMeal {
 export function isOnGoingMeal(meal: SharedMeal): meal is OnGoingSharedMeal {
   return !("expense" in meal);
 }
+
+export const MAX_PORTIONS_PER_GUEST = 5;

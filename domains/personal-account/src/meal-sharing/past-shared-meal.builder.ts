@@ -7,21 +7,30 @@ import {
 } from "./meal-sharing.error.js";
 import { SharedMealBuilder } from "./meal-sharing.js";
 
-export const SHOTGUN_PAST_MEAL_ERROR =
-  "Ce repas partagé a été cloturé, il n'est plus possible de le shotgun";
-
+export const ADD_PORTION_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de shotgun une portion";
+export const REMOVE_PORTION_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de retirer une portion";
 export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
 
 export const CLOSE_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de fermer les shotguns";
-
 export const OPEN_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'ouvrir les shotguns";
 
+export const ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible d'autoriser les shotguns multiples";
+export const DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de ne pas autoriser les shotguns multiples";
+
 class PastMealError extends MealSharingError {
-  static get shotgun(): PastMealError {
-    return new PastMealError(SHOTGUN_PAST_MEAL_ERROR);
+  static get addPortion(): PastMealError {
+    return new PastMealError(ADD_PORTION_PAST_MEAL_ERROR);
+  }
+
+  static get removePortion(): PastMealError {
+    return new PastMealError(REMOVE_PORTION_PAST_MEAL_ERROR);
   }
 
   static get cancelShotgun(): PastMealError {
@@ -35,6 +44,14 @@ class PastMealError extends MealSharingError {
   static get openShotguns(): PastMealError {
     return new PastMealError(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
   }
+
+  static get allowMultipleShotguns(): PastMealError {
+    return new PastMealError(ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
+  }
+
+  static get disallowMultipleShotguns(): PastMealError {
+    return new PastMealError(DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
+  }
 }
 
 type BuildPastSharedMeal = {
@@ -43,6 +60,7 @@ type BuildPastSharedMeal = {
   chef: Adherent;
   expense: Expense;
   areShotgunsOpen: boolean;
+  areMultipleShotgunsAllowed: boolean;
   shotguns: Shotgun[];
 };
 
@@ -55,10 +73,18 @@ export class PastSharedMealBuilder
     meal: AboutMeal,
     chef: Adherent,
     areShotgunsOpen: boolean,
+    readonly areMultipleShotgunsAllowed: boolean,
     _shotguns: Shotguns,
     readonly expense: Expense,
   ) {
-    super(id, meal, chef, areShotgunsOpen, _shotguns);
+    super(
+      id,
+      meal,
+      chef,
+      areShotgunsOpen,
+      areMultipleShotgunsAllowed,
+      _shotguns,
+    );
   }
 
   static build(builder: BuildPastSharedMeal): PastSharedMealBuilder {
@@ -67,6 +93,7 @@ export class PastSharedMealBuilder
       meal,
       chef,
       areShotgunsOpen,
+      areMultipleShotgunsAllowed,
       shotguns: shotgunList,
       expense,
     } = builder;
@@ -76,13 +103,18 @@ export class PastSharedMealBuilder
       meal,
       chef,
       areShotgunsOpen,
+      areMultipleShotgunsAllowed,
       shotguns,
       expense,
     );
   }
 
-  shotgunFor(): PastSharedMealBuilder {
-    throw PastMealError.shotgun;
+  addPortionFor(): PastSharedMealBuilder {
+    throw PastMealError.addPortion;
+  }
+
+  removePortionFor(): PastSharedMealBuilder {
+    throw PastMealError.removePortion;
   }
 
   cancelShotgunFor(): PastSharedMealBuilder {
@@ -99,5 +131,13 @@ export class PastSharedMealBuilder
 
   openShotguns(): PastSharedMealBuilder {
     throw PastMealError.openShotguns;
+  }
+
+  allowMultipleShotguns(): PastSharedMealBuilder {
+    throw PastMealError.allowMultipleShotguns;
+  }
+
+  disallowMultipleShotguns(): PastSharedMealBuilder {
+    throw PastMealError.disallowMultipleShotguns;
   }
 }
