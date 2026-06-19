@@ -65,9 +65,9 @@ describe("Generate all transactions to refound shared meal chef", () => {
       ],
     });
 
-    it("should round up to next 5cents", () => {
+    it("should round up to next cent", () => {
       const transactions = SharedMeal.refound(undividibleMeal);
-      expect(transactions.every(({ amount }) => amount === 670)).toBe(true);
+      expect(transactions.every(({ amount }) => amount === 667)).toBe(true);
     });
   });
 
