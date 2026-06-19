@@ -13,14 +13,17 @@ export type SharedMealTransaction = {
 const MAX_AMOUNT = ONE_EURO_IN_CENTS * 1000;
 
 export class SharedMeal {
-  static refound(meal: PastSharedMeal): SharedMealTransaction[] {
+  static refund(meal: PastSharedMeal): SharedMealTransaction[] {
     if (meal.expense.amount > MAX_AMOUNT) throw new AmountTooHigh();
 
-    const amount = this.divideAmount(meal.expense.amount, meal.portionCount);
     const context = `Repas partagé du ${meal.meal.date}`;
     const guests = meal.shotguns.filter(({ id }) => id !== meal.chef.id);
-    return guests.map(({ id }) => ({
-      amount,
+    return guests.map(({ id, portion }) => ({
+      amount: this.computeGuestAmount(
+        meal.expense.amount,
+        meal.portionCount,
+        portion,
+      ),
       context,
       to: meal.chef.id,
       type: SHARED_MEAL,
@@ -28,8 +31,14 @@ export class SharedMeal {
     }));
   }
 
-  private static divideAmount(totalAmount: number, guests: number) {
-    const individualAmount = Math.ceil(totalAmount / guests);
-    return individualAmount;
+  private static computeGuestAmount(
+    totalAmount: number,
+    totalPortions: number,
+    guestPortions: number,
+  ) {
+    const guestAmount = Math.ceil(
+      (totalAmount / totalPortions) * guestPortions,
+    );
+    return guestAmount;
   }
 }
