@@ -18,11 +18,11 @@ export class SharedMeal {
 
     const context = `Repas partagé du ${meal.meal.date}`;
     const guests = meal.shotguns.filter(({ id }) => id !== meal.chef.id);
-    return guests.map(({ id, portion }) => ({
+    return guests.map(({ id, portions }) => ({
       amount: this.computeGuestAmount(
         meal.expense.amount,
         meal.portionCount,
-        portion,
+        portions,
       ),
       context,
       to: meal.chef.id,

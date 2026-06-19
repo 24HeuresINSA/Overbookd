@@ -6,8 +6,9 @@ export type Adherent = {
 };
 export type Shotgun = Adherent & {
   date: Date;
-  portion: number;
+  portions: number;
 };
+
 export class Shotguns {
   private constructor(private readonly shotguns: Shotgun[]) {}
 
@@ -25,16 +26,18 @@ export class Shotguns {
       const existingShotgun = this.shotguns[shotgunIndex];
       const updatedShotgun = {
         ...existingShotgun,
-        portion: existingShotgun.portion + 1,
+        portions: existingShotgun.portions + 1,
       };
+
       return new Shotguns(
         updateItemToList(this.shotguns, shotgunIndex, updatedShotgun),
       );
     }
+
     const shotgun = {
       ...adherent,
       date: new Date(),
-      portion: 1,
+      portions: 1,
     };
     return new Shotguns([...this.shotguns, shotgun]);
   }
@@ -43,12 +46,14 @@ export class Shotguns {
     const shotgunIndex = this.shotguns.findIndex((s) => s.id === guest);
     if (shotgunIndex === -1) return this;
     const existingShotgun = this.shotguns[shotgunIndex];
-    if (existingShotgun.portion <= 1) {
+
+    if (existingShotgun.portions <= 1) {
       return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
     }
+
     const updatedShotgun = {
       ...existingShotgun,
-      portion: existingShotgun.portion - 1,
+      portions: existingShotgun.portions - 1,
     };
     return new Shotguns(
       updateItemToList(this.shotguns, shotgunIndex, updatedShotgun),
@@ -60,6 +65,6 @@ export class Shotguns {
   }
 
   get portionCount(): number {
-    return this.shotguns.reduce((total, { portion }) => total + portion, 0);
+    return this.shotguns.reduce((total, { portions }) => total + portions, 0);
   }
 }

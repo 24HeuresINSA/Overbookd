@@ -34,9 +34,9 @@ const meal = Meal.init("Riz cantonnais", {
   moment: "MIDI",
 });
 const shotguns = [
-  { ...julie, date: new Date("2023-10-12 08:00"), portion: 1 },
-  { ...noel, date: new Date("2023-10-12 08:51"), portion: 1 },
-  { ...shogosse, date: new Date("2023-10-12 13:00"), portion: 2 },
+  { ...julie, date: new Date("2023-10-12 08:00"), portions: 1 },
+  { ...noel, date: new Date("2023-10-12 08:51"), portions: 1 },
+  { ...shogosse, date: new Date("2023-10-12 13:00"), portions: 2 },
 ];
 
 const rizCantonnais = OnGoingSharedMealBuilder.build({
@@ -124,7 +124,7 @@ describe("Meal Sharing", () => {
           expect(meal.shotguns.at(0)).toEqual({
             ...expectedChef,
             date: expect.any(Date),
-            portion: 1,
+            portions: 1,
           });
         });
       },
@@ -143,7 +143,7 @@ describe("Meal Sharing", () => {
         expect(meal.shotguns).toContainEqual({
           ...lea,
           date: expect.any(Date),
-          portion: 1,
+          portions: 1,
         });
       });
       describe("when lea shotguns again", () => {
@@ -155,7 +155,7 @@ describe("Meal Sharing", () => {
           expect(meal.shotguns).toContainEqual({
             ...lea,
             date: expect.any(Date),
-            portion: 2,
+            portions: 2,
           });
         });
       });
@@ -178,7 +178,7 @@ describe("Meal Sharing", () => {
         expect(meal.shotguns).toContainEqual({
           ...shogosse,
           date: expect.any(Date),
-          portion: 1,
+          portions: 1,
         });
       });
     });
@@ -192,7 +192,7 @@ describe("Meal Sharing", () => {
         expect(meal.shotguns).toContainEqual({
           ...shogosse,
           date: expect.any(Date),
-          portion: 1,
+          portions: 1,
         });
       });
     });
@@ -401,7 +401,7 @@ describe("Meal Sharing", () => {
             expect(meal.shotguns).toContainEqual({
               ...lea,
               date: expect.any(Date),
-              portion: 1,
+              portions: 1,
             });
           });
         });
