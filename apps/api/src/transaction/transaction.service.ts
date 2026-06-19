@@ -102,7 +102,7 @@ export class TransactionService implements OnApplicationBootstrap {
   }
 
   private async generateForMeal(event: PastSharedMeal) {
-    const transactions = SharedMealPayment.refound(event);
+    const transactions = SharedMealPayment.refund(event);
     const mealTransactionsMessage = `Generating ${transactions.length} transactions for meal #${event.id}`;
     this.logger.log(mealTransactionsMessage);
     await this.repositories.transactions.createManyForSharedMeal(transactions);
