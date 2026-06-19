@@ -29,7 +29,7 @@ class ShotgunResponseDto extends AdherentResponseDto implements Shotgun {
   date: Date;
 
   @ApiProperty({ description: "number of portions requested" })
-  portion: number;
+  portions: number;
 }
 
 export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
@@ -51,7 +51,7 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
   @ApiProperty({ description: "shoutgun list", type: ShotgunResponseDto })
   shotguns: Shotgun[];
 
-  @ApiProperty({ description: "portion counter" })
+  @ApiProperty({ description: "total portion count" })
   portionCount: number;
 }
 

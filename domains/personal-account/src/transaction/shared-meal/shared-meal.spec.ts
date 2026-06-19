@@ -17,10 +17,10 @@ describe("Generate all transactions to refund shared meal chef", () => {
     meal: { menu: "Something", date: "dimanche 31 decembre soir" },
     areShotgunsOpen: true,
     shotguns: [
-      { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-      { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-      { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
-      { ...georges, date: new Date("2023-12-31T21:00+02:00"), portion: 1 },
+      { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+      { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+      { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
+      { ...georges, date: new Date("2023-12-31T21:00+02:00"), portions: 1 },
     ],
   });
 
@@ -59,9 +59,9 @@ describe("Generate all transactions to refund shared meal chef", () => {
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: true,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
       ],
     });
 
@@ -79,10 +79,10 @@ describe("Generate all transactions to refund shared meal chef", () => {
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: true,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 3 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
-        { ...georges, date: new Date("2023-12-31T09:00+02:00"), portion: 4 },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 3 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
+        { ...georges, date: new Date("2023-12-31T09:00+02:00"), portions: 4 },
       ],
     });
 
@@ -109,9 +109,9 @@ describe("Generate all transactions to refund shared meal chef", () => {
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: false,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portion: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portion: 1 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portion: 1 },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
       ],
     });
 

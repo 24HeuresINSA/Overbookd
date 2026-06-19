@@ -22,7 +22,7 @@ const SELECT_ADHERENT = {
 const SELECT_SHOTGUN = {
   guest: { select: SELECT_ADHERENT },
   date: true,
-  portion: true,
+  portions: true,
 };
 const SELECT_SHARED_MEAL = {
   id: true,
@@ -55,10 +55,10 @@ export class PrismaMeals implements SharedMeals {
         chefId: onGoingMeal.chef.id,
         shotguns: {
           createMany: {
-            data: onGoingMeal.shotguns.map((shotgun) => ({
-              guestId: shotgun.id,
-              date: shotgun.date,
-              portion: shotgun.portion,
+            data: onGoingMeal.shotguns.map(({ id, date, portions }) => ({
+              guestId: id,
+              date,
+              portions,
             })),
           },
         },
@@ -83,8 +83,8 @@ export class PrismaMeals implements SharedMeals {
       select: SELECT_SHARED_MEAL,
       data: {
         shotguns: {
-          upsert: meal.shotguns.map(({ id, date, portion }) => {
-            const shotgun = { guestId: id, date, portion };
+          upsert: meal.shotguns.map(({ id, date, portions }) => {
+            const shotgun = { guestId: id, date, portions };
             return {
               where: { guestId_mealId: { guestId: id, mealId: meal.id } },
               create: shotgun,
@@ -174,7 +174,7 @@ type DatabaseSharedMeal = {
   shotguns: {
     date: Date;
     guest: DatabaseAdherent;
-    portion: number;
+    portions: number;
   }[];
 };
 
@@ -196,7 +196,7 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
     id: shotgun.guest.id,
     name: buildUserNameWithNickname(shotgun.guest),
     date: shotgun.date,
-    portion: shotgun.portion,
+    portions: shotgun.portions,
   }));
 
   const baseBuilder = { id: saved.id, meal, chef, areShotgunsOpen, shotguns };
