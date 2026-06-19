@@ -23,7 +23,7 @@ export class Shotguns {
   addPortionFor(adherent: Adherent): Shotguns {
     const shotgunIndex = this.shotguns.findIndex((s) => s.id === adherent.id);
     if (shotgunIndex !== -1) {
-      const existingShotgun = this.shotguns[shotgunIndex];
+      const existingShotgun = this.shotguns[`${shotgunIndex}`];
       const updatedShotgun = {
         ...existingShotgun,
         portions: existingShotgun.portions + 1,
@@ -45,7 +45,7 @@ export class Shotguns {
   removePortionFor(guest: number): Shotguns {
     const shotgunIndex = this.shotguns.findIndex((s) => s.id === guest);
     if (shotgunIndex === -1) return this;
-    const existingShotgun = this.shotguns[shotgunIndex];
+    const existingShotgun = this.shotguns[`${shotgunIndex}`];
 
     if (existingShotgun.portions <= 1) {
       return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
@@ -57,6 +57,16 @@ export class Shotguns {
     };
     return new Shotguns(
       updateItemToList(this.shotguns, shotgunIndex, updatedShotgun),
+    );
+  }
+
+  cancelShotgunFor(guest: number): Shotguns {
+    return new Shotguns(this.shotguns.filter(({ id }) => id !== guest));
+  }
+
+  removeMultipleShotguns(): Shotguns {
+    return new Shotguns(
+      this.shotguns.map((shotgun) => ({ ...shotgun, portions: 1 })),
     );
   }
 

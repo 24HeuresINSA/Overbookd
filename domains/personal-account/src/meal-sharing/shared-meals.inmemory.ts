@@ -43,7 +43,11 @@ export class InMemorySharedMeals implements SharedMeals {
     return Promise.resolve(this.sharedMeals);
   }
 
-  addShotgun(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+  addPortion(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    return this.save(OnGoingSharedMealBuilder.build(meal));
+  }
+
+  removePortion(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
     return this.save(OnGoingSharedMealBuilder.build(meal));
   }
 
@@ -56,6 +60,16 @@ export class InMemorySharedMeals implements SharedMeals {
   }
 
   openShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    return this.save(OnGoingSharedMealBuilder.build(meal));
+  }
+
+  allowMultipleShotguns(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    return this.save(OnGoingSharedMealBuilder.build(meal));
+  }
+
+  disallowMultipleShotguns(
+    meal: OnGoingSharedMeal,
+  ): Promise<OnGoingSharedMeal> {
     return this.save(OnGoingSharedMealBuilder.build(meal));
   }
 
