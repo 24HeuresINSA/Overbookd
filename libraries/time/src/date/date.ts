@@ -67,6 +67,8 @@ export type DateString =
   | With30DaysDateString
   | With31DaysDateString;
 
+export type DateTimeString = `${DateString}T${Hour}:${number}`;
+
 // https://stackoverflow.com/questions/39494689/is-it-possible-to-restrict-number-to-a-certain-range/70307091#39495173
 type Enumerate<
   N extends number,

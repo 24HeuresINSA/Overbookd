@@ -36,9 +36,23 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
 import { CharismaEventModule } from "./charisma-event/charisma-event.module";
 import { MembershipApplicationModule } from "./registration/membership-application/membership-application.module";
+import { ZitadelAuthModule } from "./authentication-zitadel/zitadel-auth.module";
 
 @Module({
   imports: [
+    ZitadelAuthModule.forRoot({
+      authority: "https://zitadel.24heures.org",
+      authorization: {
+        type: "jwt-profile",
+        profile: {
+          type: "application",
+          keyId: process.env.ZITADEL_KEY_ID,
+          key: process.env.ZITADEL_KEY,
+          appId: process.env.ZITADEL_APP_ID,
+          clientId: process.env.ZITADEL_CLIENT_ID,
+        },
+      },
+    }),
     AuthenticationModule,
     UserModule,
     HashingUtilsModule,

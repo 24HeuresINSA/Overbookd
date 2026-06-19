@@ -9,11 +9,6 @@ export type JwtPayload = {
   username: string;
 };
 
-export type RefreshJwt = {
-  id: number;
-  email: string;
-};
-
 export class JwtUtil implements JwtPayload {
   userId: number;
   id: number;

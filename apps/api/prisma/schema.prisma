@@ -32,6 +32,7 @@ enum Membership {
 
 model User {
   id                        Int         @id @default(autoincrement())
+  zitadelId                 String?     @unique @map("zitadel_id")
   firstName                 String      @map("first_name") @db.VarChar(30)
   lastName                  String      @map("last_name") @db.VarChar(30)
   nickname                  String?     @db.VarChar(30)
@@ -39,8 +40,6 @@ model User {
   birthDate                 DateTime    @map("birth_date")
   phoneNumber               String      @map("phone_number") @db.VarChar(30)
   comment                   String?
-  resetPasswordToken        String?     @unique @map("reset_password_token")
-  resetPasswordExpires      DateTime?   @map("reset_password_expires")
   profilePicture            String?     @map("profile_picture")
   password                  String      @default("")
   createdAt                 DateTime    @default(now()) @map("created_at")

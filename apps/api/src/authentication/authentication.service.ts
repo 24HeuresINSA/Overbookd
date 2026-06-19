@@ -1,26 +1,21 @@
 import {
-  BadRequestException,
   HttpException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { randomBytes, timingSafeEqual } from "crypto";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
 import { UserService } from "../user/user.service";
 import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
-import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
-import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
-import { ONE_HOUR_IN_MS } from "@overbookd/time";
+import { JwtPayload } from "./entities/jwt-util.entity";
 import { UserAccess, UserCredentials } from "@overbookd/http";
 import { buildUserName } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 
 type UserEmail = { email: string };
-export type RefreshAccessRequest = { refreshToken: string };
 
 const DELETED_ACCOUNT_ERROR = new HttpException(
   "Il y a une erreur avec ton compte, envoie un mail à overbookd@24heures.org",
@@ -44,16 +39,6 @@ export class AuthenticationService {
     return {
       accessToken: this.jwtService.sign(jwtPayload),
       refreshToken: this.jwtService.sign(refreshPayload, { expiresIn: "7d" }),
-    };
-  }
-
-  async refresh({ refreshToken }: RefreshAccessRequest): Promise<UserAccess> {
-    const { email } = this.jwtService.verify<RefreshJwt>(refreshToken);
-    const user = await this.buildJwtUser({ email });
-    await this.saveLastLogin(user.id);
-    return {
-      accessToken: this.jwtService.sign(user),
-      refreshToken,
     };
   }
 
@@ -101,64 +86,5 @@ export class AuthenticationService {
 
   private async isSamePassword(userPassword: string, existingPassword: string) {
     return this.hashingUtilsService.compare(existingPassword, userPassword);
-  }
-
-  async forgot({ email }: UserEmail): Promise<void> {
-    const user = await this.prisma.user.findFirst({ where: { email } });
-    if (!user) return;
-
-    const isDeleted = await this.userService.isDeleted(email);
-    if (isDeleted) throw DELETED_ACCOUNT_ERROR;
-
-    const resetToken = randomBytes(20).toString("hex");
-    const expirationDate = new Date(Date.now() + ONE_HOUR_IN_MS);
-
-    const userDatabaseUpdate = this.prisma.user.update({
-      where: { email },
-      data: {
-        resetPasswordToken: resetToken,
-        resetPasswordExpires: expirationDate,
-      },
-    });
-
-    const sendMailToUSer = this.mailService.mailResetPassword({
-      email: email,
-      firstName: user.firstName,
-      token: resetToken,
-    });
-
-    await Promise.all([userDatabaseUpdate, sendMailToUSer]);
-  }
-
-  async recoverPassword({
-    token,
-    password,
-    password2,
-  }: ResetPasswordRequestDto): Promise<void> {
-    if (!timingSafeEqual(Buffer.from(password), Buffer.from(password2))) {
-      throw new BadRequestException("Les mot de passes ne sont pas identiques");
-    }
-
-    const user = await this.prisma.user.findFirst({
-      where: {
-        resetPasswordToken: token,
-        resetPasswordExpires: {
-          gte: new Date(),
-        },
-      },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException("Le token est invalide ou expiré");
-    }
-
-    await this.prisma.user.update({
-      where: { email: user.email },
-      data: {
-        password: await this.hashingUtilsService.hash(password),
-        resetPasswordToken: null,
-        resetPasswordExpires: null,
-      },
-    });
   }
 }

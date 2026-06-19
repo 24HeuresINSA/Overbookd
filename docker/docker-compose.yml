@@ -88,9 +88,9 @@ services:
       - "traefik.http.routers.dev-api.tls=true"
       - "traefik.http.routers.dev-api.entrypoints=websecure"
       - "traefik.http.services.dev-api.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api-v2`))"
+      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/ob-api`))"
       - "traefik.http.routers.dev-api.middlewares=api-strip"
-      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api-v2"
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/ob-api"
     command:
       - /bin/sh
       - -c

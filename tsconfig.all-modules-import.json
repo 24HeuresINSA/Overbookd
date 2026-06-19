@@ -19,6 +19,7 @@
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/logistic": ["./domains/logistic/src"],
       "@overbookd/money": ["./libraries/money/src"],
+      "@overbookd/oidc": ["./utils/oidc/src"],
       "@overbookd/pdf-book": ["./libraries/pdf-book/src"],
       "@overbookd/permission": ["./constants/permission/src"],
       "@overbookd/personal-account": ["./domains/personal-account/src"],
