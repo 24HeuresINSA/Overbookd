@@ -214,10 +214,8 @@ async function main() {
   const usefulLinksConfig: Configuration = {
     key: USEFUL_LINKS_KEY,
     value: {
-      googleCalendar:
-        "https://calendar.google.com/calendar/u/0?cid=Y182NjcyNmU4M2E1ODBiMDlmYThlNDIxOWRkZTUxMjIyMmE3NmFjMzA4YWJjNDMxMWExMGI4MGExYzk1ZDdjZDI1QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20",
-      slack:
-        "https://join.slack.com/t/24heuresdelin-gxr8091/shared_invite/zt-3dcm8mmcz-mQOnRI3ZgUGTIomRoJ9Qyg",
+      googleCalendar: "https://calendar.google.com",
+      slack: "https://join.slack.com",
     },
   };
   await prisma.configuration.upsert({
