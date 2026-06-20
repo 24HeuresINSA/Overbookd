@@ -15,7 +15,8 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a
+          >, la street view des 24 heures de l'INSA.
         </li>
         <li>
           <p>
@@ -43,11 +44,16 @@
 import { Edition } from "@overbookd/time";
 import { WIKI_URL } from "~/utils/navigation/url.constant";
 import { OVERVIEW_URL } from "~/utils/navigation/url.constant";
-import { CALENDAR_URL } from "~/utils/navigation/url.constant";
-import { SLACK_URL } from "~/utils/navigation/url.constant";
+
+const configurationStore = useConfigurationStore();
+
+const CALENDAR_URL = computed(
+  () => configurationStore.usefulLinks.googleCalendar,
+);
+const SLACK_URL = computed(() => configurationStore.usefulLinks.slack);
 
 const copyToClipBoard = () => {
-  navigator.clipboard.writeText(CALENDAR_URL);
+  navigator.clipboard.writeText(CALENDAR_URL.value);
   sendInfoNotification("Lien copié ✅");
 };
 </script>

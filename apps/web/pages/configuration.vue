@@ -81,6 +81,32 @@
         <TeamList />
       </v-expansion-panel-text>
     </v-expansion-panel>
+
+    <v-expansion-panel class="collapse">
+      <v-expansion-panel-title>
+        <h2>Liens utiles</h2>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <div class="useful-links">
+          <v-text-field
+            v-model="usefulLinks.googleCalendar"
+            label="Lien du calendrier Google"
+            hide-details
+          />
+          <v-text-field
+            v-model="usefulLinks.slack"
+            label="Lien du groupe Slack"
+            hide-details
+          />
+        </div>
+        <v-btn
+          text="Enregistrer"
+          color="primary"
+          class="save-btn"
+          @click="saveUsefulLinks"
+        />
+      </v-expansion-panel-text>
+    </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
@@ -89,6 +115,7 @@ import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
   REGISTER_FORM_KEY,
+  USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 
@@ -105,6 +132,7 @@ const dateOrgaWeekStart = ref<Date>(configurationStore.orgaWeekStartDate);
 const registerFormDescription = ref<string>(
   configurationStore.registerFormDescription,
 );
+const usefulLinks = ref(configurationStore.usefulLinks);
 
 const replaceRegisterDescriptionByTemplate = () => {
   registerFormDescription.value = defaultCommitmentPresentation;
@@ -133,6 +161,13 @@ const saveEventStartDate = async () => {
     }),
   ]);
 };
+
+const saveUsefulLinks = async () => {
+  await configurationStore.save({
+    key: USEFUL_LINKS_KEY,
+    value: usefulLinks.value,
+  });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -157,9 +192,15 @@ const saveEventStartDate = async () => {
   margin-top: 12px;
 }
 
-.event-date {
+.event-date,
+.useful-links {
   display: flex;
   gap: 15px;
+  flex-direction: column;
+}
+
+.event-date {
+  flex-direction: row;
 }
 
 .error {

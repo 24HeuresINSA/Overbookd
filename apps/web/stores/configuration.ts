@@ -2,6 +2,7 @@ import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
   REGISTER_FORM_KEY,
+  USEFUL_LINKS_KEY,
   type Configuration,
 } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
@@ -53,6 +54,15 @@ export const useConfigurationStore = defineStore("configuration", {
       const description = registerForm.description;
       if (typeof description !== "string") return defaultCommitmentPresentation;
       return description;
+    },
+
+    usefulLinks(): { googleCalendar: string; slack: string } {
+      const links = this.get(USEFUL_LINKS_KEY);
+      if (!isObject(links)) return { googleCalendar: "", slack: "" };
+      const googleCalendar =
+        typeof links.googleCalendar === "string" ? links.googleCalendar : "";
+      const slack = typeof links.slack === "string" ? links.slack : "";
+      return { googleCalendar, slack };
     },
   },
   actions: {
