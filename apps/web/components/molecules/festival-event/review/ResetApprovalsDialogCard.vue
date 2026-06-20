@@ -1,9 +1,5 @@
 <template>
-  <ConfirmationDialogCard
-    confirm-color="success"
-    @close="close"
-    @confirm="confirm"
-  >
+  <ConfirmationDialogCard @close="close" @confirm="confirm">
     <template #title>Réinitialiation des validations</template>
     <template #statement>
       Attention ! Modifier les instructions
