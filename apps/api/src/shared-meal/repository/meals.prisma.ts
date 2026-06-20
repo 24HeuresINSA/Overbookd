@@ -54,6 +54,7 @@ export class PrismaMeals implements SharedMeals {
         menu: onGoingMeal.meal.menu,
         date: onGoingMeal.meal.date,
         chefId: onGoingMeal.chef.id,
+        areMultipleShotgunsAllowed: onGoingMeal.areMultipleShotgunsAllowed,
         shotguns: {
           createMany: {
             data: onGoingMeal.shotguns.map(({ id, date, portions }) => ({
@@ -182,6 +183,14 @@ export class PrismaMeals implements SharedMeals {
       select: SELECT_SHARED_MEAL,
       data: {
         areMultipleShotgunsAllowed: false,
+        shotguns: {
+          updateMany: meal.shotguns.map(({ id, portions }) => {
+            return {
+              where: { guestId: id, mealId: meal.id },
+              data: { portions },
+            };
+          }),
+        },
       },
     });
     return buildSharedMeal(saved);

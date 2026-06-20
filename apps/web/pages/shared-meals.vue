@@ -1,7 +1,11 @@
 <template>
   <DesktopPageTitle />
+
   <div class="form-and-list">
-    <OfferSharedMealFormCard class="form desktop" />
+    <div class="form desktop">
+      <OfferSharedMealFormCard />
+    </div>
+
     <div class="meals">
       <SharedMealCard
         v-for="meal in meals"
@@ -11,14 +15,17 @@
       />
     </div>
   </div>
-  <v-btn
-    text="Proposer un repas"
-    class="offer-btn"
-    color="primary"
-    size="large"
-    rounded
-    @click="openOfferDialog"
-  />
+
+  <div class="offer-btn">
+    <v-btn
+      text="Proposer un repas"
+      color="primary"
+      size="large"
+      rounded
+      block
+      @click="openOfferDialog"
+    />
+  </div>
 
   <v-dialog v-model="isOfferDialogOpen" max-width="600px">
     <OfferSharedMealFormCard closable @close="closeOfferDialog" />
@@ -43,8 +50,12 @@ mealSharingStore.fetchAll();
 </script>
 
 <style lang="scss" scoped>
+$offer-btn-height: 50px;
+
 .offer-btn {
   display: none;
+  height: $offer-btn-height;
+  align-items: end;
 }
 
 @media screen and (max-width: $mobile-max-width) {
@@ -52,36 +63,53 @@ mealSharingStore.fetchAll();
     display: none;
   }
   .offer-btn {
-    display: block;
-    width: calc(100vw - 20px);
-    position: fixed;
-    bottom: calc($bottom-nav-height + 20px);
-    left: 10px;
-    right: 10px;
+    display: flex;
   }
 }
 
 .form-and-list {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 20px;
+  max-height: calc(90vh - #{$header-height});
+  overflow-y: scroll;
+
   .form {
-    flex-grow: 1;
+    position: sticky;
+    top: 0;
+    flex: 2 1 0;
   }
+
   .meals {
-    flex-grow: 3;
+    flex: 3 1 0;
     padding: 5px;
-    max-height: calc(90vh - #{$header-height});
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow-y: scroll;
     .meal {
       min-width: 95%;
     }
-    @media screen and (max-width: $mobile-max-width) {
-      padding-bottom: 70px;
+  }
+
+  @media screen and (max-width: 1150px) {
+    flex-direction: column;
+    gap: 10px;
+    max-height: initial;
+
+    .form,
+    .meals {
+      position: relative;
+      flex: initial;
+      width: 100%;
     }
+  }
+
+  @media screen and (max-width: $mobile-max-width) {
+    max-height: calc(
+      100vh - #{$header-height} - #{$bottom-nav-height} - #{$offer-btn-height} -
+        25px
+    );
   }
 }
 </style>
