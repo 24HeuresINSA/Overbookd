@@ -349,6 +349,7 @@ details {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 5px;
+    padding: 0 5px;
 
     .actions {
       display: flex;
