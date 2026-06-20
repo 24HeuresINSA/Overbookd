@@ -25,6 +25,8 @@ import {
   PastSharedMealBuilder,
   ADD_PORTION_PAST_MEAL_ERROR,
   REMOVE_PORTION_PAST_MEAL_ERROR,
+  ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
+  DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
@@ -354,6 +356,22 @@ describe("Meal Sharing", () => {
               rizCantonnais.chef.id,
             );
           }).rejects.toThrow(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to allow multiple shotguns", async () => {
+          expect(async () => {
+            await mealSharing.allowMultipleShotguns(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to disallow multiple shotguns", async () => {
+          expect(async () => {
+            await mealSharing.disallowMultipleShotguns(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
         });
         it("should count how many portions were done", () => {
           expect(pastSharedMeal.portionCount).toBe(3);
