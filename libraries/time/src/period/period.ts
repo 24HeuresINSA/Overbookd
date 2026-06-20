@@ -49,14 +49,18 @@ export class Period {
     return end.getTime() < start.getTime();
   }
 
-  isOverlapping(otherPeriod: Period): boolean {
+  isOverlapping(otherPeriod: Period): boolean;
+  isOverlapping(otherPeriod: IProvidePeriod): boolean;
+  isOverlapping(otherPeriod: Period | IProvidePeriod): boolean {
     return (
       this.start.getTime() < otherPeriod.end.getTime() &&
       this.end.getTime() > otherPeriod.start.getTime()
     );
   }
 
-  includes(otherPeriod: Period): boolean {
+  includes(otherPeriod: Period): boolean;
+  includes(otherPeriod: IProvidePeriod): boolean;
+  includes(otherPeriod: Period | IProvidePeriod): boolean {
     return (
       this.start.getTime() <= otherPeriod.start.getTime() &&
       this.end.getTime() >= otherPeriod.end.getTime()
@@ -69,14 +73,18 @@ export class Period {
     return happenAfterStart && happenBeforeEnd;
   }
 
-  isMergableWith(otherPeriod: Period): boolean {
+  isMergableWith(otherPeriod: Period): boolean;
+  isMergableWith(otherPeriod: IProvidePeriod): boolean;
+  isMergableWith(otherPeriod: Period | IProvidePeriod): boolean {
     return (
       this.start.getTime() <= otherPeriod.end.getTime() &&
       this.end.getTime() >= otherPeriod.start.getTime()
     );
   }
 
-  mergeWith(otherPeriod: Period): Period {
+  mergeWith(otherPeriod: Period): Period;
+  mergeWith(otherPeriod: IProvidePeriod): Period;
+  mergeWith(otherPeriod: Period | IProvidePeriod): Period {
     const start = new Date(
       Math.min(otherPeriod.start.getTime(), this.start.getTime()),
     );
@@ -86,7 +94,9 @@ export class Period {
     return new Period(start, end);
   }
 
-  splitOverlapping(otherPeriod: Period): Period[] {
+  splitOverlapping(otherPeriod: Period): Period[];
+  splitOverlapping(otherPeriod: IProvidePeriod): Period[];
+  splitOverlapping(otherPeriod: Period | IProvidePeriod): Period[] {
     const [firstStart, firstEnd, secondStart, secondEnd] = [
       this.start,
       this.end,
@@ -120,7 +130,9 @@ export class Period {
     });
   }
 
-  substract(otherPeriod: IProvidePeriod): Period[] {
+  substract(otherPeriod: Period): Period[];
+  substract(otherPeriod: IProvidePeriod): Period[];
+  substract(otherPeriod: Period | IProvidePeriod): Period[] {
     const pastPeriod = Period.init({
       start: this.start,
       end: otherPeriod.start,
@@ -141,7 +153,9 @@ export class Period {
     return this.mergeWith(otherPeriod).substract(otherPeriod);
   }
 
-  equals(otherPeriod: IProvidePeriod): boolean {
+  equals(otherPeriod: Period): boolean;
+  equals(otherPeriod: IProvidePeriod): boolean;
+  equals(otherPeriod: Period | IProvidePeriod): boolean {
     const startAtSameTime =
       this.start.getTime() === otherPeriod.start.getTime();
     const endAtSameTime = this.end.getTime() === otherPeriod.end.getTime();
