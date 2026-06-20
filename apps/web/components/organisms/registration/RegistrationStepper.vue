@@ -341,7 +341,7 @@ const cleanNickname = computed<string | undefined>(
   () => nickname.value || undefined,
 );
 
-const registerForm = computed<typeof RegisterForm>(() => {
+const registerForm = computed<RegisterForm>(() => {
   const form = commentAction(
     nicknameAction(RegisterForm.initFor(membership.value)),
   )
