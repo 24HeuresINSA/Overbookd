@@ -32,6 +32,7 @@ const SELECT_SHARED_MEAL = {
   amount: true,
   payedAt: true,
   areShotgunsOpen: true,
+  areMultipleShotgunsAllowed: true,
   shotguns: { select: SELECT_SHOTGUN },
 };
 
@@ -77,7 +78,7 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
-  async addShotgun(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+  async addPortion(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
     const saved = await this.prisma.sharedMeal.update({
       where: { id: meal.id },
       select: SELECT_SHARED_MEAL,
@@ -91,6 +92,26 @@ export class PrismaMeals implements SharedMeals {
               update: shotgun,
             };
           }),
+        },
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
+  async removePortion(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    const remainingGuests = meal.shotguns.map(({ id }) => id);
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        shotguns: {
+          updateMany: meal.shotguns.map(({ id, portions }) => {
+            return {
+              where: { guestId: id, mealId: meal.id },
+              data: { portions },
+            };
+          }),
+          deleteMany: { guestId: { notIn: remainingGuests } },
         },
       },
     });
@@ -140,6 +161,32 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
+  async allowMultipleShotguns(
+    meal: OnGoingSharedMeal,
+  ): Promise<OnGoingSharedMeal> {
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        areMultipleShotgunsAllowed: true,
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
+  async disallowMultipleShotguns(
+    meal: OnGoingSharedMeal,
+  ): Promise<OnGoingSharedMeal> {
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        areMultipleShotgunsAllowed: false,
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
   async list(): Promise<SharedMeal[]> {
     const meals = await this.prisma.sharedMeal.findMany({
       select: SELECT_SHARED_MEAL,
@@ -171,6 +218,7 @@ type DatabaseSharedMeal = {
   amount?: number;
   payedAt?: Date;
   areShotgunsOpen: boolean;
+  areMultipleShotgunsAllowed: boolean;
   shotguns: {
     date: Date;
     guest: DatabaseAdherent;
@@ -192,6 +240,7 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
   const chef = { id: saved.chef.id, name };
   const meal = { menu: saved.menu, date: saved.date };
   const areShotgunsOpen = saved.areShotgunsOpen;
+  const areMultipleShotgunsAllowed = saved.areMultipleShotgunsAllowed;
   const shotguns = saved.shotguns.map((shotgun) => ({
     id: shotgun.guest.id,
     name: buildUserNameWithNickname(shotgun.guest),
@@ -199,7 +248,14 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
     portions: shotgun.portions,
   }));
 
-  const baseBuilder = { id: saved.id, meal, chef, areShotgunsOpen, shotguns };
+  const baseBuilder = {
+    id: saved.id,
+    meal,
+    chef,
+    areShotgunsOpen,
+    areMultipleShotgunsAllowed,
+    shotguns,
+  };
 
   if (!amount || !payedAt) return baseBuilder;
 

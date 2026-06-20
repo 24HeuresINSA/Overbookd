@@ -113,37 +113,41 @@ export class SharedMealController {
     type: Number,
     required: true,
   })
-  shotgunMeal(
+  shotgunMealPortion(
     @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
     @Request() { user }: RequestWithUserPayload,
   ): Promise<OnGoingSharedMealResponseDto> {
-    return this.sharedMeal.shotgun(mealId, user.id);
+    return this.sharedMeal.addPortion(mealId, user.id);
   }
 
-  @Post(":mealId/expense")
+  @Post(":mealId/shotgun/:guestId/remove-portion")
   @Permission(OFFER_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: "Expense recorded and shared meal closed",
-    type: PastSharedMealResponseDto,
+    description: "Selected meal details",
+    type: OnGoingSharedMealResponseDto,
   })
   @ApiParam({
     name: "mealId",
     type: Number,
     required: true,
   })
-  @ApiBody({ type: RecordExpenseRequestDto })
-  recordExpense(
+  @ApiParam({
+    name: "guestId",
+    type: Number,
+    required: true,
+  })
+  unshotgunMealPortion(
     @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Param("guestId", ParseIntPipe) guestId: Adherent["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() expense: RecordExpenseRequestDto,
-  ): Promise<PastSharedMeal> {
-    return this.sharedMeal.recordExpense(mealId, user, expense);
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.removePortion(mealId, guestId, user.id);
   }
 
   @Delete(":mealId/shotgun/:guestId")
-  @Permission(SHOTGUN_SHARED_MEAL)
+  @Permission(OFFER_SHARED_MEAL)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -168,8 +172,30 @@ export class SharedMealController {
     return this.sharedMeal.cancelShotgun(mealId, guestId, user.id);
   }
 
+  @Post(":mealId/expense")
+  @Permission(OFFER_SHARED_MEAL)
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Expense recorded and shared meal closed",
+    type: PastSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  @ApiBody({ type: RecordExpenseRequestDto })
+  recordExpense(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() expense: RecordExpenseRequestDto,
+  ): Promise<PastSharedMeal> {
+    return this.sharedMeal.recordExpense(mealId, user, expense);
+  }
+
   @Delete(":mealId")
-  @Permission(SHOTGUN_SHARED_MEAL)
+  @Permission(OFFER_SHARED_MEAL)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -224,5 +250,45 @@ export class SharedMealController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<OnGoingSharedMealResponseDto> {
     return this.sharedMeal.openShotguns(mealId, user.id);
+  }
+
+  @Post(":mealId/allow-multiple-shotguns")
+  @Permission(OFFER_SHARED_MEAL)
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Updated meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  allowMultipleShotguns(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.allowMultipleShotguns(mealId, user.id);
+  }
+
+  @Post(":mealId/disallow-multiple-shotguns")
+  @Permission(OFFER_SHARED_MEAL)
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Updated meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  disallowMultipleShotguns(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.disallowMultipleShotguns(mealId, user.id);
   }
 }

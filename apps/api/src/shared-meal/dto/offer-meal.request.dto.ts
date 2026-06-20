@@ -3,7 +3,7 @@ import { OfferMeal } from "@overbookd/http";
 import { MIDI, MealDate, Moment, SOIR } from "@overbookd/personal-account";
 import { DateString } from "@overbookd/time";
 import { Type } from "class-transformer";
-import { IsEnum, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsString, ValidateNested } from "class-validator";
 
 const MOMENTS: Moment[] = [MIDI, SOIR];
 
@@ -32,4 +32,8 @@ export class OfferMealRequestDto implements OfferMeal {
   @Type(() => MealDateRepresentationDto)
   @ValidateNested()
   date: MealDate;
+
+  @ApiProperty()
+  @IsBoolean()
+  areMultipleShotgunsAllowed: boolean;
 }

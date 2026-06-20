@@ -48,7 +48,10 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
   @ApiProperty({ description: "shotguns opened" })
   areShotgunsOpen: boolean;
 
-  @ApiProperty({ description: "shoutgun list", type: ShotgunResponseDto })
+  @ApiProperty({ description: "allow guests to shotgun multiple portions" })
+  areMultipleShotgunsAllowed: boolean;
+
+  @ApiProperty({ description: "shotgun list", type: ShotgunResponseDto })
   shotguns: Shotgun[];
 
   @ApiProperty({ description: "total portion count" })
