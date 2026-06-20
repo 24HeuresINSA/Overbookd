@@ -10,7 +10,7 @@ import { george, lafarge } from "../festival-activity.fake.js";
 import { lea } from "../festival-activity.fake";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import { ContractorNotFound } from "../festival-activity.error.js";
-import { humain } from "../../common/review.js";
+import { HUMAIN } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import { VIEUX } from "@overbookd/team-constants";
 
@@ -79,18 +79,18 @@ describe("In Charge section of festival activity preparation", () => {
   });
 
   describe.each`
-    contractor                                                                                                                                         | activityName               | activity      | expectedFirstname | expectedLastname | expectedPhone   | expectedEmail            | expectedCompany | expectedComment
-    ${{ firstname: "Benjos", lastname: "Le Magicos", phone: "0612345678" }}                                                                            | ${escapeGame.general.name} | ${escapeGame} | ${"Benjos"}       | ${"Le Magicos"}  | ${"0612345678"} | ${null}                  | ${null}         | ${null}
-    ${{ firstname: "Rick", lastname: "Astley", phone: "0611111111", comment: "Never gonna give you up" }}                                              | ${justDance.general.name}  | ${justDance}  | ${"Rick"}         | ${"Astley"}      | ${"0611111111"} | ${null}                  | ${null}         | ${"Never gonna give you up"}
-    ${{ firstname: "Noel", lastname: "Pere", phone: "0600000000", email: "groenland@gmail.com", company: "Groenland", comment: "Type un peu louche" }} | ${pcSecurite.general.name} | ${pcSecurite} | ${"Noel"}         | ${"Pere"}        | ${"0600000000"} | ${"groenland@gmail.com"} | ${"Groenland"}  | ${"Type un peu louche"}
+    contractor                                                                                                                                               | activityName               | activity      | expectedFirstName | expectedLastName | expectedPhoneNumber | expectedEmail            | expectedCompany | expectedComment
+    ${{ firstName: "Benjos", lastName: "Le Magicos", phoneNumber: "0612345678" }}                                                                            | ${escapeGame.general.name} | ${escapeGame} | ${"Benjos"}       | ${"Le Magicos"}  | ${"0612345678"}     | ${null}                  | ${null}         | ${null}
+    ${{ firstName: "Rick", lastName: "Astley", phoneNumber: "0611111111", comment: "Never gonna give you up" }}                                              | ${justDance.general.name}  | ${justDance}  | ${"Rick"}         | ${"Astley"}      | ${"0611111111"}     | ${null}                  | ${null}         | ${"Never gonna give you up"}
+    ${{ firstName: "Noel", lastName: "Pere", phoneNumber: "0600000000", email: "groenland@gmail.com", company: "Groenland", comment: "Type un peu louche" }} | ${pcSecurite.general.name} | ${pcSecurite} | ${"Noel"}         | ${"Pere"}        | ${"0600000000"}     | ${"groenland@gmail.com"} | ${"Groenland"}  | ${"Type un peu louche"}
   `(
     "when adherent want to add a contractor in $activityName",
     ({
       contractor,
       activity,
-      expectedFirstname,
-      expectedLastname,
-      expectedPhone,
+      expectedFirstName,
+      expectedLastName,
+      expectedPhoneNumber,
       expectedEmail,
       expectedCompany,
       expectedComment,
@@ -103,9 +103,9 @@ describe("In Charge section of festival activity preparation", () => {
 
         const expectedContractor = {
           id: expect.any(Number),
-          firstname: expectedFirstname,
-          lastname: expectedLastname,
-          phone: expectedPhone,
+          firstName: expectedFirstName,
+          lastName: expectedLastName,
+          phoneNumber: expectedPhoneNumber,
           email: expectedEmail,
           company: expectedCompany,
           comment: expectedComment,
@@ -117,23 +117,23 @@ describe("In Charge section of festival activity preparation", () => {
   );
 
   const jeanDupont = escapeGame.inCharge.contractors[0];
-  const jeanDupontName = `${jeanDupont.firstname} ${jeanDupont.lastname}`;
+  const jeanDupontName = `${jeanDupont.firstName} ${jeanDupont.lastName}`;
 
   const charlesHenry = justDance.inCharge.contractors[0];
-  const charlesHenryName = `${charlesHenry.firstname} ${charlesHenry.lastname}`;
+  const charlesHenryName = `${charlesHenry.firstName} ${charlesHenry.lastName}`;
 
   describe.each`
     fields                                      | activityName               | activityId       | contractorName      | contractor      | update
-    ${"phone"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phone: "0612451729" }}
-    ${"phone"}                                  | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ phone: "0707070707" }}
+    ${"phoneNumber"}                            | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phoneNumber: "0612451729" }}
+    ${"phoneNumber"}                            | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ phoneNumber: "0707070707" }}
     ${"email"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ email: "jean@dupont.fr" }}
     ${"company"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ company: "Auto-Dupont" }}
     ${"comment"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ comment: "Fait des dad jokes" }}
     ${"comment"}                                | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ comment: "Avec son gros pif" }}
-    ${"phone and email"}                        | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phone: "0615372947", email: "jean@dupont.com" }}
-    ${"company and lastname"}                   | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ company: null, lastname: "De La Porte" }}
-    ${"firstname, lastname, company and email"} | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ firstname: "Inco", lastname: "Nito", company: null, email: null }}
-    ${"firstname, lastname, company and email"} | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ firstname: "Didier", lastname: "Jacques", company: "Didi & co", email: null }}
+    ${"phoneNumber and email"}                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phoneNumber: "0615372947", email: "jean@dupont.com" }}
+    ${"company and lastName"}                   | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ company: null, lastName: "De La Porte" }}
+    ${"firstName, lastName, company and email"} | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ firstName: "Inco", lastName: "Nito", company: null, email: null }}
+    ${"firstName, lastName, company and email"} | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ firstName: "Didier", lastName: "Jacques", company: "Didi & co", email: null }}
   `(
     "when updating $fields from $contractorName in $activityName",
     ({ fields, activityId, contractor, update }) => {
@@ -183,7 +183,7 @@ describe("In Charge section of festival activity preparation", () => {
     });
   });
 
-  describe(`when ${approvedByHumain.general.name} is already validated by ${humain}`, () => {
+  describe(`when ${approvedByHumain.general.name} is already validated by ${HUMAIN}`, () => {
     describe("when trying to update in charge information", () => {
       it("should indicate that in charge section is locked", async () => {
         expect(
@@ -200,9 +200,9 @@ describe("In Charge section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.addContractor(approvedByHumain.id, {
-              firstname: "Benjos",
-              lastname: "Le Magicos",
-              phone: "0612345678",
+              firstName: "Benjos",
+              lastName: "Le Magicos",
+              phoneNumber: "0612345678",
             }),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });
@@ -224,7 +224,7 @@ describe("In Charge section of festival activity preparation", () => {
           async () =>
             await prepareFestivalActivity.updateContractor(
               approvedByHumain.id,
-              { id: lafarge.id, firstname: "Davis" },
+              { id: lafarge.id, firstName: "Davis" },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });

@@ -123,10 +123,10 @@ const volunteersBornToday = computed<UserDataWithPotentialyProfilePicture[]>(
   () => {
     const today = OverDate.now();
     return props.volunteers.filter((volunteer) => {
-      const birthdate = OverDate.from(volunteer.birthdate);
+      const dateOfBirth = OverDate.from(volunteer.dateOfBirth);
       return (
-        birthdate.monthlyDate.month === today.monthlyDate.month &&
-        birthdate.monthlyDate.day === today.monthlyDate.day
+        dateOfBirth.monthlyDate.month === today.monthlyDate.month &&
+        dateOfBirth.monthlyDate.day === today.monthlyDate.day
       );
     });
   },

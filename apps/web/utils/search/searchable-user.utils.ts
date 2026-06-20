@@ -8,8 +8,8 @@ type SearchedUser = UserName & {
 };
 
 export function toSearchable<T extends SearchedUser>(user: T): Searchable<T> {
-  const { nickname, firstname, lastname, email, mobilePhone } = user;
-  const userIdentity = `${firstname} ${lastname} ${nickname} ${email} ${mobilePhone}`;
+  const { nickname, firstName, lastName, email, mobilePhone } = user;
+  const userIdentity = `${firstName} ${lastName} ${nickname} ${email} ${mobilePhone}`;
   const searchable = SlugifyService.apply(userIdentity);
   return { ...user, searchable };
 }

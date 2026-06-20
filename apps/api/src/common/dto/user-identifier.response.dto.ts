@@ -11,17 +11,17 @@ export class UserIdentifierResponseDto implements User {
 
   @ApiProperty({
     required: true,
-    description: "user firstname",
+    description: "user first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
-    description: "user lastname",
+    description: "user last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     required: false,

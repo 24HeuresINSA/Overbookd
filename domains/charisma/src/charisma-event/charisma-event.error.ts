@@ -53,7 +53,7 @@ export class SameParticipantMultipleTimes extends CharismaEventError {
 export class AlreadyExists extends CharismaEventError {
   constructor(participants: User[]) {
     const formattedParticipants = participants
-      .map(({ firstname, lastname }) => `${firstname} ${lastname}`)
+      .map(({ firstName, lastName }) => `${firstName} ${lastName}`)
       .join(", ");
     super(`${formattedParticipants} ${ALREADY_EXISTS_ERROR_MESSAGE}`);
   }

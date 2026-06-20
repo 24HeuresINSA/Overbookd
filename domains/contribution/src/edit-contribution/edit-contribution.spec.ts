@@ -15,14 +15,18 @@ const CURRENT_EDITION = 49;
 
 const noel: Adherent = {
   id: 1,
-  firstname: "Noël",
-  lastname: "Ertsemud",
+  firstName: "Noël",
+  lastName: "Ertsemud",
+  email: "noel.ertsemud@example.com",
+  teams: [],
 };
 const lea: Adherent = {
   id: 2,
-  firstname: "Léa",
-  lastname: "Mauyno",
+  firstName: "Léa",
+  lastName: "Mauyno",
   nickname: "Shogosse",
+  email: "lea.mauyno@example.com",
+  teams: [],
 };
 
 const noelContrib: Contribution = {

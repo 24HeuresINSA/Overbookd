@@ -36,7 +36,7 @@
       <div v-else class="error-message">
         <p v-if="!selectedVolunteer">Aucun bénévole séléctionné</p>
         <p v-else>
-          Aucun créneau disponible pour {{ selectedVolunteer.firstname }}
+          Aucun créneau disponible pour {{ selectedVolunteer.firstName }}
         </p>
       </div>
     </v-card-text>

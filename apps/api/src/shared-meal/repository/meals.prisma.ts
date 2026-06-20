@@ -15,8 +15,8 @@ import { buildUserNameWithNickname } from "@overbookd/user";
 
 const SELECT_ADHERENT = {
   id: true,
-  firstname: true,
-  lastname: true,
+  firstName: true,
+  lastName: true,
   nickname: true,
 };
 const SELECT_SHOTGUN = { guest: { select: SELECT_ADHERENT }, date: true };
@@ -153,8 +153,8 @@ export class PrismaMeals implements SharedMeals {
 
 type DatabaseAdherent = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   nickname: string;
 };
 

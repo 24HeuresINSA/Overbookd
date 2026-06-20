@@ -55,7 +55,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
 
       const { slug, name, eventDate, participant } = res;
       sendSuccessNotification(
-        `La participation de ${participant.firstname} à ${name} a été modifiée`,
+        `La participation de ${participant.firstName} à ${name} a été modifiée`,
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);
@@ -76,7 +76,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       );
       if (isHttpError(res)) return;
       sendSuccessNotification(
-        `La participation de ${participant.firstname} à ${name} a été supprimée`,
+        `La participation de ${participant.firstName} à ${name} a été supprimée`,
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);

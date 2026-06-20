@@ -18,18 +18,18 @@ export class HelpingVolunteerResponseDto implements HelpingVolunteer {
   @ApiProperty({ name: "id", description: "Volunteer id", type: Number })
   id: number;
 
-  @ApiProperty({ description: "Volunteer firstname", type: String })
-  firstname: string;
+  @ApiProperty({ description: "Volunteer first name", type: String })
+  firstName: string;
 
-  @ApiProperty({ description: "Volunteer lastname", type: String })
-  lastname: string;
+  @ApiProperty({ description: "Volunteer last name", type: String })
+  lastName: string;
 
   @ApiProperty({
     description: "Volunteer phone number",
     type: String,
     example: "0601020304",
   })
-  phone: string;
+  phoneNumber: string;
 
   @ApiProperty({
     description: "Teams volunteer is member of",

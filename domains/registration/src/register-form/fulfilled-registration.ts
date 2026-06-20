@@ -34,12 +34,12 @@ export type Teams = [] | [TeamCode] | [TeamCode, TeamCode];
 
 export type FulfilledRegistration = {
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   password: string;
   mobilePhone: string;
   nickname?: string;
-  birthdate: Date;
+  dateOfBirth: Date;
   comment?: string;
   teams: Teams;
   hasApprovedEULA: boolean;

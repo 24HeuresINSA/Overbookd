@@ -48,9 +48,9 @@ const SELECT_IN_CHARGE = {
   contractors: {
     select: {
       id: true,
-      firstname: true,
-      lastname: true,
-      phone: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
       email: true,
       company: true,
       comment: true,

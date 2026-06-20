@@ -12,19 +12,19 @@ export class ContractorResponseDto implements Contractor {
     description: "Contractor first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     description: "Contractor last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     description: "Contractor phone number",
     type: String,
   })
-  phone: string;
+  phoneNumber: string;
 
   @ApiProperty({
     description: "Contractor email",

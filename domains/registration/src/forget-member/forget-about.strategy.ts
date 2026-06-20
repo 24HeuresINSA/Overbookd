@@ -41,8 +41,8 @@ export class WithTransactions implements ForgetAboutMember {
 
   forget(): Promise<AnonymousMember> {
     const anonymizedMember: AnonymousMember = {
-      firstname: ANONYMOUS,
-      lastname: ANONYMOUS,
+      firstName: ANONYMOUS,
+      lastName: ANONYMOUS,
       mobilePhone: ANONYMOUS_MOBILE_PHONE,
       email: `anonymous+${this.id}@24heures.org`,
       comment: null,

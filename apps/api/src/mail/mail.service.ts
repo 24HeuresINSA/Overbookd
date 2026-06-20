@@ -27,24 +27,24 @@ import { PrismaMembers } from "./repository/members.prisma";
 
 type EmailResetPassword = {
   email: string;
-  firstname: string;
+  firstName: string;
   token: string;
 };
 
 type WelcomeNewcomer = {
   email: string;
-  firstname: string;
+  firstName: string;
   membership: Membership;
 };
 
 type EnrollVolunteer = {
   email: string;
-  firstname: string;
+  firstName: string;
 };
 
 export type Member = Pick<
   Profile,
-  "email" | "firstname" | "lastname" | "nickname"
+  "email" | "firstName" | "lastName" | "nickname"
 >;
 
 type ActivityRejected = {
@@ -200,7 +200,7 @@ export class MailService implements OnApplicationBootstrap {
 
   async mailResetPassword({
     email,
-    firstname,
+    firstName,
     token,
   }: EmailResetPassword): Promise<void> {
     try {
@@ -218,7 +218,7 @@ export class MailService implements OnApplicationBootstrap {
         subject: "Réinitialisation de ton mot de passe Overbookd",
         template: "reset-password",
         html: await renderFile(__dirname + "/templates/reset-password.ejs", {
-          firstname,
+          firstName,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
         }),
       };
@@ -232,7 +232,7 @@ export class MailService implements OnApplicationBootstrap {
 
   async welcome({
     email,
-    firstname,
+    firstName,
     membership,
   }: WelcomeNewcomer): Promise<void> {
     try {
@@ -253,7 +253,7 @@ export class MailService implements OnApplicationBootstrap {
           __dirname + `/templates/welcome-${membership.toLowerCase()}.ejs`,
           {
             email,
-            firstname,
+            firstName,
             loginLink: `https://${process.env.DOMAIN}/login`,
           },
         ),
@@ -265,7 +265,7 @@ export class MailService implements OnApplicationBootstrap {
     }
   }
 
-  async enrollVolunteer({ email, firstname }: EnrollVolunteer): Promise<void> {
+  async enrollVolunteer({ email, firstName }: EnrollVolunteer): Promise<void> {
     try {
       const transporter = createTransport({
         host: process.env.SMTP_HOST,
@@ -282,7 +282,7 @@ export class MailService implements OnApplicationBootstrap {
         template: "volunteer-enrolled",
         html: await renderFile(
           __dirname + "/templates/volunteer-enrolled.ejs",
-          { firstname },
+          { firstName },
         ),
       };
       await transporter.sendMail(options);

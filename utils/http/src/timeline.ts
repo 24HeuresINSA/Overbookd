@@ -7,11 +7,11 @@ export type TimelineActivity = {
 };
 
 export type TimelineAssignee = {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   teams: string[];
   as?: string;
-  phone: string;
+  phoneNumber: string;
 };
 
 export type TimelineAssignment = IProvidePeriod & {

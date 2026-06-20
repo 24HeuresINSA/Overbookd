@@ -79,8 +79,8 @@ export const usePlanningStore = defineStore("planning", {
       const userStore = useUserStore();
       const loggedUser = userStore.loggedUser;
       if (!loggedUser) return;
-      const { firstname, lastname, id } = loggedUser;
-      const volunteer = { firstname, lastname, id };
+      const { firstName, lastName, id } = loggedUser;
+      const volunteer = { firstName, lastName, id };
       downloadPdfPlanning(res, volunteer);
     },
 
@@ -103,13 +103,13 @@ export const usePlanningStore = defineStore("planning", {
       for (let i = 0; i < volunteers.length; i += maxRequests) {
         const chunk = volunteers.slice(i, i + maxRequests);
         const plannings = await Promise.all(
-          chunk.map(async ({ id, firstname, lastname }) => {
+          chunk.map(async ({ id, firstName, lastName }) => {
             const res = await PlanningRepository.getVolunteerPdf(
               id,
               prePreManifStart,
             );
             if (isHttpError(res)) return undefined;
-            const volunteer = { firstname, lastname, id };
+            const volunteer = { firstName, lastName, id };
             const planningBase64Data = `${res}`;
             return { volunteer, planningBase64Data };
           }),

@@ -9,16 +9,16 @@ export class VolunteerResponseDto implements Volunteer {
   id: number;
 
   @ApiProperty({
-    description: "The volunteer firstname",
+    description: "The volunteer first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
-    description: "The volunteer lastname",
+    description: "The volunteer last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     description: "The volunteer nickname",

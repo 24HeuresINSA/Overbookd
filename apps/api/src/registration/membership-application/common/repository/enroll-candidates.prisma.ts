@@ -165,9 +165,9 @@ function formatToEnrollableVolunteer(
     nickname: volunteer.nickname,
     charisma,
     availabilities: volunteer.availabilities,
-    mobilePhone: volunteer.phone,
+    mobilePhone: volunteer.phoneNumber,
     comment: volunteer.comment === null ? undefined : volunteer.comment,
-    birthdate: volunteer.birthdate,
+    dateOfBirth: volunteer.dateOfBirth,
     note: volunteer.note === null ? undefined : volunteer.note,
   };
 }

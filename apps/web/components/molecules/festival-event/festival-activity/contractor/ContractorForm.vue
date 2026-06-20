@@ -4,19 +4,19 @@
     <template #content>
       <form>
         <v-text-field
-          v-model="firstname"
+          v-model="firstName"
           label="Prénom *"
           :rules="[required]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
-          v-model="lastname"
+          v-model="lastName"
           label="Nom *"
           :rules="[required]"
           @keydown.enter="confirmContractor"
         />
         <v-text-field
-          v-model="phone"
+          v-model="phoneNumber"
           label="Téléphone *"
           :rules="[required, isPhoneNumber]"
           @keydown.enter="confirmContractor"
@@ -68,9 +68,9 @@ const props = defineProps({
   },
 });
 
-const firstname = ref<string>("");
-const lastname = ref<string>("");
-const phone = ref<string>("");
+const firstName = ref<string>("");
+const lastName = ref<string>("");
+const phoneNumber = ref<string>("");
 const email = ref<string | null>(null);
 const company = ref<string | null>(null);
 const comment = ref<string | null>(null);
@@ -81,9 +81,9 @@ const typeFormLabel = computed<string>(() =>
 );
 
 const clearContractor = () => {
-  firstname.value = "";
-  lastname.value = "";
-  phone.value = "";
+  firstName.value = "";
+  lastName.value = "";
+  phoneNumber.value = "";
   email.value = null;
   company.value = null;
   comment.value = null;
@@ -91,9 +91,9 @@ const clearContractor = () => {
 const setContractor = () => {
   if (!props.contractor) return clearContractor();
 
-  firstname.value = props.contractor.firstname;
-  lastname.value = props.contractor.lastname;
-  phone.value = props.contractor.phone;
+  firstName.value = props.contractor.firstName;
+  lastName.value = props.contractor.lastName;
+  phoneNumber.value = props.contractor.phoneNumber;
   email.value = props.contractor.email;
   company.value = props.contractor.company;
   comment.value = props.contractor.comment;
@@ -101,10 +101,10 @@ const setContractor = () => {
 watch(() => props.contractor, setContractor, { immediate: true });
 
 const canConfirmContractor = computed<boolean>(() => {
-  const hasFirstname = firstname.value.trim() !== "";
-  const hasLastname = lastname.value.trim() !== "";
-  const hasPhone = isPhoneNumber(phone.value) === true;
-  return hasFirstname && hasLastname && hasPhone;
+  const hasFirstName = firstName.value.trim() !== "";
+  const hasLastName = lastName.value.trim() !== "";
+  const hasPhone = isPhoneNumber(phoneNumber.value) === true;
+  return hasFirstName && hasLastName && hasPhone;
 });
 const close = () => emit("close");
 const confirmContractor = () => {
@@ -114,9 +114,9 @@ const confirmContractor = () => {
   const companyValue = company.value?.trim();
   const commentValue = comment.value?.trim();
   const contractor = {
-    firstname: firstname.value,
-    lastname: lastname.value,
-    phone: phone.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
+    phoneNumber: phoneNumber.value,
     email: emailValue || null,
     company: companyValue || null,
     comment: commentValue || null,

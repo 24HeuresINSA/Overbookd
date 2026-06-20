@@ -10,30 +10,30 @@ import { Contractor } from "./sections/in-charge.js";
 
 export const noel = {
   id: 1,
-  firstname: "Noel",
-  lastname: "Ertsemud",
+  firstName: "Noel",
+  lastName: "Ertsemud",
 };
 export const lea = {
   id: 2,
-  lastname: "Mouyno",
-  firstname: "Lea",
+  lastName: "Mouyno",
+  firstName: "Lea",
 };
 export const george = {
   id: 3,
-  lastname: "Ergo",
-  firstname: "George",
+  lastName: "Ergo",
+  firstName: "George",
 };
 export const robocop = {
   id: 4,
   nickname: "Robocop",
-  firstname: "Secu",
-  lastname: "Rite",
+  firstName: "Secu",
+  lastName: "Rite",
 };
 export const faker = {
   id: 5,
   nickname: "Faker",
-  firstname: "Lee",
-  lastname: "Sang-hyeok",
+  firstName: "Lee",
+  lastName: "Sang-hyeok",
 };
 
 export const friday09hToMonday08h = {
@@ -89,18 +89,18 @@ export const sunday14hToSunday18h = {
 
 export const videoGameCollectif = {
   id: 1,
-  firstname: "Charles",
-  lastname: "Henry",
-  phone: "0111111111",
+  firstName: "Charles",
+  lastName: "Henry",
+  phoneNumber: "0111111111",
   email: "charles.henry@video-game.com",
   company: "Video Game Collectif",
   comment: null,
 };
 export const neverEscape = {
   id: 2,
-  firstname: "Jean",
-  lastname: "Dupont",
-  phone: "0123456789",
+  firstName: "Jean",
+  lastName: "Dupont",
+  phoneNumber: "0123456789",
   email: "jean@neverEscape.com",
   company: null,
   comment: "Sympa",
@@ -228,9 +228,9 @@ export const cinqGuirlandeLED = {
 
 export const lafarge: Contractor = {
   id: 1,
-  firstname: "David",
-  lastname: "Lafarge",
-  phone: "0304010205",
+  firstName: "David",
+  lastName: "Lafarge",
+  phoneNumber: "0304010205",
   email: "david@lafarge.com",
   company: "Lafarge",
   comment: "On ne sait rien de lui",

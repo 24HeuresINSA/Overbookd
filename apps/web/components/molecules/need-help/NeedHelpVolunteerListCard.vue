@@ -19,18 +19,18 @@
           <TeamChip v-for="team in item.teams" :key="team" :team="team" />
         </div>
       </template>
-      <template #item.phone="{ item }">
+      <template #item.phoneNumber="{ item }">
         <div class="assignee-phone">
           <v-btn
             icon="mdi-phone"
             aria-label="Appeler"
             title="Appeler"
-            :href="formatPhoneLink(item.phone)"
+            :href="formatPhoneLink(item.phoneNumber)"
             density="comfortable"
             size="small"
             rounded="pill"
           />
-          <h3>{{ formatPhoneNumber(item.phone) }}</h3>
+          <h3>{{ formatPhoneNumber(item.phoneNumber) }}</h3>
         </div>
       </template>
     </v-data-table>
@@ -60,7 +60,7 @@ defineProps({
 const headers: TableHeaders = [
   { title: "Bénévole", value: "volunteer" },
   { title: "Equipes", value: "teams" },
-  { title: "Téléphone", value: "phone" },
+  { title: "Téléphone", value: "phoneNumber" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 

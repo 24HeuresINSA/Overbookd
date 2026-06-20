@@ -7,7 +7,7 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 
 describe("Create festival task", () => {
-  describe(`when ${noel.firstname} create Install escape game task`, async () => {
+  describe(`when ${noel.firstName} create Install escape game task`, async () => {
     const festivalTasks = new InMemoryFestivalTasks();
     const volunteerConflicts = new InMemoryVolunteerConflicts([], []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
@@ -81,7 +81,7 @@ describe("Create festival task", () => {
   });
 
   describe("when previous task id is 419", () => {
-    describe(`when ${noel.firstname} create Install escape game task`, async () => {
+    describe(`when ${noel.firstName} create Install escape game task`, async () => {
       const festivalTasks = new InMemoryFestivalTasks();
       const volunteerConflicts = new InMemoryVolunteerConflicts([], []);
       const translator = new FestivalTaskTranslator(volunteerConflicts);

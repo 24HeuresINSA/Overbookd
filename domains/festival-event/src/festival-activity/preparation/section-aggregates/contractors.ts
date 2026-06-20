@@ -67,9 +67,9 @@ export class Contractors {
   ): Contractor {
     const updatedContractor = {
       ...previousContractor,
-      firstname: form.firstname ?? previousContractor.firstname,
-      lastname: form.lastname ?? previousContractor.lastname,
-      phone: form.phone ?? previousContractor.phone,
+      firstName: form.firstName ?? previousContractor.firstName,
+      lastName: form.lastName ?? previousContractor.lastName,
+      phoneNumber: form.phoneNumber ?? previousContractor.phoneNumber,
       email: form.email === undefined ? previousContractor.email : form.email,
       company:
         form.company === undefined ? previousContractor.company : form.company,

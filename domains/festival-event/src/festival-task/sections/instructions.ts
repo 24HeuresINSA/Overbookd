@@ -3,7 +3,7 @@ import { Adherent } from "../../common/adherent.js";
 import { Location } from "../../common/location.js";
 
 export type Contact = Adherent & {
-  phone: string;
+  phoneNumber: string;
 };
 
 export type Volunteer = Adherent;

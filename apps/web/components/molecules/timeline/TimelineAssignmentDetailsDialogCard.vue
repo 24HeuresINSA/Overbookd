@@ -30,7 +30,7 @@
         disable-pagination
         hide-default-footer
       >
-        <template #item.firstname="{ item }">
+        <template #item.firstName="{ item }">
           {{ buildUserName(item) }}
         </template>
 
@@ -54,17 +54,17 @@
           <v-chip v-else> Requis </v-chip>
         </template>
 
-        <template #item.phone="{ item }">
+        <template #item.phoneNumber="{ item }">
           <div class="assignee-phone">
             <v-btn
               icon="mdi-phone"
               aria-label="Appeler"
               title="Appeler"
-              :href="formatPhoneLink(item.phone)"
+              :href="formatPhoneLink(item.phoneNumber)"
               variant="text"
               density="compact"
             />
-            <h3>{{ formatPhoneNumber(item.phone) }}</h3>
+            <h3>{{ formatPhoneNumber(item.phoneNumber) }}</h3>
           </div>
         </template>
       </v-data-table>
@@ -84,10 +84,10 @@ import { formatPhoneLink, formatPhoneNumber } from "@overbookd/registration";
 const layoutStore = useLayoutStore();
 
 const headers: TableHeaders = [
-  { title: "Bénévole", value: "firstname", sortable: true },
+  { title: "Bénévole", value: "firstName", sortable: true },
   { title: "Equipes", value: "teams" },
   { title: "Affecté en tant que", value: "as" },
-  { title: "Téléphone", value: "phone" },
+  { title: "Téléphone", value: "phoneNumber" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 

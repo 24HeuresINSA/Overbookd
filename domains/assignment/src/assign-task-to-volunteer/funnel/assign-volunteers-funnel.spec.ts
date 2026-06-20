@@ -101,10 +101,10 @@ describe("Assign volunteers funnel", () => {
   describe("when assignment has only one team member needs remaining", () => {
     describe.each`
       volunteerName                  | volunteer            | taskName                          | task                         | team          | candidates             | planning            | availabilities            | breakPeriods
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
-      ${ontaine.volunteer.firstname} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"} | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
-      ${noel.volunteer.firstname}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      ${noel.volunteer.firstName}    | ${noel.volunteer}    | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
+      ${lea.volunteer.firstName}     | ${lea.volunteer}     | ${benevolant.name}                | ${benevolant}                | ${PERSONNE}   | ${[lea.volunteer]}     | ${lea.planning}     | ${lea.availabilities}     | ${lea.breakPeriods}
+      ${ontaine.volunteer.firstName} | ${ontaine.volunteer} | ${couperDesCarottes.name}         | ${couperDesCarottes}         | ${"catering"} | ${[ontaine.volunteer]} | ${ontaine.planning} | ${ontaine.availabilities} | ${ontaine.breakPeriods}
+      ${noel.volunteer.firstName}    | ${noel.volunteer}    | ${demonterLesJeuxGonflables.name} | ${demonterLesJeuxGonflables} | ${PERSONNE}   | ${[noel.volunteer]}    | ${noel.planning}    | ${noel.availabilities}    | ${noel.breakPeriods}
     `(
       "when selecting $volunteerName as available volunteer on task $taskName",
       ({
@@ -320,7 +320,7 @@ describe("Assign volunteers funnel", () => {
     describe("when assignment needs several team member", () => {
       describe.each`
         assignmentName            | assignment           | volunteer         | volunteerName               | volunteerTeams
-        ${scannerLesBillets.name} | ${scannerLesBillets} | ${noel.volunteer} | ${noel.volunteer.firstname} | ${noel.volunteer.teams}
+        ${scannerLesBillets.name} | ${scannerLesBillets} | ${noel.volunteer} | ${noel.volunteer.firstName} | ${noel.volunteer.teams}
       `(
         "When selecting $volunteerName who is part of $volunteerTeams on $assignmentName",
         ({ assignment, volunteer }) => {
@@ -566,11 +566,11 @@ describe("Assign volunteers funnel", () => {
       });
       it.each`
         volunteerName                 | volunteer
-        ${lea.volunteer.firstname}    | ${lea.volunteer}
-        ${noel.volunteer.firstname}   | ${noel.volunteer}
-        ${bruce.volunteer.firstname}  | ${bruce.volunteer}
-        ${amanda.volunteer.firstname} | ${amanda.volunteer}
-        ${luce.volunteer.firstname}   | ${luce.volunteer}
+        ${lea.volunteer.firstName}    | ${lea.volunteer}
+        ${noel.volunteer.firstName}   | ${noel.volunteer}
+        ${bruce.volunteer.firstName}  | ${bruce.volunteer}
+        ${amanda.volunteer.firstName} | ${amanda.volunteer}
+        ${luce.volunteer.firstName}   | ${luce.volunteer}
       `(
         "should be possible to select $volunteerName",
         async ({ volunteer }) => {
@@ -667,10 +667,10 @@ describe("Assign volunteers funnel", () => {
     });
     describe.each`
       volunteerName                  | volunteer            | team          | expectedLeaAssignment | expectedTatouinAssignment
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${PERSONNE}   | ${CONDUCTEUR}         | ${PERSONNE}
-      ${tatouin.volunteer.firstname} | ${tatouin.volunteer} | ${CONDUCTEUR} | ${PERSONNE}           | ${CONDUCTEUR}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${CONDUCTEUR} | ${CONDUCTEUR}         | ${PERSONNE}
-      ${lea.volunteer.firstname}     | ${lea.volunteer}     | ${PERSONNE}   | ${PERSONNE}           | ${CONDUCTEUR}
+      ${tatouin.volunteer.firstName} | ${tatouin.volunteer} | ${PERSONNE}   | ${CONDUCTEUR}         | ${PERSONNE}
+      ${tatouin.volunteer.firstName} | ${tatouin.volunteer} | ${CONDUCTEUR} | ${PERSONNE}           | ${CONDUCTEUR}
+      ${lea.volunteer.firstName}     | ${lea.volunteer}     | ${CONDUCTEUR} | ${CONDUCTEUR}         | ${PERSONNE}
+      ${lea.volunteer.firstName}     | ${lea.volunteer}     | ${PERSONNE}   | ${PERSONNE}           | ${CONDUCTEUR}
     `(
       "when assign $volunteerName as $team",
       ({

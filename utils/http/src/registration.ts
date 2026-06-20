@@ -11,7 +11,7 @@ export type VolunteerCandidate = StaffCandidate & {
   mobilePhone: string;
   availabilities: IProvidePeriod[];
   comment?: string;
-  birthdate: Date;
+  dateOfBirth: Date;
   note?: string;
 };
 

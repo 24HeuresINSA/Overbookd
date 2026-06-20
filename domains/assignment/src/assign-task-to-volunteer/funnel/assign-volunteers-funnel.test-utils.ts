@@ -91,8 +91,8 @@ const BOILERPLATE_ASSIGNMENT_STATS = {
 export const noel: TestHelper = {
   volunteer: {
     id: 1,
-    firstname: "Noel",
-    lastname: "Ertsemud",
+    firstName: "Noel",
+    lastName: "Ertsemud",
     teams: [PERSONNE, VIEUX],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -119,8 +119,8 @@ export const noel: TestHelper = {
 export const lea: TestHelper = {
   volunteer: {
     id: 2,
-    firstname: "Lea",
-    lastname: "Mauyno",
+    firstName: "Lea",
+    lastName: "Mauyno",
     teams: [PERSONNE, VIEUX, CONDUCTEUR],
     assignmentPreference: NO_REST,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -133,8 +133,8 @@ export const lea: TestHelper = {
 export const ontaine: TestHelper = {
   volunteer: {
     id: 3,
-    firstname: "Ontaine",
-    lastname: "Porin",
+    firstName: "Ontaine",
+    lastName: "Porin",
     teams: [PERSONNE, "catering", CONDUCTEUR],
     assignmentPreference: FRAGMENTED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -150,8 +150,8 @@ export const ontaine: TestHelper = {
 export const tatouin: TestHelper = {
   volunteer: {
     id: 4,
-    firstname: "Tatouin",
-    lastname: "Jesoph",
+    firstName: "Tatouin",
+    lastName: "Jesoph",
     teams: [PERSONNE, VIEUX, CONDUCTEUR],
     assignmentPreference: STACKED,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -169,8 +169,8 @@ export const tatouin: TestHelper = {
 export const luce: TestHelper = {
   volunteer: {
     id: 5,
-    firstname: "Luce",
-    lastname: "Nehgahredanv",
+    firstName: "Luce",
+    lastName: "Nehgahredanv",
     teams: [PERSONNE, HARD],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -183,8 +183,8 @@ export const luce: TestHelper = {
 export const nathan: TestHelper = {
   volunteer: {
     id: 6,
-    firstname: "Nathan",
-    lastname: "Trice",
+    firstName: "Nathan",
+    lastName: "Trice",
     teams: [PERSONNE, VIEUX, HARD],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -197,8 +197,8 @@ export const nathan: TestHelper = {
 export const bruce: TestHelper = {
   volunteer: {
     id: 7,
-    firstname: "Bruce",
-    lastname: "Eel",
+    firstName: "Bruce",
+    lastName: "Eel",
     teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -211,8 +211,8 @@ export const bruce: TestHelper = {
 export const amanda: TestHelper = {
   volunteer: {
     id: 8,
-    firstname: "Amanda",
-    lastname: "Lousie",
+    firstName: "Amanda",
+    lastName: "Lousie",
     teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,
@@ -225,8 +225,8 @@ export const amanda: TestHelper = {
 export const rachid: TestHelper = {
   volunteer: {
     id: 9,
-    firstname: "Rachid",
-    lastname: "Datti",
+    firstName: "Rachid",
+    lastName: "Datti",
     teams: [PERSONNE],
     assignmentPreference: NO_PREF,
     ...BOILERPLATE_ASSIGNMENT_STATS,

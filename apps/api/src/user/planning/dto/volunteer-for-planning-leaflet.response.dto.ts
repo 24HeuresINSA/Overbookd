@@ -3,10 +3,10 @@ import { VolunteerForPlanningLeaflet } from "@overbookd/http";
 
 export class VolunteerForPlanningLeafletResponseDto implements VolunteerForPlanningLeaflet {
   @ApiProperty({ type: String })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({ type: String })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({ type: String, required: false })
   nickname?: string;

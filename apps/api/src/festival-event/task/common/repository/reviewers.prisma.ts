@@ -26,8 +26,8 @@ export class PrismaReviewers implements Reviewers {
     return reviewers.map((reviewer) => ({
       adherent: {
         id: reviewer.id,
-        firstname: reviewer.firstname,
-        lastname: reviewer.lastname,
+        firstName: reviewer.firstName,
+        lastName: reviewer.lastName,
         nickname: reviewer.nickname,
       },
       count: reviewer._count.festivalTasksToReview,

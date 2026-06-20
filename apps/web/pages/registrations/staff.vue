@@ -94,8 +94,8 @@ const layoutStore = useLayoutStore();
 
 const headers = [
   { title: "Date de candidature", value: "candidatedAt", sortable: true },
-  { title: "Prénom", value: "firstname", sortable: true },
-  { title: "Nom", value: "lastname", sortable: true },
+  { title: "Prénom", value: "firstName", sortable: true },
+  { title: "Nom", value: "lastName", sortable: true },
   { title: "Email", value: "email" },
   { title: "Équipes", value: "teams" },
   { title: "Action", value: "action" },

@@ -96,7 +96,7 @@ const searchableParticipations = computed<
   return allParticipations.value.map((participation) => {
     const { slug, eventDate, charisma, participant } = participation;
     const event = `${slug} ${formatDate(eventDate)} ${charisma}`;
-    const volunteer = `${participant.firstname} ${participant.lastname} ${participant.nickname}`;
+    const volunteer = `${participant.firstName} ${participant.lastName} ${participant.nickname}`;
     return {
       ...participation,
       searchable: SlugifyService.apply(`${event} ${volunteer}`),

@@ -16,13 +16,13 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
     required: true,
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     required: true,
@@ -65,7 +65,7 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
     required: true,
     type: String,
   })
-  birthdate: Date;
+  dateOfBirth: Date;
 
   @ApiProperty({
     required: false,

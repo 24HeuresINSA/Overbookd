@@ -16,8 +16,8 @@ export function downloadPdfPlanning(
   planningBase64Data: string,
   volunteer: UserName,
 ) {
-  const firstname = SlugifyService.apply(volunteer.firstname);
-  const lastname = SlugifyService.apply(volunteer.lastname);
-  const fileName = `${lastname}_${firstname}_planning.pdf`;
+  const firstName = SlugifyService.apply(volunteer.firstName);
+  const lastName = SlugifyService.apply(volunteer.lastName);
+  const fileName = `${lastName}_${firstName}_planning.pdf`;
   downloadPdfFromBase64(planningBase64Data, fileName);
 }

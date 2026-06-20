@@ -11,17 +11,17 @@ export class FriendResponseDto implements UserWithTeams {
 
   @ApiProperty({
     required: true,
-    description: "The firstname of the Friend",
+    description: "The first name of the Friend",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
-    description: "The lastname of the Friend",
+    description: "The last name of the Friend",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     required: false,

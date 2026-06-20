@@ -65,7 +65,7 @@
             />
 
             <v-text-field
-              v-model="birthday"
+              v-model="dateOfBirth"
               label="Date de naissance"
               type="date"
               :rules="[rules.required, rules.minDate, rules.maxDate]"
@@ -87,7 +87,7 @@
             />
 
             <v-text-field
-              v-model="phone"
+              v-model="phoneNumber"
               label="Numéro de téléphone"
               :readonly="!canManageUsers"
               :rules="[rules.required, rules.mobilePhone]"
@@ -230,8 +230,8 @@ const props = defineProps({
 const volunteerId = computed<number>(() => props.volunteer.id);
 
 const nickname = ref<string | null>(null);
-const birthday = ref<string>("");
-const phone = ref<string>("");
+const dateOfBirth = ref<string>("");
+const phoneNumber = ref<string>("");
 const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
@@ -278,8 +278,8 @@ const assignmentPreferenceLabel = computed<string>(() => {
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
-  birthday.value = formatLocalDate(props.volunteer.birthdate);
-  phone.value = props.volunteer.phone ?? "";
+  dateOfBirth.value = formatLocalDate(props.volunteer.dateOfBirth);
+  phoneNumber.value = props.volunteer.phoneNumber ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
   await userStore.fetchSelectedUserFriends();
@@ -340,8 +340,8 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
   return {
     ...props.volunteer,
     nickname: trimmedNickname,
-    birthdate: new Date(birthday.value),
-    phone: phone.value,
+    dateOfBirth: new Date(dateOfBirth.value),
+    phoneNumber: phoneNumber.value,
     email: email.value.trim(),
     note: trimmedNote,
     comment: trimmedComment,
@@ -361,7 +361,7 @@ const sendEmail = () => {
   window.location.href = formatEmailLink(props.volunteer.email);
 };
 const callPhoneNumber = () => {
-  window.location.href = formatPhoneLink(props.volunteer.phone);
+  window.location.href = formatPhoneLink(props.volunteer.phoneNumber);
 };
 const openCalendar = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);

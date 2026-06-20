@@ -27,7 +27,7 @@ export type PrepareInChargeUpdate = {
 
 export type PrepareContractorCreation = Pick<
   Contractor,
-  "firstname" | "lastname" | "phone"
+  "firstName" | "lastName" | "phoneNumber"
 > & {
   email?: string;
   company?: string;
@@ -36,9 +36,9 @@ export type PrepareContractorCreation = Pick<
 
 export type PrepareContractorUpdate = {
   id: Contractor["id"];
-  firstname?: string;
-  lastname?: string;
-  phone?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
   email?: string | null;
   company?: string | null;
   comment?: string | null;

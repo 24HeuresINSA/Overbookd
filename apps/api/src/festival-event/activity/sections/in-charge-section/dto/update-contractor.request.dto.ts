@@ -8,17 +8,17 @@ export class UpdateContractorRequestDto implements UpdateContractorRequest {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  firstname?: string;
+  firstName?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  lastname?: string;
+  lastName?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  phone?: string;
+  phoneNumber?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()

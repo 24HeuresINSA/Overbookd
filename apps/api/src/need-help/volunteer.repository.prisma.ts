@@ -13,7 +13,7 @@ import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 import { User } from "@overbookd/user";
 
 type DatabaseHelpingVolunteer = User & {
-  phone: string;
+  phoneNumber: string;
   teams: { teamCode: string }[];
   availabilities: IProvidePeriod[];
   assigned: {
@@ -38,7 +38,7 @@ const SELECT_VOLUNTEER = {
   ...SELECT_USER_IDENTIFIER,
   ...SELECT_TEAM_CODES,
   ...SELECT_ASSIGNEES,
-  phone: true,
+  phoneNumber: true,
   availabilities: { select: SELECT_PERIOD },
 };
 
@@ -84,10 +84,10 @@ function toHelpingVolunteer(
 ): HelpingVolunteer {
   return {
     id: volunteer.id,
-    lastname: volunteer.lastname,
+    lastName: volunteer.lastName,
     nickname: volunteer.nickname,
-    firstname: volunteer.firstname,
-    phone: volunteer.phone,
+    firstName: volunteer.firstName,
+    phoneNumber: volunteer.phoneNumber,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
     availabilities: volunteer.availabilities,
     assignments: volunteer.assigned.map((assignment) => ({

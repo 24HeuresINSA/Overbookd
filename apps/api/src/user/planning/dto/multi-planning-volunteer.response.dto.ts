@@ -15,16 +15,16 @@ export class MultiPlanningVolunteerResponseDto implements MultiPlanningVolunteer
   id: number;
 
   @ApiProperty({
-    description: "The volunteer's firstname",
+    description: "The volunteer's first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
-    description: "The volunteer's lastname",
+    description: "The volunteer's last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     description: "The volunteer's teams",

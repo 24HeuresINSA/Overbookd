@@ -10,21 +10,21 @@ import {
 export class UpdateProfileRequestDto implements Partial<Profile> {
   @ApiProperty({
     required: false,
-    description: "The firstname of the user",
+    description: "The first name of the user",
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  firstname?: string;
+  firstName?: string;
 
   @ApiProperty({
     required: false,
-    description: "The lastname of the user",
+    description: "The last name of the user",
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  lastname?: string;
+  lastName?: string;
 
   @ApiProperty({
     required: false,
@@ -37,11 +37,11 @@ export class UpdateProfileRequestDto implements Partial<Profile> {
 
   @ApiProperty({
     required: false,
-    description: "The birthdate of the user",
+    description: "The date of birth of the user",
   })
   @IsOptional()
   @IsNotEmpty()
-  birthdate?: Date;
+  dateOfBirth?: Date;
 
   @ApiProperty({
     required: false,
@@ -51,7 +51,7 @@ export class UpdateProfileRequestDto implements Partial<Profile> {
   @IsOptional()
   @IsNotEmpty()
   @IsMobilePhone()
-  phone?: string;
+  phoneNumber?: string;
 
   @ApiProperty({
     required: false,

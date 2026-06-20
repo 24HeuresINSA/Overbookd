@@ -56,9 +56,9 @@ export class PrismaMemberRepository implements MemberRepository {
     await this.prisma.user.update({
       where: { id },
       data: {
-        firstname: anonymous.firstname,
-        lastname: anonymous.lastname,
-        phone: anonymous.mobilePhone,
+        firstName: anonymous.firstName,
+        lastName: anonymous.lastName,
+        phoneNumber: anonymous.mobilePhone,
         nickname: anonymous.nickname,
         comment: anonymous.comment,
         email: anonymous.email,

@@ -2,8 +2,8 @@ import { PERSONNE } from "@overbookd/team-constants";
 
 export const SELECT_USER_IDENTIFIER = {
   id: true,
-  firstname: true,
-  lastname: true,
+  firstName: true,
+  lastName: true,
   nickname: true,
 };
 export const SELECT_USER_ASSIGNMENT_PREFERENCE = {

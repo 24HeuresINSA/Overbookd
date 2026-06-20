@@ -85,11 +85,11 @@ async function main() {
 
       const userCreateData = {
         email,
-        firstname: user,
-        lastname: user,
+        firstName: user,
+        lastName: user,
         nickname: null,
-        birthdate: new Date(1990, 1, 1),
-        phone: "0612345678",
+        dateOfBirth: new Date(1990, 1, 1),
+        phoneNumber: "0612345678",
         password: hashPassword,
         teams: {
           create: teams,
@@ -97,8 +97,8 @@ async function main() {
       };
 
       const userUpdateData = {
-        firstname: user,
-        lastname: user,
+        firstName: user,
+        lastName: user,
         password: hashPassword,
       };
 

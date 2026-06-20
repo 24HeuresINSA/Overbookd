@@ -69,7 +69,7 @@
             :value="selectedAssignee"
             no-data-text="Aucun bénévole affecté sur ce créneau"
           >
-            <template #item.firstname="{ item }">
+            <template #item.firstName="{ item }">
               {{ buildUserName(item) }}
               <v-icon
                 v-if="item?.note"
@@ -230,7 +230,7 @@ const isUpdateAssignedTeamActive = computed<boolean>(
 const tableHeaders = computed<TableHeaders>(() => {
   const volunteer = {
     title: "Bénévole",
-    value: "firstname",
+    value: "firstName",
     width: "300px",
     sortable: true,
   };

@@ -64,7 +64,7 @@ const isBirthdayToday = computed<boolean>(() => {
   if (!me.value) return false;
 
   const today = OverDate.now();
-  const birthday = OverDate.from(me.value.birthdate);
+  const birthday = OverDate.from(me.value.dateOfBirth);
 
   return (
     today.monthlyDate.month === birthday.monthlyDate.month &&

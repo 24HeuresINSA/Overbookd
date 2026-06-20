@@ -87,8 +87,8 @@ const FILTER_TEAMS = [
 ].filter((team) => !!team);
 
 const headers: TableHeaders = [
-  { title: "Prénom", value: "firstname", sortable: true },
-  { title: "Nom", value: "lastname", sortable: true },
+  { title: "Prénom", value: "firstName", sortable: true },
+  { title: "Nom", value: "lastName", sortable: true },
   { title: "Surnom", value: "nickname", sortable: true },
   { title: "Paiement", value: "amount", width: "40%", sortable: true },
 ];
@@ -157,10 +157,10 @@ const exportAdherentsToCsv = () => {
     }),
   );
   const csv = CSVBuilder.from(adherentsWithAmountInEuros)
-    .select(["firstname", "lastname", "nickname", "amount", "email"])
+    .select(["firstName", "lastName", "nickname", "amount", "email"])
     .translate([
-      ["firstname", "Prénom"],
-      ["lastname", "Nom"],
+      ["firstName", "Prénom"],
+      ["lastName", "Nom"],
       ["nickname", "Surnom"],
       ["amount", "Montant (€)"],
       ["email", "Email"],

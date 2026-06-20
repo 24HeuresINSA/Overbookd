@@ -216,10 +216,10 @@ describe("Festival Task - ask for review", () => {
   describe("when asking a review for valid draft task", () => {
     describe.each`
       task                        | administrator                                       | humainReviews                                                    | expectedReviewer
-      ${installJustDance}         | ${installJustDance.general.administrator.firstname} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 2 }]} | ${george}
-      ${installPreventionVillage} | ${installJustDance.general.administrator.firstname} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 2 }]} | ${lea}
-      ${installJustDance}         | ${installJustDance.general.administrator.firstname} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 1 }]} | ${lea}
-      ${installPreventionVillage} | ${installJustDance.general.administrator.firstname} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 1 }]} | ${george}
+      ${installJustDance}         | ${installJustDance.general.administrator.firstName} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 2 }]} | ${george}
+      ${installPreventionVillage} | ${installJustDance.general.administrator.firstName} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 2 }]} | ${lea}
+      ${installJustDance}         | ${installJustDance.general.administrator.firstName} | ${[{ adherent: lea, count: 1 }, { adherent: george, count: 1 }]} | ${lea}
+      ${installPreventionVillage} | ${installJustDance.general.administrator.firstName} | ${[{ adherent: george, count: 1 }, { adherent: lea, count: 1 }]} | ${george}
     `(
       "when task administrator $administrator is not a humain reviewer",
       ({ task, humainReviews, expectedReviewer }) => {

@@ -53,8 +53,8 @@ function toVolunteerWithAssignments(
 
   return {
     id: volunteer.id,
-    firstname: volunteer.firstname,
-    lastname: volunteer.lastname,
+    firstName: volunteer.firstName,
+    lastName: volunteer.lastName,
     nickname: volunteer.nickname,
     comment: volunteer.comment,
     note: volunteer.note,
