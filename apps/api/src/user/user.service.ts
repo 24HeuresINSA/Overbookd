@@ -51,10 +51,107 @@ import {
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-constants";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
+import { OidcRole, oidcRoles } from "@overbookd/oidc";
+import { ConnectedZitadelUser } from "../authentication-zitadel/zitadel-types";
+import { ZitadelService } from "./zitadel.service";
+
+type UserDataFromZitadel = Omit<User, "id"> & {
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: Date | null;
+};
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly zitadelService: ZitadelService,
+  ) {}
+
+  async userSync(zitadelUser: ConnectedZitadelUser): Promise<void> {
+    let birthday = new Date(zitadelUser.zitadelMetadata.dateOfBirth);
+    if (isNaN(birthday.getTime())) {
+      birthday = null;
+    }
+
+    const data: UserDataFromZitadel = {
+      email: zitadelUser.email.toLowerCase(),
+      firstname: zitadelUser.given_name,
+      lastname: zitadelUser.family_name,
+      phoneNumber: zitadelUser.phone_number,
+      dateOfBirth: birthday,
+    };
+
+    const zitadelRoles = zitadelUser.zitadelRoles;
+
+    await this.upsertUserByZitadelIdThenByMail({
+      ...data,
+      zitadelId: zitadelUser.sub,
+      roles: zitadelRoles,
+    });
+
+    if (!zitadelRoles?.includes(oidcRoles.ADMIN)) {
+      await this.zitadelService.addZitadelRoleIfNotExist(
+        zitadelUser.sub,
+        oidcRoles.USER,
+      );
+    }
+  }
+
+  async upsertUserByZitadelIdThenByMail(
+    user: UserDataFromZitadel & {
+      zitadelId: string;
+      roles?: OidcRole[];
+    },
+  ): Promise<User> {
+    const userId =
+      (await this.getUserByZitadelId(user.zitadelId))?.id ??
+      (await this.getUserByEmail(user.email))?.id;
+
+    const data = {
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      phone: user.phoneNumber,
+      birthdate: user.dateOfBirth,
+      zitadelId: user.zitadelId,
+    };
+
+    if (user.roles) {
+      data["roles"] = user.roles;
+    }
+
+    if ("dateOfBirth" in user) {
+      data["dateOfBirth"] = new Date(user.dateOfBirth);
+    }
+
+    if (!userId) {
+      return await this.prisma.user.create({
+        data,
+        select: SELECT_USER_IDENTIFIER,
+      });
+    }
+
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: data,
+      select: SELECT_USER_IDENTIFIER,
+    });
+  }
+
+  private getUserByZitadelId(zitadelId: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { zitadelId },
+      select: SELECT_USER_IDENTIFIER,
+    });
+  }
+
+  private getUserByEmail(email: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { email },
+      select: SELECT_USER_IDENTIFIER,
+    });
+  }
 
   async getById(
     id: number,

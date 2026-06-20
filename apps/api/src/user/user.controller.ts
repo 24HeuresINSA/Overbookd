@@ -48,6 +48,8 @@ import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { ImageInterceptor } from "../utils/image.interceptor";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators";
+import { ConnectedZitadelUser } from "../authentication-zitadel/zitadel-types";
 
 @Controller("users")
 @ApiTags("users")
@@ -61,6 +63,15 @@ export class UserController {
     private readonly profilePictureService: ProfilePictureService,
     private readonly teamService: TeamService,
   ) {}
+
+  @Post("sync")
+  @ApiResponse({
+    status: 200,
+    description: "Synchronisation avec Zitadel réussie",
+  })
+  userSync(@AuthenticatedUser() user: ConnectedZitadelUser) {
+    return this.userService.userSync(user);
+  }
 
   @Get("volunteers")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
