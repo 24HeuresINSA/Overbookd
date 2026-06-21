@@ -5,7 +5,7 @@ import { LastNameField } from "./fields/last-name-field.js";
 import { PasswordField } from "./fields/password-field.js";
 import { MobilePhoneField } from "./fields/mobile-phone-field.js";
 import { NicknameField } from "./fields/nickname-field.js";
-import { BirthDateField } from "./fields/date-of-birth-field.js";
+import { BirthDateField } from "./fields/birth-date-field.js";
 import { CommentField } from "./fields/comment-field.js";
 import { TeamsField } from "./fields/teams-field.js";
 import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
