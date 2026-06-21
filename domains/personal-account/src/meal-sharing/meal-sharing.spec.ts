@@ -159,7 +159,7 @@ describe("Meal Sharing", () => {
       adherents = new InMemoryAdherents([...adherentListing]);
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
-    describe("when lea shotgun for riz cantonnais", () => {
+    describe("when lea shotguns for riz cantonnais", () => {
       it("should add lea as a guest", async () => {
         const meal = await mealSharing.addPortion(rizCantonnais.id, lea.id);
         expect(meal.portionCount).toBe(4);
@@ -179,7 +179,7 @@ describe("Meal Sharing", () => {
         });
       });
     });
-    describe("when lea shotgun for salade de fruits", () => {
+    describe("when lea shotguns for salade de fruits", () => {
       it("should add lea as a guest", async () => {
         const meal = await mealSharing.addPortion(saladeDeFruits.id, lea.id);
         expect(meal.portionCount).toBe(10);
@@ -204,7 +204,7 @@ describe("Meal Sharing", () => {
         });
       });
     });
-    describe("when shogosse shotgun for salade de fruits", () => {
+    describe("when shogosse shotguns for salade de fruits", () => {
       it("should indicate that shogosse can't shotgun more portions for this meal", async () => {
         expect(
           async () =>

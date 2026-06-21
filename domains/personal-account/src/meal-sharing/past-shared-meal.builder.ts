@@ -22,7 +22,7 @@ export const OPEN_SHOTGUNS_PAST_MEAL_ERROR =
 export const ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'autoriser les shotguns multiples";
 export const DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
-  "Ce repas partagé a été cloturé, il n'est plus possible de ne pas autoriser les shotguns multiples";
+  "Ce repas partagé a été cloturé, il n'est plus possible de retirer les shotguns multiples";
 
 class PastMealError extends MealSharingError {
   static get addPortion(): PastMealError {
