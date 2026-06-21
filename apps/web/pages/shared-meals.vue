@@ -14,17 +14,17 @@
         class="meal"
       />
     </div>
-  </div>
 
-  <div class="offer-btn">
-    <v-btn
-      text="Proposer un repas"
-      color="primary"
-      size="large"
-      rounded
-      block
-      @click="openOfferDialog"
-    />
+    <div class="offer-btn">
+      <v-btn
+        text="Proposer un repas"
+        color="primary"
+        size="large"
+        rounded
+        block
+        @click="openOfferDialog"
+      />
+    </div>
   </div>
 
   <v-dialog v-model="isOfferDialogOpen" max-width="600px">
@@ -50,12 +50,10 @@ mealSharingStore.fetchAll();
 </script>
 
 <style lang="scss" scoped>
-$offer-btn-height: 50px;
-
 .offer-btn {
   display: none;
-  height: $offer-btn-height;
-  align-items: end;
+  width: 100%;
+  padding: 0 10px;
 }
 
 @media screen and (max-width: $mobile-max-width) {
@@ -63,7 +61,7 @@ $offer-btn-height: 50px;
     display: none;
   }
   .offer-btn {
-    display: flex;
+    display: block;
   }
 }
 
@@ -72,7 +70,7 @@ $offer-btn-height: 50px;
   display: flex;
   align-items: start;
   gap: 20px;
-  max-height: calc(90vh - #{$header-height});
+  height: calc(90vh - #{$header-height});
   overflow-y: scroll;
 
   .form {
@@ -95,7 +93,7 @@ $offer-btn-height: 50px;
   @media screen and (max-width: 1150px) {
     flex-direction: column;
     gap: 10px;
-    max-height: initial;
+    height: initial;
 
     .form,
     .meals {
@@ -106,10 +104,14 @@ $offer-btn-height: 50px;
   }
 
   @media screen and (max-width: $mobile-max-width) {
-    max-height: calc(
-      100vh - #{$header-height} - #{$bottom-nav-height} - #{$offer-btn-height} -
-        25px
-    );
+    height: 100%;
+    gap: 10px;
+
+    .meals {
+      flex: 1 1 auto;
+      overflow-y: scroll;
+      min-height: 0;
+    }
   }
 }
 </style>
