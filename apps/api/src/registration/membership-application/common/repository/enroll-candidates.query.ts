@@ -7,8 +7,8 @@ import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export const SELECT_STAFF = {
   id: true,
-  firstname: true,
-  lastname: true,
+  firstName: true,
+  lastName: true,
   email: true,
   ...SELECT_USER_TEAMS,
 };
@@ -17,8 +17,8 @@ export const SELECT_VOLUNTEER = {
   ...SELECT_STAFF,
   nickname: true,
   availabilities: { select: SELECT_PERIOD },
-  phone: true,
-  birthdate: true,
+  phoneNumber: true,
+  birthDate: true,
   comment: true,
   note: true,
 };
@@ -77,8 +77,8 @@ export const IS_REJECTED_VOLUNTEER = {
 
 export type DatabaseStaffCandidate = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   teams: { team: { code: string } }[];
   membershipApplications: { candidatedAt: Date }[];
@@ -87,8 +87,8 @@ export type DatabaseStaffCandidate = {
 export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
   nickname: string | null;
   availabilities: IProvidePeriod[];
-  phone: string;
+  phoneNumber: string;
   comment: string | null;
-  birthdate: Date;
+  birthDate: Date;
   note: string | null;
 };

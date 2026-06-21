@@ -17,6 +17,7 @@ import { JwtPayload, RefreshJwt } from "./entities/jwt-util.entity";
 import { ONE_HOUR_IN_MS } from "@overbookd/time";
 import { UserAccess, UserCredentials } from "@overbookd/http";
 import { buildUserName } from "@overbookd/user";
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
 
 type UserEmail = { email: string };
 export type RefreshAccessRequest = { refreshToken: string };
@@ -83,9 +84,7 @@ export class AuthenticationService {
     const userWithPayload = await this.prisma.user.findUnique({
       where,
       select: {
-        id: true,
-        firstname: true,
-        lastname: true,
+        ...SELECT_USER_IDENTIFIER,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
@@ -124,7 +123,7 @@ export class AuthenticationService {
 
     const sendMailToUSer = this.mailService.mailResetPassword({
       email: email,
-      firstname: user.firstname,
+      firstName: user.firstName,
       token: resetToken,
     });
 

@@ -2,9 +2,9 @@ import { Adherent } from "../../common/adherent.js";
 
 export type Contractor = {
   id: number;
-  firstname: string;
-  lastname: string;
-  phone: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
   email: string | null;
   company: string | null;
   comment: string | null;

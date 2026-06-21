@@ -131,7 +131,7 @@ const invalidInputsReasons = computed<string[]>(() => {
   );
   if (shouldHaveIntAmount && invalidConsumers.length > 0) {
     return invalidConsumers.map(
-      (consumer) => `Champs non valide pour: ${consumer.lastname}`,
+      (consumer) => `Champs non valide pour: ${consumer.lastName}`,
     );
   }
 

@@ -175,32 +175,32 @@ const exportCSV = async () => {
       const teams = volunteer.teams
         .filter((team) => team !== PERSONNE)
         .join(", ");
-      const birthdate = formatDate(volunteer.birthdate);
-      const phone = formatPhoneNumber(volunteer.phone);
-      return { ...volunteer, teams, phone, birthdate };
+      const birthDate = formatDate(volunteer.birthDate);
+      const phoneNumber = formatPhoneNumber(volunteer.phoneNumber);
+      return { ...volunteer, teams, phoneNumber, birthDate };
     }),
   )
     .select([
-      "firstname",
-      "lastname",
+      "firstName",
+      "lastName",
       "nickname",
       "charisma",
       "teams",
       "email",
-      "birthdate",
-      "phone",
+      "birthDate",
+      "phoneNumber",
       "comment",
       "note",
     ])
     .translate([
-      ["firstname", "Prénom"],
-      ["lastname", "Nom"],
+      ["firstName", "Prénom"],
+      ["lastName", "Nom"],
       ["nickname", "Surnom"],
       ["charisma", "Charisme"],
       ["teams", "Équipes"],
       ["email", "Email"],
-      ["birthdate", "Date de naissance"],
-      ["phone", "Téléphone"],
+      ["birthDate", "Date de naissance"],
+      ["phoneNumber", "Téléphone"],
       ["comment", "Commentaire"],
       ["note", "Note"],
     ])

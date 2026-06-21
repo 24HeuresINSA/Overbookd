@@ -12,7 +12,7 @@
       return-object
       @click:row="propagateClickedVolunteer"
     >
-      <template #item.firstname="{ item }">
+      <template #item.firstName="{ item }">
         {{ buildUserNameWithNickname(item) }}
       </template>
 
@@ -44,7 +44,7 @@
           title="Appeler le téléphone"
           size="small"
           variant="flat"
-          @click.stop="callVolunteer(item.phone)"
+          @click.stop="callVolunteer(item.phoneNumber)"
         />
         <v-btn
           icon="mdi-email"
@@ -90,7 +90,8 @@ const canViewVolunteerDetails = computed(() =>
 );
 const headers = computed<TableHeaders>(() => {
   const baseHeaders = [
-    { title: "Nom", key: "firstname", sortable: true },
+    { title: "Nom", key: "lastName", sortable: true },
+    { title: "Prénom", key: "firstName", sortable: true },
     { title: "Equipes", value: "teams" },
     { title: "Charisme", value: "charisma", sortable: true },
   ];
@@ -112,8 +113,8 @@ const propagateClickedTeam = (team: Team) => emit("click:team", team);
 const openCalendar = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);
 };
-const callVolunteer = (phone: string) => {
-  window.location.href = formatPhoneLink(phone);
+const callVolunteer = (phoneNumber: string) => {
+  window.location.href = formatPhoneLink(phoneNumber);
 };
 const sendMailTo = (email: string) => {
   window.location.href = formatEmailLink(email);

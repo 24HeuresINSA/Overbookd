@@ -11,11 +11,11 @@ export function isJoinableTeams(teams: string[]): teams is Teams {
 export type Registree = {
   id: number;
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   mobilePhone: string;
   nickname?: string;
-  birthdate: Date;
+  birthDate: Date;
   comment?: string;
   teams: Teams;
 };

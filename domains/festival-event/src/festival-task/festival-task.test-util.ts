@@ -125,69 +125,69 @@ export class MobilizationBuilder<T extends WithConflicts> {
 
 export const noel = {
   id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
+  lastName: "Ertsemud",
+  firstName: "Noel",
 };
 
-export const noelContact: Contact = { ...noel, phone: "0601020304" };
+export const noelContact: Contact = { ...noel, phoneNumber: "0601020304" };
 
 export const lea = {
   id: 2,
-  lastname: "Mouyno",
-  firstname: "Lea",
+  lastName: "Mouyno",
+  firstName: "Lea",
 };
 
-export const leaContact: Contact = { ...lea, phone: "0602030405" };
+export const leaContact: Contact = { ...lea, phoneNumber: "0602030405" };
 
 export const justDanceInstaller = {
   id: 3,
-  lastname: "Dance",
-  firstname: "Just",
+  lastName: "Dance",
+  firstName: "Just",
 };
 
 const justDanceGuard = {
   id: 4,
-  lastname: "Dance",
-  firstname: "Just",
+  lastName: "Dance",
+  firstName: "Just",
 };
 
 export const justDanceInstallerContact: Contact = {
   ...justDanceInstaller,
-  phone: "0603040506",
+  phoneNumber: "0603040506",
 };
 
 export const justDanceInstallerBis = {
   id: 4,
-  lastname: "Dance Bis",
-  firstname: "Just",
+  lastName: "Dance Bis",
+  firstName: "Just",
 };
 
 export const justDanceInstallerBisContact: Contact = {
   ...justDanceInstallerBis,
-  phone: "0604050607",
+  phoneNumber: "0604050607",
 };
 
 export const justDanceGuardContact: Contact = {
   ...justDanceGuard,
-  phone: "0605060708",
+  phoneNumber: "0605060708",
 };
 
 export const george = {
   id: 5,
-  lastname: "Ergo",
-  firstname: "George",
+  lastName: "Ergo",
+  firstName: "George",
 };
 
 export const valery = {
   id: 6,
-  lastname: "Gisc",
-  firstname: "Valery",
+  lastName: "Gisc",
+  firstName: "Valery",
 };
 
 export const gab = {
   id: 7,
-  lastname: "Riel",
-  firstname: "Gab",
+  lastName: "Riel",
+  firstName: "Gab",
 };
 
 export const friday9h: BuildTimeWindow = {

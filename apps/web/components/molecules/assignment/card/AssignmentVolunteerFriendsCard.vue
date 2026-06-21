@@ -51,7 +51,7 @@ const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
 const title = computed<string>(() => {
-  const volunteerName = selectedVolunteer.value?.firstname ?? "...";
+  const volunteerName = selectedVolunteer.value?.firstName ?? "...";
   return `Amis de ${volunteerName} :`;
 });
 

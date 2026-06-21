@@ -25,22 +25,22 @@ const notifyees: StoredNotifyee[] = [
 ];
 
 const email = "test@example.com";
-const firstname = "Titouan";
-const lastname = "Moula";
+const firstName = "Titouan";
+const lastName = "Moula";
 const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
-const birthdate = new Date("2000-01-01");
+const birthDate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 const firstNewComer: NewcomerRegistered<"STAFF"> = {
   id: 1,
-  firstname,
-  lastname,
+  firstName,
+  lastName,
   mobilePhone,
   comment,
-  birthdate,
+  birthDate,
   teams,
   nickname,
   email,
@@ -48,12 +48,12 @@ const firstNewComer: NewcomerRegistered<"STAFF"> = {
 };
 
 const staffRegisterForm: FulfilledRegistration = {
-  lastname,
-  firstname,
+  lastName,
+  firstName,
   mobilePhone,
   password,
   comment,
-  birthdate,
+  birthDate,
   teams,
   nickname,
   email,

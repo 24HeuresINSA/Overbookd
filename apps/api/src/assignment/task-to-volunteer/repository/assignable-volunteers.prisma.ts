@@ -203,8 +203,8 @@ function toStoredAssignableVolunteer(
     .calculate();
   return {
     id: volunteer.id,
-    firstname: volunteer.firstname,
-    lastname: volunteer.lastname,
+    firstName: volunteer.firstName,
+    lastName: volunteer.lastName,
     nickname: volunteer.nickname,
     charisma,
     comment: volunteer.comment,

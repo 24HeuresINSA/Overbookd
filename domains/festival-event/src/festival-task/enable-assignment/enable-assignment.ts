@@ -146,8 +146,8 @@ function extractAssignment(
 function extractVolunteerData(volunteer: VolunteerWithConflicts) {
   return {
     id: volunteer.id,
-    lastname: volunteer.lastname,
-    firstname: volunteer.firstname,
+    lastName: volunteer.lastName,
+    firstName: volunteer.firstName,
     nickname: volunteer.nickname,
   };
 }

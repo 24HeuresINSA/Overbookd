@@ -68,7 +68,7 @@ const fakeTask: FestivalTaskWithConflicts = {
   },
   general: {
     name: "",
-    administrator: { id: 0, firstname: "", lastname: "" },
+    administrator: { id: 0, firstName: "", lastName: "" },
     team: null,
   },
   instructions: {

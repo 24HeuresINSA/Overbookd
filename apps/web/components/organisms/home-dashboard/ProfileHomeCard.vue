@@ -54,7 +54,7 @@
 
         <div class="personal-info">
           <v-icon class="personal-info__icon">mdi-phone</v-icon>
-          <span class="personal-info__label">{{ phone }}</span>
+          <span class="personal-info__label">{{ phoneNumber }}</span>
         </div>
 
         <div v-if="wantsPaperPlanning" class="personal-info">
@@ -121,8 +121,8 @@ const friendCount = computed<number>(() => userStore.myFriends.length);
 const tasksCount = computed<number>(() =>
   loggedUser.value ? loggedUser.value.tasksCount : 0,
 );
-const phone = computed<string>(() =>
-  loggedUser.value ? formatPhoneNumber(loggedUser.value.phone) : "",
+const phoneNumber = computed<string>(() =>
+  loggedUser.value ? formatPhoneNumber(loggedUser.value.phoneNumber) : "",
 );
 
 const wantsPaperPlanning = computed<boolean>(

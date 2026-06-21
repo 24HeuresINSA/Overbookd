@@ -1,6 +1,6 @@
 export const SELECT_VOLUNTEER = {
   id: true,
-  firstname: true,
-  lastname: true,
+  firstName: true,
+  lastName: true,
   nickname: true,
 };

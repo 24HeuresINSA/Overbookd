@@ -12,7 +12,7 @@ export type Assignment = {
 };
 
 export type Contact = Volunteer & {
-  phone: string;
+  phoneNumber: string;
 };
 
 export type AppointmentLocation = {

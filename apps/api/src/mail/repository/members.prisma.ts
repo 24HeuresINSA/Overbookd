@@ -8,7 +8,7 @@ export class PrismaMembers implements Members {
   byId(id: number): Promise<Member | null> {
     return this.prisma.user.findUnique({
       where: { id, ...IS_NOT_DELETED },
-      select: { email: true, firstname: true, lastname: true, nickname: true },
+      select: { email: true, firstName: true, lastName: true, nickname: true },
     });
   }
 }

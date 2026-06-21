@@ -6,10 +6,10 @@ export class TransactionUserResponseDto implements TransactionUser {
   id: number;
 
   @ApiProperty()
-  firstname: string;
+  firstName: string;
 
   @ApiProperty()
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({ required: false })
   nickname?: string;

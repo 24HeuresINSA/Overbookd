@@ -5,7 +5,7 @@ import type { UserName } from "@overbookd/user";
 import type { DisplayableAssignmentStat } from "../user/user-information";
 
 export function compareVolunteersOnNames(a: UserName, b: UserName) {
-  return a.firstname.localeCompare(b.firstname);
+  return a.firstName.localeCompare(b.firstName);
 }
 
 export function compareVolunteersOnAssignment(

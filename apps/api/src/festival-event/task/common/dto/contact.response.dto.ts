@@ -7,5 +7,5 @@ export class ContactResponseDto extends AdherentResponseDto implements Contact {
     description: "The contact phone number",
     type: String,
   })
-  phone: string;
+  phoneNumber: string;
 }

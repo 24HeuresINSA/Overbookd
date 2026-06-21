@@ -3,8 +3,8 @@ import { Membership } from "@overbookd/registration";
 import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export type UserName = {
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   nickname?: string | null;
 };
 
@@ -18,15 +18,15 @@ export type UserWithTeams = User & {
 
 export type Profile = UserName & {
   email: string;
-  birthdate: Date;
-  phone: string;
+  birthDate: Date;
+  phoneNumber: string;
   comment: string | null;
 };
 
 export type UserPersonalData = User & {
   email: string;
-  birthdate: Date;
-  phone: string;
+  birthDate: Date;
+  phoneNumber: string;
   comment?: string | null;
   charisma: number;
   teams: string[];

@@ -37,7 +37,7 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     const data = {
       ...similarProperties,
       teams,
-      phone: mobilePhone,
+      phoneNumber: mobilePhone,
       password: await this.crypto.hash(password),
       registrationMembership,
     };

@@ -9,16 +9,16 @@ export class ContributionAdherentResponseDto implements Adherent {
   id: number;
 
   @ApiProperty({
-    description: "Adherent firstname",
+    description: "Adherent first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
-    description: "Adherent lastname",
+    description: "Adherent last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     description: "Adherent nickname",

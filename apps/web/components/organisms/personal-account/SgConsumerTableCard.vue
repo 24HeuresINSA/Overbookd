@@ -9,7 +9,7 @@
         :loading="loading"
         loading-text="Chargement des bénévoles..."
         no-data-text="Aucun bénévole"
-        :sort-by="[{ key: 'firstname', order: 'asc' }]"
+        :sort-by="[{ key: 'firstName', order: 'asc' }]"
         :mobile="isMobile"
       >
         <template #top>
@@ -32,7 +32,7 @@
           </div>
         </template>
 
-        <template #item.firstname="{ item }">
+        <template #item.firstName="{ item }">
           {{ buildUserNameWithNickname(item) }}
         </template>
 
@@ -155,7 +155,7 @@ const headers = computed<TableHeaders>(() => {
       ? "Moula"
       : "Nombre de bâtons";
   return [
-    { title: "Nom", value: "firstname", width: "30%", sortable: true },
+    { title: "Nom", value: "firstName", width: "30%", sortable: true },
     { title: "CP", value: "balance", width: "20%", sortable: true },
     {
       title: recapTitle,

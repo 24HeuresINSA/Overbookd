@@ -9,13 +9,13 @@ import {
 
 const olop: TransactionUser = {
   id: 1,
-  firstname: "Olop",
-  lastname: "Hcsnumeid",
+  firstName: "Olop",
+  lastName: "Hcsnumeid",
 };
 const cul: TransactionUser = {
   id: 2,
-  firstname: "Cul",
-  lastname: "Nehgahrednav",
+  firstName: "Cul",
+  lastName: "Nehgahrednav",
 };
 
 describe("Deposit", () => {

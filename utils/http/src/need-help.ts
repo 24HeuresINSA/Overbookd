@@ -7,7 +7,7 @@ export type HelpingVolunteerAssignment = IProvidePeriod & {
 };
 
 export type HelpingVolunteer = User & {
-  phone: string;
+  phoneNumber: string;
   teams: string[];
   availabilities: IProvidePeriod[];
   assignments: HelpingVolunteerAssignment[];

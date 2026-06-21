@@ -3,8 +3,8 @@ import { AssignmentPreferenceType } from "@overbookd/preference";
 
 export type Volunteer = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   nickname?: string;
   charisma: number;
   comment?: string;

@@ -111,7 +111,7 @@ export class Candidate<T extends IDefineCandidate = IDefineCandidate> {
   }
 
   private get name(): string {
-    return `${this.candidate.firstname} ${this.candidate.lastname}`;
+    return `${this.candidate.firstName} ${this.candidate.lastName}`;
   }
 
   get json(): T {

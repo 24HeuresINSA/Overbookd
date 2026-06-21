@@ -11,8 +11,8 @@
         size="x-small"
       />
     </div>
-    <a :href="formatPhoneLink(volunteer.phone)" class="volunteer-phone">
-      {{ formatPhoneNumber(volunteer.phone) }}
+    <a :href="formatPhoneLink(volunteer.phoneNumber)" class="volunteer-phone">
+      {{ formatPhoneNumber(volunteer.phoneNumber) }}
     </a>
   </div>
 </template>

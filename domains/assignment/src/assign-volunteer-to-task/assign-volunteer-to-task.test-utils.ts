@@ -22,8 +22,8 @@ const friday15h15To18h = Period.init({
 
 const noel: VolunteerWithFriendFilter = {
   id: 1,
-  firstname: "Noel",
-  lastname: "Ertsemud",
+  firstName: "Noel",
+  lastName: "Ertsemud",
   charisma: 1000,
   teams: [HARD, "comsa"],
   friendCount: defaultFriendCount,
@@ -31,8 +31,8 @@ const noel: VolunteerWithFriendFilter = {
 };
 const lea: VolunteerWithFriendFilter = {
   id: 2,
-  firstname: "Lea",
-  lastname: "Mouyno",
+  firstName: "Lea",
+  lastName: "Mouyno",
   charisma: 0,
   teams: [VIEUX],
   friendCount: defaultFriendCount,

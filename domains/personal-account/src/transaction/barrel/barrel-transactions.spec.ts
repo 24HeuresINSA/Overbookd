@@ -23,18 +23,18 @@ const blonde: ConfiguredBarrel = {
 
 const drapsag: TransactionUser = {
   id: 1,
-  firstname: "Drapsag",
-  lastname: "Lehcim",
+  firstName: "Drapsag",
+  lastName: "Lehcim",
 };
 const lea: TransactionUser = {
   id: 2,
-  firstname: "Lea",
-  lastname: "Mouyno",
+  firstName: "Lea",
+  lastName: "Mouyno",
 };
 const cul: TransactionUser = {
   id: 3,
-  firstname: "Cul",
-  lastname: "Nehgahrednav",
+  firstName: "Cul",
+  lastName: "Nehgahrednav",
 };
 
 const twoConsumersForBlonde = [

@@ -13,9 +13,9 @@ import { SELECT_TEAM_CODES } from "../common/query/user.query";
 type DatabaseAssignment = IProvidePeriod & {
   assignees: {
     personalData: {
-      firstname: string;
-      lastname: string;
-      phone: string;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
       teams: { teamCode: string }[];
     };
     as?: { teamCode: string };
@@ -94,9 +94,9 @@ export class TimelineService {
     const selectAssignee = {
       personalData: {
         select: {
-          firstname: true,
-          lastname: true,
-          phone: true,
+          firstName: true,
+          lastName: true,
+          phoneNumber: true,
           ...SELECT_TEAM_CODES,
         },
       },
@@ -176,9 +176,9 @@ function formatAssignment(assignment: DatabaseAssignment): TimelineAssignment {
     start: assignment.start,
     end: assignment.end,
     assignees: assignment.assignees.map((assignee) => ({
-      firstname: assignee.personalData.firstname,
-      lastname: assignee.personalData.lastname,
-      phone: assignee.personalData.phone,
+      firstName: assignee.personalData.firstName,
+      lastName: assignee.personalData.lastName,
+      phoneNumber: assignee.personalData.phoneNumber,
       teams: assignee.personalData.teams.map(({ teamCode }) => teamCode),
       as: assignee.as?.teamCode,
     })),

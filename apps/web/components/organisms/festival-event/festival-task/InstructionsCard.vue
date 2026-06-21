@@ -76,8 +76,8 @@
             {{ buildUserNameWithNickname(item) }}
           </template>
 
-          <template #item.phone="{ item }">
-            {{ formatPhoneNumber(item.phone) }}
+          <template #item.phoneNumber="{ item }">
+            {{ formatPhoneNumber(item.phoneNumber) }}
           </template>
 
           <template #item.removal="{ item }">
@@ -150,7 +150,7 @@ const props = defineProps({
 const contactHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Bénévole", value: "volunteer" },
-    { title: "Téléphone", value: "phone" },
+    { title: "Téléphone", value: "phoneNumber" },
   ];
   const removalHeader = { title: "Suppression", value: "removal" };
   return props.disabled ? baseHeaders : [...baseHeaders, removalHeader];

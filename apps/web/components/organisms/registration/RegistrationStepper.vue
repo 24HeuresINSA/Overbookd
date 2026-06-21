@@ -74,20 +74,20 @@
         <v-stepper-window-item :value="2">
           <v-form class="data personal-data">
             <v-text-field
-              v-model="firstname"
+              v-model="firstName"
               label="Prénom*"
               required
               :rules="[rules.required]"
             />
             <v-text-field v-model="nickname" label="Surnom" />
             <v-text-field
-              v-model="lastname"
+              v-model="lastName"
               label="Nom*"
               :rules="[rules.required]"
               required
             />
             <v-text-field
-              v-model="birthday"
+              v-model="birthDay"
               label="Date de naissance*"
               type="date"
               :rules="[
@@ -136,7 +136,7 @@
               persistent-hint
             />
             <v-text-field
-              v-model="phone"
+              v-model="phoneNumber"
               label="Ton 06 ?*"
               required
               :rules="[rules.required, rules.mobilePhone]"
@@ -297,12 +297,12 @@ const teamStore = useTeamStore();
 configurationStore.fetchAll();
 
 const step = ref<number>(1);
-const firstname = ref<string>("");
-const lastname = ref<string>("");
+const firstName = ref<string>("");
+const lastName = ref<string>("");
 const nickname = ref<string>("");
-const birthday = ref<string>("2000-01-01");
+const birthDay = ref<string>("2000-01-01");
 const email = ref<string>("");
-const phone = ref<string>("");
+const phoneNumber = ref<string>("");
 const comment = ref<string>("");
 const teams = ref<RegistrationTeams>([]);
 const password = ref<string>("");
@@ -345,11 +345,11 @@ const registerForm = computed<RegisterForm>(() => {
   const form = commentAction(
     nicknameAction(RegisterForm.initFor(membership.value)),
   )
-    .fillBirthdate(birthdayDate.value)
+    .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
-    .fillFirstname(firstname.value)
-    .fillLastname(lastname.value)
-    .fillMobilePhone(phone.value)
+    .fillFirstName(firstName.value)
+    .fillLastName(lastName.value)
+    .fillMobilePhone(phoneNumber.value)
     .fillTeams(teams.value)
     .fillPassword(password.value);
   const withEULA = hasApprovedEULA.value
@@ -360,8 +360,6 @@ const registerForm = computed<RegisterForm>(() => {
     : withEULA.denyVolunteerCharter();
 });
 
-const birthdayDate = computed<Date>(() => new Date(birthday.value));
-
 type TeamForRegistration = { name: string; code: RegistrationTeamCode };
 const comingFromTeams = computed<TeamForRegistration[]>(() => {
   return REGISTRATION_TEAM_CODES.map((code) => {
@@ -371,19 +369,19 @@ const comingFromTeams = computed<TeamForRegistration[]>(() => {
 });
 
 const presentationRules = computed(() => [
-  () => step.value <= 2 || rules.required(firstname.value),
-  () => step.value <= 2 || rules.required(lastname.value),
-  () => step.value <= 2 || rules.required(birthday.value),
-  () => step.value <= 2 || rules.birthdayMaxDate(birthday.value),
-  () => step.value <= 2 || rules.birthdayMinDate(birthday.value),
+  () => step.value <= 2 || rules.required(firstName.value),
+  () => step.value <= 2 || rules.required(lastName.value),
+  () => step.value <= 2 || rules.required(birthDay.value),
+  () => step.value <= 2 || rules.birthdayMaxDate(birthDay.value),
+  () => step.value <= 2 || rules.birthdayMinDate(birthDay.value),
 ]);
 
 const contactRules = computed(() => [
   () => step.value <= 3 || rules.required(email.value),
-  () => step.value <= 3 || rules.required(phone.value),
+  () => step.value <= 3 || rules.required(phoneNumber.value),
   () => step.value <= 3 || rules.email(email.value),
   () => step.value <= 3 || rules.insaEmail(email.value),
-  () => step.value <= 3 || rules.mobilePhone(phone.value),
+  () => step.value <= 3 || rules.mobilePhone(phoneNumber.value),
 ]);
 
 const securityRules = computed(() => [

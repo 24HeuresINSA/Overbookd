@@ -52,8 +52,8 @@ const friday09hto10hBarAssignment = {
 
 const noel: Volunteer = {
   id: 1,
-  firstname: "Noel",
-  lastname: "Ertsemud",
+  firstName: "Noel",
+  lastName: "Ertsemud",
   nickname: "Moto",
   charisma: 1000,
   teams: [HARD, "plaizir"],
@@ -61,8 +61,8 @@ const noel: Volunteer = {
 };
 const lea: Volunteer = {
   id: 2,
-  firstname: "Lea",
-  lastname: "Mauyno",
+  firstName: "Lea",
+  lastName: "Mauyno",
   nickname: "Shogosse",
   charisma: 1,
   teams: [VIEUX, PERSONNE],

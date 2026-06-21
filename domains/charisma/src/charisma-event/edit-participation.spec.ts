@@ -7,7 +7,7 @@ import {
   IntegerCharismaPerHour,
 } from "./charisma-event.error";
 
-const lea = { id: 1, firstname: "Lea", lastname: "Mouyno" };
+const lea = { id: 1, firstName: "Lea", lastName: "Mouyno" };
 
 const participationFromLea = {
   slug: "participation-from-lea",

@@ -217,8 +217,8 @@ function toAssigneeForDetails(
 ): BaseAssigneeForDetails | TeamMemberForDetails {
   const baseAssignee = {
     id: assignee.personalData.id,
-    firstname: assignee.personalData.firstname,
-    lastname: assignee.personalData.lastname,
+    firstName: assignee.personalData.firstName,
+    lastName: assignee.personalData.lastName,
     comment: assignee.personalData.comment,
     note: assignee.personalData.note,
   };

@@ -59,11 +59,11 @@ class ContactRepresentation implements Contact {
   name: string;
 
   @ApiProperty({
-    name: "phone",
-    description: "contact phone",
+    name: "phoneNumber",
+    description: "contact phone number",
     type: String,
   })
-  phone: string;
+  phoneNumber: string;
 }
 
 class AppointmentLocationResponseDto implements AppointmentLocation {

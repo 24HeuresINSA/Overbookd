@@ -23,8 +23,8 @@ export function areSameContributions(
 
 export type Adherent = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   nickname?: string;
   email: string;
   teams: string[];

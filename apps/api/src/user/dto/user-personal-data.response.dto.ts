@@ -10,18 +10,18 @@ export class UserPersonalDataResponseDto implements UserPersonalData {
   id: number;
 
   @ApiProperty({
-    name: "firstname",
-    description: "User firstname",
+    name: "firstName",
+    description: "User first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
-    name: "lastname",
-    description: "User lastname",
+    name: "lastName",
+    description: "User last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     name: "nickname",
@@ -40,19 +40,19 @@ export class UserPersonalDataResponseDto implements UserPersonalData {
   email: string;
 
   @ApiProperty({
-    name: "birthdate",
-    description: "User birthdate",
+    name: "birthDate",
+    description: "User date of birth",
     type: Date,
   })
-  birthdate: Date;
+  birthDate: Date;
 
   @ApiProperty({
-    name: "phone",
+    name: "phoneNumber",
     description: "User phone number",
     type: String,
     example: "0601020304",
   })
-  phone: string;
+  phoneNumber: string;
 
   @ApiProperty({
     name: "comment",

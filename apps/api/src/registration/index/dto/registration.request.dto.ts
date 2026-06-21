@@ -22,11 +22,11 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
 
   @IsDefined()
   @IsString()
-  firstname: string;
+  firstName: string;
 
   @IsDefined()
   @IsString()
-  lastname: string;
+  lastName: string;
 
   @IsDefined()
   @IsString()
@@ -47,7 +47,7 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   })
   @IsDate()
   @Type(() => Date)
-  birthdate: Date;
+  birthDate: Date;
 
   @IsOptional()
   @IsString()

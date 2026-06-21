@@ -70,7 +70,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     const header = "<h2>Personne(s) à contacter en cas de problème</h2>";
     const listing = contacts.reduce(
       (description, contact) =>
-        `${description}<li>${contact.name} (${contact.phone})</li>`,
+        `${description}<li>${contact.name} (${contact.phoneNumber})</li>`,
       "",
     );
 

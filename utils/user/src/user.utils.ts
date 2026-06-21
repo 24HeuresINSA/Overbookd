@@ -1,7 +1,7 @@
 import type { User, UserName } from "./user.js";
 
 export function buildUserName(user: UserName): string {
-  return `${user.firstname} ${user.lastname}`;
+  return `${user.firstName} ${user.lastName}`;
 }
 
 export function nicknameOrName(user: UserName): string {
@@ -9,13 +9,13 @@ export function nicknameOrName(user: UserName): string {
   return nickname || buildUserName(name);
 }
 
-export function nicknameOrFirstName({ nickname, firstname }: UserName): string {
-  return nickname || firstname;
+export function nicknameOrFirstName({ nickname, firstName }: UserName): string {
+  return nickname || firstName;
 }
 
 export function buildUserNameWithNickname(user: UserName): string {
   const nickname = user.nickname ? ` (${user.nickname}) ` : " ";
-  return `${user.firstname}${nickname}${user.lastname}`;
+  return `${user.firstName}${nickname}${user.lastName}`;
 }
 
 export function toStandAloneUser(user: User) {

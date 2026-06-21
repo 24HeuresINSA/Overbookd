@@ -7,12 +7,12 @@ import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.
 
 const noel: Adherent = {
   id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
+  lastName: "Ertsemud",
+  firstName: "Noel",
 };
 
 describe("Festival activity creation", () => {
-  describe(`when ${noel.firstname} create Escape game activity`, async () => {
+  describe(`when ${noel.firstName} create Escape game activity`, async () => {
     const repository = new InMemoryCreateFestivalActivityRepository();
     const festivalActivity = new CreateFestivalActivity(repository);
     const escapeGame = await festivalActivity.create({

@@ -2,7 +2,7 @@ import { Adherent, MealsAdherents } from "@overbookd/personal-account";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { PrismaService } from "../../prisma.service";
 
-const SELECT_ADHERENT = { firstname: true, lastname: true, nickname: true };
+const SELECT_ADHERENT = { firstName: true, lastName: true, nickname: true };
 
 export class PrismaAdherents implements MealsAdherents {
   constructor(private readonly prisma: PrismaService) {}

@@ -146,7 +146,7 @@
             <TeamChip v-for="team of item.teams" :key="team" :team="team" />
           </template>
 
-          <template #item.phone="{ item }">
+          <template #item.mobilePhone="{ item }">
             {{ formatPhoneNumber(item.mobilePhone) }}
           </template>
         </v-data-table>
@@ -237,7 +237,7 @@ const headers = [
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams", sortable: true },
   { title: "Email", value: "email" },
-  { title: "Téléphone", value: "phone" },
+  { title: "Téléphone", value: "mobilePhone" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
@@ -317,12 +317,12 @@ const cancelCandidateRejection = (candidateId: number) => {
   closeCandidateInfoDialogue();
 };
 
-const willBeMinorAtEvent = ({ birthdate }: VolunteerCandidate): boolean => {
+const willBeMinorAtEvent = ({ birthDate }: VolunteerCandidate): boolean => {
   const MAJORITY_AGE = 18;
   const majorityDate = new Date(
-    birthdate.getFullYear() + MAJORITY_AGE,
-    birthdate.getMonth(),
-    birthdate.getDate(),
+    birthDate.getFullYear() + MAJORITY_AGE,
+    birthDate.getMonth(),
+    birthDate.getDate(),
   );
   return majorityDate > configurationStore.mondayBeforeEventDate;
 };
@@ -346,8 +346,8 @@ const exportCSV = async () => {
     .select([
       "candidatedAt",
       "charisma",
-      "firstname",
-      "lastname",
+      "firstName",
+      "lastName",
       "teams",
       "email",
       "mobilePhone",
@@ -356,8 +356,8 @@ const exportCSV = async () => {
     .translate([
       ["candidatedAt", "Date de candidature"],
       ["charisma", "Charisme"],
-      ["firstname", "Prénom"],
-      ["lastname", "Nom"],
+      ["firstName", "Prénom"],
+      ["lastName", "Nom"],
       ["teams", "Équipes"],
       ["email", "Email"],
       ["mobilePhone", "Téléphone"],

@@ -14,8 +14,8 @@ import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
 
 const lea: Member = {
   id: 1,
-  firstname: "Léa",
-  lastname: "Mauyno",
+  firstName: "Léa",
+  lastName: "Mauyno",
   nickname: "Shogosse",
   permissions: [PAY_CONTRIBUTION],
   teams: [],
@@ -23,16 +23,16 @@ const lea: Member = {
 };
 const noel: Member = {
   id: 2,
-  firstname: "Noël",
-  lastname: "Ertsemud",
+  firstName: "Noël",
+  lastName: "Ertsemud",
   permissions: [PAY_CONTRIBUTION],
   teams: [HARD, VIEUX],
   email: "noel.ertsemud@example.com",
 };
 const tatouin: Member = {
   id: 3,
-  firstname: "Tatouin",
-  lastname: "Jesoph",
+  firstName: "Tatouin",
+  lastName: "Jesoph",
   permissions: [],
   teams: [VIEUX],
   email: "tatouin.jesoph@example.com",

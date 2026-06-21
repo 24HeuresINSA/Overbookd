@@ -13,12 +13,12 @@
         />
         <div class="profile-row">
           <v-text-field
-            v-model="firstname"
+            v-model="firstName"
             label="Prénom*"
             :rules="[required, maxLength(30)]"
           />
           <v-text-field
-            v-model="lastname"
+            v-model="lastName"
             label="Nom*"
             :rules="[required, maxLength(30)]"
           />
@@ -31,7 +31,7 @@
             clearable
           />
           <v-text-field
-            v-model="birthday"
+            v-model="birthDay"
             label="Date de naissance*"
             type="date"
             :rules="[required, minDateRule, maxDateRule]"
@@ -39,7 +39,7 @@
         </div>
         <div class="profile-row">
           <v-text-field
-            v-model="phone"
+            v-model="phoneNumber"
             label="Téléphone portable*"
             :rules="[required, isMobilePhoneNumber]"
           />
@@ -138,14 +138,14 @@ const loggedUser = computed(() => userStore.loggedUser);
 
 const profilePicture = ref<File | null>(null);
 
-const firstname = ref<string>(loggedUser.value?.firstname ?? "");
-const lastname = ref<string>(loggedUser.value?.lastname ?? "");
+const firstName = ref<string>(loggedUser.value?.firstName ?? "");
+const lastName = ref<string>(loggedUser.value?.lastName ?? "");
 const nickname = ref<string | null | undefined>(loggedUser.value?.nickname);
-const birthday = ref<string>(
-  loggedUser.value ? formatLocalDate(loggedUser.value.birthdate) : "",
+const birthDay = ref<string>(
+  loggedUser.value ? formatLocalDate(loggedUser.value.birthDate) : "",
 );
 const email = computed<string>(() => loggedUser.value?.email ?? "");
-const phone = ref<string>(loggedUser.value?.phone ?? "");
+const phoneNumber = ref<string>(loggedUser.value?.phoneNumber ?? "");
 const preferences = computed<Preference>(() => preferenceStore.myPreferences);
 const selectedAssignment = ref<AssignmentPreferenceType>(
   preferences.value?.assignment ?? NO_PREF,
@@ -195,11 +195,11 @@ const save = async () => {
   loading.value = true;
 
   const newProfileData = {
-    firstname: firstname.value,
-    lastname: lastname.value,
+    firstName: firstName.value,
+    lastName: lastName.value,
     nickname: nickname.value?.trim() ? nickname.value : null,
-    birthdate: new Date(birthday.value),
-    phone: phone.value,
+    birthDate: new Date(birthDay.value),
+    phoneNumber: phoneNumber.value,
     comment: comment.value ? comment.value : null,
   };
   await userStore.updateMyProfile(newProfileData);

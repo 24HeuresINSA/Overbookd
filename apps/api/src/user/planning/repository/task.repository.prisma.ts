@@ -32,9 +32,9 @@ const SELECT_CONTACT = {
   contact: {
     select: {
       id: true,
-      firstname: true,
-      lastname: true,
-      phone: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
     },
   },
 };
@@ -47,7 +47,12 @@ type DatabaseTask = {
   inChargeInstruction: string;
   inChargeVolunteers: { volunteerId: number }[];
   contacts: {
-    contact: { id: number; firstname: string; lastname: string; phone: string };
+    contact: {
+      id: number;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+    };
   }[];
 };
 
@@ -58,7 +63,7 @@ type DatabaseAssignmentWithTask = IProvidePeriod & {
 type DatabaseAssignmentWithAssignees = IProvidePeriod & {
   festivalTaskId: number;
   assignees: {
-    personalData: { id: number; firstname: string; lastname: string };
+    personalData: { id: number; firstName: string; lastName: string };
   }[];
 };
 
@@ -146,7 +151,7 @@ export class PrismaTaskRepository implements TaskRepository {
       assignees: {
         select: {
           personalData: {
-            select: { id: true, firstname: true, lastname: true },
+            select: { id: true, firstName: true, lastName: true },
           },
         },
         where: { userId: { not: volunteerIdToAvoid } },
@@ -161,7 +166,7 @@ function toTask(
 ): JsonStoredTask {
   const contacts = festivalTask.contacts.map(({ contact }) => ({
     id: contact.id,
-    phone: contact.phone,
+    phoneNumber: contact.phoneNumber,
     name: buildUserName(contact),
   }));
   const instructions =

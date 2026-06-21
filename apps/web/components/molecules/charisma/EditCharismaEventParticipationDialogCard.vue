@@ -4,8 +4,9 @@
 
     <template #subtitle>
       Participation de
-      <strong>{{ participation.participant.firstname }}</strong> à l'événement
-      "<strong>{{ participation.name }}</strong>" le <strong>{{ formattedDate }}</strong> pour
+      <strong>{{ participation.participant.firstName }}</strong> à l'événement
+      "<strong>{{ participation.name }} </strong>" le
+      <strong>{{ formattedDate }}</strong> pour
       <strong>{{ participation.charisma }}</strong> de charisme
     </template>
 

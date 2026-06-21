@@ -13,10 +13,10 @@ class BaseAssigneeForDetailsDto implements BaseAssigneeForDetails {
   id: number;
 
   @ApiProperty({ type: String })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({ type: String })
-  lastname: string;
+  lastName: string;
 }
 
 class TeamMemberForDetailsDto

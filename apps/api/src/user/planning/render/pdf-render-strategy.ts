@@ -357,9 +357,9 @@ export class PdfRenderStrategy implements RenderStrategy {
       style: ["contact"],
     };
     const listing = contacts
-      .reduce((rows, { name, phone }) => {
+      .reduce((rows, { name, phoneNumber }) => {
         const previousRow = rows.at(-1);
-        const contact = { text: `${name} (${phone})` };
+        const contact = { text: `${name} (${phoneNumber})` };
         if (!previousRow) return [[contact]];
         if (previousRow.length === NB_CONTACTS_PER_LINE)
           return [...rows, [contact]];

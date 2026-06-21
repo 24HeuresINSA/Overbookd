@@ -22,11 +22,11 @@ const AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD =
   "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe";
 
 const email = "test@example.com";
-const firstname = "Titouan";
-const lastname = "Moula";
+const firstName = "Titouan";
+const lastName = "Moula";
 const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
-const birthdate = new Date("2000-01-01");
+const birthDate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
@@ -34,12 +34,12 @@ const nickname = "Shagou";
 function validForm() {
   return RegisterForm.initFor(VOLUNTEER)
     .fillEmail(email)
-    .fillFirstname(firstname)
-    .fillLastname(lastname)
+    .fillFirstName(firstName)
+    .fillLastName(lastName)
     .fillPassword(password)
     .fillMobilePhone(mobilePhone)
     .fillNickname(nickname)
-    .fillBirthdate(birthdate)
+    .fillBirthDate(birthDate)
     .fillComment(comment)
     .fillTeams(teams)
     .approveEndUserLicenceAgreement()
@@ -56,12 +56,12 @@ describe("Register form", () => {
       it("should generate a fulfilled form", () => {
         const newcomer = validForm().complete();
         expect(newcomer).toEqual({
-          firstname,
-          lastname,
+          firstName,
+          lastName,
           teams,
           comment,
           nickname,
-          birthdate,
+          birthDate,
           password,
           email,
           mobilePhone,
@@ -107,29 +107,29 @@ describe("Register form", () => {
       });
     });
   });
-  describe("firstname rules", () => {
-    describe("when firstname is filled with empty string", () => {
-      const baseForm = validForm().clearFirstname();
+  describe("firstName rules", () => {
+    describe("when firstName is filled with empty string", () => {
+      const baseForm = validForm().clearFirstName();
       it("should indicate the form is invalid", () => {
-        const form = baseForm.fillFirstname("");
+        const form = baseForm.fillFirstName("");
         expect(form.isValid).toBe(false);
       });
-      it("should indicate that firstname is required", () => {
-        const form = baseForm.fillFirstname("");
+      it("should indicate that firstName is required", () => {
+        const form = baseForm.fillFirstName("");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Il faut renseigner un prenom");
       });
     });
   });
-  describe("lastname rules", () => {
-    describe("when lastname is filled with empty string", () => {
-      const baseForm = validForm().clearLastname();
+  describe("lastName rules", () => {
+    describe("when lastName is filled with empty string", () => {
+      const baseForm = validForm().clearLastName();
       it("should indicate the form is invalid", () => {
-        const form = baseForm.fillLastname("");
+        const form = baseForm.fillLastName("");
         expect(form.isValid).toBe(false);
       });
-      it("should indicate that lastname is required", () => {
-        const form = baseForm.fillLastname("");
+      it("should indicate that lastName is required", () => {
+        const form = baseForm.fillLastName("");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Il faut renseigner un nom");
       });
@@ -218,19 +218,19 @@ describe("Register form", () => {
       });
     });
   });
-  describe("birthdate rules", () => {
-    const baseForm = validForm().clearBirthdate();
+  describe("birthDate rules", () => {
+    const baseForm = validForm().clearBirthDate();
     describe.each`
-      birthdate       | valid    | reason
+      birthDate       | valid    | reason
       ${"1949-12-25"} | ${false} | ${"Tu n'es pas si vieux !"}
       ${"3000-12-25"} | ${false} | ${"Tu ne peux pas naître dans le futur 🕵️‍♂️"}
       ${"2001-12-25"} | ${true}  | ${undefined}
     `(
-      "when birthdate is filled with $birthdate",
-      ({ birthdate, valid, reason }) => {
+      "when birthDate is filled with $birthDate",
+      ({ birthDate, valid, reason }) => {
         const validity = valid ? "valid" : "invalid";
-        it(`should indicate that birthdate is ${validity}`, () => {
-          const form = baseForm.fillBirthdate(new Date(birthdate));
+        it(`should indicate that birthDate is ${validity}`, () => {
+          const form = baseForm.fillBirthDate(new Date(birthDate));
           expect(form.isValid).toBe(valid);
           if (valid) return;
           expect(form.reasons).toHaveLength(1);
@@ -311,12 +311,12 @@ describe("Register form", () => {
     describe("when staff is not signing the volunteer charter", () => {
       const unsignedForm = RegisterForm.initFor(STAFF)
         .fillEmail(email)
-        .fillFirstname(firstname)
-        .fillLastname(lastname)
+        .fillFirstName(firstName)
+        .fillLastName(lastName)
         .fillPassword(password)
         .fillMobilePhone(mobilePhone)
         .fillNickname(nickname)
-        .fillBirthdate(birthdate)
+        .fillBirthDate(birthDate)
         .fillComment(comment)
         .fillTeams(teams)
         .approveEndUserLicenceAgreement();

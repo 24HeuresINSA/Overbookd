@@ -119,8 +119,8 @@ describe("Forget member", () => {
         });
         expect(anonymizedMember).toEqual({
           email: "anonymous+4@24heures.org",
-          firstname: ANONYMOUS,
-          lastname: ANONYMOUS,
+          firstName: ANONYMOUS,
+          lastName: ANONYMOUS,
           mobilePhone: ANONYMOUS_MOBILE_PHONE,
           nickname: null,
           comment: null,

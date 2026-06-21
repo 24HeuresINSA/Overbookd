@@ -23,14 +23,14 @@ class TimelineAssigneeDto implements TimelineAssignee {
     description: "The assignee's first name",
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
     description: "The assignee's last name",
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     required: true,
@@ -45,7 +45,7 @@ class TimelineAssigneeDto implements TimelineAssignee {
     description: "The assignee's phone number",
     type: String,
   })
-  phone: string;
+  phoneNumber: string;
 }
 
 class TimelineAssignmentDto extends PeriodDto implements TimelineAssignment {

@@ -14,13 +14,13 @@ export class StaffCandidateResponseDto implements StaffCandidate {
     required: true,
     type: String,
   })
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({
     required: true,
     type: String,
   })
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({
     required: true,

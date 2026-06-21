@@ -13,13 +13,13 @@ import { InMemoryCharismaEventParticipations } from "./charisma-event-participat
 
 const lea: User = {
   id: 1,
-  firstname: "Lea",
-  lastname: "Mouyno",
+  firstName: "Lea",
+  lastName: "Mouyno",
 };
 const cul: User = {
   id: 2,
-  firstname: "Cul",
-  lastname: "Nehgahrednav",
+  firstName: "Cul",
+  lastName: "Nehgahrednav",
 };
 
 const eventDateString1 = "2024-01-01";

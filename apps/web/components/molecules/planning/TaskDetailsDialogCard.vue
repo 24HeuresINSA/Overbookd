@@ -48,7 +48,7 @@
         <ul>
           <li v-for="contact in selectedTask.contacts" :key="contact.id">
             {{ buildUserNameWithNickname(contact) }} -
-            {{ formatPhoneNumber(contact.phone) }}
+            {{ formatPhoneNumber(contact.phoneNumber) }}
           </li>
         </ul>
       </div>

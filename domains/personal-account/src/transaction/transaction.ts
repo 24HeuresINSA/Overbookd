@@ -31,8 +31,8 @@ type Receive<T extends ReceiveOrSendTransaction> = BaseTransaction & {
 
 export type TransactionUser = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   nickname?: string;
 };
 

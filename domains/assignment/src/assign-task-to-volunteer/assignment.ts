@@ -18,8 +18,8 @@ export function isMemberOf(team: string): (value: Assignee) => boolean {
 
 export type BaseAssigneeForDetails = {
   id: Volunteer["id"];
-  firstname: Volunteer["firstname"];
-  lastname: Volunteer["lastname"];
+  firstName: Volunteer["firstName"];
+  lastName: Volunteer["lastName"];
 };
 
 export type TeamMemberForDetails = BaseAssigneeForDetails & {

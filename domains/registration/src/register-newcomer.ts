@@ -57,11 +57,11 @@ export class RegisterNewcomer {
       form.comment,
     )
       .fillEmail(form.email ?? "")
-      .fillFirstname(form.firstname ?? "")
-      .fillLastname(form.lastname ?? "")
+      .fillFirstName(form.firstName ?? "")
+      .fillLastName(form.lastName ?? "")
       .fillPassword(form.password ?? "")
       .fillMobilePhone(form.mobilePhone ?? "")
-      .fillBirthdate(form.birthdate ?? new Date("1949-12-25"))
+      .fillBirthDate(form.birthDate ?? new Date("1949-12-25"))
       .fillTeams(form.teams ?? []);
     const withEULA = form.hasApprovedEULA
       ? dataForm.approveEndUserLicenceAgreement()

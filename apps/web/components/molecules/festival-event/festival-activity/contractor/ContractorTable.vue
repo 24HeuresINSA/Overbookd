@@ -9,8 +9,8 @@
       disable-pagination
       hide-default-footer
     >
-      <template #item.phone="{ item }">
-        {{ formatPhoneNumber(item.phone) }}
+      <template #item.phoneNumber="{ item }">
+        {{ formatPhoneNumber(item.phoneNumber) }}
       </template>
 
       <template #item.actions="{ item }">
@@ -76,9 +76,9 @@ const props = defineProps({
 
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
-    { title: "Prénom", value: "firstname", sortable: true },
-    { title: "Nom", value: "lastname", sortable: true },
-    { title: "Téléphone", value: "phone" },
+    { title: "Prénom", value: "firstName", sortable: true },
+    { title: "Nom", value: "lastName", sortable: true },
+    { title: "Téléphone", value: "phoneNumber" },
     { title: "Email", value: "email", sortable: true },
     { title: "Société", value: "company", sortable: true },
     { title: "Commentaire", value: "comment" },

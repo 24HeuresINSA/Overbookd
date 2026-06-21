@@ -5,15 +5,15 @@ import { IsOptional, IsString } from "class-validator";
 export class AddContractorRequestDto implements PrepareContractorCreation {
   @ApiProperty({ required: true })
   @IsString()
-  firstname: string;
+  firstName: string;
 
   @ApiProperty({ required: true })
   @IsString()
-  lastname: string;
+  lastName: string;
 
   @ApiProperty({ required: true })
   @IsString()
-  phone: string;
+  phoneNumber: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
