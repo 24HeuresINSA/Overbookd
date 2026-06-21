@@ -58,7 +58,7 @@ import { ZitadelService } from "./zitadel.service";
 type UserDataFromZitadel = Omit<User, "id"> & {
   email: string;
   phoneNumber: string;
-  dateOfBirth: Date | null;
+  birthDate: Date | null;
 };
 
 @Injectable()
@@ -76,10 +76,10 @@ export class UserService {
 
     const data: UserDataFromZitadel = {
       email: zitadelUser.email.toLowerCase(),
-      firstname: zitadelUser.given_name,
-      lastname: zitadelUser.family_name,
+      firstName: zitadelUser.given_name,
+      lastName: zitadelUser.family_name,
       phoneNumber: zitadelUser.phone_number,
-      dateOfBirth: birthday,
+      birthDate: birthday,
     };
 
     const zitadelRoles = zitadelUser.zitadelRoles;
@@ -110,10 +110,10 @@ export class UserService {
 
     const data = {
       email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      phone: user.phoneNumber,
-      birthdate: user.dateOfBirth,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      birthDate: user.birthDate,
       zitadelId: user.zitadelId,
     };
 
@@ -121,8 +121,8 @@ export class UserService {
       data["roles"] = user.roles;
     }
 
-    if ("dateOfBirth" in user) {
-      data["dateOfBirth"] = new Date(user.dateOfBirth);
+    if (user.birthDate) {
+      data["birthDate"] = new Date(user.birthDate);
     }
 
     if (!userId) {
