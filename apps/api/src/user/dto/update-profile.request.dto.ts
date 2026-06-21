@@ -41,7 +41,7 @@ export class UpdateProfileRequestDto implements Partial<Profile> {
   })
   @IsOptional()
   @IsNotEmpty()
-  dateOfBirth?: Date;
+  birthDate?: Date;
 
   @ApiProperty({
     required: false,

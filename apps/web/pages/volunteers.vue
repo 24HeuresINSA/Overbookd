@@ -175,9 +175,9 @@ const exportCSV = async () => {
       const teams = volunteer.teams
         .filter((team) => team !== PERSONNE)
         .join(", ");
-      const dateOfBirth = formatDate(volunteer.dateOfBirth);
+      const birthDate = formatDate(volunteer.birthDate);
       const phoneNumber = formatPhoneNumber(volunteer.phoneNumber);
-      return { ...volunteer, teams, phoneNumber, dateOfBirth };
+      return { ...volunteer, teams, phoneNumber, birthDate };
     }),
   )
     .select([
@@ -187,7 +187,7 @@ const exportCSV = async () => {
       "charisma",
       "teams",
       "email",
-      "dateOfBirth",
+      "birthDate",
       "phoneNumber",
       "comment",
       "note",
@@ -199,7 +199,7 @@ const exportCSV = async () => {
       ["charisma", "Charisme"],
       ["teams", "Équipes"],
       ["email", "Email"],
-      ["dateOfBirth", "Date de naissance"],
+      ["birthDate", "Date de naissance"],
       ["phoneNumber", "Téléphone"],
       ["comment", "Commentaire"],
       ["note", "Note"],

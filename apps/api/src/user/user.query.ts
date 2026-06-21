@@ -12,7 +12,7 @@ const SELECT_USER = {
   ...SELECT_USER_IDENTIFIER,
   ...SELECT_USER_DATA_FOR_CHARISMA,
   email: true,
-  dateOfBirth: true,
+  birthDate: true,
   phoneNumber: true,
   comment: true,
   profilePicture: true,

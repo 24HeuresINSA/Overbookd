@@ -52,7 +52,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
   })
   @IsOptional()
   @IsNotEmpty()
-  dateOfBirth?: Date;
+  birthDate?: Date;
 
   @ApiProperty({
     required: false,

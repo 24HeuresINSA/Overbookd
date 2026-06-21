@@ -26,7 +26,7 @@ const firstName = "Titouan";
 const lastName = "Moula";
 const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
-const dateOfBirth = new Date("2000-01-01");
+const birthDate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
@@ -39,7 +39,7 @@ function validForm() {
     .fillPassword(password)
     .fillMobilePhone(mobilePhone)
     .fillNickname(nickname)
-    .fillDateOfBirth(dateOfBirth)
+    .fillBirthDate(birthDate)
     .fillComment(comment)
     .fillTeams(teams)
     .approveEndUserLicenceAgreement()
@@ -61,7 +61,7 @@ describe("Register form", () => {
           teams,
           comment,
           nickname,
-          dateOfBirth,
+          birthDate,
           password,
           email,
           mobilePhone,
@@ -218,19 +218,19 @@ describe("Register form", () => {
       });
     });
   });
-  describe("dateOfBirth rules", () => {
-    const baseForm = validForm().clearDateOfBirth();
+  describe("birthDate rules", () => {
+    const baseForm = validForm().clearBirthDate();
     describe.each`
-      dateOfBirth     | valid    | reason
+      birthDate       | valid    | reason
       ${"1949-12-25"} | ${false} | ${"Tu n'es pas si vieux !"}
       ${"3000-12-25"} | ${false} | ${"Tu ne peux pas naître dans le futur 🕵️‍♂️"}
       ${"2001-12-25"} | ${true}  | ${undefined}
     `(
-      "when dateOfBirth is filled with $dateOfBirth",
-      ({ dateOfBirth, valid, reason }) => {
+      "when birthDate is filled with $birthDate",
+      ({ birthDate, valid, reason }) => {
         const validity = valid ? "valid" : "invalid";
-        it(`should indicate that dateOfBirth is ${validity}`, () => {
-          const form = baseForm.fillDateOfBirth(new Date(dateOfBirth));
+        it(`should indicate that birthDate is ${validity}`, () => {
+          const form = baseForm.fillBirthDate(new Date(birthDate));
           expect(form.isValid).toBe(valid);
           if (valid) return;
           expect(form.reasons).toHaveLength(1);
@@ -316,7 +316,7 @@ describe("Register form", () => {
         .fillPassword(password)
         .fillMobilePhone(mobilePhone)
         .fillNickname(nickname)
-        .fillDateOfBirth(dateOfBirth)
+        .fillBirthDate(birthDate)
         .fillComment(comment)
         .fillTeams(teams)
         .approveEndUserLicenceAgreement();

@@ -5,7 +5,7 @@ import { LastNameField } from "./fields/last-name-field.js";
 import { PasswordField } from "./fields/password-field.js";
 import { MobilePhoneField } from "./fields/mobile-phone-field.js";
 import { NicknameField } from "./fields/nickname-field.js";
-import { DateOfBirthField } from "./fields/date-of-birth-field.js";
+import { BirthDateField } from "./fields/date-of-birth-field.js";
 import { CommentField } from "./fields/comment-field.js";
 import { TeamsField } from "./fields/teams-field.js";
 import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
@@ -20,7 +20,7 @@ export class RegisterForm {
   private password: PasswordField;
   private mobilePhone: MobilePhoneField;
   private nickname: NicknameField;
-  private dateOfBirth: DateOfBirthField;
+  private birthDate: BirthDateField;
   private comment: CommentField;
   private teams: TeamsField;
   private EULA: EULAField;
@@ -35,7 +35,7 @@ export class RegisterForm {
       password,
       mobilePhone,
       nickname,
-      dateOfBirth,
+      birthDate,
       comment,
       teams,
       hasApprovedEULA,
@@ -48,9 +48,7 @@ export class RegisterForm {
     this.password = PasswordField.build(password ?? "");
     this.mobilePhone = MobilePhoneField.build(mobilePhone ?? "");
     this.nickname = NicknameField.build(nickname);
-    this.dateOfBirth = DateOfBirthField.build(
-      dateOfBirth ?? new Date("1949-12-25"),
-    );
+    this.birthDate = BirthDateField.build(birthDate ?? new Date("1949-12-25"));
     this.comment = CommentField.build(comment);
     this.teams = TeamsField.build(teams ?? []);
     this.EULA = EULAField.build(hasApprovedEULA);
@@ -148,17 +146,17 @@ export class RegisterForm {
     });
   }
 
-  fillDateOfBirth(dateOfBirth: Date): RegisterForm {
+  fillBirthDate(birthDate: Date): RegisterForm {
     return new RegisterForm(this.membership, {
       ...this.currentRegistration,
-      dateOfBirth,
+      birthDate,
     });
   }
 
-  clearDateOfBirth(): RegisterForm {
+  clearBirthDate(): RegisterForm {
     return new RegisterForm(this.membership, {
       ...this.currentRegistration,
-      dateOfBirth: undefined,
+      birthDate: undefined,
     });
   }
 
@@ -230,7 +228,7 @@ export class RegisterForm {
       password: this.password.value,
       mobilePhone: this.mobilePhone.value,
       nickname: this.nickname.value,
-      dateOfBirth: this.dateOfBirth.value,
+      birthDate: this.birthDate.value,
       comment: this.comment.value,
       teams: this.teams.value,
       hasApprovedEULA: this.EULA.value,
@@ -246,7 +244,7 @@ export class RegisterForm {
       this.password,
       this.mobilePhone,
       this.nickname,
-      this.dateOfBirth,
+      this.birthDate,
       this.comment,
       this.teams,
       this.EULA,

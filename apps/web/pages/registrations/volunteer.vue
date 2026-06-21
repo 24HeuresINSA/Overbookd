@@ -317,12 +317,12 @@ const cancelCandidateRejection = (candidateId: number) => {
   closeCandidateInfoDialogue();
 };
 
-const willBeMinorAtEvent = ({ dateOfBirth }: VolunteerCandidate): boolean => {
+const willBeMinorAtEvent = ({ birthDate }: VolunteerCandidate): boolean => {
   const MAJORITY_AGE = 18;
   const majorityDate = new Date(
-    dateOfBirth.getFullYear() + MAJORITY_AGE,
-    dateOfBirth.getMonth(),
-    dateOfBirth.getDate(),
+    birthDate.getFullYear() + MAJORITY_AGE,
+    birthDate.getMonth(),
+    birthDate.getDate(),
   );
   return majorityDate > configurationStore.mondayBeforeEventDate;
 };

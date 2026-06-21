@@ -61,7 +61,7 @@ export class RegisterNewcomer {
       .fillLastName(form.lastName ?? "")
       .fillPassword(form.password ?? "")
       .fillMobilePhone(form.mobilePhone ?? "")
-      .fillDateOfBirth(form.dateOfBirth ?? new Date("1949-12-25"))
+      .fillBirthDate(form.birthDate ?? new Date("1949-12-25"))
       .fillTeams(form.teams ?? []);
     const withEULA = form.hasApprovedEULA
       ? dataForm.approveEndUserLicenceAgreement()

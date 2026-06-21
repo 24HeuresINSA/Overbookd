@@ -47,7 +47,7 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   })
   @IsDate()
   @Type(() => Date)
-  dateOfBirth: Date;
+  birthDate: Date;
 
   @IsOptional()
   @IsString()

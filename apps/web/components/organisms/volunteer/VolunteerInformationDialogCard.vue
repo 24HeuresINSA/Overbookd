@@ -65,7 +65,7 @@
             />
 
             <v-text-field
-              v-model="dateOfBirth"
+              v-model="birthDay"
               label="Date de naissance"
               type="date"
               :rules="[rules.required, rules.minDate, rules.maxDate]"
@@ -230,7 +230,7 @@ const props = defineProps({
 const volunteerId = computed<number>(() => props.volunteer.id);
 
 const nickname = ref<string | null>(null);
-const dateOfBirth = ref<string>("");
+const birthDay = ref<string>("");
 const phoneNumber = ref<string>("");
 const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
@@ -278,7 +278,7 @@ const assignmentPreferenceLabel = computed<string>(() => {
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
-  dateOfBirth.value = formatLocalDate(props.volunteer.dateOfBirth);
+  birthDay.value = formatLocalDate(props.volunteer.birthDate);
   phoneNumber.value = props.volunteer.phoneNumber ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
@@ -340,7 +340,7 @@ const updatedVolunteer = computed<UserPersonalData>(() => {
   return {
     ...props.volunteer,
     nickname: trimmedNickname,
-    dateOfBirth: new Date(dateOfBirth.value),
+    birthDate: new Date(birthDay.value),
     phoneNumber: phoneNumber.value,
     email: email.value.trim(),
     note: trimmedNote,

@@ -40,11 +40,11 @@ export class UserPersonalDataResponseDto implements UserPersonalData {
   email: string;
 
   @ApiProperty({
-    name: "dateOfBirth",
+    name: "birthDate",
     description: "User date of birth",
     type: Date,
   })
-  dateOfBirth: Date;
+  birthDate: Date;
 
   @ApiProperty({
     name: "phoneNumber",

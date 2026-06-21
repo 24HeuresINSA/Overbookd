@@ -3,7 +3,7 @@ export type UserUpdateForm = {
   lastName?: string;
   nickname?: string | null;
   email?: string;
-  dateOfBirth?: Date;
+  birthDate?: Date;
   phoneNumber?: string;
   comment?: string | null;
   profilePicture?: string;

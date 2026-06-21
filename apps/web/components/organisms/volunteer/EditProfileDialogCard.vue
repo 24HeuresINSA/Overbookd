@@ -31,7 +31,7 @@
             clearable
           />
           <v-text-field
-            v-model="dateOfBirth"
+            v-model="birthDay"
             label="Date de naissance*"
             type="date"
             :rules="[required, minDateRule, maxDateRule]"
@@ -141,8 +141,8 @@ const profilePicture = ref<File | null>(null);
 const firstName = ref<string>(loggedUser.value?.firstName ?? "");
 const lastName = ref<string>(loggedUser.value?.lastName ?? "");
 const nickname = ref<string | null | undefined>(loggedUser.value?.nickname);
-const dateOfBirth = ref<string>(
-  loggedUser.value ? formatLocalDate(loggedUser.value.dateOfBirth) : "",
+const birthDay = ref<string>(
+  loggedUser.value ? formatLocalDate(loggedUser.value.birthDate) : "",
 );
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phoneNumber = ref<string>(loggedUser.value?.phoneNumber ?? "");
@@ -198,7 +198,7 @@ const save = async () => {
     firstName: firstName.value,
     lastName: lastName.value,
     nickname: nickname.value?.trim() ? nickname.value : null,
-    dateOfBirth: new Date(dateOfBirth.value),
+    birthDate: new Date(birthDay.value),
     phoneNumber: phoneNumber.value,
     comment: comment.value ? comment.value : null,
   };

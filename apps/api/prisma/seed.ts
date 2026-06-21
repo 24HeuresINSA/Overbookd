@@ -88,7 +88,7 @@ async function main() {
         firstName: user,
         lastName: user,
         nickname: null,
-        dateOfBirth: new Date(1990, 1, 1),
+        birthDate: new Date(1990, 1, 1),
         phoneNumber: "0612345678",
         password: hashPassword,
         teams: {

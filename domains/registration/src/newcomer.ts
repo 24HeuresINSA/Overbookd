@@ -15,7 +15,7 @@ export type Registree = {
   lastName: string;
   mobilePhone: string;
   nickname?: string;
-  dateOfBirth: Date;
+  birthDate: Date;
   comment?: string;
   teams: Teams;
 };

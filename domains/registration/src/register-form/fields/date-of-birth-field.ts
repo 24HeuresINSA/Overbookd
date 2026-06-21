@@ -1,11 +1,11 @@
 import { Field } from "./field.js";
 import { Rule } from "./rule.js";
 
-export class DateOfBirthField implements Field<Date> {
-  private readonly minimumDateOfBirth = new Date("1950-01-01");
+export class BirthDateField implements Field<Date> {
+  private readonly minimumBirthDate = new Date("1950-01-01");
 
   private readonly notBefore1950: Rule<Date> = {
-    test: (value) => value.getTime() > this.minimumDateOfBirth.getTime(),
+    test: (value) => value.getTime() > this.minimumBirthDate.getTime(),
     reason: "Tu n'es pas si vieux !",
   };
 
@@ -14,14 +14,14 @@ export class DateOfBirthField implements Field<Date> {
     reason: "Tu ne peux pas naître dans le futur 🕵️‍♂️",
   };
 
-  private constructor(private readonly dateOfBirth: Date) {}
+  private constructor(private readonly birthDate: Date) {}
 
-  static build(dateOfBirth: Date): DateOfBirthField {
-    return new DateOfBirthField(dateOfBirth);
+  static build(birthDate: Date): BirthDateField {
+    return new BirthDateField(birthDate);
   }
 
   get value(): Date {
-    return this.dateOfBirth;
+    return this.birthDate;
   }
 
   private get rules(): Rule<unknown>[] {
@@ -29,12 +29,12 @@ export class DateOfBirthField implements Field<Date> {
   }
 
   get isValid(): boolean {
-    return this.rules.every((rule) => rule.test(this.dateOfBirth));
+    return this.rules.every((rule) => rule.test(this.birthDate));
   }
 
   get reasons(): string[] {
     return this.rules
-      .filter((rule) => !rule.test(this.dateOfBirth))
+      .filter((rule) => !rule.test(this.birthDate))
       .map(({ reason }) => reason);
   }
 }

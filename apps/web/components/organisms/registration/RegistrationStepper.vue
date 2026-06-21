@@ -87,7 +87,7 @@
               required
             />
             <v-text-field
-              v-model="dateOfBirth"
+              v-model="birthDay"
               label="Date de naissance*"
               type="date"
               :rules="[
@@ -300,7 +300,7 @@ const step = ref<number>(1);
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const nickname = ref<string>("");
-const dateOfBirth = ref<string>("2000-01-01");
+const birthDay = ref<string>("2000-01-01");
 const email = ref<string>("");
 const phoneNumber = ref<string>("");
 const comment = ref<string>("");
@@ -345,7 +345,7 @@ const registerForm = computed<RegisterForm>(() => {
   const form = commentAction(
     nicknameAction(RegisterForm.initFor(membership.value)),
   )
-    .fillDateOfBirth(new Date(dateOfBirth.value))
+    .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
     .fillFirstName(firstName.value)
     .fillLastName(lastName.value)
@@ -371,9 +371,9 @@ const comingFromTeams = computed<TeamForRegistration[]>(() => {
 const presentationRules = computed(() => [
   () => step.value <= 2 || rules.required(firstName.value),
   () => step.value <= 2 || rules.required(lastName.value),
-  () => step.value <= 2 || rules.required(dateOfBirth.value),
-  () => step.value <= 2 || rules.birthdayMaxDate(dateOfBirth.value),
-  () => step.value <= 2 || rules.birthdayMinDate(dateOfBirth.value),
+  () => step.value <= 2 || rules.required(birthDay.value),
+  () => step.value <= 2 || rules.birthdayMaxDate(birthDay.value),
+  () => step.value <= 2 || rules.birthdayMinDate(birthDay.value),
 ]);
 
 const contactRules = computed(() => [

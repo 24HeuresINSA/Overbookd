@@ -65,7 +65,7 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
     required: true,
     type: String,
   })
-  dateOfBirth: Date;
+  birthDate: Date;
 
   @ApiProperty({
     required: false,

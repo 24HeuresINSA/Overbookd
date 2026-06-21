@@ -29,7 +29,7 @@ const firstName = "Titouan";
 const lastName = "Moula";
 const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
-const dateOfBirth = new Date("2000-01-01");
+const birthDate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
@@ -40,7 +40,7 @@ const firstNewComer: NewcomerRegistered<"STAFF"> = {
   lastName,
   mobilePhone,
   comment,
-  dateOfBirth,
+  birthDate,
   teams,
   nickname,
   email,
@@ -53,7 +53,7 @@ const staffRegisterForm: FulfilledRegistration = {
   mobilePhone,
   password,
   comment,
-  dateOfBirth,
+  birthDate,
   teams,
   nickname,
   email,

@@ -39,7 +39,7 @@ export type FulfilledRegistration = {
   password: string;
   mobilePhone: string;
   nickname?: string;
-  dateOfBirth: Date;
+  birthDate: Date;
   comment?: string;
   teams: Teams;
   hasApprovedEULA: boolean;

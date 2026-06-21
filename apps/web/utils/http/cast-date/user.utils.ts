@@ -6,7 +6,7 @@ export function castUserPersonalDataWithDate(
 ): UserPersonalData {
   return {
     ...user,
-    dateOfBirth: new Date(user.dateOfBirth),
+    birthDate: new Date(user.birthDate),
     teams: user.teams.toSorted(),
   };
 }
@@ -16,7 +16,7 @@ export function castMyUserInformationWithDate(
 ): MyUserInformation {
   return {
     ...user,
-    dateOfBirth: new Date(user.dateOfBirth),
+    birthDate: new Date(user.birthDate),
     teams: user.teams.toSorted(),
   };
 }
@@ -26,7 +26,7 @@ export function castConsumerWithDate(
 ): Consumer {
   return {
     ...consumer,
-    dateOfBirth: new Date(consumer.dateOfBirth),
+    birthDate: new Date(consumer.birthDate),
     teams: consumer.teams.toSorted(),
   };
 }

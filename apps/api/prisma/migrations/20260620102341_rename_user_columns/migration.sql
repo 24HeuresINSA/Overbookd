@@ -1,6 +1,6 @@
 -- Rename columns
 ALTER TABLE "user"
-RENAME COLUMN "birthdate" TO "date_of_birth";
+RENAME COLUMN "birthdate" TO "birth_date";
 
 ALTER TABLE "user"
 RENAME COLUMN "firstname" TO "first_name";
