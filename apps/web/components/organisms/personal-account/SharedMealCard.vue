@@ -218,21 +218,14 @@ const builder = computed<OnGoingSharedMealBuilder>(() =>
   OnGoingSharedMealBuilder.build(shared),
 );
 const myPortionCount = computed<number>(
-  () =>
-    shared.shotguns.find((adherent) => adherent.id === me.value.id)?.portions ??
-    0,
+  () => builder.value.getShotgunCount(me.value.id)
 );
 const areShotgunsOpen = computed<boolean>(() => builder.value.areShotgunsOpen);
 const areMultipleShotgunsAllowed = computed<boolean>(
   () => builder.value.areMultipleShotgunsAllowed,
 );
-
 const canIShotgun = computed<boolean>(
-  () =>
-    areShotgunsOpen.value &&
-    (myPortionCount.value === 0 ||
-      (areMultipleShotgunsAllowed.value &&
-        myPortionCount.value < MAX_PORTIONS_PER_GUEST)),
+  () => builder.value.canShotgun(me.value.id)
 );
 
 const isRecordExpenseDialogOpen = ref<boolean>(false);

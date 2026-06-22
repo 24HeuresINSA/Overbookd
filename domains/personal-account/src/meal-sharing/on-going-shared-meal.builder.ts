@@ -72,7 +72,7 @@ export class OnGoingSharedMealBuilder
   addPortionFor(adherent: Adherent): OnGoingSharedMealBuilder {
     if (!this.areShotgunsOpen) throw new ShotgunsClosed();
     const shotgunCount = this.getShotgunCount(adherent.id);
-    if (shotgunCount && !this.areMultipleShotgunsAllowed)
+    if (shotgunCount >= 1 && !this.areMultipleShotgunsAllowed)
       throw new MultipleShotgunsDisallowed();
     if (shotgunCount >= MAX_PORTIONS_PER_GUEST) throw new TooManyPortions();
 
@@ -180,5 +180,20 @@ export class OnGoingSharedMealBuilder
 
   isChef(adherent: Adherent["id"]): boolean {
     return adherent === this.chef.id;
+  }
+
+  canShotgun(adherent: Adherent["id"]): boolean {
+    if (!this.areShotgunsOpen) return false;
+
+    const shotgunCount = this.getShotgunCount(adherent);
+
+    const hasNotShotgun = shotgunCount === 0;
+    if (hasNotShotgun) return true;
+
+    const canShotgunOneMorePortion =
+      this.areMultipleShotgunsAllowed && shotgunCount < MAX_PORTIONS_PER_GUEST;
+    if (canShotgunOneMorePortion) return true;
+
+    return false;
   }
 }

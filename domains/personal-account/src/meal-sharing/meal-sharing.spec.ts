@@ -212,6 +212,23 @@ describe("Meal Sharing", () => {
         ).rejects.toThrow(TooManyPortions);
       });
     });
+    describe.each`
+      sharedMeal        | adherent    | expectedShotgunIndication
+      ${rizCantonnais}  | ${lea}      | ${true}
+      ${rizCantonnais}  | ${julie}    | ${false}
+      ${saladeDeFruits} | ${julie}    | ${true}
+      ${saladeDeFruits} | ${noel}     | ${true}
+      ${saladeDeFruits} | ${shogosse} | ${false}
+    `(
+      "when $adherent.name wants to know if they can shotgun for $sharedMeal.meal.menu",
+      ({ sharedMeal, adherent, expectedShotgunIndication }) => {
+        it(`should indicate ${expectedShotgunIndication}`, () => {
+          expect(sharedMeal.canShotgun(adherent.id)).toBe(
+            expectedShotgunIndication,
+          );
+        });
+      },
+    );
   });
 
   describe("Unshotgun a meal", () => {
