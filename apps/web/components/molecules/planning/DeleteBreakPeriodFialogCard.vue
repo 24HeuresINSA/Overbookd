@@ -1,7 +1,6 @@
 <template>
   <ConfirmationDialogCard
     confirm-color="error"
-    abort-color="primary"
     @close="close"
     @confirm="confirm"
   >

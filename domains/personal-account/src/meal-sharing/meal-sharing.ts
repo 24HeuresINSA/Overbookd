@@ -1,7 +1,6 @@
 import { Adherent, Shotgun, Shotguns } from "./adherent.js";
 import {
   AboutMeal,
-  isOnGoingMeal,
   OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
@@ -12,9 +11,6 @@ import {
   GuestNotFound,
   RecordExpenseOnNoShotgunedMeal,
   OnlyChefCan,
-  ShotgunsAlreadyClosed,
-  ShotgunsAlreadyOpened,
-  ShotgunsClosed,
 } from "./meal-sharing.error.js";
 import { Expense } from "./meals.model.js";
 import { DateString } from "@overbookd/time";
@@ -30,6 +26,7 @@ export type SharedMealCreation = {
   chef: Adherent;
   menu: string;
   date: MealDate;
+  areMultipleShotgunsAllowed: boolean;
 };
 
 export abstract class SharedMealBuilder {
@@ -38,10 +35,13 @@ export abstract class SharedMealBuilder {
     readonly meal: AboutMeal,
     readonly chef: Adherent,
     readonly areShotgunsOpen: boolean,
+    readonly areMultipleShotgunsAllowed: boolean,
     protected readonly _shotguns: Shotguns,
   ) {}
 
-  abstract shotgunFor(adherent: Adherent): SharedMealBuilder;
+  abstract addPortionFor(adherent: Adherent): SharedMealBuilder;
+
+  abstract removePortionFor(guest: Adherent["id"]): SharedMealBuilder;
 
   abstract cancelShotgunFor(guest: Adherent["id"]): SharedMealBuilder;
 
@@ -51,12 +51,16 @@ export abstract class SharedMealBuilder {
 
   abstract openShotguns(): SharedMealBuilder;
 
+  abstract allowMultipleShotguns(): SharedMealBuilder;
+
+  abstract disallowMultipleShotguns(): SharedMealBuilder;
+
   get shotguns(): Shotgun[] {
     return this._shotguns.all;
   }
 
-  get shotgunCount(): number {
-    return this._shotguns.all.length;
+  get portionCount(): number {
+    return this._shotguns.portionCount;
   }
 
   isChef(adherent: Adherent["id"]): boolean {
@@ -70,17 +74,24 @@ export type SharedMeals = {
   find(mealId: number): Promise<SharedMealBuilder | undefined>;
   close(meal: PastSharedMeal): Promise<PastSharedMeal>;
   list(): Promise<SharedMeal[]>;
-  addShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
+  addPortion(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
+  removePortion(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
   cancelShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
   closeShotguns(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
   openShotguns(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
+  allowMultipleShotguns(
+    updatedMeal: OnGoingSharedMeal,
+  ): Promise<OnGoingSharedMeal>;
+  disallowMultipleShotguns(
+    updatedMeal: OnGoingSharedMeal,
+  ): Promise<OnGoingSharedMeal>;
 };
 
 export type Adherents = {
   find(id: number): Promise<Adherent | undefined>;
 };
 
-type CancelShotgun = {
+type RemoveShotgun = {
   mealId: number;
   guestId: number;
 };
@@ -95,36 +106,57 @@ export class MealSharing {
     menu: string,
     date: MealDate,
     chefId: number,
+    areMultipleShotgunsAllowed: boolean,
   ): Promise<OnGoingSharedMeal> {
     const chef = await this.adherents.find(chefId);
     if (!chef) return Promise.reject(new ChefNotFound(chefId));
 
-    return this.sharedMeals.create({ menu, date, chef });
+    return this.sharedMeals.create({
+      menu,
+      date,
+      chef,
+      areMultipleShotgunsAllowed,
+    });
   }
 
-  async shotgun(mealId: number, guestId: number): Promise<OnGoingSharedMeal> {
+  async addPortion(
+    mealId: number,
+    guestId: number,
+  ): Promise<OnGoingSharedMeal> {
     const [sharedMeal, guest] = await Promise.all([
       this.sharedMeals.find(mealId),
       this.adherents.find(guestId),
     ]);
     if (!sharedMeal) throw new MealNotFound(mealId);
     if (!guest) throw new GuestNotFound(guestId);
-    if (isOnGoingMeal(sharedMeal) && !sharedMeal.areShotgunsOpen)
-      throw new ShotgunsClosed();
 
-    const updatedMeal = sharedMeal.shotgunFor(guest);
-    return this.sharedMeals.addShotgun(updatedMeal);
+    const updatedMeal = sharedMeal.addPortionFor(guest);
+    return this.sharedMeals.addPortion(updatedMeal);
+  }
+
+  async removePortion(
+    { mealId, guestId }: RemoveShotgun,
+    instigatorId: number,
+  ): Promise<OnGoingSharedMeal> {
+    const sharedMeal = await this.sharedMeals.find(mealId);
+    if (!sharedMeal) throw new MealNotFound(mealId);
+    if (!sharedMeal.isChef(instigatorId))
+      throw OnlyChefCan.removePortionFor(sharedMeal);
+
+    const updatedMeal = sharedMeal.removePortionFor(guestId);
+    return this.sharedMeals.removePortion(updatedMeal);
   }
 
   async cancelShotgun(
-    { mealId, guestId }: CancelShotgun,
-    instigator: number,
+    { mealId, guestId }: RemoveShotgun,
+    instigatorId: number,
   ): Promise<OnGoingSharedMeal> {
-    const meal = await this.sharedMeals.find(mealId);
-    if (!meal) throw new MealNotFound(mealId);
-    if (!meal.isChef(instigator)) throw OnlyChefCan.cancelShotgunFor(meal);
+    const sharedMeal = await this.sharedMeals.find(mealId);
+    if (!sharedMeal) throw new MealNotFound(mealId);
+    if (!sharedMeal.isChef(instigatorId))
+      throw OnlyChefCan.cancelShotgunFor(sharedMeal);
 
-    const updatedMeal = meal.cancelShotgunFor(guestId);
+    const updatedMeal = sharedMeal.cancelShotgunFor(guestId);
     return this.sharedMeals.cancelShotgun(updatedMeal);
   }
 
@@ -147,7 +179,7 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.recordExpenseFor(meal);
-    if (meal.shotgunCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
+    if (meal.portionCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);
@@ -172,8 +204,6 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.closeShotguns(meal);
-    if (isOnGoingMeal(meal) && !meal.areShotgunsOpen)
-      throw new ShotgunsAlreadyClosed();
 
     const updatedMeal = meal.closeShotguns();
     return this.sharedMeals.closeShotguns(updatedMeal);
@@ -187,10 +217,35 @@ export class MealSharing {
 
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.openShotguns(meal);
-    if (isOnGoingMeal(meal) && meal.areShotgunsOpen)
-      throw new ShotgunsAlreadyOpened();
 
     const updatedMeal = meal.openShotguns();
     return this.sharedMeals.openShotguns(updatedMeal);
+  }
+
+  async allowMultipleShotguns(
+    mealId: SharedMeal["id"],
+    recorder: Adherent["id"],
+  ): Promise<SharedMeal> {
+    const meal = await this.sharedMeals.find(mealId);
+
+    if (!meal) throw new MealNotFound(mealId);
+    if (!meal.isChef(recorder)) throw OnlyChefCan.allowMultipleShotguns(meal);
+
+    const updatedMeal = meal.allowMultipleShotguns();
+    return this.sharedMeals.allowMultipleShotguns(updatedMeal);
+  }
+
+  async disallowMultipleShotguns(
+    mealId: SharedMeal["id"],
+    recorder: Adherent["id"],
+  ): Promise<SharedMeal> {
+    const meal = await this.sharedMeals.find(mealId);
+
+    if (!meal) throw new MealNotFound(mealId);
+    if (!meal.isChef(recorder))
+      throw OnlyChefCan.disallowMultipleShotguns(meal);
+
+    const updatedMeal = meal.disallowMultipleShotguns();
+    return this.sharedMeals.disallowMultipleShotguns(updatedMeal);
   }
 }

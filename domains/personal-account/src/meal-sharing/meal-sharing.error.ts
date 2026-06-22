@@ -1,5 +1,5 @@
 import { Adherent } from "./adherent.js";
-import { SharedMeal } from "./meals.model.js";
+import { MAX_PORTIONS_PER_GUEST, SharedMeal } from "./meals.model.js";
 
 export class MealSharingError extends Error {}
 
@@ -21,19 +21,9 @@ export class GuestNotFound extends MealSharingError {
   }
 }
 
-export class AlreadyShotguned extends MealSharingError {
-  constructor({ meal }: SharedMeal) {
-    super(`Tu as déjà shotgun pour le repas du ${meal.date}`);
-  }
-}
-
 export class OnlyChefCan extends MealSharingError {
   private constructor(chef: Adherent, action: string) {
     super(`Seul le.a chef.fe ${chef.name} peut ${action}`);
-  }
-
-  static cancelShotgunFor({ chef }: SharedMeal) {
-    return new OnlyChefCan(chef, "annuler un shotgun");
   }
 
   static recordExpenseFor({ chef }: SharedMeal) {
@@ -50,6 +40,22 @@ export class OnlyChefCan extends MealSharingError {
 
   static openShotguns({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "ouvrir les shotguns");
+  }
+
+  static removePortionFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "retirer une portion");
+  }
+
+  static cancelShotgunFor({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "annuler un shotgun");
+  }
+
+  static allowMultipleShotguns({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "autoriser les shotguns multiples");
+  }
+
+  static disallowMultipleShotguns({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "ne pas autoriser les shotguns multiples");
   }
 }
 
@@ -80,5 +86,31 @@ export class ShotgunsAlreadyClosed extends MealSharingError {
 export class ShotgunsAlreadyOpened extends MealSharingError {
   constructor() {
     super("Les shotguns sont déjà ouverts");
+  }
+}
+
+export class MultipleShotgunsDisallowed extends MealSharingError {
+  constructor() {
+    super("Il n'est pas possible de shotgun plusieurs portions pour ce repas");
+  }
+}
+
+export class TooManyPortions extends MealSharingError {
+  constructor() {
+    super(
+      `Il n'est pas possible de shotgun plus de ${MAX_PORTIONS_PER_GUEST} portions par invité`,
+    );
+  }
+}
+
+export class MultipleShotgunsAlreadyAllowed extends MealSharingError {
+  constructor() {
+    super("Les shotguns multiples sont déjà autorisés");
+  }
+}
+
+export class MultipleShotgunsAlreadyDisallowed extends MealSharingError {
+  constructor() {
+    super("Les shotguns multiples ne sont déjà pas autorisés");
   }
 }

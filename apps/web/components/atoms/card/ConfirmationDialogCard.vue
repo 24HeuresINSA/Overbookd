@@ -44,7 +44,7 @@ defineProps({
   },
   abortColor: {
     type: String,
-    default: "warning",
+    default: "primary",
   },
 });
 

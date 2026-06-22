@@ -2,7 +2,6 @@ import { Period } from "@overbookd/time";
 import type { CalendarEvent } from "./event";
 
 export type DisplayableCalendarEvent = CalendarEvent & {
-  period: Period;
   startColumn: number;
   endColumn: number;
   columnCount: number;
@@ -22,10 +21,7 @@ export class CalendarEventOrganizer {
       if (a.start.getTime() !== b.start.getTime())
         return a.start.getTime() - b.start.getTime();
 
-      if (a.end.getTime() !== b.end.getTime())
-        return b.end.getTime() - a.end.getTime();
-
-      return a.id.localeCompare(b.id);
+      return b.end.getTime() - a.end.getTime();
     });
 
     const { displayableEvents, columnsBuffer } =
@@ -49,7 +45,6 @@ export class CalendarEventOrganizer {
             eventColumnIndex === -1 ? columnsBuffer.length : eventColumnIndex;
           const displayableEvent: DisplayableCalendarEvent = {
             ...event,
-            period: Period.init({ start: event.start, end: event.end }),
             startColumn,
             endColumn: startColumn + 1,
             columnCount: columnsBuffer.length,
@@ -78,12 +73,14 @@ export class CalendarEventOrganizer {
     const displayableEvents = tempDisplayableEvents.reduce<
       DisplayableCalendarEvent[]
     >((cleanedDisplayableEvents, displayableEvent) => {
+      const eventPeriod = Period.init({
+        start: displayableEvent.start,
+        end: displayableEvent.end,
+      });
       const endColumnAddition = columnsBuffer
         .slice(displayableEvent.endColumn)
         .findIndex((events) =>
-          events.some((event) =>
-            displayableEvent.period.isOverlapping(event.period),
-          ),
+          events.some((event) => eventPeriod.isOverlapping(event)),
         );
       const endColumn =
         endColumnAddition === -1

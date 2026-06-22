@@ -9,31 +9,33 @@ const lea = { id: 2, name: "Lea" };
 const noel = { id: 3, name: "Noel" };
 const georges = { id: 4, name: "Georges" };
 
-describe("Generate all transactions to refound shared meal chef", () => {
+describe("Generate all transactions to refund shared meal chef", () => {
   const sharedMeal = PastSharedMealBuilder.build({
     id: 1,
     expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
     chef: julie,
     meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+    areShotgunsOpen: true,
+    areMultipleShotgunsAllowed: false,
     shotguns: [
-      { ...julie, date: new Date("2023-12-29T21:00+02:00") },
-      { ...lea, date: new Date("2023-12-30T10:00+02:00") },
-      { ...noel, date: new Date("2023-12-31T09:00+02:00") },
-      { ...georges, date: new Date("2023-12-31T21:00+02:00") },
+      { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+      { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+      { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
+      { ...georges, date: new Date("2023-12-31T21:00+02:00"), portions: 1 },
     ],
   });
 
   it("should generate transactions with individual amount set to 5€", () => {
-    const transactions = SharedMeal.refound(sharedMeal);
+    const transactions = SharedMeal.refund(sharedMeal);
     expect(transactions.every(({ amount }) => amount === 500)).toBe(true);
   });
   it("should generate transactions only for guests that aren't chef", () => {
-    const transactions = SharedMeal.refound(sharedMeal);
+    const transactions = SharedMeal.refund(sharedMeal);
     expect(transactions).toHaveLength(3);
     expect(transactions.every(({ from }) => [2, 3, 4].includes(from)));
   });
   it("should generate transactions with 'Repas partage du dimanche 31 decembre soir' as context", () => {
-    const transactions = SharedMeal.refound(sharedMeal);
+    const transactions = SharedMeal.refund(sharedMeal);
     expect(
       transactions.every(
         ({ context }) =>
@@ -42,11 +44,11 @@ describe("Generate all transactions to refound shared meal chef", () => {
     ).toBe(true);
   });
   it("should generate transactions with chef as receiver", () => {
-    const transactions = SharedMeal.refound(sharedMeal);
+    const transactions = SharedMeal.refund(sharedMeal);
     expect(transactions.every(({ to }) => to === 1)).toBe(true);
   });
   it("should generate transactions with 'SHARED_MEAL' as type", () => {
-    const transactions = SharedMeal.refound(sharedMeal);
+    const transactions = SharedMeal.refund(sharedMeal);
     expect(transactions.every(({ type }) => type === SHARED_MEAL)).toBe(true);
   });
 
@@ -56,16 +58,49 @@ describe("Generate all transactions to refound shared meal chef", () => {
       expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+      areShotgunsOpen: true,
+      areMultipleShotgunsAllowed: false,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
       ],
     });
 
-    it("should round up to next 5cents", () => {
-      const transactions = SharedMeal.refound(undividibleMeal);
-      expect(transactions.every(({ amount }) => amount === 670)).toBe(true);
+    it("should round up to next cent", () => {
+      const transactions = SharedMeal.refund(undividibleMeal);
+      expect(transactions.every(({ amount }) => amount === 667)).toBe(true);
+    });
+  });
+
+  describe("when some guests have multiple portions", () => {
+    const multiplePortionsPerGuestMeal = PastSharedMealBuilder.build({
+      id: 1,
+      expense: { amount: 2100, date: new Date("2023-12-31T10:30+02:00") },
+      chef: julie,
+      meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+      areShotgunsOpen: true,
+      areMultipleShotgunsAllowed: true,
+      shotguns: [
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 3 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
+        { ...georges, date: new Date("2023-12-31T09:00+02:00"), portions: 4 },
+      ],
+    });
+
+    it("should create a single transaction for each guest", () => {
+      const transactions = SharedMeal.refund(multiplePortionsPerGuestMeal);
+      expect(transactions).toHaveLength(3);
+      expect(transactions.every(({ from }) => [2, 3, 4].includes(from)));
+    });
+
+    it("should create transactions with the amount corresponding to the guest portions", () => {
+      const transactions = SharedMeal.refund(multiplePortionsPerGuestMeal);
+      const expectedTransactionAmounts = [700, 234, 934];
+      expect(transactions.map(({ amount }) => amount)).toEqual(
+        expectedTransactionAmounts,
+      );
     });
   });
 
@@ -75,16 +110,18 @@ describe("Generate all transactions to refound shared meal chef", () => {
       expense: { amount: 200000, date: new Date("2023-12-31T10:30+02:00") },
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+      areShotgunsOpen: false,
+      areMultipleShotgunsAllowed: false,
       shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
       ],
     });
 
     it("should indicate that amount is too high", () => {
-      const refound = () => SharedMeal.refound(expensiveMeal);
-      expect(refound).toThrow(AmountTooHigh);
+      const refund = () => SharedMeal.refund(expensiveMeal);
+      expect(refund).toThrow(AmountTooHigh);
     });
   });
 });

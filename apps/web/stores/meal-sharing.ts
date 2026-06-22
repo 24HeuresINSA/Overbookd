@@ -57,6 +57,13 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       this._updateMealInsideMeals(sharedMeal);
     },
 
+    async removePortion(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
+      const res = await MealSharingRepository.removePortion(mealId, guestId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
     async cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
       const res = await MealSharingRepository.cancelShotgun(mealId, guestId);
       if (isHttpError(res)) return;
@@ -87,6 +94,20 @@ export const useMealSharingStore = defineStore("meal-sharing", {
 
     async openShotguns(mealId: SharedMeal["id"]) {
       const res = await MealSharingRepository.openShotguns(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
+    async allowMultipleShotguns(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.allowMultipleShotguns(mealId);
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideMeals(sharedMeal);
+    },
+
+    async disallowMultipleShotguns(mealId: SharedMeal["id"]) {
+      const res = await MealSharingRepository.disallowMultipleShotguns(mealId);
       if (isHttpError(res)) return;
       const sharedMeal = castSharedMealWithDate(res);
       this._updateMealInsideMeals(sharedMeal);

@@ -26,6 +26,12 @@ export class MealSharingRepository {
     return HttpClient.post<SharedMeal>(`${this.basePath}/${mealId}/shotgun`);
   }
 
+  static removePortion(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/shotgun/${guestId}/remove-portion`,
+    );
+  }
+
   static cancelShotgun(mealId: SharedMeal["id"], guestId: Adherent["id"]) {
     return HttpClient.delete<SharedMeal>(
       `${this.basePath}/${mealId}/shotgun/${guestId}`,
@@ -52,6 +58,18 @@ export class MealSharingRepository {
   static openShotguns(mealId: SharedMeal["id"]) {
     return HttpClient.post<SharedMeal>(
       `${this.basePath}/${mealId}/open-shotguns`,
+    );
+  }
+
+  static allowMultipleShotguns(mealId: SharedMeal["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/allow-multiple-shotguns`,
+    );
+  }
+
+  static disallowMultipleShotguns(mealId: SharedMeal["id"]) {
+    return HttpClient.post<SharedMeal>(
+      `${this.basePath}/${mealId}/disallow-multiple-shotguns`,
     );
   }
 }

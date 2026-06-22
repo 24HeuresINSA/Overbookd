@@ -16,36 +16,66 @@ const tuesday = "2024-12-31";
 const displayedDate = OverDate.init({ date: monday, hour: 0 });
 const displayedDatePresenter = new DayPresenter(displayedDate);
 
-const monday09hto10hEvent = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 9 }).date,
-  end: OverDate.init({ date: monday, hour: 10 }).date,
-  name: "Event monday 09h to 10h",
-});
-const monday14h15to16h30Event = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 14, minute: 15 }).date,
-  end: OverDate.init({ date: monday, hour: 16, minute: 30 }).date,
-  name: "Event monday 14h45 to 16h30",
-});
-const monday00hto23h59Event = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 0 }).date,
-  end: OverDate.init({ date: monday, hour: 23, minute: 59 }).date,
-  name: "Event monday 00h to 23h59",
-});
-const monday22htoTuesday02hEvent = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 22 }).date,
-  end: OverDate.init({ date: tuesday, hour: 2 }).date,
-  name: "Event monday 22h to tuesday 02h",
-});
-const monday08hto10hEvent = createCalendarEvent({
-  start: OverDate.init({ date: monday, hour: 8 }).date,
-  end: OverDate.init({ date: monday, hour: 10 }).date,
-  name: "Event monday 08h to 10h",
-});
-const sunday23htoMonday01hEvent = createCalendarEvent({
-  start: OverDate.init({ date: sunday, hour: 23 }).date,
-  end: OverDate.init({ date: monday, hour: 1 }).date,
-  name: "Event sunday 23h to monday 01h",
-});
+const monday09hto10hEvent = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: monday, hour: 9 }).date,
+    end: OverDate.init({ date: monday, hour: 10 }).date,
+    name: "Event monday 09h to 10h",
+  }),
+  startColumn: 0,
+  endColumn: 1,
+  columnCount: 1,
+};
+const monday14h15to16h30Event = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: monday, hour: 14, minute: 15 }).date,
+    end: OverDate.init({ date: monday, hour: 16, minute: 30 }).date,
+    name: "Event monday 14h45 to 16h30",
+  }),
+  startColumn: 0,
+  endColumn: 1,
+  columnCount: 1,
+};
+const monday00hto23h59Event = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: monday, hour: 0 }).date,
+    end: OverDate.init({ date: monday, hour: 23, minute: 59 }).date,
+    name: "Event monday 00h to 23h59",
+  }),
+  startColumn: 1,
+  endColumn: 3,
+  columnCount: 5,
+};
+const monday22htoTuesday02hEvent = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: monday, hour: 22 }).date,
+    end: OverDate.init({ date: tuesday, hour: 2 }).date,
+    name: "Event monday 22h to tuesday 02h",
+  }),
+  startColumn: 0,
+  endColumn: 7,
+  columnCount: 7,
+};
+const monday08hto10hEvent = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: monday, hour: 8 }).date,
+    end: OverDate.init({ date: monday, hour: 10 }).date,
+    name: "Event monday 08h to 10h",
+  }),
+  startColumn: 1,
+  endColumn: 2,
+  columnCount: 2,
+};
+const sunday23htoMonday01hEvent = {
+  ...createCalendarEvent({
+    start: OverDate.init({ date: sunday, hour: 23 }).date,
+    end: OverDate.init({ date: monday, hour: 1 }).date,
+    name: "Event sunday 23h to monday 01h",
+  }),
+  startColumn: 2,
+  endColumn: 3,
+  columnCount: 3,
+};
 
 const VERTICAL_MARGINS = VERTICAL_MARGIN_IN_PIXELS * 2;
 const HORIZONTAL_MARGINS = HORIZONTAL_MARGIN_IN_PERCENTAGE * 2;
@@ -100,26 +130,24 @@ describe("Calendar Event Presenter", () => {
     });
   });
 
-  // FIXME
-  // describe.each`
-  //   event                         | expectedWidth                   | expectedLeft
-  //   ${monday09hto10hEvent}        | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  //   ${monday09hto10hEvent}        | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  //   ${monday08hto10hEvent}        | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  //   ${monday08hto10hEvent}        | ${100 / 3 - HORIZONTAL_MARGINS} | ${100 / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  //   ${monday00hto23h59Event}      | ${50 - HORIZONTAL_MARGINS}      | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  //   ${monday22htoTuesday02hEvent} | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
-  // `(
-  //   "calendar event width and left",
-  //   ({ event, expectedWidth, expectedLeft }) => {
-  //     it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
-  //       const presenter = new CalendarEventPresenter(
-  //         event,
-  //         displayedDatePresenter,
-  //       );
-  //       expect(presenter.width.value).toBe(expectedWidth);
-  //       expect(presenter.left.value).toBe(expectedLeft);
-  //     });
-  //   },
-  // );
+  describe.each`
+    event                         | expectedWidth                   | expectedLeft
+    ${monday09hto10hEvent}        | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday08hto10hEvent}        | ${50 - HORIZONTAL_MARGINS}      | ${50 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday00hto23h59Event}      | ${40 - HORIZONTAL_MARGINS}      | ${20 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${monday22htoTuesday02hEvent} | ${100 - HORIZONTAL_MARGINS}     | ${HORIZONTAL_MARGIN_IN_PERCENTAGE}
+    ${sunday23htoMonday01hEvent}  | ${100 / 3 - HORIZONTAL_MARGINS} | ${(2 * 100) / 3 + HORIZONTAL_MARGIN_IN_PERCENTAGE}
+  `(
+    "calendar event width and left",
+    ({ event, expectedWidth, expectedLeft }) => {
+      it(`should calculate width as ${expectedWidth}% and left as ${expectedLeft}px for ${event.name}`, () => {
+        const presenter = new CalendarEventPresenter(
+          event,
+          displayedDatePresenter,
+        );
+        expect(presenter.width.value).toBe(expectedWidth);
+        expect(presenter.left.value).toBe(expectedLeft);
+      });
+    },
+  );
 });

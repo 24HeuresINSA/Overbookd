@@ -806,19 +806,20 @@ model SharedMeal {
   amount  Int?
   payedAt DateTime? @map("payed_at")
 
-  areShotgunsOpen Boolean   @default(true) @map("are_shotguns_open")
-  shotguns        Shotgun[]
+  areShotgunsOpen            Boolean   @default(true) @map("are_shotguns_open")
+  areMultipleShotgunsAllowed Boolean   @default(false) @map("are_multiple_shotguns_allowed")
+  shotguns                   Shotgun[]
 
   @@map("shared_meal")
 }
 
 model Shotgun {
-  guestId Int        @map("guest_id")
-  guest   User       @relation("guest", fields: [guestId], references: [id])
-  mealId  Int        @map("meal_id")
-  meal    SharedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
-  date    DateTime
-  portion Int        @default(1)
+  guestId  Int        @map("guest_id")
+  guest    User       @relation("guest", fields: [guestId], references: [id])
+  mealId   Int        @map("meal_id")
+  meal     SharedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  date     DateTime
+  portions Int        @default(1)
 
   @@id([guestId, mealId])
   @@map("shotgun")

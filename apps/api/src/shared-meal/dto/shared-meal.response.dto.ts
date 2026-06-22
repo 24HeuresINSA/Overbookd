@@ -27,6 +27,9 @@ class AdherentResponseDto implements Adherent {
 class ShotgunResponseDto extends AdherentResponseDto implements Shotgun {
   @ApiProperty({ type: Date, description: "when shotgun occured" })
   date: Date;
+
+  @ApiProperty({ description: "number of portions requested" })
+  portions: number;
 }
 
 export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
@@ -45,11 +48,14 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
   @ApiProperty({ description: "shotguns opened" })
   areShotgunsOpen: boolean;
 
-  @ApiProperty({ description: "shoutgun list", type: ShotgunResponseDto })
+  @ApiProperty({ description: "allow guests to shotgun multiple portions" })
+  areMultipleShotgunsAllowed: boolean;
+
+  @ApiProperty({ description: "shotgun list", type: ShotgunResponseDto })
   shotguns: Shotgun[];
 
-  @ApiProperty({ description: "shoutguns counter" })
-  shotgunCount: number;
+  @ApiProperty({ description: "total portion count" })
+  portionCount: number;
 }
 
 class ExpenseResponseDto implements Expense {
@@ -66,7 +72,4 @@ export class PastSharedMealResponseDto
 {
   @ApiProperty({ type: ExpenseResponseDto })
   expense: Expense;
-
-  @ApiProperty({ description: "guests that shotgun before expense occur" })
-  inTimeShotguns: number;
 }

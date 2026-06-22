@@ -113,6 +113,7 @@ export type {
   Expense,
 } from "./meal-sharing/meals.model.js";
 export { isOnGoingMeal, isPastMeal } from "./meal-sharing/meals.model.js";
+export { MAX_PORTIONS_PER_GUEST } from "./meal-sharing/meals.model.js";
 export type { Adherent, Shotgun } from "./meal-sharing/adherent.js";
 export { MealSharingError } from "./meal-sharing/meal-sharing.error.js";
 export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder.js";

@@ -9,7 +9,11 @@
       variant="flat"
       @click="close"
     />
-    <v-card-title><h3>Proposer un repas</h3></v-card-title>
+
+    <v-card-title>
+      <h3>Proposer un repas</h3>
+    </v-card-title>
+
     <v-card-text>
       <div class="when">
         <DateField v-model="day" hide-details class="day" />
@@ -20,10 +24,23 @@
           hide-details
         />
       </div>
+
       <div class="menu">
         <h3><v-icon>mdi-silverware</v-icon> Au menu</h3>
-        <v-textarea v-model="menu" variant="outlined" label="Menu" />
+        <v-textarea
+          v-model="menu"
+          variant="outlined"
+          label="Menu"
+          hide-details
+        />
       </div>
+
+      <v-checkbox
+        v-model="areMultipleShotgunsAllowed"
+        label="Autoriser les shotguns multiples"
+        hide-details
+      />
+
       <v-btn
         class="offer"
         color="primary"
@@ -60,6 +77,7 @@ const close = () => emit("close");
 const day = ref<Date>(new Date());
 const moment = ref<Moment>(MIDI);
 const menu = ref<string>("");
+const areMultipleShotgunsAllowed = ref<boolean>(false);
 
 const moments: Moment[] = [MIDI, SOIR];
 const date = computed<MealDate>(() => ({
@@ -71,18 +89,18 @@ const offer = async () => {
   await mealSharingStore.offerSharedMeal({
     menu: menu.value,
     date: date.value,
+    areMultipleShotgunsAllowed: areMultipleShotgunsAllowed.value,
   });
   menu.value = "";
   day.value = new Date();
   moment.value = MIDI;
+  areMultipleShotgunsAllowed.value = false;
   if (closable) close();
 };
 </script>
 
 <style lang="scss" scoped>
 .offer-shared-meal {
-  min-width: 33%;
-
   .close-btn {
     position: absolute;
     top: 8px;
@@ -104,6 +122,14 @@ h2 {
   font-size: large;
   gap: 5px;
   margin-bottom: 15px;
+
+  .day {
+    flex: 3 1 0;
+  }
+
+  .moment {
+    flex: 2 1 0;
+  }
 
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;

@@ -19,7 +19,12 @@ export class SharedMealService {
   ) {}
 
   async offer(meal: OfferMeal, chef: JwtPayload): Promise<OnGoingSharedMeal> {
-    const created = await this.mealSharing.offer(meal.menu, meal.date, chef.id);
+    const created = await this.mealSharing.offer(
+      meal.menu,
+      meal.date,
+      chef.id,
+      meal.areMultipleShotgunsAllowed,
+    );
     return formatCreatedMeal(created);
   }
 
@@ -33,11 +38,23 @@ export class SharedMealService {
     return meals.map(formatSharedMeal);
   }
 
-  async shotgun(
+  async addPortion(
     mealId: SharedMeal["id"],
     guestId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
-    const updated = await this.mealSharing.shotgun(mealId, guestId);
+    const updated = await this.mealSharing.addPortion(mealId, guestId);
+    return formatSharedMeal(updated);
+  }
+
+  async removePortion(
+    mealId: SharedMeal["id"],
+    guestId: Adherent["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.removePortion(
+      { mealId, guestId },
+      instigatorId,
+    );
     return formatSharedMeal(updated);
   }
 
@@ -89,6 +106,28 @@ export class SharedMealService {
     const updated = await this.mealSharing.openShotguns(mealId, instigatorId);
     return formatSharedMeal(updated);
   }
+
+  async allowMultipleShotguns(
+    mealId: SharedMeal["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.allowMultipleShotguns(
+      mealId,
+      instigatorId,
+    );
+    return formatSharedMeal(updated);
+  }
+
+  async disallowMultipleShotguns(
+    mealId: SharedMeal["id"],
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.disallowMultipleShotguns(
+      mealId,
+      instigatorId,
+    );
+    return formatSharedMeal(updated);
+  }
 }
 
 function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
@@ -97,7 +136,8 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    shotgunCount: meal.shotgunCount,
+    areMultipleShotgunsAllowed: meal.areMultipleShotgunsAllowed,
+    portionCount: meal.portionCount,
     shotguns: meal.shotguns,
   };
 }
@@ -108,7 +148,8 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
-    shotgunCount: meal.shotgunCount,
+    areMultipleShotgunsAllowed: meal.areMultipleShotgunsAllowed,
+    portionCount: meal.portionCount,
     shotguns: meal.shotguns,
   };
 
