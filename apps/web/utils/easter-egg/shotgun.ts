@@ -9,7 +9,7 @@ export function getShotgunTitle(
   if (myPortionCount >= MAX_PORTIONS_PER_GUEST)
     return "Encore, ça fait beaucoup là non !?";
 
-  if (myPortionCount > 0) return "Gourmand·e 😏";
+  if (myPortionCount >= 1) return "Gourmand·e 😏";
 
   return undefined;
 }
