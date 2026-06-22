@@ -99,7 +99,6 @@
           <div class="column">
             <v-btn
               color="secondary"
-              size="large"
               text="Clore le repas"
               append-icon="mdi-cash-multiple"
               @click="openRecordExpenseDialog"
@@ -107,7 +106,6 @@
 
             <v-btn
               color="tertiary"
-              size="large"
               text="Annuler le repas"
               append-icon="mdi-cancel"
               @click="openCancelConfirmationDialog"
@@ -117,7 +115,6 @@
           <div class="column">
             <v-btn
               :color="areShotgunsOpen ? 'tertiary' : 'secondary'"
-              size="large"
               :text="
                 areShotgunsOpen ? 'Fermer les shotguns' : 'Ouvrir les shotguns'
               "
@@ -129,7 +126,6 @@
 
             <v-btn
               :color="areMultipleShotgunsAllowed ? 'tertiary' : 'secondary'"
-              size="large"
               :text="
                 areMultipleShotgunsAllowed
                   ? 'Retirer les shotguns multiples'
