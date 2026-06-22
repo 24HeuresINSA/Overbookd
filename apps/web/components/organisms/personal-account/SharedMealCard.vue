@@ -187,7 +187,6 @@
 
 <script lang="ts" setup>
 import {
-  MAX_PORTIONS_PER_GUEST,
   OnGoingSharedMealBuilder,
   type Adherent,
   type SharedMeal,
@@ -217,15 +216,15 @@ const iAmChef = computed<boolean>(() => shared.chef.id === me.value.id);
 const builder = computed<OnGoingSharedMealBuilder>(() =>
   OnGoingSharedMealBuilder.build(shared),
 );
-const myPortionCount = computed<number>(
-  () => builder.value.getShotgunCount(me.value.id)
+const myPortionCount = computed<number>(() =>
+  builder.value.getShotgunCount(me.value.id),
 );
 const areShotgunsOpen = computed<boolean>(() => builder.value.areShotgunsOpen);
 const areMultipleShotgunsAllowed = computed<boolean>(
   () => builder.value.areMultipleShotgunsAllowed,
 );
-const canIShotgun = computed<boolean>(
-  () => builder.value.canShotgun(me.value.id)
+const canIShotgun = computed<boolean>(() =>
+  builder.value.canShotgun(me.value.id),
 );
 
 const isRecordExpenseDialogOpen = ref<boolean>(false);
