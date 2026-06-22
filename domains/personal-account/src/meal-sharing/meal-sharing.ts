@@ -141,7 +141,7 @@ export class MealSharing {
     const sharedMeal = await this.sharedMeals.find(mealId);
     if (!sharedMeal) throw new MealNotFound(mealId);
     if (!sharedMeal.isChef(instigatorId))
-      throw OnlyChefCan.removeShotgunFor(sharedMeal);
+      throw OnlyChefCan.removePortionFor(sharedMeal);
 
     const updatedMeal = sharedMeal.removePortionFor(guestId);
     return this.sharedMeals.removePortion(updatedMeal);

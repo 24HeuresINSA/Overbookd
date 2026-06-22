@@ -227,7 +227,7 @@ describe("Meal Sharing", () => {
         expect(
           async () =>
             await mealSharing.removePortion(removeShotgun, instigator),
-        ).rejects.toThrow(OnlyChefCan.removeShotgunFor(rizCantonnais));
+        ).rejects.toThrow(OnlyChefCan.removePortionFor(rizCantonnais));
       });
     });
     describe("when one of the guests tries to cancel their shotgun", () => {

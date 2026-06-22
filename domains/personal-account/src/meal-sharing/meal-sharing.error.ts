@@ -42,7 +42,7 @@ export class OnlyChefCan extends MealSharingError {
     return new OnlyChefCan(chef, "ouvrir les shotguns");
   }
 
-  static removeShotgunFor({ chef }: SharedMeal) {
+  static removePortionFor({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "retirer une portion");
   }
 
