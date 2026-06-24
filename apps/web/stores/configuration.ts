@@ -59,7 +59,8 @@ export const useConfigurationStore = defineStore("configuration", {
     usefulLinks(): { googleCalendar: string; slack: string } {
       const links = this.get(USEFUL_LINKS_KEY);
       if (!isObject(links)) return { googleCalendar: "", slack: "" };
-      const googleCalendar = "googleCalendar" in links ? links.googleCalendar : "";
+      const googleCalendar =
+        "googleCalendar" in links ? links.googleCalendar : "";
       const slack = "slack" in links ? links.slack : "";
       return { googleCalendar, slack };
     },
