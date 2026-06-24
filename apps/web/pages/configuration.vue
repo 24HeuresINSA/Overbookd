@@ -196,11 +196,10 @@ const saveUsefulLinks = async () => {
 .useful-links {
   display: flex;
   gap: 15px;
-  flex-direction: column;
 }
 
-.event-date {
-  flex-direction: row;
+.useful-links {
+  flex-direction: column;
 }
 
 .error {
