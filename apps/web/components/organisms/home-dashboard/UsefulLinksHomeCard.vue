@@ -15,9 +15,10 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a
+          >, la street view des 24 heures de l'INSA.
         </li>
-        <li>
+        <li v-if="calendarUrl">
           <p>
             Pour ne rater aucun évènement important, tu peux récupérer le lien
             du
@@ -28,9 +29,9 @@
             de la {{ Edition.current }}e édition.
           </p>
         </li>
-        <li>
+        <li v-if="slackUrl">
           Pour rejoindre le groupe Slack :
-          <a :href="SLACK_URL" target="_blank">
+          <a :href="slackUrl" target="_blank">
             <strong> Clique ICI</strong>
           </a>
         </li>
@@ -46,13 +47,16 @@ import { OVERVIEW_URL } from "~/utils/navigation/url.constant";
 
 const configurationStore = useConfigurationStore();
 
-const CALENDAR_URL = computed(
+const calendarUrl = computed<string | undefined>(
   () => configurationStore.usefulLinks.googleCalendar,
 );
-const SLACK_URL = computed(() => configurationStore.usefulLinks.slack);
+const slackUrl = computed<string | undefined>(
+  () => configurationStore.usefulLinks.slack,
+);
 
 const copyToClipBoard = () => {
-  navigator.clipboard.writeText(CALENDAR_URL.value);
+  if (!calendarUrl.value) return;
+  navigator.clipboard.writeText(calendarUrl.value);
   sendInfoNotification("Lien copié ✅");
 };
 </script>

@@ -56,13 +56,13 @@ export const useConfigurationStore = defineStore("configuration", {
       return description;
     },
 
-    usefulLinks(): { googleCalendar: string; slack: string } {
+    usefulLinks(): { googleCalendar?: string; slack?: string } {
       const links = this.get(USEFUL_LINKS_KEY);
-      if (!isObject(links)) return { googleCalendar: "", slack: "" };
-      const googleCalendar =
-        "googleCalendar" in links ? links.googleCalendar : "";
-      const slack = "slack" in links ? links.slack : "";
-      return { googleCalendar, slack };
+      if (!isObject(links)) return {};
+      return {
+        googleCalendar: toOptionalString(links.googleCalendar),
+        slack: toOptionalString(links.slack),
+      };
     },
   },
   actions: {
@@ -100,4 +100,8 @@ export const useConfigurationStore = defineStore("configuration", {
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && value !== undefined && typeof value === "object";
+}
+
+function toOptionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value ? value : undefined;
 }
