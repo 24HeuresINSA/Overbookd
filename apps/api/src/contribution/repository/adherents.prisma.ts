@@ -6,7 +6,7 @@ import { SELECT_ADHERENT } from "./contribution.query";
 export class PrismaAdherents implements Adherents {
   constructor(private readonly prisma: PrismaService) {}
 
-  async find(id: number): Promise<Adherent | undefined> {
+  async find(id: Adherent["id"]): Promise<Adherent | undefined> {
     const prismaAdherent = await this.prisma.user.findUnique({
       where: { id },
       select: SELECT_ADHERENT,

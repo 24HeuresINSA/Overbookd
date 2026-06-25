@@ -29,6 +29,7 @@ import {
   REMOVE_PORTION_PAST_MEAL_ERROR,
   ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
   DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
+  CANCEL_MEAL_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
@@ -361,8 +362,8 @@ describe("Meal Sharing", () => {
         });
         it("should indicate shared meal is past for chef trying to remove a portion", async () => {
           expect(async () => {
-            const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
-            await mealSharing.removePortion(cancel, rizCantonnais.chef.id);
+            const remove = { mealId: rizCantonnais.id, guestId: julie.id };
+            await mealSharing.removePortion(remove, rizCantonnais.chef.id);
           }).rejects.toThrow(REMOVE_PORTION_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to cancel a shotgun", async () => {
@@ -370,6 +371,14 @@ describe("Meal Sharing", () => {
             const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
             await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to cancel it", async () => {
+          expect(async () => {
+            await mealSharing.cancelMeal(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(CANCEL_MEAL_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
           expect(async () => {

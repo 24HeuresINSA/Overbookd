@@ -11,6 +11,7 @@ import {
   PastSharedMeal,
   SharedMeal,
 } from "./meals.model.js";
+import { Adherent } from "./adherent.js";
 
 export class InMemorySharedMeals implements SharedMeals {
   private idGenerator: Generator<number>;
@@ -19,7 +20,7 @@ export class InMemorySharedMeals implements SharedMeals {
     this.idGenerator = numberGenerator(sharedMeals.length + 1);
   }
 
-  find(mealId: number): Promise<SharedMealBuilder | undefined> {
+  find(mealId: SharedMeal["id"]): Promise<SharedMealBuilder | undefined> {
     return Promise.resolve(this.sharedMeals.find((meal) => meal.id === mealId));
   }
 
@@ -39,8 +40,36 @@ export class InMemorySharedMeals implements SharedMeals {
     return this.save(PastSharedMealBuilder.build(meal));
   }
 
-  list(): Promise<SharedMeal[]> {
+  listAll(): Promise<SharedMeal[]> {
     return Promise.resolve(this.sharedMeals);
+  }
+
+  listAllOnGoing(): Promise<OnGoingSharedMeal[]> {
+    return Promise.resolve(
+      this.sharedMeals.filter(
+        (sharedMeal) => sharedMeal instanceof OnGoingSharedMealBuilder,
+      ),
+    );
+  }
+
+  listAllPast(): Promise<PastSharedMeal[]> {
+    return Promise.resolve(
+      this.sharedMeals.filter(
+        (sharedMeal) => sharedMeal instanceof PastSharedMealBuilder,
+      ),
+    );
+  }
+
+  listPastWithAdherent(adherentId: Adherent["id"]): Promise<PastSharedMeal[]> {
+    return Promise.resolve(
+      this.sharedMeals
+        .filter((sharedMeal) => sharedMeal instanceof PastSharedMealBuilder)
+        .filter(
+          ({ chef, shotguns }) =>
+            chef.id === adherentId ||
+            shotguns.some(({ id }) => id === adherentId),
+        ),
+    );
   }
 
   addPortion(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {

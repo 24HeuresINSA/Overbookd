@@ -46,7 +46,7 @@ const closeOfferDialog = () => (isOfferDialogOpen.value = false);
 const meals = computed<OnGoingSharedMeal[]>(
   () => mealSharingStore.onGoingMeals,
 );
-mealSharingStore.fetchAll();
+mealSharingStore.fetchOnGoing();
 </script>
 
 <style lang="scss" scoped>

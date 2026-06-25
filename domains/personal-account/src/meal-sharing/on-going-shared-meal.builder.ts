@@ -133,6 +133,8 @@ export class OnGoingSharedMealBuilder
     });
   }
 
+  cancelMeal(): void {}
+
   closeShotguns(): OnGoingSharedMealBuilder {
     if (!this.areShotgunsOpen) throw new ShotgunsAlreadyClosed();
 

@@ -38,6 +38,23 @@ export class SharedMealService {
     return meals.map(formatSharedMeal);
   }
 
+  async allOnGoing(): Promise<OnGoingSharedMeal[]> {
+    const meals = await this.mealSharing.findAllOnGoing();
+    return meals.map(formatSharedMeal);
+  }
+
+  async allPast(): Promise<PastSharedMeal[]> {
+    const meals = await this.mealSharing.findAllPast();
+    return meals.map(formatSharedMeal);
+  }
+
+  async pastWithAdherent(
+    adherentId: Adherent["id"],
+  ): Promise<PastSharedMeal[]> {
+    const meals = await this.mealSharing.findPastWithAdherent(adherentId);
+    return meals.map(formatSharedMeal);
+  }
+
   async addPortion(
     mealId: SharedMeal["id"],
     guestId: Adherent["id"],

@@ -42,6 +42,7 @@ export const MANAGE_CONTRIBUTIONS = "manage-contributions";
 export const PAY_CONTRIBUTION = "pay-contribution";
 export const OFFER_SHARED_MEAL = "offer-shared-meal";
 export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
+export const MANAGE_SHARED_MEALS = "manage-shared-meals";
 export const BORROW_GEARS = "borrow-gears";
 export const MANAGE_CHARISMA_EVENTS = "manage-charisma-events";
 export const SET_FAVORITE_PAGES = "set-favorite-pages";
@@ -98,6 +99,7 @@ export const permissions = [
   PAY_CONTRIBUTION,
   OFFER_SHARED_MEAL,
   SHOTGUN_SHARED_MEAL,
+  MANAGE_SHARED_MEALS,
   BORROW_GEARS,
   MANAGE_CHARISMA_EVENTS,
   SET_FAVORITE_PAGES,

@@ -13,6 +13,8 @@ export const REMOVE_PORTION_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de retirer une portion";
 export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
+export const CANCEL_MEAL_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de l'annuler";
 
 export const CLOSE_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de fermer les shotguns";
@@ -35,6 +37,10 @@ class PastMealError extends MealSharingError {
 
   static get cancelShotgun(): PastMealError {
     return new PastMealError(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
+  }
+
+  static get cancelMeal(): PastMealError {
+    return new PastMealError(CANCEL_MEAL_PAST_MEAL_ERROR);
   }
 
   static get closeShotguns(): PastMealError {
@@ -132,6 +138,10 @@ export class PastSharedMealBuilder
 
   close(): PastSharedMeal {
     throw new RecordExpenseOnPastMeal();
+  }
+
+  cancelMeal(): PastSharedMealBuilder {
+    throw PastMealError.cancelMeal;
   }
 
   closeShotguns(): PastSharedMealBuilder {

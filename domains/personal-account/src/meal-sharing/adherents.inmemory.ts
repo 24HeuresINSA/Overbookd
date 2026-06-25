@@ -4,7 +4,7 @@ import { Adherent } from "./adherent.js";
 export class InMemoryAdherents implements Adherents {
   constructor(private readonly adherents: Adherent[]) {}
 
-  find(id: number): Promise<Adherent | undefined> {
+  find(id: Adherent["id"]): Promise<Adherent | undefined> {
     return Promise.resolve(
       this.adherents.find((adherent) => adherent.id === id),
     );

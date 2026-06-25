@@ -7,7 +7,7 @@ const SELECT_ADHERENT = { firstName: true, lastName: true, nickname: true };
 export class PrismaAdherents implements MealsAdherents {
   constructor(private readonly prisma: PrismaService) {}
 
-  async find(id: number): Promise<Adherent | undefined> {
+  async find(id: Adherent["id"]): Promise<Adherent | undefined> {
     const adherent = await this.prisma.user.findUnique({
       where: { id },
       select: SELECT_ADHERENT,

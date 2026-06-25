@@ -14,11 +14,11 @@ import {
 import { PreviewForSigna } from "../preview/signa-preview";
 
 export type Adherents = {
-  find(id: number): Promise<Adherent | null>;
+  find(id: Adherent["id"]): Promise<Adherent | null>;
 };
 
 export type CatalogSignages = {
-  find(id: number): Promise<SignageCatalogItem | null>;
+  find(id: SignageCatalogItem["id"]): Promise<SignageCatalogItem | null>;
 };
 
 export type Gear = {
