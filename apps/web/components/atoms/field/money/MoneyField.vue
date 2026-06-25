@@ -3,7 +3,7 @@
     v-model="displayedEuros"
     :label="hideLabel ? undefined : label"
     suffix="€"
-    :rules="[rules.min]"
+    :rules="rules"
     :readonly="readonly"
     :hide-details="hideDetails"
     :density="density"
@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { Money } from "@overbookd/money";
-import { min as minRule } from "~/utils/rules/input.rules";
+import { min as minRule, max as maxRule } from "~/utils/rules/input.rules";
 import {
   endByNumber,
   endByNumberSeparation,
@@ -24,9 +24,9 @@ import type { Density } from "~/utils/vuetify/component-props";
 
 const emit = defineEmits(["update:model-value", "error"]);
 
-const euros = defineModel<number>({ required: true });
+const cents = defineModel<number>({ required: true });
 
-const { min } = defineProps({
+const { min, max } = defineProps({
   label: {
     type: String,
     default: "Montant",
@@ -39,12 +39,16 @@ const { min } = defineProps({
     type: Number,
     default: 0,
   },
+  max: {
+    type: Number,
+    default: undefined,
+  },
   readonly: {
     type: Boolean,
     default: false,
   },
   hideDetails: {
-    type: Boolean,
+    type: [Boolean, String] as PropType<boolean | "auto">,
     default: false,
   },
   density: {
@@ -53,17 +57,20 @@ const { min } = defineProps({
   },
 });
 
-const rules = {
-  min: minRule(Money.cents(min).inEuros),
-};
+const rules = computed(() => [
+  minRule(Money.cents(min).inEuros),
+  ...(max !== undefined ? [maxRule(Money.cents(max).inEuros)] : []),
+]);
 
-const displayedEuros = ref<string>(Money.cents(euros.value).inEuros.toString());
+const displayedEuros = ref<string>(Money.cents(cents.value).inEuros.toString());
 
-watch(euros, (value) => {
+watch(cents, (value) => {
   displayedEuros.value = Money.cents(value).inEuros.toString();
 });
 
-const propagateValue = (euros: string) => {
+const propagateValue = async (euros: string) => {
+  await nextTick();
+
   const formatted = euros.replace(",", ".");
   if (endByNumberSeparation(euros) || hasOneZeroAfterSeparator(euros)) {
     displayedEuros.value = formatted;
@@ -76,8 +83,7 @@ const propagateValue = (euros: string) => {
   }
 
   const money = Money.euros(Number(formatted));
-  displayedEuros.value = money.inEuros.toString();
-  emit("update:model-value", money.inCents);
+  cents.value = money.inCents;
 };
 const propagateError = (isError: boolean) => emit("error", isError);
 </script>

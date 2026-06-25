@@ -50,7 +50,6 @@ export type {
 export { TransferError } from "./transaction/transfer/transfer.error.js";
 export { SharedMeal as SharedMealPayment } from "./transaction/shared-meal/shared-meal.js";
 export type { SharedMealTransaction } from "./transaction/shared-meal/shared-meal.js";
-export { SharedMealError } from "./transaction/shared-meal/shared-meal.error.js";
 export {
   type CreateDepositForm,
   type Deposits,
@@ -113,7 +112,10 @@ export type {
   Expense,
 } from "./meal-sharing/meals.model.js";
 export { isOnGoingMeal, isPastMeal } from "./meal-sharing/meals.model.js";
-export { MAX_PORTIONS_PER_GUEST } from "./meal-sharing/meals.model.js";
+export {
+  MAX_PORTIONS_PER_GUEST,
+  MAX_SHARED_MEAL_EXPENSE_AMOUNT,
+} from "./meal-sharing/meals.model.js";
 export type { Adherent, Shotgun } from "./meal-sharing/adherent.js";
 export { MealSharingError } from "./meal-sharing/meal-sharing.error.js";
 export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder.js";

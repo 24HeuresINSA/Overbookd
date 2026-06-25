@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { Adherents, MealSharing, SOIR, MIDI } from "./meal-sharing.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
+  AmountTooHigh,
+  AmountTooLow,
   MealNotFound,
   MultipleShotgunsAlreadyAllowed,
   MultipleShotgunsAlreadyDisallowed,
@@ -403,6 +405,26 @@ describe("Meal Sharing", () => {
         });
         it("should count how many portions were done", () => {
           expect(pastSharedMeal.portionCount).toBe(3);
+        });
+      });
+      describe("when the amount is too low", () => {
+        it("should indicate we can not record expense", () => {
+          expect(
+            async () =>
+              await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
+                amount: 0,
+              }),
+          ).rejects.toThrow(AmountTooLow);
+        });
+      });
+      describe("when the amount is too high", () => {
+        it("should indicate we can not record expense", () => {
+          expect(
+            async () =>
+              await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
+                amount: 200000,
+              }),
+          ).rejects.toThrow(AmountTooHigh);
         });
       });
       describe("when no one shotguns for the meal", () => {

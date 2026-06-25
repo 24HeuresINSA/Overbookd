@@ -1,6 +1,7 @@
 import { Adherent, Shotgun, Shotguns } from "./adherent.js";
 import {
   AboutMeal,
+  MAX_SHARED_MEAL_EXPENSE_AMOUNT,
   OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
@@ -11,6 +12,8 @@ import {
   GuestNotFound,
   RecordExpenseOnNoShotgunedMeal,
   OnlyChefCan,
+  AmountTooLow,
+  AmountTooHigh,
 } from "./meal-sharing.error.js";
 import { Expense } from "./meals.model.js";
 import { DateString } from "@overbookd/time";
@@ -181,6 +184,9 @@ export class MealSharing {
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.recordExpenseFor(meal);
     if (meal.portionCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
+    if (expense.amount <= 0) throw new AmountTooLow();
+    if (expense.amount > MAX_SHARED_MEAL_EXPENSE_AMOUNT)
+      throw new AmountTooHigh();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);

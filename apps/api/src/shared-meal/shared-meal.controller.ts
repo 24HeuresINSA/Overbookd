@@ -39,14 +39,13 @@ import {
 } from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
-import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("shared-meals")
 @ApiTags("shared-meals")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
+@UseFilters(MealSharingErrorFilter)
 @ApiSwaggerResponse()
 @ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 export class SharedMealController {

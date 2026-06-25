@@ -1,6 +1,5 @@
 import { PastSharedMeal } from "../../meal-sharing/meals.model.js";
-import { ONE_EURO_IN_CENTS, SHARED_MEAL } from "../transaction.js";
-import { AmountTooHigh } from "./shared-meal.error.js";
+import { SHARED_MEAL } from "../transaction.js";
 
 export type SharedMealTransaction = {
   amount: number;
@@ -10,12 +9,8 @@ export type SharedMealTransaction = {
   type: typeof SHARED_MEAL;
 };
 
-const MAX_AMOUNT = ONE_EURO_IN_CENTS * 1000;
-
 export class SharedMeal {
   static refund(meal: PastSharedMeal): SharedMealTransaction[] {
-    if (meal.expense.amount > MAX_AMOUNT) throw new AmountTooHigh();
-
     const context = `Repas partagé du ${meal.meal.date}`;
     const guests = meal.shotguns.filter(({ id }) => id !== meal.chef.id);
     return guests.map(({ id, portions }) => ({

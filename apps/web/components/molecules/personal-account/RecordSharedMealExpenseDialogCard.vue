@@ -1,44 +1,47 @@
 <template>
-  <DialogCard @close="close">
-    <template #title> Dépense du repas </template>
-    <template #subtitle>
-      <h3>{{ shared.meal.date }}</h3>
-    </template>
-    <template #content>
-      <v-textarea
-        :model-value="shared.meal.menu"
-        variant="outlined"
-        label="Au menu 🍴"
-        readonly
-        hide-details
-        :rows="4"
-      />
-      <form>
-        <DateTimeField
-          v-model="date"
-          label="Quand la dépense a été réalisée"
-          hide-details
+  <v-form v-model="isFormValid" @submit.prevent="recordExpense">
+    <DialogCard @close="close">
+      <template #title> Dépense du repas </template>
+      <template #subtitle>
+        <h3>{{ shared.meal.date }}</h3>
+      </template>
+      <template #content>
+        <div class="content">
+          <v-textarea
+            :model-value="shared.meal.menu"
+            variant="outlined"
+            label="Au menu 🍴"
+            readonly
+            hide-details
+            :rows="4"
+          />
+          <MoneyField
+            v-model="amount"
+            label="Somme totale du repas"
+            :min="1"
+            :max="MAX_SHARED_MEAL_EXPENSE_AMOUNT"
+          />
+        </div>
+      </template>
+      <template #actions>
+        <v-btn
+          type="submit"
+          text="Renseigner"
+          size="large"
+          append-icon="mdi-cash-multiple"
+          :disabled="!isFormValid"
         />
-        <MoneyField
-          v-model="amount"
-          label="Somme totale du repas"
-          hide-details
-        />
-      </form>
-    </template>
-    <template #actions>
-      <v-btn
-        text="Renseigner"
-        size="large"
-        append-icon="mdi-cash-multiple"
-        @click="recordExpense"
-      />
-    </template>
-  </DialogCard>
+      </template>
+    </DialogCard>
+  </v-form>
 </template>
 
 <script lang="ts" setup>
-import type { OnGoingSharedMeal } from "@overbookd/personal-account";
+import {
+  MAX_SHARED_MEAL_EXPENSE_AMOUNT,
+  type Expense,
+  type OnGoingSharedMeal,
+} from "@overbookd/personal-account";
 
 const mealSharingStore = useMealSharingStore();
 
@@ -49,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const date = ref<Date>(new Date());
+const isFormValid = ref<boolean>(false);
 const amount = ref<number>(0);
 
 const emit = defineEmits(["close"]);
@@ -57,27 +60,16 @@ const close = () => emit("close");
 
 const recordExpense = () => {
   const mealId = props.shared.id;
-  const expense = { amount: amount.value, date: date.value };
+  const expense: Expense = { amount: amount.value };
   mealSharingStore.recordExpense(mealId, expense);
   close();
 };
 </script>
 
 <style lang="scss" scoped>
-.close-btn {
-  position: absolute;
-  right: 0;
-}
-form {
-  margin-top: 30px;
+.content {
   display: flex;
-  gap: 10px;
   flex-direction: column;
-}
-#expense-meal {
-  display: block;
-  h3 {
-    margin-top: 20px;
-  }
+  gap: 20px;
 }
 </style>

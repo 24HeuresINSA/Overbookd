@@ -121,14 +121,34 @@ export const useMealSharingStore = defineStore("meal-sharing", {
   },
 });
 
-function castSharedMealWithDate(
-  sharedMeal: HttpStringified<SharedMeal>,
-): SharedMeal {
+function castOnGoingSharedMealWithDate(
+  sharedMeal: HttpStringified<OnGoingSharedMeal>,
+): OnGoingSharedMeal {
   return {
     ...sharedMeal,
+    createdAt: new Date(sharedMeal.createdAt),
     shotguns: sharedMeal.shotguns.map((shotgun) => ({
       ...shotgun,
       date: new Date(shotgun.date),
     })),
   };
+}
+
+function castPastSharedMealWithDate(
+  sharedMeal: HttpStringified<PastSharedMeal>,
+): PastSharedMeal {
+  return {
+    ...castOnGoingSharedMealWithDate(sharedMeal),
+    expense: sharedMeal.expense,
+    closedAt: new Date(sharedMeal.closedAt),
+  };
+}
+
+function castSharedMealWithDate(
+  sharedMeal: HttpStringified<SharedMeal>,
+): SharedMeal {
+  const isPastMeal = "expense" in sharedMeal;
+  return isPastMeal
+    ? castPastSharedMealWithDate(sharedMeal)
+    : castOnGoingSharedMealWithDate(sharedMeal);
 }

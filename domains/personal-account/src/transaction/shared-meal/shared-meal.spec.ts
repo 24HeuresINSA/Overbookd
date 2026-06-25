@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { SHARED_MEAL } from "../transaction.js";
 import { SharedMeal } from "./shared-meal.js";
 import { PastSharedMealBuilder } from "../../meal-sharing/past-shared-meal.builder.js";
-import { AmountTooHigh } from "./shared-meal.error.js";
 
 const julie = { id: 1, name: "Julie" };
 const lea = { id: 2, name: "Lea" };
@@ -107,29 +106,6 @@ describe("Generate all transactions to refund shared meal chef", () => {
       expect(transactions.map(({ amount }) => amount)).toEqual(
         expectedTransactionAmounts,
       );
-    });
-  });
-
-  describe("when amount exceeds 1000€", () => {
-    const expensiveMeal = PastSharedMealBuilder.build({
-      id: 1,
-      createdAt: new Date("2023-12-31T10:30+02:00"),
-      expense: { amount: 200000 },
-      closedAt: new Date("2024-01-01T12:30+02:00"),
-      chef: julie,
-      meal: { menu: "Something", date: "dimanche 31 decembre soir" },
-      areShotgunsOpen: false,
-      areMultipleShotgunsAllowed: false,
-      shotguns: [
-        { ...julie, date: new Date("2023-12-29T21:00+02:00"), portions: 1 },
-        { ...lea, date: new Date("2023-12-30T10:00+02:00"), portions: 1 },
-        { ...noel, date: new Date("2023-12-31T09:00+02:00"), portions: 1 },
-      ],
-    });
-
-    it("should indicate that amount is too high", () => {
-      const refund = () => SharedMeal.refund(expensiveMeal);
-      expect(refund).toThrow(AmountTooHigh);
     });
   });
 });

@@ -133,6 +133,7 @@ export class SharedMealService {
 function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
   return {
     id: meal.id,
+    createdAt: meal.createdAt,
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
@@ -145,6 +146,7 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
 function formatSharedMeal<T extends SharedMeal>(meal: T): T {
   const baseMeal: OnGoingSharedMeal = {
     id: meal.id,
+    createdAt: meal.createdAt,
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
@@ -155,5 +157,5 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
 
   if (!isPastMeal(meal)) return baseMeal as T;
 
-  return { ...baseMeal, expense: meal.expense } as T;
+  return { ...baseMeal, expense: meal.expense, closedAt: meal.closedAt } as T;
 }

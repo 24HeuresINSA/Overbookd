@@ -1,3 +1,4 @@
+import { ONE_EURO_IN_CENTS } from "../transaction/transaction.js";
 import { Adherent, Shotgun } from "./adherent.js";
 
 export type Expense = {
@@ -33,3 +34,4 @@ export function isOnGoingMeal(meal: SharedMeal): meal is OnGoingSharedMeal {
 }
 
 export const MAX_PORTIONS_PER_GUEST = 5;
+export const MAX_SHARED_MEAL_EXPENSE_AMOUNT = ONE_EURO_IN_CENTS * 1000;
