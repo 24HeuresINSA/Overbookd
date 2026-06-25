@@ -56,9 +56,11 @@ class PastMealError extends MealSharingError {
 
 type BuildPastSharedMeal = {
   id: number;
+  createdAt: Date;
   meal: AboutMeal;
   chef: Adherent;
   expense: Expense;
+  closedAt: Date;
   areShotgunsOpen: boolean;
   areMultipleShotgunsAllowed: boolean;
   shotguns: Shotgun[];
@@ -69,16 +71,19 @@ export class PastSharedMealBuilder
   implements PastSharedMeal
 {
   protected constructor(
-    id: number,
-    meal: AboutMeal,
-    chef: Adherent,
-    areShotgunsOpen: boolean,
+    readonly id: number,
+    readonly createdAt: Date,
+    readonly meal: AboutMeal,
+    readonly chef: Adherent,
+    readonly areShotgunsOpen: boolean,
     readonly areMultipleShotgunsAllowed: boolean,
-    _shotguns: Shotguns,
+    protected readonly _shotguns: Shotguns,
     readonly expense: Expense,
+    readonly closedAt: Date,
   ) {
     super(
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
@@ -90,22 +95,26 @@ export class PastSharedMealBuilder
   static build(builder: BuildPastSharedMeal): PastSharedMealBuilder {
     const {
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
       areMultipleShotgunsAllowed,
       shotguns: shotgunList,
       expense,
+      closedAt,
     } = builder;
     const shotguns = Shotguns.build(shotgunList);
     return new PastSharedMealBuilder(
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
       areMultipleShotgunsAllowed,
       shotguns,
       expense,
+      closedAt,
     );
   }
 

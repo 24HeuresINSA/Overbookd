@@ -26,11 +26,12 @@ const SELECT_SHOTGUN = {
 };
 const SELECT_SHARED_MEAL = {
   id: true,
+  createdAt: true,
   menu: true,
   date: true,
   chef: { select: SELECT_ADHERENT },
   amount: true,
-  payedAt: true,
+  closedAt: true,
   areShotgunsOpen: true,
   areMultipleShotgunsAllowed: true,
   shotguns: { select: SELECT_SHOTGUN },
@@ -51,6 +52,7 @@ export class PrismaMeals implements SharedMeals {
     const onGoingMeal = OnGoingSharedMealBuilder.init({ ...meal, id });
     const saved = await this.prisma.sharedMeal.create({
       data: {
+        createdAt: onGoingMeal.createdAt,
         menu: onGoingMeal.meal.menu,
         date: onGoingMeal.meal.date,
         chefId: onGoingMeal.chef.id,
@@ -134,7 +136,7 @@ export class PrismaMeals implements SharedMeals {
   async close(meal: PastSharedMealBuilder): Promise<PastSharedMeal> {
     await this.prisma.sharedMeal.update({
       where: { id: meal.id },
-      data: { amount: meal.expense.amount, payedAt: meal.expense.date },
+      data: { amount: meal.expense.amount, closedAt: meal.closedAt },
       select: { id: true },
     });
     return meal;
@@ -221,11 +223,12 @@ type DatabaseAdherent = {
 
 type DatabaseSharedMeal = {
   id: number;
+  createdAt: Date;
   menu: string;
   date: string;
   chef: DatabaseAdherent;
   amount?: number;
-  payedAt?: Date;
+  closedAt?: Date;
   areShotgunsOpen: boolean;
   areMultipleShotgunsAllowed: boolean;
   shotguns: {
@@ -244,7 +247,8 @@ function buildSharedMeal(saved: DatabaseSharedMeal) {
 }
 
 function convertToBuilder(saved: DatabaseSharedMeal) {
-  const { amount, payedAt } = saved;
+  const { amount, closedAt } = saved;
+  const createdAt = saved.createdAt;
   const name = buildUserNameWithNickname(saved.chef);
   const chef = { id: saved.chef.id, name };
   const meal = { menu: saved.menu, date: saved.date };
@@ -259,6 +263,7 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
 
   const baseBuilder = {
     id: saved.id,
+    createdAt,
     meal,
     chef,
     areShotgunsOpen,
@@ -266,9 +271,9 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
     shotguns,
   };
 
-  if (!amount || !payedAt) return baseBuilder;
+  if (!amount || !closedAt) return baseBuilder;
 
-  return { ...baseBuilder, expense: { amount, date: payedAt } };
+  return { ...baseBuilder, expense: { amount }, closedAt };
 }
 
 type BuildSharedMeal = ReturnType<typeof convertToBuilder>;

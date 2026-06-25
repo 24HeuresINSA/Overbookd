@@ -33,10 +33,12 @@ export class OnGoingSharedMealBuilder
 {
   static init(initializer: InitSharedMeal): OnGoingSharedMealBuilder {
     const { id, menu, date, chef, areMultipleShotgunsAllowed } = initializer;
+    const createdAt = new Date();
     const meal = Meal.init(menu, date);
     const shotguns = Shotguns.init().addPortionFor(chef);
     return new OnGoingSharedMealBuilder(
       id,
+      createdAt,
       meal,
       chef,
       true,
@@ -48,6 +50,7 @@ export class OnGoingSharedMealBuilder
   static build(builder: BuildOnGoingSharedMeal): OnGoingSharedMealBuilder {
     const {
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
@@ -57,6 +60,7 @@ export class OnGoingSharedMealBuilder
     const shotguns = Shotguns.build(shotgunList);
     return new OnGoingSharedMealBuilder(
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
@@ -79,6 +83,7 @@ export class OnGoingSharedMealBuilder
     const shotguns = this._shotguns.addPortionFor(adherent);
     return new OnGoingSharedMealBuilder(
       this.id,
+      this.createdAt,
       this.meal,
       this.chef,
       this.areShotgunsOpen,
@@ -91,6 +96,7 @@ export class OnGoingSharedMealBuilder
     const shotguns = this._shotguns.removePortionFor(guest);
     return new OnGoingSharedMealBuilder(
       this.id,
+      this.createdAt,
       this.meal,
       this.chef,
       this.areShotgunsOpen,
@@ -103,6 +109,7 @@ export class OnGoingSharedMealBuilder
     const shotguns = this._shotguns.cancelShotgunFor(guest);
     return new OnGoingSharedMealBuilder(
       this.id,
+      this.createdAt,
       this.meal,
       this.chef,
       this.areShotgunsOpen,
@@ -112,14 +119,17 @@ export class OnGoingSharedMealBuilder
   }
 
   close(expense: Expense): PastSharedMealBuilder {
+    const closedAt = new Date();
     return PastSharedMealBuilder.build({
       id: this.id,
+      createdAt: this.createdAt,
       meal: this.meal,
       chef: this.chef,
       areShotgunsOpen: false,
       areMultipleShotgunsAllowed: this.areMultipleShotgunsAllowed,
       shotguns: this.shotguns,
       expense,
+      closedAt,
     });
   }
 
@@ -128,6 +138,7 @@ export class OnGoingSharedMealBuilder
 
     return OnGoingSharedMealBuilder.build({
       id: this.id,
+      createdAt: this.createdAt,
       meal: this.meal,
       chef: this.chef,
       areShotgunsOpen: false,
@@ -141,6 +152,7 @@ export class OnGoingSharedMealBuilder
 
     return OnGoingSharedMealBuilder.build({
       id: this.id,
+      createdAt: this.createdAt,
       meal: this.meal,
       chef: this.chef,
       areShotgunsOpen: true,
@@ -155,6 +167,7 @@ export class OnGoingSharedMealBuilder
 
     return OnGoingSharedMealBuilder.build({
       id: this.id,
+      createdAt: this.createdAt,
       meal: this.meal,
       chef: this.chef,
       areShotgunsOpen: this.areShotgunsOpen,
@@ -170,6 +183,7 @@ export class OnGoingSharedMealBuilder
     const shotguns = this._shotguns.removeMultipleShotguns();
     return new OnGoingSharedMealBuilder(
       this.id,
+      this.createdAt,
       this.meal,
       this.chef,
       this.areShotgunsOpen,

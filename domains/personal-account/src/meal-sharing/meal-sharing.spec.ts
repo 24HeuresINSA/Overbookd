@@ -53,6 +53,7 @@ const multipleShotguns = [
 
 const rizCantonnais = OnGoingSharedMealBuilder.build({
   id: 1,
+  createdAt: new Date("2023-10-12 08:00"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -62,6 +63,7 @@ const rizCantonnais = OnGoingSharedMealBuilder.build({
 
 const saladeDeFruits = OnGoingSharedMealBuilder.build({
   id: 2,
+  createdAt: new Date("2023-10-12 08:00"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -71,6 +73,7 @@ const saladeDeFruits = OnGoingSharedMealBuilder.build({
 
 const lonelyMeal = OnGoingSharedMealBuilder.build({
   id: 3,
+  createdAt: new Date("2023-10-14 05:36"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -80,12 +83,14 @@ const lonelyMeal = OnGoingSharedMealBuilder.build({
 
 const closedMeal = PastSharedMealBuilder.build({
   id: 4,
+  createdAt: new Date("2023-10-10 16:20"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
   areMultipleShotgunsAllowed: false,
   shotguns,
-  expense: { amount: 1000, date: new Date() },
+  expense: { amount: 1000 },
+  closedAt: new Date(),
 });
 
 describe("Meal Sharing", () => {
@@ -131,6 +136,9 @@ describe("Meal Sharing", () => {
         });
         it("should identify meal sharing with an id", async () => {
           expect(sharedMeal.id).toBeGreaterThan(0);
+        });
+        it("should generate a creation date", async () => {
+          expect(sharedMeal.createdAt).toStrictEqual(expect.any(Date));
         });
         it("should link meal with volunteer offering it", async () => {
           expect(sharedMeal.chef).toStrictEqual(expectedChef);
@@ -310,7 +318,7 @@ describe("Meal Sharing", () => {
   });
 
   describe("Record expense", () => {
-    const expense = { amount: 1000, date: new Date("2023-10-12 12:00") };
+    const expense = { amount: 1000 };
     let pastSharedMeal: PastSharedMeal;
     beforeEach(async () => {
       sharedMeals = new InMemorySharedMeals([
@@ -338,8 +346,11 @@ describe("Meal Sharing", () => {
             expense,
           );
         });
-        it("should record amount and date of the expense", async () => {
+        it("should record the amount of the expense", async () => {
           expect(pastSharedMeal.expense.amount).toBe(1000);
+        });
+        it("should generate a closing date", async () => {
+          expect(pastSharedMeal.closedAt).toStrictEqual(expect.any(Date));
         });
         it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
           expect(async () => {

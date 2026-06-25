@@ -798,13 +798,14 @@ model FestivalTaskReview {
 }
 
 model SharedMeal {
-  id      Int       @id @default(autoincrement())
-  menu    String    @db.Text
-  date    String    @db.Text
-  chefId  Int       @map("chef_id")
-  chef    User      @relation("chef", fields: [chefId], references: [id])
-  amount  Int?
-  payedAt DateTime? @map("payed_at")
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at")
+  menu      String    @db.Text
+  date      String    @db.Text
+  chefId    Int       @map("chef_id")
+  chef      User      @relation("chef", fields: [chefId], references: [id])
+  amount    Int?
+  closedAt  DateTime? @map("closed_at")
 
   areShotgunsOpen            Boolean   @default(true) @map("are_shotguns_open")
   areMultipleShotgunsAllowed Boolean   @default(false) @map("are_multiple_shotguns_allowed")

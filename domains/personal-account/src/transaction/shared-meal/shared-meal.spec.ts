@@ -12,7 +12,9 @@ const georges = { id: 4, name: "Georges" };
 describe("Generate all transactions to refund shared meal chef", () => {
   const sharedMeal = PastSharedMealBuilder.build({
     id: 1,
-    expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
+    createdAt: new Date("2023-12-31T10:30+02:00"),
+    expense: { amount: 2000 },
+    closedAt: new Date("2024-01-01T12:30+02:00"),
     chef: julie,
     meal: { menu: "Something", date: "dimanche 31 decembre soir" },
     areShotgunsOpen: true,
@@ -55,7 +57,9 @@ describe("Generate all transactions to refund shared meal chef", () => {
   describe("when meal amount can't be divided properly", () => {
     const undividibleMeal = PastSharedMealBuilder.build({
       id: 1,
-      expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
+      createdAt: new Date("2023-12-31T10:30+02:00"),
+      expense: { amount: 2000 },
+      closedAt: new Date("2024-01-01T12:30+02:00"),
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: true,
@@ -76,7 +80,9 @@ describe("Generate all transactions to refund shared meal chef", () => {
   describe("when some guests have multiple portions", () => {
     const multiplePortionsPerGuestMeal = PastSharedMealBuilder.build({
       id: 1,
-      expense: { amount: 2100, date: new Date("2023-12-31T10:30+02:00") },
+      createdAt: new Date("2023-12-31T10:30+02:00"),
+      expense: { amount: 2100 },
+      closedAt: new Date("2024-01-01T12:30+02:00"),
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: true,
@@ -107,7 +113,9 @@ describe("Generate all transactions to refund shared meal chef", () => {
   describe("when amount exceeds 1000€", () => {
     const expensiveMeal = PastSharedMealBuilder.build({
       id: 1,
-      expense: { amount: 200000, date: new Date("2023-12-31T10:30+02:00") },
+      createdAt: new Date("2023-12-31T10:30+02:00"),
+      expense: { amount: 200000 },
+      closedAt: new Date("2024-01-01T12:30+02:00"),
       chef: julie,
       meal: { menu: "Something", date: "dimanche 31 decembre soir" },
       areShotgunsOpen: false,

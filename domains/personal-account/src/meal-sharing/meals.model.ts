@@ -2,13 +2,13 @@ import { Adherent, Shotgun } from "./adherent.js";
 
 export type Expense = {
   amount: number;
-  date: Date;
 };
 
 export type AboutMeal = { menu: string; date: string };
 
 export type OnGoingSharedMeal = {
   id: number;
+  createdAt: Date;
   meal: AboutMeal;
   chef: Adherent;
   areShotgunsOpen: boolean;
@@ -19,6 +19,7 @@ export type OnGoingSharedMeal = {
 
 export type PastSharedMeal = OnGoingSharedMeal & {
   expense: Expense;
+  closedAt: Date;
 };
 
 export type SharedMeal = PastSharedMeal | OnGoingSharedMeal;

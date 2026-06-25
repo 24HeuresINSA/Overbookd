@@ -32,6 +32,7 @@ export type SharedMealCreation = {
 export abstract class SharedMealBuilder {
   protected constructor(
     readonly id: number,
+    readonly createdAt: Date,
     readonly meal: AboutMeal,
     readonly chef: Adherent,
     readonly areShotgunsOpen: boolean,
