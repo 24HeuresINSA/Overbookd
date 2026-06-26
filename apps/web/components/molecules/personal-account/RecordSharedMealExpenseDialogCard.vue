@@ -17,7 +17,7 @@
           />
           <MoneyField
             v-model="amount"
-            label="Somme totale du repas"
+            label="Coût total du repas"
             :min="1"
             :max="MAX_SHARED_MEAL_EXPENSE_AMOUNT"
           />
@@ -26,7 +26,7 @@
       <template #actions>
         <v-btn
           type="submit"
-          text="Renseigner"
+          text="Clore le repas"
           size="large"
           append-icon="mdi-cash-multiple"
           :disabled="!isFormValid"
