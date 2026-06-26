@@ -125,22 +125,6 @@ export class SharedMealController {
     return this.sharedMeal.pastWithAdherent(user.id);
   }
 
-  @Get(":mealId")
-  @Permission(SHOTGUN_SHARED_MEAL)
-  @ApiResponse({
-    status: 200,
-    description: "Selected meal details",
-    type: OnGoingSharedMealResponseDto,
-  })
-  @ApiParam({
-    name: "mealId",
-    type: Number,
-    required: true,
-  })
-  displayMeal(@Param("mealId", ParseIntPipe) mealId: SharedMeal["id"]) {
-    return this.sharedMeal.find(mealId);
-  }
-
   @Post(":mealId/shotgun")
   @Permission(SHOTGUN_SHARED_MEAL)
   @HttpCode(200)

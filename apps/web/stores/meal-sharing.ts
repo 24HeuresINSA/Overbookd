@@ -11,7 +11,6 @@ import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
-  sharedMeal?: SharedMeal;
   meals: SharedMeal[];
   onGoingMeals: OnGoingSharedMeal[];
   pastMeals: PastSharedMeal[];
@@ -19,7 +18,6 @@ type State = {
 
 export const useMealSharingStore = defineStore("meal-sharing", {
   state: (): State => ({
-    sharedMeal: undefined,
     meals: [],
     onGoingMeals: [],
     pastMeals: [],
@@ -30,12 +28,6 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       if (isHttpError(res)) return;
       const sharedMeal = castSharedMealWithDate(res);
       this.onGoingMeals = [sharedMeal, ...this.onGoingMeals];
-    },
-
-    async find(mealId: number) {
-      const res = await MealSharingRepository.find(mealId);
-      if (isHttpError(res)) return;
-      this.sharedMeal = castSharedMealWithDate(res);
     },
 
     async fetchAll() {

@@ -15,10 +15,6 @@ export class MealSharingRepository {
     return HttpClient.post<SharedMeal>(this.basePath, meal);
   }
 
-  static find(mealId: SharedMeal["id"]) {
-    return HttpClient.get<SharedMeal>(`${this.basePath}/${mealId}`);
-  }
-
   static all() {
     return HttpClient.get<SharedMeal[]>(this.basePath);
   }

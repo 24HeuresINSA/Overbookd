@@ -28,11 +28,6 @@ export class SharedMealService {
     return formatCreatedMeal(created);
   }
 
-  async find(mealId: SharedMeal["id"]): Promise<SharedMeal> {
-    const found = await this.mealSharing.findById(mealId);
-    return formatSharedMeal(found);
-  }
-
   async all(): Promise<SharedMeal[]> {
     const meals = await this.mealSharing.findAll();
     return meals.map(formatSharedMeal);
