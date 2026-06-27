@@ -4,6 +4,7 @@ export const ORGA_WEEK_DATE_KEY = "orgaWeekDate";
 export const INVITE_STAFF_LINK_KEY = "inviteStaffLink";
 export const INVITE_NEW_ADHERENT_KEY = "inviteNewAdherentLink";
 export const VOLUNTEER_BRIEFING_TIME_WINDOW_KEY = "volunteerBriefingTimeWindow";
+export const USEFUL_LINKS_KEY = "usefulLinks";
 
 export type ConfigurationKey =
   | typeof REGISTER_FORM_KEY
@@ -11,7 +12,8 @@ export type ConfigurationKey =
   | typeof ORGA_WEEK_DATE_KEY
   | typeof INVITE_STAFF_LINK_KEY
   | typeof INVITE_NEW_ADHERENT_KEY
-  | typeof VOLUNTEER_BRIEFING_TIME_WINDOW_KEY;
+  | typeof VOLUNTEER_BRIEFING_TIME_WINDOW_KEY
+  | typeof USEFUL_LINKS_KEY;
 
 export const configurationKeys = [
   REGISTER_FORM_KEY,
@@ -20,6 +22,7 @@ export const configurationKeys = [
   INVITE_STAFF_LINK_KEY,
   INVITE_NEW_ADHERENT_KEY,
   VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+  USEFUL_LINKS_KEY,
 ] as const;
 
 export type Configuration<

@@ -9,6 +9,7 @@ import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
   REGISTER_FORM_KEY,
+  USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
@@ -207,6 +208,20 @@ async function main() {
     where: { key: REGISTER_FORM_KEY },
     update: registerFormConfig,
     create: registerFormConfig,
+  });
+
+  console.log("Creating of useful links config");
+  const usefulLinksConfig: Configuration = {
+    key: USEFUL_LINKS_KEY,
+    value: {
+      googleCalendar: "https://calendar.google.com",
+      slack: "https://join.slack.com",
+    },
+  };
+  await prisma.configuration.upsert({
+    where: { key: USEFUL_LINKS_KEY },
+    update: usefulLinksConfig,
+    create: usefulLinksConfig,
   });
 
   const locations = await Promise.all(

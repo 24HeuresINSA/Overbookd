@@ -1,4 +1,8 @@
-import { EVENT_DATE_KEY, ORGA_WEEK_DATE_KEY } from "@overbookd/configuration";
+import {
+  EVENT_DATE_KEY,
+  ORGA_WEEK_DATE_KEY,
+  USEFUL_LINKS_KEY,
+} from "@overbookd/configuration";
 
 export default defineNuxtRouteMiddleware(async () => {
   const teamStore = useTeamStore();
@@ -7,6 +11,7 @@ export default defineNuxtRouteMiddleware(async () => {
   const hasNoTeam = teamStore.teams.length === 0;
   const hasNoEventDate = !configurationStore.get(EVENT_DATE_KEY);
   const hasNoOrgaWeekDate = !configurationStore.get(ORGA_WEEK_DATE_KEY);
+  const hasNoUsefulLinks = !configurationStore.get(USEFUL_LINKS_KEY);
 
   const actions = [
     hasNoTeam ? teamStore.fetchTeams() : undefined,
@@ -14,6 +19,7 @@ export default defineNuxtRouteMiddleware(async () => {
     hasNoOrgaWeekDate
       ? configurationStore.fetch(ORGA_WEEK_DATE_KEY)
       : undefined,
+    hasNoUsefulLinks ? configurationStore.fetch(USEFUL_LINKS_KEY) : undefined,
   ].filter(Boolean);
   await Promise.all(actions);
 });
