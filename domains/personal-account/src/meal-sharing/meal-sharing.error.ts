@@ -65,6 +65,18 @@ export class RecordExpenseOnNoShotgunedMeal extends MealSharingError {
   }
 }
 
+export class AmountTooLow extends MealSharingError {
+  constructor() {
+    super("Le montant du repas partagé doit être positif");
+  }
+}
+
+export class AmountTooHigh extends MealSharingError {
+  constructor() {
+    super("Le montant du repas partagé est trop élevé");
+  }
+}
+
 export class RecordExpenseOnPastMeal extends MealSharingError {
   constructor() {
     super("Le repas a déjà une dépense renseignée");

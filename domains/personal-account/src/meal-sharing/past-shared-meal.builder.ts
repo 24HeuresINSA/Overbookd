@@ -13,6 +13,8 @@ export const REMOVE_PORTION_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de retirer une portion";
 export const CANCEL_SHOTGUN_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible d'annuler un shotgun";
+export const CANCEL_MEAL_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de l'annuler";
 
 export const CLOSE_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de fermer les shotguns";
@@ -37,6 +39,10 @@ class PastMealError extends MealSharingError {
     return new PastMealError(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
   }
 
+  static get cancelMeal(): PastMealError {
+    return new PastMealError(CANCEL_MEAL_PAST_MEAL_ERROR);
+  }
+
   static get closeShotguns(): PastMealError {
     return new PastMealError(CLOSE_SHOTGUNS_PAST_MEAL_ERROR);
   }
@@ -56,9 +62,11 @@ class PastMealError extends MealSharingError {
 
 type BuildPastSharedMeal = {
   id: number;
+  createdAt: Date;
   meal: AboutMeal;
   chef: Adherent;
   expense: Expense;
+  closedAt: Date;
   areShotgunsOpen: boolean;
   areMultipleShotgunsAllowed: boolean;
   shotguns: Shotgun[];
@@ -69,16 +77,19 @@ export class PastSharedMealBuilder
   implements PastSharedMeal
 {
   protected constructor(
-    id: number,
-    meal: AboutMeal,
-    chef: Adherent,
-    areShotgunsOpen: boolean,
+    readonly id: number,
+    readonly createdAt: Date,
+    readonly meal: AboutMeal,
+    readonly chef: Adherent,
+    readonly areShotgunsOpen: boolean,
     readonly areMultipleShotgunsAllowed: boolean,
-    _shotguns: Shotguns,
+    protected readonly _shotguns: Shotguns,
     readonly expense: Expense,
+    readonly closedAt: Date,
   ) {
     super(
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
@@ -90,22 +101,26 @@ export class PastSharedMealBuilder
   static build(builder: BuildPastSharedMeal): PastSharedMealBuilder {
     const {
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
       areMultipleShotgunsAllowed,
       shotguns: shotgunList,
       expense,
+      closedAt,
     } = builder;
     const shotguns = Shotguns.build(shotgunList);
     return new PastSharedMealBuilder(
       id,
+      createdAt,
       meal,
       chef,
       areShotgunsOpen,
       areMultipleShotgunsAllowed,
       shotguns,
       expense,
+      closedAt,
     );
   }
 
@@ -123,6 +138,10 @@ export class PastSharedMealBuilder
 
   close(): PastSharedMeal {
     throw new RecordExpenseOnPastMeal();
+  }
+
+  cancelMeal(): PastSharedMealBuilder {
+    throw PastMealError.cancelMeal;
   }
 
   closeShotguns(): PastSharedMealBuilder {

@@ -24,7 +24,11 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { OFFER_SHARED_MEAL, SHOTGUN_SHARED_MEAL } from "@overbookd/permission";
+import {
+  MANAGE_SHARED_MEALS,
+  OFFER_SHARED_MEAL,
+  SHOTGUN_SHARED_MEAL,
+} from "@overbookd/permission";
 import { SharedMealService } from "./shared-meal.service";
 import { RequestWithUserPayload } from "../app.controller";
 import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
@@ -39,14 +43,13 @@ import {
 } from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
-import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("shared-meals")
 @ApiTags("shared-meals")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
+@UseFilters(MealSharingErrorFilter)
 @ApiSwaggerResponse()
 @ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 export class SharedMealController {
@@ -68,10 +71,10 @@ export class SharedMealController {
   }
 
   @Get()
-  @Permission(SHOTGUN_SHARED_MEAL)
+  @Permission(MANAGE_SHARED_MEALS)
   @ApiResponse({
     status: 200,
-    description: "Meals available",
+    description: "All shared meals",
     schema: {
       oneOf: [
         { $ref: getSchemaPath(OnGoingSharedMealResponseDto) },
@@ -84,20 +87,42 @@ export class SharedMealController {
     return this.sharedMeal.all();
   }
 
-  @Get(":mealId")
+  @Get("on-going")
   @Permission(SHOTGUN_SHARED_MEAL)
   @ApiResponse({
     status: 200,
-    description: "Selected meal details",
+    description: "Shared meals available",
     type: OnGoingSharedMealResponseDto,
+    isArray: true,
   })
-  @ApiParam({
-    name: "mealId",
-    type: Number,
-    required: true,
+  allOnGoingMeals(): Promise<OnGoingSharedMealResponseDto[]> {
+    return this.sharedMeal.allOnGoing();
+  }
+
+  @Get("past")
+  @Permission(MANAGE_SHARED_MEALS)
+  @ApiResponse({
+    status: 200,
+    description: "Past shared meals",
+    type: PastSharedMealResponseDto,
+    isArray: true,
   })
-  displayMeal(@Param("mealId", ParseIntPipe) mealId: SharedMeal["id"]) {
-    return this.sharedMeal.find(mealId);
+  allPastMeals(): Promise<PastSharedMealResponseDto[]> {
+    return this.sharedMeal.allPast();
+  }
+
+  @Get("past/mine")
+  @Permission(OFFER_SHARED_MEAL)
+  @ApiResponse({
+    status: 200,
+    description: "Shared meals the user was part of",
+    type: PastSharedMealResponseDto,
+    isArray: true,
+  })
+  myPastMeals(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<PastSharedMealResponseDto[]> {
+    return this.sharedMeal.pastWithAdherent(user.id);
   }
 
   @Post(":mealId/shotgun")

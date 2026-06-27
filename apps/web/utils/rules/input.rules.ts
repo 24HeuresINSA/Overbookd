@@ -23,6 +23,13 @@ export function min(minValue: number) {
   };
 }
 
+export function max(maxValue: number) {
+  const message = `La valeur doit être moins de ${maxValue}`;
+  return function (value: string | null) {
+    return (value != undefined && parseFloat(value) <= maxValue) || message;
+  };
+}
+
 export function minLength(minLength: number) {
   return function (value: string | null) {
     const message = `Taper au moins ${minLength} caracteres`;
@@ -108,11 +115,3 @@ export function isSupportedImageFile(value?: File | null): true | string {
   const message = "Seulement des images (png, jpeg ou gif)";
   return !value || IMAGE_EXTENSIONS.includes(value.type) || message;
 }
-export type InputRulesData = {
-  rules: Record<string, (value: string | null) => string | boolean>;
-};
-
-export type InputRulesDataWithImage = {
-  rules: Record<string, (value: string | null) => string | boolean>;
-  fileRules: Record<string, (value?: File | null) => string | boolean>;
-};

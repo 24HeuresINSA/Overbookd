@@ -6,13 +6,15 @@ export type Gear = {
 };
 
 export type FestivalActivities = {
-  find(id: number): Promise<FestivalTask["festivalActivity"] | null>;
+  find(
+    id: FestivalTask["festivalActivity"]["id"],
+  ): Promise<FestivalTask["festivalActivity"] | null>;
 };
 
 export type Adherents = {
-  findOne(id: number): Promise<Adherent | null>;
-  findMatching(ids: number[]): Promise<Adherent[]>;
-  findContact(id: number): Promise<Contact | null>;
+  findOne(id: Adherent["id"]): Promise<Adherent | null>;
+  findMatching(ids: Adherent["id"][]): Promise<Adherent[]>;
+  findContact(id: Contact["id"]): Promise<Contact | null>;
 };
 
 export type Inquiries = {

@@ -5,7 +5,7 @@ import type {
   SharedMealBuilder,
   SharedMealCreation,
   PastSharedMeal,
-  Expense,
+  Adherent,
 } from "@overbookd/personal-account";
 import { OnGoingSharedMealBuilder } from "@overbookd/personal-account";
 import { PastSharedMealBuilder } from "@overbookd/personal-account";
@@ -26,11 +26,12 @@ const SELECT_SHOTGUN = {
 };
 const SELECT_SHARED_MEAL = {
   id: true,
+  createdAt: true,
   menu: true,
   date: true,
   chef: { select: SELECT_ADHERENT },
   amount: true,
-  payedAt: true,
+  closedAt: true,
   areShotgunsOpen: true,
   areMultipleShotgunsAllowed: true,
   shotguns: { select: SELECT_SHOTGUN },
@@ -51,6 +52,7 @@ export class PrismaMeals implements SharedMeals {
     const onGoingMeal = OnGoingSharedMealBuilder.init({ ...meal, id });
     const saved = await this.prisma.sharedMeal.create({
       data: {
+        createdAt: onGoingMeal.createdAt,
         menu: onGoingMeal.meal.menu,
         date: onGoingMeal.meal.date,
         chefId: onGoingMeal.chef.id,
@@ -70,7 +72,7 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
-  async find(mealId: number): Promise<SharedMealBuilder | undefined> {
+  async find(mealId: SharedMeal["id"]): Promise<SharedMealBuilder | undefined> {
     const saved = await this.prisma.sharedMeal.findUnique({
       where: { id: mealId },
       select: SELECT_SHARED_MEAL,
@@ -134,7 +136,7 @@ export class PrismaMeals implements SharedMeals {
   async close(meal: PastSharedMealBuilder): Promise<PastSharedMeal> {
     await this.prisma.sharedMeal.update({
       where: { id: meal.id },
-      data: { amount: meal.expense.amount, payedAt: meal.expense.date },
+      data: { amount: meal.expense.amount, closedAt: meal.closedAt },
       select: { id: true },
     });
     return meal;
@@ -196,12 +198,51 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
-  async list(): Promise<SharedMeal[]> {
+  async listAll(): Promise<SharedMeal[]> {
     const meals = await this.prisma.sharedMeal.findMany({
       select: SELECT_SHARED_MEAL,
       orderBy: { id: "desc" },
     });
     return meals.map(buildSharedMeal);
+  }
+
+  async listAllOnGoing(): Promise<OnGoingSharedMeal[]> {
+    const meals = await this.prisma.sharedMeal.findMany({
+      select: SELECT_SHARED_MEAL,
+      where: { amount: null },
+      orderBy: { id: "desc" },
+    });
+    return meals.map(buildOnGoingSharedMeal);
+  }
+
+  async listAllPast(): Promise<PastSharedMeal[]> {
+    const meals = await this.prisma.sharedMeal.findMany({
+      select: SELECT_SHARED_MEAL,
+      where: { NOT: { amount: null } },
+      orderBy: { id: "desc" },
+    });
+    return meals.map(buildPastSharedMeal);
+  }
+
+  async listPastWithAdherent(
+    adherentId: Adherent["id"],
+  ): Promise<PastSharedMeal[]> {
+    const meals = await this.prisma.sharedMeal.findMany({
+      select: SELECT_SHARED_MEAL,
+      where: {
+        AND: [
+          { NOT: { amount: null } },
+          {
+            OR: [
+              { chefId: adherentId },
+              { shotguns: { some: { guestId: adherentId } } },
+            ],
+          },
+        ],
+      },
+      orderBy: { id: "desc" },
+    });
+    return meals.map(buildPastSharedMeal);
   }
 
   async cancel(mealId: SharedMeal["id"]): Promise<void> {
@@ -221,11 +262,12 @@ type DatabaseAdherent = {
 
 type DatabaseSharedMeal = {
   id: number;
+  createdAt: Date;
   menu: string;
   date: string;
   chef: DatabaseAdherent;
-  amount?: number;
-  payedAt?: Date;
+  amount: number | null;
+  closedAt: Date | null;
   areShotgunsOpen: boolean;
   areMultipleShotgunsAllowed: boolean;
   shotguns: {
@@ -235,16 +277,34 @@ type DatabaseSharedMeal = {
   }[];
 };
 
-function buildSharedMeal(saved: DatabaseSharedMeal) {
-  const builder = convertToBuilder(saved);
-  if (hasExpense(builder)) {
-    return PastSharedMealBuilder.build(builder);
-  }
+type DatabasePastSharedMeal = DatabaseSharedMeal & {
+  amount: number;
+  closedAt: Date;
+};
+
+function buildOnGoingSharedMeal(
+  saved: DatabaseSharedMeal,
+): OnGoingSharedMealBuilder {
+  const builder = convertToOnGoingBuilder(saved);
   return OnGoingSharedMealBuilder.build(builder);
 }
 
-function convertToBuilder(saved: DatabaseSharedMeal) {
-  const { amount, payedAt } = saved;
+function buildPastSharedMeal(
+  saved: DatabasePastSharedMeal,
+): PastSharedMealBuilder {
+  const builder = convertToPastBuilder(saved);
+  return PastSharedMealBuilder.build(builder);
+}
+
+function buildSharedMeal(saved: DatabaseSharedMeal): SharedMealBuilder {
+  if (hasExpense(saved)) {
+    return buildPastSharedMeal(saved);
+  }
+  return buildOnGoingSharedMeal(saved);
+}
+
+function convertToOnGoingBuilder(saved: DatabaseSharedMeal) {
+  const createdAt = saved.createdAt;
   const name = buildUserNameWithNickname(saved.chef);
   const chef = { id: saved.chef.id, name };
   const meal = { menu: saved.menu, date: saved.date };
@@ -257,24 +317,29 @@ function convertToBuilder(saved: DatabaseSharedMeal) {
     portions: shotgun.portions,
   }));
 
-  const baseBuilder = {
+  return {
     id: saved.id,
+    createdAt,
     meal,
     chef,
     areShotgunsOpen,
     areMultipleShotgunsAllowed,
     shotguns,
   };
-
-  if (!amount || !payedAt) return baseBuilder;
-
-  return { ...baseBuilder, expense: { amount, date: payedAt } };
 }
 
-type BuildSharedMeal = ReturnType<typeof convertToBuilder>;
+function convertToPastBuilder(saved: DatabasePastSharedMeal) {
+  const onGoingBuilder = convertToOnGoingBuilder(saved);
+
+  return {
+    ...onGoingBuilder,
+    expense: { amount: saved.amount },
+    closedAt: saved.closedAt,
+  };
+}
 
 function hasExpense(
-  builder: BuildSharedMeal,
-): builder is Extract<BuildSharedMeal, { expense: Expense }> {
-  return Object.hasOwn(builder, "expense");
+  databaseSharedMeal: DatabaseSharedMeal,
+): databaseSharedMeal is Extract<DatabaseSharedMeal, { amount: number }> {
+  return databaseSharedMeal.amount !== null;
 }

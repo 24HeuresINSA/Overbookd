@@ -1,6 +1,7 @@
 import { Adherent, Shotgun, Shotguns } from "./adherent.js";
 import {
   AboutMeal,
+  MAX_SHARED_MEAL_EXPENSE_AMOUNT,
   OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
@@ -11,6 +12,8 @@ import {
   GuestNotFound,
   RecordExpenseOnNoShotgunedMeal,
   OnlyChefCan,
+  AmountTooLow,
+  AmountTooHigh,
 } from "./meal-sharing.error.js";
 import { Expense } from "./meals.model.js";
 import { DateString } from "@overbookd/time";
@@ -32,6 +35,7 @@ export type SharedMealCreation = {
 export abstract class SharedMealBuilder {
   protected constructor(
     readonly id: number,
+    readonly createdAt: Date,
     readonly meal: AboutMeal,
     readonly chef: Adherent,
     readonly areShotgunsOpen: boolean,
@@ -46,6 +50,8 @@ export abstract class SharedMealBuilder {
   abstract cancelShotgunFor(guest: Adherent["id"]): SharedMealBuilder;
 
   abstract close(expense: Expense): PastSharedMeal;
+
+  abstract cancelMeal(): void;
 
   abstract closeShotguns(): SharedMealBuilder;
 
@@ -71,9 +77,12 @@ export abstract class SharedMealBuilder {
 export type SharedMeals = {
   create(meal: SharedMealCreation): Promise<OnGoingSharedMeal>;
   cancel(mealId: SharedMeal["id"]): Promise<void>;
-  find(mealId: number): Promise<SharedMealBuilder | undefined>;
+  find(mealId: SharedMeal["id"]): Promise<SharedMealBuilder | undefined>;
   close(meal: PastSharedMeal): Promise<PastSharedMeal>;
-  list(): Promise<SharedMeal[]>;
+  listAll(): Promise<SharedMeal[]>;
+  listAllOnGoing(): Promise<OnGoingSharedMeal[]>;
+  listAllPast(): Promise<PastSharedMeal[]>;
+  listPastWithAdherent(adherentId: Adherent["id"]): Promise<PastSharedMeal[]>;
   addPortion(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
   removePortion(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
   cancelShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
@@ -88,12 +97,12 @@ export type SharedMeals = {
 };
 
 export type Adherents = {
-  find(id: number): Promise<Adherent | undefined>;
+  find(id: Adherent["id"]): Promise<Adherent | undefined>;
 };
 
 type RemoveShotgun = {
-  mealId: number;
-  guestId: number;
+  mealId: SharedMeal["id"];
+  guestId: Adherent["id"];
 };
 
 export class MealSharing {
@@ -105,7 +114,7 @@ export class MealSharing {
   async offer(
     menu: string,
     date: MealDate,
-    chefId: number,
+    chefId: Adherent["id"],
     areMultipleShotgunsAllowed: boolean,
   ): Promise<OnGoingSharedMeal> {
     const chef = await this.adherents.find(chefId);
@@ -120,8 +129,8 @@ export class MealSharing {
   }
 
   async addPortion(
-    mealId: number,
-    guestId: number,
+    mealId: SharedMeal["id"],
+    guestId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
     const [sharedMeal, guest] = await Promise.all([
       this.sharedMeals.find(mealId),
@@ -136,7 +145,7 @@ export class MealSharing {
 
   async removePortion(
     { mealId, guestId }: RemoveShotgun,
-    instigatorId: number,
+    instigatorId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
     const sharedMeal = await this.sharedMeals.find(mealId);
     if (!sharedMeal) throw new MealNotFound(mealId);
@@ -149,7 +158,7 @@ export class MealSharing {
 
   async cancelShotgun(
     { mealId, guestId }: RemoveShotgun,
-    instigatorId: number,
+    instigatorId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
     const sharedMeal = await this.sharedMeals.find(mealId);
     if (!sharedMeal) throw new MealNotFound(mealId);
@@ -160,14 +169,28 @@ export class MealSharing {
     return this.sharedMeals.cancelShotgun(updatedMeal);
   }
 
-  async findById(mealId: number): Promise<SharedMeal> {
+  async findById(mealId: SharedMeal["id"]): Promise<SharedMeal> {
     const sharedMeal = await this.sharedMeals.find(mealId);
     if (!sharedMeal) throw new MealNotFound(mealId);
     return sharedMeal;
   }
 
   async findAll(): Promise<SharedMeal[]> {
-    return this.sharedMeals.list();
+    return this.sharedMeals.listAll();
+  }
+
+  async findAllOnGoing(): Promise<OnGoingSharedMeal[]> {
+    return this.sharedMeals.listAllOnGoing();
+  }
+
+  async findAllPast(): Promise<PastSharedMeal[]> {
+    return this.sharedMeals.listAllPast();
+  }
+
+  async findPastWithAdherent(
+    adherentId: Adherent["id"],
+  ): Promise<PastSharedMeal[]> {
+    return this.sharedMeals.listPastWithAdherent(adherentId);
   }
 
   async recordExpense(
@@ -180,6 +203,9 @@ export class MealSharing {
     if (!meal) throw new MealNotFound(mealId);
     if (!meal.isChef(recorder)) throw OnlyChefCan.recordExpenseFor(meal);
     if (meal.portionCount === 0) throw new RecordExpenseOnNoShotgunedMeal();
+    if (expense.amount <= 0) throw new AmountTooLow();
+    if (expense.amount > MAX_SHARED_MEAL_EXPENSE_AMOUNT)
+      throw new AmountTooHigh();
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);
@@ -193,6 +219,7 @@ export class MealSharing {
     if (!meal) return;
     if (!meal.isChef(instigatorId)) throw OnlyChefCan.cancel(meal);
 
+    meal.cancelMeal();
     return this.sharedMeals.cancel(mealId);
   }
 

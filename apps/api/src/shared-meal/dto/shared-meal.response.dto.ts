@@ -36,6 +36,9 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
   @ApiProperty()
   id: number;
 
+  @ApiProperty({ description: "when shared meal was created", type: Date })
+  createdAt: Date;
+
   @ApiProperty({ type: AboutMealResponseDto })
   meal: AboutMeal;
 
@@ -61,9 +64,6 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
 class ExpenseResponseDto implements Expense {
   @ApiProperty({ description: "total meal amount in cents" })
   amount: number;
-
-  @ApiProperty({ description: "when expense occured", type: Date })
-  date: Date;
 }
 
 export class PastSharedMealResponseDto
@@ -72,4 +72,7 @@ export class PastSharedMealResponseDto
 {
   @ApiProperty({ type: ExpenseResponseDto })
   expense: Expense;
+
+  @ApiProperty({ description: "when shared meal was closed", type: Date })
+  closedAt: Date;
 }

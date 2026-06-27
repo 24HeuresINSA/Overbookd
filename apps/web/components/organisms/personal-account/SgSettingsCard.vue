@@ -24,8 +24,8 @@
           v-model="totalPrice"
           label="Prix du fût"
           class="settings__field"
-          hide-details
           readonly
+          hide-details
         />
         <MoneyField
           v-model="caskStickPrice"

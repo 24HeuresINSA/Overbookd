@@ -28,13 +28,25 @@ export class SharedMealService {
     return formatCreatedMeal(created);
   }
 
-  async find(mealId: SharedMeal["id"]): Promise<SharedMeal> {
-    const found = await this.mealSharing.findById(mealId);
-    return formatSharedMeal(found);
-  }
-
   async all(): Promise<SharedMeal[]> {
     const meals = await this.mealSharing.findAll();
+    return meals.map(formatSharedMeal);
+  }
+
+  async allOnGoing(): Promise<OnGoingSharedMeal[]> {
+    const meals = await this.mealSharing.findAllOnGoing();
+    return meals.map(formatSharedMeal);
+  }
+
+  async allPast(): Promise<PastSharedMeal[]> {
+    const meals = await this.mealSharing.findAllPast();
+    return meals.map(formatSharedMeal);
+  }
+
+  async pastWithAdherent(
+    adherentId: Adherent["id"],
+  ): Promise<PastSharedMeal[]> {
+    const meals = await this.mealSharing.findPastWithAdherent(adherentId);
     return meals.map(formatSharedMeal);
   }
 
@@ -133,6 +145,7 @@ export class SharedMealService {
 function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
   return {
     id: meal.id,
+    createdAt: meal.createdAt,
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
@@ -145,6 +158,7 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
 function formatSharedMeal<T extends SharedMeal>(meal: T): T {
   const baseMeal: OnGoingSharedMeal = {
     id: meal.id,
+    createdAt: meal.createdAt,
     chef: meal.chef,
     meal: meal.meal,
     areShotgunsOpen: meal.areShotgunsOpen,
@@ -155,5 +169,5 @@ function formatSharedMeal<T extends SharedMeal>(meal: T): T {
 
   if (!isPastMeal(meal)) return baseMeal as T;
 
-  return { ...baseMeal, expense: meal.expense } as T;
+  return { ...baseMeal, expense: meal.expense, closedAt: meal.closedAt } as T;
 }

@@ -2,6 +2,7 @@ import type { OfferMeal } from "@overbookd/http";
 import type {
   Adherent,
   Expense,
+  OnGoingSharedMeal,
   PastSharedMeal,
   SharedMeal,
 } from "@overbookd/personal-account";
@@ -14,12 +15,20 @@ export class MealSharingRepository {
     return HttpClient.post<SharedMeal>(this.basePath, meal);
   }
 
-  static find(mealId: SharedMeal["id"]) {
-    return HttpClient.get<SharedMeal>(`${this.basePath}/${mealId}`);
-  }
-
   static all() {
     return HttpClient.get<SharedMeal[]>(this.basePath);
+  }
+
+  static allOnGoing() {
+    return HttpClient.get<OnGoingSharedMeal[]>(`${this.basePath}/on-going`);
+  }
+
+  static allPast() {
+    return HttpClient.get<PastSharedMeal[]>(`${this.basePath}/past`);
+  }
+
+  static myPast() {
+    return HttpClient.get<PastSharedMeal[]>(`${this.basePath}/past/mine`);
   }
 
   static shotgun(mealId: SharedMeal["id"]) {

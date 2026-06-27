@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { Adherents, MealSharing, SOIR, MIDI } from "./meal-sharing.js";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
+  AmountTooHigh,
+  AmountTooLow,
   MealNotFound,
   MultipleShotgunsAlreadyAllowed,
   MultipleShotgunsAlreadyDisallowed,
@@ -27,6 +29,7 @@ import {
   REMOVE_PORTION_PAST_MEAL_ERROR,
   ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
   DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
+  CANCEL_MEAL_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
@@ -53,6 +56,7 @@ const multipleShotguns = [
 
 const rizCantonnais = OnGoingSharedMealBuilder.build({
   id: 1,
+  createdAt: new Date("2023-10-12 08:00"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -62,6 +66,7 @@ const rizCantonnais = OnGoingSharedMealBuilder.build({
 
 const saladeDeFruits = OnGoingSharedMealBuilder.build({
   id: 2,
+  createdAt: new Date("2023-10-12 08:00"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -71,6 +76,7 @@ const saladeDeFruits = OnGoingSharedMealBuilder.build({
 
 const lonelyMeal = OnGoingSharedMealBuilder.build({
   id: 3,
+  createdAt: new Date("2023-10-14 05:36"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
@@ -80,12 +86,14 @@ const lonelyMeal = OnGoingSharedMealBuilder.build({
 
 const closedMeal = PastSharedMealBuilder.build({
   id: 4,
+  createdAt: new Date("2023-10-10 16:20"),
   meal,
   chef: julie,
   areShotgunsOpen: true,
   areMultipleShotgunsAllowed: false,
   shotguns,
-  expense: { amount: 1000, date: new Date() },
+  expense: { amount: 1000 },
+  closedAt: new Date(),
 });
 
 describe("Meal Sharing", () => {
@@ -131,6 +139,9 @@ describe("Meal Sharing", () => {
         });
         it("should identify meal sharing with an id", async () => {
           expect(sharedMeal.id).toBeGreaterThan(0);
+        });
+        it("should generate a creation date", async () => {
+          expect(sharedMeal.createdAt).toStrictEqual(expect.any(Date));
         });
         it("should link meal with volunteer offering it", async () => {
           expect(sharedMeal.chef).toStrictEqual(expectedChef);
@@ -310,7 +321,7 @@ describe("Meal Sharing", () => {
   });
 
   describe("Record expense", () => {
-    const expense = { amount: 1000, date: new Date("2023-10-12 12:00") };
+    const expense = { amount: 1000 };
     let pastSharedMeal: PastSharedMeal;
     beforeEach(async () => {
       sharedMeals = new InMemorySharedMeals([
@@ -338,8 +349,11 @@ describe("Meal Sharing", () => {
             expense,
           );
         });
-        it("should record amount and date of the expense", async () => {
+        it("should record the amount of the expense", async () => {
           expect(pastSharedMeal.expense.amount).toBe(1000);
+        });
+        it("should generate a closing date", async () => {
+          expect(pastSharedMeal.closedAt).toStrictEqual(expect.any(Date));
         });
         it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
           expect(async () => {
@@ -348,8 +362,8 @@ describe("Meal Sharing", () => {
         });
         it("should indicate shared meal is past for chef trying to remove a portion", async () => {
           expect(async () => {
-            const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
-            await mealSharing.removePortion(cancel, rizCantonnais.chef.id);
+            const remove = { mealId: rizCantonnais.id, guestId: julie.id };
+            await mealSharing.removePortion(remove, rizCantonnais.chef.id);
           }).rejects.toThrow(REMOVE_PORTION_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to cancel a shotgun", async () => {
@@ -357,6 +371,14 @@ describe("Meal Sharing", () => {
             const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
             await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
+        });
+        it("should indicate shared meal is past for chef trying to cancel it", async () => {
+          expect(async () => {
+            await mealSharing.cancelMeal(
+              rizCantonnais.id,
+              rizCantonnais.chef.id,
+            );
+          }).rejects.toThrow(CANCEL_MEAL_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
           expect(async () => {
@@ -392,6 +414,26 @@ describe("Meal Sharing", () => {
         });
         it("should count how many portions were done", () => {
           expect(pastSharedMeal.portionCount).toBe(3);
+        });
+      });
+      describe("when the amount is too low", () => {
+        it("should indicate we can not record expense", () => {
+          expect(
+            async () =>
+              await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
+                amount: 0,
+              }),
+          ).rejects.toThrow(AmountTooLow);
+        });
+      });
+      describe("when the amount is too high", () => {
+        it("should indicate we can not record expense", () => {
+          expect(
+            async () =>
+              await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
+                amount: 200000,
+              }),
+          ).rejects.toThrow(AmountTooHigh);
         });
       });
       describe("when no one shotguns for the meal", () => {
