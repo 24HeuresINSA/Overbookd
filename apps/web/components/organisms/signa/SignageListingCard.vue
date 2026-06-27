@@ -5,7 +5,6 @@
         <v-text-field
           v-model="searchName"
           label="Nom de la signalisation"
-          class="filter__field"
           clear-icon="mdi-close-circle-outline"
           autofocus
           clearable
@@ -17,12 +16,11 @@
           type="select"
           label="Type de signalisation"
           :items="signageTypeValues"
-          class="filter__field"
           clearable
           hide-details
         />
 
-        <div class="create-signa-container">
+        <div>
           <v-btn
             v-if="isCatalogWriter"
             text="Ajouter une signalisation"
@@ -212,25 +210,19 @@ const filterSignagesByType = (
 <style lang="scss" scoped>
 .filters {
   display: flex;
-  flex-direction: column;
   gap: 10px;
-  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 
   .v-input {
-    flex-grow: 1;
+    flex: 1 1 0;
   }
 
-  .create-signa-container {
-    text-align: center;
-  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
 
-  @media screen and (min-width: $mobile-max-width) {
-    flex-direction: row;
-    &__field {
-      width: 50%;
-    }
-    .create-signa-container {
-      margin-top: 5px;
+    .v-input {
+      width: 100%;
     }
   }
 }
