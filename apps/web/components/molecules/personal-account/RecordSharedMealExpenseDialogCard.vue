@@ -3,12 +3,12 @@
     <DialogCard @close="close">
       <template #title> Dépense du repas </template>
       <template #subtitle>
-        <h3>{{ shared.meal.date }}</h3>
+        <h3>{{ meal.meal.date }}</h3>
       </template>
       <template #content>
         <div class="content">
           <v-textarea
-            :model-value="shared.meal.menu"
+            :model-value="meal.meal.menu"
             variant="outlined"
             label="Au menu 🍴"
             readonly
@@ -45,8 +45,8 @@ import {
 
 const mealSharingStore = useMealSharingStore();
 
-const props = defineProps({
-  shared: {
+const { meal } = defineProps({
+  meal: {
     type: Object as PropType<OnGoingSharedMeal>,
     required: true,
   },
@@ -59,7 +59,7 @@ const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
 const recordExpense = () => {
-  const mealId = props.shared.id;
+  const mealId = meal.id;
   const expense: Expense = { amount: amount.value };
   mealSharingStore.recordExpense(mealId, expense);
   close();

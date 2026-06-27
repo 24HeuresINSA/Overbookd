@@ -10,7 +10,7 @@
       <SharedMealCard
         v-for="meal in meals"
         :key="meal.id"
-        :shared="meal"
+        :meal="meal"
         class="meal"
       />
     </div>

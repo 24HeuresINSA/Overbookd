@@ -28,6 +28,7 @@
         loading-text="Chargement des repas..."
         no-data-text="Tu n'as participé à aucun repas partagé"
         :mobile="isMobile"
+        :striped="isMobile ? 'odd' : undefined"
         multi-sort
         hover
         return-object
@@ -62,6 +63,14 @@
       </v-data-table>
     </v-card-text>
   </v-card>
+
+  <v-dialog v-model="isMealDetailsDialogOpen" width="1000px">
+    <PastSharedMealCard
+      v-if="selectedMeal"
+      :meal="selectedMeal"
+      @close="closeMealDetails"
+    />
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -151,6 +160,9 @@ const openMealDetails = (_: MouseEvent, { item }: { item: PastSharedMeal }) => {
   selectedMeal.value = item;
   isMealDetailsDialogOpen.value = true;
 };
+const closeMealDetails = () => {
+  isMealDetailsDialogOpen.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -171,15 +183,7 @@ const openMealDetails = (_: MouseEvent, { item }: { item: PastSharedMeal }) => {
 }
 
 .no-pointer {
-  cursor: default;
-
-  :deep(input) {
-    cursor: default;
-  }
-
-  :deep(.v-label) {
-    cursor: default;
-  }
+  pointer-events: none;
 }
 
 .meal-date {
