@@ -58,24 +58,13 @@ export const SHARED_MEALS_PAGE: PageInSummary = {
   ],
 };
 
-export const SHARED_MEALS_HISTORY_PAGE: PageInSummary = {
-  icon: "mdi-pasta",
+export const SHARED_MEALS_HISTORY_PAGE: HiddenPage = {
   title: "Historique des Repas Partagés",
   permission: SHOTGUN_SHARED_MEAL,
   to: SHARED_MEALS_HISTORY_URL,
-  description: "Page pour voir les repas partagés auxquels tu as participé",
   mobileSupport: true,
-  canBeFavorite: true,
+  canBeFavorite: false,
   hasParam: false,
-  keywords: [
-    "repas-partages",
-    "shotguns",
-    "comptes",
-    "persos",
-    "menus",
-    "repas-orgas",
-    "historique",
-  ],
 };
 
 export const VOLUNTEERS_PAGE: PageInSummary = {
@@ -143,7 +132,6 @@ const MULTI_PLANNING_PAGE: PageInSummary = {
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
-  SHARED_MEALS_HISTORY_PAGE,
   VOLUNTEERS_PAGE,
   AVAILABILITIES_PAGE,
   MY_PLANNING_PAGE,
@@ -152,5 +140,6 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
 
 export const VOLUNTEER_PAGES: Page[] = [
   ...VOLUNTEER_SUMMARY_PAGES,
+  SHARED_MEALS_HISTORY_PAGE,
   PLANNING_PAGE,
 ];

@@ -2,8 +2,19 @@
   <DesktopPageTitle />
 
   <div class="form-and-list">
-    <div class="form desktop">
+    <div class="form">
       <OfferSharedMealFormCard />
+
+      <div class="see-history">
+        <v-btn
+          text="Voir l'historique des repas"
+          color="secondary"
+          size="large"
+          rounded
+          block
+          :to="SHARED_MEALS_HISTORY_URL"
+        />
+      </div>
     </div>
 
     <div class="meals">
@@ -15,7 +26,7 @@
       />
     </div>
 
-    <div class="offer-btn">
+    <div class="mobile-buttons">
       <v-btn
         text="Proposer un repas"
         color="primary"
@@ -23,6 +34,15 @@
         rounded
         block
         @click="openOfferDialog"
+      />
+
+      <v-btn
+        text="Voir l'historique des repas"
+        color="secondary"
+        size="large"
+        rounded
+        block
+        :to="SHARED_MEALS_HISTORY_URL"
       />
     </div>
   </div>
@@ -34,6 +54,7 @@
 
 <script lang="ts" setup>
 import type { OnGoingSharedMeal } from "@overbookd/personal-account";
+import { SHARED_MEALS_HISTORY_URL } from "@overbookd/web-page";
 
 useHead({ title: "Repas partagés" });
 
@@ -50,18 +71,15 @@ mealSharingStore.fetchOnGoing();
 </script>
 
 <style lang="scss" scoped>
-.offer-btn {
+.mobile-buttons {
   display: none;
   width: 100%;
   padding: 0 10px;
-}
 
-@media screen and (max-width: $mobile-max-width) {
-  .desktop {
-    display: none;
-  }
-  .offer-btn {
-    display: block;
+  @media screen and (max-width: $mobile-max-width) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
@@ -77,6 +95,18 @@ mealSharingStore.fetchOnGoing();
     position: sticky;
     top: 0;
     flex: 2 1 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .see-history {
+      margin-inline: 20px;
+    }
+
+    @media screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
   }
 
   .meals {
