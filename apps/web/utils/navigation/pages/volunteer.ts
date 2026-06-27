@@ -12,6 +12,7 @@ import {
   MULTI_PLANNING_URL,
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
+  SHARED_MEALS_HISTORY_URL,
 } from "@overbookd/web-page";
 import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
@@ -55,6 +56,15 @@ export const SHARED_MEALS_PAGE: PageInSummary = {
     "menus",
     "repas-orgas",
   ],
+};
+
+export const SHARED_MEALS_HISTORY_PAGE: HiddenPage = {
+  title: "Historique des Repas Partagés",
+  permission: SHOTGUN_SHARED_MEAL,
+  to: SHARED_MEALS_HISTORY_URL,
+  mobileSupport: true,
+  canBeFavorite: false,
+  hasParam: false,
 };
 
 export const VOLUNTEERS_PAGE: PageInSummary = {
@@ -130,5 +140,6 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
 
 export const VOLUNTEER_PAGES: Page[] = [
   ...VOLUNTEER_SUMMARY_PAGES,
+  SHARED_MEALS_HISTORY_PAGE,
   PLANNING_PAGE,
 ];

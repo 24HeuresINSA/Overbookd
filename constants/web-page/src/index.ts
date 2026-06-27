@@ -5,6 +5,7 @@ export const REGISTER_URL = "/register";
 
 export const MY_PERSONAL_ACCOUNT_URL = "/my-personal-account";
 export const SHARED_MEALS_URL = "/shared-meals";
+export const SHARED_MEALS_HISTORY_URL = "/shared-meals/history";
 export const VOLUNTEERS_URL = "/volunteers";
 export const AVAILABILITIES_URL = "/availabilities";
 export const PLANNING_URL = "/planning";
@@ -45,6 +46,7 @@ export const pagesURL = [
   HOME_URL,
   MY_PERSONAL_ACCOUNT_URL,
   SHARED_MEALS_URL,
+  SHARED_MEALS_HISTORY_URL,
   VOLUNTEERS_URL,
   AVAILABILITIES_URL,
   PLANNING_URL,

@@ -3,12 +3,12 @@
     <v-card>
       <v-card-title class="meal-title">
         <span class="meal-title__date">
-          {{ shared.meal.date }}
+          {{ meal.meal.date }}
         </span>
 
-        <div class="meal-title__chef">
+        <div class="meal-title__chef" aria-label="Chef" title="Chef">
           <v-icon>mdi-chef-hat</v-icon>
-          <span>{{ shared.chef.name }}</span>
+          <span>{{ meal.chef.name }}</span>
         </div>
       </v-card-title>
 
@@ -16,7 +16,7 @@
         <div class="presentation">
           <div class="column">
             <v-textarea
-              :model-value="shared.meal.menu"
+              :model-value="meal.meal.menu"
               variant="outlined"
               label="Au menu 🍴"
               readonly
@@ -28,8 +28,11 @@
           <div class="column">
             <details>
               <summary>
-                {{ shared.portionCount }}
-                {{ pluralize("portion", shared.portionCount) }}
+                {{ meal.shotguns.length }}
+                {{ pluralize("convive", meal.shotguns.length) }}
+                -
+                {{ meal.portionCount }}
+                {{ pluralize("portion", meal.portionCount) }}
                 <span v-show="myPortionCount > 0">
                   (dont {{ myPortionCount }}
                   {{ pluralize("portion", myPortionCount) }} pour moi)
@@ -37,7 +40,7 @@
               </summary>
 
               <ul>
-                <li v-for="guest in shared.shotguns" :key="guest.id">
+                <li v-for="guest in meal.shotguns" :key="guest.id">
                   {{ guest.name }}
                   ({{ guest.portions }}
                   {{ pluralize("portion", guest.portions) }})
@@ -145,7 +148,7 @@
 
     <v-dialog v-model="isRecordExpenseDialogOpen" max-width="600px">
       <RecordSharedMealExpenseDialogCard
-        :shared="shared"
+        :meal="meal"
         @close="closeRecordExpenseDialog"
       />
     </v-dialog>
@@ -159,7 +162,7 @@
         <template #title> Annuler le repas partagé </template>
         <template #statement>
           Tu es sur le point d'annuler le repas du
-          <strong> {{ shared.meal.date }} </strong>.
+          <strong> {{ meal.meal.date }} </strong>.
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
@@ -176,7 +179,7 @@
         <template #title> Désactiver les shotguns multiples </template>
         <template #statement>
           Tu es sur le point de désactiver les shotguns multiples pour le repas
-          du <strong> {{ shared.meal.date }} </strong>.
+          du <strong> {{ meal.meal.date }} </strong>.
           <br />
           Cela va fixer le nombre de portion à 1 pour chaque invité.
         </template>
@@ -198,8 +201,8 @@ import { getShotgunTitle } from "~/utils/easter-egg/shotgun";
 const userStore = useUserStore();
 const mealSharingStore = useMealSharingStore();
 
-const { shared } = defineProps({
-  shared: {
+const { meal: meal } = defineProps({
+  meal: {
     type: Object as PropType<SharedMeal>,
     required: true,
   },
@@ -211,10 +214,10 @@ const me = computed<Adherent>(() => {
   const { id, ...me } = loggedUser;
   return { id, name: nicknameOrName(me) };
 });
-const iAmChef = computed<boolean>(() => shared.chef.id === me.value.id);
+const iAmChef = computed<boolean>(() => meal.chef.id === me.value.id);
 
 const builder = computed<OnGoingSharedMealBuilder>(() =>
-  OnGoingSharedMealBuilder.build(shared),
+  OnGoingSharedMealBuilder.build(meal),
 );
 const myPortionCount = computed<number>(() =>
   builder.value.getShotgunCount(me.value.id),
@@ -245,36 +248,36 @@ const closeDisallowMultipleShotgunsConfirmationDialog = () =>
   (isDisallowMultipleShotgunsConfirmationDialogOpen.value = false);
 
 const shotgun = () => {
-  mealSharingStore.shotgun(shared.id);
+  mealSharingStore.shotgun(meal.id);
 };
 
 const removePortion = (guest: Shotgun) => {
-  mealSharingStore.removePortion(shared.id, guest.id);
+  mealSharingStore.removePortion(meal.id, guest.id);
 };
 
 const cancelShotgun = (guest: Shotgun) => {
-  mealSharingStore.cancelShotgun(shared.id, guest.id);
+  mealSharingStore.cancelShotgun(meal.id, guest.id);
 };
 
 const cancelMeal = () => {
-  mealSharingStore.cancelMeal(shared.id);
+  mealSharingStore.cancelMeal(meal.id);
   closeCancelConfirmationDialog();
 };
 
 const toggleShotguns = () => {
   areShotgunsOpen.value
-    ? mealSharingStore.closeShotguns(shared.id)
-    : mealSharingStore.openShotguns(shared.id);
+    ? mealSharingStore.closeShotguns(meal.id)
+    : mealSharingStore.openShotguns(meal.id);
 };
 
 const toggleMultipleShotguns = () => {
   areMultipleShotgunsAllowed.value
     ? openDisallowMultipleShotgunsConfirmationDialog()
-    : mealSharingStore.allowMultipleShotguns(shared.id);
+    : mealSharingStore.allowMultipleShotguns(meal.id);
 };
 
 const disallowMultipleShotguns = () => {
-  mealSharingStore.disallowMultipleShotguns(shared.id);
+  mealSharingStore.disallowMultipleShotguns(meal.id);
   closeDisallowMultipleShotgunsConfirmationDialog();
 };
 </script>
@@ -288,14 +291,17 @@ const disallowMultipleShotguns = () => {
   column-gap: 10px;
   flex-wrap: wrap;
   padding-right: 40px;
+
   &__chef {
     display: flex;
     flex-direction: column;
     align-items: center;
     font-size: smaller;
+    white-space: normal;
+
     @media screen and (max-width: $mobile-max-width) {
       flex-direction: row;
-      gap: 3px;
+      gap: 5px;
       margin-bottom: 3px;
     }
   }
@@ -310,7 +316,7 @@ const disallowMultipleShotguns = () => {
 .presentation {
   display: flex;
   gap: 12px;
-  align-items: start;
+  align-items: center;
   flex-wrap: wrap;
 
   > * {
