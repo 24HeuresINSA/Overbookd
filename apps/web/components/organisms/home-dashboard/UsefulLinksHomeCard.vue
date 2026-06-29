@@ -15,7 +15,8 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a
+          >, la street view des 24 heures de l'INSA.
         </li>
         <li v-if="calendarUrl">
           <p>
@@ -40,11 +41,18 @@
 </template>
 
 <script lang="ts" setup>
+import { USEFUL_LINKS_KEY } from "@overbookd/configuration";
 import { Edition } from "@overbookd/time";
 import { WIKI_URL } from "~/utils/navigation/url.constant";
 import { OVERVIEW_URL } from "~/utils/navigation/url.constant";
 
 const configurationStore = useConfigurationStore();
+
+onMounted(() => {
+  if (!configurationStore.get(USEFUL_LINKS_KEY)) {
+    configurationStore.fetch(USEFUL_LINKS_KEY);
+  }
+});
 
 const calendarUrl = computed<string | undefined>(
   () => configurationStore.usefulLinks.googleCalendar,

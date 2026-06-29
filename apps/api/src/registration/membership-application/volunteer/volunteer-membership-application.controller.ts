@@ -16,7 +16,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Request,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -28,11 +27,7 @@ import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
-import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
-import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 
 @Controller("registrations/membership-applications/volunteers")
 @ApiTags("registrations/membership-applications/volunteers")
@@ -164,29 +159,6 @@ export class VolunteerMembershipApplicationController {
   ): Promise<void> {
     return this.applicationService.cancelVolunteerApplicationRejection(
       candidateId,
-    );
-  }
-
-  @Post("briefing-time-window")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
-  @UseFilters(VolunteerAvailabilityErrorFilter)
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Upsert briefing time window",
-  })
-  @ApiBody({
-    description: "Briefing time window",
-    type: PeriodRequestDto,
-  })
-  upsertBriefingTimeWindow(
-    @Body() period: PeriodRequestDto,
-    @Request() { user }: RequestWithUserPayload,
-  ): Promise<void> {
-    return this.applicationService.upsertBriefingTimeWindow(
-      period,
-      new JwtUtil(user),
     );
   }
 }

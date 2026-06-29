@@ -414,7 +414,7 @@ const closeBriefingTimeWindowDialog = () => {
   isBriefingTimeWindowDialogOpen.value = false;
 };
 const saveBriefingTimeWindow = async (period: IProvidePeriod) => {
-  await membershipApplicationStore.saveBriefingTimeWindow(period);
+  await configurationStore.saveBriefingTimeWindow(period);
 };
 
 const handleMouseEnter = () => {

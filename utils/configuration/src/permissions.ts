@@ -75,7 +75,7 @@ const configurationsWithPermissions: ConfigurationWithPermissions[] = [
 
 export function canReadConfiguration(
   key: string,
-  permissions: Permission[],
+  permissions: Permission[] = [],
 ): boolean {
   const config = configurationsWithPermissions.find((c) => c.key === key);
   if (!config) return false;
@@ -88,7 +88,7 @@ export function canReadConfiguration(
 
 export function canWriteConfiguration(
   key: string,
-  permissions: Permission[],
+  permissions: Permission[] = [],
 ): boolean {
   const config = configurationsWithPermissions.find((c) => c.key === key);
   if (!config) return false;

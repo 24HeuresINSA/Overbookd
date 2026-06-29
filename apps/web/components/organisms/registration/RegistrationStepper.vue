@@ -291,10 +291,7 @@ import { loginAndApplyForMembership } from "~/utils/login.utils";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
-const configurationStore = useConfigurationStore();
 const teamStore = useTeamStore();
-
-configurationStore.fetchAll();
 
 const step = ref<number>(1);
 const firstName = ref<string>("");
