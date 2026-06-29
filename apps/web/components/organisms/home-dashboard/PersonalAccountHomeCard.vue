@@ -73,7 +73,6 @@ const POSITIVE = "positive";
 const NEGATIVE = "negative";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 
 transactionStore.fetchMyTransactions();

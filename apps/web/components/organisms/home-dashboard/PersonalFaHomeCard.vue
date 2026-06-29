@@ -59,7 +59,6 @@ import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 

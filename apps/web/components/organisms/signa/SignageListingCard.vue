@@ -119,7 +119,6 @@ import { SlugifyService } from "@overbookd/slugify";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const catalogSignageStore = useCatalogSignageStore();
 const layoutStore = useLayoutStore();
 

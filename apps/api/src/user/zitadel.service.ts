@@ -12,7 +12,7 @@ import { DateString, toIsoDate } from "@overbookd/time";
 import { UserMetadata } from "./entities/user-metadata.entity";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
-export type AboutUser = {
+type AboutUser = {
   firstName: string;
   lastName: string;
   phoneNumber: string;

@@ -60,7 +60,6 @@ import type { User } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 

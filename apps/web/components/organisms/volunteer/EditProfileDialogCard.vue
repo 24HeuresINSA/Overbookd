@@ -132,7 +132,6 @@ import {
 } from "~/utils/rules/input.rules";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const preferenceStore = usePreferenceStore();
 
 const loggedUser = computed(() => myStore.loggedUser);

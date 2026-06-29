@@ -109,11 +109,11 @@ const headers: TableHeaders = [
 
 const layoutStore = useLayoutStore();
 const mealSharingStore = useMealSharingStore();
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const isSharedMealManager = computed<boolean>(() =>
-  userStore.can(MANAGE_SHARED_MEALS),
+  myStore.can(MANAGE_SHARED_MEALS),
 );
 
 const onlyMyMeals = ref<boolean>(!isSharedMealManager.value);

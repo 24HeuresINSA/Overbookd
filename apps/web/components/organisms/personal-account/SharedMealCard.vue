@@ -199,7 +199,6 @@ import { nicknameOrName } from "@overbookd/user";
 import { getShotgunTitle } from "~/utils/easter-egg/shotgun";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const mealSharingStore = useMealSharingStore();
 
 const { meal: meal } = defineProps({

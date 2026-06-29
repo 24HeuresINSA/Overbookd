@@ -45,7 +45,6 @@ import { calculateBalanceByDates } from "~/utils/transaction/balance.graph";
 import { getBorderColorForAmount } from "~/utils/transaction/border-color.graph";
 
 const myStore = useMyStore();
-const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 
 const isTransferDialogOpen = ref<boolean>(false);
