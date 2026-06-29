@@ -1,5 +1,5 @@
 .setup-pnpm:
-  image: node:24.17.0-alpine
+  image: node:24.18.0-alpine
   interruptible: true
   before_script:
     - apk add --no-cache openssl
