@@ -72,7 +72,7 @@ import type { CategoryForm, CatalogCategoryTree } from "@overbookd/http";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 const catalogStore = useCatalogStore();
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 catalogStore.fetchCategoryTree();
 const categories = computed<CatalogCategoryTree[]>(
@@ -80,7 +80,7 @@ const categories = computed<CatalogCategoryTree[]>(
 );
 
 const isCatalogWriter = computed<boolean>(() =>
-  userStore.can(WRITE_GEAR_CATALOG),
+  myStore.can(WRITE_GEAR_CATALOG),
 );
 
 const selectedCategory = ref<CatalogCategoryTree | undefined>();

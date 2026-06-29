@@ -58,11 +58,12 @@ import {
 import type { User } from "@overbookd/user";
 import { FA_URL } from "@overbookd/web-page";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
 const teamStore = useTeamStore();
 
-const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
+const currentAdherent = computed<User | undefined>(() => myStore.loggedUser);
 
 faStore.fetchMyActivities();
 if (teamStore.faReviewers.length === 0) teamStore.fetchFaReviewers();

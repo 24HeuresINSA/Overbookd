@@ -1,29 +1,18 @@
-import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import {
   castConsumerWithDate,
-  castMyUserInformationWithDate,
   castUserPersonalDataWithDate,
 } from "~/utils/http/cast-date/user.utils";
 import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import type {
-  Profile,
-  User,
-  UserPersonalData,
-  UserWithTeams,
-} from "@overbookd/user";
+import type { User, UserPersonalData, UserWithTeams } from "@overbookd/user";
 import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
-import { jwtDecode } from "jwt-decode";
 import { UserRepository } from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
-import type { Membership } from "@overbookd/registration";
-import { ADMIN } from "@overbookd/team-constants";
 
 type State = {
-  loggedUser?: MyUserInformationWithPotentialyProfilePicture;
   selectedUser?: UserDataWithPotentialyProfilePicture;
   selectedUserFriends: UserWithTeams[];
   personalAccountConsumers: Consumer[];
@@ -34,11 +23,8 @@ type State = {
   myFriends: User[];
 };
 
-type Token = { teams: string[]; permissions: Permission[] };
-
 export const useUserStore = defineStore("user", {
   state: (): State => ({
-    loggedUser: undefined,
     selectedUser: undefined,
     selectedUserFriends: [],
     personalAccountConsumers: [],
@@ -49,27 +35,10 @@ export const useUserStore = defineStore("user", {
     myFriends: [],
   }),
   getters: {
-    can:
-      () =>
-      (permission?: Permission): boolean => {
-        if (!permission) return true;
-
-        const accessToken = useCookie(ACCESS_TOKEN);
-        if (!accessToken.value) return false;
-        const decodedToken: Token = jwtDecode(accessToken.value);
-
-        const isAdmin = decodedToken.teams.includes(ADMIN);
-        const hasPermission = decodedToken.permissions.includes(permission);
-        return isAdmin || hasPermission;
-      },
-    isMemberOf:
-      ({ loggedUser }) =>
-      (team: string): boolean => {
-        if (!loggedUser) return false;
-        return (
-          loggedUser.teams.includes(ADMIN) || loggedUser.teams.includes(team)
-        );
-      },
+    isLogged: () => (): boolean => {
+      const myStore = useMyStore();
+      return !!myStore.loggedUser;
+    },
   },
   actions: {
     setSelectedUser(user: UserPersonalData) {
@@ -81,41 +50,6 @@ export const useUserStore = defineStore("user", {
       const res = await UserRepository.getUserFriends(this.selectedUser.id);
       if (isHttpError(res)) return;
       this.selectedUserFriends = res;
-    },
-
-    async fetchUser() {
-      await this.fetchMyInformations();
-      if (!this.loggedUser) return;
-      await this.setMyProfilePicture();
-    },
-
-    async fetchMyInformations() {
-      const res = await UserRepository.getMyUser();
-      if (isHttpError(res)) return;
-      this.loggedUser = {
-        ...this.loggedUser,
-        ...castMyUserInformationWithDate(res),
-      };
-    },
-
-    async approveEndUserLicenceAgreement() {
-      const res = await UserRepository.approveEndUserLicenceAgreement();
-      if (isHttpError(res)) return;
-      sendSuccessNotification("CGU approuvées ! 🎉");
-      if (!this.loggedUser) return;
-      this.loggedUser = { ...this.loggedUser, hasApprovedEULA: true };
-    },
-
-    async signVolunteerCharter() {
-      const res = await UserRepository.signVolunteerCharter();
-      if (isHttpError(res)) return;
-      sendSuccessNotification("Charte bénévole signée ! 🎉");
-      if (!this.loggedUser) return;
-      this.loggedUser = { ...this.loggedUser, hasSignedVolunteerCharter: true };
-    },
-
-    clearLoggedUser() {
-      this.loggedUser = undefined;
     },
 
     async fetchVolunteers() {
@@ -144,8 +78,9 @@ export const useUserStore = defineStore("user", {
     },
 
     async fetchMyFriends() {
-      if (!this.loggedUser) return;
-      const res = await UserRepository.getUserFriends(this.loggedUser.id);
+      const loggedUser = useMyStore().loggedUser;
+      if (!loggedUser) return;
+      const res = await UserRepository.getUserFriends(loggedUser.id);
       if (isHttpError(res)) return;
       this.myFriends = res;
     },
@@ -214,20 +149,8 @@ export const useUserStore = defineStore("user", {
 
       const updated = castUserPersonalDataWithDate(res);
       this._updateVolunteerFromList(updated);
-      if (this.selectedUser?.id === this.loggedUser?.id) this.fetchUser();
-    },
-
-    async updateMyProfile(profile: Partial<Profile>) {
-      const res = await UserRepository.updateMyProfile(profile);
-      if (isHttpError(res)) return;
-      sendSuccessNotification("Profil mis à jour ! 🎉");
-
-      const updated = {
-        ...this.loggedUser,
-        ...castMyUserInformationWithDate(res),
-      };
-      this.loggedUser = updated;
-      this._updateVolunteerFromList(updated);
+      if (this.selectedUser?.id === useMyStore().loggedUser?.id)
+        useMyStore().fetchMyInformations();
     },
 
     async deleteUser(userId: number) {
@@ -246,7 +169,8 @@ export const useUserStore = defineStore("user", {
       if (this.selectedUser?.id !== userId) return;
       this.selectedUser = { ...this.selectedUser, teams: res };
       this._updateVolunteerFromList(this.selectedUser);
-      if (userId === this.loggedUser?.id) this.fetchMyInformations();
+      if (userId === useMyStore().loggedUser?.id)
+        useMyStore().fetchMyInformations();
     },
 
     async removeTeamFromUser(userId: number, team: string) {
@@ -259,20 +183,14 @@ export const useUserStore = defineStore("user", {
         (t) => t !== team,
       );
       this._updateVolunteerFromList(this.selectedUser);
-      if (userId === this.loggedUser?.id) this.fetchMyInformations();
+      if (userId === useMyStore().loggedUser?.id)
+        useMyStore().fetchMyInformations();
     },
 
     async findUserById(id: number) {
       const res = await UserRepository.getUser(id);
       if (isHttpError(res)) return;
       this.selectedUser = castUserPersonalDataWithDate(res);
-    },
-
-    async addProfilePicture(profilePicture: FormData) {
-      const res = await UserRepository.addProfilePicture(profilePicture);
-      if (isHttpError(res)) return;
-      sendSuccessNotification("Photo de profil mise à jour ! 🎉");
-      this.loggedUser = castMyUserInformationWithDate(res);
     },
 
     _getProfilePicture(
@@ -284,15 +202,6 @@ export const useUserStore = defineStore("user", {
       if (user.profilePictureBlob) return user.profilePictureBlob;
 
       return UserRepository.getProfilePicture(user.id);
-    },
-
-    async setMyProfilePicture() {
-      if (!this.loggedUser) return;
-      const profilePictureBlob = await this._getProfilePicture(this.loggedUser);
-      if (profilePictureBlob instanceof Error) return;
-
-      this.loggedUser = { ...this.loggedUser, profilePictureBlob };
-      this._updateVolunteerFromList(this.loggedUser);
     },
 
     async setSelectedUserProfilePicture() {
@@ -312,14 +221,6 @@ export const useUserStore = defineStore("user", {
 
       const updated = { ...user, profilePictureBlob };
       this._updateVolunteerFromList(updated);
-    },
-
-    setLoggedUserMembershipApplication(application: Membership) {
-      if (!this.loggedUser) return;
-      this.loggedUser = {
-        ...this.loggedUser,
-        membershipApplication: application,
-      };
     },
 
     _updateVolunteerFromList(volunteer: UserDataWithPotentialyProfilePicture) {

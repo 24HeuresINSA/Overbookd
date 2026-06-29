@@ -36,9 +36,9 @@ const props = defineProps({
   },
 });
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const canViewVolunteerDetails = computed(() =>
-  userStore.can(VIEW_VOLUNTEER_DETAILS),
+  myStore.can(VIEW_VOLUNTEER_DETAILS),
 );
 
 const emit = defineEmits(["click:team", "click:volunteer"]);

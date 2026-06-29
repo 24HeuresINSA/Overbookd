@@ -4,8 +4,8 @@
 </template>
 
 <script lang="ts" setup>
-const userStore = useUserStore();
-const me = computed(() => userStore.loggedUser);
+const myStore = useMyStore();
+const me = computed(() => myStore.loggedUser);
 
 useHead({ title: "Mon planning" });
 </script>

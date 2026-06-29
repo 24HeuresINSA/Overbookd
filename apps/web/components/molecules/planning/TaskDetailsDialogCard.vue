@@ -93,7 +93,7 @@ import { buildUserNameWithNickname } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const locationStore = useLocationStore();
 
 const props = defineProps({
@@ -103,7 +103,7 @@ const props = defineProps({
   },
 });
 
-const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
+const canReadFT = computed<boolean>(() => myStore.can(READ_FT));
 
 const openAssignmentInNewTab = () => {
   openPageWithIdInNewTab(FT_URL, props.selectedTask.id);

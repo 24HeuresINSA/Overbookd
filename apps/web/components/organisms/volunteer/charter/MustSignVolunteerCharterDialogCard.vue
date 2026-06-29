@@ -42,7 +42,7 @@
 import { LOGIN_URL } from "@overbookd/web-page";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const authStore = useAuthStore();
 
 const emit = defineEmits(["signed"]);
@@ -54,12 +54,12 @@ const closeCharterDialog = () => (isCharterDialogOpen.value = false);
 const logout = async () => {
   authStore.logout();
   await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
+  myStore.clearLoggedUser();
 };
 
 const signVolunteerCharter = async () => {
-  await userStore.signVolunteerCharter();
-  if (userStore?.loggedUser?.hasSignedVolunteerCharter) closeCharterDialog();
+  await myStore.signVolunteerCharter();
+  if (myStore?.loggedUser?.hasSignedVolunteerCharter) closeCharterDialog();
   emit("signed");
 };
 </script>

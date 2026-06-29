@@ -70,7 +70,7 @@ import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 
 const theme = useTheme();
 const { listen, stopListening } = useLiveNotification();
-const userStore = useUserStore();
+const myStore = useMyStore();
 const { refreshTokens } = useAuthStore();
 const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
   useNavigationBadgeStore();
@@ -87,9 +87,9 @@ if (isPreProd) favicon.value = "/favicon-preprod.ico";
 if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
 
 const isMyFestivalActivity = (activity: FestivalActivity): boolean =>
-  activity.inCharge.adherent.id === userStore.loggedUser?.id;
+  activity.inCharge.adherent.id === myStore.loggedUser?.id;
 const isMyFestivalTask = (task: FestivalTask): boolean =>
-  task.general.administrator.id === userStore.loggedUser?.id;
+  task.general.administrator.id === myStore.loggedUser?.id;
 
 onMounted(() => {
   theme.change(pickDefaultTheme());
@@ -149,12 +149,12 @@ onUnmounted(() => {
 });
 
 const shouldApproveEULA = computed<boolean>(
-  () => userStore.loggedUser?.hasApprovedEULA === false,
+  () => myStore.loggedUser?.hasApprovedEULA === false,
 );
 const shouldSignVolunteerCharter = computed<boolean>(
   () =>
-    userStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
-    userStore.loggedUser?.hasSignedVolunteerCharter === false,
+    myStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
+    myStore.loggedUser?.hasSignedVolunteerCharter === false,
 );
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());

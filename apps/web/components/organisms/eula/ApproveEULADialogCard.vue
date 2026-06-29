@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { LOGIN_URL } from "@overbookd/web-page";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const authStore = useAuthStore();
 
 const isEULADialogOpen = ref<boolean>(false);
@@ -43,12 +43,12 @@ const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
 
 const approveEndUserLicenceAgreement = async () => {
-  await userStore.approveEndUserLicenceAgreement();
+  await myStore.approveEndUserLicenceAgreement();
 };
 const logout = async () => {
   authStore.logout();
   await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
+  myStore.clearLoggedUser();
 };
 </script>
 

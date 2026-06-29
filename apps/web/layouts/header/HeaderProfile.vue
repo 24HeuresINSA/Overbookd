@@ -87,21 +87,19 @@ import { navigateTo } from "#app";
 import { LOGIN_URL } from "@overbookd/web-page";
 
 const theme = useTheme();
+const myStore = useMyStore();
 const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
-const userStore = useUserStore();
 
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const isMenuOpen = ref<boolean>(false);
 
-const loggedUser = computed(() => userStore.loggedUser);
+const loggedUser = computed(() => myStore.loggedUser);
 const myName = computed<string>(() =>
   loggedUser.value ? nicknameOrFirstName(loggedUser.value) : "",
 );
 
-const haveBalance = computed<boolean>(() =>
-  userStore.can(HAVE_PERSONAL_ACCOUNT),
-);
+const haveBalance = computed<boolean>(() => myStore.can(HAVE_PERSONAL_ACCOUNT));
 
 const myBalance = computed(() => loggedUser.value?.balance ?? 0);
 const displayedBalance = computed<string>(() =>
@@ -117,7 +115,7 @@ const logout = async () => {
   isMenuOpen.value = false;
   authStore.logout();
   await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
+  myStore.clearLoggedUser();
 };
 
 const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);

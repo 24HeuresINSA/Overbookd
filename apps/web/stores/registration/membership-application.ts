@@ -54,8 +54,8 @@ export const useMembershipApplicationStore = defineStore(
           "Ta demande pour devenir organisateur a été envoyée",
         );
 
-        const userStore = useUserStore();
-        userStore.setLoggedUserMembershipApplication(STAFF);
+        const myStore = useMyStore();
+        myStore.setLoggedUserMembershipApplication(STAFF);
       },
 
       async rejectStaffCandidate(candidateId: number) {
@@ -129,8 +129,8 @@ export const useMembershipApplicationStore = defineStore(
           "Ta demande pour devenir bénévole a été envoyée",
         );
 
-        const userStore = useUserStore();
-        userStore.setLoggedUserMembershipApplication(VOLUNTEER);
+        const myStore = useMyStore();
+        myStore.setLoggedUserMembershipApplication(VOLUNTEER);
       },
 
       async rejectVolunteerCandidate(candidateId: VolunteerCandidate["id"]) {

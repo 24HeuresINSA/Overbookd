@@ -44,12 +44,13 @@ import { Money } from "@overbookd/money";
 import { calculateBalanceByDates } from "~/utils/transaction/balance.graph";
 import { getBorderColorForAmount } from "~/utils/transaction/border-color.graph";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 
 const isTransferDialogOpen = ref<boolean>(false);
 
-const balance = computed<number>(() => userStore.loggedUser?.balance ?? 0);
+const balance = computed<number>(() => myStore.loggedUser?.balance ?? 0);
 const displayableBalance = computed<string>(() =>
   Money.cents(balance.value).toString(),
 );

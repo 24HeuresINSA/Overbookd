@@ -66,13 +66,13 @@ import { PageFilter } from "~/utils/navigation/page.filter";
 import { MY_PLANNING_PAGE } from "~/utils/navigation/pages/volunteer";
 
 const route = useRoute();
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 const shouldDisplayOrgaNav = computed<boolean>(() =>
-  userStore.can(VIEW_ORGA_MOBILE_NAV),
+  myStore.can(VIEW_ORGA_MOBILE_NAV),
 );
 const shouldDisplayPlanning = computed<boolean>(() =>
-  userStore.can(VIEW_PLANNING),
+  myStore.can(VIEW_PLANNING),
 );
 const mainPages = computed<PageInSummary[]>(() => {
   if (!shouldDisplayOrgaNav.value) return VOLUNTEER_MOBILE_SUMMARY;
@@ -103,7 +103,7 @@ const isCurrent = ({ to }: PageInSummary): boolean => {
   return currentPage?.to === to;
 };
 const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
-  return userStore.can(permission);
+  return myStore.can(permission);
 };
 </script>
 

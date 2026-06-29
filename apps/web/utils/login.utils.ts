@@ -29,8 +29,8 @@ async function applyForMembership(email: string, token?: string) {
     return;
   }
 
-  const userStore = useUserStore();
-  if (userStore.can(BE_AFFECTED)) return;
+  const myStore = useMyStore();
+  if (myStore.can(BE_AFFECTED)) return;
   const hasApplication =
     await membershipApplicationStore.hasCurrentVolunteerApplication(email);
   if (hasApplication) return;

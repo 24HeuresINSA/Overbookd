@@ -24,6 +24,7 @@
 import type { Consumer } from "@overbookd/http";
 import { ONE_EURO_IN_CENTS } from "@overbookd/personal-account";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 userStore.fetchPersonalAccountConsumers();
@@ -37,7 +38,7 @@ const isTransferValid = computed<boolean>(
 );
 const adherents = computed<Consumer[]>(() =>
   userStore.personalAccountConsumers.filter(
-    (consumer) => consumer.id !== userStore.loggedUser?.id,
+    (consumer) => consumer.id !== myStore.loggedUser?.id,
   ),
 );
 

@@ -84,15 +84,16 @@ useHead({ title: "Multi Planning" });
 const DEFAULT_PAGE = 0;
 const DEFAULT_ITEMS_PER_PAGE = 10;
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();
 
 const selectedVolunteers = ref<User[]>([]);
 
-const canReadFt = computed<boolean>(() => userStore.can(READ_FT));
+const canReadFt = computed<boolean>(() => myStore.can(READ_FT));
 const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 
 const volunteersForCalendar = computed<VolunteerForCalendar[]>(() =>

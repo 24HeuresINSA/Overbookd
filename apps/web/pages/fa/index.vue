@@ -141,14 +141,14 @@ import { updateQueryParams } from "~/utils/http/url-params.utils";
 
 useHead({ title: "Fiches Activités" });
 
+const myStore = useMyStore();
 const faStore = useFestivalActivityStore();
-const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 const teamStore = useTeamStore();
 
-const me = computed<User | undefined>(() => userStore.loggedUser);
+const me = computed<User | undefined>(() => myStore.loggedUser);
 
-const canRemoveActivity = computed<boolean>(() => userStore.can(WRITE_FA));
+const canRemoveActivity = computed<boolean>(() => myStore.can(WRITE_FA));
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Statut", value: "id", sortable: true },

@@ -76,26 +76,27 @@ import {
 import { Edition } from "@overbookd/time";
 import type { User } from "@overbookd/user";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
 const downloading = ref(false);
 
-const loggedUser = computed<User | undefined>(() => userStore.loggedUser);
+const loggedUser = computed<User | undefined>(() => myStore.loggedUser);
 const selectedUser = computed<User | undefined>(() => userStore.selectedUser);
 
 const isMe = computed<boolean>(
   () => !selectedUser.value || loggedUser.value?.id === selectedUser.value?.id,
 );
 const canDownloadPlanning = computed<boolean>(() =>
-  userStore.can(isMe.value ? DOWNLOAD_PLANNING : AFFECT_VOLUNTEER),
+  myStore.can(isMe.value ? DOWNLOAD_PLANNING : AFFECT_VOLUNTEER),
 );
 
 const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 
 const syncLink = computed<string | null>(() => planningStore.link);
-const canSyncPlanning = computed<boolean>(() => userStore.can(SYNC_PLANNING));
+const canSyncPlanning = computed<boolean>(() => myStore.can(SYNC_PLANNING));
 
 onMounted(() => {
   if (canSyncPlanning.value) {

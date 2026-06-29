@@ -88,8 +88,8 @@ import {
 import { AUCUNE } from "~/utils/assignment/task-category";
 
 const route = useRoute();
+const myStore = useMyStore();
 const ftStore = useFestivalTaskStore();
-const userStore = useUserStore();
 const { listen } = useLiveNotification();
 const teamStore = useTeamStore();
 
@@ -148,7 +148,7 @@ const isValidatedOrReadyToAssign = computed<boolean>(() => {
   return isTaskValidated || isTaskReadyToAssign;
 });
 const canEnableAssignment = computed<boolean>(
-  () => userStore.can(AFFECT_VOLUNTEER) && isValidatedOrReadyToAssign.value,
+  () => myStore.can(AFFECT_VOLUNTEER) && isValidatedOrReadyToAssign.value,
 );
 const cantStartAssignment = computed<boolean>(
   () => !isValidated(selectedTask.value),

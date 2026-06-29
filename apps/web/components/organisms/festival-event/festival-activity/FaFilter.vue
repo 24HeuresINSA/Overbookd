@@ -116,6 +116,7 @@ import { downloadCsv } from "~/utils/file/download.utils";
 import { openPage } from "~/utils/navigation/router.utils";
 
 const route = useRoute();
+const myStore = useMyStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 const faStore = useFestivalActivityStore();
@@ -155,35 +156,35 @@ const updateReviewerParams = (
 };
 
 const canViewSecurityDashboard = computed<boolean>(() => {
-  return userStore.can(VIEW_SECURITY_DASHBOARD);
+  return myStore.can(VIEW_SECURITY_DASHBOARD);
 });
 const openSecurityDashboard = (event: PointerEvent) => {
   openPage(event, SECURITY_DASHBOARD_URL);
 };
 
 const canViewGearDashboard = computed<boolean>(() => {
-  return userStore.can(VIEW_FA_GEAR_DASHBOARD);
+  return myStore.can(VIEW_FA_GEAR_DASHBOARD);
 });
 const openGearDashboard = (event: PointerEvent) => {
   openPage(event, FA_GEAR_DASHBOARD_URL);
 };
 
 const canViewAnimationsToPublish = computed<boolean>(() => {
-  return userStore.can(READ_ANIMATION_TO_PUBLISH);
+  return myStore.can(READ_ANIMATION_TO_PUBLISH);
 });
 const openAnimationsToPublish = (event: PointerEvent) => {
   openPage(event, FA_TO_PUBLISH_URL);
 };
 
 const hasLogElecTeam = computed<boolean>(() => {
-  return userStore.isMemberOf(LOG_ELEC);
+  return myStore.isMemberOf(LOG_ELEC);
 });
 const updateNeedSupply = (needSupply: boolean | null) => {
   updateQueryParams(NEED_SUPPLY_QUERY_PARAM, !!needSupply);
 };
 
 const canExportForSigna = computed<boolean>(() => {
-  return userStore.can(EXPORT_FOR_SIGNA);
+  return myStore.can(EXPORT_FOR_SIGNA);
 });
 const signaExportLoading = ref<boolean>(false);
 const exportSignaCsv = async () => {

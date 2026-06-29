@@ -124,14 +124,14 @@ export const useTransactionStore = defineStore("transaction", {
     },
 
     _getLoggedUserId(): number {
-      const userStore = useUserStore();
-      return userStore.loggedUser?.id ?? 0;
+      const myStore = useMyStore();
+      return myStore.loggedUser?.id ?? 0;
     },
 
     async _fetchMyInformation() {
       await this.fetchMyTransactions();
-      const userStore = useUserStore();
-      userStore.fetchMyInformations();
+      const myStore = useMyStore();
+      myStore.fetchMyInformations();
     },
   },
 });

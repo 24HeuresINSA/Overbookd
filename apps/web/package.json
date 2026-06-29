@@ -50,6 +50,7 @@
     "@overbookd/list": "workspace:*",
     "@overbookd/logistic": "workspace:*",
     "@overbookd/money": "workspace:*",
+    "@overbookd/oidc": "workspace:*",
     "@overbookd/permission": "workspace:*",
     "@overbookd/personal-account": "workspace:*",
     "@overbookd/preference": "workspace:*",

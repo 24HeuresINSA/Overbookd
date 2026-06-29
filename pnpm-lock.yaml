@@ -372,6 +372,9 @@ importers:
       '@overbookd/money':
         specifier: workspace:*
         version: link:../../libraries/money
+      '@overbookd/oidc':
+        specifier: workspace:*
+        version: link:../../utils/oidc
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission

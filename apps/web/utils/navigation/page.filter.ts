@@ -7,9 +7,9 @@ export class PageFilter {
   private constructor(private readonly pages: PageInSummary[]) {}
 
   static from(pages: PageInSummary[]): PageFilter {
-    const userStore = useUserStore();
+    const myStore = useMyStore();
     const authorizedPages = pages.filter(
-      (page) => !page.permission || userStore.can(page.permission),
+      (page) => !page.permission || myStore.can(page.permission),
     );
     return new PageFilter(authorizedPages);
   }

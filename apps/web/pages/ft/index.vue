@@ -152,14 +152,14 @@ import {
 
 useHead({ title: "Fiches Tâches" });
 
+const myStore = useMyStore();
 const ftStore = useFestivalTaskStore();
-const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 const teamStore = useTeamStore();
 
-const me = computed<UserPersonalData | undefined>(() => userStore.loggedUser);
+const me = computed<UserPersonalData | undefined>(() => myStore.loggedUser);
 
-const canRemoveTask = computed<boolean>(() => userStore.can(WRITE_FT));
+const canRemoveTask = computed<boolean>(() => myStore.can(WRITE_FT));
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [
     { title: "Statut", value: "id", sortable: true },

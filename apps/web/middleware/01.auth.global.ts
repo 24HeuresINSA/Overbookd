@@ -7,6 +7,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const oidc = useOidcAuth();
   await oidc.fetch();
 
+  const myStore = useMyStore();
+
+  if (!myStore.loggedUser) {
+    await myStore.fetchMyInformations();
+  }
+  if (!myStore.synced) {
+    await myStore.sync();
+  }
+
   const isLoggedIn = oidc.loggedIn.value;
   const unprotectedRoute = isUnprotectedRoute(to);
 
