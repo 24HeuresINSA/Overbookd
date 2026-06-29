@@ -128,7 +128,9 @@ onMounted(async () => {
 });
 
 const dateEventStart = ref<Date>(configurationStore.eventStartDate);
-const dateOrgaWeekStart = ref<Date>(configurationStore.orgaWeekStartDate);
+const dateOrgaWeekStart = ref<Date>(
+  configurationStore.orgaWeekStartDate ?? new Date(),
+);
 const registerFormDescription = ref<string>(
   configurationStore.registerFormDescription,
 );

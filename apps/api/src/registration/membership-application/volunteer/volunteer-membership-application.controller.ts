@@ -16,6 +16,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Request,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -30,6 +31,8 @@ import { HasApplicationResponseDto } from "../common/dto/has-application.respons
 import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
 import { VolunteerAvailabilityErrorFilter } from "../../../volunteer-availability/volunteer-availability-error.filter";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../../app.controller";
+import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 
 @Controller("registrations/membership-applications/volunteers")
 @ApiTags("registrations/membership-applications/volunteers")
@@ -177,7 +180,13 @@ export class VolunteerMembershipApplicationController {
     description: "Briefing time window",
     type: PeriodRequestDto,
   })
-  upsertBriefingTimeWindow(@Body() period: PeriodRequestDto): Promise<void> {
-    return this.applicationService.upsertBriefingTimeWindow(period);
+  upsertBriefingTimeWindow(
+    @Body() period: PeriodRequestDto,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.applicationService.upsertBriefingTimeWindow(
+      period,
+      new JwtUtil(user),
+    );
   }
 }

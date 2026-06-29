@@ -32,7 +32,10 @@ export class ConfigurationService {
   }
 
   upsert(configuration: Configuration, user: JwtUtil): Promise<Configuration> {
-    if (!user.isAdmin && !canWriteConfiguration(key, user.permissions)) {
+    if (
+      !user.isAdmin &&
+      !canWriteConfiguration(configuration.key, user.permissions)
+    ) {
       throw new ForbiddenException(
         "You are not allowed to write this configuration",
       );
