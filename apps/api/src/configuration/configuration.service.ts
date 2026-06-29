@@ -15,7 +15,7 @@ export class ConfigurationService {
   async findAll(user: JwtUtil): Promise<Configuration[]> {
     const config = await this.prisma.configuration.findMany();
     if (user.isAdmin) return config;
-    return config.filter((c) => (canReadConfiguration(c.key, user.permissions)));
+    return config.filter((c) => canReadConfiguration(c.key, user.permissions));
   }
 
   async findOne(key: ConfigurationKey, user: JwtUtil): Promise<Configuration> {
@@ -33,7 +33,9 @@ export class ConfigurationService {
 
   upsert(configuration: Configuration, user: JwtUtil): Promise<Configuration> {
     if (!user.isAdmin && !canWriteConfiguration(key, user.permissions)) {
-      throw new ForbiddenException("You are not allowed to write this configuration");
+      throw new ForbiddenException(
+        "You are not allowed to write this configuration",
+      );
     }
     return this.prisma.configuration.upsert({
       where: { key: configuration.key },

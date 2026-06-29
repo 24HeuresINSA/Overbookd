@@ -9,19 +9,11 @@ import {
 } from "@nestjs/common";
 import { ConfigurationService } from "./configuration.service";
 import { ConfigurationResponseDto } from "./dto/configuration.response.dto";
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import {
-  Configuration,
-  ConfigurationKey,
-} from "@overbookd/configuration";
+import { Configuration, ConfigurationKey } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { MANAGE_CONFIG } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
