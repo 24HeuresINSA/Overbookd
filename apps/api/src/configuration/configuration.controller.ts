@@ -4,17 +4,14 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   Request,
   UseGuards,
-  HttpCode,
 } from "@nestjs/common";
 import { ConfigurationService } from "./configuration.service";
 import { ConfigurationResponseDto } from "./dto/configuration.response.dto";
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -22,7 +19,6 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import {
-  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   Configuration,
   ConfigurationKey,
 } from "@overbookd/configuration";
@@ -44,7 +40,9 @@ export class ConfigurationController {
     type: ConfigurationResponseDto,
     isArray: true,
   })
-  findAll(@Request() { user }: RequestWithUserPayload): Promise<Configuration[]> {
+  findAll(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<Configuration[]> {
     return this.configurationService.findAll(new JwtUtil(user));
   }
 

@@ -5,7 +5,7 @@ import {
   ORGA_WEEK_DATE_KEY,
   INVITE_STAFF_LINK_KEY,
   VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-  USEFUL_LINKS_KEY
+  USEFUL_LINKS_KEY,
 } from "./keys";
 import {
   type Permission,
@@ -18,15 +18,15 @@ import {
 const ALL = "ALL";
 const NONE = "NONE";
 
-type ExtendedPermission = Permission | typeof ALL | typeof NONE
+type ExtendedPermission = Permission | typeof ALL | typeof NONE;
 
 type ConfigurationWithPermissions = {
   key: ConfigurationKey;
   permissions: {
-    read: ExtendedPermission,
-    write: ExtendedPermission,
+    read: ExtendedPermission;
+    write: ExtendedPermission;
   };
-}
+};
 
 const configurationsWithPermissions: ConfigurationWithPermissions[] = [
   {
@@ -79,13 +79,12 @@ export function canReadConfiguration(
 ): boolean {
   const config = configurationsWithPermissions.find((c) => c.key === key);
   if (!config) return false;
-  
+
   const read = config.permissions.read;
   if (read === ALL) return true;
   if (read === NONE) return false;
   return permissions.some((p) => p === read);
 }
-
 
 export function canWriteConfiguration(
   key: ConfigurationKey,
@@ -93,7 +92,7 @@ export function canWriteConfiguration(
 ): boolean {
   const config = configurationsWithPermissions.find((c) => c.key === key);
   if (!config) return false;
-  
+
   const write = config.permissions.write;
   if (write === ALL) return true;
   if (write === NONE) return false;
