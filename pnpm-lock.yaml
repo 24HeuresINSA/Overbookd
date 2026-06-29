@@ -649,9 +649,9 @@ importers:
 
   utils/configuration:
     dependencies:
-      '@overbookd/configuration':
+      '@overbookd/permission':
         specifier: workspace:*
-        version: link:../../utils/configuration
+        version: link:../../constants/permission
 
   utils/domain-events:
     dependencies:
