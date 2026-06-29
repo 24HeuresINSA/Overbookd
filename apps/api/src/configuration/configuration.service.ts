@@ -42,7 +42,7 @@ export class ConfigurationService {
       !canWriteConfiguration(configuration.key, user?.permissions ?? [])
     ) {
       throw new ForbiddenException(
-        "You are not allowed to write this configuration",
+        "Tu n'es pas autorisé à modifier cette configuration",
       );
     }
     if (configuration.key === VOLUNTEER_BRIEFING_TIME_WINDOW_KEY) {
