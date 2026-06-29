@@ -4,7 +4,6 @@ import {
   Configuration,
   ConfigurationKey,
   canReadConfiguration,
-  canWriteConfiguration,
 } from "@overbookd/configuration";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
@@ -14,10 +13,13 @@ export class ConfigurationService {
 
   async findAll({ permissions }: JwtUtil): Promise<Configuration[]> {
     const config = await this.prisma.configuration.findMany();
-    return config.filter((c) => (canReadConfiguration(c.key, permissions)));
+    return config.filter((c) => canReadConfiguration(c.key, permissions));
   }
 
-  async findOne(key: ConfigurationKey, { permissions }: JwtUtil): Promise<Configuration> {
+  async findOne(
+    key: ConfigurationKey,
+    { permissions }: JwtUtil,
+  ): Promise<Configuration> {
     if (!canReadConfiguration(key, permissions)) {
       return { key, value: null };
     }
@@ -30,9 +32,14 @@ export class ConfigurationService {
     };
   }
 
-  upsert(configuration: Configuration, { permissions }: JwtUtil): Promise<Configuration> {
+  upsert(
+    configuration: Configuration,
+    { permissions }: JwtUtil,
+  ): Promise<Configuration> {
     if (!canReadConfiguration(key, permissions)) {
-      throw new ForbiddenException("You are not allowed to write this configuration");
+      throw new ForbiddenException(
+        "You are not allowed to write this configuration",
+      );
     }
     return this.prisma.configuration.upsert({
       where: { key: configuration.key },
