@@ -4,6 +4,7 @@ import {
   Configuration,
   ConfigurationKey,
   canReadConfiguration,
+  canWriteConfiguration,
 } from "@overbookd/configuration";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
@@ -11,16 +12,14 @@ import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll({ permissions }: JwtUtil): Promise<Configuration[]> {
+  async findAll(user: JwtUtil): Promise<Configuration[]> {
     const config = await this.prisma.configuration.findMany();
-    return config.filter((c) => canReadConfiguration(c.key, permissions));
+    if (user.isAdmin) return config;
+    return config.filter((c) => (canReadConfiguration(c.key, user.permissions)));
   }
 
-  async findOne(
-    key: ConfigurationKey,
-    { permissions }: JwtUtil,
-  ): Promise<Configuration> {
-    if (!canReadConfiguration(key, permissions)) {
+  async findOne(key: ConfigurationKey, user: JwtUtil): Promise<Configuration> {
+    if (!user.isAdmin && !canReadConfiguration(key, user.permissions)) {
       return { key, value: null };
     }
     const config = await this.prisma.configuration.findUnique({
@@ -32,14 +31,9 @@ export class ConfigurationService {
     };
   }
 
-  upsert(
-    configuration: Configuration,
-    { permissions }: JwtUtil,
-  ): Promise<Configuration> {
-    if (!canReadConfiguration(key, permissions)) {
-      throw new ForbiddenException(
-        "You are not allowed to write this configuration",
-      );
+  upsert(configuration: Configuration, user: JwtUtil): Promise<Configuration> {
+    if (!user.isAdmin && !canWriteConfiguration(key, user.permissions)) {
+      throw new ForbiddenException("You are not allowed to write this configuration");
     }
     return this.prisma.configuration.upsert({
       where: { key: configuration.key },
