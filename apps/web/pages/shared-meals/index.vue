@@ -25,26 +25,26 @@
         class="meal"
       />
     </div>
+  </div>
 
-    <div class="mobile-buttons">
-      <v-btn
-        text="Proposer un repas"
-        color="primary"
-        size="large"
-        rounded
-        block
-        @click="openOfferDialog"
-      />
+  <div class="mobile-buttons">
+    <v-btn
+      text="Proposer un repas"
+      color="primary"
+      size="large"
+      rounded
+      block
+      @click="openOfferDialog"
+    />
 
-      <v-btn
-        text="Voir l'historique des repas"
-        color="secondary"
-        size="large"
-        rounded
-        block
-        :to="SHARED_MEALS_HISTORY_URL"
-      />
-    </div>
+    <v-btn
+      text="Voir l'historique des repas"
+      color="secondary"
+      size="large"
+      rounded
+      block
+      :to="SHARED_MEALS_HISTORY_URL"
+    />
   </div>
 
   <v-dialog v-model="isOfferDialogOpen" max-width="600px">
@@ -73,8 +73,12 @@ mealSharingStore.fetchOnGoing();
 <style lang="scss" scoped>
 .mobile-buttons {
   display: none;
-  width: 100%;
-  padding: 0 10px;
+  position: fixed;
+  bottom: $bottom-nav-height;
+  left: 0;
+  right: 0;
+  padding: 10px 20px;
+  background-color: rgb(var(--v-theme-background));
 
   @media screen and (max-width: $mobile-max-width) {
     display: flex;
@@ -98,7 +102,7 @@ mealSharingStore.fetchOnGoing();
 
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 
     .see-history {
       margin-inline: 20px;
@@ -118,6 +122,10 @@ mealSharingStore.fetchOnGoing();
     .meal {
       min-width: 95%;
     }
+
+    @media screen and (max-width: $mobile-max-width) {
+      margin-bottom: 120px;
+    }
   }
 
   @media screen and (max-width: 1150px) {
@@ -130,17 +138,6 @@ mealSharingStore.fetchOnGoing();
       position: relative;
       flex: initial;
       width: 100%;
-    }
-  }
-
-  @media screen and (max-width: $mobile-max-width) {
-    height: 100%;
-    gap: 10px;
-
-    .meals {
-      flex: 1 1 auto;
-      overflow-y: scroll;
-      min-height: 0;
     }
   }
 }

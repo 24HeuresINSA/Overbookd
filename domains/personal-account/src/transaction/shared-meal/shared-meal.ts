@@ -26,11 +26,11 @@ export class SharedMeal {
     }));
   }
 
-  private static computeGuestAmount(
+  static computeGuestAmount(
     totalAmount: number,
     totalPortions: number,
     guestPortions: number,
-  ) {
+  ): number {
     const guestAmount = Math.ceil(
       (totalAmount / totalPortions) * guestPortions,
     );

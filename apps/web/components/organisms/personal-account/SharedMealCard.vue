@@ -6,7 +6,7 @@
           {{ meal.meal.date }}
         </span>
 
-        <div class="meal-title__chef" aria-label="Chef" title="Chef">
+        <div class="meal-title__chef" aria-label="Chef·fe" title="Chef·fe">
           <v-icon>mdi-chef-hat</v-icon>
           <span>{{ meal.chef.name }}</span>
         </div>
