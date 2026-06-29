@@ -203,12 +203,12 @@ export const useMembershipApplicationStore = defineStore(
       },
 
       async saveBriefingTimeWindow(period: IProvidePeriod) {
-        const res =
-          await MembershipApplicationRepository.saveBriefingTimeWindow(period);
-        if (isHttpError(res)) return;
         const configurationStore = useConfigurationStore();
+        await configurationStore.save({
+          key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+          value: period,
+        });
         configurationStore.fetch(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY);
-        sendSuccessNotification("Le créneau du brief a été enregistré");
       },
 
       async hasCurrentStaffApplication(email: string): Promise<boolean> {

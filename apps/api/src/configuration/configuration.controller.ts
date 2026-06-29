@@ -18,6 +18,7 @@ import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
 import { MANAGE_CONFIG } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { RequestWithUserPayload } from "../../src/app.controller";
 
 @Controller("configuration")
 @ApiTags("configuration")
