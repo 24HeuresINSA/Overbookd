@@ -4,6 +4,7 @@ import {
   ASK_FOR_HELP,
   BE_AFFECTED,
   DOWNLOAD_PLANNING,
+  ENROLL_SOFT,
   ENROLL_HARD,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_CONFIG,
@@ -376,8 +377,17 @@ export const permissions = [
     },
   },
   {
+    name: ENROLL_SOFT,
+    description: "Peut enrôler des bénévoles",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "humain" }],
+      },
+    },
+  },
+  {
     name: ENROLL_HARD,
-    description: "Peut enrôler des nouveaux",
+    description: "Peut enrôler des orgas",
     teams: {
       createMany: {
         data: [{ teamCode: "sg" }, { teamCode: "humain" }],
