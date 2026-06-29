@@ -14,6 +14,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { ConfigurationService } from "../../../configuration/configuration.service";
 import { Availability } from "@overbookd/volunteer-availability";
 import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
+import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -72,11 +73,15 @@ export class VolunteerMembershipApplicationService {
     return this.useCases.enroll.apply({ candidates, team: SOFT });
   }
 
-  async upsertBriefingTimeWindow(period: IProvidePeriod): Promise<void> {
+  async upsertBriefingTimeWindow(
+    period: IProvidePeriod,
+    user: JwtUtil,
+  ): Promise<void> {
     Availability.fromPeriod(period);
-    await this.repositories.configuration.upsert({
+    const config = {
       key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
       value: period,
-    });
+    };
+    await this.repositories.configuration.upsert(config, user);
   }
 }
