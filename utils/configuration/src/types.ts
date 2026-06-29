@@ -1,5 +1,3 @@
-import type { ConfigurationKey } from "./keys";
-
 export type Configuration<
   T extends object | string | number | boolean =
     | object
@@ -7,6 +5,6 @@ export type Configuration<
     | number
     | boolean,
 > = {
-  key: ConfigurationKey;
+  key: string;
   value: T;
 };
