@@ -1,1 +1,6 @@
-export type { Team } from "./team.js";
+export type Team = {
+  code: string;
+  name: string;
+  color: string;
+  icon: string;
+};

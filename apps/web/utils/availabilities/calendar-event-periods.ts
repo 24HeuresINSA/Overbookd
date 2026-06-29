@@ -16,8 +16,9 @@ export class CalendarEventPeriods {
     return OverDate.fromLocal(configurationStore.mondayBeforeEventDate);
   }
 
-  private static get startCollage(): OverDate {
+  private static get startCollage(): OverDate | null {
     const configurationStore = useConfigurationStore();
+    if (!configurationStore.orgaWeekStartDate) return null;
     return OverDate.fromLocal(configurationStore.orgaWeekStartDate);
   }
 
@@ -32,6 +33,7 @@ export class CalendarEventPeriods {
   }
 
   public static get collages(): CalendarStep[] {
+    if (!CalendarEventPeriods.startCollage) return [];
     const collagePeriod = Period.init({
       start: CalendarEventPeriods.startCollage.date,
       end: CalendarEventPeriods.removeDays(12).date,

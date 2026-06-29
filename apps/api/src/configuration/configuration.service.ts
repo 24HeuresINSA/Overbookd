@@ -1,16 +1,26 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { Configuration, ConfigurationKey } from "@overbookd/configuration";
+import {
+  Configuration,
+  ConfigurationKey,
+  canReadConfiguration,
+  canWriteConfiguration,
+} from "@overbookd/configuration";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  findAll(): Promise<Configuration[]> {
-    return this.prisma.configuration.findMany();
+  async findAll({ permissions }: JwtUtil): Promise<Configuration[]> {
+    const config = await this.prisma.configuration.findMany();
+    return config.filter((c) => (canReadConfiguration(c.key, permissions)));
   }
 
-  async findOne(key: ConfigurationKey): Promise<Configuration> {
+  async findOne(key: ConfigurationKey, { permissions }: JwtUtil): Promise<Configuration> {
+    if (!canReadConfiguration(key, permissions)) {
+      return { key, value: null };
+    }
     const config = await this.prisma.configuration.findUnique({
       where: { key },
     });
@@ -20,17 +30,14 @@ export class ConfigurationService {
     };
   }
 
-  upsert(configuration: Configuration): Promise<Configuration> {
+  upsert(configuration: Configuration, { permissions }: JwtUtil): Promise<Configuration> {
+    if (!canReadConfiguration(key, permissions)) {
+      throw new ForbiddenException("You are not allowed to write this configuration");
+    }
     return this.prisma.configuration.upsert({
       where: { key: configuration.key },
       create: configuration,
       update: configuration,
-    });
-  }
-
-  async remove(key: ConfigurationKey): Promise<void> {
-    await this.prisma.configuration.delete({
-      where: { key },
     });
   }
 }

@@ -37,12 +37,11 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.from(this.eventStartDate).minus(duration).date;
     },
 
-    orgaWeekStartDate(): Date {
+    orgaWeekStartDate(): Date | null {
       const orgaWeekDate = this.get(ORGA_WEEK_DATE_KEY);
-      const now = OverDate.now().date;
-      if (!isObject(orgaWeekDate) || !("start" in orgaWeekDate)) return now;
+      if (!isObject(orgaWeekDate) || !("start" in orgaWeekDate)) return null;
       const start = orgaWeekDate.start;
-      if (typeof start !== "string") return now;
+      if (typeof start !== "string") return null;
       return OverDate.fromLocal(new Date(start)).date;
     },
 
