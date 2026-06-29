@@ -5,6 +5,7 @@ import {
   Body,
   Param,
   Delete,
+  Request,
   UseGuards,
   HttpCode,
 } from "@nestjs/common";
@@ -26,8 +27,9 @@ import {
   ConfigurationKey,
 } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
-import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
+import { MANAGE_CONFIG } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
 @Controller("configuration")
 @ApiTags("configuration")
@@ -42,8 +44,8 @@ export class ConfigurationController {
     type: ConfigurationResponseDto,
     isArray: true,
   })
-  findAll(): Promise<Configuration[]> {
-    return this.configurationService.findAll();
+  findAll(@Request() { user }: RequestWithUserPayload): Promise<Configuration[]> {
+    return this.configurationService.findAll(new JwtUtil(user));
   }
 
   @Get(":key")
@@ -52,30 +54,11 @@ export class ConfigurationController {
     description: "Get configuration by key",
     type: ConfigurationResponseDto,
   })
-  findOne(@Param("key") key: ConfigurationKey): Promise<Configuration> {
-    return this.configurationService.findOne(key);
-  }
-
-  @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
-  @ApiResponse({
-    status: 201,
-    description: "Upsert briefing time window",
-    type: ConfigurationResponseDto,
-  })
-  @ApiBody({
-    description: "Briefing time window",
-    type: UpsertConfigurationDto,
-  })
-  upsertBriefingTimeWindow(
-    @Body() { value }: UpsertConfigurationDto,
+  findOne(
+    @Param("key") key: ConfigurationKey,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<Configuration> {
-    return this.configurationService.upsert({
-      key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value,
-    });
+    return this.configurationService.findOne(key, new JwtUtil(user));
   }
 
   @Post(":key")
@@ -94,24 +77,8 @@ export class ConfigurationController {
   upsert(
     @Param("key") key: ConfigurationKey,
     @Body() { value }: UpsertConfigurationDto,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<Configuration> {
-    return this.configurationService.upsert({ key, value });
-  }
-
-  @Delete(":key")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONFIG)
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Delete a configuration",
-  })
-  @ApiParam({
-    name: "key",
-    description: "Configuration key",
-  })
-  remove(@Param("key") key: ConfigurationKey): Promise<void> {
-    return this.configurationService.remove(key);
+    return this.configurationService.upsert({ key, value }, new JwtUtil(user));
   }
 }
