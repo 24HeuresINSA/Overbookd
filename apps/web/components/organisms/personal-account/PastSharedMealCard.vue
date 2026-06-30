@@ -39,16 +39,7 @@
             </div>
 
             <div class="ml-3">
-              Coût d'une portion :
-              {{
-                Money.cents(
-                  SharedMealPayment.computeGuestAmount(
-                    meal.expense.amount,
-                    meal.portionCount,
-                    1,
-                  ),
-                )
-              }}
+              Coût d'une portion : {{ Money.cents(portionCost) }}
             </div>
           </div>
 
@@ -99,6 +90,14 @@ const { meal } = defineProps({
     required: true,
   },
 });
+
+const portionCost = computed<number>(() =>
+  SharedMealPayment.computeGuestAmount(
+    meal.expense.amount,
+    meal.portionCount,
+    1,
+  ),
+);
 
 const me = computed<Adherent>(() => {
   const loggedUser = userStore.loggedUser;
