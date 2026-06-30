@@ -16,7 +16,7 @@
           {{ meal.meal.date }}
         </span>
 
-        <div class="meal-title__chef" aria-label="Chef" title="Chef">
+        <div class="meal-title__chef" aria-label="Chef·fe" title="Chef·fe">
           <v-icon>mdi-chef-hat</v-icon>
           <span>{{ meal.chef.name }}</span>
         </div>
@@ -36,6 +36,10 @@
 
             <div class="ml-3">
               Coût total du repas : {{ Money.cents(meal.expense.amount) }}
+            </div>
+
+            <div class="ml-3">
+              Coût d'une portion : {{ Money.cents(portionCost) }}
             </div>
           </div>
 
@@ -72,6 +76,7 @@
 import { Money } from "@overbookd/money";
 import {
   OnGoingSharedMealBuilder,
+  SharedMealPayment,
   type Adherent,
   type PastSharedMeal,
 } from "@overbookd/personal-account";
@@ -85,6 +90,14 @@ const { meal } = defineProps({
     required: true,
   },
 });
+
+const portionCost = computed<number>(() =>
+  SharedMealPayment.computeGuestAmount(
+    meal.expense.amount,
+    meal.portionCount,
+    1,
+  ),
+);
 
 const me = computed<Adherent>(() => {
   const loggedUser = userStore.loggedUser;

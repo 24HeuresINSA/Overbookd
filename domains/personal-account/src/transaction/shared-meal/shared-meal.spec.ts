@@ -54,7 +54,7 @@ describe("Generate all transactions to refund shared meal chef", () => {
   });
 
   describe("when meal amount can't be divided properly", () => {
-    const undividibleMeal = PastSharedMealBuilder.build({
+    const undivisibleMeal = PastSharedMealBuilder.build({
       id: 1,
       createdAt: new Date("2023-12-31T10:30+02:00"),
       expense: { amount: 2000 },
@@ -71,7 +71,7 @@ describe("Generate all transactions to refund shared meal chef", () => {
     });
 
     it("should round up to next cent", () => {
-      const transactions = SharedMeal.refund(undividibleMeal);
+      const transactions = SharedMeal.refund(undivisibleMeal);
       expect(transactions.every(({ amount }) => amount === 667)).toBe(true);
     });
   });
@@ -108,4 +108,27 @@ describe("Generate all transactions to refund shared meal chef", () => {
       );
     });
   });
+});
+
+describe("Compute the amount a guest should pay", () => {
+  describe.each`
+    totalAmount | totalPortions | guestPortions | expectedAmount
+    ${1000}     | ${2}          | ${1}          | ${500}
+    ${1500}     | ${3}          | ${2}          | ${1000}
+    ${2000}     | ${6}          | ${1}          | ${334}
+    ${2000}     | ${6}          | ${2}          | ${667}
+  `(
+    "when a guest has $guestPortions portion(s) for a meal costing $totalAmount for $totalPortions portion(s)",
+    ({ totalAmount, totalPortions, guestPortions, expectedAmount }) => {
+      it(`should be costing them ${expectedAmount}`, () => {
+        expect(
+          SharedMeal.computeGuestAmount(
+            totalAmount,
+            totalPortions,
+            guestPortions,
+          ),
+        ).toBe(expectedAmount);
+      });
+    },
+  );
 });

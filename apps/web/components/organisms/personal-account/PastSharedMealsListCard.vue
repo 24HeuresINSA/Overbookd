@@ -84,7 +84,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 const headers: TableHeaders = [
   { title: "Date de création", key: "createdAt", sortable: true },
   { title: "Date du repas", key: "date" },
-  { title: "Chef", key: "chef.name", sortable: true },
+  { title: "Chef·fe", key: "chef.name", sortable: true },
   {
     title: "Nombre de portions",
     key: "portionCount",
