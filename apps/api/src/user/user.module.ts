@@ -17,9 +17,12 @@ import { PlanningController } from "./planning/planning.controller";
 import { TeamService } from "../team/team.service";
 import { AccessManagerModule } from "../access-manager/access-manager.module";
 import { ZitadelService } from "./zitadel.service";
+import { CommonModule } from "../common/common.module";
+import { CommonService } from "../common/common.service";
 
 @Module({
   imports: [
+    CommonModule,
     PlanningModule,
     RegistrationModule,
     PrismaModule,
@@ -55,11 +58,15 @@ import { ZitadelService } from "./zitadel.service";
       inject: [PrismaBreaks],
     },
     ZitadelService,
+    CommonService,
     {
       provide: UserService,
-      useFactory: (prisma: PrismaService, zitadelService: ZitadelService) =>
-        new UserService(prisma, zitadelService),
-      inject: [PrismaService, ZitadelService],
+      useFactory: (
+        prisma: PrismaService,
+        zitadelService: ZitadelService,
+        commonService: CommonService,
+      ) => new UserService(prisma, zitadelService, commonService),
+      inject: [PrismaService, ZitadelService, CommonService],
     },
     FileService,
     ProfilePictureService,

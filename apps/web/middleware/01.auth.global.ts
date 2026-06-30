@@ -7,20 +7,21 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const oidc = useOidcAuth();
   await oidc.fetch();
 
-  const myStore = useMyStore();
-
-  if (!myStore.loggedUser) {
-    await myStore.fetchMyInformations();
-  }
-  if (!myStore.synced) {
-    await myStore.sync();
-  }
-
   const isLoggedIn = oidc.loggedIn.value;
   const unprotectedRoute = isUnprotectedRoute(to);
 
   if (unprotectedRoute) {
     if (isLoggedIn) return navigateTo(HOME_URL);
+  }
+
+  if (isLoggedIn) {
+    const myStore = useMyStore();
+    if (!myStore.loggedUser) {
+      await myStore.fetchMyInformations();
+    }
+    if (!myStore.synced) {
+      await myStore.sync();
+    }
   }
 
   if (!isLoggedIn && to.path !== LOGIN_URL) return navigateTo(LOGIN_URL);

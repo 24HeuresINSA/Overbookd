@@ -20,24 +20,17 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-
-    if (isPublic) {
-      return true;
-    }
+    if (isPublic) return true;
 
     const roles = this.reflector.getAllAndOverride<string[]>(ROLES_METADATA, [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    if (!roles) {
-      return false;
-    }
+    if (!roles) return false;
 
     const { user } = context.switchToHttp().getRequest();
-    if (!user) {
-      return false;
-    }
+    if (!user) return false;
 
     const rolesObj = user[OIDC_ROLES_CLAIMS];
 

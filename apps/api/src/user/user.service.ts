@@ -54,8 +54,10 @@ import { friendAssigneesCount } from "../assignment/common/repository/assignment
 import { OidcRole, oidcRoles } from "@overbookd/oidc";
 import { ConnectedZitadelUser } from "../authentication-zitadel/zitadel-types";
 import { ZitadelService } from "./zitadel.service";
+import { CommonService } from "../common/common.service";
+import { parseBirthDateFromZitadelMetadata } from "../authentication-zitadel/zitadel-types-utils";
 
-type UserDataFromZitadel = Omit<User, "id"> & {
+export type UserDataFromZitadel = Omit<User, "id"> & {
   email: string;
   phoneNumber: string;
   birthDate: Date | null;
@@ -66,20 +68,16 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private readonly zitadelService: ZitadelService,
+    private readonly commonService: CommonService,
   ) {}
 
   async userSync(zitadelUser: ConnectedZitadelUser): Promise<void> {
-    let birthday = new Date(zitadelUser.zitadelMetadata.dateOfBirth);
-    if (isNaN(birthday.getTime())) {
-      birthday = null;
-    }
-
     const data: UserDataFromZitadel = {
       email: zitadelUser.email.toLowerCase(),
       firstName: zitadelUser.given_name,
       lastName: zitadelUser.family_name,
       phoneNumber: zitadelUser.phone_number,
-      birthDate: birthday,
+      birthDate: parseBirthDateFromZitadelMetadata(zitadelUser),
     };
 
     const zitadelRoles = zitadelUser.zitadelRoles;
@@ -169,7 +167,11 @@ export class UserService {
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
-  async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
+  async getMyInformation(
+    zitadelUser: ConnectedZitadelUser,
+  ): Promise<MyUserInformation> {
+    const { id } =
+      await this.commonService.getUserDataFromConnectedZitadelUser(zitadelUser);
     const [user, charismaPeriods] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id },

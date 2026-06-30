@@ -14,11 +14,7 @@ export class ZitadelAuthGuard extends AuthGuard("zitadel") {
       context.getHandler(),
       context.getClass(),
     ]);
-
-    if (skipAuth) {
-      return true;
-    }
-
+    if (skipAuth) return true;
     return super.canActivate(context);
   }
 }

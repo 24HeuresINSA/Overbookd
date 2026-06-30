@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,
-      apiURL: `${process.env.BASE_URL}/api-v2`,
+      apiURL: `${process.env.BASE_URL}/ob-api`,
       version: process.env.OVERBOOKD_VERSION || "no version",
     },
   },
@@ -95,12 +95,19 @@ export default defineNuxtConfig({
     providers: {
       zitadel: {
         clientId: process.env.OIDC_CLIENT_ID,
-        clientSecret: "", // Works with PKCE and Code flow, just leave empty for PKCE
+        clientSecret: ".", // Works with PKCE and Code flow, just leave empty for PKCE
         baseUrl: process.env.ZITADEL_BASE_URL, // For example https://PROJECT.REGION.zitadel.cloud
         redirectUri: `${process.env.BASE_URL}/auth/zitadel/callback`, // Replace with your domain
         audience: "", // Specify for id token validation, normally same as clientId
         logoutRedirectUri: `${process.env.BASE_URL}/`, // Needs to be registered in Zitadel portal
-        scope: ["openid", "profile", "email", "phone", "offline_access"],
+        scope: [
+          "openid",
+          "profile",
+          "email",
+          "phone",
+          "offline_access",
+          "urn:zitadel:iam:user:metadata",
+        ],
         nonce: false,
         responseType: "code",
         exposeAccessToken: true,

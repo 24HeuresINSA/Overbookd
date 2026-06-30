@@ -50,11 +50,10 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { ImageInterceptor } from "../utils/image.interceptor";
 import { AuthenticatedUser } from "../authentication-zitadel/decorators";
 import { ConnectedZitadelUser } from "../authentication-zitadel/zitadel-types";
+import { RolesGuard, ZitadelAuthGuard } from "../authentication-zitadel/guards";
 
 @Controller("users")
 @ApiTags("users")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class UserController {
   constructor(
@@ -65,6 +64,8 @@ export class UserController {
   ) {}
 
   @Post("sync")
+  @UseGuards(ZitadelAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: "Synchronisation avec Zitadel réussie",
@@ -108,9 +109,9 @@ export class UserController {
     type: MyUserInformationResponseDto,
   })
   async getCurrentUser(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: ConnectedZitadelUser,
   ): Promise<MyUserInformation | null> {
-    return this.userService.getMyInformation(req.user);
+    return this.userService.getMyInformation(user);
   }
 
   @Patch("me")
