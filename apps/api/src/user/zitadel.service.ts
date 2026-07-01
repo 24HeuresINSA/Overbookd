@@ -23,7 +23,8 @@ type AboutUser = {
 export class ZitadelService {
   private ZITADEL_BASE_URL = process.env.ZITADEL_BASE_URL;
   private ZITADEL_API_BEARER_TOKEN = process.env.ZITADEL_API_BEARER_TOKEN;
-  private ZITADEL_OVERRUN_PROJECT_ID = process.env.ZITADEL_OVERRUN_PROJECT_ID;
+  private ZITADEL_OVERBOOKD_PROJECT_ID =
+    process.env.ZITADEL_OVERBOOKD_PROJECT_ID;
 
   private headers = {
     "Content-Type": "application/json",
@@ -80,7 +81,7 @@ export class ZitadelService {
       queries: [
         {
           projectIdQuery: {
-            projectId: this.ZITADEL_OVERRUN_PROJECT_ID,
+            projectId: this.ZITADEL_OVERBOOKD_PROJECT_ID,
           },
         },
         {
@@ -136,7 +137,7 @@ export class ZitadelService {
     roleKeys: Array<OidcRole>;
   }) {
     const data = JSON.stringify({
-      projectId: this.ZITADEL_OVERRUN_PROJECT_ID,
+      projectId: this.ZITADEL_OVERBOOKD_PROJECT_ID,
       roleKeys,
     });
 
