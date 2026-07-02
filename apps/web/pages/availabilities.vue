@@ -21,7 +21,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card>
+    <v-card class="overflow-visible">
       <v-card-text>
         <p class="desktop-only charisma">
           Mon Charisme : {{ charisma }} {{ charismaEmoji }}

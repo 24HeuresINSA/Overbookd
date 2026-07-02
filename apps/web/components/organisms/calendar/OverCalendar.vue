@@ -20,9 +20,16 @@
         </template>
       </CalendarManager>
     </slot>
-    <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
-      <div class="empty-case" />
-      <header class="calendar-header">
+    <div
+      ref="calendar"
+      class="calendar"
+      :class="{ 'daily-calendar': isDayMode }"
+    >
+      <div class="empty-case sticky-header" :class="{ overlay: isInOverlay }" />
+      <header
+        class="calendar-header sticky-header"
+        :class="{ overlay: isInOverlay }"
+      >
         <slot name="header">
           <DailyCalendarHeader
             v-if="isDayMode"
@@ -182,6 +189,12 @@ const propagateEventRightClick = (event: CalendarEvent) => {
 const propagatePeriodClick = (period: Period) => {
   emit("click:period", period);
 };
+
+const calendar = useTemplateRef("calendar");
+const isInOverlay = ref<boolean>(false);
+onMounted(() => {
+  isInOverlay.value = !!calendar.value?.closest(".v-overlay");
+});
 </script>
 
 <style lang="scss" scoped>
@@ -197,15 +210,14 @@ $calendar-content-height: $hour-height * 24;
 }
 
 .calendar {
+  position: relative;
   width: 100%;
   min-width: $calendar-day-min-width * 7 + $first-column-width + 2px;
   display: grid;
   grid-template-columns: $first-column-width 1fr;
   align-items: center;
   background-color: rgb(var(--v-theme-surface));
-  border: 1px solid rgb(var(--v-theme-on-surface));
   border-radius: $calendar-radius;
-  padding-bottom: 1px;
 }
 .daily-calendar {
   min-width: $first-column-width + $calendar-day-min-width + 2px;
@@ -214,8 +226,8 @@ $calendar-content-height: $hour-height * 24;
 .empty-case {
   grid-row: 1;
   grid-column: 1;
-  border-bottom: 1px solid rgb(var(--v-theme-on-surface));
-  border-right: 1px solid rgb(var(--v-theme-on-surface));
+  border-top-left-radius: $calendar-radius;
+  border: 1px solid rgb(var(--v-theme-on-surface));
   height: 100%;
 }
 
@@ -223,17 +235,36 @@ $calendar-content-height: $hour-height * 24;
   grid-row: 1;
   grid-column: 2;
   border-top-right-radius: $calendar-radius;
+  border-top: 1px solid rgb(var(--v-theme-on-surface));
+  border-right: 1px solid rgb(var(--v-theme-on-surface));
   border-bottom: 1px solid rgb(var(--v-theme-on-surface));
   overflow-x: auto;
 }
 
+.sticky-header {
+  position: sticky;
+  top: -15px;
+  background-color: rgb(var(--v-theme-surface));
+  z-index: 100;
+
+  &.overlay {
+    top: -5px;
+  }
+
+  @media screen and (max-width: $mobile-max-width) {
+    top: -10px;
+  }
+}
+
 .calendar-time {
-  height: $calendar-content-height;
+  height: 100%;
   width: 60px;
   grid-row: 2;
   grid-column: 1;
   border-bottom-left-radius: $calendar-radius;
   border-right: 1px solid rgb(var(--v-theme-on-surface));
+  border-bottom: 1px solid rgb(var(--v-theme-on-surface));
+  border-left: 1px solid rgb(var(--v-theme-on-surface));
 
   &__hour {
     height: $hour-height;
@@ -307,5 +338,8 @@ $calendar-content-height: $hour-height * 24;
   grid-row: 2;
   grid-column: 2;
   z-index: 10;
+  border-bottom-right-radius: $calendar-radius;
+  border-right: 1px solid rgb(var(--v-theme-on-surface));
+  border-bottom: 1px solid rgb(var(--v-theme-on-surface));
 }
 </style>
