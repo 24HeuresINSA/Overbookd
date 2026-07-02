@@ -20,9 +20,16 @@
         </template>
       </CalendarManager>
     </slot>
-    <div class="calendar" :class="{ 'daily-calendar': isDayMode }">
-      <div class="empty-case sticky-header" />
-      <header class="calendar-header sticky-header">
+    <div
+      ref="calendar"
+      class="calendar"
+      :class="{ 'daily-calendar': isDayMode }"
+    >
+      <div class="empty-case sticky-header" :class="{ overlay: isInOverlay }" />
+      <header
+        class="calendar-header sticky-header"
+        :class="{ overlay: isInOverlay }"
+      >
         <slot name="header">
           <DailyCalendarHeader
             v-if="isDayMode"
@@ -182,6 +189,12 @@ const propagateEventRightClick = (event: CalendarEvent) => {
 const propagatePeriodClick = (period: Period) => {
   emit("click:period", period);
 };
+
+const calendar = useTemplateRef("calendar");
+const isInOverlay = ref<boolean>(false);
+onMounted(() => {
+  isInOverlay.value = !!calendar.value?.closest(".v-overlay");
+});
 </script>
 
 <style lang="scss" scoped>
@@ -233,6 +246,10 @@ $calendar-content-height: $hour-height * 24;
   top: -15px;
   background-color: rgb(var(--v-theme-surface));
   z-index: 100;
+
+  &.overlay {
+    top: -5px;
+  }
 
   @media screen and (max-width: $mobile-max-width) {
     top: -10px;
