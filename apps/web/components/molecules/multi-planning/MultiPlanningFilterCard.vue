@@ -3,15 +3,24 @@
     <v-card-title> Filtres </v-card-title>
     <v-card-text class="card-content">
       <div class="card-content__line">
-        <SearchTeams
-          v-model="teams"
-          label="Équipes"
-          hide-details
-          closable-chips
-        />
+        <div class="card-content__column">
+          <SearchTeams
+            v-model="teams"
+            label="Équipes"
+            hide-details
+            closable-chips
+          />
+          <SearchTeams
+            v-model="excludedTeams"
+            label="Équipes à exclure"
+            hide-details
+            closable-chips
+          />
+        </div>
         <v-btn
           :text="`Ajouter les membres de ${teams.length} ${pluralize('équipe', teams.length)}`"
           color="primary"
+          size="large"
           :disabled="teams.length === 0"
           @click="addVolunteersFromTeams"
         />
@@ -28,6 +37,7 @@
         <v-btn
           text="Appliquer"
           color="primary"
+          size="large"
           :loading="loading"
           @click="selectVolunteers"
         />
@@ -52,12 +62,15 @@ defineProps({
 });
 
 const teams = ref<Team[]>([]);
+const excludedTeams = ref<Team[]>([]);
 
 const addVolunteersFromTeams = () => {
   if (teams.value.length === 0) return;
 
-  const volunteersFromTeam = userStore.volunteers.filter((volunteer) =>
-    teams.value.every(({ code }) => volunteer.teams.includes(code)),
+  const volunteersFromTeam = userStore.volunteers.filter(
+    (volunteer) =>
+      teams.value.every(({ code }) => volunteer.teams.includes(code)) &&
+      !excludedTeams.value.some(({ code }) => volunteer.teams.includes(code)),
   );
 
   const uniqueVolunteersFromTeam = volunteersFromTeam.filter(
@@ -69,6 +82,7 @@ const addVolunteersFromTeams = () => {
 
   volunteers.value.push(...uniqueVolunteersFromTeam);
   teams.value = [];
+  excludedTeams.value = [];
 
   selectVolunteers();
 };
@@ -81,12 +95,19 @@ const selectVolunteers = () => emit("apply");
 .card-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 
   &__line {
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  &__column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
 }
 </style>
