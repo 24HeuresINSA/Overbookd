@@ -17,7 +17,7 @@ import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
-import { ONE_DAY_IN_MS } from "@overbookd/time";
+import { Duration, OverDate } from "@overbookd/time";
 
 const url = process.env.DATABASE_URL;
 if (!url) {
@@ -58,8 +58,6 @@ function insertOrUpdateGear(name: string, categoryId: number) {
 }
 
 async function main() {
-  console.log("Creating teams 👥");
-
   await Promise.all(
     teams.map((team) =>
       prisma.team.upsert({
@@ -71,10 +69,12 @@ async function main() {
   );
   const databaseTeams = await prisma.team.findMany();
 
-  console.log("Creating users 👤");
+  console.log(`\n${databaseTeams.length} teams inserted 👥`);
+
+  console.log("\nCreating users 👤");
 
   const hashPassword = await new HashingUtilsService().hash("password");
-  await Promise.all(
+  const savedUsers = await Promise.all(
     userTeamTuples.map(async (userTeam) => {
       const [user, teamNames] = userTeam;
 
@@ -109,12 +109,17 @@ async function main() {
         create: userCreateData,
       });
 
-      console.log(`User ${user} added with teams ${teamNames.split(",")}`);
       console.log(
         "------------------------------------------------------------",
       );
+      console.log(`User ${user} added with teams ${teamNames.split(",")}`);
     }),
   );
+
+  console.log("------------------------------------------------------------");
+  console.log(`${savedUsers.length} users inserted 👤`);
+
+  console.log("\nCreating gears and categories 🛠️");
 
   await Promise.all(
     categoriesAndGears.map(async ({ name, gears, categories }) => {
@@ -155,6 +160,8 @@ async function main() {
     }),
   );
 
+  console.log("\nCreating permissions 💂");
+
   const savedPermissions = await Promise.all(
     permissions.map(async (permission) => {
       const name = permission.name;
@@ -168,36 +175,43 @@ async function main() {
     }),
   );
 
-  console.log(`\n${savedPermissions.length} permissions inserted`);
+  console.log("----------------------------------------------------------");
+  console.log(`${savedPermissions.length} permissions inserted 💂`);
 
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
+  console.log("\nCreating config ⚙️");
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const currentDate = OverDate.fromLocal(now);
+
+  console.log("----------------------------------------------------------");
+  console.log("Inserting event date");
+  const eventDate = currentDate.plus(Duration.ONE_WEEK.times(6));
   const eventDateConfig: Configuration = {
     key: EVENT_DATE_KEY,
-    value: { start: currentDate.toISOString() },
+    value: { start: eventDate.date.toISOString() },
   };
-  console.log("Creating of event date config");
   await prisma.configuration.upsert({
     where: { key: EVENT_DATE_KEY },
     update: eventDateConfig,
     create: eventDateConfig,
   });
 
-  const lastMonth = new Date(
-    currentDate.getMilliseconds() - 33 * ONE_DAY_IN_MS,
-  );
+  console.log("----------------------------------------------------------");
+  console.log("Inserting orga week date");
+  const orgaWeekDate = currentDate.plus(Duration.ONE_WEEK);
   const orgaWeekDateConfig: Configuration = {
     key: ORGA_WEEK_DATE_KEY,
-    value: { start: lastMonth.toISOString() },
+    value: { start: orgaWeekDate.date.toISOString() },
   };
-  console.log("Creating of orga week date config");
   await prisma.configuration.upsert({
     where: { key: ORGA_WEEK_DATE_KEY },
     update: orgaWeekDateConfig,
     create: orgaWeekDateConfig,
   });
 
-  console.log("Creating of register form config");
+  console.log("----------------------------------------------------------");
+  console.log("Inserting register form text");
   const registerFormConfig: Configuration = {
     key: REGISTER_FORM_KEY,
     value: {
@@ -210,7 +224,8 @@ async function main() {
     create: registerFormConfig,
   });
 
-  console.log("Creating of useful links config");
+  console.log("----------------------------------------------------------");
+  console.log("Inserting useful links");
   const usefulLinksConfig: Configuration = {
     key: USEFUL_LINKS_KEY,
     value: {
@@ -224,6 +239,8 @@ async function main() {
     create: usefulLinksConfig,
   });
 
+  console.log("----------------------------------------------------------");
+
   const locations = await Promise.all(
     signaLocations.map(({ name }) =>
       prisma.signaLocation.create({
@@ -232,16 +249,22 @@ async function main() {
     ),
   );
 
-  console.log(`\n${locations.length} Signa Locations inserted ⛳`);
+  console.log(`\n${locations.length} signa locations inserted ⛳`);
 
   const charismaPeriodData = [];
   for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 12; j += 2) {
+    for (let j = 0; j < 24; j += 2) {
+      const start = eventDate
+        .plus(Duration.ONE_DAY.times(i))
+        .plus(Duration.ONE_HOUR.times(j));
+      const end = eventDate
+        .plus(Duration.ONE_DAY.times(i))
+        .plus(Duration.ONE_HOUR.times(j + 2));
       charismaPeriodData.push({
         name: `Charisma ${i} - ${j}`,
-        start: new Date(2021, 8, i, j),
-        end: new Date(2021, 8, i, j + 2),
-        charisma: j % 2 === 0 ? 10 : 5,
+        start: start.date,
+        end: end.date,
+        charisma: j >= 18 ? 5 : 10,
       });
     }
   }
@@ -252,7 +275,7 @@ async function main() {
     ),
   );
 
-  console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉`);
+  console.log(`\n${charismaPeriods.length} charisma periods inserted 🎉`);
 
   const savedSignages = await prisma.catalogSignage.createMany({
     data: signages,
