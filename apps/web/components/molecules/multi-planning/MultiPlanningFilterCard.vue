@@ -5,9 +5,17 @@
       <div class="card-content__line">
         <SearchTeams
           v-model="teams"
-          label="Équipes"
+          label="Équipe(s)"
           hide-details
           closable-chips
+          class="fixed-width-field"
+        />
+        <SearchTeams
+          v-model="excludedTeams"
+          label="Équipe(s) à exclure"
+          hide-details
+          closable-chips
+          class="fixed-width-field"
         />
         <v-btn
           :text="`Ajouter les membres de ${teams.length} ${pluralize('équipe', teams.length)}`"
@@ -52,12 +60,23 @@ defineProps({
 });
 
 const teams = ref<Team[]>([]);
+const excludedTeams = ref<Team[]>([]);
 
 const addVolunteersFromTeams = () => {
   if (teams.value.length === 0) return;
 
-  const volunteersFromTeam = userStore.volunteers.filter((volunteer) =>
-    teams.value.every(({ code }) => volunteer.teams.includes(code)),
+  const excludeIncludedTeam = excludedTeams.value.some(
+    ({ code: excludedCode }) =>
+      teams.value.some(({ code }) => excludedCode === code),
+  );
+  if (excludeIncludedTeam) {
+    sendInfoNotification("Ah c'est bien malin ça 😅");
+  }
+
+  const volunteersFromTeam = userStore.volunteers.filter(
+    (volunteer) =>
+      teams.value.every(({ code }) => volunteer.teams.includes(code)) &&
+      !excludedTeams.value.some(({ code }) => volunteer.teams.includes(code)),
   );
 
   const uniqueVolunteersFromTeam = volunteersFromTeam.filter(
@@ -69,6 +88,7 @@ const addVolunteersFromTeams = () => {
 
   volunteers.value.push(...uniqueVolunteersFromTeam);
   teams.value = [];
+  excludedTeams.value = [];
 
   selectVolunteers();
 };
@@ -88,5 +108,9 @@ const selectVolunteers = () => emit("apply");
     align-items: center;
     gap: 10px;
   }
+}
+
+.fixed-width-field {
+  flex: 1 1 0;
 }
 </style>
