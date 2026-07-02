@@ -1,7 +1,7 @@
 <template>
   <DesktopPageTitle title="Assignation du charisme aux disponibilités" />
   <div class="charisma-periods">
-    <v-card>
+    <v-card class="overflow-visible">
       <v-card-text>
         <OverCalendar
           v-model="calendarDisplayedDay"

@@ -239,7 +239,6 @@ const propagatePeriodClick = (period: Period, volunteerId: number) => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .multi-calendar__pagination {
