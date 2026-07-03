@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Request,
   UseFilters,
   UseGuards,
 } from "@nestjs/common";
@@ -29,6 +30,8 @@ import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
 import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { RequestWithUserPayload } from "../../../app.controller";
+import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 
 @Controller("registrations/membership-applications/staffs")
 @ApiTags("registrations/membership-applications/staffs")
@@ -111,15 +114,21 @@ export class StaffMembershipApplicationController {
   @Get("invitation-link")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  getStaffInvitationLink(): Promise<URL | undefined> {
-    return this.applicationService.getStaffInvitationLink();
+  getStaffInvitationLink(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<URL | undefined> {
+    return this.applicationService.getStaffInvitationLink(new JwtUtil(user));
   }
 
   @Post("invitation-link")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(ENROLL_HARD)
-  generateStaffInvitationLink(): Promise<URL> {
-    return this.applicationService.generateStaffInvitationLink();
+  generateStaffInvitationLink(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<URL> {
+    return this.applicationService.generateStaffInvitationLink(
+      new JwtUtil(user),
+    );
   }
 
   @Get(":email")

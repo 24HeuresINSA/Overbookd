@@ -13,6 +13,7 @@ import {
   ENROLL_SOFT,
   MANAGE_CONFIG,
   VIEW_USEFUL_LINKS,
+  ENROLL_HARD,
 } from "@overbookd/permission";
 
 const ALL = "ALL";
@@ -53,8 +54,8 @@ const configurationsWithPermissions: ConfigurationWithPermissions[] = [
   {
     key: INVITE_STAFF_LINK_KEY,
     permissions: {
-      read: NONE,
-      write: NONE,
+      read: ENROLL_HARD,
+      write: ENROLL_HARD,
     },
   },
   {

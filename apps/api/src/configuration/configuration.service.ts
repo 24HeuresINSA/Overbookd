@@ -3,13 +3,10 @@ import { PrismaService } from "../prisma.service";
 import {
   Configuration,
   ConfigurationKey,
-  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   canReadConfiguration,
   canWriteConfiguration,
 } from "@overbookd/configuration";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { Availability } from "@overbookd/volunteer-availability";
-import { IProvidePeriod, Period } from "@overbookd/time";
 
 @Injectable()
 export class ConfigurationService {
@@ -45,23 +42,7 @@ export class ConfigurationService {
         "Tu n'es pas autorisé à modifier cette configuration",
       );
     }
-    if (configuration.key === VOLUNTEER_BRIEFING_TIME_WINDOW_KEY) {
-      const period = Period.init(configuration.value as IProvidePeriod);
-      Availability.fromPeriod(period);
-    }
-    return this.prisma.configuration.upsert({
-      where: { key: configuration.key },
-      create: configuration,
-      update: configuration,
-    });
-  }
 
-  upsertBriefingTimeWindow(period: IProvidePeriod): Promise<Configuration> {
-    Availability.fromPeriod(period);
-    const configuration: Configuration = {
-      key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value: period,
-    };
     return this.prisma.configuration.upsert({
       where: { key: configuration.key },
       create: configuration,

@@ -23,9 +23,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { RequestWithUserPayload } from "../../src/app.controller";
 import { VolunteerAvailabilityErrorFilter } from "../volunteer-availability/volunteer-availability-error.filter";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { ENROLL_SOFT } from "@overbookd/permission";
 import { PeriodRequestDto } from "../common/dto/period.request.dto";
+import { Availability } from "@overbookd/volunteer-availability";
 
 @Controller("configuration")
 @ApiTags("configuration")
@@ -76,7 +75,6 @@ export class ConfigurationController {
   @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
   @UseFilters(VolunteerAvailabilityErrorFilter)
   @ApiResponse({
     status: 201,
@@ -89,7 +87,11 @@ export class ConfigurationController {
   upsertBriefingTimeWindow(
     @Body() period: PeriodRequestDto,
   ): Promise<Configuration> {
-    return this.configurationService.upsertBriefingTimeWindow(period);
+    Availability.fromPeriod(period);
+    return this.configurationService.upsert({
+      key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
+      value: { period },
+    });
   }
 
   @Post(":key")
