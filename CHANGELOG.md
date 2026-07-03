@@ -1,3 +1,26 @@
+## [3.54.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.10...v3.54.0) (2026-07-03)
+
+### Features
+
+* **shared-meal:** :tada: add multishotgun [#2578](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2578) [#2691](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2691) ([da55b77](https://gitlab.com/24-heures-insa/overbookd-mono/commit/da55b772daf373a0b32e8cbb34cef63a1866519e))
+* **shared-meal:** add shared meal creation and closing dates [#2756](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2756) ([7ef95af](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7ef95afd6cd3d15dee9ff0786b97153746f1bbe1))
+* **shared-meal:** add shared meals history [#2251](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2251) ([bfc8858](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bfc8858a435f48056943f24ae15103211853cd23))
+
+### Bug Fixes
+
+* **config:** Save useful links in database [#2609](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2609) ([ca9ace7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ca9ace73bd800795bca463be045ac9287b254a73))
+* **configuration:** bind permissions with configuration keys [#2757](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2757) ([52559df](https://gitlab.com/24-heures-insa/overbookd-mono/commit/52559df605b153b116f3d6587a4b4cd4dc4327b0))
+* **mutliplanning:** add option to exclude teams from multiplanning [#2732](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2732) ([dc11a08](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dc11a088a88b5aa77946d4706c819141e204c167))
+* **purchase:** remove gear purchases [#2744](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2744) ([4fede31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4fede314616ecd898f4c9bf0c5d4a41f6ae34b17))
+* **registration:** use configured registration description [#2762](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2762) ([cf898b2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cf898b26da6cf7a0d5f25fc13b249c9a3fa02b28))
+* Repair dev env for MacOS ([2b928ec](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2b928ec3ab9af7a1406609da3415e479160f6036))
+* **shared-meal:** mobile display issue & add portion cost [#2251](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2251) ([73a7dd6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/73a7dd671ec913d36c496315adb2978ee2e30189))
+* **web:** make calendar header sticky [#2720](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2720) ([aba6d91](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aba6d91eb612914755a843b4c6a92143f4390990))
+
+### Refactor
+
+* firstname, lastname, birthdate, phone [#2754](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2754) ([b88210a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b88210a1aab827986913aaba8e8134258460fa23))
+
 ## [3.53.10](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.9...v3.53.10) (2026-05-18)
 
 ### Bug Fixes

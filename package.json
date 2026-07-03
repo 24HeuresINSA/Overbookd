@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "3.53.11-rc.11",
+  "version": "3.54.0",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
