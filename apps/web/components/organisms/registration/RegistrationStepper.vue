@@ -263,7 +263,6 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { loginAndApplyForMembership } from "~/utils/login.utils";
