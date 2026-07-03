@@ -86,12 +86,14 @@ export class ConfigurationController {
   })
   upsertBriefingTimeWindow(
     @Body() period: PeriodRequestDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<Configuration> {
     Availability.fromPeriod(period);
-    return this.configurationService.upsert({
+    const config = {
       key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value: { period },
-    });
+      value: period,
+    };
+    return this.configurationService.upsert(config, new JwtUtil(req.user));
   }
 
   @Post(":key")
