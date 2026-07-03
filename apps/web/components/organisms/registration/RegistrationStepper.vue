@@ -24,29 +24,8 @@
 
       <v-stepper-window v-show="step == 1" direction="vertical">
         <v-stepper-window-item :value="1">
-          <p>Hello et merci d'être venu jusqu'ici ! 🤗</p>
-          <p>
-            Le festival des 24 heures de l'INSA n'est possible que grâce aux
-            plus de <strong>350 bénévoles</strong> qui, comme toi, ont accepté
-            de venir nous donner un coup de main pour préparer, organiser et
-            faire en sorte que les festivaliers passent le meilleur moment
-            possible. 🎉
-          </p>
-          <p>
-            Pour que l'on puisse t'accueillir dans les meilleures conditions il
-            nous faut cependant quelques informations sur toi et le temps que tu
-            souhaites consacrer à nous aider.
-          </p>
-          <p>
-            Si tu as la moindre question sur le festival et ce que tu peux faire
-            pour nous aider, n'hésite pas à
-            <a :href="`mailto:${HUMAINS_EMAIL}`">
-              contacter les responsables bénévoles
-            </a>
-            .
-            <br />Ils seront tes principaux interlocuteurs en amont et en aval
-            du festival. 😎
-          </p>
+          <div v-html-safe="registerFormDescription" />
+
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
             <v-btn
@@ -288,10 +267,17 @@ import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { loginAndApplyForMembership } from "~/utils/login.utils";
+import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
+const configurationStore = useConfigurationStore();
 const teamStore = useTeamStore();
+
+configurationStore.fetch(REGISTER_FORM_KEY);
+const registerFormDescription = computed<string>(
+  () => configurationStore.registerFormDescription,
+);
 
 const step = ref<number>(1);
 const firstName = ref<string>("");
