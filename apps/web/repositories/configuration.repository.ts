@@ -18,7 +18,7 @@ export class ConfigurationRepository {
 
   static fetchAsUnauthenticated(key: string) {
     return HttpClient.get<Configuration>(
-      `${this.basePath}/${key}/unauthenticated`,
+      `${this.basePath}/unauthenticated/${key}`,
     );
   }
 

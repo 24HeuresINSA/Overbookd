@@ -45,7 +45,7 @@ export class ConfigurationController {
     return this.configurationService.findAll(new JwtUtil(req.user));
   }
 
-  @Get(":key/unauthenticated")
+  @Get("unauthenticated/:key")
   @ApiResponse({
     status: 200,
     description: "Get configuration by key",
