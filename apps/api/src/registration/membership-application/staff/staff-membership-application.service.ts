@@ -8,11 +8,13 @@ import {
   STAFF,
 } from "@overbookd/registration";
 import { Users } from "../common/repository/users";
-import { Configurations } from "./repository/configurations";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { HARD } from "@overbookd/team-constants";
 import { createStaffInvitationToken } from "./jwt.utils";
+import { ConfigurationService } from "../../../configuration/configuration.service";
+import { INVITE_STAFF_LINK_KEY } from "@overbookd/configuration";
+import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -22,8 +24,11 @@ type UseCases = {
 
 type Repositories = {
   users: Readonly<Users>;
-  configurations: Readonly<Configurations>;
   enroll: Readonly<EnrollCandidatesRepository>;
+};
+
+type Services = {
+  configuration: Readonly<ConfigurationService>;
 };
 
 @Injectable()
@@ -31,6 +36,7 @@ export class StaffMembershipApplicationService {
   constructor(
     private readonly useCases: UseCases,
     private readonly repositories: Repositories,
+    private readonly services: Services,
   ) {}
 
   async applyFor(email: string, token: string): Promise<void> {
@@ -58,16 +64,20 @@ export class StaffMembershipApplicationService {
     return this.useCases.reject.unapplyOne({ email }, STAFF);
   }
 
-  async getStaffInvitationLink(): Promise<URL | undefined> {
-    const link = await this.repositories.configurations.getInviteStaffLink();
-    return link ? new URL(link) : undefined;
+  async getStaffInvitationLink(user: JwtUtil): Promise<URL | undefined> {
+    const link = await this.services.configuration.findOne(
+      INVITE_STAFF_LINK_KEY,
+      user,
+    );
+    return link?.value ? new URL(link.value.toString()) : undefined;
   }
 
-  async generateStaffInvitationLink(): Promise<URL> {
+  async generateStaffInvitationLink(user: JwtUtil): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
     const token = createStaffInvitationToken();
     const link = InviteStaff.byLink({ domain, token });
-    await this.repositories.configurations.saveInviteStaffLink(link.toString());
+    const config = { key: INVITE_STAFF_LINK_KEY, value: link.toString() };
+    await this.services.configuration.upsert(config, user);
     return link;
   }
 

@@ -29,7 +29,7 @@ export class JwtUtil implements JwtPayload {
     this.username = payload.username;
   }
 
-  private get isAdmin(): boolean {
+  get isAdmin(): boolean {
     return this.teams.includes(ADMIN);
   }
 

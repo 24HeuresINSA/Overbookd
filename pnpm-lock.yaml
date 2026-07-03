@@ -647,7 +647,11 @@ importers:
         specifier: 7.8.2
         version: 7.8.2
 
-  utils/configuration: {}
+  utils/configuration:
+    dependencies:
+      '@overbookd/permission':
+        specifier: workspace:*
+        version: link:../../constants/permission
 
   utils/domain-events:
     dependencies:

@@ -10,10 +10,7 @@ import { Users } from "../common/repository/users";
 import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { SOFT } from "@overbookd/team-constants";
-import { IProvidePeriod } from "@overbookd/time";
 import { ConfigurationService } from "../../../configuration/configuration.service";
-import { Availability } from "@overbookd/volunteer-availability";
-import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -70,13 +67,5 @@ export class VolunteerMembershipApplicationService {
 
   enroll(candidates: CandidateToEnroll[]): Promise<void> {
     return this.useCases.enroll.apply({ candidates, team: SOFT });
-  }
-
-  async upsertBriefingTimeWindow(period: IProvidePeriod): Promise<void> {
-    Availability.fromPeriod(period);
-    await this.repositories.configuration.upsert({
-      key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value: period,
-    });
   }
 }

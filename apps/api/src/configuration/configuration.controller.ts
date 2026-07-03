@@ -4,30 +4,27 @@ import {
   Post,
   Body,
   Param,
-  Delete,
+  Request,
   UseGuards,
-  HttpCode,
+  UseFilters,
 } from "@nestjs/common";
 import { ConfigurationService } from "./configuration.service";
 import { ConfigurationResponseDto } from "./dto/configuration.response.dto";
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import {
-  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   Configuration,
   ConfigurationKey,
+  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
 } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
-import { ENROLL_SOFT, MANAGE_CONFIG } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { RequestWithUserPayload } from "../../src/app.controller";
+import { VolunteerAvailabilityErrorFilter } from "../volunteer-availability/volunteer-availability-error.filter";
+import { PeriodRequestDto } from "../common/dto/period.request.dto";
+import { Availability } from "@overbookd/volunteer-availability";
 
 @Controller("configuration")
 @ApiTags("configuration")
@@ -36,52 +33,73 @@ export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: "Get all configurations",
     type: ConfigurationResponseDto,
     isArray: true,
   })
-  findAll(): Promise<Configuration[]> {
-    return this.configurationService.findAll();
+  findAll(@Request() req: RequestWithUserPayload): Promise<Configuration[]> {
+    return this.configurationService.findAll(new JwtUtil(req.user));
   }
 
-  @Get(":key")
+  @Get(":key/unauthenticated")
   @ApiResponse({
     status: 200,
     description: "Get configuration by key",
     type: ConfigurationResponseDto,
   })
-  findOne(@Param("key") key: ConfigurationKey): Promise<Configuration> {
+  findOneAsUnauthenticated(
+    @Param("key") key: ConfigurationKey,
+  ): Promise<Configuration> {
     return this.configurationService.findOne(key);
+  }
+
+  @Get(":key")
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: "Get configuration by key",
+    type: ConfigurationResponseDto,
+  })
+  findOne(
+    @Param("key") key: ConfigurationKey,
+    @Request() req: RequestWithUserPayload,
+  ): Promise<Configuration> {
+    return this.configurationService.findOne(key, new JwtUtil(req.user));
   }
 
   @Post(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY)
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_SOFT)
+  @UseFilters(VolunteerAvailabilityErrorFilter)
   @ApiResponse({
     status: 201,
     description: "Upsert briefing time window",
-    type: ConfigurationResponseDto,
   })
   @ApiBody({
     description: "Briefing time window",
-    type: UpsertConfigurationDto,
+    type: PeriodRequestDto,
   })
   upsertBriefingTimeWindow(
-    @Body() { value }: UpsertConfigurationDto,
+    @Body() period: PeriodRequestDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<Configuration> {
-    return this.configurationService.upsert({
+    Availability.fromPeriod(period);
+    const config = {
       key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-      value,
-    });
+      value: period,
+    };
+    return this.configurationService.upsert(config, new JwtUtil(req.user));
   }
 
   @Post(":key")
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(MANAGE_CONFIG)
+  @UseFilters(VolunteerAvailabilityErrorFilter)
   @ApiResponse({
     status: 201,
     description: "Upsert configuration",
@@ -94,24 +112,11 @@ export class ConfigurationController {
   upsert(
     @Param("key") key: ConfigurationKey,
     @Body() { value }: UpsertConfigurationDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<Configuration> {
-    return this.configurationService.upsert({ key, value });
-  }
-
-  @Delete(":key")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONFIG)
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Delete a configuration",
-  })
-  @ApiParam({
-    name: "key",
-    description: "Configuration key",
-  })
-  remove(@Param("key") key: ConfigurationKey): Promise<void> {
-    return this.configurationService.remove(key);
+    return this.configurationService.upsert(
+      { key, value },
+      new JwtUtil(req.user),
+    );
   }
 }
