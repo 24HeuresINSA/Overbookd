@@ -1,6 +1,7 @@
 FROM node:24.18.0-alpine AS installer
 
 ENV CI=true
+ENV DISABLE_PLANTUML_ERD_GENERATION=true
 
 WORKDIR /overbookd
 
