@@ -24,7 +24,6 @@ import {
   approvedByElecRejectedByMatos,
   rejectedByHumainAndIgnoredByMatos,
 } from "../festival-task.fake.js";
-import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
 import { InMemoryReviewers } from "./reviewers.inmemory.js";
@@ -34,7 +33,6 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 describe("Festival Task - ask for review", () => {
-  let notifications: InMemoryNotifications<"FT">;
   let askForReview: AskForReview;
   let festivalTasks: InMemoryAskForReviewTasks;
   let translator: FestivalTaskTranslator;
@@ -62,11 +60,10 @@ describe("Festival Task - ask for review", () => {
       { adherent: noel, count: 0 },
       { adherent: george, count: 1 },
     ]);
-    notifications = new InMemoryNotifications<"FT">();
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     translator = new FestivalTaskTranslator(volunteerConflicts);
     askForReview = new AskForReview(
-      { notifications, reviewers, tasks: festivalTasks },
+      { reviewers, tasks: festivalTasks },
       translator,
     );
   });
@@ -114,16 +111,6 @@ describe("Festival Task - ask for review", () => {
           expect(festivalTasks.entries).toContainEqual(inReview);
         });
         describe("reviews", () => {
-          it(`should ask review from ${reviewers}`, async () => {
-            const inReview = await askForReview.from(task.id, instigator);
-
-            expect(notifications.entries).toHaveLength(reviewers.length);
-
-            const event = { id: inReview.id, name: inReview.general.name };
-            reviewers.every((team: string) =>
-              expect(notifications.entries).toContainEqual({ team, event }),
-            );
-          });
           it.each`
             team         | status
             ${LOG_ELEC}  | ${task.festivalActivity.hasSupplyRequest ? REVIEWING : NOT_ASKING_TO_REVIEW}
@@ -189,16 +176,6 @@ describe("Festival Task - ask for review", () => {
           ]);
         });
         describe("reviews", () => {
-          it(`should ask review from ${rejectors}`, async () => {
-            const inReview = await askForReview.from(task.id, instigator);
-
-            expect(notifications.entries).toHaveLength(rejectors.length);
-
-            const event = { id: inReview.id, name: inReview.general.name };
-            rejectors.every((team: string) =>
-              expect(notifications.entries).toContainEqual({ team, event }),
-            );
-          });
           it("should reset rejected reviews to reviewing", async () => {
             const inReview = await askForReview.from(task.id, instigator);
             const resetReviews = Object.fromEntries(
@@ -226,7 +203,7 @@ describe("Festival Task - ask for review", () => {
         beforeEach(() => {
           const reviewers = new InMemoryReviewers(humainReviews);
           askForReview = new AskForReview(
-            { tasks: festivalTasks, notifications, reviewers },
+            { tasks: festivalTasks, reviewers },
             translator,
           );
         });
@@ -244,7 +221,7 @@ describe("Festival Task - ask for review", () => {
       const reviewers = new InMemoryReviewers(humainReviews);
       it("should assign the task to a human reviewer who is not the task administrator", async () => {
         askForReview = new AskForReview(
-          { tasks: festivalTasks, notifications, reviewers },
+          { tasks: festivalTasks, reviewers },
           translator,
         );
         const inReview = await askForReview.from(

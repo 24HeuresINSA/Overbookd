@@ -1,11 +1,4 @@
-import { ENROLL_HARD, ENROLL_SOFT, Permission } from "@overbookd/permission";
-import {
-  StaffRegistered,
-  Membership,
-  NewcomerRegistered,
-  VolunteerRegistered,
-  MemberRegistered,
-} from "./newcomer.js";
+import { Membership, NewcomerRegistered } from "./newcomer.js";
 import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
 import {
   RegisterForm,
@@ -20,23 +13,8 @@ export type NewcomerRepository = {
   ) => Promise<NewcomerRegistered<T>>;
 };
 
-export type FilterNotifyees = {
-  permission: Permission;
-};
-
-export type Notifyee = {
-  id: number;
-};
-
-export type NotificationRepository = {
-  add(event: MemberRegistered, clause: FilterNotifyees): Promise<Notifyee[]>;
-};
-
 export class RegisterNewcomer {
-  constructor(
-    private readonly newcomerRepository: NewcomerRepository,
-    private readonly notificationRepository: NotificationRepository,
-  ) {}
+  constructor(private readonly newcomerRepository: NewcomerRepository) {}
 
   private commentAction(form: RegisterForm, comment?: string) {
     if (comment === undefined) return form.clearComment();
@@ -82,17 +60,5 @@ export class RegisterNewcomer {
     }
 
     return this.newcomerRepository.save(fulfilledForm, membership);
-  }
-
-  notifyNewStaffAwaits(newcomer: StaffRegistered): Promise<Notifyee[]> {
-    return this.notificationRepository.add(newcomer, {
-      permission: ENROLL_HARD,
-    });
-  }
-
-  notifyNewVolunteerAwaits(newcomer: VolunteerRegistered): Promise<Notifyee[]> {
-    return this.notificationRepository.add(newcomer, {
-      permission: ENROLL_SOFT,
-    });
   }
 }

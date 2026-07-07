@@ -22,7 +22,6 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaReviewers } from "./repository/reviewers.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
-import { PrismaNotifications } from "../../common/repository/notifications.prisma";
 import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
 import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignment-festival-tasks.prisma";
 
@@ -79,12 +78,6 @@ import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignm
       inject: [PrismaService],
     },
     {
-      provide: PrismaNotifications<"FT">,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaNotifications<"FT">(prisma),
-      inject: [PrismaService],
-    },
-    {
       provide: PrismaReviewers,
       useFactory: (prisma: PrismaService) => new PrismaReviewers(prisma),
       inject: [PrismaService],
@@ -133,17 +126,10 @@ import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignm
       provide: AskForReviewTask,
       useFactory: (
         tasks: PrismaAskForReview,
-        notifications: PrismaNotifications<"FT">,
         reviewers: PrismaReviewers,
         translator: FestivalTaskTranslator,
-      ) =>
-        new AskForReviewTask({ tasks, notifications, reviewers }, translator),
-      inject: [
-        PrismaAskForReview,
-        PrismaNotifications<"FT">,
-        PrismaReviewers,
-        FestivalTaskTranslator,
-      ],
+      ) => new AskForReviewTask({ tasks, reviewers }, translator),
+      inject: [PrismaAskForReview, PrismaReviewers, FestivalTaskTranslator],
     },
     {
       provide: PrismaFestivalTasksForRemoval,

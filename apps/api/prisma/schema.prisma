@@ -67,7 +67,6 @@ model User {
   friends          Friend[]                @relation("friend")
 
   contributions                Contribution[]
-  notifications                Notification[]
   festivalActivities           FestivalActivity[]
   festivalActivityInstigations FestivalActivityHistory[]
   faFeedbacks                  FestivalActivityFeedback[]
@@ -106,13 +105,6 @@ model Preference {
   assignment    AssignmentPreference @default(NO_PREF)
 
   @@map("preference")
-}
-
-model Notification {
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @id
-
-  @@map("notification")
 }
 
 model Team {

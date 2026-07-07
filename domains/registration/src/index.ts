@@ -14,12 +14,7 @@ export {
   isStaffRegistered,
   isVolunteerRegistered,
 } from "./newcomer.js";
-export type {
-  FilterNotifyees,
-  NewcomerRepository,
-  NotificationRepository,
-  Notifyee,
-} from "./register-newcomer.js";
+export type { NewcomerRepository } from "./register-newcomer.js";
 export { RegisterNewcomer } from "./register-newcomer.js";
 
 // Enroll

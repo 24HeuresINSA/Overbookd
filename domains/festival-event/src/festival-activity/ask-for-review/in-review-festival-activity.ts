@@ -20,7 +20,6 @@ import { ActivityInChargeSpecification } from "./specifications/in-charge-sectio
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification.js";
 import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
-import { WaitingForReview } from "../../common/notifications.js";
 import {
   Reviewer,
   PrivateActivityReviewer,
@@ -28,15 +27,6 @@ import {
 } from "../../common/review.js";
 import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
 import { Adherent } from "../../common/adherent.js";
-import {
-  BARRIERES,
-  COMMUNICATION,
-  HUMAIN,
-  LOG_ELEC,
-  LOG_MATOS,
-  SECU,
-  SIGNA,
-} from "@overbookd/team-constants";
 
 type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;
@@ -97,16 +87,6 @@ export class ReviewableSpecification {
     return [...general, ...inCharge, ...signa, ...inquiry];
   }
 }
-
-const COMMON_REVIEWERS: Reviewer<"FA">[] = [
-  HUMAIN,
-  SIGNA,
-  SECU,
-  LOG_MATOS,
-  LOG_ELEC,
-  BARRIERES,
-];
-const PUBLIC_REVIEWERS: Reviewer<"FA">[] = [...COMMON_REVIEWERS, COMMUNICATION];
 
 export class InReviewFestivalActivity implements InReview {
   private constructor(
@@ -201,45 +181,6 @@ export class InReviewFestivalActivity implements InReview {
       elec: reviews.elec !== REJECTED ? reviews.elec : REVIEWING,
       barrieres: reviews.barrieres !== REJECTED ? reviews.barrieres : REVIEWING,
     };
-  }
-
-  private get isPublic(): boolean {
-    return this.general.toPublish;
-  }
-
-  get readyForReview(): WaitingForReview<"FA"> {
-    return {
-      id: this.id,
-      name: this.general.name,
-      reviewers: this.reviewersToNotify,
-    };
-  }
-
-  private get reviewersToNotify(): Reviewer<"FA">[] {
-    if (!this.previousReviews) {
-      return this.isPublic ? PUBLIC_REVIEWERS : COMMON_REVIEWERS;
-    }
-
-    return PUBLIC_REVIEWERS.filter((reviewer) => this.hasRejected(reviewer));
-  }
-
-  private hasRejected(reviewer: Reviewer<"FA">): boolean {
-    switch (reviewer) {
-      case HUMAIN:
-        return this.previousReviews?.humain === REJECTED;
-      case SIGNA:
-        return this.previousReviews?.signa === REJECTED;
-      case SECU:
-        return this.previousReviews?.secu === REJECTED;
-      case LOG_MATOS:
-        return this.previousReviews?.matos === REJECTED;
-      case LOG_ELEC:
-        return this.previousReviews?.elec === REJECTED;
-      case BARRIERES:
-        return this.previousReviews?.barrieres === REJECTED;
-      case COMMUNICATION:
-        return this.previousReviews?.communication === REJECTED;
-    }
   }
 }
 
