@@ -1,0 +1,635 @@
+@startuml erd
+skinparam linetype ortho
+enum "TransactionType" as TransactionType {
+  INITIALIZATION
+  DEPOSIT
+  TRANSFER
+  BARREL
+  PROVISIONS
+  SHARED_MEAL
+  EXTERNAL_EVENT
+}
+enum "Membership" as Membership {
+  VOLUNTEER
+  STAFF
+}
+enum "AssignmentPreference" as AssignmentPreference {
+  NO_PREF
+  STACKED
+  FRAGMENTED
+  NO_REST
+}
+enum "FestivalActivityStatus" as FestivalActivityStatus {
+  DRAFT
+  IN_REVIEW
+  VALIDATED
+  REFUSED
+}
+enum "SignageType" as SignageType {
+  BACHE
+  PANNEAU
+  AFFICHE
+}
+enum "ElectricityConnection" as ElectricityConnection {
+  PC16_Prise_classique
+  P17_16A_MONO
+  P17_16A_TRI
+  P17_16A_TETRA
+  P17_32A_MONO
+  P17_32A_TRI
+  P17_32A_TETRA
+  P17_63A_MONO
+  P17_63A_TRI
+  P17_63A_TETRA
+  P17_125A_TETRA
+}
+enum "FestivalActivityReviewer" as FestivalActivityReviewer {
+  humain
+  signa
+  secu
+  matos
+  elec
+  barrieres
+  communication
+}
+enum "FestivalActivityReviewStatus" as FestivalActivityReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+  APPROVED
+  REJECTED
+}
+enum "FestivalActivityEvent" as FestivalActivityEvent {
+  CREATED
+  READY_TO_REVIEW
+  APPROVED
+  REJECTED
+  COMMENTED
+}
+enum "FestivalTaskCategory" as FestivalTaskCategory {
+  BAR
+  MANUTENTION
+  RELOU
+  STATIQUE
+  FUN
+  COLLAGE
+}
+enum "FestivalTaskStatus" as FestivalTaskStatus {
+  DRAFT
+  IN_REVIEW
+  REFUSED
+  VALIDATED
+  READY_TO_ASSIGN
+}
+enum "FestivalTaskEvent" as FestivalTaskEvent {
+  CREATED
+  COMMENTED
+  READY_TO_REVIEW
+  REJECTED
+  APPROVED
+  RESET_REVIEW
+  ASSIGNMENT_STARTED
+  FORCED_UPDATE
+}
+enum "FestivalTaskReviewer" as FestivalTaskReviewer {
+  humain
+  matos
+  elec
+}
+enum "FestivalTaskReviewStatus" as FestivalTaskReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+  WILL_NOT_REVIEW
+  REJECTED
+  APPROVED
+}
+entity "User" as User {
++ id [PK] : Int 
+--
+  * firstName : String
+  * lastName : String
+  nickname : String
+  * email : String
+  * birthDate : DateTime
+  * phoneNumber : String
+  comment : String
+  resetPasswordToken : String
+  resetPasswordExpires : DateTime
+  profilePicture : String
+  * password : String
+  * createdAt : DateTime
+  * updatedAt : DateTime
+  lastLogin : DateTime
+  * isDeleted : Boolean
+  registrationMembership : Membership
+  note : String
+  * hasApprovedEULA : Boolean
+  * hasSignedVolunteerCharter : Boolean
+}
+
+entity "Preference" as Preference {
++ userId [PK] : Int 
+--
+  paperPlanning : Boolean
+  * favoritePages : String
+  * assignment : AssignmentPreference
+}
+
+entity "Notification" as Notification {
++ userId [PK] : Int 
+--
+}
+
+entity "Team" as Team {
++ code [PK] : String 
+--
+  * name : String
+  * color : String
+  * icon : String
+}
+
+entity "UserTeam" as UserTeam {
+--
+  # userId : [FK] User
+  # teamCode : [FK] Team
+}
+
+entity "MembershipApplication" as MembershipApplication {
+--
+  # userId : [FK] User
+  * edition : Int
+  * membership : Membership
+  * isRejected : Boolean
+  * candidatedAt : DateTime
+}
+
+entity "Permission" as Permission {
++ id [PK] : Int 
+--
+  * name : String
+  description : String
+}
+
+entity "TeamPermission" as TeamPermission {
+--
+  # permissionName : [FK] Permission
+  # teamCode : [FK] Team
+}
+
+entity "Transaction" as Transaction {
++ id [PK] : Int 
+--
+  * type : TransactionType
+  # from : [FK] User
+  # to : [FK] User
+  * amount : Int
+  * context : String
+  * createdAt : DateTime
+  * isDeleted : Boolean
+}
+
+entity "Contribution" as Contribution {
+--
+  # adherentId : [FK] User
+  * edition : Int
+  * expirationDate : DateTime
+  * paymentDate : DateTime
+  * amount : Int
+}
+
+entity "CharismaEventParticipation" as CharismaEventParticipation {
+--
+  * slug : String
+  * name : String
+  # participantId : [FK] User
+  * charisma : Int
+  * eventDate : String
+}
+
+entity "SignaLocation" as SignaLocation {
++ id [PK] : Int 
+--
+  * name : String
+  geoLocation : Json
+}
+
+entity "CatalogCategory" as CatalogCategory {
++ id [PK] : Int 
+--
+  * name : String
+  * path : String
+  # parent : [FK] CatalogCategory
+  # ownerCode : [FK] Team
+}
+
+entity "CatalogGear" as CatalogGear {
++ id [PK] : Int 
+--
+  * name : String
+  * slug : String
+  # categoryId : [FK] CatalogCategory
+  * isPonctualUsage : Boolean
+  * isConsumable : Boolean
+}
+
+entity "Configuration" as Configuration {
++ key [PK] : String 
+--
+  * value : Json
+}
+
+entity "InventoryRecord" as InventoryRecord {
+--
+  # gearId : [FK] CatalogGear
+  * storage : String
+  * quantity : Int
+  comment : String
+}
+
+entity "CharismaPeriod" as CharismaPeriod {
++ id [PK] : Int 
+--
+  * name : String
+  * charisma : Int
+  * start : DateTime
+  * end : DateTime
+}
+
+entity "VolunteerAvailability" as VolunteerAvailability {
+--
+  # userId : [FK] User
+  * start : DateTime
+  * end : DateTime
+}
+
+entity "Friend" as Friend {
+--
+  # requestorId : [FK] User
+  # friendId : [FK] User
+}
+
+entity "CatalogSignage" as CatalogSignage {
++ id [PK] : Int 
+--
+  * name : String
+  * slug : String
+  * type : SignageType
+  image : String
+}
+
+entity "Barrel" as Barrel {
++ slug [PK] : String 
+--
+  * drink : String
+  * price : Int
+  * openedOn : DateTime
+}
+
+entity "FestivalActivity" as FestivalActivity {
+--
+  * id : Int
+  * status : FestivalActivityStatus
+  * isDeleted : Boolean
+  * name : String
+  description : String
+  * toPublish : Boolean
+  photoLink : String
+  * isFlagship : Boolean
+  * categories : String
+  # teamCode : [FK] Team
+  # adherentId : [FK] User
+  # locationId : [FK] SignaLocation
+  specialNeed : String
+  * freePass : Int
+  water : String
+}
+
+entity "FestivalActivityTimeWindowGeneral" as FestivalActivityTimeWindowGeneral {
+--
+  * id : String
+  * start : DateTime
+  * end : DateTime
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivityTimeWindowInquiry" as FestivalActivityTimeWindowInquiry {
+--
+  * id : String
+  * start : DateTime
+  * end : DateTime
+  # faId : [FK] FestivalActivity
+}
+
+entity "Contractor" as Contractor {
+--
+  * id : Int
+  * firstName : String
+  * lastName : String
+  * phoneNumber : String
+  email : String
+  company : String
+  comment : String
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivitySignage" as FestivalActivitySignage {
+--
+  * id : String
+  * quantity : Int
+  * text : String
+  * size : String
+  * type : SignageType
+  comment : String
+  # catalogItemId : [FK] CatalogSignage
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivityElectricitySupply" as FestivalActivityElectricitySupply {
+--
+  * id : String
+  * connection : ElectricityConnection
+  * device : String
+  * power : Int
+  * count : Int
+  comment : String
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivityInquiryRequest" as FestivalActivityInquiryRequest {
+--
+  # slug : [FK] CatalogGear
+  * quantity : Int
+  drive : String
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivityReview" as FestivalActivityReview {
+--
+  * team : FestivalActivityReviewer
+  * status : FestivalActivityReviewStatus
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalActivityHistory" as FestivalActivityHistory {
++ id [PK] : Int 
+--
+  * event : FestivalActivityEvent
+  # instigatorId : [FK] User
+  # faId : [FK] FestivalActivity
+  * snapshot : Json
+  * at : DateTime
+  context : String
+}
+
+entity "FestivalActivityFeedback" as FestivalActivityFeedback {
+--
+  * content : String
+  # authorId : [FK] User
+  * publishedAt : DateTime
+  # faId : [FK] FestivalActivity
+}
+
+entity "FestivalTask" as FestivalTask {
+--
+  * id : Int
+  * status : FestivalTaskStatus
+  * isDeleted : Boolean
+  category : FestivalTaskCategory
+  topPriority : Boolean
+  # reviewerId : [FK] User
+  * name : String
+  # administratorId : [FK] User
+  # teamCode : [FK] Team
+  # festivalActivityId : [FK] FestivalActivity
+  # appointmentId : [FK] SignaLocation
+  globalInstruction : String
+  inChargeInstruction : String
+}
+
+entity "FestivalTaskContact" as FestivalTaskContact {
+--
+  # contactId : [FK] User
+  # festivalTaskId : [FK] FestivalTask
+}
+
+entity "FestivalTaskInChargeVolunteer" as FestivalTaskInChargeVolunteer {
+--
+  # volunteerId : [FK] User
+  # festivalTaskId : [FK] FestivalTask
+}
+
+entity "FestivalTaskMobilization" as FestivalTaskMobilization {
+--
+  * id : String
+  * start : DateTime
+  * end : DateTime
+  durationSplitInHour : Int
+  # ftId : [FK] FestivalTask
+}
+
+entity "FestivalTaskMobilizationVolunteer" as FestivalTaskMobilizationVolunteer {
+--
+  # volunteerId : [FK] User
+  # mobilizationId : [FK] FestivalTaskMobilization
+  # mobilizationftId : [FK] FestivalTaskMobilization
+}
+
+entity "FestivalTaskMobilizationTeam" as FestivalTaskMobilizationTeam {
+--
+  * count : Int
+  # teamCode : [FK] Team
+  # mobilizationId : [FK] FestivalTaskMobilization
+  # mobilizationftId : [FK] FestivalTaskMobilization
+}
+
+entity "Assignment" as Assignment {
+--
+  * id : String
+  * start : DateTime
+  * end : DateTime
+  # mobilizationId : [FK] FestivalTaskMobilization
+  # festivalTaskId : [FK] FestivalTaskMobilization
+}
+
+entity "Assignee" as Assignee {
+--
+  # assignmentId : [FK] Assignment
+  # mobilizationId : [FK] Assignment
+  # festivalTaskId : [FK] Assignment
+  # userId : [FK] User
+  # teamCode : [FK] FestivalTaskMobilizationTeam
+}
+
+entity "FestivalTaskInquiryRequest" as FestivalTaskInquiryRequest {
+--
+  # slug : [FK] CatalogGear
+  * quantity : Int
+  drive : String
+  # ftId : [FK] FestivalTask
+}
+
+entity "FestivalTaskHistory" as FestivalTaskHistory {
++ id [PK] : Int 
+--
+  * event : FestivalTaskEvent
+  # instigatorId : [FK] User
+  # ftId : [FK] FestivalTask
+  * snapshot : Json
+  * at : DateTime
+  context : String
+}
+
+entity "FestivalTaskFeedback" as FestivalTaskFeedback {
+--
+  * content : String
+  # authorId : [FK] User
+  * publishedAt : DateTime
+  # ftId : [FK] FestivalTask
+}
+
+entity "FestivalTaskReview" as FestivalTaskReview {
+--
+  * team : FestivalTaskReviewer
+  * status : FestivalTaskReviewStatus
+  # ftId : [FK] FestivalTask
+}
+
+entity "SharedMeal" as SharedMeal {
++ id [PK] : Int 
+--
+  * createdAt : DateTime
+  * menu : String
+  * date : String
+  # chefId : [FK] User
+  amount : Int
+  closedAt : DateTime
+  * areShotgunsOpen : Boolean
+  * areMultipleShotgunsAllowed : Boolean
+}
+
+entity "Shotgun" as Shotgun {
+--
+  # guestId : [FK] User
+  # mealId : [FK] SharedMeal
+  * date : DateTime
+  * portions : Int
+}
+
+entity "Borrow" as Borrow {
++ id [PK] : Int 
+--
+  * lender : String
+  * availableOn : DateTime
+  * unavailableOn : DateTime
+}
+
+entity "BorrowGearRequest" as BorrowGearRequest {
+--
+  # borrowId : [FK] Borrow
+  # gearSlug : [FK] CatalogGear
+  * quantity : Int
+}
+
+entity "BreakPeriod" as BreakPeriod {
+--
+  * name : String
+  * start : DateTime
+  * end : DateTime
+  # volunteerId : [FK] User
+}
+
+' Relations
+Preference }o--|| User
+Notification }o--|| User
+UserTeam }o--|| User
+UserTeam }o--|| Team
+MembershipApplication }o--|| User
+TeamPermission }o--|| Permission
+TeamPermission }o--|| Team
+Transaction }o--o| User
+Transaction }o--o| User
+Contribution }o--|| User
+CharismaEventParticipation }o--|| User
+CatalogCategory }o--o| CatalogCategory
+CatalogCategory }o--o| Team
+CatalogGear }o--o| CatalogCategory
+InventoryRecord }o--|| CatalogGear
+VolunteerAvailability }o--|| User
+Friend }o--|| User
+Friend }o--|| User
+FestivalActivity }o--o| Team
+FestivalActivity }o--o| User
+FestivalActivity }o--o| SignaLocation
+FestivalActivityTimeWindowGeneral }o--|| FestivalActivity
+FestivalActivityTimeWindowInquiry }o--|| FestivalActivity
+Contractor }o--|| FestivalActivity
+FestivalActivitySignage }o--o| CatalogSignage
+FestivalActivitySignage }o--|| FestivalActivity
+FestivalActivityElectricitySupply }o--|| FestivalActivity
+FestivalActivityInquiryRequest }o--|| CatalogGear
+FestivalActivityInquiryRequest }o--|| FestivalActivity
+FestivalActivityReview }o--|| FestivalActivity
+FestivalActivityHistory }o--|| User
+FestivalActivityHistory }o--|| FestivalActivity
+FestivalActivityFeedback }o--|| User
+FestivalActivityFeedback }o--|| FestivalActivity
+FestivalTask }o--o| User
+FestivalTask }o--|| User
+FestivalTask }o--o| Team
+FestivalTask }o--o| FestivalActivity
+FestivalTask }o--o| SignaLocation
+FestivalTaskContact }o--|| User
+FestivalTaskContact }o--|| FestivalTask
+FestivalTaskInChargeVolunteer }o--|| User
+FestivalTaskInChargeVolunteer }o--|| FestivalTask
+FestivalTaskMobilization }o--|| FestivalTask
+FestivalTaskMobilizationVolunteer }o--|| User
+FestivalTaskMobilizationVolunteer }o--|| FestivalTaskMobilization
+FestivalTaskMobilizationVolunteer }o--|| FestivalTaskMobilization
+FestivalTaskMobilizationTeam }o--|| Team
+FestivalTaskMobilizationTeam }o--|| FestivalTaskMobilization
+FestivalTaskMobilizationTeam }o--|| FestivalTaskMobilization
+Assignment }o--|| FestivalTaskMobilization
+Assignment }o--|| FestivalTaskMobilization
+Assignment }o--|| FestivalTask
+Assignee }o--|| Assignment
+Assignee }o--|| Assignment
+Assignee }o--|| Assignment
+Assignee }o--|| FestivalTaskMobilization
+Assignee }o--|| FestivalTaskMobilization
+Assignee }o--|| FestivalTask
+Assignee }o--|| User
+Assignee }o--o| FestivalTaskMobilizationTeam
+Assignee }o--o| FestivalTaskMobilizationTeam
+Assignee }o--o| FestivalTaskMobilizationTeam
+FestivalTaskInquiryRequest }o--|| CatalogGear
+FestivalTaskInquiryRequest }o--|| FestivalTask
+FestivalTaskHistory }o--|| User
+FestivalTaskHistory }o--|| FestivalTask
+FestivalTaskFeedback }o--|| User
+FestivalTaskFeedback }o--|| FestivalTask
+FestivalTaskReview }o--|| FestivalTask
+SharedMeal }o--|| User
+Shotgun }o--|| User
+Shotgun }o--|| SharedMeal
+BorrowGearRequest }o--|| Borrow
+BorrowGearRequest }o--|| CatalogGear
+BreakPeriod }o--|| User
+' ManyToMany Relations
+' enum relations
+User |o--|| Membership
+Preference |o--|| AssignmentPreference
+MembershipApplication |o--|| Membership
+Transaction |o--|| TransactionType
+CatalogSignage |o--|| SignageType
+FestivalActivity |o--|| FestivalActivityStatus
+FestivalActivitySignage |o--|| SignageType
+FestivalActivityElectricitySupply |o--|| ElectricityConnection
+FestivalActivityReview |o--|| FestivalActivityReviewer
+FestivalActivityReview |o--|| FestivalActivityReviewStatus
+FestivalActivityHistory |o--|| FestivalActivityEvent
+FestivalTask |o--|| FestivalTaskStatus
+FestivalTask |o--|| FestivalTaskCategory
+FestivalTaskHistory |o--|| FestivalTaskEvent
+FestivalTaskReview |o--|| FestivalTaskReviewer
+FestivalTaskReview |o--|| FestivalTaskReviewStatus
+@enduml
