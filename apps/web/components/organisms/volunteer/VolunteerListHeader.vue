@@ -106,7 +106,7 @@ import {
 } from "~/utils/user/volunteer.display";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 const filters = defineModel<VolunteerFilters>("filters", { required: true });
 const displayMode = defineModel<DisplayMode>("displayMode", {
@@ -133,9 +133,9 @@ const updateDisplayModeParam = (mode: DisplayMode) => {
   updateQueryParams("displayMode", mode);
 };
 
-const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
+const canManageUsers = computed<boolean>(() => myStore.can(MANAGE_USERS));
 const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 
 const canFilterByExcludedTeams = computed<boolean>(

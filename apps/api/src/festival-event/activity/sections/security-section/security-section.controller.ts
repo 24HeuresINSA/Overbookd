@@ -1,7 +1,6 @@
 import {
   UseFilters,
   Controller,
-  UseGuards,
   Patch,
   Param,
   ParseIntPipe,
@@ -18,9 +17,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
@@ -35,9 +32,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalActivityResponseDto,
@@ -49,7 +45,7 @@ export class SecuritySectionController {
   constructor(private readonly securityService: SecuritySectionService) {}
 
   @Patch(":id/security")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",

@@ -1,13 +1,4 @@
 import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
-import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
-import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
-import {
   Body,
   Controller,
   Delete,
@@ -17,46 +8,48 @@ import {
   ParseIntPipe,
   Post,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
+import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
+import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
 import { ENROLL_SOFT } from "@overbookd/permission";
 import { HasApplication, VolunteerCandidate } from "@overbookd/http";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("registrations/membership-applications/volunteers")
 @ApiTags("registrations/membership-applications/volunteers")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @UseFilters(MembershipApplicationErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class VolunteerMembershipApplicationController {
   constructor(
     private readonly applicationService: VolunteerMembershipApplicationService,
   ) {}
 
-  @Post("apply/:email")
+  @Post("apply")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Volunteer application submitted",
   })
-  @ApiParam({
-    name: "email",
-    type: String,
-  })
-  applyFor(@Param("email") email: string): Promise<void> {
+  applyFor(@AuthenticatedUser() { email }: RequestHydratedUser): Promise<void> {
     return this.applicationService.applyFor(email);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @ApiResponse({
     status: 200,
     description: "Get all volunteer candidates",
@@ -68,8 +61,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Get("candidates/count")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @ApiResponse({
     status: 200,
     description: "Get the volunteer candidates count",
@@ -79,8 +71,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Get("rejected")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @ApiResponse({
     status: 200,
     description: "Get all rejected volunteer candidates",
@@ -92,8 +83,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Post("enroll")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -108,25 +98,20 @@ export class VolunteerMembershipApplicationController {
     return this.applicationService.enroll(candidates);
   }
 
-  @Get(":email")
-  @ApiParam({
-    name: "email",
-    type: String,
-  })
+  @Get("me")
   @ApiResponse({
     status: 200,
     description: "Get current volunteer application",
     type: HasApplicationResponseDto,
   })
   getCurrentApplication(
-    @Param("email") email: string,
+    @AuthenticatedUser() { email }: RequestHydratedUser,
   ): Promise<HasApplication> {
     return this.applicationService.getCurrentApplication(email);
   }
 
   @Delete(":candidateId")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -143,8 +128,7 @@ export class VolunteerMembershipApplicationController {
   }
 
   @Post(":candidateId/cancel-rejection")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_SOFT)
+  @Permissions(ENROLL_SOFT)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -7,8 +7,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Request,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -17,20 +15,18 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { RequestWithUserPayload } from "../../src/app.controller";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { CreateFriendRequestDto } from "./dto/create-friend.request.dto";
 import { FriendResponseDto } from "./dto/friend.response.dto";
 import { FriendService } from "./friend.service";
 import { MANAGE_USERS } from "@overbookd/permission";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Controller("friends")
 @ApiTags("friends")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
@@ -85,9 +81,9 @@ export class FriendController {
   })
   create(
     @Body() friend: CreateFriendRequestDto,
-    @Request() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FriendResponseDto> {
-    return this.friendService.create(req.user.id, friend.id);
+    return this.friendService.create(user.id, friend.id);
   }
 
   @Delete(":friendId")
@@ -104,14 +100,13 @@ export class FriendController {
   })
   remove(
     @Param("friendId", ParseIntPipe) friendId: number,
-    @Request() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<void> {
-    return this.friendService.delete(req.user.id, friendId);
+    return this.friendService.delete(user.id, friendId);
   }
 
   @Post(":id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_USERS)
+  @Permissions(MANAGE_USERS)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -130,8 +125,7 @@ export class FriendController {
   }
 
   @Delete(":id/:friendId")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_USERS)
+  @Permissions(MANAGE_USERS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

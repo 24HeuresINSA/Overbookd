@@ -8,7 +8,6 @@ import {
   Post,
   Put,
   Delete,
-  UseGuards,
   UseFilters,
   UseInterceptors,
   StreamableFile,
@@ -16,9 +15,7 @@ import {
   ParseFilePipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CatalogSignageService } from "./catalog-signage.service";
 import {
   READ_SIGNAGE_CATALOG,
@@ -35,14 +32,13 @@ import { ImageInterceptor } from "../utils/image.interceptor";
 @Controller("signages")
 @ApiTags("signages")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(CatalogSignageErrorFilter)
 @ApiSwaggerResponse()
 export class CatalogSignageController {
   constructor(private readonly catalogSignageService: CatalogSignageService) {}
 
   @Get()
-  @Permission(READ_SIGNAGE_CATALOG)
+  @Permissions(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get all signage items in catalog",
@@ -54,7 +50,7 @@ export class CatalogSignageController {
   }
 
   @Post()
-  @Permission(WRITE_SIGNAGE_CATALOG)
+  @Permissions(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to create",
     type: SignageFormRequestDto,
@@ -69,7 +65,7 @@ export class CatalogSignageController {
   }
 
   @Put(":id")
-  @Permission(WRITE_SIGNAGE_CATALOG)
+  @Permissions(WRITE_SIGNAGE_CATALOG)
   @ApiBody({
     description: "The signage to update",
     type: SignageFormRequestDto,
@@ -87,7 +83,7 @@ export class CatalogSignageController {
   }
 
   @Delete(":id")
-  @Permission(WRITE_SIGNAGE_CATALOG)
+  @Permissions(WRITE_SIGNAGE_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -98,7 +94,7 @@ export class CatalogSignageController {
   }
 
   @Post(":id/image")
-  @Permission(WRITE_SIGNAGE_CATALOG)
+  @Permissions(WRITE_SIGNAGE_CATALOG)
   @UseInterceptors(ImageInterceptor("file"))
   @ApiResponse({
     status: 201,
@@ -118,7 +114,7 @@ export class CatalogSignageController {
   }
 
   @Get(":id/image")
-  @Permission(READ_SIGNAGE_CATALOG)
+  @Permissions(READ_SIGNAGE_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get signage image",

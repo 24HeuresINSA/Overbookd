@@ -1,6 +1,5 @@
 import type {
   HttpStringified,
-  StaffApplication,
   StaffCandidate,
   VolunteerCandidate,
 } from "@overbookd/http";
@@ -42,18 +41,16 @@ export const useMembershipApplicationStore = defineStore(
         this.inviteStaffLink = new URL(res);
       },
 
-      async submitStaffApplication(candidate: StaffApplication) {
+      async submitStaffApplication(token: string) {
         const res =
-          await MembershipApplicationRepository.submitStaffApplication(
-            candidate,
-          );
+          await MembershipApplicationRepository.submitStaffApplication(token);
         if (isHttpError(res)) return;
         sendSuccessNotification(
           "Ta demande pour devenir organisateur a été envoyée",
         );
 
-        const userStore = useUserStore();
-        userStore.setLoggedUserMembershipApplication(STAFF);
+        const myStore = useMyStore();
+        myStore.setLoggedUserMembershipApplication(STAFF);
       },
 
       async rejectStaffCandidate(candidateId: number) {
@@ -117,18 +114,16 @@ export const useMembershipApplicationStore = defineStore(
         navigationBadgeStore.fetchStaffCandidates();
       },
 
-      async submitVolunteerApplication(email: string) {
+      async submitVolunteerApplication() {
         const res =
-          await MembershipApplicationRepository.submitVolunteerApplication(
-            email,
-          );
+          await MembershipApplicationRepository.submitVolunteerApplication();
         if (isHttpError(res)) return;
         sendSuccessNotification(
           "Ta demande pour devenir bénévole a été envoyée",
         );
 
-        const userStore = useUserStore();
-        userStore.setLoggedUserMembershipApplication(VOLUNTEER);
+        const myStore = useMyStore();
+        myStore.setLoggedUserMembershipApplication(VOLUNTEER);
       },
 
       async rejectVolunteerCandidate(candidateId: VolunteerCandidate["id"]) {
@@ -200,20 +195,16 @@ export const useMembershipApplicationStore = defineStore(
         navigationBadgeStore.fetchVolunteerCandidates();
       },
 
-      async hasCurrentStaffApplication(email: string): Promise<boolean> {
+      async hasCurrentStaffApplication(): Promise<boolean> {
         const res =
-          await MembershipApplicationRepository.getCurrentStaffApplication(
-            email,
-          );
+          await MembershipApplicationRepository.getCurrentStaffApplication();
         if (isHttpError(res)) return false;
         return res.hasApplication;
       },
 
-      async hasCurrentVolunteerApplication(email: string): Promise<boolean> {
+      async hasCurrentVolunteerApplication(): Promise<boolean> {
         const res =
-          await MembershipApplicationRepository.getCurrentVolunteerApplication(
-            email,
-          );
+          await MembershipApplicationRepository.getCurrentVolunteerApplication();
         if (isHttpError(res)) return false;
         return res.hasApplication;
       },

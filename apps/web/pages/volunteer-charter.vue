@@ -17,18 +17,18 @@ import { MUST_SIGN_VOLUNTEER_CHARTER } from "@overbookd/permission";
 
 useHead({ title: "Charte bénévole" });
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 const shouldSign = computed<boolean>(() =>
-  userStore.can(MUST_SIGN_VOLUNTEER_CHARTER),
+  myStore.can(MUST_SIGN_VOLUNTEER_CHARTER),
 );
 const hasSigned = computed<boolean>(
-  () => userStore.loggedUser?.hasSignedVolunteerCharter === true,
+  () => myStore.loggedUser?.hasSignedVolunteerCharter === true,
 );
 
 const signVolunteerCharter = async () => {
   if (!shouldSign.value) return;
-  await userStore.signVolunteerCharter();
+  await myStore.signVolunteerCharter();
 };
 </script>
 

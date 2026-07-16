@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "../../tsconfig.all-modules-import.json",
+    "../../tsconfig.build.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "composite": false
+  }
+}

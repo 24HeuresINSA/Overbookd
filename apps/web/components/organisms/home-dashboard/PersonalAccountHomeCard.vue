@@ -72,12 +72,12 @@ import {
 const POSITIVE = "positive";
 const NEGATIVE = "negative";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const transactionStore = useTransactionStore();
 
 transactionStore.fetchMyTransactions();
 
-const loggedUser = computed(() => userStore.loggedUser);
+const loggedUser = computed(() => myStore.loggedUser);
 
 const myBalance = computed(() => loggedUser.value?.balance ?? 0);
 const displayedBalance = computed<string>(() =>

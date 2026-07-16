@@ -8,12 +8,9 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  Request as RequestDecorator,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import {
-  ApiBearerAuth,
   ApiTags,
   ApiParam,
   ApiResponse,
@@ -21,6 +18,7 @@ import {
   ApiExtraModels,
   ApiQuery,
   getSchemaPath,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { AssignmentErrorFilter } from "../assignment.filter";
 import { AssignmentService } from "./assignment.service";
@@ -29,10 +27,6 @@ import {
   READ_FT,
   VIEW_PLANNING,
 } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { RequestWithUserPayload } from "../../app.controller";
 import {
   AssignmentResponseDto,
   NamelyDemandedDto,
@@ -48,11 +42,13 @@ import {
 import { TaskForCalendar, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { TaskForCalendarResponseDto } from "./dto/task-for-calendar.response.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
+import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("assignments")
 @ApiTags("assignments")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 @ApiExtraModels(NamelyDemandedDto, TeamMemberDto)
@@ -62,7 +58,7 @@ export class AssignmentController {
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/for-calendar",
   )
-  @Permission(VIEW_PLANNING)
+  @Permissions(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Assignment For Calendar",
@@ -87,15 +83,14 @@ export class AssignmentController {
     @Param("taskId", ParseIntPipe) taskId: number,
     @Param("mobilizationId") mobilizationId: string,
     @Param("assignmentId") assignmentId: string,
-    @RequestDecorator() request: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<TaskForCalendar> {
-    const volunteerId = request.user.id;
     const identifier = { taskId, mobilizationId, assignmentId };
-    return this.assignment.findOneForCalendar(identifier, volunteerId);
+    return this.assignment.findOneForCalendar(identifier, user.id);
   }
 
   @Get("tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId")
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Assignment",
@@ -138,7 +133,7 @@ export class AssignmentController {
   }
 
   @Get("volunteers/:volunteerId/planning")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer planning",
@@ -157,7 +152,7 @@ export class AssignmentController {
   }
 
   @Post()
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -177,7 +172,7 @@ export class AssignmentController {
   @Delete(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignees/:assigneeId",
   )
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -214,7 +209,7 @@ export class AssignmentController {
   }
 
   @Get("stats")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get assignments stats for all volunteers",
@@ -226,8 +221,7 @@ export class AssignmentController {
   }
 
   @Get("stats/:id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get duration of assignments for a volunteer",

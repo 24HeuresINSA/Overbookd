@@ -14,6 +14,10 @@ import { ImageRepository } from "~/utils/http/image.repository";
 export class UserRepository {
   private static readonly basePath = "users";
 
+  static userSync() {
+    return HttpClient.post(`${this.basePath}/sync`);
+  }
+
   static getUser(userId: number) {
     return HttpClient.get<UserPersonalData>(`${this.basePath}/${userId}`);
   }

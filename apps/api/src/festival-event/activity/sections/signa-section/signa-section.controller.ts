@@ -1,7 +1,6 @@
 import {
   UseFilters,
   Controller,
-  UseGuards,
   Patch,
   Param,
   ParseIntPipe,
@@ -9,7 +8,6 @@ import {
   Post,
   HttpCode,
   Delete,
-  Request,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -22,11 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivity, Signage } from "@overbookd/festival-event";
 import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
-import { RequestWithUserPayload } from "../../../../app.controller";
-import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
@@ -45,12 +39,13 @@ import { UpdateSignaRequestDto } from "./dto/update-signa.request.dto";
 import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   UnlinkedSignageResponseDto,
@@ -64,7 +59,7 @@ export class SignaSectionController {
   constructor(private readonly signaService: SignaSectionService) {}
 
   @Patch(":id/signa")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -95,7 +90,7 @@ export class SignaSectionController {
   }
 
   @Post(":id/signa/signages")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -127,7 +122,7 @@ export class SignaSectionController {
   }
 
   @Patch(":faId/signa/signages/:signageId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -166,7 +161,7 @@ export class SignaSectionController {
   }
 
   @Delete(":faId/signa/signages/:signageId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -200,7 +195,7 @@ export class SignaSectionController {
   }
 
   @Patch(":faId/signa/signages/:signageId/link")
-  @Permission(VALIDATE_FA)
+  @Permissions(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -235,10 +230,9 @@ export class SignaSectionController {
     @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
     @Param("signageId") signageId: Signage["id"],
     @Body() { catalogItemId }: LinkSignageCatalogItemRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalActivity> {
-    const jwt = new JwtUtil(user);
-    return this.signaService.linkSignageToCatalogItem(jwt, {
+    return this.signaService.linkSignageToCatalogItem(user, {
       activityId,
       signageId,
       catalogItemId,

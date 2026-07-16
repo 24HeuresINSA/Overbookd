@@ -5,10 +5,8 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  UseGuards,
   Post,
   Delete,
-  Request,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -21,11 +19,9 @@ import {
 import { InstructionsSectionService } from "./instructions-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { FORCE_WRITE_FT, WRITE_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { Contact, FestivalTask, Volunteer } from "@overbookd/festival-event";
 import { AddContactRequestDto } from "./dto/add-contact.request.dto";
 import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
@@ -36,7 +32,6 @@ import {
   RefusedFestivalTaskResponseDto,
   ValidatedFestivalTaskResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
-import { RequestWithUserPayload } from "../../../../app.controller";
 import { InitInChargeRequestDto } from "./dto/init-in-charge.request.dto";
 import {
   ForceGlobalInstructionsRequestDto,
@@ -44,12 +39,13 @@ import {
   ForceInstructionsRequestDto,
 } from "./dto/force-instructions.request.dto";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class InstructionsSectionController {
   constructor(
@@ -57,7 +53,7 @@ export class InstructionsSectionController {
   ) {}
 
   @Patch(":id/instructions")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -81,13 +77,13 @@ export class InstructionsSectionController {
   update(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
     @Body() instructions: InstructionsRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.instructionsService.update(id, instructions, user);
   }
 
   @Patch(":id/force/instructions")
-  @Permission(FORCE_WRITE_FT)
+  @Permissions(FORCE_WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "Festival task",
@@ -123,13 +119,13 @@ export class InstructionsSectionController {
       | ForceGlobalInstructionsRequestDto
       | ForceInChargeInstructionsRequestDto
       | ForceInstructionsRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.instructionsService.force(id, instructions, user);
   }
 
   @Post(":ftId/instructions/contacts")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -158,7 +154,7 @@ export class InstructionsSectionController {
   }
 
   @Delete(":ftId/instructions/contacts/:contactId")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -189,7 +185,7 @@ export class InstructionsSectionController {
   }
 
   @Post(":ftId/instructions/in-charge/volunteers")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -218,7 +214,7 @@ export class InstructionsSectionController {
   }
 
   @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -249,7 +245,7 @@ export class InstructionsSectionController {
   }
 
   @Post(":ftId/instructions/in-charge")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -273,13 +269,13 @@ export class InstructionsSectionController {
   initInCharge(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() form: InitInChargeRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.instructionsService.initInCharge(ftId, form, user);
   }
 
   @Delete(":ftId/instructions/in-charge")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -298,7 +294,7 @@ export class InstructionsSectionController {
   })
   clearInCharge(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.instructionsService.clearInCharge(ftId, user);
   }

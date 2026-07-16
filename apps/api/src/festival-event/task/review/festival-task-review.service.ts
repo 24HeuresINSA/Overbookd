@@ -16,13 +16,10 @@ import {
   ReviewIgnoreTask,
   ReviewRejection,
 } from "@overbookd/http";
-import {
-  JwtPayload,
-  JwtUtil,
-} from "../../../authentication/entities/jwt-util.entity";
 import { Adherents } from "../common/festival-task-common.model";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
-import { TeamService } from "../../../team/team.service";
+import { checkMembership } from "../../../team/team.utils";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 type UseCases = {
   prepare: Readonly<PrepareFestivalTask>;
@@ -45,7 +42,7 @@ export class FestivalTaskReviewService {
 
   async publishFeedback(
     ftId: FestivalTask["id"],
-    { id }: JwtPayload,
+    { id }: RequestHydratedUser,
     { content }: PublishFeedbackForm,
   ): Promise<FestivalTask> {
     const author = await this.repositories.adherents.findOne(id);
@@ -55,7 +52,7 @@ export class FestivalTaskReviewService {
 
   async toReview(
     ftId: FestivalTask["id"],
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const adherent = await this.repositories.adherents.findOne(user.id);
     const task = await this.useCases.askForReview.from(ftId, adherent);
@@ -68,10 +65,10 @@ export class FestivalTaskReviewService {
 
   async reject(
     ftId: FestivalTask["id"],
-    user: JwtUtil,
+    user: RequestHydratedUser,
     rejection: ReviewRejection<"FT">,
   ): Promise<FestivalTaskRefused> {
-    TeamService.checkMembership(user, rejection.team);
+    checkMembership(user, rejection.team);
 
     const rejector = await this.repositories.adherents.findOne(user.id);
     const withRejector = { ...rejection, rejector };
@@ -89,10 +86,10 @@ export class FestivalTaskReviewService {
 
   async approve(
     ftId: FestivalTask["id"],
-    user: JwtUtil,
+    user: RequestHydratedUser,
     approval: ReviewApproval<"FT">,
   ): Promise<FestivalTask> {
-    TeamService.checkMembership(user, approval.team);
+    checkMembership(user, approval.team);
 
     const reviewer = await this.repositories.adherents.findOne(user.id);
     const withApprover = { ...approval, reviewer };
@@ -106,10 +103,10 @@ export class FestivalTaskReviewService {
 
   async ignore(
     ftId: FestivalTask["id"],
-    user: JwtUtil,
+    user: RequestHydratedUser,
     { team }: ReviewIgnoreTask,
   ): Promise<FestivalTask> {
-    TeamService.checkMembership(user, team);
+    checkMembership(user, team);
 
     const reviewer = await this.repositories.adherents.findOne(user.id);
     const task = await this.useCases.review.ignore(ftId, team);
@@ -122,10 +119,10 @@ export class FestivalTaskReviewService {
 
   async review(
     ftId: FestivalTask["id"],
-    user: JwtUtil,
+    user: RequestHydratedUser,
     { team }: ReviewIgnoreTask,
   ): Promise<FestivalTask> {
-    TeamService.checkMembership(user, team);
+    checkMembership(user, team);
 
     const reviewer = await this.repositories.adherents.findOne(user.id);
     const task = await this.useCases.review.review(ftId, team);
@@ -138,7 +135,7 @@ export class FestivalTaskReviewService {
 
   async enableAssignment(
     ftId: FestivalTask["id"],
-    user: JwtUtil,
+    user: RequestHydratedUser,
     categoryze: Categorize,
   ): Promise<FestivalTaskReadyToAssign> {
     const adherent = await this.repositories.adherents.findOne(user.id);

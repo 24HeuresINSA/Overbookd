@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -21,9 +20,7 @@ import {
   Permission as AvailablePermission,
   MANAGE_PERMISSIONS,
 } from "@overbookd/permission";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
@@ -33,13 +30,12 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("permissions")
 @ApiTags("permissions")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
   @Get()
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @ApiResponse({
     status: 200,
     description: "Get all permissions",
@@ -51,7 +47,7 @@ export class PermissionController {
   }
 
   @Post()
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @ApiResponse({
     status: 201,
     description: "Create a permission",
@@ -68,7 +64,7 @@ export class PermissionController {
   }
 
   @Patch(":id")
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -92,7 +88,7 @@ export class PermissionController {
   }
 
   @Delete(":id")
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -108,7 +104,7 @@ export class PermissionController {
   }
 
   @Post(":permission/teams")
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @ApiBearerAuth()
   @ApiBody({
     description: "team to grant the permission to",
@@ -127,7 +123,7 @@ export class PermissionController {
   }
 
   @Delete(":permission/teams/:code")
-  @Permission(MANAGE_PERMISSIONS)
+  @Permissions(MANAGE_PERMISSIONS)
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({

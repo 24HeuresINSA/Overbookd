@@ -4,19 +4,16 @@ import {
   Param,
   ParseIntPipe,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TaskToVolunteerService } from "./task-to-volunteer.service";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import {
   AssignableVolunteer,
   TaskForAssignment,
   TaskWithAssignmentsSummary,
 } from "@overbookd/assignment";
-import { Permission } from "../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { TaskForAssignmentResponseDto } from "./dto/missing-assignment-task.response.dto";
 import { TaskWithAssignmentsSummaryResponseDto } from "./dto/task-with-assignments-summary.response.dto";
 import { AssignmentErrorFilter } from "../assignment.filter";
@@ -26,14 +23,13 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 @Controller("assignments/task-to-volunteer")
 @ApiTags("assignments/task-to-volunteer")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 export class TaskToVolunteerController {
   constructor(private readonly taskToVolunteer: TaskToVolunteerService) {}
 
   @Get("assignableTasks")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All tasks with missing assignments",
@@ -45,7 +41,7 @@ export class TaskToVolunteerController {
   }
 
   @Get("allTasks")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All tasks",
@@ -57,7 +53,7 @@ export class TaskToVolunteerController {
   }
 
   @Get("tasks/:id")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Selected task with assignments summary",
@@ -77,7 +73,7 @@ export class TaskToVolunteerController {
   @Get(
     "tasks/:taskId/mobilizations/:mobilizationId/assignments/:assignmentId/assignable-volunteers",
   )
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Assignable volunteers for the selected assignment",

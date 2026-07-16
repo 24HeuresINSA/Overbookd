@@ -3,10 +3,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import {
-  JwtPayload,
-  JwtUtil,
-} from "../authentication/entities/jwt-util.entity";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
 import {
@@ -33,7 +29,6 @@ import {
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
-  MANAGE_ADMINS,
   MANAGE_USERS,
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
@@ -48,17 +43,89 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
+import { canManageAdmins } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-constants";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
+import { OidcRole, oidcRoles } from "@overbookd/oidc";
+import { ZitadelService } from "./zitadel.service";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly zitadelService: ZitadelService,
+  ) {}
+
+  async userSync(user: RequestHydratedUser): Promise<void> {
+    const userId =
+      (await this.getUserByZitadelId(user.zitadelId))?.id ??
+      (await this.getUserByEmail(user.email))?.id;
+
+    const data = {
+      email: user.email,
+      firstName: user.givenName,
+      lastName: user.familyName,
+      phoneNumber: user.phoneNumber,
+      birthDate: user.birthDate,
+      zitadelId: user.zitadelId,
+    };
+
+    if (!userId) {
+      const newUser = await this.prisma.user.create({
+        data,
+        select: SELECT_USER_IDENTIFIER,
+      });
+      await this.updateAdminTeamFromZitadel(newUser.id, user.zitadelRoles);
+      return;
+    }
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: data,
+      select: SELECT_USER_IDENTIFIER,
+    });
+    await this.updateAdminTeamFromZitadel(userId, user.zitadelRoles);
+  }
+
+  private getUserByZitadelId(zitadelId: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { zitadelId },
+      select: SELECT_USER_IDENTIFIER,
+    });
+  }
+
+  private getUserByEmail(email: string): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: { email },
+      select: SELECT_USER_IDENTIFIER,
+    });
+  }
+
+  private async updateAdminTeamFromZitadel(
+    userId: number,
+    zitadelRoles: OidcRole[],
+  ): Promise<void> {
+    const hasZitadelAdminRole = zitadelRoles.includes(oidcRoles.ADMIN);
+    const hasAdminTeam = await this.prisma.userTeam.findFirst({
+      where: { teamCode: ADMIN, userId },
+    });
+    if (hasZitadelAdminRole && !hasAdminTeam) {
+      await this.prisma.userTeam.create({
+        data: { userId, teamCode: ADMIN },
+      });
+      return;
+    }
+    if (!hasZitadelAdminRole && hasAdminTeam) {
+      await this.prisma.userTeam.delete({
+        where: { userId_teamCode: { userId, teamCode: ADMIN } },
+      });
+    }
+  }
 
   async getById(
     id: number,
-    currentUser?: JwtUtil,
+    currentUser?: RequestHydratedUser,
   ): Promise<UserPersonalData | null> {
     const select =
       currentUser && currentUser.can(MANAGE_USERS)
@@ -72,7 +139,9 @@ export class UserService {
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
-  async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
+  async getMyInformation({
+    id,
+  }: RequestHydratedUser): Promise<MyUserInformation> {
     const [user, charismaPeriods] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id },
@@ -99,12 +168,12 @@ export class UserService {
   }
 
   async updateMyInformation(
-    authorInformation: JwtPayload,
+    author: RequestHydratedUser,
     profile: Partial<Profile>,
   ): Promise<MyUserInformation | null> {
     const [updatedUser, charismaPeriods] = await Promise.all([
       this.prisma.user.update({
-        where: { id: authorInformation.id },
+        where: { id: author.id },
         data: profile,
         select: SELECT_MY_USER_INFORMATION,
       }),
@@ -113,25 +182,28 @@ export class UserService {
     return UserService.formatToMyInformation(updatedUser, charismaPeriods);
   }
 
-  async approveEndUserLicenceAgreement({ id }: JwtPayload): Promise<void> {
+  async approveEndUserLicenceAgreement({
+    id,
+  }: RequestHydratedUser): Promise<void> {
     await this.prisma.user.update({
       where: { id },
       data: { hasApprovedEULA: true },
     });
   }
 
-  async signVolunteerCharter({ id }: JwtPayload): Promise<void> {
+  async signVolunteerCharter({ id }: RequestHydratedUser): Promise<void> {
     await this.prisma.user.update({
       where: { id },
       data: { hasSignedVolunteerCharter: true },
     });
   }
 
-  async getVolunteers(currentUser?: JwtUtil): Promise<UserPersonalData[]> {
-    const select =
-      currentUser && currentUser.can(MANAGE_USERS)
-        ? SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER
-        : SELECT_USER_PERSONAL_DATA;
+  async getVolunteers(
+    currentUser: RequestHydratedUser,
+  ): Promise<UserPersonalData[]> {
+    const select = currentUser.can(MANAGE_USERS)
+      ? SELECT_USER_PERSONAL_DATA_FOR_USER_MANAGER
+      : SELECT_USER_PERSONAL_DATA;
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
         where: { ...IS_NOT_DELETED, ...hasPermission(BE_AFFECTED) },
@@ -199,10 +271,8 @@ export class UserService {
   async updateUser(
     targetId: number,
     userData: UserUpdateForm,
-    authorInformation: JwtPayload,
+    author: RequestHydratedUser,
   ): Promise<UserPersonalData> {
-    const author = new JwtUtil(authorInformation);
-
     if (!this.canUpdateUser(author, targetId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
@@ -218,7 +288,7 @@ export class UserService {
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
 
-  async deleteUser(id: number, author: JwtUtil): Promise<void> {
+  async deleteUser(id: number, author: RequestHydratedUser): Promise<void> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: { email: true },
@@ -234,19 +304,18 @@ export class UserService {
     });
   }
 
-  private async softDeleteUser(id: number, author: JwtUtil): Promise<void> {
+  private async softDeleteUser(
+    id: number,
+    author: RequestHydratedUser,
+  ): Promise<void> {
     const teams = await this.getUserTeams(id);
-    if (!this.canManageAdmins(teams, author)) {
+    if (!canManageAdmins(teams, author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
     Promise.all([
       this.prisma.user.updateMany({ where: { id }, data: { isDeleted: true } }),
       this.prisma.userTeam.deleteMany({ where: { userId: id } }),
     ]);
-  }
-
-  private canManageAdmins(teams: string[], author: JwtUtil) {
-    return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
   }
 
   static formatToPersonalData(
@@ -306,14 +375,17 @@ export class UserService {
       ...this.formatToPersonalData(personalData, charismaPeriods),
       hasApprovedEULA,
       hasSignedVolunteerCharter,
-      permissions: [...retrievePermissions(user.teams)],
+      permissions: retrievePermissions(user.teams),
       tasksCount: _count.assigned,
       balance: Balance.calculate({ transactionsFrom, transactionsTo }),
       membershipApplication: membershipApplications?.at(0)?.membership ?? null,
     };
   }
 
-  private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
+  private canUpdateUser(
+    author: RequestHydratedUser,
+    targetUserId: number,
+  ): boolean {
     return author.can(MANAGE_USERS) || author.id === targetUserId;
   }
 }

@@ -94,7 +94,7 @@ const HELP_LINK = {
   mozilla: "https://support.mozilla.org/en-US/kb/adding-a-holiday-calendar",
 };
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const planningStore = usePlanningStore();
 const downloading = ref(false);
 
@@ -122,7 +122,7 @@ const copyToClipBoard = () => {
 };
 
 const exportPlanning = async () => {
-  if (!userStore.can(DOWNLOAD_PLANNING)) return;
+  if (!myStore.can(DOWNLOAD_PLANNING)) return;
   downloading.value = true;
   await planningStore
     .downloadMyPdfPlanning()

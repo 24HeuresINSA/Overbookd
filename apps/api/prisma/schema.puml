@@ -105,6 +105,7 @@ enum "FestivalTaskReviewStatus" as FestivalTaskReviewStatus {
 entity "User" as User {
 + id [PK] : Int 
 --
+  zitadelId : String
   * firstName : String
   * lastName : String
   nickname : String
@@ -112,13 +113,10 @@ entity "User" as User {
   * birthDate : DateTime
   * phoneNumber : String
   comment : String
-  resetPasswordToken : String
-  resetPasswordExpires : DateTime
   profilePicture : String
   * password : String
   * createdAt : DateTime
   * updatedAt : DateTime
-  lastLogin : DateTime
   * isDeleted : Boolean
   registrationMembership : Membership
   note : String

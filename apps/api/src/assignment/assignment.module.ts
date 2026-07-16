@@ -5,6 +5,7 @@ import { VolunteerToTaskModule } from "./volunteer-to-task/volunteer-to-task.mod
 import { TaskToVolunteerModule } from "./task-to-volunteer/task-to-volunteer.module";
 import { AssignmentCommonModule } from "./common/assignment-common.module";
 import { AssignmentController } from "./common/assignment.controller";
+import { PrismaModule } from "../prisma.module";
 
 @Module({
   controllers: [
@@ -16,6 +17,7 @@ import { AssignmentController } from "./common/assignment.controller";
     AssignmentCommonModule,
     VolunteerToTaskModule,
     TaskToVolunteerModule,
+    PrismaModule,
   ],
 })
 export class AssignmentModule {}

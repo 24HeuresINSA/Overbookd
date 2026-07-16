@@ -8,12 +8,9 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CreateLocationRequestDto } from "./dto/create-location.request.dto";
 import { UpdateLocationRequestDto } from "./dto/update-location.request.dto";
 import { LocationService } from "./location.service";
@@ -24,13 +21,12 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("locations")
 @ApiTags("locations")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
   @Post()
-  @Permission(MANAGE_LOCATION)
+  @Permissions(MANAGE_LOCATION)
   @ApiBody({
     type: CreateLocationRequestDto,
   })
@@ -43,7 +39,7 @@ export class LocationController {
   }
 
   @Get()
-  @Permission(VIEW_LOCATION)
+  @Permissions(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     isArray: true,
@@ -54,7 +50,7 @@ export class LocationController {
   }
 
   @Get(":id")
-  @Permission(VIEW_LOCATION)
+  @Permissions(VIEW_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -64,7 +60,7 @@ export class LocationController {
   }
 
   @Put(":id")
-  @Permission(MANAGE_LOCATION)
+  @Permissions(MANAGE_LOCATION)
   @ApiResponse({
     status: 200,
     type: LocationRequestDto,
@@ -77,7 +73,7 @@ export class LocationController {
   }
 
   @Delete(":id")
-  @Permission(MANAGE_LOCATION)
+  @Permissions(MANAGE_LOCATION)
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   remove(@Param("id", ParseIntPipe) id: number) {

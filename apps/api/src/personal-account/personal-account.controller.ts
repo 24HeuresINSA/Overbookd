@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
@@ -16,9 +15,7 @@ import {
   HAVE_PERSONAL_ACCOUNT,
 } from "@overbookd/permission";
 import { PersonalAccountService } from "./personal-account.service";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { BarrelResponseDto } from "./dto/barrel.response.dto";
 import { AdjustBarrelPriceRequestDto } from "./dto/adjust-barrel-price.request.dto";
 import { CreateBarrelRequestDto } from "./dto/create-barrel.request.dto";
@@ -31,9 +28,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("personal-account")
 @ApiTags("personal-account")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(SimilarBarrelExistFilter, BarrelNotConfiguredFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class PersonalAccountController {
   constructor(
@@ -41,7 +37,7 @@ export class PersonalAccountController {
   ) {}
 
   @Get("barrels")
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permissions(HAVE_PERSONAL_ACCOUNT)
   @ApiResponse({
     status: 200,
     description: "All configured barrels",
@@ -53,7 +49,7 @@ export class PersonalAccountController {
   }
 
   @Post("barrels")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 201,
     description: "Configured barrel created",
@@ -66,7 +62,7 @@ export class PersonalAccountController {
   }
 
   @Patch("barrels/:slug/price")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Configured barrel updated",
@@ -86,7 +82,7 @@ export class PersonalAccountController {
   }
 
   @Patch("barrels/:slug/opening")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Configured barrel updated",
@@ -109,7 +105,7 @@ export class PersonalAccountController {
   }
 
   @Delete("barrels/:slug")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

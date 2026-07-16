@@ -1,9 +1,8 @@
-import { JwtService } from "@nestjs/jwt";
 import { type DomainEvent } from "@overbookd/domain-events";
 import { ENROLL_HARD, type Permission } from "@overbookd/permission";
 import { filter, merge, Observable } from "rxjs";
-import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../../domain-event/domain-event.service";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 
 type Identifiers = { teams: string[]; id: number };
 
@@ -13,13 +12,10 @@ type PermissionBasedNotification = {
 };
 
 export class LiveNotificationService {
-  constructor(
-    private readonly eventStore: DomainEventService,
-    private readonly jwt: JwtService,
-  ) {}
+  constructor(private readonly eventStore: DomainEventService) {}
 
-  all(token: string): Observable<DomainEvent> {
-    const { permissions, teams, id } = this.jwt.verify<JwtPayload>(token);
+  all(user: RequestHydratedUser): Observable<DomainEvent> {
+    const { permissions, teams, id } = user;
 
     return merge(
       ...this.myPermissionBasedNotifications(permissions),

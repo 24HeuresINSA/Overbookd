@@ -9,7 +9,6 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -18,12 +17,10 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CatalogService } from "./catalog.service";
 import { GearFormRequestDto } from "./dto/gear-form.request.dto";
 import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 import { CatalogGear } from "@overbookd/http";
@@ -32,13 +29,12 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 @Controller("logistic/gears")
 @ApiTags("logistic/catalog")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get()
-  @Permission(READ_GEAR_CATALOG)
+  @Permissions(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get gears that match search",
@@ -68,7 +64,7 @@ export class GearController {
   }
 
   @Get(":id")
-  @Permission(READ_GEAR_CATALOG)
+  @Permissions(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
@@ -85,7 +81,7 @@ export class GearController {
   }
 
   @Post()
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -97,7 +93,7 @@ export class GearController {
   }
 
   @Put(":id")
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Updating a gear",
@@ -117,7 +113,7 @@ export class GearController {
   }
 
   @Delete(":id")
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -1,11 +1,14 @@
-import { needToBeLoggedIn } from "~/utils/navigation/pages/unauthenticated";
+export default defineNuxtRouteMiddleware(async () => {
+  const oidc = useOidcAuth();
+  if (!oidc.loggedIn.value) return;
 
-export default defineNuxtRouteMiddleware(async (to) => {
-  if (!needToBeLoggedIn(to)) return;
-
-  const userStore = useUserStore();
-  if (userStore.loggedUser !== undefined) return;
-  await userStore.fetchUser();
+  const myStore = useMyStore();
+  if (!myStore.synced) {
+    await myStore.sync();
+  }
+  if (!myStore.loggedUser) {
+    await myStore.fetchMyInformations();
+  }
 
   const preferenceStore = usePreferenceStore();
   await preferenceStore.fetchMyPreferences();

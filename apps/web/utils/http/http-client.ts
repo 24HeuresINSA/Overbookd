@@ -9,7 +9,7 @@ type Endpoint = {
 };
 
 const DEFAULT_SERVER_ERROR_MESSAGE =
-  "Oups, une erreur s'est produite.. Réessaie et contacte un admin si le problème persiste.";
+  "Oups, une erreur s'est produite... Réessaie et contacte un admin si le problème persiste.";
 const DEFAULT_OPTIONS: RequestOptions = {
   acceptedType: JSON,
   serverErrorMessage: DEFAULT_SERVER_ERROR_MESSAGE,
@@ -87,7 +87,7 @@ export class HttpClient {
     const params = this.isString(endpoint) ? undefined : endpoint.params;
 
     const config = useRuntimeConfig();
-    const url = new URL(`${config.public.baseURL}/${path}`);
+    const url = new URL(`${config.public.apiURL}/${path}`);
 
     if (!params) return url;
     const urlParams = HttpParams.generate(params);

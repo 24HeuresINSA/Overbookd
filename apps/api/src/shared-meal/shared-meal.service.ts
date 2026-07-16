@@ -8,7 +8,6 @@ import {
   SharedMeal,
   isPastMeal,
 } from "@overbookd/personal-account";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { SHARED_MEAL_CLOSED } from "@overbookd/domain-events";
 
@@ -18,11 +17,14 @@ export class SharedMealService {
     private readonly eventStore: DomainEventService,
   ) {}
 
-  async offer(meal: OfferMeal, chef: JwtPayload): Promise<OnGoingSharedMeal> {
+  async offer(
+    meal: OfferMeal,
+    chefId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
     const created = await this.mealSharing.offer(
       meal.menu,
       meal.date,
-      chef.id,
+      chefId,
       meal.areMultipleShotgunsAllowed,
     );
     return formatCreatedMeal(created);
@@ -84,12 +86,12 @@ export class SharedMealService {
 
   async recordExpense(
     mealId: SharedMeal["id"],
-    user: JwtPayload,
+    instigatorId: Adherent["id"],
     expense: Expense,
   ): Promise<PastSharedMeal> {
     const pastMeal = await this.mealSharing.recordExpense(
       mealId,
-      user.id,
+      instigatorId,
       expense,
     );
     this.eventStore.publish({ data: pastMeal, type: SHARED_MEAL_CLOSED });

@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -21,9 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
 import { RefusedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
@@ -41,9 +38,8 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   PublicReviewableGeneralResponseDto,
@@ -57,7 +53,7 @@ export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
   @Patch(":id/general")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -88,7 +84,7 @@ export class GeneralSectionController {
   }
 
   @Post(":id/general/time-windows")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -120,7 +116,7 @@ export class GeneralSectionController {
   }
 
   @Patch(":faId/general/time-windows/:timeWindowId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -158,7 +154,7 @@ export class GeneralSectionController {
   }
 
   @Delete(":faId/general/time-windows/:timeWindowId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -16,9 +15,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
@@ -28,9 +25,8 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
 @Controller("volunteer-availability")
 @ApiTags("volunteer-availability")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @UseFilters(VolunteerAvailabilityErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class VolunteerAvailabilityController {
   constructor(
@@ -84,8 +80,7 @@ export class VolunteerAvailabilityController {
   }
 
   @Patch(":userId")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiParam({
     name: "userId",
     description: "The id of the user to add the availability periods to.",

@@ -1,8 +1,8 @@
 <template>
   <div class="balance-cards">
     <v-card>
-      <v-card-title> Solde du CP </v-card-title>
-      <v-card-text>
+      <v-card-title class="balance-card__title"> Solde du CP </v-card-title>
+      <v-card-text class="balance-card__text">
         <span
           class="balance"
           :class="{ negative: balance < 0, positive: balance > 0 }"
@@ -10,7 +10,7 @@
           {{ displayableBalance }}
         </span>
       </v-card-text>
-      <v-card-actions class="balance-cards__actions">
+      <v-card-actions class="balance-card__actions">
         <v-btn
           text="Faire un virement"
           size="x-large"
@@ -44,12 +44,12 @@ import { Money } from "@overbookd/money";
 import { calculateBalanceByDates } from "~/utils/transaction/balance.graph";
 import { getBorderColorForAmount } from "~/utils/transaction/border-color.graph";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const transactionStore = useTransactionStore();
 
 const isTransferDialogOpen = ref<boolean>(false);
 
-const balance = computed<number>(() => userStore.loggedUser?.balance ?? 0);
+const balance = computed<number>(() => myStore.loggedUser?.balance ?? 0);
 const displayableBalance = computed<string>(() =>
   Money.cents(balance.value).toString(),
 );
@@ -107,6 +107,17 @@ const data = computed<ChartData<"line">>(() => {
   display: flex;
   flex-direction: column;
   gap: $card-gap;
+}
+
+.balance-card {
+  &__title {
+    margin: 10px 10px 0 10px;
+  }
+
+  &__text {
+    margin: 0 10px;
+    padding-bottom: 0;
+  }
 
   &__actions {
     display: flex;

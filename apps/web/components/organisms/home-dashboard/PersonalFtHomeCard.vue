@@ -59,11 +59,11 @@ import {
 import type { User } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
 
-const currentAdherent = computed<User | undefined>(() => userStore.loggedUser);
+const currentAdherent = computed<User | undefined>(() => myStore.loggedUser);
 
 ftStore.fetchMyTasks();
 if (teamStore.ftReviewers.length === 0) teamStore.fetchFtReviewers();

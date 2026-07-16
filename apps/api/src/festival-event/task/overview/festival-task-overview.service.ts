@@ -11,7 +11,6 @@ import {
   ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
-import { JwtPayload } from "../../../authentication/entities/jwt-util.entity";
 import { FestivalTaskCreationForm } from "@overbookd/http";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 
@@ -39,10 +38,10 @@ export class FestivalTaskOverviewService {
   }
 
   async createOne(
-    { id }: JwtPayload,
     { name, festivalActivityId }: FestivalTaskCreationForm,
+    authorId: number,
   ): Promise<FestivalTaskDraft> {
-    const author = await this.repositories.adherents.findOne(id);
+    const author = await this.repositories.adherents.findOne(authorId);
     const festivalActivity =
       await this.repositories.festivalActivities.find(festivalActivityId);
 

@@ -1,4 +1,4 @@
-import { isPermission } from "@overbookd/permission";
+import { isPermission, Permission } from "@overbookd/permission";
 
 export type TeamWithNestedPermissions = {
   team: {
@@ -9,11 +9,13 @@ export type TeamWithNestedPermissions = {
   };
 };
 
-export function retrievePermissions(teams: TeamWithNestedPermissions[]) {
+export function retrievePermissions(
+  teams: TeamWithNestedPermissions[],
+): Permission[] {
   const permissions = teams
     .flatMap(({ team }) =>
       team.permissions.map(({ permissionName }) => permissionName),
     )
     .filter(isPermission);
-  return new Set(permissions);
+  return [...new Set(permissions)];
 }

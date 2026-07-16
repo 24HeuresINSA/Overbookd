@@ -118,7 +118,7 @@ import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const catalogSignageStore = useCatalogSignageStore();
 const layoutStore = useLayoutStore();
 
@@ -132,7 +132,7 @@ const isDeleteSignageDialogOpen = ref<boolean>(false);
 const isSignageImageDisplayDialogOpen = ref<boolean>(false);
 
 const isCatalogWriter = computed<boolean>(() =>
-  userStore.can(WRITE_SIGNAGE_CATALOG),
+  myStore.can(WRITE_SIGNAGE_CATALOG),
 );
 const tableHeaders = computed<TableHeaders>(() => {
   const baseHeaders = [

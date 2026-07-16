@@ -38,6 +38,7 @@
     - echo $OVERBOOKD_VERSION
   script:
     - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && OIDC_CLIENT_ID=$OIDC_CLIENT_ID_PREPROD || OIDC_CLIENT_ID=$OIDC_CLIENT_ID_PROD'
     - docker load -i ${APP_NAME}_installer.tar
     - >
       docker build
@@ -51,6 +52,8 @@
       --build-arg API_VERSION=$VERSION
       --build-arg WEB_VERSION=$VERSION
       --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION
+      --build-arg OIDC_CLIENT_ID=$OIDC_CLIENT_ID
+      --build-arg ZITADEL_BASE_URL=$ZITADEL_BASE_URL
       --file $APP_PATH/Dockerfile .
     - >
       docker save -o ${APP_NAME}.tar

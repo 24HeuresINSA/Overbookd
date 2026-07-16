@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -17,9 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CharismaPeriodService } from "./charisma-period.service";
 import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
@@ -30,7 +27,6 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("charisma-periods")
 @ApiTags("charisma-periods")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
@@ -64,8 +60,7 @@ export class CharismaPeriodController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 201,
     description: "The Charisma Period has been successfully created.",
@@ -82,8 +77,7 @@ export class CharismaPeriodController {
   }
 
   @Put(":id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "The Charisma Period has been successfully updated.",
@@ -106,8 +100,7 @@ export class CharismaPeriodController {
   }
 
   @Delete(":id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

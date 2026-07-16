@@ -4,13 +4,10 @@ import {
   Param,
   ParseIntPipe,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { VolunteerToTaskService } from "./volunteer-to-task.service";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import { VolunteerWithAssignmentDurationResponseDto } from "./dto/volunteer-with-assignment-duration.response.dto";
@@ -23,14 +20,13 @@ import { AssignmentFriendResponseDto } from "./dto/assignment-friend.response.dt
 @Controller("assignments/volunteer-to-task")
 @ApiTags("assignments/volunteer-to-task")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(AssignmentErrorFilter)
 @ApiSwaggerResponse()
 export class VolunteerToTaskController {
   constructor(private readonly volunteerToTask: VolunteerToTaskService) {}
 
   @Get("volunteers")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All assignable volunteers with assignment duration",
@@ -42,7 +38,7 @@ export class VolunteerToTaskController {
   }
 
   @Get("volunteers/:volunteerId/assignments")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All assignments for volunteer",
@@ -61,7 +57,7 @@ export class VolunteerToTaskController {
   }
 
   @Get("volunteers/:volunteerId/friends")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "All friends for volunteer",

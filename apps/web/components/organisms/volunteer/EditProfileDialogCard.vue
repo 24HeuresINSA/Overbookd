@@ -131,10 +131,10 @@ import {
   maxLength,
 } from "~/utils/rules/input.rules";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const preferenceStore = usePreferenceStore();
 
-const loggedUser = computed(() => userStore.loggedUser);
+const loggedUser = computed(() => myStore.loggedUser);
 
 const profilePicture = ref<File | null>(null);
 
@@ -171,7 +171,7 @@ const updatePaperPlanningPreference = (paperPlanning: boolean | null) => {
   preferenceStore.updatePlanningPreference({ paperPlanning });
 };
 
-const isHard = computed<boolean>(() => userStore.isMemberOf(HARD));
+const isHard = computed<boolean>(() => myStore.isMemberOf(HARD));
 const selectableAssignmentPreferenceLabels = computed<
   Record<AssignmentPreferenceType, string>
 >(() => {
@@ -202,14 +202,14 @@ const save = async () => {
     phoneNumber: phoneNumber.value,
     comment: comment.value ? comment.value : null,
   };
-  await userStore.updateMyProfile(newProfileData);
+  await myStore.updateMyProfile(newProfileData);
 
   const image = profilePicture.value;
   if (image) {
     const profilePictureForm = new FormData();
     profilePictureForm.append("file", image, image.name);
-    await userStore.addProfilePicture(profilePictureForm);
-    userStore.setMyProfilePicture();
+    await myStore.addProfilePicture(profilePictureForm);
+    myStore.setMyProfilePicture();
   }
 
   loading.value = false;

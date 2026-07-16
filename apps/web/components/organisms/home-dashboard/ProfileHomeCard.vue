@@ -101,11 +101,13 @@ import { HARD } from "@overbookd/team-constants";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
-userStore.fetchMyFriends();
 const preferenceStore = usePreferenceStore();
 
-const loggedUser = computed(() => userStore.loggedUser);
+userStore.fetchMyFriends();
+
+const loggedUser = computed(() => myStore.loggedUser);
 
 const name = computed<string>(() =>
   loggedUser.value ? nicknameOrFirstName(loggedUser.value) : "",
@@ -129,7 +131,7 @@ const wantsPaperPlanning = computed<boolean>(
   () => preferenceStore.myPreferences.paperPlanning ?? false,
 );
 
-const isHard = computed<boolean>(() => userStore.isMemberOf(HARD));
+const isHard = computed<boolean>(() => myStore.isMemberOf(HARD));
 const assignmentPreferenceLabel = computed<string>(() => {
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;
   return assignmentPreferenceLabels[preferenceStore.myPreferences.assignment];
@@ -162,7 +164,7 @@ const closeEditProfileDialog = () => (isEditProfileDialogOpen.value = false);
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 10px;
+    margin-top: 5px;
   }
 }
 

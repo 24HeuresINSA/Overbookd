@@ -95,7 +95,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const catalogGearStore = useCatalogGearStore();
 const layoutStore = useLayoutStore();
 
@@ -166,9 +166,7 @@ const sortedDrives = computed<Drive[]>(() => {
   return [...selectedSet, ...nonSelectedDrives];
 });
 
-const cantLinkDrive = computed<boolean>(
-  () => !userStore.isMemberOf(props.owner),
-);
+const cantLinkDrive = computed<boolean>(() => !myStore.isMemberOf(props.owner));
 
 const displayQuantity = (inquiry: InquiryRequest): string => {
   const gear = catalogGearStore.gears.find(({ slug }) => slug === inquiry.slug);

@@ -7,18 +7,16 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { MANAGE_TEAMS, READ_FA, READ_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { UpdateTeamRequestDto } from "./dto/update-team.request";
 import { TeamService } from "./team.service";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { Public } from "../authentication-zitadel/decorators/public.decorator";
 
 @Controller("teams")
 @ApiTags("teams")
@@ -27,6 +25,7 @@ export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
   @Get()
+  @Public()
   @ApiResponse({
     status: 200,
     description: "Get all teams",
@@ -37,9 +36,9 @@ export class TeamController {
     return this.teamService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
   @Get("fa-reviewers")
+  @Permissions(READ_FA)
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: "Get all FA reviewers",
@@ -50,9 +49,9 @@ export class TeamController {
     return this.teamService.findFaReviewers();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
   @Get("ft-reviewers")
+  @Permissions(READ_FT)
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: "Get all FT reviewers",
@@ -63,9 +62,8 @@ export class TeamController {
     return this.teamService.findFtReviewers();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_TEAMS)
   @Post()
+  @Permissions(MANAGE_TEAMS)
   @ApiBearerAuth()
   @ApiBody({
     description: "Team to create",
@@ -82,9 +80,8 @@ export class TeamController {
     return this.teamService.createTeam(payload);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_TEAMS)
   @Patch(":code")
+  @Permissions(MANAGE_TEAMS)
   @ApiBearerAuth()
   @HttpCode(200)
   @ApiBody({
@@ -103,9 +100,8 @@ export class TeamController {
     return this.teamService.updateTeam(code, data);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_TEAMS)
   @Delete(":code")
+  @Permissions(MANAGE_TEAMS)
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({

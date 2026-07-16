@@ -52,9 +52,8 @@ import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
 import { SOFT } from "@overbookd/team-constants";
 
-const userStore = useUserStore();
-
-const me = computed(() => userStore.loggedUser);
+const myStore = useMyStore();
+const me = computed(() => myStore.loggedUser);
 
 const displayedName = computed<string>(() =>
   me.value ? nicknameOrFirstName(me.value) : "",
@@ -98,10 +97,10 @@ const titleMessage = computed<string>(() => {
 });
 
 const hasPersonalAccount = computed<boolean>(() =>
-  userStore.can(HAVE_PERSONAL_ACCOUNT),
+  myStore.can(HAVE_PERSONAL_ACCOUNT),
 );
 const canDownloadAndSyncPlanning = computed<boolean>(
-  () => userStore.can(DOWNLOAD_PLANNING) && userStore.can(SYNC_PLANNING),
+  () => myStore.can(DOWNLOAD_PLANNING) && myStore.can(SYNC_PLANNING),
 );
 const isOrWantsToBeVolunteer = computed<boolean | undefined>(() => {
   if (!me.value) return;
@@ -115,11 +114,11 @@ const shouldDisplayInstructionsForVolunteer = computed<boolean>(() => {
 });
 
 const canViewUsefulLinks = computed<boolean>(() =>
-  userStore.can(VIEW_USEFUL_LINKS),
+  myStore.can(VIEW_USEFUL_LINKS),
 );
 
-const canWriteFA = computed<boolean>(() => userStore.can(WRITE_FA));
-const canWriteFT = computed<boolean>(() => userStore.can(WRITE_FT));
+const canWriteFA = computed<boolean>(() => myStore.can(WRITE_FA));
+const canWriteFT = computed<boolean>(() => myStore.can(WRITE_FT));
 const hasThirdColumn = computed<boolean>(
   () => canWriteFA.value || canWriteFT.value || !!isOrWantsToBeVolunteer.value,
 );

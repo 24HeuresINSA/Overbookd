@@ -110,12 +110,12 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 useHead({ title: "Lieux de la signa" });
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const locationStore = useLocationStore();
 const layoutStore = useLayoutStore();
 
 const canManageLocations = computed<boolean>(() =>
-  userStore.can(MANAGE_LOCATION),
+  myStore.can(MANAGE_LOCATION),
 );
 const tableHeaders = computed<TableHeaders>(() => {
   const nameHeader = { title: "Nom", value: "name", sortable: true };

@@ -70,8 +70,7 @@ import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 
 const theme = useTheme();
 const { listen, stopListening } = useLiveNotification();
-const userStore = useUserStore();
-const { refreshTokens } = useAuthStore();
+const myStore = useMyStore();
 const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
   useNavigationBadgeStore();
 const faStore = useFestivalActivityStore();
@@ -87,17 +86,17 @@ if (isPreProd) favicon.value = "/favicon-preprod.ico";
 if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
 
 const isMyFestivalActivity = (activity: FestivalActivity): boolean =>
-  activity.inCharge.adherent.id === userStore.loggedUser?.id;
+  activity.inCharge.adherent.id === myStore.loggedUser?.id;
 const isMyFestivalTask = (task: FestivalTask): boolean =>
-  task.general.administrator.id === userStore.loggedUser?.id;
+  task.general.administrator.id === myStore.loggedUser?.id;
 
 onMounted(() => {
   theme.change(pickDefaultTheme());
-  listen(PERMISSION_GRANTED, () => refreshTokens());
-  listen(PERMISSION_REVOKED, () => refreshTokens());
-  listen(TEAMS_JOINED, () => refreshTokens());
-  listen(TEAM_LEFT, () => refreshTokens());
-  listen(CANDIDATE_ENROLLED, () => refreshTokens());
+  listen(PERMISSION_GRANTED, () => myStore.fetchMyInformations());
+  listen(PERMISSION_REVOKED, () => myStore.fetchMyInformations());
+  listen(TEAMS_JOINED, () => myStore.fetchMyInformations());
+  listen(TEAM_LEFT, () => myStore.fetchMyInformations());
+  listen(CANDIDATE_ENROLLED, () => myStore.fetchMyInformations());
   listen(FESTIVAL_ACTIVITY_REJECTED, ({ data }) => {
     if (!isMyFestivalActivity(data.festivalActivity)) return;
     faStore.updateMyPreview(data.festivalActivity);
@@ -149,12 +148,12 @@ onUnmounted(() => {
 });
 
 const shouldApproveEULA = computed<boolean>(
-  () => userStore.loggedUser?.hasApprovedEULA === false,
+  () => myStore.loggedUser?.hasApprovedEULA === false,
 );
 const shouldSignVolunteerCharter = computed<boolean>(
   () =>
-    userStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
-    userStore.loggedUser?.hasSignedVolunteerCharter === false,
+    myStore.can(MUST_SIGN_VOLUNTEER_CHARTER) &&
+    myStore.loggedUser?.hasSignedVolunteerCharter === false,
 );
 
 const shouldFlipContent = ref<boolean>(isContentFlipped());

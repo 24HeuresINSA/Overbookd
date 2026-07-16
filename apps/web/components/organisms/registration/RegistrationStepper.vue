@@ -265,8 +265,9 @@ import {
 } from "~/utils/rules/input.rules";
 import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { loginAndApplyForMembership } from "~/utils/login.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
+import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
+import { planMembershipApplication } from "~/utils/registration/membership-application.utils";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
@@ -408,11 +409,8 @@ const register = async () => {
     return;
   }
 
-  const credentials = {
-    email: email.value.trim().toLowerCase(),
-    password: password.value,
-  };
-  await loginAndApplyForMembership(credentials, token.value);
+  planJauneAudioPlay();
+  planMembershipApplication(token.value);
   loading.value = false;
 };
 

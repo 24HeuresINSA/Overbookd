@@ -11,10 +11,10 @@ import {
   AddInquiryRequestForm,
   UpdateInquiryRequestForm,
 } from "@overbookd/http";
-import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
 import { Inquiries } from "../../common/festival-activity-common.model";
-import { TeamService } from "../../../../team/team.service";
+import { checkMembership } from "../../../../team/team.utils";
 import { IProvidePeriod } from "@overbookd/time";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];
@@ -104,13 +104,13 @@ export class InquirySectionService {
   }
 
   async linkInquiryRequestToDrive(
-    user: JwtUtil,
+    user: RequestHydratedUser,
     { activityId, slug, drive }: LinkDriveToInquiryRequest,
   ): Promise<FestivalActivity> {
     const gear = await this.inquiries.find(slug);
     if (!gear) throw new NotFoundException("Le matos recherché n'existe pas");
 
-    TeamService.checkMembership(user, gear.owner);
+    checkMembership(user, gear.owner);
 
     return this.prepare.assignInquiryToDrive(activityId, {
       drive,

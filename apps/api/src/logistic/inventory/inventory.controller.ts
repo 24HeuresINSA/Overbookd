@@ -6,7 +6,6 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -17,9 +16,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { READ_INVENTORY, WRITE_INVENTORY } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { InventoryGroupedRecordResponseDto } from "./dto/inventory-grouped-record.response.dto";
 import { InventoryGroupedRecordSearchRequestDto } from "./dto/inventory-grouped-record-search.request.dto";
 import { InventoryRecordDto } from "./dto/inventory-record.dto";
@@ -29,13 +26,12 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 @Controller("logistic/inventory")
 @ApiTags("logistic/inventory")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
   @Get()
-  @Permission(READ_INVENTORY)
+  @Permissions(READ_INVENTORY)
   @ApiResponse({
     status: 200,
     description: "Get inventory grouped records that match search",
@@ -77,7 +73,7 @@ export class InventoryController {
   }
 
   @Post()
-  @Permission(WRITE_INVENTORY)
+  @Permissions(WRITE_INVENTORY)
   @ApiResponse({
     status: 201,
     description:
@@ -97,7 +93,7 @@ export class InventoryController {
   }
 
   @Get("storages")
-  @Permission(READ_INVENTORY)
+  @Permissions(READ_INVENTORY)
   @ApiResponse({
     status: 200,
     description: "Get inventory records storages",
@@ -109,7 +105,7 @@ export class InventoryController {
   }
 
   @Get(":gearId")
-  @Permission(READ_INVENTORY)
+  @Permissions(READ_INVENTORY)
   @ApiResponse({
     status: 200,
     description: "Get inventory records for a specific gear",

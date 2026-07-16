@@ -7,12 +7,12 @@ import {
   SignageCatalogItem,
 } from "@overbookd/festival-event";
 import { PrepareSignaForm } from "@overbookd/http";
-import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
-import { TeamService } from "../../../../team/team.service";
+import { checkMembership } from "../../../../team/team.utils";
 import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
 import { UpdateSignageRequest } from "./dto/update-signage.request.dto";
 import { SIGNA } from "@overbookd/team-constants";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 type LinkSignageToCatalogItem = {
   activityId: FestivalActivity["id"];
@@ -63,7 +63,7 @@ export class SignaSectionService {
   }
 
   async linkSignageToCatalogItem(
-    user: JwtUtil,
+    user: RequestHydratedUser,
     { activityId, signageId, catalogItemId }: LinkSignageToCatalogItem,
   ): Promise<FestivalActivity> {
     const catalogItem = await this.catalogSignages.find(catalogItemId);
@@ -73,7 +73,7 @@ export class SignaSectionService {
       );
     }
 
-    TeamService.checkMembership(user, SIGNA);
+    checkMembership(user, SIGNA);
 
     return this.prepare.linkSignageToCatalogItem(activityId, {
       signageId,

@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Get,
-  ParseDatePipe,
-  Query,
-  UseGuards,
-} from "@nestjs/common";
+import { Controller, Get, ParseDatePipe, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { NeedHelpService } from "./need-help.service";
 import { HelpingVolunteerResponseDto } from "./dto/helping-volunteer.response.dto";
 import { ASK_FOR_HELP } from "@overbookd/permission";
@@ -17,13 +9,12 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("need-help")
 @ApiTags("need-help")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class NeedHelpController {
   constructor(private readonly needHelpService: NeedHelpService) {}
 
   @Get()
-  @Permission(ASK_FOR_HELP)
+  @Permissions(ASK_FOR_HELP)
   @ApiQuery({
     name: "start",
     required: true,

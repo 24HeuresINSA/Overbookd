@@ -16,7 +16,6 @@ import {
   Query,
   Request as RequestDecorator,
   Res,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -28,30 +27,29 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Request, Response } from "express";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import {
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
   SYNC_PLANNING,
   VIEW_MULTI_PLANNING,
 } from "@overbookd/permission";
-import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PlanningService } from "./planning.service";
 import { CreateBreakPeriodRequestDto } from "./dto/create-break-period.request.dto";
 import { Duration, Period, Edition } from "@overbookd/time";
 import { VolunteerForPlanningLeafletResponseDto } from "./dto/volunteer-for-planning-leaflet.response.dto";
 import { SecretService } from "./secret.service";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { VolunteerSubscriptionPlanningResponseDto } from "./dto/volunter-subscription-planning.response.dto";
-import { RequestWithUserPayload } from "../../app.controller";
 import { PlanningSubscription } from "./subscription.service";
 import { TaskResponseDto } from "./dto/task.response.dto";
 import { ICAL, PDF, JSON } from "@overbookd/http";
 import { PDFBook } from "@overbookd/pdf-book";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import { MultiPlanningVolunteerResponseDto } from "./dto/multi-planning-volunteer.response.dto";
-import { JwtUtil } from "../../authentication/entities/jwt-util.entity";
 import { BreakPeriodResponseDto } from "../../assignment/common/dto/break-period.response.dto";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
+import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { Public } from "../../authentication-zitadel/decorators/public.decorator";
 
 @Controller("planning")
 @ApiTags("planning")
@@ -63,8 +61,7 @@ export class PlanningController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(DOWNLOAD_PLANNING)
+  @Permissions(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -79,11 +76,12 @@ export class PlanningController {
   })
   @ApiProduces(JSON, ICAL, PDF)
   async getCurrentVolunteerPlanning(
-    @RequestDecorator() request: RequestWithUserPayload,
+    @RequestDecorator() request: Request,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Res() response: Response,
     @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<TaskResponseDto[]> {
-    const volunteerId = request.user.id;
+    const volunteerId = user.id;
     const format = request.headers.accept;
     try {
       const planning = await this.planning.buildOne(format, volunteerId, after);
@@ -101,8 +99,8 @@ export class PlanningController {
   }
 
   @Get("volunteers/multi")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_MULTI_PLANNING)
+  @Permissions(VIEW_MULTI_PLANNING)
+  @ApiBearerAuth()
   @ApiQuery({
     name: "volunteerIds",
     required: true,
@@ -123,10 +121,9 @@ export class PlanningController {
       new ParseArrayPipe({ items: Number }),
     )
     volunteerIds: number[],
-    @RequestDecorator() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<MultiPlanningVolunteerResponseDto[]> {
-    const jwt = new JwtUtil(user);
-    const withBreakPeriods = jwt.can(AFFECT_VOLUNTEER);
+    const withBreakPeriods = user.can(AFFECT_VOLUNTEER);
     return this.planning.getVolunteersForMultiPlanning(
       volunteerIds,
       withBreakPeriods,
@@ -134,9 +131,8 @@ export class PlanningController {
   }
 
   @Get("volunteers")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteers with assignments for planning leaflets",
@@ -150,8 +146,7 @@ export class PlanningController {
   }
 
   @Get("subscribe")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(SYNC_PLANNING)
+  @Permissions(SYNC_PLANNING)
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -159,13 +154,13 @@ export class PlanningController {
     type: VolunteerSubscriptionPlanningResponseDto,
   })
   async getCurrentVolunteerSubscriptionPlanningLink(
-    @RequestDecorator() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PlanningSubscription> {
-    const volunteerId = user.id;
-    return this.planning.subscribe(volunteerId);
+    return this.planning.subscribe(user.id);
   }
 
   @Get("subscribe/:secret")
+  @Public()
   @ApiResponse({
     status: 200,
     description: "Ical format volunteer planning",
@@ -193,9 +188,8 @@ export class PlanningController {
   }
 
   @Post("booklets")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get volunteers plannings as booklets",
@@ -236,9 +230,8 @@ export class PlanningController {
   }
 
   @Get("booklets/:volunteerId")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get volunteer planning as a booklet",
@@ -275,8 +268,7 @@ export class PlanningController {
   }
 
   @Get(":volunteerId")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -313,9 +305,8 @@ export class PlanningController {
   }
 
   @Get(":volunteerId/break-periods")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
@@ -329,9 +320,8 @@ export class PlanningController {
   }
 
   @Post(":volunteerId/break-periods")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",
@@ -355,9 +345,8 @@ export class PlanningController {
   }
 
   @Delete(":volunteerId/break-periods")
-  @UseGuards(JwtAuthGuard)
+  @Permissions(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
-  @Permission(AFFECT_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Volunteer break periods",

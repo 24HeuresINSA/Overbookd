@@ -25,8 +25,8 @@ export const useVolunteerAvailabilityStore = defineStore(
       },
 
       async fetchVolunteerAvailabilities(userId: number) {
-        const userStore = useUserStore();
-        this.currentCharisma = userStore.loggedUser?.charisma ?? 0;
+        const myStore = useMyStore();
+        this.currentCharisma = myStore.loggedUser?.charisma ?? 0;
 
         const res = await repo.getVolunteerAvailabilities(userId);
         if (isHttpError(res)) return;
@@ -42,8 +42,8 @@ export const useVolunteerAvailabilityStore = defineStore(
         sendSuccessNotification("Disponibilitiés sauvegardées 🥳");
         this._initAvailabilities(castPeriodsWithDate(res));
 
-        const userStore = useUserStore();
-        userStore.fetchMyInformations();
+        const myStore = useMyStore();
+        myStore.fetchMyInformations();
       },
 
       async overrideVolunteerAvailabilities(

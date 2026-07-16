@@ -8,7 +8,6 @@ import { AccessManagerModule } from "../access-manager/access-manager.module";
 import { GrantPermission, RevokePermission } from "@overbookd/access-manager";
 
 @Module({
-  imports: [MailModule, PrismaModule, AccessManagerModule],
   controllers: [PermissionController],
   providers: [
     PrismaService,
@@ -23,5 +22,6 @@ import { GrantPermission, RevokePermission } from "@overbookd/access-manager";
     },
   ],
   exports: [PermissionService],
+  imports: [MailModule, PrismaModule, AccessManagerModule],
 })
 export class PermissionModule {}

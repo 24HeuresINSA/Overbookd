@@ -82,7 +82,7 @@ import {
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 
 const { meal } = defineProps({
   meal: {
@@ -100,7 +100,7 @@ const portionCost = computed<number>(() =>
 );
 
 const me = computed<Adherent>(() => {
-  const loggedUser = userStore.loggedUser;
+  const loggedUser = myStore.loggedUser;
   if (!loggedUser) return { id: 0, name: "" };
   const { id, ...me } = loggedUser;
   return { id, name: nicknameOrName(me) };

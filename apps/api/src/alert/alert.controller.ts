@@ -1,15 +1,14 @@
-import { Controller, Get, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AlertService } from "./alert.service";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { RequestWithUserPayload } from "../app.controller";
 import { AlertsResponseDto } from "./dto/alerts.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Controller("alerts")
 @ApiTags("alerts")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class AlertController {
   constructor(private readonly alert: AlertService) {}
@@ -20,7 +19,7 @@ export class AlertController {
     description: "Volunteer's alerts",
     type: AlertsResponseDto,
   })
-  getAlerts(@Request() request: RequestWithUserPayload) {
-    return this.alert.getMyAlerts(request.user);
+  getAlerts(@AuthenticatedUser() user: RequestHydratedUser) {
+    return this.alert.getMyAlerts(user);
   }
 }

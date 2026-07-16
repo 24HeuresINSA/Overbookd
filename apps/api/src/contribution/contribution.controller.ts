@@ -1,5 +1,4 @@
 import {
-  UseGuards,
   Controller,
   Get,
   Post,
@@ -18,12 +17,10 @@ import {
   ApiBody,
   ApiParam,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ContributionService } from "./contribution.service";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import { Adherent, AdherentWithContribution } from "@overbookd/contribution";
-import { Permission } from "../authentication/permissions-auth.decorator";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
 import { ContributionAdherentResponseDto } from "./dto/adherent.response.dto";
 import { ContributionErrorFilter } from "./contribution.filter";
@@ -34,14 +31,13 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("contributions")
 @ApiTags("contributions")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(ContributionErrorFilter)
 @ApiSwaggerResponse()
 export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
 
   @Get("out-to-date-adherents")
-  @Permission(MANAGE_CONTRIBUTIONS)
+  @Permissions(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -54,7 +50,7 @@ export class ContributionController {
   }
 
   @Get("valid-adherents")
-  @Permission(MANAGE_CONTRIBUTIONS)
+  @Permissions(MANAGE_CONTRIBUTIONS)
   @ApiResponse({
     status: 200,
     description:
@@ -67,7 +63,7 @@ export class ContributionController {
   }
 
   @Post()
-  @Permission(MANAGE_CONTRIBUTIONS)
+  @Permissions(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -82,7 +78,7 @@ export class ContributionController {
   }
 
   @Patch("adherents/:adherentId/editions/:edition")
-  @Permission(MANAGE_CONTRIBUTIONS)
+  @Permissions(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -111,7 +107,7 @@ export class ContributionController {
   }
 
   @Delete("adherents/:adherentId/editions/:edition")
-  @Permission(MANAGE_CONTRIBUTIONS)
+  @Permissions(MANAGE_CONTRIBUTIONS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

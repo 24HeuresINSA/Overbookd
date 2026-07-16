@@ -88,13 +88,12 @@ useHead({ title: "Statistiques des FA" });
 const theme = useTheme();
 const router = useRouter();
 const route = useRoute();
-
+const myStore = useMyStore();
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
-const userStore = useUserStore();
 
-const canReadFA = computed<boolean>(() => userStore.can(READ_FA));
-const canReadFT = computed<boolean>(() => userStore.can(READ_FT));
+const canReadFA = computed<boolean>(() => myStore.can(READ_FA));
+const canReadFT = computed<boolean>(() => myStore.can(READ_FT));
 
 const displayMode = ref<StatsDisplayMode>(DISPLAY_FA);
 const isDisplayTasksMode = computed<boolean>(

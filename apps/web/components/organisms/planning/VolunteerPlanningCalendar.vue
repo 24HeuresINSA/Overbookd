@@ -95,6 +95,7 @@ import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
 import type { SelectableCategory } from "~/utils/assignment/task-category";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const planningStore = usePlanningStore();
 const layoutStore = useLayoutStore();
@@ -118,12 +119,12 @@ const selectedTask = computed<TaskForCalendar | undefined>(
 );
 
 const canViewVolunteerDetails = computed<boolean>(() =>
-  userStore.can(VIEW_VOLUNTEER_DETAILS),
+  myStore.can(VIEW_VOLUNTEER_DETAILS),
 );
 const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
-const canReadFt = computed<boolean>(() => userStore.can(READ_FT));
+const canReadFt = computed<boolean>(() => myStore.can(READ_FT));
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 const shouldShowStats = computed<boolean>(
   () => canAssignVolunteer.value && isDesktop.value,

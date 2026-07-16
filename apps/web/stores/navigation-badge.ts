@@ -63,8 +63,8 @@ export const useNavigationBadgeStore = defineStore("navigation-badge", {
     },
 
     _hasPermission(permission: Permission) {
-      const userStore = useUserStore();
-      return userStore.can(permission);
+      const myStore = useMyStore();
+      return myStore.can(permission);
     },
   },
 });

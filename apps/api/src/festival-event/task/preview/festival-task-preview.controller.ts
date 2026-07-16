@@ -1,10 +1,4 @@
-import {
-  UseFilters,
-  Controller,
-  UseGuards,
-  Get,
-  Request,
-} from "@nestjs/common";
+import { UseFilters, Controller, Get } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiTags,
@@ -14,9 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { PreviewFestivalTask } from "@overbookd/festival-event";
 import { READ_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { FestivalTaskPreviewService } from "./festival-task-preview.service";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
@@ -24,14 +16,14 @@ import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task
 import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-task-in-review.response.dto";
 import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-task-refused.response.dto";
 import { PreviewFestivalTaskValidatedResponseDto } from "./dto/preview-festival-task-validated.response.dto";
-import { RequestWithUserPayload } from "../../../app.controller";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   PreviewFestivalTaskDraftResponseDto,
@@ -43,7 +35,7 @@ export class FestivalTaskPreviewController {
   constructor(private readonly previewService: FestivalTaskPreviewService) {}
 
   @Get()
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "All festival tasks",
@@ -62,7 +54,7 @@ export class FestivalTaskPreviewController {
   }
 
   @Get("mine")
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "My festival tasks",
@@ -77,7 +69,7 @@ export class FestivalTaskPreviewController {
     isArray: true,
   })
   findMine(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PreviewFestivalTask[]> {
     return this.previewService.findMine(user.id);
   }

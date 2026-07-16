@@ -7,9 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Request,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -21,46 +19,45 @@ import {
 import { HasApplication, StaffCandidate } from "@overbookd/http";
 import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
 import { StaffMembershipApplicationService } from "./staff-membership-application.service";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { ENROLL_HARD } from "@overbookd/permission";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
-import { StaffCandidateRequestDto } from "./dto/staff-candidate.request.dto";
+import { StaffCandidateTokenRequestDto } from "./dto/staff-candidate-token.request.dto";
 import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("registrations/membership-applications/staffs")
 @ApiTags("registrations/membership-applications/staffs")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @UseFilters(MembershipApplicationErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class StaffMembershipApplicationController {
   constructor(
     private readonly applicationService: StaffMembershipApplicationService,
   ) {}
 
-  @Post()
+  @Post("apply")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Staff application submitted",
   })
   @ApiBody({
-    type: StaffCandidateRequestDto,
+    type: StaffCandidateTokenRequestDto,
     description: "Candidate",
   })
-  applyFor(@Body() { email, token }: StaffCandidateRequestDto): Promise<void> {
+  applyFor(
+    @Body() { token }: StaffCandidateTokenRequestDto,
+    @AuthenticatedUser() { email }: RequestHydratedUser,
+  ): Promise<void> {
     return this.applicationService.applyFor(email, token);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get all staff candidates",
@@ -72,8 +69,7 @@ export class StaffMembershipApplicationController {
   }
 
   @Get("candidates/count")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get the staff candidates count",
@@ -83,8 +79,7 @@ export class StaffMembershipApplicationController {
   }
 
   @Get("rejected")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @ApiResponse({
     status: 200,
     description: "Get all rejected staff candidates",
@@ -96,8 +91,7 @@ export class StaffMembershipApplicationController {
   }
 
   @Post("enroll")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -112,45 +106,35 @@ export class StaffMembershipApplicationController {
   }
 
   @Get("invitation-link")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   getStaffInvitationLink(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<URL | undefined> {
-    return this.applicationService.getStaffInvitationLink(new JwtUtil(user));
+    return this.applicationService.getStaffInvitationLink(user);
   }
 
   @Post("invitation-link")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   generateStaffInvitationLink(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<URL> {
-    return this.applicationService.generateStaffInvitationLink(
-      new JwtUtil(user),
-    );
+    return this.applicationService.generateStaffInvitationLink(user);
   }
 
-  @Get(":email")
-  @UseGuards(JwtAuthGuard)
-  @ApiParam({
-    name: "email",
-    type: String,
-  })
+  @Get("me")
   @ApiResponse({
     status: 200,
     description: "Get current staff application",
     type: HasApplicationResponseDto,
   })
   getCurrentApplication(
-    @Param("email") email: string,
+    @AuthenticatedUser() { email }: RequestHydratedUser,
   ): Promise<HasApplication> {
     return this.applicationService.getCurrentApplication(email);
   }
 
   @Delete(":candidateId")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -167,8 +151,7 @@ export class StaffMembershipApplicationController {
   }
 
   @Post(":candidateId/cancel-rejection")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(ENROLL_HARD)
+  @Permissions(ENROLL_HARD)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -9,7 +9,6 @@ import {
   Patch,
   Post,
   UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -20,10 +19,8 @@ import {
 } from "@nestjs/swagger";
 import { LogisticErrorFilter } from "../logistic.filter";
 import { BorrowService } from "./borrow.service";
-import { Permission } from "../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { BORROW_GEARS } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
 import { InitBorrowRequestDto } from "./dto/init-borrow.request.dto";
 import { Borrow, GearRequest } from "@overbookd/logistic";
@@ -34,15 +31,14 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/borrows")
 @ApiTags("logistic/borrows")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(LogisticErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
   @Get()
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiResponse({
     status: 200,
     description: "All borrows",
@@ -54,7 +50,7 @@ export class BorrowController {
   }
 
   @Get(":id")
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -70,7 +66,7 @@ export class BorrowController {
   }
 
   @Post()
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiBody({
     description: "Borrow to initialize",
     type: InitBorrowRequestDto,
@@ -85,7 +81,7 @@ export class BorrowController {
   }
 
   @Patch(":id")
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -108,7 +104,7 @@ export class BorrowController {
   }
 
   @Delete(":id")
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @HttpCode(204)
   @ApiParam({
     name: "id",
@@ -124,7 +120,7 @@ export class BorrowController {
   }
 
   @Post(":id/gear-requests")
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,
@@ -147,7 +143,7 @@ export class BorrowController {
   }
 
   @Delete(":id/gear-requests/:slug")
-  @Permission(BORROW_GEARS)
+  @Permissions(BORROW_GEARS)
   @ApiParam({
     name: "id",
     type: Number,

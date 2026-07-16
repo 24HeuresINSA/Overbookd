@@ -42,9 +42,9 @@ async function bootstrap() {
   //Create swagger
   const config = new DocumentBuilder()
     .setTitle("Overbookd")
-    .setDescription("The Overbookd API description")
+    .setDescription("Overbookd API documentation")
     .setVersion("1.0")
-    .addServer("/api")
+    .addServer("/ob-api")
     .addBearerAuth()
     .build();
 

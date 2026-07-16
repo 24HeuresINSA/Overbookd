@@ -53,6 +53,7 @@
 <script lang="ts" setup>
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 
 userStore.fetchMyFriends();
@@ -77,7 +78,7 @@ const howToMakeFriends =
 
 const newFriend = ref<User | null>(null);
 
-const loggedUser = computed(() => userStore.loggedUser);
+const loggedUser = computed(() => myStore.loggedUser);
 const myFriends = computed(() => userStore.myFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
 

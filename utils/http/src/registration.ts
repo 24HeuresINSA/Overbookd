@@ -15,9 +15,4 @@ export type VolunteerCandidate = StaffCandidate & {
   note?: string;
 };
 
-export type StaffApplication = {
-  email: string;
-  token: string;
-};
-
 export type HasApplication = { hasApplication: boolean };

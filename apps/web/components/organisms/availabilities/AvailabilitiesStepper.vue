@@ -47,7 +47,7 @@ const EXTENDED_CALENDAR_STEPS: CalendarStep[] = [
   ...BASE_CALENDAR_STEPS,
 ];
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 const layoutStore = useLayoutStore();
 
@@ -57,7 +57,7 @@ const mobileStepDayIndex = ref<number>(0);
 const isDesktop = computed<boolean>(() => layoutStore.isDesktop);
 
 const calendarSteps = computed<CalendarStep[]>(() => {
-  const canViewExtended = userStore.can(ENTER_EXTENDED_AVAILABILITITES);
+  const canViewExtended = myStore.can(ENTER_EXTENDED_AVAILABILITITES);
   return canViewExtended ? EXTENDED_CALENDAR_STEPS : BASE_CALENDAR_STEPS;
 });
 const stepDays = computed<DayPresenter[]>(() => {
@@ -115,9 +115,7 @@ const moveToNext = () => {
 };
 
 const saveAvailabilities = async () => {
-  if (!userStore.loggedUser) return;
-  await availabilitiyStore.updateVolunteerAvailabilities(
-    userStore.loggedUser.id,
-  );
+  if (!myStore.loggedUser) return;
+  await availabilitiyStore.updateVolunteerAvailabilities(myStore.loggedUser.id);
 };
 </script>

@@ -217,7 +217,7 @@ import { toSearchable } from "~/utils/search/searchable-user.utils";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registrations/volunteer-candidates.utils";
+import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registration/volunteer-candidates.utils";
 import { CSVBuilder } from "@overbookd/csv";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatPhoneNumber } from "@overbookd/registration";

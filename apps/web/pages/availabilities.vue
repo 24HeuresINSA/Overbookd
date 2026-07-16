@@ -37,11 +37,11 @@ import { EVIL_CHARISMA, EVIL, COOL } from "~/utils/easter-egg/evil-charisma";
 
 useHead({ title: "Mes dispos" });
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const availabilitiyStore = useVolunteerAvailabilityStore();
 const charismaPeriodStore = useCharismaPeriodStore();
 
-const volunteerId = computed<number>(() => userStore.loggedUser?.id ?? 0);
+const volunteerId = computed<number>(() => myStore.loggedUser?.id ?? 0);
 const charisma = computed<number>(
   () => availabilitiyStore.currentCharisma ?? 0,
 );

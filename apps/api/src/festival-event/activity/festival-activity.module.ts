@@ -20,6 +20,7 @@ import { FestivalActivityOverviewModule } from "./overview/festival-activity-ove
 import { FestivalActivityOverviewController } from "./overview/festival-activity-overview.controller";
 import { FestivalActivityReviewController } from "./review/festival-activity-review.controller";
 import { FestivalActivityReviewModule } from "./review/festival-activity-review.module";
+import { PrismaModule } from "../../prisma.module";
 
 @Module({
   controllers: [
@@ -45,6 +46,7 @@ import { FestivalActivityReviewModule } from "./review/festival-activity-review.
     SecuritySectionModule,
     SignaSectionModule,
     SupplySectionModule,
+    PrismaModule,
   ],
 })
 export class FestivalActivityModule {}

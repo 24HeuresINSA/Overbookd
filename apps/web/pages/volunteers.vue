@@ -88,11 +88,12 @@ import { formatPhoneNumber } from "@overbookd/registration";
 useHead({ title: "Liste des bénévoles" });
 
 const route = useRoute();
+const myStore = useMyStore();
 const userStore = useUserStore();
 const availabilityStore = useVolunteerAvailabilityStore();
 
 const canAssignVolunteer = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 
 const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
@@ -158,7 +159,7 @@ const isVolunteerInfoDialogOpen = ref<boolean>(false);
 const openVolunteerInfoDialog = (
   volunteer: UserDataWithPotentialyProfilePicture,
 ) => {
-  if (!userStore.can(VIEW_VOLUNTEER_DETAILS)) return;
+  if (!myStore.can(VIEW_VOLUNTEER_DETAILS)) return;
   userStore.setSelectedUser(volunteer);
   if (canAssignVolunteer.value) {
     availabilityStore.fetchVolunteerAvailabilities(volunteer.id);

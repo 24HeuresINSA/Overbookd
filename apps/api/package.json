@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "2.24.8",
+  "version": "3.0.0",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -60,6 +60,7 @@
     "@overbookd/http": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/logistic": "workspace:*",
+    "@overbookd/oidc": "workspace:*",
     "@overbookd/pdf-book": "workspace:*",
     "@overbookd/permission": "workspace:*",
     "@overbookd/personal-account": "workspace:*",
@@ -91,6 +92,7 @@
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
+    "passport-zitadel": "1.2.3",
     "pdfmake": "0.2.22",
     "reflect-metadata": "0.2.2",
     "rimraf": "6.1.3",

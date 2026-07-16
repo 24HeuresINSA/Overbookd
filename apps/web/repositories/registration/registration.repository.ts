@@ -7,9 +7,10 @@ export class RegistrationRepository {
   static registerNewcomer(form: RegisterForm, token?: string) {
     const newcomer = form.complete();
     const body = { token, newcomer };
-    const serverErrorMessage =
-      "Oups, l'inscription a échoué... Rééssaie de créer ton compte.";
-    const options = { serverErrorMessage };
+    const options = {
+      serverErrorMessage:
+        "Oups, l'inscription a échoué... Rééssaie de créer ton compte.",
+    };
     return HttpClient.post<void>(this.basePath, body, options);
   }
 

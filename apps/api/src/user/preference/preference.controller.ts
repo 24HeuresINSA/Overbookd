@@ -6,8 +6,6 @@ import {
   ParseEnumPipe,
   Patch,
   Query,
-  Request,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -17,11 +15,8 @@ import {
   ApiQuery,
 } from "@nestjs/swagger";
 import { PreferenceService } from "./preference.service";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PlanningPreferenceDto } from "./dto/planning-preference.dto";
-import { RequestWithUserPayload } from "../../app.controller";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { SET_FAVORITE_PAGES } from "@overbookd/permission";
 import { PagesPreferenceResponseDto } from "./dto/pages-preference.response.dto";
 import { AddPageToFavoritesRequestDto } from "./dto/add-page-to-favorites.request.dto";
@@ -29,11 +24,12 @@ import { PreferenceResponseDto } from "./dto/preference.response.dto";
 import { pagesURL, PageURL } from "@overbookd/web-page";
 import { AssignmentPreferenceDto } from "./dto/assignment-preference.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 
 @Controller("preferences")
 @ApiTags("preferences")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class PreferenceController {
   constructor(private readonly preferenceService: PreferenceService) {}
@@ -45,7 +41,7 @@ export class PreferenceController {
     type: PreferenceResponseDto,
   })
   findMine(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PreferenceResponseDto> {
     return this.preferenceService.findOne(user.id);
   }
@@ -62,7 +58,7 @@ export class PreferenceController {
   })
   updatePlanningPreference(
     @Body() preference: PlanningPreferenceDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PlanningPreferenceDto> {
     return this.preferenceService.updatePlanningPreference(user.id, preference);
   }
@@ -79,7 +75,7 @@ export class PreferenceController {
   })
   updateAssignmentPreference(
     @Body() preference: AssignmentPreferenceDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<AssignmentPreferenceDto> {
     return this.preferenceService.updateAssignmentPreference(
       user.id,
@@ -88,8 +84,7 @@ export class PreferenceController {
   }
 
   @Patch("me/favorite-pages")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(SET_FAVORITE_PAGES)
+  @Permissions(SET_FAVORITE_PAGES)
   @ApiResponse({
     status: 200,
     description: "Updated favorite pages",
@@ -101,14 +96,13 @@ export class PreferenceController {
   })
   addPageToFavorites(
     @Body() { page }: AddPageToFavoritesRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PagesPreferenceResponseDto> {
     return this.preferenceService.addPageToFavorites(user.id, page);
   }
 
   @Delete("me/favorite-pages")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(SET_FAVORITE_PAGES)
+  @Permissions(SET_FAVORITE_PAGES)
   @ApiResponse({
     status: 200,
     description: "Updated favorite pages",
@@ -120,7 +114,7 @@ export class PreferenceController {
     enum: pagesURL,
   })
   removePageFromFavorites(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Query("page", new ParseEnumPipe(pagesURL)) page: PageURL,
   ): Promise<PagesPreferenceResponseDto> {
     return this.preferenceService.removePageFromFavorites(user.id, page);

@@ -86,6 +86,7 @@ async function main() {
 
       const userCreateData = {
         email,
+        zitadelId: email,
         firstName: user,
         lastName: user,
         nickname: null,

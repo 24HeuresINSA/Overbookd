@@ -1,8 +1,6 @@
 import {
   UseFilters,
   Controller,
-  Request,
-  UseGuards,
   Post,
   HttpCode,
   Param,
@@ -26,11 +24,8 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
-import { RequestWithUserPayload } from "../../../../app.controller";
-import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
+
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import { PeriodRequestDto } from "../../../../common/dto/period.request.dto";
 import {
@@ -50,12 +45,13 @@ import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../../../common/dto/inquiry-request.response.dto";
+import { AuthenticatedUser } from "../../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
@@ -69,7 +65,7 @@ export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
   @Post(":faId/inquiry")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -101,7 +97,7 @@ export class InquirySectionController {
   }
 
   @Delete(":faId/inquiry")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -128,7 +124,7 @@ export class InquirySectionController {
   }
 
   @Post(":faId/inquiry/time-windows")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -160,7 +156,7 @@ export class InquirySectionController {
   }
 
   @Patch(":faId/inquiry/time-windows/:timeWindowId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -198,7 +194,7 @@ export class InquirySectionController {
   }
 
   @Delete(":faId/inquiry/time-windows/:timeWindowId")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -232,7 +228,7 @@ export class InquirySectionController {
   }
 
   @Post(":faId/inquiry/requests")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -265,7 +261,7 @@ export class InquirySectionController {
   }
 
   @Patch(":faId/inquiry/requests/:inquirySlug")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -305,7 +301,7 @@ export class InquirySectionController {
   }
 
   @Delete(":faId/inquiry/requests/:inquirySlug")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -339,7 +335,7 @@ export class InquirySectionController {
   }
 
   @Patch(":faId/inquiry/requests/:inquirySlug/link-drive")
-  @Permission(VALIDATE_FA)
+  @Permissions(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -374,10 +370,9 @@ export class InquirySectionController {
     @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
     @Param("inquirySlug") slug: InquiryRequest["slug"],
     @Body() { drive }: LinkInquiryDriveRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalActivity> {
-    const jwt = new JwtUtil(user);
-    return this.inquiryService.linkInquiryRequestToDrive(jwt, {
+    return this.inquiryService.linkInquiryRequestToDrive(user, {
       activityId,
       slug,
       drive,

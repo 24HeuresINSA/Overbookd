@@ -6,7 +6,6 @@ import type {
   FestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-event";
-import { JwtPayload } from "../../../authentication/entities/jwt-util.entity";
 import {
   Adherents,
   RemoveFestivalActivities,
@@ -33,8 +32,8 @@ export class FestivalActivityOverviewService {
     return activity;
   }
 
-  async create({ id }: JwtPayload, name: string): Promise<Draft> {
-    const author = await this.adherents.find(id);
+  async create(name: string, authorId: number): Promise<Draft> {
+    const author = await this.adherents.find(authorId);
     const activity = await this.creation.create({
       author,
       name,

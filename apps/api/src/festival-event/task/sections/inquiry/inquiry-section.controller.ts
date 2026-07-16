@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  UseGuards,
   Delete,
   Patch,
   HttpCode,
@@ -21,10 +20,8 @@ import {
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { FestivalTask, InquiryRequest } from "@overbookd/festival-event";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import {
@@ -39,15 +36,14 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
 
   @Post(":ftId/inquiry/requests")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -77,7 +73,7 @@ export class InquirySectionController {
   }
 
   @Patch(":ftId/inquiry/requests/:inquirySlug")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -115,7 +111,7 @@ export class InquirySectionController {
   }
 
   @Delete(":ftId/inquiry/requests/:inquirySlug")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -147,7 +143,7 @@ export class InquirySectionController {
   }
 
   @Patch(":ftId/inquiry/requests/:inquirySlug/link-drive")
-  @Permission(VALIDATE_FT)
+  @Permissions(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

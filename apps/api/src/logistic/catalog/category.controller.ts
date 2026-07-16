@@ -5,7 +5,6 @@ import {
   Param,
   Post,
   Delete,
-  UseGuards,
   HttpCode,
   Put,
   ParseIntPipe,
@@ -19,13 +18,11 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
 import { CategoryResponseDto } from "./dto/category.response.dto";
 import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
@@ -33,13 +30,12 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 @Controller("logistic/categories")
 @ApiTags("logistic/catalog")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @Permission(READ_GEAR_CATALOG)
+  @Permissions(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get categories that match search",
@@ -65,7 +61,7 @@ export class CategoryController {
   }
 
   @Get("tree")
-  @Permission(READ_GEAR_CATALOG)
+  @Permissions(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get categories tree",
@@ -77,7 +73,7 @@ export class CategoryController {
   }
 
   @Get(":id")
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get a specific category",
@@ -94,7 +90,7 @@ export class CategoryController {
   }
 
   @Delete(":id")
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -111,7 +107,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @ApiResponse({
     status: 201,
     description: "Creating a new category",
@@ -124,7 +120,7 @@ export class CategoryController {
   }
 
   @Put(":id")
-  @Permission(WRITE_GEAR_CATALOG)
+  @Permissions(WRITE_GEAR_CATALOG)
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -10,18 +10,13 @@ import {
   Patch,
   Post,
   Put,
-  Request as RequestDecorator,
   StreamableFile,
   UploadedFile,
   UseFilters,
-  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { RequestWithUserPayload } from "../../src/app.controller";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
 import { ProfilePictureService } from "./profile-picture.service";
@@ -37,7 +32,6 @@ import {
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
 import { TeamService } from "../team/team.service";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
@@ -48,11 +42,12 @@ import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { ImageInterceptor } from "../utils/image.interceptor";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("users")
 @ApiTags("users")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class UserController {
   constructor(
@@ -62,32 +57,13 @@ export class UserController {
     private readonly teamService: TeamService,
   ) {}
 
-  @Get("volunteers")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_VOLUNTEER)
+  @Post("sync")
   @ApiResponse({
     status: 200,
-    description: "Get all volunteers",
-    type: UserPersonalDataResponseDto,
-    isArray: true,
+    description: "Synchronisation avec Zitadel réussie",
   })
-  getVolunteers(
-    @RequestDecorator() { user }: RequestWithUserPayload,
-  ): Promise<UserPersonalData[]> {
-    return this.userService.getVolunteers(new JwtUtil(user));
-  }
-
-  @Get("adherents")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_VOLUNTEER)
-  @ApiResponse({
-    status: 200,
-    description: "Get all adherents",
-    type: UserIdentifierResponseDto,
-    isArray: true,
-  })
-  getAdherents(): Promise<User[]> {
-    return this.userService.getAdherents();
+  userSync(@AuthenticatedUser() user: RequestHydratedUser) {
+    return this.userService.userSync(user);
   }
 
   @Get("me")
@@ -97,9 +73,35 @@ export class UserController {
     type: MyUserInformationResponseDto,
   })
   async getCurrentUser(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<MyUserInformation | null> {
-    return this.userService.getMyInformation(req.user);
+    return this.userService.getMyInformation(user);
+  }
+
+  @Get("volunteers")
+  @Permissions(VIEW_VOLUNTEER)
+  @ApiResponse({
+    status: 200,
+    description: "Get all volunteers",
+    type: UserPersonalDataResponseDto,
+    isArray: true,
+  })
+  getVolunteers(
+    @AuthenticatedUser() user: RequestHydratedUser,
+  ): Promise<UserPersonalData[]> {
+    return this.userService.getVolunteers(user);
+  }
+
+  @Get("adherents")
+  @Permissions(VIEW_VOLUNTEER)
+  @ApiResponse({
+    status: 200,
+    description: "Get all adherents",
+    type: UserIdentifierResponseDto,
+    isArray: true,
+  })
+  getAdherents(): Promise<User[]> {
+    return this.userService.getAdherents();
   }
 
   @Patch("me")
@@ -113,10 +115,10 @@ export class UserController {
     type: UpdateProfileRequestDto,
   })
   async updateCurrentUser(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() userData: UpdateProfileRequestDto,
   ): Promise<MyUserInformation | null> {
-    return this.userService.updateMyInformation(req.user, userData);
+    return this.userService.updateMyInformation(user, userData);
   }
 
   @Post("me/approve-eula")
@@ -126,9 +128,9 @@ export class UserController {
     description: "Approve End User Licence Agreement",
   })
   async approveEndUserLicenceAgreement(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<void> {
-    return this.userService.approveEndUserLicenceAgreement(req.user);
+    return this.userService.approveEndUserLicenceAgreement(user);
   }
 
   @Post("me/sign-volunteer-charter")
@@ -138,14 +140,13 @@ export class UserController {
     description: "Sign Volunteer Charter",
   })
   async signVolunteerCharter(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<void> {
-    return this.userService.signVolunteerCharter(req.user);
+    return this.userService.signVolunteerCharter(user);
   }
 
   @Get("personal-account-consumers")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permissions(HAVE_PERSONAL_ACCOUNT)
   @ApiResponse({
     status: 200,
     description: "Get all consumers",
@@ -157,8 +158,7 @@ export class UserController {
   }
 
   @Get(":id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_VOLUNTEER)
+  @Permissions(VIEW_VOLUNTEER)
   @ApiResponse({
     status: 200,
     description: "Get a user by id",
@@ -166,14 +166,13 @@ export class UserController {
   })
   getUserById(
     @Param("id", ParseIntPipe) id: number,
-    @RequestDecorator() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<UserPersonalData> {
-    return this.userService.getById(id, new JwtUtil(user));
+    return this.userService.getById(id, user);
   }
 
   @Get(":id/mobilizations")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_PLANNING)
+  @Permissions(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Get mobilizations a volunteer is required on",
@@ -187,8 +186,7 @@ export class UserController {
   }
 
   @Get(":id/assignments")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VIEW_PLANNING)
+  @Permissions(VIEW_PLANNING)
   @ApiResponse({
     status: 200,
     description: "Get tasks a volunteer is assigned to",
@@ -213,15 +211,14 @@ export class UserController {
   })
   updateUserById(
     @Param("id", ParseIntPipe) targetUserId: number,
-    @Body() user: UpdateUserRequestDto,
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Body() userForm: UpdateUserRequestDto,
+    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<UserPersonalData> {
-    return this.userService.updateUser(targetUserId, user, req.user);
+    return this.userService.updateUser(targetUserId, userForm, me);
   }
 
   @Delete(":id")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_USERS)
+  @Permissions(MANAGE_USERS)
   @UseFilters(ForgetMemberErrorFilter)
   @HttpCode(204)
   @ApiResponse({
@@ -229,10 +226,10 @@ export class UserController {
     description: "Delete a user by id",
   })
   deleteUser(
-    @Param("id", ParseIntPipe) userId: number,
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Param("id", ParseIntPipe) userToDeleteId: number,
+    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<void> {
-    return this.userService.deleteUser(userId, new JwtUtil(req.user));
+    return this.userService.deleteUser(userToDeleteId, me);
   }
 
   @Post("me/profile-picture")
@@ -247,12 +244,12 @@ export class UserController {
     type: FileUploadRequestDto,
   })
   defineProfilePicture(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
     file: Express.Multer.File,
   ): Promise<MyUserInformation> {
     return this.profilePictureService.updateProfilePicture(
-      req.user.id,
+      user.id,
       file.filename,
     );
   }
@@ -269,8 +266,7 @@ export class UserController {
   }
 
   @Patch(":userId/teams")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_TEAM)
+  @Permissions(AFFECT_TEAM)
   @ApiResponse({
     status: 200,
     description: "User's teams",
@@ -285,15 +281,13 @@ export class UserController {
   joinTeams(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() teams: string[],
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<string[]> {
-    const me = new JwtUtil(req.user);
     return this.teamService.as(me).user(userId).joins(teams);
   }
 
   @Delete(":userId/teams/:teamCode")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_TEAM)
+  @Permissions(AFFECT_TEAM)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -302,9 +296,8 @@ export class UserController {
   leaveTeam(
     @Param("userId", ParseIntPipe) userId: number,
     @Param("teamCode") team: string,
-    @RequestDecorator() req: RequestWithUserPayload,
+    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<void> {
-    const me = new JwtUtil(req.user);
     return this.teamService.as(me).user(userId).leave(team);
   }
 }

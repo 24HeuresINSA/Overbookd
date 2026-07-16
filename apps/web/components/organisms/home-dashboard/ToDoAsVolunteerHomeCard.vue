@@ -55,9 +55,8 @@ import { BE_AFFECTED } from "@overbookd/permission";
 import { AVAILABILITIES_URL, VOLUNTEER_CHARTER_URL } from "@overbookd/web-page";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
-const userStore = useUserStore();
-
-const isEnrolled = computed<boolean>(() => userStore.can(BE_AFFECTED));
+const myStore = useMyStore();
+const isEnrolled = computed<boolean>(() => myStore.can(BE_AFFECTED));
 
 const title = computed<string>(() =>
   isEnrolled.value ? "Bienvenue dans l'équipe !" : "Comment devenir bénévole ?",

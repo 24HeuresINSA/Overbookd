@@ -1,8 +1,11 @@
 import { findPage } from "~/utils/navigation/find-page.utils";
 import { HOME_URL } from "@overbookd/web-page";
+import { playJauneAudioIfNeeded } from "~/utils/easter-egg/jaune-audio";
 
 export default defineNuxtRouteMiddleware((to) => {
-  const userStore = useUserStore();
+  playJauneAudioIfNeeded(to);
+
+  const myStore = useMyStore();
   const layoutStore = useLayoutStore();
   layoutStore.initializeResizeListener();
 
@@ -14,6 +17,6 @@ export default defineNuxtRouteMiddleware((to) => {
     return HOME_URL;
   }
 
-  const hasPermission = userStore.can(page.permission);
+  const hasPermission = myStore.can(page.permission);
   if (!hasPermission) return HOME_URL;
 });

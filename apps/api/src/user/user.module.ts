@@ -16,6 +16,7 @@ import { PlanningModule } from "./planning/planning.module";
 import { PlanningController } from "./planning/planning.controller";
 import { TeamService } from "../team/team.service";
 import { AccessManagerModule } from "../access-manager/access-manager.module";
+import { ZitadelService } from "./zitadel.service";
 
 @Module({
   imports: [
@@ -53,10 +54,12 @@ import { AccessManagerModule } from "../access-manager/access-manager.module";
       useFactory: (breaks: PrismaBreaks) => new BreakPeriods(breaks),
       inject: [PrismaBreaks],
     },
+    ZitadelService,
     {
       provide: UserService,
-      useFactory: (prisma: PrismaService) => new UserService(prisma),
-      inject: [PrismaService],
+      useFactory: (prisma: PrismaService, zitadelService: ZitadelService) =>
+        new UserService(prisma, zitadelService),
+      inject: [PrismaService, ZitadelService],
     },
     FileService,
     ProfilePictureService,

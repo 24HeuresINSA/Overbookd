@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { JwtModule, JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "../../authentication/jwt-constants";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { LiveNotificationService } from "./live-notification.service";
@@ -9,16 +7,13 @@ import { LiveNotificationService } from "./live-notification.service";
   providers: [
     {
       provide: LiveNotificationService,
-      useFactory: (eventStore: DomainEventService, jwt: JwtService) => {
-        return new LiveNotificationService(eventStore, jwt);
+      useFactory: (eventStore: DomainEventService) => {
+        return new LiveNotificationService(eventStore);
       },
-      inject: [DomainEventService, JwtService],
+      inject: [DomainEventService],
     },
   ],
-  imports: [
-    DomainEventModule,
-    JwtModule.register({ secret: jwtConstants.secret }),
-  ],
+  imports: [DomainEventModule],
   exports: [LiveNotificationService],
 })
 export class LiveNotificationModule {}

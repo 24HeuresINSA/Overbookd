@@ -214,6 +214,7 @@ import type { AssignmentPreferenceType } from "@overbookd/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
 import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const teamStore = useTeamStore();
 
@@ -251,20 +252,20 @@ const rules = {
 const selectedVolunteerFriends = computed<UserWithTeams[]>(
   () => userStore.selectedUserFriends,
 );
-const canManageUsers = computed<boolean>(() => userStore.can(MANAGE_USERS));
-const canViewPlanning = computed<boolean>(() => userStore.can(VIEW_PLANNING));
+const canManageUsers = computed<boolean>(() => myStore.can(MANAGE_USERS));
+const canViewPlanning = computed<boolean>(() => myStore.can(VIEW_PLANNING));
 const canManageAvailabilities = computed<boolean>(() =>
-  userStore.can(AFFECT_VOLUNTEER),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 const isMe = computed<boolean>(
-  () => userStore.loggedUser?.id === volunteerId.value,
+  () => myStore.loggedUser?.id === volunteerId.value,
 );
 
 const assignableTeams = computed<Team[]>(() => {
   const teamsToAdd = teamStore.teams.filter(
     (team: Team) => !props.volunteer.teams?.includes(team.code),
   );
-  if (userStore.can(MANAGE_ADMINS)) return teamsToAdd;
+  if (myStore.can(MANAGE_ADMINS)) return teamsToAdd;
   return teamsToAdd.filter((team: Team) => team.code !== ADMIN);
 });
 

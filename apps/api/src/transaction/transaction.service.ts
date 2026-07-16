@@ -1,5 +1,4 @@
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import {
   PastSharedMeal,
   SharedMealPayment,
@@ -67,8 +66,8 @@ export class TransactionService implements OnApplicationBootstrap {
     return this.repositories.transactions.getAll();
   }
 
-  async getMyTransactions(user: JwtPayload): Promise<MyTransaction[]> {
-    return this.repositories.transactions.getMine(user.id);
+  async getMyTransactions(userId: number): Promise<MyTransaction[]> {
+    return this.repositories.transactions.getMine(userId);
   }
 
   async addDeposits(deposits: CreateDepositForm[]): Promise<void> {

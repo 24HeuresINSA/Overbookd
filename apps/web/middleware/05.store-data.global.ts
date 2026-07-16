@@ -3,9 +3,9 @@ import { EVENT_DATE_KEY, ORGA_WEEK_DATE_KEY } from "@overbookd/configuration";
 export default defineNuxtRouteMiddleware(async () => {
   const teamStore = useTeamStore();
   const configurationStore = useConfigurationStore();
-  const userStore = useUserStore();
+  const oidc = useOidcAuth();
 
-  const isLoggedIn = !!userStore.loggedUser;
+  const isLoggedIn = oidc.loggedIn.value;
 
   const shouldFetchTeams = teamStore.teams.length === 0;
   const shouldFetchEventDate = !configurationStore.get(EVENT_DATE_KEY);

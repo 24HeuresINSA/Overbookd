@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -19,9 +18,7 @@ import { GeneralSectionService } from "./general-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { WRITE_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { FestivalTask } from "@overbookd/festival-event";
 import { GeneralTaskRequestDto } from "./dto/update-general.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
@@ -30,15 +27,14 @@ import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
   @Patch(":id/general")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

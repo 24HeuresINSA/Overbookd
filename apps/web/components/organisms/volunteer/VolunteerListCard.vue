@@ -82,11 +82,11 @@ defineProps({
   },
 });
 
-const userStore = useUserStore();
+const myStore = useMyStore();
 const layoutStore = useLayoutStore();
 
 const canViewVolunteerDetails = computed(() =>
-  userStore.can(VIEW_VOLUNTEER_DETAILS),
+  myStore.can(VIEW_VOLUNTEER_DETAILS),
 );
 const headers = computed<TableHeaders>(() => {
   const baseHeaders = [

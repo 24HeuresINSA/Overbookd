@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { BreakPeriods } from "@overbookd/assignment";
-import { jwtConstants } from "../../authentication/jwt-constants";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { Planning } from "./domain/planning";
@@ -12,6 +11,7 @@ import { PrismaPlanningVolunteers } from "./repository/planning-volunteers.prism
 import { SecretService } from "./secret.service";
 import { SubscriptionService } from "./subscription.service";
 import { PlanningRenderStrategy } from "./render/render-strategy";
+import { jwtConstants } from "../../jwt-constants";
 
 @Module({
   providers: [

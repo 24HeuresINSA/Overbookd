@@ -6,9 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  UseGuards,
   Patch,
-  Request,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -27,23 +25,21 @@ import {
 } from "@overbookd/festival-event";
 import { AddMobilizationRequestDto } from "./dto/add-mobilization.request.dto";
 import { WRITE_FT } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
-import { Permission } from "../../../../authentication/permissions-auth.decorator";
+import { Permissions } from "../../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { UpdateMobilizationRequestDto } from "./dto/update-mobilization.request.dto";
 import { TeamMobilizationRequestDto } from "./dto/team-mobilization.request.dto";
 import { AddVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
-import { RequestWithUserPayload } from "../../../../app.controller";
 import { ApiSwaggerResponse } from "../../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class MobilizationSectionController {
   constructor(
@@ -51,7 +47,7 @@ export class MobilizationSectionController {
   ) {}
 
   @Post(":ftId/mobilizations")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -75,13 +71,13 @@ export class MobilizationSectionController {
   addMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() mobilization: AddMobilizationRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.mobilizationService.add(ftId, mobilization, user);
   }
 
   @Patch(":ftId/mobilizations/:mobilizationId")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -112,7 +108,7 @@ export class MobilizationSectionController {
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
     @Body() mobilization: UpdateMobilizationRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.mobilizationService.update(
       ftId,
@@ -123,7 +119,7 @@ export class MobilizationSectionController {
   }
 
   @Delete(":ftId/mobilizations/:mobilizationId")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -149,13 +145,13 @@ export class MobilizationSectionController {
   removeMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.mobilizationService.remove(ftId, mobilizationId, user);
   }
 
   @Post(":ftId/mobilizations/:mobilizationId/volunteers")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -195,7 +191,7 @@ export class MobilizationSectionController {
   }
 
   @Delete(":ftId/mobilizations/:mobilizationId/volunteers/:volunteerId")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -237,7 +233,7 @@ export class MobilizationSectionController {
   }
 
   @Post(":ftId/mobilizations/:mobilizationId/teams")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -273,7 +269,7 @@ export class MobilizationSectionController {
   }
 
   @Delete(":ftId/mobilizations/:mobilizationId/teams/:teamCode")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",

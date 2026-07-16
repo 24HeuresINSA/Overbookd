@@ -1,5 +1,4 @@
 import {
-  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -7,17 +6,18 @@ import {
 } from "@nestjs/common";
 import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
+import { ADMIN } from "@overbookd/team-constants";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
 import { toStandAloneUser } from "@overbookd/user";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import {
   SELECT_TEAM_CODES,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
-import { ADMIN } from "@overbookd/team-constants";
+import { canManageAdmins } from "./team.utils";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -73,7 +73,7 @@ export class TeamService {
     await this.prisma.team.delete({ where: { code } });
   }
 
-  as(me: JwtUtil) {
+  as(me: RequestHydratedUser) {
     return {
       user: (userId: number) => ({
         joins: async (teams: string[]) => {
@@ -112,10 +112,10 @@ export class TeamService {
   async removeTeamFromUser(
     userId: number,
     team: string,
-    author: JwtUtil,
+    author: RequestHydratedUser,
   ): Promise<void> {
     await this.checkUserExistence(userId);
-    if (!this.canManageAdmins([team], author)) {
+    if (!canManageAdmins([team], author)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
 
@@ -132,13 +132,6 @@ export class TeamService {
     return { some: { team: { code: { in: teamCodes } } } };
   }
 
-  static checkMembership(user: JwtUtil, team: string) {
-    if (!user.isMemberOf(team)) {
-      const notMember = `Tu n'es pas membre de l'équipe ${team}`;
-      throw new ForbiddenException(notMember);
-    }
-  }
-
   private async fetchExistingTeams(teams: string[]): Promise<string[]> {
     const teamsFound = await this.prisma.team.findMany({
       where: { code: { in: teams } },
@@ -150,9 +143,5 @@ export class TeamService {
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
     if (!user) throw new NotFoundException("Utilisateur inconnu");
-  }
-
-  private canManageAdmins(teams: string[], author: JwtUtil) {
-    return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
   }
 }

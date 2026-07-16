@@ -2,7 +2,6 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AssignmentModule } from "./assignment/assignment.module";
-import { AuthenticationModule } from "./authentication/authentication.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { FriendModule } from "./friend/friend.module";
@@ -36,10 +35,25 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 import { PlanningModule } from "./user/planning/planning.module";
 import { CharismaEventModule } from "./charisma-event/charisma-event.module";
 import { MembershipApplicationModule } from "./registration/membership-application/membership-application.module";
+import { ZitadelAuthModule } from "./authentication-zitadel/zitadel-auth.module";
+import { ZitadelAuthGuard } from "./authentication-zitadel/guards/zitadel.auth.guard";
+import { PermissionsGuard } from "./authentication-zitadel/guards/permissions-auth.guard";
 
 @Module({
   imports: [
-    AuthenticationModule,
+    ZitadelAuthModule.forRoot({
+      authority: process.env.ZITADEL_BASE_URL,
+      authorization: {
+        type: "jwt-profile",
+        profile: {
+          type: "application",
+          keyId: process.env.ZITADEL_KEY_ID,
+          key: process.env.ZITADEL_KEY,
+          appId: process.env.ZITADEL_APP_ID,
+          clientId: process.env.ZITADEL_CLIENT_ID,
+        },
+      },
+    }),
     UserModule,
     HashingUtilsModule,
     TeamModule,
@@ -80,6 +94,14 @@ import { MembershipApplicationModule } from "./registration/membership-applicati
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuardCustom,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ZitadelAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard,
     },
   ],
 })

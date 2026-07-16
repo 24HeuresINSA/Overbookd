@@ -26,8 +26,8 @@ export const useTeamStore = defineStore("team", {
         return state.teams.find((team) => team.code === code);
       },
     mobilizableTeams(state): Team[] {
-      const userStore = useUserStore();
-      const mobilizableTeams = userStore.can(AFFECT_VOLUNTEER)
+      const myStore = useMyStore();
+      const mobilizableTeams = myStore.can(AFFECT_VOLUNTEER)
         ? requirableTeamsExtended
         : requirableTeams;
 

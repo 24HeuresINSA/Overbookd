@@ -153,10 +153,10 @@ import {
 } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 const route = useRoute();
+const myStore = useMyStore();
 const faStore = useFestivalActivityStore();
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
-const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
@@ -206,7 +206,7 @@ const myActivityReviewers = computed<Team[]>(() => {
 
   return reviewers.value.filter(({ code }) => {
     if (!isActivityReviewer(code)) return false;
-    const isReviewer = userStore.isMemberOf(code);
+    const isReviewer = myStore.isMemberOf(code);
     const shouldReview = activity.reviews[`${code}`] !== NOT_ASKING_TO_REVIEW;
     return isReviewer && shouldReview;
   });
@@ -217,7 +217,7 @@ const myTaskReviewers = computed<Team[]>(() => {
 
   return reviewers.value.filter(({ code }) => {
     if (!isTaskReviewer(code)) return false;
-    const isReviewer = userStore.isMemberOf(code);
+    const isReviewer = myStore.isMemberOf(code);
     const shouldReview = isConcerned(task.reviews[`${code}`]);
     return isReviewer && shouldReview;
   });
@@ -232,7 +232,7 @@ const otherTaskReviewers = computed<Team[]>(() => {
 
   return reviewers.value.filter(({ code }) => {
     if (!isTaskReviewer(code)) return false;
-    const isReviewer = userStore.isMemberOf(code);
+    const isReviewer = myStore.isMemberOf(code);
     const shouldNotReview = !isConcerned(task.reviews[`${code}`]);
     return isReviewer && shouldNotReview;
   });
@@ -318,7 +318,7 @@ const cantApproveAs = (team: Team): boolean => {
         team.code as Reviewer<"FT">,
         APPROVED,
       );
-  const isTeamMember = userStore.isMemberOf(team.code);
+  const isTeamMember = myStore.isMemberOf(team.code);
   return isAlreadyApprovedBy || !isTeamMember;
 };
 const cantRejectAs = (team: Team): boolean => {
@@ -334,7 +334,7 @@ const cantRejectAs = (team: Team): boolean => {
         REJECTED,
       );
 
-  const isTeamMember = userStore.isMemberOf(team.code);
+  const isTeamMember = myStore.isMemberOf(team.code);
   return isAlreadyRejectedBy || !isTeamMember;
 };
 const canIgnore = (team: Team): boolean => {

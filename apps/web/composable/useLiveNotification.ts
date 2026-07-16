@@ -8,10 +8,12 @@ let sharedSource: EventSource | null = null;
 
 export function useLiveNotification() {
   if (!sharedSource || sharedSource.readyState === EventSource.CLOSED) {
-    const { accessToken } = useAuthStore();
     const config = useRuntimeConfig();
-    const url = new URL(`${config.public.baseURL}/live-notifications/stream`);
-    url.searchParams.append("token", accessToken ?? "");
+    const url = new URL(`${config.public.apiURL}/live-notifications/stream`);
+
+    const oidc = useOidcAuth();
+    const accessToken = oidc.user.value?.accessToken ?? "";
+    url.searchParams.append("token", accessToken);
     sharedSource = new EventSource(url.href);
   }
 

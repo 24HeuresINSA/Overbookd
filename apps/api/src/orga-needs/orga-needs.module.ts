@@ -4,7 +4,6 @@ import { OrgaNeedsController } from "./orga-needs.controller";
 import { OrgaNeedsService } from "./orga-needs.service";
 
 @Module({
-  imports: [],
   controllers: [OrgaNeedsController],
   providers: [PrismaService, OrgaNeedsService],
 })

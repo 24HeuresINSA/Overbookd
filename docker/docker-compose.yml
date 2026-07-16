@@ -74,6 +74,13 @@ services:
       HOME: /overbookd
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd-postgresql:5432/${OVERBOOKD_DATABASE_NAME}
+      ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID}
+      ZITADEL_BASE_URL: ${ZITADEL_BASE_URL}
+      ZITADEL_KEY_ID: ${ZITADEL_KEY_ID}
+      ZITADEL_KEY: ${ZITADEL_KEY}
+      ZITADEL_APP_ID: ${ZITADEL_APP_ID}
+      ZITADEL_BEARER_TOKEN: ${ZITADEL_BEARER_TOKEN}
+      ZITADEL_OVERBOOKD_PROJECT_ID: ${ZITADEL_OVERBOOKD_PROJECT_ID}
       GMAIL_USER: ${OVERBOOKD_EMAIL_USER}
       GMAIL_PASS: ${OVERBOOKD_EMAIL_PASSWORD}
       JWT_SECRET: ${OVERBOOKD_JWT_SECRET}
@@ -85,12 +92,12 @@ services:
       PORT: 3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-back.tls=true"
-      - "traefik.http.routers.dev-back.entrypoints=websecure"
-      - "traefik.http.services.dev-back.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
-      - "traefik.http.routers.dev-back.middlewares=api-strip"
-      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.dev-api.tls=true"
+      - "traefik.http.routers.dev-api.entrypoints=websecure"
+      - "traefik.http.services.dev-api.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-api.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/ob-api`))"
+      - "traefik.http.routers.dev-api.middlewares=api-strip"
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/ob-api"
     command:
       - /bin/sh
       - -c
@@ -160,19 +167,24 @@ services:
     volumes:
       - ../:/overbookd
     environment:
-      - HOME=/overbookd
-      - BASE_URL
-      - HOST=0.0.0.0
+      HOME: /overbookd
+      HOST: 0.0.0.0
+      BASE_URL: ${BASE_URL}
+      ZITADEL_BASE_URL: ${ZITADEL_BASE_URL}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      NUXT_OIDC_TOKEN_KEY: ${NUXT_OIDC_TOKEN_KEY}
+      NUXT_OIDC_AUTH_SESSION_SECRET: ${NUXT_OIDC_AUTH_SESSION_SECRET}
+      NUXT_OIDC_SESSION_SECRET: ${NUXT_OIDC_SESSION_SECRET}
     restart: unless-stopped
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-front.entrypoints=websecure"
-      - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
-      - "traefik.http.services.dev-front.loadbalancer.server.scheme=https"
-      - "traefik.http.routers.dev-front.tls=true"
+      - "traefik.http.routers.dev-web.entrypoints=websecure"
+      - "traefik.http.services.dev-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-web.rule=Host(`overbookd.${DOMAIN}`)"
+      - "traefik.http.services.dev-web.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.dev-web.tls=true"
     command:
       - /bin/sh
       - -c

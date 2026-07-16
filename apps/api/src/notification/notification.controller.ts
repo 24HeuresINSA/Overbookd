@@ -1,22 +1,14 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Request,
-  UseGuards,
-} from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { RequestWithUserPayload } from "../app.controller";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { NotificationsResponseDto } from "./dto/notifications.response.dto";
 import { NotificationService } from "./notification.service";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Controller("notifications")
 @ApiTags("notifications")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @ApiSwaggerResponse()
 export class NotificationController {
   constructor(private readonly notify: NotificationService) {}
@@ -27,7 +19,7 @@ export class NotificationController {
     description: "Volunteer's notifications",
     type: NotificationsResponseDto,
   })
-  hasNotifications(@Request() { user }: RequestWithUserPayload) {
+  hasNotifications(@AuthenticatedUser() user: RequestHydratedUser) {
     return this.notify.hasNotifications(user.id);
   }
 
@@ -37,7 +29,7 @@ export class NotificationController {
     status: 204,
     description: "Volunteer's notifications set as red",
   })
-  readNotification(@Request() { user }: RequestWithUserPayload) {
+  readNotification(@AuthenticatedUser() user: RequestHydratedUser) {
     return this.notify.readNotification(user.id);
   }
 }

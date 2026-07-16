@@ -136,6 +136,7 @@ import {
 } from "~/utils/festival-event/festival-task/festival-task.utils";
 import { formatPhoneNumber } from "@overbookd/registration";
 
+const myStore = useMyStore();
 const ftStore = useFestivalTaskStore();
 const userStore = useUserStore();
 const layoutStore = useLayoutStore();
@@ -183,7 +184,7 @@ const hasApprovals = computed<boolean>(() =>
   hasTaskApprovals(selectedTask.value),
 );
 const canForceInstruction = computed<boolean>(() => {
-  const hasPermission = userStore.can(FORCE_WRITE_FT);
+  const hasPermission = myStore.can(FORCE_WRITE_FT);
   return (props.disabled || hasApprovals.value) && hasPermission;
 });
 const canSaveInstructions = computed<boolean>(

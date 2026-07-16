@@ -13,7 +13,7 @@
     </template>
     <template #actions>
       <div class="actions">
-        <v-btn text="Se déconnecter" color="error" @click="logout" />
+        <v-btn text="Se déconnecter" color="error" @click="handleLogout" />
         <v-btn
           text="Approuver les CGU"
           color="success"
@@ -33,22 +33,17 @@
 </template>
 
 <script lang="ts" setup>
-import { LOGIN_URL } from "@overbookd/web-page";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 
-const userStore = useUserStore();
-const authStore = useAuthStore();
+const { handleLogout } = useOidcUtils();
+const myStore = useMyStore();
 
 const isEULADialogOpen = ref<boolean>(false);
 const openEULADialog = () => (isEULADialogOpen.value = true);
 const closeEULADialog = () => (isEULADialogOpen.value = false);
 
 const approveEndUserLicenceAgreement = async () => {
-  await userStore.approveEndUserLicenceAgreement();
-};
-const logout = async () => {
-  authStore.logout();
-  await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
+  await myStore.approveEndUserLicenceAgreement();
 };
 </script>
 

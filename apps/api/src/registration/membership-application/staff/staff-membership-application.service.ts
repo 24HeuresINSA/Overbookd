@@ -14,7 +14,7 @@ import { HARD } from "@overbookd/team-constants";
 import { createStaffInvitationToken } from "./jwt.utils";
 import { ConfigurationService } from "../../../configuration/configuration.service";
 import { INVITE_STAFF_LINK_KEY } from "@overbookd/configuration";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
@@ -64,7 +64,9 @@ export class StaffMembershipApplicationService {
     return this.useCases.reject.unapplyOne({ email }, STAFF);
   }
 
-  async getStaffInvitationLink(user: JwtUtil): Promise<URL | undefined> {
+  async getStaffInvitationLink(
+    user: RequestHydratedUser,
+  ): Promise<URL | undefined> {
     const link = await this.services.configuration.findOne(
       INVITE_STAFF_LINK_KEY,
       user,
@@ -72,7 +74,7 @@ export class StaffMembershipApplicationService {
     return link?.value ? new URL(link.value.toString()) : undefined;
   }
 
-  async generateStaffInvitationLink(user: JwtUtil): Promise<URL> {
+  async generateStaffInvitationLink(user: RequestHydratedUser): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
     const token = createStaffInvitationToken();
     const link = InviteStaff.byLink({ domain, token });

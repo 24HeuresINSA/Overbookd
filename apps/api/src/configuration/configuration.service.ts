@@ -6,22 +6,23 @@ import {
   canReadConfiguration,
   canWriteConfiguration,
 } from "@overbookd/configuration";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Injectable()
 export class ConfigurationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(user?: JwtUtil): Promise<Configuration[]> {
+  async findAll(user?: RequestHydratedUser): Promise<Configuration[]> {
     const config = await this.prisma.configuration.findMany();
     if (user?.isAdmin) return config;
-    return config.filter((c) =>
-      canReadConfiguration(c.key, user?.permissions ?? []),
-    );
+    return config.filter((c) => canReadConfiguration(c.key, user?.permissions));
   }
 
-  async findOne(key: ConfigurationKey, user?: JwtUtil): Promise<Configuration> {
-    if (!user?.isAdmin && !canReadConfiguration(key, user?.permissions ?? [])) {
+  async findOne(
+    key: ConfigurationKey,
+    user?: RequestHydratedUser,
+  ): Promise<Configuration> {
+    if (!user?.isAdmin && !canReadConfiguration(key, user?.permissions)) {
       return { key, value: null };
     }
     const config = await this.prisma.configuration.findUnique({
@@ -33,10 +34,13 @@ export class ConfigurationService {
     };
   }
 
-  upsert(configuration: Configuration, user?: JwtUtil): Promise<Configuration> {
+  async upsert(
+    configuration: Configuration,
+    user?: RequestHydratedUser,
+  ): Promise<Configuration> {
     if (
       !user?.isAdmin &&
-      !canWriteConfiguration(configuration.key, user?.permissions ?? [])
+      !canWriteConfiguration(configuration.key, user?.permissions)
     ) {
       throw new ForbiddenException(
         "Tu n'es pas autorisé à modifier cette configuration",

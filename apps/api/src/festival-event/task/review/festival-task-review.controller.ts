@@ -1,11 +1,9 @@
 import {
-  UseGuards,
   Post,
   HttpCode,
   Param,
   ParseIntPipe,
   Body,
-  Request,
   Controller,
   UseFilters,
 } from "@nestjs/common";
@@ -23,10 +21,7 @@ import {
   FestivalTaskRefused,
 } from "@overbookd/festival-event";
 import { AFFECT_VOLUNTEER, VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { PublishFeedbackRequestDto } from "./dto/publish-feedback.request.dto";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
@@ -38,7 +33,6 @@ import {
   ValidatedFestivalTaskResponseDto,
 } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import {
   ApproveTaskRequestDto,
   IgnoreTaskRequestDto,
@@ -47,18 +41,19 @@ import {
 } from "./dto/review.request.dto";
 import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class FestivalTaskReviewController {
   constructor(private readonly reviewService: FestivalTaskReviewService) {}
 
   @Post(":ftId/feedbacks")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -82,14 +77,14 @@ export class FestivalTaskReviewController {
   })
   publishFeedback(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() feedback: PublishFeedbackRequestDto,
   ): Promise<FestivalTask> {
     return this.reviewService.publishFeedback(ftId, user, feedback);
   }
 
   @Post(":ftId/ask-for-review")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 200,
     description: "Festival task",
@@ -103,13 +98,13 @@ export class FestivalTaskReviewController {
   })
   askForReview(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     return this.reviewService.toReview(ftId, user);
   }
 
   @Post(":ftId/reject")
-  @Permission(VALIDATE_FT)
+  @Permissions(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -128,15 +123,14 @@ export class FestivalTaskReviewController {
   })
   reject(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() reject: RejectTaskRequestDto,
   ): Promise<FestivalTaskRefused> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.reject(ftId, jwt, reject);
+    return this.reviewService.reject(ftId, user, reject);
   }
 
   @Post(":ftId/approve")
-  @Permission(VALIDATE_FT)
+  @Permissions(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -161,15 +155,14 @@ export class FestivalTaskReviewController {
   })
   approve(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() approve: ApproveTaskRequestDto,
   ): Promise<FestivalTask> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.approve(ftId, jwt, approve);
+    return this.reviewService.approve(ftId, user, approve);
   }
 
   @Post(":ftId/ignore")
-  @Permission(VALIDATE_FT)
+  @Permissions(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -194,15 +187,14 @@ export class FestivalTaskReviewController {
   })
   ignore(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() ignore: IgnoreTaskRequestDto,
   ): Promise<FestivalTask> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.ignore(ftId, jwt, ignore);
+    return this.reviewService.ignore(ftId, user, ignore);
   }
 
   @Post(":ftId/review")
-  @Permission(VALIDATE_FT)
+  @Permissions(VALIDATE_FT)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -227,15 +219,14 @@ export class FestivalTaskReviewController {
   })
   review(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() review: ReviewTaskRequestDto,
   ): Promise<FestivalTask> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.review(ftId, jwt, review);
+    return this.reviewService.review(ftId, user, review);
   }
 
   @Post(":ftId/enable-assignment")
-  @Permission(AFFECT_VOLUNTEER)
+  @Permissions(AFFECT_VOLUNTEER)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -254,10 +245,9 @@ export class FestivalTaskReviewController {
   })
   enableAssignments(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() categorize: CategorizeTaskRequestDto,
   ): Promise<FestivalTaskReadyToAssign> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.enableAssignment(ftId, jwt, categorize);
+    return this.reviewService.enableAssignment(ftId, user, categorize);
   }
 }

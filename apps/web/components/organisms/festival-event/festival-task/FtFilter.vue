@@ -57,6 +57,7 @@ import { REVIEWER_QUERY_PARAM } from "~/utils/festival-event/festival-event.cons
 import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 const route = useRoute();
+const myStore = useMyStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
 
@@ -79,7 +80,7 @@ const reviewerTeams = computed<ReviewerTeam[]>(() => {
 });
 const reviewStatusLabels = [...reviewStatusLabel.entries()];
 
-const isHumainMember = computed<boolean>(() => userStore.isMemberOf(HUMAIN));
+const isHumainMember = computed<boolean>(() => myStore.isMemberOf(HUMAIN));
 const assignableReviewers = computed<User[]>(() =>
   userStore.volunteers.filter(({ teams }) => teams.includes(HUMAIN)),
 );

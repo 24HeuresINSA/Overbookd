@@ -76,8 +76,8 @@ export const usePlanningStore = defineStore("planning", {
       const res = await PlanningRepository.getMyPdf(prePreManifStart);
       if (isHttpError(res)) return;
 
-      const userStore = useUserStore();
-      const loggedUser = userStore.loggedUser;
+      const myStore = useMyStore();
+      const loggedUser = myStore.loggedUser;
       if (!loggedUser) return;
       const { firstName, lastName, id } = loggedUser;
       const volunteer = { firstName, lastName, id };

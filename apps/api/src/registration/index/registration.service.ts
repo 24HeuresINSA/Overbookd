@@ -12,7 +12,6 @@ import {
   isStaffRegistered,
   isVolunteerRegistered,
 } from "@overbookd/registration";
-import { jwtConstants } from "../../authentication/jwt-constants";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { isString } from "class-validator";
 import {
@@ -20,6 +19,7 @@ import {
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
+import { jwtConstants } from "../../jwt-constants";
 
 type Member = {
   forget: Readonly<ForgetMember>;

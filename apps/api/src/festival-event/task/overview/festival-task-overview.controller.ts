@@ -1,11 +1,9 @@
 import {
-  UseGuards,
   Get,
   Param,
   ParseIntPipe,
   Post,
   Body,
-  Request,
   Controller,
   UseFilters,
   Delete,
@@ -22,10 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalTask } from "@overbookd/festival-event";
 import { READ_FT, WRITE_FT } from "@overbookd/permission";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CreateFestivalTaskRequestDto } from "./dto/create-festival-task.request.dto";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
@@ -66,12 +61,13 @@ import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../../common/dto/inquiry-request.response.dto";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-tasks")
 @ApiTags("festival-tasks")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   DraftFestivalTaskResponseDto,
@@ -104,7 +100,7 @@ export class FestivalTaskOverviewController {
   ) {}
 
   @Get("statistics")
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Festival tasks statistics",
@@ -116,7 +112,7 @@ export class FestivalTaskOverviewController {
   }
 
   @Get(":id")
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "A festival task",
@@ -143,20 +139,19 @@ export class FestivalTaskOverviewController {
   }
 
   @Get("my-refusals/count")
-  @Permission(READ_FT)
+  @Permissions(READ_FT)
   @ApiResponse({
     status: 200,
     description: "Number of refused festival tasks for the user",
   })
   getMyRefusedTasksCount(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<number> {
     return this.statistics.countRefusedTasksByUser(user.id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
   @Post()
+  @Permissions(WRITE_FT)
   @ApiResponse({
     status: 201,
     description: "A festival task",
@@ -168,13 +163,13 @@ export class FestivalTaskOverviewController {
   })
   create(
     @Body() form: CreateFestivalTaskRequestDto,
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
-    return this.overviewService.createOne(user, form);
+    return this.overviewService.createOne(form, user.id);
   }
 
   @Delete(":id")
-  @Permission(WRITE_FT)
+  @Permissions(WRITE_FT)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

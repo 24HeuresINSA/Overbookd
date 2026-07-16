@@ -15,7 +15,7 @@
     </template>
     <template #actions>
       <div class="actions">
-        <v-btn text="Se déconnecter" color="error" @click="logout" />
+        <v-btn text="Se déconnecter" color="error" @click="handleLogout" />
         <v-btn
           text="Lire et signer la Charte"
           color="success"
@@ -39,11 +39,11 @@
 </template>
 
 <script lang="ts" setup>
-import { LOGIN_URL } from "@overbookd/web-page";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 
-const userStore = useUserStore();
-const authStore = useAuthStore();
+const myStore = useMyStore();
+const { handleLogout } = useOidcUtils();
 
 const emit = defineEmits(["signed"]);
 
@@ -51,15 +51,9 @@ const isCharterDialogOpen = ref<boolean>(false);
 const openCharterDialog = () => (isCharterDialogOpen.value = true);
 const closeCharterDialog = () => (isCharterDialogOpen.value = false);
 
-const logout = async () => {
-  authStore.logout();
-  await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
-};
-
 const signVolunteerCharter = async () => {
-  await userStore.signVolunteerCharter();
-  if (userStore?.loggedUser?.hasSignedVolunteerCharter) closeCharterDialog();
+  await myStore.signVolunteerCharter();
+  if (myStore?.loggedUser?.hasSignedVolunteerCharter) closeCharterDialog();
   emit("signed");
 };
 </script>

@@ -83,25 +83,22 @@ import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { Money } from "@overbookd/money";
 import { useTheme } from "vuetify";
 import { pickReverseTheme } from "~/utils/vuetify/theme/theme.utils";
-import { navigateTo } from "#app";
-import { LOGIN_URL } from "@overbookd/web-page";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 
+const { handleLogout } = useOidcUtils();
 const theme = useTheme();
+const myStore = useMyStore();
 const layoutStore = useLayoutStore();
-const authStore = useAuthStore();
-const userStore = useUserStore();
 
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const isMenuOpen = ref<boolean>(false);
 
-const loggedUser = computed(() => userStore.loggedUser);
+const loggedUser = computed(() => myStore.loggedUser);
 const myName = computed<string>(() =>
   loggedUser.value ? nicknameOrFirstName(loggedUser.value) : "",
 );
 
-const haveBalance = computed<boolean>(() =>
-  userStore.can(HAVE_PERSONAL_ACCOUNT),
-);
+const haveBalance = computed<boolean>(() => myStore.can(HAVE_PERSONAL_ACCOUNT));
 
 const myBalance = computed(() => loggedUser.value?.balance ?? 0);
 const displayedBalance = computed<string>(() =>
@@ -113,11 +110,9 @@ const balanceClassColor = computed<string>(() => {
   return "";
 });
 
-const logout = async () => {
+const logout = () => {
   isMenuOpen.value = false;
-  authStore.logout();
-  await navigateTo(LOGIN_URL);
-  userStore.clearLoggedUser();
+  handleLogout();
 };
 
 const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);

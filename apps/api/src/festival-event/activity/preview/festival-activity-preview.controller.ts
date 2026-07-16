@@ -2,12 +2,11 @@ import { Response } from "express";
 import {
   UseFilters,
   Controller,
-  UseGuards,
   Get,
   Res,
   Logger,
   HttpException,
-  Request,
+  Request as RequestDecorator,
   Query,
 } from "@nestjs/common";
 import {
@@ -19,6 +18,7 @@ import {
   ApiProduces,
   ApiQuery,
 } from "@nestjs/swagger";
+import { Request } from "express";
 import { PreviewFestivalActivity } from "@overbookd/festival-event";
 import {
   PreviewForSecurity,
@@ -33,9 +33,7 @@ import {
   VIEW_FA_GEAR_DASHBOARD,
   VIEW_SECURITY_DASHBOARD,
 } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { PreviewForCommunicationResponseDto } from "./dto/for-communication-preview.response.dto";
 import { PreviewForSecurityResponseDto } from "./dto/for-security-preview.response.dto";
@@ -44,17 +42,17 @@ import { ValidatedPreviewFestivalActivityResponseDto } from "./dto/preview-valid
 import { InReviewPreviewFestivalActivityResponseDto } from "./dto/preview-in-review.response.dto";
 import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft.response.dto";
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
-import { RequestWithUserPayload } from "../../../app.controller";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview.response.dto";
 import { ActivityGearSearchOptionsRequestDto } from "./dto/gear-inquiry-search-options.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   DraftPreviewFestivalActivityResponseDto,
@@ -70,7 +68,7 @@ export class FestivalActivityPreviewController {
   private logger = new Logger(FestivalActivityPreviewController.name);
 
   @Get()
-  @Permission(READ_FA)
+  @Permissions(READ_FA)
   @ApiResponse({
     status: 200,
     description: "All festival activities",
@@ -89,7 +87,7 @@ export class FestivalActivityPreviewController {
   }
 
   @Get("mine")
-  @Permission(READ_FA)
+  @Permissions(READ_FA)
   @ApiResponse({
     status: 200,
     description: "My festival activities",
@@ -104,13 +102,13 @@ export class FestivalActivityPreviewController {
     isArray: true,
   })
   findMine(
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<PreviewFestivalActivity[]> {
     return this.previewService.findMine(user.id);
   }
 
   @Get("for-logistic")
-  @Permission(VIEW_FA_GEAR_DASHBOARD)
+  @Permissions(VIEW_FA_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Festival activities for logistic",
@@ -152,7 +150,7 @@ export class FestivalActivityPreviewController {
   }
 
   @Get("for-security")
-  @Permission(VIEW_SECURITY_DASHBOARD)
+  @Permissions(VIEW_SECURITY_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Festival activities for security",
@@ -163,7 +161,7 @@ export class FestivalActivityPreviewController {
     return this.previewService.findForSecurity();
   }
 
-  @Permission(READ_ANIMATION_TO_PUBLISH)
+  @Permissions(READ_ANIMATION_TO_PUBLISH)
   @Get("for-communication")
   @ApiResponse({
     status: 200,
@@ -176,14 +174,14 @@ export class FestivalActivityPreviewController {
   }
 
   @Get("for-signa")
-  @Permission(EXPORT_FOR_SIGNA)
+  @Permissions(EXPORT_FOR_SIGNA)
   @ApiResponse({
     status: 200,
     description: "All signages from festival activities",
   })
   @ApiProduces(CSV)
   async findAllForSigna(
-    @Request() request: RequestWithUserPayload,
+    @RequestDecorator() request: Request,
     @Res() response: Response,
   ) {
     try {

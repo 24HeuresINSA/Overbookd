@@ -6,11 +6,10 @@ import {
   Param,
   ParseDatePipe,
   Query,
-  Request,
+  Request as RequestDecorator,
   Res,
-  UseGuards,
 } from "@nestjs/common";
-import { Response } from "express";
+import { Request, Response } from "express";
 import {
   ApiBearerAuth,
   ApiParam,
@@ -21,20 +20,16 @@ import {
 } from "@nestjs/swagger";
 import { DashboardService } from "./dashboard.service";
 import { VIEW_GEAR_DASHBOARD } from "@overbookd/permission";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
 import { GearWithDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { CSV, GearPreview, GearWithDetails } from "@overbookd/http";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
-import { RequestWithUserPayload } from "../../app.controller";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/dashboard")
 @ApiTags("logistic/dashboard")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiSwaggerResponse()
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
@@ -42,7 +37,7 @@ export class DashboardController {
   private logger = new Logger(DashboardController.name);
 
   @Get()
-  @Permission(VIEW_GEAR_DASHBOARD)
+  @Permissions(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Get all gear previews",
@@ -74,14 +69,14 @@ export class DashboardController {
   }
 
   @Get("export")
-  @Permission(VIEW_GEAR_DASHBOARD)
+  @Permissions(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Gear previews in CSV",
   })
   @ApiProduces(CSV)
   async getRequirementsInCsv(
-    @Request() request: RequestWithUserPayload,
+    @RequestDecorator() request: Request,
     @Res() response: Response,
   ) {
     try {
@@ -100,7 +95,7 @@ export class DashboardController {
   }
 
   @Get(":slug")
-  @Permission(VIEW_GEAR_DASHBOARD)
+  @Permissions(VIEW_GEAR_DASHBOARD)
   @ApiResponse({
     status: 200,
     description: "Get gear",

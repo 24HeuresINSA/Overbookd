@@ -23,7 +23,7 @@ export const SELECT_USER_TEAMS = {
   teams: { select: { team: { select: { code: true } } } },
 };
 
-export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
+const SELECT_USER_TEAMS_AND_PERMISSIONS = {
   teams: {
     select: {
       team: {

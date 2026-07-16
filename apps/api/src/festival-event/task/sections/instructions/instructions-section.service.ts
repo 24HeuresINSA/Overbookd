@@ -9,7 +9,7 @@ import {
 import { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { Adherents } from "../../common/festival-task-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
-import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Injectable()
 export class InstructionsSectionService {
@@ -22,7 +22,7 @@ export class InstructionsSectionService {
   async update(
     id: FestivalTask["id"],
     instructions: UpdateInstructionsForm,
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
     const appointment = instructions.appointmentId
@@ -40,7 +40,7 @@ export class InstructionsSectionService {
   async force(
     id: FestivalTask["id"],
     instructions: ForceInstructions,
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
 
@@ -80,7 +80,7 @@ export class InstructionsSectionService {
   async initInCharge(
     id: FestivalTask["id"],
     { volunteers, instruction }: InitInChargeForm,
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
     const form = {
@@ -92,7 +92,7 @@ export class InstructionsSectionService {
 
   async clearInCharge(
     id: FestivalTask["id"],
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
     return this.prepare.clearInCharge(id, instigator);

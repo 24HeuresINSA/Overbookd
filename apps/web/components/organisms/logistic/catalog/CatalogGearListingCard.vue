@@ -131,11 +131,11 @@ import { booleanToReadableString } from "~/utils/file/csv.utils";
 import { CSVBuilder } from "@overbookd/csv";
 
 const catalogGearStore = useCatalogGearStore();
-const userStore = useUserStore();
+const myStore = useMyStore();
 const layoutStore = useLayoutStore();
 
 const isCatalogWriter = computed<boolean>(() =>
-  userStore.can(WRITE_GEAR_CATALOG),
+  myStore.can(WRITE_GEAR_CATALOG),
 );
 const headers = computed<TableHeaders>(() => {
   const commonHeaders = [

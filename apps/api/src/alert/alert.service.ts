@@ -1,8 +1,8 @@
 import type { Alerts } from "@overbookd/alerts";
 import { PersonalAccountAlerting } from "@overbookd/personal-account";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { SettleAlerting } from "@overbookd/contribution";
 import { User } from "@overbookd/user";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 export type ProfilePictureAlerting = {
   for(id: User["id"]): Promise<boolean>;
@@ -25,7 +25,7 @@ type Alerting = {
 export class AlertService {
   constructor(private readonly alert: Alerting) {}
 
-  async getMyAlerts(volunteer: JwtPayload): Promise<Alerts> {
+  async getMyAlerts(volunteer: RequestHydratedUser): Promise<Alerts> {
     const [
       personalAccount,
       contribution,

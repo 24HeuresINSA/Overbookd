@@ -1,6 +1,5 @@
 import {
   Controller,
-  UseGuards,
   UseFilters,
   Post,
   Body,
@@ -18,13 +17,11 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CharismaEventService } from "./charisma-event.service";
 import { CharismaEventErrorFilter } from "./charisma-event-error.filter";
 import { MANAGE_CHARISMA_EVENTS } from "@overbookd/permission";
 import { CharismaEventParticipationResponseDto } from "./dto/participation.response.dto";
-import { Permission } from "../authentication/permissions-auth.decorator";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { CreateCharismaEventParticipationsRequestDto } from "./dto/create-participations.request.dto";
 import { CharismaEventPotentialParticipantResponseDto } from "./dto/potential-participant.response.dto";
 import { DateString } from "@overbookd/time";
@@ -34,14 +31,13 @@ import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 @Controller("charisma-events")
 @ApiTags("charisma-events")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(CharismaEventErrorFilter)
 @ApiSwaggerResponse()
 export class CharismaEventController {
   constructor(private readonly charismaEvent: CharismaEventService) {}
 
   @Get("all-participations")
-  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Permissions(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all charisma event participations",
@@ -53,7 +49,7 @@ export class CharismaEventController {
   }
 
   @Get("potential-participants")
-  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Permissions(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 200,
     description: "List of all potential charisma event participants",
@@ -67,7 +63,7 @@ export class CharismaEventController {
   }
 
   @Post()
-  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Permissions(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -86,7 +82,7 @@ export class CharismaEventController {
   }
 
   @Patch(":slug/date/:date/participant/:participantId")
-  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Permissions(MANAGE_CHARISMA_EVENTS)
   @ApiResponse({
     status: 201,
     description: "List of all charisma event participations",
@@ -127,7 +123,7 @@ export class CharismaEventController {
   }
 
   @Delete(":slug/date/:date/participant/:participantId")
-  @Permission(MANAGE_CHARISMA_EVENTS)
+  @Permissions(MANAGE_CHARISMA_EVENTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -1,11 +1,9 @@
 import {
-  UseGuards,
   Post,
   HttpCode,
   Param,
   ParseIntPipe,
   Body,
-  Request,
   Controller,
   UseFilters,
 } from "@nestjs/common";
@@ -20,11 +18,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivity, Refused } from "@overbookd/festival-event";
 import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
-import { RequestWithUserPayload } from "../../../app.controller";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
-import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
-import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
@@ -52,12 +46,13 @@ import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "../../common/dto/inquiry-request.response.dto";
+import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("festival-activities")
 @ApiTags("festival-activities")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
@@ -75,7 +70,7 @@ export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
   @Post(":faId/feedbacks")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -101,14 +96,14 @@ export class FestivalActivityReviewController {
   })
   addFeedback(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() feedback: AddFeedbackRequestDto,
   ): Promise<FestivalActivity> {
     return this.reviewService.addFeedback(faId, user, feedback);
   }
 
   @Post(":faId/ask-for-review")
-  @Permission(WRITE_FA)
+  @Permissions(WRITE_FA)
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -129,13 +124,13 @@ export class FestivalActivityReviewController {
   })
   askForReview(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalActivity> {
     return this.reviewService.toReview(faId, user);
   }
 
   @Post(":faId/approve")
-  @Permission(VALIDATE_FA)
+  @Permissions(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -160,15 +155,14 @@ export class FestivalActivityReviewController {
   })
   approve(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() { team }: ApproveActivityRequestDto,
   ): Promise<FestivalActivity> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.approve(faId, jwt, team);
+    return this.reviewService.approve(faId, user, team);
   }
 
   @Post(":faId/reject")
-  @Permission(VALIDATE_FA)
+  @Permissions(VALIDATE_FA)
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -187,10 +181,9 @@ export class FestivalActivityReviewController {
   })
   reject(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Request() { user }: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
     @Body() reject: RejectActivityRequestDto,
   ): Promise<Refused> {
-    const jwt = new JwtUtil(user);
-    return this.reviewService.reject(faId, jwt, reject);
+    return this.reviewService.reject(faId, user, reject);
   }
 }

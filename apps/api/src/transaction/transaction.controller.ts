@@ -5,8 +5,6 @@ import {
   Param,
   Post,
   Delete,
-  UseGuards,
-  Request,
   ParseIntPipe,
   HttpCode,
   UseFilters,
@@ -20,10 +18,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { RequestWithUserPayload } from "../../src/app.controller";
+import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
 import { TransactionResponseDto } from "./dto/transaction.response.dto";
 import {
   HAVE_PERSONAL_ACCOUNT,
@@ -52,12 +47,13 @@ import { CreateBarrelTransactionsRequestDto } from "./dto/create-barrel-transact
 import { CreateProvisionsTransactionsRequestDto } from "./dto/create-provisions-transactions.request.dto";
 import { CreateExternalEventTransactionsRequestDto } from "./dto/create-external-event-transactions.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("transactions")
 @ApiTags("transactions")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
 @UseFilters(TransactionErrorFilter)
+@ApiBearerAuth()
 @ApiSwaggerResponse()
 export class TransactionController {
   constructor(
@@ -66,7 +62,7 @@ export class TransactionController {
   ) {}
 
   @Get()
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @ApiResponse({
     status: 200,
     description: "Get all transactions",
@@ -78,7 +74,7 @@ export class TransactionController {
   }
 
   @Get("me")
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permissions(HAVE_PERSONAL_ACCOUNT)
   @ApiExtraModels(
     MyDepositTransactionResponseDto,
     MyBarrelTransactionResponseDto,
@@ -106,13 +102,13 @@ export class TransactionController {
     },
   })
   getMyTransactions(
-    @Request() request: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<MyTransaction[]> {
-    return this.transactionService.getMyTransactions(request.user);
+    return this.transactionService.getMyTransactions(user.id);
   }
 
   @Post("transfer")
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permissions(HAVE_PERSONAL_ACCOUNT)
   @HttpCode(204)
   @ApiBody({
     description: "transfer to create",
@@ -124,13 +120,13 @@ export class TransactionController {
   })
   sendTransfer(
     @Body() transfer: CreateTransferForm,
-    @Request() request: RequestWithUserPayload,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<void> {
-    return this.transferService.send(transfer, request.user);
+    return this.transferService.send(transfer, user);
   }
 
   @Post("deposits")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Deposits to create",
@@ -146,7 +142,7 @@ export class TransactionController {
   }
 
   @Post("barrels")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Barrel transactions to create",
@@ -166,7 +162,7 @@ export class TransactionController {
   }
 
   @Post("provisions")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "Provisions transactions to create",
@@ -187,7 +183,7 @@ export class TransactionController {
   }
 
   @Post("external-event")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiBody({
     description: "External event transactions to create",
@@ -206,7 +202,7 @@ export class TransactionController {
   }
 
   @Delete(":id")
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @Permissions(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

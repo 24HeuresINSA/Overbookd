@@ -9,7 +9,7 @@ import {
 } from "@overbookd/festival-event";
 import { Adherents } from "../../common/festival-task-common.model";
 import { AddMobilizationForm } from "@overbookd/http";
-import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
+import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 @Injectable()
 export class MobilizationSectionService {
@@ -21,7 +21,7 @@ export class MobilizationSectionService {
   async add(
     id: FestivalTask["id"],
     form: AddMobilizationForm,
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const [instigator, volunteers] = await Promise.all([
       this.adherents.findOne(user.id),
@@ -36,7 +36,7 @@ export class MobilizationSectionService {
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     mobilization: UpdateMobilization,
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
     return this.prepare.updateMobilization(
@@ -50,7 +50,7 @@ export class MobilizationSectionService {
   async remove(
     id: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
-    user: JwtPayload,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
     const instigator = await this.adherents.findOne(user.id);
     return this.prepare.removeMobilization(id, mobilizationId, instigator);
