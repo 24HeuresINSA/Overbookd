@@ -13,7 +13,7 @@ export class MailTestRequestDto {
 
   @ApiProperty({
     required: true,
-    description: "The email of the user",
+    description: "The name of the receiver",
   })
   @IsDefined()
   @IsString()

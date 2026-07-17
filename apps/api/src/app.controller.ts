@@ -6,6 +6,7 @@ import { MailService } from "./mail/mail.service";
 import { SEND_MAIL_TEST } from "@overbookd/permission";
 import { ApiSwaggerResponse } from "./api-swagger-response.decorator";
 import { Permissions } from "./authentication-zitadel/decorators/permissions-auth.decorator";
+import { Public } from "./authentication-zitadel/decorators/public.decorator";
 
 @Controller()
 @ApiBearerAuth()
@@ -17,6 +18,7 @@ export class AppController {
   ) {}
 
   @Get()
+  @Public()
   getHello(): string {
     return this.appService.getHello();
   }
