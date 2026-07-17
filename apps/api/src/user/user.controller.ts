@@ -58,11 +58,12 @@ export class UserController {
   ) {}
 
   @Post("sync")
+  @HttpCode(204)
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: "Synchronisation avec Zitadel réussie",
   })
-  userSync(@AuthenticatedUser() user: RequestHydratedUser) {
+  userSync(@AuthenticatedUser() user: RequestHydratedUser): Promise<void> {
     return this.userService.userSync(user);
   }
 
