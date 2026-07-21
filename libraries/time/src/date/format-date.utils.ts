@@ -1,6 +1,4 @@
 import {
-  DateString,
-  DateTimeString,
   DISPLAY_DATE,
   DISPLAY_DATE_TIME,
   DISPLAY_TIME,

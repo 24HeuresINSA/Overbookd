@@ -63,9 +63,9 @@ type FebruaryDateString = `${Year}-${February}-${Day<February>}`;
 type With30DaysDateString = `${Year}-${With30Days}-${Day<With30Days>}`;
 type With31DaysDateString = `${Year}-${With31Days}-${Day<With31Days>}`;
 export type DateString =
-  FebruaryDateString | With30DaysDateString | With31DaysDateString;
-
-export type DateTimeString = `${DateString}T${Hour}:${number}`;
+  | FebruaryDateString
+  | With30DaysDateString
+  | With31DaysDateString;
 
 // https://stackoverflow.com/questions/39494689/is-it-possible-to-restrict-number-to-a-certain-range/70307091#39495173
 type Enumerate<
