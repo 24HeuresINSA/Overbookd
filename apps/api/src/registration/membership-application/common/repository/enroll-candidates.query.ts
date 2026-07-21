@@ -89,6 +89,6 @@ export type DatabaseEnrollableVolunteer = DatabaseStaffCandidate & {
   availabilities: IProvidePeriod[];
   phoneNumber: string;
   comment: string | null;
-  birthDate: Date;
+  birthDate: Date | null;
   note: string | null;
 };

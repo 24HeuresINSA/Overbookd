@@ -171,16 +171,29 @@ const closeVolunteerInfoDialog = () => {
 };
 
 const exportCSV = async () => {
-  const csv = CSVBuilder.from(
-    filteredVolunteers.value.map((volunteer) => {
-      const teams = volunteer.teams
-        .filter((team) => team !== PERSONNE)
-        .join(", ");
-      const birthDate = formatDate(volunteer.birthDate);
-      const phoneNumber = formatPhoneNumber(volunteer.phoneNumber);
-      return { ...volunteer, teams, phoneNumber, birthDate };
-    }),
-  )
+  const mappedVolunteers = filteredVolunteers.value.map((volunteer) => {
+    const teams = volunteer.teams
+      .filter((team) => team !== PERSONNE)
+      .join(", ");
+    const birthDate = volunteer.birthDate
+      ? formatDate(volunteer.birthDate)
+      : "";
+    const phoneNumber = formatPhoneNumber(volunteer.phoneNumber);
+    return {
+      firstName: volunteer.firstName,
+      lastName: volunteer.lastName,
+      nickname: volunteer.nickname,
+      charisma: volunteer.charisma,
+      teams,
+      email: volunteer.email,
+      birthDate,
+      phoneNumber,
+      comment: volunteer.comment,
+      note: volunteer.note,
+    };
+  });
+
+  const csv = CSVBuilder.from(mappedVolunteers)
     .select([
       "firstName",
       "lastName",

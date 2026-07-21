@@ -121,20 +121,3 @@ export function formatDateWithHoursAndMinutesOnly(date: DateSeed): string {
 export function formatDateNumberValue(value: number): string {
   return value.toString().padStart(2, "0");
 }
-
-export function toIsoDate(
-  date: string | Date,
-  options: { hideTime?: boolean } = {},
-): DateString | DateTimeString {
-  const { hideTime } = options;
-  const dateObj = new Date(date);
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const year = dateObj.getFullYear();
-  if (!hideTime) {
-    const hours = String(dateObj.getHours()).padStart(2, "0");
-    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}` as DateTimeString;
-  }
-  return `${year}-${month}-${day}` as DateString;
-}

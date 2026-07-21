@@ -7,7 +7,12 @@ import type {
   MyUserInformationWithPotentialyProfilePicture,
   UserDataWithPotentialyProfilePicture,
 } from "~/utils/user/user-information";
-import type { User, UserPersonalData, UserWithTeams } from "@overbookd/user";
+import type {
+  User,
+  UserPersonalData,
+  UserUpdateForm,
+  UserWithTeams,
+} from "@overbookd/user";
 import type { Consumer, VolunteerWithAssignmentStats } from "@overbookd/http";
 import { UserRepository } from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
@@ -136,7 +141,7 @@ export const useUserStore = defineStore("user", {
       this.personalAccountConsumers = res.map(castConsumerWithDate);
     },
 
-    async updateUser(id: number, user: UserPersonalData) {
+    async updateUser(id: number, user: UserUpdateForm) {
       const res = await UserRepository.updateUser(id, user);
       if (isHttpError(res)) return;
       sendSuccessNotification("Profil mis à jour ! 🎉");

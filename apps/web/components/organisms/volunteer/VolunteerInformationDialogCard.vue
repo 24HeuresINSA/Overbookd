@@ -191,7 +191,7 @@ import {
 } from "@overbookd/permission";
 import {
   type User,
-  type UserPersonalData,
+  type UserUpdateForm,
   type UserWithTeams,
   buildUserName,
   buildUserNameWithNickname,
@@ -279,7 +279,7 @@ const assignmentPreferenceLabel = computed<string>(() => {
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
-  birthDay.value = formatLocalDate(props.volunteer.birthDate);
+  birthDay.value = formatLocalDate(props.volunteer.birthDate ?? new Date());
   phoneNumber.value = props.volunteer.phoneNumber ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
@@ -334,7 +334,7 @@ const removeFriend = async (friend: User) => {
 
 const updateAvailabilities = () => emit("update-availabilities");
 
-const updatedVolunteer = computed<UserPersonalData>(() => {
+const updatedVolunteer = computed<UserUpdateForm>(() => {
   const trimmedNickname = nickname.value?.trim() || null;
   const trimmedNote = note.value?.trim() || null;
   const trimmedComment = props.volunteer.comment?.trim() || null;

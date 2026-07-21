@@ -3,10 +3,6 @@ import { ZitadelIntrospectionOptions } from "passport-zitadel";
 
 export type ZitadelAuthModuleConfig = ZitadelIntrospectionOptions;
 
-export type ZitadelMetadata = {
-  dateOfBirth: string;
-};
-
 /**
  * Represents a Zitadel user with information about their authentication token.
  */

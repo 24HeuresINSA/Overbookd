@@ -60,7 +60,7 @@ const displayedName = computed<string>(() =>
 );
 
 const isBirthdayToday = computed<boolean>(() => {
-  if (!me.value) return false;
+  if (!me.value?.birthDate) return false;
 
   const today = OverDate.now();
   const birthday = OverDate.from(me.value.birthDate);

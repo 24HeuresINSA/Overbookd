@@ -239,7 +239,7 @@ function castVolunteerCandidateWithDate(
   return {
     ...volunteer,
     candidatedAt: new Date(volunteer.candidatedAt),
-    birthDate: new Date(volunteer.birthDate),
+    birthDate: volunteer.birthDate ? new Date(volunteer.birthDate) : undefined,
     availabilities: castPeriodsWithDate(volunteer.availabilities),
   };
 }

@@ -142,7 +142,9 @@ const firstName = ref<string>(loggedUser.value?.firstName ?? "");
 const lastName = ref<string>(loggedUser.value?.lastName ?? "");
 const nickname = ref<string | null | undefined>(loggedUser.value?.nickname);
 const birthDay = ref<string>(
-  loggedUser.value ? formatLocalDate(loggedUser.value.birthDate) : "",
+  loggedUser.value?.birthDate
+    ? formatLocalDate(loggedUser.value.birthDate)
+    : "",
 );
 const email = computed<string>(() => loggedUser.value?.email ?? "");
 const phoneNumber = ref<string>(loggedUser.value?.phoneNumber ?? "");
