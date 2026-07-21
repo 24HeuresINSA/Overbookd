@@ -17,7 +17,7 @@ services:
 
   traefik:
     container_name: overbookd-traefik
-    image: traefik:v3.7.5
+    image: traefik:v3.7.8
     restart: unless-stopped
     command:
       # Docker config
@@ -144,7 +144,7 @@ services:
 
   adminer:
     container_name: overbookd-adminer
-    image: adminer:5.4.2
+    image: adminer:5.5.0
     restart: unless-stopped
     networks:
       - overbookd_net-api
