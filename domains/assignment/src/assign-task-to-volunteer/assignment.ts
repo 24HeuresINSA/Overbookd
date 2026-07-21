@@ -34,8 +34,7 @@ export type TeamMemberForDetails = BaseAssigneeForDetails & {
 export type NamelyDemandedForDetails = BaseAssigneeForDetails;
 
 export type AssigneeForDetails =
-  | TeamMemberForDetails
-  | NamelyDemandedForDetails;
+  TeamMemberForDetails | NamelyDemandedForDetails;
 
 export type TeamDemanded = { team: string; demand: number };
 

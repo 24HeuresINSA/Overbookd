@@ -118,9 +118,7 @@ export type RefusedPreview = PreviewReviewableBase & {
 };
 
 export type PreviewReviewable =
-  | InReviewPreview
-  | ValidatedPreview
-  | RefusedPreview;
+  InReviewPreview | ValidatedPreview | RefusedPreview;
 
 export type PreviewDraft = PreviewBase & {
   status: Draft["status"];

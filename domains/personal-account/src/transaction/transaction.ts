@@ -15,9 +15,7 @@ type BaseTransaction = {
 };
 
 type ReceiveOrSendTransaction =
-  | typeof SHARED_MEAL
-  | typeof TRANSFER
-  | typeof INITIALIZATION;
+  typeof SHARED_MEAL | typeof TRANSFER | typeof INITIALIZATION;
 
 type Send<T extends ReceiveOrSendTransaction> = BaseTransaction & {
   type: T;

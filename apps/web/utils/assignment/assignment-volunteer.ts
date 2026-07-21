@@ -4,8 +4,7 @@ import type {
 } from "@overbookd/assignment";
 
 export type AssignmentVolunteer =
-  | VolunteerWithAssignmentDuration
-  | AssignableVolunteer;
+  VolunteerWithAssignmentDuration | AssignableVolunteer;
 
 export function isAssignableVolunteer(
   volunteer: AssignmentVolunteer,

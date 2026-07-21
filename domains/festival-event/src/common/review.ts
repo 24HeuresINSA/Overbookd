@@ -26,22 +26,18 @@ export type PrivateActivityReviewer =
   | typeof BARRIERES;
 
 export type PublicActivityReviewer =
-  | PrivateActivityReviewer
-  | typeof COMMUNICATION;
+  PrivateActivityReviewer | typeof COMMUNICATION;
 
 type NoSupplyRequestTaskReviewer = typeof HUMAIN | typeof LOG_MATOS;
 
 type TaskWithSupplyRequestReviewer =
-  | NoSupplyRequestTaskReviewer
-  | typeof LOG_ELEC;
+  NoSupplyRequestTaskReviewer | typeof LOG_ELEC;
 export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
   : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;
 
 type FestivalActivityReviewingStatus =
-  | typeof REVIEWING
-  | typeof NOT_ASKING_TO_REVIEW
-  | typeof APPROVED;
+  typeof REVIEWING | typeof NOT_ASKING_TO_REVIEW | typeof APPROVED;
 
 type FestivalTaskReviewingStatus =
   | typeof REVIEWING
@@ -54,13 +50,10 @@ export type ReviewingStatus<T extends FestivalEventIdentifier> = T extends "FA"
   : FestivalTaskReviewingStatus;
 
 type FestivalActivityApprovalReviewStatus =
-  | typeof APPROVED
-  | typeof NOT_ASKING_TO_REVIEW;
+  typeof APPROVED | typeof NOT_ASKING_TO_REVIEW;
 
 type FestivalTaskApprovalReviewStatus =
-  | typeof APPROVED
-  | typeof NOT_ASKING_TO_REVIEW
-  | typeof WILL_NOT_REVIEW;
+  typeof APPROVED | typeof NOT_ASKING_TO_REVIEW | typeof WILL_NOT_REVIEW;
 
 export type ApprovalReviewStatus<T extends FestivalEventIdentifier> =
   T extends "FA"
@@ -86,9 +79,7 @@ export type RejectionReviewStatus<T extends FestivalEventIdentifier> =
     : FestivalTaskRejectionReviewStatus;
 
 export type ReviewStatus<T extends FestivalEventIdentifier> =
-  | ReviewingStatus<T>
-  | ApprovalReviewStatus<T>
-  | RejectionReviewStatus<T>;
+  ReviewingStatus<T> | ApprovalReviewStatus<T> | RejectionReviewStatus<T>;
 
 export type InReviewReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
@@ -115,9 +106,7 @@ export type Approval<T extends FestivalEventIdentifier> = {
 };
 
 export type Reviews<T extends FestivalEventIdentifier> =
-  | InReviewReviews<T>
-  | ValidatedReviews<T>
-  | RefusedReviews<T>;
+  InReviewReviews<T> | ValidatedReviews<T> | RefusedReviews<T>;
 
 export function isRefusedReviews<T extends FestivalEventIdentifier>(
   reviews: Reviews<T>,

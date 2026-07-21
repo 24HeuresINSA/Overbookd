@@ -5,7 +5,7 @@ ENV DISABLE_PLANTUML_ERD_GENERATION=true
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@10.34.4
+RUN npm install -g pnpm@10.34.5
 COPY pnpm-lock.yaml package.json ./
 
 RUN pnpm fetch
@@ -39,7 +39,7 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV=production
 
-RUN npm install -g pnpm@10.34.4 \
+RUN npm install -g pnpm@10.34.5 \
   && apk update \
   && apk add --no-cache openssl
 
